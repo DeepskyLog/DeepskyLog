@@ -14,7 +14,7 @@ class Eyepiece extends Model
 
     protected $fillable = [
         'user_id', 'name', 'make_id', 'type_id', 'focal_length_mm', 'apparentFOV',
-        'active', 'observer', 'maxFocalLength', 'field_stop_mm', 'picture',
+        'active', 'observer', 'max_focal_length_mm', 'maxFocalLength', 'field_stop_mm', 'picture',
     ];
 
     protected $with = ['eyepiece_make', 'eyepiece_type'];

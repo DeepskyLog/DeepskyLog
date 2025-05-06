@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class EyepieceType extends Model
 {
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
-        'name',
+        'name', 'eyepiece_makes_id',
     ];
 
     public function eyepieces(): hasMany

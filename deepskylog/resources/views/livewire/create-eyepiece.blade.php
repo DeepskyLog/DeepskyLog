@@ -36,10 +36,10 @@
                                     name="eyepiece_new_make"
                                     label="{!! __('Only add a make for the eyepiece here if the correct make is not available in the dropdown above.') !!}"
                                     type="text"
-                                    wire:model="eyepiece_new_make"
+                                    wire:model.live="eyepiece_new_make"
                                     class="mt-1 block w-full"
                                     value=""
-                                    x-on:selected="$wire.updateMake"
+                                    x-on:input="$wire.updateMake"
                                     id="eyepiece_new_make"
                                     name="eyepiece_new_make"
                                 />
@@ -57,8 +57,6 @@
                                 />
                             @endif
 
-                            {{ $eyepiece_new_make }}
-
                             <br/>
                             <x-select
                                 label="{{ __('Select the type of the eyepiece, if the make is not in the list, add a new type in the next field.') }}"
@@ -70,16 +68,29 @@
                             />
 
                             {{-- Or create a new type--}}
-                            <x-input
-                                name="eyepiece_new_type"
-                                label="{!! __('Only add a type for the eyepiece here if the correct type is not available in the dropdown above.') !!}"
-                                type="text"
-                                wire:model.live="eyepiece_new_type"
-                                class="mt-1 block w-full"
-                                value=""
-                                id="eyepiece_new_type"
-                            />
-
+                            @if ($eyepiece_type == null || $eyepiece_type == 1)
+                                <x-input
+                                    name="eyepiece_new_type"
+                                    label="{!! __('Only add a type for the eyepiece here if the correct type is not available in the dropdown above.') !!}"
+                                    type="text"
+                                    wire:model.live="eyepiece_new_type"
+                                    x-on:input="$wire.updateMake"
+                                    class="mt-1 block w-full"
+                                    value=""
+                                    id="eyepiece_new_type"
+                                />
+                            @else
+                                <x-input
+                                    name="eyepiece_new_type"
+                                    label="{!! __('Only add a type for the eyepiece here if the correct type is not available in the dropdown above.') !!}"
+                                    type="text"
+                                    wire:model.live="eyepiece_new_type"
+                                    class="mt-1 block w-full"
+                                    value=""
+                                    id="eyepiece_new_type"
+                                    readonly
+                                />
+                            @endif
                             <x-input
                                 name="focal_length_mm"
                                 label="{!! __('Focal Length of the eyepiece (in mm)') !!}"
@@ -102,7 +113,6 @@
                                 x-on:input="$wire.updateFocalLength"
                                 step="0.1"
                                 min="0.1"
-                                required
                                 value="{{ old('max_focal_length_mm') }}"
                             />
 
@@ -128,7 +138,6 @@
                                 step="0.1"
                                 min="0"
                                 max="99.9"
-                                required
                                 value="{{ old('field_stop_mm') }}"
                             />
 
@@ -141,6 +150,49 @@
                                 class="mt-1 block w-full"
                                 value="{{ old('name') }}"/>
                         </div>
+
+                        <div class="mt-5">
+                            <x-input type="file"
+                                     label="{!! __('Upload image') !!}"
+                                     wire:model="photo"/>
+
+                            @error('photo') <span class="error">{{ $message }}</span> @enderror
+
+                            @if ($update)
+                                @if($eyepiece->picture)
+                                    <img
+                                        alt="{{ __('Picture of eyepiece') }}"
+                                        class="mt-2 h-40 w-40 object-cover"
+                                        src="{{ '/storage/'.asset($eyepiece->picture) }}">
+
+                                @endif
+                            @endif
+                            @if ($photo)
+                                <img
+                                    alt="{{ __('Picture of eyepiece') }}"
+                                    class="mt-2 h-40 w-40 object-cover"
+                                    src="{{ $photo->temporaryUrl() }}">
+                            @endif
+                        </div>
+
+                        <br/>
+
+                        @if($update)
+
+                            <x-button class="mt-5"
+                                      type="submit"
+                                      secondary
+                                      label="{{ __('Update eyepiece') }}"
+                            />
+
+                        @else
+
+                            <x-button class="mt-5"
+                                      type="submit"
+                                      secondary
+                                      label="{{ __('Add new eyepiece') }}"
+                            />
+                        @endif
                     </form>
                 </x-card>
             </div>

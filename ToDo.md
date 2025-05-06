@@ -40,9 +40,9 @@
     + [X] Add table with all instruments and calculate the magnification, field of view, exit pupil, ...
     + [X] Do the same in the detail page for the instrument.
     + [X] Adapt instrument edit -> fixed magnification is set to 0, should not be filled.
-    + [ ] Add page to add / edit eyepieces.
+    + [X] Add page to add / edit eyepieces.
     + [ ] Check if the create eyepiece and the list eyepieces page can only be seen if logged in.
-    + [ ] Add page for administrator (only for the eyepiece_makes table)
+    + [ ] Add page for administrator (only for the eyepiece_makes and eyepiece_types table)
     + [ ] Translate the new strings
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog
@@ -60,8 +60,7 @@
         + 5mm Nagler: 7.2mm
         + Baader 3.5mm Hyperion: 3.9mm
         + Baader 36mm Aspheric: 45.2mm
-        + 25mm Coronado Cemax: 22.7mm
-    + [ ] Calculate the Exit pupil and magnification
+        + 25mm Coronado Cemax (52 degrees): 22.7mm
 + [ ] Create lenses tables in the new version of DeepskyLog.
     + [ ] Write script to populate the tables from the old database.
     + [ ] Update user model to use the lenses from the new database.
@@ -85,6 +84,7 @@
     + [ ] Blog style?
 + [ ] Targets
 + [ ] Observing lists
++ [ ] Friends? Add friends and see their observations / sessions / ... Different lists for Murzim, Capella, ...
 
 ### Combination of old and new DeepskyLog
 

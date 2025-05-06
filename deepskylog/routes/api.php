@@ -332,6 +332,10 @@ Route::get('eyepiece_type.api', function (Request $request) {
         ];
     }
     if ($request->exists('make')) {
+        $allTypes[] = [
+            'id' => 0,
+            'name' => '',
+        ];
         $types = EyepieceType::where('eyepiece_makes_id', $request->make)->get();
         foreach ($types as $type) {
             if ($request->search == '' || Str::contains(Str::lower($type->name), Str::lower($request->search))) {
@@ -343,14 +347,10 @@ Route::get('eyepiece_type.api', function (Request $request) {
         }
     } else {
         $types = EyepieceType::get();
-        foreach ($types as $type) {
-            if ($request->search == '' || Str::contains(Str::lower($type->name), Str::lower($request->search))) {
-                $allTypes[] = [
-                    'id' => $type->id,
-                    'name' => $type->name,
-                ];
-            }
-        }
+        $allTypes[] = [
+            'id' => 0,
+            'name' => '',
+        ];
     }
 
     return $allTypes;
