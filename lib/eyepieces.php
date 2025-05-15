@@ -10,34 +10,57 @@ class Eyepieces
 {
     public function addEyepiece($name, $focalLength, $apparentFOV) // addEyepiece adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters.
     {
-        global $objDatabase;
-        $objDatabase->execSQL("INSERT INTO eyepieces (name, focalLength, apparentFOV) VALUES (\"" . $name . "\", \"" . $focalLength . "\", \"" . $apparentFOV . "\")");
-        return $objDatabase->selectSingleValue("SELECT id FROM eyepieces ORDER BY id DESC LIMIT 1", 'id', '');
+        global $objDatabase_new, $loggedUser;
+
+        $user_id = $objDatabase_new->selectSingleValue(
+            "SELECT id FROM users WHERE username = \"" . html_entity_decode($loggedUser) . "\"",
+            'id'
+        );
+
+        // Create a slug from the name
+        $slug = $str = strtolower($name);
+
+        // Replace special characters
+        // and spaces with hyphens
+        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+
+        // Trim hyphens from the beginning
+        // and ending of String
+        $slug = trim($slug, '-');
+
+        $created_at = date('Y-m-d H:i:s');
+        $updated_at = date('Y-m-d H:i:s');
+
+        $objDatabase_new->execSQL(
+            "INSERT INTO eyepieces "
+            . "(make_id, type_id, name, focal_length_mm, apparentFOV, max_focal_length_mm, user_id, observer, slug, field_stop_mm, created_at, updated_at) VALUES "
+            . "(1, 1, \"" . $name . "\", \"" . $focalLength . "\", \"" . $apparentFOV . "\", -1, \"" . $user_id . "\", \"" . $loggedUser . "\", \"" . $slug . "\", 0, \"" . $created_at . "\", \"" . $updated_at . "\")");
+        return $objDatabase_new->selectSingleValue("SELECT id FROM eyepieces ORDER BY id DESC LIMIT 1", 'id', '');
     }
     public function getAllEyepiecesIds($id) // getAllIds returns a list with all id's which have the same name as the name of the given id
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleArray("SELECT id FROM eyepieces WHERE name=" . $objDatabase->selectSingleValue("SELECT name FROM eyepieces WHERE id = \"" . $id . "\"", 'name'), 'id');
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleArray("SELECT id FROM eyepieces WHERE name=" . $objDatabase_new->selectSingleValue("SELECT name FROM eyepieces WHERE id = \"" . $id . "\"", 'name'), 'id');
     }
     public function getEyepieceId($name, $observer) // returns the id for this eyepiece
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleValue("SELECT id FROM eyepieces where name=\"" . $name . "\" and observer=\"" . $observer . "\"", 'id', -1);
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleValue("SELECT id FROM eyepieces where name=\"" . $name . "\" and observer=\"" . $observer . "\"", 'id', -1);
     }
     public function getEyepieceObserverPropertyFromName($name, $observer, $property) // returns the property for the eyepiece of the observer
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleValue("SELECT " . $property . " FROM eyepieces where name=\"" . $name . "\" and observer=\"" . $observer . "\"", $property);
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleValue("SELECT " . $property . " FROM eyepieces where name=\"" . $name . "\" and observer=\"" . $observer . "\"", $property);
     }
     public function getEyepiecePropertiesFromId($id) // returns the properties of the eyepiece with id
     {
-        global $objDatabase;
-        return $objDatabase->selectRecordArray("SELECT * FROM eyepieces WHERE id=\"" . $id . "\"");
+        global $objDatabase_new;
+        return $objDatabase_new->selectRecordArray("SELECT * FROM eyepieces WHERE id=\"" . $id . "\"");
     }
     public function getEyepiecePropertyFromId($id, $property, $defaultValue = '') // returns the property of the given eyepiece
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleValue("SELECT " . $property . " FROM eyepieces WHERE id = \"" . $id . "\"", $property, $defaultValue);
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleValue("SELECT " . $property . " FROM eyepieces WHERE id = \"" . $id . "\"", $property, $defaultValue);
     }
     public function getEyepieceUsedFromId($id) // returns the number of times the eyepiece is used in observations
     {
@@ -46,14 +69,14 @@ class Eyepieces
     }
     public function getSortedEyepieces($sort, $observer = "", $active = "") // returns an array with the ids of all eyepieces, sorted by the column specified in $sort
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleArray("SELECT " . ($observer ? "" : "MAX(id)") . " id, `name` FROM eyepieces " . ($observer ? "WHERE observer LIKE \"" . $observer . "\"" . ($active ? " AND eyepieceactive = " . $active : "") : " GROUP BY name") . " ORDER BY " . $sort . ", name", 'id');
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleArray("SELECT " . ($observer ? "" : "MAX(id)") . " id, `name` FROM eyepieces " . ($observer ? "WHERE observer LIKE \"" . $observer . "\"" . ($active ? " AND eyepieceactive = " . $active : "") : " GROUP BY name") . " ORDER BY " . $sort . ", name", 'id');
     }
     public function setEyepieceProperty($id, $property, $propertyValue) // sets the property to the specified value for the given eyepiece
     {
-        global $objDatabase;
+        global $objDatabase_new;
         $sql = "UPDATE eyepieces SET " . $property . " = \"" . $propertyValue . "\" WHERE id = \"" . $id . "\"";
-        return $objDatabase->execSQL($sql);
+        return $objDatabase_new->execSQL($sql);
     }
     public function showEyepiecesObserver()
     {
@@ -105,9 +128,9 @@ class Eyepieces
     }
     public function validateDeleteEyepiece() // validates and deletes an eyepiece
     {
-        global $objUtil, $objDatabase;
+        global $objUtil, $objDatabase_new;
         if (($eyepieceid = $objUtil->checkGetKey('eyepieceid')) && $objUtil->checkAdminOrUserID($this->getEyepiecePropertyFromId($eyepieceid, 'observer')) && (!($this->getEyepieceUsedFromId($eyepieceid)))) {
-            $objDatabase->execSQL("DELETE FROM eyepieces WHERE id=\"" . $eyepieceid . "\"");
+            $objDatabase_new->execSQL("DELETE FROM eyepieces WHERE id=\"" . $eyepieceid . "\"");
             return _("The eyepiece is removed from your equipment list.");
         }
     }
@@ -116,15 +139,15 @@ class Eyepieces
         global $objUtil, $loggedUser;
         if ($objUtil->checkPostKey('eyepiecename') && $objUtil->checkSessionKey('deepskylog_id') && $objUtil->checkPostKey('focalLength') && $objUtil->checkPostKey('apparentFOV') && $objUtil->checkPostKey('add')) {
             $id = $this->addEyepiece($_POST ['eyepiecename'], $_POST ['focalLength'], $_POST ['apparentFOV']);
-            $this->setEyepieceProperty($id, 'observer', $loggedUser);
-            $this->setEyepieceProperty($id, 'maxFocalLength', $objUtil->checkPostKey('maxFocalLength', -1));
+//            $this->setEyepieceProperty($id, 'observer', $loggedUser);
+            $this->setEyepieceProperty($id, 'max_focal_length_mm', $objUtil->checkPostKey('maxFocalLength', -1));
             return _("The eyepiece is added to your equipment list");
         } elseif ($objUtil->checkPostKey('id') && $objUtil->checkPostKey('eyepiecename') && $objUtil->checkPostKey('focalLength') && $objUtil->checkPostKey('apparentFOV') && $objUtil->checkPostKey('change') && $objUtil->checkAdminOrUserID($this->getEyepiecePropertyFromId($_POST ['id'], 'observer'))) {
             $this->setEyepieceProperty($_POST ['id'], 'name', $_POST ['eyepiecename']);
-            $this->setEyepieceProperty($_POST ['id'], 'focalLength', $_POST ['focalLength']);
+            $this->setEyepieceProperty($_POST ['id'], 'focal_length_mm', $_POST ['focalLength']);
             $this->setEyepieceProperty($_POST ['id'], 'apparentFOV', $_POST ['apparentFOV']);
             // $this->setEyepieceProperty($_POST['id'],'observer', $loggedUser);
-            $this->setEyepieceProperty($_POST ['id'], 'maxFocalLength', $objUtil->checkPostKey('maxFocalLength', -1));
+            $this->setEyepieceProperty($_POST ['id'], 'max_focal_length_mm', $objUtil->checkPostKey('maxFocalLength', -1));
             return _("The eyepiece is changed in your equipment list") . ' ' . _("Eyepiece changed");
         } else {
             return _("All required fields must be filled in!");

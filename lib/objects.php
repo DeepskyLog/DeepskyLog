@@ -1142,7 +1142,8 @@ class Objects
 
     public function prepareObjectsContrast() // internal procedure to speed up contrast calculations
     {
-        global $objContrast, $loggedUser, $objDatabase;
+        global $objContrast, $loggedUser, $objDatabase, $objDatabase_new;
+;
 
         if (!array_key_exists('LTC', $_SESSION) || (!$_SESSION['LTC'])) {
             $_SESSION['LTC'] = [
@@ -1421,13 +1422,13 @@ class Objects
                 $popup = _('Contrast reserve can only be calculated when you have set a standard instrument...');
             } else { // Check for eyepieces or a fixed magnification
                 $sql6 = 'SELECT fixedMagnification, diameter, fd from instruments where id = "'.$get5->stdtelescope.'"';
-                $run6 = $objDatabase->selectRecordset($sql6);
+                $run6 = $objDatabase_new->selectRecordset($sql6);
                 $get6 = $run6->fetch(PDO::FETCH_OBJ);
                 if ($get6->fd == 0 && $get6->fixedMagnification == 0) { // We are not setting $magnifications
                     $magnifications = [];
                 } elseif ($get6->fixedMagnification == 0) {
                     $sql7 = 'SELECT focalLength, name, apparentFOV, maxFocalLength from eyepieces where observer = "'.$loggedUser.'" AND eyepieceactive=1';
-                    $run7 = $objDatabase->selectRecordset($sql7);
+                    $run7 = $objDatabase_new->selectRecordset($sql7);
                     while ($get7 = $run7->fetch(PDO::FETCH_OBJ)) {
                         if ($get7->maxFocalLength > 0.0) {
                             $fRange = $get7->maxFocalLength - $get7->focalLength;
@@ -1489,7 +1490,7 @@ class Objects
                         $_SESSION['initBB'] = $sqm;
 
                         $sql7 = 'SELECT diameter, name from instruments where id = "'.$get5->stdtelescope.'"';
-                        $run7 = $objDatabase->selectRecordset($sql7);
+                        $run7 = $objDatabase_new->selectRecordset($sql7);
                         $get7 = $run7->fetch(PDO::FETCH_OBJ);
                         $_SESSION['aperMm'] = $get7->diameter;
                         $_SESSION['aperIn'] = $_SESSION['aperMm'] / 25.4;
