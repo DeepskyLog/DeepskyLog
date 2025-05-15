@@ -33,7 +33,7 @@
         "wireui/wireui": "^2"
     },
     "require-dev": {
-        "amirami/localizator": "v0.13.0-alpha",
+        "amirami/localizator": "v0.14.0-alpha",
         "barryvdh/laravel-debugbar": "^3.13",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "*",

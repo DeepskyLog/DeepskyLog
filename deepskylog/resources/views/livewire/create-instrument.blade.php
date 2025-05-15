@@ -77,7 +77,7 @@
                                 wire:model.live="aperture_mm"
                                 x-on:input="$wire.updateAperture"
                                 step="0.1"
-                                min="0.0"
+                                min="0.1"
                                 required
                                 value="{{ old('aperture') }}"
                             />

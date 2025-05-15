@@ -36,7 +36,7 @@
                                  href="{{ config('app.old_url') }}/index.php?indexAction=view_sites"
                                  label="{{ __('My locations') }}"/>
 
-                <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=view_eyepieces"
+                <x-dropdown.item href="/eyepiece"
                                  label="{{ __('My eyepieces') }}"/>
 
                 <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=view_filters"

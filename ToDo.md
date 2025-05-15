@@ -2,15 +2,15 @@
 
 + [ ] See GitHub: <https://github.com/DeepskyLog/DeepskyLog/issues>
 
-## Combined version of old DeepskyLog and laravel DeepskyLog
-
-> /Users/wim/GitHub/DeepskyLog/deepskylog is http://deepskylog.localhost/, the old code
-> is http://deepskylog.localhost/old/
-
-+ deepskylog: uses laravel jetstream and socialstream for authentication
-
 ### Next steps
 
++ [ ] Update to laravel 12
+    + [ ] Update resources/views/livewire/settings/linked-account.blade.php and update-avatar.blade.php
+    + [ ] Test logging in using Google / ... and update the code if necessary
+    + [X] Update marineusde/larapex-charts to the newest version (with laravel 12 support)
+    + [ ] Add laravel-12 compatible version of PeterColes/multilingual-language-list
+        + [ ] Uncomment everything in language_selection.blade.php
++ [ ] Update Tailwindcss to version 4.0
 + [X] Create instruments tables in the new version of DeepskyLog.
     + [X] Add Make and flip options to the instruments (see PiFinder model)
     + [X] Write script to populate the tables from the old database.
@@ -30,11 +30,25 @@
 + [ ] Create eyepieces tables in the new version of DeepskyLog.
     + [X] Create eyepiece makes table
     + [X] Create eyepiece type table
-    + [ ] Create eyepiece table
-    + [ ] Write script to populate the eyepiece table from the old database.
-    + [ ] Update user model to use the eyepieces from the new database.
+    + [X] Create eyepiece table
+    + [X] Write script to populate the eyepiece table from the old database.
+    + [X] Update script to add the number of observations done by each eyepiece.
+    + [X] Update user model to use the eyepieces from the new database.
+    + [X] Use database from the new version in the old version of DeepskyLog.
+    + [X] Add page to view all eyepieces of an observer
+    + [X] Add page to see the details of an eyepiece
+    + [X] Add table with all instruments and calculate the magnification, field of view, exit pupil, ...
+    + [X] Do the same in the detail page for the instrument.
+    + [X] Adapt instrument edit -> fixed magnification is set to 0, should not be filled.
+    + [X] Add page to add / edit eyepieces.
+    + [X] Check if the create eyepiece and the list eyepieces page can only be seen if logged in.
+    + [X] Add page for administrator (only for the eyepiece_makes and eyepiece_types table)
+    + [X] Translate the new strings
+    + [X] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
+    + [ ] Release new version of pyDeepskyLog
+    + [ ] Change pifinder code
     + [ ] Add Field stop: tfov = eyepiece.field_stop / telescope.focal_length_mm * 57.2958
-        + 31mm Nagler: 44,4mm
+        + 31mm Nagler: 44.4mm
         + 21mm Ethos: 36.2mm
         + 20mm Nagler: 27.4mm
         + 19mm Panoptic: 22.5mm
@@ -43,14 +57,10 @@
         + 8mm Ethos: 14.0mm
         + 8mm Radian: 8.3mm
         + 6mm Ethos: 10.5mm
-        + 5mm Nagler: 7,2mm
+        + 5mm Nagler: 7.2mm
         + Baader 3.5mm Hyperion: 3.9mm
         + Baader 36mm Aspheric: 45.2mm
-    + [ ] Calculate the Exit pupil and magnification
-    + [ ] Use database from the new version in the old version of DeepskyLog.
-    + [ ] Change API to get the eyepieces from the new table.
-    + [ ] Add all pages for adding, viewing, editing, deleting eyepieces. Also update user overview page. TO DO AFTER
-      adding the contrast reserve to PiFinder
+        + 25mm Coronado Cemax (52 degrees): 22.7mm
 + [ ] Create lenses tables in the new version of DeepskyLog.
     + [ ] Write script to populate the tables from the old database.
     + [ ] Update user model to use the lenses from the new database.
@@ -58,10 +68,12 @@
     + [ ] Create API to get the lenses from a given user.
     + [ ] Add all pages for adding, viewing, editing, deleting lenses, filters, instrument sets. Also update user
       overview page. TO DO AFTER adding the contrast reserve to PiFinder
+    + [ ] Adapt instrument and eyepiece detail page to also use the lenses (dropdown to select lens?).
 + [ ] Create filters tables in the new version of DeepskyLog
 + [ ] Create instrument sets tables in the new version of DeepskyLog
     + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into
       account the Barlow and other lenses)
++ [ ] Create locations tables in the new version of DeepskyLog
 
 ### Distant future
 
@@ -72,6 +84,7 @@
     + [ ] Blog style?
 + [ ] Targets
 + [ ] Observing lists
++ [ ] Friends? Add friends and see their observations / sessions / ... Different lists for Murzim, Capella, ...
 
 ### Combination of old and new DeepskyLog
 

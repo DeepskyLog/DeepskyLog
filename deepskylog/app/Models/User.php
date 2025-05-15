@@ -822,16 +822,16 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Establishes a relationship between the User model and the EyepiecesOld model.
+     * Establishes a relationship between the User model and the Eyepiece model.
      *
-     * This method defines a one-to-many relationship between the User model and the EyepiecesOld model.
-     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the EyepiecesOld model.
+     * This method defines a one-to-many relationship between the User model and the Eyepiece model.
+     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the Eyepiece model.
      *
-     * @return HasMany The relationship between the User model and the EyepiecesOld model.
+     * @return HasMany The relationship between the User model and the Eyepiece model.
      */
     public function eyepieces(): HasMany
     {
-        return $this->hasMany(related: EyepiecesOld::class, foreignKey: 'observer', localKey: 'username');
+        return $this->hasMany(related: Eyepiece::class);
     }
 
     /**

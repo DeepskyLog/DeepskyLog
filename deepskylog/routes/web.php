@@ -92,3 +92,40 @@ Route::post('admin/instrument_make/store', 'App\Http\Controllers\InstrumentContr
 
 Route::post('admin/instrument_make/destroy', 'App\Http\Controllers\InstrumentController@destroyMake')
     ->name('instrumentmake.destroy')->can('add_sketch', User::class);
+
+// Eyepieces
+Route::resource(
+    'eyepiece',
+    'App\Http\Controllers\EyepieceController',
+    ['parameters' => ['eyepiece' => 'eyepiece']]
+)->middleware('verified')->except('show');
+
+Route::get('/eyepiece/{user}/{eyepiece}', 'App\Http\Controllers\EyepieceController@show')
+    ->name('eyepiece.show');
+
+Route::get('/eyepiece/{user}/{eyepiece}/edit', 'App\Http\Controllers\EyepieceController@edit')
+    ->name('eyepiece.edit')->middleware('auth');
+
+Route::get('/admin/eyepiece', 'App\Http\Controllers\EyepieceController@indexAdmin')
+    ->name('eyepiece.indexAdmin')->can('add_sketch', User::class);
+
+Route::get('admin/eyepiece_make/{make}/edit', 'App\Http\Controllers\EyepieceController@editMake')
+    ->name('eyepiecemake.edit')->can('add_sketch', User::class);
+
+Route::post('admin/eyepiece_make/store', 'App\Http\Controllers\EyepieceController@storeMake')
+    ->name('eyepiecemake.store')->can('add_sketch', User::class);
+
+Route::post('admin/eyepiece_make/destroy', 'App\Http\Controllers\EyepieceController@destroyMake')
+    ->name('eyepiecemake.destroy')->can('add_sketch', User::class);
+
+Route::get('/admin/eyepiece-types', 'App\Http\Controllers\EyepieceController@indexTypeAdmin')
+    ->name('eyepiece.index-typeAdmin')->can('add_sketch', User::class);
+
+Route::get('admin/eyepiece_type/{type}/edit', 'App\Http\Controllers\EyepieceController@editType')
+    ->name('eyepiecetype.edit')->can('add_sketch', User::class);
+
+Route::post('admin/eyepiece_type/store', 'App\Http\Controllers\EyepieceController@storeType')
+    ->name('eyepiecetype.store')->can('add_sketch', User::class);
+
+Route::post('admin/eyepiece_typee/destroy', 'App\Http\Controllers\EyepieceController@destroyType')
+    ->name('eyepiecetype.destroy')->can('add_sketch', User::class);

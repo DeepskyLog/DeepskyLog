@@ -62,7 +62,7 @@
                 />
 
                 <x-dropdown.item
-                    href="{{ config('app.old_url') }}/index.php?indexAction=view_eyepieces"
+                    href="/eyepiece"
                     label="{{ __('My eyepieces') }}"
                 />
 

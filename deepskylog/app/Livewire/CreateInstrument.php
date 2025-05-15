@@ -61,7 +61,9 @@ class CreateInstrument extends Component
             }
             $this->f_d = round(floatval($this->focal_length_mm) / floatval($this->aperture_mm), 1);
             $this->fixed_mag = $this->instrument->fixedMagnification;
-            $this->obstruction_perc = $this->instrument->obstruction_perc;
+            if ($this->instrument->obstruction_perc != 0) {
+                $this->obstruction_perc = $this->instrument->obstruction_perc;
+            }
             $this->flipped_image = boolval($this->instrument->flip_image);
             $this->flopped_image = boolval($this->instrument->flop_image);
             $this->mount_type_id = $this->instrument->mount_type_id;
@@ -141,8 +143,8 @@ class CreateInstrument extends Component
             'name' => 'required|min:3',
             'instrument_type_id' => 'required',
             'aperture_mm' => 'required|numeric|min:0',
-            'focal_length_mm' => 'nullable|numeric|min:0|nullable',
-            'f_d' => 'nullable|numeric|min:0|nullable',
+            'focal_length_mm' => 'numeric|min:0|nullable',
+            'f_d' => 'numeric|min:0|nullable',
             'fixed_mag' => 'nullable|numeric|min:1',
             'mount_type_id' => 'required',
             'obstruction_perc' => 'nullable|numeric|min:0',

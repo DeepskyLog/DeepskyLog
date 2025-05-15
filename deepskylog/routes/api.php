@@ -3,6 +3,8 @@
 use App\Http\Controllers\EyepieceController;
 use App\Http\Controllers\InstrumentController;
 use App\Models\Atlas;
+use App\Models\EyepieceMake;
+use App\Models\EyepieceType;
 use App\Models\Instrument;
 use App\Models\InstrumentMake;
 use App\Models\InstrumentType;
@@ -297,6 +299,62 @@ Route::get('mount_types.api', function (Request $request) {
 
     return $allTypes;
 })->name('mount_types.api');
+
+Route::get('eyepiece_makes.api', function (Request $request) {
+    $allMakes = [];
+    // Show the selected option
+    if ($request->exists('selected')) {
+        $allMakes[] = [
+            'id' => EyepieceMake::where('id', $request->selected)->first()->id,
+            'name' => EyepieceMake::where('id', $request->selected)->first()->name,
+        ];
+    }
+    $makes = EyepieceMake::get();
+    foreach ($makes as $make) {
+        if ($request->search == '' || Str::contains(Str::lower($make->name), Str::lower($request->search))) {
+            $allMakes[] = [
+                'id' => $make->id,
+                'name' => $make->name,
+            ];
+        }
+    }
+
+    return $allMakes;
+})->name('eyepiece_makes.api');
+
+Route::get('eyepiece_type.api', function (Request $request) {
+    $allTypes = [];
+    // Show the selected option
+    if ($request->exists('selected')) {
+        $allTypes[] = [
+            'id' => EyepieceType::where('id', $request->selected)->first()->id,
+            'name' => EyepieceType::where('id', $request->selected)->first()->name,
+        ];
+    }
+    if ($request->exists('make')) {
+        $allTypes[] = [
+            'id' => 0,
+            'name' => '',
+        ];
+        $types = EyepieceType::where('eyepiece_makes_id', $request->make)->get();
+        foreach ($types as $type) {
+            if ($request->search == '' || Str::contains(Str::lower($type->name), Str::lower($request->search))) {
+                $allTypes[] = [
+                    'id' => $type->id,
+                    'name' => $type->name,
+                ];
+            }
+        }
+    } else {
+        $types = EyepieceType::get();
+        $allTypes[] = [
+            'id' => 0,
+            'name' => '',
+        ];
+    }
+
+    return $allTypes;
+})->name('eyepiece_types.api');
 
 Route::get('/instrument/{userid}', [InstrumentController::class, 'show_from_user']);
 Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);

@@ -44,7 +44,7 @@
 
                 <x-dropdown.item
                     icon="plus-circle"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=add_eyepiece"
+                    href="{{ route('eyepiece.create') }}"
                     label="{{ __('Eyepieces') }}"
                 />
 
