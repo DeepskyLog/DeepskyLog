@@ -164,8 +164,6 @@ class CreateInstrument extends Component
         }
 
         $data['make_id'] = $make;
-        $data['user_id'] = Auth::id();
-        $data['observer'] = Auth::user()->username;
 
         if ($this->photo) {
             $data['picture'] = $photoPath;
@@ -176,8 +174,10 @@ class CreateInstrument extends Component
             session()->flash('message', __('Instrument updated successfully.'));
 
             // Return to /instrument/{user-slug}/{instrument-slug} page
-            return redirect('/instrument/'.Auth()->user()->slug.'/'.$this->instrument->slug);
+            return redirect('/instrument/'.$this->instrument->user->slug.'/'.$this->instrument->slug);
         } else {
+            $data['user_id'] = Auth::id();
+            $data['observer'] = Auth::user()->username;
             $instrument = Instrument::create($data);
 
             session()->flash('message', __('Instrument created successfully.'));

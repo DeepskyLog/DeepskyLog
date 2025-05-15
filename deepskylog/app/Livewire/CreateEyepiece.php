@@ -188,8 +188,6 @@ class CreateEyepiece extends Component
 
         $data['make_id'] = $make;
         $data['type_id'] = $type;
-        $data['user_id'] = Auth::id();
-        $data['observer'] = Auth::user()->username;
 
         if ($this->photo) {
             $data['picture'] = $photoPath;
@@ -200,8 +198,10 @@ class CreateEyepiece extends Component
             session()->flash('message', __('Eyepiece updated successfully.'));
 
             // Return to /eyepiece/{user-slug}/{eyepiece-slug} page
-            return redirect('/eyepiece/'.Auth()->user()->slug.'/'.$this->eyepiece->slug);
+            return redirect('/eyepiece/'.$this->eyepiece->user->slug.'/'.$this->eyepiece->slug);
         } else {
+            $data['user_id'] = Auth::id();
+            $data['observer'] = Auth::user()->username;
             $eyepiece = Eyepiece::create($data);
 
             session()->flash('message', __('Eyepiece created successfully.'));
