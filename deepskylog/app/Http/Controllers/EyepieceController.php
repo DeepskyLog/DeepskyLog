@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Eyepiece;
+use App\Models\EyepieceMake;
 use App\Models\EyepiecesOld;
+use App\Models\EyepieceType;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class EyepieceController extends Controller
 {
@@ -50,5 +53,57 @@ class EyepieceController extends Controller
             'eyepiece.create',
             ['eyepiece' => $eyepiece, 'update' => true]
         );
+    }
+
+    public function indexAdmin()
+    {
+        return view('eyepiece-admin.index');
+    }
+
+    public function editMake(EyepieceMake $make)
+    {
+        return view('eyepiece-admin.edit-make', ['make' => $make]);
+    }
+
+    public function storeMake(Request $request)
+    {
+        EyepieceMake::where('id', $request->id)->update(['name' => $request->eyepiece_make]);
+
+        return redirect()->route('eyepiece.indexAdmin');
+    }
+
+    public function destroyMake(Request $request)
+    {
+        Eyepiece::where('make_id', $request->id)->update(['type_id' => 1]);
+        Eyepiece::where('make_id', $request->id)->update(['make_id' => $request->new_make]);
+        EyepieceType::where('eyepiece_makes_id', $request->id)->delete();
+        EyepieceMake::where('id', $request->id)->delete();
+
+        return redirect()->route('eyepiece.indexAdmin');
+    }
+
+    public function indexTypeAdmin()
+    {
+        return view('eyepiece-admin.index-type');
+    }
+
+    public function editType(EyepieceType $type)
+    {
+        return view('eyepiece-admin.edit-type', ['type' => $type]);
+    }
+
+    public function storeType(Request $request)
+    {
+        EyepieceType::where('id', $request->id)->update(['name' => $request->eyepiece_type]);
+
+        return redirect()->route('eyepiece.index-typeAdmin');
+    }
+
+    public function destroyType(Request $request)
+    {
+        Eyepiece::where('type_id', $request->id)->update(['type_id' => 1]);
+        EyepieceType::where('id', $request->id)->delete();
+
+        return redirect()->route('eyepiece.index-typeAdmin');
     }
 }

@@ -106,14 +106,26 @@ Route::get('/eyepiece/{user}/{eyepiece}', 'App\Http\Controllers\EyepieceControll
 Route::get('/eyepiece/{user}/{eyepiece}/edit', 'App\Http\Controllers\EyepieceController@edit')
     ->name('eyepiece.edit')->middleware('auth');
 
-// Route::get('/admin/instrument', 'App\Http\Controllers\InstrumentController@indexAdmin')
-//    ->name('instrument.indexAdmin')->can('add_sketch', User::class);
-//
-// Route::get('admin/instrument_make/{make}/edit', 'App\Http\Controllers\InstrumentController@editMake')
-//    ->name('instrument.editMake')->can('add_sketch', User::class);
-//
-// Route::post('admin/instrument_make/store', 'App\Http\Controllers\InstrumentController@storeMake')
-//    ->name('instrumentmake.store')->can('add_sketch', User::class);
-//
-// Route::post('admin/instrument_make/destroy', 'App\Http\Controllers\InstrumentController@destroyMake')
-//    ->name('instrumentmake.destroy')->can('add_sketch', User::class);
+Route::get('/admin/eyepiece', 'App\Http\Controllers\EyepieceController@indexAdmin')
+    ->name('eyepiece.indexAdmin')->can('add_sketch', User::class);
+
+Route::get('admin/eyepiece_make/{make}/edit', 'App\Http\Controllers\EyepieceController@editMake')
+    ->name('eyepiecemake.edit')->can('add_sketch', User::class);
+
+Route::post('admin/eyepiece_make/store', 'App\Http\Controllers\EyepieceController@storeMake')
+    ->name('eyepiecemake.store')->can('add_sketch', User::class);
+
+Route::post('admin/eyepiece_make/destroy', 'App\Http\Controllers\EyepieceController@destroyMake')
+    ->name('eyepiecemake.destroy')->can('add_sketch', User::class);
+
+Route::get('/admin/eyepiece-types', 'App\Http\Controllers\EyepieceController@indexTypeAdmin')
+    ->name('eyepiece.index-typeAdmin')->can('add_sketch', User::class);
+
+Route::get('admin/eyepiece_type/{type}/edit', 'App\Http\Controllers\EyepieceController@editType')
+    ->name('eyepiecetype.edit')->can('add_sketch', User::class);
+
+Route::post('admin/eyepiece_type/store', 'App\Http\Controllers\EyepieceController@storeType')
+    ->name('eyepiecetype.store')->can('add_sketch', User::class);
+
+Route::post('admin/eyepiece_typee/destroy', 'App\Http\Controllers\EyepieceController@destroyType')
+    ->name('eyepiecetype.destroy')->can('add_sketch', User::class);

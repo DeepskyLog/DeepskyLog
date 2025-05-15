@@ -11,7 +11,7 @@
                     <x-card>
                         <form
                             role="form"
-                            action="{{ route("instrumentmake.store") }}"
+                            action="{{ route("eyepiecemake.store") }}"
                             method="POST"
                         >
                             @csrf
@@ -21,12 +21,12 @@
                                        value="{{ $make->id }}"
                                 />
                                 <x-input
-                                    name="instrument_make"
+                                    name="eyepiece_make"
                                     label="{!! __('Make') !!}"
                                     type="text"
                                     class="mt-1 block w-full"
                                     value="{{ $make->name }}"
-                                    id="instrument_make"
+                                    id="eyepiece_make"
                                 />
                                 <x-button class="mt-5"
                                           type="submit"
@@ -41,7 +41,7 @@
                         <br/>
                         <form
                             role="form"
-                            action="{{ route("instrumentmake.destroy") }}"
+                            action="{{ route("eyepiecemake.destroy") }}"
                             method="POST"
                         >
                             @csrf
@@ -51,8 +51,8 @@
                                        value="{{ $make->id }}"
                                 />
                                 <x-select class="mt-2"
-                                          label="{{ __('Move all instruments with the make to an existing make.') }}"
-                                          :async-data="route('instrument_makes.api')"
+                                          label="{{ __('Move all eyepieces with the make to an existing make.') }}"
+                                          :async-data="route('eyepiece_makes.api')"
                                           option-label="name"
                                           option-value="id"
                                           id="new_make"
@@ -63,7 +63,7 @@
                                           type="submit"
                                           secondary
                                           name="delete"
-                                          label="{{ __('Delete make and move instruments to the selected make') }}"
+                                          label="{{ __('Delete make and move eyepieces to the selected make') }}"
                                 />
 
                             </div>

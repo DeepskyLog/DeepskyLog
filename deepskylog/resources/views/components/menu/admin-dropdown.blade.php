@@ -41,8 +41,11 @@
                         <x-dropdown.item href="/admin/instrument"
                                          label="{{ __('Instruments') }}"/>
 
-                        <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=overview_eyepieces"
-                                         label="{{ __('Eyepieces') }}"/>
+                        <x-dropdown.item href="/admin/eyepiece"
+                                         label="{{ __('Eyepieces Makes') }}"/>
+
+                        <x-dropdown.item href="/admin/eyepiece-types"
+                                         label="{{ __('Eyepieces Types') }}"/>
 
                         <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=overview_filters"
                                          label="{{ __('Filters') }}"/>

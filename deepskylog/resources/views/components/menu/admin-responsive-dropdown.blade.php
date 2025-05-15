@@ -68,8 +68,13 @@
                         />
 
                         <x-dropdown.item
-                            href="{{ config('app.old_url') }}/index.php?indexAction=overview_eyepieces"
-                            label="{{ __('Eyepieces') }}"
+                            href="/admin/eyepiece"
+                            label="{{ __('Eyepiece Makes') }}"
+                        />
+
+                        <x-dropdown.item
+                            href="/admin/eyepiece-type"
+                            label="{{ __('Eyepiece Types') }}"
                         />
 
                         <x-dropdown.item
