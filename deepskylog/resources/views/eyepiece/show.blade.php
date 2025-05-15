@@ -158,34 +158,36 @@
 
                         <br/>
                         <br/>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th class="text-left">{{ __("Instrument") }}</th>
-                                <th class="text-left">{{ __("Magnification") }}</th>
-                                <th class="text-left">{{ __("Field of View") }}</th>
-                                <th class="text-left">{{ __("Exit pupil") }}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach(Instrument::where('user_id', Auth::user()->id)->where('active', 1)->where('focal_length_mm', '>', 1)->get()->sortBy('aperture_mm', SORT_NATURAL, true) as $instrument)
+                        @if ($eyepiece->user_id == Auth::user()->id)
+                            <table>
+                                <thead>
                                 <tr>
-                                    <td>
-                                        <a href="/instrument/{{ Auth::user()->slug }}/{{ $instrument->slug }}">{{ $instrument->name }}</a>
-                                    </td>
-                                    <td>
-                                        {{ $instrument->magnification($eyepiece) }}
-                                    </td>
-                                    <td>
-                                        {{ $instrument->field_of_view($eyepiece) }}
-                                    </td>
-                                    <td>
-                                        {{ $instrument->exit_pupil($eyepiece) }}
-                                    </td>
+                                    <th class="text-left">{{ __("Instrument") }}</th>
+                                    <th class="text-left">{{ __("Magnification") }}</th>
+                                    <th class="text-left">{{ __("Field of View") }}</th>
+                                    <th class="text-left">{{ __("Exit pupil") }}</th>
                                 </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                @foreach(Instrument::where('user_id', Auth::user()->id)->where('active', 1)->where('focal_length_mm', '>', 1)->get()->sortBy('aperture_mm', SORT_NATURAL, true) as $instrument)
+                                    <tr>
+                                        <td>
+                                            <a href="/instrument/{{ Auth::user()->slug }}/{{ $instrument->slug }}">{{ $instrument->name }}</a>
+                                        </td>
+                                        <td>
+                                            {{ $instrument->magnification($eyepiece) }}
+                                        </td>
+                                        <td>
+                                            {{ $instrument->field_of_view($eyepiece) }}
+                                        </td>
+                                        <td>
+                                            {{ $instrument->exit_pupil($eyepiece) }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        @endif
                     @endauth
 
                 </div>

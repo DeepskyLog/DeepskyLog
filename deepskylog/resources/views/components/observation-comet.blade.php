@@ -82,7 +82,7 @@
                 gray
                 icon="eye"
                 class="mb-2 mt-2"
-                href='{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $observation->id }}'
+                href='{{ config("app.old_url") }}/index.php?indexAction=comets_detail_observation&observation={{ $observation->id }}'
             >
                 {{ __("More details") }}
             </x-button>
