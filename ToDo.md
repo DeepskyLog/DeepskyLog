@@ -44,7 +44,7 @@
     + [X] Check if the create eyepiece and the list eyepieces page can only be seen if logged in.
     + [X] Add page for administrator (only for the eyepiece_makes and eyepiece_types table)
     + [X] Translate the new strings
-    + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
+    + [X] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog
     + [ ] Change pifinder code
     + [ ] Add Field stop: tfov = eyepiece.field_stop / telescope.focal_length_mm * 57.2958
