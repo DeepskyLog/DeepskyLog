@@ -43,7 +43,7 @@
     + [X] Add page to add / edit eyepieces.
     + [X] Check if the create eyepiece and the list eyepieces page can only be seen if logged in.
     + [X] Add page for administrator (only for the eyepiece_makes and eyepiece_types table)
-    + [ ] Translate the new strings
+    + [X] Translate the new strings
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog
     + [ ] Change pifinder code
