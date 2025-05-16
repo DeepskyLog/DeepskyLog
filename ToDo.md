@@ -46,23 +46,9 @@
     + [X] Translate the new strings
     + [X] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [X] Release new version of DeepskyLog
-    + [ ] Release new version of DeepskyLog.old
+    + [X] Release new version of DeepskyLog.old
     + [ ] Release new version of pyDeepskyLog
     + [ ] Change pifinder code
-    + [ ] Add Field stop: tfov = eyepiece.field_stop / telescope.focal_length_mm * 57.2958
-        + 31mm Nagler: 44.4mm
-        + 21mm Ethos: 36.2mm
-        + 20mm Nagler: 27.4mm
-        + 19mm Panoptic: 22.5mm
-        + 13mm Ethos: 22.7mm
-        + 13mm Nagler: 18.6mm
-        + 8mm Ethos: 14.0mm
-        + 8mm Radian: 8.3mm
-        + 6mm Ethos: 10.5mm
-        + 5mm Nagler: 7.2mm
-        + Baader 3.5mm Hyperion: 3.9mm
-        + Baader 36mm Aspheric: 45.2mm
-        + 25mm Coronado Cemax (52 degrees): 22.7mm
 + [ ] Create lenses tables in the new version of DeepskyLog.
     + [ ] Write script to populate the tables from the old database.
     + [ ] Update user model to use the lenses from the new database.

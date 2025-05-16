@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Eyepiece;
 use App\Models\EyepieceMake;
-use App\Models\EyepiecesOld;
 use App\Models\EyepieceType;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,7 +22,7 @@ class EyepieceController extends Controller
 
     public function show_from_user(string $user_id)
     {
-        return EyepiecesOld::where('observer', $user_id)->get();
+        return Eyepiece::where('observer', $user_id)->get();
     }
 
     public function show(string $user_slug, string $eyepiece_slug)
