@@ -34,7 +34,7 @@ class CreateInstrument extends Component
 
     public $f_d;
 
-    public $fixed_mag;
+    public $fixedMagnification;
 
     public $obstruction_perc;
 
@@ -60,7 +60,7 @@ class CreateInstrument extends Component
                 $this->focal_length_mm = $this->instrument->focal_length_mm;
             }
             $this->f_d = round(floatval($this->focal_length_mm) / floatval($this->aperture_mm), 1);
-            $this->fixed_mag = $this->instrument->fixedMagnification;
+            $this->fixedMagnification = $this->instrument->fixedMagnification;
             if ($this->instrument->obstruction_perc != 0) {
                 $this->obstruction_perc = $this->instrument->obstruction_perc;
             }
@@ -145,7 +145,7 @@ class CreateInstrument extends Component
             'aperture_mm' => 'required|numeric|min:0',
             'focal_length_mm' => 'numeric|min:0|nullable',
             'f_d' => 'numeric|min:0|nullable',
-            'fixed_mag' => 'nullable|numeric|min:1',
+            'fixedMagnification' => 'nullable|numeric|min:1',
             'mount_type_id' => 'required',
             'obstruction_perc' => 'nullable|numeric|min:0',
             'photo' => 'nullable|image',

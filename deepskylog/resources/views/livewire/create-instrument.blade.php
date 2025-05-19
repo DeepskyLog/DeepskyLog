@@ -116,12 +116,12 @@
 
                             {{-- Add the fixed magnification of the instrument--}}
                             <x-input
-                                name="fixed_mag"
+                                name="fixedMagnification"
                                 label="{!! __('Fixed magnification of the instrument (for examples for finderscopes / binoculars)') !!}"
                                 type="number"
-                                wire:model.live="fixed_mag"
+                                wire:model.live="fixedMagnification"
                                 class="mt-1 block w-full"
-                                value="{{ old('fixed_mag') }}"
+                                value="{{ old('fixedMagnification') }}"
                             />
 
                             {{-- Add the obstruction of the instrument--}}
