@@ -4,13 +4,6 @@
 
 ### Next steps
 
-+ [ ] Update to laravel 12
-    + [ ] Update resources/views/livewire/settings/linked-account.blade.php and update-avatar.blade.php
-    + [ ] Test logging in using Google / ... and update the code if necessary
-    + [X] Update marineusde/larapex-charts to the newest version (with laravel 12 support)
-    + [ ] Add laravel-12 compatible version of PeterColes/multilingual-language-list
-        + [ ] Uncomment everything in language_selection.blade.php
-+ [X] Update Tailwindcss to version 4.0
 + [X] Create instruments tables in the new version of DeepskyLog.
     + [X] Add Make and flip options to the instruments (see PiFinder model)
     + [X] Write script to populate the tables from the old database.
@@ -60,6 +53,7 @@
 + [ ] Targets
 + [ ] Observing lists
 + [ ] Friends? Add friends and see their observations / sessions / ... Different lists for Murzim, Capella, ...
++ [ ] Like observations / sketches / sessions
 
 ### Combination of old and new DeepskyLog
 
