@@ -64,7 +64,7 @@ final class EyepieceTable extends PowerGridComponent
             ->add('type_str', function ($eyepiece) {
                 return $eyepiece->eyepiece_type->name;
             })->add('name_link', function ($eyepiece) {
-                return '<a href="/eyepiece/'.Auth()->user()->slug.'/'.$eyepiece->slug.'">'.$eyepiece->name.'</a>';
+                return '<a class="font-bold" href="/eyepiece/'.Auth()->user()->slug.'/'.$eyepiece->slug.'">'.$eyepiece->name.'</a>';
             })
             ->add('active')
             ->add('active_label', fn ($instrument) => $instrument->active ? 'Yes' : 'No')

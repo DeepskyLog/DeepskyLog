@@ -10,7 +10,7 @@
     + [X] Update marineusde/larapex-charts to the newest version (with laravel 12 support)
     + [ ] Add laravel-12 compatible version of PeterColes/multilingual-language-list
         + [ ] Uncomment everything in language_selection.blade.php
-+ [ ] Update Tailwindcss to version 4.0
++ [X] Update Tailwindcss to version 4.0
 + [X] Create instruments tables in the new version of DeepskyLog.
     + [X] Add Make and flip options to the instruments (see PiFinder model)
     + [X] Write script to populate the tables from the old database.
