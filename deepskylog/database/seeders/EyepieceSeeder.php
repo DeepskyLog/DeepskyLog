@@ -44,6 +44,8 @@ class EyepieceSeeder extends Seeder
                         'user_id' => $observer[0],
                         'active' => $eyepiece->eyepieceactive,
                         'observer' => $eyepiece->observer,
+                        'created_at' => $date,
+                        'updated_at' => $date,
                     ]
                 );
             }

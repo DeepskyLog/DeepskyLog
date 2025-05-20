@@ -22,7 +22,7 @@
     + [X] Change pifinder code
 + [X] Create eyepieces tables in the new version of DeepskyLog.
 + [ ] Create lenses tables in the new version of DeepskyLog.
-    + [ ] Write script to populate the tables from the old database.
+    + [X] Write script to populate the tables from the old database.
     + [ ] Use database from the new version in the old version of DeepskyLog.
     + [ ] Make a table for the lenses makes and add some standard makes (like Tele Vue, ...)
     + [ ] Update user model to use the lenses from the new database.
