@@ -26,10 +26,10 @@
     + [ ] Use database from the new version in the old version of DeepskyLog.
     + [X] Make a table for the lenses makes and add some standard makes (like Tele Vue, ...)
     + [X] Update user model to use the lenses from the new database.
-    + [ ] Add page to see the details of an lenses
-    + [ ] Add page to view all lenses of an observer
+    + [X] Add page to see the details of an lenses
+    + [X] Add page to view all lenses of an observer
     + [ ] Add page to add / edit lenses.
-    + [ ] Move to a better url: wim-de-meester/lens/coronado-solarmax-40mm
+    + [X] Move to a better url: wim-de-meester/lens/coronado-solarmax-40mm
     + [ ] Check if the create lens and the list lenses page can only be seen if logged in.
     + [ ] Add page for administrator (only for the lens_makes table)
     + [ ] Translate the new strings
