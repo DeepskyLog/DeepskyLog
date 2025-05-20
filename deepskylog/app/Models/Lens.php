@@ -14,6 +14,8 @@ class Lens extends Model
         'user_id', 'name', 'factor', 'make_id', 'active', 'observer', 'picture',
     ];
 
+    protected $with = ['lens_make'];
+
     public function sluggable(): array
     {
         return [
@@ -34,7 +36,7 @@ class Lens extends Model
         return $this->belongsTo('App\Models\User');
     }
 
-    public function instrument_make(): BelongsTo
+    public function lens_make(): BelongsTo
     {
         return $this->belongsTo(LensMake::class, 'make_id');
     }
