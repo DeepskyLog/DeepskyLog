@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
                 //                SketchOfTheMonthSeeder::class,
                 //                addAchievementsSeeder::class,
                 //                InstrumentSeeder::class,
-                EyepieceSeeder::class,
+                //                EyepieceSeeder::class,
+                LensSeeder::class,
             ]
         );
     }
