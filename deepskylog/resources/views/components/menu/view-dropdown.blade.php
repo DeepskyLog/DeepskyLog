@@ -2,7 +2,7 @@
     <!-- View Dropdown -->
 <div class="hidden lg:ml-6 lg:flex lg:items-center">
     <div class="relative mr-3 text-sm">
-        <x-dropdown width="xl" height="max-h-[20rem]" position="bottom-start">
+        <x-dropdown width="xl" height="max-h-80" position="bottom-start">
             <x-slot name="trigger">
                 {{ __('View') }}
             </x-slot>

@@ -10,7 +10,7 @@
     + [X] Update marineusde/larapex-charts to the newest version (with laravel 12 support)
     + [ ] Add laravel-12 compatible version of PeterColes/multilingual-language-list
         + [ ] Uncomment everything in language_selection.blade.php
-+ [ ] Update Tailwindcss to version 4.0
++ [X] Update Tailwindcss to version 4.0
 + [X] Create instruments tables in the new version of DeepskyLog.
     + [X] Add Make and flip options to the instruments (see PiFinder model)
     + [X] Write script to populate the tables from the old database.
@@ -27,35 +27,22 @@
     + [X] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [X] Release new version of pyDeepskyLog
     + [X] Change pifinder code
-+ [ ] Create eyepieces tables in the new version of DeepskyLog.
-    + [X] Create eyepiece makes table
-    + [X] Create eyepiece type table
-    + [X] Create eyepiece table
-    + [X] Write script to populate the eyepiece table from the old database.
-    + [X] Update script to add the number of observations done by each eyepiece.
-    + [X] Update user model to use the eyepieces from the new database.
-    + [X] Use database from the new version in the old version of DeepskyLog.
-    + [X] Add page to view all eyepieces of an observer
-    + [X] Add page to see the details of an eyepiece
-    + [X] Add table with all instruments and calculate the magnification, field of view, exit pupil, ...
-    + [X] Do the same in the detail page for the instrument.
-    + [X] Adapt instrument edit -> fixed magnification is set to 0, should not be filled.
-    + [X] Add page to add / edit eyepieces.
-    + [X] Check if the create eyepiece and the list eyepieces page can only be seen if logged in.
-    + [X] Add page for administrator (only for the eyepiece_makes and eyepiece_types table)
-    + [X] Translate the new strings
-    + [X] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
-    + [X] Release new version of DeepskyLog
-    + [X] Release new version of DeepskyLog.old
-    + [ ] Release new version of pyDeepskyLog
-    + [ ] Change pifinder code
++ [X] Create eyepieces tables in the new version of DeepskyLog.
 + [ ] Create lenses tables in the new version of DeepskyLog.
     + [ ] Write script to populate the tables from the old database.
-    + [ ] Update user model to use the lenses from the new database.
     + [ ] Use database from the new version in the old version of DeepskyLog.
-    + [ ] Create API to get the lenses from a given user.
-    + [ ] Add all pages for adding, viewing, editing, deleting lenses, filters, instrument sets. Also update user
-      overview page. TO DO AFTER adding the contrast reserve to PiFinder
+    + [ ] Make a table for the lenses makes and add some standard makes (like Tele Vue, ...)
+    + [ ] Update user model to use the lenses from the new database.
+    + [ ] Add page to see the details of an lenses
+    + [ ] Add page to view all lenses of an observer
+    + [ ] Add page to add / edit lenses.
+    + [ ] Move to a better url: wim-de-meester/lens/coronado-solarmax-40mm
+    + [ ] Check if the create lens and the list lenses page can only be seen if logged in.
+    + [ ] Add page for administrator (only for the lens_makes table)
+    + [ ] Translate the new strings
+    + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
+    + [ ] Release new version of pyDeepskyLog
+    + [ ] Change pifinder code
     + [ ] Adapt instrument and eyepiece detail page to also use the lenses (dropdown to select lens?).
 + [ ] Create filters tables in the new version of DeepskyLog
 + [ ] Create instrument sets tables in the new version of DeepskyLog

@@ -1,15 +1,21 @@
-@import '../../node_modules/flatpickr/dist/flatpickr.min.css';
-@import '@fortawesome/fontawesome-free/css/fontawesome.css';
-@import '@fortawesome/fontawesome-free/css/regular.css';
-@import '@fortawesome/fontawesome-free/css/solid.css';
-@import '@fortawesome/fontawesome-free/css/brands.css';
-@import './share-buttons.css';
+@import '../../node_modules/flatpickr/dist/flatpickr.min.css' layer(base);
+@import '@fortawesome/fontawesome-free/css/fontawesome.css' layer(base);
+@import '@fortawesome/fontawesome-free/css/regular.css' layer(base);
+@import '@fortawesome/fontawesome-free/css/solid.css' layer(base);
+@import '@fortawesome/fontawesome-free/css/brands.css' layer(base);
+@import './share-buttons.css' layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@import '../../vendor/wireui/wireui/ts/global.css';
 
-a {
-    @apply font-bold;
-}
+@source '../../vendor/wireui/wireui';
 
+@import '../../vendor/power-components/livewire-powergrid/resources/css/tailwind4.css';
+
+/** enable dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source '../../app/Livewire/*Table.php';
+@source '../../app/Livewire/**/*Table.php';
+@source '../../vendor/power-components/livewire-powergrid/src/Themes/Tailwind.php';
+@source '../../vendor/power-components/livewire-powergrid/resources/views/**/*.php';

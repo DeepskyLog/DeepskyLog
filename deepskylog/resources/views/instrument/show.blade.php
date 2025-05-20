@@ -203,7 +203,7 @@
                         <br/>
                         <br/>
                         @if ($instrument->user_id == Auth::user()->id)
-                            @if ($instrument->focal_length_mm > 0)
+                            @if ($instrument->focal_length_mm > 0 && $instrument->fixedMagnification == 0)
                                 <table>
                                     <thead>
                                     <tr>

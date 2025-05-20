@@ -117,7 +117,7 @@
                             {{-- Add the fixed magnification of the instrument--}}
                             <x-input
                                 name="fixedMagnification"
-                                label="{!! __('Fixed magnification of the instrument (for examples for finderscopes / binoculars)') !!}"
+                                label="{!! __('Fixed magnification of the instrument (for example for finderscopes / binoculars)') !!}"
                                 type="number"
                                 wire:model.live="fixedMagnification"
                                 class="mt-1 block w-full"
