@@ -42,7 +42,7 @@
                 <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=view_filters"
                                  label="{{ __('My filters') }}"/>
 
-                <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=view_lenses"
+                <x-dropdown.item href="/lens"
                                  label="{{ __('My lenses') }}"/>
 
                 <x-dropdown.item separator

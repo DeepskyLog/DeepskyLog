@@ -10,6 +10,10 @@ class Lens extends Model
 {
     use Sluggable;
 
+    protected $fillable = [
+        'user_id', 'name', 'factor', 'make_id', 'active', 'observer', 'picture',
+    ];
+
     public function sluggable(): array
     {
         return [

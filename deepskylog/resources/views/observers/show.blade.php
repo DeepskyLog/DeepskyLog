@@ -153,7 +153,7 @@
                                 <td>{{ __("Number of lenses") }}</td>
                                 <td>
                                     @if (Auth::user() && $user->id === Auth::user()->id)
-                                        <a href="{{ config('app.old_url') }}/index.php?indexAction=view_lenses">
+                                        <a href="/lens">
                                             @endif
                                             {{ $user->lenses->count() }}
                                             @if (Auth::user() && $user->id === Auth::user()->id)

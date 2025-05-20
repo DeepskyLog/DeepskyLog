@@ -64,7 +64,7 @@
 
                         <x-dropdown.item
                             href="/admin/instrument"
-                            label="{{ __('Instruments') }}"
+                            label="{{ __('Instrument Makes') }}"
                         />
 
                         <x-dropdown.item
@@ -83,8 +83,8 @@
                         />
 
                         <x-dropdown.item
-                            href="{{ config('app.old_url') }}/index.php?indexAction=overview_lenses"
-                            label="{{ __('Lenses') }}"
+                            href="/admin/lens"
+                            label="{{ __('Lens Makes') }}"
                         />
                     @endif
                 </div>

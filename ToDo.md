@@ -24,8 +24,8 @@
 + [ ] Create lenses tables in the new version of DeepskyLog.
     + [X] Write script to populate the tables from the old database.
     + [ ] Use database from the new version in the old version of DeepskyLog.
-    + [ ] Make a table for the lenses makes and add some standard makes (like Tele Vue, ...)
-    + [ ] Update user model to use the lenses from the new database.
+    + [X] Make a table for the lenses makes and add some standard makes (like Tele Vue, ...)
+    + [X] Update user model to use the lenses from the new database.
     + [ ] Add page to see the details of an lenses
     + [ ] Add page to view all lenses of an observer
     + [ ] Add page to add / edit lenses.
@@ -38,10 +38,10 @@
     + [ ] Change pifinder code
     + [ ] Adapt instrument and eyepiece detail page to also use the lenses (dropdown to select lens?).
 + [ ] Create filters tables in the new version of DeepskyLog
++ [ ] Create locations tables in the new version of DeepskyLog
 + [ ] Create instrument sets tables in the new version of DeepskyLog
     + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into
       account the Barlow and other lenses)
-+ [ ] Create locations tables in the new version of DeepskyLog
 
 ### Distant future
 
