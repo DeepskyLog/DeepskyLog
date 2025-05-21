@@ -28,7 +28,7 @@
     + [X] Update user model to use the lenses from the new database.
     + [X] Add page to see the details of an lenses
     + [X] Add page to view all lenses of an observer
-    + [ ] Add page to add / edit lenses.
+    + [X] Add page to add / edit lenses.
     + [X] Move to a better url: wim-de-meester/lens/coronado-solarmax-40mm
     + [ ] Check if the create lens and the list lenses page can only be seen if logged in.
     + [ ] Add page for administrator (only for the lens_makes table)

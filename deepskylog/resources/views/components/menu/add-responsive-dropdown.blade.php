@@ -56,7 +56,7 @@
 
                 <x-dropdown.item
                     icon="plus-circle"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=add_lens"
+                    href="/lens/create"
                     label="{{ __('Lenses') }}"
                 />
 
