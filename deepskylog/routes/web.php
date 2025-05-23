@@ -127,7 +127,7 @@ Route::get('admin/eyepiece_type/{type}/edit', 'App\Http\Controllers\EyepieceCont
 Route::post('admin/eyepiece_type/store', 'App\Http\Controllers\EyepieceController@storeType')
     ->name('eyepiecetype.store')->can('add_sketch', User::class);
 
-Route::post('admin/eyepiece_typee/destroy', 'App\Http\Controllers\EyepieceController@destroyType')
+Route::post('admin/eyepiece_type/destroy', 'App\Http\Controllers\EyepieceController@destroyType')
     ->name('eyepiecetype.destroy')->can('add_sketch', User::class);
 
 // Lenses

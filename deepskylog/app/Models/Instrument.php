@@ -89,6 +89,11 @@ class Instrument extends Model
             $firstObservation = min($firstDeepskyObservation, $firstCometObservation);
         }
 
+        return $this->get_date_and_id($firstObservation, $language, $firstDeepskyObservation);
+    }
+
+    public function get_date_and_id(mixed $firstObservation, string $language, mixed $firstDeepskyObservation): array
+    {
         $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
 
         if ($firstObservation == $firstDeepskyObservation) {
@@ -128,14 +133,7 @@ class Instrument extends Model
             return [null, null];
         }
 
-        $date = Carbon::createFromFormat('Ymd', $lastObservation)->locale($language)->isoFormat('LL');
-        if ($lastObservation == $lastDeepskyObservation) {
-            $id = ObservationsOld::where('instrumentid', $this->id)->where('date', $lastObservation)->first()['id'];
-        } else {
-            $id = -CometObservationsOld::where('instrumentid', $this->id)->where('date', $lastObservation)->first()['id'];
-        }
-
-        return [$date, $id];
+        return $this->get_date_and_id($lastObservation, $language, $lastDeepskyObservation);
     }
 
     public function get_used_eyepieces_as_string(): string
@@ -205,8 +203,9 @@ class Instrument extends Model
             if ($lens == 0) {
                 continue;
             }
-            $to_return .= "<a href='".config('app.old_url').'index.php?indexAction=detail_lens&lens='.$lens."'>".
-                LensesOld::where('id', $lens)->pluck('name')[0].'</a>'.', ';
+            $lns = Lens::where('id', $lens)->first();
+            $to_return .= "<a href='/lens/".$lns->user->slug.'/'.$lns->slug."'>".
+                $lns->name.'</a>'.', ';
         }
 
         // Remove the trailing comma and space
