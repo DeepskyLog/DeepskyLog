@@ -32,7 +32,7 @@
     + [X] Move to a better url: wim-de-meester/lens/lens-name
     + [X] Check if the create lens and the list lenses page can only be seen if logged in.
     + [X] Add page for administrator (only for the lens_makes table)
-    + [ ] Adapt instrument and eyepiece detail page to also use the lenses (dropdown to select lens?).
+    + [X] Adapt instrument and eyepiece detail page to also use the lenses.
     + [ ] Translate the new strings
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog

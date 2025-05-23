@@ -241,15 +241,23 @@ class Instrument extends Model
         return ObservationsOld::where('instrumentid', $this->id)->groupby('locationid')->distinct()->pluck('locationid');
     }
 
-    public function magnification(Eyepiece $eyepiece): string
+    public function magnification(Eyepiece $eyepiece, ?Lens $lens = null): string
     {
+        if ($lens) {
+            return round($this->focal_length_mm * $lens->factor / ($eyepiece->focal_length_mm)).'x';
+        }
+
         return round($this->focal_length_mm / $eyepiece->focal_length_mm).'x';
     }
 
-    public function field_of_view(Eyepiece $eyepiece): string
+    public function field_of_view(Eyepiece $eyepiece, ?Lens $lens = null): string
     {
+        $focal_length = $this->focal_length_mm;
+        if ($lens) {
+            $focal_length = $this->focal_length_mm * $lens->factor;
+        }
         if ($eyepiece->field_stop_mm != 0) {
-            $tfov = $eyepiece->field_stop_mm / $this->focal_length_mm * 57.2958;
+            $tfov = $eyepiece->field_stop_mm / $focal_length * 57.2958;
             // Convert $tfov to degrees and minutes and return as a string
             $degrees = floor($tfov);
             $minutes = round(($tfov - $degrees) * 60);
@@ -259,7 +267,7 @@ class Instrument extends Model
             $tfov = $degrees.'° '.$minutes."'";
         } elseif ($eyepiece->apparentFOV > 10) {
             // Calculate the true field of view
-            $tfov = $eyepiece->apparentFOV / ($this->focal_length_mm / $eyepiece->focal_length_mm);
+            $tfov = $eyepiece->apparentFOV / ($focal_length / $eyepiece->focal_length_mm);
             // Convert $tfov to degrees and minutes and return as a string
             $degrees = floor($tfov);
             $minutes = round(($tfov - $degrees) * 60);
@@ -275,8 +283,12 @@ class Instrument extends Model
         return $tfov;
     }
 
-    public function exit_pupil(Eyepiece $eyepiece): string
+    public function exit_pupil(Eyepiece $eyepiece, ?Lens $lens = null): string
     {
+        if ($lens) {
+            return round($this->aperture_mm / ($this->focal_length_mm * $lens->factor / $eyepiece->focal_length_mm), 1).'mm';
+        }
+
         return round($this->aperture_mm / ($this->focal_length_mm / $eyepiece->focal_length_mm), 1).'mm';
     }
 }
