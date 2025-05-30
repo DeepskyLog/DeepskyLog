@@ -33,7 +33,7 @@
     + [X] Check if the create lens and the list lenses page can only be seen if logged in.
     + [X] Add page for administrator (only for the lens_makes table)
     + [X] Adapt instrument and eyepiece detail page to also use the lenses.
-    + [ ] Translate the new strings
+    + [X] Translate the new strings
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog
     + [ ] Change pifinder code
@@ -53,7 +53,7 @@
 + [ ] Targets
 + [ ] Observing lists
 + [ ] Friends? Add friends and see their observations / sessions / ... Different lists for Murzim, Capella, ...
-+ [ ] Like observations / sketches / sessions
++ [ ] Like observations / sketches / sessions / user profiles
 
 ### Combination of old and new DeepskyLog
 
@@ -61,7 +61,6 @@
 + [ ] Use the new database tables in the old version of DeepskyLog
 + [ ] On the server, set up the apache / nginx configuration to use the old version of DeepskyLog
 + [ ] On the server, make sure to run the queue workers: https://laravel.com/docs/11.x/queues#running-the-queue-worker
-+ [ ] Release new version of DeepskyLog with new registration and login pages.
 
 ### Done
 
@@ -87,7 +86,7 @@
   latest observations
 + [X] Add object type and constellation to the list of 10 newest observations
 + [X] Automatically translate the descriptions.
-+ [X] Add instruments to the new version of DeepskyLog.
++ [X] Add instruments, eyepieces and filters to the new version of DeepskyLog.
     + [X] Use /instrument/user-slug/instrument-slug as url
 
 ## Eloquent
