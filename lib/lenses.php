@@ -6,40 +6,65 @@ if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 class Lenses {
 	public function addLens($name, $factor) // adds a new lens to the database. The name and the factor should be given as parameters.
-{
-		global $objDatabase;
-		$objDatabase->execSQL ( "INSERT INTO lenses (name, factor) VALUES (\"" . $name . "\", \"" . $factor . "\")" );
-		return $objDatabase->selectSingleValue ( "SELECT id FROM lenses ORDER BY id DESC LIMIT 1", 'id' );
+	{
+		global $objDatabase_new, $loggedUser;
+
+		$user_id = $objDatabase_new->selectSingleValue(
+			"SELECT id FROM users WHERE username = \"" . html_entity_decode($loggedUser) . "\"",
+			'id'
+		);
+
+		// Create a slug from the name
+		$slug = $str = strtolower($name);
+
+		// Replace special characters
+		// and spaces with hyphens
+		$slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+
+		// Trim hyphens from the beginning
+		// and ending of String
+		$slug = trim($slug, '-');
+
+		$created_at = date('Y-m-d H:i:s');
+		$updated_at = date('Y-m-d H:i:s');
+
+		$objDatabase_new->execSQL (
+			"INSERT INTO lenses "
+			. "(make_id, name, factor, user_id, observer, slug, created_at, updated_at) VALUES "
+			. "(1, \"" . $name . "\", $factor, \"" . $user_id . "\", \"" . $loggedUser . "\", \"" . $slug . "\", \"" . $created_at . "\", \"" . $updated_at . "\")");
+
+		return $objDatabase_new->selectSingleValue("SELECT id FROM lenses ORDER BY id DESC LIMIT 1", 'id', '');
 	}
+
 	public function getAllFiltersIds($id) // returns a list with all id's which have the same name as the name of the given id
 {
-		global $objDatabase;
-		return $objDatabase->selectSinleArray ( "SELECT id FROM lenses WHERE name = \"" . $objDatabase->selectSingleValue ( "SELECT name FROM lenses WHERE id = \"" . $id . "\"" ) . "\"" );
+		global $objDatabase_new;
+		return $objDatabase_new->selectSinleArray ( "SELECT id FROM lenses WHERE name = \"" . $objDatabase->selectSingleValue ( "SELECT name FROM lenses WHERE id = \"" . $id . "\"" ) . "\"" );
 	}
 	public function getLensId($name, $observer) // returns the id for this lens
 {
-		global $objDatabase;
-		return $objDatabase->selectSingleValue ( "SELECT id FROM lenses where name=\"" . $name . "\" and observer=\"" . $observer . "\"", 'id', - 1 );
+		global $objDatabase_new;
+		return $objDatabase_new->selectSingleValue ( "SELECT id FROM lenses where name=\"" . $name . "\" and observer=\"" . $observer . "\"", 'id', - 1 );
 	}
 	public function getLensObserverPropertyFromName($name, $observer, $property) // returns the property for the eyepiece of the observer
 {
-		global $objDatabase;
-		return $objDatabase->selectSingleValue ( "SELECT " . $property . " FROM lenses where name=\"" . $name . "\" and observer=\"" . $observer . "\"", $property );
+		global $objDatabase_new;
+		return $objDatabase_new->selectSingleValue ( "SELECT " . $property . " FROM lenses where name=\"" . $name . "\" and observer=\"" . $observer . "\"", $property );
 	}
 	public function getLensPropertyFromId($id, $property, $defaultValue = '') // returns the property of the given lens
 	{
-		global $objDatabase;
-		return $objDatabase->selectSingleValue ( "SELECT " . $property . " FROM lenses WHERE id = \"" . $id . "\"", $property, $defaultValue );
+		global $objDatabase_new;
+		return $objDatabase_new->selectSingleValue ( "SELECT " . $property . " FROM lenses WHERE id = \"" . $id . "\"", $property, $defaultValue );
 	}
 	public function getSortedLenses($sort, $observer = "", $active = '') // returns an array with the ids of all lenses, sorted by the column specified in $sort
 	{
-		global $objDatabase;
-		return $objDatabase->selectSingleArray ( "SELECT " . ($observer ? "" : "MAX(id)") . " id, name FROM lenses " . ($observer ? "WHERE observer LIKE \"" . $observer . "\" " . ($active ? " AND lensactive=" . $active : "") : " GROUP BY name") . " ORDER BY " . $sort . ", name", 'id' );
+		global $objDatabase_new;
+		return $objDatabase_new->selectSingleArray ( "SELECT " . ($observer ? "" : "MAX(id)") . " id, name FROM lenses " . ($observer ? "WHERE observer LIKE \"" . $observer . "\" " . ($active ? " AND lensactive=" . $active : "") : " GROUP BY name") . " ORDER BY " . $sort . ", name", 'id' );
 	}
 	public function setLensProperty($id, $property, $propertyValue) // sets the property to the specified value for the given lens
 {
-		global $objDatabase;
-		return $objDatabase->execSQL ( "UPDATE lenses SET " . $property . " = \"" . $propertyValue . "\" WHERE id = \"" . $id . "\"" );
+		global $objDatabase_new;
+		return $objDatabase_new->execSQL ( "UPDATE lenses SET " . $property . " = \"" . $propertyValue . "\" WHERE id = \"" . $id . "\"" );
 	}
 	public function getLensUsedFromId($id) // returns the number of times the lens is used in observations
 {
@@ -94,9 +119,9 @@ class Lenses {
 	}
 	public function validateDeleteLens() // validates and removes the lens with id
 {
-		global $objUtil, $objDatabase;
+		global $objUtil, $objDatabase_new;
 		if (($lensid = $objUtil->checkGetKey ( 'lensid' )) && $objUtil->checkAdminOrUserID ( $this->getLensPropertyFromId ( $lensid, 'observer' ) ) && (! ($this->getLensUsedFromId ( $lensid )))) {
-			$objDatabase->execSQL ( "DELETE FROM lenses WHERE id=\"" . $lensid . "\"" );
+			$objDatabase_new->execSQL ( "DELETE FROM lenses WHERE id=\"" . $lensid . "\"" );
 			return _("The lens is removed from your equipment list");
 		}
 	}
@@ -105,8 +130,7 @@ class Lenses {
 		global $objUtil, $loggedUser;
 		if ($objUtil->checkPostKey ( 'add' ) && $objUtil->checkPostKey ( 'lensname' ) && $objUtil->checkPostKey ( 'factor' ) && $loggedUser) {
 			$id = $this->addLens ( $_POST ['lensname'], $_POST ['factor'] );
-			$this->setLensProperty ( $id, 'observer', $loggedUser );
-			return _("The lens is added to your equipment list");
+//			return _("The lens is added to your equipment list");
 		} elseif ($objUtil->checkPostKey ( 'change' ) && $objUtil->checkAdminOrUserID ( $this->getLensPropertyFromId ( $objUtil->checkPostKey ( 'id' ), 'observer' ) ) && $objUtil->checkPostKey ( 'lensname' ) && $objUtil->checkPostKey ( 'factor' )) {
 			$this->setLensProperty ( $_POST ['id'], 'name', $_POST ['lensname'] );
 			$this->setLensProperty ( $_POST ['id'], 'factor', $_POST ['factor'] );
@@ -116,4 +140,4 @@ class Lenses {
 			return _("All required fields must be filled in!");
 	}
 }
-?>
+

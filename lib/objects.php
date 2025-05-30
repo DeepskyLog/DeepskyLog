@@ -1445,7 +1445,7 @@ class Objects
                         }
                     }
                     $sql8 = 'SELECT name, factor from lenses where observer = "'.$loggedUser.'"  AND lensactive=1';
-                    $run8 = $objDatabase->selectRecordset($sql8);
+                    $run8 = $objDatabase_new->selectRecordset($sql8);
                     $origmagnifications = $magnifications;
                     $origmagnificationsName = $magnificationsName;
                     $origfov = $fov;
