@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EyepieceController;
 use App\Http\Controllers\InstrumentController;
+use App\Http\Controllers\LensController;
 use App\Models\Atlas;
 use App\Models\EyepieceMake;
 use App\Models\EyepieceType;
@@ -381,3 +382,4 @@ Route::get('lens_makes.api', function (Request $request) {
 
 Route::get('/instrument/{userid}', [InstrumentController::class, 'show_from_user']);
 Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);
+Route::get('/lenses/{userid}', [LensController::class, 'show_from_user']);

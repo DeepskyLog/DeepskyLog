@@ -21,23 +21,22 @@
     + [X] Release new version of pyDeepskyLog
     + [X] Change pifinder code
 + [X] Create eyepieces tables in the new version of DeepskyLog.
-+ [ ] Create lenses tables in the new version of DeepskyLog.
-    + [X] Write script to populate the tables from the old database.
-    + [X] Use database from the new version in the old version of DeepskyLog.
-    + [X] Make a table for the lenses makes and add some standard makes (like Tele Vue, ...)
-    + [X] Update user model to use the lenses from the new database.
-    + [X] Add page to see the details of a lens
-    + [X] Add page to view all lenses of an observer
-    + [X] Add page to add / edit lenses.
-    + [X] Move to a better url: wim-de-meester/lens/lens-name
-    + [X] Check if the create lens and the list lenses page can only be seen if logged in.
-    + [X] Add page for administrator (only for the lens_makes table)
-    + [X] Adapt instrument and eyepiece detail page to also use the lenses.
-    + [X] Translate the new strings
++ [X] Create lenses tables in the new version of DeepskyLog.
++ [ ] Create filters tables in the new version of DeepskyLog
+    + [ ] Write script to populate the tables from the old database.
+    + [ ] Use database from the new version in the old version of DeepskyLog.
+    + [ ] Make a table for the filter makes and add some standard makes (like Tele Vue, ...)
+    + [ ] Update user model to use the filters from the new database.
+    + [ ] Add page to see the details of a filter
+    + [ ] Add page to view all filters of an observer
+    + [ ] Add page to add / edit filters.
+    + [ ] Move to a better url: wim-de-meester/filter/lens-name
+    + [ ] Check if the create filter and the list filter page can only be seen if logged in.
+    + [ ] Add page for administrator (only for the filter_makes table)
+    + [ ] Translate the new strings
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog
-    + [ ] Change pifinder code
-+ [ ] Create filters tables in the new version of DeepskyLog
++ [ ] Fix logging in
 + [ ] Create locations tables in the new version of DeepskyLog
 + [ ] Create instrument sets tables in the new version of DeepskyLog
     + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into
