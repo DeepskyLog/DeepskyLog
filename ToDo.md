@@ -5,10 +5,9 @@
 ### Next steps
 
 + [ ] Create filters tables in the new version of DeepskyLog
-    + [ ] Write script to populate the tables from the old database.
-        + [ ] Filter Types -> 1 -> 0, 2 -> 1, ...
+    + [X] Write script to populate the tables from the old database.
     + [ ] Use database from the new version in the old version of DeepskyLog.
-    + [ ] Make a table for the filter makes and add some standard makes (like Tele Vue, ...)
+    + [X] Make a table for the filter makes and add some standard makes (like Tele Vue, ...)
     + [ ] Update user model to use the filters from the new database.
     + [ ] Add page to see the details of a filter
     + [ ] Add page to view all filters of an observer
