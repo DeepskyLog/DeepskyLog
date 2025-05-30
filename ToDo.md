@@ -4,26 +4,9 @@
 
 ### Next steps
 
-+ [X] Create instruments tables in the new version of DeepskyLog.
-    + [X] Add Make and flip options to the instruments (see PiFinder model)
-    + [X] Write script to populate the tables from the old database.
-    + [X] Use database from the new version in the old version of DeepskyLog.
-    + [X] Make a table for the instrument makes and add some standard makes (like SkyWatcher, ...)
-    + [X] Update user model to use the instruments from the new database.
-    + [X] Add page to see the details of an instrument
-    + [X] Add page to view all instruments of an observer
-    + [X] Add page to add / edit instruments.
-    + [X] Move to a better url: instrument/wim-de-meester/instrument-name
-    + [X] Check if the create instrument and the list instruments page can only be seen if logged in.
-    + [X] Add page for administrator (only for the instrument_makes table)
-    + [X] Translate the new strings
-    + [X] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
-    + [X] Release new version of pyDeepskyLog
-    + [X] Change pifinder code
-+ [X] Create eyepieces tables in the new version of DeepskyLog.
-+ [X] Create lenses tables in the new version of DeepskyLog.
 + [ ] Create filters tables in the new version of DeepskyLog
     + [ ] Write script to populate the tables from the old database.
+        + [ ] Filter Types -> 1 -> 0, 2 -> 1, ...
     + [ ] Use database from the new version in the old version of DeepskyLog.
     + [ ] Make a table for the filter makes and add some standard makes (like Tele Vue, ...)
     + [ ] Update user model to use the filters from the new database.
@@ -35,7 +18,7 @@
     + [ ] Add page for administrator (only for the filter_makes table)
     + [ ] Translate the new strings
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
-    + [ ] Release new version of pyDeepskyLog
+    + [ ] Release new version of pyDeepskyLog -> prepared
 + [ ] Fix logging in
 + [ ] Create locations tables in the new version of DeepskyLog
 + [ ] Create instrument sets tables in the new version of DeepskyLog
