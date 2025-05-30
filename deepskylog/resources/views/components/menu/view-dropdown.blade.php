@@ -39,7 +39,7 @@
                 <x-dropdown.item href="/eyepiece"
                                  label="{{ __('My eyepieces') }}"/>
 
-                <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=view_filters"
+                <x-dropdown.item href="/filter"
                                  label="{{ __('My filters') }}"/>
 
                 <x-dropdown.item href="/lens"

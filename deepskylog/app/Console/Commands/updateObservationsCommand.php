@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\CometObservationsOld;
 use App\Models\Eyepiece;
+use App\Models\Filter;
 use App\Models\Instrument;
 use App\Models\Lens;
 use App\Models\ObservationsOld;
@@ -14,7 +15,7 @@ class updateObservationsCommand extends Command
 {
     protected $signature = 'update:observations';
 
-    protected $description = 'Updates the instrument, eyepiece and lens table with the number of observations from the old version of DeepskyLog.';
+    protected $description = 'Updates the instrument, eyepiece, filter and lens table with the number of observations from the old version of DeepskyLog.';
 
     public function handle(): void
     {
@@ -73,5 +74,20 @@ class updateObservationsCommand extends Command
             $lens->save();
         }
 
+        $this->info('Updating Lens table...');
+
+        // Get all filters
+        $filters = Filter::all();
+
+        foreach ($filters as $filter) {
+            try {
+                $observations = ObservationsOld::where('filterid', $filter->id)->count();
+            } catch (Exception $e) {
+                $observations = 0;
+            }
+
+            $filter->observations = $observations;
+            $filter->save();
+        }
     }
 }

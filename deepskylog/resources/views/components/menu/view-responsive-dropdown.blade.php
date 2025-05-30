@@ -67,7 +67,7 @@
                 />
 
                 <x-dropdown.item
-                    href="{{ config('app.old_url') }}/index.php?indexAction=view_filters"
+                    href="/filter"
                     label="{{ __('My filters') }}"
                 />
 

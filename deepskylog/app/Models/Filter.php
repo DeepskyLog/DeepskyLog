@@ -10,6 +10,10 @@ class Filter extends Model
 {
     use Sluggable;
 
+    protected $fillable = [
+        'user_id', 'name', 'make_id', 'type_id', 'color_id', 'wratten', 'schott', 'active', 'observer', 'picture',
+    ];
+
     public function sluggable(): array
     {
         return [
