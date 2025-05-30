@@ -23,7 +23,7 @@
 + [X] Create eyepieces tables in the new version of DeepskyLog.
 + [ ] Create lenses tables in the new version of DeepskyLog.
     + [X] Write script to populate the tables from the old database.
-    + [ ] Use database from the new version in the old version of DeepskyLog.
+    + [X] Use database from the new version in the old version of DeepskyLog.
     + [X] Make a table for the lenses makes and add some standard makes (like Tele Vue, ...)
     + [X] Update user model to use the lenses from the new database.
     + [X] Add page to see the details of a lens
