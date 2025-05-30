@@ -8,12 +8,12 @@
     + [X] Add Make and flip options to the instruments (see PiFinder model)
     + [X] Write script to populate the tables from the old database.
     + [X] Use database from the new version in the old version of DeepskyLog.
-    + [X] Make a table for the instrument makes and add some standard makes (like SkyWatcher, Celestron, ...)
+    + [X] Make a table for the instrument makes and add some standard makes (like SkyWatcher, ...)
     + [X] Update user model to use the instruments from the new database.
     + [X] Add page to see the details of an instrument
     + [X] Add page to view all instruments of an observer
     + [X] Add page to add / edit instruments.
-    + [X] Move to a better url: instrument/wim-de-meester/coronado-solarmax-40mm
+    + [X] Move to a better url: instrument/wim-de-meester/instrument-name
     + [X] Check if the create instrument and the list instruments page can only be seen if logged in.
     + [X] Add page for administrator (only for the instrument_makes table)
     + [X] Translate the new strings
@@ -22,26 +22,26 @@
     + [X] Change pifinder code
 + [X] Create eyepieces tables in the new version of DeepskyLog.
 + [ ] Create lenses tables in the new version of DeepskyLog.
-    + [ ] Write script to populate the tables from the old database.
-    + [ ] Use database from the new version in the old version of DeepskyLog.
-    + [ ] Make a table for the lenses makes and add some standard makes (like Tele Vue, ...)
-    + [ ] Update user model to use the lenses from the new database.
-    + [ ] Add page to see the details of an lenses
-    + [ ] Add page to view all lenses of an observer
-    + [ ] Add page to add / edit lenses.
-    + [ ] Move to a better url: wim-de-meester/lens/coronado-solarmax-40mm
-    + [ ] Check if the create lens and the list lenses page can only be seen if logged in.
-    + [ ] Add page for administrator (only for the lens_makes table)
-    + [ ] Translate the new strings
+    + [X] Write script to populate the tables from the old database.
+    + [X] Use database from the new version in the old version of DeepskyLog.
+    + [X] Make a table for the lenses makes and add some standard makes (like Tele Vue, ...)
+    + [X] Update user model to use the lenses from the new database.
+    + [X] Add page to see the details of a lens
+    + [X] Add page to view all lenses of an observer
+    + [X] Add page to add / edit lenses.
+    + [X] Move to a better url: wim-de-meester/lens/lens-name
+    + [X] Check if the create lens and the list lenses page can only be seen if logged in.
+    + [X] Add page for administrator (only for the lens_makes table)
+    + [X] Adapt instrument and eyepiece detail page to also use the lenses.
+    + [X] Translate the new strings
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog
     + [ ] Change pifinder code
-    + [ ] Adapt instrument and eyepiece detail page to also use the lenses (dropdown to select lens?).
 + [ ] Create filters tables in the new version of DeepskyLog
++ [ ] Create locations tables in the new version of DeepskyLog
 + [ ] Create instrument sets tables in the new version of DeepskyLog
     + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into
       account the Barlow and other lenses)
-+ [ ] Create locations tables in the new version of DeepskyLog
 
 ### Distant future
 
@@ -53,7 +53,7 @@
 + [ ] Targets
 + [ ] Observing lists
 + [ ] Friends? Add friends and see their observations / sessions / ... Different lists for Murzim, Capella, ...
-+ [ ] Like observations / sketches / sessions
++ [ ] Like observations / sketches / sessions / user profiles
 
 ### Combination of old and new DeepskyLog
 
@@ -61,7 +61,6 @@
 + [ ] Use the new database tables in the old version of DeepskyLog
 + [ ] On the server, set up the apache / nginx configuration to use the old version of DeepskyLog
 + [ ] On the server, make sure to run the queue workers: https://laravel.com/docs/11.x/queues#running-the-queue-worker
-+ [ ] Release new version of DeepskyLog with new registration and login pages.
 
 ### Done
 
@@ -87,7 +86,7 @@
   latest observations
 + [X] Add object type and constellation to the list of 10 newest observations
 + [X] Automatically translate the descriptions.
-+ [X] Add instruments to the new version of DeepskyLog.
++ [X] Add instruments, eyepieces and filters to the new version of DeepskyLog.
     + [X] Use /instrument/user-slug/instrument-slug as url
 
 ## Eloquent

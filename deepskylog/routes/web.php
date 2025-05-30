@@ -127,5 +127,30 @@ Route::get('admin/eyepiece_type/{type}/edit', 'App\Http\Controllers\EyepieceCont
 Route::post('admin/eyepiece_type/store', 'App\Http\Controllers\EyepieceController@storeType')
     ->name('eyepiecetype.store')->can('add_sketch', User::class);
 
-Route::post('admin/eyepiece_typee/destroy', 'App\Http\Controllers\EyepieceController@destroyType')
+Route::post('admin/eyepiece_type/destroy', 'App\Http\Controllers\EyepieceController@destroyType')
     ->name('eyepiecetype.destroy')->can('add_sketch', User::class);
+
+// Lenses
+Route::resource(
+    'lens',
+    'App\Http\Controllers\LensController',
+    ['parameters' => ['lens' => 'lens']]
+)->middleware('verified')->except('show');
+
+Route::get('/lens/{user}/{lens}', 'App\Http\Controllers\LensController@show')
+    ->name('lens.show');
+
+Route::get('/lens/{user}/{lens}/edit', 'App\Http\Controllers\LensController@edit')
+    ->name('lens.edit')->middleware('auth');
+
+Route::get('/admin/lens', 'App\Http\Controllers\LensController@indexAdmin')
+    ->name('lens.indexAdmin')->can('add_sketch', User::class);
+
+Route::get('admin/lens_make/{make}/edit', 'App\Http\Controllers\LensController@editMake')
+    ->name('lens.editMake')->can('add_sketch', User::class);
+
+Route::post('admin/lens_make/store', 'App\Http\Controllers\LensController@storeMake')
+    ->name('lensmake.store')->can('add_sketch', User::class);
+
+Route::post('admin/lens_make/destroy', 'App\Http\Controllers\LensController@destroyMake')
+    ->name('lensmake.destroy')->can('add_sketch', User::class);

@@ -39,19 +39,19 @@
                                          label="{{ __('Locations') }}"/>
 
                         <x-dropdown.item href="/admin/instrument"
-                                         label="{{ __('Instruments') }}"/>
+                                         label="{{ __('Instrument Makes') }}"/>
 
                         <x-dropdown.item href="/admin/eyepiece"
-                                         label="{{ __('Eyepieces Makes') }}"/>
+                                         label="{{ __('Eyepiece Makes') }}"/>
 
                         <x-dropdown.item href="/admin/eyepiece-types"
-                                         label="{{ __('Eyepieces Types') }}"/>
+                                         label="{{ __('Eyepiece Types') }}"/>
 
                         <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=overview_filters"
                                          label="{{ __('Filters') }}"/>
 
-                        <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=overview_lenses"
-                                         label="{{ __('Lenses') }}"/>
+                        <x-dropdown.item href="/admin/lens"
+                                         label="{{ __('Lens Makes') }}"/>
                     @endif
                 </x-dropdown>
             </div>

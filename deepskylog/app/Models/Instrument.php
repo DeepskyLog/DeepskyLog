@@ -89,6 +89,11 @@ class Instrument extends Model
             $firstObservation = min($firstDeepskyObservation, $firstCometObservation);
         }
 
+        return $this->get_date_and_id($firstObservation, $language, $firstDeepskyObservation);
+    }
+
+    public function get_date_and_id(mixed $firstObservation, string $language, mixed $firstDeepskyObservation): array
+    {
         $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
 
         if ($firstObservation == $firstDeepskyObservation) {
@@ -128,14 +133,7 @@ class Instrument extends Model
             return [null, null];
         }
 
-        $date = Carbon::createFromFormat('Ymd', $lastObservation)->locale($language)->isoFormat('LL');
-        if ($lastObservation == $lastDeepskyObservation) {
-            $id = ObservationsOld::where('instrumentid', $this->id)->where('date', $lastObservation)->first()['id'];
-        } else {
-            $id = -CometObservationsOld::where('instrumentid', $this->id)->where('date', $lastObservation)->first()['id'];
-        }
-
-        return [$date, $id];
+        return $this->get_date_and_id($lastObservation, $language, $lastDeepskyObservation);
     }
 
     public function get_used_eyepieces_as_string(): string
@@ -205,8 +203,9 @@ class Instrument extends Model
             if ($lens == 0) {
                 continue;
             }
-            $to_return .= "<a href='".config('app.old_url').'index.php?indexAction=detail_lens&lens='.$lens."'>".
-                LensesOld::where('id', $lens)->pluck('name')[0].'</a>'.', ';
+            $lns = Lens::where('id', $lens)->first();
+            $to_return .= "<a href='/lens/".$lns->user->slug.'/'.$lns->slug."'>".
+                $lns->name.'</a>'.', ';
         }
 
         // Remove the trailing comma and space
@@ -241,15 +240,23 @@ class Instrument extends Model
         return ObservationsOld::where('instrumentid', $this->id)->groupby('locationid')->distinct()->pluck('locationid');
     }
 
-    public function magnification(Eyepiece $eyepiece): string
+    public function magnification(Eyepiece $eyepiece, ?Lens $lens = null): string
     {
+        if ($lens) {
+            return round($this->focal_length_mm * $lens->factor / ($eyepiece->focal_length_mm)).'x';
+        }
+
         return round($this->focal_length_mm / $eyepiece->focal_length_mm).'x';
     }
 
-    public function field_of_view(Eyepiece $eyepiece): string
+    public function field_of_view(Eyepiece $eyepiece, ?Lens $lens = null): string
     {
+        $focal_length = $this->focal_length_mm;
+        if ($lens) {
+            $focal_length = $this->focal_length_mm * $lens->factor;
+        }
         if ($eyepiece->field_stop_mm != 0) {
-            $tfov = $eyepiece->field_stop_mm / $this->focal_length_mm * 57.2958;
+            $tfov = $eyepiece->field_stop_mm / $focal_length * 57.2958;
             // Convert $tfov to degrees and minutes and return as a string
             $degrees = floor($tfov);
             $minutes = round(($tfov - $degrees) * 60);
@@ -259,7 +266,7 @@ class Instrument extends Model
             $tfov = $degrees.'° '.$minutes."'";
         } elseif ($eyepiece->apparentFOV > 10) {
             // Calculate the true field of view
-            $tfov = $eyepiece->apparentFOV / ($this->focal_length_mm / $eyepiece->focal_length_mm);
+            $tfov = $eyepiece->apparentFOV / ($focal_length / $eyepiece->focal_length_mm);
             // Convert $tfov to degrees and minutes and return as a string
             $degrees = floor($tfov);
             $minutes = round(($tfov - $degrees) * 60);
@@ -275,8 +282,12 @@ class Instrument extends Model
         return $tfov;
     }
 
-    public function exit_pupil(Eyepiece $eyepiece): string
+    public function exit_pupil(Eyepiece $eyepiece, ?Lens $lens = null): string
     {
+        if ($lens) {
+            return round($this->aperture_mm / ($this->focal_length_mm * $lens->factor / $eyepiece->focal_length_mm), 1).'mm';
+        }
+
         return round($this->aperture_mm / ($this->focal_length_mm / $eyepiece->focal_length_mm), 1).'mm';
     }
 }

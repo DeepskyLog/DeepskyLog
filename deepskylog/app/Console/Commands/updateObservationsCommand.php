@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\CometObservationsOld;
 use App\Models\Eyepiece;
 use App\Models\Instrument;
+use App\Models\Lens;
 use App\Models\ObservationsOld;
 use Exception;
 use Illuminate\Console\Command;
@@ -13,7 +14,7 @@ class updateObservationsCommand extends Command
 {
     protected $signature = 'update:observations';
 
-    protected $description = 'Updates the instrument and eyepiece table with the number of observations from the old version of DeepskyLog.';
+    protected $description = 'Updates the instrument, eyepiece and lens table with the number of observations from the old version of DeepskyLog.';
 
     public function handle(): void
     {
@@ -55,5 +56,22 @@ class updateObservationsCommand extends Command
             $eyepiece->observations = $observations;
             $eyepiece->save();
         }
+
+        $this->info('Updating Lens table...');
+
+        // Get all lenses
+        $lenses = Lens::all();
+
+        foreach ($lenses as $lens) {
+            try {
+                $observations = ObservationsOld::where('lensid', $lens->id)->count();
+            } catch (Exception $e) {
+                $observations = 0;
+            }
+
+            $lens->observations = $observations;
+            $lens->save();
+        }
+
     }
 }

@@ -72,7 +72,7 @@
                 />
 
                 <x-dropdown.item
-                    href="{{ config('app.old_url') }}/index.php?indexAction=view_lenses"
+                    href="/lens"
                     label="{{ __('My lenses') }}"
                 />
 

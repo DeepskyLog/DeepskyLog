@@ -848,16 +848,16 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Establishes a relationship between the User model and the LensesOld model.
+     * Establishes a relationship between the User model and the Lenses model.
      *
-     * This method defines a one-to-many relationship between the User model and the LensesOld model.
-     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the LensesOld model.
+     * This method defines a one-to-many relationship between the User model and the Lenses model.
+     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the Lenses model.
      *
-     * @return HasMany The relationship between the User model and the LensesOld model.
+     * @return HasMany The relationship between the User model and the Lenses model.
      */
     public function lenses(): HasMany
     {
-        return $this->hasMany(related: LensesOld::class, foreignKey: 'observer', localKey: 'username');
+        return $this->hasMany(related: Lens::class);
     }
 
     /**

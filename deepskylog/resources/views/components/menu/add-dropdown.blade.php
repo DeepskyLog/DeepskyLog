@@ -36,7 +36,7 @@
                 <x-dropdown.item icon="plus-circle" href="{{ config('app.old_url') }}/index.php?indexAction=add_filter"
                                  label="{{ __('Filters') }}"/>
 
-                <x-dropdown.item icon="plus-circle" href="{{ config('app.old_url') }}/index.php?indexAction=add_lens"
+                <x-dropdown.item icon="plus-circle" href="/lens/create"
                                  label="{{ __('Lenses') }}"/>
 
                 <x-dropdown.item separator icon="plus-circle"

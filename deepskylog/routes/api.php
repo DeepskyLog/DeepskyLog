@@ -8,6 +8,7 @@ use App\Models\EyepieceType;
 use App\Models\Instrument;
 use App\Models\InstrumentMake;
 use App\Models\InstrumentType;
+use App\Models\LensMake;
 use App\Models\LocationsOld;
 use App\Models\MountType;
 use App\Models\User;
@@ -355,6 +356,28 @@ Route::get('eyepiece_type.api', function (Request $request) {
 
     return $allTypes;
 })->name('eyepiece_types.api');
+
+Route::get('lens_makes.api', function (Request $request) {
+    $allMakes = [];
+    // Show the selected option
+    if ($request->exists('selected')) {
+        $allMakes[] = [
+            'id' => LensMake::where('id', $request->selected)->first()->id,
+            'name' => LensMake::where('id', $request->selected)->first()->name,
+        ];
+    }
+    $makes = LensMake::get();
+    foreach ($makes as $make) {
+        if ($request->search == '' || Str::contains(Str::lower($make->name), Str::lower($request->search))) {
+            $allMakes[] = [
+                'id' => $make->id,
+                'name' => $make->name,
+            ];
+        }
+    }
+
+    return $allMakes;
+})->name('lens_makes.api');
 
 Route::get('/instrument/{userid}', [InstrumentController::class, 'show_from_user']);
 Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);
