@@ -6,6 +6,9 @@ use App\Http\Controllers\LensController;
 use App\Models\Atlas;
 use App\Models\EyepieceMake;
 use App\Models\EyepieceType;
+use App\Models\FilterColor;
+use App\Models\FilterMake;
+use App\Models\FilterType;
 use App\Models\Instrument;
 use App\Models\InstrumentMake;
 use App\Models\InstrumentType;
@@ -379,6 +382,72 @@ Route::get('lens_makes.api', function (Request $request) {
 
     return $allMakes;
 })->name('lens_makes.api');
+
+Route::get('filter_makes.api', function (Request $request) {
+    $allMakes = [];
+    // Show the selected option
+    if ($request->exists('selected')) {
+        $allMakes[] = [
+            'id' => FilterMake::where('id', $request->selected)->first()->id,
+            'name' => FilterMake::where('id', $request->selected)->first()->name,
+        ];
+    }
+    $makes = FilterMake::get();
+    foreach ($makes as $make) {
+        if ($request->search == '' || Str::contains(Str::lower($make->name), Str::lower($request->search))) {
+            $allMakes[] = [
+                'id' => $make->id,
+                'name' => $make->name,
+            ];
+        }
+    }
+
+    return $allMakes;
+})->name('filter_makes.api');
+
+Route::get('filter_colors.api', function (Request $request) {
+    $allColors = [];
+    // Show the selected option
+    if ($request->exists('selected')) {
+        $allColors[] = [
+            'id' => FilterColor::where('id', $request->selected)->first()->id,
+            'name' => FilterColor::where('id', $request->selected)->first()->name,
+        ];
+    }
+    $colors = FilterColor::get();
+    foreach ($colors as $color) {
+        if ($request->search == '' || Str::contains(Str::lower($color->name), Str::lower($request->search))) {
+            $allColors[] = [
+                'id' => $color->id,
+                'name' => $color->name,
+            ];
+        }
+    }
+
+    return $allColors;
+})->name('filter_colors.api');
+
+Route::get('filter_types.api', function (Request $request) {
+    $allTypes = [];
+    // Show the selected option
+    if ($request->exists('selected')) {
+        $allTypes[] = [
+            'id' => FilterType::where('id', $request->selected)->first()->id,
+            'name' => FilterType::where('id', $request->selected)->first()->name,
+        ];
+    }
+    $types = FilterType::get();
+    foreach ($types as $type) {
+        if ($request->search == '' || Str::contains(Str::lower($type->name), Str::lower($request->search))) {
+            $allTypes[] = [
+                'id' => $type->id,
+                'name' => $type->name,
+            ];
+        }
+    }
+
+    return $allTypes;
+})->name('filter_types.api');
 
 Route::get('/instrument/{userid}', [InstrumentController::class, 'show_from_user']);
 Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);

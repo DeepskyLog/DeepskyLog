@@ -2,11 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\CometObservationsOld;
-use App\Models\Eyepiece;
 use App\Models\Filter;
-use App\Models\Instrument;
-use App\Models\Lens;
 use App\Models\ObservationsOld;
 use Exception;
 use Illuminate\Console\Command;
@@ -74,7 +70,7 @@ class updateObservationsCommand extends Command
             $lens->save();
         }
 
-        $this->info('Updating Lens table...');
+        $this->info('Updating Filters table...');
 
         // Get all filters
         $filters = Filter::all();

@@ -14,6 +14,8 @@ class Filter extends Model
         'user_id', 'name', 'make_id', 'type_id', 'color_id', 'wratten', 'schott', 'active', 'observer', 'picture',
     ];
 
+    protected $with = ['filter_make', 'filter_color', 'filter_type'];
+
     public function sluggable(): array
     {
         return [

@@ -8,9 +8,9 @@
     + [X] Write script to populate the tables from the old database.
     + [ ] Use database from the new version in the old version of DeepskyLog.
     + [X] Make a table for the filter makes and add some standard makes (like Tele Vue, ...)
-    + [ ] Update user model to use the filters from the new database.
+    + [X] Update user model to use the filters from the new database.
     + [ ] Add page to see the details of a filter
-    + [ ] Add page to view all filters of an observer
+    + [X] Add page to view all filters of an observer
     + [ ] Add page to add / edit filters.
     + [ ] Move to a better url: wim-de-meester/filter/lens-name
     + [ ] Check if the create filter and the list filter page can only be seen if logged in.
