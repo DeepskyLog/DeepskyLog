@@ -72,7 +72,7 @@ class Instruments
         // and spaces with hyphens
         $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
 
-        $type = $type + 1
+        $type = $type + 1;
         // Trim hyphens from the beginning
         // and ending of String
         $slug = trim($slug, '-');
