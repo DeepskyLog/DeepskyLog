@@ -9,7 +9,7 @@
     + [ ] Use database from the new version in the old version of DeepskyLog.
     + [X] Make a table for the filter makes and add some standard makes (like Tele Vue, ...)
     + [X] Update user model to use the filters from the new database.
-    + [ ] Add page to see the details of a filter
+    + [X] Add page to see the details of a filter
     + [X] Add page to view all filters of an observer
     + [ ] Add page to add / edit filters.
     + [ ] Move to a better url: wim-de-meester/filter/lens-name
@@ -67,7 +67,7 @@
   latest observations
 + [X] Add object type and constellation to the list of 10 newest observations
 + [X] Automatically translate the descriptions.
-+ [X] Add instruments, eyepieces and filters to the new version of DeepskyLog.
++ [X] Add instruments, eyepieces, lenses and filters to the new version of DeepskyLog.
     + [X] Use /instrument/user-slug/instrument-slug as url
 
 ## Eloquent

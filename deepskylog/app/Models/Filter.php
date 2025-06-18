@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,5 +50,62 @@ class Filter extends Model
     public function filter_color(): BelongsTo
     {
         return $this->belongsTo(FilterColor::class, 'color_id');
+    }
+
+    /**
+     * Retrieves the date of the first observation made with the filter.
+     *
+     * This method calculates the earliest observation date for the filter from ObservationsOld
+     *
+     * If no observations are found, it returns [null, null].
+     *
+     * The date is formatted according to the current application locale.
+     * Additionally, the method retrieves the ID of the first observation.
+     *
+     * @return array An array containing the formatted date of the first observation and its ID.
+     */
+    public function first_observation_date(): array
+    {
+        $language = app()->getLocale();
+
+        $firstObservation = ObservationsOld::where('filterid', $this->id)->min('date');
+
+        if ($firstObservation == null) {
+            return [null, null];
+        }
+
+        $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
+
+        $id = ObservationsOld::where('filterid', $this->id)->where('date', $firstObservation)->first()['id'];
+
+        return [$date, $id];
+    }
+
+    /**
+     * Retrieves the date of the last observation made with the filter.
+     *
+     * This method calculates the last observation date for the filter from ObservationsOld
+     *
+     * If no observations are found, it returns [null, null].
+     *
+     * The date is formatted according to the current application locale.
+     * Additionally, the method retrieves the ID of the last observation.
+     *
+     * @return array An array containing the formatted date of the last observation and its ID.
+     */
+    public function last_observation_date(): array
+    {
+        $language = app()->getLocale();
+
+        $lastObservation = ObservationsOld::where('filterid', $this->id)->max('date');
+
+        if ($lastObservation == null) {
+            return [null, null];
+        }
+
+        $date = Carbon::createFromFormat('Ymd', $lastObservation)->locale($language)->isoFormat('LL');
+        $id = ObservationsOld::where('filterid', $this->id)->where('date', $lastObservation)->first()['id'];
+
+        return [$date, $id];
     }
 }
