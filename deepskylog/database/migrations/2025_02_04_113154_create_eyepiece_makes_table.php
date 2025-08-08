@@ -655,6 +655,14 @@ return new class extends Migration
                 'updated_at' => now(),
             ]
         );
+
+        DB::table('eyepiece_makes')->insert(
+            [
+                'name' => 'Houdini',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
     }
 
     public function down(): void
