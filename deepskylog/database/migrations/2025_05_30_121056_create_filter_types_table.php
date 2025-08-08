@@ -57,7 +57,7 @@ return new class extends Migration
 
         DB::table('filter_types')->insert(
             [
-                'name' => 'H-alpha',
+                'name' => 'H-Alpha',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

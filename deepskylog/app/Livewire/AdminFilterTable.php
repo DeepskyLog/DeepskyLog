@@ -2,9 +2,8 @@
 
 namespace App\Livewire;
 
-use App\Models\Eyepiece;
-use App\Models\EyepieceMake;
-use App\Models\EyepieceType;
+use App\Models\Filter;
+use App\Models\FilterMake;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Button;
@@ -13,9 +12,9 @@ use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
-final class AdminEyepieceTypeTable extends PowerGridComponent
+final class AdminFilterTable extends PowerGridComponent
 {
-    public string $tableName = 'admin-eyepiece-type-table';
+    public string $tableName = 'admin-filter-table';
 
     public function setUp(): array
     {
@@ -32,7 +31,7 @@ final class AdminEyepieceTypeTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return EyepieceType::query();
+        return FilterMake::query();
     }
 
     public function relationSearch(): array
@@ -45,13 +44,10 @@ final class AdminEyepieceTypeTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('name')
-            ->add('number_of_eyepieces', function ($eyepiece_type) {
-                return Eyepiece::where('type_id', $eyepiece_type->id)->count();
-            })
-            ->add('eyepiece_make', function ($eyepiece_type) {
-                return EyepieceMake::where('id', $eyepiece_type->eyepiece_makes_id)->first()->name;
+            ->add('created_at')
+            ->add('number_of_filters', function ($filter_make) {
+                return Filter::where('make_id', $filter_make->id)->count();
             });
-
     }
 
     public function columns(): array
@@ -62,13 +58,12 @@ final class AdminEyepieceTypeTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Eyepiece make', 'eyepiece_make'),
-            Column::make('Number of Eyepieces', 'number_of_eyepieces'),
-
-            // Add update time
             Column::make('Created at', 'created_at')
                 ->sortable()
                 ->searchable(),
+
+            Column::make('Number of Filters', 'number_of_filters'),
+
             Column::action('Action'),
         ];
     }
@@ -82,10 +77,10 @@ final class AdminEyepieceTypeTable extends PowerGridComponent
     #[On('edit')]
     public function edit($rowId): void
     {
-        $this->redirect('/admin/eyepiece_type/'.$rowId.'/edit');
+        $this->redirect('/admin/filter_make/'.$rowId.'/edit');
     }
 
-    public function actions(EyepieceType $row): array
+    public function actions(FilterMake $row): array
     {
         return [
             Button::add('edit')

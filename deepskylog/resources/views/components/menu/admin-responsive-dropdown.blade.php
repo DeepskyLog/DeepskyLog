@@ -82,12 +82,6 @@
                             label="{{ __('Filter Makes') }}"
                         />
 
-                        <x-dropdown.item href="/admin/filter-types"
-                                         label="{{ __('Filter Types') }}"/>
-
-                        <x-dropdown.item href="/admin/filter-colors"
-                                         label="{{ __('Filter Colors') }}"/>
-                        
                         <x-dropdown.item
                             href="/admin/lens"
                             label="{{ __('Lens Makes') }}"

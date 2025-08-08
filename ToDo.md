@@ -11,15 +11,15 @@
     + [X] Update user model to use the filters from the new database.
     + [X] Add page to see the details of a filter
     + [X] Add page to view all filters of an observer
-    + [ ] Add page to add / edit filters.
-    + [ ] Move to a better url: wim-de-meester/filter/lens-name
+    + [X] Add page to add / edit filters.
+    + [X] Move to a better url: wim-de-meester/filter/lens-name
     + [ ] Check if the create filter and the list filter page can only be seen if logged in.
-    + [ ] Add page for administrator (only for the filter_makes table)
+    + [X] Add page for administrator (only for the filter_makes table)
     + [ ] Translate the new strings
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog -> prepared
 + [ ] Fix logging in
-+ [ ] Create locations tables in the new version of DeepskyLog
++ [ ] Create locations tables in the new version of DeepskyLogf
 + [ ] Create instrument sets tables in the new version of DeepskyLog
     + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into
       account the Barlow and other lenses)
