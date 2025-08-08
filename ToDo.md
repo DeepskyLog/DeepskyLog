@@ -13,9 +13,9 @@
     + [X] Add page to view all filters of an observer
     + [X] Add page to add / edit filters.
     + [X] Move to a better url: wim-de-meester/filter/lens-name
-    + [ ] Check if the create filter and the list filter page can only be seen if logged in.
+    + [X] Check if the create filter and the list filter page can only be seen if logged in.
     + [X] Add page for administrator (only for the filter_makes table)
-    + [ ] Translate the new strings
+    + [X] Translate the new strings
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog -> prepared
 + [ ] Fix logging in
