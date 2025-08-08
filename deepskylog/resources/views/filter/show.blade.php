@@ -27,7 +27,7 @@
                             <td>{{ $filter->filter_type->name }}</td>
                         </tr>
 
-                        @if ($filter->type == 1 || $filter->type == 7)
+                        @if ($filter->type_id == 1 || $filter->type_id == 7)
                             @if ($filter->wratten)
                                 <tr>
                                     <td>{{ __("Wratten") }}</td>
@@ -42,7 +42,7 @@
                                 </tr>
                             @endif
 
-                            @if ($filter->filter_color->id != 1)
+                            @if ($filter->color_id != 1)
                                 <tr>
                                     <td>{{ __("Color") }}</td>
                                     <td>{{ $filter->filter_color->name }}</td>
