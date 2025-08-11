@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Eyepiece;
 use App\Models\Filter;
+use App\Models\Instrument;
+use App\Models\Lens;
 use App\Models\ObservationsOld;
 use Exception;
 use Illuminate\Console\Command;
