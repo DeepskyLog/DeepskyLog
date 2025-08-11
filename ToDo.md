@@ -4,24 +4,23 @@
 
 ### Next steps
 
-+ [ ] Fix logging in
 + [ ] Create locations tables in the new version of DeepskyLog
-    + [ ] Write script to populate the tables from the old database.
+    + [X] Write script to populate the tables from the old database.
     + [ ] Use database from the new version in the old version of DeepskyLog.
-    + [ ] Make a table for the filter makes and add some standard makes (like Tele Vue, ...)
-    + [ ] Update user model to use the filters from the new database.
-    + [ ] Add page to see the details of a filter
-    + [ ] Add page to view all filters of an observer
-    + [ ] Add page to add / edit filters.
-    + [ ] Move to a better url: wim-de-meester/filter/lens-name
-    + [ ] Check if the create filter and the list filter page can only be seen if logged in.
-    + [ ] Add page for administrator (only for the filter_makes table)
+    + [ ] Update user model to use the locations from the new database.
+    + [ ] Add page to see the details of a location
+    + [ ] Add page to view all locations of an observer
+    + [ ] Add page to add / edit locations.
+    + [ ] Move to a better url: wim-de-meester/location/lens-name
+    + [ ] Check if the create location and the list location page can only be seen if logged in.
+    + [ ] Add page for administrator -> Not needed?
     + [ ] Translate the new strings
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog
 + [ ] Create instrument sets tables in the new version of DeepskyLog
     + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into
       account the Barlow and other lenses)
++ [ ] Fix logging in -> Only problem on Phone
 
 ### Distant future
 
