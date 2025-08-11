@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EyepieceController;
+use App\Http\Controllers\FilterController;
 use App\Http\Controllers\InstrumentController;
 use App\Http\Controllers\LensController;
 use App\Models\Atlas;
@@ -452,3 +453,4 @@ Route::get('filter_types.api', function (Request $request) {
 Route::get('/instrument/{userid}', [InstrumentController::class, 'show_from_user']);
 Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);
 Route::get('/lenses/{userid}', [LensController::class, 'show_from_user']);
+Route::get('/filters/{userid}', [FilterController::class, 'show_from_user']);
