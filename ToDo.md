@@ -6,7 +6,6 @@
 
 + [ ] Create locations tables in the new version of DeepskyLog
     + [X] Write script to populate the tables from the old database.
-    + [ ] Use database from the new version in the old version of DeepskyLog.
     + [ ] Update user model to use the locations from the new database.
     + [ ] Add page to see the details of a location
     + [ ] Add page to view all locations of an observer
@@ -15,6 +14,7 @@
     + [ ] Check if the create location and the list location page can only be seen if logged in.
     + [ ] Add page for administrator -> Not needed?
     + [ ] Translate the new strings
+    + [ ] Use database from the new version in the old version of DeepskyLog.
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog
 + [ ] Create instrument sets tables in the new version of DeepskyLog

@@ -760,16 +760,16 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Establishes a relationship between the User model and the LocationsOld model.
+     * Establishes a relationship between the User model and the Location model.
      *
-     * This method defines a one-to-one relationship between the User model and the LocationsOld model.
-     * The relationship is established based on the 'stdlocation' attribute of the User model and the 'id' attribute of the LocationsOld model.
+     * This method defines a one-to-one relationship between the User model and the Location model.
+     * The relationship is established based on the 'stdlocation' attribute of the User model and the 'id' attribute of the Location model.
      *
-     * @return HasOne The relationship between the User model and the LocationsOld model.
+     * @return HasOne The relationship between the User model and the Location model.
      */
     public function standardLocation(): HasOne
     {
-        return $this->hasOne(related: LocationsOld::class, foreignKey: 'id', localKey: 'stdlocation');
+        return $this->hasOne(related: Location::class, foreignKey: 'id', localKey: 'stdlocation');
     }
 
     /**
@@ -796,16 +796,16 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Establishes a relationship between the User model and the LocationsOld model.
+     * Establishes a relationship between the User model and the Location model.
      *
-     * This method defines a one-to-many relationship between the User model and the LocationsOld model.
-     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the LocationsOld model.
+     * This method defines a one-to-many relationship between the User model and the Location model.
+     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the Location model.
      *
-     * @return HasMany The relationship between the User model and the LocationsOld model.
+     * @return HasMany The relationship between the User model and the Location model.
      */
     public function locations(): HasMany
     {
-        return $this->hasMany(related: LocationsOld::class, foreignKey: 'observer', localKey: 'username');
+        return $this->hasMany(related: Location::class);
     }
 
     /**
