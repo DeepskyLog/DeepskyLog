@@ -3,6 +3,7 @@
 use App\Console\Commands\updateAchievementsCommand;
 use App\Console\Commands\updateObservationsCommand;
 use App\Console\Commands\updateOldEyepieceTableCommand;
+use App\Console\Commands\updateOldFilterTableCommand;
 use App\Console\Commands\updateOldInstrumentTableCommand;
 use App\Console\Commands\updateOldLensTableCommand;
 use App\Console\Commands\updateUserTableCommand;
@@ -30,3 +31,4 @@ Schedule::command(updateObservationsCommand::class)->daily();
 Schedule::command(updateOldInstrumentTableCommand::class)->everyFiveMinutes();
 Schedule::command(updateOldEyepieceTableCommand::class)->everyFiveMinutes();
 Schedule::command(updateOldLensTableCommand::class)->everyFifteenMinutes();
+Schedule::command(updateOldFilterTableCommand::class)->everyFifteenMinutes();

@@ -14,7 +14,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
 final class AdminLensTable extends PowerGridComponent
 {
-    public string $tableName = 'admin-lens-table-bq9ffy-table';
+    public string $tableName = 'admin-lens-table';
 
     public function setUp(): array
     {

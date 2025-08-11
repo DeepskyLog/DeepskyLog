@@ -47,8 +47,8 @@
                         <x-dropdown.item href="/admin/eyepiece-types"
                                          label="{{ __('Eyepiece Types') }}"/>
 
-                        <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=overview_filters"
-                                         label="{{ __('Filters') }}"/>
+                        <x-dropdown.item href="/admin/filter"
+                                         label="{{ __('Filter Makes') }}"/>
 
                         <x-dropdown.item href="/admin/lens"
                                          label="{{ __('Lens Makes') }}"/>

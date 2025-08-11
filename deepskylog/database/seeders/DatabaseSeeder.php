@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
                 //                addAchievementsSeeder::class,
                 //                InstrumentSeeder::class,
                 //                EyepieceSeeder::class,
-                LensSeeder::class,
+                //                LensSeeder::class,
+                FilterSeeder::class,
             ]
         );
     }

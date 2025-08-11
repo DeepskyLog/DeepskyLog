@@ -835,16 +835,16 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Establishes a relationship between the User model and the FiltersOld model.
+     * Establishes a relationship between the User model and the Filters model.
      *
-     * This method defines a one-to-many relationship between the User model and the FiltersOld model.
-     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the FiltersOld model.
+     * This method defines a one-to-many relationship between the User model and the Filters model.
+     * The relationship is established based on the 'username' attribute of the User model and the 'observer' attribute of the Filters model.
      *
-     * @return HasMany The relationship between the User model and the FiltersOld model.
+     * @return HasMany The relationship between the User model and the Filters model.
      */
     public function filters(): HasMany
     {
-        return $this->hasMany(related: FiltersOld::class, foreignKey: 'observer', localKey: 'username');
+        return $this->hasMany(related: Filter::class);
     }
 
     /**

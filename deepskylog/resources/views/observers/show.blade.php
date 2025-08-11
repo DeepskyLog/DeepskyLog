@@ -139,7 +139,7 @@
                                 <td>{{ __("Number of filters") }}</td>
                                 <td>
                                     @if (Auth::user() && $user->id === Auth::user()->id)
-                                        <a href="{{ config('app.old_url') }}/index.php?indexAction=view_filters">
+                                        <a href="/filter">
                                             @endif
                                             {{ $user->filters->count() }}
                                             @if (Auth::user() && $user->id === Auth::user()->id)

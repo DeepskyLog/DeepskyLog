@@ -180,8 +180,9 @@ class Instrument extends Model
             if ($filter == 0) {
                 continue;
             }
-            $to_return .= "<a href='".config('app.old_url').'index.php?indexAction=detail_filter&filter='.$filter."'>".
-                FiltersOld::where('id', $filter)->pluck('name')[0].'</a>'.', ';
+            $filt = Filter::where('id', $filter)->first();
+            $to_return .= "<a href='/filter/".$filt->user->slug.'/'.$filt->slug."'>".
+                $filt->name.'</a>'.', ';
         }
 
         // Remove the trailing comma and space

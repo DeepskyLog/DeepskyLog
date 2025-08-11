@@ -4,25 +4,8 @@
 
 ### Next steps
 
-+ [X] Create instruments tables in the new version of DeepskyLog.
-    + [X] Add Make and flip options to the instruments (see PiFinder model)
-    + [X] Write script to populate the tables from the old database.
-    + [X] Use database from the new version in the old version of DeepskyLog.
-    + [X] Make a table for the instrument makes and add some standard makes (like SkyWatcher, ...)
-    + [X] Update user model to use the instruments from the new database.
-    + [X] Add page to see the details of an instrument
-    + [X] Add page to view all instruments of an observer
-    + [X] Add page to add / edit instruments.
-    + [X] Move to a better url: instrument/wim-de-meester/instrument-name
-    + [X] Check if the create instrument and the list instruments page can only be seen if logged in.
-    + [X] Add page for administrator (only for the instrument_makes table)
-    + [X] Translate the new strings
-    + [X] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
-    + [X] Release new version of pyDeepskyLog
-    + [X] Change pifinder code
-+ [X] Create eyepieces tables in the new version of DeepskyLog.
-+ [X] Create lenses tables in the new version of DeepskyLog.
-+ [ ] Create filters tables in the new version of DeepskyLog
++ [ ] Fix logging in
++ [ ] Create locations tables in the new version of DeepskyLog
     + [ ] Write script to populate the tables from the old database.
     + [ ] Use database from the new version in the old version of DeepskyLog.
     + [ ] Make a table for the filter makes and add some standard makes (like Tele Vue, ...)
@@ -36,8 +19,6 @@
     + [ ] Translate the new strings
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog
-+ [ ] Fix logging in
-+ [ ] Create locations tables in the new version of DeepskyLog
 + [ ] Create instrument sets tables in the new version of DeepskyLog
     + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into
       account the Barlow and other lenses)
@@ -53,13 +34,6 @@
 + [ ] Observing lists
 + [ ] Friends? Add friends and see their observations / sessions / ... Different lists for Murzim, Capella, ...
 + [ ] Like observations / sketches / sessions / user profiles
-
-### Combination of old and new DeepskyLog
-
-+ [ ] Use the old version of DeepskyLog alongside the new version
-+ [ ] Use the new database tables in the old version of DeepskyLog
-+ [ ] On the server, set up the apache / nginx configuration to use the old version of DeepskyLog
-+ [ ] On the server, make sure to run the queue workers: https://laravel.com/docs/11.x/queues#running-the-queue-worker
 
 ### Done
 
@@ -84,8 +58,8 @@
 + [X] Add new index page, with latest sketch of the week and the month, 10 latest drawings, 10 latest observers, 10
   latest observations
 + [X] Add object type and constellation to the list of 10 newest observations
-+ [X] Automatically translate the descriptions.
-+ [X] Add instruments, eyepieces and filters to the new version of DeepskyLog.
++ [X] Automatically translate the descriptions of observations on the home page.
++ [X] Add instruments, eyepieces, lenses and filters to the new version of DeepskyLog.
     + [X] Use /instrument/user-slug/instrument-slug as url
 
 ## Eloquent

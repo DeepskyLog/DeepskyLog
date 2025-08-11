@@ -78,8 +78,8 @@
                         />
 
                         <x-dropdown.item
-                            href="{{ config('app.old_url') }}/index.php?indexAction=overview_filters"
-                            label="{{ __('Filters') }}"
+                            href="/admin/filter"
+                            label="{{ __('Filter Makes') }}"
                         />
 
                         <x-dropdown.item

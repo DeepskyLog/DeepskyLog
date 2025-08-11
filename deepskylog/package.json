@@ -7,24 +7,24 @@
         "format": "npx prettier --write resources/"
     },
     "devDependencies": {
-        "@alpinejs/focus": "^3.10.5",
         "@shufo/prettier-plugin-blade": "^1.14.1",
         "@tailwindcss/forms": "^0.5.7",
         "@tailwindcss/typography": "^0.5.0",
         "@tailwindcss/vite": "^4.1.7",
         "autoprefixer": "^10.4.7",
         "axios": "^1.1.2",
-        "laravel-vite-plugin": "^1.0",
+        "laravel-vite-plugin": "^2.0",
         "postcss": "^8.4.14",
         "prettier": "^3.3.3",
         "prettier-plugin-blade": "^2.1.19",
         "prettier-plugin-tailwindcss": "^0.6.11",
-        "tailwindcss": "^4.1.7",
-        "vite": "^6.0.0"
+        "vite": "^7.0.0"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-free": "^6.5.2",
+        "tailwindcss": "^4.1.7",
+        "@alpinejs/focus": "^3.10.5",
+        "@fortawesome/fontawesome-free": "^7",
         "flatpickr": "^4.6.13",
-        "tinymce": "^7.6.1"
+        "tinymce": "^8"
     }
 }

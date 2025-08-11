@@ -3295,6 +3295,15 @@ return new class extends Migration
                 'updated_at' => now(),
             ]
         );
+
+        DB::table('eyepiece_types')->insert(
+            [
+                'name' => '86° Coma-Correcting',
+                'eyepiece_makes_id' => 81,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
     }
 
     public function down(): void

@@ -14,7 +14,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridFields;
 
 final class AdminEyepieceTable extends PowerGridComponent
 {
-    public string $tableName = 'admin-eyepiece-table-sfghiy-table';
+    public string $tableName = 'admin-eyepiece-table';
 
     public function setUp(): array
     {

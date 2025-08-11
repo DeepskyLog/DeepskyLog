@@ -3,7 +3,7 @@
     @php
         use App\Models\Constellation;
         use App\Models\Eyepiece;
-        use App\Models\FiltersOld;
+        use App\Models\Filter;
         use App\Models\Instrument;
         use App\Models\LocationsOld;
         use App\Models\ObjectsOld;
@@ -83,11 +83,12 @@
                 {{ html_entity_decode(Eyepiece::where('id', $observation->eyepieceid)->first()->fullName()) }}
             </a>
             {{ __(' eyepiece') }}
+
             @if ($observation->filterid > 0)
                 {{ __(' and a ') }}
-                <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_filter&filter={{ $observation->filterid }}"
+                <a href="/filter/{{ $user->slug }}/{{ Filter::where('id', $observation->filterid)->first()->slug }}"
                    class="font-bold hover:underline">
-                    {{ html_entity_decode(FiltersOld::where('id', $observation->filterid)->first()->name) }}
+                    {{ html_entity_decode(Filter::where('id', $observation->filterid)->first()->name) }}
                 </a>
                 {{ __(' filter') }}
             @endif
@@ -95,7 +96,7 @@
             {{ __(' using a ') }}
             <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_filter&filter={{ $observation->filterid }}"
                class="font-bold hover:underline">
-                {{ html_entity_decode(FiltersOld::where('id', $observation->filterid)->first()->name) }}
+                {{ html_entity_decode(Filter::where('id', $observation->filterid)->first()->name) }}
             </a>
             {{ __(' filter') }}
         @endif

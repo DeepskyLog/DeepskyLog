@@ -33,7 +33,7 @@
                                  href="{{ route('eyepiece.create') }}"
                                  label="{{ __('Eyepieces') }}"/>
 
-                <x-dropdown.item icon="plus-circle" href="{{ config('app.old_url') }}/index.php?indexAction=add_filter"
+                <x-dropdown.item icon="plus-circle" href="/filter/create"
                                  label="{{ __('Filters') }}"/>
 
                 <x-dropdown.item icon="plus-circle" href="/lens/create"

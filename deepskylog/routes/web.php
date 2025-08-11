@@ -154,3 +154,28 @@ Route::post('admin/lens_make/store', 'App\Http\Controllers\LensController@storeM
 
 Route::post('admin/lens_make/destroy', 'App\Http\Controllers\LensController@destroyMake')
     ->name('lensmake.destroy')->can('add_sketch', User::class);
+
+// Filters
+Route::resource(
+    'filter',
+    'App\Http\Controllers\FilterController',
+    ['parameters' => ['filter' => 'filter']]
+)->middleware('verified')->except('show');
+
+Route::get('/filter/{user}/{filter}', 'App\Http\Controllers\FilterController@show')
+    ->name('filter.show');
+
+Route::get('/filter/{user}/{filter}/edit', 'App\Http\Controllers\FilterController@edit')
+    ->name('filter.edit')->middleware('auth');
+
+Route::get('/admin/filter', 'App\Http\Controllers\FilterController@indexAdmin')
+    ->name('filter.indexAdmin')->can('add_sketch', User::class);
+
+Route::get('admin/filter_make/{make}/edit', 'App\Http\Controllers\FilterController@editMake')
+    ->name('filter.editMake')->can('add_sketch', User::class);
+
+Route::post('admin/filter_make/store', 'App\Http\Controllers\FilterController@storeMake')
+    ->name('filtermake.store')->can('add_sketch', User::class);
+
+Route::post('admin/filter_make/destroy', 'App\Http\Controllers\FilterController@destroyMake')
+    ->name('filtermake.destroy')->can('add_sketch', User::class);
