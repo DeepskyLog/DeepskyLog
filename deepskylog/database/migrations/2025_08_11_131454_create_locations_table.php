@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('elevation')->default(0);
             $table->string('country', 255)->nullable();
             $table->boolean('active')->default(true);
-            $table->boolean('instrumentactive')->virtualAs('active');
+            $table->boolean('locationactive')->virtualAs('active');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')
                 ->onDelete('cascade');

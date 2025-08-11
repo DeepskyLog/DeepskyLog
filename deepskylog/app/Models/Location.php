@@ -10,6 +10,11 @@ class Location extends Model
 {
     use Sluggable;
 
+    protected $fillable = [
+        'user_id', 'name', 'longitude', 'latitude', 'country', 'timezone', 'limitingMagnitude', 'skyBackground',
+        'elevation', 'active', 'observer', 'picture',
+    ];
+
     public function sluggable(): array
     {
         return [

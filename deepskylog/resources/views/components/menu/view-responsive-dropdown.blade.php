@@ -57,7 +57,7 @@
 
                 <x-dropdown.item
                     icon="globe-europe-africa"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=view_sites"
+                    href="/location"
                     label="{{ __('My locations') }}"
                 />
 
