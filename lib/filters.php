@@ -10,14 +10,37 @@ class Filters
 {
     public function addFilter($name, $type, $color, $wratten, $schott) // addFilter adds a new filter to the database. The name, type, color, wratten and schott should be given as parameters.
     {
-        global $objDatabase;
-        $objDatabase->execSQL("INSERT INTO filters (name, type, color, wratten, schott) VALUES (\"" . $name . "\", \"" . $type . "\", \"" . $color . "\", \"" . $wratten . "\", \"" . $schott . "\")");
-        return $objDatabase->selectSingleValue("SELECT id FROM filters ORDER BY id DESC LIMIT 1", 'id', '');
+        global $objDatabase_new, $loggedUser;
+
+        $user_id = $objDatabase_new->selectSingleValue(
+            "SELECT id FROM users WHERE username = \"" . html_entity_decode($loggedUser) . "\"",
+            'id'
+        );
+
+
+        // Create a slug from the name
+        $slug = $str = strtolower($name);
+
+        // Replace special characters
+        // and spaces with hyphens
+        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+
+        // Trim hyphens from the beginning
+        // and ending of String
+        $slug = trim($slug, '-');
+
+        $created_at = date('Y-m-d H:i:s');
+        $updated_at = date('Y-m-d H:i:s');
+
+        $objDatabase_new->execSQL(
+            "INSERT INTO filters (make_id, name, type_id, color_id, wratten, schott, user_id, observer, slug, created_at, updated_at) VALUES (1, 
+            \"". $name . "\", \"" . ($type + 1) . "\", \"" . ($color + 1) . "\", \"" . $wratten . "\", \"" . $schott . "\", \"" . $user_id . "\", \"" . $loggedUser . "\", \"" . $slug . "\", \"" . $created_at . "\", \"" . $updated_at . "\")");
+        return $objDatabase_new->selectSingleValue("SELECT id FROM filters ORDER BY id DESC LIMIT 1", 'id', '');
     }
     public function getAllFiltersIds($id) // returns a list with all id's which have the same name as the name of the given id
     {
-        global $objDatabase;
-        return $objDatabase->selectSinleArray("SELECT id FROM filters WHERE name = \"" . $objDatabase->selectSingleValue("SELECT name FROM filters WHERE id = \"" . $id . "\"") . "\"");
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleArray("SELECT id FROM filters WHERE name = \"" . $objDatabase->selectSingleValue("SELECT name FROM filters WHERE id = \"" . $id . "\"") . "\"");
     }
     public function getEchoColor($color)
     {
@@ -138,23 +161,23 @@ class Filters
     }
     public function getFilterId($name, $observer) // returns the id for this instrument
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleValue("SELECT id FROM filters where name=\"" . $name . "\" and observer=\"" . $observer . "\"", 'id', -1);
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleValue("SELECT id FROM filters where name=\"" . $name . "\" and observer=\"" . $observer . "\"", 'id', -1);
     }
     public function getFilterObserverPropertyFromName($name, $observer, $property) // returns the property for the filter of the observer
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleValue("SELECT " . $property . " FROM filters where name=\"" . $name . "\" and observer=\"" . $observer . "\"", $property);
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleValue("SELECT " . $property . " FROM filters where name=\"" . $name . "\" and observer=\"" . $observer . "\"", $property);
     }
     public function getFilterPropertiesFromId($id) // returns the properties of the filters with id
     {
-        global $objDatabase;
-        return $objDatabase->selectRecordArray("SELECT * FROM filters WHERE id=\"" . $id . "\"");
+        global $objDatabase_new;
+        return $objDatabase_new->selectRecordArray("SELECT * FROM filters WHERE id=\"" . $id . "\"");
     }
     public function getFilterPropertyFromId($id, $property, $defaultValue = '') // returns the property of the given filter
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleValue("SELECT " . $property . " FROM filters WHERE id = \"" . $id . "\"", $property, $defaultValue);
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleValue("SELECT " . $property . " FROM filters WHERE id = \"" . $id . "\"", $property, $defaultValue);
     }
     public function getFilterUsedFromId($id) // returns the number of times the eyepiece is used in observations
     {
@@ -163,13 +186,13 @@ class Filters
     }
     public function getSortedFilters($sort, $observer = "", $active = '') // returns an array with the ids of all filters, sorted by the column specified in $sort
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleArray("SELECT " . ($observer ? "" : "MAX(id)") . "  id, name FROM filters " . ($observer ? "WHERE observer LIKE \"" . $observer . "\" " . ($active ? " AND filteractive=" . $active : '') : " GROUP BY name") . " ORDER BY " . $sort . ", name", 'id');
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleArray("SELECT " . ($observer ? "" : "MAX(id)") . "  id, name FROM filters " . ($observer ? "WHERE observer LIKE \"" . $observer . "\" " . ($active ? " AND filteractive=" . $active : '') : " GROUP BY name") . " ORDER BY " . $sort . ", name", 'id');
     }
     public function setFilterProperty($id, $property, $propertyValue) // sets the property to the specified value for the given filter
     {
-        global $objDatabase;
-        return $objDatabase->execSQL("UPDATE filters SET " . $property . " = \"" . $propertyValue . "\" WHERE id = \"" . $id . "\"");
+        global $objDatabase_new;
+        return $objDatabase_new->execSQL("UPDATE filters SET " . $property . " = \"" . $propertyValue . "\" WHERE id = \"" . $id . "\"");
     }
     public function showFiltersObserver()
     {
@@ -225,9 +248,9 @@ class Filters
     }
     public function validateDeleteFilter() // validates and deletes a filter
     {
-        global $objUtil, $objDatabase;
+        global $objUtil, $objDatabase_new;
         if (($filterid = $objUtil->checkGetKey('filterid')) && $objUtil->checkAdminOrUserID($this->getFilterPropertyFromId($filterid, 'observer')) && (!($this->getFilterUsedFromId($filterid)))) {
-            $objDatabase->execSQL("DELETE FROM filters WHERE id=\"" . $filterid . "\"");
+            $objDatabase_new->execSQL("DELETE FROM filters WHERE id=\"" . $filterid . "\"");
             return _("The filter is removed from your equipment list");
         }
     }
@@ -240,8 +263,10 @@ class Filters
             return _("The filter is added to your equipment list");
         } elseif ($objUtil->checkPostKey('change') && $objUtil->checkPostKey('id') && $objUtil->checkPostKey('filtername') && $objUtil->checkAdminOrUserID($this->getFilterPropertyFromId($_POST ['id'], 'observer'))) {
             $this->setFilterProperty($_POST ['id'], 'name', $objUtil->checkPostKey('filtername'));
-            $this->setFilterProperty($_POST ['id'], 'type', $objUtil->checkPostKey('type'));
-            $this->setFilterProperty($_POST ['id'], 'color', $objUtil->checkPostKey('color', 0));
+            $type = $objUtil->checkPostKey('type') + 1; // +1 because the color is stored in the database starting from 1
+            $this->setFilterProperty($_POST ['id'], 'type_id', $type);
+            $color = $objUtil->checkPostKey('color', 0) + 1; // +1 because the color is stored in the database starting from 1
+            $this->setFilterProperty($_POST ['id'], 'color_id', $color);
             $this->setFilterProperty($_POST ['id'], 'wratten', $objUtil->checkPostKey('wratten'));
             $this->setFilterProperty($_POST ['id'], 'schott', $objUtil->checkPostKey('schott'));
             // $this->setFilterProperty($_POST['id'], 'observer', $loggedUser);
