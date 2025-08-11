@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\CometObservationsOld;
 use App\Models\Eyepiece;
 use App\Models\Filter;
 use App\Models\Instrument;
