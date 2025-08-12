@@ -150,7 +150,9 @@ class InstrumentTable extends PowerGridComponent
                 ->searchable(),
 
             Column::make(__('Flip'), 'flip_image')
-                ->sortable(),            Column::make('Created At', 'created_at_formatted'),
+                ->sortable(),
+
+            Column::make('Created At', 'created_at_formatted'),
 
             Column::make(__('Flop'), 'flop_image')
                 ->sortable(),

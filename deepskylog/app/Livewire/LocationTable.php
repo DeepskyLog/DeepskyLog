@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use LaravelAstronomy\Astronomy;
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
@@ -47,7 +46,7 @@ final class LocationTable extends PowerGridComponent
 
             PowerGrid::responsive()->fixedColumns('name'),
 
-            PowerGrid::exportable('export')
+            PowerGrid::exportable()
                 ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
         ];
@@ -69,7 +68,7 @@ final class LocationTable extends PowerGridComponent
             ->add('active')
             ->add('country', function ($location) {
                 // Get the country code, based on the country name in English
-                $c = Countries::getList('en');
+                $c = Countries::getList();
                 // Switch key and value
                 $c = array_flip($c);
 
@@ -146,7 +145,7 @@ final class LocationTable extends PowerGridComponent
             Column::add()
                 ->title(__('Active'))
                 ->field('active')
-                ->toggleable(hasPermission: true, trueLabel: 'Yes', falseLabel: 'No')
+                ->toggleable()
                 ->sortable(),
 
             Column::make(__('Country'), 'country')
@@ -171,6 +170,8 @@ final class LocationTable extends PowerGridComponent
 
             Column::make(__('# obs'), 'observations')
                 ->sortable(),
+
+            Column::make('Created At', 'created_at_formatted'),
 
             Column::action('Action'),
         ];

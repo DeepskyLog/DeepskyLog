@@ -9,13 +9,11 @@
     + [X] Update user model to use the locations from the new database.
     + [ ] Add page to see the details of a location
     + [X] Add page to view all locations of an observer
-    + [ ] Creation date is available in the old table. Use it!
     + [ ] Export the xlsx also exports the links.
     + [ ] Add page to add / edit locations.
     + [ ] Move to a better url: wim-de-meester/location/lens-name
     + [ ] Check if the create location and the list location page can only be seen if logged in.
     + [ ] Add page for administrator -> Not needed?
-    + [ ] Check if setting the default location from the user settings works.
     + [ ] Translate the new strings
     + [ ] Use database from the new version in the old version of DeepskyLog.
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)

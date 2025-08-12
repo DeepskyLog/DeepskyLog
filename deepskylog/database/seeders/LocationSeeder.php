@@ -22,6 +22,17 @@ class LocationSeeder extends Seeder
             $observer = User::where('username', html_entity_decode($location->observer))->pluck('id');
 
             if (count($observer) > 0) {
+                if ($location->timestamp == '') {
+                    $date = date('Y-m-d H:i:s');
+                } else {
+                    [$year, $month, $day, $hour, $minute, $second]
+                        = sscanf($location->timestamp, '%4d%2d%2d%2d%2d%d');
+                    $date = date(
+                        'Y-m-d H:i:s',
+                        mktime($hour, $minute, $second, $month, $day, $year)
+                    );
+                }
+
                 Location::create(
                     [
                         'id' => $location->id,
