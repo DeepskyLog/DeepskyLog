@@ -93,9 +93,16 @@ final class EyepieceTable extends PowerGridComponent
         return [
             Column::make('Make', 'make_str'),
             Column::make('Type', 'type_str'),
-            Column::make('Name', 'name_link')
-                ->sortable()
-                ->searchable(),
+
+            Column::make('Name', 'name_link', 'name')
+                ->visibleInExport(false)
+                ->sortable(),
+
+            // Hidden in the grid, but included in the exported file
+            Column::make('Name', 'name')
+                ->searchable()
+                ->hidden()
+                ->visibleInExport(true),
 
             Column::add()
                 ->title(__('Active'))

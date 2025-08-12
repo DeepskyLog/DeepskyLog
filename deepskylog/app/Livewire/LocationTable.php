@@ -139,8 +139,14 @@ final class LocationTable extends PowerGridComponent
     {
         return [
             Column::make(__('Name'), 'name_link', 'name')
-                ->searchable()
+                ->visibleInExport(false)
                 ->sortable(),
+
+            // Hidden in the grid, but included in the exported file
+            Column::make('Name', 'name')
+                ->searchable()
+                ->hidden()
+                ->visibleInExport(true),
 
             Column::add()
                 ->title(__('Active'))
@@ -166,7 +172,8 @@ final class LocationTable extends PowerGridComponent
 
             Column::make('Bortle', 'bortle'),
 
-            Column::make(__('Weather'), 'weather'),
+            Column::make(__('Weather'), 'weather')
+                ->visibleInExport(false),
 
             Column::make(__('# obs'), 'observations')
                 ->sortable(),
