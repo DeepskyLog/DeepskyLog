@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Models\Location;
 use Countries;
-use deepskylog\AstronomyLibrary\Magnitude;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -88,39 +87,21 @@ final class LocationTable extends PowerGridComponent
                 return $elevation;
             })
             ->add('skyBackground', function ($location) {
-                $sqm = $location->skyBackground;
+                $fstOffset = Auth()->user()->fstOffset ?? 0;
+                $sqm = $location->getSqm($fstOffset);
 
-                if ($sqm > 0) {
-                    return $sqm;
-                } elseif ($location->limitingMagnitude > 0) {
-                    // If SQM is < 0, check if limitingMagnitude is > 0
-                    // If so, convert limitingMagnitude to SQM using deepskylog/laravel-astronomy-library
-                    return round(Magnitude::nelmToSqm($location->limitingMagnitude, Auth()->user()->fstOffset), 2);
-                } else {
-                    return __('Unknown');
-                }
+                return $sqm !== null ? $sqm : __('Unknown');
             })
             ->add('limitingMagnitude', function ($location) {
-                $nelm = $location->limitingMagnitude;
+                $fstOffset = Auth()->user()->fstOffset ?? 0;
+                $nelm = $location->getNelm($fstOffset);
 
-                if ($nelm > 0) {
-                    return $nelm;
-                } elseif ($location->skyBackground > 0) {
-                    // If NELM is < 0, check if SQM is > 0
-                    // If so, convert SQM to limitingMagnitude using deepskylog/laravel-astronomy-library
-                    return round(Magnitude::sqmToNelm($location->skyBackground, Auth()->user()->fstOffset), 1);
-                } else {
-                    return __('Unknown');
-                }
+                return $nelm !== null ? $nelm : __('Unknown');
             })
             ->add('bortle', function ($location) {
-                if ($location->skyBackground > 0) {
-                    return Magnitude::sqmToBortle($location->skyBackground);
-                } elseif ($location->limitingMagnitude > 0) {
-                    return Magnitude::nelmToBortle($location->limitingMagnitude);
-                } else {
-                    return __('Unknown');
-                }
+                $bortle = $location->getBortle();
+
+                return $bortle !== null ? $bortle : __('Unknown');
             })
             ->add('weather', function ($location) {
                 return '<a href="https://clearoutside.com/forecast/'

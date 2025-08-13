@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
+use App\Models\Traits\HasObservationsDates;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 
 class Instrument extends Model
 {
+    use HasObservationsDates;
     use Sluggable;
 
     protected $fillable = [
@@ -57,83 +58,14 @@ class Instrument extends Model
         return $this->belongsTo('App\Models\InstrumentType');
     }
 
-    /**
-     * Retrieves the date of the first observation made with the instrument.
-     *
-     * This method calculates the earliest observation date for the instrument from two sources:
-     * - ObservationsOld
-     * - CometObservationsOld
-     *
-     * It compares the minimum dates from both sources and returns the earliest one.
-     * If no observations are found, it returns [null, null].
-     *
-     * The date is formatted according to the current application locale.
-     * Additionally, the method retrieves the ID of the first observation.
-     *
-     * @return array An array containing the formatted date of the first observation and its ID.
-     */
     public function first_observation_date(): array
     {
-        $language = app()->getLocale();
-
-        $firstDeepskyObservation = ObservationsOld::where('instrumentid', $this->id)->min('date');
-        $firstCometObservation = CometObservationsOld::where('instrumentid', $this->id)->min('date');
-
-        if ($firstDeepskyObservation == null && $firstCometObservation != null) {
-            $firstObservation = $firstCometObservation;
-        } elseif ($firstDeepskyObservation != null && $firstCometObservation == null) {
-            $firstObservation = $firstDeepskyObservation;
-        } elseif ($firstDeepskyObservation == null && $firstCometObservation == null) {
-            return [null, null];
-        } else {
-            $firstObservation = min($firstDeepskyObservation, $firstCometObservation);
-        }
-
-        return $this->get_date_and_id($firstObservation, $language, $firstDeepskyObservation);
+        return $this->first_observation_date_generic('instrumentid');
     }
 
-    public function get_date_and_id(mixed $firstObservation, string $language, mixed $firstDeepskyObservation): array
-    {
-        $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
-
-        if ($firstObservation == $firstDeepskyObservation) {
-            $id = ObservationsOld::where('instrumentid', $this->id)->where('date', $firstObservation)->first()['id'];
-        } else {
-            $id = -CometObservationsOld::where('instrumentid', $this->id)->where('date', $firstObservation)->first()['id'];
-        }
-
-        return [$date, $id];
-    }
-
-    /**
-     * Retrieves the date of the last observation made with the instrument.
-     *
-     * This method calculates the last observation date for the instrument from two sources:
-     * - ObservationsOld
-     * - CometObservationsOld
-     *
-     * It compares the maximum dates from both sources and returns the last one.
-     * If no observations are found, it returns [null, null].
-     *
-     * The date is formatted according to the current application locale.
-     * Additionally, the method retrieves the ID of the last observation.
-     *
-     * @return array An array containing the formatted date of the last observation and its ID.
-     */
     public function last_observation_date(): array
     {
-        $language = app()->getLocale();
-
-        $lastDeepskyObservation = ObservationsOld::where('instrumentid', $this->id)->max('date');
-        $lastCometObservation = CometObservationsOld::where('instrumentid', $this->id)->max('date');
-
-        $lastObservation = max($lastDeepskyObservation, $lastCometObservation);
-
-        if ($lastObservation == null) {
-            return [null, null];
-        }
-
-        return $this->get_date_and_id($lastObservation, $language, $lastDeepskyObservation);
+        return $this->last_observation_date_generic('instrumentid');
     }
 
     public function get_used_eyepieces_as_string(): string
@@ -228,8 +160,9 @@ class Instrument extends Model
             if ($location == 0) {
                 continue;
             }
-            $to_return .= "<a href='".config('app.old_url').'index.php?indexAction=detail_location&location='.$location."'>".
-                LocationsOld::where('id', $location)->pluck('name')[0].'</a>'.', ';
+            $loc = Location::where('id', $location)->first();
+            $to_return .= "<a href='/location/".$loc->user->slug.'/'.$loc->slug."'>".
+                $loc->name.'</a>'.', ';
         }
 
         // Remove the trailing comma and space
