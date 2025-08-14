@@ -16,4 +16,12 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
+    optimizeDeps: {
+        exclude: ['leaflet-control-geocoder']
+    },
+    build: {
+        commonjsOptions: {
+            include: [/leaflet-control-geocoder/, /node_modules/]
+        }
+    },
 });

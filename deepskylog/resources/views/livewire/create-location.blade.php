@@ -1,4 +1,3 @@
-
 <div>
     <div>
         <div class="max-w-screen mx-auto bg-gray-900 px-2 py-10 sm:px-6 lg:px-8">
@@ -28,11 +27,6 @@
 
                             <!-- Leaflet.js Map and Search -->
                             <div class="mt-4">
-                                <label class="block text-sm font-medium">{{ __('Search for address') }}</label>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="address-search" class="form-input mt-1 block w-full" placeholder="Enter address...">
-                                        <button type="button" id="address-search-btn" class="btn btn-primary mt-1">{{ __('Search') }}</button>
-                                    </div>
                                     <div id="map" class="w-full h-96 mt-4 rounded" style="z-index:1;" wire:ignore></div>
                             </div>
 
@@ -124,7 +118,7 @@
                     updateLatLng(pos.lat, pos.lng);
                 });
 
-                // Geocoder search
+                // Geocoder search (v3+ API)
                 var geocoder = new L.Control.Geocoder.Nominatim();
                 var geocoderControl = new L.Control.Geocoder({
                     geocoder: geocoder,
@@ -139,26 +133,6 @@
                 });
                 geocoderControl.addTo(window.leafletMap);
 
-                document.getElementById('address-search').addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        var input = this.value.trim();
-                        if (!input) {
-                            alert('Please enter an address to search.');
-                            return;
-                        }
-                        geocoder.geocode(input, function(results) {
-                            if (results.length > 0) {
-                                var result = results[0];
-                                window.leafletMap.setView(result.center, 16);
-                                marker.setLatLng(result.center);
-                                updateLatLng(result.center.lat, result.center.lng);
-                            } else {
-                                alert('No results found for: ' + input);
-                            }
-                        });
-                    }
-                });
             }
 
             if (lat === null || lng === null) {
@@ -181,8 +155,6 @@
                     @this.set('latitude', 28.7606);
                     @this.set('longitude', -17.8892);
                 }
-            } else {
-                initMap(lat, lng);
             }
         }
         window.addEventListener('init-map', initLeafletMap);
