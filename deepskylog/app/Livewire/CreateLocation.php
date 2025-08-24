@@ -292,4 +292,42 @@ class CreateLocation extends Component
             $this->nelm = null;
         }
     }
+
+    public function fetchLightPollutionData(): void
+    {
+        if (!$this->latitude || !$this->longitude) {
+            session()->flash('message', 'Please provide valid latitude and longitude values.');
+            return;
+        }
+
+        $client = new Client;
+        try {
+            $response = $client->get('https://www.lightpollutionmap.info/QueryRaster/', [
+                'query' => [
+                    'ql' => 'wa_2015',
+                    'qt' => 'point',
+                    'qd' => $this->longitude . "," . $this->latitude,
+                    'key' => env('LIGHTPOLLUTIONMAP_API_KEY'),
+                ],
+            ]);
+
+            $data = json_decode($response->getBody(), true);
+            
+            if ($data != null) {
+                // Convert the value to a number and add the natural sky brightness
+                $lpNumber = (float) $data + 0.132025599479675;
+
+                // Calculate SQM
+                $sqm = log10($lpNumber / 108000000) / -0.4;
+
+                // Update the SQM field and trigger updates for NELM and Bortle
+                $this->sqm = round($sqm, 2);
+                $this->updatedSqm($this->sqm);
+            } else {
+                session()->flash('message', 'Error fetching data from Light Pollution Map.');
+            }
+        } catch (GuzzleException $e) {
+            session()->flash('message', 'Error fetching data from Light Pollution Map.');
+        }
+    }
 }

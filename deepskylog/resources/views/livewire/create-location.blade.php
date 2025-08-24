@@ -133,6 +133,16 @@
                                         option-value="id"
                                     />
                                 </div>
+
+                                <!-- Fetch button -->
+                                <div class="flex items-end">
+                                    <x-button
+                                        type="button"
+                                        secondary
+                                        label="{{ __('Fetch from Light Pollution Map') }}"
+                                        wire:click="fetchLightPollutionData"
+                                    />
+                                </div>
                             </div>
 
                             <x-toggle
