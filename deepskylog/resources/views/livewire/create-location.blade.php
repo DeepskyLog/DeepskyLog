@@ -51,6 +51,36 @@
                                 value="{{ old('longitude') }}"
                             />
 
+                            <x-input
+                                name="elevation"
+                                label="{{ __('Elevation (meters)') }}"
+                                type="number"
+                                step="any"
+                                wire:model.live="elevation"
+                                class="mt-1 block w-full"
+                                value="{{ old('elevation') }}"
+                            />
+
+                            <x-input
+                                name="country"
+                                label="{{ __('Country') }}"
+                                type="text"
+                                wire:model.live="country"
+                                class="mt-1 block w-full"
+                                maxlength="255"
+                                value="{{ old('country') }}"
+                            />
+
+                            <x-input
+                                name="timezone"
+                                label="{{ __('Timezone') }}"
+                                type="text"
+                                wire:model.live="timezone"
+                                class="mt-1 block w-full"
+                                maxlength="255"
+                                value="{{ old('timezone') }}"
+                            />
+
                             <x-toggle
                                 name="hidden"
                                 label="{{ __('Hidden') }}"
@@ -104,6 +134,7 @@
                 function updateLatLng(lat, lng) {
                     @this.set('latitude', lat);
                     @this.set('longitude', lng);
+                    @this.call('updateElevation', lat, lng);
                 }
 
                 window.leafletMap.on('moveend', function () {

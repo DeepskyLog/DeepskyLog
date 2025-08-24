@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\HasObservationsDates;
 use Cviebrock\EloquentSluggable\Sluggable;
+use deepskylog\AstronomyLibrary\Magnitude;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -15,6 +16,7 @@ class Location extends Model
     protected $fillable = [
         'user_id', 'name', 'longitude', 'latitude', 'country', 'timezone', 'limitingMagnitude', 'skyBackground',
         'elevation', 'active', 'observer', 'picture', 'hidden',
+        'description',
     ];
 
     protected $casts = [
@@ -104,7 +106,7 @@ class Location extends Model
         if ($this->skyBackground > 0) {
             return $this->skyBackground;
         } elseif ($this->limitingMagnitude > 0) {
-            return round(\deepskylog\AstronomyLibrary\Magnitude::nelmToSqm($this->limitingMagnitude, $fstOffset), 2);
+            return round(Magnitude::nelmToSqm($this->limitingMagnitude, $fstOffset), 2);
         } else {
             return null;
         }
@@ -118,7 +120,7 @@ class Location extends Model
         if ($this->limitingMagnitude > 0) {
             return $this->limitingMagnitude;
         } elseif ($this->skyBackground > 0) {
-            return round(\deepskylog\AstronomyLibrary\Magnitude::sqmToNelm($this->skyBackground, $fstOffset), 1);
+            return round(Magnitude::sqmToNelm($this->skyBackground, $fstOffset), 1);
         } else {
             return null;
         }
@@ -130,9 +132,9 @@ class Location extends Model
     public function getBortle()
     {
         if ($this->skyBackground > 0) {
-            return \deepskylog\AstronomyLibrary\Magnitude::sqmToBortle($this->skyBackground);
+            return Magnitude::sqmToBortle($this->skyBackground);
         } elseif ($this->limitingMagnitude > 0) {
-            return \deepskylog\AstronomyLibrary\Magnitude::nelmToBortle($this->limitingMagnitude);
+            return Magnitude::nelmToBortle($this->limitingMagnitude);
         } else {
             return null;
         }
