@@ -28,6 +28,10 @@ class CreateLocation extends Component
 
     public $hidden = false;
 
+    public $country;
+
+    public $timezone;
+
     protected $rules = [
         'name' => 'required|string|max:255',
         'description' => 'nullable|string',
@@ -80,6 +84,9 @@ class CreateLocation extends Component
 
     public function updateElevation($latitude, $longitude): void
     {
+        // TODO: Only update the elevation, country and timezone if the location is saved.
+        // TODO: Add Extra fields
+        // TODO: Add SQM, NELM, Bortle from API.
         $client = new Client;
         try {
             $response = $client->get('https://api.opentopodata.org/v1/mapzen', [
@@ -98,8 +105,44 @@ class CreateLocation extends Component
             // Should work: Need to make sure to only get the elevation when saving the data.
             // Can be hosted on our own server if needed: See https://www.opentopodata.org/#public-api
             $this->elevation = $data['results'][0]['elevation'] ?? 0;
+
+            $this->updateCountry($latitude, $longitude);
         } catch (GuzzleException) {
             $this->elevation = 0;
+        }
+    }
+
+    public function updateCountry($latitude, $longitude): void
+    {
+        $client = new Client;
+        try {
+            $response = $client->get('https://api.bigdatacloud.net/data/reverse-geocode-client', [
+                'query' => [
+                    'latitude' => $latitude,
+                    'longitude' => $longitude,
+                    'localityLanguage' => 'en',
+                    'key' => env('BIGDATA_API_KEY'),
+                ],
+            ]);
+            $data = json_decode($response->getBody(), true);
+            $this->country = $data['countryName'] ?? 'Unknown';
+        } catch (GuzzleException $e) {
+            $this->country = 'Unknown';
+        }
+
+        $client2 = new Client;
+        try {
+            $response = $client2->get('https://api-bdc.net/data/timezone-by-location', [
+                'query' => [
+                    'latitude' => $latitude,
+                    'longitude' => $longitude,
+                    'key' => env('BIGDATA_API_KEY'),
+                ],
+            ]);
+            $data = json_decode($response->getBody(), true);
+            $this->timezone = $data['ianaTimeId'] ?? 'UTC';
+        } catch (GuzzleException $e) {
+            $this->timezone = 'UTC';
         }
     }
 
