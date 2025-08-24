@@ -82,7 +82,7 @@
                             />
 
                             <!-- SQM, NELM and Bortle on one line -->
-                            <div class="mt-4 flex gap-3">
+                            <div class="mt-4 flex flex-col gap-3 sm:flex-row">
                                 <div class="flex-1">
                                     <x-input
                                         name="sqm"
