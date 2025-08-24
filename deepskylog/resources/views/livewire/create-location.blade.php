@@ -81,6 +81,60 @@
                                 value="{{ old('timezone') }}"
                             />
 
+                            <!-- SQM, NELM and Bortle on one line -->
+                            <div class="mt-4 flex gap-3">
+                                <div class="flex-1">
+                                    <x-input
+                                        name="sqm"
+                                        label="{{ __('SQM (mag/arcsec²)') }}"
+                                        type="number"
+                                        step="0.01"
+                                        min="15"
+                                        max="22"
+                                        wire:model.live="sqm"
+                                        class="mt-1 block w-full"
+                                        value="{{ old('sqm') }}"
+                                    />
+                                </div>
+
+                                <div class="flex-1">
+                                    <x-input
+                                        name="nelm"
+                                        label="{{ __('NELM') }}"
+                                        type="number"
+                                        step="0.1"
+                                        min="0"
+                                        max="8"
+                                        wire:model.live="nelm"
+                                        class="mt-1 block w-full"
+                                        value="{{ old('nelm') }}"
+                                    />
+                                </div>
+
+                                <div class="flex-1">
+                                    <x-select
+                                        id="bortle"
+                                        name="bortle"
+                                        label="{{ __('Bortle') }}"
+                                        wire:model.live="bortle"
+                                        x-on:selected="$wire.set('bortle', $event.detail.value)"
+                                        :options="[
+                                            ['id' => 1, 'name' => '1 - Excellent dark-sky site'],
+                                            ['id' => 2, 'name' => '2 - Typical truly dark site'],
+                                            ['id' => 3, 'name' => '3 - Rural sky'],
+                                            ['id' => 4, 'name' => '4 - Rural/suburban transition'],
+                                            ['id' => 5, 'name' => '5 - Suburban sky'],
+                                            ['id' => 6, 'name' => '6 - Bright suburban sky'],
+                                            ['id' => 7, 'name' => '7 - Suburban/urban transition'],
+                                            ['id' => 8, 'name' => '8 - City sky'],
+                                            ['id' => 9, 'name' => '9 - Inner-city sky'],
+                                        ]"
+                                        option-label="name"
+                                        option-value="id"
+                                    />
+                                </div>
+                            </div>
+
                             <x-toggle
                                 name="hidden"
                                 label="{{ __('Hidden') }}"
@@ -134,7 +188,6 @@
                 function updateLatLng(lat, lng) {
                     @this.set('latitude', lat);
                     @this.set('longitude', lng);
-                    @this.call('updateElevation', lat, lng);
                 }
 
                 window.leafletMap.on('moveend', function () {

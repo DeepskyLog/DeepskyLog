@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Location;
+use deepskylog\AstronomyLibrary\Magnitude;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\View\Factory;
@@ -32,6 +33,12 @@ class CreateLocation extends Component
 
     public $timezone;
 
+    public $sqm;
+
+    public $nelm;
+
+    public $bortle;
+
     protected $rules = [
         'name' => 'required|string|max:255',
         'description' => 'nullable|string',
@@ -39,6 +46,9 @@ class CreateLocation extends Component
         'longitude' => 'nullable|numeric',
         'hidden' => 'boolean',
         'elevation' => 'nullable|numeric',
+        'sqm' => 'nullable|numeric|min:15|max:22',
+        'nelm' => 'nullable|numeric|min:0|max:8',
+        'bortle' => 'nullable|integer|between:1,9',
     ];
 
     public function mount($location = null): void
@@ -52,6 +62,9 @@ class CreateLocation extends Component
             $this->longitude = $location->longitude;
             $this->hidden = $location->hidden;
             $this->elevation = $location->elevation;
+            $this->sqm = $location->sqm ?? null;
+            $this->nelm = $location->nelm ?? null;
+            $this->bortle = $location->bortle ?? null;
         }
     }
 
@@ -66,6 +79,9 @@ class CreateLocation extends Component
                 'longitude' => $this->longitude,
                 'hidden' => $this->hidden,
                 'elevation' => $this->elevation,
+                'sqm' => $this->sqm,
+                'nelm' => $this->nelm,
+                'bortle' => $this->bortle,
             ]);
             session()->flash('message', 'Location updated successfully!');
         } else {
@@ -76,9 +92,12 @@ class CreateLocation extends Component
                 'longitude' => $this->longitude,
                 'hidden' => $this->hidden,
                 'elevation' => $this->elevation,
+                'sqm' => $this->sqm,
+                'nelm' => $this->nelm,
+                'bortle' => $this->bortle,
             ]);
             session()->flash('message', 'Location created successfully!');
-            $this->reset(['name', 'description', 'latitude', 'longitude', 'hidden']);
+            $this->reset(['name', 'description', 'latitude', 'longitude', 'hidden', 'sqm', 'nelm', 'bortle']);
         }
     }
 
@@ -149,5 +168,128 @@ class CreateLocation extends Component
     public function render(): \Illuminate\Contracts\View\View|Application|Factory|View
     {
         return view('livewire.create-location');
+    }
+
+    /**
+     * When the SQM value is updated in the UI, calculate and set NELM and Bortle.
+     */
+    public function updatedSqm($value): void
+    {
+        if ($value === null || $value === '') {
+            $this->nelm = null;
+            $this->bortle = null;
+
+            return;
+        }
+
+        // Ensure numeric
+        if (! is_numeric($value)) {
+            $this->nelm = null;
+            $this->bortle = null;
+
+            return;
+        }
+
+        try {
+            $fstOffset = auth()->check() ? (auth()->user()->fstOffset ?? 0) : 0;
+            // NELM: one decimal like Location::getNelm
+            $this->nelm = round(Magnitude::sqmToNelm((float) $value, $fstOffset), 1);
+            // Bortle: integer (Magnitude methods return integer)
+            $this->bortle = Magnitude::sqmToBortle((float) $value);
+        } catch (\Throwable $e) {
+            // In case of any error, clear the derived values
+            $this->nelm = null;
+            $this->bortle = null;
+        }
+    }
+
+    /**
+     * When the NELM value is updated in the UI, calculate and set SQM and Bortle.
+     * Includes a small tolerance guard to avoid back-and-forth updates between fields.
+     */
+    public function updatedNelm($value): void
+    {
+        if ($value === null || $value === '') {
+            $this->sqm = null;
+            $this->bortle = null;
+
+            return;
+        }
+
+        if (! is_numeric($value)) {
+            $this->sqm = null;
+            $this->bortle = null;
+
+            return;
+        }
+
+        try {
+            $fstOffset = auth()->check() ? (auth()->user()->fstOffset ?? 0) : 0;
+            // SQM: round to 2 decimals as in Location::getSqm when converted from NELM
+            $computedSqm = round(Magnitude::nelmToSqm((float) $value, $fstOffset), 2);
+            $computedBortle = Magnitude::nelmToBortle((float) $value);
+
+            // Avoid tiny oscillations: only update if difference is noticeable
+            if ($this->sqm === null || abs((float) $this->sqm - $computedSqm) > 0.01) {
+                $this->sqm = $computedSqm;
+            }
+
+            if ($this->bortle === null || (int) $this->bortle !== (int) $computedBortle) {
+                $this->bortle = $computedBortle;
+            }
+        } catch (\Throwable $e) {
+            $this->sqm = null;
+            $this->bortle = null;
+        }
+    }
+
+    /**
+     * When the Bortle value is updated in the UI, calculate and set SQM and NELM.
+     */
+    public function updatedBortle($value): void
+    {
+        if ($value === null || $value === '') {
+            $this->sqm = null;
+            $this->nelm = null;
+
+            return;
+        }
+
+        // Accept numeric or integer-like values
+        if (! is_numeric($value)) {
+            $this->sqm = null;
+            $this->nelm = null;
+
+            return;
+        }
+
+        try {
+            $b = (int) $value;
+
+            // Assumed helper methods exist to convert from Bortle to NELM and SQM.
+            $fstOffset = auth()->check() ? (auth()->user()->fstOffset ?? 0) : 0;
+            $computedNelm = Magnitude::bortleToNelm($b, $fstOffset);
+            $computedSqm = Magnitude::bortleToSqm($b);
+
+            // Round to match other methods: NELM one decimal, SQM two decimals
+            if ($computedNelm !== null) {
+                $computedNelm = round($computedNelm, 1);
+            }
+            if ($computedSqm !== null) {
+                $computedSqm = round($computedSqm, 2);
+            }
+
+            // Update if noticeably different to avoid small oscillations
+            if ($this->nelm === null || abs((float) $this->nelm - (float) $computedNelm) > 0.01) {
+                $this->nelm = $computedNelm;
+            }
+
+            if ($this->sqm === null || abs((float) $this->sqm - (float) $computedSqm) > 0.01) {
+                $this->sqm = $computedSqm;
+            }
+        } catch (\Throwable $e) {
+            $this->sqm = null;
+            $this->nelm = null;
+        }
     }
 }
