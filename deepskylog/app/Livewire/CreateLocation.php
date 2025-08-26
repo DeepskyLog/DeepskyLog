@@ -10,9 +10,12 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
 use Illuminate\View\View;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class CreateLocation extends Component
 {
+    use WithFileUploads;
+
     public $location;
 
     public $update = false;
@@ -38,6 +41,9 @@ class CreateLocation extends Component
     public $nelm;
 
     public $bortle;
+
+    #[Validate('image')]
+    public $photo;
 
     protected $listeners = [
         'setDescription',

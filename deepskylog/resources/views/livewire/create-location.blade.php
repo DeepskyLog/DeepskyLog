@@ -169,9 +169,31 @@
                                 ></textarea>
                             </div>
 
-                        </div>
+                            <div class="mt-5">
+                                <x-input type="file"
+                                            label="{!! __('Upload image') !!}"
+                                            wire:model="photo"/>
 
-                        <br/>
+                                @error('photo') <span class="error">{{ $message }}</span> @enderror
+
+                                @if ($update)
+                                    @if($location->picture)
+                                        <img
+                                            alt="{{ __('Picture of location') }}"
+                                            class="mt-2 h-40 w-40 object-cover"
+                                            src="{{ '/storage/'.asset($location->picture) }}">
+
+                                    @endif
+                                @endif
+                                @if ($photo)
+                                    <img
+                                        alt="{{ __('Picture of location') }}"
+                                        class="mt-2 h-40 w-40 object-cover"
+                                        src="{{ $photo->temporaryUrl() }}">
+                                @endif
+                            </div>
+
+                            <br/>
 
                         @if($update)
                             <x-button class="mt-5" type="submit" secondary label="{{ __('Update location') }}" />
