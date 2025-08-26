@@ -8,41 +8,18 @@
     + [X] Write script to populate the tables from the old database.
     + [X] Update user model to use the locations from the new database.
     + [ ] Add page to see the details of a location
-        + [ ] Add a hidden field to the database to make sure that the coordinates and the map are only shown if hidden
-          is true.
+        + [ ] Add a hidden field to the database to make sure that the coordinates and the map are only shown if hidden is true.
         + [ ] Add a description field with a description of the location.
         + [ ] Add an image field, with the picture of the location
-        + [ ] Searching on the map works. Next step: Use the reverse geocoder API to get the elevation from the
-          location.
-        + To meet your requirements in Laravel:
-
-2. **Get country and timezone from coordinates:**  
-   Use [geocoder-php/laravel-geocoder](https://github.com/geocoder-php/GeocoderLaravel) (free, supports OpenStreetMap
-   Nominatim for reverse geocoding).
-
-**Summary of integration:**
-
-- Use `geocoder-php/laravel-geocoder` for reverse geocoding in your Laravel backend.
-
-**Example usage in controller:**
-
-```php
-use Geocoder;
-
-$results = Geocoder::reverse($latitude, $longitude)->get();
-$country = $results->first()->getCountry()->getName();
-$timezone = $results->first()->getTimezone()->getName();
-```
-
-+ [X] Add page to view all locations of an observer
-+ [ ] Add page to add / edit locations.
-+ [ ] Move to a better url: wim-de-meester/location/lens-name
-+ [ ] Check if the create location and the list location page can only be seen if logged in.
-+ [ ] Add page for administrator -> Not needed?
-+ [ ] Translate the new strings
-+ [ ] Use database from the new version in the old version of DeepskyLog.
-+ [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
-+ [ ] Release new version of pyDeepskyLog
+    + [X] Add page to view all locations of an observer
+    + [ ] Add page to add / edit locations.
+    + [ ] Move to a better url: wim-de-meester/location/lens-name
+    + [ ] Check if the create location and the list location page can only be seen if logged in.
+    + [ ] Add page for administrator -> Not needed?
+    + [ ] Translate the new strings
+    + [ ] Use database from the new version in the old version of DeepskyLog.
+    + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
+    + [ ] Release new version of pyDeepskyLog
 
 + [ ] Create instrument sets tables in the new version of DeepskyLog
     + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into

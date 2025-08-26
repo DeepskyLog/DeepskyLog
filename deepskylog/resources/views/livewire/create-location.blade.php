@@ -82,7 +82,7 @@
                             />
 
                             <!-- SQM, NELM and Bortle on one line -->
-                            <div class="mt-4 flex flex-col gap-3 sm:flex-row">
+                            <div class="mt-4 flex flex-col gap-3 md:flex-row">
                                 <div class="flex-1">
                                     <x-input
                                         name="sqm"
@@ -145,13 +145,30 @@
                                 </div>
                             </div>
 
+                            <br />
+
                             <x-toggle
                                 name="hidden"
-                                label="{{ __('Hidden') }}"
+                                label="{{ __('Hide the exact location for other users') }}"
                                 wire:model="hidden"
                                 class="mt-2"
                                 id="hidden"
                             />
+
+                            <br />
+
+                            <div class="col-span-6 text-sm text-gray-400 sm:col-span-5">
+                                {{ __("Tell something about your location") }}
+                            </div>
+                            <div class="col-span-6 sm:col-span-5" wire:ignore>
+                                <textarea
+                                    wire:model.live="description"
+                                    class="h-48 min-h-fit"
+                                    name="description"
+                                    id="description"
+                                ></textarea>
+                            </div>
+
                         </div>
 
                         <br/>
@@ -254,5 +271,84 @@
         window.addEventListener('init-map', initLeafletMap);
         document.addEventListener('DOMContentLoaded', initLeafletMap);
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function initializeTinyMCE() {
+                if (typeof tinymce === 'undefined') return;
+                var el = document.querySelector('#description');
+                if (!el) return;
+
+                if (tinymce.get("description")) {
+                    tinymce.get("description").remove();
+                }
+
+                tinymce.init({
+                    selector: "#description",
+                    plugins: "lists emoticons quickbars wordcount",
+                    toolbar: "undo redo | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | emoticons | wordcount",
+                    menubar: false,
+                    license_key: 'gpl',
+                    quickbars_insert_toolbar: false,
+                    quickbars_image_toolbar: false,
+                    quickbars_selection_toolbar: "bold italic",
+                    skin: "oxide-dark",
+                    content_css: "dark",
+                    setup: function (editor) {
+                        editor.on("init", function () {
+                            editor.save();
+                            console.log('TinyMCE initialized for #description');
+                        });
+                        editor.on("change", function () {
+                            editor.save();
+                            if (typeof Livewire !== 'undefined') {
+                                Livewire.emit('setDescription', editor.getContent());
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Try to initialize immediately if possible.
+            if (typeof tinymce !== 'undefined' && document.querySelector('#description')) {
+                initializeTinyMCE();
+            } else {
+                // Retry for a short period in case assets are still loading or Livewire re-renders.
+                var retryCount = 0;
+                var retryMax = 20; // ~5 seconds
+                var retryInterval = setInterval(function () {
+                    retryCount++;
+                    if (typeof tinymce !== 'undefined' && document.querySelector('#description')) {
+                        initializeTinyMCE();
+                        clearInterval(retryInterval);
+                    } else if (retryCount >= retryMax) {
+                        clearInterval(retryInterval);
+                    }
+                }, 250);
+            }
+
+            // Initialize on Livewire load and after messages processed to survive re-renders.
+            document.addEventListener('livewire:load', function () {
+                initializeTinyMCE();
+            });
+
+            // Attach hook when Livewire becomes available.
+            if (typeof Livewire !== 'undefined' && Livewire.hook) {
+                Livewire.hook('message.processed', function () {
+                    initializeTinyMCE();
+                });
+            } else {
+                window.addEventListener('livewire:load', function () {
+                    if (typeof Livewire !== 'undefined' && Livewire.hook) {
+                        Livewire.hook('message.processed', function () {
+                            initializeTinyMCE();
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+
+
 @endpush
 

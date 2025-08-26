@@ -16,6 +16,13 @@
         <!-- Scripts -->
         <wireui:scripts />
         @vite(["resources/css/app.css", "resources/js/app.js"])
+    <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
+        <style>
+            /* Ensure TinyMCE UI is above map and other controls (Leaflet uses high z-index for some controls) */
+            .tox, .tox-tinymce, .tox-tinymce-aux, .tox-tinymce-aux .tox, .tox .tox-toolbar, .tox .tox-toolbar__primary {
+                z-index: 99999 !important;
+            }
+        </style>
 
         <!-- Styles -->
         @livewireStyles
@@ -88,7 +95,7 @@
             </div>
         </footer>
 
-        @stack("scripts")
+    @stack("scripts")
         @stack("modals")
 
         @livewireScripts

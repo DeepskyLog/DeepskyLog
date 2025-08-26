@@ -39,6 +39,10 @@ class CreateLocation extends Component
 
     public $bortle;
 
+    protected $listeners = [
+        'setDescription',
+    ];
+
     protected $rules = [
         'name' => 'required|string|max:255',
         'description' => 'nullable|string',
@@ -101,11 +105,15 @@ class CreateLocation extends Component
         }
     }
 
+    public function setDescription($value): void
+    {
+        $this->description = $value;
+    }
+
     public function updateElevation($latitude, $longitude): void
     {
         // TODO: Only update the elevation, country and timezone if the location is saved.
         // TODO: Add Extra fields
-        // TODO: Add SQM, NELM, Bortle from API.
         $client = new Client;
         try {
             $response = $client->get('https://api.opentopodata.org/v1/mapzen', [
@@ -295,8 +303,9 @@ class CreateLocation extends Component
 
     public function fetchLightPollutionData(): void
     {
-        if (!$this->latitude || !$this->longitude) {
+        if (! $this->latitude || ! $this->longitude) {
             session()->flash('message', 'Please provide valid latitude and longitude values.');
+
             return;
         }
 
@@ -306,13 +315,13 @@ class CreateLocation extends Component
                 'query' => [
                     'ql' => 'wa_2015',
                     'qt' => 'point',
-                    'qd' => $this->longitude . "," . $this->latitude,
+                    'qd' => $this->longitude.','.$this->latitude,
                     'key' => env('LIGHTPOLLUTIONMAP_API_KEY'),
                 ],
             ]);
 
             $data = json_decode($response->getBody(), true);
-            
+
             if ($data != null) {
                 // Convert the value to a number and add the natural sky brightness
                 $lpNumber = (float) $data + 0.132025599479675;
