@@ -168,6 +168,15 @@
 
                             @endif
                         @endauth
+
+                        <tr>
+                            <td>{{ __('Weather Prospects') }}</td>
+                            <td>
+                                <a href="https://clearoutside.com/forecast/{{ round($location->latitude, 2) }}/{{ round($location->longitude, 2) }}">
+                                    <img alt="Weather forecast" src="https://clearoutside.com/forecast_image_small/{{ round($location->latitude, 2) }}/{{ round($location->longitude, 2) }}/forecast.png" />
+                                </a>
+                            </td>
+                        </tr>
                     </table>
 
                     @auth

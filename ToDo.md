@@ -14,11 +14,10 @@
     + [X] Check if the create location and the list location page can only be seen if logged in.
     + [X] Add page for administrator -> Not needed?
     + [X] Translate the new strings
-    + [ ] Use database from the new version in the old version of DeepskyLog.
+    + [X] Use database from the new version in the old version of DeepskyLog.
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
-    + [ ] Release new version of pyDeepskyLog
-    + [ ] Add description also for instruments, lenses, eyepieces, filters?
 
++ [ ] Add description also for instruments, lenses, eyepieces, filters?
 + [ ] Create instrument sets tables in the new version of DeepskyLog
     + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into account the Barlow and other lenses)
 + [ ] Like observations / sketches / sessions / user profiles
@@ -62,8 +61,9 @@
   latest observations
 + [X] Add object type and constellation to the list of 10 newest observations
 + [X] Automatically translate the descriptions of observations on the home page.
-+ [X] Add instruments, eyepieces, lenses and filters to the new version of DeepskyLog.
++ [X] Add locations, instruments, eyepieces, lenses and filters to the new version of DeepskyLog.
     + [X] Use /instrument/user-slug/instrument-slug as url
++ [X] Add description and picture to locations, instruments, eyepieces, lenses and filters.
 
 ## Eloquent
 
