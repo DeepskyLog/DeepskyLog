@@ -68,9 +68,9 @@
                             <tr>
                                 <td>{!! __("Default observing site") !!}</td>
                                 <td>
-                                    @if ($user->stdlocation && $user->stdLocation != null)
+                                    @if ($user->stdlocation && $user->stdlocation != null)
                                         <a
-                                            href="{{ config("app.old_url") }}/index.php?indexAction=detail_location&location={{ $user->stdlocation }}"
+                                            href="/location/{{ $user->slug }}/{{ $user->standardLocation->slug }}"
                                         >
                                             {!! $user->standardLocation->name !!}
                                         </a>

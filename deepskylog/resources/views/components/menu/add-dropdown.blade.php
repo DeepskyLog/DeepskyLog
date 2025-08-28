@@ -26,7 +26,7 @@
                                  label="{{ __('Instruments') }}"/>
 
                 <x-dropdown.item icon="globe-europe-africa"
-                                 href="{{ config('app.old_url') }}/index.php?indexAction=add_location"
+                                 href="{{ route('location.create') }}"
                                  label="{{ __('Locations') }}"/>
 
                 <x-dropdown.item icon="plus-circle"

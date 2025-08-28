@@ -1,7 +1,7 @@
 @php use App\Models\User; @endphp
 @php use App\Models\CometObjectsOld; @endphp
 @php use Carbon\Carbon; @endphp
-@php use App\Models\LocationsOld; @endphp
+@php use App\Models\Location; @endphp
 @php use App\Models\Instrument; @endphp
 @props([
     "observation",
@@ -45,10 +45,10 @@
         @if ($observation->locationid > 0)
             {{ __(" from ") }}
             <a
-                href="{{ config("app.old_url") }}/index.php?indexAction=detail_location&location={{ $observation->locationid }}"
+                href="/location/{{$user->slug}}/{{ Location::where("id", $observation->locationid)->first()->slug }}"
                 class="font-bold hover:underline"
             >
-                {{ html_entity_decode(LocationsOld::where("id", $observation->locationid)->first()->name) }}
+                {{ html_entity_decode(Location::where("id", $observation->locationid)->first()->name) }}
                 .
             </a>
         @endif

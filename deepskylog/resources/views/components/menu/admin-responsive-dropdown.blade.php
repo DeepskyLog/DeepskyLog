@@ -56,13 +56,6 @@
 
                     @if (Auth::user()->isAdministrator())
                         <x-dropdown.item
-                            icon="globe-europe-africa"
-                            separator
-                            href="{{ config('app.old_url') }}/index.php?indexAction=overview_locations"
-                            label="{{ __('Locations') }}"
-                        />
-
-                        <x-dropdown.item
                             href="/admin/instrument"
                             label="{{ __('Instrument Makes') }}"
                         />

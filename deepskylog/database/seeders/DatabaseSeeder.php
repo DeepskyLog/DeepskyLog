@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
                 //                InstrumentSeeder::class,
                 //                EyepieceSeeder::class,
                 //                LensSeeder::class,
-                FilterSeeder::class,
+                //                FilterSeeder::class,
+                LocationSeeder::class,
             ]
         );
     }

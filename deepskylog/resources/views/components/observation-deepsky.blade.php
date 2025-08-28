@@ -5,7 +5,7 @@
         use App\Models\Eyepiece;
         use App\Models\Filter;
         use App\Models\Instrument;
-        use App\Models\LocationsOld;
+        use App\Models\Location;
         use App\Models\ObjectsOld;
         use App\Models\User;
         use Carbon\Carbon;
@@ -41,9 +41,9 @@
         {{ __(' on ') }}
         {{ Carbon::create($observation_date)->translatedFormat('j M Y') }}
         {{ __(' from ') }}
-        <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_location&location={{ $observation->locationid }}"
+        <a href="/location/{{ $user->slug }}/{{ Location::where('id', $observation->locationid)->first()->slug }}"
            class="font-bold hover:underline">
-            {{ html_entity_decode(LocationsOld::where('id', $observation->locationid)->first()->name) }}
+            {{ html_entity_decode(Location::where('id', $observation->locationid)->first()->name) }}
         </a>
 
         {{-- Seeing --}}

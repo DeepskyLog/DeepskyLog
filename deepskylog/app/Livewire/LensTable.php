@@ -79,9 +79,15 @@ class LensTable extends PowerGridComponent
             Column::make(__('Make'), 'makestr')
                 ->searchable(),
 
-            Column::make(__('Name'), 'name_link', 'name')
-                ->searchable()
+            Column::make('Name', 'name_link', 'name')
+                ->visibleInExport(false)
                 ->sortable(),
+
+            // Hidden in the grid, but included in the exported file
+            Column::make('Name', 'name')
+                ->searchable()
+                ->hidden()
+                ->visibleInExport(true),
 
             Column::add()
                 ->title(__('Active'))

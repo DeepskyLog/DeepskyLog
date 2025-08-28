@@ -4,24 +4,27 @@
 
 ### Next steps
 
-+ [ ] Fix logging in
 + [ ] Create locations tables in the new version of DeepskyLog
-    + [ ] Write script to populate the tables from the old database.
-    + [ ] Use database from the new version in the old version of DeepskyLog.
-    + [ ] Make a table for the filter makes and add some standard makes (like Tele Vue, ...)
-    + [ ] Update user model to use the filters from the new database.
-    + [ ] Add page to see the details of a filter
-    + [ ] Add page to view all filters of an observer
-    + [ ] Add page to add / edit filters.
-    + [ ] Move to a better url: wim-de-meester/filter/lens-name
-    + [ ] Check if the create filter and the list filter page can only be seen if logged in.
-    + [ ] Add page for administrator (only for the filter_makes table)
-    + [ ] Translate the new strings
+    + [X] Write script to populate the tables from the old database.
+    + [X] Update user model to use the locations from the new database.
+    + [X] Add page to see the details of a location
+    + [X] Add page to view all locations of an observer
+    + [X] Add page to add / edit locations.
+    + [X] Move to a better url: wim-de-meester/location/location-name
+    + [X] Check if the create location and the list location page can only be seen if logged in.
+    + [X] Add page for administrator -> Not needed?
+    + [X] Translate the new strings
+    + [X] Use database from the new version in the old version of DeepskyLog.
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
-    + [ ] Release new version of pyDeepskyLog
+
++ [ ] Add description also for instruments, lenses, eyepieces, filters?
 + [ ] Create instrument sets tables in the new version of DeepskyLog
-    + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into
-      account the Barlow and other lenses)
+    + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into account the Barlow and other lenses)
++ [ ] Like observations / sketches / sessions / user profiles
++ [ ] Fix logging in -> Only problem on Phone
++ [ ] Release new version of pyDeepskyLog
+    + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
+
 
 ### Distant future
 
@@ -33,7 +36,6 @@
 + [ ] Targets
 + [ ] Observing lists
 + [ ] Friends? Add friends and see their observations / sessions / ... Different lists for Murzim, Capella, ...
-+ [ ] Like observations / sketches / sessions / user profiles
 
 ### Done
 
@@ -59,8 +61,9 @@
   latest observations
 + [X] Add object type and constellation to the list of 10 newest observations
 + [X] Automatically translate the descriptions of observations on the home page.
-+ [X] Add instruments, eyepieces, lenses and filters to the new version of DeepskyLog.
++ [X] Add locations, instruments, eyepieces, lenses and filters to the new version of DeepskyLog.
     + [X] Use /instrument/user-slug/instrument-slug as url
++ [X] Add description and picture to locations, instruments, eyepieces, lenses and filters.
 
 ## Eloquent
 

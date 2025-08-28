@@ -179,3 +179,16 @@ Route::post('admin/filter_make/store', 'App\Http\Controllers\FilterController@st
 
 Route::post('admin/filter_make/destroy', 'App\Http\Controllers\FilterController@destroyMake')
     ->name('filtermake.destroy')->can('add_sketch', User::class);
+
+// Locations
+Route::resource(
+    'location',
+    'App\Http\Controllers\LocationController',
+    ['parameters' => ['location' => 'location']]
+)->middleware('verified')->except('show');
+
+Route::get('/location/{user}/{location}', 'App\Http\Controllers\LocationController@show')
+    ->name('location.show');
+
+Route::get('/location/{user}/{location}/edit', 'App\Http\Controllers\LocationController@edit')
+    ->name('location.edit')->middleware('auth');

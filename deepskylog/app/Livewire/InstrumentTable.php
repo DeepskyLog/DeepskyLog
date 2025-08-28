@@ -113,9 +113,15 @@ class InstrumentTable extends PowerGridComponent
             Column::make(__('Make'), 'makestr')
                 ->searchable(),
 
-            Column::make(__('Name'), 'name_link', 'name')
-                ->searchable()
+            Column::make('Name', 'name_link', 'name')
+                ->visibleInExport(false)
                 ->sortable(),
+
+            // Hidden in the grid, but included in the exported file
+            Column::make('Name', 'name')
+                ->searchable()
+                ->hidden()
+                ->visibleInExport(true),
 
             Column::add()
                 ->title(__('Active'))
@@ -150,7 +156,9 @@ class InstrumentTable extends PowerGridComponent
                 ->searchable(),
 
             Column::make(__('Flip'), 'flip_image')
-                ->sortable(),            Column::make('Created At', 'created_at_formatted'),
+                ->sortable(),
+
+            Column::make('Created At', 'created_at_formatted'),
 
             Column::make(__('Flop'), 'flop_image')
                 ->sortable(),

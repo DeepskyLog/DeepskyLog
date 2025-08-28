@@ -14,7 +14,7 @@ use App\Models\Instrument;
 use App\Models\InstrumentMake;
 use App\Models\InstrumentType;
 use App\Models\LensMake;
-use App\Models\LocationsOld;
+use App\Models\Location;
 use App\Models\MountType;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -99,12 +99,12 @@ Route::get('locations.api', function (Request $request) {
     if ($request->exists('selected')) {
         $allLocations[] = [
             'id' => auth()->user()->stdlocation,
-            'name' => LocationsOld::where('id', auth()->user()->stdlocation)->first()->name,
+            'name' => Location::where('id', auth()->user()->stdlocation)->first()->name,
         ];
     }
 
     // Get the location, but they should be active
-    $locations = LocationsOld::where('observer', auth()->user()->username)->where('locationactive', 1)->get();
+    $locations = Location::where('observer', auth()->user()->username)->where('locationactive', 1)->get();
 
     foreach ($locations as $location) {
         if ($request->search == '' || Str::contains(Str::lower($location->name), Str::lower($request->search))) {
@@ -185,7 +185,7 @@ Route::get('ui_languages.index', function (Request $request) {
     }
 
     // Get the languages
-    foreach (config('app.available_locales') as $language => $key) {
+    foreach (config('app.available_locales') as $lang => $key) {
         $language = Languages::lookup([$key], $key)[$key];
         if ($request->search == '' || Str::contains(Str::lower($language), Str::lower($request->search))) {
             $allLanguages[] = [

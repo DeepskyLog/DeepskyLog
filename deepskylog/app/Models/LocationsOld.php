@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class LocationsOld extends Model
 {
+    public $timestamps = false;
+
     protected $casts = ['id' => 'string'];
 
     protected $connection = 'mysqlOld';
