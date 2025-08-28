@@ -71,6 +71,9 @@ final class LocationTable extends PowerGridComponent
                 // Switch key and value
                 $c = array_flip($c);
 
+                // If $location->country ends with something between brackets, remove that part
+                $location->country = preg_replace('/\s*\(.*\)\s*/', '', $location->country);
+
                 $country_code = $c[$location->country];
 
                 // Translate country using the current language

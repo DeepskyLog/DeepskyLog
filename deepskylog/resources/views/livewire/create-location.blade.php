@@ -31,53 +31,38 @@
                             </div>
 
 
-                            <x-input
+                            <input
+                                type="hidden"
                                 name="latitude"
-                                label="{{ __('Latitude') }}"
-                                type="number"
-                                step="any"
                                 wire:model.live="latitude"
-                                class="mt-1 block w-full"
                                 value="{{ old('latitude') }}"
                             />
 
-                            <x-input
+                            <input
+                                type="hidden"
                                 name="longitude"
-                                label="{{ __('Longitude') }}"
-                                type="number"
-                                step="any"
                                 wire:model.live="longitude"
-                                class="mt-1 block w-full"
                                 value="{{ old('longitude') }}"
                             />
 
-                            <x-input
+                            <input
+                                type="hidden"
                                 name="elevation"
-                                label="{{ __('Elevation (meters)') }}"
-                                type="number"
-                                step="any"
                                 wire:model.live="elevation"
-                                class="mt-1 block w-full"
                                 value="{{ old('elevation') }}"
                             />
 
-                            <x-input
+                            <input
+                                type="hidden"
                                 name="country"
-                                label="{{ __('Country') }}"
-                                type="text"
                                 wire:model.live="country"
-                                class="mt-1 block w-full"
-                                maxlength="255"
                                 value="{{ old('country') }}"
                             />
 
-                            <x-input
+                            <input
+                                type="hidden"
                                 name="timezone"
-                                label="{{ __('Timezone') }}"
-                                type="text"
                                 wire:model.live="timezone"
-                                class="mt-1 block w-full"
-                                maxlength="255"
                                 value="{{ old('timezone') }}"
                             />
 
@@ -117,6 +102,7 @@
                                         name="bortle"
                                         label="{{ __('Bortle') }}"
                                         wire:model.live="bortle"
+                                        class="mt-1 block w-full h-10"
                                         x-on:selected="$wire.set('bortle', $event.detail.value)"
                                         :options="[
                                             ['id' => 1, 'name' => '1 - Excellent dark-sky site'],
@@ -171,8 +157,8 @@
 
                             <div class="mt-5">
                                 <x-input type="file"
-                                            label="{!! __('Upload image') !!}"
-                                            wire:model="photo"/>
+                                        label="{!! __('Upload image') !!}"
+                                        wire:model="photo"/>
 
                                 @error('photo') <span class="error">{{ $message }}</span> @enderror
 
@@ -211,6 +197,38 @@
 </div>
 
 @push('scripts')
+    <style>
+        /* Make common dropdown/listbox popovers appear above TinyMCE toolbar/overlays */
+        [role="listbox"],
+        .headlessui-listbox__options,
+        .listbox__options,
+        .select-dropdown,
+        [data-listbox],
+        .choices__list,
+        .dropdown-menu {
+            position: relative;
+            z-index: 99999 !important;
+        }
+
+        /* Reduce TinyMCE root stacking so popovers can appear above it.
+           We keep values conservative but use !important to override vendor styles. */
+        .tox,
+        .tox-tinymce,
+        .tox-editor-container,
+        .tox-toolbar,
+        .tox-toolbar__primary {
+            z-index: 1000 !important;
+        }
+
+        /* Target WireUI popover root and options container specifically and
+           raise them above TinyMCE's auxiliary/blocker z-index (TinyMCE may
+           use extremely large z-index values). Use a slightly larger value
+           than TinyMCE's internal 'blocker' to ensure stacking correctness. */
+        [x-ref="popover"],
+        [x-ref="optionsContainer"] {
+            z-index: 1000000000000001 !important;
+        }
+    </style>
     <script>
         window.leafletMap = null;
         function initLeafletMap() {
@@ -224,6 +242,23 @@
             var lat = {{ is_numeric($latitude ?? null) ? $latitude : 'null' }};
             var lng = {{ is_numeric($longitude ?? null) ? $longitude : 'null' }};
 
+            function setCoordsSafely(lat, lng) {
+                try {
+                    @this.set('latitude', lat);
+                    @this.set('longitude', lng);
+                } catch (err) {
+                    // Livewire not ready yet — set once it loads
+                    document.addEventListener('livewire:load', function () {
+                        try {
+                            @this.set('latitude', lat);
+                            @this.set('longitude', lng);
+                        } catch (e) {
+                            // give up if still not available
+                        }
+                    }, { once: true });
+                }
+            }
+
             function initMap(latitude, longitude) {
                 window.leafletMap = L.map('map', { fullscreenControl: true }).setView([latitude, longitude], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -234,21 +269,19 @@
                 var marker = L.marker([latitude, longitude], {draggable: true}).addTo(window.leafletMap);
                 marker.setZIndexOffset(1000);
 
-                function updateLatLng(lat, lng) {
-                    @this.set('latitude', lat);
-                    @this.set('longitude', lng);
-                }
+                // setCoordsSafely is defined in the outer scope so it's usable
+                // both inside initMap and after map initialization.
 
                 window.leafletMap.on('moveend', function () {
                     var center = window.leafletMap.getCenter();
                     marker.setLatLng(center);
-                    updateLatLng(center.lat, center.lng);
+                    setCoordsSafely(center.lat, center.lng);
                 });
 
                 marker.on('dragend', function (e) {
                     var pos = marker.getLatLng();
                     window.leafletMap.setView(pos);
-                    updateLatLng(pos.lat, pos.lng);
+                    setCoordsSafely(pos.lat, pos.lng);
                 });
 
                 // Geocoder search (v3+ API)
@@ -262,31 +295,34 @@
                     var center = e.geocode.center;
                     window.leafletMap.fitBounds(bbox);
                     marker.setLatLng(center);
-                    updateLatLng(center.lat, center.lng);
+                    setCoordsSafely(center.lat, center.lng);
                 });
                 geocoderControl.addTo(window.leafletMap);
 
             }
 
-            if (lat === null || lng === null) {
+            // If Blade provided coords (from mount), use them; otherwise try geolocation and finally a default.
+            if (lat !== null && lng !== null) {
+                // Use server-provided coordinates immediately
+                initMap(lat, lng);
+                // Ensure Livewire receives them as well (safe even if already set)
+                setCoordsSafely(lat, lng);
+            } else {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(position) {
                         lat = position.coords.latitude;
                         lng = position.coords.longitude;
                         initMap(lat, lng);
-                        @this.set('latitude', lat);
-                        @this.set('longitude', lng);
+                        setCoordsSafely(lat, lng);
                     }, function() {
                         // Fallback to default if denied
                         initMap(28.7606, -17.8892);
-                        @this.set('latitude', 28.7606);
-                        @this.set('longitude', -17.8892);
+                        setCoordsSafely(28.7606, -17.8892);
                     });
                 } else {
                     // Geolocation not supported
                     initMap(28.7606, -17.8892);
-                    @this.set('latitude', 28.7606);
-                    @this.set('longitude', -17.8892);
+                    setCoordsSafely(28.7606, -17.8892);
                 }
             }
         }
@@ -316,15 +352,29 @@
                     quickbars_selection_toolbar: "bold italic",
                     skin: "oxide-dark",
                     content_css: "dark",
-                    setup: function (editor) {
+                        setup: function (editor) {
                         editor.on("init", function () {
                             editor.save();
                             console.log('TinyMCE initialized for #description');
+                            try {
+                                // Prefer direct @this.set to synchronously update the Livewire property
+                                @this.set('description', editor.getContent());
+                            } catch (err) {
+                                // Fallback to emit if @this isn't available
+                                if (typeof Livewire !== 'undefined') {
+                                    Livewire.emit('setDescription', editor.getContent());
+                                }
+                            }
                         });
+
                         editor.on("change", function () {
                             editor.save();
-                            if (typeof Livewire !== 'undefined') {
-                                Livewire.emit('setDescription', editor.getContent());
+                            try {
+                                @this.set('description', editor.getContent());
+                            } catch (err) {
+                                if (typeof Livewire !== 'undefined') {
+                                    Livewire.emit('setDescription', editor.getContent());
+                                }
                             }
                         });
                     }
@@ -373,4 +423,3 @@
 
 
 @endpush
-

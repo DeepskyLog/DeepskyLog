@@ -8,6 +8,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -42,7 +44,8 @@ class CreateLocation extends Component
 
     public $bortle;
 
-    #[Validate('image')]
+    // Use Livewire validation rules (see $rules below). Removed an invalid PHP attribute
+    // which could cause parse/syntax issues in some PHP versions/environments.
     public $photo;
 
     protected $listeners = [
@@ -59,6 +62,8 @@ class CreateLocation extends Component
         'sqm' => 'nullable|numeric|min:15|max:22',
         'nelm' => 'nullable|numeric|min:0|max:8',
         'bortle' => 'nullable|integer|between:1,9',
+        // limit to 5MB by default (value is in kilobytes for Laravel validation)
+        'photo' => 'nullable|image|max:5120',
     ];
 
     public function mount($location = null): void
@@ -72,15 +77,51 @@ class CreateLocation extends Component
             $this->longitude = $location->longitude;
             $this->hidden = $location->hidden;
             $this->elevation = $location->elevation;
-            $this->sqm = $location->sqm ?? null;
-            $this->nelm = $location->nelm ?? null;
-            $this->bortle = $location->bortle ?? null;
+
+            if ($location->skyBackground > 0) {
+                $this->sqm = $location->skyBackground ?? null;
+                $this->updatedSqm($this->sqm);
+            } elseif ($location->limitingMagnitude > 0) {
+                $this->nelm = $location->limitingMagnitude ?? null;
+                $this->updatedNelm($this->nelm);
+            }
+            // Frontend initialization of the map is handled client-side via Livewire hooks
         }
     }
 
-    public function save(): void
+    public function save()
     {
+        $this->updateElevation($this->latitude, $this->longitude);
+        $this->updateCountry($this->latitude, $this->longitude);
+
+        // Make sure to add the nelm value without the fstOffset
+        if ($this->sqm !== null) {
+            $this->nelm = $this->nelm + Auth()->user()->fstOffset;
+        } else {
+            $this->sqm = -999;
+            $this->nelm = -999;
+        }
+
+        $photoPath = null;
+
+        $this->country = preg_replace('/\s*\(.*\)\s*/', '', $this->country);
+
+        // Validate first to ensure uploaded file is acceptable before any processing
         $this->validate();
+
+        // If a photo was uploaded, store it now.
+        // dd($this->photo);
+        if ($this->photo) {
+            $upload_name = Str::slug(
+                Auth()->user()->slug.' '.$this->name,
+                '-'
+            ).'.'.$this->photo->getClientOriginalExtension();
+            // Make a slug from the upload_name
+            $photoPath = $this->photo->storePubliclyAs('photos/locations', $upload_name, 'public');
+
+            $picture = $photoPath;
+        }
+
         if ($this->update) {
             $this->location->update([
                 'name' => $this->name,
@@ -89,25 +130,48 @@ class CreateLocation extends Component
                 'longitude' => $this->longitude,
                 'hidden' => $this->hidden,
                 'elevation' => $this->elevation,
-                'sqm' => $this->sqm,
-                'nelm' => $this->nelm,
-                'bortle' => $this->bortle,
+                'country' => $this->country,
+                'timezone' => $this->timezone,
+                'skyBackground' => $this->sqm,
+                'limitingMagnitude' => $this->nelm,
             ]);
+
+            if ($this->photo) {
+                $this->location->update([
+                    'picture' => $picture,
+                ]);
+            }
             session()->flash('message', 'Location updated successfully!');
+
+            // Return to /location/{user-slug}/{location-slug} page
+            return redirect('/location/'.$this->location->user->slug.'/'.$this->location->slug);
         } else {
-            Location::create([
+            $user_id = Auth::id();
+            $observer = Auth::user()->username;
+
+            $location = Location::create([
                 'name' => $this->name,
                 'description' => $this->description,
                 'latitude' => $this->latitude,
                 'longitude' => $this->longitude,
                 'hidden' => $this->hidden,
                 'elevation' => $this->elevation,
-                'sqm' => $this->sqm,
-                'nelm' => $this->nelm,
-                'bortle' => $this->bortle,
+                'country' => $this->country,
+                'timezone' => $this->timezone,
+                'skyBackground' => $this->sqm,
+                'limitingMagnitude' => $this->nelm,
+                'user_id' => $user_id,
+                'observer' => $observer,
             ]);
+            if ($this->photo) {
+                $location->update([
+                    'picture' => $picture,
+                ]);
+            }
             session()->flash('message', 'Location created successfully!');
-            $this->reset(['name', 'description', 'latitude', 'longitude', 'hidden', 'sqm', 'nelm', 'bortle']);
+
+            // Return to /location/{user-slug}/{location-slug} page
+            return redirect('/location/'.Auth()->user()->slug.'/'.$location->slug);
         }
     }
 
@@ -118,8 +182,6 @@ class CreateLocation extends Component
 
     public function updateElevation($latitude, $longitude): void
     {
-        // TODO: Only update the elevation, country and timezone if the location is saved.
-        // TODO: Add Extra fields
         $client = new Client;
         try {
             $response = $client->get('https://api.opentopodata.org/v1/mapzen', [
@@ -128,15 +190,6 @@ class CreateLocation extends Component
                 ],
             ]);
             $data = json_decode($response->getBody(), true);
-            // Seems to work fine: But
-            // To keep the public API sustainable some limitations are applied.
-            //
-            // Max 100 locations per request.
-            // Max 1 call per second.
-            // Max 1000 calls per day.
-
-            // Should work: Need to make sure to only get the elevation when saving the data.
-            // Can be hosted on our own server if needed: See https://www.opentopodata.org/#public-api
             $this->elevation = $data['results'][0]['elevation'] ?? 0;
 
             $this->updateCountry($latitude, $longitude);

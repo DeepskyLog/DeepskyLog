@@ -4,10 +4,17 @@
         <div class="mx-auto max-w-screen bg-gray-900 px-2 py-10 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-3 gap-4 grid-cols-1">
                 <div class="col-span-1">
-                    <img class="w-64 mx-auto object-cover" src="{{ $image }}"
+                    <img class="w-full sm:w-64 mx-auto object-cover" src="{{ $image }}"
                          alt="{{ $location->name }}">
-                    @if (!$location->hidden)
-                        <div id="location-map" class="w-64 h-64 mx-auto mt-4 rounded" style="z-index:1;"></div>
+
+                    @if (!empty($location->description))
+                        <div class="w-full sm:w-64 mx-auto mt-4 p-3 border border-gray-700 bg-gray-800 text-gray-100 rounded">
+                            {!! $location->description !!}
+                        </div>
+                    @endif
+
+                    @if (!$location->hidden || Auth::user()->id == $location->user_id || Auth::user()->isAdministrator())
+                        <div id="location-map" class="w-full sm:w-64 h-64 mx-auto mt-4 rounded" style="z-index:1;"></div>
                     @endif
                 </div>
 
@@ -20,7 +27,7 @@
                     <br/>
                     <table class="table-auto w-full">
 
-                        @if (!$location->hidden)
+                        @if (!$location->hidden || Auth::user()->id == $location->user_id || Auth::user()->isAdministrator())
                             <tr>
                                 <td>{{ __("Latitude") }}</td>
                                 <td>{{ Location::dms($location->latitude, true) }}</td>
@@ -29,18 +36,20 @@
                                 <td>{{ __("Longitude") }}</td>
                                 <td>{{ Location::dms($location->longitude, false) }}</td>
                             </tr>
+
+                            <tr>
+                                <td>{{ __("Elevation") }}</td>
+                                <td>
+                                    @if (Auth::check() && Auth::user()->showInches)
+                                        {{ intval($location->elevation * 3.28084) }} {{ __('ft') }}
+                                    @else
+                                        {{ __($location->elevation) }} {{ __('m') }}
+                                    @endif
+                                </td>
+                            </tr>
+
                         @endif
 
-                        <tr>
-                            <td>{{ __("Elevation") }}</td>
-                            <td>
-                                @if (Auth::check() && Auth::user()->showInches)
-                                    {{ intval($location->elevation * 3.28084) }} {{ __('ft') }}
-                                @else
-                                    {{ __($location->elevation) }} {{ __('m') }}
-                                @endif
-                            </td>
-                        </tr>
                         <tr>
                             <td>{{ __("Country") }}</td>
                             <td>{{ $location->country ?? __('Unknown') }}</td>
@@ -68,6 +77,19 @@
                                 {{ $location->getBortle() ?? __('Unknown') }}
                             </td>
                         </tr>
+
+                        @if (Auth::user()->id == $location->user_id || Auth::user()->isAdministrator())
+                            <tr>
+                                <td>{{ __("Details visible for other users") }}</td>
+                                <td>
+                                    @if($location->hidden)
+                                        {{ __('No') }}
+                                    @else
+                                        {{ __('Yes') }}
+                                    @endif
+                                </td>
+                            </tr>
+                        @endif
 
                         <tr>
                             <td>{{ __("Owner") }}</td>
@@ -165,7 +187,7 @@
         </div>
     </div>
     @push('scripts')
-        @if (!$location->hidden)
+        @if (!$location->hidden || Auth::user()->id == $location->user_id || Auth::user()->isAdministrator())
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                         var map = L.map('location-map', { fullscreenControl: true }).setView([

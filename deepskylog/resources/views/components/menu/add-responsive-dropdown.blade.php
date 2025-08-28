@@ -38,7 +38,7 @@
 
                 <x-dropdown.item
                     icon="globe-europe-africa"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=add_location"
+                    href="{{ route('location.create') }}"
                     label="{{ __('Locations') }}"
                 />
 

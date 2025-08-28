@@ -7,23 +7,21 @@
 + [ ] Create locations tables in the new version of DeepskyLog
     + [X] Write script to populate the tables from the old database.
     + [X] Update user model to use the locations from the new database.
-    + [ ] Add page to see the details of a location
-        + [ ] Add a hidden field to the database to make sure that the coordinates and the map are only shown if hidden is true.
-        + [ ] Add a description field with a description of the location.
-        + [ ] Add an image field, with the picture of the location
+    + [X] Add page to see the details of a location
     + [X] Add page to view all locations of an observer
-    + [ ] Add page to add / edit locations.
-    + [ ] Move to a better url: wim-de-meester/location/lens-name
-    + [ ] Check if the create location and the list location page can only be seen if logged in.
+    + [X] Add page to add / edit locations.
+    + [X] Move to a better url: wim-de-meester/location/location-name
+    + [X] Check if the create location and the list location page can only be seen if logged in.
     + [ ] Add page for administrator -> Not needed?
     + [ ] Translate the new strings
     + [ ] Use database from the new version in the old version of DeepskyLog.
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog
+    + [ ] Add description also for instruments, lenses, eyepieces, filters?
 
 + [ ] Create instrument sets tables in the new version of DeepskyLog
-    + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into
-      account the Barlow and other lenses)
+    + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into account the Barlow and other lenses)
++ [ ] Like observations / sketches / sessions / user profiles
 + [ ] Fix logging in -> Only problem on Phone
 
 ### Distant future
@@ -36,7 +34,6 @@
 + [ ] Targets
 + [ ] Observing lists
 + [ ] Friends? Add friends and see their observations / sessions / ... Different lists for Murzim, Capella, ...
-+ [ ] Like observations / sketches / sessions / user profiles
 
 ### Done
 

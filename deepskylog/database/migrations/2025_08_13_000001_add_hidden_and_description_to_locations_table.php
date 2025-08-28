@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::table('locations', function (Blueprint $table) {
             $table->boolean('hidden')->default(false)->after('active');
+            // Add a description field with a default value
+            $table->string('description')->default('')->after('hidden');
         });
     }
 
@@ -23,6 +25,7 @@ return new class extends Migration
     {
         Schema::table('locations', function (Blueprint $table) {
             $table->dropColumn('hidden');
+            $table->dropColumn('description');
         });
     }
 };
