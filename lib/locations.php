@@ -52,14 +52,33 @@ class Locations
         $timezone,
         $elevation
     ) {
-        global $objDatabase;
-        $objDatabase->execSQL(
-            "INSERT INTO locations ("
-            . "name, longitude, latitude, country, timezone, elevation, checked"
-            . ") VALUES (\"$name\", \"$longitude\", \"$latitude\", "
-            . "\"$country\", \"$timezone\", \"$elevation\", 1)"
+        global $objDatabase_new, $loggedUser;
+
+        $user_id = $objDatabase_new->selectSingleValue(
+            "SELECT id FROM users WHERE username = \"" . html_entity_decode($loggedUser) . "\"",
+            'id'
         );
-        return $objDatabase->selectSingleValue(
+        // Create a slug from the name
+        $slug = $str = strtolower($name);
+
+        // Replace special characters
+        // and spaces with hyphens
+        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+
+        // Trim hyphens from the beginning
+        // and ending of String
+        $slug = trim($slug, '-');
+
+        $created_at = date('Y-m-d H:i:s');
+        $updated_at = date('Y-m-d H:i:s');
+
+        $objDatabase_new->execSQL(
+            "INSERT INTO locations ("
+            . "name, longitude, latitude, country, timezone, elevation, slug, created_at, updated_at, user_id, observer"
+            . ") VALUES (\"$name\", \"$longitude\", \"$latitude\", "
+            . "\"$country\", \"$timezone\", \"$elevation\", \"$slug\", \"$created_at\", \"$updated_at\", \"$user_id\", \"$loggedUser\")"
+        );
+        return $objDatabase_new->selectSingleValue(
             "SELECT id FROM locations ORDER BY id DESC LIMIT 1",
             'id'
         );
@@ -75,8 +94,8 @@ class Locations
      */
     public function getAllLocationsIds($id)
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleArray(
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleArray(
             "SELECT id FROM locations WHERE name = \""
             . $objDatabase->selectSingleValue(
                 "SELECT name FROM locations WHERE id = \"" . $id . "\"",
@@ -96,8 +115,8 @@ class Locations
      */
     public function getLocationId($name, $observer)
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleValue(
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleValue(
             "SELECT id FROM locations where name=\""
             . ($name) . "\" and observer=\"" . $observer . "\"",
             'id',
@@ -116,8 +135,8 @@ class Locations
      */
     public function getLocationPropertyFromId($id, $property, $defaultValue = '')
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleValue(
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleValue(
             "SELECT " . $property . " FROM locations WHERE id = \""
             . $id . "\"",
             $property,
@@ -132,8 +151,8 @@ class Locations
      */
     public function getLocations()
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleArray("SELECT id FROM locations", 'id');
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleArray("SELECT id FROM locations", 'id');
     }
 
     /**
@@ -172,8 +191,8 @@ class Locations
      */
     public function getSortedLocations($sort, $observer = "", $active = '')
     {
-        global $objDatabase;
-        return $objDatabase->selectSingleArray(
+        global $objDatabase_new;
+        return $objDatabase_new->selectSingleArray(
             "SELECT " . ($observer ? "" : "MAX(id)") . " id, name FROM locations "
             . ($observer ? "WHERE observer LIKE \"" . $observer . "\" "
             . ($active ? " AND locationactive=" . $active : "") : " GROUP BY name")
@@ -196,9 +215,9 @@ class Locations
      */
     public function getSortedLocationsList($sort, $observer = "", $active = '')
     {
-        global $objDatabase;
+        global $objDatabase_new;
         $new_sites = array();
-        $sites = $objDatabase->selectRecordsetArray(
+        $sites = $objDatabase_new->selectRecordsetArray(
             "SELECT id, name FROM locations "
             . ($observer ? "WHERE observer LIKE \"" . $observer . "\" "
             . ($active ? " AND locationactive=" . $active : "") : " GROUP BY name")
@@ -231,31 +250,11 @@ class Locations
      */
     public function setLocationProperty($id, $property, $propertyValue)
     {
-        global $objDatabase;
-        return $objDatabase->execSQL(
+        global $objDatabase_new;
+        return $objDatabase_new->execSQL(
             "UPDATE locations SET " . $property . " = \""
             . $propertyValue . "\" WHERE id = \"" . $id . "\""
         );
-    }
-
-    /**
-     * Returns a list with locations that are not checked.
-     *
-     * @param string $observer The observer for which the not checked locations
-     *                         should be returned.
-     *
-     * @return array An array with the not checked locations for the given observer.
-     */
-    public function getNotcheckedLocations($observer)
-    {
-        global $objDatabase;
-        $sites = $objDatabase->selectRecordsetArray(
-            "SELECT id FROM locations where observer = \""
-            . $observer . "\" AND checked=\"0\"",
-            'id'
-        );
-
-        return $sites;
     }
 
     /**
@@ -268,80 +267,6 @@ class Locations
         global $baseURL, $loggedUser, $objObserver, $objUtil, $objLocation;
         global $objPresentations, $loggedUserName, $objContrast, $locationid, $sites;
         if ($sites != null) {
-            // First check if there are not checked locations
-            $locationsToCheck = $objLocation->getNotCheckedLocations($loggedUser);
-            if (sizeof($locationsToCheck) > 0) {
-                foreach ($locationsToCheck as $location) {
-                    // We adapt the timezone, elevation and country
-                    $latitude = $objLocation->getLocationPropertyFromId(
-                        $location ['id'],
-                        "latitude"
-                    );
-                    $longitude = $objLocation->getLocationPropertyFromId(
-                        $location ['id'],
-                        "longitude"
-                    );
-
-                    $url = "https://maps.googleapis.com/maps/"
-                        . "api/timezone/json"
-                        . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE&location="
-                        . $latitude . "," . $longitude . "&timestamp=0";
-                    $json = file_get_contents($url);
-                    $obj = json_decode($json);
-                    if ($obj->status == "OK") {
-                        $objLocation->setLocationProperty(
-                            $location['id'],
-                            "timezone",
-                            $obj->timeZoneId
-                        );
-
-                        // Get the elevation
-                        $url = "https://maps.googleapis.com/maps/"
-                            . "api/elevation/json"
-                            . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE"
-                            . "&locations="
-                            . $latitude . "," . $longitude;
-                        $json = file_get_contents($url);
-                        $obj = json_decode($json);
-                        if ($obj->status == "OK") {
-                            $results = $obj->results[0];
-                            $objLocation->setLocationProperty(
-                                $location['id'],
-                                "elevation",
-                                ((int) $results->elevation)
-                            );
-
-                            // Get the country
-                            $url = "https://maps.googleapis.com/maps/"
-                                . "api/geocode/json"
-                                . "?key=AIzaSyD8QoWrJk48kEjHhaiwU77Tp-qSaT2xCNE"
-                                . "&latlng="
-                                . $latitude . "," . $longitude
-                                . "&language=en";
-                            $json = file_get_contents($url);
-                            $obj = json_decode($json);
-                            if ($obj->status == "OK") {
-                                $results = $obj->results[0];
-                                $components = $results->address_components;
-                                for ($ac = 0; $ac < sizeof($components); $ac++) {
-                                    if ($components [$ac]->types [0] == "country") {
-                                        $objLocation->setLocationProperty(
-                                            $location['id'],
-                                            "country",
-                                            $components[$ac]->long_name
-                                        );
-                                        $objLocation->setLocationProperty(
-                                            $location['id'],
-                                            "checked",
-                                            1
-                                        );
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
 
             echo "<form action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
             echo "<input type=\"hidden\" name=\"indexAction\""
@@ -563,7 +488,7 @@ class Locations
      */
     public function validateDeleteLocation()
     {
-        global $loggedUser, $objUtil, $objDatabase, $objObserver;
+        global $loggedUser, $objUtil, $objDatabase_new, $objObserver;
         if (($locationid = $objUtil->checkGetKey('locationid'))
             && $objUtil->checkAdminOrUserID(
                 $this->getLocationPropertyFromId($locationid, 'observer')
@@ -578,7 +503,7 @@ class Locations
             ) {
                 $objObserver->setObserverProperty($loggedUser, 'stdlocation', 0);
             }
-            $objDatabase->execSQL(
+            $objDatabase_new->execSQL(
                 "DELETE FROM locations WHERE id=\"" . $locationid . "\""
             );
             return _("The location is removed from your list");
@@ -592,7 +517,8 @@ class Locations
      */
     public function validateSaveLocation()
     {
-        global $objPresentations, $objUtil, $objDatabase, $objObserver, $loggedUser;
+        global $objPresentations, $objUtil, $objDatabase_new, $objObserver, $loggedUser;
+
         if (($objUtil->checkPostKey('adaptStandardLocation') == 1)
             && $objUtil->checkUserID(
                 $this->getLocationPropertyFromId(
