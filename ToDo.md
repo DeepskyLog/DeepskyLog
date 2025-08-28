@@ -12,8 +12,8 @@
     + [X] Add page to add / edit locations.
     + [X] Move to a better url: wim-de-meester/location/location-name
     + [X] Check if the create location and the list location page can only be seen if logged in.
-    + [ ] Add page for administrator -> Not needed?
-    + [ ] Translate the new strings
+    + [X] Add page for administrator -> Not needed?
+    + [X] Translate the new strings
     + [ ] Use database from the new version in the old version of DeepskyLog.
     + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
     + [ ] Release new version of pyDeepskyLog
@@ -23,6 +23,9 @@
     + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into account the Barlow and other lenses)
 + [ ] Like observations / sketches / sessions / user profiles
 + [ ] Fix logging in -> Only problem on Phone
++ [ ] Release new version of pyDeepskyLog
+    + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
+
 
 ### Distant future
 
