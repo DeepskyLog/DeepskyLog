@@ -1,6 +1,131 @@
 <div>
     <div>
         <div
+
+@push('scripts')
+    <style>
+        /* Make common dropdown/listbox popovers appear above TinyMCE toolbar/overlays */
+        [role="listbox"],
+        .headlessui-listbox__options,
+        .listbox__options,
+        .select-dropdown,
+        [data-listbox],
+        .choices__list,
+        .dropdown-menu {
+            position: relative;
+            z-index: 99999 !important;
+        }
+
+        /* Reduce TinyMCE root stacking so popovers can appear above it.
+           We keep values conservative but use !important to override vendor styles. */
+        .tox,
+        .tox-tinymce,
+        .tox-editor-container,
+        .tox-toolbar,
+        .tox-toolbar__primary {
+            z-index: 1000 !important;
+        }
+
+        /* Target WireUI popover root and options container specifically and
+           raise them above TinyMCE's auxiliary/blocker z-index (TinyMCE may
+           use extremely large z-index values). Use a slightly larger value
+           than TinyMCE's internal 'blocker' to ensure stacking correctness. */
+        [x-ref="popover"],
+        [x-ref="optionsContainer"] {
+            z-index: 1000000000000001 !important;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function initializeTinyMCE() {
+                if (typeof tinymce === 'undefined') return;
+                var el = document.querySelector('#description');
+                if (!el) return;
+
+                if (tinymce.get("description")) {
+                    tinymce.get("description").remove();
+                }
+
+                tinymce.init({
+                    selector: "#description",
+                    plugins: "lists emoticons quickbars wordcount",
+                    toolbar: "undo redo | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | emoticons | wordcount",
+                    menubar: false,
+                    license_key: 'gpl',
+                    quickbars_insert_toolbar: false,
+                    quickbars_image_toolbar: false,
+                    quickbars_selection_toolbar: "bold italic",
+                    skin: "oxide-dark",
+                    content_css: "dark",
+                        setup: function (editor) {
+                        editor.on("init", function () {
+                            editor.save();
+                            try {
+                                // Prefer direct @this.set to synchronously update the Livewire property
+                                @this.set('description', editor.getContent());
+                            } catch (err) {
+                                // Fallback to emit if @this isn't available
+                                if (typeof Livewire !== 'undefined') {
+                                    Livewire.emit('setDescription', editor.getContent());
+                                }
+                            }
+                        });
+
+                        editor.on("change", function () {
+                            editor.save();
+                            try {
+                                @this.set('description', editor.getContent());
+                            } catch (err) {
+                                if (typeof Livewire !== 'undefined') {
+                                    Livewire.emit('setDescription', editor.getContent());
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Try to initialize immediately if possible.
+            if (typeof tinymce !== 'undefined' && document.querySelector('#description')) {
+                initializeTinyMCE();
+            } else {
+                // Retry for a short period in case assets are still loading or Livewire re-renders.
+                var retryCount = 0;
+                var retryMax = 20; // ~5 seconds
+                var retryInterval = setInterval(function () {
+                    retryCount++;
+                    if (typeof tinymce !== 'undefined' && document.querySelector('#description')) {
+                        initializeTinyMCE();
+                        clearInterval(retryInterval);
+                    } else if (retryCount >= retryMax) {
+                        clearInterval(retryInterval);
+                    }
+                }, 250);
+            }
+
+            // Initialize on Livewire load and after messages processed to survive re-renders.
+            document.addEventListener('livewire:load', function () {
+                initializeTinyMCE();
+            });
+
+            // Attach hook when Livewire becomes available.
+            if (typeof Livewire !== 'undefined' && Livewire.hook) {
+                Livewire.hook('message.processed', function () {
+                    initializeTinyMCE();
+                });
+            } else {
+                window.addEventListener('livewire:load', function () {
+                    if (typeof Livewire !== 'undefined' && Livewire.hook) {
+                        Livewire.hook('message.processed', function () {
+                            initializeTinyMCE();
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+
+@endpush
             class="max-w-screen mx-auto bg-gray-900 px-2 py-10 sm:px-6 lg:px-8"
         >
             <h2 class="text-xl font-semibold leading-tight">
@@ -62,16 +187,16 @@
                             />
 
                             {{-- Description of the lens --}}
-                            <div class="mt-4">
-                                <x-label for="description" :value="__('Description')" />
+                            <div class="col-span-6 mt-4 text-sm text-gray-400 sm:col-span-5">
+                                {{ __("Tell something about your lens") }}
+                            </div>
+                            <div class="col-span-6 sm:col-span-5" wire:ignore>
                                 <textarea
-                                    id="description"
-                                    name="description"
-                                    rows="3"
-                                    class="mt-1 block w-full"
-                                    placeholder="{{ __('Enter description') }}"
                                     wire:model.live="description"
-                                ></textarea>
+                                    class="h-48 min-h-fit mt-1 block w-full"
+                                    name="description"
+                                    id="description"
+                                >{{ old('description') }}</textarea>
                             </div>
 
                         </div>

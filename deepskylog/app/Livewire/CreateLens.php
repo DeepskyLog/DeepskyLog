@@ -36,6 +36,8 @@ class CreateLens extends Component
 
             $this->factor = floatval($this->lens->factor);
             $this->lens_make = $this->lens->make_id;
+
+            $this->description = $this->lens->description;
         }
     }
 

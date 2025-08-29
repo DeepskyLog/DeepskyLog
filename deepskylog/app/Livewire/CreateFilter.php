@@ -46,6 +46,7 @@ class CreateFilter extends Component
 
             $this->wratten = $this->filter->wratten;
             $this->schott = $this->filter->schott;
+            $this->description = $this->filter->description;
         }
     }
 

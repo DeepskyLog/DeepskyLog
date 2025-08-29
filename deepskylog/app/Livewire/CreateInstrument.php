@@ -71,6 +71,7 @@ class CreateInstrument extends Component
             $this->mount_type_id = $this->instrument->mount_type_id;
             $this->instrument_make = $this->instrument->make_id;
             $this->instrument_type_id = $this->instrument->instrument_type_id;
+            $this->description = $this->instrument->description;
         }
     }
 

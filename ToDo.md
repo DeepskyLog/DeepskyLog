@@ -4,8 +4,6 @@
 
 ### Next steps
 
-+ [ ] Add description also for instruments, lenses, eyepieces, filters?
-    + [ ] Still to add the TinyMCE integration.
 + [ ] Create instrument sets tables in the new version of DeepskyLog
     + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into account the Barlow and other lenses)
     + [ ] Write script to create the tables

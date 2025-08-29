@@ -67,6 +67,7 @@ class CreateEyepiece extends Component
             if ($this->eyepiece->field_stop_mm > 0) {
                 $this->field_stop_mm = $this->eyepiece->field_stop_mm;
             }
+            $this->description = $this->eyepiece->description;
         }
     }
 
