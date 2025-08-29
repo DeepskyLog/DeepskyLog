@@ -24,6 +24,8 @@ class CreateLens extends Component
 
     public $factor;
 
+    public $description;
+
     #[Validate('image')]
     public $photo;
 
@@ -34,6 +36,8 @@ class CreateLens extends Component
 
             $this->factor = floatval($this->lens->factor);
             $this->lens_make = $this->lens->make_id;
+
+            $this->description = $this->lens->description;
         }
     }
 
@@ -76,6 +80,7 @@ class CreateLens extends Component
             'name' => 'required|min:3',
             'factor' => 'required|numeric|min:0',
             'photo' => 'nullable|image',
+            'description' => 'nullable|string',
         ]);
 
         $data['make_id'] = $make;

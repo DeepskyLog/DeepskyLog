@@ -121,7 +121,8 @@
                                 </div>
 
                                 <!-- Fetch button -->
-                                <div class="flex items-end">
+                                <!-- Add a small top margin on small screens so the button sits a bit lower; keep md+ behavior unchanged -->
+                                <div class="flex items-end mt-6 md:mt-0">
                                     <x-button
                                         type="button"
                                         secondary

@@ -47,6 +47,8 @@ class CreateInstrument extends Component
     #[Validate('image')]
     public $photo;
 
+    public $description;
+
     public function mount(): void
     {
         if ($this->instrument) {
@@ -69,6 +71,7 @@ class CreateInstrument extends Component
             $this->mount_type_id = $this->instrument->mount_type_id;
             $this->instrument_make = $this->instrument->make_id;
             $this->instrument_type_id = $this->instrument->instrument_type_id;
+            $this->description = $this->instrument->description;
         }
     }
 
@@ -149,6 +152,7 @@ class CreateInstrument extends Component
             'mount_type_id' => 'required',
             'obstruction_perc' => 'nullable|numeric|min:0',
             'photo' => 'nullable|image',
+            'description' => 'nullable|string',
         ]);
 
         if ($this->flipped_image) {

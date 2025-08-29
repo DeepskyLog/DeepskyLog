@@ -40,6 +40,8 @@ class CreateEyepiece extends Component
 
     public $apparentFOV;
 
+    public $description;
+
     #[Validate('image')]
     public $photo;
 
@@ -65,6 +67,7 @@ class CreateEyepiece extends Component
             if ($this->eyepiece->field_stop_mm > 0) {
                 $this->field_stop_mm = $this->eyepiece->field_stop_mm;
             }
+            $this->description = $this->eyepiece->description;
         }
     }
 
@@ -176,6 +179,7 @@ class CreateEyepiece extends Component
             'apparentFOV' => 'numeric|min:1|max:150|nullable',
             'field_stop_mm' => 'numeric|min:1|max:150|nullable',
             'photo' => 'nullable|image',
+            'description' => 'nullable|string',
         ]);
 
         if ($this->field_stop_mm == '') {
