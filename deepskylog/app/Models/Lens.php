@@ -98,4 +98,12 @@ class Lens extends Model
 
         return [$date, $id];
     }
+
+    /**
+     * Many-to-many relationship to InstrumentSet
+     */
+    public function instrument_sets()
+    {
+        return $this->belongsToMany(InstrumentSet::class, 'instrument_set_lens');
+    }
 }

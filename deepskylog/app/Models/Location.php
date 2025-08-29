@@ -139,4 +139,12 @@ class Location extends Model
             return null;
         }
     }
+
+    /**
+     * Many-to-many relationship to InstrumentSet
+     */
+    public function instrument_sets()
+    {
+        return $this->belongsToMany(InstrumentSet::class, 'instrument_set_location');
+    }
 }
