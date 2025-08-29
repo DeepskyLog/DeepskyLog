@@ -162,6 +162,15 @@
                                       wire:model="flopped_image"
                                       id="flopped_image"
                             />
+
+                            {{-- Enter the description of the instrument--}}
+                            <x-input
+                                name="description"
+                                label="{!! __('Description of the instrument') !!}"
+                                type="textarea"
+                                wire:model.live="description"
+                                class="mt-1 block w-full"
+                                value="{{ old('description') }}"/>
                         </div>
 
                         <div class="mt-5">

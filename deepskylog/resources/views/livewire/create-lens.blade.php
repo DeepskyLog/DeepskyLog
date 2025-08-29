@@ -61,6 +61,19 @@
                                 value="{{ old('factor') }}"
                             />
 
+                            {{-- Description of the lens --}}
+                            <div class="mt-4">
+                                <x-label for="description" :value="__('Description')" />
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    rows="3"
+                                    class="mt-1 block w-full"
+                                    placeholder="{{ __('Enter description') }}"
+                                    wire:model.live="description"
+                                ></textarea>
+                            </div>
+
                         </div>
 
                         <div class="mt-5">

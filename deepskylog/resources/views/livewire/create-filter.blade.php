@@ -91,6 +91,19 @@
                                     </div>
                                 @endif
 
+                                {{-- Description field --}}
+                                <div class="col-span-6 sm:col-span-5">
+                                    <x-label for="description" :value="__('Description')" />
+                                    <textarea
+                                        id="description"
+                                        name="description"
+                                        rows="3"
+                                        class="mt-1 block w-full rounded-md shadow-sm sm:text-sm"
+                                        placeholder="{{ __('Enter description') }}"
+                                        wire:model="description"
+                                    ></textarea>
+                                </div>
+
                                 <div class="mt-5">
                                     <x-input type="file"
                                              label="{!! __('Upload image') !!}"

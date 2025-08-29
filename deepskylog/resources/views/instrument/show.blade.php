@@ -6,6 +6,11 @@
                 <div class="col-span-1">
                     <img class="w-64 mx-auto object-cover" src="{{ $image }}"
                          alt="{{ $instrument->fullName() }}">
+                    @if (!empty($instrument->description))
+                        <div class="mt-4 p-3 border border-gray-700 bg-gray-800 text-gray-100 rounded">
+                            {!! $instrument->description !!}
+                        </div>
+                    @endif
                 </div>
 
                 <div class="col-span-2">

@@ -4,22 +4,20 @@
 
 ### Next steps
 
-+ [ ] Create locations tables in the new version of DeepskyLog
-    + [X] Write script to populate the tables from the old database.
-    + [X] Update user model to use the locations from the new database.
-    + [X] Add page to see the details of a location
-    + [X] Add page to view all locations of an observer
-    + [X] Add page to add / edit locations.
-    + [X] Move to a better url: wim-de-meester/location/location-name
-    + [X] Check if the create location and the list location page can only be seen if logged in.
-    + [X] Add page for administrator -> Not needed?
-    + [X] Translate the new strings
-    + [X] Use database from the new version in the old version of DeepskyLog.
-    + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
-
 + [ ] Add description also for instruments, lenses, eyepieces, filters?
+    + [ ] Still to add the TinyMCE integration.
 + [ ] Create instrument sets tables in the new version of DeepskyLog
     + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into account the Barlow and other lenses)
+    + [ ] Write script to create the tables
+    + [ ] Add page to see the details of a instrument set
+    + [ ] Add page to view all instrument sets of an observer
+    + [ ] Add page to add / edit instrument sets.
+    + [ ] Move to a better url: wim-de-meester/instrument set/instrument set-name
+    + [ ] Check if the create instrument set and the list instrument set page can only be seen if logged in.
+    + [ ] Add page for administrator -> Not needed?
+    + [ ] Translate the new strings
+    + [ ] Use database from the new version in the old version of DeepskyLog.
+    + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
 + [ ] Like observations / sketches / sessions / user profiles
 + [ ] Fix logging in -> Only problem on Phone
 + [ ] Release new version of pyDeepskyLog

@@ -3,22 +3,22 @@
     <div>
         <div class="mx-auto max-w-screen bg-gray-900 px-2 py-10 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-3 gap-4 grid-cols-1">
-                <div class="col-span-1">
-                    <img class="w-full sm:w-64 mx-auto object-cover" src="{{ $image }}"
+                <div class="md:col-span-1 col-span-1">
+                    <img class="w-full md:w-64 mx-auto object-cover" src="{{ $image }}"
                          alt="{{ $location->name }}">
 
                     @if (!empty($location->description))
-                        <div class="w-full sm:w-64 mx-auto mt-4 p-3 border border-gray-700 bg-gray-800 text-gray-100 rounded">
+                        <div class="w-full md:w-64 mx-auto mt-4 p-3 border border-gray-700 bg-gray-800 text-gray-100 rounded">
                             {!! $location->description !!}
                         </div>
                     @endif
 
                     @if (!$location->hidden || Auth::user()->id == $location->user_id || Auth::user()->isAdministrator())
-                        <div id="location-map" class="w-full sm:w-64 h-64 mx-auto mt-4 rounded" style="z-index:1;"></div>
+                        <div id="location-map" class="w-full md:w-64 h-64 mx-auto mt-4 rounded overflow-hidden" style="z-index:1;"></div>
                     @endif
                 </div>
 
-                <div class="col-span-2">
+                <div class="md:col-span-2">
                     <h4 class="font-bold text-xl">{{ $location->name }}
                         @if (!$location->active)
                             <div class="text-sm">{{ __("(Not active anymore)") }}</div>

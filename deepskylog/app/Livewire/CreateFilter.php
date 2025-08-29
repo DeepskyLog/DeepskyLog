@@ -33,6 +33,8 @@ class CreateFilter extends Component
     #[Validate('image')]
     public $photo;
 
+    public $description;
+
     public function mount(): void
     {
         if ($this->filter) {
@@ -92,6 +94,7 @@ class CreateFilter extends Component
             'wratten' => 'nullable|string|max:25',
             'schott' => 'nullable|string|max:25',
             'photo' => 'nullable|image',
+            'description' => 'nullable|string',
         ]);
 
         $data['make_id'] = $make;

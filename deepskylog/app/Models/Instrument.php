@@ -16,7 +16,7 @@ class Instrument extends Model
     protected $fillable = [
         'user_id', 'name', 'aperture_mm', 'type', 'instrument_type_id', 'make_id', 'mount_type_id',
         'focal_length_mm', 'fixedMagnification', 'active', 'observer', 'flip_image', 'flop_image',
-        'obstruction_perc', 'picture',
+        'obstruction_perc', 'picture', 'description',
     ];
 
     protected $with = ['instrument_make', 'mount_type', 'instrument_type'];
