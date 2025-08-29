@@ -97,7 +97,7 @@
                                 <td>{!! __("Number of locations") !!}</td>
                                 <td>
                                     @if (Auth::user() && $user->id === Auth::user()->id)
-                                        <a href="{{ config('app.old_url') }}/index.php?indexAction=view_sites">
+                                        <a href="/location">
                                             @endif
                                             {{ $user->locations->count() }}
                                             @if (Auth::user() && $user->id === Auth::user()->id)
@@ -191,20 +191,18 @@
                             </tr>
 
                             <!-- Number of equipment sets -->
-                            {{--                            <tr>--}}
-                            {{--                                <td>{!! __("Number of equipment sets") !!}</td>--}}
-                            {{--                                <td>--}}
-                            {{--
-                                @if ($user->id === Auth::user()->id)
-                                <a href="{{ route('set.index') }}">
-                                @endif
-                                {{ $user->sets()->count() }}
+                           <tr>
+                           <td>{!! __("Number of equipment sets") !!}</td>
+                               <td>
+                                   @if ($user->id === Auth::user()->id)
+                                       <a href="/instrumentset">
+                                   @endif
+                                {{ $user->instrumentSets()->count() }}
                                 @if ($user->id === Auth::user()->id)
                                 </a>
                                 @endif
-                            --}}
-                            {{--                                </td>--}}
-                            {{--                            </tr>--}}
+                                </td>
+                            </tr>
 
                             <!-- Country of residence -->
                             <tr>

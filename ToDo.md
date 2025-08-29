@@ -5,11 +5,10 @@
 ### Next steps
 
 + [ ] Create instrument sets tables in the new version of DeepskyLog
-    + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into account the Barlow and other lenses)
     + [X] Write script to create the tables
     + [X] Add page to add / edit instrument sets.
     + [X] Add page to see the details of a instrument set
-    + [ ] Fix the 'In Equipment Set' entries in user profile
+    + [X] Fix the 'In Equipment Set' entries in user profile
     + [ ] Add page to view all instrument sets of an observer
     + [ ] Check if the create instrument set and the list instrument set page can only be seen if logged in.
     + [ ] Add page for administrator -> Not needed?
