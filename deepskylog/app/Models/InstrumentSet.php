@@ -6,6 +6,7 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class InstrumentSet extends Model
 {
@@ -26,6 +27,11 @@ class InstrumentSet extends Model
                 'unique' => false,
             ],
         ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo('App\Models\User');
     }
 
     public function instruments(): BelongsToMany

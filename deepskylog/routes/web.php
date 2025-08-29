@@ -192,3 +192,19 @@ Route::get('/location/{user}/{location}', 'App\Http\Controllers\LocationControll
 
 Route::get('/location/{user}/{location}/edit', 'App\Http\Controllers\LocationController@edit')
     ->name('location.edit')->middleware('auth');
+
+// Instrument sets
+Route::resource(
+    'instrumentset',
+    'App\Http\Controllers\InstrumentSetController',
+    ['parameters' => ['instrumentset' => 'instrumentset']]
+)->middleware('verified')->except('show');
+
+Route::get('/instrumentset/{user}/{instrumentset}', 'App\Http\Controllers\InstrumentSetController@show')
+    ->name('instrumentset.show');
+
+Route::get('/instrumentset/{user}/{instrumentset}/edit', 'App\Http\Controllers\InstrumentSetController@edit')
+    ->name('instrumentset.edit')->middleware('auth');
+
+Route::get('/admin/instrumentset', 'App\Http\Controllers\InstrumentSetController@indexAdmin')
+    ->name('instrumentset.indexAdmin')->can('add_sketch', User::class);

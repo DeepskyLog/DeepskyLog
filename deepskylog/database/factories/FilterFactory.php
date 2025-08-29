@@ -3,9 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\Filter;
+use App\Models\FilterColor;
 use App\Models\FilterMake;
 use App\Models\FilterType;
-use App\Models\FilterColor;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

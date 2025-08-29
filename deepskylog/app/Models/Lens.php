@@ -106,4 +106,9 @@ class Lens extends Model
     {
         return $this->belongsToMany(InstrumentSet::class, 'instrument_set_lens');
     }
+
+    public function fullName(): string
+    {
+        return ltrim($this->lens_make->name.' '.$this->name);
+    }
 }

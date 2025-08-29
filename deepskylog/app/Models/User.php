@@ -885,4 +885,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(related: SketchOfTheMonth::class, foreignKey: 'user_id', localKey: 'id');
     }
+
+    public function instrumentSets(): HasMany
+    {
+        return $this->hasMany(related: InstrumentSet::class);
+    }
+
 }
