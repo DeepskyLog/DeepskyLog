@@ -99,5 +99,33 @@
         @stack("modals")
 
         @livewireScripts
+        <script>
+            document.addEventListener('click', function (e) {
+                const btn = e.target.closest('.like-button');
+                if (!btn) return;
+                e.preventDefault();
+                const type = btn.getAttribute('data-observation-type');
+                const id = btn.getAttribute('data-observation-id');
+
+                fetch('{{ route('observation.like') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ observation_type: type, observation_id: id })
+                }).then(r => r.json()).then(data => {
+                    if (data.count !== undefined) {
+                        const countEl = btn.querySelector('.like-count');
+                        const iconEl = btn.querySelector('.like-icon');
+                        if (countEl) countEl.textContent = data.count;
+                        if (iconEl) iconEl.innerHTML = data.status === 'liked' ? '❤️' : '👍';
+                    }
+                }).catch(() => {
+                    // noop
+                });
+            });
+        </script>
     </body>
 </html>

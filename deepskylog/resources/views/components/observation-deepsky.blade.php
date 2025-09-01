@@ -119,6 +119,19 @@
             {{ __("More details") }}
         </x-button>
 
+        <div class="inline-block align-middle ml-3">
+            @php
+                use App\Models\ObservationLike;
+                $likesCount = ObservationLike::where('observation_type', 'deepsky')->where('observation_id', $observation->id)->count();
+                $liked = auth()->check() && ObservationLike::where('observation_type', 'deepsky')->where('observation_id', $observation->id)->where('user_id', auth()->id())->exists();
+            @endphp
+
+            <button data-observation-type="deepsky" data-observation-id="{{ $observation->id }}" class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white">
+                <span class="like-icon">{!! $liked ? '❤️' : '👍' !!}</span>
+                <span class="like-count">{{ $likesCount }}</span>
+            </button>
+        </div>
+
     </div>
 
 </div>

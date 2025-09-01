@@ -13,8 +13,8 @@ use App\Models\FilterColor;
 use App\Models\FilterMake;
 use App\Models\FilterType;
 use App\Models\Instrument;
-use App\Models\InstrumentSet;
 use App\Models\InstrumentMake;
+use App\Models\InstrumentSet;
 use App\Models\InstrumentType;
 use App\Models\Lens;
 use App\Models\LensMake;
@@ -129,7 +129,6 @@ Route::get('locations.api', function (Request $request) {
     return $allLocations;
 })->name('locations.api');
 
-
 // Location select helper that correctly returns any selected locations (supports arrays)
 Route::get('location.select.api', function (Request $request) {
 
@@ -140,9 +139,9 @@ Route::get('location.select.api', function (Request $request) {
     // which break array-style querystrings like selected[0]=..&selected[1]=..
     // Accept `selected_ids=1,2,3` and normalize it to `selected` so the
     // existing code below can continue to work unchanged.
-    if (!$request->exists('selected') && $request->filled('selected_ids')) {
+    if (! $request->exists('selected') && $request->filled('selected_ids')) {
         $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
-        if (!empty($ids)) {
+        if (! empty($ids)) {
             $request->merge(['selected' => $ids]);
         }
     }
@@ -151,7 +150,7 @@ Route::get('location.select.api', function (Request $request) {
     // If selected is provided and there's no search term, return only the selected items
     if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
         $selected = $request->selected;
-        if (!is_array($selected)) {
+        if (! is_array($selected)) {
             $selected = [$selected];
         }
         foreach ($selected as $sel) {
@@ -171,7 +170,7 @@ Route::get('location.select.api', function (Request $request) {
     // Otherwise return selected first + the full (or filtered) list
     if ($request->exists('selected')) {
         $selected = $request->selected;
-        if (!is_array($selected)) {
+        if (! is_array($selected)) {
             $selected = [$selected];
         }
         foreach ($selected as $sel) {
@@ -206,7 +205,7 @@ Route::get('location.select.api', function (Request $request) {
     $seen = [];
     $uniqueLocations = [];
     foreach ($allLocations as $location) {
-        if (!isset($seen[$location['id']])) {
+        if (! isset($seen[$location['id']])) {
             $seen[$location['id']] = true;
             $uniqueLocations[] = $location;
         }
@@ -286,9 +285,9 @@ Route::get('instrumentset.select.api', function (Request $request) {
     $allSets = [];
 
     // Support an alternative comma-separated parameter `selected_ids`.
-    if (!$request->exists('selected') && $request->filled('selected_ids')) {
+    if (! $request->exists('selected') && $request->filled('selected_ids')) {
         $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
-        if (!empty($ids)) {
+        if (! empty($ids)) {
             $request->merge(['selected' => $ids]);
         }
     }
@@ -296,7 +295,7 @@ Route::get('instrumentset.select.api', function (Request $request) {
     // If selected is provided and there's no search term, return only the selected items
     if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
         $selected = $request->selected;
-        if (!is_array($selected)) {
+        if (! is_array($selected)) {
             $selected = [$selected];
         }
         foreach ($selected as $sel) {
@@ -321,7 +320,7 @@ Route::get('instrumentset.select.api', function (Request $request) {
     // Otherwise return selected first + the full (or filtered) list
     if ($request->exists('selected')) {
         $selected = $request->selected;
-        if (!is_array($selected)) {
+        if (! is_array($selected)) {
             $selected = [$selected];
         }
         foreach ($selected as $sel) {
@@ -353,7 +352,7 @@ Route::get('instrumentset.select.api', function (Request $request) {
     $seen = [];
     $uniqueSets = [];
     foreach ($allSets as $set) {
-        if (!isset($seen[$set['id']])) {
+        if (! isset($seen[$set['id']])) {
             $seen[$set['id']] = true;
             $uniqueSets[] = $set;
         }
@@ -372,9 +371,9 @@ Route::get('instrument.select.api', function (Request $request) {
     // which break array-style querystrings like selected[0]=..&selected[1]=..
     // Accept `selected_ids=1,2,3` and normalize it to `selected` so the
     // existing code below can continue to work unchanged.
-    if (!$request->exists('selected') && $request->filled('selected_ids')) {
+    if (! $request->exists('selected') && $request->filled('selected_ids')) {
         $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
-        if (!empty($ids)) {
+        if (! empty($ids)) {
             $request->merge(['selected' => $ids]);
         }
     }
@@ -383,7 +382,7 @@ Route::get('instrument.select.api', function (Request $request) {
     // If selected is provided and there's no search term, return only the selected items
     if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
         $selected = $request->selected;
-        if (!is_array($selected)) {
+        if (! is_array($selected)) {
             $selected = [$selected];
         }
         foreach ($selected as $sel) {
@@ -403,7 +402,7 @@ Route::get('instrument.select.api', function (Request $request) {
     // Otherwise return selected first + the full (or filtered) list
     if ($request->exists('selected')) {
         $selected = $request->selected;
-        if (!is_array($selected)) {
+        if (! is_array($selected)) {
             $selected = [$selected];
         }
         foreach ($selected as $sel) {
@@ -438,7 +437,7 @@ Route::get('instrument.select.api', function (Request $request) {
     $seen = [];
     $uniqueInstruments = [];
     foreach ($allInstruments as $instrument) {
-        if (!isset($seen[$instrument['id']])) {
+        if (! isset($seen[$instrument['id']])) {
             $seen[$instrument['id']] = true;
             $uniqueInstruments[] = $instrument;
         }
@@ -756,9 +755,9 @@ Route::get('eyepiece.select.api', function (Request $request) {
     // which break array-style querystrings like selected[0]=..&selected[1]=..
     // Accept `selected_ids=1,2,3` and normalize it to `selected` so the
     // existing code below can continue to work unchanged.
-    if (!$request->exists('selected') && $request->filled('selected_ids')) {
+    if (! $request->exists('selected') && $request->filled('selected_ids')) {
         $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
-        if (!empty($ids)) {
+        if (! empty($ids)) {
             $request->merge(['selected' => $ids]);
         }
     }
@@ -767,7 +766,7 @@ Route::get('eyepiece.select.api', function (Request $request) {
     // If selected is provided and there's no search term, return only the selected items
     if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
         $selected = $request->selected;
-        if (!is_array($selected)) {
+        if (! is_array($selected)) {
             $selected = [$selected];
         }
         foreach ($selected as $sel) {
@@ -787,7 +786,7 @@ Route::get('eyepiece.select.api', function (Request $request) {
     // Otherwise return selected first + the full (or filtered) list
     if ($request->exists('selected')) {
         $selected = $request->selected;
-        if (!is_array($selected)) {
+        if (! is_array($selected)) {
             $selected = [$selected];
         }
         foreach ($selected as $sel) {
@@ -823,7 +822,7 @@ Route::get('eyepiece.select.api', function (Request $request) {
     $seen = [];
     $uniqueEyepieces = [];
     foreach ($allEyepieces as $eyepiece) {
-        if (!isset($seen[$eyepiece['id']])) {
+        if (! isset($seen[$eyepiece['id']])) {
             $seen[$eyepiece['id']] = true;
             $uniqueEyepieces[] = $eyepiece;
         }
@@ -831,7 +830,6 @@ Route::get('eyepiece.select.api', function (Request $request) {
 
     return $uniqueEyepieces;
 })->name('eyepiece.select.api');
-
 
 // Lens select helper that correctly returns any selected lenses (supports arrays)
 Route::get('lens.select.api', function (Request $request) {
@@ -843,9 +841,9 @@ Route::get('lens.select.api', function (Request $request) {
     // which break array-style querystrings like selected[0]=..&selected[1]=..
     // Accept `selected_ids=1,2,3` and normalize it to `selected` so the
     // existing code below can continue to work unchanged.
-    if (!$request->exists('selected') && $request->filled('selected_ids')) {
+    if (! $request->exists('selected') && $request->filled('selected_ids')) {
         $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
-        if (!empty($ids)) {
+        if (! empty($ids)) {
             $request->merge(['selected' => $ids]);
         }
     }
@@ -854,7 +852,7 @@ Route::get('lens.select.api', function (Request $request) {
     // If selected is provided and there's no search term, return only the selected items
     if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
         $selected = $request->selected;
-        if (!is_array($selected)) {
+        if (! is_array($selected)) {
             $selected = [$selected];
         }
         foreach ($selected as $sel) {
@@ -874,7 +872,7 @@ Route::get('lens.select.api', function (Request $request) {
     // Otherwise return selected first + the full (or filtered) list
     if ($request->exists('selected')) {
         $selected = $request->selected;
-        if (!is_array($selected)) {
+        if (! is_array($selected)) {
             $selected = [$selected];
         }
         foreach ($selected as $sel) {
@@ -909,7 +907,7 @@ Route::get('lens.select.api', function (Request $request) {
     $seen = [];
     $uniqueLenses = [];
     foreach ($allLenses as $lens) {
-        if (!isset($seen[$lens['id']])) {
+        if (! isset($seen[$lens['id']])) {
             $seen[$lens['id']] = true;
             $uniqueLenses[] = $lens;
         }
@@ -917,7 +915,6 @@ Route::get('lens.select.api', function (Request $request) {
 
     return $uniqueLenses;
 })->name('lens.select.api');
-
 
 // Filter select helper that correctly returns any selected filters (supports arrays)
 Route::get('filter.select.api', function (Request $request) {
@@ -929,9 +926,9 @@ Route::get('filter.select.api', function (Request $request) {
     // which break array-style querystrings like selected[0]=..&selected[1]=..
     // Accept `selected_ids=1,2,3` and normalize it to `selected` so the
     // existing code below can continue to work unchanged.
-    if (!$request->exists('selected') && $request->filled('selected_ids')) {
+    if (! $request->exists('selected') && $request->filled('selected_ids')) {
         $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
-        if (!empty($ids)) {
+        if (! empty($ids)) {
             $request->merge(['selected' => $ids]);
         }
     }
@@ -940,7 +937,7 @@ Route::get('filter.select.api', function (Request $request) {
     // If selected is provided and there's no search term, return only the selected items
     if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
         $selected = $request->selected;
-        if (!is_array($selected)) {
+        if (! is_array($selected)) {
             $selected = [$selected];
         }
         foreach ($selected as $sel) {
@@ -960,7 +957,7 @@ Route::get('filter.select.api', function (Request $request) {
     // Otherwise return selected first + the full (or filtered) list
     if ($request->exists('selected')) {
         $selected = $request->selected;
-        if (!is_array($selected)) {
+        if (! is_array($selected)) {
             $selected = [$selected];
         }
         foreach ($selected as $sel) {
@@ -995,7 +992,7 @@ Route::get('filter.select.api', function (Request $request) {
     $seen = [];
     $uniqueFilters = [];
     foreach ($allFilters as $filter) {
-        if (!isset($seen[$filter['id']])) {
+        if (! isset($seen[$filter['id']])) {
             $seen[$filter['id']] = true;
             $uniqueFilters[] = $filter;
         }
@@ -1003,7 +1000,6 @@ Route::get('filter.select.api', function (Request $request) {
 
     return $uniqueFilters;
 })->name('filter.select.api');
-
 
 Route::get('/instrument/{userid}', [InstrumentController::class, 'show_from_user']);
 Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);

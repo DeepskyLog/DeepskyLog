@@ -117,7 +117,6 @@ class Filter extends Model
         return $this->belongsToMany(InstrumentSet::class, 'instrument_set_filter');
     }
 
-    
     public function fullName(): string
     {
         return ltrim($this->filter_make->name.' '.$this->name);

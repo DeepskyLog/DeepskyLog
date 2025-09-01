@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use App\Models\Traits\HasObservationsDates;
-use Cviebrock\EloquentSluggable\Sluggable;
-use deepskylog\AstronomyLibrary\Magnitude;
 use Carbon\Carbon;
+use Cviebrock\EloquentSluggable\Sluggable;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
-use Illuminate\Support\Facades\Session;
+use deepskylog\AstronomyLibrary\Magnitude;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Session;
 
 class Location extends Model
 {
@@ -222,7 +222,7 @@ class Location extends Model
             $transit = Carbon::createFromTimestamp($sun_info['transit'])->timezone($timezone)->isoFormat('HH:mm');
         }
 
-        return $sunrise . ' / ' . $sunset . ' / ' . $transit;
+        return $sunrise.' / '.$sunset.' / '.$transit;
     }
 
     /**
@@ -263,7 +263,7 @@ class Location extends Model
             $start = Carbon::createFromTimestamp($sun_info['civil_twilight_begin'])->timezone($timezone)->isoFormat('HH:mm');
         }
 
-        return $end . ' / ' . $start;
+        return $end.' / '.$start;
     }
 
     /**
@@ -303,7 +303,7 @@ class Location extends Model
             $start = Carbon::createFromTimestamp($sun_info['nautical_twilight_begin'])->timezone($timezone)->isoFormat('HH:mm');
         }
 
-        return $end . ' / ' . $start;
+        return $end.' / '.$start;
     }
 
     /**
@@ -343,7 +343,7 @@ class Location extends Model
             $start = Carbon::createFromTimestamp($sun_info['astronomical_twilight_begin'])->timezone($timezone)->isoFormat('HH:mm');
         }
 
-        return $end . ' / ' . $start;
+        return $end.' / '.$start;
     }
 
     /**
