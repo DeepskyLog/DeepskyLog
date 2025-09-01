@@ -18,7 +18,7 @@
             />
             <x-dropdown.item
                 icon="clipboard"
-                href="{{ config('app.old_url') }}/index.php?indexAction=downloadForms"
+                href="/downloads/forms"
                 label="{{ __('Forms') }}"
             />
 

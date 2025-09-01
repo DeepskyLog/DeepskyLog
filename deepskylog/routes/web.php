@@ -67,6 +67,7 @@ Route::view('/', 'welcome');
 Route::view('/privacy', 'privacy')->name('privacy');
 Route::view('/sponsors', 'layouts.sponsors');
 Route::view('/downloads/magazines', 'layouts.downloads.magazines');
+Route::view('/downloads/forms', 'layouts.downloads.forms');
 
 // Instruments
 Route::resource(

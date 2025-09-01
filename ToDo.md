@@ -4,7 +4,6 @@
 
 ### Next steps
 
-+ [ ] Download forms page.
 + [ ] Fix logging in -> Only problem on Phone
 + [ ] Release new version of pyDeepskyLog
     + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
