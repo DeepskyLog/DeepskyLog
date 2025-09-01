@@ -186,8 +186,11 @@ Route::get('location.select.api', function (Request $request) {
         }
     }
 
-    // Get the locations for the authenticated user (only active ones)
+    // Get the locations for the authenticated user (only active ones) and sort alphabetically
     $locations = Location::where('observer', auth()->user()->username)->where('active', 1)->get();
+    $locations = $locations->sortBy(function ($l) {
+        return Str::lower($l->name);
+    });
 
     foreach ($locations as $location) {
         if ($request->search == '' || Str::contains(Str::lower($location->fullName()), Str::lower($request->search))) {
@@ -415,8 +418,11 @@ Route::get('instrument.select.api', function (Request $request) {
         }
     }
 
-    // Get the instruments for the authenticated user (only active ones)
+    // Get the instruments for the authenticated user (only active ones) and sort alphabetically
     $instruments = Instrument::where('observer', auth()->user()->username)->where('active', 1)->get();
+    $instruments = $instruments->sortBy(function ($i) {
+        return Str::lower($i->fullName());
+    });
 
     foreach ($instruments as $instrument) {
         if ($request->search == '' || Str::contains(Str::lower($instrument->fullName()), Str::lower($request->search))) {
@@ -796,8 +802,12 @@ Route::get('eyepiece.select.api', function (Request $request) {
         }
     }
 
-    // Get the eyepieces for the authenticated user (only active ones)
+    // Get the eyepieces for the authenticated user (only active ones) and sort by focal length descending
     $eyepieces = Eyepiece::where('observer', auth()->user()->username)->where('active', 1)->get();
+    // Sort numerically by focal_length_mm in descending order, nulls last
+    $eyepieces = $eyepieces->sortByDesc(function ($e) {
+        return $e->focal_length_mm === null ? -1 : (int) $e->focal_length_mm;
+    });
 
     foreach ($eyepieces as $eyepiece) {
         if ($request->search == '' || Str::contains(Str::lower($eyepiece->fullName()), Str::lower($request->search))) {
@@ -879,8 +889,11 @@ Route::get('lens.select.api', function (Request $request) {
         }
     }
 
-    // Get the lenses for the authenticated user (only active ones)
+    // Get the lenses for the authenticated user (only active ones) and sort alphabetically
     $lenses = Lens::where('observer', auth()->user()->username)->where('active', 1)->get();
+    $lenses = $lenses->sortBy(function ($ln) {
+        return Str::lower($ln->fullName());
+    });
 
     foreach ($lenses as $lens) {
         if ($request->search == '' || Str::contains(Str::lower($lens->fullName()), Str::lower($request->search))) {
@@ -962,8 +975,11 @@ Route::get('filter.select.api', function (Request $request) {
         }
     }
 
-    // Get the filters for the authenticated user (only active ones)
+    // Get the filters for the authenticated user (only active ones) and sort alphabetically
     $filters = Filter::where('observer', auth()->user()->username)->where('active', 1)->get();
+    $filters = $filters->sortBy(function ($f) {
+        return Str::lower($f->fullName());
+    });
 
     foreach ($filters as $filter) {
         if ($request->search == '' || Str::contains(Str::lower($filter->fullName()), Str::lower($request->search))) {
