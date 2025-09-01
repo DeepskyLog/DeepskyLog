@@ -5,6 +5,10 @@ namespace App\Models;
 use App\Models\Traits\HasObservationsDates;
 use Cviebrock\EloquentSluggable\Sluggable;
 use deepskylog\AstronomyLibrary\Magnitude;
+use Carbon\Carbon;
+use deepskylog\AstronomyLibrary\AstronomyLibrary;
+use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -138,6 +142,208 @@ class Location extends Model
         } else {
             return null;
         }
+    }
+
+    /**
+     * Return an image (HTML <img>) with the length of night plot for this location.
+     * The method reads the current 'date' from session (format Y-m-d) and falls
+     * back to today when missing or invalid.
+     *
+     * @return string HTML string containing an <img> tag with the plot
+     */
+    public function getLengthOfNightPlot(): string
+    {
+        // Try to use the session date if present, otherwise use today
+        $datestr = Session::get('date', Carbon::now()->format('Y-m-d'));
+        try {
+            $date = Carbon::createFromFormat('Y-m-d', $datestr);
+        } catch (\Exception $e) {
+            $date = Carbon::now();
+        }
+
+        // Use local midday to avoid DST/day boundary issues
+        $date->hour = 12;
+
+        $coords = new GeographicalCoordinates($this->longitude, $this->latitude);
+
+        // Pass elevation if available, else 0.0
+        $astrolib = new AstronomyLibrary($date, $coords, $this->elevation ?? 0.0);
+
+        // Use the location timezone if set, otherwise fallback to app timezone
+        $timezone = $this->timezone ?? config('app.timezone');
+
+        return $astrolib->getLengthOfNightPlot($timezone);
+    }
+
+    /**
+     * Returns today's sunrise / sunset / transit times for this location as a formatted string.
+     * Uses the session 'date' (Y-m-d) when available, otherwise uses today.
+     *
+     * @return string e.g. "06:23 / 21:45 / 13:05" or "- / - / -" when unavailable
+     */
+    public function sunriseSetTransit(): string
+    {
+        $datestr = Session::get('date', Carbon::now()->format('Y-m-d'));
+        try {
+            $date = Carbon::createFromFormat('Y-m-d', $datestr);
+        } catch (\Exception $e) {
+            $date = Carbon::now();
+        }
+
+        // Use midday to avoid boundary/DST issues
+        $date->hour = 12;
+
+        $sun_info = date_sun_info(
+            $date->timestamp,
+            $this->latitude,
+            $this->longitude
+        );
+
+        $timezone = $this->timezone ?? config('app.timezone');
+
+        // Sunrise
+        if (! isset($sun_info['sunrise']) || $sun_info['sunrise'] === true || $sun_info['sunrise'] === false) {
+            $sunrise = '-';
+        } else {
+            $sunrise = Carbon::createFromTimestamp($sun_info['sunrise'])->timezone($timezone)->isoFormat('HH:mm');
+        }
+
+        // Sunset
+        if (! isset($sun_info['sunset']) || $sun_info['sunset'] === true || $sun_info['sunset'] === false) {
+            $sunset = '-';
+        } else {
+            $sunset = Carbon::createFromTimestamp($sun_info['sunset'])->timezone($timezone)->isoFormat('HH:mm');
+        }
+
+        // Transit
+        if (! isset($sun_info['transit']) || $sun_info['transit'] === true || $sun_info['transit'] === false) {
+            $transit = '-';
+        } else {
+            $transit = Carbon::createFromTimestamp($sun_info['transit'])->timezone($timezone)->isoFormat('HH:mm');
+        }
+
+        return $sunrise . ' / ' . $sunset . ' / ' . $transit;
+    }
+
+    /**
+     * Returns today's civil twilight end / begin times for this location as a formatted string.
+     * Uses the session 'date' (Y-m-d) when available, otherwise uses today.
+     *
+     * @return string e.g. "21:00 / 04:30" or "- / -" when unavailable
+     */
+    public function civilTwilight(): string
+    {
+        $datestr = Session::get('date', Carbon::now()->format('Y-m-d'));
+        try {
+            $date = Carbon::createFromFormat('Y-m-d', $datestr);
+        } catch (\Exception $e) {
+            $date = Carbon::now();
+        }
+
+        // Use midday to avoid boundary/DST issues
+        $date->hour = 12;
+
+        $sun_info = date_sun_info(
+            $date->timestamp,
+            $this->latitude,
+            $this->longitude
+        );
+
+        $timezone = $this->timezone ?? config('app.timezone');
+
+        if (! isset($sun_info['civil_twilight_end']) || $sun_info['civil_twilight_end'] === true || $sun_info['civil_twilight_end'] === false) {
+            $end = '-';
+        } else {
+            $end = Carbon::createFromTimestamp($sun_info['civil_twilight_end'])->timezone($timezone)->isoFormat('HH:mm');
+        }
+
+        if (! isset($sun_info['civil_twilight_begin']) || $sun_info['civil_twilight_begin'] === true || $sun_info['civil_twilight_begin'] === false) {
+            $start = '-';
+        } else {
+            $start = Carbon::createFromTimestamp($sun_info['civil_twilight_begin'])->timezone($timezone)->isoFormat('HH:mm');
+        }
+
+        return $end . ' / ' . $start;
+    }
+
+    /**
+     * Returns today's nautical twilight end / begin times for this location as a formatted string.
+     * Uses the session 'date' (Y-m-d) when available, otherwise uses today.
+     *
+     * @return string e.g. "22:30 / 03:45" or "- / -" when unavailable
+     */
+    public function nauticalTwilight(): string
+    {
+        $datestr = Session::get('date', Carbon::now()->format('Y-m-d'));
+        try {
+            $date = Carbon::createFromFormat('Y-m-d', $datestr);
+        } catch (\Exception $e) {
+            $date = Carbon::now();
+        }
+
+        $date->hour = 12;
+
+        $sun_info = date_sun_info(
+            $date->timestamp,
+            $this->latitude,
+            $this->longitude
+        );
+
+        $timezone = $this->timezone ?? config('app.timezone');
+
+        if (! isset($sun_info['nautical_twilight_end']) || $sun_info['nautical_twilight_end'] === true || $sun_info['nautical_twilight_end'] === false) {
+            $end = '-';
+        } else {
+            $end = Carbon::createFromTimestamp($sun_info['nautical_twilight_end'])->timezone($timezone)->isoFormat('HH:mm');
+        }
+
+        if (! isset($sun_info['nautical_twilight_begin']) || $sun_info['nautical_twilight_begin'] === true || $sun_info['nautical_twilight_begin'] === false) {
+            $start = '-';
+        } else {
+            $start = Carbon::createFromTimestamp($sun_info['nautical_twilight_begin'])->timezone($timezone)->isoFormat('HH:mm');
+        }
+
+        return $end . ' / ' . $start;
+    }
+
+    /**
+     * Returns today's astronomical twilight end / begin times for this location as a formatted string.
+     * Uses the session 'date' (Y-m-d) when available, otherwise uses today.
+     *
+     * @return string e.g. "23:10 / 02:50" or "- / -" when unavailable
+     */
+    public function astronomicalTwilight(): string
+    {
+        $datestr = Session::get('date', Carbon::now()->format('Y-m-d'));
+        try {
+            $date = Carbon::createFromFormat('Y-m-d', $datestr);
+        } catch (\Exception $e) {
+            $date = Carbon::now();
+        }
+
+        $date->hour = 12;
+
+        $sun_info = date_sun_info(
+            $date->timestamp,
+            $this->latitude,
+            $this->longitude
+        );
+
+        $timezone = $this->timezone ?? config('app.timezone');
+
+        if (! isset($sun_info['astronomical_twilight_end']) || $sun_info['astronomical_twilight_end'] === true || $sun_info['astronomical_twilight_end'] === false) {
+            $end = '-';
+        } else {
+            $end = Carbon::createFromTimestamp($sun_info['astronomical_twilight_end'])->timezone($timezone)->isoFormat('HH:mm');
+        }
+
+        if (! isset($sun_info['astronomical_twilight_begin']) || $sun_info['astronomical_twilight_begin'] === true || $sun_info['astronomical_twilight_begin'] === false) {
+            $start = '-';
+        } else {
+            $start = Carbon::createFromTimestamp($sun_info['astronomical_twilight_begin'])->timezone($timezone)->isoFormat('HH:mm');
+        }
+
+        return $end . ' / ' . $start;
     }
 
     /**

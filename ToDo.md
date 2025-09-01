@@ -58,6 +58,7 @@
 + [X] Add locations, instruments, eyepieces, lenses and filters to the new version of DeepskyLog.
     + [X] Use /instrument/user-slug/instrument-slug as url
 + [X] Add description and picture to locations, instruments, eyepieces, lenses and filters.
++ [X] Add a plot with the length of the night for a whole year when showing a location.
 
 ## Eloquent
 

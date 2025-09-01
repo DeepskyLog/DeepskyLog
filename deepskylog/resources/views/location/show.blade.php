@@ -78,6 +78,32 @@
                             </td>
                         </tr>
 
+                        @if (!$location->hidden || Auth::user()->id == $location->user_id || Auth::user()->isAdministrator())
+                            <tr>
+                                <td>{{ __('Length of night') }}</td>
+                                <td>
+                                    {!! $location->getLengthOfNightPlot() !!}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ __('Today sunrise / sunset / transit') }}</td>
+                                <td>{{ $location->sunriseSetTransit() }}</td>
+                            </tr>
+
+                            <tr>
+                                <td>{{ __('Today Civil Darkness') }}</td>
+                                <td>{{ $location->civilTwilight() }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ __('Today Nautical Darkness') }}</td>
+                                <td>{{ $location->nauticalTwilight() }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ __('Today Astronomical Darkness') }}</td>
+                                <td>{{ $location->astronomicalTwilight() }}</td>
+                            </tr>
+                        @endif
+
                         @if (Auth::user()->id == $location->user_id || Auth::user()->isAdministrator())
                             <tr>
                                 <td>{{ __("Details visible for other users") }}</td>
