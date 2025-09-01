@@ -19,7 +19,7 @@ class UpdateUserObservingInformation extends Component
     protected $rules = [
         'stdlocation' => 'numeric',
         'stdtelescope' => 'numeric',
-    'stdinstrumentset' => 'numeric',
+        'stdinstrumentset' => 'numeric',
         'showInches' => 'boolean',
     ];
 
@@ -30,7 +30,7 @@ class UpdateUserObservingInformation extends Component
     {
         $this->stdlocation = auth()->user()->stdlocation;
         $this->stdtelescope = auth()->user()->stdtelescope;
-    $this->stdinstrumentset = auth()->user()->stdinstrumentset ?? null;
+        $this->stdinstrumentset = auth()->user()->stdinstrumentset ?? null;
         $this->standardAtlasCode = auth()->user()->standardAtlasCode;
         $this->showInches = boolval(auth()->user()->showInches);
     }

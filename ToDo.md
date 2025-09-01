@@ -4,7 +4,7 @@
 
 ### Next steps
 
-+ [ ] Like observations / sketches / sessions / user profiles
++ [ ] Download forms page.
 + [ ] Fix logging in -> Only problem on Phone
 + [ ] Release new version of pyDeepskyLog
     + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
@@ -16,6 +16,7 @@
 + [ ] Sessions
     + [ ] Overview page with all images
     + [ ] Blog style?
+    + [ ] Like sessions
 + [ ] Targets
 + [ ] Observing lists
 + [ ] Friends? Add friends and see their observations / sessions / ... Different lists for Murzim, Capella, ...
@@ -49,6 +50,7 @@
 + [X] Add description and picture to locations, instruments, eyepieces, lenses and filters.
 + [X] Add a plot with the length of the night for a whole year when showing a location.
 + [X] Add instrument sets.
++ [X] Like observations and sketches
 
 ## Eloquent
 

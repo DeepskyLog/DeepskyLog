@@ -19,10 +19,12 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use LevelUp\Experience\Concerns\GiveExperience;
 use LevelUp\Experience\Concerns\HasAchievements;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
+    use GiveExperience;
     use HasAchievements;
     use HasApiTokens;
     use HasConnectedAccounts;
@@ -77,7 +79,6 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     protected $with = ['locations', 'instruments', 'eyepieces', 'filters', 'lenses'];
-
 
     /**
      * Return the sluggable configuration array for this model.
@@ -896,5 +897,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(related: InstrumentSet::class);
     }
-
 }

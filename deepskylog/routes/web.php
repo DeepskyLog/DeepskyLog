@@ -208,3 +208,9 @@ Route::get('/instrumentset/{user}/{instrumentset}/edit', 'App\Http\Controllers\I
 
 Route::get('/admin/instrumentset', 'App\Http\Controllers\InstrumentSetController@indexAdmin')
     ->name('instrumentset.indexAdmin')->can('add_sketch', User::class);
+
+// Likes for observations (deepsky / comet)
+Route::post('/observation/like', [App\Http\Controllers\ObservationLikeController::class, 'toggle'])->name('observation.like')->middleware('auth');
+
+// Popular observations
+Route::get('/popular-observations', [App\Http\Controllers\PopularObservationController::class, 'index'])->name('observations.popular');

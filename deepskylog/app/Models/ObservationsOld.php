@@ -111,4 +111,19 @@ class ObservationsOld extends Model
     {
         return $this->setConnection('mysql')->belongsTo(SketchOfTheMonth::class, 'id', 'observation_id');
     }
+
+    /**
+     * Relation to the User model using the legacy observer username stored in observerid.
+     * This allows eager-loading the owning user by matching ObservationsOld.observerid -> users.username.
+     */
+    public function user(): BelongsTo
+    {
+        $relation = $this->belongsTo(\App\Models\User::class, 'observerid', 'username');
+
+        // Ensure the related User model queries the default connection (not mysqlOld)
+        $related = $relation->getRelated();
+        $related->setConnection(config('database.default'));
+
+        return $relation;
+    }
 }
