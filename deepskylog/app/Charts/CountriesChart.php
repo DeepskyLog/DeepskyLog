@@ -44,19 +44,51 @@ class CountriesChart
         $countries = [];
         $values = [];
 
-        $deepsky->map(function ($item) use (&$countries, &$values) {
-            return [
-                array_push($countries, Countries::getOne(Country::where('country', $item->country)->first()->code, app()->getLocale())),
-                array_push($values, $item->count),
-            ];
-        });
+        // Build country labels and values from deep-sky observations.
+        foreach ($deepsky as $item) {
+            // Try to find a Country model for this location country value.
+            $countryModel = Country::where('country', $item->country)->first();
 
-        foreach ($comets as $comet) {
-            $country = Countries::getOne(Country::where('country', $comet->country)->first()->code, app()->getLocale());
-            if (in_array($country, $countries)) {
-                $values[array_search($country, $countries)] += $comet->count;
+            // Prefer localized name from Countries::getOne when we have a code.
+            if ($countryModel && $countryModel->code) {
+                $countryName = Countries::getOne($countryModel->code, app()->getLocale()) ?? $countryModel->country;
             } else {
-                $countries[] = $country;
+                // Fallback to the raw country text from the locations table if no Country model is found.
+                $countryName = $item->country;
+            }
+
+            // Skip empty country names.
+            if (empty($countryName)) {
+                continue;
+            }
+
+            // Merge counts when the same country appears multiple times.
+            if (in_array($countryName, $countries, true)) {
+                $values[array_search($countryName, $countries, true)] += $item->count;
+            } else {
+                $countries[] = $countryName;
+                $values[] = $item->count;
+            }
+        }
+
+        // Add comet observations, merging into the same arrays and handling missing Country models.
+        foreach ($comets as $comet) {
+            $countryModel = Country::where('country', $comet->country)->first();
+
+            if ($countryModel && $countryModel->code) {
+                $countryName = Countries::getOne($countryModel->code, app()->getLocale()) ?? $countryModel->country;
+            } else {
+                $countryName = $comet->country;
+            }
+
+            if (empty($countryName)) {
+                continue;
+            }
+
+            if (in_array($countryName, $countries, true)) {
+                $values[array_search($countryName, $countries, true)] += $comet->count;
+            } else {
+                $countries[] = $countryName;
                 $values[] = $comet->count;
             }
         }
