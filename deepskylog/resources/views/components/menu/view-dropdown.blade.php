@@ -32,6 +32,10 @@
                                  href="/instrument"
                                  label="{{ __('My instruments') }}"/>
 
+                <x-dropdown.item
+                                 href="/instrumentset"
+                                 label="{{ __('My instrument sets') }}"/>
+
                 <x-dropdown.item icon="globe-europe-africa"
                                  href="/location"
                                  label="{{ __('My locations') }}"/>

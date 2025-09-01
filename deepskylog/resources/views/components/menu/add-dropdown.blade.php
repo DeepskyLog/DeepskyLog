@@ -39,6 +39,10 @@
                 <x-dropdown.item icon="plus-circle" href="/lens/create"
                                  label="{{ __('Lenses') }}"/>
 
+                <x-dropdown.item icon="plus-circle"
+                                 href="{{ route('instrumentset.create') }}"
+                                 label="{{ __('Instrument sets') }}"/>
+
                 <x-dropdown.item separator icon="plus-circle"
                                  href="{{ config('app.old_url') }}/index.php?indexAction=add_object"
                                  label="{{ __('Object') }}"/>

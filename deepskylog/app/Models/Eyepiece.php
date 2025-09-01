@@ -148,4 +148,12 @@ class Eyepiece extends Model
     {
         return trim($this->name);
     }
+
+    /**
+     * Many-to-many relationship to InstrumentSet
+     */
+    public function instrument_sets()
+    {
+        return $this->belongsToMany(InstrumentSet::class, 'instrument_set_eyepiece');
+    }
 }

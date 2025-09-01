@@ -67,25 +67,6 @@
                             </td>
                         </tr>
 
-                        @auth
-                            @if ($eyepiece->user_id == Auth::user()->id)
-                                {{--                                @if($eyepiece->sets()->count())--}}
-                                {{--                                    <tr>--}}
-                                {{--                                        <td>{{ __('In equipment sets') }}</td>--}}
-                                {{--                                        <td>--}}
-                                {{--                                            <div class="trix-content">--}}
-                                {{--                                                <ul>--}}
-                                {{--                                                    @foreach($eyepiece->sets()->get() as $set)--}}
-                                {{--                                                        <li><a href="/set/{{ $set->id }}">{{ $set->name }}</a></li>--}}
-                                {{--                                                    @endforeach--}}
-                                {{--                                                </ul>--}}
-                                {{--                                            </div>--}}
-                                {{--                                        </td>--}}
-                                {{--                                    </tr>--}}
-                                {{--                                @endif--}}
-                            @endif
-                        @endauth
-
                         <tr>
                             <td>{{ __("Number of observations") }}</td>
                             <td>

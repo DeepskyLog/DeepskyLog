@@ -4,23 +4,10 @@
 
 ### Next steps
 
-+ [ ] Create instrument sets tables in the new version of DeepskyLog
-    + [ ] Also show immediately a table with all eyepieces, magnifications, fields of view, ... (also taking into account the Barlow and other lenses)
-    + [ ] Write script to create the tables
-    + [ ] Add page to see the details of a instrument set
-    + [ ] Add page to view all instrument sets of an observer
-    + [ ] Add page to add / edit instrument sets.
-    + [ ] Move to a better url: wim-de-meester/instrument set/instrument set-name
-    + [ ] Check if the create instrument set and the list instrument set page can only be seen if logged in.
-    + [ ] Add page for administrator -> Not needed?
-    + [ ] Translate the new strings
-    + [ ] Use database from the new version in the old version of DeepskyLog.
-    + [ ] Test on the old server and install updates on the server (for the old DeepskyLog and the new one)
 + [ ] Like observations / sketches / sessions / user profiles
 + [ ] Fix logging in -> Only problem on Phone
 + [ ] Release new version of pyDeepskyLog
     + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
-
 
 ### Distant future
 
@@ -60,6 +47,8 @@
 + [X] Add locations, instruments, eyepieces, lenses and filters to the new version of DeepskyLog.
     + [X] Use /instrument/user-slug/instrument-slug as url
 + [X] Add description and picture to locations, instruments, eyepieces, lenses and filters.
++ [X] Add a plot with the length of the night for a whole year when showing a location.
++ [X] Add instrument sets.
 
 ## Eloquent
 

@@ -224,4 +224,12 @@ class Instrument extends Model
 
         return round($this->aperture_mm / ($this->focal_length_mm / $eyepiece->focal_length_mm), 1).'mm';
     }
+
+    /**
+     * Many-to-many relationship to InstrumentSet
+     */
+    public function instrument_sets()
+    {
+        return $this->belongsToMany(InstrumentSet::class, 'instrument_set_instrument');
+    }
 }

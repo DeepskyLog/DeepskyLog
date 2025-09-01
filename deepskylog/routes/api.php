@@ -5,20 +5,25 @@ use App\Http\Controllers\FilterController;
 use App\Http\Controllers\InstrumentController;
 use App\Http\Controllers\LensController;
 use App\Models\Atlas;
+use App\Models\Eyepiece;
 use App\Models\EyepieceMake;
 use App\Models\EyepieceType;
+use App\Models\Filter;
 use App\Models\FilterColor;
 use App\Models\FilterMake;
 use App\Models\FilterType;
 use App\Models\Instrument;
+use App\Models\InstrumentSet;
 use App\Models\InstrumentMake;
 use App\Models\InstrumentType;
+use App\Models\Lens;
 use App\Models\LensMake;
 use App\Models\Location;
 use App\Models\MountType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,6 +105,7 @@ Route::get('locations.api', function (Request $request) {
         $allLocations[] = [
             'id' => auth()->user()->stdlocation,
             'name' => Location::where('id', auth()->user()->stdlocation)->first()->name,
+            'description' => Location::where('id', auth()->user()->stdlocation)->first()->description ?? '',
         ];
     }
 
@@ -111,6 +117,7 @@ Route::get('locations.api', function (Request $request) {
             $allLocations[] = [
                 'id' => $location->id,
                 'name' => $location->name,
+                'description' => $location->description ?? '',
             ];
         }
     }
@@ -122,6 +129,89 @@ Route::get('locations.api', function (Request $request) {
     return $allLocations;
 })->name('locations.api');
 
+
+// Location select helper that correctly returns any selected locations (supports arrays)
+Route::get('location.select.api', function (Request $request) {
+
+    $allLocations = [];
+
+    // Support an alternative comma-separated parameter `selected_ids`.
+    // Some callers (Blade attributes/HTML) may end up with HTML-escaped ampersands
+    // which break array-style querystrings like selected[0]=..&selected[1]=..
+    // Accept `selected_ids=1,2,3` and normalize it to `selected` so the
+    // existing code below can continue to work unchanged.
+    if (!$request->exists('selected') && $request->filled('selected_ids')) {
+        $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
+        if (!empty($ids)) {
+            $request->merge(['selected' => $ids]);
+        }
+    }
+
+    // Show the selected options (supports single value or array)
+    // If selected is provided and there's no search term, return only the selected items
+    if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
+        $selected = $request->selected;
+        if (!is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            $loc = Location::where('id', $sel)->first();
+            if ($loc) {
+                $allLocations[] = [
+                    'id' => $loc->id,
+                    'name' => $loc->name,
+                    'description' => $loc->description,
+                ];
+            }
+        }
+
+        return $allLocations;
+    }
+
+    // Otherwise return selected first + the full (or filtered) list
+    if ($request->exists('selected')) {
+        $selected = $request->selected;
+        if (!is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            $loc = Location::where('id', $sel)->first();
+            if ($loc) {
+                $allLocations[] = [
+                    'id' => $loc->id,
+                    'name' => $loc->name,
+                    'description' => $loc->description,
+                ];
+            }
+        }
+    }
+
+    // Get the locations for the authenticated user (only active ones)
+    $locations = Location::where('observer', auth()->user()->username)->where('active', 1)->get();
+
+    foreach ($locations as $location) {
+        if ($request->search == '' || Str::contains(Str::lower($location->fullName()), Str::lower($request->search))) {
+            $allLocations[] = [
+                'id' => $location->id,
+                'name' => $location->name,
+                'description' => $location->description,
+            ];
+        }
+    }
+
+    // Remove duplicates while preserving order
+    $seen = [];
+    $uniqueLocations = [];
+    foreach ($allLocations as $location) {
+        if (!isset($seen[$location['id']])) {
+            $seen[$location['id']] = true;
+            $uniqueLocations[] = $location;
+        }
+    }
+
+    return $uniqueLocations;
+})->name('location.select.api');
+
 Route::get('instrument.api', function (Request $request) {
     $allInstruments = [];
     // Show the selected option
@@ -129,6 +219,7 @@ Route::get('instrument.api', function (Request $request) {
         $allInstruments[] = [
             'id' => auth()->user()->stdtelescope,
             'name' => Instrument::where('id', auth()->user()->stdtelescope)->first()->fullName(),
+            'description' => Instrument::where('id', auth()->user()->stdtelescope)->first()->description,
         ];
     }
 
@@ -140,6 +231,7 @@ Route::get('instrument.api', function (Request $request) {
             $allInstruments[] = [
                 'id' => $instrument->id,
                 'name' => $instrument->fullName(),
+                'description' => $instrument->description,
             ];
         }
     }
@@ -150,6 +242,204 @@ Route::get('instrument.api', function (Request $request) {
 
     return $allInstruments;
 })->name('instrument.api');
+
+Route::get('instrumentset.api', function (Request $request) {
+    $allSets = [];
+    // Show the selected option
+    if ($request->exists('selected')) {
+        $selectedSet = auth()->user()->standardInstrumentSet;
+        if ($selectedSet) {
+            $allSets[] = [
+                'id' => $selectedSet->id,
+                'name' => $selectedSet->name,
+                'description' => $selectedSet->description ?? '',
+            ];
+        }
+    }
+
+    // Get the instrument sets, only active ones
+    $sets = InstrumentSet::where('user_id', auth()->user()->id)->where('active', 1)->get();
+
+    foreach ($sets as $set) {
+        if ($request->search == '' || Str::contains(Str::lower($set->name), Str::lower($request->search))) {
+            $allSets[] = [
+                'id' => $set->id,
+                'name' => $set->name,
+                'description' => $set->description ?? '',
+            ];
+        }
+    }
+    $allSets[] = [
+        'id' => 0,
+        'name' => 'No standard instrument set (Not recommended)',
+    ];
+
+    return $allSets;
+})->name('instrumentset.api');
+
+// InstrumentSet select helper that correctly returns any selected instrument sets (supports arrays)
+Route::get('instrumentset.select.api', function (Request $request) {
+
+    $allSets = [];
+
+    // Support an alternative comma-separated parameter `selected_ids`.
+    if (!$request->exists('selected') && $request->filled('selected_ids')) {
+        $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
+        if (!empty($ids)) {
+            $request->merge(['selected' => $ids]);
+        }
+    }
+
+    // If selected is provided and there's no search term, return only the selected items
+    if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
+        $selected = $request->selected;
+        if (!is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            // Prefer the user's relation when possible
+            if ($sel == auth()->user()->stdinstrumentset) {
+                $s = auth()->user()->standardInstrumentSet;
+            } else {
+                $s = InstrumentSet::where('id', $sel)->first();
+            }
+            if ($s) {
+                $allSets[] = [
+                    'id' => $s->id,
+                    'name' => $s->name,
+                    'description' => $s->description ?? '',
+                ];
+            }
+        }
+
+        return $allSets;
+    }
+
+    // Otherwise return selected first + the full (or filtered) list
+    if ($request->exists('selected')) {
+        $selected = $request->selected;
+        if (!is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            $s = InstrumentSet::where('id', $sel)->first();
+            if ($s) {
+                $allSets[] = [
+                    'id' => $s->id,
+                    'name' => $s->name,
+                    'description' => $s->description ?? '',
+                ];
+            }
+        }
+    }
+
+    // Get the instrument sets for the authenticated user (only active ones)
+    $sets = InstrumentSet::where('user_id', auth()->user()->id)->where('active', 1)->get();
+
+    foreach ($sets as $set) {
+        if ($request->search == '' || Str::contains(Str::lower($set->name), Str::lower($request->search))) {
+            $allSets[] = [
+                'id' => $set->id,
+                'name' => $set->name,
+                'description' => $set->description ?? '',
+            ];
+        }
+    }
+
+    // Remove duplicates while preserving order
+    $seen = [];
+    $uniqueSets = [];
+    foreach ($allSets as $set) {
+        if (!isset($seen[$set['id']])) {
+            $seen[$set['id']] = true;
+            $uniqueSets[] = $set;
+        }
+    }
+
+    return $uniqueSets;
+})->name('instrumentset.select.api');
+
+// Instrument select helper that correctly returns any selected instruments (supports arrays)
+Route::get('instrument.select.api', function (Request $request) {
+
+    $allInstruments = [];
+
+    // Support an alternative comma-separated parameter `selected_ids`.
+    // Some callers (Blade attributes/HTML) may end up with HTML-escaped ampersands
+    // which break array-style querystrings like selected[0]=..&selected[1]=..
+    // Accept `selected_ids=1,2,3` and normalize it to `selected` so the
+    // existing code below can continue to work unchanged.
+    if (!$request->exists('selected') && $request->filled('selected_ids')) {
+        $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
+        if (!empty($ids)) {
+            $request->merge(['selected' => $ids]);
+        }
+    }
+
+    // Show the selected options (supports single value or array)
+    // If selected is provided and there's no search term, return only the selected items
+    if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
+        $selected = $request->selected;
+        if (!is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            $inst = Instrument::where('id', $sel)->first();
+            if ($inst) {
+                $allInstruments[] = [
+                    'id' => $inst->id,
+                    'name' => $inst->fullName(),
+                    'description' => $inst->description,
+                ];
+            }
+        }
+
+        return $allInstruments;
+    }
+
+    // Otherwise return selected first + the full (or filtered) list
+    if ($request->exists('selected')) {
+        $selected = $request->selected;
+        if (!is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            $inst = Instrument::where('id', $sel)->first();
+            if ($inst) {
+                $allInstruments[] = [
+                    'id' => $inst->id,
+                    'name' => $inst->fullName(),
+                    'description' => $inst->description,
+                ];
+            }
+        }
+    }
+
+    // Get the instruments for the authenticated user (only active ones)
+    $instruments = Instrument::where('observer', auth()->user()->username)->where('active', 1)->get();
+
+    foreach ($instruments as $instrument) {
+        if ($request->search == '' || Str::contains(Str::lower($instrument->fullName()), Str::lower($request->search))) {
+            $allInstruments[] = [
+                'id' => $instrument->id,
+                'name' => $instrument->fullName(),
+                'description' => $instrument->description,
+            ];
+        }
+    }
+
+    // Remove duplicates while preserving order
+    $seen = [];
+    $uniqueInstruments = [];
+    foreach ($allInstruments as $instrument) {
+        if (!isset($seen[$instrument['id']])) {
+            $seen[$instrument['id']] = true;
+            $uniqueInstruments[] = $instrument;
+        }
+    }
+
+    return $uniqueInstruments;
+})->name('instrument.select.api');
 
 Route::get('atlas.index', function (Request $request) {
     $allAtlases = [];
@@ -449,6 +739,255 @@ Route::get('filter_types.api', function (Request $request) {
 
     return $allTypes;
 })->name('filter_types.api');
+
+// Eyepiece select helper that correctly returns any selected eyepieces (supports arrays)
+Route::get('eyepiece.select.api', function (Request $request) {
+
+    $allEyepieces = [];
+
+    // Support an alternative comma-separated parameter `selected_ids`.
+    // Some callers (Blade attributes/HTML) may end up with HTML-escaped ampersands
+    // which break array-style querystrings like selected[0]=..&selected[1]=..
+    // Accept `selected_ids=1,2,3` and normalize it to `selected` so the
+    // existing code below can continue to work unchanged.
+    if (!$request->exists('selected') && $request->filled('selected_ids')) {
+        $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
+        if (!empty($ids)) {
+            $request->merge(['selected' => $ids]);
+        }
+    }
+
+    // Show the selected options (supports single value or array)
+    // If selected is provided and there's no search term, return only the selected items
+    if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
+        $selected = $request->selected;
+        if (!is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            $ep = Eyepiece::where('id', $sel)->first();
+            if ($ep) {
+                $allEyepieces[] = [
+                    'id' => $ep->id,
+                    'name' => $ep->name,
+                    'description' => $ep->description,
+                ];
+            }
+        }
+
+        return $allEyepieces;
+    }
+
+    // Otherwise return selected first + the full (or filtered) list
+    if ($request->exists('selected')) {
+        $selected = $request->selected;
+        if (!is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            $ep = Eyepiece::where('id', $sel)->first();
+            if ($ep) {
+                $allEyepieces[] = [
+                    'id' => $ep->id,
+                    'name' => $ep->name,
+                    'description' => $ep->description,
+                ];
+            }
+        }
+    }
+
+    // Get the eyepieces for the authenticated user (only active ones)
+    $eyepieces = Eyepiece::where('observer', auth()->user()->username)->where('active', 1)->get();
+
+    foreach ($eyepieces as $eyepiece) {
+        if ($request->search == '' || Str::contains(Str::lower($eyepiece->fullName()), Str::lower($request->search))) {
+            $allEyepieces[] = [
+                'id' => $eyepiece->id,
+                'name' => $eyepiece->name,
+                'description' => $eyepiece->description,
+            ];
+        }
+    }
+
+    // Remove duplicates while preserving order
+    $seen = [];
+    $uniqueEyepieces = [];
+    foreach ($allEyepieces as $eyepiece) {
+        if (!isset($seen[$eyepiece['id']])) {
+            $seen[$eyepiece['id']] = true;
+            $uniqueEyepieces[] = $eyepiece;
+        }
+    }
+
+    return $uniqueEyepieces;
+})->name('eyepiece.select.api');
+
+
+// Lens select helper that correctly returns any selected lenses (supports arrays)
+Route::get('lens.select.api', function (Request $request) {
+
+    $allLenses = [];
+
+    // Support an alternative comma-separated parameter `selected_ids`.
+    // Some callers (Blade attributes/HTML) may end up with HTML-escaped ampersands
+    // which break array-style querystrings like selected[0]=..&selected[1]=..
+    // Accept `selected_ids=1,2,3` and normalize it to `selected` so the
+    // existing code below can continue to work unchanged.
+    if (!$request->exists('selected') && $request->filled('selected_ids')) {
+        $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
+        if (!empty($ids)) {
+            $request->merge(['selected' => $ids]);
+        }
+    }
+
+    // Show the selected options (supports single value or array)
+    // If selected is provided and there's no search term, return only the selected items
+    if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
+        $selected = $request->selected;
+        if (!is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            $lns = Lens::where('id', $sel)->first();
+            if ($lns) {
+                $allLenses[] = [
+                    'id' => $lns->id,
+                    'name' => $lns->fullName(),
+                    'description' => $lns->description,
+                ];
+            }
+        }
+
+        return $allLenses;
+    }
+
+    // Otherwise return selected first + the full (or filtered) list
+    if ($request->exists('selected')) {
+        $selected = $request->selected;
+        if (!is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            $lns = Lens::where('id', $sel)->first();
+            if ($lns) {
+                $allLenses[] = [
+                    'id' => $lns->id,
+                    'name' => $lns->fullName(),
+                    'description' => $lns->description,
+                ];
+            }
+        }
+    }
+
+    // Get the lenses for the authenticated user (only active ones)
+    $lenses = Lens::where('observer', auth()->user()->username)->where('active', 1)->get();
+
+    foreach ($lenses as $lens) {
+        if ($request->search == '' || Str::contains(Str::lower($lens->fullName()), Str::lower($request->search))) {
+            $allLenses[] = [
+                'id' => $lens->id,
+                'name' => $lens->fullName(),
+                'description' => $lens->description,
+            ];
+        }
+    }
+
+    // Remove duplicates while preserving order
+    $seen = [];
+    $uniqueLenses = [];
+    foreach ($allLenses as $lens) {
+        if (!isset($seen[$lens['id']])) {
+            $seen[$lens['id']] = true;
+            $uniqueLenses[] = $lens;
+        }
+    }
+
+    return $uniqueLenses;
+})->name('lens.select.api');
+
+
+// Filter select helper that correctly returns any selected filters (supports arrays)
+Route::get('filter.select.api', function (Request $request) {
+
+    $allFilters = [];
+
+    // Support an alternative comma-separated parameter `selected_ids`.
+    // Some callers (Blade attributes/HTML) may end up with HTML-escaped ampersands
+    // which break array-style querystrings like selected[0]=..&selected[1]=..
+    // Accept `selected_ids=1,2,3` and normalize it to `selected` so the
+    // existing code below can continue to work unchanged.
+    if (!$request->exists('selected') && $request->filled('selected_ids')) {
+        $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
+        if (!empty($ids)) {
+            $request->merge(['selected' => $ids]);
+        }
+    }
+
+    // Show the selected options (supports single value or array)
+    // If selected is provided and there's no search term, return only the selected items
+    if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
+        $selected = $request->selected;
+        if (!is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            $filter = Filter::where('id', $sel)->first();
+            if ($filter) {
+                $allFilters[] = [
+                    'id' => $filter->id,
+                    'name' => $filter->fullName(),
+                    'description' => $filter->description,
+                ];
+            }
+        }
+
+        return $allFilters;
+    }
+
+    // Otherwise return selected first + the full (or filtered) list
+    if ($request->exists('selected')) {
+        $selected = $request->selected;
+        if (!is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            $filter = Filter::where('id', $sel)->first();
+            if ($filter) {
+                $allFilters[] = [
+                    'id' => $filter->id,
+                    'name' => $filter->fullName(),
+                    'description' => $filter->description,
+                ];
+            }
+        }
+    }
+
+    // Get the filters for the authenticated user (only active ones)
+    $filters = Filter::where('observer', auth()->user()->username)->where('active', 1)->get();
+
+    foreach ($filters as $filter) {
+        if ($request->search == '' || Str::contains(Str::lower($filter->fullName()), Str::lower($request->search))) {
+            $allFilters[] = [
+                'id' => $filter->id,
+                'name' => $filter->fullName(),
+                'description' => $filter->description,
+            ];
+        }
+    }
+
+    // Remove duplicates while preserving order
+    $seen = [];
+    $uniqueFilters = [];
+    foreach ($allFilters as $filter) {
+        if (!isset($seen[$filter['id']])) {
+            $seen[$filter['id']] = true;
+            $uniqueFilters[] = $filter;
+        }
+    }
+
+    return $uniqueFilters;
+})->name('filter.select.api');
+
 
 Route::get('/instrument/{userid}', [InstrumentController::class, 'show_from_user']);
 Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);

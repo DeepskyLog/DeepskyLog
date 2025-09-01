@@ -40,25 +40,6 @@
                             </td>
                         </tr>
 
-                        @auth
-                            @if ($lens->user_id == Auth::user()->id)
-                                {{--                                @if($instrument->sets()->count())--}}
-                                {{--                                    <tr>--}}
-                                {{--                                        <td>{{ __('In equipment sets') }}</td>--}}
-                                {{--                                        <td>--}}
-                                {{--                                            <div class="trix-content">--}}
-                                {{--                                                <ul>--}}
-                                {{--                                                    @foreach($instrument->sets()->get() as $set)--}}
-                                {{--                                                        <li><a href="/set/{{ $set->id }}">{{ $set->name }}</a></li>--}}
-                                {{--                                                    @endforeach--}}
-                                {{--                                                </ul>--}}
-                                {{--                                            </div>--}}
-                                {{--                                        </td>--}}
-                                {{--                                    </tr>--}}
-                                {{--                                @endif--}}
-                            @endif
-                        @endauth
-
                         <tr>
                             <td>{{ __("Number of observations") }}</td>
                             <td>
