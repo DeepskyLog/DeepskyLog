@@ -136,28 +136,38 @@ final class PopularObservationsTable extends PowerGridComponent
             ->add('id')
             ->add('objectname', function ($row) {
                 // $row is the aggregated ObservationLike model instance
+                $objectName = null;
+
                 if ($row->observation_type === 'deepsky') {
                     // use eager-loaded relation if present (use relationLoaded to avoid lazy loading)
                     if ($row->relationLoaded('deepsky') && $row->deepsky) {
-                        return $row->deepsky->objectname;
+                        $objectName = $row->deepsky->objectname;
+                    } else {
+                        // fallback: try to load single model
+                        $obs = ObservationsOld::find($row->observation_id);
+                        $objectName = $obs ? $obs->objectname : null;
                     }
-
-                    // fallback: try to load single model
-                    $obs = ObservationsOld::find($row->observation_id);
-
-                    return $obs ? $obs->objectname : null;
-                }
-                if ($row->observation_type === 'comet') {
+                } elseif ($row->observation_type === 'comet') {
                     if ($row->relationLoaded('comet') && $row->comet) {
-                        return $row->comet->object ? $row->comet->object->name : null;
+                        $objectName = $row->comet->object ? $row->comet->object->name : null;
+                    } else {
+                        $obs = CometObservationsOld::find($row->observation_id);
+                        $objectName = $obs && $obs->object ? $obs->object->name : null;
                     }
-
-                    $obs = CometObservationsOld::find($row->observation_id);
-
-                    return $obs && $obs->object ? $obs->object->name : null;
                 }
 
-                return null;
+                if (! $objectName) {
+                    return null;
+                }
+
+                // Link to the external (legacy) deepskylog observation detail page for this observation
+                if ($row->observation_type === 'deepsky') {
+                    $link = config('app.old_url') . '/index.php?indexAction=detail_observation&observation=' . $row->observation_id;
+                } else {
+                    $link = config('app.old_url') . '/index.php?indexAction=comets_detail_observation&observation=' . $row->observation_id;
+                }
+
+                return sprintf('<a href="%s" class="font-bold hover:underline" target="_blank" rel="noopener noreferrer">%s</a>', $link, e($objectName));
             })
             ->add('observer_name', function ($row) {
                 if ($row->observation_type === 'deepsky') {
@@ -249,6 +259,28 @@ final class PopularObservationsTable extends PowerGridComponent
 
                 return $username;
             })
+            ->add('objectname_plain', function ($row) {
+                // Plain text version of the object name for exports
+                $objectName = null;
+
+                if ($row->observation_type === 'deepsky') {
+                    if ($row->relationLoaded('deepsky') && $row->deepsky) {
+                        $objectName = html_entity_decode((string) $row->deepsky->objectname);
+                    } else {
+                        $obs = ObservationsOld::find($row->observation_id);
+                        $objectName = $obs ? html_entity_decode((string) $obs->objectname) : null;
+                    }
+                } elseif ($row->observation_type === 'comet') {
+                    if ($row->relationLoaded('comet') && $row->comet) {
+                        $objectName = $row->comet->object ? html_entity_decode((string) $row->comet->object->name) : null;
+                    } else {
+                        $obs = CometObservationsOld::find($row->observation_id);
+                        $objectName = $obs && $obs->object ? html_entity_decode((string) $obs->object->name) : null;
+                    }
+                }
+
+                return $objectName;
+            })
             ->add('obs_date')
             ->add('date', function ($row) {
                 $value = $row->obs_date ?? null;
@@ -271,6 +303,10 @@ final class PopularObservationsTable extends PowerGridComponent
         return [
             Column::make(__('Object'), 'objectname')
                 ->searchable(), // objectname is computed from related models; sorting requires a DB join. Disable here.
+
+            Column::make(__('Object'), 'objectname_plain')
+                ->hidden()
+                ->visibleInExport(true),
 
             Column::make(__('Observer'), 'observer_name')
                 ->searchable()
