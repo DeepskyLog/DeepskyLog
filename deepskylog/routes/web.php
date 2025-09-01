@@ -211,3 +211,6 @@ Route::get('/admin/instrumentset', 'App\Http\Controllers\InstrumentSetController
 
 // Likes for observations (deepsky / comet)
 Route::post('/observation/like', [App\Http\Controllers\ObservationLikeController::class, 'toggle'])->name('observation.like')->middleware('auth');
+
+// Popular observations
+Route::get('/popular-observations', [App\Http\Controllers\PopularObservationController::class, 'index'])->name('observations.popular');

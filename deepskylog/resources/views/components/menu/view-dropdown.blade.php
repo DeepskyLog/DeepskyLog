@@ -65,6 +65,7 @@
 
             <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=rank_objects"
                              label="{{ __('Popular objects') }}"/>
+            <x-dropdown.item href="/popular-observations" label="{{ __('Popular observations') }}"/>
 
             <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=statistics"
                              label="{{ __('Statistics') }}"/>

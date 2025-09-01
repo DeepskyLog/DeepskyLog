@@ -85,4 +85,18 @@ class CometObservationsOld extends Model
     {
         return $this->hasOne(CometObjectsOld::class, 'id', 'objectid');
     }
+
+    /**
+     * Relation to the User model using the legacy observer username stored in observerid.
+     */
+    public function user(): BelongsTo
+    {
+        $relation = $this->belongsTo(\App\Models\User::class, 'observerid', 'username');
+
+        // Ensure the related User model queries the default connection (not mysqlOld)
+        $related = $relation->getRelated();
+        $related->setConnection(config('database.default'));
+
+        return $relation;
+    }
 }
