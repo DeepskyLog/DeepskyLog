@@ -62,6 +62,17 @@
             />
         </div>
 
+        {{-- Default instrument set --}}
+        <div class="col-span-6 sm:col-span-5">
+            <x-select
+                label="{{ __('Default instrument set') }}"
+                wire:model.live="stdinstrumentset"
+                :async-data="route('instrumentset.api')"
+                option-label="name"
+                option-value="id"
+            />
+        </div>
+
         {{-- Default atlas --}}
         <div class="col-span-6 sm:col-span-5">
             <x-select

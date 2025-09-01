@@ -9,16 +9,16 @@
     + [X] Add page to add / edit instrument sets.
     + [X] Add page to see the details of a instrument set
     + [X] Fix the 'In Equipment Set' entries in user profile
-    + [ ] Add page to view all instrument sets of an observer
+    + [X] Add page to view all instrument sets of an observer
     + [ ] Check if the create instrument set and the list instrument set page can only be seen if logged in.
     + [ ] Add page for administrator -> Not needed?
     + [ ] Translate the new strings
     + [ ] Install updates on the server
++ [ ] Add graph with darkness on the location page
 + [ ] Like observations / sketches / sessions / user profiles
 + [ ] Fix logging in -> Only problem on Phone
 + [ ] Release new version of pyDeepskyLog
     + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
-
 
 ### Distant future
 
