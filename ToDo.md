@@ -4,16 +4,6 @@
 
 ### Next steps
 
-+ [ ] Create instrument sets tables in the new version of DeepskyLog
-    + [X] Write script to create the tables
-    + [X] Add page to add / edit instrument sets.
-    + [X] Add page to see the details of a instrument set
-    + [X] Fix the 'In Equipment Set' entries in user profile
-    + [X] Add page to view all instrument sets of an observer
-    + [X] Check if the create instrument set and the list instrument set page can only be seen if logged in.
-    + [X] Add page for administrator
-    + [ ] Translate the new strings
-    + [ ] Install updates on the server
 + [ ] Like observations / sketches / sessions / user profiles
 + [ ] Fix logging in -> Only problem on Phone
 + [ ] Release new version of pyDeepskyLog
@@ -58,6 +48,7 @@
     + [X] Use /instrument/user-slug/instrument-slug as url
 + [X] Add description and picture to locations, instruments, eyepieces, lenses and filters.
 + [X] Add a plot with the length of the night for a whole year when showing a location.
++ [X] Add instrument sets.
 
 ## Eloquent
 
