@@ -72,7 +72,7 @@
                 @if (! Auth::guest())
                     <div class="space-x-2 lg:ml-6 lg:flex lg:items-center">
                         <x-nav-link
-                            href="{{ config('app.old_url') }}/index.php?indexAction=show_messages"
+                            href="{{ route('messages.index') }}"
                         >
                             <div class="flex space-x-2">
                                 <x-icon name="inbox" class="h-5 w-5" />

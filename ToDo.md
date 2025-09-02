@@ -4,14 +4,14 @@
 
 ### Next steps
 
++ [ ] Messages in DeepskyLog
+    + [ ] Also messages for everyone // like a forum
 + [ ] Fix logging in -> Only problem on Phone
 + [ ] Release new version of pyDeepskyLog
     + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
 ### Distant future
 
-+ [ ] Messages in DeepskyLog
-    + [ ] Also messages for everyone // like a forum
 + [ ] Sessions
     + [ ] Overview page with all images
     + [ ] Blog style?

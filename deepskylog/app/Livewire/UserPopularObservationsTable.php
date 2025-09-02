@@ -30,11 +30,11 @@ final class UserPopularObservationsTable extends PowerGridComponent
     // PowerGridComponent::mount() has no parameters, so keep signature compatible.
     public function mount(): void
     {
-    // Ensure PowerGrid base mount logic runs so theme and setup are initialized.
-    parent::mount();
+        // Ensure PowerGrid base mount logic runs so theme and setup are initialized.
+        parent::mount();
 
-    // When Livewire renders this component in a blade with :username binding,
-    // Livewire will hydrate the public property $username automatically.
+        // When Livewire renders this component in a blade with :username binding,
+        // Livewire will hydrate the public property $username automatically.
     }
 
     public function setUp(): array
@@ -135,9 +135,9 @@ final class UserPopularObservationsTable extends PowerGridComponent
                 }
 
                 if ($row->observation_type === 'deepsky') {
-                    $link = config('app.old_url') . '/index.php?indexAction=detail_observation&observation=' . $row->observation_id;
+                    $link = config('app.old_url').'/index.php?indexAction=detail_observation&observation='.$row->observation_id;
                 } else {
-                    $link = config('app.old_url') . '/index.php?indexAction=comets_detail_observation&observation=' . $row->observation_id;
+                    $link = config('app.old_url').'/index.php?indexAction=comets_detail_observation&observation='.$row->observation_id;
                 }
 
                 return sprintf('<a href="%s" class="font-bold hover:underline" target="_blank" rel="noopener noreferrer">%s</a>', $link, e($objectName));
