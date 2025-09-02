@@ -489,6 +489,21 @@
                     </x-card>
                 </div>
             @endif
+
+            @if (! empty($hasPopularObservations) && $hasPopularObservations)
+                <div class="mt-6">
+                    <x-card>
+                        <h2 class="mb-2 mt-2 text-xl px-5 font-bold">
+                            {{ __("Most liked observations") }}
+                        </h2>
+
+                        <div class="px-5">
+                            {{-- Render Livewire table showing only this user's popular observations --}}
+                            <livewire:user-popular-observations-table :username="$user->username" />
+                        </div>
+                    </x-card>
+                </div>
+            @endif
         </div>
     </div>
 
