@@ -1,5 +1,6 @@
 <x-app-layout>
-    <x-slot name="header">{{ __('New message') }}</x-slot>
+    @php $isBroadcast = request()->query('receiver') === 'all'; @endphp
+    <x-slot name="header">{{ $isBroadcast ? __('Broadcast message') : __('New message') }}</x-slot>
 
     <div class="py-6">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -7,40 +8,45 @@
                 <div class="max-w-2xl mx-auto">
                     <div class="bg-gray-900 p-6 rounded-lg shadow">
         @php
-            $usersAsyncRoute = request()->query('to') ? route('users.select.api', ['selected' => request()->query('to')]) : route('users.select.api');
+            $usersAsyncRoute = !$isBroadcast ? (request()->query('to') ? route('users.select.api', ['selected' => request()->query('to')]) : route('users.select.api')) : null;
             $selectedUser = null;
-            if (request()->query('to')) {
+            if (!$isBroadcast && request()->query('to')) {
                 $selectedUser = \App\Models\User::where('username', request()->query('to'))->first();
             }
 
             // No inline Blade conditionals inside the component tag — use safe Blade expressions in attributes instead.
         @endphp
 
-        <form method="POST" action="{{ route('messages.store') }}">
+        <form method="POST" action="{{ $isBroadcast ? route('messages.broadcast') : route('messages.store') }}">
             @csrf
 
-            <div class="mb-2">
-                <x-select
-                    label="{{ __('Receiver') }}"
-                    async-data="{{ $usersAsyncRoute }}"
-                    value="{{ $selectedUser->username ?? '' }}"
-                    placeholder="{{ $selectedUser->name ?? '' }}"
-                    option-label="name"
-                    option-value="id"
-                    class="w-full"
-                    x-on:selected="document.getElementById('receiver_hidden').value = $event.detail.value"
-                >
-                    @if($selectedUser)
-                        <x-select.option
-                            label="{{ $selectedUser->name }}"
-                            value="{{ $selectedUser->username }}"
-                        />
-                    @endif
-                </x-select>
+            @if(! $isBroadcast)
+                <div class="mb-2">
+                    <x-select
+                        label="{{ __('Receiver') }}"
+                        async-data="{{ $usersAsyncRoute }}"
+                        value="{{ $selectedUser->username ?? '' }}"
+                        placeholder="{{ $selectedUser->name ?? '' }}"
+                        option-label="name"
+                        option-value="id"
+                        class="w-full"
+                        x-on:selected="document.getElementById('receiver_hidden').value = $event.detail.value"
+                    >
+                        @if($selectedUser)
+                            <x-select.option
+                                label="{{ $selectedUser->name }}"
+                                value="{{ $selectedUser->username }}"
+                            />
+                        @endif
+                    </x-select>
 
-                {{-- Hidden input that will actually be submitted with the form. It is kept in sync with the x-select. --}}
-                <input type="hidden" id="receiver_hidden" name="receiver" value="{{ old('receiver', request()->query('to', '')) }}" />
-            </div>
+                    {{-- Hidden input that will actually be submitted with the form. It is kept in sync with the x-select. --}}
+                    <input type="hidden" id="receiver_hidden" name="receiver" value="{{ old('receiver', request()->query('to', '')) }}" />
+                </div>
+            @else
+                {{-- Broadcast: receiver is fixed to "all" and not selectable --}}
+                <input type="hidden" name="receiver" value="all" />
+            @endif
 
             <div class="mb-2">
                 <x-input
@@ -56,6 +62,7 @@
                 <div class="mt-1">
                     <textarea id="message" name="message" class="w-full h-48 mt-1 block p-2 bg-gray-800 text-gray-100 rounded">{{ old('message', request()->query('message', '')) }}</textarea>
                 </div>
+                <p class="text-sm text-gray-400 mt-2">{!! __('Note: recipients can disable email notifications in their :link; if they have, this message will only appear in the DeepskyLog message inbox.', ['link' => '<a href="'.url('/user/profile').'" class="underline hover:text-white">'.__('profile settings').'</a>']) !!}</p>
             </div>
 
             <div>
@@ -71,10 +78,12 @@
             // If reply_to is present in query params, fetch the original message
             var params = new URLSearchParams(window.location.search);
             var replyTo = params.get('reply_to') || params.get('to');
-            if (!replyTo) return;
 
-            // If reply_to looks numeric, treat as message id and fetch reply-data
-            if (/^\d+$/.test(replyTo)) {
+            // If reply_to exists, then fetch the original message or set receiver from username.
+            // Do NOT return early here: we still need to initialize TinyMCE for new messages.
+            if (replyTo) {
+                // If reply_to looks numeric, treat as message id and fetch reply-data
+                if (/^\d+$/.test(replyTo)) {
                 var headers = { 'X-Requested-With': 'XMLHttpRequest' };
                 var tokenMeta = document.querySelector('meta[name="csrf-token"]');
                 if (tokenMeta) headers['X-CSRF-TOKEN'] = tokenMeta.getAttribute('content');
@@ -117,10 +126,9 @@
                     }).catch(function(e){
                         console.error('Failed to fetch reply data', e);
                     });
+                }
             } else {
-                // If reply_to is not numeric treat as a username and fill receiver only
-                var recv = document.querySelector('input[name="receiver"]');
-                if (recv && !recv.value) recv.value = replyTo;
+                // no replyTo present; nothing to fetch. (leave receiver as-is)
             }
             // If the page was loaded with a `to` query param (username), ensure the hidden input is populated
             var params = new URLSearchParams(window.location.search);
@@ -136,34 +144,38 @@
                 var el = document.querySelector('#message');
                 if (!el) return;
 
-                if (tinymce.get('message')) {
-                    tinymce.get('message').remove();
-                }
-
-                tinymce.init({
-                    selector: '#message',
-                    plugins: 'lists emoticons quickbars wordcount',
-                    toolbar: 'undo redo | bold italic | bullist numlist | emoticons | wordcount',
-                    menubar: false,
-                    license_key: 'gpl',
-                    quickbars_insert_toolbar: false,
-                    quickbars_image_toolbar: false,
-                    quickbars_selection_toolbar: 'bold italic',
-                    skin: 'oxide-dark',
-                    content_css: 'dark',
-                    setup: function (editor) {
-                        editor.on('init', function () {
-                            // If a prefill HTML was stored earlier, apply it now so formatting is preserved
-                            if (window.replyPrefillHtml) {
-                                try { editor.setContent(window.replyPrefillHtml); } catch (e) { /* ignore */ }
-                            }
-                            editor.save();
-                        });
-                        editor.on('change', function () {
-                            editor.save();
-                        });
+                try {
+                    if (tinymce.get('message')) {
+                        tinymce.get('message').remove();
                     }
-                });
+
+
+                    tinymce.init({
+                        selector: '#message',
+                        plugins: 'lists emoticons quickbars wordcount',
+                        toolbar: 'undo redo | bold italic | bullist numlist | emoticons | wordcount',
+                        menubar: false,
+                        license_key: 'gpl',
+                        quickbars_insert_toolbar: false,
+                        quickbars_image_toolbar: false,
+                        quickbars_selection_toolbar: 'bold italic',
+                        skin: 'oxide-dark',
+                        content_css: 'dark',
+                        setup: function (editor) {
+                            editor.on('init', function () {
+                                if (window.replyPrefillHtml) {
+                                    try { editor.setContent(window.replyPrefillHtml); } catch (e) { /* ignore */ }
+                                }
+                                editor.save();
+                            });
+                            editor.on('change', function () {
+                                editor.save();
+                            });
+                        }
+                    });
+                } catch (e) {
+                    console.error('TinyMCE init error', e);
+                }
             }
 
             if (typeof tinymce !== 'undefined' && document.querySelector('#message')) {

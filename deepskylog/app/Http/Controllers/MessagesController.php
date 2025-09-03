@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\MessageReceived;
 use App\Models\MessagesDeletedOld;
 use App\Models\MessagesOld;
 use App\Models\MessagesReadOld;
@@ -9,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class MessagesController extends Controller
 {
@@ -98,18 +100,10 @@ class MessagesController extends Controller
         // Eager-fetch sender users for the current page to show full name and profile link
         $senders = User::whereIn('username', $messages->pluck('sender')->unique()->values()->all())->get()->keyBy('username');
 
-        // Map administrator user display names to the branded 'DeepskyLog'. We resolve admin
-        // usernames in one query to avoid N+1 checks and then overwrite the name on the
-        // fetched sender models so the view shows the replacement.
-        $adminUsernames = User::whereHas('teams', function ($q) {
-            $q->where('name', 'Administrators');
-        })->pluck('username')->all();
-
-        foreach ($adminUsernames as $adminUsername) {
-            if (isset($senders[$adminUsername])) {
-                $senders[$adminUsername]->name = 'DeepskyLog';
-            }
-        }
+        // Do not overwrite administrator user names here. We want admin user accounts
+        // to keep their full name for regular messages. The special branded name
+        // 'DeepskyLog' should only apply to literal legacy senders like 'admin' or
+        // explicit broadcast markers; that is handled later when building view rows.
 
         // Some legacy messages may have 'admin' as a literal sender username without a
         // corresponding User row. Ensure those still display as 'DeepskyLog' by adding
@@ -119,7 +113,7 @@ class MessagesController extends Controller
             if (strtolower($s) === 'admin' && ! isset($senders['admin'])) {
                 $placeholder = new \stdClass;
                 $placeholder->username = 'admin';
-                $placeholder->name = 'DeepskyLog';
+                $placeholder->name = 'admin';
                 $placeholder->slug = 'admin';
                 $placeholder->profile_photo_url = null;
                 $senders['admin'] = $placeholder;
@@ -167,7 +161,9 @@ class MessagesController extends Controller
             'message' => 'required|string',
         ]);
 
-        $sender = Auth::user()->username;
+        $senderUsername = Auth::user()->username;
+        // For normal (non-broadcast) messages, show the sender's full name even for admins.
+        $senderName = Auth::user()->name;
 
         // If receiver is 'all' and user is admin, broadcast
         if ($request->receiver === 'all' && Auth::user()->hasAdministratorPrivileges()) {
@@ -178,12 +174,23 @@ class MessagesController extends Controller
         $safeMessage = MessagesOld::sanitizeHtml($request->message);
 
         MessagesOld::create([
-            'sender' => $sender,
+            'sender' => $senderUsername,
             'receiver' => $request->receiver,
             'subject' => $safeSubject,
             'message' => $safeMessage,
             'date' => now(),
         ]);
+
+        // Send email notification to recipient if they have enabled mail notifications
+        try {
+            $recipientUser = User::where('username', $request->receiver)->first();
+            if ($recipientUser && $recipientUser->sendMail) {
+                Mail::to($recipientUser->email)->send(new MessageReceived($senderName, $request->subject, $safeMessage, $recipientUser->name));
+            }
+        } catch (\Throwable $e) {
+            // Don't break main flow on mail failures; just log to the error log.
+            logger()->error('Failed to send message email notification: '.$e->getMessage());
+        }
 
         return redirect()->route('messages.index')->with('status', __('Message sent'));
     }
@@ -196,6 +203,8 @@ class MessagesController extends Controller
         ]);
 
         $sender = Auth::user()->username;
+        // For broadcasts, always display 'DeepskyLog' as sender name regardless of which admin sent it.
+        $senderName = 'DeepskyLog';
 
         $users = User::pluck('username');
 
@@ -218,6 +227,20 @@ class MessagesController extends Controller
 
         // Use the old connection table
         DB::connection('mysqlOld')->table('messages')->insert($rows);
+
+        // Send email notifications to users who have enabled mail notifications.
+        try {
+            $usersWithMail = User::where('sendMail', true)->pluck('email', 'username');
+            foreach ($usersWithMail as $username => $email) {
+                // avoid sending to empty emails
+                if (empty($email)) {
+                    continue;
+                }
+                Mail::to($email)->send(new MessageReceived($senderName, $request->subject, $safeMessage, User::where('username', $username)->value('name')));
+            }
+        } catch (\Throwable $e) {
+            logger()->error('Failed to send broadcast email notifications: '.$e->getMessage());
+        }
 
         return redirect()->route('messages.index')->with('status', __('Broadcast sent'));
     }

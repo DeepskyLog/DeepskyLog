@@ -94,8 +94,14 @@
                                                 // unified color for sender names
                                                 $nameColor = 'text-blue-300';
                                             @endphp
-                                            @if(($senderUser->name ?? '') === 'DeepskyLog' || strtolower($senderUser->username ?? '') === 'admin')
-                                                <span class="text-sm {{ $nameColor }}">{{ $senderUser->name }}</span>
+                                            @php
+                                                // If this particular message was a broadcast (receiver == 'all')
+                                                // show the branded DeepskyLog name. Otherwise show the actual
+                                                // user's full name (linked to their profile).
+                                                $displayAsBrand = ($m->receiver ?? '') === 'all';
+                                            @endphp
+                                            @if($displayAsBrand || strtolower($senderUser->username ?? '') === 'admin')
+                                                <span class="text-sm {{ $nameColor }}">{{ $displayAsBrand ? 'DeepskyLog' : $senderUser->name }}</span>
                                             @else
                                                 <a href="/observers/{{ $senderUser->slug ?? $senderUser->username }}" class="text-sm font-semibold {{ $nameColor }} hover:text-blue-500">{{ $senderUser->name }}</a>
                                             @endif
@@ -107,7 +113,7 @@
                                             @else
                                                 <div class="h-8 w-8 rounded-full bg-gray-700 text-xs flex items-center justify-center text-white">{{ strtoupper(mb_substr($m->sender, 0, 1)) }}</div>
                                             @endif
-                                            <span class="text-sm text-blue-300">{{ in_array(strtolower($m->sender), ['admin', 'deepskylog']) ? 'DeepskyLog' : $m->sender }}</span>
+                                            <span class="text-sm text-blue-300">{{ ($m->receiver ?? '') === 'all' ? 'DeepskyLog' : (in_array(strtolower($m->sender), ['admin', 'deepskylog']) ? 'DeepskyLog' : $m->sender) }}</span>
                                         </div>
                                     @endif
                                 </td>
