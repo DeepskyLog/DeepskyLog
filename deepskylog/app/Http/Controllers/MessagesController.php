@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Mail\MessageReceived;
-use App\Models\MessagesDeletedOld;
-use App\Models\MessagesOld;
-use App\Models\MessagesReadOld;
+use App\Models\Message;
+use App\Models\MessageDeleted;
+use App\Models\MessageRead;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,10 +18,10 @@ class MessagesController extends Controller
     {
         $user = Auth::user();
         // Exclude deleted messages
-        $deleted = MessagesDeletedOld::where('receiver', $user->username)->pluck('id')->toArray();
+        $deleted = MessageDeleted::where('receiver', $user->username)->pluck('id')->toArray();
 
         // Read message ids for marking
-        $read = MessagesReadOld::where('receiver', $user->username)->pluck('id');
+        $read = MessageRead::where('receiver', $user->username)->pluck('id');
 
         // Allow sorting only on specific logical columns mapped to real DB columns
         $allowed = [
@@ -45,7 +45,7 @@ class MessagesController extends Controller
                 // Qualify the users table with the default database name to allow cross-database join
                 $qualifiedUsers = ($defaultDb ? $defaultDb.'.users' : 'users');
 
-                $query = MessagesOld::where(function ($q) use ($user) {
+                $query = Message::where(function ($q) use ($user) {
                     $q->where('messages.receiver', $user->username)
                         ->orWhere('messages.receiver', 'all');
                 })
@@ -55,7 +55,7 @@ class MessagesController extends Controller
                     ->orderBy('u.name', $direction);
             } catch (\Exception $e) {
                 // fallback: order by sender username
-                $query = MessagesOld::where(function ($q) use ($user) {
+                $query = Message::where(function ($q) use ($user) {
                     $q->where('messages.receiver', $user->username)
                         ->orWhere('messages.receiver', 'all');
                 })
@@ -64,7 +64,7 @@ class MessagesController extends Controller
                     ->orderBy('messages.sender', $direction);
             }
         } else {
-            $query = MessagesOld::where(function ($q) use ($user) {
+            $query = Message::where(function ($q) use ($user) {
                 $q->where('messages.receiver', $user->username)
                     ->orWhere('messages.receiver', 'all');
             })
@@ -89,13 +89,13 @@ class MessagesController extends Controller
         $messages = $query->paginate($perPage)->withQueryString();
 
         // Total messages for this user (including broadcasts) excluding deleted
-        $totalMessages = MessagesOld::where(function ($q) use ($user) {
+        $totalMessages = Message::where(function ($q) use ($user) {
             $q->where('receiver', $user->username)
                 ->orWhere('receiver', 'all');
         })->whereNotIn('id', $deleted)->count();
 
         // Unread messages (uses helper that excludes deleted/read)
-        $unreadMessages = MessagesOld::getNumberOfUnreadMails($user->username);
+        $unreadMessages = Message::getNumberOfUnreadMails($user->username);
 
         // Eager-fetch sender users for the current page to show full name and profile link
         $senders = User::whereIn('username', $messages->pluck('sender')->unique()->values()->all())->get()->keyBy('username');
@@ -127,7 +127,7 @@ class MessagesController extends Controller
     public function show($id)
     {
         $user = Auth::user();
-        $message = MessagesOld::findOrFail($id);
+        $message = Message::findOrFail($id);
 
         // ensure receiver is user or admin
         if ($message->receiver !== $user->username && ! $user->hasAdministratorPrivileges()) {
@@ -135,8 +135,8 @@ class MessagesController extends Controller
         }
 
         // mark as read
-        if (! MessagesReadOld::where('id', $id)->where('receiver', $user->username)->exists()) {
-            MessagesReadOld::create(['id' => $id, 'receiver' => $user->username]);
+        if (! MessageRead::where('id', $id)->where('receiver', $user->username)->exists()) {
+            MessageRead::create(['id' => $id, 'receiver' => $user->username, 'read_at' => now()]);
         }
 
         // Fetch sender user if available and map admin display-name
@@ -170,10 +170,10 @@ class MessagesController extends Controller
             return $this->broadcast($request);
         }
 
-        $safeSubject = MessagesOld::sanitizeHtml($request->subject);
-        $safeMessage = MessagesOld::sanitizeHtml($request->message);
+        $safeSubject = Message::sanitizeHtml($request->subject);
+        $safeMessage = Message::sanitizeHtml($request->message);
 
-        MessagesOld::create([
+        Message::create([
             'sender' => $senderUsername,
             'receiver' => $request->receiver,
             'subject' => $safeSubject,
@@ -212,8 +212,8 @@ class MessagesController extends Controller
 
         $rows = [];
 
-        $safeSubject = MessagesOld::sanitizeHtml($request->subject);
-        $safeMessage = MessagesOld::sanitizeHtml($request->message);
+        $safeSubject = Message::sanitizeHtml($request->subject);
+        $safeMessage = Message::sanitizeHtml($request->message);
 
         foreach ($users as $username) {
             $rows[] = [
@@ -222,11 +222,15 @@ class MessagesController extends Controller
                 'subject' => $safeSubject,
                 'message' => $safeMessage,
                 'date' => $now,
+                'created_at' => now(),
+                'updated_at' => now(),
             ];
         }
 
-        // Use the old connection table
-        DB::connection('mysqlOld')->table('messages')->insert($rows);
+        // Insert into the new messages table on the default connection
+        foreach (array_chunk($rows, 500) as $chunk) {
+            DB::table('messages')->insert($chunk);
+        }
 
         // Send email notifications to users who have enabled mail notifications.
         try {
@@ -253,13 +257,14 @@ class MessagesController extends Controller
         $user = Auth::user();
 
         // Exclude deleted messages
-        $deleted = MessagesDeletedOld::where('receiver', $user->username)->pluck('id')->toArray();
+        $deleted = MessageDeleted::where('receiver', $user->username)->pluck('id')->toArray();
 
         // IDs already read
-        $readIds = MessagesReadOld::where('receiver', $user->username)->pluck('id')->all();
+        $readIds = MessageRead::where('receiver', $user->username)->pluck('id')->all();
 
         // All message ids for user including broadcasts
-        $allIds = MessagesOld::where(function ($q) use ($user) {
+        // Use the new Message model which targets the new `messages` table
+        $allIds = Message::where(function ($q) use ($user) {
             $q->where('receiver', $user->username)
                 ->orWhere('receiver', 'all');
         })->whereNotIn('id', $deleted)->pluck('id')->all();
@@ -272,9 +277,18 @@ class MessagesController extends Controller
         }
 
         if (! empty($rows)) {
-            // Use the legacy connection for writes. Insert only the columns that exist in
-            // the legacy table (some installs don't have timestamp columns on messagesRead).
-            DB::connection('mysqlOld')->table('messagesRead')->insert($rows);
+            foreach (array_chunk($rows, 500) as $chunk) {
+                $insertRows = array_map(function ($r) {
+                    return ['id' => $r['id'], 'receiver' => $r['receiver'], 'read_at' => now()];
+                }, $chunk);
+                foreach ($insertRows as $ir) {
+                    try {
+                        DB::table('messages_read')->insert($ir);
+                    } catch (\Exception $e) {
+                        // ignore duplicates
+                    }
+                }
+            }
         }
 
         // Redirect back to the inbox page (preserves query params) so the refreshed
@@ -289,7 +303,7 @@ class MessagesController extends Controller
     {
         $user = Auth::user();
 
-        $message = MessagesOld::findOrFail($id);
+        $message = Message::findOrFail($id);
 
         // ensure receiver is user or admin
         if ($message->receiver !== $user->username && ! $user->hasAdministratorPrivileges()) {
@@ -297,12 +311,13 @@ class MessagesController extends Controller
         }
 
         // avoid duplicate marks
-        $exists = MessagesDeletedOld::where('id', $id)->where('receiver', $user->username)->exists();
+        $exists = MessageDeleted::where('id', $id)->where('receiver', $user->username)->exists();
         if (! $exists) {
-            // Use legacy connection to insert a deleted marker. Some installs may not have timestamps.
-            DB::connection('mysqlOld')->table('messagesDeleted')->insert([
-                ['id' => $id, 'receiver' => $user->username],
-            ]);
+            try {
+                DB::table('messages_deleted')->insert(['id' => $id, 'receiver' => $user->username, 'deleted_at' => now()]);
+            } catch (\Exception $e) {
+                // ignore duplicate key or other insert error
+            }
         }
 
         return redirect()->route('messages.index')->with('status', __('Message deleted'));
@@ -314,7 +329,7 @@ class MessagesController extends Controller
     public function replyData($id)
     {
         $auth = Auth::user();
-        $message = MessagesOld::findOrFail($id);
+        $message = Message::findOrFail($id);
 
         // ensure receiver is user or admin
         if ($message->receiver !== $auth->username && ! $auth->hasAdministratorPrivileges()) {
@@ -353,7 +368,7 @@ class MessagesController extends Controller
             'subject' => $subject,
             'message' => $quoted,
             // Also return sanitized HTML so rich editors can preserve markup
-            'message_html' => MessagesOld::sanitizeHtml($message->message),
+            'message_html' => Message::sanitizeHtml($message->message),
             'sender' => $message->sender,
             'date' => $message->date,
             'header' => $header,

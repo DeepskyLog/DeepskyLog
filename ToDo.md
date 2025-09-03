@@ -7,8 +7,6 @@
 + [ ] Messages in DeepskyLog
     + [ ] Also messages for everyone // like a forum
 
-Move the old message tables
-Test emoji's
 Add slug to individual message?
 Add possibility to send mails from details of observation, profile, ...
 

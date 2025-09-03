@@ -47,19 +47,10 @@ class MessagesOld extends Model
      */
     public static function getNumberOfUnreadMails($id): int
     {
-        // Include messages addressed to this user or broadcasts addressed to 'all'
-        $allMails = MessagesOld::where(function ($q) use ($id) {
-            $q->where('receiver', $id)
-                ->orWhere('receiver', 'all');
-        })->pluck('id');
-
-        $deletedMails = MessagesDeletedOld::where('receiver', $id)->pluck('id');
-        $readMails = MessagesReadOld::where('receiver', $id)->pluck('id');
-
-        // Remove deleted and read ids from all mails
-        $remaining = $allMails->diff($deletedMails)->diff($readMails);
-
-        return $remaining->count();
+        // Delegate to the current Message model which implements the
+        // canonical unread-count logic. Keep this wrapper so legacy
+        // callers continue working while using the new data source.
+        return Message::getNumberOfUnreadMails($id);
     }
 
     /**
