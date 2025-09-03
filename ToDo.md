@@ -9,6 +9,7 @@
 
 Add slug to individual message?
 Add possibility to send mails from details of observation, profile, ...
+Translations
 
 + [ ] Fix logging in -> Only problem on Phone
 + [ ] Release new version of pyDeepskyLog

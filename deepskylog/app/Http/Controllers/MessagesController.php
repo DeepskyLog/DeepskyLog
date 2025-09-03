@@ -139,11 +139,11 @@ class MessagesController extends Controller
             MessageRead::create(['id' => $id, 'receiver' => $user->username, 'read_at' => now()]);
         }
 
-        // Fetch sender user if available and map admin display-name
+        // Fetch sender user if available. Do NOT overwrite an admin user's real name here.
+        // The branded name 'DeepskyLog' should only apply to literal legacy senders
+        // like the string 'admin' or 'deepskylog' (handled in the view), or to
+        // explicit broadcast markers if/when they exist.
         $senderUser = User::where('username', $message->sender)->first();
-        if ($senderUser && $senderUser->hasAdministratorPrivileges()) {
-            $senderUser->name = 'DeepskyLog';
-        }
 
         return view('messages.show', compact('message', 'senderUser'));
     }
@@ -206,30 +206,28 @@ class MessagesController extends Controller
         // For broadcasts, always display 'DeepskyLog' as sender name regardless of which admin sent it.
         $senderName = 'DeepskyLog';
 
-        $users = User::pluck('username');
-
         $now = now();
-
-        $rows = [];
 
         $safeSubject = Message::sanitizeHtml($request->subject);
         $safeMessage = Message::sanitizeHtml($request->message);
 
-        foreach ($users as $username) {
-            $rows[] = [
+        // Store a single legacy broadcast row with receiver = 'all' so
+        // older codepaths and external tools that expect a single broadcast
+        // entry continue to work. We do NOT create per-user DB rows here.
+        try {
+            $allRow = [
                 'sender' => $sender,
-                'receiver' => $username,
+                'receiver' => 'all',
                 'subject' => $safeSubject,
                 'message' => $safeMessage,
                 'date' => $now,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
-        }
-
-        // Insert into the new messages table on the default connection
-        foreach (array_chunk($rows, 500) as $chunk) {
-            DB::table('messages')->insert($chunk);
+            DB::table('messages')->insert($allRow);
+        } catch (\Exception $e) {
+            // Log and continue: failure to add the legacy 'all' row shouldn't stop emailing
+            logger()->error('Failed to insert legacy broadcast row: '.$e->getMessage());
         }
 
         // Send email notifications to users who have enabled mail notifications.
@@ -352,12 +350,15 @@ class MessagesController extends Controller
             $subject = $rePrefix.' '.$originalSubject;
         }
 
-        // Resolve sender display name if user exists and map admin to DeepskyLog
+        // Resolve sender display name. Preserve real user names (including admins).
+        // Only map literal legacy senders 'admin' or 'deepskylog' to the branded
+        // display name 'DeepskyLog'. This ensures administrator user accounts
+        // still show their personal name for normal messages and replies.
         $senderModel = User::where('username', $message->sender)->first();
         if ($senderModel) {
-            $senderName = $senderModel->hasAdministratorPrivileges() ? 'DeepskyLog' : $senderModel->name;
+            $senderName = $senderModel->name;
         } else {
-            $senderName = (strtolower($message->sender) === 'admin') ? 'DeepskyLog' : $message->sender;
+            $senderName = in_array(strtolower($message->sender), ['admin', 'deepskylog']) ? 'DeepskyLog' : $message->sender;
         }
 
         // Localized header: "On DATE, USER wrote:"
