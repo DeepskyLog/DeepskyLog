@@ -19,3 +19,48 @@
 @source '../../app/Livewire/**/*Table.php';
 @source '../../vendor/power-components/livewire-powergrid/src/Themes/Tailwind.php';
 @source '../../vendor/power-components/livewire-powergrid/resources/views/**/*.php';
+
+/* Restore basic list markers and alignment inside message .prose containers.
+	 Some resets remove list markers globally; these rules narrowly re-enable
+	 markers and alignment inside .prose/.prose-invert so message HTML displays
+	 as authored. */
+.prose ul, .prose-invert ul {
+	list-style-type: disc;
+	margin-left: 1.25rem;
+	padding-left: 0;
+}
+.prose ol, .prose-invert ol {
+	list-style-type: decimal;
+	margin-left: 1.25rem;
+	padding-left: 0;
+}
+.prose li, .prose-invert li {
+	margin-top: 0.25rem;
+}
+.prose p[align="center"], .prose-invert p[align="center"] {
+	text-align: center;
+}
+.prose p[align="right"], .prose-invert p[align="right"] {
+	text-align: right;
+}
+.prose p[align="left"], .prose-invert p[align="left"] {
+	text-align: left;
+}
+
+/* Stronger overrides for inline styles — use attribute contains to catch style="text-align:..." etc.
+	 Use !important to defeat other resets that remove alignment or indentation. */
+.prose p[style*="text-align:center"], .prose-invert p[style*="text-align:center"],
+.prose p[align="center"], .prose-invert p[align="center"] {
+	text-align: center !important;
+}
+.prose p[style*="text-align:right"], .prose-invert p[style*="text-align:right"],
+.prose p[align="right"], .prose-invert p[align="right"] {
+	text-align: right !important;
+}
+.prose p[style*="margin-left"], .prose-invert p[style*="margin-left"] {
+	/* preserve inline indentation */
+	margin-left: 2rem !important;
+}
+.prose p[style*="text-indent"], .prose-invert p[style*="text-indent"] {
+	text-indent: 1.5rem !important;
+}

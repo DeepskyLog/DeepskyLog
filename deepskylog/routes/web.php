@@ -227,3 +227,9 @@ Route::post('/messages/broadcast', [App\Http\Controllers\MessagesController::cla
 
 // Mark all messages as read
 Route::post('/messages/mark-all-read', [App\Http\Controllers\MessagesController::class, 'markAllRead'])->name('messages.markAllRead')->middleware('auth');
+
+// Reply data (plain-text message) for prefill via AJAX
+Route::get('/messages/{id}/reply-data', [App\Http\Controllers\MessagesController::class, 'replyData'])->name('messages.replyData')->middleware('auth');
+
+// Delete a message (mark deleted in legacy messagesDeleted table)
+Route::post('/messages/{id}/delete', [App\Http\Controllers\MessagesController::class, 'destroy'])->name('messages.destroy')->middleware('auth');

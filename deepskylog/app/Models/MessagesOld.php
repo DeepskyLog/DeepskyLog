@@ -13,6 +13,9 @@ class MessagesOld extends Model
 
     protected $table = 'messages';
 
+    // Legacy messages table does not have Laravel timestamp columns
+    public $timestamps = false;
+
     protected $fillable = ['sender', 'receiver', 'subject', 'message', 'date'];
 
     /**
@@ -72,9 +75,26 @@ class MessagesOld extends Model
         if ($purifier === null) {
             $config = HTMLPurifier_Config::createDefault();
             // Allow a safe set of elements and attributes
-            $config->set('HTML.Allowed', 'a[href|title|target],b,strong,i,em,br,p,ul,ol,li,blockquote,code,pre,span,div,img[src|alt|title|width|height]');
+            // Allow a conservative but useful set of elements and attributes. We permit
+            // p/div/span with simple style/align attributes so alignment and indentation
+            // (as in the user's example) are preserved. We also restrict which CSS
+            // properties are allowed to avoid risky inline styles.
+            $config->set('HTML.Allowed',
+                'a[href|title|target],b,strong,i,em,br,'.
+                'p[style|align|class],div[style|align|class],span[style|class],'.
+                'ul[style|class],ol[style|class],li[style|class],blockquote,code,pre,'.
+                'img[src|alt|title|width|height]'
+            );
+
+            // Allow only safe URI schemes for links/images
             $config->set('URI.AllowedSchemes', ['http' => true, 'https' => true]);
+
+            // Allow opening links in a new tab
             $config->set('Attr.AllowedFrameTargets', ['_blank']);
+
+            // Restrict inline CSS to a small set of harmless properties used for
+            // alignment and indentation in messages.
+            $config->set('CSS.AllowedProperties', ['text-align', 'margin-left', 'margin', 'padding-left', 'text-indent', 'list-style-type']);
             // Avoid filesystem cache issues on some hosts
             $config->set('Cache.DefinitionImpl', null);
 

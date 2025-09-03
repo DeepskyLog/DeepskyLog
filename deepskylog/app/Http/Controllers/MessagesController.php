@@ -258,4 +258,82 @@ class MessagesController extends Controller
         // list shows updated read/unread state.
         return redirect()->back()->with('status', __('All messages marked as read'));
     }
+
+    /**
+     * Mark a single message as deleted for the current user (legacy messagesDeleted table).
+     */
+    public function destroy($id)
+    {
+        $user = Auth::user();
+
+        $message = MessagesOld::findOrFail($id);
+
+        // ensure receiver is user or admin
+        if ($message->receiver !== $user->username && ! $user->hasAdministratorPrivileges()) {
+            abort(403);
+        }
+
+        // avoid duplicate marks
+        $exists = MessagesDeletedOld::where('id', $id)->where('receiver', $user->username)->exists();
+        if (! $exists) {
+            // Use legacy connection to insert a deleted marker. Some installs may not have timestamps.
+            DB::connection('mysqlOld')->table('messagesDeleted')->insert([
+                ['id' => $id, 'receiver' => $user->username],
+            ]);
+        }
+
+        return redirect()->route('messages.index')->with('status', __('Message deleted'));
+    }
+
+    /**
+     * Return reply data (plain-text quoted message) for AJAX prefill.
+     */
+    public function replyData($id)
+    {
+        $auth = Auth::user();
+        $message = MessagesOld::findOrFail($id);
+
+        // ensure receiver is user or admin
+        if ($message->receiver !== $auth->username && ! $auth->hasAdministratorPrivileges()) {
+            abort(403);
+        }
+
+        // build plain text and quote it with > like mail
+        $plain = trim(preg_replace('/\s+/', ' ', strip_tags($message->message)));
+        $lines = preg_split('/\r?\n/', $plain);
+        $quoted = implode("\n", array_map(function ($l) {
+            return '> '.$l;
+        }, $lines));
+
+        $originalSubject = $message->subject ?: __('(no subject)');
+        $rePrefix = __('Re:');
+        // If the original subject already starts with a Re: prefix (localized or plain), don't add another
+        if (mb_stripos(ltrim($originalSubject), $rePrefix) === 0 || mb_stripos(ltrim($originalSubject), 're:') === 0) {
+            $subject = $originalSubject;
+        } else {
+            $subject = $rePrefix.' '.$originalSubject;
+        }
+
+        // Resolve sender display name if user exists and map admin to DeepskyLog
+        $senderModel = User::where('username', $message->sender)->first();
+        if ($senderModel) {
+            $senderName = $senderModel->hasAdministratorPrivileges() ? 'DeepskyLog' : $senderModel->name;
+        } else {
+            $senderName = (strtolower($message->sender) === 'admin') ? 'DeepskyLog' : $message->sender;
+        }
+
+        // Localized header: "On DATE, USER wrote:"
+        $displayDate = $message->formatted_date ?? $message->date;
+        $header = __('On :date, :user wrote:', ['date' => $displayDate, 'user' => $senderName]);
+
+        return response()->json([
+            'subject' => $subject,
+            'message' => $quoted,
+            // Also return sanitized HTML so rich editors can preserve markup
+            'message_html' => MessagesOld::sanitizeHtml($message->message),
+            'sender' => $message->sender,
+            'date' => $message->date,
+            'header' => $header,
+        ]);
+    }
 }

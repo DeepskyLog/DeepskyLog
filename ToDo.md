@@ -6,6 +6,17 @@
 
 + [ ] Messages in DeepskyLog
     + [ ] Also messages for everyone // like a forum
+
+Reply on message
+
+The excerpt is plain text and safe to place in a query param; if your message bodies are very large you may prefer to open the compose page and fetch the full original via AJAX, or to prefill only the subject and leave the body empty.
+If you want "Re: " to be localized, I can wrap it in __('Re:') or use a localized template.
+
+Broadcast
+Send a real mail (only for direct messages)
+Move the old message tables
+Add slug to individual message?
+
 + [ ] Fix logging in -> Only problem on Phone
 + [ ] Release new version of pyDeepskyLog
     + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.

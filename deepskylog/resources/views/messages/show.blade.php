@@ -35,12 +35,63 @@
             <div class="text-sm text-gray-400">{{ $message->formatted_date }}</div>
         </div>
 
-        <div class="mt-4 prose max-w-none text-gray-200">
+    <div class="mt-4 prose prose-invert max-w-none text-gray-200">
             {!! $message->safe_message !!}
         </div>
 
+        {{-- Scoped inline styles to enforce alignment and indentation for legacy messages --}}
+        <style>
+            /* Target only this message area */
+            .prose.prose-invert.max-w-none.text-gray-200 p[align],
+            .prose.prose-invert.max-w-none.text-gray-200 p[style*="text-align"],
+            .prose.prose-invert.max-w-none.text-gray-200 li[style*="text-align"],
+            .prose.prose-invert.max-w-none.text-gray-200 li[align] {
+                /* force alignment from inline attributes */
+                text-align: inherit !important;
+            }
+
+            .prose.prose-invert.max-w-none.text-gray-200 p[style*="margin-left"],
+            .prose.prose-invert.max-w-none.text-gray-200 p[style*="text-indent"],
+            .prose.prose-invert.max-w-none.text-gray-200 li[style*="margin-left"],
+            .prose.prose-invert.max-w-none.text-gray-200 li[style*="text-indent"] {
+                margin-left: inherit !important;
+                text-indent: inherit !important;
+            }
+
+            /* Ensure list markers are visible inside the prose area */
+            .prose.prose-invert.max-w-none.text-gray-200 ul,
+            .prose.prose-invert.max-w-none.text-gray-200 ol {
+                list-style-position: outside !important;
+                list-style-type: disc !important;
+            }
+        </style>
+
                 <div class="mt-6">
-                    <a href="{{ route('messages.index') }}" class="text-sm text-gray-400">&larr; {{ __('Back to inbox') }}</a>
+                    <div class="flex items-center gap-4">
+                        <button type="button" onclick="window.location='{{ route('messages.index') }}'" class="text-sm bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded">&larr; {{ __('Back to inbox') }}</button>
+
+                        @php
+                            $isDsl = false;
+                            if (isset($senderUser)) {
+                                if ((($senderUser->name ?? '') === 'DeepskyLog') || strtolower($senderUser->username ?? '') === 'admin') {
+                                    $isDsl = true;
+                                }
+                            } else {
+                                if (in_array(strtolower($message->sender), ['admin','deepskylog'])) {
+                                    $isDsl = true;
+                                }
+                            }
+                        @endphp
+
+                        @if(! $isDsl)
+                            <a href="{{ route('messages.create', ['reply_to' => $message->id, 'to' => $message->sender]) }}" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">{{ __('Reply') }}</a>
+                        @endif
+
+                        <form method="post" action="{{ route('messages.destroy', $message->id) }}" onsubmit="return confirm('{{ __('Are you sure you want to delete this message?') }}');">
+                            @csrf
+                            <button type="submit" class="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">{{ __('Delete message') }}</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
