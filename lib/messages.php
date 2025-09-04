@@ -6,7 +6,7 @@ if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 class Messages {
 	public function getNumberOfUnreadMails() {
-		global $objDatabase, $loggedUser;
+		global $loggedUser;
 		if ($loggedUser) {
 			return "" . count ( $this->getIdsNewMails ( $loggedUser ) ) . "/" . count ( $this->getIdsAllMails ( $loggedUser ) ) . "";
 		} else {
@@ -14,11 +14,11 @@ class Messages {
 		}
 	}
 	public function getIdsNewMails($user) {
-		global $objDatabase;
+		global $objDatabase_new;
 		$listOfAllMails = $this->getIdsAllMails ( $user );
 
 		// Read mails should not be counted in the first part
-		$readMails = $objDatabase->selectSingleArray ( "select id from messagesRead where receiver = \"" . $user . "\"", "id" );
+		$readMails = $objDatabase_new->selectSingleArray ( "select id from messages_read where receiver = \"" . $user . "\"", "id" );
 
 		$cnt = 0;
 
@@ -40,13 +40,13 @@ class Messages {
 
 	// Returns a list of all mails. The deleted mails are not included in the list of id's.
 	public function getIdsAllMails($user) {
-		global $objDatabase;
-		$listOfAllMails = $objDatabase->selectSingleArray ( "select id from messages where receiver = \"" . $user . "\" or receiver = \"all\"", "id" );
+		global $objDatabase_new;
+		$listOfAllMails = $objDatabase_new->selectSingleArray ( "select id from messages where receiver = \"" . $user . "\" or receiver = \"all\"", "id" );
 
 		$listOfMails = Array ();
 
 		// Removed mails should not be counted
-		$removedMails = $objDatabase->selectSingleArray ( "select id from messagesDeleted where receiver = \"" . $user . "\"", "id" );
+		$removedMails = $objDatabase_new->selectSingleArray ( "select id from messages_deleted where receiver = \"" . $user . "\"", "id" );
 
 		$cnt = 0;
 
@@ -60,24 +60,24 @@ class Messages {
 		return $listOfMails;
 	}
 	public function getSubject($id) {
-		global $objDatabase;
-		return $objDatabase->selectSingleValue ( "select subject from messages where id = \"" . $id . "\"", "subject" );
+		global $objDatabase_new;
+		return $objDatabase_new->selectSingleValue ( "select subject from messages where id = \"" . $id . "\"", "subject" );
 	}
 	public function getSender($id) {
-		global $objDatabase;
-		return $objDatabase->selectSingleValue ( "select sender from messages where id = \"" . $id . "\"", "sender" );
+		global $objDatabase_new;
+		return $objDatabase_new->selectSingleValue ( "select sender from messages where id = \"" . $id . "\"", "sender" );
 	}
 	public function getReceiver($id) {
-		global $objDatabase;
-		return $objDatabase->selectSingleValue ( "select receiver from messages where id = \"" . $id . "\"", "receiver" );
+		global $objDatabase_new;
+		return $objDatabase_new->selectSingleValue ( "select receiver from messages where id = \"" . $id . "\"", "receiver" );
 	}
 	public function getDate($id) {
-		global $objDatabase;
-		return $objDatabase->selectSingleValue ( "select date from messages where id = \"" . $id . "\"", "date" );
+		global $objDatabase_new;
+		return $objDatabase_new->selectSingleValue ( "select date from messages where id = \"" . $id . "\"", "date" );
 	}
 	public function getContent($id) {
-		global $objDatabase, $baseURL;
-		$message = $objDatabase->selectSingleValue ( "select message from messages where id = \"" . $id . "\"", "message" );
+		global $objDatabase_new, $baseURL;
+		$message = $objDatabase_new->selectSingleValue ( "select message from messages where id = \"" . $id . "\"", "message" );
 		$message = str_replace ( 'http://www.deepskylog.be/', $baseURL, $message );
 		$message = str_replace ( 'http://www.deepskylog.nl/', $baseURL, $message );
 		$message = str_replace ( 'http://www.deepskylog.de/', $baseURL, $message );
@@ -86,22 +86,23 @@ class Messages {
 		return $message;
 	}
 	public function removeAllMessages($id) {
-		global $objDatabase;
+		global $objDatabase_new;
 		if ($id != "") {
 			$allMessages = $this->getIdsAllMails ( $id );
 			for($cnt = 0; $cnt < count ( $allMessages ); $cnt ++) {
-				$objDatabase->execSQL ( "insert into messagesDeleted VALUES(\"" . $allMessages [$cnt] . "\", \"" . $id . "\")" );
+				$deleted_at = date ( 'Y-m-d H:i:s' );
+				$objDatabase_new->execSQL ( "insert into messages_deleted VALUES(\"" . $allMessages [$cnt] . "\", \"" . $id . "\", \"" . $deleted_at . "\")" );
 			}
 		}
 	}
 	public function getContentWithoutLinks($id) {
-		global $objDatabase;
-		$message = $objDatabase->selectSingleValue ( "select message from messages where id = \"" . $id . "\"", "message" );
+		global $objDatabase_new;
+		$message = $objDatabase_new->selectSingleValue ( "select message from messages where id = \"" . $id . "\"", "message" );
 		return strip_tags ( $message, '<br>' );
 	}
 	public function isRead($id, $receiver) {
-		global $objDatabase;
-		$read = $objDatabase->selectSingleValue ( "select id from messagesRead where id = \"" . $id . "\" and receiver = \"" . $receiver . "\"", "id" );
+		global $objDatabase_new;
+		$read = $objDatabase_new->selectSingleValue ( "select id from messages_read where id = \"" . $id . "\" and receiver = \"" . $receiver . "\"", "id" );
 		if ($read == "") {
 			return false;
 		} else {
@@ -109,8 +110,8 @@ class Messages {
 		}
 	}
 	public function isDeleted($id, $receiver) {
-		global $objDatabase;
-		$deleted = $objDatabase->selectSingleValue ( "select id from messagesDeleted where id = \"" . $id . "\" and receiver = \"" . $receiver . "\"", "id" );
+		global $objDatabase_new;
+		$deleted = $objDatabase_new->selectSingleValue ( "select id from messages_deleted where id = \"" . $id . "\" and receiver = \"" . $receiver . "\"", "id" );
 		if ($deleted == "") {
 			return false;
 		} else {
@@ -118,14 +119,18 @@ class Messages {
 		}
 	}
 	public function markMessageRead($id, $receiver) {
-		global $objDatabase;
-		$objDatabase->execSQL ( "insert into messagesRead VALUES(\"" . $id . "\", \"" . $receiver . "\")" );
+		global $objDatabase_new;
+		// Mark the message as read
+		// Also add the read_at timestamp to the table
+		$read_at = date ( 'Y-m-d H:i:s' );
+		$objDatabase_new->execSQL ( "insert into messages_read VALUES(\"" . $id . "\", \"" . $receiver . "\", \"" . $read_at . "\")" );
 	}
 	public function validateDeleteMessage() {
-		global $objDatabase, $loggedUser;
+		global $objDatabase_new, $loggedUser;
 		if ($loggedUser != "") {
 			$id = $_GET ["id"];
-			$objDatabase->execSQL ( "insert into messagesDeleted VALUES(\"" . $id . "\", \"" . $loggedUser . "\")" );
+			$deleted_at = date ( 'Y-m-d H:i:s' );
+			$objDatabase_new->execSQL ( "insert into messages_deleted VALUES(\"" . $id . "\", \"" . $loggedUser . "\", \"" . $deleted_at . "\")" );
 		}
 	}
 	public function getReplyToSubject($id) {
@@ -157,7 +162,6 @@ class Messages {
 
 	// Returns a list of all read mails.
 	public function getIdsReadMails($user) {
-		global $objDatabase;
 		$listOfAllMails = $this->getIdsAllMails ( $user );
 		$listOfNewMails = $this->getIdsNewMails ( $user );
 
@@ -178,7 +182,7 @@ class Messages {
 		return $listOfReadMails;
 	}
 	public function sendMessage($sender, $receiver, $subject, $message) {
-		global $objDatabase, $objObserver;
+		global $objDatabase, $objObserver, $objDatabase_new;
 		$date = $mysqldate = date ( 'Y-m-d H:i:s' );
 
 		// We check whether the observer wants to receive the DeepskyLog messages as email. If so, we send an email.
@@ -202,7 +206,7 @@ class Messages {
 				}
 			}
 		}
-		$objDatabase->execSQL ( "INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")" );
+		$objDatabase_new->execSQL ( "INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")" );
 	}
 	public function sendEmail($subject, $message, $userid, $cc = false) {
 		// Sends a html mail to the given userid. If $userid == "developers", then we send a mail to the DeepskyLog team.
@@ -272,7 +276,7 @@ class Messages {
         }
 	}
 	public function sendRealMessage($sender, $receiver, $subject, $message) {
-		global $objDatabase, $objObserver;
+		global $objDatabase, $objObserver, $objDatabase_new;
 		$date = $mysqldate = date ( 'Y-m-d H:i:s' );
 
 		// We loop over all observers and send all observers who wants to receive the messages as email a mail.
@@ -282,10 +286,10 @@ class Messages {
 				$this->sendEmail ( $subject, $message . "<br /><br />", $mailTo );
 			}
 		}
-		$objDatabase->execSQL ( "INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")" );
+		$objDatabase_new->execSQL ( "INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")" );
 	}
 	public function showListMails($newMails, $readMails) {
-		global $baseURL, $baseURL, $objPresentations, $objObserver, $dateformat, $loggedUser, $objUtil;
+		global $baseURL, $objObserver, $dateformat, $loggedUser, $objUtil;
 
 		// Add the button to select which columns to show
 		$objUtil->addTableColumSelector ();
