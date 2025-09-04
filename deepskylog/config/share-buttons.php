@@ -156,6 +156,10 @@ return [
 
     'templater' => \Kudashevs\ShareButtons\Templaters\LaravelTemplater::class,
 
-    'url_templater' => \Kudashevs\ShareButtons\Templaters\LaravelTemplater::class,
+    // Use the simple colon templater for URL generation so placeholders like
+    // :url and :text are replaced literally (and subsequently encoded)
+    // which avoids unexpected behavior when using the translation-based
+    // templater for URLs.
+    'url_templater' => \Kudashevs\ShareButtons\Templaters\SimpleColonTemplater::class,
 
 ];

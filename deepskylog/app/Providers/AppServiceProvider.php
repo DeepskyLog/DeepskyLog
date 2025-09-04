@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
+use Kudashevs\ShareButtons\ShareButtons;
+use App\ShareButtons\Presenters\CustomTemplateBasedPresenterMediator;
+use ReflectionClass;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,7 +15,24 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Replace the ShareButtons presenter with a custom mediator to change URL encoding
+        $this->app->singleton(ShareButtons::class, function ($app) {
+            $options = config('share-buttons') ?? [];
+
+            $instance = new ShareButtons($options);
+
+            // Create custom mediator and inject it into the ShareButtons instance
+            $mediator = new CustomTemplateBasedPresenterMediator($options);
+
+            $ref = new ReflectionClass($instance);
+            if ($ref->hasProperty('presenter')) {
+                $prop = $ref->getProperty('presenter');
+                $prop->setAccessible(true);
+                $prop->setValue($instance, $mediator);
+            }
+
+            return $instance;
+        });
     }
 
     /**
