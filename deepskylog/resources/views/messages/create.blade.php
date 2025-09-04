@@ -7,6 +7,21 @@
             <div class="overflow-hidden bg-gray-900 shadow-sm sm:rounded-lg p-4">
                 <div class="max-w-2xl mx-auto">
                     <div class="bg-gray-900 p-6 rounded-lg shadow">
+                    <style>
+                        /* Ensure the receiver select dropdown appears above TinyMCE when composing messages */
+                        [x-ref="popover"],
+                        [x-ref="optionsContainer"],
+                        [role="listbox"],
+                        .headlessui-listbox__options,
+                        .listbox__options,
+                        .select-dropdown,
+                        [data-listbox],
+                        .choices__list,
+                        .dropdown-menu {
+                            position: relative;
+                            z-index: 1000000000000001 !important;
+                        }
+                    </style>
         @php
             $usersAsyncRoute = !$isBroadcast ? (request()->query('to') ? route('users.select.api', ['selected' => request()->query('to')]) : route('users.select.api')) : null;
             $selectedUser = null;

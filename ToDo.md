@@ -5,10 +5,8 @@
 ### Next steps
 
 + [ ] Messages in DeepskyLog
-    + [ ] Also messages for everyone // like a forum
-
-Send mail -> wrong title
-Translations
+    + [ ] Translations.
+    + [ ] Adapt the old DeepskyLog messages to use the new tables.
 
 + [ ] Fix logging in -> Only problem on Phone
 + [ ] Release new version of pyDeepskyLog
@@ -22,6 +20,8 @@ Translations
     + [ ] Like sessions
 + [ ] Targets
 + [ ] Observing lists
++ [ ] Observations
++ [ ] All missing pages
 + [ ] Friends? Add friends and see their observations / sessions / ... Different lists for Murzim, Capella, ...
 
 ### Done

@@ -23,6 +23,23 @@
                 z-index: 99999 !important;
             }
 
+            /* Raise common dropdown/listbox/popover elements (WireUI, headlessui, choices, etc.)
+               above TinyMCE's blocker. TinyMCE may use a very large z-index (1e15) for some
+               auxiliary elements, so we choose a slightly larger value to ensure popovers
+               are visible above it. Use !important to override vendor styles. */
+            [x-ref="popover"],
+            [x-ref="optionsContainer"],
+            [role="listbox"],
+            .headlessui-listbox__options,
+            .listbox__options,
+            .select-dropdown,
+            [data-listbox],
+            .choices__list,
+            .dropdown-menu {
+                position: relative;
+                z-index: 1000000000000001 !important;
+            }
+
             main a[href*="/messages/create"]::after,
             a[href*="/messages/create"]::after {
                 content: "DSL";
