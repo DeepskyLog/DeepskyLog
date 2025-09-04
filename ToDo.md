@@ -7,8 +7,7 @@
 + [ ] Messages in DeepskyLog
     + [ ] Also messages for everyone // like a forum
 
-Add slug to individual message?
-Add possibility to send mails from details of observation, profile, ...
+Send mail -> wrong title
 Translations
 
 + [ ] Fix logging in -> Only problem on Phone

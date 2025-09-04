@@ -101,6 +101,7 @@
                                 <x-sketch-deepsky
                                     :observation_id="$observation_id"
                                     :observer_name="$observer_name"
+                                    :observer_username="$sketch->observerid"
                                     :observation_date="$observation_date"
                                 />
                             </div>
@@ -138,6 +139,7 @@
                                 <x-sketch-comet
                                     :observation_id="$observation_id"
                                     :observer_name="$observer_name"
+                                    :observer_username="$sketch->observerid"
                                     :observation_date="$observation_date"
                                 />
                             </div>

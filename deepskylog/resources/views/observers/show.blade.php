@@ -427,7 +427,7 @@
 
                 @if (Auth::user() && $user->id != Auth::user()->id)
                     <x-button gray icon="envelope-open" class="mb-2"
-                              href="{{ config('app.old_url') }}/index.php?indexAction=new_message&receiver={{ $user->username }}"
+                              href="{{ route('messages.create', ['to' => $user->username]) }}"
                     >
                         {{ __("Send message to ") . $user->name }}
                     </x-button>
