@@ -11,12 +11,15 @@ class MigrateOldMessagesSeeder extends Seeder
     {
         $oldConn = DB::connection('mysqlOld');
         $newConn = DB::connection();
+    // disable query log to avoid memory growth while processing large datasets
+    DB::disableQueryLog();
 
-        // Copy messages
-        $oldMessages = $oldConn->table('messages')->orderBy('id')->get();
-        if ($oldMessages->isNotEmpty()) {
-            $rows = $oldMessages->map(function ($m) {
-                return [
+        // Copy messages in chunks to avoid loading the entire table into memory
+        $maxId = null;
+        $oldConn->table('messages')->orderBy('id')->chunkById(500, function ($chunk) use ($newConn, &$maxId) {
+            $rows = [];
+            foreach ($chunk as $m) {
+                $rows[] = [
                     'id' => $m->id,
                     'sender' => $m->sender ?? null,
                     'receiver' => $m->receiver ?? null,
@@ -26,67 +29,57 @@ class MigrateOldMessagesSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
-            })->toArray();
-
-            // Use insert on chunks to avoid large single queries
-            foreach (array_chunk($rows, 500) as $chunk) {
-                $newConn->table('messages')->insert($chunk);
+                $maxId = $m->id > ($maxId ?? 0) ? $m->id : $maxId;
             }
 
-            // Set messages auto-increment to max(id)+1 to avoid conflict with preserved ids
-            $maxId = $oldMessages->max('id');
-            if ($maxId !== null) {
-                $driver = $newConn->getDriverName();
-                // Only adjust for MySQL-compatible drivers
-                if (in_array($driver, ['mysql', 'pdo_mysql'], true)) {
-                    $newConn->statement('ALTER TABLE `messages` AUTO_INCREMENT = '.((int) $maxId + 1));
+            if (!empty($rows)) {
+                foreach (array_chunk($rows, 500) as $insertChunk) {
+                    $newConn->table('messages')->insert($insertChunk);
                 }
+            }
+        });
+
+        // Set messages auto-increment to max(id)+1 to avoid conflict with preserved ids
+        if ($maxId !== null) {
+            $driver = $newConn->getDriverName();
+            // Only adjust for MySQL-compatible drivers
+            if (in_array($driver, ['mysql', 'pdo_mysql'], true)) {
+                $newConn->statement('ALTER TABLE `messages` AUTO_INCREMENT = '.((int) $maxId + 1));
             }
         }
 
         // Copy messagesRead -> messages_read
-        $oldRead = $oldConn->table('messagesRead')->get();
-        if ($oldRead->isNotEmpty()) {
-            $rows = $oldRead->map(function ($r) {
-                return [
+        // Copy messagesRead -> messages_read using chunking
+        $oldConn->table('messagesRead')->orderBy('id')->chunkById(500, function ($chunk) use ($newConn) {
+            foreach ($chunk as $r) {
+                $row = [
                     'id' => $r->id,
                     'receiver' => $r->receiver ?? null,
                     'read_at' => now(),
                 ];
-            })->toArray();
-
-            foreach (array_chunk($rows, 500) as $chunk) {
-                // ignore duplicates if any
-                foreach ($chunk as $row) {
-                    try {
-                        $newConn->table('messages_read')->insert($row);
-                    } catch (\Exception $e) {
-                        // ignore duplicate key or other insert errors for safety during seeding
-                    }
+                try {
+                    $newConn->table('messages_read')->insert($row);
+                } catch (\Exception $e) {
+                    // ignore duplicate key or other insert errors for safety during seeding
                 }
             }
-        }
+        });
 
         // Copy messagesDeleted -> messages_deleted
-        $oldDeleted = $oldConn->table('messagesDeleted')->get();
-        if ($oldDeleted->isNotEmpty()) {
-            $rows = $oldDeleted->map(function ($r) {
-                return [
+        // Copy messagesDeleted -> messages_deleted using chunking
+        $oldConn->table('messagesDeleted')->orderBy('id')->chunkById(500, function ($chunk) use ($newConn) {
+            foreach ($chunk as $r) {
+                $row = [
                     'id' => $r->id,
                     'receiver' => $r->receiver ?? null,
                     'deleted_at' => now(),
                 ];
-            })->toArray();
-
-            foreach (array_chunk($rows, 500) as $chunk) {
-                foreach ($chunk as $row) {
-                    try {
-                        $newConn->table('messages_deleted')->insert($row);
-                    } catch (\Exception $e) {
-                        // ignore duplicates
-                    }
+                try {
+                    $newConn->table('messages_deleted')->insert($row);
+                } catch (\Exception $e) {
+                    // ignore duplicates
                 }
             }
-        }
+        });
     }
 }
