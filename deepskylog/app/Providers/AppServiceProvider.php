@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
+use App\ShareButtons\Presenters\CustomTemplateBasedPresenterMediator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Kudashevs\ShareButtons\ShareButtons;
-use App\ShareButtons\Presenters\CustomTemplateBasedPresenterMediator;
 use ReflectionClass;
 
 class AppServiceProvider extends ServiceProvider

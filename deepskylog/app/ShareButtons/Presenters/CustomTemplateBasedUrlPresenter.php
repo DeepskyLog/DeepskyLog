@@ -2,8 +2,8 @@
 
 namespace App\ShareButtons\Presenters;
 
-use Kudashevs\ShareButtons\Templaters\Templater;
 use Kudashevs\ShareButtons\Presenters\TemplateBasedUrlPresenter as BasePresenter;
+use Kudashevs\ShareButtons\Templaters\Templater;
 
 class CustomTemplateBasedUrlPresenter extends BasePresenter
 {

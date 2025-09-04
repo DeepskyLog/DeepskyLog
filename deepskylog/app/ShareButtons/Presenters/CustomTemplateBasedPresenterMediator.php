@@ -2,12 +2,11 @@
 
 namespace App\ShareButtons\Presenters;
 
-use Kudashevs\ShareButtons\Presenters\TemplateBasedPresenterMediator as BaseMediator;
-use Kudashevs\ShareButtons\Templaters\Templater;
+use Kudashevs\ShareButtons\Exceptions\InvalidOptionValue;
 use Kudashevs\ShareButtons\Presenters\TemplateBasedBlockPresenter;
 use Kudashevs\ShareButtons\Presenters\TemplateBasedElementPresenter;
-use Kudashevs\ShareButtons\Templaters\SimpleColonTemplater;
-use Kudashevs\ShareButtons\Exceptions\InvalidOptionValue;
+use Kudashevs\ShareButtons\Presenters\TemplateBasedPresenterMediator as BaseMediator;
+use Kudashevs\ShareButtons\Templaters\Templater;
 
 class CustomTemplateBasedPresenterMediator extends BaseMediator
 {
@@ -16,6 +15,7 @@ class CustomTemplateBasedPresenterMediator extends BaseMediator
      * while delegating the rest to the base implementation.
      *
      * @param  array{templater?: class-string, url_templater?: class-string}  $options
+     *
      * @throws InvalidOptionValue
      */
     protected function initMediator(array $options = []): void
