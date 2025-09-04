@@ -14,12 +14,14 @@
             <x-sketch-comet
                 :observation_id="-$sketch->observation_id"
                 :observer_name="$sketch->user->name"
+                :observer_username="$sketch->user->username"
                 :observation_date="$sketch->date"
             />
         @else
             <x-sketch-deepsky
                 :observation_id="$sketch->observation_id"
                 :observer_name="$sketch->user->name"
+                :observer_username="$sketch->user->username"
                 :observation_date="$sketch->date"
             />
         @endif

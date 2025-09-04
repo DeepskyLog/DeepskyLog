@@ -14,7 +14,7 @@
                     @if (Auth::user()->isAdministrator())
                         <x-dropdown.item
                             icon="envelope-open"
-                            href="{{ config('app.old_url') }}/index.php?indexAction=new_message&receiver=all"
+                            href="{{ route('messages.create', ['receiver' => 'all']) }}"
                             label="{{ __('Send message to all') }}"
                         />
 

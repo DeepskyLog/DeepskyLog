@@ -51,6 +51,7 @@
                                 <x-sketch-deepsky
                                     :observation_id="$sketch->id"
                                     :observer_name="$observer_name"
+                                    :observer_username="$sketch->observerid"
                                     :observation_date="$observation_date"
                                 />
                             </div>

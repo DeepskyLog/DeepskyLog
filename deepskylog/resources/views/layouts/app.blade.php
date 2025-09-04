@@ -22,6 +22,46 @@
             .tox, .tox-tinymce, .tox-tinymce-aux, .tox-tinymce-aux .tox, .tox .tox-toolbar, .tox .tox-toolbar__primary {
                 z-index: 99999 !important;
             }
+
+            /* Raise common dropdown/listbox/popover elements (WireUI, headlessui, choices, etc.)
+               above TinyMCE's blocker. TinyMCE may use a very large z-index (1e15) for some
+               auxiliary elements, so we choose a slightly larger value to ensure popovers
+               are visible above it. Use !important to override vendor styles. */
+            [x-ref="popover"],
+            [x-ref="optionsContainer"],
+            [role="listbox"],
+            .headlessui-listbox__options,
+            .listbox__options,
+            .select-dropdown,
+            [data-listbox],
+            .choices__list,
+            .dropdown-menu {
+                position: relative;
+                z-index: 1000000000000001 !important;
+            }
+
+            main a[href*="/messages/create"]::after,
+            a[href*="/messages/create"]::after {
+                content: "DSL";
+                display: inline-block;
+                margin-left: 0.5rem;
+                font-size: 0.65rem;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                padding: 0.12rem 0.4rem;
+                border-radius: 9999px;
+                background: #2563eb; /* blue-600 */
+                color: #ffffff;
+                vertical-align: middle;
+            }
+
+            /* Make sure small UI links (icons/buttons) don't get overly padded by the pill */
+            a.inline-flex[href*="/messages/create"]::after,
+            a.inline-flex[href^="mailto:"]::after {
+                margin-left: 0.35rem;
+                font-size: 0.6rem;
+                padding: 0.08rem 0.32rem;
+            }
         </style>
 
         <!-- Styles -->
@@ -35,9 +75,18 @@
             <x-notifications />
 
             <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                <main>
+                    {{-- Optional page header slot (used by pages like messages.create) --}}
+                    @isset($header)
+                        <header class="bg-gray-900 border-b border-gray-700">
+                            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 py-4">
+                                <h1 class="text-xl font-semibold text-gray-100">{{ $header }}</h1>
+                            </div>
+                        </header>
+                    @endisset
+
+                    {{ $slot }}
+                </main>
         </div>
 
         <footer class="bg-gray-800 shadow-sm">

@@ -48,6 +48,32 @@ class ObserverController extends Controller
         $totalNumberOfDrawings = ObservationsOld::where('hasDrawing', 1)->count();
         $totalUniqueObjects = ObservationsOld::getUniqueObjectsObserved();
 
+        // Determine if this user has any observations with likes (deepsky or comet)
+        $hasPopularObservations = false;
+        $username = $user->username;
+
+        $deepskyIds = ObservationsOld::where('observerid', $username)->pluck('id')->toArray();
+        $cometIds = \App\Models\CometObservationsOld::where('observerid', $username)->pluck('id')->toArray();
+
+        if (! empty($deepskyIds) || ! empty($cometIds)) {
+            $query = \App\Models\ObservationLike::query();
+            $query->where(function ($q) use ($deepskyIds, $cometIds) {
+                if (! empty($deepskyIds)) {
+                    $q->orWhere(function ($q2) use ($deepskyIds) {
+                        $q2->where('observation_type', 'deepsky')->whereIn('observation_id', $deepskyIds);
+                    });
+                }
+
+                if (! empty($cometIds)) {
+                    $q->orWhere(function ($q2) use ($cometIds) {
+                        $q2->where('observation_type', 'comet')->whereIn('observation_id', $cometIds);
+                    });
+                }
+            });
+
+            $hasPopularObservations = $query->exists();
+        }
+
         return view('observers.show', [
             'user' => $user,
             'observations' => $observationsOld,
@@ -60,6 +86,8 @@ class ObserverController extends Controller
             'observationsPerMonthChart' => $chart2->build($user),
             'objectTypesChart' => $chart3->build($user),
             'countriesChart' => $chart4->build($user),
+            'hasPopularObservations' => $hasPopularObservations,
+            'username' => $username,
         ]);
 
     }

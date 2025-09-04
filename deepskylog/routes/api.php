@@ -534,6 +534,81 @@ Route::get('addUserToTeam.index', function (Request $request) {
     return $allUsers;
 })->name('addUserToTeam.index');
 
+// Users select helper for message receiver (returns username as id and full name)
+Route::get('users.select.api', function (Request $request) {
+    $allUsers = [];
+
+    // Support comma-separated selected_ids parameter used by some callers
+    if (! $request->exists('selected') && $request->filled('selected_ids')) {
+        $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
+        if (! empty($ids)) {
+            $request->merge(['selected' => $ids]);
+        }
+    }
+
+    // If selected is provided and there's no search term, return only the selected items
+    if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
+        $selected = $request->selected;
+        if (! is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            $u = User::where('username', $sel)->orWhere('email', $sel)->first();
+            if ($u) {
+                $allUsers[] = [
+                    'id' => $u->username,
+                    'name' => $u->name,
+                ];
+            }
+        }
+
+        return $allUsers;
+    }
+
+    // Otherwise return selected first + the full (or filtered) list
+    if ($request->exists('selected')) {
+        $selected = $request->selected;
+        if (! is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            $u = User::where('username', $sel)->orWhere('email', $sel)->first();
+            if ($u) {
+                $allUsers[] = [
+                    'id' => $u->username,
+                    'name' => $u->name,
+                ];
+            }
+        }
+    }
+
+    // Get all users and sort by full name (case-insensitive)
+    $users = User::all()->sortBy(function ($u) {
+        return Str::lower($u->name);
+    });
+
+    foreach ($users as $user) {
+        if ($request->search == '' || Str::contains(Str::lower($user->name), Str::lower($request->search)) || Str::contains(Str::lower($user->username), Str::lower($request->search))) {
+            $allUsers[] = [
+                'id' => $user->username,
+                'name' => $user->name,
+            ];
+        }
+    }
+
+    // Remove duplicates while preserving order
+    $seen = [];
+    $unique = [];
+    foreach ($allUsers as $u) {
+        if (! isset($seen[$u['id']])) {
+            $seen[$u['id']] = true;
+            $unique[] = $u;
+        }
+    }
+
+    return $unique;
+})->name('users.select.api');
+
 Route::get('instrument_makes.api', function (Request $request) {
     $allMakes = [];
     // Show the selected option

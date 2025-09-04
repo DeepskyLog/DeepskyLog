@@ -9,4 +9,6 @@ class MessagesDeletedOld extends Model
     protected $connection = 'mysqlOld';
 
     protected $table = 'messagesDeleted';
+
+    protected $fillable = ['id', 'receiver'];
 }

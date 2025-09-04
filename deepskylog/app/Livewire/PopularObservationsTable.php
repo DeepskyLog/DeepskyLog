@@ -162,9 +162,9 @@ final class PopularObservationsTable extends PowerGridComponent
 
                 // Link to the external (legacy) deepskylog observation detail page for this observation
                 if ($row->observation_type === 'deepsky') {
-                    $link = config('app.old_url') . '/index.php?indexAction=detail_observation&observation=' . $row->observation_id;
+                    $link = config('app.old_url').'/index.php?indexAction=detail_observation&observation='.$row->observation_id;
                 } else {
-                    $link = config('app.old_url') . '/index.php?indexAction=comets_detail_observation&observation=' . $row->observation_id;
+                    $link = config('app.old_url').'/index.php?indexAction=comets_detail_observation&observation='.$row->observation_id;
                 }
 
                 return sprintf('<a href="%s" class="font-bold hover:underline" target="_blank" rel="noopener noreferrer">%s</a>', $link, e($objectName));

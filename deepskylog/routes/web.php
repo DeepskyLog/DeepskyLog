@@ -215,3 +215,21 @@ Route::post('/observation/like', [App\Http\Controllers\ObservationLikeController
 
 // Popular observations
 Route::get('/popular-observations', [App\Http\Controllers\PopularObservationController::class, 'index'])->name('observations.popular');
+
+// Messages
+Route::get('/messages', [App\Http\Controllers\MessagesController::class, 'index'])->name('messages.index')->middleware('auth');
+Route::get('/messages/create', [App\Http\Controllers\MessagesController::class, 'create'])->name('messages.create')->middleware('auth');
+Route::post('/messages', [App\Http\Controllers\MessagesController::class, 'store'])->name('messages.store')->middleware('auth');
+Route::get('/messages/{id}', [App\Http\Controllers\MessagesController::class, 'show'])->name('messages.show')->middleware('auth');
+
+// Admin broadcast
+Route::post('/messages/broadcast', [App\Http\Controllers\MessagesController::class, 'broadcast'])->name('messages.broadcast')->middleware('can:add_sketch,App\\Models\\User');
+
+// Mark all messages as read
+Route::post('/messages/mark-all-read', [App\Http\Controllers\MessagesController::class, 'markAllRead'])->name('messages.markAllRead')->middleware('auth');
+
+// Reply data (plain-text message) for prefill via AJAX
+Route::get('/messages/{id}/reply-data', [App\Http\Controllers\MessagesController::class, 'replyData'])->name('messages.replyData')->middleware('auth');
+
+// Delete a message (mark deleted in legacy messagesDeleted table)
+Route::post('/messages/{id}/delete', [App\Http\Controllers\MessagesController::class, 'destroy'])->name('messages.destroy')->middleware('auth');

@@ -113,20 +113,29 @@
             @endif
         </div>
 
-        <x-button gray icon="eye" class="mb-2 mt-2"
-                  href='{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $observation->id }}'
-        >
-            {{ __("More details") }}
-        </x-button>
+        <div class="flex items-center space-x-3 mt-2 mb-2">
+            <x-button gray icon="eye" class="align-middle"
+                      href='{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $observation->id }}'
+            >
+                {{ __("More details") }}
+            </x-button>
 
-        <div class="inline-block align-middle ml-3">
+            {{-- DSL message button: opens internal composer with to=username and a prefilled subject --}}
+            <a href="{{ route('messages.create', ['to' => $user->username , 'subject' => 'About your observation of ' . $observation->objectname]) }}" class="inline-flex items-center px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white align-middle" aria-label="{{ __('Send message about this sketch') }}">
+                {{-- envelope icon --}}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M2.94 6.94A2 2 0 014.828 6h10.344a2 2 0 011.888.94L10 11.586 2.94 6.94z" />
+                    <path d="M18 8.118V13a2 2 0 01-2 2H4a2 2 0 01-2-2V8.118l7.293 4.377a1 1 0 001.414 0L18 8.118z" />
+                </svg>
+            </a>
+
             @php
                 use App\Models\ObservationLike;
                 $likesCount = ObservationLike::where('observation_type', 'deepsky')->where('observation_id', $observation->id)->count();
                 $liked = auth()->check() && ObservationLike::where('observation_type', 'deepsky')->where('observation_id', $observation->id)->where('user_id', auth()->id())->exists();
             @endphp
 
-            <button data-observation-type="deepsky" data-observation-id="{{ $observation->id }}" class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white">
+            <button data-observation-type="deepsky" data-observation-id="{{ $observation->id }}" class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white align-middle">
                 <span class="like-icon">{!! $liked ? '❤️' : '👍' !!}</span>
                 <span class="like-count">{{ $likesCount }}</span>
             </button>

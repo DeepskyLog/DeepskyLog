@@ -427,7 +427,7 @@
 
                 @if (Auth::user() && $user->id != Auth::user()->id)
                     <x-button gray icon="envelope-open" class="mb-2"
-                              href="{{ config('app.old_url') }}/index.php?indexAction=new_message&receiver={{ $user->username }}"
+                              href="{{ route('messages.create', ['to' => $user->username]) }}"
                     >
                         {{ __("Send message to ") . $user->name }}
                     </x-button>
@@ -485,6 +485,21 @@
                                     <x-sketch :sketch="$sketch"/>
                                 </div>
                             @endforeach
+                        </div>
+                    </x-card>
+                </div>
+            @endif
+
+            @if (! empty($hasPopularObservations) && $hasPopularObservations)
+                <div class="mt-6">
+                    <x-card>
+                        <h2 class="mb-2 mt-2 text-xl px-5 font-bold">
+                            {{ __("Most liked observations") }}
+                        </h2>
+
+                        <div class="px-5">
+                            {{-- Render Livewire table showing only this user's popular observations --}}
+                            <livewire:user-popular-observations-table :username="$user->username" />
                         </div>
                     </x-card>
                 </div>

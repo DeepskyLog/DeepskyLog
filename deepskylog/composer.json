@@ -12,6 +12,8 @@
         "cjmellor/level-up": "^1.2",
         "cviebrock/eloquent-sluggable": "^12.0",
         "deepskylog/laravel-astronomy-library": ">=6",
+        "ezyang/htmlpurifier": "^4.18",
+        "geocoder-php/nominatim-provider": "^5.0",
         "guzzlehttp/guzzle": "^7.2",
         "joelbutcher/socialstream": "^6",
         "kudashevs/laravel-share-buttons": "^6",
@@ -30,7 +32,6 @@
         "symfony/http-client": "^7",
         "symfony/mailgun-mailer": "^7",
         "tinymce/tinymce": "^8",
-        "geocoder-php/nominatim-provider": "^5.0",
         "wireui/wireui": "^2"
     },
     "require-dev": {
