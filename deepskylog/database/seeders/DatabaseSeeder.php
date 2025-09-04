@@ -22,8 +22,9 @@ class DatabaseSeeder extends Seeder
                 //                EyepieceSeeder::class,
                 //                LensSeeder::class,
                 //                FilterSeeder::class,
-                MigrateOldMessagesSeeder::class,
                 // LocationSeeder::class,
+                // MigrateOldMessagesSeeder::class,
+                LegacySessionsSeeder::class,
             ]
         );
     }

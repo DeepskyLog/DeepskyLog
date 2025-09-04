@@ -4,18 +4,18 @@
 
 ### Next steps
 
-+ [ ] Messages in DeepskyLog
++ [ ] Sessions
+    + [ ] Overview page with all images
+    + [ ] Preview on the main DeepskyLog page
+    + [ ] Blog style?
+    + [ ] Like sessions
+    + [ ] Update old version of DeepskyLog to use the new session tables
 + [ ] Fix logging in -> Only problem on Phone
 + [ ] Release new version of pyDeepskyLog
     + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
 ### Distant future
 
-+ [ ] Sessions
-    + [ ] Overview page with all images
-    + [ ] Preview on the main DeepskyLog page
-    + [ ] Blog style?
-    + [ ] Like sessions
 + [ ] Targets
 + [ ] Observing lists
 + [ ] Observations
