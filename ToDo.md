@@ -5,7 +5,6 @@
 ### Next steps
 
 + [ ] Messages in DeepskyLog
-    + [ ] Translations.
     + [ ] Adapt the old DeepskyLog messages to use the new tables.
 
 + [ ] Fix logging in -> Only problem on Phone
