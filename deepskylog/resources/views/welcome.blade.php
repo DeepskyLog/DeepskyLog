@@ -3,6 +3,7 @@
 @php use App\Models\User; @endphp
 @php use App\Models\ObservationsOld; @endphp
 @php use App\Models\CometObservationsOld; @endphp
+@php use App\Models\ObservationSession; @endphp
 <x-app-layout>
     <x-slot name="header">DeepskyLog</x-slot>
     <div class="max-w-screen mx-auto bg-gray-900 px-2 py-10 sm:px-6 lg:px-8">
@@ -70,6 +71,79 @@
                             />
                         </div>
                     </div>
+                </x-card>
+            </div>
+        </div>
+
+        {{-- Five newest active sessions --}}
+        <div class="pt-4">
+            <h2 class="ml-3 mt-3 text-xl font-semibold leading-tight">
+                {{ __("5 newest sessions") }}
+            </h2>
+            @php
+                // $sessions is prepared in the homepage route (mirrors SessionController::all) and injected into this view.
+            @endphp
+
+            <div class="mt-2">
+                <x-card>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
+                        @foreach($sessions as $session)
+                            @php
+                                // Use a slightly lighter background for each session card (no borders)
+                                if ($loop->iteration === 1) {
+                                    $bgClass = 'bg-gray-700';
+                                } elseif ($loop->iteration === 2) {
+                                    $bgClass = 'bg-gray-700';
+                                } elseif ($loop->iteration === 3) {
+                                    $bgClass = 'bg-gray-700';
+                                } elseif ($loop->iteration === 4) {
+                                    $bgClass = 'bg-gray-700';
+                                } else {
+                                    $bgClass = 'bg-gray-700';
+                                }
+                            @endphp
+
+                            <article class="{{ $bgClass }} p-4 rounded">
+                                @if(! empty($session->preview))
+                                    <div class="mb-3">
+                                        <a href="{{ route('session.show', [$session->observer->slug ?? $session->observerid, $session->slug ?? $session->id]) }}">
+                                            <img src="{{ $session->preview }}" alt="{{ html_entity_decode($session->name ?? __('Session'), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}" class="w-full h-40 object-cover rounded" />
+                                        </a>
+                                    </div>
+                                @endif
+
+                                <h3 class="text-lg font-bold text-white mb-2">
+                                    <a href="{{ route('session.show', [$session->observer->slug ?? $session->observerid, $session->slug ?? $session->id]) }}" class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                                </h3>
+
+                                <div class="text-sm text-gray-400 mb-2">
+                                    <span class="mr-2 font-medium text-gray-200">{{ __('Owner') }}:</span>
+                                    @if($session->observer)
+                                        <a href="{{ route('observer.show', $session->observer->slug) }}" class="text-gray-400 hover:underline">{{ $session->observer->name }}</a>
+                                    @else
+                                        <span class="text-gray-400">{{ $session->observerid }}</span>
+                                    @endif
+                                </div>
+
+                                <div class="text-sm text-gray-400 mb-3">
+                                    <span>{{ $session->begindate ? \Carbon\Carbon::parse($session->begindate)->translatedFormat('j M Y') : __('Unknown') }}</span>
+                                    <span class="mx-2">&ndash;</span>
+                                    <span>{{ $session->enddate ? \Carbon\Carbon::parse($session->enddate)->translatedFormat('j M Y') : __('Unknown') }}</span>
+                                </div>
+
+                                @if(isset($session->observation_count))
+                                    <div class="text-sm text-gray-300 mb-2">{{ __('Observations') }}: <strong class="text-white">{{ $session->observation_count }}</strong></div>
+                                @endif
+
+                                <p class="text-sm text-gray-300 mb-3">{{ \Illuminate\Support\Str::limit(strip_tags(html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8')), 180) }}</p>
+                                <div class="flex items-center justify-between text-sm">
+                                    <div class="text-gray-400">{{ __('Observers') }}: {{ $session->otherObserversCount() ?? 1 }}</div>
+                                    <a href="{{ route('session.show', [$session->observer->slug ?? $session->observerid, $session->slug ?? $session->id]) }}" class="text-blue-500 hover:underline">{{ __('Read more') }}</a>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                    {{ $sessions->links() }}
                 </x-card>
             </div>
         </div>

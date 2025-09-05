@@ -3,6 +3,10 @@
 use App\Models\SketchOfTheMonth;
 use App\Models\SketchOfTheWeek;
 use App\Models\User;
+use App\Models\ObservationSession;
+use App\Models\Location;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB as DBFacade;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,7 +67,87 @@ Route::post('/sketch-of-the-week', 'App\Http\Controllers\SketchOfTheWeekControll
 Route::get('/sketch-of-the-month/create', 'App\Http\Controllers\SketchOfTheMonthController@create')->name('sketch-of-the-month.create')->can('add_sketch', User::class);
 Route::post('/sketch-of-the-month', 'App\Http\Controllers\SketchOfTheMonthController@store')->name('sketch-of-the-month.store')->can('add_sketch', User::class);
 
-Route::view('/', 'welcome');
+Route::get('/', function (Request $request) {
+    // Mirror SessionController::all logic but limit to 5 per page for homepage
+    $query = ObservationSession::where('active', 1)
+        ->withObserver()
+        ->orderByDesc('enddate')
+        ->orderByDesc('begindate');
+
+    $perPage = 5;
+    $sessions = $query->paginate($perPage, $columns = ['*'], $pageName = 'sessions')->appends(request()->except('sessions'));
+
+    // Prefetch related locations to avoid N+1 when resolving location pictures
+    $collection = $sessions->getCollection();
+    $locationIds = $collection->pluck('locationid')->filter()->unique()->values()->all();
+    $locations = [];
+    if (! empty($locationIds)) {
+        $locations = Location::whereIn('id', $locationIds)->get()->keyBy('id');
+    }
+
+    $sessionImageDir = public_path('images/sessions');
+
+    // Precompute observation counts for the sessions in this page to avoid N+1 queries
+    $sessionIds = $collection->pluck('id')->filter()->unique()->values()->all();
+    $obsCounts = [];
+    if (! empty($sessionIds)) {
+        $obsCounts = DBFacade::table('sessionObservations')
+            ->whereIn('sessionid', $sessionIds)
+            ->select('sessionid', DBFacade::raw('count(*) as cnt'))
+            ->groupBy('sessionid')
+            ->pluck('cnt', 'sessionid')
+            ->toArray();
+    }
+
+    $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts) {
+        $image = null;
+
+        // Prefer images stored under public/images/sessions/{id}.*
+        if (is_dir($sessionImageDir)) {
+            $patterns = [
+                $sessionImageDir.'/'.$session->id.'.jpg',
+                $sessionImageDir.'/'.$session->id.'.jpeg',
+                $sessionImageDir.'/'.$session->id.'.png',
+                $sessionImageDir.'/'.$session->id.'.gif',
+            ];
+            foreach ($patterns as $p) {
+                if (file_exists($p)) {
+                    $image = '/images/sessions/'.basename($p);
+                    break;
+                }
+            }
+
+            if (empty($image)) {
+                $glob = glob($sessionImageDir.'/'.$session->id.'.*');
+                if (! empty($glob)) {
+                    $image = '/images/sessions/'.basename($glob[0]);
+                }
+            }
+        }
+
+        // Fallback: session->picture (legacy) if present
+        if (empty($image) && ! empty($session->picture)) {
+            $image = asset('storage/'.$session->picture);
+        }
+
+        // Fallback: location picture if available
+        if (empty($image) && ! empty($session->locationid) && isset($locations[$session->locationid])) {
+            $loc = $locations[$session->locationid];
+            if (! empty($loc->picture)) {
+                $image = asset('storage/'.$loc->picture);
+            }
+        }
+
+        $session->preview = $image;
+        $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
+
+        return $session;
+    });
+
+    $sessions->setCollection($collection);
+
+    return view('welcome', compact('sessions'));
+});
 Route::view('/privacy', 'privacy')->name('privacy');
 Route::view('/sponsors', 'layouts.sponsors');
 Route::view('/downloads/magazines', 'layouts.downloads.magazines');

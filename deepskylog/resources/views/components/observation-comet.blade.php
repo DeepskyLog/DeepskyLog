@@ -83,7 +83,7 @@
             </x-button>
 
             {{-- DSL message button: opens internal composer with to=username and a prefilled subject --}}
-            <a href="{{ route('messages.create', ['to' => $user->username, 'subject' => 'About your observation of ' . CometObjectsOld::where('id', $observation->objectid)->first()->name]) }}" class="inline-flex items-center px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white align-middle" aria-label="{{ __('Send message about this sketch') }}">
+            <a href="{{ route('messages.create', ['to' => $user->username, 'subject' => 'About your observation of ' . \App\Models\CometObjectsOld::where('id', $observation->objectid)->first()->name]) }}" class="inline-flex items-center px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white align-middle" aria-label="{{ __('Send message about this sketch') }}">
                 {{-- envelope icon --}}
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path d="M2.94 6.94A2 2 0 014.828 6h10.344a2 2 0 011.888.94L10 11.586 2.94 6.94z" />
