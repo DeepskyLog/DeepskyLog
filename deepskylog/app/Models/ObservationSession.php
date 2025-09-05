@@ -55,4 +55,43 @@ class ObservationSession extends Model
             ->pluck('observer')
             ->toArray();
     }
+
+    /**
+     * Relation to the User model for the primary observer.
+     * observation_sessions.observerid stores the legacy username which maps to users.username
+     */
+    public function observer()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'observerid', 'username');
+    }
+
+    /**
+     * Scope to eager-load the observer relation.
+     */
+    public function scopeWithObserver($query)
+    {
+        return $query->with('observer');
+    }
+
+    /**
+     * Return the number of distinct observers for this session.
+     * Ensures the primary observer (observerid) is counted at least once.
+     */
+    public function otherObserversCount()
+    {
+        $names = \DB::table('sessionObservers')
+            ->where('sessionid', $this->id)
+            ->pluck('observer')
+            ->toArray();
+
+        $unique = array_values(array_unique($names));
+        $count = count($unique);
+
+        // If the primary observer (observerid) is not present in the pivot, include them.
+        if (! empty($this->observerid) && ! in_array($this->observerid, $unique, true)) {
+            $count++;
+        }
+
+        return max(1, $count);
+    }
 }

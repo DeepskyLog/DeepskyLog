@@ -3,7 +3,7 @@
     <div>
     <div class="mx-auto max-w-7xl bg-gray-900 px-4 py-6 sm:px-4 lg:px-6">
         <header class="mb-6">
-            <h1 class="text-3xl font-extrabold">{{ $session->name }}</h1>
+            <h1 class="text-3xl font-extrabold">{{ html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</h1>
             <p class="text-sm flex items-center gap-2 text-gray-300">
                 <span class="text-gray-400">{{ __('by') }}</span>
                 <a class="text-white hover:underline font-medium" href="{{ route('observer.show', $user->slug) }}">{{ $user->name }}</a>
@@ -15,7 +15,7 @@
 
             <div class="mt-3 flex items-center gap-3">
                 {{-- Share buttons using ShareButtons facade configured in app --}}
-                {!! \ShareButtons::page(url()->current(), __('Observations from :session by :owner', ['session' => $session->name, 'owner' => $user->name])) !!}
+                {!! \ShareButtons::page(url()->current(), __('Observations from :session by :owner', ['session' => html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8'), 'owner' => $user->name])) !!}
 
                 {{-- Message button moved to bottom of page --}}
             </div>
@@ -23,8 +23,8 @@
 
     <div class="grid md:grid-cols-3 gap-4">
                 <article class="md:col-span-2">
-                @if(!empty($image))
-                    <img class="w-full rounded shadow mb-3" src="{{ $image }}" alt="{{ $session->name }}">
+                    @if(!empty($image))
+                    <img class="w-full rounded shadow mb-3" src="{{ $image }}" alt="{{ html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') }}">
                 @endif
 
                 <div class="mb-4 text-gray-100">
@@ -57,14 +57,14 @@
                         </tr>
                         <tr>
                             <td class="pr-4 font-medium">{{ __('Weather') }}</td>
-                            <td>{!! html_entity_decode($session->weather ?? __('Unknown'), ENT_QUOTES | ENT_HTML5, 'UTF-8') !!}</td>
+                            <td>{!! nl2br(e(html_entity_decode($session->weather ?? __('Unknown'), ENT_QUOTES | ENT_HTML5, 'UTF-8'))) !!}</td>
                         </tr>
                         <tr>
                             <td colspan="2" class="py-2"></td>
                         </tr>
                         <tr>
                             <td class="pr-4 font-medium">{{ __('Equipment') }}</td>
-                            <td>{!! html_entity_decode($session->equipment ?? __('Unknown'), ENT_QUOTES | ENT_HTML5, 'UTF-8') !!}</td>
+                            <td>{!! nl2br(e(html_entity_decode($session->equipment ?? __('Unknown'), ENT_QUOTES | ENT_HTML5, 'UTF-8'))) !!}</td>
                         </tr>
                         @if(false)
                             {{-- comments moved out of table --}}

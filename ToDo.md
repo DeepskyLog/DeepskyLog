@@ -5,10 +5,11 @@
 ### Next steps
 
 + [ ] Sessions
-    + [ ] Overview page with all images
-    + [ ] Preview on the main DeepskyLog page
+    + [X] Overview page with all images
     + [X] Blog style for the detail page
-    + [ ] Like sessions
+    + [X] Like sessions
+    + [ ] Preview on the main DeepskyLog page
+    + [ ] Create a new session
     + [ ] Update old version of DeepskyLog to use the new session tables
 + [ ] Fix logging in -> Only problem on Phone
 + [ ] Release new version of pyDeepskyLog

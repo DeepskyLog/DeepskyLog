@@ -208,6 +208,12 @@ Route::get('/instrumentset/{user}/{instrumentset}', 'App\Http\Controllers\Instru
 Route::get('/session/{user}/{session}', 'App\Http\Controllers\SessionController@show')
     ->name('session.show');
 
+// My sessions (authenticated)
+Route::get('/my-sessions', [App\Http\Controllers\SessionController::class, 'mine'])->name('session.mine')->middleware('auth');
+
+// All sessions (public)
+Route::get('/sessions', [App\Http\Controllers\SessionController::class, 'all'])->name('session.all');
+
 Route::get('/instrumentset/{user}/{instrumentset}/edit', 'App\Http\Controllers\InstrumentSetController@edit')
     ->name('instrumentset.edit')->middleware('auth');
 

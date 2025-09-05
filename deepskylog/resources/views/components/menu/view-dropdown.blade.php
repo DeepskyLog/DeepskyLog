@@ -25,8 +25,10 @@
                                  href="{{ config('app.old_url') }}/index.php?indexAction=view_lists"
                                  label="{!! __('My observing lists') !!}"/>
 
-                <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=result_my_sessions"
+                <x-dropdown.item href="{{ route('session.mine') }}"
                                  label="{{ __('My sessions') }}"/>
+
+                <x-dropdown.item href="{{ route('session.all') }}" label="{{ __('All sessions') }}"/>
 
                 <x-dropdown.item separator
                                  href="/instrument"

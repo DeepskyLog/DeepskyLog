@@ -45,8 +45,13 @@
                 />
 
                 <x-dropdown.item
-                    href="{{ config('app.old_url') }}/index.php?indexAction=result_my_sessions"
+                    href="{{ route('session.mine') }}"
                     label="{{ __('My sessions') }}"
+                />
+
+                <x-dropdown.item
+                    href="{{ route('session.all') }}"
+                    label="{{ __('All sessions') }}"
                 />
 
                 <x-dropdown.item

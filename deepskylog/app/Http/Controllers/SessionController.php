@@ -7,7 +7,9 @@ use App\Models\Location;
 use App\Models\ObservationSession;
 use App\Models\ObservationsOld;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB as DBFacade;
 
 class SessionController extends Controller
@@ -188,5 +190,183 @@ class SessionController extends Controller
         }
 
         return view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats'));
+    }
+
+    /**
+     * Show a paginated list of sessions for the current authenticated user.
+     */
+    public function mine(Request $request)
+    {
+        $user = Auth::user();
+        if (! $user) {
+            abort(403);
+        }
+
+        // Sessions use observerid to store the legacy username.
+        $query = ObservationSession::where('observerid', $user->username)
+            ->where('active', 1)
+            ->withObserver()
+            ->orderByDesc('enddate')
+            ->orderByDesc('begindate');
+
+        $perPage = 12;
+        $sessions = $query->paginate($perPage)->withQueryString();
+
+        // Prefetch related locations to avoid N+1 when resolving location pictures
+        $collection = $sessions->getCollection();
+        $locationIds = $collection->pluck('locationid')->filter()->unique()->values()->all();
+        $locations = [];
+        if (! empty($locationIds)) {
+            $locations = Location::whereIn('id', $locationIds)->get()->keyBy('id');
+        }
+
+        $sessionImageDir = public_path('images/sessions');
+
+        // Precompute observation counts for the sessions in this page to avoid N+1 queries
+        $sessionIds = $collection->pluck('id')->filter()->unique()->values()->all();
+        $obsCounts = [];
+        if (! empty($sessionIds)) {
+            $obsCounts = DBFacade::table('sessionObservations')
+                ->whereIn('sessionid', $sessionIds)
+                ->select('sessionid', DBFacade::raw('count(*) as cnt'))
+                ->groupBy('sessionid')
+                ->pluck('cnt', 'sessionid')
+                ->toArray();
+        }
+
+        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts) {
+            $image = null;
+
+            // Prefer images stored under public/images/sessions/{id}.*
+            if (is_dir($sessionImageDir)) {
+                $patterns = [
+                    $sessionImageDir.'/'.$session->id.'.jpg',
+                    $sessionImageDir.'/'.$session->id.'.jpeg',
+                    $sessionImageDir.'/'.$session->id.'.png',
+                    $sessionImageDir.'/'.$session->id.'.gif',
+                ];
+                foreach ($patterns as $p) {
+                    if (file_exists($p)) {
+                        $image = '/images/sessions/'.basename($p);
+                        break;
+                    }
+                }
+
+                if (empty($image)) {
+                    $glob = glob($sessionImageDir.'/'.$session->id.'.*');
+                    if (! empty($glob)) {
+                        $image = '/images/sessions/'.basename($glob[0]);
+                    }
+                }
+            }
+
+            // Fallback: session->picture (legacy) if present
+            if (empty($image) && ! empty($session->picture)) {
+                $image = asset('storage/'.$session->picture);
+            }
+
+            // Fallback: location picture if available
+            if (empty($image) && ! empty($session->locationid) && isset($locations[$session->locationid])) {
+                $loc = $locations[$session->locationid];
+                if (! empty($loc->picture)) {
+                    $image = asset('storage/'.$loc->picture);
+                }
+            }
+
+            $session->preview = $image;
+            $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
+
+            return $session;
+        });
+
+        $sessions->setCollection($collection);
+
+        return view('session.my-sessions', compact('sessions'));
+    }
+
+    /**
+     * Show a paginated list of all sessions (public view).
+     */
+    public function all(Request $request)
+    {
+        // Sessions ordered by most recent enddate
+        $query = ObservationSession::where('active', 1)
+            ->withObserver()
+            ->orderByDesc('enddate')
+            ->orderByDesc('begindate');
+
+        $perPage = 12;
+        $sessions = $query->paginate($perPage)->withQueryString();
+
+        // Prefetch related locations to avoid N+1 when resolving location pictures
+        $collection = $sessions->getCollection();
+        $locationIds = $collection->pluck('locationid')->filter()->unique()->values()->all();
+        $locations = [];
+        if (! empty($locationIds)) {
+            $locations = Location::whereIn('id', $locationIds)->get()->keyBy('id');
+        }
+
+        $sessionImageDir = public_path('images/sessions');
+
+        // Precompute observation counts for the sessions in this page to avoid N+1 queries
+        $sessionIds = $collection->pluck('id')->filter()->unique()->values()->all();
+        $obsCounts = [];
+        if (! empty($sessionIds)) {
+            $obsCounts = DBFacade::table('sessionObservations')
+                ->whereIn('sessionid', $sessionIds)
+                ->select('sessionid', DBFacade::raw('count(*) as cnt'))
+                ->groupBy('sessionid')
+                ->pluck('cnt', 'sessionid')
+                ->toArray();
+        }
+
+        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts) {
+            $image = null;
+
+            // Prefer images stored under public/images/sessions/{id}.*
+            if (is_dir($sessionImageDir)) {
+                $patterns = [
+                    $sessionImageDir.'/'.$session->id.'.jpg',
+                    $sessionImageDir.'/'.$session->id.'.jpeg',
+                    $sessionImageDir.'/'.$session->id.'.png',
+                    $sessionImageDir.'/'.$session->id.'.gif',
+                ];
+                foreach ($patterns as $p) {
+                    if (file_exists($p)) {
+                        $image = '/images/sessions/'.basename($p);
+                        break;
+                    }
+                }
+
+                if (empty($image)) {
+                    $glob = glob($sessionImageDir.'/'.$session->id.'.*');
+                    if (! empty($glob)) {
+                        $image = '/images/sessions/'.basename($glob[0]);
+                    }
+                }
+            }
+
+            // Fallback: session->picture (legacy) if present
+            if (empty($image) && ! empty($session->picture)) {
+                $image = asset('storage/'.$session->picture);
+            }
+
+            // Fallback: location picture if available
+            if (empty($image) && ! empty($session->locationid) && isset($locations[$session->locationid])) {
+                $loc = $locations[$session->locationid];
+                if (! empty($loc->picture)) {
+                    $image = asset('storage/'.$loc->picture);
+                }
+            }
+
+            $session->preview = $image;
+            $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
+
+            return $session;
+        });
+
+        $sessions->setCollection($collection);
+
+        return view('session.all-sessions', compact('sessions'));
     }
 }
