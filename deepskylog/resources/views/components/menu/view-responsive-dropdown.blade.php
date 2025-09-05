@@ -115,6 +115,11 @@
             />
 
             <x-dropdown.item
+                href="/popular-sessions"
+                label="{{ __('Popular sessions') }}"
+            />
+
+            <x-dropdown.item
                 href="{{ config('app.old_url') }}/index.php?indexAction=statistics"
                 label="{{ __('Statistics') }}"
             />

@@ -220,6 +220,11 @@ Route::post('/observation/like', [App\Http\Controllers\ObservationLikeController
 // Popular observations
 Route::get('/popular-observations', [App\Http\Controllers\PopularObservationController::class, 'index'])->name('observations.popular');
 
+// Popular sessions
+Route::get('/popular-sessions', function () {
+    return view('observations.popular-sessions');
+})->name('observations.popular.sessions');
+
 // Messages
 Route::get('/messages', [App\Http\Controllers\MessagesController::class, 'index'])->name('messages.index')->middleware('auth');
 Route::get('/messages/create', [App\Http\Controllers\MessagesController::class, 'create'])->name('messages.create')->middleware('auth');
