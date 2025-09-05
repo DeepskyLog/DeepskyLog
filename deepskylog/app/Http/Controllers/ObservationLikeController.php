@@ -32,7 +32,7 @@ class ObservationLikeController extends Controller
             ->where('observation_id', $id)
             ->first();
 
-        // Determine owner of observation
+        // Determine owner of observation/session
         $owner = null;
         if ($type === 'deepsky') {
             $obs = ObservationsOld::find($id);
@@ -43,6 +43,12 @@ class ObservationLikeController extends Controller
             $obs = CometObservationsOld::find($id);
             if ($obs) {
                 $owner = User::where('username', html_entity_decode($obs->observerid))->first();
+            }
+        } elseif ($type === 'session') {
+            // For sessions, owner is the observer (observerid) on the session record
+            $session = \App\Models\ObservationSession::find($id);
+            if ($session) {
+                $owner = User::where('username', html_entity_decode($session->observerid))->first();
             }
         }
 

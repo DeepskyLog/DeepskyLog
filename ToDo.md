@@ -6,6 +6,11 @@
 
 + [ ] Sessions
     + [ ] Overview page with all images
+Replace mailto with a proper internal messaging/contact form (create route + modal or form).
+Add pagination or "show more" for the object list if very long.
+Convert the observer stats grouping into a single DB query (SQL join) for even better performance on large sessions.
+Use user avatars instead of FontAwesome icons if the app stores them.
+Add tests for the controller logic (happy path + edge case where some observation ids aren't found).
     + [ ] Preview on the main DeepskyLog page
     + [ ] Blog style?
     + [ ] Like sessions

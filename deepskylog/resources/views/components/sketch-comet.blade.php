@@ -1,5 +1,4 @@
-@php use Carbon\Carbon; @endphp
-@php use App\Models\CometObservationsOld; @endphp
+{{-- Avoid inline `use` in Blade; use fully-qualified class names instead --}}
 @props(["observation_id" => null, "observer_name" => null, "observer_username" => null, "observation_date" => null])
 <div>
     <a class="no-underline" href="{{ config("app.old_url") }}/index.php?indexAction=comets_detail_observation&observation={{ $observation_id }}">
@@ -7,9 +6,9 @@
 
         <div class="text-center">
             {{ $observer_name }} -
-            {{ CometObservationsOld::find($observation_id)->object->name }}
+            {{ \App\Models\CometObservationsOld::find($observation_id)->object->name }}
             -
-            {{ Carbon::create($observation_date)->translatedFormat("j M Y") }}
+            {{ \Carbon\Carbon::create($observation_date)->translatedFormat("j M Y") }}
         </div>
     </a>
 
@@ -18,7 +17,7 @@
             {!!
                 ShareButtons::page(
                     "https://www.deepskylog.org/index.php?indexAction=comets_detail_observation&observation=" . $observation_id,
-                    __("Look at this sketch of ") . CometObservationsOld::find($observation_id)->object->name . __(" by ") . $observer_name . __(" on #deepskylog"),
+                    __("Look at this sketch of ") . \App\Models\CometObservationsOld::find($observation_id)->object->name . __(" by ") . $observer_name . __(" on #deepskylog"),
                     [
                         "title" => __("Share this sketch"),
                         "class" => "text-gray-500 hover:text-gray-700",
@@ -35,21 +34,20 @@
             !!}
         </div>
 
-        @php
-            use App\Models\ObservationLike;
-            $likesCount = ObservationLike::where('observation_type', 'comet')->where('observation_id', $observation_id)->count();
-            $liked = auth()->check() && ObservationLike::where('observation_type', 'comet')->where('observation_id', $observation_id)->where('user_id', auth()->id())->exists();
-        @endphp
+            @php
+                $likesCount = \App\Models\ObservationLike::where('observation_type', 'comet')->where('observation_id', $observation_id)->count();
+                $liked = auth()->check() && \App\Models\ObservationLike::where('observation_type', 'comet')->where('observation_id', $observation_id)->where('user_id', auth()->id())->exists();
+            @endphp
 
         <button data-observation-type="comet" data-observation-id="{{ $observation_id }}" class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white">
             <span class="like-icon">{!! $liked ? '❤️' : '👍' !!}</span>
             <span class="like-count">{{ $likesCount }}</span>
         </button>
 
-        @php
-            $objectName = CometObservationsOld::find($observation_id)->object->name;
-            $messageSubject = __('About your sketch of :object', ['object' => $objectName]);
-        @endphp
+            @php
+                $objectName = \App\Models\CometObservationsOld::find($observation_id)->object->name;
+                $messageSubject = __('About your sketch of :object', ['object' => $objectName]);
+            @endphp
 
         <a href="{{ route('messages.create', ['to' => $observer_username ?? $observer_name, 'subject' => $messageSubject]) }}" class="inline-flex items-center p-2 rounded bg-blue-600 hover:bg-blue-700 text-white" aria-label="{{ __('Send message about this sketch') }}">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

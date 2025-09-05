@@ -81,6 +81,7 @@ final class PopularObservationsTable extends PowerGridComponent
             ."THEN CAST((SELECT c.date FROM {$cometTable} c WHERE c.id = observation_id LIMIT 1) AS UNSIGNED) "
             .'ELSE NULL END) as obs_date'
         )
+            ->whereIn('observation_type', ['deepsky', 'comet'])
             ->groupBy('observation_type', 'observation_id')
             ->orderByDesc('likes');
 

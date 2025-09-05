@@ -204,6 +204,10 @@ Route::resource(
 Route::get('/instrumentset/{user}/{instrumentset}', 'App\Http\Controllers\InstrumentSetController@show')
     ->name('instrumentset.show');
 
+// Observation sessions
+Route::get('/session/{user}/{session}', 'App\Http\Controllers\SessionController@show')
+    ->name('session.show');
+
 Route::get('/instrumentset/{user}/{instrumentset}/edit', 'App\Http\Controllers\InstrumentSetController@edit')
     ->name('instrumentset.edit')->middleware('auth');
 

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class LegacySessionsSeeder extends Seeder
 {
@@ -30,6 +31,48 @@ class LegacySessionsSeeder extends Seeder
             $legacy->table('sessions')->orderBy('id')->chunk(500, function ($rows) use ($app) {
                 $inserts = [];
                 foreach ($rows as $r) {
+                    $picturePath = null;
+
+                    // Attempt to copy legacy session image from old filesystem if it exists.
+                    // Assumption: legacy images are located in /var/www/DeepskyLog.old/deepsky/sessions
+                    // and named either by session id + extension or stored in a 'picture' column (if present).
+                    $legacyImageDir = '/var/www/DeepskyLog.old/deepsky/sessions';
+                    $targetDir = public_path('images/sessions');
+
+                    if (! File::exists($targetDir)) {
+                        File::makeDirectory($targetDir, 0755, true);
+                    }
+
+                    // If the legacy row contains a picture column with a filename, use it; otherwise try common names.
+                    if (! empty($r->picture)) {
+                        $possible = [$r->picture];
+                    } else {
+                        // try id-based filenames with common extensions
+                        $possible = [
+                            $r->id.'.jpg',
+                            $r->id.'.jpeg',
+                            $r->id.'.png',
+                            $r->id.'.gif',
+                        ];
+                    }
+
+                    foreach ($possible as $fname) {
+                        $src = $legacyImageDir.DIRECTORY_SEPARATOR.$fname;
+                        if (File::exists($src)) {
+                            // copy to public/images/sessions keeping the same filename
+                            $dest = $targetDir.DIRECTORY_SEPARATOR.$fname;
+                            try {
+                                File::copy($src, $dest);
+                                // record public-relative path to image for potential use
+                                $picturePath = 'images/sessions/'.$fname;
+                                break;
+                            } catch (\Throwable $e) {
+                                // ignore copy errors but don't abort seeding
+                                $picturePath = null;
+                            }
+                        }
+                    }
+
                     $inserts[] = [
                         'id' => (int) $r->id,
                         'name' => $r->name,
@@ -40,6 +83,8 @@ class LegacySessionsSeeder extends Seeder
                         'weather' => $r->weather,
                         'equipment' => $r->equipment,
                         'comments' => $r->comments,
+                        // Keep legacy picture path in comments? No — we don't have a picture column on target.
+                        // Potentially store in a migration table or handle via filesystem only.
                         'language' => $r->language,
                         'active' => (int) $r->active,
                     ];

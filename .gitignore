@@ -27,3 +27,4 @@ storage/framework/messages/
 /vendor/*
 /.idea/*
 /orig/
+deepskylog/public/images/sessions/*
