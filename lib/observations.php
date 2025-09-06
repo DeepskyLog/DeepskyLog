@@ -50,7 +50,7 @@ class Observations
         set_time_limit(count($data_array));
 
         for ($i = 0; $i < count($data_array); $i++) {
-            $parts_array [$i] = explode(";", $data_array[$i]);
+            $parts_array [$i] = explode(";", mb_convert_encoding($data_array[$i], "UTF-8", "ISO-8859-1"));
         }
 
         for ($i = 0; $i < count($parts_array); $i++) {
@@ -395,7 +395,7 @@ Correct observations which have been imported will not be registered for a secon
                         "</a>"
                     ) . "</p>";
                 $_GET['indexAction'] = 'default_action';
-            }
+	    }
 
             $username = $objObserver->getObserverProperty($loggedUser, 'firstname')
                 . " " . $objObserver->getObserverProperty($loggedUser, 'name');
@@ -410,7 +410,8 @@ Correct observations which have been imported will not be registered for a secon
                         htmlentities(trim($parts_array[$i][1])),
                         'name'
                     );
-                    if (trim($parts_array[$i][1]) == $username) {
+
+                    if (htmlentities(trim($parts_array[$i][1])) == $username) {
                         $instrum = $objInstrument->getInstrumentId(
                             htmlentities(
                                 trim($parts_array[$i][5]),
