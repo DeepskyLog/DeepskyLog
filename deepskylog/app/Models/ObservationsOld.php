@@ -8,12 +8,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\ClearsResponseCache;
 
 /**
  * Old observers eloquent model.
  */
 class ObservationsOld extends Model
 {
+    use ClearsResponseCache;
     protected $connection = 'mysqlOld';
 
     protected $table = 'observations';

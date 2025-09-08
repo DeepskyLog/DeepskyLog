@@ -8,12 +8,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\ClearsResponseCache;
 
 /**
  * Old locations eloquent model.
  */
 class LocationsOld extends Model
 {
+    use ClearsResponseCache;
     public $timestamps = false;
 
     protected $casts = ['id' => 'string'];

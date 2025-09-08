@@ -6,10 +6,12 @@ use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\ClearsResponseCache;
 
 class Lens extends Model
 {
     use Sluggable;
+    use ClearsResponseCache;
 
     protected $fillable = [
         'user_id', 'name', 'factor', 'make_id', 'active', 'observer', 'picture', 'description',

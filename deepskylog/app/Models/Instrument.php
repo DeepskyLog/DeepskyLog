@@ -7,11 +7,13 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
+use App\Traits\ClearsResponseCache;
 
 class Instrument extends Model
 {
     use HasObservationsDates;
     use Sluggable;
+    use ClearsResponseCache;
 
     protected $fillable = [
         'user_id', 'name', 'aperture_mm', 'type', 'instrument_type_id', 'make_id', 'mount_type_id',

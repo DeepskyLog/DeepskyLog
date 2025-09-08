@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Traits\ClearsResponseCache;
 
 class SketchOfTheMonth extends Model
 {
+    use ClearsResponseCache;
     public $timestamps = false;
 
     protected $with = ['observation', 'user'];

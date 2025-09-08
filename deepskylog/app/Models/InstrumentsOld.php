@@ -8,12 +8,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\ClearsResponseCache;
 
 /**
  * Old instrument eloquent model.
  */
 class InstrumentsOld extends Model
 {
+    use ClearsResponseCache;
     public $timestamps = false;
 
     protected $casts = ['id' => 'string'];
