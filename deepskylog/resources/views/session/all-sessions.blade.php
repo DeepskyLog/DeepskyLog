@@ -6,6 +6,7 @@
     <div class="py-6">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="bg-gray-900 shadow-sm sm:rounded-lg p-6">
+                {{-- preview_text and preview are prepared in the controller; views stay simple --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($sessions as $session)
                         <article class="bg-gray-800 p-4 rounded">
@@ -40,7 +41,7 @@
                                 <div class="text-sm text-gray-300 mb-2">{{ __('Observations') }}: <strong class="text-white">{{ $session->observation_count }}</strong></div>
                             @endif
 
-                            <p class="text-sm text-gray-300 mb-3">{{ Str::limit(strip_tags(html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8')), 180) }}</p>
+                            <p class="text-sm text-gray-300 mb-3">{{ $session->preview_text ?? Str::limit(strip_tags(html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8')), 180) }}</p>
                             <div class="flex items-center justify-between text-sm">
                                 <div class="text-gray-400">{{ __('Observers') }}: {{ $session->otherObserversCount() ?? 1 }}</div>
                                 <a href="{{ route('session.show', [$session->observer->slug ?? $session->observerid, $session->slug ?? $session->id]) }}" class="text-blue-500 hover:underline">{{ __('Read more') }}</a>

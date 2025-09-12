@@ -1,9 +1,9 @@
 <?php
 
+use App\Models\ObservationSession;
 use App\Models\SketchOfTheMonth;
 use App\Models\SketchOfTheWeek;
 use App\Models\User;
-use App\Models\ObservationSession;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -24,9 +24,8 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('welcome');
-    })->name('dashboard');
+    // Use the SessionController homepage action so the welcome view receives the expected `$sessions` variable.
+    Route::get('/dashboard', [App\Http\Controllers\SessionController::class, 'homepage'])->name('dashboard');
 });
 
 // Switch language
@@ -209,17 +208,31 @@ Route::get('/instrumentset/{user}/{instrumentset}', 'App\Http\Controllers\Instru
 
 // Observation sessions
 Route::get('/session/{user}/{session}', 'App\Http\Controllers\SessionController@show')
-    ->name('session.show');
+    ->name('session.show')->middleware('doNotCacheResponse');
 
 // Create session (authenticated)
-Route::get('/sessions/create', [App\Http\Controllers\SessionController::class, 'create'])->name('session.create')->middleware('auth');
-Route::post('/sessions', [App\Http\Controllers\SessionController::class, 'store'])->name('session.store')->middleware('auth');
+Route::get('/sessions/create', [App\Http\Controllers\SessionController::class, 'create'])
+    ->name('session.create')->middleware(['auth', 'doNotCacheResponse']);
+Route::post('/sessions', [App\Http\Controllers\SessionController::class, 'store'])
+    ->name('session.store')->middleware(['auth', 'doNotCacheResponse']);
 
 // My sessions (authenticated)
-Route::get('/my-sessions', [App\Http\Controllers\SessionController::class, 'mine'])->name('session.mine')->middleware('auth');
+// Note: /my-sessions removed in favor of /sessions/{user} - use route('session.user', [Auth::user()->slug]) when needed
 
 // All sessions (public)
 Route::get('/sessions', [App\Http\Controllers\SessionController::class, 'all'])->name('session.all');
+
+// Sessions by user (public): show sessions for a given observer username or slug
+Route::get('/sessions/{user}', [App\Http\Controllers\SessionController::class, 'user'])
+    ->name('session.user')->middleware('doNotCacheResponse');
+
+// Delete session (authenticated, owner only - controller enforces)
+Route::post('/sessions/{session}/delete', [App\Http\Controllers\SessionController::class, 'destroy'])
+    ->name('session.destroy')->middleware('auth');
+
+// Adapt session: create a new session prefilled from an existing one (owner only)
+Route::get('/sessions/{session}/adapt', [App\Http\Controllers\SessionController::class, 'adapt'])
+    ->name('session.adapt')->middleware(['auth', 'doNotCacheResponse']);
 
 Route::get('/instrumentset/{user}/{instrumentset}/edit', 'App\Http\Controllers\InstrumentSetController@edit')
     ->name('instrumentset.edit')->middleware('auth');
@@ -239,22 +252,36 @@ Route::get('/popular-sessions', function () {
 })->name('observations.popular.sessions');
 
 // Messages
-Route::get('/messages', [App\Http\Controllers\MessagesController::class, 'index'])->name('messages.index')->middleware('auth');
-Route::get('/messages/create', [App\Http\Controllers\MessagesController::class, 'create'])->name('messages.create')->middleware('auth');
-Route::post('/messages', [App\Http\Controllers\MessagesController::class, 'store'])->name('messages.store')->middleware('auth');
-Route::get('/messages/{id}', [App\Http\Controllers\MessagesController::class, 'show'])->name('messages.show')->middleware('auth');
+Route::get('/messages', [App\Http\Controllers\MessagesController::class, 'index'])
+    ->name('messages.index')
+    ->middleware(['auth', 'doNotCacheResponse']);
+Route::get('/messages/create', [App\Http\Controllers\MessagesController::class, 'create'])
+    ->name('messages.create')
+    ->middleware(['auth', 'doNotCacheResponse']);
+Route::post('/messages', [App\Http\Controllers\MessagesController::class, 'store'])
+    ->name('messages.store')
+    ->middleware('auth');
+Route::get('/messages/{id}', [App\Http\Controllers\MessagesController::class, 'show'])
+    ->name('messages.show')
+    ->middleware(['auth', 'doNotCacheResponse']);
 
 // Admin broadcast
 Route::post('/messages/broadcast', [App\Http\Controllers\MessagesController::class, 'broadcast'])->name('messages.broadcast')->middleware('can:add_sketch,App\\Models\\User');
 
 // Mark all messages as read
-Route::post('/messages/mark-all-read', [App\Http\Controllers\MessagesController::class, 'markAllRead'])->name('messages.markAllRead')->middleware('auth');
+Route::post('/messages/mark-all-read', [App\Http\Controllers\MessagesController::class, 'markAllRead'])
+    ->name('messages.markAllRead')
+    ->middleware(['auth', 'doNotCacheResponse']);
 
 // Reply data (plain-text message) for prefill via AJAX
-Route::get('/messages/{id}/reply-data', [App\Http\Controllers\MessagesController::class, 'replyData'])->name('messages.replyData')->middleware('auth');
+Route::get('/messages/{id}/reply-data', [App\Http\Controllers\MessagesController::class, 'replyData'])
+    ->name('messages.replyData')
+    ->middleware(['auth', 'doNotCacheResponse']);
 
 // Delete a message (mark deleted in legacy messagesDeleted table)
-Route::post('/messages/{id}/delete', [App\Http\Controllers\MessagesController::class, 'destroy'])->name('messages.destroy')->middleware('auth');
+Route::post('/messages/{id}/delete', [App\Http\Controllers\MessagesController::class, 'destroy'])
+    ->name('messages.destroy')
+    ->middleware(['auth', 'doNotCacheResponse']);
 
 // Sitemap (cached): generates a simple sitemap.xml with main pages and recent public sessions
 Route::get('/sitemap.xml', function () {

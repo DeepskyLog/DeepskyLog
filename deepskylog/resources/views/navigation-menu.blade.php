@@ -122,6 +122,9 @@
 
         <!-- Responsive Navigation Menu -->
         <div :class="{ 'block': open, 'hidden': !open }" class="hidden">
+            <!-- Responsive Observer Quick Links (first entry) -->
+            <x-menu.observer-responsive-dropdown />
+
             <!-- Responsive View Dropdown -->
             <x-menu.view-responsive-dropdown />
 
@@ -165,6 +168,33 @@
                     </div>
 
                     <div class="mt-3 space-y-1">
+                        @if (! Auth::guest() && Auth::user()->isObserver())
+                            <x-dropdown.item
+                                icon="bars-3-center-left"
+                                href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&observer={{ Auth::user()->username }}"
+                                label="{{ __('My observations') }}"
+                            />
+
+                            <x-dropdown.item
+                                icon="pencil-square"
+                                href="/drawings/{{ Auth::user()->slug }}"
+                                label="{{ __('My drawings') }}"
+                            />
+
+                            <x-dropdown.item
+                                separator
+                                icon="bars-3-center-left"
+                                href="{{ config('app.old_url') }}/index.php?indexAction=view_lists"
+                                label="{!! __('My observing lists') !!}"
+                            />
+
+                            @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
+                            <x-dropdown.item
+                                href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}"
+                                label="{{ __('My sessions') }}"
+                            />
+                        @endif
+
                         <x-dropdown.item
                             href="/observers/{{ Auth::user()->slug }}"
                             label="{{ __('Details') }}"

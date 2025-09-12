@@ -2,20 +2,45 @@
 
 namespace App\Models;
 
+use App\Traits\ClearsResponseCache;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class ObservationSession extends Model
 {
-    use Sluggable;
+    use ClearsResponseCache, Sluggable;
 
     protected $table = 'observation_sessions';
 
     public $timestamps = false;
 
+    // Legacy table uses manual ids (not auto-increment). Ensure Eloquent doesn't
+    // expect DB to generate ids and assign a new legacy id when creating.
+    public $incrementing = false;
+
+    protected $keyType = 'int';
+
     protected $fillable = [
-        'id', 'name', 'slug', 'observerid', 'begindate', 'enddate', 'locationid', 'weather', 'equipment', 'comments', 'language', 'active',
+        'id', 'name', 'slug', 'observerid', 'begindate', 'enddate', 'locationid', 'weather', 'equipment', 'comments', 'language', 'active', 'picture',
+    ];
+
+    /**
+     * Cast datetime columns to predictable format when accessing via Eloquent.
+     * Using explicit format reduces implicit timezone conversions when attributes
+     * are automatically converted to Carbon instances.
+     */
+    protected $casts = [
+        'begindate' => 'datetime:Y-m-d H:i:s',
+        'enddate' => 'datetime:Y-m-d H:i:s',
+    ];
+
+    /**
+     * Default model attributes.
+     * Ensure new observation sessions default to English when not explicitly provided.
+     */
+    protected $attributes = [
+        'language' => 'en',
     ];
 
     public function sluggable(): array
@@ -31,6 +56,17 @@ class ObservationSession extends Model
     public static function booted()
     {
         static::creating(function ($model) {
+            // Ensure a legacy numeric id exists. Use max(id)+1 as the next id.
+            if (empty($model->id)) {
+                try {
+                    $max = self::max('id');
+                    $model->id = $max ? ((int) $max + 1) : 1;
+                } catch (\Throwable $e) {
+                    // In rare cases (e.g., missing table) leave id empty and let DB report.
+                }
+            }
+
+            // Ensure slug uniqueness scoped to observerid when name present
             if (empty($model->slug) && ! empty($model->name)) {
                 $base = Str::slug($model->name);
                 $slug = $base;

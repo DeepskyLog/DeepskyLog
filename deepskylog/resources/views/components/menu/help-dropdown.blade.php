@@ -1,7 +1,7 @@
 <!-- Help Dropdown -->
 <div class="hidden lg:ml-6 lg:flex lg:items-center">
     <div class="relative mr-3 text-sm">
-        <x-dropdown width="48" align="right" position="bottom-start">
+    <x-dropdown width="48" align="right" position="bottom-start" height="max-h-[70vh]">
             <x-slot name="trigger">
                 {{ __("Help") }}
             </x-slot>

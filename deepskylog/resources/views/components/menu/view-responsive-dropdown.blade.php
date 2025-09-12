@@ -10,18 +10,7 @@
         </div>
 
         <div class="mt-3 space-y-1">
-            <!-- Account Management -->
-            @if (! Auth::guest() && Auth::user()->isObserver())
-                <x-dropdown.item
-                    icon="bars-3-center-left"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&observer={{  Auth::user()->username }}"
-                    label="{{ __("My observations") }}"/>
-
-                <x-dropdown.item
-                    icon="pencil-square"
-                    href="/drawings/{{ Auth::user()->slug }}"
-                    label="{{__('My drawings') }}"/>
-            @endif
+            <!-- Observer-specific items moved to responsive settings menu -->
 
             <!-- Team Management -->
             <x-dropdown.item
@@ -44,8 +33,9 @@
                     label="{!! __('My observing lists') !!}"
                 />
 
+                @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
                 <x-dropdown.item
-                    href="{{ route('session.mine') }}"
+                    href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}"
                     label="{{ __('My sessions') }}"
                 />
 

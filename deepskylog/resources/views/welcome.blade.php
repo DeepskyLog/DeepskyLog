@@ -5,7 +5,6 @@
 @php use App\Models\CometObservationsOld; @endphp
 @php use App\Models\ObservationSession; @endphp
 <x-app-layout>
-    <x-slot name="header">DeepskyLog</x-slot>
     <div class="max-w-screen mx-auto bg-gray-900 px-2 py-10 sm:px-6 lg:px-8">
         <x-card>
             <div
@@ -76,12 +75,13 @@
         </div>
 
         {{-- Five newest active sessions --}}
-        <div class="pt-4">
+        @isset($sessions)
+            <div class="pt-4">
             <h2 class="ml-3 mt-3 text-xl font-semibold leading-tight">
                 {{ __("5 newest sessions") }}
             </h2>
             @php
-                // $sessions is prepared in the homepage route (mirrors SessionController::all) and injected into this view.
+                // $sessions is prepared in the homepage route (SessionController::homepage)
             @endphp
 
             <div class="mt-2">
@@ -135,7 +135,7 @@
                                     <div class="text-sm text-gray-300 mb-2">{{ __('Observations') }}: <strong class="text-white">{{ $session->observation_count }}</strong></div>
                                 @endif
 
-                                <p class="text-sm text-gray-300 mb-3">{{ \Illuminate\Support\Str::limit(strip_tags(html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8')), 180) }}</p>
+                                <p class="text-sm text-gray-300 mb-3">{{ $session->preview_text ?? \Illuminate\Support\Str::limit(strip_tags(html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8')), 180) }}</p>
                                 <div class="flex items-center justify-between text-sm">
                                     <div class="text-gray-400">{{ __('Observers') }}: {{ $session->otherObserversCount() ?? 1 }}</div>
                                     <a href="{{ route('session.show', [$session->observer->slug ?? $session->observerid, $session->slug ?? $session->id]) }}" class="text-blue-500 hover:underline">{{ __('Read more') }}</a>
@@ -143,10 +143,13 @@
                             </article>
                         @endforeach
                     </div>
-                    {{ $sessions->links() }}
+                    <div class="mt-4">
+                        {{ $sessions->links() }}
+                    </div>
                 </x-card>
             </div>
         </div>
+        @endisset
 
         {{-- Ten latest sketches --}}
         <div class="pt-4">

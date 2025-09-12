@@ -55,16 +55,25 @@
                         <tr>
                             <td colspan="2" class="py-2"></td>
                         </tr>
+                        @php
+                            // weather, equipment and comments are translated/cached in the controller if needed
+                            $rawWeather = html_entity_decode($session->weather ?? __('Unknown'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                            $weatherTranslated = $session->weather_translated ?? $rawWeather;
+                        @endphp
                         <tr>
                             <td class="pr-4 font-medium">{{ __('Weather') }}</td>
-                            <td>{!! nl2br(e(html_entity_decode($session->weather ?? __('Unknown'), ENT_QUOTES | ENT_HTML5, 'UTF-8'))) !!}</td>
+                            <td>{!! strip_tags($weatherTranslated, '<p><br><em><strong><b><i><u><ul><ol><li>') !!}</td>
                         </tr>
                         <tr>
                             <td colspan="2" class="py-2"></td>
                         </tr>
+                        @php
+                            $rawEquipment = html_entity_decode($session->equipment ?? __('Unknown'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                            $equipmentTranslated = $session->equipment_translated ?? $rawEquipment;
+                        @endphp
                         <tr>
                             <td class="pr-4 font-medium">{{ __('Equipment') }}</td>
-                            <td>{!! nl2br(e(html_entity_decode($session->equipment ?? __('Unknown'), ENT_QUOTES | ENT_HTML5, 'UTF-8'))) !!}</td>
+                            <td>{!! strip_tags($equipmentTranslated, '<p><br><em><strong><b><i><u><ul><ol><li>') !!}</td>
                         </tr>
                         @if(false)
                             {{-- comments moved out of table --}}
@@ -74,10 +83,26 @@
                         @endif
                     </table>
                     @if(!empty($session->comments))
+                        @php
+                            $rawComments = html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                            $commentsTranslated = $session->comments_translated ?? $rawComments;
+                        @endphp
                         <div class="mt-4">
                             <x-card>
-                                <div class="text-sm">{!! nl2br(e($session->comments)) !!}</div>
+                                <div class="text-sm">{!! strip_tags($commentsTranslated, '<p><br><em><strong><b><i><u><ul><ol><li>') !!}</div>
                             </x-card>
+                        </div>
+                    @endif
+                    @if(auth()->check() && (auth()->user()->username === $session->observerid || (method_exists(auth()->user(), 'hasAdministratorPrivileges') && auth()->user()->hasAdministratorPrivileges())))
+                        <div class="mt-3 flex items-center justify-end gap-3">
+                            <a href="{{ route('session.adapt', $session->id) }}" class="inline-flex items-center p-2 rounded bg-yellow-600 hover:bg-yellow-700 text-white" aria-label="{{ __('Adapt this session') }}">
+                                {{ __('Adapt') }}
+                            </a>
+
+                            <form method="POST" action="{{ route('session.destroy', $session->id) }}" onsubmit="return confirm('{{ __('Are you sure you want to delete this session?') }}');">
+                                @csrf
+                                <button type="submit" class="inline-flex items-center p-2 rounded bg-red-600 hover:bg-red-700 text-white">{{ __('Delete') }}</button>
+                            </form>
                         </div>
                     @endif
                 </div>
@@ -199,6 +224,7 @@
                                 <path d="M18 8.118V13a2 2 0 01-2 2H4a2 2 0 01-2-2V8.118l7.293 4.377a1 1 0 001.414 0L18 8.118z" />
                             </svg>
                         </a>
+                        {{-- owner-only actions moved above the map --}}
                     </div>
                 </div>
             </aside>

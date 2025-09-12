@@ -2,54 +2,21 @@
     <!-- View Dropdown -->
 <div class="hidden lg:ml-6 lg:flex lg:items-center">
     <div class="relative mr-3 text-sm">
-        <x-dropdown width="xl" height="max-h-80" position="bottom-start">
+    <x-dropdown width="xl" height="max-h-[70vh]" position="bottom-start">
             <x-slot name="trigger">
                 {{ __('View') }}
             </x-slot>
 
-            @if (!Auth::guest() && Auth::user()->isObserver())
-                <x-dropdown.item icon="bars-3-center-left"
-                                 href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&observer={{ Auth::user()->username }}"
-                                 label="{{ __('My observations') }}"/>
-
-                <x-dropdown.item icon="pencil-square" href="/drawings/{{ Auth::user()->slug }}"
-                                 label="{{ __('My drawings') }}"/>
-            @endif
+            {{-- Observer-specific items moved to the user settings dropdown --}}
 
             <x-dropdown.item icon="sparkles" href="/sketch-of-the-week" label="{{ __('Sketch of the Week') }}"/>
 
             <x-dropdown.item icon="sparkles" href="/sketch-of-the-month" label="{{ __('Sketch of the Month') }}"/>
 
             @if (!Auth::guest() && Auth::user()->isObserver())
-                <x-dropdown.item separator icon="bars-3-center-left"
-                                 href="{{ config('app.old_url') }}/index.php?indexAction=view_lists"
-                                 label="{!! __('My observing lists') !!}"/>
-
-                <x-dropdown.item href="{{ route('session.mine') }}"
-                                 label="{{ __('My sessions') }}"/>
-
                 <x-dropdown.item href="{{ route('session.all') }}" label="{{ __('All sessions') }}"/>
 
-                <x-dropdown.item separator
-                                 href="/instrument"
-                                 label="{{ __('My instruments') }}"/>
-
-                <x-dropdown.item
-                                 href="/instrumentset"
-                                 label="{{ __('My instrument sets') }}"/>
-
-                <x-dropdown.item icon="globe-europe-africa"
-                                 href="/location"
-                                 label="{{ __('My locations') }}"/>
-
-                <x-dropdown.item href="/eyepiece"
-                                 label="{{ __('My eyepieces') }}"/>
-
-                <x-dropdown.item href="/filter"
-                                 label="{{ __('My filters') }}"/>
-
-                <x-dropdown.item href="/lens"
-                                 label="{{ __('My lenses') }}"/>
+                {{-- Instrument/eyepiece/filter/lens links moved to the user menu --}}
 
                 <x-dropdown.item separator
                                  href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&myLanguages=true&catalog=%&minyear={{ Carbon::now()->year - 1 }}&minmonth={{ Carbon::now()->month }}&minday={{ Carbon::now()->day }}&newobservations=true"

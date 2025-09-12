@@ -1,6 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-200 leading-tight">{{ __('My sessions') }}</h2>
+        <div class="flex items-center justify-between">
+            <h2 class="font-semibold text-xl text-gray-200 leading-tight">{{ __('My sessions') }}</h2>
+            <div>
+                <a href="{{ route('session.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    {{ __('Add session') }}
+                </a>
+            </div>
+        </div>
     </x-slot>
 
     <div class="py-6">

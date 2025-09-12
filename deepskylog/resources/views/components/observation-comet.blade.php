@@ -8,7 +8,8 @@
         $observation_date = substr($date, 0, 4) . "-" . substr($date, 4, 2) . "-" . substr($date, 6, 2);
         $user = \App\Models\User::where("username", html_entity_decode($observation->observerid))->first();
         // Stichoza\GoogleTranslate\GoogleTranslate used conditionally
-        if (auth()->user()) {
+        $tr = null;
+        if (auth()->check() && auth()->user()->translate) {
             $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(auth()->user()->language);
         }
         @endphp
@@ -63,8 +64,8 @@
             <br/>
             {{ __(" The following notes where made: ") }}
             <br/>
-            <div class="my-2 rounded-sm bg-gray-900 px-4 py-4">
-                @if (auth()->user() && auth()->user()->translate)
+                <div class="my-2 rounded-sm bg-gray-900 px-4 py-4">
+                @if ($tr)
                     {!! ($translated = $tr->translate(html_entity_decode($observation->description))) == null ? html_entity_decode($observation->description): $translated !!}
                 @else
                     {!! html_entity_decode($observation->description) !!}

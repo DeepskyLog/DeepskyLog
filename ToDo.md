@@ -8,9 +8,14 @@
     + [X] Overview page with all images
     + [X] Blog style for the detail page
     + [X] Like sessions
-    + [ ] Preview on the main DeepskyLog page
+    + [X] Preview on the main DeepskyLog page
     + [ ] Create a new session
+        + [ ] Moet ik twee keer klikken om een menu te openen?
     + [ ] Update old version of DeepskyLog to use the new session tables
+    + [ ] Install on server.
+        + [ ] Check if the new robots.txt works as expected.
+        + [ ] Check if the server still needs to work hard.
+        + [ ] Check if the images for the sessions are available.
 + [ ] Fix logging in -> Only problem on Phone
 + [ ] Release new version of pyDeepskyLog
     + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
@@ -71,3 +76,15 @@
     + [ ] See https://laraveldaily.teachable.com/courses/393790/lectures/6329089
 + [ ] Feeds: https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel
 + [ ] Check https://laravel-comments.com/ for commenting on observations, observing lists, ...
+
+## Infrastructure changes made
+
+The response cache (spatie/laravel-responsecache) was installed and configured to cache public GET responses.
+- Middleware `\Spatie\ResponseCache\Middlewares\CacheResponse` was added to the `web` group in `app/Http/Kernel.php`.
+- Middleware aliases `cacheResponse` and `doNotCacheResponse` were added.
+- `config/responsecache.php` was published and set to a default 1 hour cache lifetime.
+
+Next recommended steps:
+- Consider using a cache store that supports tags (Redis) if you plan to clear subsets of cached pages.
+- Add `doNotCacheResponse` to routes that should never be cached (e.g., user dashboards, forms).
+- Monitor `php artisan responsecache:clear` as part of model events or deployments where content changes.

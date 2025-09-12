@@ -18,7 +18,10 @@
         $constellation = Constellation::where('id', $object->con)->first()->name;
 
         if (auth()->user()) {
-            $tr = new GoogleTranslate(auth()->user()->language);
+                $tr = null;
+                if (auth()->check() && auth()->user()->translate) {
+                    $tr = new GoogleTranslate(auth()->user()->language);
+                }
         }
     @endphp
 

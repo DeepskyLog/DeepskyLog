@@ -1,7 +1,7 @@
 <!-- Teams Dropdown -->
 @if (Auth::user() && Laravel\Jetstream\Jetstream::hasTeamFeatures() && Auth::user()->teams->count() > 1)
     <div class="relative ml-3">
-        <x-dropdown align="right" width="60">
+    <x-dropdown align="right" width="60" height="max-h-[70vh]">
             <x-slot name="trigger">
                 <span class="inline-flex rounded-md">
                     <button

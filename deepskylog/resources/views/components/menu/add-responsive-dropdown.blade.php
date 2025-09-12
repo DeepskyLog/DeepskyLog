@@ -25,9 +25,10 @@
 
                 <x-dropdown.item
                     icon="user-plus"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=add_session"
-                    label="{{ __('Sessions') }}"
+                    href="{{ route('session.create') }}"
+                    label="{{ __('Session') }}"
                 />
+
 
                 <x-dropdown.item
                     separator

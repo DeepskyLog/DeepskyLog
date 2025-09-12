@@ -78,11 +78,9 @@
                 <main>
                     {{-- Optional page header slot (used by pages like messages.create) --}}
                     @isset($header)
-                        <header class="bg-gray-900 border-b border-gray-700">
-                            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 py-4">
-                                <h1 class="text-xl font-semibold text-gray-100">{{ $header }}</h1>
-                            </div>
-                        </header>
+                        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 py-4">
+                            <h1 class="text-xl font-semibold text-gray-100">{{ $header }}</h1>
+                        </div>
                     @endisset
 
                     @if(isset($slot))

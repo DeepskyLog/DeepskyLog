@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\ClearsResponseCache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use App\Traits\ClearsResponseCache;
 
 class CometObservationsOld extends Model
 {
     use ClearsResponseCache;
+
     protected $connection = 'mysqlOld';
 
     protected $table = 'cometobservations';

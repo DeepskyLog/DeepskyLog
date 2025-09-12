@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\ClearsResponseCache;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use App\Traits\ClearsResponseCache;
 
 class InstrumentSet extends Model
 {
+    use ClearsResponseCache;
     use HasFactory;
     use Sluggable;
-    use ClearsResponseCache;
 
     protected $fillable = [
         'user_id', 'name', 'description', 'active', 'picture',

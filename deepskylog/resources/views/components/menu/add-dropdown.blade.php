@@ -2,7 +2,7 @@
 @if (!Auth::guest() && !Auth::user()->isAdministrator() && !Auth::user()->isDatabaseExpert())
     <div class="hidden lg:ml-6 lg:flex lg:items-center">
         <div class="relative mr-3 text-sm">
-            <x-dropdown height="max-h-80" position="bottom-start">
+            <x-dropdown height="max-h-[70vh]" position="bottom-start">
                 <x-slot name="trigger">
                     {{ __('Add') }}
                 </x-slot>
@@ -18,8 +18,8 @@
                 {{-- label="{!! __('Observing list') !!}" --}}
                 {{-- /> --}}
 
-                <x-dropdown.item icon="user-plus" href="{{ config('app.old_url') }}/index.php?indexAction=add_session"
-                                 label="{{ __('Sessions') }}"/>
+                <x-dropdown.item icon="user-plus" href="{{ route('session.create') }}"
+                                 label="{{ __('Session') }}"/>
 
                 <x-dropdown.item separator icon="plus-circle"
                                  href="{{ route('instrument.create') }}"

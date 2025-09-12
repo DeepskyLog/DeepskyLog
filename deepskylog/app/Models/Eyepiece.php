@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\ClearsResponseCache;
 use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
-use App\Traits\ClearsResponseCache;
 
 class Eyepiece extends Model
 {
-    use Sluggable;
     use ClearsResponseCache;
+    use Sluggable;
 
     protected $fillable = [
         'user_id', 'name', 'make_id', 'type_id', 'focal_length_mm', 'apparentFOV',

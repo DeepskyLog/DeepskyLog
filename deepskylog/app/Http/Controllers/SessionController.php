@@ -10,7 +10,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB as DBFacade;
+use Illuminate\Support\Str;
 
 class SessionController extends Controller
 {
@@ -28,19 +30,14 @@ class SessionController extends Controller
         $image = null; // default: no image unless found
         if (! empty($session->locationid)) {
             $location = Location::find($session->locationid);
-            if ($location) {
-                if (! empty($location->picture)) {
-                    // location pictures are stored in storage; keep existing behavior for location images
-                    $image = '/storage/'.asset($location->picture);
-                }
+            if ($location && ! empty($location->picture)) {
+                $image = asset('storage/'.$location->picture);
             }
         }
 
         // Try to find a session image in public/images/sessions. We prefer filenames matching the session id
-        // or a filename stored in legacy 'picture' column if available during migration.
         $sessionImageDir = public_path('images/sessions');
         if (is_dir($sessionImageDir)) {
-            // look for files like {id}.(jpg|jpeg|png|gif)
             $patterns = [
                 $sessionImageDir.'/'.$session->id.'.jpg',
                 $sessionImageDir.'/'.$session->id.'.jpeg',
@@ -53,14 +50,16 @@ class SessionController extends Controller
                     break;
                 }
             }
-
-            // If not found, try files that use the session id as the full basename before the extension
-            // e.g. '4.jpg' but NOT '419.jpg'. This avoids accidental prefix matches.
             if (empty($image)) {
                 $glob = glob($sessionImageDir.'/'.$session->id.'.*');
                 if (! empty($glob)) {
                     $image = '/images/sessions/'.basename($glob[0]);
                 }
+            }
+
+            // Fallback: if no public/images session image was found, use the stored session picture (storage/app/public/...)
+            if (empty($image) && ! empty($session->picture)) {
+                $image = asset('storage/'.$session->picture);
             }
         }
 
@@ -69,16 +68,13 @@ class SessionController extends Controller
         $observers = [];
         if (! empty($observerUsernames)) {
             foreach ($observerUsernames as $uname) {
-                // Skip the primary observer (observerid) if present in the pivot
                 if ($uname === $session->observerid) {
                     continue;
                 }
                 $u = User::where('username', $uname)->first();
                 if ($u) {
-                    // store the original username so counts can be matched against legacy observerid
                     $observers[] = ['username' => $uname, 'name' => $u->name, 'slug' => $u->slug, 'user' => ['name' => $u->name, 'slug' => $u->slug]];
                 } else {
-                    // fallback to raw username if no User record exists
                     $observers[] = ['username' => $uname, 'name' => $uname, 'slug' => null, 'user' => null];
                 }
             }
@@ -90,9 +86,8 @@ class SessionController extends Controller
         // Build list of observation IDs for this session so we can filter old observations
         $obsIds = DBFacade::table('sessionObservations')->where('sessionid', $session->id)->pluck('observationid')->toArray();
 
-        // List of objects observed by THIS observer in THIS session (distinct objectname from old observations + comets)
+        // Fetch observations and drawings
         if (! empty($obsIds)) {
-            // Fetch observations (deep-sky and comet) for this session made by the session owner
             $deepObservations = ObservationsOld::whereIn('id', $obsIds)
                 ->where('observerid', $session->observerid)
                 ->orderBy('id', 'desc')
@@ -103,7 +98,6 @@ class SessionController extends Controller
                 ->orderBy('id', 'desc')
                 ->get();
 
-            // Merge and sort by id desc so newest observations first
             $allObservations = $deepObservations->merge($cometObservations)->sortByDesc('id')->values();
 
             // Manual pagination for combined observations
@@ -124,13 +118,10 @@ class SessionController extends Controller
                 ]
             );
 
-            // Drawings (deep & comet) by this observer during this session
             $drawingDeep = ObservationsOld::whereIn('id', $obsIds)->where('observerid', $session->observerid)->where('hasDrawing', 1)->orderBy('id', 'desc')->get();
             $drawingComet = CometObservationsOld::whereIn('id', $obsIds)->where('observerid', $session->observerid)->where('hasDrawing', 1)->orderBy('id', 'desc')->get();
             $drawings = $drawingDeep->merge($drawingComet)->sortByDesc('id')->values();
 
-            // Build per-session object name lists (used historically by the page). Keep as arrays so
-            // downstream code that paginates names continues to work.
             $objectsDeepSky = $deepObservations->pluck('objectname')->unique()->values()->toArray();
             $objectsComet = $cometObservations->pluck('objectname')->unique()->values()->toArray();
         } else {
@@ -143,53 +134,129 @@ class SessionController extends Controller
         $allObjects = array_values(array_unique(array_merge($objectsDeepSky, $objectsComet)));
         sort($allObjects, SORT_STRING | SORT_FLAG_CASE);
 
-        // Manual pagination for an array of object names (works across connections)
-        $perPage = 20;
-        $page = (int) request()->get('page', 1);
-        $total = count($allObjects);
-        $offset = ($page - 1) * $perPage;
-        $itemsForCurrentPage = array_slice($allObjects, $offset, $perPage);
-
-        $objectList = new LengthAwarePaginator(
-            $itemsForCurrentPage,
-            $total,
-            $perPage,
-            $page,
-            [
-                'path' => request()->url(),
-                'query' => request()->query(),
-            ]
-        );
-
-        // Compute number of observations each observer did during this session
+        // Compute number of observations each observer did during this session.
+        // Counts are calculated only when there are session observation ids available.
         $observerStats = [];
 
-        // Build map of observationid -> observerid for old observations (both tables)
+        $counts = [];
         if (! empty($obsIds)) {
-            // deep-sky observations
-            $deepRows = ObservationsOld::whereIn('id', $obsIds)->select('id', 'observerid')->get();
-            // comet observations
-            $cometRows = CometObservationsOld::whereIn('id', $obsIds)->select('id', 'observerid')->get();
+            // Count per observer in deep observations
+            $deepCounts = ObservationsOld::whereIn('id', $obsIds)
+                ->select('observerid', DBFacade::raw('count(*) as cnt'))
+                ->groupBy('observerid')
+                ->pluck('cnt', 'observerid')
+                ->toArray();
 
-            $allRows = $deepRows->merge($cometRows);
-            // group by observerid and count
-            $grouped = $allRows->groupBy('observerid')->map(function ($group) {
-                return $group->count();
-            });
+            // Count per observer in comet observations
+            $cometCounts = CometObservationsOld::whereIn('id', $obsIds)
+                ->select('observerid', DBFacade::raw('count(*) as cnt'))
+                ->groupBy('observerid')
+                ->pluck('cnt', 'observerid')
+                ->toArray();
 
-            // ensure primary observer is included
-            $primaryCount = $grouped->get($session->observerid, 0);
-            $observerStats[] = ['username' => $session->observerid, 'count' => $primaryCount, 'user' => $user];
-
-            // add other observers - use stored legacy username to match grouped observerid keys
-            foreach ($observers as $obs) {
-                $legacyUsername = $obs['username'];
-                $count = $grouped->get($legacyUsername, 0);
-                $observerStats[] = ['username' => $legacyUsername, 'count' => $count, 'user' => $obs['user'] ?? null];
+            // Merge counts
+            foreach ($deepCounts as $who => $c) {
+                $counts[$who] = ($counts[$who] ?? 0) + (int) $c;
+            }
+            foreach ($cometCounts as $who => $c) {
+                $counts[$who] = ($counts[$who] ?? 0) + (int) $c;
             }
         }
 
-        return view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats'));
+        // Primary observer count (defaults to zero)
+        $primaryCount = isset($counts[$session->observerid]) ? (int) $counts[$session->observerid] : 0;
+        // Fallback: if primaryCount is zero but there are totalObservations, try direct count
+        if ($primaryCount === 0 && $totalObservations > 0 && ! empty($obsIds)) {
+            $primaryCount = (int) (
+                (int) (ObservationsOld::whereIn('id', $obsIds)->where('observerid', $session->observerid)->count()) +
+                (int) (CometObservationsOld::whereIn('id', $obsIds)->where('observerid', $session->observerid)->count())
+            );
+        }
+
+        // Always include the primary observer (even when there are no observations)
+        $observerStats[] = ['username' => $session->observerid, 'count' => $primaryCount, 'user' => $user];
+
+        // Add other observers (counts default to zero when there are no observations)
+        foreach ($observers as $obs) {
+            $legacyUsername = $obs['username'];
+            $count = isset($counts[$legacyUsername]) ? (int) $counts[$legacyUsername] : 0;
+            $observerStats[] = ['username' => $legacyUsername, 'count' => $count, 'user' => $obs['user'] ?? null];
+        }
+
+        // Prepare translations for session fields (weather, equipment, comments) if user requested
+        // Allow forcing translation via query string for testing: ?force_translate=1
+        $forceTranslate = request()->boolean('force_translate');
+        $forceLang = request()->get('force_lang');
+        $shouldTranslate = (Auth::check() && Auth::user()->translate) || $forceTranslate;
+        $lang = null;
+        if ($shouldTranslate) {
+            if (! empty($forceLang)) {
+                $lang = $forceLang;
+            } elseif (Auth::check()) {
+                $lang = Auth::user()->language ?? config('app.locale');
+            } else {
+                $lang = config('app.locale');
+            }
+        }
+
+        $rawWeather = html_entity_decode($session->weather ?? __('Unknown'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $weatherTranslated = $rawWeather;
+        if ($shouldTranslate && $lang) {
+            $cacheKey = 'session_weather:'.$session->id.':'.$lang;
+            $weatherTranslated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawWeather, $lang) {
+                try {
+                    $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
+                    $t = $tr->translate($rawWeather);
+
+                    return $t !== null ? $t : $rawWeather;
+                } catch (\Throwable $e) {
+                    return $rawWeather;
+                }
+            });
+        }
+
+        $rawEquipment = html_entity_decode($session->equipment ?? __('Unknown'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $equipmentTranslated = $rawEquipment;
+        if ($shouldTranslate && $lang) {
+            $cacheKey = 'session_equipment:'.$session->id.':'.$lang;
+            $equipmentTranslated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawEquipment, $lang) {
+                try {
+                    $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
+                    $t = $tr->translate($rawEquipment);
+
+                    return $t !== null ? $t : $rawEquipment;
+                } catch (\Throwable $e) {
+                    return $rawEquipment;
+                }
+            });
+        }
+
+        $rawComments = html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $commentsTranslated = $rawComments;
+        if ($shouldTranslate && $lang) {
+            $cacheKey = 'session_comments:'.$session->id.':'.$lang;
+            $commentsTranslated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawComments, $lang) {
+                try {
+                    $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
+                    $t = $tr->translate($rawComments);
+
+                    return $t !== null ? $t : $rawComments;
+                } catch (\Throwable $e) {
+                    return $rawComments;
+                }
+            });
+        }
+
+        // Ensure preview and observation counts are available to views
+        $session->preview = $image;
+        $session->observation_count = $totalObservations;
+
+        // Attach translated fields to the session instance for the view
+        $session->weather_translated = $weatherTranslated;
+        $session->equipment_translated = $equipmentTranslated;
+        $session->comments_translated = $commentsTranslated;
+
+        return $this->noCacheResponse(response()->view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats')));
     }
 
     /**
@@ -204,6 +271,279 @@ class SessionController extends Controller
 
         // Sessions use observerid to store the legacy username.
         $query = ObservationSession::where('observerid', $user->username)
+            ->where('active', 1)
+            ->withObserver()
+            ->orderByDesc('enddate')
+            ->orderByDesc('begindate');
+
+        $perPage = 12;
+        $sessions = $query->paginate($perPage)->withQueryString();
+
+        // Prefetch related locations to avoid N+1 when resolving location pictures
+        $collection = $sessions->getCollection();
+        $locationIds = $collection->pluck('locationid')->filter()->unique()->values()->all();
+        $locations = [];
+        if (! empty($locationIds)) {
+            $locations = Location::whereIn('id', $locationIds)->get()->keyBy('id');
+        }
+
+        $sessionImageDir = public_path('images/sessions');
+
+        // Precompute observation counts for the sessions in this page to avoid N+1 queries
+        $sessionIds = $collection->pluck('id')->filter()->unique()->values()->all();
+        $obsCounts = [];
+        if (! empty($sessionIds)) {
+            $obsCounts = DBFacade::table('sessionObservations')
+                ->whereIn('sessionid', $sessionIds)
+                ->select('sessionid', DBFacade::raw('count(*) as cnt'))
+                ->groupBy('sessionid')
+                ->pluck('cnt', 'sessionid')
+                ->toArray();
+        }
+
+        // Allow forcing translation via query string for testing: ?force_translate=1
+        $forceTranslate = request()->boolean('force_translate');
+        $forceLang = request()->get('force_lang');
+        $shouldTranslate = (Auth::check() && Auth::user()->translate) || $forceTranslate;
+        $lang = null;
+        if ($shouldTranslate) {
+            if (! empty($forceLang)) {
+                $lang = $forceLang;
+            } elseif (Auth::check()) {
+                $lang = Auth::user()->language ?? config('app.locale');
+            } else {
+                $lang = config('app.locale');
+            }
+        }
+
+        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang) {
+            $image = null;
+
+            // Prefer images stored under public/images/sessions/{id}.*
+            if (is_dir($sessionImageDir)) {
+                $patterns = [
+                    $sessionImageDir.'/'.$session->id.'.jpg',
+                    $sessionImageDir.'/'.$session->id.'.jpeg',
+                    $sessionImageDir.'/'.$session->id.'.png',
+                    $sessionImageDir.'/'.$session->id.'.gif',
+                ];
+                foreach ($patterns as $p) {
+                    if (file_exists($p)) {
+                        $image = '/images/sessions/'.basename($p);
+                        break;
+                    }
+                }
+
+                if (empty($image)) {
+                    $glob = glob($sessionImageDir.'/'.$session->id.'.*');
+                    if (! empty($glob)) {
+                        $image = '/images/sessions/'.basename($glob[0]);
+                    }
+                }
+            }
+
+            // Fallback: session->picture (legacy) if present
+            if (empty($image) && ! empty($session->picture)) {
+                $image = asset('storage/'.$session->picture);
+            }
+
+            // Fallback: location picture if available
+            if (empty($image) && ! empty($session->locationid) && isset($locations[$session->locationid])) {
+                $loc = $locations[$session->locationid];
+                if (! empty($loc->picture)) {
+                    $image = asset('storage/'.$loc->picture);
+                }
+            }
+
+            $session->preview = $image;
+            $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
+
+            // Prepare translated preview text (comments) if needed and cache per session+lang
+            $rawComments = html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $translated = $rawComments;
+            if ($shouldTranslate && $lang) {
+                $cacheKey = 'session_preview:'.$session->id.':'.$lang;
+                $translated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawComments, $lang) {
+                    try {
+                        $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
+                        $t = $tr->translate($rawComments);
+
+                        return $t !== null ? $t : $rawComments;
+                    } catch (\Throwable $e) {
+                        return $rawComments;
+                    }
+                });
+            }
+
+            $session->preview_text = Str::limit(strip_tags($translated), 180);
+
+            return $session;
+        });
+
+        $sessions->setCollection($collection);
+
+        $user = Auth::user();
+        $userSlug = $user ? $user->slug ?? $user->username : null;
+
+        // Fetch inactive (draft) sessions for the current user so they can be shown at the top
+        $inactiveSessions = collect();
+        $inactiveMore = false;
+        if ($user) {
+            $allDrafts = ObservationSession::where('observerid', $user->username)
+                ->where('active', 0)
+                ->orderByDesc('id')
+                ->limit(11)
+                ->get();
+
+            if ($allDrafts->count() > 10) {
+                $inactiveMore = true;
+            }
+
+            $inactiveSessions = $allDrafts->slice(0, 10);
+
+            // Attach display names of other observers for each draft
+            $inactiveSessions = $inactiveSessions->map(function ($s) {
+                $others = $s->otherObservers();
+                $names = [];
+                if (! empty($others)) {
+                    foreach ($others as $uname) {
+                        $u = User::where('username', $uname)->first();
+                        if ($u) {
+                            $names[] = $u->name;
+                        } else {
+                            $names[] = $uname;
+                        }
+                    }
+                }
+                $s->otherObserversDisplay = implode(', ', $names);
+                return $s;
+            });
+        }
+
+        // Reuse the user-facing sessions view but mark it as the owner view when appropriate
+        return $this->noCacheResponse(response()->view('session.user-sessions', compact('sessions', 'user', 'userSlug', 'inactiveSessions', 'inactiveMore')));
+    }
+
+    /**
+     * Show a paginated list of all sessions (public view).
+     */
+    public function all(Request $request)
+    {
+        // Sessions ordered by most recent enddate
+        $query = ObservationSession::where('active', 1)
+            ->withObserver()
+            ->orderByDesc('enddate')
+            ->orderByDesc('begindate');
+
+        $perPage = 12;
+        $sessions = $query->paginate($perPage)->withQueryString();
+
+        // Prefetch related locations to avoid N+1 when resolving location pictures
+        $collection = $sessions->getCollection();
+        $locationIds = $collection->pluck('locationid')->filter()->unique()->values()->all();
+        $locations = [];
+        if (! empty($locationIds)) {
+            $locations = Location::whereIn('id', $locationIds)->get()->keyBy('id');
+        }
+
+        $sessionImageDir = public_path('images/sessions');
+
+        // Precompute observation counts for the sessions in this page to avoid N+1 queries
+        $sessionIds = $collection->pluck('id')->filter()->unique()->values()->all();
+        $obsCounts = [];
+        if (! empty($sessionIds)) {
+            $obsCounts = DBFacade::table('sessionObservations')
+                ->whereIn('sessionid', $sessionIds)
+                ->select('sessionid', DBFacade::raw('count(*) as cnt'))
+                ->groupBy('sessionid')
+                ->pluck('cnt', 'sessionid')
+                ->toArray();
+        }
+
+        $shouldTranslate = Auth::check() && Auth::user()->translate;
+        $lang = $shouldTranslate ? (Auth::user()->language ?? config('app.locale')) : null;
+
+        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang) {
+            $image = null;
+
+            // Prefer images stored under public/images/sessions/{id}.*
+            if (is_dir($sessionImageDir)) {
+                $patterns = [
+                    $sessionImageDir.'/'.$session->id.'.jpg',
+                    $sessionImageDir.'/'.$session->id.'.jpeg',
+                    $sessionImageDir.'/'.$session->id.'.png',
+                    $sessionImageDir.'/'.$session->id.'.gif',
+                ];
+                foreach ($patterns as $p) {
+                    if (file_exists($p)) {
+                        $image = '/images/sessions/'.basename($p);
+                        break;
+                    }
+                }
+
+                if (empty($image)) {
+                    $glob = glob($sessionImageDir.'/'.$session->id.'.*');
+                    if (! empty($glob)) {
+                        $image = '/images/sessions/'.basename($glob[0]);
+                    }
+                }
+            }
+
+            // Fallback: session->picture (legacy) if present
+            if (empty($image) && ! empty($session->picture)) {
+                $image = asset('storage/'.$session->picture);
+            }
+
+            // Fallback: location picture if available
+            if (empty($image) && ! empty($session->locationid) && isset($locations[$session->locationid])) {
+                $loc = $locations[$session->locationid];
+                if (! empty($loc->picture)) {
+                    $image = asset('storage/'.$loc->picture);
+                }
+            }
+
+            $session->preview = $image;
+            $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
+
+            // Prepare translated preview text (comments) for homepage
+            $rawComments = html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $translated = $rawComments;
+            if ($shouldTranslate && $lang) {
+                $cacheKey = 'session_preview:'.$session->id.':'.$lang;
+                $translated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawComments, $lang) {
+                    try {
+                        $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
+                        $t = $tr->translate($rawComments);
+
+                        return $t !== null ? $t : $rawComments;
+                    } catch (\Throwable $e) {
+                        return $rawComments;
+                    }
+                });
+            }
+
+            $session->preview_text = Str::limit(strip_tags($translated), 180);
+
+            return $session;
+        });
+
+        $sessions->setCollection($collection);
+
+        return $this->noCacheResponse(response()->view('session.all-sessions', compact('sessions')));
+    }
+
+    /**
+     * Show sessions for a specific user (public view).
+     */
+    public function user(Request $request, $user)
+    {
+        // Try to resolve user by slug first, then by username fallback
+        $u = User::where('slug', $user)->first();
+        if (! $u) {
+            $u = User::where('username', $user)->firstOrFail();
+        }
+
+        $query = ObservationSession::where('observerid', $u->username)
             ->where('active', 1)
             ->withObserver()
             ->orderByDesc('enddate')
@@ -281,22 +621,259 @@ class SessionController extends Controller
 
         $sessions->setCollection($collection);
 
-        return view('session.my-sessions', compact('sessions'));
+        $userSlug = $u->slug ?? $u->username;
+
+        // Pass the currently authenticated user so the view can detect the owner and show owner-only actions
+        $user = Auth::user();
+
+        // If the page owner matches an authenticated user, prefer showing their inactive sessions (limit to 10 + flag)
+        $inactiveSessions = collect();
+        $inactiveMore = false;
+        $ownerUsername = $u->username ?? ($u->slug ?? null);
+        if ($ownerUsername) {
+            $allDrafts = ObservationSession::where('observerid', $ownerUsername)
+                ->where('active', 0)
+                ->orderByDesc('id')
+                ->limit(11)
+                ->get();
+
+            if ($allDrafts->count() > 10) {
+                $inactiveMore = true;
+            }
+
+            $inactiveSessions = $allDrafts->slice(0, 10);
+
+            // Attach display names of other observers for each draft
+            $inactiveSessions = $inactiveSessions->map(function ($s) {
+                $others = $s->otherObservers();
+                $names = [];
+                if (! empty($others)) {
+                    foreach ($others as $uname) {
+                        $u = User::where('username', $uname)->first();
+                        if ($u) {
+                            $names[] = $u->name;
+                        } else {
+                            $names[] = $uname;
+                        }
+                    }
+                }
+                $s->otherObserversDisplay = implode(', ', $names);
+                return $s;
+            });
+        }
+
+        return $this->noCacheResponse(response()->view('session.user-sessions', compact('sessions', 'u', 'userSlug', 'user', 'inactiveSessions', 'inactiveMore')));
     }
 
     /**
-     * Show a paginated list of all sessions (public view).
+     * Show form to create a new observation session.
      */
-    public function all(Request $request)
+    public function create()
     {
-        // Sessions ordered by most recent enddate
+        // Only authenticated users can create sessions (route is protected by middleware)
+        $users = User::orderBy('name')->get();
+        $locations = Location::orderBy('name')->get();
+
+        return $this->noCacheResponse(response()->view('session.create', compact('users', 'locations')));
+    }
+
+    /**
+     * Store a newly created observation session.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'observer' => 'required|string|exists:users,username',
+            'locationid' => 'nullable|integer|exists:locations,id',
+            'begindate' => 'nullable|date',
+            'enddate' => 'nullable|date',
+            'weather' => 'nullable|string',
+            'equipment' => 'nullable|string',
+            'comments' => 'nullable|string',
+            'active' => 'sometimes|boolean',
+        ]);
+
+        $session = new ObservationSession;
+        $session->name = $validated['name'];
+        $session->observerid = $validated['observer'];
+        $session->locationid = $validated['locationid'] ?? null;
+        // Debug: log incoming raw date values
+        try {
+            \Illuminate\Support\Facades\Log::info('SessionController.store raw dates', ['begindate_raw' => $request->input('begindate'), 'enddate_raw' => $request->input('enddate')]);
+        } catch (\Throwable $e) {
+            // ignore
+        }
+
+        // Normalize date-only inputs to literal datetimes (no timezone conversion)
+        if (! empty($validated['begindate'])) {
+            try {
+                $raw = (string) $validated['begindate'];
+                if (preg_match('/^(\d{4}-\d{2}-\d{2})/', $raw, $m)) {
+                    $session->begindate = $m[1].' 00:00:00';
+                } else {
+                    $session->begindate = $validated['begindate'];
+                }
+            } catch (\Throwable $e) {
+                $session->begindate = $validated['begindate'];
+            }
+        } else {
+            $session->begindate = null;
+        }
+
+        if (! empty($validated['enddate'])) {
+            try {
+                $raw = (string) $validated['enddate'];
+                if (preg_match('/^(\d{4}-\d{2}-\d{2})/', $raw, $m)) {
+                    $session->enddate = $m[1].' 23:59:59';
+                } else {
+                    $session->enddate = $validated['enddate'];
+                }
+            } catch (\Throwable $e) {
+                $session->enddate = $validated['enddate'];
+            }
+        } else {
+            $session->enddate = null;
+        }
+        $session->weather = $validated['weather'] ?? null;
+        $session->equipment = $validated['equipment'] ?? null;
+        $session->comments = $validated['comments'] ?? null;
+        $session->active = isset($validated['active']) ? (int) $validated['active'] : 1;
+
+        $session->save();
+
+        // After saving the primary session, dispatch job to build per-user copies and sessionObservations
+        try {
+            $otherObservers = $request->input('otherObservers');
+            $otherArray = [];
+            if (! empty($otherObservers)) {
+                if (is_array($otherObservers)) {
+                    $otherArray = $otherObservers;
+                } else {
+                    $otherArray = array_filter(array_map('trim', explode(',', $otherObservers)));
+                }
+            }
+
+            $participants = array_values(array_unique(array_filter(array_merge([$session->observerid], $otherArray))));
+            \App\Jobs\BuildSessionCopies::dispatch($session->id, $participants);
+
+            // Dispatch invitation messages asynchronously
+            try {
+                $sender = auth()->check() ? auth()->user()->username : ($session->observerid ?? 'admin');
+                $creator = auth()->check() ? auth()->user()->username : null;
+                $invitees = $participants;
+                if (! empty($creator)) {
+                    $invitees = array_values(array_filter($participants, function ($u) use ($creator) {
+                        return $u !== $creator;
+                    }));
+                }
+
+                if (! empty($invitees)) {
+                    \App\Jobs\SendSessionInvitations::dispatch($session->id, $invitees, $sender);
+                }
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
+        // Redirect to the newly created session page. Find the user by username to get the slug for URL.
+        $user = User::where('username', $session->observerid)->first();
+
+        return redirect()->route('session.show', [$user ? $user->slug : $session->observerid, $session->slug ?? $session->id]);
+    }
+
+    /**
+     * Redirect to create session with the data from an existing session to adapt it.
+     * Lightweight approach: redirect to session.create with adapt_from={id}
+     */
+    public function adapt(Request $request, $sessionId)
+    {
+        $session = ObservationSession::findOrFail($sessionId);
+
+        // Allow owner or administrators to adapt the session
+        if (! auth()->check() || (auth()->user()->username !== $session->observerid && ! (method_exists(auth()->user(), 'hasAdministratorPrivileges') && auth()->user()->hasAdministratorPrivileges()))) {
+            abort(403);
+        }
+
+        // Redirect to create with query parameter referencing the source session id
+        return redirect()->route('session.create', ['adapt_from' => $session->id]);
+    }
+
+    /**
+     * Mark a session as deleted (inactive). Only the owner may do this.
+     */
+    public function destroy(Request $request, $sessionId)
+    {
+        $session = ObservationSession::findOrFail($sessionId);
+
+        // Allow owner or administrators to delete the session
+        if (! auth()->check() || (auth()->user()->username !== $session->observerid && ! (method_exists(auth()->user(), 'hasAdministratorPrivileges') && auth()->user()->hasAdministratorPrivileges()))) {
+            abort(403);
+        }
+
+        // Hard-delete: remove pivot rows and related data, then delete the session row.
+        try {
+            // Remove legacy pivot links between sessions and observations
+            DBFacade::table('sessionObservations')->where('sessionid', $session->id)->delete();
+
+            // Remove legacy session observers pivot rows
+            DBFacade::table('sessionObservers')->where('sessionid', $session->id)->delete();
+
+            // Remove observation likes that reference this session (observation_type = 'session')
+            \App\Models\ObservationLike::where('observation_type', 'session')->where('observation_id', $session->id)->delete();
+
+            // Remove any public image files named after the session id
+            $sessionImageDir = public_path('images/sessions');
+            if (is_dir($sessionImageDir)) {
+                $matches = glob($sessionImageDir.'/'.$session->id.'.*');
+                if (! empty($matches)) {
+                    foreach ($matches as $f) {
+                        @unlink($f);
+                    }
+                }
+            }
+
+            // Remove legacy stored picture referenced via storage if present
+            if (! empty($session->picture)) {
+                // session->picture is usually stored for asset('storage/...') paths, remove from storage/app/public
+                $storagePath = storage_path('app/public/'.ltrim($session->picture, '/'));
+                if (file_exists($storagePath)) {
+                    @unlink($storagePath);
+                }
+            }
+
+            // Finally delete the session row from DB
+            $session->delete();
+        } catch (\Throwable $e) {
+            // If anything goes wrong, log and return a message but do not reveal internals
+            report($e);
+
+            // Redirect the owner to their sessions page (use slug when available)
+            $owner = auth()->user();
+            $ownerSlug = $owner ? ($owner->slug ?? $owner->username) : ($session->observerid ?? null);
+
+            return redirect()->route('session.user', [$ownerSlug])->with('status', __('Failed to delete session'));
+        }
+
+        $owner = auth()->user();
+        $ownerSlug = $owner ? ($owner->slug ?? $owner->username) : ($session->observerid ?? null);
+
+        return redirect()->route('session.user', [$ownerSlug])->with('status', __('Session deleted'));
+    }
+
+    /**
+     * Homepage sessions (mirrors previous route closure) - shows 5 newest active sessions.
+     */
+    public function homepage(Request $request)
+    {
         $query = ObservationSession::where('active', 1)
             ->withObserver()
             ->orderByDesc('enddate')
             ->orderByDesc('begindate');
 
-        $perPage = 12;
-        $sessions = $query->paginate($perPage)->withQueryString();
+        $perPage = 6;
+        $sessions = $query->paginate($perPage, $columns = ['*'], $pageName = 'sessions')->appends(request()->except('sessions'));
 
         // Prefetch related locations to avoid N+1 when resolving location pictures
         $collection = $sessions->getCollection();
@@ -320,7 +897,22 @@ class SessionController extends Controller
                 ->toArray();
         }
 
-        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts) {
+        // Allow forcing translation via query string for testing: ?force_translate=1
+        $forceTranslate = request()->boolean('force_translate');
+        $forceLang = request()->get('force_lang');
+        $shouldTranslate = (Auth::check() && Auth::user()->translate) || $forceTranslate;
+        $lang = null;
+        if ($shouldTranslate) {
+            if (! empty($forceLang)) {
+                $lang = $forceLang;
+            } elseif (Auth::check()) {
+                $lang = Auth::user()->language ?? config('app.locale');
+            } else {
+                $lang = config('app.locale');
+            }
+        }
+
+        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang) {
             $image = null;
 
             // Prefer images stored under public/images/sessions/{id}.*
@@ -362,11 +954,44 @@ class SessionController extends Controller
             $session->preview = $image;
             $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
 
+            // Prepare translated preview text (comments) for homepage
+            $rawComments = html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $translated = $rawComments;
+            if ($shouldTranslate && $lang) {
+                $cacheKey = 'session_preview:'.$session->id.':'.$lang;
+                $translated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawComments, $lang) {
+                    try {
+                        $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
+                        $t = $tr->translate($rawComments);
+
+                        return $t !== null ? $t : $rawComments;
+                    } catch (\Throwable $e) {
+                        return $rawComments;
+                    }
+                });
+            }
+
+            $session->preview_text = Str::limit(strip_tags($translated), 180);
+
             return $session;
         });
 
         $sessions->setCollection($collection);
 
-        return view('session.all-sessions', compact('sessions'));
+        return $this->noCacheResponse(response()->view('welcome', compact('sessions')));
+    }
+
+    /**
+     * Attach headers to ensure responses are not cached by intermediate proxies or browsers.
+     */
+    protected function noCacheResponse($response)
+    {
+        try {
+            return $response->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+                ->header('Pragma', 'no-cache')
+                ->header('Expires', '0');
+        } catch (\Throwable $e) {
+            return $response;
+        }
     }
 }

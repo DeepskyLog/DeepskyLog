@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Models\Traits\HasObservationsDates;
+use App\Traits\ClearsResponseCache;
 use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
-use App\Traits\ClearsResponseCache;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Magnitude;
@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Session;
 
 class Location extends Model
 {
+    use ClearsResponseCache;
     use HasObservationsDates;
     use Sluggable;
-    use ClearsResponseCache;
 
     protected $fillable = [
         'user_id', 'name', 'longitude', 'latitude', 'country', 'timezone', 'limitingMagnitude', 'skyBackground',

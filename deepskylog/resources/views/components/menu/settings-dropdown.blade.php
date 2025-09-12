@@ -1,7 +1,7 @@
 <!-- Settings Dropdown -->
 <div class="relative ml-3">
     @if (Auth::user())
-        <x-dropdown align="right" width="48">
+    <x-dropdown align="right" width="48" height="max-h-[70vh]">
             <x-slot name="trigger">
                 @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                     <x-avatar
@@ -37,7 +37,48 @@
             </x-slot>
 
             <!-- Account Management -->
-            <x-dropdown.item
+            {{-- Move observer-specific quick links here so they're available in the user menu --}}
+            @if (!Auth::guest() && Auth::user()->isObserver())
+                <x-dropdown.item icon="bars-3-center-left"
+                                 href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&observer={{ Auth::user()->username }}"
+                                 label="{{ __('My observations') }}"/>
+
+                <x-dropdown.item icon="pencil-square" href="/drawings/{{ Auth::user()->slug }}"
+                                 label="{{ __('My drawings') }}"/>
+
+                @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
+                <x-dropdown.item href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}"
+                                 label="{{ __('My sessions') }}"/>
+
+                <x-dropdown.item separator
+                                 icon="bars-3-center-left"
+                                 href="{{ config('app.old_url') }}/index.php?indexAction=view_lists"
+                                 label="{!! __('My observing lists') !!}"/>
+
+                <x-dropdown.item separator
+                                 href="/instrument"
+                                 label="{{ __('My instruments') }}"/>
+
+                <x-dropdown.item
+                                 href="/instrumentset"
+                                 label="{{ __('My instrument sets') }}"/>
+
+                <x-dropdown.item icon="globe-europe-africa"
+                                 href="/location"
+                                 label="{{ __('My locations') }}"/>
+
+                <x-dropdown.item href="/eyepiece"
+                                 label="{{ __('My eyepieces') }}"/>
+
+                <x-dropdown.item href="/filter"
+                                 label="{{ __('My filters') }}"/>
+
+                <x-dropdown.item href="/lens"
+                                 label="{{ __('My lenses') }}"/>
+
+            @endif
+
+            <x-dropdown.item  separator
                 href="/observers/{{ Auth::user()->slug }}"
                 label="{{ __('Details') }}"
             />

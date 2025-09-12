@@ -3,7 +3,7 @@
     @if (Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
         <div class="hidden lg:ml-6 lg:flex lg:items-center">
             <div class="relative mr-3 text-sm">
-                <x-dropdown position="bottom-start" height="max-h-80" width="48">
+                <x-dropdown position="bottom-start" height="max-h-[70vh]" width="48">
                     <x-slot name="trigger">
                         {{ __('Administration') }}
                     </x-slot>
