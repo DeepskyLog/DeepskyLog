@@ -25,6 +25,19 @@ class SessionController extends Controller
             ->where('observerid', $user->username)
             ->firstOrFail();
 
+        // If the session is inactive (draft / active==0) only the owner or an administrator
+        // with override permission may view it. For everyone else, behave as if it does not exist.
+        if (isset($session->active) && (int) $session->active === 0) {
+            $viewer = Auth::user();
+            $allowAdmin = config('sessions.allow_admin_override', false);
+            $viewerIsOwner = $viewer && ($viewer->username === $session->observerid || ($viewer->slug ?? null) === ($user->slug ?? null));
+            $viewerIsAdmin = $viewer && method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges();
+
+            if (! ($viewerIsOwner || ($allowAdmin && $viewerIsAdmin))) {
+                abort(404);
+            }
+        }
+
         // Load location information
         $location = null;
         $image = null; // default: no image unless found
@@ -86,15 +99,23 @@ class SessionController extends Controller
         // Build list of observation IDs for this session so we can filter old observations
         $obsIds = DBFacade::table('sessionObservations')->where('sessionid', $session->id)->pluck('observationid')->toArray();
 
+    // Allow viewing observations for a specific observer via ?observer={username}
+    $targetObserver = request()->get('observer', $session->observerid);
+    $selectedObserverUser = User::where('username', $targetObserver)->first();
+    $selectedObserverName = $selectedObserverUser ? $selectedObserverUser->name : $targetObserver;
+
         // Fetch observations and drawings
         if (! empty($obsIds)) {
+            // Fetch observations for the session regardless of which observer recorded them.
+            // Previously this filtered by the session owner, preventing other viewers from seeing observations.
+            // Show observations recorded by the requested observer (defaults to session owner)
             $deepObservations = ObservationsOld::whereIn('id', $obsIds)
-                ->where('observerid', $session->observerid)
+                ->where('observerid', $targetObserver)
                 ->orderBy('id', 'desc')
                 ->get();
 
             $cometObservations = CometObservationsOld::whereIn('id', $obsIds)
-                ->where('observerid', $session->observerid)
+                ->where('observerid', $targetObserver)
                 ->orderBy('id', 'desc')
                 ->get();
 
@@ -118,9 +139,30 @@ class SessionController extends Controller
                 ]
             );
 
-            $drawingDeep = ObservationsOld::whereIn('id', $obsIds)->where('observerid', $session->observerid)->where('hasDrawing', 1)->orderBy('id', 'desc')->get();
-            $drawingComet = CometObservationsOld::whereIn('id', $obsIds)->where('observerid', $session->observerid)->where('hasDrawing', 1)->orderBy('id', 'desc')->get();
-            $drawings = $drawingDeep->merge($drawingComet)->sortByDesc('id')->values();
+            // Drawings should also be visible to viewers of the session regardless of who made them.
+            // Drawings for the requested observer
+            $drawingDeep = ObservationsOld::whereIn('id', $obsIds)->where('observerid', $targetObserver)->where('hasDrawing', 1)->orderBy('id', 'desc')->get();
+            $drawingComet = CometObservationsOld::whereIn('id', $obsIds)->where('observerid', $targetObserver)->where('hasDrawing', 1)->orderBy('id', 'desc')->get();
+            $allDrawings = $drawingDeep->merge($drawingComet)->sortByDesc('id')->values();
+
+            // Paginate drawings separately from observations. Use a distinct page name to avoid conflicts.
+            $drawingsPerPage = 8;
+            $drawingsPage = (int) request()->get('drawings_page', 1);
+            $drawingsTotal = $allDrawings->count();
+            $drawingsOffset = ($drawingsPage - 1) * $drawingsPerPage;
+            $drawingsSlice = $allDrawings->slice($drawingsOffset, $drawingsPerPage)->values();
+
+            $drawings = new LengthAwarePaginator(
+                $drawingsSlice,
+                $drawingsTotal,
+                $drawingsPerPage,
+                $drawingsPage,
+                [
+                    'path' => request()->url(),
+                    'query' => array_merge(request()->query(), ['drawings_page' => $drawingsPage]),
+                    'pageName' => 'drawings_page',
+                ]
+            );
 
             $objectsDeepSky = $deepObservations->pluck('objectname')->unique()->values()->toArray();
             $objectsComet = $cometObservations->pluck('objectname')->unique()->values()->toArray();
@@ -256,7 +298,26 @@ class SessionController extends Controller
         $session->equipment_translated = $equipmentTranslated;
         $session->comments_translated = $commentsTranslated;
 
-        return $this->noCacheResponse(response()->view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats')));
+        // Debug logging to help diagnose missing observations/drawings (only in debug mode)
+        try {
+            if (config('app.debug')) {
+                \Illuminate\Support\Facades\Log::info('session.show debug', [
+                    'session_id' => $session->id,
+                    'session_obs_ids' => is_array($obsIds) ? count($obsIds) : null,
+                    'observations_count' => isset($observations) && is_object($observations) ? $observations->count() : (isset($observations) ? count($observations) : null),
+                    'observations_total' => (isset($observations) && is_object($observations) && method_exists($observations, 'total')) ? $observations->total() : null,
+                    'drawings_count' => isset($drawings) && is_object($drawings) ? $drawings->count() : (isset($drawings) ? count($drawings) : null),
+                    'drawings_total' => (isset($drawings) && is_object($drawings) && method_exists($drawings, 'total')) ? $drawings->total() : null,
+                ]);
+            }
+        } catch (\Throwable $e) {
+            // ignore logging failures
+        }
+
+    // Provide the selected observer username and display name to the view so it can highlight the active observer in the sidebar
+    $selectedObserverUsername = $targetObserver;
+
+    return $this->noCacheResponse(response()->view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName')));
     }
 
     /**
@@ -391,6 +452,7 @@ class SessionController extends Controller
         if ($user) {
             $allDrafts = ObservationSession::where('observerid', $user->username)
                 ->where('active', 0)
+                ->with('observer')
                 ->orderByDesc('id')
                 ->limit(11)
                 ->get();
@@ -626,13 +688,19 @@ class SessionController extends Controller
         // Pass the currently authenticated user so the view can detect the owner and show owner-only actions
         $user = Auth::user();
 
-        // If the page owner matches an authenticated user, prefer showing their inactive sessions (limit to 10 + flag)
+        // Only show inactive (draft) sessions to the page owner or administrators.
         $inactiveSessions = collect();
         $inactiveMore = false;
         $ownerUsername = $u->username ?? ($u->slug ?? null);
-        if ($ownerUsername) {
+
+        $viewer = Auth::user();
+        $viewerIsOwner = $viewer && ($viewer->username === $ownerUsername || ($viewer->slug ?? null) === ($u->slug ?? null));
+
+        // Only show inactive (draft) sessions to the page owner. Do not allow administrator override here.
+        if ($ownerUsername && $viewerIsOwner) {
             $allDrafts = ObservationSession::where('observerid', $ownerUsername)
                 ->where('active', 0)
+                ->with('observer')
                 ->orderByDesc('id')
                 ->limit(11)
                 ->get();
@@ -791,8 +859,9 @@ class SessionController extends Controller
     {
         $session = ObservationSession::findOrFail($sessionId);
 
-        // Allow owner or administrators to adapt the session
-        if (! auth()->check() || (auth()->user()->username !== $session->observerid && ! (method_exists(auth()->user(), 'hasAdministratorPrivileges') && auth()->user()->hasAdministratorPrivileges()))) {
+        // Allow owner or administrators (when feature flag enabled) to adapt the session
+        $allowAdmin = config('sessions.allow_admin_override', false);
+        if (! auth()->check() || (auth()->user()->username !== $session->observerid && ! ($allowAdmin && method_exists(auth()->user(), 'hasAdministratorPrivileges') && auth()->user()->hasAdministratorPrivileges()))) {
             abort(403);
         }
 
@@ -807,8 +876,9 @@ class SessionController extends Controller
     {
         $session = ObservationSession::findOrFail($sessionId);
 
-        // Allow owner or administrators to delete the session
-        if (! auth()->check() || (auth()->user()->username !== $session->observerid && ! (method_exists(auth()->user(), 'hasAdministratorPrivileges') && auth()->user()->hasAdministratorPrivileges()))) {
+        // Allow owner or administrators (when feature flag enabled) to delete the session
+        $allowAdmin = config('sessions.allow_admin_override', false);
+        if (! auth()->check() || (auth()->user()->username !== $session->observerid && ! ($allowAdmin && method_exists(auth()->user(), 'hasAdministratorPrivileges') && auth()->user()->hasAdministratorPrivileges()))) {
             abort(403);
         }
 

@@ -9,8 +9,7 @@
     + [X] Blog style for the detail page
     + [X] Like sessions
     + [X] Preview on the main DeepskyLog page
-    + [ ] Create a new session
-        + [ ] Moet ik twee keer klikken om een menu te openen?
+    + [ ] Moet ik twee keer klikken om een menu te openen?
     + [ ] Update old version of DeepskyLog to use the new session tables
     + [ ] Install on server.
         + [ ] Check if the new robots.txt works as expected.

@@ -36,6 +36,14 @@
                             <div class="space-y-3">
                                 @foreach($inactiveSessions as $s)
                                     @php $observerSlug = $s->observer->slug ?? $s->observerid; @endphp
+                                    @php
+                                        $viewer = auth()->user();
+                                        $allowAdmin = config('sessions.allow_admin_override', false);
+                                        $viewerIsOwner = $viewer && ($viewer->username === ($u->username ?? $u->slug ?? null));
+                                        $viewerIsAdmin = $viewer && method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges();
+                                        $showDraftActions = $viewerIsOwner || ($allowAdmin && $viewerIsAdmin);
+                                    @endphp
+
                                     <div class="bg-gray-700 p-3 rounded flex items-center justify-between">
                                         <div>
                                             <div class="font-semibold text-white">{{ html_entity_decode($s->name ?? __('Session :id', ['id' => $s->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</div>
@@ -45,11 +53,16 @@
                                             <div class="text-sm text-gray-400">{{ $s->begindate ? \Carbon\Carbon::parse($s->begindate)->translatedFormat('j M Y') : __('Unknown') }} &ndash; {{ $s->enddate ? \Carbon\Carbon::parse($s->enddate)->translatedFormat('j M Y') : __('Unknown') }}</div>
                                         </div>
                                         <div class="flex items-center space-x-2">
-                                            <a href="{{ route('session.adapt', $s->id) }}" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-500">{{ __('Use') }}</a>
-                                            <form method="POST" action="{{ route('session.destroy', $s->id) }}" onsubmit="return confirm('{{ __('Are you sure you want to delete this draft session?') }}');">
-                                                @csrf
-                                                <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-500">{{ __('Delete') }}</button>
-                                            </form>
+                                            @if($showDraftActions)
+                                                @if($viewerIsAdmin && ! $viewerIsOwner && $allowAdmin)
+                                                    <span class="inline-flex items-center px-2 py-1 text-xs font-medium bg-yellow-600 text-white rounded" title="{{ __('Administrator override enabled: actions performed will be executed as an administrator on behalf of the owner') }}">{{ __('Admin override') }}</span>
+                                                @endif
+                                                <a href="{{ route('session.adapt', $s->id) }}" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-500">{{ __('Use') }}</a>
+                                                <form method="POST" action="{{ route('session.destroy', $s->id) }}" onsubmit="return confirm('{{ $viewerIsAdmin && ! $viewerIsOwner && $allowAdmin ? __('You are performing this action as an administrator on behalf of the owner. Are you sure you want to delete this draft session?') : __('Are you sure you want to delete this draft session?') }}');">
+                                                    @csrf
+                                                    <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-500">{{ __('Delete') }}</button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </div>
                                 @endforeach

@@ -9,7 +9,7 @@
                 <a class="text-white hover:underline font-medium" href="{{ route('observer.show', $user->slug) }}">{{ $user->name }}</a>
                 @if(!empty($observerStats))
                     <span class="text-gray-500">&middot;</span>
-                    <a class="text-gray-300 hover:underline" href="https://www.deepskylog.be/index.php?indexAction=result_selected_observations&sessionid={{ $session->id }}">{{ $totalObservations }} {{ __('observations') }}</a>
+                    <a class="text-gray-300 hover:underline" href="{{ route('session.show', [$user->slug, $session->slug]) }}?observer={{ urlencode($session->observerid) }}">{{ $totalObservations }} {{ __('observations') }}</a>
                 @endif
             </p>
 
@@ -93,13 +93,25 @@
                             </x-card>
                         </div>
                     @endif
-                    @if(auth()->check() && (auth()->user()->username === $session->observerid || (method_exists(auth()->user(), 'hasAdministratorPrivileges') && auth()->user()->hasAdministratorPrivileges())))
+                    @php
+                        $viewer = auth()->user();
+                        $allowAdmin = config('sessions.allow_admin_override', false);
+                        $viewerIsOwner = $viewer && ($viewer->username === $session->observerid);
+                        $viewerIsAdmin = $viewer && method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges();
+                        $showOwnerActions = $viewerIsOwner || ($allowAdmin && $viewerIsAdmin);
+                    @endphp
+
+                    @if($showOwnerActions)
                         <div class="mt-3 flex items-center justify-end gap-3">
+                            @if($viewerIsAdmin && ! $viewerIsOwner && $allowAdmin)
+                                <span class="inline-flex items-center px-2 py-1 text-xs font-medium bg-yellow-600 text-white rounded" title="{{ __('Administrator override enabled: actions performed will be executed as an administrator on behalf of the owner') }}">{{ __('Admin override') }}</span>
+                            @endif
+
                             <a href="{{ route('session.adapt', $session->id) }}" class="inline-flex items-center p-2 rounded bg-yellow-600 hover:bg-yellow-700 text-white" aria-label="{{ __('Adapt this session') }}">
                                 {{ __('Adapt') }}
                             </a>
 
-                            <form method="POST" action="{{ route('session.destroy', $session->id) }}" onsubmit="return confirm('{{ __('Are you sure you want to delete this session?') }}');">
+                            <form method="POST" action="{{ route('session.destroy', $session->id) }}" onsubmit="return confirm('{{ $viewerIsAdmin && ! $viewerIsOwner && $allowAdmin ? __('You are performing this action as an administrator on behalf of the owner. Are you sure you want to delete this session?') : __('Are you sure you want to delete this session?') }}');">
                                 @csrf
                                 <button type="submit" class="inline-flex items-center p-2 rounded bg-red-600 hover:bg-red-700 text-white">{{ __('Delete') }}</button>
                             </form>
@@ -112,9 +124,9 @@
                 @endif
 
                 {{-- Drawings first: show sketches (images) above textual observations --}}
-                @if($drawings->count() > 0)
+                @if(isset($drawings) && $drawings->count() > 0)
                     <section class="mb-6">
-                        <h3 class="text-lg font-semibold text-white">{{ __('Drawings by :owner', ['owner' => $user->name]) }}</h3>
+                        <h3 class="text-lg font-semibold text-white">{{ __('Drawings by :owner', ['owner' => $selectedObserverName ?? $user->name]) }}</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                             @foreach($drawings as $drawing)
                                 @php
@@ -131,18 +143,20 @@
                                 </div>
                             @endforeach
                         </div>
+
+                        <div class="mt-4">
+                            {{-- Render pagination links for drawings using the separate page name --}}
+                            {{ $drawings->withQueryString()->links() }}
+                        </div>
                     </section>
+                @else
+                    {{-- No drawings found for this session --}}
                 @endif
 
                 <section>
-                    <h3 class="text-lg font-semibold text-white">{{ __('Observations by :owner', ['owner' => $user->name]) }}</h3>
+                    <h3 class="text-lg font-semibold text-white">{{ __('Observations by :owner', ['owner' => $selectedObserverName ?? $user->name]) }}</h3>
                     @if($observations->count() > 0)
                         @foreach($observations as $observation)
-                            {{-- Skip observations that have drawings to avoid duplicate display --}}
-                            @if(!empty($observation->hasDrawing) && $observation->hasDrawing == 1)
-                                @continue
-                            @endif
-
                             @if(isset($observation->objectname))
                                 <x-observation-deepsky :observation="$observation" />
                             @else
@@ -162,21 +176,30 @@
             <aside class="md:col-span-1">
                 <div class="bg-gray-800 p-3 rounded shadow text-gray-100">
                     <h4 class="font-semibold mb-2 text-white">{{ __('Observers') }}</h4>
-                    <ul class="space-y-2">
+                        <ul class="space-y-2">
                         {{-- Show primary observer and other observers with icons and counts --}}
                         @foreach($observerStats as $stat)
+                            @php
+                                $observerUsername = $stat['username'];
+                                $observerSlug = $stat['user']['slug'] ?? null;
+                                $isSelected = isset($selectedObserverUsername) && $selectedObserverUsername === $observerUsername;
+                                // Merge current query parameters but force observer to this username so pagination is preserved when possible
+                                $qs = array_merge(request()->query(), ['observer' => $observerUsername]);
+                                $link = route('session.show', [$user->slug, $session->slug]) . '?' . http_build_query($qs);
+                            @endphp
+
                             <li class="flex items-center justify-between">
                                 <div class="flex items-center gap-2">
-                                    <i class="fa fa-user-circle text-xl text-gray-300"></i>
-                                    @if(!empty($stat['user']) && isset($stat['user']['slug']))
-                                        <a href="{{ route('observer.show', $stat['user']['slug']) }}">{{ $stat['user']['name'] }}</a>
-                                    @elseif($stat['username'] === $user->username)
-                                        <a href="{{ route('observer.show', $user->slug) }}">{{ $user->name }}</a>
+                                    <i class="fa fa-user-circle text-xl {{ $isSelected ? 'text-yellow-400' : 'text-gray-300' }}"></i>
+                                    @if($observerSlug)
+                                        <a href="{{ $link }}" class="{{ $isSelected ? 'font-semibold text-white' : 'text-gray-200 hover:underline' }}">{{ $stat['user']['name'] }}</a>
+                                    @elseif($observerUsername === $user->username)
+                                        <a href="{{ $link }}" class="{{ $isSelected ? 'font-semibold text-white' : 'text-gray-200 hover:underline' }}">{{ $user->name }}</a>
                                     @else
-                                        {{ $stat['username'] }}
+                                        <a href="{{ $link }}" class="{{ $isSelected ? 'font-semibold text-white' : 'text-gray-200 hover:underline' }}">{{ $observerUsername }}</a>
                                     @endif
                                 </div>
-                                <div class="text-sm text-gray-300">{{ $stat['count'] }} {{ __('obs') }}</div>
+                                <div class="text-sm {{ $isSelected ? 'text-white' : 'text-gray-300' }}"> <a href="{{ $link }}">{{ $stat['count'] }} {{ __('obs') }}</a></div>
                             </li>
                         @endforeach
                     </ul>
