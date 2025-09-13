@@ -429,7 +429,9 @@
                     <x-button gray icon="envelope-open" class="mb-2"
                               href="{{ route('messages.create', ['to' => $user->username]) }}"
                     >
+                        @auth
                         {{ __("Send message to ") . $user->name }}
+                        @endauth
                     </x-button>
                 @endif
             </div>

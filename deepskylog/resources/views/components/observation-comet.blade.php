@@ -84,6 +84,7 @@
             </x-button>
 
             {{-- DSL message button: opens internal composer with to=username and a prefilled subject --}}
+            @auth
             <a href="{{ route('messages.create', ['to' => $user->username, 'subject' => 'About your observation of ' . \App\Models\CometObjectsOld::where('id', $observation->objectid)->first()->name]) }}" class="inline-flex items-center px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white align-middle" aria-label="{{ __('Send message about this sketch') }}">
                 {{-- envelope icon --}}
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -91,6 +92,7 @@
                     <path d="M18 8.118V13a2 2 0 01-2 2H4a2 2 0 01-2-2V8.118l7.293 4.377a1 1 0 001.414 0L18 8.118z" />
                 </svg>
             </a>
+            @endauth
 
             @php
                 $likesCount = \App\Models\ObservationLike::where('observation_type', 'comet')->where('observation_id', $observation->id)->count();
