@@ -10,7 +10,6 @@
     + [X] Like sessions
     + [X] Preview on the main DeepskyLog page
     + [ ] Moet ik twee keer klikken om een menu te openen?
-    + [ ] Images if adapting an old session
     + [ ] Update old version of DeepskyLog to use the new session tables
     + [ ] Install on server.
         + [ ] Check if the new robots.txt works as expected.

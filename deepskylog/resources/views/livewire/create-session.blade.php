@@ -108,6 +108,10 @@
                             <div class="mt-2">
                                 <img src="{{ $photo->temporaryUrl() }}" class="max-h-48 object-contain" alt="Preview" />
                             </div>
+                        @elseif (! empty($sessionPreview))
+                            <div class="mt-2">
+                                <img src="{{ $sessionPreview }}" class="max-h-48 object-contain" alt="Session image" />
+                            </div>
                         @elseif (! empty($session) && ! empty($session->picture))
                             <div class="mt-2">
                                 <img src="{{ asset('storage/'.ltrim($session->picture, '/')) }}" class="max-h-48 object-contain" alt="Session image" />

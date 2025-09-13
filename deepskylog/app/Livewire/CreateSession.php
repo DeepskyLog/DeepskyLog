@@ -41,6 +41,7 @@ class CreateSession extends Component
     public $active = 1;
 
     public $photo;
+    public $sessionPreview;
 
     public function mount($session = null)
     {
@@ -79,6 +80,44 @@ class CreateSession extends Component
             $this->equipment = ! empty($session->equipment) ? html_entity_decode($session->equipment, ENT_QUOTES | ENT_HTML5, 'UTF-8') : $session->equipment;
             $this->comments = ! empty($session->comments) ? html_entity_decode($session->comments, ENT_QUOTES | ENT_HTML5, 'UTF-8') : $session->comments;
             $this->active = $session->active;
+            // Compute a preview URL for the session image so the edit/adapt form can show
+            // images stored under public/images/sessions/{id}.* or the legacy storage path.
+            $this->sessionPreview = null;
+            try {
+                if (! empty($session->id)) {
+                    $sessionImageDir = public_path('images/sessions');
+                    $found = null;
+                    if (is_dir($sessionImageDir)) {
+                        $patterns = [
+                            $sessionImageDir.'/'.$session->id.'.jpg',
+                            $sessionImageDir.'/'.$session->id.'.jpeg',
+                            $sessionImageDir.'/'.$session->id.'.png',
+                            $sessionImageDir.'/'.$session->id.'.gif',
+                        ];
+                        foreach ($patterns as $p) {
+                            if (file_exists($p)) {
+                                $found = asset('/images/sessions/'.basename($p));
+                                break;
+                            }
+                        }
+
+                        if (empty($found)) {
+                            $glob = glob($sessionImageDir.'/'.$session->id.'.*');
+                            if (! empty($glob)) {
+                                $found = asset('/images/sessions/'.basename($glob[0]));
+                            }
+                        }
+                    }
+
+                    if (empty($found) && ! empty($session->picture)) {
+                        $found = asset('storage/'.ltrim($session->picture, '/'));
+                    }
+
+                    $this->sessionPreview = $found;
+                }
+            } catch (\Throwable $e) {
+                $this->sessionPreview = null;
+            }
         } else {
             $this->observer = Auth::user()->username ?? null;
         }
