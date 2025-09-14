@@ -37,7 +37,11 @@ class LegacySessionsSeeder extends Seeder
                     // Assumption: legacy images are located in /var/www/DeepskyLog.old/deepsky/sessions
                     // and named either by session id + extension or stored in a 'picture' column (if present).
                     $legacyImageDir = '/var/www/DeepskyLog.old/deepsky/sessions';
-                    $targetDir = public_path('images/sessions');
+
+                    // New storage location for session photos (matches CreateSession behavior)
+                    // Files should be placed under storage/app/public/photos/sessions so they are
+                    // accessible via the storage symlink as asset('storage/photos/sessions/...')
+                    $targetDir = storage_path('app/public/photos/sessions');
 
                     if (! File::exists($targetDir)) {
                         File::makeDirectory($targetDir, 0755, true);
@@ -57,14 +61,16 @@ class LegacySessionsSeeder extends Seeder
                     }
 
                     foreach ($possible as $fname) {
-                        $src = $legacyImageDir.DIRECTORY_SEPARATOR.$fname;
+                        // ensure we only use the basename when constructing destination
+                        $base = basename($fname);
+                        $src = $legacyImageDir.DIRECTORY_SEPARATOR.$base;
                         if (File::exists($src)) {
-                            // copy to public/images/sessions keeping the same filename
-                            $dest = $targetDir.DIRECTORY_SEPARATOR.$fname;
+                            // copy to storage/app/public/photos/sessions keeping the same filename
+                            $dest = $targetDir.DIRECTORY_SEPARATOR.$base;
                             try {
                                 File::copy($src, $dest);
-                                // record public-relative path to image for potential use
-                                $picturePath = 'images/sessions/'.$fname;
+                                // record storage-relative path (same format as ->storePubliclyAs returns)
+                                $picturePath = 'photos/sessions/'.$base;
                                 break;
                             } catch (\Throwable $e) {
                                 // ignore copy errors but don't abort seeding
@@ -87,6 +93,7 @@ class LegacySessionsSeeder extends Seeder
                         // Potentially store in a migration table or handle via filesystem only.
                         'language' => $r->language,
                         'active' => (int) $r->active,
+                        'picture' => $picturePath,
                     ];
                 }
                 // Insert preserving IDs. Use insert() which allows explicit PK values.
