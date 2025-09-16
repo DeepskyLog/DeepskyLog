@@ -57,24 +57,30 @@
                         </tr>
                         @php
                             // weather, equipment and comments are translated/cached in the controller if needed
-                            $rawWeather = html_entity_decode($session->weather ?? __('Unknown'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                            $rawWeather = html_entity_decode($session->weather ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
                             $weatherTranslated = $session->weather_translated ?? $rawWeather;
+                            $weatherVisible = trim(strip_tags($weatherTranslated)) !== '';
                         @endphp
-                        <tr>
-                            <td class="pr-4 font-medium">{{ __('Weather') }}</td>
-                            <td>{!! strip_tags($weatherTranslated, '<p><br><em><strong><b><i><u><ul><ol><li>') !!}</td>
-                        </tr>
+                        @if($weatherVisible)
+                            <tr>
+                                <td class="pr-4 font-medium">{{ __('Weather') }}</td>
+                                <td>{!! strip_tags($weatherTranslated, '<p><br><em><strong><b><i><u><ul><ol><li>') !!}</td>
+                            </tr>
+                        @endif
                         <tr>
                             <td colspan="2" class="py-2"></td>
                         </tr>
                         @php
-                            $rawEquipment = html_entity_decode($session->equipment ?? __('Unknown'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                            $rawEquipment = html_entity_decode($session->equipment ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
                             $equipmentTranslated = $session->equipment_translated ?? $rawEquipment;
+                            $equipmentVisible = trim(strip_tags($equipmentTranslated)) !== '';
                         @endphp
-                        <tr>
-                            <td class="pr-4 font-medium">{{ __('Equipment') }}</td>
-                            <td>{!! strip_tags($equipmentTranslated, '<p><br><em><strong><b><i><u><ul><ol><li>') !!}</td>
-                        </tr>
+                        @if($equipmentVisible)
+                            <tr>
+                                <td class="pr-4 font-medium">{{ __('Equipment') }}</td>
+                                <td>{!! strip_tags($equipmentTranslated, '<p><br><em><strong><b><i><u><ul><ol><li>') !!}</td>
+                            </tr>
+                        @endif
                         @if(false)
                             {{-- comments moved out of table --}}
                             <tr>

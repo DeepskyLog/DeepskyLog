@@ -48,33 +48,8 @@ class SessionController extends Controller
             }
         }
 
-        // Try to find a session image in public/images/sessions. We prefer filenames matching the session id
-        $sessionImageDir = public_path('images/sessions');
-        if (is_dir($sessionImageDir)) {
-            $patterns = [
-                $sessionImageDir.'/'.$session->id.'.jpg',
-                $sessionImageDir.'/'.$session->id.'.jpeg',
-                $sessionImageDir.'/'.$session->id.'.png',
-                $sessionImageDir.'/'.$session->id.'.gif',
-            ];
-            foreach ($patterns as $p) {
-                if (file_exists($p)) {
-                    $image = '/images/sessions/'.basename($p);
-                    break;
-                }
-            }
-            if (empty($image)) {
-                $glob = glob($sessionImageDir.'/'.$session->id.'.*');
-                if (! empty($glob)) {
-                    $image = '/images/sessions/'.basename($glob[0]);
-                }
-            }
-
-            // Fallback: if no public/images session image was found, use the stored session picture (storage/app/public/...)
-            if (empty($image) && ! empty($session->picture)) {
-                $image = asset('storage/'.$session->picture);
-            }
-        }
+        // Resolve image via helper (prefers storage/photos/sessions, then public/images, then legacy storage paths)
+        $image = $this->resolveSessionImage($session, $location);
 
         // Load other observers (legacy pivot table 'sessionObservers')
         $observerUsernames = $session->otherObservers();
@@ -378,45 +353,8 @@ class SessionController extends Controller
         }
 
         $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang) {
-            $image = null;
-
-            // Prefer images stored under public/images/sessions/{id}.*
-            if (is_dir($sessionImageDir)) {
-                $patterns = [
-                    $sessionImageDir.'/'.$session->id.'.jpg',
-                    $sessionImageDir.'/'.$session->id.'.jpeg',
-                    $sessionImageDir.'/'.$session->id.'.png',
-                    $sessionImageDir.'/'.$session->id.'.gif',
-                ];
-                foreach ($patterns as $p) {
-                    if (file_exists($p)) {
-                        $image = '/images/sessions/'.basename($p);
-                        break;
-                    }
-                }
-
-                if (empty($image)) {
-                    $glob = glob($sessionImageDir.'/'.$session->id.'.*');
-                    if (! empty($glob)) {
-                        $image = '/images/sessions/'.basename($glob[0]);
-                    }
-                }
-            }
-
-            // Fallback: session->picture (legacy) if present
-            if (empty($image) && ! empty($session->picture)) {
-                $image = asset('storage/'.$session->picture);
-            }
-
-            // Fallback: location picture if available
-            if (empty($image) && ! empty($session->locationid) && isset($locations[$session->locationid])) {
-                $loc = $locations[$session->locationid];
-                if (! empty($loc->picture)) {
-                    $image = asset('storage/'.$loc->picture);
-                }
-            }
-
-            $session->preview = $image;
+            $loc = isset($locations[$session->locationid]) ? $locations[$session->locationid] : null;
+            $session->preview = $this->resolveSessionImage($session, $loc);
             $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
 
             // Prepare translated preview text (comments) if needed and cache per session+lang
@@ -528,43 +466,8 @@ class SessionController extends Controller
         $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang) {
             $image = null;
 
-            // Prefer images stored under public/images/sessions/{id}.*
-            if (is_dir($sessionImageDir)) {
-                $patterns = [
-                    $sessionImageDir.'/'.$session->id.'.jpg',
-                    $sessionImageDir.'/'.$session->id.'.jpeg',
-                    $sessionImageDir.'/'.$session->id.'.png',
-                    $sessionImageDir.'/'.$session->id.'.gif',
-                ];
-                foreach ($patterns as $p) {
-                    if (file_exists($p)) {
-                        $image = '/images/sessions/'.basename($p);
-                        break;
-                    }
-                }
-
-                if (empty($image)) {
-                    $glob = glob($sessionImageDir.'/'.$session->id.'.*');
-                    if (! empty($glob)) {
-                        $image = '/images/sessions/'.basename($glob[0]);
-                    }
-                }
-            }
-
-            // Fallback: session->picture (legacy) if present
-            if (empty($image) && ! empty($session->picture)) {
-                $image = asset('storage/'.$session->picture);
-            }
-
-            // Fallback: location picture if available
-            if (empty($image) && ! empty($session->locationid) && isset($locations[$session->locationid])) {
-                $loc = $locations[$session->locationid];
-                if (! empty($loc->picture)) {
-                    $image = asset('storage/'.$loc->picture);
-                }
-            }
-
-            $session->preview = $image;
+            $loc = isset($locations[$session->locationid]) ? $locations[$session->locationid] : null;
+            $session->preview = $this->resolveSessionImage($session, $loc);
             $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
 
             // Prepare translated preview text (comments) for homepage
@@ -639,43 +542,8 @@ class SessionController extends Controller
         $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts) {
             $image = null;
 
-            // Prefer images stored under public/images/sessions/{id}.*
-            if (is_dir($sessionImageDir)) {
-                $patterns = [
-                    $sessionImageDir.'/'.$session->id.'.jpg',
-                    $sessionImageDir.'/'.$session->id.'.jpeg',
-                    $sessionImageDir.'/'.$session->id.'.png',
-                    $sessionImageDir.'/'.$session->id.'.gif',
-                ];
-                foreach ($patterns as $p) {
-                    if (file_exists($p)) {
-                        $image = '/images/sessions/'.basename($p);
-                        break;
-                    }
-                }
-
-                if (empty($image)) {
-                    $glob = glob($sessionImageDir.'/'.$session->id.'.*');
-                    if (! empty($glob)) {
-                        $image = '/images/sessions/'.basename($glob[0]);
-                    }
-                }
-            }
-
-            // Fallback: session->picture (legacy) if present
-            if (empty($image) && ! empty($session->picture)) {
-                $image = asset('storage/'.$session->picture);
-            }
-
-            // Fallback: location picture if available
-            if (empty($image) && ! empty($session->locationid) && isset($locations[$session->locationid])) {
-                $loc = $locations[$session->locationid];
-                if (! empty($loc->picture)) {
-                    $image = asset('storage/'.$loc->picture);
-                }
-            }
-
-            $session->preview = $image;
+            $loc = isset($locations[$session->locationid]) ? $locations[$session->locationid] : null;
+            $session->preview = $this->resolveSessionImage($session, $loc);
             $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
 
             return $session;
@@ -753,9 +621,9 @@ class SessionController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'observer' => 'required|string|exists:users,username',
-            'locationid' => 'nullable|integer|exists:locations,id',
-            'begindate' => 'nullable|date',
-            'enddate' => 'nullable|date',
+            'locationid' => 'required|integer|exists:locations,id',
+            'begindate' => 'required|date',
+            'enddate' => 'required|date',
             'weather' => 'nullable|string',
             'equipment' => 'nullable|string',
             'comments' => 'nullable|string',
@@ -802,6 +670,19 @@ class SessionController extends Controller
             }
         } else {
             $session->enddate = null;
+        }
+
+        // Validate that enddate is not before begindate
+        try {
+            if (! empty($session->begindate) && ! empty($session->enddate)) {
+                $begin = \Carbon\Carbon::parse($session->begindate);
+                $end = \Carbon\Carbon::parse($session->enddate);
+                if ($end->lt($begin)) {
+                    return redirect()->back()->withInput()->withErrors(['enddate' => __('The end date must be the same as or after the begin date.')]);
+                }
+            }
+        } catch (\Throwable $e) {
+            // If parsing fails, allow the save to proceed and let DB constraints handle it if necessary
         }
         $session->weather = $validated['weather'] ?? null;
         $session->equipment = $validated['equipment'] ?? null;
@@ -1063,5 +944,80 @@ class SessionController extends Controller
         } catch (\Throwable $e) {
             return $response;
         }
+    }
+
+    /**
+     * Resolve a session image URL preferring storage/app/public/photos/sessions (served via /storage/photos/sessions)
+     * then public/images/sessions, then legacy session->picture and finally the location picture.
+     *
+     * @param  \App\Models\ObservationSession  $session
+     * @param  \App\Models\Location|null  $location
+     * @return string|null
+     */
+    protected function resolveSessionImage($session, $location = null)
+    {
+        $image = null;
+
+        // 1) storage/app/public/photos/sessions (accessible via /storage/photos/sessions/...)
+        $storageSessionDir = storage_path('app/public/photos/sessions');
+        if (is_dir($storageSessionDir)) {
+            $patterns = [
+                $storageSessionDir.'/'.$session->id.'.jpg',
+                $storageSessionDir.'/'.$session->id.'.jpeg',
+                $storageSessionDir.'/'.$session->id.'.png',
+                $storageSessionDir.'/'.$session->id.'.gif',
+            ];
+            foreach ($patterns as $p) {
+                if (file_exists($p)) {
+                    $image = asset('storage/photos/sessions/'.basename($p));
+                    break;
+                }
+            }
+
+            if (empty($image)) {
+                $glob = glob($storageSessionDir.'/'.$session->id.'.*');
+                if (! empty($glob)) {
+                    $image = asset('storage/photos/sessions/'.basename($glob[0]));
+                }
+            }
+        }
+
+        // 2) public/images/sessions legacy files
+        if (empty($image)) {
+            $sessionImageDir = public_path('images/sessions');
+            if (is_dir($sessionImageDir)) {
+                $patterns = [
+                    $sessionImageDir.'/'.$session->id.'.jpg',
+                    $sessionImageDir.'/'.$session->id.'.jpeg',
+                    $sessionImageDir.'/'.$session->id.'.png',
+                    $sessionImageDir.'/'.$session->id.'.gif',
+                ];
+                foreach ($patterns as $p) {
+                    if (file_exists($p)) {
+                        $image = '/images/sessions/'.basename($p);
+                        break;
+                    }
+                }
+
+                if (empty($image)) {
+                    $glob = glob($sessionImageDir.'/'.$session->id.'.*');
+                    if (! empty($glob)) {
+                        $image = '/images/sessions/'.basename($glob[0]);
+                    }
+                }
+            }
+        }
+
+        // 3) legacy session->picture stored under storage/app/public/... (session->picture is usually a relative path)
+        if (empty($image) && ! empty($session->picture)) {
+            $image = asset('storage/'.$session->picture);
+        }
+
+        // 4) location picture (fallback)
+        if (empty($image) && $location && ! empty($location->picture)) {
+            $image = asset('storage/'.$location->picture);
+        }
+
+        return $image;
     }
 }

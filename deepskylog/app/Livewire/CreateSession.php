@@ -163,9 +163,9 @@ class CreateSession extends Component
         $data = $this->validate([
             'name' => 'required|min:3',
             'observer' => 'nullable|exists:users,username',
-            'locationid' => 'nullable|exists:locations,id',
-            'begindate' => 'nullable|date',
-            'enddate' => 'nullable|date',
+            'locationid' => 'required|exists:locations,id',
+            'begindate' => 'required|date',
+            'enddate' => 'required|date',
             'weather' => 'nullable|string',
             'equipment' => 'nullable|string',
             'comments' => 'nullable|string',
@@ -199,6 +199,20 @@ class CreateSession extends Component
             } catch (\Throwable $e) {
                 // leave as-is
             }
+        }
+
+        // Ensure enddate is not before begindate
+        try {
+            if (! empty($this->begindate) && ! empty($this->enddate)) {
+                $begin = \Carbon\Carbon::parse($this->begindate);
+                $end = \Carbon\Carbon::parse($this->enddate);
+                if ($end->lt($begin)) {
+                    $this->addError('enddate', __('The end date must be the same as or after the begin date.'));
+                    return null;
+                }
+            }
+        } catch (\Throwable $e) {
+            // If parsing fails, let existing validation handle incorrect formats
         }
 
         if ($this->session) {
