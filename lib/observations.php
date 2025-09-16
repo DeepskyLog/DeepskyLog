@@ -43,14 +43,25 @@ class Observations
 
         $_GET['indexAction'] = 'default_action';
 
-        if ($_FILES['csv']['tmp_name'] != "") {
+        // Increase memory and execution time for large CSV imports (quick fix)
+        // NOTE: long-term we should stream the CSV instead of loading it all.
+        @ini_set('memory_limit', '512M');
+        @set_time_limit(0);
+
+        if (!empty($_FILES['csv']['tmp_name'])) {
             $csvfile = $_FILES['csv']['tmp_name'];
+        } else {
+            throw new Exception(_("No CSV file uploaded."));
         }
-        $data_array = file($csvfile);
-        set_time_limit(count($data_array));
+
+        // Read file into array; keep as-is for backward compatibility.
+        $data_array = @file($csvfile);
+        if ($data_array === false) {
+            throw new Exception(_("Could not read uploaded CSV file."));
+        }
 
         for ($i = 0; $i < count($data_array); $i++) {
-            $parts_array [$i] = explode(";", $data_array[$i]);
+            $parts_array [$i] = explode(";", mb_convert_encoding($data_array[$i], "UTF-8", "auto"));
         }
 
         for ($i = 0; $i < count($parts_array); $i++) {
@@ -1247,6 +1258,8 @@ Correct observations which have been imported will not be registered for a secon
     {
         global $objInstrument, $objEyepiece, $objFilter, $objLens, $objLocation;
         global $objDatabase, $loggedUser;
+        @ini_set('memory_limit', '512M');
+        @set_time_limit(0);
         $object = "";
         $sqland = "";
         $alternative = "";
@@ -3197,7 +3210,7 @@ Correct observations which have been imported will not be registered for a secon
      */
     public function validateDeleteDSObservation()
     {
-        global $objDatabase, $objAccomplishments, $objUtil;
+        global $objDatabase, $objDatabase_new, $objAccomplishments, $objUtil;
         if (!$_GET['observationid']) {
             throw new Exception("No observation to delete.");
         }
@@ -3207,7 +3220,7 @@ Correct observations which have been imported will not be registered for a secon
             $objDatabase->execSQL(
                 "DELETE FROM observations WHERE id=\"" . $id . "\""
             );
-            $objDatabase->execSQL(
+            $objDatabase_new->execSQL(
                 "DELETE FROM sessionObservations WHERE observationid=\""
                 . $id . "\""
             );

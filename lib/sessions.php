@@ -7,23 +7,23 @@ if ((! isset ( $inIndex )) || (! $inIndex))
 class Sessions {
 	public function getSessionPropertiesFromId($id) 	// returns the properties of the session with id
 	{
-		global $objDatabase;
-		return $objDatabase->selectRecordArray ( "SELECT * FROM sessions WHERE id=\"" . $id . "\"" );
+		global $objDatabase_new;
+		return $objDatabase_new->selectRecordArray ( "SELECT * from observation_sessions WHERE id=\"" . $id . "\"" );
 	}
 	public function getSessionPropertyFromId($id, $property, $defaultValue = '') 	// returns the property of the given session
 	{
-		global $objDatabase;
-		return $objDatabase->selectSingleValue ( "SELECT " . $property . " FROM sessions WHERE id = \"" . $id . "\"", $property, $defaultValue );
+		global $objDatabase_new;
+		return $objDatabase_new->selectSingleValue ( "SELECT " . $property . " from observation_sessions WHERE id = \"" . $id . "\"", $property, $defaultValue );
 	}
 	public function getAllSessionsForUser($user) 	// returns all the sessions for a given user
 	{
-		global $objDatabase;
-		return $objDatabase->selectRecordsetArray ( "SELECT * FROM sessions WHERE observerid=\"" . $user . "\"" );
+		global $objDatabase_new;
+		return $objDatabase_new->selectRecordsetArray ( "SELECT * from observation_sessions WHERE observerid=\"" . $user . "\"" );
 	}
 	public function getAllActiveSessionsForUser($user) 	// returns all the active sessions for a given user
 	{
-		global $objDatabase;
-		return $objDatabase->selectRecordsetArray ( "SELECT * FROM sessions WHERE observerid=\"" . $user . "\" and active=\"1\"" );
+		global $objDatabase_new;
+		return $objDatabase_new->selectRecordsetArray ( "SELECT * from observation_sessions WHERE observerid=\"" . $user . "\" and active=\"1\"" );
 	}
 	public function validateSession() {
 		global $loggedUser, $instDir, $_FILES;
@@ -64,7 +64,7 @@ class Sessions {
 		}
 	}
 	public function addSession($sessionname, $beginday, $beginmonth, $beginyear, $beginhours, $beginminutes, $endday, $endmonth, $endyear, $endhours, $endminutes, $location, $weather, $equipment, $comments, $language, $observers, $sessionid) {
-		global $objDatabase, $loggedUser, $dateformat, $entryMessage;
+		global $objDatabase_new, $loggedUser, $dateformat, $entryMessage;
 		// Make sure not to insert bad code in the database
 		$name = preg_replace ( "/(\")/", "", $sessionname );
 		$name = preg_replace ( "/;/", ",", $name );
@@ -133,22 +133,22 @@ class Sessions {
 		// First check whether the session already exists
 		if ($sessionid > 0) {
 			// Check if there is a deleted observer
-			$observersFromDatabase = $objDatabase->selectSingleArray ( "SELECT observer from sessionObservers where sessionid=\"" . $sessionid . "\";", "observer" );
+			$observersFromDatabase = $objDatabase_new->selectSingleArray ( "SELECT observer from sessionObservers where sessionid=\"" . $sessionid . "\";", "observer" );
 			for($i = 0; $i < count ( $observersFromDatabase ); $i ++) {
 				if (! in_array ( $observersFromDatabase [$i], $observers )) {
-					$objDatabase->execSQL ( "DELETE from sessionObservers where sessionid=\"" . $sessionid . "\" AND observer=\"" . $observersFromDatabase [$i] . "\"" );
+					$objDatabase_new->execSQL ( "DELETE from sessionObservers where sessionid=\"" . $sessionid . "\" AND observer=\"" . $observersFromDatabase [$i] . "\"" );
 				}
 			}
 			// Update the session
 			$this->updateSession ( $sessionid, $name, $begindate, $enddate, $location, $weather, $equipment, $comments, $language );
 
 			// First make sure to remove all old observations
-			$objDatabase->execSQL ( "DELETE from sessionObservations where sessionid=\"" . $sessionid . "\"" );
+			$objDatabase_new->execSQL ( "DELETE from sessionObservations where sessionid=\"" . $sessionid . "\"" );
 			// Add observations to the session
 			$this->addObservations ( $sessionid, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers );
 
 			// Check if there is a new observer
-			$observersFromDatabase = $objDatabase->selectSingleArray ( "SELECT observer from sessionObservers where sessionid=\"" . $sessionid . "\";", "observer" );
+			$observersFromDatabase = $objDatabase_new->selectSingleArray ( "SELECT observer from sessionObservers where sessionid=\"" . $sessionid . "\";", "observer" );
 			// Add the logged user to the list of the observers
 			$observersFromDatabase [] = $loggedUser;
 			for($i = 0; $i < count ( $observers ); $i ++) {
@@ -156,12 +156,12 @@ class Sessions {
 					// The observer is not in the database. We have to add a new user.
 					$this->addObserver ( $sessionid, $observers [$i] );
 
-					$objDatabase->execSQL ( "INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers [$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)" );
-					$newId = $objDatabase->insert_id ();
+					$objDatabase_new->execSQL ( "INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers [$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)" );
+					$newId = $objDatabase_new->insert_id ();
 					// Also add the extra observers to the sessionObservers table
 					for($j = 0; $j < count ( $observers ); $j ++) {
 						if ($j != $i) {
-							$objDatabase->execSQL ( "INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $newId . "\", \"" . $observers [$j] . "\");" );
+							$objDatabase_new->execSQL ( "INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $newId . "\", \"" . $observers [$j] . "\");" );
 						}
 					}
 				}
@@ -170,8 +170,8 @@ class Sessions {
 			$observers [] = $loggedUser;
 		} else {
 			// First add a new session with the observer which created the session (and set to active)
-			$objDatabase->execSQL ( "INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)" );
-			$sessionid = $objDatabase->selectSingleValue ( "SELECT id FROM sessions ORDER BY id DESC LIMIT 1", 'id' );
+			$objDatabase_new->execSQL ( "INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)" );
+			$sessionid = $objDatabase_new->selectSingleValue ( "SELECT id from observation_sessions ORDER BY id DESC LIMIT 1", 'id' );
 			// Get the id of the new session
 
 			for($i = 1; $i < count ( $observers ); $i ++) {
@@ -179,12 +179,12 @@ class Sessions {
 				$this->addObserver ( $sessionid, $observers [$i] );
 
 				// Add the new session also for the other observers (and set to inactive)
-				$objDatabase->execSQL ( "INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers [$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)" );
-				$newId = $objDatabase->insert_id ();
+				$objDatabase_new->execSQL ( "INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers [$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)" );
+				$newId = $objDatabase_new->insert_id ();
 				// Also add the extra observers to the sessionObservers table
 				for($j = 0; $j < count ( $observers ); $j ++) {
 					if ($j != $i) {
-						$objDatabase->execSQL ( "INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $newId . "\", \"" . $observers [$j] . "\");" );
+						$objDatabase_new->execSQL ( "INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $newId . "\", \"" . $observers [$j] . "\");" );
 					}
 				}
 			}
@@ -193,8 +193,8 @@ class Sessions {
 		return $sessionid;
 	}
 	private function addObserver($id, $observer) {
-		global $objDatabase, $objMessages, $loggedUser, $objObserver, $baseURL;
-		$objDatabase->execSQL ( "INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $id . "\", \"" . $observer . "\");" );
+		global $objDatabase_new, $objMessages, $loggedUser, $objObserver, $baseURL;
+		$objDatabase_new->execSQL ( "INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $id . "\", \"" . $observer . "\");" );
 
 		$observername = $objObserver->getObserverProperty ( $loggedUser, "firstname" ) . " " . $objObserver->getObserverProperty ( $loggedUser, "name" );
 		$subject = sprintf(_("%s made a new session where you are an observer"), $observername);
@@ -212,7 +212,7 @@ class Sessions {
 		}
 	}
 	private function addObservations($id, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers) {
-		global $objDatabase;
+		global $objDatabase_new, $objDatabase;
 		$begindate = sprintf ( "%4d%02d%02d", $beginyear, $beginmonth, $beginday );
 		$enddate = sprintf ( "%4d%02d%02d", $endyear, $endmonth, $endday );
 		// Add all observations to the sessionObservations table
@@ -222,12 +222,12 @@ class Sessions {
 			$obsids = $objDatabase->selectSingleArray ( "SELECT id from observations where observerid=\"" . $observers [$i] . "\" and date>=\"" . $begindate . "\" and date<=\"" . $enddate . "\";", "id" );
 			for($cnt = 0; $cnt < count ( $obsids ); $cnt ++) {
 				// Add the observations to the sessionObservations table
-				$objDatabase->execSQL ( "INSERT into sessionObservations (sessionid, observationid) VALUES(\"" . $id . "\", \"" . $obsids [$cnt] . "\");" );
+				$objDatabase_new->execSQL ( "INSERT into sessionObservations (sessionid, observationid) VALUES(\"" . $id . "\", \"" . $obsids [$cnt] . "\");" );
 			}
 		}
 	}
 	public function updateSession($id, $name, $begindate, $enddate, $location, $weather, $equipment, $comments, $language) {
-		global $objDatabase, $dateformat;
+		global $objDatabase_new, $dateformat;
 		// Here we change the session
 		// Make sure not to insert bad code in the database
 		$name = html_entity_decode ( $name, ENT_COMPAT, "ISO-8859-15" );
@@ -255,39 +255,39 @@ class Sessions {
                 );
 			}
 		}
-		$objDatabase->execSQL ( "UPDATE sessions set name=\"" . $name . "\" where id=\"" . $id . "\";" );
-		$objDatabase->execSQL ( "UPDATE sessions set begindate=\"" . $begindate . "\" where id=\"" . $id . "\";" );
-		$objDatabase->execSQL ( "UPDATE sessions set enddate=\"" . $enddate . "\" where id=\"" . $id . "\";" );
-		$objDatabase->execSQL ( "UPDATE sessions set locationid=\"" . $location . "\" where id=\"" . $id . "\";" );
-		$objDatabase->execSQL ( "UPDATE sessions set weather=\"" . $weather . "\" where id=\"" . $id . "\";" );
-		$objDatabase->execSQL ( "UPDATE sessions set equipment=\"" . $equipment . "\" where id=\"" . $id . "\";" );
-		$objDatabase->execSQL ( "UPDATE sessions set comments=\"" . $comments . "\" where id=\"" . $id . "\";" );
-		$objDatabase->execSQL ( "UPDATE sessions set language=\"" . $language . "\" where id=\"" . $id . "\";" );
-		$objDatabase->execSQL ( "UPDATE sessions set active=\"1\" where id=\"" . $id . "\";" );
+		$objDatabase_new->execSQL ( "update observation_sessions set name=\"" . $name . "\" where id=\"" . $id . "\";" );
+		$objDatabase_new->execSQL ( "update observation_sessions set begindate=\"" . $begindate . "\" where id=\"" . $id . "\";" );
+		$objDatabase_new->execSQL ( "update observation_sessions set enddate=\"" . $enddate . "\" where id=\"" . $id . "\";" );
+		$objDatabase_new->execSQL ( "update observation_sessions set locationid=\"" . $location . "\" where id=\"" . $id . "\";" );
+		$objDatabase_new->execSQL ( "update observation_sessions set weather=\"" . $weather . "\" where id=\"" . $id . "\";" );
+		$objDatabase_new->execSQL ( "update observation_sessions set equipment=\"" . $equipment . "\" where id=\"" . $id . "\";" );
+		$objDatabase_new->execSQL ( "update observation_sessions set comments=\"" . $comments . "\" where id=\"" . $id . "\";" );
+		$objDatabase_new->execSQL ( "update observation_sessions set language=\"" . $language . "\" where id=\"" . $id . "\";" );
+		$objDatabase_new->execSQL ( "update observation_sessions set active=\"1\" where id=\"" . $id . "\";" );
 	}
 	public function removeAllSessionObservations($sessionid) {
-		global $objDatabase;
-		$objDatabase->execSQL ( "DELETE FROM sessionObservations WHERE sessionid=\"" . $sessionid . "\"" );
+		global $objDatabase_new;
+		$objDatabase_new->execSQL ( "DELETE FROM sessionObservations WHERE sessionid=\"" . $sessionid . "\"" );
 	}
 	public function getListWithInactiveSessions($userid) {
-		global $objDatabase;
-		return $objDatabase->selectRecordsetArray ( "SELECT id from sessions where observerid = \"" . $userid . "\" and active = \"0\";" );
+		global $objDatabase_new;
+		return $objDatabase_new->selectRecordsetArray ( "SELECT id from observation_sessions where observerid = \"" . $userid . "\" and active = \"0\";" );
 	}
 	public function getListWithActiveSessions($userid) {
-		global $objDatabase;
-		return $objDatabase->selectRecordsetArray ( "SELECT id from sessions where observerid = \"" . $userid . "\" and active = \"1\";" );
+		global $objDatabase_new;
+		return $objDatabase_new->selectRecordsetArray ( "SELECT id from observation_sessions where observerid = \"" . $userid . "\" and active = \"1\";" );
 	}
 	public function getListWithAllActiveSessions() {
-		global $objDatabase;
-		return $objDatabase->selectRecordsetArray ( "SELECT id from sessions where active = \"1\";" );
+		global $objDatabase_new;
+		return $objDatabase_new->selectRecordsetArray ( "SELECT id from observation_sessions where active = \"1\";" );
 	}
 	public function getObservers($id) {
-		global $objDatabase;
-		return $objDatabase->selectRecordsetArray ( "SELECT observer from sessionObservers where sessionid = \"" . $id . "\";" );
+		global $objDatabase_new;
+		return $objDatabase_new->selectRecordsetArray ( "SELECT observer from sessionObservers where sessionid = \"" . $id . "\";" );
 	}
 	public function getObservations($id) {
-		global $objDatabase, $objObservation, $objObject, $objObserver, $objInstrument;
-		$obs = $objDatabase->selectRecordsetArray ( "SELECT observationid from sessionObservations where sessionid = \"" . $id . "\";" );
+		global $objDatabase_new, $objObservation, $objObject, $objObserver, $objInstrument;
+		$obs = $objDatabase_new->selectRecordsetArray ( "SELECT observationid from sessionObservations where sessionid = \"" . $id . "\";" );
 		$qobs = Array ();
 		for($i = 0; $i < count ( $obs ); $i ++) {
 			$obsid = $obs [$i] ["observationid"];
@@ -352,7 +352,7 @@ class Sessions {
 		}
 	}
 	public function showListSessions($sessions, $observer) {
-		global $baseURL, $loggedUser, $objUtil, $objDatabase, $objLocation, $objPresentations, $loggedUserName, $objObserver, $instDir;
+		global $baseURL, $loggedUser, $objUtil, $objDatabase_new, $objLocation, $objPresentations, $loggedUserName, $objObserver, $instDir;
 		// Get the number of sessions
 		if (count ( $sessions ) == 0) 	// ================================================================================================== no result present =======================================================================================
 		{
@@ -422,7 +422,7 @@ class Sessions {
 					echo "</td><td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&sessionid=" . $allSessions [$cnt] ["id"] . "\">";
 
 					// the number of observations
-					$numberOfObservations = $objDatabase->selectRecordsetArray ( "SELECT COUNT(sessionid) from sessionObservations where sessionid = \"" . $allSessions [$cnt] ["id"] . "\";" );
+					$numberOfObservations = $objDatabase_new->selectRecordsetArray ( "SELECT COUNT(sessionid) from sessionObservations where sessionid = \"" . $allSessions [$cnt] ["id"] . "\";" );
 					echo $numberOfObservations[0]['COUNT(sessionid)'] . " " . _("observations");
 					echo "</a></td></tr>";
 				}
@@ -436,16 +436,16 @@ class Sessions {
 	}
 	public function validateDeleteSession() 	// validates and deletes a session
 	{
-		global $objUtil, $objDatabase;
+		global $objUtil, $objDatabase_new;
 		if (($sessionid = $objUtil->checkGetKey ( 'sessionid' )) && $objUtil->checkAdminOrUserID ( $this->getSessionPropertyFromId ( $sessionid, 'observerid' ) )) {
-			$objDatabase->execSQL("DELETE FROM sessions WHERE id=\"" . $sessionid . "\"" );
-			$objDatabase->execSQL("DELETE FROM sessionObservations WHERE sessionid=\"" . $sessionid . "\"" );
-			$objDatabase->execSQL("DELETE FROM sessionObservers WHERE sessionid=\"" . $sessionid . "\"" );
+			$objDatabase_new->execSQL("DELETE from observation_sessions WHERE id=\"" . $sessionid . "\"" );
+			$objDatabase_new->execSQL("DELETE FROM sessionObservations WHERE sessionid=\"" . $sessionid . "\"" );
+			$objDatabase_new->execSQL("DELETE FROM sessionObservers WHERE sessionid=\"" . $sessionid . "\"" );
 			return _("The session is removed from DeepskyLog.");
 		}
 	}
 	public function addObservationToSessions($current_observation) {
-		global $objObservation, $objDatabase;
+		global $objObservation, $objDatabase_new;
 		$obs = $objObservation->getAllInfoDsObservation ( $current_observation );
 		$dateWithoutTime = $obs ['date'];
 		$date = substr ( $dateWithoutTime, 0, 4 ) . "-" . substr ( $dateWithoutTime, 4, 2 ) . "-" . substr ( $dateWithoutTime, 6, 2 ) . " ";
@@ -461,18 +461,18 @@ class Sessions {
 		}
 
 		// First remove the observation from the existing sessions
-		$objDatabase->execSQL ( "DELETE from sessionObservations where observationid =  \"" . $current_observation . "\"" );
-		$sessions = $objDatabase->selectRecordsetArray ( "SELECT * from sessions where begindate <= \"" . $date . "\" and enddate >= \"" . $date . "\" and active = 1" );
+		$objDatabase_new->execSQL ( "DELETE from sessionObservations where observationid =  \"" . $current_observation . "\"" );
+		$sessions = $objDatabase_new->selectRecordsetArray ( "SELECT * from observation_sessions where begindate <= \"" . $date . "\" and enddate >= \"" . $date . "\" and active = 1" );
 
 		// We now have a list with all sessions, but we only have one observer. Get the other observers from the sessionObservers table
 		for($i = 0; $i < count ( $sessions ); $i ++) {
 			$users [] = $sessions [$i] ['observerid'];
-			$extraUsers = $objDatabase->selectRecordsetArray ( "SELECT * from sessionObservers where sessionid =  \"" . $sessions [$i] ['id'] . "\"" );
+			$extraUsers = $objDatabase_new->selectRecordsetArray ( "SELECT * from sessionObservers where sessionid =  \"" . $sessions [$i] ['id'] . "\"" );
 			for($cnt = 0; $cnt < count ( $extraUsers ); $cnt ++) {
 				$users [] = $extraUsers [$cnt] ['observer'];
 			}
 			if (in_array ( $obs ['observerid'], $users )) {
-				$objDatabase->execSQL ( "INSERT into sessionObservations (sessionid, observationid) VALUES (\"" . $sessions [$i] ['id'] . "\", \"" . $obs ['id'] . "\");" );
+				$objDatabase_new->execSQL ( "INSERT into sessionObservations (sessionid, observationid) VALUES (\"" . $sessions [$i] ['id'] . "\", \"" . $obs ['id'] . "\");" );
 			}
 			$users = Array ();
 		}
