@@ -14,8 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('observation_sessions', function (Blueprint $table) {
-            // preserve legacy IDs (not auto-incrementing)
-            $table->unsignedInteger('id')->primary();
+            // Use an auto-incrementing primary key, but legacy IDs can still be
+            // inserted explicitly when needed (see migration added to alter
+            // existing tables). `increments` creates an unsigned INTEGER
+            // AUTO_INCREMENT primary key.
+            $table->increments('id');
             $table->string('name', 200)->default('');
             $table->string('observerid', 200)->default('');
             $table->dateTime('begindate');
