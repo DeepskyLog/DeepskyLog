@@ -1,52 +1,35 @@
-<!-- Add Dropdown -->
+<!-- Add Dropdown (converted to reusable menu component) -->
 @if (!Auth::guest() && !Auth::user()->isAdministrator() && !Auth::user()->isDatabaseExpert())
-    <div class="hidden lg:ml-6 lg:flex lg:items-center">
-        <div class="relative mr-3 text-sm">
-            <x-dropdown height="max-h-[70vh]" position="bottom-start">
+    <div class="hidden lg:ml-1 lg:flex lg:items-center">
+        <div class="relative mr-0 text-sm">
+            <x-menu.dropdown :width="56">
                 <x-slot name="trigger">
-                    {{ __('Add') }}
+                    <button x-ref="trigger" @click="open = !open" aria-haspopup="true" :aria-expanded="open.toString()" class="inline-flex items-center rounded px-3 py-2 text-sm font-medium text-gray-200 hover:bg-gray-800">
+                        {{ __('Add') }}
+                    </button>
                 </x-slot>
 
-                <x-dropdown.item icon="user-plus"
-                                 href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming"
-                                 label="{{ __('Observation') }}"/>
+                <x-menu.item icon="user-plus" href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming">{{ __('Observation') }}</x-menu.item>
 
-                {{-- <x-dropdown.item --}}
-                {{-- separator --}}
-                {{-- icon="bars-4" --}}
-                {{-- href="" --}}
-                {{-- label="{!! __('Observing list') !!}" --}}
-                {{-- /> --}}
+                {{-- observing list placeholder (kept commented) --}}
 
-                <x-dropdown.item icon="user-plus" href="{{ route('session.create') }}"
-                                 label="{{ __('Session') }}"/>
+                <x-menu.item icon="user-plus" href="{{ route('session.create') }}">{{ __('Session') }}</x-menu.item>
 
-                <x-dropdown.item separator icon="plus-circle"
-                                 href="{{ route('instrument.create') }}"
-                                 label="{{ __('Instruments') }}"/>
+                <x-menu.item separator icon="plus-circle" href="{{ route('instrument.create') }}">{{ __('Instruments') }}</x-menu.item>
 
-                <x-dropdown.item icon="globe-europe-africa"
-                                 href="{{ route('location.create') }}"
-                                 label="{{ __('Locations') }}"/>
+                <x-menu.item icon="globe-europe-africa" href="{{ route('location.create') }}">{{ __('Locations') }}</x-menu.item>
 
-                <x-dropdown.item icon="plus-circle"
-                                 href="{{ route('eyepiece.create') }}"
-                                 label="{{ __('Eyepieces') }}"/>
+                <x-menu.item icon="plus-circle" href="{{ route('eyepiece.create') }}">{{ __('Eyepieces') }}</x-menu.item>
 
-                <x-dropdown.item icon="plus-circle" href="/filter/create"
-                                 label="{{ __('Filters') }}"/>
+                <x-menu.item icon="plus-circle" href="/filter/create">{{ __('Filters') }}</x-menu.item>
 
-                <x-dropdown.item icon="plus-circle" href="/lens/create"
-                                 label="{{ __('Lenses') }}"/>
+                <x-menu.item icon="plus-circle" href="/lens/create">{{ __('Lenses') }}</x-menu.item>
 
-                <x-dropdown.item icon="plus-circle"
-                                 href="{{ route('instrumentset.create') }}"
-                                 label="{{ __('Instrument sets') }}"/>
+                <x-menu.item icon="plus-circle" href="{{ route('instrumentset.create') }}">{{ __('Instrument sets') }}</x-menu.item>
 
-                <x-dropdown.item separator icon="plus-circle"
-                                 href="{{ config('app.old_url') }}/index.php?indexAction=add_object"
-                                 label="{{ __('Object') }}"/>
-            </x-dropdown>
+                <x-menu.item separator icon="plus-circle" href="{{ config('app.old_url') }}/index.php?indexAction=add_object">{{ __('Object') }}</x-menu.item>
+
+            </x-menu.dropdown>
         </div>
     </div>
 @endif

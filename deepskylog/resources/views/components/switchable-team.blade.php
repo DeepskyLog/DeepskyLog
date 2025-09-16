@@ -18,10 +18,11 @@
         }
     @endphp
 
-    <x-dropdown.item
-        href="#"
-        icon="{{ $icon }}"
-        x-on:click.prevent="$root.submit();"
-        label="{{ $team->name }}"
-    />
+    <button type="submit" class="flex items-center w-full text-left px-3 py-2 text-sm text-gray-200 hover:bg-gray-700">
+        @if ($icon)
+            <x-icon :name="$icon" class="h-4 w-4 mr-2 text-gray-300" />
+        @endif
+
+        {{ $team->name }}
+    </button>
 </form>

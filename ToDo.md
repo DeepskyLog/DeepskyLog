@@ -5,17 +5,11 @@
 ### Next steps
 
 + [ ] Sessions
-    + [X] Overview page with all images
-    + [X] Blog style for the detail page
-    + [X] Like sessions
-    + [X] Preview on the main DeepskyLog page
-    + [ ] Moet ik twee keer klikken om een menu te openen?
-    + [ ] Update old version of DeepskyLog to use the new session tables
-    + [ ] Install on server.
+    + [ ] Add extra icons to the menus?
+    + [ ] Install on server, both the new and the old versions
         + [ ] Check if the new robots.txt works as expected.
         + [ ] Check if the server still needs to work hard.
         + [ ] Check if the images for the sessions are available.
-+ [ ] Fix logging in -> Only problem on Phone
 + [ ] Release new version of pyDeepskyLog
     + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 

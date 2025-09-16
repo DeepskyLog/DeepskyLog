@@ -28,6 +28,24 @@ Route::middleware([
     Route::get('/dashboard', [App\Http\Controllers\SessionController::class, 'homepage'])->name('dashboard');
 });
 
+// Override Jetstream's current-team.update route to redirect back after switching teams
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::put('/current-team', function (\Illuminate\Http\Request $request) {
+        $team = Laravel\Jetstream\Jetstream::newTeamModel()->findOrFail($request->team_id);
+
+        if (! $request->user()->switchTeam($team)) {
+            abort(403);
+        }
+
+        // Redirect back to the referring page so the header renders the updated team immediately.
+        return redirect()->back(303);
+    })->name('current-team.update');
+});
+
 // Switch language
 Route::get('language/{locale}', function ($locale) {
     app()->setLocale($locale);
