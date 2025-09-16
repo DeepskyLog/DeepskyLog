@@ -156,7 +156,7 @@ class Sessions {
 					// The observer is not in the database. We have to add a new user.
 					$this->addObserver ( $sessionid, $observers [$i] );
 
-					$objDatabase_new->execSQL ( "INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers [$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)" );
+					$objDatabase_new->execSQL ( "INSERT into observation_sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers [$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)" );
 					$newId = $objDatabase_new->insert_id ();
 					// Also add the extra observers to the sessionObservers table
 					for($j = 0; $j < count ( $observers ); $j ++) {
@@ -170,7 +170,7 @@ class Sessions {
 			$observers [] = $loggedUser;
 		} else {
 			// First add a new session with the observer which created the session (and set to active)
-			$objDatabase_new->execSQL ( "INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)" );
+			$objDatabase_new->execSQL ( "INSERT into observation_sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)" );
 			$sessionid = $objDatabase_new->selectSingleValue ( "SELECT id from observation_sessions ORDER BY id DESC LIMIT 1", 'id' );
 			// Get the id of the new session
 
@@ -179,7 +179,7 @@ class Sessions {
 				$this->addObserver ( $sessionid, $observers [$i] );
 
 				// Add the new session also for the other observers (and set to inactive)
-				$objDatabase_new->execSQL ( "INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers [$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)" );
+				$objDatabase_new->execSQL ( "INSERT into observation_sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers [$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)" );
 				$newId = $objDatabase_new->insert_id ();
 				// Also add the extra observers to the sessionObservers table
 				for($j = 0; $j < count ( $observers ); $j ++) {
@@ -200,13 +200,10 @@ class Sessions {
 		$subject = sprintf(_("%s made a new session where you are an observer"), $observername);
 		$sessionname = $this->getSessionPropertyFromId ( $id, "name" );
 		$content = sprintf(
-            _("%s made the session '%s'."), 
+            _("%s made the session %s."), 
             $observername, $sessionname);
         $content .= "<br /><br />" . 
-            sprintf(_("A similar session is prepared for you. Check %sAdd/Sessions</a> to validate the session."), 
-                "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_session\">");
-		$content .= "<br /><br />" . _('Send message to ') . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $sessionname ) . "\">" . $observername . "</a>";
-		$content .= "<br /><br />Zend een bericht naar " . $observername;
+            sprintf(_("A similar session is prepared for you. Check Add/Sessions to validate the session."));
 		if ($loggedUser != $observer) {
 			$objMessages->sendMessage ( $loggedUser, $observer, $subject, $content );
 		}
