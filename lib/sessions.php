@@ -25,6 +25,46 @@ class Sessions {
 		global $objDatabase_new;
 		return $objDatabase_new->selectRecordsetArray ( "SELECT * from observation_sessions WHERE observerid=\"" . $user . "\" and active=\"1\"" );
 	}
+
+	// Create a URL-friendly slug from a name
+	private function slugify($text) {
+		// Attempt to transliterate UTF-8 to ASCII
+		if (function_exists('iconv')) {
+			$trans = @iconv('UTF-8', 'ASCII//TRANSLIT', $text);
+			if ($trans !== false) {
+				$text = $trans;
+			}
+		}
+		// replace non alnum by -
+		$text = preg_replace('/[^A-Za-z0-9]+/', '-', $text);
+		$text = strtolower(trim($text, '-'));
+		if ($text == '') {
+			return 'session';
+		}
+		return $text;
+	}
+
+	// Ensure slug is unique for a given observer by appending -n when needed
+	private function uniqueSlugForObserver($observerid, $name) {
+		global $objDatabase_new;
+		$base = $this->slugify($name);
+		$slug = $base;
+		$counter = 1;
+		while (true) {
+			// Check whether this observer already has a session with this slug
+			$count = $objDatabase_new->selectSingleValue(
+				"SELECT COUNT(id) from observation_sessions where observerid=\"" . $observerid . "\" and slug=\"" . $slug . "\"",
+				"COUNT(id)",
+				0
+			);
+			if ($count == 0) {
+				break;
+			}
+			$slug = $base . '-' . $counter;
+			$counter++;
+		}
+		return $slug;
+	}
 	public function validateSession() {
 		global $loggedUser, $instDir, $_FILES;
 		if (! ($loggedUser))
@@ -155,8 +195,9 @@ class Sessions {
 				if (! in_array ( $observers [$i], $observersFromDatabase )) {
 					// The observer is not in the database. We have to add a new user.
 					$this->addObserver ( $sessionid, $observers [$i] );
-
-					$objDatabase_new->execSQL ( "INSERT into observation_sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers [$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)" );
+					// Generate slug unique for this observer
+					$slug = $this->uniqueSlugForObserver($observers[$i], $name);
+					$objDatabase_new->execSQL ( "INSERT into observation_sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active, slug) VALUES(\"" . $name . "\", \"" . $observers [$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0, \"" . $slug . "\")" );
 					$newId = $objDatabase_new->insert_id ();
 					// Also add the extra observers to the sessionObservers table
 					for($j = 0; $j < count ( $observers ); $j ++) {
@@ -170,7 +211,9 @@ class Sessions {
 			$observers [] = $loggedUser;
 		} else {
 			// First add a new session with the observer which created the session (and set to active)
-			$objDatabase_new->execSQL ( "INSERT into observation_sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)" );
+			// Generate slug for the creating observer
+			$creatorSlug = $this->uniqueSlugForObserver($loggedUser, $name);
+			$objDatabase_new->execSQL ( "INSERT into observation_sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active, slug) VALUES(\"" . $name . "\", \"" . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1, \"" . $creatorSlug . "\")" );
 			$sessionid = $objDatabase_new->selectSingleValue ( "SELECT id from observation_sessions ORDER BY id DESC LIMIT 1", 'id' );
 			// Get the id of the new session
 
@@ -179,8 +222,10 @@ class Sessions {
 				$this->addObserver ( $sessionid, $observers [$i] );
 
 				// Add the new session also for the other observers (and set to inactive)
-				$objDatabase_new->execSQL ( "INSERT into observation_sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers [$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)" );
-				$newId = $objDatabase_new->insert_id ();
+					// Generate slug unique for this observer
+					$slugOther = $this->uniqueSlugForObserver($observers[$i], $name);
+					$objDatabase_new->execSQL ( "INSERT into observation_sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active, slug) VALUES(\"" . $name . "\", \"" . $observers [$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0, \"" . $slugOther . "\")" );
+					$newId = $objDatabase_new->insert_id ();
 				// Also add the extra observers to the sessionObservers table
 				for($j = 0; $j < count ( $observers ); $j ++) {
 					if ($j != $i) {
