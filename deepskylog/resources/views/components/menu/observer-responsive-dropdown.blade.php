@@ -24,18 +24,18 @@
                 @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
                 <x-dropdown.item
                     href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}"
-                    label="{{ __('My sessions') }}"
+                    label="<x-outline.session-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My sessions') }}"
                 />
 
                 <x-dropdown.item
                     separator
                     href="/instrument"
-                    label="{{ __('My instruments') }}"
+                    label="<x-outline.telescope-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My instruments') }}"
                 />
 
                 <x-dropdown.item
                     href="/instrumentset"
-                    label="{{ __('My instrument sets') }}"
+                    label="<x-outline.instrument-set-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My instrument sets') }}"
                 />
 
                 <x-dropdown.item
@@ -46,17 +46,17 @@
 
                 <x-dropdown.item
                     href="/eyepiece"
-                    label="{{ __('My eyepieces') }}"
+                    label="<x-outline.eyepiece-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My eyepieces') }}"
                 />
 
                 <x-dropdown.item
                     href="/filter"
-                    label="{{ __('My filters') }}"
+                    label="<x-outline.filter-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My filters') }}"
                 />
 
                 <x-dropdown.item
                     href="/lens"
-                    label="{{ __('My lenses') }}"
+                    label="<x-outline.barlow-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My lenses') }}"
                 />
 
                 <x-dropdown.item

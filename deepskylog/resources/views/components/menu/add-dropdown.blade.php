@@ -13,19 +13,37 @@
 
                 {{-- observing list placeholder (kept commented) --}}
 
-                <x-menu.item icon="user-plus" href="{{ route('session.create') }}">{{ __('Session') }}</x-menu.item>
+                <x-menu.item href="{{ route('session.create') }}">
+                    <x-outline.session-icon class="h-4 w-4 mr-3 text-gray-300" />
+                    {{ __('Session') }}
+                </x-menu.item>
 
-                <x-menu.item separator icon="plus-circle" href="{{ route('instrument.create') }}">{{ __('Instruments') }}</x-menu.item>
+                <x-menu.item separator href="{{ route('instrument.create') }}">
+                    <x-outline.telescope-icon class="h-4 w-4 mr-3 text-gray-300" />
+                    {{ __('Instruments') }}
+                </x-menu.item>
 
                 <x-menu.item icon="globe-europe-africa" href="{{ route('location.create') }}">{{ __('Locations') }}</x-menu.item>
 
-                <x-menu.item icon="plus-circle" href="{{ route('eyepiece.create') }}">{{ __('Eyepieces') }}</x-menu.item>
+                <x-menu.item href="{{ route('eyepiece.create') }}">
+                    <x-outline.eyepiece-icon class="h-4 w-4 mr-4 text-gray-300 inline-block align-middle" />
+                    {{ __('Eyepieces') }}
+                </x-menu.item>
 
-                <x-menu.item icon="plus-circle" href="/filter/create">{{ __('Filters') }}</x-menu.item>
+                <x-menu.item href="/filter/create">
+                    <x-outline.filter-icon class="h-4 w-4 mr-4 text-gray-300 inline-block align-middle" />
+                    {{ __('Filters') }}
+                </x-menu.item>
 
-                <x-menu.item icon="plus-circle" href="/lens/create">{{ __('Lenses') }}</x-menu.item>
+                <x-menu.item href="/lens/create">
+                    <x-outline.barlow-icon class="h-4 w-4 mr-4 text-gray-300 inline-block align-middle" />
+                    {{ __('Lenses') }}
+                </x-menu.item>
 
-                <x-menu.item icon="plus-circle" href="{{ route('instrumentset.create') }}">{{ __('Instrument sets') }}</x-menu.item>
+                <x-menu.item href="{{ route('instrumentset.create') }}">
+                    <x-outline.instrument-set-icon class="h-4 w-4 mr-4 text-gray-300 inline-block align-middle" />
+                    {{ __('Instrument sets') }}
+                </x-menu.item>
 
                 <x-menu.item separator icon="plus-circle" href="{{ config('app.old_url') }}/index.php?indexAction=add_object">{{ __('Object') }}</x-menu.item>
 

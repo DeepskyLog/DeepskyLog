@@ -50,25 +50,43 @@
                 <x-menu.item icon="pencil-square" href="/drawings/{{ Auth::user()->slug }}">{{ __('My drawings') }}</x-menu.item>
 
                 @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
-                <x-menu.item href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}">{{ __('My sessions') }}</x-menu.item>
+                <x-menu.item href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}">
+                    <x-outline.session-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
+                    {{ __('My sessions') }}
+                </x-menu.item>
 
                 <x-menu.item separator icon="bars-3-center-left" href="{{ config('app.old_url') }}/index.php?indexAction=view_lists">{!! __('My observing lists') !!}</x-menu.item>
 
-                <x-menu.item separator href="/instrument">{{ __('My instruments') }}</x-menu.item>
+                <x-menu.item separator href="/instrument">
+                    <x-outline.telescope-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
+                    {{ __('My instruments') }}
+                </x-menu.item>
 
-                <x-menu.item href="/instrumentset">{{ __('My instrument sets') }}</x-menu.item>
+                <x-menu.item href="/instrumentset">
+                    <x-outline.instrument-set-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
+                    {{ __('My instrument sets') }}
+                </x-menu.item>
 
                 <x-menu.item icon="globe-europe-africa" href="/location">{{ __('My locations') }}</x-menu.item>
 
-                <x-menu.item href="/eyepiece">{{ __('My eyepieces') }}</x-menu.item>
+                <x-menu.item href="/eyepiece">
+                    <x-outline.eyepiece-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
+                    {{ __('My eyepieces') }}
+                </x-menu.item>
 
-                <x-menu.item href="/filter">{{ __('My filters') }}</x-menu.item>
+                <x-menu.item href="/filter">
+                    <x-outline.filter-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
+                    {{ __('My filters') }}
+                </x-menu.item>
 
-                <x-menu.item href="/lens">{{ __('My lenses') }}</x-menu.item>
+                <x-menu.item href="/lens">
+                    <x-outline.barlow-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
+                    {{ __('My lenses') }}
+                </x-menu.item>
 
-                <x-menu.item separator href="/observers/{{ Auth::user()->slug }}">{{ __('Details') }}</x-menu.item>
+                <x-menu.item separator icon="user-circle" href="/observers/{{ Auth::user()->slug }}">{{ __('Details') }}</x-menu.item>
             @else
-                <x-menu.item href="/observers/{{ Auth::user()->slug }}">{{ __('Details') }}</x-menu.item>
+                <x-menu.item icon="user-circle" href="/observers/{{ Auth::user()->slug }}">{{ __('Details') }}</x-menu.item>
             @endif
 
 
@@ -82,7 +100,7 @@
             <form method="POST" action="{{ route("logout") }}" x-data>
                 @csrf
 
-                <x-menu.item separator href="{{ route('logout') }}" @click.prevent="$root.submit();">{{ __('Log Out') }}</x-menu.item>
+                <x-menu.item separator icon="arrow-left-start-on-rectangle" href="{{ route('logout') }}" @click.prevent="$root.submit();">{{ __('Log Out') }}</x-menu.item>
             </form>
         </x-menu.dropdown>
     @endif

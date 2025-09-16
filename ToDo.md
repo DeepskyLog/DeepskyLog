@@ -5,7 +5,6 @@
 ### Next steps
 
 + [ ] Sessions
-    + [ ] Add extra icons to the menus?
     + [ ] Install on server, both the new and the old versions
         + [ ] Check if the new robots.txt works as expected.
         + [ ] Check if the server still needs to work hard.
@@ -52,6 +51,7 @@
 + [X] Add instrument sets.
 + [X] Like observations and sketches
 + [X] Rework message system
++ [X] Totally reworked the session.  They are now more blog-like
 
 ## Eloquent
 
