@@ -11,29 +11,26 @@ trait ClearsResponseCache
      */
     public static function bootClearsResponseCache()
     {
-        // Clear entire response cache on create/update/delete. Adjust if you want targeted clears.
-        static::created(function ($model) {
+        // Targeted invalidation: forget the homepage URL when models that affect
+        // the welcome page change. Fall back to clearing the entire response
+        // cache if forgetting the specific URL fails for any reason.
+        $invalidateHomepage = function ($model) {
             try {
-                ResponseCache::clear();
+                // Try to forget only the cached homepage entry. If the cache
+                // profile uses a suffix or complex keying this may not work;
+                // in that case the fallback below clears all cached responses.
+                ResponseCache::forget('/');
             } catch (\Throwable $e) {
-                // swallow to avoid breaking model save
+                try {
+                    ResponseCache::clear();
+                } catch (\Throwable $e) {
+                    // swallow to avoid breaking model save
+                }
             }
-        });
+        };
 
-        static::updated(function ($model) {
-            try {
-                ResponseCache::clear();
-            } catch (\Throwable $e) {
-                // swallow
-            }
-        });
-
-        static::deleted(function ($model) {
-            try {
-                ResponseCache::clear();
-            } catch (\Throwable $e) {
-                // swallow
-            }
-        });
+        static::created($invalidateHomepage);
+        static::updated($invalidateHomepage);
+        static::deleted($invalidateHomepage);
     }
 }
