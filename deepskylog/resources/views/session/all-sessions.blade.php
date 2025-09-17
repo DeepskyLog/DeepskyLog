@@ -31,6 +31,11 @@
                                 @endif
                             </div>
 
+                            <div class="text-sm text-gray-400 mb-2">
+                                <span class="mr-2 font-medium text-gray-200">{{ __('Location') }}:</span>
+                                <span class="text-gray-400">{{ $session->location_name ?? ($session->locationid ? __('Unknown') : __('Unknown')) }}</span>
+                            </div>
+
                             <div class="text-sm text-gray-400 mb-3">
                                 <span>{{ $session->begindate ? \Carbon\Carbon::parse($session->begindate)->translatedFormat('j M Y') : __('Unknown') }}</span>
                                 <span class="mx-2">&ndash;</span>

@@ -96,6 +96,11 @@
                                 <span>{{ $session->enddate ? \Carbon\Carbon::parse($session->enddate)->translatedFormat('j M Y') : __('Unknown') }}</span>
                             </div>
 
+                            <div class="text-sm text-gray-400 mb-2">
+                                <span class="mr-2 font-medium text-gray-200">{{ __('Location') }}:</span>
+                                <span class="text-gray-400">{{ $session->location_name ?? __('Unknown') }}</span>
+                            </div>
+
                             @if(isset($session->observation_count))
                                 <div class="text-sm text-gray-300 mb-2">{{ __('Observations') }}: <strong class="text-white">{{ $session->observation_count }}</strong></div>
                             @endif

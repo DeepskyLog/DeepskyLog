@@ -78,7 +78,7 @@
         @isset($sessions)
             <div class="pt-4">
             <h2 class="ml-3 mt-3 text-xl font-semibold leading-tight">
-                {{ __("5 newest sessions") }}
+                {{ __("Newest sessions") }}
             </h2>
             @php
                 // $sessions is prepared in the homepage route (SessionController::homepage)
@@ -129,6 +129,11 @@
                                     <span>{{ $session->begindate ? \Carbon\Carbon::parse($session->begindate)->translatedFormat('j M Y') : __('Unknown') }}</span>
                                     <span class="mx-2">&ndash;</span>
                                     <span>{{ $session->enddate ? \Carbon\Carbon::parse($session->enddate)->translatedFormat('j M Y') : __('Unknown') }}</span>
+                                </div>
+
+                                <div class="text-sm text-gray-400 mb-2">
+                                    <span class="mr-2 font-medium text-gray-200">{{ __('Location') }}:</span>
+                                    <span class="text-gray-400">{{ $session->location_name ?? __('Unknown') }}</span>
                                 </div>
 
                                 @if(isset($session->observation_count))

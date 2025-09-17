@@ -467,6 +467,8 @@ class SessionController extends Controller
             $image = null;
 
             $loc = isset($locations[$session->locationid]) ? $locations[$session->locationid] : null;
+            // Attach a human-friendly location name to the session for use in views
+            $session->location_name = $loc ? ($loc->name ?? null) : null;
             $session->preview = $this->resolveSessionImage($session, $loc);
             $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
 
@@ -543,6 +545,8 @@ class SessionController extends Controller
             $image = null;
 
             $loc = isset($locations[$session->locationid]) ? $locations[$session->locationid] : null;
+            // Attach a human-friendly location name for user sessions view
+            $session->location_name = $loc ? ($loc->name ?? null) : null;
             $session->preview = $this->resolveSessionImage($session, $loc);
             $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
 
@@ -902,6 +906,9 @@ class SessionController extends Controller
                 }
             }
 
+            // Attach a human-friendly location name for homepage sessions
+            $loc = isset($locations[$session->locationid]) ? $locations[$session->locationid] : null;
+            $session->location_name = $loc ? ($loc->name ?? null) : null;
             $session->preview = $image;
             $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
 
