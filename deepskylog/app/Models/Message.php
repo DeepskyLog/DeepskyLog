@@ -71,7 +71,11 @@ class Message extends Model
 
     public function getSafeSubjectAttribute(): string
     {
-        return self::sanitizeHtml($this->subject);
+        // Purify the subject (allow minimal inline formatting if present),
+        // then decode any HTML entities so titles containing sequences like
+        // '&amp;' or '&eacute;' render as the actual character in the UI.
+        $purified = self::sanitizeHtml($this->subject);
+        return html_entity_decode($purified, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
     public function getSafePreviewAttribute(): string

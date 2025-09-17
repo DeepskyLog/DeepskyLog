@@ -341,7 +341,9 @@ class MessagesController extends Controller
             return '> '.$l;
         }, $lines));
 
-        $originalSubject = $message->subject ?: __('(no subject)');
+        // Decode any HTML entities stored in the subject so reply subjects
+        // show human-readable characters and prefix detection works correctly.
+        $originalSubject = $message->subject ? html_entity_decode($message->subject, ENT_QUOTES | ENT_HTML5, 'UTF-8') : __('(no subject)');
         $rePrefix = __('Re:');
         // If the original subject already starts with a Re: prefix (localized or plain), don't add another
         if (mb_stripos(ltrim($originalSubject), $rePrefix) === 0 || mb_stripos(ltrim($originalSubject), 're:') === 0) {
