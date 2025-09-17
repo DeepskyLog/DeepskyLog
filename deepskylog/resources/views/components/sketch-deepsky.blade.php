@@ -25,7 +25,6 @@
                     ->copylink()
                     ->mailto(["class" => "hover", "rel" => "nofollow"])
                     ->whatsapp()
-                    ->bluesky(["class" => "hover", "rel" => "follow"])
                     ->render()
             !!}
         </div>

@@ -117,7 +117,12 @@
                                 {{ __('Adapt') }}
                             </a>
 
-                            <form method="POST" action="{{ route('session.destroy', $session->id) }}" onsubmit="return confirm('{{ $viewerIsAdmin && ! $viewerIsOwner && $allowAdmin ? __('You are performing this action as an administrator on behalf of the owner. Are you sure you want to delete this session?') : __('Are you sure you want to delete this session?') }}');">
+                            @php
+                                $deleteConfirm = $viewerIsAdmin && ! $viewerIsOwner && $allowAdmin
+                                    ? __('You are performing this action as an administrator on behalf of the owner. Are you sure you want to delete this session?')
+                                    : __('Are you sure you want to delete this session?');
+                            @endphp
+                            <form method="POST" action="{{ route('session.destroy', $session->id) }}" data-confirm="{{ e($deleteConfirm) }}">
                                 @csrf
                                 <button type="submit" class="inline-flex items-center p-2 rounded bg-red-600 hover:bg-red-700 text-white">{{ __('Delete') }}</button>
                             </form>
@@ -125,8 +130,12 @@
                     @endif
                 </div>
 
-                @if($location)
-                    <div id="session-location-map" class="w-full h-64 rounded mb-4"></div>
+                @if ($location)
+                    <div id="session-location-map" class="w-full h-64 rounded mb-4"
+                         data-lat="{{ $location->latitude }}"
+                         data-lng="{{ $location->longitude }}"
+                         data-name="{{ $location->name ?? '' }}">
+                    </div>
                 @endif
 
                 {{-- Drawings first: show sketches (images) above textual observations --}}
@@ -231,7 +240,6 @@
                                     ->copylink()
                                     ->mailto(['class' => 'hover', 'rel' => 'nofollow'])
                                     ->whatsapp()
-                                    ->bluesky(['class' => 'hover', 'rel' => 'follow'])
                                     ->render()
                             !!}
                         </div>
@@ -266,18 +274,39 @@
         @if ($location)
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
-                        var map = L.map('session-location-map', { fullscreenControl: true }).setView([
-                            {{ $location->latitude }},
-                            {{ $location->longitude }}
-                        ], 13);
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            maxZoom: 19,
-                            attribution: '© OpenStreetMap contributors'
-                        }).addTo(map);
+                    // Attach confirm handler to forms with data-confirm to avoid inline JS
+                    document.querySelectorAll('form[data-confirm]').forEach(function(form){
+                        form.addEventListener('submit', function(e){
+                            var msg = form.getAttribute('data-confirm') || '';
+                            if(!confirm(msg)){
+                                e.preventDefault();
+                            }
+                        });
+                    });
 
-                        var marker = L.marker([{{ $location->latitude }}, {{ $location->longitude }}]).addTo(map)
-                            .bindPopup('<strong>{{ addslashes($location->name ?? '') }}</strong>');
-                        marker.openPopup();
+                    var mapEl = document.getElementById('session-location-map');
+                    if(!mapEl) return;
+
+                    var lat = parseFloat(mapEl.getAttribute('data-lat'));
+                    var lng = parseFloat(mapEl.getAttribute('data-lng'));
+                    var name = mapEl.getAttribute('data-name') || '';
+
+                    function escapeHtml(str) {
+                        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+                    }
+
+                    var popupHtml = '<strong>' + escapeHtml(name) + '</strong>';
+                    var coords = [lat, lng];
+
+                    var map = L.map('session-location-map', { fullscreenControl: true }).setView(coords, 13);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '© OpenStreetMap contributors'
+                    }).addTo(map);
+
+                    var marker = L.marker(coords).addTo(map)
+                        .bindPopup(popupHtml);
+                    marker.openPopup();
                 });
             </script>
         @endif
