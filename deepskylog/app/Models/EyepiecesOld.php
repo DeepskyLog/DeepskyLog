@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\ClearsResponseCache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EyepiecesOld extends Model
 {
+    use ClearsResponseCache;
+
+    public $timestamps = false;
+
     protected $casts = ['id' => 'string'];
 
     protected $connection = 'mysqlOld';

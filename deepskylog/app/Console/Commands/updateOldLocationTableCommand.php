@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Location;
+use App\Models\LocationsOld;
 use Illuminate\Console\Command;
 
 class updateOldLocationTableCommand extends Command

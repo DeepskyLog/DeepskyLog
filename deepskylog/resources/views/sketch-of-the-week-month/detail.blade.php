@@ -24,7 +24,7 @@
                                         ->twitter(['class' => 'hover', 'rel' => 'follow'])
                                         ->copylink()
                                         ->mailto(['class' => 'hover', 'rel' => 'nofollow'])
-                                        ->whatsapp()->bluesky(["class" => "hover", "rel" => "follow"])
+                                        ->whatsapp()
                                         ->render() !!}
                                     </div>
                                 </a>
@@ -42,7 +42,6 @@
                                         ->twitter(['class' => 'hover', 'rel' => 'follow'])
                                         ->copylink()
                                         ->mailto(['class' => 'hover', 'rel' => 'nofollow'])
-                                        ->bluesky(["class" => "hover", "rel" => "follow"])
                                         ->whatsapp()->render() !!}
                                     </div>
                                 </a>

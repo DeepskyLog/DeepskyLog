@@ -14,6 +14,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('auth:clear-resets')->everyFifteenMinutes();
         $schedule->command('cache:prune-stale-tags')->hourly();
+        // Backfill session slugs regularly (idempotent)
+        $schedule->command('sessions:backfill-slugs')->everyFiveMinutes();
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\HasObservationsDates;
+use App\Traits\ClearsResponseCache;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +11,7 @@ use Illuminate\Support\Collection;
 
 class Instrument extends Model
 {
+    use ClearsResponseCache;
     use HasObservationsDates;
     use Sluggable;
 

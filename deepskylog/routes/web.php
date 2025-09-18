@@ -1,8 +1,11 @@
 <?php
 
+use App\Models\ObservationSession;
 use App\Models\SketchOfTheMonth;
 use App\Models\SketchOfTheWeek;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,9 +24,26 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('welcome');
-    })->name('dashboard');
+    // Use the SessionController homepage action so the welcome view receives the expected `$sessions` variable.
+    Route::get('/dashboard', [App\Http\Controllers\SessionController::class, 'homepage'])->name('dashboard');
+});
+
+// Override Jetstream's current-team.update route to redirect back after switching teams
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::put('/current-team', function (\Illuminate\Http\Request $request) {
+        $team = Laravel\Jetstream\Jetstream::newTeamModel()->findOrFail($request->team_id);
+
+        if (! $request->user()->switchTeam($team)) {
+            abort(403);
+        }
+
+        // Redirect back to the referring page so the header renders the updated team immediately.
+        return redirect()->back(303);
+    })->name('current-team.update');
 });
 
 // Switch language
@@ -63,7 +83,7 @@ Route::post('/sketch-of-the-week', 'App\Http\Controllers\SketchOfTheWeekControll
 Route::get('/sketch-of-the-month/create', 'App\Http\Controllers\SketchOfTheMonthController@create')->name('sketch-of-the-month.create')->can('add_sketch', User::class);
 Route::post('/sketch-of-the-month', 'App\Http\Controllers\SketchOfTheMonthController@store')->name('sketch-of-the-month.store')->can('add_sketch', User::class);
 
-Route::view('/', 'welcome');
+Route::get('/', [App\Http\Controllers\SessionController::class, 'homepage']);
 Route::view('/privacy', 'privacy')->name('privacy');
 Route::view('/sponsors', 'layouts.sponsors');
 Route::view('/downloads/magazines', 'layouts.downloads.magazines');
@@ -204,6 +224,34 @@ Route::resource(
 Route::get('/instrumentset/{user}/{instrumentset}', 'App\Http\Controllers\InstrumentSetController@show')
     ->name('instrumentset.show');
 
+// Observation sessions
+Route::get('/session/{user}/{session}', 'App\Http\Controllers\SessionController@show')
+    ->name('session.show')->middleware('doNotCacheResponse');
+
+// Create session (authenticated)
+Route::get('/sessions/create', [App\Http\Controllers\SessionController::class, 'create'])
+    ->name('session.create')->middleware(['auth', 'doNotCacheResponse']);
+Route::post('/sessions', [App\Http\Controllers\SessionController::class, 'store'])
+    ->name('session.store')->middleware(['auth', 'doNotCacheResponse']);
+
+// My sessions (authenticated)
+// Note: /my-sessions removed in favor of /sessions/{user} - use route('session.user', [Auth::user()->slug]) when needed
+
+// All sessions (public)
+Route::get('/sessions', [App\Http\Controllers\SessionController::class, 'all'])->name('session.all');
+
+// Sessions by user (public): show sessions for a given observer username or slug
+Route::get('/sessions/{user}', [App\Http\Controllers\SessionController::class, 'user'])
+    ->name('session.user')->middleware('doNotCacheResponse');
+
+// Delete session (authenticated, owner only - controller enforces)
+Route::post('/sessions/{session}/delete', [App\Http\Controllers\SessionController::class, 'destroy'])
+    ->name('session.destroy')->middleware('auth');
+
+// Adapt session: create a new session prefilled from an existing one (owner only)
+Route::get('/sessions/{session}/adapt', [App\Http\Controllers\SessionController::class, 'adapt'])
+    ->name('session.adapt')->middleware(['auth', 'doNotCacheResponse']);
+
 Route::get('/instrumentset/{user}/{instrumentset}/edit', 'App\Http\Controllers\InstrumentSetController@edit')
     ->name('instrumentset.edit')->middleware('auth');
 
@@ -216,20 +264,92 @@ Route::post('/observation/like', [App\Http\Controllers\ObservationLikeController
 // Popular observations
 Route::get('/popular-observations', [App\Http\Controllers\PopularObservationController::class, 'index'])->name('observations.popular');
 
+// Popular sessions
+Route::get('/popular-sessions', function () {
+    return view('observations.popular-sessions');
+})->name('observations.popular.sessions');
+
 // Messages
-Route::get('/messages', [App\Http\Controllers\MessagesController::class, 'index'])->name('messages.index')->middleware('auth');
-Route::get('/messages/create', [App\Http\Controllers\MessagesController::class, 'create'])->name('messages.create')->middleware('auth');
-Route::post('/messages', [App\Http\Controllers\MessagesController::class, 'store'])->name('messages.store')->middleware('auth');
-Route::get('/messages/{id}', [App\Http\Controllers\MessagesController::class, 'show'])->name('messages.show')->middleware('auth');
+Route::get('/messages', [App\Http\Controllers\MessagesController::class, 'index'])
+    ->name('messages.index')
+    ->middleware(['auth', 'doNotCacheResponse']);
+Route::get('/messages/create', [App\Http\Controllers\MessagesController::class, 'create'])
+    ->name('messages.create')
+    ->middleware(['auth', 'doNotCacheResponse']);
+Route::post('/messages', [App\Http\Controllers\MessagesController::class, 'store'])
+    ->name('messages.store')
+    ->middleware('auth');
+Route::get('/messages/{id}', [App\Http\Controllers\MessagesController::class, 'show'])
+    ->name('messages.show')
+    ->middleware(['auth', 'doNotCacheResponse']);
 
 // Admin broadcast
 Route::post('/messages/broadcast', [App\Http\Controllers\MessagesController::class, 'broadcast'])->name('messages.broadcast')->middleware('can:add_sketch,App\\Models\\User');
 
 // Mark all messages as read
-Route::post('/messages/mark-all-read', [App\Http\Controllers\MessagesController::class, 'markAllRead'])->name('messages.markAllRead')->middleware('auth');
+Route::post('/messages/mark-all-read', [App\Http\Controllers\MessagesController::class, 'markAllRead'])
+    ->name('messages.markAllRead')
+    ->middleware(['auth', 'doNotCacheResponse']);
 
 // Reply data (plain-text message) for prefill via AJAX
-Route::get('/messages/{id}/reply-data', [App\Http\Controllers\MessagesController::class, 'replyData'])->name('messages.replyData')->middleware('auth');
+Route::get('/messages/{id}/reply-data', [App\Http\Controllers\MessagesController::class, 'replyData'])
+    ->name('messages.replyData')
+    ->middleware(['auth', 'doNotCacheResponse']);
 
 // Delete a message (mark deleted in legacy messagesDeleted table)
-Route::post('/messages/{id}/delete', [App\Http\Controllers\MessagesController::class, 'destroy'])->name('messages.destroy')->middleware('auth');
+Route::post('/messages/{id}/delete', [App\Http\Controllers\MessagesController::class, 'destroy'])
+    ->name('messages.destroy')
+    ->middleware(['auth', 'doNotCacheResponse']);
+
+// Sitemap (cached): generates a simple sitemap.xml with main pages and recent public sessions
+Route::get('/sitemap.xml', function () {
+    $xml = Cache::remember('sitemap_xml_v1', 60 * 60 * 12, function () {
+        $base = rtrim(config('app.url') ?: url('/'), '/');
+        $now = now()->toAtomString();
+
+        $urls = [];
+        // Static / important pages
+        $urls[] = ['loc' => $base.'/', 'lastmod' => $now, 'changefreq' => 'daily', 'priority' => '1.0'];
+        $urls[] = ['loc' => $base.'/sessions', 'lastmod' => $now, 'changefreq' => 'daily', 'priority' => '0.8'];
+        $urls[] = ['loc' => $base.'/popular-sessions', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
+        $urls[] = ['loc' => $base.'/popular-observations', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
+        $urls[] = ['loc' => $base.'/drawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
+        $urls[] = ['loc' => $base.'/cometdrawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
+
+        // Recent public sessions (limit to avoid heavy queries)
+        try {
+            $sessions = ObservationSession::where('active', 1)
+                ->orderByDesc('enddate')
+                ->limit(1000)
+                ->get(['slug', 'observerid', 'updated_at']);
+
+            foreach ($sessions as $s) {
+                $user = User::where('username', $s->observerid)->first();
+                $slug = $user ? $user->slug : $s->observerid;
+                $loc = $base.'/session/'.($slug ?? $s->observerid).'/'.($s->slug ?? $s->id);
+                $urls[] = ['loc' => $loc, 'lastmod' => optional($s->updated_at)->toAtomString() ?? $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
+            }
+        } catch (\Throwable $e) {
+            // If the DB is unavailable, return only the static urls
+        }
+
+        // Build XML
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+        foreach ($urls as $u) {
+            $xml .= "  <url>\n";
+            $xml .= '    <loc>'.e($u['loc'])."</loc>\n";
+            if (! empty($u['lastmod'])) {
+                $xml .= '    <lastmod>'.$u['lastmod']."</lastmod>\n";
+            }
+            $xml .= '    <changefreq>'.$u['changefreq']."</changefreq>\n";
+            $xml .= '    <priority>'.$u['priority']."</priority>\n";
+            $xml .= "  </url>\n";
+        }
+        $xml .= '</urlset>';
+
+        return $xml;
+    });
+
+    return Response::make($xml, 200, ['Content-Type' => 'application/xml']);
+})->name('sitemap');

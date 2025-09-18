@@ -64,3 +64,49 @@
 .prose p[style*="text-indent"], .prose-invert p[style*="text-indent"] {
 	text-indent: 1.5rem !important;
 }
+
+/* Fix browser autofill (white background) for dark themed inputs
+	 Chrome / Edge / Safari use :-webkit-autofill and apply an internal
+	 background-color; we reset it via box-shadow and background-clip.
+	 Firefox uses :-moz-autofill. These rules should ensure autofilled
+	 inputs keep the site background and text color. */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0px 1000px var(--color-background-white) inset !important;
+	box-shadow: 0 0 0px 1000px var(--color-background-white) inset !important;
+	-webkit-text-fill-color: inherit !important;
+	caret-color: auto;
+}
+
+/* If you use a specific background on inputs (e.g., a dark panel),
+	 you can override transparent above with your input background color.
+	 Example (uncomment and adjust if needed):
+	 input:-webkit-autofill { -webkit-box-shadow: 0 0 0px 1000px #0f172a inset !important; }
+*/
+
+/* Firefox autofill */
+input:-moz-autofill,
+textarea:-moz-autofill,
+select:-moz-autofill {
+	box-shadow: 0 0 0px 1000px var(--color-background-white) inset !important;
+	-moz-text-fill-color: inherit !important;
+}
+
+/* Dark mode: ensure autofill matches dark input backgrounds when .dark class is present */
+.dark input:-webkit-autofill,
+.dark textarea:-webkit-autofill,
+.dark select:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0px 1000px var(--color-background-dark) inset !important;
+	box-shadow: 0 0 0px 1000px var(--color-background-dark) inset !important;
+	-webkit-text-fill-color: var(--color-secondary-50) !important;
+	caret-color: auto;
+}
+
+.dark input:-moz-autofill,
+.dark textarea:-moz-autofill,
+.dark select:-moz-autofill {
+	box-shadow: 0 0 0px 1000px var(--color-background-dark) inset !important;
+	-moz-text-fill-color: var(--color-secondary-50) !important;
+}
+

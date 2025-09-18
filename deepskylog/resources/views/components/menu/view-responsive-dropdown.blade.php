@@ -10,18 +10,7 @@
         </div>
 
         <div class="mt-3 space-y-1">
-            <!-- Account Management -->
-            @if (! Auth::guest() && Auth::user()->isObserver())
-                <x-dropdown.item
-                    icon="bars-3-center-left"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&observer={{  Auth::user()->username }}"
-                    label="{{ __("My observations") }}"/>
-
-                <x-dropdown.item
-                    icon="pencil-square"
-                    href="/drawings/{{ Auth::user()->slug }}"
-                    label="{{__('My drawings') }}"/>
-            @endif
+            <!-- Observer-specific items moved to responsive settings menu -->
 
             <!-- Team Management -->
             <x-dropdown.item
@@ -44,20 +33,26 @@
                     label="{!! __('My observing lists') !!}"
                 />
 
+                @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
                 <x-dropdown.item
-                    href="{{ config('app.old_url') }}/index.php?indexAction=result_my_sessions"
-                    label="{{ __('My sessions') }}"
+                    href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}"
+                    label="<x-outline.session-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My sessions') }}"
+                />
+
+                <x-dropdown.item
+                    href="{{ route('session.all') }}"
+                    label="<x-outline.session-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('All sessions') }}"
                 />
 
                 <x-dropdown.item
                     separator
                     href="/instrument"
-                    label="{{ __('My instruments') }}"
+                    label="<x-outline.telescope-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My instruments') }}"
                 />
 
                 <x-dropdown.item
                     href="/instrumentset"
-                    label="{{ __('My instrument sets') }}"
+                    label="<x-outline.instrument-set-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My instrument sets') }}"
                 />
 
                 <x-dropdown.item
@@ -68,17 +63,17 @@
 
                 <x-dropdown.item
                     href="/eyepiece"
-                    label="{{ __('My eyepieces') }}"
+                    label="<x-outline.eyepiece-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My eyepieces') }}"
                 />
 
                 <x-dropdown.item
                     href="/filter"
-                    label="{{ __('My filters') }}"
+                    label="<x-outline.filter-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My filters') }}"
                 />
 
                 <x-dropdown.item
                     href="/lens"
-                    label="{{ __('My lenses') }}"
+                    label="<x-outline.barlow-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My lenses') }}"
                 />
 
                 <x-dropdown.item
@@ -112,6 +107,11 @@
             <x-dropdown.item
                 href="/popular-observations"
                 label="{{ __('Popular observations') }}"
+            />
+
+            <x-dropdown.item
+                href="/popular-sessions"
+                label="{{ __('Popular sessions') }}"
             />
 
             <x-dropdown.item

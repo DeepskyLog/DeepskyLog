@@ -24,16 +24,16 @@
                 {{-- /> --}}
 
                 <x-dropdown.item
-                    icon="user-plus"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=add_session"
-                    label="{{ __('Sessions') }}"
+                    href="{{ route('session.create') }}"
+                    label="<x-outline.session-icon class=\"h-4 w-4 mr-3 text-gray-300\" />{{ __('Session') }}"
                 />
+
 
                 <x-dropdown.item
                     separator
                     icon="plus-circle"
                     href="{{ route('instrument.create') }}"
-                    label="{{ __('Instruments') }}"
+                    label="<x-outline.telescope-icon class=\"h-4 w-4 mr-3 text-gray-300\" />{{ __('Instruments') }}"
                 />
 
                 <x-dropdown.item
@@ -43,27 +43,23 @@
                 />
 
                 <x-dropdown.item
-                    icon="plus-circle"
                     href="{{ route('eyepiece.create') }}"
-                    label="{{ __('Eyepieces') }}"
+                    label="<x-outline.eyepiece-icon class=\"h-4 w-4 mr-4 text-gray-300 inline-block align-middle\" />{{ __('Eyepieces') }}"
                 />
 
                 <x-dropdown.item
-                    icon="plus-circle"
                     href="/filter/create"
-                    label="{{ __('Filters') }}"
+                    label="<x-outline.filter-icon class=\"h-4 w-4 mr-4 text-gray-300 inline-block align-middle\" />{{ __('Filters') }}"
                 />
 
                 <x-dropdown.item
-                    icon="plus-circle"
                     href="/lens/create"
-                    label="{{ __('Lenses') }}"
+                    label="<x-outline.barlow-icon class=\"h-4 w-4 mr-4 text-gray-300 inline-block align-middle\" />{{ __('Lenses') }}"
                 />
 
                 <x-dropdown.item
-                    icon="plus-circle"
                     href="{{ route('instrumentset.create') }}"
-                    label="{{ __('Instrument sets') }}"
+                    label="<x-outline.instrument-set-icon class=\"h-4 w-4 mr-4 text-gray-300 inline-block align-middle\" />{{ __('Instrument sets') }}"
                 />
 
                 <x-dropdown.item

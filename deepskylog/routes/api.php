@@ -100,13 +100,22 @@ Route::get('licenses.index', function (Request $request) {
 
 Route::get('locations.api', function (Request $request) {
     $allLocations = [];
-    // Show the selected option
+    // Show the selected option(s) when provided. Support single value or array.
     if ($request->exists('selected')) {
-        $allLocations[] = [
-            'id' => auth()->user()->stdlocation,
-            'name' => Location::where('id', auth()->user()->stdlocation)->first()->name,
-            'description' => Location::where('id', auth()->user()->stdlocation)->first()->description ?? '',
-        ];
+        $selected = $request->selected;
+        if (! is_array($selected)) {
+            $selected = [$selected];
+        }
+        foreach ($selected as $sel) {
+            $loc = Location::where('id', $sel)->first();
+            if ($loc) {
+                $allLocations[] = [
+                    'id' => $loc->id,
+                    'name' => $loc->name,
+                    'description' => $loc->description ?? '',
+                ];
+            }
+        }
     }
 
     // Get the location, but they should be active

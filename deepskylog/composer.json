@@ -28,6 +28,7 @@
         "openspout/openspout": "^4.13",
         "petercoles/multilingual-language-list": "^1.16",
         "power-components/livewire-powergrid": "^6",
+        "spatie/laravel-responsecache": "^7.0",
         "stichoza/google-translate-php": "^5.2",
         "symfony/http-client": "^7",
         "symfony/mailgun-mailer": "^7",

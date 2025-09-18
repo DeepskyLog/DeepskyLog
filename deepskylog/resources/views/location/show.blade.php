@@ -1,4 +1,4 @@
-@php use App\Models\Location; @endphp
+{{-- Avoid inline `use` in Blade; Location is available as $location --}}
 <x-app-layout>
     <div>
         <div class="mx-auto max-w-screen bg-gray-900 px-2 py-10 sm:px-6 lg:px-8">

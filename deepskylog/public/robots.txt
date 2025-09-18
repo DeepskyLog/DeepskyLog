@@ -1,2 +1,25 @@
+# Robots policy for DeepskyLog
+# Edit the Sitemap URL below to your actual site URL if you serve under a domain
 User-agent: *
-Disallow: /
+
+# Allow main public pages
+Allow: /
+
+# Disallow common admin and account pages
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+Disallow: /api/
+Disallow: /cart
+Disallow: /messages
+
+# Optional: discourage crawling of URLs with query strings (may hide paginated/filter pages)
+# Uncomment if you want to block query-strings site-wide
+# Disallow: /*?*
+
+# Sitemap - update to full URL if you prefer an absolute URL
+# Example: Sitemap: https://your-domain.example/sitemap.xml
+Sitemap: /sitemap.xml
+
+# Crawl-delay is non-standard; Bing/Yandex may respect it, Google ignores it
+Crawl-delay: 10

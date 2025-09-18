@@ -1,10 +1,12 @@
 <!-- Teams Dropdown -->
 @if (Auth::user() && Laravel\Jetstream\Jetstream::hasTeamFeatures() && Auth::user()->teams->count() > 1)
     <div class="relative ml-3">
-        <x-dropdown align="right" width="60">
+    <x-menu.dropdown align="right" :width="60">
             <x-slot name="trigger">
                 <span class="inline-flex rounded-md">
                     <button
+                        x-ref="trigger"
+                        @click="open = !open"
                         type="button"
                         class="inline-flex items-center rounded-md border border-transparent bg-gray-700 px-3 py-2 text-sm font-medium leading-4 text-gray-300 transition hover:bg-gray-500 hover:text-gray-200 focus:bg-gray-500 focus:outline-hidden active:bg-gray-500"
                     >
@@ -29,20 +31,20 @@
             </x-slot>
 
             <!-- Team Management -->
-            <x-dropdown.header label="{!! __('Manage Team') !!}">
+            <x-menu.header label="{!! __('Manage Team') !!}">
                 <!-- Team Settings -->
-                <x-dropdown.item
-                    label="{!! __('Team Settings') !!}"
+                <x-menu.item
+                    :label="__('Team Settings')"
                     href="{{ route('teams.show', Auth::user()->currentTeam->slug) }}"
                 />
-            </x-dropdown.header>
+            </x-menu.header>
 
             <!-- Team Switcher -->
-            <x-dropdown.header label="{!! __('Switch Teams') !!}">
+            <x-menu.header label="{!! __('Switch Teams') !!}">
                 @foreach (Auth::user()->allTeams() as $team)
                     <x-switchable-team :team="$team" />
                 @endforeach
-            </x-dropdown.header>
-        </x-dropdown>
+            </x-menu.header>
+        </x-menu.dropdown>
     </div>
 @endif

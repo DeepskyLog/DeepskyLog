@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\HasObservationsDates;
+use App\Traits\ClearsResponseCache;
 use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Session;
 
 class Location extends Model
 {
+    use ClearsResponseCache;
     use HasObservationsDates;
     use Sluggable;
 

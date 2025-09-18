@@ -11,8 +11,8 @@ class MigrateOldMessagesSeeder extends Seeder
     {
         $oldConn = DB::connection('mysqlOld');
         $newConn = DB::connection();
-    // disable query log to avoid memory growth while processing large datasets
-    DB::disableQueryLog();
+        // disable query log to avoid memory growth while processing large datasets
+        DB::disableQueryLog();
 
         // Copy messages in chunks to avoid loading the entire table into memory
         $maxId = null;
@@ -32,7 +32,7 @@ class MigrateOldMessagesSeeder extends Seeder
                 $maxId = $m->id > ($maxId ?? 0) ? $m->id : $maxId;
             }
 
-            if (!empty($rows)) {
+            if (! empty($rows)) {
                 foreach (array_chunk($rows, 500) as $insertChunk) {
                     $newConn->table('messages')->insert($insertChunk);
                 }
