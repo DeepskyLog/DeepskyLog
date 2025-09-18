@@ -23,18 +23,16 @@
                 {{-- label="{!! __('Observing list') !!}" --}}
                 {{-- /> --}}
 
-                <x-dropdown.item
-                    href="{{ route('session.create') }}"
-                    label="<x-outline.session-icon class=\"h-4 w-4 mr-3 text-gray-300\" />{{ __('Session') }}"
-                />
+                <x-dropdown.item href="{{ route('session.create') }}">
+                    <x-outline.session-icon class="h-4 w-4 mr-3 text-gray-300" />
+                    {{ __('Session') }}
+                </x-dropdown.item>
 
 
-                <x-dropdown.item
-                    separator
-                    icon="plus-circle"
-                    href="{{ route('instrument.create') }}"
-                    label="<x-outline.telescope-icon class=\"h-4 w-4 mr-3 text-gray-300\" />{{ __('Instruments') }}"
-                />
+                <x-dropdown.item separator href="{{ route('instrument.create') }}">
+                    <x-outline.telescope-icon class="h-4 w-4 mr-3 text-gray-300" />
+                    {{ __('Instruments') }}
+                </x-dropdown.item>
 
                 <x-dropdown.item
                     icon="globe-europe-africa"
@@ -42,25 +40,25 @@
                     label="{{ __('Locations') }}"
                 />
 
-                <x-dropdown.item
-                    href="{{ route('eyepiece.create') }}"
-                    label="<x-outline.eyepiece-icon class=\"h-4 w-4 mr-4 text-gray-300 inline-block align-middle\" />{{ __('Eyepieces') }}"
-                />
+                <x-dropdown.item href="{{ route('eyepiece.create') }}">
+                    <x-outline.eyepiece-icon class="h-4 w-4 mr-4 text-gray-300 inline-block align-middle" />
+                    {{ __('Eyepieces') }}
+                </x-dropdown.item>
 
-                <x-dropdown.item
-                    href="/filter/create"
-                    label="<x-outline.filter-icon class=\"h-4 w-4 mr-4 text-gray-300 inline-block align-middle\" />{{ __('Filters') }}"
-                />
+                <x-dropdown.item href="/filter/create">
+                    <x-outline.filter-icon class="h-4 w-4 mr-4 text-gray-300 inline-block align-middle" />
+                    {{ __('Filters') }}
+                </x-dropdown.item>
 
-                <x-dropdown.item
-                    href="/lens/create"
-                    label="<x-outline.barlow-icon class=\"h-4 w-4 mr-4 text-gray-300 inline-block align-middle\" />{{ __('Lenses') }}"
-                />
+                <x-dropdown.item href="/lens/create">
+                    <x-outline.barlow-icon class="h-4 w-4 mr-4 text-gray-300 inline-block align-middle" />
+                    {{ __('Lenses') }}
+                </x-dropdown.item>
 
-                <x-dropdown.item
-                    href="{{ route('instrumentset.create') }}"
-                    label="<x-outline.instrument-set-icon class=\"h-4 w-4 mr-4 text-gray-300 inline-block align-middle\" />{{ __('Instrument sets') }}"
-                />
+                <x-dropdown.item href="{{ route('instrumentset.create') }}">
+                    <x-outline.instrument-set-icon class="h-4 w-4 mr-4 text-gray-300 inline-block align-middle" />
+                    {{ __('Instrument sets') }}
+                </x-dropdown.item>
 
                 <x-dropdown.item
                     separator

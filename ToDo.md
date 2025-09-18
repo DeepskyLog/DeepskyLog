@@ -4,11 +4,8 @@
 
 ### Next steps
 
-+ [ ] Sessions
-    + [ ] Install on server, both the new and the old versions
-        + [ ] Check if the new robots.txt works as expected.
-        + [ ] Check if the server still needs to work hard.
-        + [ ] Check if the images for the sessions are available.
++ [ ] Check if the new robots.txt works as expected.
++ [ ] Check if the server still needs to work hard.
 + [ ] Release new version of pyDeepskyLog
     + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
