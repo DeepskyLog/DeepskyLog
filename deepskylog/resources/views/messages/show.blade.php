@@ -62,7 +62,7 @@
 
                 <div class="mt-6">
                     <div class="flex items-center gap-4">
-                        <button type="button" onclick="window.location='{{ route('messages.index') }}'" class="text-sm bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded">&larr; {{ __('Back to inbox') }}</button>
+                        <a href="{{ route('messages.index') }}" class="text-sm bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded">&larr; {{ __('Back to inbox') }}</a>
 
                         @php
                             $isDsl = false;
@@ -81,7 +81,7 @@
                             <a href="{{ route('messages.create', ['reply_to' => $message->id, 'to' => $message->sender]) }}" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">{{ __('Reply') }}</a>
                         @endif
 
-                        <form method="post" action="{{ route('messages.destroy', $message->id) }}" onsubmit="return confirm('{{ __('Are you sure you want to delete this message?') }}');">
+                        <form method="post" action="{{ route('messages.destroy', $message->id) }}" class="message-delete-form">
                             @csrf
                             <button type="submit" class="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">{{ __('Delete message') }}</button>
                         </form>
@@ -91,3 +91,12 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    (function(){
+        var deleteMsg = <?php echo json_encode(__('Are you sure you want to delete this message?')); ?>;
+        document.querySelectorAll('.message-delete-form').forEach(function(f){
+            f.addEventListener('submit', function(e){ if (!confirm(deleteMsg)) { e.preventDefault(); } });
+        });
+    })();
+</script>

@@ -300,6 +300,10 @@ Route::get('/messages/{id}/reply-data', [App\Http\Controllers\MessagesController
 Route::post('/messages/{id}/delete', [App\Http\Controllers\MessagesController::class, 'destroy'])
     ->name('messages.destroy')
     ->middleware(['auth', 'doNotCacheResponse']);
+// Bulk-delete grouped sent message (delete all per-recipient rows matching content of the representative id)
+Route::post('/messages/{id}/delete-group', [App\Http\Controllers\MessagesController::class, 'bulkDestroy'])
+    ->name('messages.destroyGroup')
+    ->middleware(['auth', 'doNotCacheResponse']);
 
 // Sitemap (cached): generates a simple sitemap.xml with main pages and recent public sessions
 Route::get('/sitemap.xml', function () {
