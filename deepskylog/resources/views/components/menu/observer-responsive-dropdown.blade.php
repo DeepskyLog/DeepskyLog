@@ -22,21 +22,20 @@
                     label="{{__('My drawings') }}"/>
 
                 @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
-                <x-dropdown.item
-                    href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}"
-                    label="<x-outline.session-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My sessions') }}"
-                />
+                <x-dropdown.item href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}">
+                    <x-outline.session-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
+                    {{ __('My sessions') }}
+                </x-dropdown.item>
 
-                <x-dropdown.item
-                    separator
-                    href="/instrument"
-                    label="<x-outline.telescope-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My instruments') }}"
-                />
+                <x-dropdown.item separator href="/instrument">
+                    <x-outline.telescope-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
+                    {{ __('My instruments') }}
+                </x-dropdown.item>
 
-                <x-dropdown.item
-                    href="/instrumentset"
-                    label="<x-outline.instrument-set-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My instrument sets') }}"
-                />
+                <x-dropdown.item href="/instrumentset">
+                    <x-outline.instrument-set-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
+                    {{ __('My instrument sets') }}
+                </x-dropdown.item>
 
                 <x-dropdown.item
                     icon="globe-europe-africa"
@@ -44,20 +43,20 @@
                     label="{{ __('My locations') }}"
                 />
 
-                <x-dropdown.item
-                    href="/eyepiece"
-                    label="<x-outline.eyepiece-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My eyepieces') }}"
-                />
+                <x-dropdown.item href="/eyepiece">
+                    <x-outline.eyepiece-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
+                    {{ __('My eyepieces') }}
+                </x-dropdown.item>
 
-                <x-dropdown.item
-                    href="/filter"
-                    label="<x-outline.filter-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My filters') }}"
-                />
+                <x-dropdown.item href="/filter">
+                    <x-outline.filter-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
+                    {{ __('My filters') }}
+                </x-dropdown.item>
 
-                <x-dropdown.item
-                    href="/lens"
-                    label="<x-outline.barlow-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My lenses') }}"
-                />
+                <x-dropdown.item href="/lens">
+                    <x-outline.barlow-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
+                    {{ __('My lenses') }}
+                </x-dropdown.item>
 
                 <x-dropdown.item
                     separator

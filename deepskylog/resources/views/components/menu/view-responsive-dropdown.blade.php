@@ -25,68 +25,10 @@
                 label="{{ __('Sketch of the Month') }}"
             />
 
-            @if (! Auth::guest() && Auth::user()->isObserver())
-                <x-dropdown.item
-                    separator
-                    icon="bars-3-center-left"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=view_lists"
-                    label="{!! __('My observing lists') !!}"
-                />
-
-                @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
-                <x-dropdown.item
-                    href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}"
-                    label="<x-outline.session-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My sessions') }}"
-                />
-
-                <x-dropdown.item
-                    href="{{ route('session.all') }}"
-                    label="<x-outline.session-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('All sessions') }}"
-                />
-
-                <x-dropdown.item
-                    separator
-                    href="/instrument"
-                    label="<x-outline.telescope-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My instruments') }}"
-                />
-
-                <x-dropdown.item
-                    href="/instrumentset"
-                    label="<x-outline.instrument-set-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My instrument sets') }}"
-                />
-
-                <x-dropdown.item
-                    icon="globe-europe-africa"
-                    href="/location"
-                    label="{{ __('My locations') }}"
-                />
-
-                <x-dropdown.item
-                    href="/eyepiece"
-                    label="<x-outline.eyepiece-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My eyepieces') }}"
-                />
-
-                <x-dropdown.item
-                    href="/filter"
-                    label="<x-outline.filter-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My filters') }}"
-                />
-
-                <x-dropdown.item
-                    href="/lens"
-                    label="<x-outline.barlow-icon class=\"h-4 w-4 mr-3 text-gray-300 inline-block align-middle\" />{{ __('My lenses') }}"
-                />
-
-                <x-dropdown.item
-                    separator
-                    href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&myLanguages=true&catalog=%&minyear={{ Carbon::now()->year - 1 }}&minmonth={{ Carbon::now()->month }}&minday={{ Carbon::now()->day }}&newobservations=true"
-                    label="{{ __('Latest observations') }}"
-                />
-            @else
-                <x-dropdown.item
-                    href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&myLanguages=true&catalog=%&minyear={{ Carbon::now()->year - 1 }}&minmonth={{ Carbon::now()->month }}&minday={{ Carbon::now()->day }}&newobservations=true"
-                    label="{{ __('Latest observations') }}"
-                />
-            @endif
+            <x-dropdown.item
+                href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&myLanguages=true&catalog=%&minyear={{ Carbon::now()->year - 1 }}&minmonth={{ Carbon::now()->month }}&minday={{ Carbon::now()->day }}&newobservations=true"
+                label="{{ __('Latest observations') }}"
+            />
             <x-dropdown.item
                 icon="pencil-square"
                 href="/drawings"

@@ -1,8 +1,8 @@
 <nav x-data="{ open: false }" class="border-b border-gray-700 bg-gray-900">
     <!-- Primary Navigation Menu -->
     <div class="relative">
-        <!-- Left brand (flush left) -->
-        <div class="absolute left-0 inset-y-0 flex items-center pl-4 lg:pl-6">
+    <!-- Left brand (flush left) -->
+    <div class="absolute left-0 inset-y-0 hidden lg:flex items-center pl-4 lg:pl-6">
             <x-nav-link href="/">
                 <div class="text-xl font-bold text-gray-200">
                     {{ __("DeepskyLog") }}
