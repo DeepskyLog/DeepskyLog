@@ -12,6 +12,15 @@
 
         <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 justify-between pl-6 lg:pl-8">
+                <!-- Mobile brand (visible on small screens) -->
+                <div class="flex items-center lg:hidden pl-0">
+                    <x-nav-link href="/">
+                        <div class="text-lg font-bold text-gray-200">
+                            {{ __("DeepskyLog") }}
+                        </div>
+                    </x-nav-link>
+                </div>
+
                 <div class="flex">
                     <!-- Navigation Links -->
 
