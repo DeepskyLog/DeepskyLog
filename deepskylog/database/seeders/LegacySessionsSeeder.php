@@ -36,7 +36,7 @@ class LegacySessionsSeeder extends Seeder
                     // Attempt to copy legacy session image from old filesystem if it exists.
                     // Assumption: legacy images are located in /var/www/DeepskyLog.old/deepsky/sessions
                     // and named either by session id + extension or stored in a 'picture' column (if present).
-                    $legacyImageDir = '/var/www/DeepskyLog.old/deepsky/sessions';
+                    $legacyImageDir = '/var/www/www.deepskylog.be/deepsky/sessions';
 
                     // New storage location for session photos (matches CreateSession behavior)
                     // Files should be placed under storage/app/public/photos/sessions so they are
