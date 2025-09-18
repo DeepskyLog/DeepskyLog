@@ -14,9 +14,13 @@
         </div>
         <div class="text-sm text-gray-400 flex items-center gap-4">
             <div>
-                {{ __('Total') }}: <span class="font-medium text-gray-200">{{ $totalMessages ?? 0 }}</span>
+                {{ __('Total') }}: <span class="font-medium text-gray-200">{{ $mergedTotal ?? ($totalMessages ?? 0) }}</span>
                 &nbsp;|&nbsp;
                 {{ __('Unread') }}: <span class="font-medium text-yellow-300">{{ $unreadMessages ?? 0 }}</span>
+                &nbsp;|&nbsp;
+                {{ __('Received') }}: <span class="font-medium text-gray-200">{{ $receivedCount ?? 0 }}</span>
+                &nbsp;|&nbsp;
+                {{ __('Sent') }}: <span class="font-medium text-gray-200">{{ $sentGroupsCount ?? 0 }}</span>
             </div>
             <form method="get" action="" class="flex items-center gap-2">
                 <label for="per_page" class="text-xs text-gray-400">{{ __('Per page') }}</label>
