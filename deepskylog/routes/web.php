@@ -333,20 +333,23 @@ Route::get('/sitemap.xml', function () {
             // If the DB is unavailable, return only the static urls
         }
 
-        // Build XML
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+        // Build XML (use PHP_EOL so we don't include literal "\n" sequences
+        // and ensure proper XML escaping for values)
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
         foreach ($urls as $u) {
-            $xml .= "  <url>\n";
-            $xml .= '    <loc>'.e($u['loc'])."</loc>\n";
+            $xml .= "  <url>" . PHP_EOL;
+            // Use XML-safe escaping
+            $loc = htmlspecialchars($u['loc'], ENT_XML1 | ENT_COMPAT, 'UTF-8');
+            $xml .= '    <loc>'.$loc."</loc>" . PHP_EOL;
             if (! empty($u['lastmod'])) {
-                $xml .= '    <lastmod>'.$u['lastmod']."</lastmod>\n";
+                $xml .= '    <lastmod>'.$u['lastmod']."</lastmod>" . PHP_EOL;
             }
-            $xml .= '    <changefreq>'.$u['changefreq']."</changefreq>\n";
-            $xml .= '    <priority>'.$u['priority']."</priority>\n";
-            $xml .= "  </url>\n";
+            $xml .= '    <changefreq>'.$u['changefreq']."</changefreq>" . PHP_EOL;
+            $xml .= '    <priority>'.$u['priority']."</priority>" . PHP_EOL;
+            $xml .= "  </url>" . PHP_EOL;
         }
-        $xml .= '</urlset>';
+        $xml .= '</urlset>' . PHP_EOL;
 
         return $xml;
     });
