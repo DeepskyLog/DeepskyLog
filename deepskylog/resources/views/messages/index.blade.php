@@ -6,7 +6,7 @@
             <div class="overflow-hidden bg-gray-900 shadow-sm sm:rounded-lg p-4">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
-            <button type="button" onclick="window.location='{{ route('messages.create') }}'" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">{{ __('New Message') }}</button>
+            <a href="{{ route('messages.create') }}" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">{{ __('New Message') }}</a>
             <form method="post" action="{{ route('messages.markAllRead') }}" id="mark-all-read-form">
                 @csrf
                 <button type="button" id="mark-all-read-btn" class="inline-flex items-center px-3 py-2 bg-gray-600 text-white text-sm font-medium rounded hover:bg-gray-500">{{ __('Mark all read') }}</button>
@@ -50,31 +50,28 @@
                             @php
                                 $currentSort = request()->query('sort');
                                 $currentDirection = strtolower(request()->query('direction', 'desc')) === 'asc' ? 'asc' : 'desc';
-                                $buildSort = function($key) use ($currentSort, $currentDirection) {
-                                    $dir = ($currentSort === $key && $currentDirection === 'asc') ? 'desc' : 'asc';
-                                    return request()->fullUrlWithQuery(['sort' => $key, 'direction' => $dir]);
-                                };
-                                $linkClass = function($key) use ($currentSort) {
-                                    $base = 'inline-flex items-center gap-1 text-sm font-medium';
-                                    $active = $currentSort === $key;
-                                    $color = $active ? 'text-yellow-300' : 'text-blue-400 hover:text-blue-600';
-                                    return $base . ' ' . $color;
-                                };
-                                $indicator = function($key) use ($currentSort, $currentDirection) {
-                                    if ($currentSort !== $key) return '';
-                                    return $currentDirection === 'asc' ? ' ▲' : ' ▼';
-                                };
                             @endphp
-                            <th class="px-2 py-1"><a class="{{ $linkClass('from') }}" href="{{ $buildSort('from') }}">{{ __('From') }}{{ $indicator('from') }}</a></th>
-                            <th class="px-2 py-1"><a class="{{ $linkClass('subject') }}" href="{{ $buildSort('subject') }}">{{ __('Subject') }}{{ $indicator('subject') }}</a></th>
+                            <th class="px-2 py-1">
+                                <a class="inline-flex items-center gap-1 text-sm font-medium {{ $currentSort === 'from' ? 'text-yellow-300' : 'text-blue-400 hover:text-blue-600' }}" href="{{ request()->fullUrlWithQuery(['sort' => 'from', 'direction' => ($currentSort === 'from' && $currentDirection === 'asc') ? 'desc' : 'asc']) }}">{{ __('From') }}{{ $currentSort === 'from' ? ($currentDirection === 'asc' ? ' ▲' : ' ▼') : '' }}</a>
+                            </th>
+                            <th class="px-2 py-1">
+                                <a class="inline-flex items-center gap-1 text-sm font-medium {{ $currentSort === 'to' ? 'text-yellow-300' : 'text-blue-400 hover:text-blue-600' }}" href="{{ request()->fullUrlWithQuery(['sort' => 'to', 'direction' => ($currentSort === 'to' && $currentDirection === 'asc') ? 'desc' : 'asc']) }}">{{ __('To') }}{{ $currentSort === 'to' ? ($currentDirection === 'asc' ? ' ▲' : ' ▼') : '' }}</a>
+                            </th>
+                            <th class="px-2 py-1">
+                                <a class="inline-flex items-center gap-1 text-sm font-medium {{ $currentSort === 'subject' ? 'text-yellow-300' : 'text-blue-400 hover:text-blue-600' }}" href="{{ request()->fullUrlWithQuery(['sort' => 'subject', 'direction' => ($currentSort === 'subject' && $currentDirection === 'asc') ? 'desc' : 'asc']) }}">{{ __('Subject') }}{{ $currentSort === 'subject' ? ($currentDirection === 'asc' ? ' ▲' : ' ▼') : '' }}</a>
+                            </th>
                             <th class="px-2 py-1">{{ __('Preview') }}</th>
-                            <th class="px-2 py-1"><a class="{{ $linkClass('date') }}" href="{{ $buildSort('date') }}">{{ __('Date') }}{{ $indicator('date') }}</a></th>
+                            <th class="px-2 py-1">
+                                <a class="inline-flex items-center gap-1 text-sm font-medium {{ $currentSort === 'date' ? 'text-yellow-300' : 'text-blue-400 hover:text-blue-600' }}" href="{{ request()->fullUrlWithQuery(['sort' => 'date', 'direction' => ($currentSort === 'date' && $currentDirection === 'asc') ? 'desc' : 'asc']) }}">{{ __('Date') }}{{ $currentSort === 'date' ? ($currentDirection === 'asc' ? ' ▲' : ' ▼') : '' }}</a>
+                            </th>
+                            <th class="px-2 py-1">{{ __('Actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($messages as $m)
                             @php $isRead = $read->contains($m->id); @endphp
-                            <tr class="border-t {{ $isRead ? '' : 'bg-gray-800' }}">
+                            @php $isSent = ($m->sender === auth()->user()->username); @endphp
+                            <tr class="border-t {{ $isRead ? '' : 'bg-gray-800' }} {{ $isSent ? 'bg-gray-800/40' : '' }}">
                                 <td class="px-2 py-2">
                                     @php $senderUser = $senders[$m->sender] ?? null; @endphp
                                     @if($senderUser)
@@ -117,16 +114,39 @@
                                         </div>
                                     @endif
                                 </td>
+                                <td class="px-2 py-2">
+                                    @php $receiverUser = $senders[$m->receiver] ?? null; @endphp
+                                    @if(($m->receiver ?? '') === 'all')
+                                        <span class="text-sm text-gray-300">{{ __('All') }}</span>
+                                    @elseif($receiverUser)
+                                        {{-- Show full name and link to profile if available --}}
+                                        <a href="/observers/{{ $receiverUser->slug ?? $receiverUser->username }}" class="text-sm font-medium text-blue-300 hover:text-blue-500">{{ $receiverUser->name }}</a>
+                                    @elseif(! empty($m->receiver))
+                                        <span class="text-sm text-gray-300">{{ $m->receiver }}</span>
+                                    @else
+                                        <span class="text-sm text-gray-300">-</span>
+                                    @endif
+                                </td>
                                 <td class="px-2 py-2 font-medium">
                                     <div class="flex items-center gap-2">
                                         <a href="{{ route('messages.show', $m->id) }}">{!! $m->safe_subject ?: '<span class="text-gray-400">'.__('(no subject)').'</span>' !!}</a>
-                                        @if (! $isRead)
+                                        @if (! $isRead && ! $isSent)
                                             <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-red-600 text-white shadow-sm ring-2 ring-red-300 animate-pulse uppercase tracking-wide" title="{{ __('New message') }}" aria-label="{{ __('New message') }}">{{ __('New') }}</span>
                                         @endif
                                     </div>
                                 </td>
                                 <td class="px-2 py-2 text-gray-400">{{ $m->safe_preview }}</td>
                                 <td class="px-2 py-2 text-xs text-gray-400">{{ $m->formatted_date }}</td>
+                                <td class="px-2 py-2">
+                                    <div class="flex items-center gap-2">
+                                        @php $isGroup = isset($m->_is_group) && $m->_is_group; @endphp
+                                        <form method="post" action="{{ $isGroup ? route('messages.destroyGroup', $m->id) : route('messages.destroy', $m->id) }}" class="message-delete-form">
+                                            @csrf
+                                            <input type="hidden" name="page" value="{{ request()->query('page', 1) }}" />
+                                            <button type="submit" class="text-xs bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded">{{  __('Delete') }}</button>
+                                        </form>
+                                    </div>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -151,6 +171,13 @@
                 </div>
 
                 <script>
+                    // confirmation handler for delete forms (localized message)
+                    (function(){
+                        var deleteMsg = <?php echo json_encode(__('Are you sure you want to delete this message?')); ?>;
+                        document.querySelectorAll('.message-delete-form').forEach(function(f){
+                            f.addEventListener('submit', function(e){ if (!confirm(deleteMsg)) { e.preventDefault(); } });
+                        });
+                    })();
                     (function(){
                         var btn = document.getElementById('mark-all-read-btn');
                         var modal = document.getElementById('markAllReadModal');
