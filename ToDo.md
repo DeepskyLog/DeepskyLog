@@ -4,6 +4,9 @@
 
 ### Next steps
 
++ [ ] Targets
+    + [ ] Create tables for deepsky and comet objects.
+    + [ ] Create extra tables
 + [ ] Check if the new robots.txt works as expected.
 + [ ] Check if the server still needs to work hard.
 + [ ] Release new version of pyDeepskyLog
@@ -11,7 +14,6 @@
 
 ### Distant future
 
-+ [ ] Targets
 + [ ] Observing lists
 + [ ] Observations
 + [ ] All missing pages

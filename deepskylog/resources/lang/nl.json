@@ -91,6 +91,8 @@
     "Bortle": "Bortle-schaal",
     "Bright nebula": "Heldere nevel",
     "Broadcast message": "Broadcast bericht",
+        "Sent": "Verzonden",
+        "Received": "Ontvangen",
     "Browser Sessions": "Browsersessies",
     "by": "door",
     " by ": " door ",

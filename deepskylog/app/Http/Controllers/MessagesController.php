@@ -160,10 +160,25 @@ class MessagesController extends Controller
         // Unread messages (uses helper that excludes deleted/read)
         $unreadMessages = Message::getNumberOfUnreadMails($user->username);
 
+        // Received messages count (exclude messages where the user is the sender to avoid duplicates)
+        $receivedCount = Message::where(function ($q) use ($user) {
+            $q->where('receiver', $user->username)
+                ->orWhere('receiver', 'all');
+        })->whereNotIn('id', $deleted)->where('sender', '!=', $user->username)->count();
+
+        // Grouped sent messages count (groups of identical sends)
+        $sentGroupsCount = Message::where('sender', $user->username)->whereNotIn('id', $deleted)
+            ->selectRaw('MIN(id) as id, sender, subject, message, date')
+            ->groupBy('sender', 'subject', 'message', 'date')
+            ->get()
+            ->count();
+
         // Paginate the merged collection
         $currentPage = max(1, (int) $request->query('page', 1));
         $perPage = (int) $perPage;
         $total = $all->count();
+    // merged total: number of rows shown in the merged inbox (received + grouped sent)
+    $mergedTotal = $total;
         $slice = $all->slice(($currentPage - 1) * $perPage, $perPage)->values();
 
         // Build a LengthAwarePaginator for compatibility with the view links
@@ -197,7 +212,7 @@ class MessagesController extends Controller
             }
         }
 
-        return view('messages.index', compact('messages', 'read', 'senders', 'totalMessages', 'unreadMessages', 'perPage'));
+        return view('messages.index', compact('messages', 'read', 'senders', 'totalMessages', 'unreadMessages', 'perPage', 'receivedCount', 'sentGroupsCount', 'mergedTotal'));
     }
 
     public function show($id)
