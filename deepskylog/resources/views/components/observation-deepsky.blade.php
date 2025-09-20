@@ -44,9 +44,9 @@
         {{ __(' on ') }}
         {{ Carbon::create($observation_date)->translatedFormat('j M Y') }}
         {{ __(' from ') }}
-        <a href="/location/{{ $user->slug }}/{{ Location::where('id', $observation->locationid)->first()->slug }}"
+        <a href="/location/{{ $user->slug }}/{{ \App\Models\Location::where('id', $observation->locationid)->first()->slug }}"
            class="font-bold hover:underline">
-            {{ html_entity_decode(Location::where('id', $observation->locationid)->first()->name) }}
+            {{ html_entity_decode(\App\Models\Location::where('id', $observation->locationid)->first()->name) }}
         </a>
 
         {{-- Seeing --}}

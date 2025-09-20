@@ -30,11 +30,11 @@
                         @if (!$location->hidden || Auth::user()->id == $location->user_id || Auth::user()->isAdministrator())
                             <tr>
                                 <td>{{ __("Latitude") }}</td>
-                                <td>{{ Location::dms($location->latitude, true) }}</td>
+                                <td>{{ \App\Models\Location::dms($location->latitude, true) }}</td>
                             </tr>
                             <tr>
                                 <td>{{ __("Longitude") }}</td>
-                                <td>{{ Location::dms($location->longitude, false) }}</td>
+                                <td>{{ \App\Models\Location::dms($location->longitude, false) }}</td>
                             </tr>
 
                             <tr>
