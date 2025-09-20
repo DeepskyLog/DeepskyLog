@@ -13,7 +13,16 @@
                         </div>
                     @endif
 
-                    @if (!$location->hidden || Auth::user()->id == $location->user_id || Auth::user()->isAdministrator())
+                    @php
+                        // Compute auth flags safely to avoid errors when no user is logged in
+                        $isLoggedIn = Auth::check();
+                        $isOwner = $isLoggedIn && Auth::user()->id == $location->user_id;
+                        $isAdmin = $isLoggedIn && Auth::user()->isAdministrator();
+                        $fstOffset = $isLoggedIn ? (Auth::user()->fstOffset ?? 0) : 0;
+                        $showInches = $isLoggedIn && (Auth::user()->showInches ?? false);
+                    @endphp
+
+                    @if (!$location->hidden || $isOwner || $isAdmin)
                         <div id="location-map" class="w-full md:w-64 h-64 mx-auto mt-4 rounded overflow-hidden" style="z-index:1;"></div>
                     @endif
                 </div>
@@ -27,7 +36,7 @@
                     <br/>
                     <table class="table-auto w-full">
 
-                        @if (!$location->hidden || Auth::user()->id == $location->user_id || Auth::user()->isAdministrator())
+                        @if (!$location->hidden || $isOwner || $isAdmin)
                             <tr>
                                 <td>{{ __("Latitude") }}</td>
                                 <td>{{ \App\Models\Location::dms($location->latitude, true) }}</td>
@@ -40,7 +49,7 @@
                             <tr>
                                 <td>{{ __("Elevation") }}</td>
                                 <td>
-                                    @if (Auth::check() && Auth::user()->showInches)
+                                    @if ($showInches)
                                         {{ intval($location->elevation * 3.28084) }} {{ __('ft') }}
                                     @else
                                         {{ __($location->elevation) }} {{ __('m') }}
@@ -61,7 +70,6 @@
                         <tr>
                             <td>{{ __('SQM') }}</td>
                             <td>
-                                @php $fstOffset = Auth::user()->fstOffset ?? 0; @endphp
                                 {{ $location->getSqm($fstOffset) ?? __('Unknown') }}
                             </td>
                         </tr>
@@ -78,7 +86,7 @@
                             </td>
                         </tr>
 
-                        @if (!$location->hidden || Auth::user()->id == $location->user_id || Auth::user()->isAdministrator())
+                        @if (!$location->hidden || $isOwner || $isAdmin)
                             <tr>
                                 <td>{{ __('Length of night') }}</td>
                                 <td>
@@ -104,7 +112,7 @@
                             </tr>
                         @endif
 
-                        @if (Auth::user()->id == $location->user_id || Auth::user()->isAdministrator())
+                        @if ($isOwner || $isAdmin)
                             <tr>
                                 <td>{{ __("Details visible for other users") }}</td>
                                 <td>
@@ -168,7 +176,7 @@
                         </tr>
 
                         @auth
-                            @if ($location->user_id == Auth::user()->id)
+                            @if ($isOwner)
                                 <tr>
                                     <td>{{ __("Used instruments") }}</td>
                                     <td>{!! $location->get_used_instruments_as_string() !!}</td>
@@ -188,7 +196,7 @@
                     </table>
 
                     @auth
-                        @if (Auth::user()->id == $location->user_id || Auth::user()->isAdministrator())
+                        @if ($isOwner || $isAdmin)
                             <br/>
                             <a href="/location/{{$location->user->slug}}/{{$location->slug }}/edit">
                                 <x-button type="submit" secondary label="{{ __('Edit') }} {!! $location->name !!}"/>
@@ -204,7 +212,7 @@
         </div>
     </div>
     @push('scripts')
-        @if (!$location->hidden || Auth::user()->id == $location->user_id || Auth::user()->isAdministrator())
+        @if (!$location->hidden || $isOwner || $isAdmin)
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                         var map = L.map('location-map', { fullscreenControl: true }).setView([
@@ -216,20 +224,34 @@
                             attribution: '© OpenStreetMap contributors'
                         }).addTo(map);
 
-                        // Add all locations of the user with SQM, NELM, Bortle
-                        var locations = [
-                            @foreach($location->user->locations as $loc)
-                                {
-                                    id: {{ $loc->id }},
-                                    name: @json($loc->name),
-                                    latitude: {{ $loc->latitude }},
-                                    longitude: {{ $loc->longitude }},
-                                    sqm: @json(($loc->getSqm(Auth::user()->fstOffset ?? 0) !== null) ? $loc->getSqm(Auth::user()->fstOffset ?? 0) : 'Unknown'),
-                                    nelm: @json(($loc->getNelm(Auth::user()->fstOffset ?? 0) !== null) ? $loc->getNelm(Auth::user()->fstOffset ?? 0) : 'Unknown'),
-                                    bortle: @json(($loc->getBortle() !== null) ? $loc->getBortle() : 'Unknown'),
-                                },
-                            @endforeach
-                        ];
+                        // Prepare locations data (owners see all their locations; others only the current location)
+                        @php
+                            if ($isOwner) {
+                                $mapLocations = $location->user->locations->map(function($loc) use ($fstOffset) {
+                                    return [
+                                        'id' => $loc->id,
+                                        'name' => $loc->name,
+                                        'latitude' => $loc->latitude,
+                                        'longitude' => $loc->longitude,
+                                        'sqm' => $loc->getSqm($fstOffset) ?? 'Unknown',
+                                        'nelm' => $loc->getNelm($fstOffset) ?? 'Unknown',
+                                        'bortle' => $loc->getBortle() ?? 'Unknown',
+                                    ];
+                                })->toArray();
+                            } else {
+                                $mapLocations = [[
+                                    'id' => $location->id,
+                                    'name' => $location->name,
+                                    'latitude' => $location->latitude,
+                                    'longitude' => $location->longitude,
+                                    'sqm' => $location->getSqm($fstOffset) ?? 'Unknown',
+                                    'nelm' => $location->getNelm($fstOffset) ?? 'Unknown',
+                                    'bortle' => $location->getBortle() ?? 'Unknown',
+                                ]];
+                            }
+                        @endphp
+
+                        var locations = @json($mapLocations);
 
                         locations.forEach(function(loc) {
                             var popupContent = `<strong>${loc.name}</strong><br>` +
