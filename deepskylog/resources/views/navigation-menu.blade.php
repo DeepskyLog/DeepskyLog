@@ -264,7 +264,7 @@
                             @foreach (Auth::user()->allTeams() as $team)
                                 <x-switchable-team
                                     :team="$team"
-                                    component="x-dropdown.item"
+                                    component="link"
                                 />
                             @endforeach
                         @endif

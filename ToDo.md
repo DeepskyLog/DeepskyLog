@@ -4,6 +4,10 @@
 
 ### Next steps
 
++ [ ] Change team does not update the page. 
++ [ ] Icons in the responsive menu
++ [ ] Need to log in again every day?  
++ [ ] Log in on tablet redirects to the login page, and gives a Page Retired error.
 + [ ] Targets
     + [ ] Create tables for deepsky and comet objects.
     + [ ] Create extra tables
