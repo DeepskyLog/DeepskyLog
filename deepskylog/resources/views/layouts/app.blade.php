@@ -178,5 +178,31 @@
                 });
             });
         </script>
+        <script>
+            // Ensure team-switch links trigger a full navigation even when other
+            // libraries (e.g. TinyMCE) add global click handlers that call
+            // preventDefault(). We listen in the capture phase and, when a
+            // `.dsl-switch-team` anchor is clicked without modifier keys, we
+            // stop propagation so downstream listeners cannot turn the click
+            // into an XHR/fetch. Respect Ctrl/Meta/Shift/Alt for opening in new
+            // tabs/windows or modified behavior.
+            document.addEventListener('click', function (e) {
+                const el = e.target.closest && e.target.closest('a.dsl-switch-team');
+                if (!el) return;
+
+                // Respect modifier keys to allow opening in new tab/window
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+                // If it's a normal left-click on the link, ensure native navigation
+                // by stopping propagation on the capture phase so other handlers
+                // can't prevent the default.
+                try {
+                    e.stopPropagation();
+                } catch (err) {
+                    // ignore
+                }
+                // Let the browser perform the default action (navigation).
+            }, true);
+        </script>
     </body>
 </html>
