@@ -15,17 +15,14 @@ trait ClearsResponseCache
         // the welcome page change. Fall back to clearing the entire response
         // cache if forgetting the specific URL fails for any reason.
         $invalidateHomepage = function ($model) {
+            // Invalidate all response cache entries. We previously attempted
+            // to forget('/') but with team-aware hashing the same URL may
+            // produce multiple cache entries (per user/team). Clearing the
+            // whole response cache ensures stale team-specific pages are removed.
             try {
-                // Try to forget only the cached homepage entry. If the cache
-                // profile uses a suffix or complex keying this may not work;
-                // in that case the fallback below clears all cached responses.
-                ResponseCache::forget('/');
+                ResponseCache::clear();
             } catch (\Throwable $e) {
-                try {
-                    ResponseCache::clear();
-                } catch (\Throwable $e) {
-                    // swallow to avoid breaking model save
-                }
+                // swallow to avoid breaking model save
             }
         };
 

@@ -42,7 +42,7 @@
             <!-- Team Switcher -->
             <x-menu.header label="{!! __('Switch Teams') !!}">
                 @foreach (Auth::user()->allTeams() as $team)
-                    <x-switchable-team :team="$team" />
+                    <x-switchable-team :team="$team" component="link" />
                 @endforeach
             </x-menu.header>
         </x-menu.dropdown>
