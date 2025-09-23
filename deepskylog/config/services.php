@@ -32,27 +32,35 @@ return [
     ],
 
     'github' => [
-        'client_id' => env('GITHUB_CLIENT_ID'),
-        'client_secret' => env('GITHUB_CLIENT_SECRET'),
-        'redirect' => env('GITHUB_REDIRECT'),
+        // Support both GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET and legacy GITHUB_KEY / GITHUB_SECRET
+        'client_id' => env('GITHUB_CLIENT_ID', env('GITHUB_KEY')),
+        'client_secret' => env('GITHUB_CLIENT_SECRET', env('GITHUB_SECRET')),
+        // Support both GITHUB_REDIRECT and GITHUB_REDIRECT_URI
+        'redirect' => env('GITHUB_REDIRECT', env('GITHUB_REDIRECT_URI')),
     ],
 
     'facebook' => [
-        'client_id' => env('FACEBOOK_CLIENT_ID'),
-        'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
-        'redirect' => env('FACEBOOK_REDIRECT'),
+        // Support both FACEBOOK_CLIENT_ID / FACEBOOK_CLIENT_SECRET and legacy FACEBOOK_KEY / FACEBOOK_SECRET
+        'client_id' => env('FACEBOOK_CLIENT_ID', env('FACEBOOK_KEY')),
+        'client_secret' => env('FACEBOOK_CLIENT_SECRET', env('FACEBOOK_SECRET')),
+        // Support both FACEBOOK_REDIRECT and FACEBOOK_REDIRECT_URI
+        'redirect' => env('FACEBOOK_REDIRECT', env('FACEBOOK_REDIRECT_URI')),
     ],
 
     'twitter' => [
-        'client_id' => env('TWITTER_CLIENT_ID'),
-        'client_secret' => env('TWITTER_CLIENT_SECRET'),
-        'redirect' => env('TWITTER_REDIRECT'),
+        // Support both TWITTER_CLIENT_ID / TWITTER_CLIENT_SECRET and legacy TWITTER_KEY / TWITTER_SECRET
+        'client_id' => env('TWITTER_CLIENT_ID', env('TWITTER_KEY')),
+        'client_secret' => env('TWITTER_CLIENT_SECRET', env('TWITTER_SECRET')),
+        // Support both TWITTER_REDIRECT and TWITTER_REDIRECT_URI
+        'redirect' => env('TWITTER_REDIRECT', env('TWITTER_REDIRECT_URI')),
     ],
 
     'google' => [
-        'client_id' => env('GOOGLE_CLIENT_ID'),
-        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => env('GOOGLE_REDIRECT'),
+        // GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET are already standard
+        'client_id' => env('GOOGLE_CLIENT_ID', env('GOOGLE_KEY')),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET', env('GOOGLE_SECRET')),
+        // Support both GOOGLE_REDIRECT and GOOGLE_CALLBACK_URL
+        'redirect' => env('GOOGLE_REDIRECT', env('GOOGLE_CALLBACK_URL')),
     ],
 
 ];
