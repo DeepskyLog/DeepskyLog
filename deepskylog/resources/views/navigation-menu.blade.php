@@ -179,40 +179,15 @@
                     </div>
 
                     <div class="mt-3 space-y-1">
-                        @if (! Auth::guest() && Auth::user()->isObserver())
-                            <x-dropdown.item
-                                icon="bars-3-center-left"
-                                href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&observer={{ Auth::user()->username }}"
-                                label="{{ __('My observations') }}"
-                            />
-
-                            <x-dropdown.item
-                                icon="pencil-square"
-                                href="/drawings/{{ Auth::user()->slug }}"
-                                label="{{ __('My drawings') }}"
-                            />
-
-                            <x-dropdown.item
-                                separator
-                                icon="bars-3-center-left"
-                                href="{{ config('app.old_url') }}/index.php?indexAction=view_lists"
-                                label="{!! __('My observing lists') !!}"
-                            />
-
-                            @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
-                            <x-dropdown.item
-                                href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}"
-                                label="{{ __('My sessions') }}"
-                            />
-                        @endif
-
                         <x-dropdown.item
+                            icon="user-circle"
                             href="/observers/{{ Auth::user()->slug }}"
                             label="{{ __('Details') }}"
                         />
 
                         <!-- Account Management -->
                         <x-dropdown.item
+                            icon="cog"
                             href="{{ route('profile.show') }}"
                             label="{{ __('Profile') }}"
                         />
@@ -233,6 +208,7 @@
                             @csrf
 
                             <x-dropdown.item
+                                icon="arrow-left-start-on-rectangle"
                                 href="{{ route('logout') }}"
                                 @click.prevent="$root.submit();"
                                 label='{{ __("Log Out") }}'
