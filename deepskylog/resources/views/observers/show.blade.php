@@ -194,11 +194,11 @@
                            <tr>
                            <td>{!! __("Number of equipment sets") !!}</td>
                                <td>
-                                   @if ($user->id === Auth::user()->id)
+                                   @if (Auth::user() && $user->id === Auth::user()->id)
                                        <a href="/instrumentset">
                                    @endif
                                 {{ $user->instrumentSets()->count() }}
-                                @if ($user->id === Auth::user()->id)
+                                @if (Auth::user() && $user->id === Auth::user()->id)
                                 </a>
                                 @endif
                                 </td>
