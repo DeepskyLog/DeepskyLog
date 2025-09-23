@@ -155,7 +155,10 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN'),
+    // Ensure we don't set an invalid cookie domain (e.g. 'localhost') which
+    // many browsers will ignore. If SESSION_DOMAIN is empty or 'localhost'
+    // fall back to null so the cookie is host-only.
+    'domain' => ($d = env('SESSION_DOMAIN')) && $d !== 'localhost' ? $d : null,
 
     /*
     |--------------------------------------------------------------------------
@@ -168,7 +171,9 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    // Accept boolean-like env values (true/false strings). Use FILTER_VALIDATE_BOOLEAN
+    // to correctly interpret 'false' as boolean false.
+    'secure' => filter_var(env('SESSION_SECURE_COOKIE', false), FILTER_VALIDATE_BOOLEAN),
 
     /*
     |--------------------------------------------------------------------------
@@ -196,6 +201,7 @@ return [
     |
     */
 
-    'same_site' => 'lax',
+    // Allow overriding via SESSION_SAME_SITE env var (null, 'lax', 'strict', 'none')
+    'same_site' => env('SESSION_SAME_SITE', 'lax'),
 
 ];
