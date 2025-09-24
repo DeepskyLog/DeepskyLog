@@ -176,11 +176,3 @@ foreach ($drawings as $drawing => $key) {
 }
 echo "</div>";
 
-echo "<h2>Tweets</h2>";
-
-echo "<a class='twitter-timeline' data-handle='DeepskyLog' data-height='750' data-width='750' data-theme='dark' ></a>";
-echo "<script src='https://www.athabasca.dev/content/scripts/widget.js'></script>";
-
-//echo '<a class="twitter-timeline" data-width="750" data-height="750" data-theme="dark" href="https://twitter.com/DeepskyLog?ref_src=twsrc%5Etfw">
-//    Tweets by DeepskyLog</a>';
-//echo '<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>';
