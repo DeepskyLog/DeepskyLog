@@ -45,30 +45,42 @@
 
         @php
             $link = config("app.old_url") . "/index.php?indexAction=comets_detail_object&object=" . $observation->objectid;
+            $cometOld = \App\Models\CometObjectsOld::where('id', $observation->objectid)->first();
+            $cometName = $cometOld ? $cometOld->name : __('Unknown comet');
         @endphp
 
-    {!! __(" observed :object", ["object" => '<a href="' . $link . '" class="font-bold hover:underline">' . \App\Models\CometObjectsOld::where("id", $observation->objectid)->first()->name . "</a>"]) !!}
+    {!! __(" observed :object", ["object" => '<a href="' . $link . '" class="font-bold hover:underline">' . $cometName . "</a>"]) !!}
 
         {{ __(" on ") }}
             {{ \Carbon\Carbon::create($observation_date)->translatedFormat("j M Y") }}
         @if ($observation->locationid > 0)
             {{ __(" from ") }}
+            @php
+                $location = \App\Models\Location::where('id', $observation->locationid)->first();
+                $locationSlug = $location ? $location->slug : '';
+                $locationName = $location ? $location->name : __('Unknown location');
+            @endphp
             <a
-                href="/location/{{$user->slug}}/{{ \App\Models\Location::where("id", $observation->locationid)->first()->slug }}"
+                href="/location/{{ $user->slug }}/{{ $locationSlug }}"
                 class="font-bold hover:underline"
             >
-                {{ html_entity_decode(\App\Models\Location::where("id", $observation->locationid)->first()->name) }}
+                {{ html_entity_decode($locationName) }}
                 .
             </a>
         @endif
         <br/>
         @if ($observation->instrumentid > 0)
+            @php
+                $instrument = \App\Models\Instrument::where('id', $observation->instrumentid)->first();
+                $instrumentSlug = $instrument ? $instrument->slug : '';
+                $instrumentName = $instrument ? $instrument->fullName() : __('Unknown instrument');
+            @endphp
             {{ __("Used instrument was ") }}
             <a
-                href="/instrument/{{ $user->slug }}/{{ \App\Models\Instrument::where("id", $observation->instrumentid)->first()->slug }}"
+                href="/instrument/{{ $user->slug }}/{{ $instrumentSlug }}"
                 class="font-bold hover:underline"
             >
-                {!! html_entity_decode(\App\Models\Instrument::where("id", $observation->instrumentid)->first()->fullName()) !!}
+                {!! html_entity_decode($instrumentName) !!}
                 .
             </a>
         @endif
