@@ -13,7 +13,9 @@ return [
      *  You can provide your own class given that it implements the
      *  CacheProfile interface.
      */
-    'cache_profile' => Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests::class,
+    // Use a team/user-aware cache profile that avoids caching requests with
+    // session cookies or authenticated users.
+    'cache_profile' => App\Http\ResponseCache\TeamAwareCacheProfile::class,
 
     /*
      *  Optionally, you can specify a header that will force a cache bypass.
