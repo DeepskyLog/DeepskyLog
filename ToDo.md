@@ -4,8 +4,6 @@
 
 ### Next steps
 
-+ [X] Change team does not update the page. 
-+ [X] Icons in the responsive menu
 + [ ] Need to log in again every day?  
 + [ ] Log in on tablet redirects to the login page, and gives a Page Retired error.
 + [ ] Log in using Facebook, google, github does not work anymore...

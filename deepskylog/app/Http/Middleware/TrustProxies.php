@@ -19,6 +19,15 @@ class TrustProxies extends Middleware
      *
      * @var int
      */
+    public function __construct()
+    {
+        // Allow configuring trusted proxies via the TRUSTED_PROXIES env var
+        // (comma-separated list). If not set, leave as null so Laravel's
+        // default behavior applies.
+        $proxies = env('TRUSTED_PROXIES');
+        $this->proxies = $proxies ? explode(',', $proxies) : null;
+    }
+
     protected $headers =
         Request::HEADER_X_FORWARDED_FOR |
         Request::HEADER_X_FORWARDED_HOST |
