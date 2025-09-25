@@ -20,11 +20,6 @@
                 href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&myLanguages=true&searchObservationsQuickPick"
                 label="{{ __('Search Observations') }}"
             />
-
-                <x-dropdown.item separator href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_sessions">
-                    <x-outline.session-icon class="h-4 w-4 mr-2 text-gray-300" />
-                    {{ __('All sessions') }}
-                </x-dropdown.item>
         </div>
     </div>
 </div>

@@ -7,6 +7,15 @@
         $date = $observation->date;
         $observation_date = substr($date, 0, 4) . "-" . substr($date, 4, 2) . "-" . substr($date, 6, 2);
         $user = \App\Models\User::where("username", html_entity_decode($observation->observerid))->first();
+        // Fallbacks when user cannot be found
+        if (! $user) {
+            $user = (object) [
+                'profile_photo_url' => asset('images/placeholder-avatar.png'),
+                'name' => __('Unknown observer'),
+                'username' => '',
+                'slug' => '',
+            ];
+        }
         // Stichoza\GoogleTranslate\GoogleTranslate used conditionally
         $tr = null;
         if (auth()->check() && auth()->user()->translate) {
@@ -16,19 +25,23 @@
 
     <div class="mr-4">
         <img
-            src="{{ $user->profile_photo_url }}"
-            alt="{{ $user->name }}"
+            src="{{ $user->profile_photo_url ?? asset('images/placeholder-avatar.png') }}"
+            alt="{{ $user->name ?? __('Unknown observer') }}"
             class="h-20 w-20 rounded-full object-cover"
         />
     </div>
 
     <div class="max-w-[calc(100%-7rem)]">
-        <a
-            href="/observers/{{ $user->slug }}"
-            class="font-bold hover:underline"
-        >
-            {{ $user->name }}
-        </a>
+        @if (!empty($user->slug))
+            <a
+                href="/observers/{{ $user->slug }}"
+                class="font-bold hover:underline"
+            >
+                {{ $user->name }}
+            </a>
+        @else
+            <span class="font-bold">{{ $user->name }}</span>
+        @endif
 
         @php
             $link = config("app.old_url") . "/index.php?indexAction=comets_detail_object&object=" . $observation->objectid;

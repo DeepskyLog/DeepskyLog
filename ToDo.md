@@ -4,14 +4,12 @@
 
 ### Next steps
 
-+ [ ] Need to log in again every day?  
++ [ ] Need to log in again every day? Solved? 
 + [ ] Log in on tablet redirects to the login page, and gives a Page Retired error.
 + [ ] Log in using Facebook, google, github does not work anymore...
 + [ ] Targets
     + [ ] Create tables for deepsky and comet objects.
     + [ ] Create extra tables
-+ [ ] Check if the new robots.txt works as expected.
-+ [ ] Check if the server still needs to work hard.
 + [ ] Release new version of pyDeepskyLog
     + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
