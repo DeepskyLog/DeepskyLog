@@ -13,11 +13,6 @@
 
             <x-menu.item icon="globe-europe-africa" href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&myLanguages=true&searchObservationsQuickPick">{{ __('Search Observations') }}</x-menu.item>
 
-            <x-menu.item separator href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_sessions">
-                <x-outline.session-icon class="h-4 w-4 mr-2 text-gray-300" />
-                {{ __('All sessions') }}
-            </x-menu.item>
-
         </x-menu.dropdown>
     </div>
 </div>
