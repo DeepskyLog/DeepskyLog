@@ -11,9 +11,10 @@
 
         <div class="mt-3 space-y-1">
             @if (! Auth::guest() && Auth::user()->isObserver())
+                @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
                 <x-dropdown.item
                     icon="bars-3-center-left"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&observer={{  Auth::user()->username }}"
+                    href="{{ $meSlug ? url('/observations/'.$meSlug) : '#' }}"
                     label="{{ __('My observations') }}"/>
 
                 <x-dropdown.item

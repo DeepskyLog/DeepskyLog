@@ -413,7 +413,7 @@
 
                 <br/>
                 <x-button gray icon="eye" class="mb-2"
-                          href='{{ config("app.old_url") }}/index.php?indexAction=result_selected_observations&observer={{ $user->username }}'
+                          href='{{ url("/observations/" . $user->slug) }}'
                 >
                     {{ __("All observations of ") . $user->name }}
                 </x-button>

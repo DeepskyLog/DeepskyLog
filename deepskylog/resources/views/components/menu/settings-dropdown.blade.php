@@ -45,7 +45,8 @@
             <!-- Account Management -->
             {{-- Move observer-specific quick links here so they're available in the user menu --}}
             @if (!Auth::guest() && Auth::user()->isObserver())
-                <x-menu.item icon="bars-3-center-left" href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&observer={{ Auth::user()->username }}">{{ __('My observations') }}</x-menu.item>
+                @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
+                <x-menu.item icon="bars-3-center-left" href="{{ $meSlug ? url('/observations/'.$meSlug) : '#' }}">{{ __('My observations') }}</x-menu.item>
 
                 <x-menu.item icon="pencil-square" href="/drawings/{{ Auth::user()->slug }}">{{ __('My drawings') }}</x-menu.item>
 
