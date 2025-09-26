@@ -6,9 +6,11 @@
 
 + [ ] Log in on tablet redirects to the login page, and gives a Page Retired error.
 + [ ] Log in using Facebook, google, github does not work anymore...
++ [ ] Test registration
++ [ ] Test password reset
 + [ ] Targets
     + [ ] Create tables for deepsky and comet objects.
-    + [ ] Create extra tables
+    + [ ] Create extra tables for other objects (planets, sun, moon, moon features, ...)
     + [ ] Search targets, first by name, then by type, constellation, ...
 + [ ] Release new version of pyDeepskyLog
     + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.

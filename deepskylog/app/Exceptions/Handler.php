@@ -4,6 +4,9 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class Handler extends ExceptionHandler
 {
@@ -43,6 +46,29 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        // Capture CSRF token mismatch details so we can debug 419s from specific clients
+        $this->renderable(function (TokenMismatchException $e, $request) {
+            try {
+                $data = [
+                    'path' => $request->path(),
+                    'method' => $request->method(),
+                    'ip' => $request->ip(),
+                    'user_agent' => $request->header('User-Agent'),
+                    'referer' => $request->header('Referer'),
+                    'cookies' => array_keys($request->cookies->all()),
+                    'has_session_cookie' => (bool) $request->cookie(config('session.cookie')),
+                ];
+
+                Log::warning('CSRF token mismatch (419) encountered', $data);
+            } catch (\Throwable $logEx) {
+                // If logging fails, don't break the request flow
+                Log::error('Failed to log TokenMismatchException details: '.$logEx->getMessage());
+            }
+
+            // Let the framework continue to render the usual response (419 page)
+            return null;
         });
     }
 }
