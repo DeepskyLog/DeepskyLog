@@ -26,9 +26,9 @@
             />
 
             <x-dropdown.item
-                icon="bars-3-center-left" 
-                href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&myLanguages=true&catalog=%&minyear={{ Carbon::now()->year - 1 }}&minmonth={{ Carbon::now()->month }}&minday={{ Carbon::now()->day }}&newobservations=true"
-                label="{{ __('Latest observations') }}"
+                icon="bars-3-center-left"
+                href="/observations"
+                label="{{ __('All observations') }}"
             />
             <x-dropdown.item
                 icon="pencil-square"

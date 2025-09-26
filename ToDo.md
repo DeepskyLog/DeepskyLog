@@ -4,7 +4,6 @@
 
 ### Next steps
 
-+ [ ] Need to log in again every day? Solved? 
 + [ ] Log in on tablet redirects to the login page, and gives a Page Retired error.
 + [ ] Log in using Facebook, google, github does not work anymore...
 + [ ] Targets

@@ -32,16 +32,10 @@
     </div>
 
     <div class="max-w-[calc(100%-7rem)]">
-        @if (!empty($user->slug))
-            <a
-                href="/observers/{{ $user->slug }}"
-                class="font-bold hover:underline"
-            >
-                {{ $user->name }}
-            </a>
-        @else
-            <span class="font-bold">{{ $user->name }}</span>
-        @endif
+        <a href="/observers/{{ $user->slug }}" class="font-bold hover:underline">
+            {{ $user->name ?? __('Unknown observer') }}
+        </a>
+
 
         @php
             $link = config("app.old_url") . "/index.php?indexAction=comets_detail_object&object=" . $observation->objectid;
@@ -90,11 +84,33 @@
             {{ __(" The following notes where made: ") }}
             <br/>
                 <div class="my-2 rounded-sm bg-gray-900 px-4 py-4">
-                @if ($tr)
-                    {!! ($translated = $tr->translate(html_entity_decode($observation->description))) == null ? html_entity_decode($observation->description): $translated !!}
-                @else
-                    {!! html_entity_decode($observation->description) !!}
-                @endif
+                <div class="flex items-start space-x-4">
+                    @if ($observation->hasDrawing)
+                        <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-comet-lightbox-{{ $observation->id }}'))" class="flex-shrink-0 focus:outline-none">
+                            <img src="/images/cometdrawings/{{ $observation->id }}.jpg" alt="comet-drawing-{{ $observation->id }}" class="w-28 rounded" />
+                        </button>
+                    @endif
+
+                    <div class="flex-1">
+                        @if ($tr)
+                            {!! ($translated = $tr->translate(html_entity_decode($observation->description))) == null ? html_entity_decode($observation->description): $translated !!}
+                        @else
+                            {!! html_entity_decode($observation->description) !!}
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Modal / Lightbox (listens for custom event to open) -->
+                <div x-data="{ open: false }" x-on:open-comet-lightbox-{{ $observation->id }}.window="open = true">
+                    <div x-cloak x-show="open" x-transition.opacity="" @click.self="open = false" @keydown.escape.window="open = false" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+                        <div class="max-w-4xl max-h-[90vh] p-4">
+                            <button type="button" @click="open = false" class="absolute top-4 right-4 z-50 rounded bg-gray-800 p-2 text-white">
+                                &times;
+                            </button>
+                            <img src="/images/cometdrawings/{{ $observation->id }}.jpg" alt="comet-drawing-large-{{ $observation->id }}" class="max-w-full max-h-[85vh] rounded shadow-lg" />
+                        </div>
+                    </div>
+                </div>
             </div>
         @endif
 

@@ -80,6 +80,12 @@ Route::get('/drawings', 'App\Http\Controllers\DrawingController@index')->name('d
 Route::get('/cometdrawings', 'App\Http\Controllers\CometDrawingController@index')->name('cometdrawings.index');
 Route::get('/drawings/{observer}', 'App\Http\Controllers\DrawingController@show')->name('drawings.show');
 Route::get('/cometdrawings/{observer}', 'App\Http\Controllers\CometDrawingController@show')->name('cometdrawings.show');
+// Observations (deepsky + comet)
+Route::get('/observations', 'App\Http\Controllers\ObservationsController@index')->name('observations.index');
+Route::get('/observations/{observer}', 'App\Http\Controllers\ObservationsController@show')->name('observations.show');
+// Separate comet observations pages
+Route::get('/cometobservations', 'App\\Http\\Controllers\\ObservationsController@cometIndex')->name('observations.comet.index');
+Route::get('/cometobservations/{observer}', 'App\\Http\\Controllers\\ObservationsController@cometShow')->name('observations.comet.show');
 
 // Sketch of the week / month
 Route::get('/sketch-of-the-week', function () {

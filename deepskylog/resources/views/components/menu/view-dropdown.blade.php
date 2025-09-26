@@ -22,7 +22,7 @@
 
                 {{-- Instrument/eyepiece/filter/lens links moved to the user menu --}}
             @endif
-            <x-menu.item icon="bars-3-center-left" href="{{ config('app.old_url') }}/index.php?indexAction=result_selected_observations&myLanguages=true&catalog=%&minyear={{ Carbon::now()->year - 1 }}&minmonth={{ Carbon::now()->month }}&minday={{ Carbon::now()->day }}&newobservations=true">{{ __('Latest observations') }}</x-menu.item>
+            <x-menu.item icon="bars-3-center-left" href="/observations">{{ __('All observations') }}</x-menu.item>
 
             <x-menu.item icon="pencil-square" href="/drawings">{{ __('All drawings') }}</x-menu.item>
 
