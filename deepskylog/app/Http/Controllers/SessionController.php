@@ -352,7 +352,18 @@ class SessionController extends Controller
             }
         }
 
-        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang) {
+        // Preload primary observers for the sessions so views can safely access $session->observer
+        $observerUsernames = $collection->pluck('observerid')->filter()->unique()->values()->all();
+        $observerUsers = [];
+        if (! empty($observerUsernames)) {
+            $observerUsers = User::whereIn('username', $observerUsernames)->get()->keyBy('username');
+        }
+
+        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang, $observerUsers) {
+            // Ensure a stable observer object is always available on the session instance
+            if (empty($session->observer)) {
+                $session->observer = isset($observerUsers[$session->observerid]) ? $observerUsers[$session->observerid] : (object) ['name' => $session->observerid, 'slug' => null];
+            }
             $loc = isset($locations[$session->locationid]) ? $locations[$session->locationid] : null;
             $session->preview = $this->resolveSessionImage($session, $loc);
             $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
@@ -463,7 +474,17 @@ class SessionController extends Controller
         $shouldTranslate = Auth::check() && Auth::user()->translate;
         $lang = $shouldTranslate ? (Auth::user()->language ?? config('app.locale')) : null;
 
-        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang) {
+        // Preload primary observers for the sessions so views can safely access $session->observer
+        $observerUsernames = $collection->pluck('observerid')->filter()->unique()->values()->all();
+        $observerUsers = [];
+        if (! empty($observerUsernames)) {
+            $observerUsers = User::whereIn('username', $observerUsernames)->get()->keyBy('username');
+        }
+
+        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang, $observerUsers) {
+            if (empty($session->observer)) {
+                $session->observer = isset($observerUsers[$session->observerid]) ? $observerUsers[$session->observerid] : (object) ['name' => $session->observerid, 'slug' => null];
+            }
             $image = null;
 
             $loc = isset($locations[$session->locationid]) ? $locations[$session->locationid] : null;
@@ -867,7 +888,17 @@ class SessionController extends Controller
             }
         }
 
-        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang) {
+        // Preload primary observers for the sessions so views can safely access $session->observer
+        $observerUsernames = $collection->pluck('observerid')->filter()->unique()->values()->all();
+        $observerUsers = [];
+        if (! empty($observerUsernames)) {
+            $observerUsers = User::whereIn('username', $observerUsernames)->get()->keyBy('username');
+        }
+
+        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang, $observerUsers) {
+            if (empty($session->observer)) {
+                $session->observer = isset($observerUsers[$session->observerid]) ? $observerUsers[$session->observerid] : (object) ['name' => $session->observerid, 'slug' => null];
+            }
             $image = null;
 
             // Prefer images stored under public/images/sessions/{id}.*
