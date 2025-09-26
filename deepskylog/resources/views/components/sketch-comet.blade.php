@@ -5,8 +5,11 @@
         <img width="400" src="/images/cometdrawings/{{ $observation_id }}.jpg"/>
 
         <div class="text-center">
-            {{ $observer_name }} -
-            {{ \App\Models\CometObservationsOld::find($observation_id)->object->name }}
+            @php
+                $obs = \App\Models\CometObservationsOld::find($observation_id);
+                $objectName = $obs && isset($obs->object) ? ($obs->object->name ?? __('Unknown')) : __('Unknown');
+            @endphp
+            {{ $observer_name }} - {{ $objectName }}
             -
             {{ \Carbon\Carbon::create($observation_date)->translatedFormat("j M Y") }}
         </div>
@@ -44,7 +47,8 @@
         </button>
 
             @php
-                $objectName = \App\Models\CometObservationsOld::find($observation_id)->object->name;
+                $obs = \App\Models\CometObservationsOld::find($observation_id);
+                $objectName = $obs && isset($obs->object) ? ($obs->object->name ?? __('Unknown')) : __('Unknown');
                 $messageSubject = __('About your sketch of :object', ['object' => $objectName]);
             @endphp
 

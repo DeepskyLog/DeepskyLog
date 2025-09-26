@@ -106,14 +106,14 @@
                             <article class="{{ $bgClass }} p-4 rounded">
                                 @if(! empty($session->preview))
                                     <div class="mb-3">
-                                        <a href="{{ route('session.show', [$session->observer->slug ?? $session->observerid, $session->slug ?? $session->id]) }}">
+                                        <a href="{{ route('session.show', [optional($session->observer)->slug ?? $session->observerid, $session->slug ?? $session->id]) }}">
                                             <img src="{{ $session->preview }}" alt="{{ html_entity_decode($session->name ?? __('Session'), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}" class="w-full h-40 object-cover rounded" />
                                         </a>
                                     </div>
                                 @endif
 
                                 <h3 class="text-lg font-bold text-white mb-2">
-                                    <a href="{{ route('session.show', [$session->observer->slug ?? $session->observerid, $session->slug ?? $session->id]) }}" class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                                    <a href="{{ route('session.show', [optional($session->observer)->slug ?? $session->observerid, $session->slug ?? $session->id]) }}" class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
                                 </h3>
 
                                 <div class="text-sm text-gray-400 mb-2">
@@ -174,7 +174,8 @@
                         @foreach ($sketches as $sketch)
                             @php
                                 $observation_id = $sketch->id;
-                                $observer_name = User::where("username", $sketch->observerid)->first()->name;
+                                $observerUser = User::where("username", $sketch->observerid)->first();
+                                $observer_name = $observerUser ? $observerUser->name : $sketch->observerid;
                                 $date = $sketch->date;
                                 $observation_date = substr($date, 0, 4) . "-" . substr($date, 4, 2) . "-" . substr($date, 6, 2);
                             @endphp
@@ -212,7 +213,8 @@
                         @foreach ($sketches as $sketch)
                             @php
                                 $observation_id = $sketch->id;
-                                $observer_name = User::where("username", $sketch->observerid)->first()->name;
+                                $observerUser = User::where("username", $sketch->observerid)->first();
+                                $observer_name = $observerUser ? $observerUser->name : $sketch->observerid;
                                 $date = $sketch->date;
                                 $observation_date = substr($date, 0, 4) . "-" . substr($date, 4, 2) . "-" . substr($date, 6, 2);
                             @endphp

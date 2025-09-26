@@ -35,7 +35,7 @@
                             <h3 class="text-lg font-semibold mb-3 text-gray-100">{{ __('Draft sessions') }}</h3>
                             <div class="space-y-3">
                                 @foreach($inactiveSessions as $s)
-                                    @php $observerSlug = $s->observer->slug ?? $s->observerid; @endphp
+                                    @php $observerSlug = optional($s->observer)->slug ?? $s->observerid; @endphp
                                     @php
                                         $viewer = auth()->user();
                                         $allowAdmin = config('sessions.allow_admin_override', false);
@@ -78,16 +78,16 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($sessions as $session)
                         <article class="bg-gray-800 p-4 rounded">
-                            @if(! empty($session->preview))
+                                    @if(! empty($session->preview))
                                 <div class="mb-3">
-                                    <a href="{{ route('session.show', [$session->observer->slug ?? $session->observerid, $session->slug ?? $session->id]) }}">
+                                    <a href="{{ route('session.show', [optional($session->observer)->slug ?? $session->observerid, $session->slug ?? $session->id]) }}">
                                         <img src="{{ $session->preview }}" alt="{{ html_entity_decode($session->name ?? __('Session'), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}" class="w-full h-40 object-cover rounded" />
                                     </a>
                                 </div>
                             @endif
 
                             <h3 class="text-lg font-bold text-white mb-2">
-                                <a href="{{ route('session.show', [$session->observer->slug ?? $session->observerid, $session->slug ?? $session->id]) }}" class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                                <a href="{{ route('session.show', [optional($session->observer)->slug ?? $session->observerid, $session->slug ?? $session->id]) }}" class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
                             </h3>
 
                             <div class="text-sm text-gray-400 mb-3">

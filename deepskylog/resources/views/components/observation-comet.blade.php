@@ -93,7 +93,15 @@
 
                     <div class="flex-1">
                         @if ($tr)
-                            {!! ($translated = $tr->translate(html_entity_decode($observation->description))) == null ? html_entity_decode($observation->description): $translated !!}
+                            @php
+                                $translated = null;
+                                try {
+                                    $translated = $tr->translate(html_entity_decode($observation->description));
+                                } catch (\Throwable $e) {
+                                    $translated = null;
+                                }
+                            @endphp
+                            {!! $translated === null ? html_entity_decode($observation->description) : $translated !!}
                         @else
                             {!! html_entity_decode($observation->description) !!}
                         @endif
