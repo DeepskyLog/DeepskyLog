@@ -30,6 +30,20 @@ class ResolveSocialiteUser implements ResolvesSocialiteUsers
 
             $user = Socialite::driver($provider)->user();
 
+            try {
+                Log::info('oauth: provider user', [
+                    'provider' => $provider,
+                    'provider_id' => $user->getId(),
+                    'email' => $user->getEmail(),
+                    'name' => $user->getName(),
+                    'nickname' => method_exists($user, 'getNickname') ? $user->getNickname() : null,
+                    'avatar' => method_exists($user, 'getAvatar') ? $user->getAvatar() : null,
+                    'has_token' => ! empty($user->token ?? null),
+                ]);
+            } catch (\Throwable $e) {
+                Log::warning('oauth: failed to log provider user', ['error' => $e->getMessage()]);
+            }
+
             if (Socialstream::generatesMissingEmails()) {
                 $user->email = $user->getEmail() ?? ("{$user->id}@{$provider}".config('app.domain'));
             }
