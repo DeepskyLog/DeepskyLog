@@ -6,7 +6,11 @@
 
         <div class="text-center">
             {{ $observer_name }} -
-            {{ \App\Models\ObservationsOld::find($observation_id)->objectname }}
+                @php
+                    $obs = \App\Models\ObservationsOld::find($observation_id);
+                    $objectName = $obs ? ($obs->objectname ?? __('Unknown')) : __('Unknown');
+                @endphp
+                {{ $observer_name }} - {{ $objectName }}
             -
             {{ \Carbon\Carbon::create($observation_date)->translatedFormat("j M Y") }}
         </div>
@@ -40,7 +44,8 @@
         </button>
 
         @php
-            $objectName = \App\Models\ObservationsOld::find($observation_id)->objectname;
+              $obs = \App\Models\ObservationsOld::find($observation_id);
+              $objectName = $obs ? ($obs->objectname ?? __('Unknown')) : __('Unknown');
             $messageSubject = __('About your sketch of :object', ['object' => $objectName]);
         @endphp
 

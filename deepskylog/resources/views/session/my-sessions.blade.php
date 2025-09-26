@@ -16,7 +16,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($sessions as $session)
                         @php
-                            $observerSlug = $session->observer->slug ?? $session->observerid;
+                            $observerSlug = optional($session->observer)->slug ?? $session->observerid;
                         @endphp
                         <article class="bg-gray-800 p-4 rounded">
                             @if(! empty($session->preview))
