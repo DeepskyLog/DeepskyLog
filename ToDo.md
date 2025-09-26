@@ -9,6 +9,7 @@
 + [ ] Targets
     + [ ] Create tables for deepsky and comet objects.
     + [ ] Create extra tables
+    + [ ] Search targets, first by name, then by type, constellation, ...
 + [ ] Release new version of pyDeepskyLog
     + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
@@ -50,7 +51,7 @@
 + [X] Add instrument sets.
 + [X] Like observations and sketches
 + [X] Rework message system
-+ [X] Totally reworked the session.  They are now more blog-like
++ [X] Totally reworked the sessions.  They are now more blog-like
 
 ## Eloquent
 
@@ -68,15 +69,3 @@
     + [ ] See https://laraveldaily.teachable.com/courses/393790/lectures/6329089
 + [ ] Feeds: https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel
 + [ ] Check https://laravel-comments.com/ for commenting on observations, observing lists, ...
-
-## Infrastructure changes made
-
-The response cache (spatie/laravel-responsecache) was installed and configured to cache public GET responses.
-- Middleware `\Spatie\ResponseCache\Middlewares\CacheResponse` was added to the `web` group in `app/Http/Kernel.php`.
-- Middleware aliases `cacheResponse` and `doNotCacheResponse` were added.
-- `config/responsecache.php` was published and set to a default 1 hour cache lifetime.
-
-Next recommended steps:
-- Consider using a cache store that supports tags (Redis) if you plan to clear subsets of cached pages.
-- Add `doNotCacheResponse` to routes that should never be cached (e.g., user dashboards, forms).
-- Monitor `php artisan responsecache:clear` as part of model events or deployments where content changes.
