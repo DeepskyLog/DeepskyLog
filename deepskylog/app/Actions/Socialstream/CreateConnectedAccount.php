@@ -14,6 +14,19 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
      */
     public function create(mixed $user, string $provider, ProviderUser $providerUser): ConnectedAccount
     {
+        try {
+            \Illuminate\Support\Facades\Log::info('oauth: creating connected account', [
+                'provider' => $provider,
+                'provider_id' => $providerUser->getId(),
+                'provider_email' => $providerUser->getEmail(),
+                'user_id' => is_object($user) ? $user->id : $user,
+                'session_id' => session()->getId(),
+                'session_cookie' => request()->cookie(config('session.cookie')),
+            ]);
+        } catch (\Throwable $e) {
+            // ignore logging errors
+        }
+
         return Socialstream::connectedAccountModel()::forceCreate([
             'user_id' => $user->id,
             'provider' => strtolower($provider),
