@@ -17,6 +17,19 @@ class UpdateConnectedAccount implements UpdatesConnectedAccounts
     {
         Gate::forUser($user)->authorize('update', $connectedAccount);
 
+        try {
+            \Illuminate\Support\Facades\Log::info('oauth: updating connected account', [
+                'provider' => $provider,
+                'provider_id' => $providerUser->getId(),
+                'connected_account_id' => $connectedAccount->id ?? null,
+                'user_id' => is_object($user) ? $user->id : $user,
+                'session_id' => session()->getId(),
+                'session_cookie' => request()->cookie(config('session.cookie')),
+            ]);
+        } catch (\Throwable $e) {
+            // ignore logging errors
+        }
+
         $connectedAccount->forceFill([
             'provider' => strtolower($provider),
             'provider_id' => $providerUser->getId(),
