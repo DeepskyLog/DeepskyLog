@@ -36,6 +36,21 @@ class CreateUserFromProvider implements CreatesUserFromProvider
     public function create(string $provider, ProviderUserContract $providerUser): mixed
     {
         return DB::transaction(function () use ($provider, $providerUser) {
+            // Log diagnostic info about the provider user and session at creation time
+            try {
+                \Illuminate\Support\Facades\Log::info('oauth: creating user from provider', [
+                    'provider' => $provider,
+                    'provider_id' => $providerUser->getId(),
+                    'provider_email' => $providerUser->getEmail(),
+                    'provider_name' => $providerUser->getName(),
+                    'session_id' => session()->getId(),
+                    'session_cookie' => request()->cookie(config('session.cookie')),
+                    'cookies' => request()->cookies->all(),
+                ]);
+            } catch (\Throwable $e) {
+                // Do not break the flow for logging failures
+            }
+
             return tap(User::create([
                 'name' => $providerUser->getName(),
                 'username' => Str::studly($providerUser->getName()),
@@ -53,6 +68,18 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                     $this->createsConnectedAccounts->create($user, $provider, $providerUser)
                 );
                 $user->save();
+                try {
+                    \Illuminate\Support\Facades\Log::info('oauth: created user', [
+                        'provider' => $provider,
+                        'provider_id' => $providerUser->getId(),
+                        'user_id' => $user->id,
+                        'user_email' => $user->email,
+                        'session_id' => session()->getId(),
+                        'session_cookie' => request()->cookie(config('session.cookie')),
+                    ]);
+                } catch (\Throwable $e) {
+                    // ignore logging errors
+                }
                 $this->addToTeam($user, 'Observers');
             });
         });
