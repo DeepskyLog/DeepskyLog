@@ -7,6 +7,8 @@
 + [ ] Log in using Facebook, google, github does not work anymore... 
 + [ ] Test registration
 + [ ] Test password reset
++ [ ] Error: 
+[2025-09-29 13:26:06] production.ERROR: Attempt to read property "slug" on null {"view":{"view":"/var/www/test.deepskylog.org/DeepskyLog/deepskylog/resources/views/components/observation-deepsky.blade.php","data":[]},"exception":"[object] (Spatie\\LaravelIgnition\\Exceptions\\ViewException(code: 0): Attempt to read property \"slug\" on null at /var/www/test.deepskylog.org/DeepskyLog/deepskylog/resources/views/components/observation-deepsky.blade.php:47)
 + [ ] Targets
     + [ ] Create tables for deepsky and comet objects.
     + [ ] Create extra tables for other objects (planets, sun, moon, moon features, ...)
