@@ -110,8 +110,6 @@
             </div>
         </form>
 
-        @if (JoelButcher\Socialstream\Socialstream::show())
-            <x-socialstream />
-        @endif
+        {{-- Social login buttons removed per request: "Login via" section hidden on registration page --}}
     </x-authentication-card>
 </x-app-layout>
