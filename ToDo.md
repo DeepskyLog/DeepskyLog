@@ -4,9 +4,6 @@
 
 ### Next steps
 
-+ [ ] Log in using Facebook does not work anymore... 
-+ [ ] Test registration
-+ [ ] Test password reset
 + [ ] Targets
     + [ ] Create tables for deepsky and comet objects.
     + [ ] Create extra tables for other objects (planets, sun, moon, moon features, ...)

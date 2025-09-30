@@ -3,7 +3,8 @@
     <td class="header">
         <a href="{{ $url }}" style="display: inline-block;">
             @if (trim($slot) === 'DeepskyLog')
-                <img src="{{ config('app.url') }}/images/logo_small.jpg" class="logo" alt="DeepskyLog Logo">
+                {{-- Use asset() helper and the primary logo to ensure correct path in emails --}}
+                <img src="{{ asset('images/logo2.png') }}" class="logo" alt="DeepskyLog Logo">
             @else
                 {{ $slot }}
             @endif
