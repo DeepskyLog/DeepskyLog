@@ -34,5 +34,7 @@ class SocialstreamServiceProvider extends ServiceProvider
         Socialstream::setUserPasswordsUsing(SetUserPassword::class);
         Socialstream::handlesInvalidStateUsing(HandleInvalidState::class);
         Socialstream::generatesProvidersRedirectsUsing(GenerateRedirectForProvider::class);
+        // Use app-level AuthenticateOAuthCallback to ensure explicit guard login
+        $this->app->bind(\JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback::class, \App\Actions\Socialstream\AuthenticateOAuthCallback::class);
     }
 }
