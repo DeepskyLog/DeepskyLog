@@ -10,12 +10,53 @@
         use App\Models\User;
         use Carbon\Carbon;
         use Stichoza\GoogleTranslate\GoogleTranslate;
+    use Illuminate\Support\Facades\Log;
 
         $date = $observation->date;
         $observation_date = substr($date, 0, 4) . '-' . substr($date, 4, 2) . '-' . substr($date, 6, 2);
-        $user = User::where('username', html_entity_decode($observation->observerid))->first();
-        $object = ObjectsOld::where('name', $observation->objectname)->first();
-        $constellation = Constellation::where('id', $object->con)->first()->name;
+    $user = User::where('username', html_entity_decode($observation->observerid))->first();
+    $object = ObjectsOld::where('name', $observation->objectname)->first();
+    $constellation = $object ? (Constellation::where('id', $object->con)->first()?->name ?? '') : '';
+
+    // preload related models and guard against nulls when rendering
+    $location = Location::where('id', $observation->locationid)->first();
+        $instrument = Instrument::where('id', $observation->instrumentid)->first();
+        $eyepiece = $observation->eyepieceid > 0 ? Eyepiece::where('id', $observation->eyepieceid)->first() : null;
+        $filter = $observation->filterid > 0 ? Filter::where('id', $observation->filterid)->first() : null;
+
+        // Collect context to help debugging when related models are missing
+        $logContext = [
+            'observation_id' => $observation->id,
+            'observerid' => $observation->observerid ?? null,
+            'objectname' => $observation->objectname ?? null,
+            'locationid' => $observation->locationid ?? null,
+            'instrumentid' => $observation->instrumentid ?? null,
+            'eyepieceid' => $observation->eyepieceid ?? null,
+            'filterid' => $observation->filterid ?? null,
+            'route' => request()->route()?->getName() ?? null,
+            'uri' => request()->getRequestUri() ?? null,
+            'ip' => request()->ip() ?? null,
+            'auth_user_id' => auth()->id(),
+        ];
+
+        if (!$user) {
+            Log::warning('Observation component: missing user', $logContext);
+        }
+        if (!$object) {
+            Log::warning('Observation component: missing object', $logContext);
+        }
+        if (!$location) {
+            Log::warning('Observation component: missing location', $logContext);
+        }
+        if (!$instrument) {
+            Log::warning('Observation component: missing instrument', $logContext);
+        }
+        if ($observation->eyepieceid > 0 && !$eyepiece) {
+            Log::warning('Observation component: missing eyepiece', $logContext);
+        }
+        if ($observation->filterid > 0 && !$filter) {
+            Log::warning('Observation component: missing filter', $logContext);
+        }
 
         if (auth()->user()) {
                 $tr = null;
@@ -26,13 +67,17 @@
     @endphp
 
     <div class="mr-4">
-        <img src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}" class="h-20 w-20 rounded-full object-cover"/>
+        <img src="{{ $user?->profile_photo_url ?? '/images/default-profile.png' }}" alt="{{ $user?->name ?? __('Unknown') }}" class="h-20 w-20 rounded-full object-cover"/>
     </div>
 
     <div class="max-w-[calc(100%-7rem)]">
-        <a href="/observers/{{ $user->slug }}" class="font-bold hover:underline">
-            {{ $user->name }}
-        </a>
+        @if($user)
+            <a href="/observers/{{ $user->slug }}" class="font-bold hover:underline">
+                {{ $user->name }}
+            </a>
+        @else
+            <span class="font-bold">{{ __('Unknown observer') }}</span>
+        @endif
         @php
             $link = config('app.old_url') . "/index.php?indexAction=detail_object&object=" . $observation->objectname;
         @endphp
@@ -44,10 +89,13 @@
         {{ __(' on ') }}
         {{ Carbon::create($observation_date)->translatedFormat('j M Y') }}
         {{ __(' from ') }}
-        <a href="/location/{{ $user->slug }}/{{ \App\Models\Location::where('id', $observation->locationid)->first()->slug }}"
-           class="font-bold hover:underline">
-            {{ html_entity_decode(\App\Models\Location::where('id', $observation->locationid)->first()->name) }}
-        </a>
+        @if($location)
+            <a href="/location/{{ $user?->slug ?? 'unknown' }}/{{ $location->slug }}" class="font-bold hover:underline">
+                {{ html_entity_decode($location->name) }}
+            </a>
+        @else
+            <span class="font-bold">{{ __('Unknown location') }}</span>
+        @endif
 
         {{-- Seeing --}}
         {{-- SQM or limiting magnitude --}}
@@ -71,28 +119,37 @@
             {{ __('seeing') }}
         @endif.<br/>
         {{ __('Used instrument was ') }}
-        <a href="/instrument/{{ $user->slug }}/{{ Instrument::where('id', $observation->instrumentid)->first()->slug }}"
-           class="font-bold hover:underline">
-            {!! html_entity_decode(Instrument::where('id', $observation->instrumentid)->first()->fullName()) !!}
-        </a>
+        @if($instrument)
+            <a href="/instrument/{{ $user?->slug ?? 'unknown' }}/{{ $instrument->slug }}" class="font-bold hover:underline">
+                {!! html_entity_decode($instrument->fullName()) !!}
+            </a>
+        @else
+            <span class="font-bold">{{ __('Unknown instrument') }}</span>
+        @endif
         @if ($observation->magnification > 0)
             {{ __(' with a magnification of ') }}
             {{ $observation->magnification }}x
         @endif
         @if ($observation->eyepieceid > 0)
             {{ __(' using a ') }}
-            <a href="/eyepiece/{{ $user->slug }}/{{ Eyepiece::where('id', $observation->eyepieceid)->first()->slug }}"
-               class="font-bold hover:underline">
-                {{ html_entity_decode(Eyepiece::where('id', $observation->eyepieceid)->first()->fullName()) }}
-            </a>
+            @if($eyepiece)
+                <a href="/eyepiece/{{ $user?->slug ?? 'unknown' }}/{{ $eyepiece->slug }}" class="font-bold hover:underline">
+                    {{ html_entity_decode($eyepiece->fullName()) }}
+                </a>
+            @else
+                <span class="font-bold">{{ __('Unknown eyepiece') }}</span>
+            @endif
             {{ __(' eyepiece') }}
 
             @if ($observation->filterid > 0)
                 {{ __(' and a ') }}
-                <a href="/filter/{{ $user->slug }}/{{ Filter::where('id', $observation->filterid)->first()->slug }}"
-                   class="font-bold hover:underline">
-                    {{ html_entity_decode(Filter::where('id', $observation->filterid)->first()->name) }}
-                </a>
+                @if($filter)
+                    <a href="/filter/{{ $user?->slug ?? 'unknown' }}/{{ $filter->slug }}" class="font-bold hover:underline">
+                        {{ html_entity_decode($filter->name) }}
+                    </a>
+                @else
+                    <span class="font-bold">{{ __('Unknown filter') }}</span>
+                @endif
                 {{ __(' filter') }}
             @endif
         @elseif ($observation->filterid > 0)
