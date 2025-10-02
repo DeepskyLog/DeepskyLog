@@ -82,7 +82,11 @@
             $link = config('app.old_url') . "/index.php?indexAction=detail_object&object=" . $observation->objectname;
         @endphp
 
-        {!! __(' observed :object', ['object' => Str::lower(__($object->long_type())) . ' <a href="' . $link . '" class="font-bold hover:underline">' . $observation->objectname . '</a>']) !!}
+        @php
+            $objectLongType = $object ? $object->long_type() : null;
+            $objectTypeLabel = $objectLongType ? Str::lower(__($objectLongType)) : __('object');
+        @endphp
+        {!! __(' observed :object', ['object' => $objectTypeLabel . ' <a href="' . $link . '" class="font-bold hover:underline">' . $observation->objectname . '</a>']) !!}
 
         {{ __(' in ') . $constellation }}
 
@@ -154,9 +158,13 @@
             @endif
         @elseif ($observation->filterid > 0)
             {{ __(' using a ') }}
+            @php
+                $filterModel = Filter::where('id', $observation->filterid)->first();
+                $filterName = $filterModel ? $filterModel->name : null;
+            @endphp
             <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_filter&filter={{ $observation->filterid }}"
                class="font-bold hover:underline">
-                {{ html_entity_decode(Filter::where('id', $observation->filterid)->first()->name) }}
+                {{ html_entity_decode($filterName ?? __('Unknown filter')) }}
             </a>
             {{ __(' filter') }}
         @endif
