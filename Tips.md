@@ -26,6 +26,12 @@ php artisan db:seed
 chmod 777 storage/app/public/profile-photos
 ```
 
+## New objects
+
+```bash
+php artisan search:reindex
+```
+
 ## Translation
 
 When new strings were added, the translation files need to be updated. This can be done with the following command:
