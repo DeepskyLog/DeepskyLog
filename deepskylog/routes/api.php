@@ -25,6 +25,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
+use App\Http\Controllers\SearchController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -49,6 +51,8 @@ Route::get('countries.index', function (Request $request) {
             'name' => Countries::getOne(auth()->user()->country, $request->lang),
         ];
     }
+
+    Route::get('search', [SearchController::class, 'search'])->name('api.search');
     foreach (Countries::getList($request->lang) as $code => $name) {
         if ($request->search == '' || Str::contains(Str::lower($name), Str::lower($request->search))) {
             $allCountries[] = [
