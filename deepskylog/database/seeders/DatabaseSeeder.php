@@ -22,6 +22,11 @@ class DatabaseSeeder extends Seeder
                 \Database\Seeders\MoonsSeeder::class,
                 \Database\Seeders\LunarFeaturesSeeder::class,
                 \Database\Seeders\ObjectNameTranslationsSeeder::class,
+                \Database\Seeders\PopulateObjectSlugsSeeder::class,
+                \Database\Seeders\BackfillPlanetSlugsSeeder::class,
+                \Database\Seeders\BackfillMoonSlugsSeeder::class,
+                \Database\Seeders\BackfillLunarFeatureSlugsSeeder::class,
+                \Database\Seeders\BackfillAsteroidSlugsSeeder::class,
             ]
         );
 
