@@ -26,6 +26,8 @@ class Kernel extends ConsoleKernel
         // appear exactly once in `artisan schedule:list`.
         $schedule->command('astronomy:updateDeltat')->quarterly();
         $schedule->command('astronomy:updateOrbitalElements')->weeklyOn(1, '4:30');
+    // Incremental TNTSearch index update
+    $schedule->command('tntsearch:incremental-index --storage=storage/tnt')->everyFiveMinutes();
     }
 
     /**
