@@ -107,7 +107,23 @@ class ObjectController extends Controller
 
                 // planets
                 if (! $record && Schema::hasColumn('planets', 'slug')) {
+                    // Try canonical slug first
                     $p = DB::table('planets')->where('slug', $slug)->first();
+                    if (! $p) {
+                        // Try localized names for the current locale and fall back to any locale
+                        $locale = app()->getLocale();
+                        $trans = DB::table('object_name_translations')
+                            ->where('name', 'like', $slug)
+                            ->where(function ($q) use ($locale) {
+                                $q->where('locale', $locale)->orWhereNull('locale');
+                            })
+                            ->first();
+                        if ($trans) {
+                            // Map canonical name back to planets table
+                            $p = DB::table('planets')->where('name', $trans->objectname)->first();
+                        }
+                    }
+
                     if ($p) {
                         $record = Planet::where('id', $p->id)->first();
                         if ($record) { $type = 'planet'; }
@@ -116,7 +132,23 @@ class ObjectController extends Controller
 
                 // moons
                 if (! $record && Schema::hasColumn('moons', 'slug')) {
+                    // Try canonical slug first
                     $m = DB::table('moons')->where('slug', $slug)->first();
+                    if (! $m) {
+                        // Try localized names for the current locale and fall back to any locale
+                        $locale = app()->getLocale();
+                        $trans = DB::table('object_name_translations')
+                            ->where('name', 'like', $slug)
+                            ->where(function ($q) use ($locale) {
+                                $q->where('locale', $locale)->orWhereNull('locale');
+                            })
+                            ->first();
+                        if ($trans) {
+                            // Map canonical name back to moons table
+                            $m = DB::table('moons')->where('name', $trans->objectname)->first();
+                        }
+                    }
+
                     if ($m) {
                         $record = Moon::where('id', $m->id)->first();
                         if ($record) { $type = 'moon'; }
@@ -467,7 +499,55 @@ class ObjectController extends Controller
         // Build a minimal $user-like object for links (use current authenticated user if available)
     $user = Auth::user() ?? (object) ['name' => $record->name ?? ($record->display_name ?? $slug), 'slug' => null, 'username' => null];
 
-        // Map properties to variables used by session.show so the view can reuse layout
+        // Normalize source type (used by the view) and map properties to variables
+        // used by session.show so the view can reuse layout
+        $sourceTypeLabel = null;
+        $sourceTypeRaw = $type ?? null;
+        // Special-case: if the resolved record or slug refers to the Sun, label it explicitly
+        $lowerName = mb_strtolower($record->name ?? '');
+        $lowerSlug = mb_strtolower($slug ?? '');
+        if ($lowerName === 'sun' || $lowerSlug === 'sun') {
+            $sourceTypeLabel = __('Sun');
+            $sourceTypeRaw = 'sun';
+        } elseif (! empty($type)) {
+            switch ($type) {
+                case 'deepsky':
+                case 'objects':
+                    $sourceTypeLabel = __('Deep-sky');
+                    $sourceTypeRaw = 'object';
+                    break;
+                case 'comet':
+                case 'cometobjects':
+                    $sourceTypeLabel = __('Comet');
+                    $sourceTypeRaw = 'comet';
+                    break;
+                case 'planet':
+                case 'planets':
+                    $sourceTypeLabel = __('Planet');
+                    $sourceTypeRaw = 'planet';
+                    break;
+                case 'moon':
+                case 'moons':
+                    $sourceTypeLabel = __('Moon');
+                    $sourceTypeRaw = 'moon';
+                    break;
+                case 'lunar_feature':
+                case 'lunar_features':
+                    $sourceTypeLabel = __('Lunar feature');
+                    $sourceTypeRaw = 'lunar_feature';
+                    break;
+                case 'asteroid':
+                case 'asteroids':
+                    $sourceTypeLabel = __('Asteroid');
+                    $sourceTypeRaw = 'asteroid';
+                    break;
+                default:
+                    // fallback: humanize the raw type value
+                    $sourceTypeLabel = ucfirst(str_replace('_', ' ', $type));
+                    $sourceTypeRaw = $type;
+            }
+        }
+
         $session = (object) [
             'name' => $record->name ?? ($record->display_name ?? $slug),
             'comments' => $record->description ?? ($record->notes ?? null),
@@ -478,6 +558,10 @@ class ObjectController extends Controller
             'enddate' => null,
             'slug' => $slug,
             'id' => $record->id ?? null,
+            // Human-friendly, translated label for display in views
+            'source_type' => $sourceTypeLabel,
+            // Raw machine-readable source type (useful for APIs/filters)
+            'source_type_raw' => $sourceTypeRaw,
         ];
 
         // Location and observations are not relevant; pass empty arrays where session.show expects them
