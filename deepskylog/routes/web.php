@@ -248,6 +248,10 @@ Route::get('/instrumentset/{user}/{instrumentset}', 'App\Http\Controllers\Instru
 Route::get('/session/{user}/{session}', 'App\Http\Controllers\SessionController@show')
     ->name('session.show')->middleware('doNotCacheResponse');
 
+// Object detail pages: /object/{type}/{slugOrId}
+Route::get('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'show'])
+    ->name('object.show')->middleware('doNotCacheResponse');
+
 // Create session (authenticated)
 Route::get('/sessions/create', [App\Http\Controllers\SessionController::class, 'create'])
     ->name('session.create')->middleware(['auth', 'doNotCacheResponse']);
