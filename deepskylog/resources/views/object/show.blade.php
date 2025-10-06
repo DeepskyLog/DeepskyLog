@@ -123,12 +123,6 @@
                                                 $crCat = $session->contrast_reserve_category ?? null;
                                                 $crClass = 'text-white';
                                                 // Map categories to requested colors:
-                                                // very_easy (>1.0) -> bright green
-                                                // easy (0.5-1.0) -> dark green
-                                                // quite_difficult (0.35-0.5) -> bright orange
-                                                // difficult (0.10-0.35) -> dark orange
-                                                // questionable (-0.2-0.10) -> bright gray
-                                                // not_visible (< -0.2) -> dark gray
                                                 if ($crCat === 'very_easy') {
                                                     $crClass = 'text-green-400';
                                                 } elseif ($crCat === 'easy') {
@@ -162,52 +156,43 @@
                                 </tr>
                             @endif
 
-                                @if(isset($session->optimum_detection_magnification))
-                                    <tr>
-                                        <td class="pr-4 font-medium">{{ __('Optimum detection magnification') }}</td>
-                                        <td>
-                                            @if($session->optimum_detection_magnification === null)
-                                                {{ __('Unknown') }}
-                                            @else
-                                                @if(!empty($session->optimum_eyepieces) && is_array($session->optimum_eyepieces))
-                                                    @php
-                                                        // Show only the primary/used eyepiece for Optimum Detection magnification.
-                                                        $primaryEp = $session->optimum_eyepieces[0] ?? null;
-                                                    @endphp
-                                                @endif
+                            {{-- Additional object fields that were present previously: optimum magnification, eyepieces, size and position angle --}}
+                            @if(!empty($session->optimum_detection_magnification))
+                                <tr>
+                                    <td class="pr-4 font-medium">{{ __('Optimum detection magnification') }}</td>
+                                    <td>{{ $session->optimum_detection_magnification }}</td>
+                                </tr>
+                            @endif
 
-                                                <div x-data="{ openOpt: false }" class="inline-block relative">
-                                                    <button @click.prevent="openOpt = !openOpt" @keydown.escape="openOpt = false" :aria-expanded="openOpt.toString()" aria-haspopup="true" type="button" class="focus:outline-none text-white font-medium">
-                                                        {{ $session->optimum_detection_magnification }}x - {{ $primaryEp['name'] ?? ($primaryEp['focal'] . 'mm') }}
-                                                    </button>
+                            @if(!empty($session->optimum_eyepieces) && is_array($session->optimum_eyepieces) && count($session->optimum_eyepieces) > 0)
+                                <tr>
+                                    <td class="pr-4 font-medium">{{ __('Optimum eyepieces') }}</td>
+                                    <td>
+                                        @php
+                                            $eps = [];
+                                            foreach ($session->optimum_eyepieces as $ep) {
+                                                $name = $ep['name'] ?? ($ep['label'] ?? null);
+                                                $focal = $ep['focal'] ?? null;
+                                                $parts = [];
+                                                if (! empty($name)) { $parts[] = e($name); }
+                                                if (! empty($focal)) { $parts[] = e($focal) . ' mm'; }
+                                                if (! empty($parts)) { $eps[] = implode(' — ', $parts); }
+                                            }
+                                        @endphp
+                                        {!! implode(', ', $eps) !!}
+                                    </td>
+                                </tr>
+                            @endif
 
-                                                    <div x-show="openOpt" x-cloak @click.outside="openOpt = false" x-transition class="absolute z-10 left-0 mt-2 w-80 p-3 bg-gray-800 text-sm text-gray-100 rounded shadow-lg">
-                                                        <div class="text-sm mb-2">{{ __('Estimated best magnification using your instrument and eyepieces') }}</div>
-                                                        <div class="text-xs text-gray-300 mb-1"><strong>{{ __('Location') }}:</strong> {{ $session->contrast_used_location ?? __('Unknown') }}</div>
-                                                        <div class="text-xs text-gray-300 mb-1"><strong>{{ __('Instrument') }}:</strong> {{ $session->contrast_used_instrument ?? __('Unknown') }}</div>
-                                                        @if($primaryEp)
-                                                            <div class="text-xs text-gray-300">
-                                                                <strong>{{ __('Eyepiece') }}:</strong>
-                                                                <span class="ml-1">{{ $primaryEp['name'] ?? ($primaryEp['focal'] . 'mm') }} — {{ $primaryEp['focal'] }}mm</span>
-                                                            </div>
-                                                        @endif
-
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endif
-
-                            @if((!empty($session->diam1)))
+                            @if(isset($session->diam1) || isset($session->diam2))
                                 <tr>
                                     <td class="pr-4 font-medium">{{ __('Size') }}</td>
                                     <td>
-                                        @if(!empty($session->diam1) && !empty($session->diam2))
-                                            {{ $session->diam1 }}' x {{ $session->diam2 }}'
-                                        @else
-                                            {{ $session->diam1 }}'
-                                        @endif
+                                        @php
+                                            $d1 = $session->diam1 ?? '';
+                                            $d2 = $session->diam2 ?? '';
+                                        @endphp
+                                        {{ $d1 }}' @if(!empty($d1) && !empty($d2)) x @endif {{ $d2 }}'
                                     </td>
                                 </tr>
                             @endif
@@ -215,24 +200,82 @@
                             @if(!empty($session->pa))
                                 <tr>
                                     <td class="pr-4 font-medium">{{ __('Position angle') }}</td>
-                                    <td>{{ $session->pa }}°</td>
+                                    <td>{{ $session->pa }}</td>
                                 </tr>
                             @endif
+
                         </table>
+
                     </div>
 
-                    <section>
-                        <h3 class="text-lg font-semibold text-white">{{ __('Observations') }}</h3>
-                        <p class="text-sm text-gray-600">{{ __('No observations listed for this object here. Use the search or check user pages for observations.') }}</p>
-                    </section>
                 </article>
 
-                <aside class="md:col-span-1">
+                                        <aside class="md:col-span-1">
                     <div class="bg-gray-800 p-3 rounded shadow text-gray-100">
                         <h4 class="font-semibold mb-2 text-white">{{ __('Quick links') }}</h4>
                         <ul class="space-y-2 text-sm">
                             <li><a href="{{ route('session.all') }}" class="text-gray-300 hover:underline">{{ __('All sessions') }}</a></li>
                             <li><a href="{{ route('observations.index') }}" class="text-gray-300 hover:underline">{{ __('All observations') }}</a></li>
+                            @php
+                                // Prepare name and coordinates for external links
+                                $objectName = $session->name ?? null;
+                                $hasCoords = isset($session->ra) && isset($session->decl) && !empty($session->ra) && !empty($session->decl);
+                                // SIMBAD: prefer name search, otherwise use coordinates (format: %2B12+34+56+%2B12+34+56 not necessary here, use basic coords)
+                                $simbadUrl = null;
+                                $nedUrl = null;
+                                $wikipediaUrl = null;
+                                $aladinUrl = null;
+
+                                if ($objectName) {
+                                    $encName = rawurlencode($objectName);
+                                    $simbadUrl = "https://simbad.cds.unistra.fr/simbad/sim-id?Ident=$encName";
+                                    $nedUrl = "https://ned.ipac.caltech.edu/byname?objname=$encName";
+                                    $wikipediaUrl = "https://en.wikipedia.org/wiki/Special:Search?search=$encName";
+                                    $aladinUrl = "https://aladin.u-strasbg.fr/AladinLite/?target=$encName";
+                                }
+
+                                        
+                            @endphp
+
+                            @if($simbadUrl || $nedUrl || $wikipediaUrl || $aladinUrl)
+                                <li class="pt-2 border-t border-gray-700 text-xs text-gray-400">{{ __("External databases") }}</li>
+                                @if($simbadUrl)
+                                    <li>
+                                        <a href="{{ $simbadUrl }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-300 hover:text-white">
+                                            <!-- SIMBAD icon (simple star) -->
+                                            <svg class="h-4 w-4 text-gray-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2l2.39 4.85L19 8.27l-3.5 3.41L16.18 19 12 16.27 7.82 19l.68-7.32L4.999 8.27l4.61-.42L12 2z" fill="currentColor"/></svg>
+                                            <span>SIMBAD</span>
+                                        </a>
+                                    </li>
+                                @endif
+                                @if($nedUrl)
+                                    <li>
+                                        <a href="{{ $nedUrl }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-300 hover:text-white">
+                                            <!-- NED icon (globe) -->
+                                            <svg class="h-4 w-4 text-gray-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 2.06v2.04a6.002 6.002 0 013.364 3.364H17A8 8 0 0013 4.06zM6.636 7.48A6.002 6.002 0 0111 4.1V2.06A8 8 0 006.636 7.48zM4.06 11H6.1a6.002 6.002 0 010 2H4.06A8 8 0 004.06 11zM6.636 16.52A8 8 0 0011 21.94v-2.04a6.002 6.002 0 01-4.364-3.38zM13 19.94v-2.04a6.002 6.002 0 01-3.364-3.364H11a8 8 0 002 5.404z" fill="currentColor"/></svg>
+                                            <span>NED</span>
+                                        </a>
+                                    </li>
+                                @endif
+                                @if($wikipediaUrl)
+                                    <li>
+                                        <a href="{{ $wikipediaUrl }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-300 hover:text-white">
+                                            <!-- Wikipedia icon (W) -->
+                                            <svg class="h-4 w-4 text-gray-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2l2.5 4.9L19 8l-4 3.6L16 19 12 16.2 8 19l1-7.4L5 8l4.5-.9L12 2z" fill="currentColor"/></svg>
+                                            <span>Wikipedia</span>
+                                        </a>
+                                    </li>
+                                @endif
+                                @if($aladinUrl)
+                                    <li>
+                                        <a href="{{ $aladinUrl }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-300 hover:text-white">
+                                            <!-- Aladin icon (map/target) -->
+                                            <svg class="h-4 w-4 text-gray-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+                                            <span>Aladin Lite</span>
+                                        </a>
+                                    </li>
+                                @endif
+                            @endif
                         </ul>
                     </div>
                 </aside>
