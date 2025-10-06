@@ -24,8 +24,31 @@
                         <table class="table-auto w-full text-sm text-gray-100">
                             <tr>
                                 <td class="pr-4 font-medium">{{ __('Name') }}</td>
-                                <td>{{ $session->name }}</td>
+                                <td>
+                                    @php
+                                        // Prefer canonicalSlug provided by controller, fall back to session.slug or slugified name
+                                        $primarySlug = $canonicalSlug ?? ($session->slug ? $session->slug : \Illuminate\Support\Str::slug($session->name ?? '', '-'));
+                                    @endphp
+                                    <a href="{{ route('object.show', ['slug' => $primarySlug]) }}" class="font-bold text-white hover:underline">{{ $session->name }}</a>
+                                </td>
                             </tr>
+                            @if(!empty($alternatives) && is_array($alternatives) && count($alternatives) > 0)
+                                <tr>
+                                    <td class="pr-4 font-medium">{{ __('Also known as') }}</td>
+                                    <td>
+                                        @php
+                                            // Render alternatives as a comma-separated list with exactly one space after comma.
+                                            $altLinks = [];
+                                            foreach ($alternatives as $alt) {
+                                                $altSlug = \Illuminate\Support\Str::slug($alt, '-');
+                                                $url = route('object.show', ['slug' => $altSlug]);
+                                                $altLinks[] = '<a href="'.e($url).'" class="text-gray-300 hover:underline">'.e($alt).'</a>';
+                                            }
+                                        @endphp
+                                        {!! implode(', ', $altLinks) !!}
+                                    </td>
+                                </tr>
+                            @endif
                             @if(isset($session->ra) && isset($session->decl))
                                 <tr>
                                     <td class="pr-4 font-medium">{{ __('RA / Dec') }}</td>

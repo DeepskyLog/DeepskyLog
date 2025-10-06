@@ -843,6 +843,53 @@ class ObjectController extends Controller
             $session->preview = $image;
         }
 
+        // Load alternative names (aliases) from legacy objectnames table when available.
+        // Use the mysqlOld connection which contains the legacy `objectnames` table.
+        $alternatives = [];
+        try {
+            if (! empty($record->name)) {
+                $rows = DB::connection('mysql')
+                    ->table('objectnames')
+                    ->select(['objectname', 'altname', 'catalog', 'catindex'])
+                    ->where('objectname', $record->name)
+                    ->orWhere('altname', $record->name)
+                    ->get();
+
+                foreach ($rows as $r) {
+                    // Collect non-empty alternative strings excluding the canonical name
+                    if (! empty($r->altname) && strcasecmp($r->altname, $record->name) !== 0) {
+                        $alternatives[] = $r->altname;
+                    }
+                    // Also include objectname values that differ in case/spacing if useful
+                    if (! empty($r->objectname) && strcasecmp($r->objectname, $record->name) !== 0) {
+                        $alternatives[] = $r->objectname;
+                    }
+                }
+
+                // Deduplicate while preserving order
+                $alternatives = array_values(array_unique(array_filter($alternatives)));
+
+                // sort alphabetically
+                sort($alternatives, SORT_NATURAL | SORT_FLAG_CASE);
+            }
+        } catch (\Throwable $_) {
+            // Fail silently; alternatives remain an empty array
+            $alternatives = [];
+        }
+
+        // Determine a canonical slug for this object so primary name links to the correct canonical page.
+        // Prefer a slug property on the record if present, else slugify the canonical name.
+        $canonicalSlug = null;
+        try {
+            if (! empty($record->slug)) {
+                $canonicalSlug = (string) $record->slug;
+            } elseif (! empty($record->name)) {
+                $canonicalSlug = \Illuminate\Support\Str::slug($record->name, '-');
+            }
+        } catch (\Throwable $_) {
+            $canonicalSlug = null;
+        }
+
         // Atlas page: if a user is logged in and they have a standardAtlasCode set,
         // check the objects table for a column with that name and read the stored page value.
     $atlasPage = null;
@@ -871,6 +918,6 @@ class ObjectController extends Controller
             $atlasPage = null;
         }
 
-        return response()->view('object.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName'));
+    return response()->view('object.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug'));
     }
 }

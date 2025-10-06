@@ -11,9 +11,13 @@
     + [ ] Show information about an object, like type, constellation, other names, description, ...
         + [ ] Add links to external databases, like SIMBAD, NED, Wikipedia, ...
         + [ ] Add images from external databases, like SIMBAD, NED, Wikipedia, ...
+        + [ ] Add date, rise, transit, sett, best time and maximum altitude.
         + [ ] Add a list of observations of this object, with a link to the observation.
-        + [ ] Add a list of drawings of this object, with a link to the drawing
+        + [ ] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
         + [ ] Add graph with elevation of the object for a location and a certain date
+        + [ ] Add nearby objects
+        + [ ] Add export to CSV, Excel, PDF (names PDF, details PDF), Argo Navis, SkySafari, Report, Maps
+        + [ ] Add lists which have this object
     + [ ] Administrator / Database expert pages to add / edit / delete objects
     + [ ] Search targets, first by name, then by type, constellation, ...
     + [ ] Install sqlite3 on the server to be able to use TNTSearch
