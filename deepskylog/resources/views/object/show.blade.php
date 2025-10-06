@@ -158,31 +158,20 @@
 
                             {{-- Additional object fields that were present previously: optimum magnification, eyepieces, size and position angle --}}
                             @if(!empty($session->optimum_detection_magnification))
+                                @php
+                                    $eps = [];
+                                    foreach ($session->optimum_eyepieces as $ep) {
+                                        $name = $ep['name'] ?? ($ep['label'] ?? null);
+                                        if (! empty($name)) { $parts[] = e($name); }
+                                        if (! empty($parts)) { $eps[] = implode(' — ', $parts); }
+                                    }
+                                @endphp
                                 <tr>
                                     <td class="pr-4 font-medium">{{ __('Optimum detection magnification') }}</td>
-                                    <td>{{ $session->optimum_detection_magnification }}</td>
+                                    <td>{{ $session->optimum_detection_magnification }}x - {!! implode(', ', $eps) !!}</td>
                                 </tr>
                             @endif
 
-                            @if(!empty($session->optimum_eyepieces) && is_array($session->optimum_eyepieces) && count($session->optimum_eyepieces) > 0)
-                                <tr>
-                                    <td class="pr-4 font-medium">{{ __('Optimum eyepieces') }}</td>
-                                    <td>
-                                        @php
-                                            $eps = [];
-                                            foreach ($session->optimum_eyepieces as $ep) {
-                                                $name = $ep['name'] ?? ($ep['label'] ?? null);
-                                                $focal = $ep['focal'] ?? null;
-                                                $parts = [];
-                                                if (! empty($name)) { $parts[] = e($name); }
-                                                if (! empty($focal)) { $parts[] = e($focal) . ' mm'; }
-                                                if (! empty($parts)) { $eps[] = implode(' — ', $parts); }
-                                            }
-                                        @endphp
-                                        {!! implode(', ', $eps) !!}
-                                    </td>
-                                </tr>
-                            @endif
 
                             @if(isset($session->diam1) || isset($session->diam2))
                                 <tr>

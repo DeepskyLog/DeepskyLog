@@ -40,6 +40,7 @@
         "amirami/localizator": "v0.14.0-alpha",
         "barryvdh/laravel-debugbar": "^3.13",
         "fakerphp/faker": "^1.9.1",
+        "friendsofphp/php-cs-fixer": "^3.88",
         "laravel/pint": "*",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.6",
