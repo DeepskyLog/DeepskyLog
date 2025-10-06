@@ -4,10 +4,19 @@
 
 ### Next steps
 
++ [ ] Problem with Mockery in Pest
+    + [ ] XDEBUG_MODE=off ./vendor/bin/pest --filter DeepskyObjectTest -v
 + [ ] Targets
-    + [ ] Create tables for deepsky and comet objects.
-    + [ ] Create extra tables for other objects (planets, sun, moon, moon features, ...)
+    + [X] Create tables for deepsky, comets, planets, moons, lunar features, and other object types.
+    + [ ] Show information about an object, like type, constellation, other names, description, ...
+        + [ ] Add links to external databases, like SIMBAD, NED, Wikipedia, ...
+        + [ ] Add images from external databases, like SIMBAD, NED, Wikipedia, ...
+        + [ ] Add a list of observations of this object, with a link to the observation.
+        + [ ] Add a list of drawings of this object, with a link to the drawing
+        + [ ] Add graph with elevation of the object for a location and a certain date
+    + [ ] Administrator / Database expert pages to add / edit / delete objects
     + [ ] Search targets, first by name, then by type, constellation, ...
+    + [ ] Install sqlite3 on the server to be able to use TNTSearch
 + [ ] Release new version of pyDeepskyLog
     + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 

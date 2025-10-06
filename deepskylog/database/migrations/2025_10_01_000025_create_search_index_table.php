@@ -23,8 +23,11 @@ class CreateSearchIndexTable extends Migration
             $table->timestamps();
         });
 
-        // add fulltext index via raw statement for compatibility
-        DB::statement('ALTER TABLE search_index ADD FULLTEXT INDEX ft_name (name)');
+        // add fulltext index via raw statement for compatibility (MySQL only)
+        $driver = Schema::getConnection()->getDriverName();
+        if ($driver === 'mysql') {
+            DB::statement('ALTER TABLE search_index ADD FULLTEXT INDEX ft_name (name)');
+        }
     }
 
     public function down()

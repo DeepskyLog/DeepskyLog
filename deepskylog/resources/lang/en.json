@@ -1,0 +1,19 @@
+{
+    "Contrast reserve": "Contrast reserve",
+    "contrast.reserve.tooltip_title": "Contrast reserve categories",
+    "contrast.reserve.summary": "Contrast reserve: :value — :category",
+
+    "contrast.reserve.category.very_easy": "Very easy to see (>1.0)",
+    "contrast.reserve.category.easy": "Easy to see (0.50–1.00)",
+    "contrast.reserve.category.quite_difficult": "Quite difficult to see (0.35–0.50)",
+    "contrast.reserve.category.difficult": "Difficult (0.10–0.35)",
+    "contrast.reserve.category.questionable": "Questionable (-0.2–0.10)",
+    "contrast.reserve.category.not_visible": "Not visible (< -0.2)",
+
+    "(log units, >0 visible)": "(log units, >0 visible)",
+    "Unknown": "Unknown",
+
+    "Optimum detection magnification": "Optimum detection magnification",
+    "Estimated best magnification using your instrument and eyepieces": "Estimated best magnification using your instrument and eyepieces",
+    "Eyepieces": "Eyepieces"
+}

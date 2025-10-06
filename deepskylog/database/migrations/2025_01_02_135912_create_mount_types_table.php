@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mount_types', function (Blueprint $table) {
-            $table->id()->primary();
+            $table->id();
             $table->string('name')->unique();
         });
 
@@ -35,6 +35,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('instrument_types');
+        Schema::dropIfExists('mount_types');
     }
 };
