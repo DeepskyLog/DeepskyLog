@@ -698,7 +698,19 @@ class ObjectController extends Controller
                                         if ($ep->active && $ep->focal_length_mm) {
                                             $ef = $ep->focal_length_mm;
                                             $eyepieceFocals[] = $ef;
-                                            $eyepiecesForDisplay[] = ['name' => $ep->fullName(), 'focal' => $ef];
+                                            // Attempt to include slugs so the view can link to eyepiece pages
+                                            $userSlug = null;
+                                            try {
+                                                $userSlug = $ep->user?->slug ?? \App\Models\User::where('id', $ep->user_id)->value('slug');
+                                            } catch (\Throwable $_) {
+                                                $userSlug = null;
+                                            }
+                                            $eyepiecesForDisplay[] = [
+                                                'name' => $ep->fullName(),
+                                                'focal' => $ef,
+                                                'slug' => $ep->slug ?? null,
+                                                'user_slug' => $userSlug,
+                                            ];
                                         }
                                     }
                                 }
@@ -711,7 +723,12 @@ class ObjectController extends Controller
                                     if ($ep->focal_length_mm) {
                                         $ef = $ep->focal_length_mm;
                                         $eyepieceFocals[] = $ef;
-                                        $eyepiecesForDisplay[] = ['name' => $ep->fullName(), 'focal' => $ef];
+                                        $eyepiecesForDisplay[] = [
+                                            'name' => $ep->fullName(),
+                                            'focal' => $ef,
+                                            'slug' => $ep->slug ?? null,
+                                            'user_slug' => $authUser?->slug ?? null,
+                                        ];
                                     }
                                 }
                             }

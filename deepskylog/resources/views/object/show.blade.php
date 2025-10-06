@@ -75,6 +75,25 @@
                                     </tr>
                                 @endif
                             @endif
+                            @if(isset($session->diam1) || isset($session->diam2))
+                                <tr>
+                                    <td class="pr-4 font-medium">{{ __('Size') }}</td>
+                                    <td>
+                                        @php
+                                            $d1 = $session->diam1 ?? '';
+                                            $d2 = $session->diam2 ?? '';
+                                        @endphp
+                                        {{ $d1 }}' @if(!empty($d1) && !empty($d2)) x @endif {{ $d2 }}'
+                                    </td>
+                                </tr>
+                            @endif
+
+                            @if(!empty($session->pa))
+                                <tr>
+                                    <td class="pr-4 font-medium">{{ __('Position angle') }}</td>
+                                    <td>{{ $session->pa }}</td>
+                                </tr>
+                            @endif
                             <tr>
                                 <td class="pr-4 font-medium">{{ __('Description') }}</td>
                                 <td>{!! nl2br(e($session->comments ?? '')) !!}</td>
@@ -162,34 +181,24 @@
                                     $eps = [];
                                     foreach ($session->optimum_eyepieces as $ep) {
                                         $name = $ep['name'] ?? ($ep['label'] ?? null);
-                                        if (! empty($name)) { $parts[] = e($name); }
+                                        $slug = $ep['slug'] ?? null;
+                                        $userSlug = $ep['user_slug'] ?? null;
+                                        $parts = [];
+                                        if (! empty($name)) {
+                                            if (! empty($slug) && ! empty($userSlug)) {
+                                                // Build an internal route to the eyepiece show page
+                                                $url = route('eyepiece.show', ['user' => $userSlug, 'eyepiece' => $slug]);
+                                                $parts[] = '<a href="'.e($url).'" class="text-gray-300 hover:underline">'.e($name).'</a>';
+                                            } else {
+                                                $parts[] = e($name);
+                                            }
+                                        }
                                         if (! empty($parts)) { $eps[] = implode(' — ', $parts); }
                                     }
                                 @endphp
                                 <tr>
                                     <td class="pr-4 font-medium">{{ __('Optimum detection magnification') }}</td>
                                     <td>{{ $session->optimum_detection_magnification }}x - {!! implode(', ', $eps) !!}</td>
-                                </tr>
-                            @endif
-
-
-                            @if(isset($session->diam1) || isset($session->diam2))
-                                <tr>
-                                    <td class="pr-4 font-medium">{{ __('Size') }}</td>
-                                    <td>
-                                        @php
-                                            $d1 = $session->diam1 ?? '';
-                                            $d2 = $session->diam2 ?? '';
-                                        @endphp
-                                        {{ $d1 }}' @if(!empty($d1) && !empty($d2)) x @endif {{ $d2 }}'
-                                    </td>
-                                </tr>
-                            @endif
-
-                            @if(!empty($session->pa))
-                                <tr>
-                                    <td class="pr-4 font-medium">{{ __('Position angle') }}</td>
-                                    <td>{{ $session->pa }}</td>
                                 </tr>
                             @endif
 
