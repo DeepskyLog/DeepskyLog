@@ -935,6 +935,101 @@ class ObjectController extends Controller
             $atlasPage = null;
         }
 
-    return response()->view('object.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug'));
+        // Provide minimal defaults for Aladin Lite preview: raw coordinates and user instrument/eyepiece hints
+        $aladinDefaults = null;
+        try {
+            if (isset($record->ra) && isset($record->decl)) {
+                // raw numeric RA/Dec from legacy record are stored as strings like "00 42 44.3" or decimal degrees
+                // Attempt to parse to decimal degrees using DeepskyObject helper if available
+                $rawRa = $record->ra;
+                $rawDec = $record->decl;
+                // If DeepskyObject has a helper to produce decimal degrees, use it; otherwise pass raw strings
+                $raDeg = null;
+                $decDeg = null;
+                try {
+                    if (method_exists(\App\Models\DeepskyObject::class, 'raToDecimal')) {
+                        $raDeg = \App\Models\DeepskyObject::raToDecimal($rawRa);
+                        $decDeg = \App\Models\DeepskyObject::decToDecimal($rawDec);
+                    }
+                } catch (\Throwable $_) {
+                    // ignore conversion errors
+                }
+
+                $aladinDefaults = [
+                    'ra_raw' => $rawRa,
+                    'dec_raw' => $rawDec,
+                    'ra_deg' => $raDeg,
+                    'dec_deg' => $decDeg,
+                ];
+            }
+
+            // Add simple instrument / eyepiece hints if authenticated user has defaults
+            $authUser = Auth::user();
+                if ($authUser) {
+                $userInstrument = $authUser->standardInstrument ?? null;
+                $inst = null;
+                if ($userInstrument) {
+                    $inst = [
+                        'aperture_mm' => $userInstrument->aperture_mm ?? null,
+                        'focal_length_mm' => $userInstrument->focal_length_mm ?? null,
+                        'fixedMagnification' => $userInstrument->fixedMagnification ?? null,
+                    ];
+                }
+
+                // pick a default eyepiece: prefer first of standard set or user's eyepieces
+                $ep = null;
+                $instSet = $authUser?->standardInstrumentSet ?? null;
+                if ($instSet) {
+                    $set = \App\Models\InstrumentSet::where('id', $instSet)->first();
+                    if ($set && count($set->eyepieces) > 0) {
+                        $first = $set->eyepieces[0];
+                        $ep = [
+                            'focal_length_mm' => $first->focal_length_mm ?? null,
+                            'apparent_fov_deg' => $first->apparentFOV ?? null,
+                        ];
+                    }
+                }
+                if (! $ep && $authUser) {
+                    $userEps = \App\Models\Eyepiece::where('user_id', $authUser->id)->where('active', 1)->first();
+                    if ($userEps) {
+                        $ep = [
+                            'focal_length_mm' => $userEps->focal_length_mm ?? null,
+                            'apparent_fov_deg' => $userEps->apparentFOV ?? null,
+                        ];
+                    }
+                }
+
+                if ($aladinDefaults === null) { $aladinDefaults = []; }
+                $aladinDefaults['instrument'] = $inst;
+                $aladinDefaults['eyepiece'] = $ep;
+                // Provide object diameter in arcminutes (view derives this from legacy record diam1 which is arcseconds)
+                try {
+                    // record->diam1 stored in arcseconds in legacy table; convert to arcminutes with one decimal
+                    if (isset($record->diam1) && is_numeric($record->diam1) && $record->diam1 > 0) {
+                        $aladinDefaults['object_diam_arcmin'] = round(($record->diam1 / 60.0), 1);
+                    } else {
+                        $aladinDefaults['object_diam_arcmin'] = null;
+                    }
+                } catch (\Throwable $_) {
+                    $aladinDefaults['object_diam_arcmin'] = null;
+                }
+            }
+            // If user is not authenticated, still expose object diameter to aladinDefaults
+            if (! isset($aladinDefaults['object_diam_arcmin'])) {
+                try {
+                    if (isset($record->diam1) && is_numeric($record->diam1) && $record->diam1 > 0) {
+                        $aladinDefaults['object_diam_arcmin'] = round(($record->diam1 / 60.0), 1);
+                    } else {
+                        $aladinDefaults['object_diam_arcmin'] = null;
+                    }
+                } catch (\Throwable $_) {
+                    $aladinDefaults['object_diam_arcmin'] = null;
+                }
+            }
+        } catch (\Throwable $_) {
+            // defensive: don't break rendering
+        }
+
+        return response()->view('object.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults'));
     }
 }

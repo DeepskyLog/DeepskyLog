@@ -9,14 +9,21 @@
 + [ ] Targets
     + [X] Create tables for deepsky, comets, planets, moons, lunar features, and other object types.
     + [ ] Show information about an object, like type, constellation, other names, description, ...
-        + [ ] Add links to external databases, like SIMBAD, NED, Wikipedia, ...
-        + [ ] Add images from external databases, like SIMBAD, NED, Wikipedia, ...
-        + [ ] Add date, rise, transit, sett, best time and maximum altitude.
+        + [ ] Add Aladin preview:
+            + [X] Fix RA error
+            + [X] Add circle with FoV of the eyepiece
+            + [X] Remove the Aladin preview if the object does not have coordinates
+            + [X] Remove link to Aladin Lite
+            + [ ] Change (uses default eyepiece / instrument if available) to name of eyepiece and instrument.  
+            + [ ] Change eyepiece?  Default eyepiece is not available in the database yet.
+            + [ ] Add default lens?
+        + [ ] Add date, rise, transit, set, best time and maximum altitude.
         + [ ] Add a list of observations of this object, with a link to the observation.
         + [ ] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
         + [ ] Add graph with elevation of the object for a location and a certain date
         + [ ] Add nearby objects
         + [ ] Add export to CSV, Excel, PDF (names PDF, details PDF), Argo Navis, SkySafari, Report, Maps
+        + [ ] Add star map created from DeepskyLog or from external source (stellarium web, ...)?
         + [ ] Add lists which have this object
     + [ ] Administrator / Database expert pages to add / edit / delete objects
     + [ ] Search targets, first by name, then by type, constellation, ...

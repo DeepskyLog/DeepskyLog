@@ -1,6 +1,6 @@
 @props(['width' => '72'])
 <div class="relative" x-data="{ open: false }" x-init="$watch('open', value => { if (value) { $nextTick(()=> { const first = $el.querySelector('[data-first]'); if(first) first.focus(); }); } })" @keydown.escape.prevent="open = false; $refs.trigger.focus()" @keydown.tab="if (open) {
-        const focusable = $el.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])');
+    const focusable = $el.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex=\'-1\'])');
         if (focusable.length === 0) return;
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
