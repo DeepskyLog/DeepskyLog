@@ -205,13 +205,22 @@
                                 $simbadUrl = null;
                                 $nedUrl = null;
                                 $wikipediaUrl = null;
+                                $aladinUrl = null;
 
                                 if ($objectName) {
                                     $encName = rawurlencode($objectName);
                                     $simbadUrl = "https://simbad.cds.unistra.fr/simbad/sim-id?Ident=$encName";
                                     $nedUrl = "https://ned.ipac.caltech.edu/byname?objname=$encName";
                                     $wikipediaUrl = "https://en.wikipedia.org/wiki/Special:Search?search=$encName";
-                                    // Intentionally removed external Aladin/AstroBin link per request
+                                    // Add Aladin Lite pointing to the object name when available
+                                    $aladinUrl = "https://aladin.u-strasbg.fr/AladinLite/?target=$encName";
+                                } elseif ($hasCoords) {
+                                    // Fallback: point Aladin Lite to coordinates when no name is available
+                                    $raParam = rawurlencode($session->ra ?? '');
+                                    $decParam = rawurlencode($session->decl ?? '');
+                                    if (!empty($raParam) && !empty($decParam)) {
+                                        $aladinUrl = "https://aladin.u-strasbg.fr/AladinLite/?ra={$raParam}&dec={$decParam}";
+                                    }
                                 }
 
                                         
@@ -246,7 +255,15 @@
                                         </a>
                                     </li>
                                 @endif
-                                {{-- Aladin external link removed per user request --}}
+                                @if($aladinUrl)
+                                    <li>
+                                        <a href="{{ $aladinUrl }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-gray-300 hover:text-white">
+                                            <!-- Aladin icon (map pin / telescope simplified) -->
+                                            <svg class="h-4 w-4 text-gray-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6.5a2.5 2.5 0 010 5z" fill="currentColor"/></svg>
+                                            <span>{{ __('aladin.lite') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
                             @endif
                         </ul>
                     </div>
