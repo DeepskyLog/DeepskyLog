@@ -15,12 +15,18 @@ class UpdateUserObservingInformation extends Component
     public $standardAtlasCode;
 
     public $showInches;
+    
+    // New defaults for Aladin preview
+    public $stdeyepiece;
+    public $stdlens;
 
     protected $rules = [
         'stdlocation' => 'numeric',
         'stdtelescope' => 'numeric',
         'stdinstrumentset' => 'numeric',
         'showInches' => 'boolean',
+        'stdeyepiece' => 'numeric|nullable',
+        'stdlens' => 'numeric|nullable',
     ];
 
     /**
@@ -33,6 +39,8 @@ class UpdateUserObservingInformation extends Component
         $this->stdinstrumentset = auth()->user()->stdinstrumentset ?? null;
         $this->standardAtlasCode = auth()->user()->standardAtlasCode;
         $this->showInches = boolval(auth()->user()->showInches);
+        $this->stdeyepiece = auth()->user()->stdeyepiece ?? null;
+        $this->stdlens = auth()->user()->stdlens ?? null;
     }
 
     /**
@@ -68,6 +76,17 @@ class UpdateUserObservingInformation extends Component
             auth()->user()->forceFill([
                 'stdinstrumentset' => $this->stdinstrumentset,
             ])->save();
+        }
+        // Persist eyepiece and lens defaults
+        if ($this->stdeyepiece == 0) {
+            auth()->user()->forceFill(['stdeyepiece' => null])->save();
+        } else {
+            auth()->user()->forceFill(['stdeyepiece' => $this->stdeyepiece])->save();
+        }
+        if ($this->stdlens == 0) {
+            auth()->user()->forceFill(['stdlens' => null])->save();
+        } else {
+            auth()->user()->forceFill(['stdlens' => $this->stdlens])->save();
         }
         auth()->user()->forceFill([
             'standardAtlasCode' => $this->standardAtlasCode,

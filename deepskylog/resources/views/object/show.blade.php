@@ -11,33 +11,15 @@
                         <span class="text-white font-medium ml-2">{{ $session->constellation }}</span>
                     @endif
                 </p>
-            </header>
 
-            <div class="grid md:grid-cols-3 gap-4">
+            <div class="grid md:grid-cols-3 gap-4 mt-3">
                 <article class="md:col-span-2">
-                    @if(!empty($image))
-                        <img class="w-full rounded shadow mb-3" src="{{ $image }}" alt="{{ html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') }}">
-                    @endif
-
                     <div class="mb-4 text-gray-100">
                         <h2 class="text-xl font-semibold text-white">{{ __('Object details') }}</h2>
                         <table class="table-auto w-full text-sm text-gray-100">
-                            <tr>
-                                <td class="pr-4 font-medium">{{ __('Name') }}</td>
-                                <td>
-                                    @php
-                                        // Prefer canonicalSlug provided by controller, fall back to session.slug or slugified name
-                                        $primarySlug = $canonicalSlug ?? ($session->slug ? $session->slug : \Illuminate\Support\Str::slug($session->name ?? '', '-'));
-                                    @endphp
-                                    <a href="{{ route('object.show', ['slug' => $primarySlug]) }}" class="font-bold text-white hover:underline">{{ $session->name }}</a>
-                                </td>
-                            </tr>
-                            @if(!empty($alternatives) && is_array($alternatives) && count($alternatives) > 0)
-                                <tr>
-                                    <td class="pr-4 font-medium">{{ __('Also known as') }}</td>
-                                    <td>
-                                        @php
-                                            // Render alternatives as a comma-separated list with exactly one space after comma.
+                            <td class="pr-4 font-medium">{{ __('Also known as') }}</td>
+                            <td>
+                            @php
                                             $altLinks = [];
                                             foreach ($alternatives as $alt) {
                                                 $altSlug = \Illuminate\Support\Str::slug($alt, '-');
@@ -48,7 +30,6 @@
                                         {!! implode(', ', $altLinks) !!}
                                     </td>
                                 </tr>
-                            @endif
                             @if(isset($session->ra) && isset($session->decl))
                                 <tr>
                                     <td class="pr-4 font-medium">{{ __('RA / Dec') }}</td>
@@ -273,19 +254,162 @@
                     @if(isset($session->ra) && isset($session->decl) && !empty($session->ra) && !empty($session->decl))
                         <div class="mt-4 bg-gray-800 p-3 rounded shadow text-gray-100">
                             <h4 class="font-semibold mb-2 text-white">{{ __('Sky preview') }}</h4>
-                            <div id="aladin-lite-container" class="w-full h-64 rounded bg-black" style="min-height:240px;"
-                                 data-aladin="{{ base64_encode(json_encode($aladinDefaults ?? [])) }}"
-                                 data-ra="{{ e($session->ra ?? '') }}"
-                                 data-dec="{{ e($session->decl ?? '') }}"
-                                 data-name="{{ e($session->name ?? '') }}">
+                            @php
+                                $dslText = [
+                                    'saving' => __('Saving...'),
+                                    'save' => __('Save'),
+                                    'saved' => __('Saved'),
+                                    'save_failed' => __('Save failed'),
+                                    'fov_label' => __('FoV'),
+                                    'fov_object_size' => __('(object size)'),
+                                    'fov_eyepiece' => __('(eyepiece)'),
+                                    'fov_instrument' => __('(instrument)'),
+                                    'none_label' => __('(none)'),
+                                ];
+                            @endphp
+                       <div id="aladin-lite-container" class="w-full h-64 rounded bg-black" style="min-height:240px;"
+                           data-aladin="{{ base64_encode(json_encode($aladinDefaults ?? [])) }}"
+                           data-ra="{{ e($session->ra ?? '') }}"
+                           data-dec="{{ e($session->decl ?? '') }}"
+                           data-name="{{ e($session->name ?? '') }}"
+                           data-save-url="{{ url('/api/user/aladin-defaults') }}"
+                           data-dsl-text="{{ base64_encode(json_encode($dslText)) }}"
+                           data-available="{{ base64_encode(json_encode(['instruments' => $availableInstruments ?? [], 'eyepieces' => $availableEyepieces ?? [], 'lenses' => $availableLenses ?? []])) }}"
+                           {{-- Server-provided initial selections encoded as safe data attributes to avoid inline Blade @json in JS --}}
+                           data-selected-instrument="{{ $selectedInstrumentId ?? '' }}"
+                           data-selected-eyepiece="{{ $selectedEyepieceId ?? '' }}"
+                           data-selected-lens="{{ $selectedLensId ?? '' }}">
                                 {{-- Aladin will render into this container --}}
                             </div>
                             <div id="aladin-legend" class="mt-2 text-sm text-gray-300 flex items-center gap-3">
-                                <div class="text-xs text-gray-400">{{ __('FoV:') }}</div>
                                 <div id="aladin-fov-label" class="text-xs text-gray-400">{{ __('FoV:') }}</div>
                                     <div id="aladin-fov" class="font-medium">—</div>
                                 <div class="text-xs text-gray-400">{{ __('Magnification:') }}</div>
                                 <div id="aladin-mag" class="font-medium">—</div>
+                            </div>
+                            <div class="mt-2">
+                                <div>
+                                    @livewire('aladin-selects', ['instrument' => $selectedInstrumentId ?? null, 'eyepiece' => $selectedEyepieceId ?? null, 'lens' => $selectedLensId ?? null])
+                                    <input type="hidden" id="aladin-instrument-hidden" value="{{ $selectedInstrumentId ?? '' }}" />
+                                    <input type="hidden" id="aladin-eyepiece-hidden" value="{{ $selectedEyepieceId ?? '' }}" />
+                                    <input type="hidden" id="aladin-lens-hidden" value="{{ $selectedLensId ?? '' }}" />
+                                    <!-- Selected labels removed per UI preference -->
+                                    <div class="mt-2">
+                                        <button id="aladin-save-btn" type="button" class="inline-flex items-center justify-center text-sm font-medium px-3 py-1.5 rounded-md bg-green-600 text-white hover:bg-green-700 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-green-400 transition">
+                                            {{ __('Save') }}
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- selects are rendered by the Livewire AladinSelects component above -->
+                                {{-- One-time server-side initial sync: ensure hidden inputs match server-selected ids immediately on first render. This avoids relying on client heuristics to populate hidden fields. --}}
+                                <script>
+                                    (function(){
+                                        try {
+                                            // Only run once and only when DOMContentLoaded has already fired or will fire soon
+                                            function runInitSync(){
+                                                try {
+                                                    var instHidden = document.getElementById('aladin-instrument-hidden');
+                                                    var epHidden = document.getElementById('aladin-eyepiece-hidden');
+                                                    var lnHidden = document.getElementById('aladin-lens-hidden');
+                                                    // Server-provided values (blade variables) — encoded safely into attributes to avoid inline php printing issues
+                                                    try { if (typeof window.__dsl_server_selected === 'undefined') { window.__dsl_server_selected = {}; } } catch(e){}
+                                                    try {
+                                                        if (typeof window.__dsl_server_selected.instrument === 'undefined') {
+                                                            var _alc_sel = document.getElementById('aladin-lite-container');
+                                                            if (_alc_sel) {
+                                                                window.__dsl_server_selected.instrument = _alc_sel.getAttribute('data-selected-instrument') || '';
+                                                            } else {
+                                                                window.__dsl_server_selected.instrument = '';
+                                                            }
+                                                        }
+                                                    } catch(e){}
+                                                    try {
+                                                        if (typeof window.__dsl_server_selected.eyepiece === 'undefined') {
+                                                            var _alc_sel2 = document.getElementById('aladin-lite-container');
+                                                            if (_alc_sel2) {
+                                                                window.__dsl_server_selected.eyepiece = _alc_sel2.getAttribute('data-selected-eyepiece') || '';
+                                                            } else {
+                                                                window.__dsl_server_selected.eyepiece = '';
+                                                            }
+                                                        }
+                                                    } catch(e){}
+                                                    try {
+                                                        if (typeof window.__dsl_server_selected.lens === 'undefined') {
+                                                            var _alc_sel3 = document.getElementById('aladin-lite-container');
+                                                            if (_alc_sel3) {
+                                                                window.__dsl_server_selected.lens = _alc_sel3.getAttribute('data-selected-lens') || '';
+                                                            } else {
+                                                                window.__dsl_server_selected.lens = '';
+                                                            }
+                                                        }
+                                                    } catch(e){}
+
+                                                    if (instHidden && typeof window.__dsl_server_selected.instrument !== 'undefined') {
+                                                        instHidden.value = window.__dsl_server_selected.instrument || '';
+                                                    }
+                                                    if (epHidden && typeof window.__dsl_server_selected.eyepiece !== 'undefined') {
+                                                        epHidden.value = window.__dsl_server_selected.eyepiece || '';
+                                                    }
+                                                    if (lnHidden && typeof window.__dsl_server_selected.lens !== 'undefined') {
+                                                        lnHidden.value = window.__dsl_server_selected.lens || '';
+                                                    }
+                                                            // If the visible select widget already has a value (async data), ensure
+                                                            // hidden inputs match the visible selects on first load. This is a
+                                                            // conservative one-time sync only; user interactions remain driven
+                                                            // by x-on:selected handlers.
+                                                            try {
+                                                                try {
+                                                                    if (instHidden) {
+                                                                                        var wrapper = document.querySelector('[data-dsl-field="instrument"]') || (instHidden.parentElement || null);
+                                                                                        if (wrapper) {
+                                                                                            var s = wrapper.querySelector('select');
+                                                                                            if (s && s.value && (!instHidden.value || instHidden.value !== s.value)) {
+                                                                                                instHidden.value = s.value;
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                } catch(e){}
+                                                                try {
+                                                                    if (epHidden) {
+                                                                            var wrapper2 = document.querySelector('[data-dsl-field="eyepiece"]') || (epHidden.parentElement || null);
+                                                                            if (wrapper2) {
+                                                                                var s2 = wrapper2.querySelector('select');
+                                                                                if (s2 && s2.value && (!epHidden.value || epHidden.value !== s2.value)) {
+                                                                                    epHidden.value = s2.value;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                } catch(e){}
+                                                                try {
+                                                                    if (lnHidden) {
+                                                                            var wrapper3 = document.querySelector('[data-dsl-field="lens"]') || (lnHidden.parentElement || null);
+                                                                            if (wrapper3) {
+                                                                                var s3 = wrapper3.querySelector('select');
+                                                                                if (s3 && s3.value && (!lnHidden.value || lnHidden.value !== s3.value)) {
+                                                                                    lnHidden.value = s3.value;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                } catch(e){}
+                                                            } catch(e){}
+                                                            // Install a capture-level pointerdown listener so real user interactions
+                                                            // update a timestamp we use to distinguish init-time events from user events.
+                                                            try {
+                                                                if (typeof window.__dsl_last_user_interaction_ts === 'undefined') {
+                                                                    window.__dsl_last_user_interaction_ts = 0;
+                                                                    document.addEventListener('pointerdown', function(){ try { window.__dsl_last_user_interaction_ts = Date.now(); } catch(e){} }, true);
+                                                                    // also support touchstart for older devices
+                                                                    document.addEventListener('touchstart', function(){ try { window.__dsl_last_user_interaction_ts = Date.now(); } catch(e){} }, true);
+                                                                }
+                                                            } catch(e){}
+                                                    try { if (typeof updateSelectedLabels === 'function') updateSelectedLabels(); } catch(e){}
+                                                    try { if (typeof scheduleApplyAladinSelectsUpdate === 'function') scheduleApplyAladinSelectsUpdate(); } catch(e){}
+                                                } catch(e){}
+                                            }
+                                            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', runInitSync); else runInitSync();
+                                        } catch(e) {}
+                                    })();
+                                </script>
                             </div>
                             <div class="text-xs text-gray-400 mt-2">{{ __('Aladin Lite preview (uses default eyepiece/instrument if available)') }}</div>
                         </div>
@@ -298,21 +422,33 @@
 
 <!-- Aladin Lite assets (inline so layout stack is not required) -->
 <link rel="stylesheet" href="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css">
+<!-- Tom Select removed: using native selects / WireUI styling instead -->
 
 <script>
     (function(){
-        // Server-provided values will be read from the aladin container data- attributes
-        var aladinDefaults = null;
-        var sessionRa = null;
-        var sessionDec = null;
-        var sessionName = null;
-        // Debug flag (toggle by setting data-debug="1" or "true" on #aladin-lite-container)
-        var DSL_DEBUG = false;
-        function dbg() {
-            if (!DSL_DEBUG) return;
-            try { if (console && typeof console.debug === 'function') console.debug.apply(console, arguments); }
-            catch (e) {}
-        }
+    // Server-provided values will be read from the aladin container data- attributes
+    var aladinDefaults = null;
+    var sessionRa = null;
+    var sessionDec = null;
+    var sessionName = null;
+    var DSL_AVAILABLE = { instruments: [], eyepieces: [], lenses: [] };
+    // Global handles so select changes can update the active Aladin instance
+    var __dslCurrentAladin = null;
+    var __dslCenterRaDeg = null;
+    var __dslCenterDecDeg = null;
+    var __dslAladinUpdateTimer = null;
+    // Debug logging removed for production.
+        // parse embedded data attributes early
+        try {
+            var _alc = document.getElementById('aladin-lite-container');
+            if (_alc) {
+                try { var dab = _alc.getAttribute('data-available'); if (dab) DSL_AVAILABLE = JSON.parse(atob(dab)); } catch (e) { /* ignore */ }
+                try { var dslb = _alc.getAttribute('data-dsl-text'); if (dslb) DSL_TEXT = JSON.parse(atob(dslb)); } catch (e) { /* ignore */ }
+            }
+        } catch (e) {}
+
+        // DSL_TEXT will be parsed from data attribute on the aladin container at init time
+        var DSL_TEXT = {};
 
     // Utility: try to parse "HH MM SS" RA or decimal into degrees
         function parseRaToDegrees(ra) {
@@ -354,12 +490,16 @@
                 if (defaults) {
                     var inst = defaults.instrument || null;
                     var ep = defaults.eyepiece || null;
+                    var ln = defaults.lens || null;
                     if (ep && inst && inst.focal_length_mm && ep.apparent_fov_deg) {
                         var mag = inst.fixedMagnification || (inst.focal_length_mm && ep.focal_length_mm ? inst.focal_length_mm / ep.focal_length_mm : null);
+                        // Apply lens factor if present (e.g., barlow or reducer stored as factor)
+                        try { if (ln && ln.factor) { mag = mag ? (Number(mag) * Number(ln.factor)) : null; } } catch (e) {}
                         if (mag) { return Math.max(0.01, Number(ep.apparent_fov_deg) / mag); }
                     }
                     if (ep && inst && inst.focal_length_mm && ep.focal_length_mm) {
                         var mag2 = inst.focal_length_mm / ep.focal_length_mm;
+                        try { if (defaults.lens && defaults.lens.factor) { mag2 = Number(mag2) * Number(defaults.lens.factor); } } catch (e) {}
                         if (mag2 && mag2 > 0) { return Math.max(0.01, 50.0 / mag2); }
                     }
                     // If no instrument/eyepiece defaults available, try using the object's diameter (arcminutes)
@@ -441,11 +581,11 @@
                         setTimeout(function(){
                             try {
                                 var f2 = aladinInstance.getFov && aladinInstance.getFov();
-                                dbg('finalAdjustFov: after setFov, getFov=', f2);
+                                
                             } catch (e) {}
                         }, 300);
                     } catch (e) { }
-                }, 1200);
+                }, 250);
             } catch (e) { }
         }
 
@@ -472,6 +612,9 @@
             try {
                 if (!containerEl) return;
                 opts = opts || {};
+                // Keep the Aladin internal DOM intact (do not hide children). We still
+                // want to add a minimal, non-invasive control bar for zoom/fullscreen/save.
+                var doPrune = false;
                 // Determine the main viewport element (canvas/img/background) to keep
                 var viewport = null;
                 try {
@@ -490,28 +633,55 @@
                     }
                 } catch (e) { viewport = null; }
 
-                // Hide all children except viewport and overlay DOM we created (ids: aladin-fov-dom)
-                Array.prototype.slice.call(containerEl.children).forEach(function(ch){
-                    try {
-                        if (ch.id === 'aladin-fov-dom') return; // keep our overlay
-                        if (viewport && (ch === viewport || ch.contains(viewport) || viewport.contains(ch))) return;
-                        // hide everything else (toolbar, legends, etc.)
-                        ch.style.display = 'none';
-                    } catch (e) {}
-                });
+                // Targeted pruning: hide only toolbar-like elements that sit above the viewport
+                // Keep the main viewport and our overlays intact so panning and interactions remain functional.
+                try {
+                    Array.prototype.slice.call(containerEl.children).forEach(function(ch){
+                        try {
+                            // preserve our overlays and control container
+                            if (!ch) return;
+                            if (ch.id === 'aladin-fov-dom' || ch.id === 'dsl-aladin-minimal-controls' || ch.id === 'aladin-live-fov-badge') return;
+                            // preserve viewport (canvas/img) and anything that contains or is the viewport
+                            if (viewport && (ch === viewport || ch.contains(viewport) || viewport.contains(ch))) return;
+                            // Heuristic: hide elements that are absolutely/fixed positioned or have high z-index
+                            var hide = false;
+                            try {
+                                var cs = window.getComputedStyle(ch);
+                                var pos = (cs && cs.position) ? cs.position : '';
+                                var z = (cs && cs.zIndex) ? parseInt(cs.zIndex, 10) : 0;
+                                if (pos === 'absolute' || pos === 'fixed' || (!isNaN(z) && z >= 10)) hide = true;
+                            } catch (e) { /* ignore */ }
+                            // Additionally, hide if element contains toolbar-like controls (buttons/inputs) but is not the viewport
+                            try {
+                                if (!hide && ch.querySelector && (ch.querySelector('button, input, select, [role="toolbar"]'))) hide = true;
+                            } catch (e) {}
+                            if (hide) {
+                                try {
+                                    // Make the element visually hidden but non-intercepting so pointer events reach the viewport
+                                    ch.style.visibility = 'hidden';
+                                    ch.style.pointerEvents = 'none';
+                                    // keep the element in the flow to avoid layout shifts
+                                } catch (e) {}
+                            }
+                        } catch (e) {}
+                    });
+                } catch (e) {}
 
-                // Add a minimal control container if not already present
+                // Add a minimal control container if not already present. Place it outside the
+                // Aladin internal DOM by appending it to the Aladin container's parent (or body)
+                // so it never obscures or intercepts events intended for the viewport.
                 var ctrlId = 'dsl-aladin-minimal-controls';
                 var existing = document.getElementById(ctrlId);
                 if (existing) return; // already installed
 
                 var ctrl = document.createElement('div');
                 ctrl.id = ctrlId;
+                // We'll position the controls absolutely relative to the container's parent
                 ctrl.style.position = 'absolute';
                 ctrl.style.right = '8px';
                 ctrl.style.top = '50%';
                 ctrl.style.transform = 'translateY(-50%)';
-                ctrl.style.zIndex = 60;
+                ctrl.style.zIndex = 1000; // high so it sits above the preview
                 ctrl.style.display = 'flex';
                 ctrl.style.flexDirection = 'column';
                 ctrl.style.gap = '6px';
@@ -529,6 +699,8 @@
                     b.style.color = 'white';
                     b.style.cursor = 'pointer';
                     b.style.fontSize = '18px';
+                    // Ensure the button itself can receive pointer events even if its container is non-intercepting
+                    b.style.pointerEvents = 'auto';
                     return b;
                 }
 
@@ -590,55 +762,52 @@
                         try {
                             var cvs = container.querySelector('canvas');
                             if (cvs && typeof cvs.toDataURL === 'function') {
-                                var dataUrl = cvs.toDataURL('image/png');
-                                // create download link
-                                var link = document.createElement('a');
-                                link.href = dataUrl;
-                                link.download = filename;
-                                document.body.appendChild(link);
-                                link.click();
-                                document.body.removeChild(link);
-                                done = true;
-                                return;
+                                try {
+                                    var dataUrl = cvs.toDataURL('image/png');
+                                    var link = document.createElement('a');
+                                    link.href = dataUrl;
+                                    link.download = filename;
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                    done = true;
+                                    return;
+                                } catch(e) { /* continue to next method */ }
                             }
                         } catch (e) { /* continue to next method */ }
 
                         // Second: try to find an image element inside the container and fetch it
-                        try {
-                            var img = container.querySelector('img');
-                            if (img && img.src) {
-                                var src = img.src;
-                                // If it is a data URL, download directly
-                                if (src.indexOf('data:') === 0) {
-                                    var link2 = document.createElement('a');
-                                    link2.href = src;
-                                    link2.download = filename;
-                                    document.body.appendChild(link2);
-                                    link2.click();
-                                    document.body.removeChild(link2);
-                                    done = true;
+                            try {
+                                var img = container.querySelector('img');
+                                if (img && img.src) {
+                                    var src = img.src;
+                                    if (src.indexOf('data:') === 0) {
+                                        try {
+                                            var link2 = document.createElement('a');
+                                            link2.href = src;
+                                            link2.download = filename;
+                                            document.body.appendChild(link2);
+                                            link2.click();
+                                            document.body.removeChild(link2);
+                                            done = true;
+                                            return;
+                                        } catch (e) { /* fallback to fetch below */ }
+                                    }
+                                    // Otherwise fetch the resource as blob then download. 
+                                    fetch(src, { mode: 'cors' }).then(function(resp){
+                                        if (!resp.ok) throw new Error('Fetch failed');
+                                        return resp.blob();
+                                    }).then(function(blob){
+                                        var url = URL.createObjectURL(blob);
+                                        var l = document.createElement('a'); l.href = url; l.download = filename; document.body.appendChild(l); l.click(); document.body.removeChild(l); setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+                                        return;
+                                    }).catch(function(err){
+                                        // fallback to opening full aladin
+                                        try { openFullAladin(); } catch(e) {}
+                                    });
                                     return;
                                 }
-                                // Otherwise fetch the resource as blob then download
-                                fetch(src, { mode: 'cors' }).then(function(resp){
-                                    if (!resp.ok) throw new Error('Fetch failed');
-                                    return resp.blob();
-                                }).then(function(blob){
-                                    var url = URL.createObjectURL(blob);
-                                    var l = document.createElement('a');
-                                    l.href = url;
-                                    l.download = filename;
-                                    document.body.appendChild(l);
-                                    l.click();
-                                    document.body.removeChild(l);
-                                    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
-                                }).catch(function(err){
-                                    // fallback to opening full aladin
-                                    try { openFullAladin(); } catch(e) {}
-                                });
-                                return;
-                            }
-                        } catch (e) { /* continue */ }
+                            } catch (e) { /* continue */ }
 
                         // Final fallback: open full Aladin page for manual save
                         function openFullAladin() {
@@ -658,21 +827,78 @@
                     }
                 });
 
-                // Append buttons
+                // Append buttons in a minimal, non-invasive control container
                 ctrl.appendChild(btnZoomIn);
                 ctrl.appendChild(btnZoomOut);
                 ctrl.appendChild(btnFullscreen);
                 ctrl.appendChild(btnSave);
 
-                // Ensure container is positioned
-                containerEl.style.position = containerEl.style.position || 'relative';
-                containerEl.appendChild(ctrl);
+                // Place the control container outside the Aladin internal DOM. We'll append to
+                // the container's parent so the controls can overlay the preview without being
+                // children of the Aladin root (avoids intercepting internal pointer handlers).
+                try {
+                    var parentForControls = (containerEl && containerEl.parentElement) ? containerEl.parentElement : document.body;
+                    // Ensure parent is positioned so absolutely positioned controls align
+                    parentForControls.style.position = parentForControls.style.position || 'relative';
+                    // Style the control container to be transparent and small
+                    try { ctrl.style.background = 'transparent'; ctrl.style.padding = '4px'; ctrl.style.borderRadius = '6px'; } catch(e){}
+                    // Temporarily set pointer-events to none on the container; we'll enable it on buttons
+                    try { ctrl.style.pointerEvents = 'none'; } catch(e){}
+                    // Append to parent (outside Aladin internals)
+                    parentForControls.appendChild(ctrl);
+                    // Position the control container to visually overlay the Aladin container
+                    try {
+                        var alcRect = containerEl.getBoundingClientRect();
+                        var parentRect = parentForControls.getBoundingClientRect();
+                        // Compute offset relative to parent
+                        var offsetTop = alcRect.top - parentRect.top;
+                        var offsetLeft = alcRect.left - parentRect.left;
+                        // Place controls near the right center of the Aladin container
+                        ctrl.style.position = 'absolute';
+                        ctrl.style.left = (offsetLeft + alcRect.width - 48) + 'px';
+                        ctrl.style.top = (offsetTop + (alcRect.height / 2) - 34) + 'px';
+                        // Ensure buttons receive pointer events
+                        Array.prototype.slice.call(ctrl.querySelectorAll('button')).forEach(function(b){ try { b.style.pointerEvents = 'auto'; } catch(e){} });
+                    } catch(e) {
+                        // fallback: rely on css positioning already set
+                        try { Array.prototype.slice.call(ctrl.querySelectorAll('button')).forEach(function(b){ try { b.style.pointerEvents = 'auto'; } catch(e){} }); } catch(e){}
+                    }
+                } catch (e) {}
+                // Ensure only the viewport element inside the Aladin container can receive pointer events.
+                // This makes sure any remaining overlays or UI elements won't intercept drag/pan.
+                try {
+                    Array.prototype.slice.call(containerEl.children).forEach(function(ch){
+                        try {
+                            if (!ch) return;
+                            // Allow the viewport element itself to keep pointer events
+                            if (viewport && (ch === viewport || ch.contains(viewport) || viewport.contains(ch))) {
+                                try { ch.style.pointerEvents = 'auto'; } catch(e){}
+                                return;
+                            }
+                            // Keep our DOM overlay non-intercepting
+                            if (ch.id === 'aladin-fov-dom' || ch.id === 'aladin-live-fov-badge') {
+                                try { ch.style.pointerEvents = 'none'; } catch(e){}
+                                return;
+                            }
+                            // Disable pointer events on any other child so pointer interactions reach the viewport
+                            try { ch.style.pointerEvents = 'none'; } catch(e){}
+                        } catch (e) {}
+                    });
+                } catch (e) {}
             } catch (e) { console.error('pruneAladinControls error', e); }
         }
 
         function initAladin() {
             var container = document.getElementById('aladin-lite-container');
             if (!container) return;
+
+            // Parse localized DSL_TEXT from container to avoid Blade inside JS literals
+            try {
+                var raw = container.getAttribute('data-dsl-text');
+                if (raw) {
+                    DSL_TEXT = JSON.parse(atob(raw));
+                }
+            } catch (e) { DSL_TEXT = {}; }
 
             try {
                 var raw = container.getAttribute('data-aladin');
@@ -685,14 +911,345 @@
             sessionDec = container.getAttribute('data-dec') || null;
             sessionName = container.getAttribute('data-name') || null;
 
+            // Merge any hidden select values into aladinDefaults so initial FOV reflects them
+            try {
+                // If hidden inputs are empty but server-provided aladinDefaults contains
+                // instrument/eyepiece/lens hints (without ids), try to find matching
+                // available items and populate the hidden inputs so selects show them.
+                try {
+                    var instHiddenEl = document.getElementById('aladin-instrument-hidden');
+                    var epHiddenEl = document.getElementById('aladin-eyepiece-hidden');
+                    var lnHiddenEl = document.getElementById('aladin-lens-hidden');
+                    if (aladinDefaults && typeof DSL_AVAILABLE !== 'undefined') {
+                        try {
+                            if (aladinDefaults.instrument && !aladinDefaults.instrument.id && Array.isArray(DSL_AVAILABLE.instruments)) {
+                                var match = DSL_AVAILABLE.instruments.find(function(i){
+                                    try {
+                                        var f1 = Number(i.focal_length_mm || i.focal_length_mm_mm || 0);
+                                        var f2 = Number(aladinDefaults.instrument.focal_length_mm || 0);
+                                        var a1 = Number(i.aperture_mm || 0);
+                                        var a2 = Number(aladinDefaults.instrument.aperture_mm || 0);
+                                        if (f2 && Math.abs(f1 - f2) <= 1) return true;
+                                        if (a2 && Math.abs(a1 - a2) <= 1) return true;
+                                    } catch (e) {}
+                                    return false;
+                                });
+                                if (match && instHiddenEl) { instHiddenEl.value = match.id; }
+                            }
+                            if (aladinDefaults.eyepiece && !aladinDefaults.eyepiece.id && Array.isArray(DSL_AVAILABLE.eyepieces)) {
+                                var matchEp = DSL_AVAILABLE.eyepieces.find(function(e){
+                                    try {
+                                        var ef = Number(e.focal_length_mm || 0);
+                                        var rf = Number(aladinDefaults.eyepiece.focal_length_mm || 0);
+                                        var ap = Number(e.apparent_fov_deg || 0);
+                                        var rap = Number(aladinDefaults.eyepiece.apparent_fov_deg || 0);
+                                        if (rf && Math.abs(ef - rf) <= 0.5) return true;
+                                        if (rap && Math.abs(ap - rap) <= 0.5) return true;
+                                    } catch (e) {}
+                                    return false;
+                                });
+                                if (matchEp && epHiddenEl) { epHiddenEl.value = matchEp.id; }
+                            }
+                            if (aladinDefaults.lens && !aladinDefaults.lens.id && Array.isArray(DSL_AVAILABLE.lenses)) {
+                                var matchLn = DSL_AVAILABLE.lenses.find(function(l){
+                                    try { return Number(l.factor || 0) === Number(aladinDefaults.lens.factor || 0); } catch (e) { return false; }
+                                });
+                                if (matchLn && lnHiddenEl) { lnHiddenEl.value = matchLn.id; }
+                            }
+                        } catch (e) { /* ignore match errors */ }
+                    }
+                } catch (e) {}
+                readSelectsIntoDefaults();
+            } catch (e) {}
             var centerRaDeg = null;
             var centerDecDeg = null;
             if (aladinDefaults && aladinDefaults.ra_deg && aladinDefaults.dec_deg) {
                 centerRaDeg = aladinDefaults.ra_deg;
                 centerDecDeg = aladinDefaults.dec_deg;
             }
+            try {
+                function parseBool(v){ if (typeof v === 'undefined' || v === null || v === '') return false; try { var s = String(v).toLowerCase().trim(); return (s === '1' || s === 'true' || s === 'yes' || s === 'on'); } catch(e){ return false; } }
+                try {
+                    var selInst = null;
+                    // aladinDefaults.instrument may be an object with id, or aladinDefaults may be null
+                    if (aladinDefaults && aladinDefaults.instrument && (aladinDefaults.instrument.id || aladinDefaults.instrument.id === 0)) {
+                        var instId = aladinDefaults.instrument.id;
+                        if (DSL_AVAILABLE && Array.isArray(DSL_AVAILABLE.instruments)) {
+                            selInst = DSL_AVAILABLE.instruments.find(function(i){ return String(i.id) === String(instId); }) || null;
+                        }
+                    }
+                    // Also allow for a directly selected instrument id from hidden input
+                    if (!selInst) {
+                        var hid = document.getElementById('aladin-instrument-hidden');
+                        if (hid && hid.value) {
+                            var hidId = hid.value;
+                            if (DSL_AVAILABLE && Array.isArray(DSL_AVAILABLE.instruments)) {
+                                selInst = DSL_AVAILABLE.instruments.find(function(i){ return String(i.id) === String(hidId); }) || null;
+                            }
+                        }
+                    }
+                } catch(e) { selInst = null; }
+
+
+                // Retries a few times if no canvas/iframe is present yet (Aladin may create it asynchronously)
+                // Helper: sample the center pixel of a canvas when readable. Returns [r,g,b,a] or null.
+                function dslSampleCanvasCenter(canvasEl) {
+                    try {
+                        if (!canvasEl) return null;
+                        try { var ctx2d = canvasEl.getContext('2d'); } catch(e) { ctx2d = null; }
+                        if (ctx2d && typeof ctx2d.getImageData === 'function') {
+                            var cx = Math.max(0, Math.floor((canvasEl.width||canvasEl.clientWidth||1)/2));
+                            var cy = Math.max(0, Math.floor((canvasEl.height||canvasEl.clientHeight||1)/2));
+                            try { var d = ctx2d.getImageData(cx, cy, 1, 1).data; return [d[0], d[1], d[2], d[3]]; } catch(e) { return null; }
+                        }
+                        try {
+                            var gl = canvasEl.getContext('webgl') || canvasEl.getContext('experimental-webgl') || canvasEl.getContext('webgl2');
+                            if (gl && typeof gl.readPixels === 'function') {
+                                var w = canvasEl.width || canvasEl.clientWidth || 1;
+                                var h = canvasEl.height || canvasEl.clientHeight || 1;
+                                var x = Math.max(0, Math.floor(w/2));
+                                var y = Math.max(0, Math.floor(h/2));
+                                var buf = new Uint8Array(4);
+                                try { gl.readPixels(x, h - y - 1, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, buf); return [buf[0], buf[1], buf[2], buf[3]]; } catch(e) { return null; }
+                            }
+                        } catch(e) {}
+                        return null;
+                    } catch(e) { return null; }
+                }
+
+                try {
+                    // MutationObserver for hidden input value changes
+                    var hidInst = document.getElementById('aladin-instrument-hidden');
+                    if (hidInst) {
+                        mo.observe(hidInst, { attributes: true });
+                    }
+
+                    // Also listen for change events on any select within the instrument wrapper
+                    var wrapper = document.querySelector('[data-dsl-field="instrument"]') || null;
+
+                    // Prefer attaching to Aladin's event hooks so we react only when Aladin
+                    // reports activity (render/zoom/move). This is more reliable than
+                    // DOM-only watching because Aladin knows when its internal rendering
+                    // cycle finished. We still keep a DOM-stability fallback when no
+                    // Aladin event API is available.
+                    try {
+                        function computeCanvasSignature(root) {
+                            try {
+                                var canvases = Array.prototype.slice.call((root.querySelectorAll ? root.querySelectorAll('canvas') : []));
+                                var imgs = Array.prototype.slice.call((root.querySelectorAll ? root.querySelectorAll('iframe, img, [role="img"]') : []));
+                                var items = canvases.concat(imgs);
+                                var sigParts = items.map(function(el){
+                                    try {
+                                        if (!el || el.nodeType !== 1) return '';
+                                        if (el.hasAttribute && el.hasAttribute('data-dsl-overlay-for')) return '';
+                                        var id = el.id || el.getAttribute('data-dsl-canvas-id') || '';
+                                        var w = (el.width || el.clientWidth || el.offsetWidth || 0);
+                                        var h = (el.height || el.clientHeight || el.offsetHeight || 0);
+                                        var style = '';
+                                        try { style = (window.getComputedStyle && window.getComputedStyle(el).transform) || (el.style && el.style.transform) || ''; } catch(e) { style = (el.style && el.style.transform) || ''; }
+                                        return [ (el.tagName || '').toLowerCase(), id, w, h, style ].join('|');
+                                    } catch(e){ return ''; }
+                                }).filter(function(s){ return !!s; });
+                                sigParts.sort();
+                                return sigParts.join('::');
+                            } catch(e) { return ''; }
+                        }
+
+                        function monitorAladinDomStability(root, onStable, opts) {
+                            opts = opts || {};
+                            var stableMs = typeof opts.stableMs === 'number' ? opts.stableMs : 180;
+                            var maxWaitMs = typeof opts.maxWaitMs === 'number' ? opts.maxWaitMs : 3000;
+                            var lastSig = computeCanvasSignature(root);
+                            var lastChangeTs = Date.now();
+                            var timeoutId = null;
+                            var startTs = Date.now();
+
+                            function scheduleCheck() {
+                                if (timeoutId) clearTimeout(timeoutId);
+                                timeoutId = setTimeout(function(){
+                                    try {
+                                        var sig = computeCanvasSignature(root);
+                                        if (sig === lastSig && (Date.now() - lastChangeTs) >= stableMs) {
+                                            cleanup();
+                                            try { onStable(); } catch(e){}
+                                            return;
+                                        }
+                                        lastSig = sig;
+                                        lastChangeTs = Date.now();
+                                        if ((Date.now() - startTs) >= maxWaitMs) {
+                                            cleanup();
+                                            try { onStable(); } catch(e){}
+                                            return;
+                                        }
+                                        scheduleCheck();
+                                    } catch(e) { cleanup(); try { onStable(); } catch(_){} }
+                                }, stableMs + 20);
+                            }
+
+                            var mo = new MutationObserver(function(muts){
+                                try {
+                                    var sawRelevant = false;
+                                    muts.forEach(function(m){
+                                        try {
+                                            var tgt = m.target || null;
+                                            if (tgt && tgt.nodeType === 1) {
+                                                if (tgt.hasAttribute && tgt.hasAttribute('data-dsl-overlay-for')) return;
+                                                try { if (tgt.closest && tgt.closest('[data-dsl-overlay-for]')) return; } catch(e){}
+                                            }
+                                            if (m.type === 'childList') {
+                                                Array.prototype.forEach.call(m.addedNodes || [], function(n){
+                                                    try { if (n && n.nodeType === 1) {
+                                                        var tag = (n.tagName || '').toLowerCase();
+                                                        if (tag === 'canvas' || tag === 'iframe' || tag === 'img' || (n.querySelector && n.querySelector('canvas'))) sawRelevant = true;
+                                                    } } catch(e){}
+                                                });
+                                                Array.prototype.forEach.call(m.removedNodes || [], function(n){ try { if (n && n.nodeType === 1 && (n.tagName || '').toLowerCase() === 'canvas') sawRelevant = true; } catch(e){} });
+                                            } else if (m.type === 'attributes') {
+                                                try {
+                                                    var mt = m.target;
+                                                    if (mt && mt.nodeType === 1) {
+                                                        var tag = (mt.tagName || '').toLowerCase();
+                                                        if (tag === 'canvas' || tag === 'img' || tag === 'iframe') sawRelevant = true;
+                                                    }
+                                                } catch(e){}
+                                            }
+                                        } catch(e){}
+                                    });
+                                    if (sawRelevant) {
+                                        lastSig = computeCanvasSignature(root);
+                                        lastChangeTs = Date.now();
+                                        scheduleCheck();
+                                    }
+                                } catch(e){}
+                            });
+
+                            try {
+                                mo.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+                            } catch(e) {
+                                setTimeout(function(){ try { onStable(); } catch(e){} }, 300);
+                            }
+
+                            function cleanup() {
+                                try { if (mo) mo.disconnect(); } catch(e){}
+                                try { if (timeoutId) clearTimeout(timeoutId); } catch(e){}
+                            }
+
+                            return { disconnect: cleanup };
+                        }
+
+                        function attachAladinEventWatcher(root, aladinInstance, onStable) {
+                            try {
+                                if (!aladinInstance) {
+                                    // No instance yet; use DOM fallback
+                                    return monitorAladinDomStability(root, onStable, { stableMs: 180, maxWaitMs: 3000 });
+                                }
+
+                                // Debounce events so rapid internal updates coalesce into a single final call
+                                var debounceTimer = null;
+                                function scheduleStableCall() {
+                                    try {
+                                        if (debounceTimer) clearTimeout(debounceTimer);
+                                        debounceTimer = setTimeout(function(){ debounceTimer = null; try { onStable(); } catch(e){} }, 160);
+                                    } catch(e) { try { onStable(); } catch(e){} }
+                                }
+
+                                var attached = [];
+                                // common Aladin event names (best-effort); many builds expose .on or addListener
+                                var events = ['redraw','render','zoom','move','viewChanged','positionChanged','update','change'];
+                                var hooked = false;
+                                try {
+                                    if (typeof aladinInstance.on === 'function') {
+                                        events.forEach(function(ev){
+                                            try { aladinInstance.on(ev, scheduleStableCall); attached.push({ api: 'on', ev: ev }); hooked = true; } catch(e){}
+                                        });
+                                    }
+                                } catch(e){}
+                                try {
+                                    if (!hooked && typeof aladinInstance.addListener === 'function') {
+                                        events.forEach(function(ev){
+                                            try { aladinInstance.addListener(ev, scheduleStableCall); attached.push({ api: 'addListener', ev: ev }); hooked = true; } catch(e){}
+                                        });
+                                    }
+                                } catch(e){}
+                                try {
+                                    if (!hooked && typeof aladinInstance.addEventListener === 'function') {
+                                        events.forEach(function(ev){
+                                            try { aladinInstance.addEventListener(ev, scheduleStableCall); attached.push({ api: 'addEventListener', ev: ev }); hooked = true; } catch(e){}
+                                        });
+                                    }
+                                } catch(e){}
+
+                                if (hooked) {
+                                    // Return a small object that can be used to detach listeners if needed
+                                    return {
+                                        disconnect: function(){
+                                            try {
+                                                attached.forEach(function(a){
+                                                    try {
+                                                        if (a.api === 'on' && typeof aladinInstance.off === 'function') aladinInstance.off(a.ev, scheduleStableCall);
+                                                        else if (a.api === 'addListener' && typeof aladinInstance.removeListener === 'function') aladinInstance.removeListener(a.ev, scheduleStableCall);
+                                                        else if (a.api === 'addEventListener' && typeof aladinInstance.removeEventListener === 'function') aladinInstance.removeEventListener(a.ev, scheduleStableCall);
+                                                    } catch(e){}
+                                                });
+                                            } catch(e){}
+                                        }
+                                    };
+                                }
+
+                                // If we couldn't hook into Aladin's event system, fall back to DOM-stability watcher
+                                return monitorAladinDomStability(root, onStable, { stableMs: 180, maxWaitMs: 3000 });
+                            } catch(e) {
+                                try { return monitorAladinDomStability(root, onStable, { stableMs: 180, maxWaitMs: 3000 }); } catch(e) { return { disconnect: function(){} }; }
+                            }
+                        }
+
+                        // Install event-driven watcher on container/aladin when available
+                        try {
+                            if (container.__dslAladinEventMonitor && typeof container.__dslAladinEventMonitor.disconnect === 'function') {
+                                try { container.__dslAladinEventMonitor.disconnect(); } catch(e){}
+                                container.__dslAladinEventMonitor = null;
+                            }
+                            // prefer hooking to the global current Aladin instance if present
+                            var targetAladin = (typeof __dslCurrentAladin !== 'undefined' && __dslCurrentAladin) ? __dslCurrentAladin : null;
+                            container.__dslAladinEventMonitor = attachAladinEventWatcher(container, targetAladin, function(){
+                                try { if (typeof __dslCurrentAladin !== 'undefined' && __dslCurrentAladin) { updateDomFovOverlay(__dslCurrentAladin, computeFovDegFromDefaults(aladinDefaults)); } } catch(e){}
+                            });
+                        } catch(e) {
+                        }
+                    } catch(e){}
+                } catch(e) { /* non-fatal */ }
+            } catch(e) {}
+            // expose center to global so dropdown updates can re-center overlays
+            __dslCenterRaDeg = centerRaDeg;
+            __dslCenterDecDeg = centerDecDeg;
             if (!centerRaDeg && sessionRa) { centerRaDeg = parseRaToDegrees(sessionRa); }
             if (!centerDecDeg && sessionDec) { centerDecDeg = parseDecToDegrees(sessionDec); }
+
+            // Force a quick sync from visible select widgets (TomSelect/native) into the
+            // server-hidden inputs so aladinDefaults reflects the user's current selection
+            // (useful when Livewire/x-select populated the visible control but the hidden
+            // inputs were left empty on server render). This avoids computing FoV from
+            // stale defaults.
+            try {
+                ['instrument','eyepiece','lens'].forEach(function(k){
+                    try {
+                        var hidden = document.getElementById('aladin-'+k+'-hidden');
+                        if (!hidden) return;
+                        var wrapper = document.querySelector('[data-dsl-field="'+k+'"]') || hidden.parentElement || null;
+                        var sel = wrapper ? wrapper.querySelector('select') : null;
+                        var v = '';
+                        if (sel) {
+                            try { if (sel.tom && typeof sel.tom.getValue === 'function') v = sel.tom.getValue(); } catch(e){}
+                            if (!v) v = sel.value || (sel.dataset && sel.dataset.tsValue) || '';
+                        }
+                        if (!v && wrapper) {
+                            var control = wrapper.querySelector('input[type="text"], [role="combobox"], input');
+                            if (control) try { v = control.value || ''; } catch(e){}
+                        }
+                        if (v && hidden.value !== v) hidden.value = v;
+                    } catch(e){}
+                });
+            } catch(e){}
 
             var fovUsedDeg = computeFovDegFromDefaults(aladinDefaults);
             // Compute a slightly larger default display FoV so the full FoV circle is visible
@@ -745,17 +1302,15 @@
             var fovEl = document.getElementById('aladin-fov');
             var magEl = document.getElementById('aladin-mag');
             var fovLabelEl = document.getElementById('aladin-fov-label');
-            try {
-                var baseLabel = {!! json_encode(__('FoV')) !!};
-            } catch (e) { var baseLabel = 'FoV'; }
+                var baseLabel = (DSL_TEXT && DSL_TEXT.fov_label) ? DSL_TEXT.fov_label : 'FoV';
             var sourceSuffix = '';
             try {
                 if (typeof __dslFovUsedObjectDiameter !== 'undefined' && __dslFovUsedObjectDiameter) {
-                    sourceSuffix = {!! json_encode(__('(object size)')) !!};
+                    sourceSuffix = DSL_TEXT.fov_object_size || '(object size)';
                 } else if (aladinDefaults && aladinDefaults.eyepiece && aladinDefaults.instrument) {
-                    sourceSuffix = {!! json_encode(__('(eyepiece)')) !!};
+                    sourceSuffix = DSL_TEXT.fov_eyepiece || '(eyepiece)';
                 } else if (aladinDefaults && aladinDefaults.instrument) {
-                    sourceSuffix = {!! json_encode(__('(instrument)')) !!};
+                    sourceSuffix = DSL_TEXT.fov_instrument || '(instrument)';
                 }
             } catch (e) { sourceSuffix = ''; }
             if (fovLabelEl) { fovLabelEl.textContent = baseLabel + (sourceSuffix ? ' ' + sourceSuffix : '') + ':'; }
@@ -777,7 +1332,7 @@
             }
 
                 waitForAladinAndRun(function(Alib) {
-                    dbg('Aladin is available, initializing with fov', fovUsedDeg);
+                    
                     // Helper: update the DOM FoV overlay size based on current Aladin fov
                     function updateDomFovOverlay(aladinInstance, eyeFovDeg) {
                         try {
@@ -845,7 +1400,7 @@
                                 existing.style.boxSizing = 'border-box';
                                 // Keep the overlay below typical UI dropdowns (which use Tailwind z-50)
                                 // so menus appear above the FoV circle. Use a modest z-index.
-                                existing.style.zIndex = 40;
+                                existing.style.zIndex = 5;
                                 existing.style.left = '50%';
                                 existing.style.top = '50%';
                                 existing.style.transform = 'translate(-50%,-50%)';
@@ -893,6 +1448,9 @@
                             aladinInstance.__dslLastFov = null;
                             aladinInstance.__dslLastContainerW = null;
                             aladinInstance.__dslLastContainerH = null;
+                            // store the eyeFov on the instance so future watchers/readers prefer the most
+                            // recent value (applyAladinSelectsUpdate will update this when selects change)
+                            try { aladinInstance.__dslEyeFov = (typeof eyeFovDeg === 'number') ? eyeFovDeg : (aladinInstance.__dslEyeFov || null); } catch (e) {}
 
                             // First, try to attach event-driven updates: ResizeObserver for container and Aladin event hooks if available
                             var containerEl = document.getElementById('aladin-lite-container');
@@ -952,7 +1510,9 @@
                                     try {
                                         var legendFovEl = document.getElementById('aladin-fov');
                                         var badge = document.getElementById('aladin-live-fov-badge');
-                                        var sourceText = (typeof eyeFovDeg === 'number' ? formatFovLabel(eyeFovDeg) : '—');
+                                        // Prefer the eyeFov stored on the instance so updates from selects are shown
+                                        var currentEyeFov = (typeof aladinInstance.__dslEyeFov === 'number') ? aladinInstance.__dslEyeFov : ((typeof eyeFovDeg === 'number') ? eyeFovDeg : null);
+                                        var sourceText = (typeof currentEyeFov === 'number' ? formatFovLabel(currentEyeFov) : '—');
                                         var liveText = '—';
                                         try {
                                             if (curRa !== null && curDec !== null && !isNaN(Number(curRa)) && !isNaN(Number(curDec))) {
@@ -979,7 +1539,8 @@
                                                 badge.style.color = 'white';
                                                 badge.style.borderRadius = '6px';
                                                 badge.style.fontSize = '12px';
-                                                badge.style.zIndex = 80;
+                                                // ensure the live badge sits above overlay but below menus
+                                                badge.style.zIndex = 48;
                                                 badge.style.pointerEvents = 'none';
                                                 containerEl.style.position = containerEl.style.position || 'relative';
                                                 containerEl.appendChild(badge);
@@ -998,7 +1559,8 @@
                                         aladinInstance.__dslLastZoom = zoom;
                                         aladinInstance.__dslLastContainerW = w;
                                         aladinInstance.__dslLastContainerH = h;
-                                        updateDomFovOverlay(aladinInstance, eyeFovDeg);
+                                        // prefer instance-stored eyeFov when updating overlay
+                                        updateDomFovOverlay(aladinInstance, (typeof aladinInstance.__dslEyeFov === 'number') ? aladinInstance.__dslEyeFov : eyeFovDeg);
                                     }
                                 } catch (e) { }
                             }, 300);
@@ -1076,9 +1638,9 @@
                     // We add the Circle into a graphic overlay (which implements setView) and then add that overlay.
                     function addFovCircle(aladinInstance, ra, dec, eyeFovDeg, opts) {
                         try {
-                            dbg('addFovCircle called', { ra: ra, dec: dec, eyeFovDeg: eyeFovDeg, opts: opts });
+                            
                             if (!eyeFovDeg || isNaN(Number(eyeFovDeg))) {
-                                dbg('addFovCircle: invalid eyeFovDeg, skipping');
+                                
                                 return;
                             }
                             var radius = Number(eyeFovDeg) / 2.0; // degrees
@@ -1087,21 +1649,21 @@
                             // Prefer to use Alib.graphicOverlay if available (overlay implements setView)
                             if (Alib && typeof Alib.graphicOverlay === 'function' && typeof Alib.circle === 'function') {
                                 try {
-                                    dbg('addFovCircle: attempting graphicOverlay approach');
+                                    
                                     var circ = Alib.circle(ra, dec, radius, circleOpts);
                                     var overlay = Alib.graphicOverlay({ name: 'fov-overlay' });
                                     if (overlay && typeof overlay.add === 'function') {
                                         overlay.add(circ);
                                         aladinInstance.addOverlay(overlay);
-                                        dbg('addFovCircle: graphicOverlay added');
+                                        
                                         return;
                                     }
                                 } catch (e) {
                                     // fall through to marker-based fallback
-                                    dbg('addFovCircle: graphicOverlay approach failed, will fallback to markers', e);
+                                    
                                 }
                             } else {
-                                dbg('addFovCircle: graphicOverlay or circle factory not available, using fallback');
+                                
                             }
 
                             // Fallback: approximate the circle with a set of small markers placed around the circumference
@@ -1127,7 +1689,7 @@
                                 }
                             }
                             if (points.length === 0) {
-                                dbg('addFovCircle: no points created for fallback');
+                                
                                 return;
                             }
                             var cat = Alib.catalog({ name: 'fov-markers', color: visColor });
@@ -1135,11 +1697,11 @@
                             aladinInstance.addCatalog(cat);
                             // Try to set marker/source size on the catalog if supported
                             try {
-                                if (typeof cat.setMarkerSize === 'function') { cat.setMarkerSize(visSize); dbg('setMarkerSize called on catalog'); }
-                                if (typeof cat.setSourceSize === 'function') { cat.setSourceSize(visSize); dbg('setSourceSize called on catalog'); }
-                                if (typeof cat.setSymbol === 'function') { cat.setSymbol('circle'); dbg('setSymbol called on catalog'); }
+                                if (typeof cat.setMarkerSize === 'function') { cat.setMarkerSize(visSize); }
+                                if (typeof cat.setSourceSize === 'function') { cat.setSourceSize(visSize); }
+                                if (typeof cat.setSymbol === 'function') { cat.setSymbol('circle'); }
                             } catch (e) {
-                                dbg('Failed to call catalog sizing methods', e);
+                                
                             }
                             // Try to force a redraw on the Aladin instance
                             try {
@@ -1148,22 +1710,22 @@
                             } catch (e) {
                                 // ignore
                             }
-                            dbg('addFovCircle: fallback catalog added with', points.length, 'points, catalog=', cat);
+                            
                             try {
                                 if (typeof cat.getSources === 'function') {
-                                    dbg('catalog.getSources():', cat.getSources().slice(0,5));
+                                    
                                 } else if (cat.sources) {
-                                    dbg('catalog.sources:', (cat.sources || []).slice(0,5));
+                                    
                                 }
                             } catch (e) {
-                                dbg('Could not inspect catalog sources', e);
+                                
                             }
                             try {
                                 if (typeof aladinInstance.getFov === 'function') {
-                                    dbg('Aladin fov (after add):', aladinInstance.getFov());
+                                    
                                 }
                                 if (typeof aladinInstance.getZoom === 'function') {
-                                    dbg('Aladin zoom:', aladinInstance.getZoom());
+                                    
                                 }
                             } catch (e) {
                                 // ignore
@@ -1176,10 +1738,10 @@
                                     var domId = 'aladin-fov-dom';
                                     var existing = document.getElementById(domId);
                                     // Delegate DOM overlay sizing to the shared helper so zoom-based scaling is consistent
-                                    try { updateDomFovOverlay(aladinInstance, eyeFovDeg); } catch (e) { dbg('addFovCircle: failed to update DOM overlay via helper', e); }
+                                    try { updateDomFovOverlay(aladinInstance, eyeFovDeg); } catch (e) { }
                                 }
                             } catch (e) {
-                                dbg('addFovCircle: failed to add/update DOM overlay', e);
+                                
                             }
                             // Add four cardinal markers (N,S,E,W) to make the ring extent obvious
                             try {
@@ -1197,24 +1759,24 @@
                                     var majorCat = Alib.catalog({ name: 'fov-major', color: 'magenta' });
                                     majorCat.addSources(cardinal);
                                     aladinInstance.addCatalog(majorCat);
-                                    dbg('addFovCircle: added cardinal markers', cardinal.length, 'majorCat=', majorCat);
+                                                
                                 }
                             } catch (e) {
-                                dbg('addFovCircle: failed to add cardinal markers', e);
+                                    
                             }
                             try {
                                 if (typeof aladinInstance.getCatalogs === 'function') {
-                                    dbg('Aladin catalogs after add:', aladinInstance.getCatalogs());
+                                    
                                 }
                             } catch (e) {
-                                dbg('Could not read aladinInstance.getCatalogs()', e);
+                                
                             }
                             try {
                                 if (typeof aladinInstance.getCatalogs === 'function') {
-                                    dbg('Aladin catalogs after add:', aladinInstance.getCatalogs());
+                                    
                                 }
                             } catch (e) {
-                                dbg('Could not read aladinInstance.getCatalogs()', e);
+                                
                             }
                         } catch (e) {
                             console.error('Failed to add FoV circle (both overlay and marker fallback)', e);
@@ -1242,84 +1804,652 @@
                                 }
                                 var gotRa = Number(got[0]);
                                 var gotDec = Number(got[1]);
-                                dbg('Aladin reported center (deg):', gotRa, gotDec, 'intended (deg):', intendedRaDeg, intendedDecDeg);
+                                
 
                                 // If gotRa is approximately intendedRaDeg, all good.
                                 if (Math.abs(gotRa - intendedRaDeg) < 1e-6) {
                                     addMarkerViaCatalog(aladinInstance, gotRa, gotDec, { color: 'magenta', size: 20 });
                                     // draw FoV circle using the eyepiece fov
-                                    try { dbg('ensureAladinCenterAndMark: calling addFovCircle (main branch)', gotRa, gotDec, eyeFov); addFovCircle(aladinInstance, gotRa, gotDec, eyeFov); } catch(e) { console.error('addFovCircle threw', e); }
+                                    try { addFovCircle(aladinInstance, gotRa, gotDec, eyeFov); } catch(e) { console.error('addFovCircle threw', e); }
                                     return;
                                 }
 
                                 // Check if there's a ~1/15 or ~15 ratio mismatch (common RA-hours<->degrees confusion)
                                 var ratio = gotRa / intendedRaDeg;
                                 if (Math.abs(ratio - 1/15) < 0.01) {
-                                    dbg('Detected RA scaling ~1/15; re-applying corrected goto (dividing by 15)');
+                                
                                     aladinInstance.gotoRaDec(intendedRaDeg / 15.0, intendedDecDeg, displayFov);
                                     setTimeout(function(){
                                         var g2 = aladinInstance.getRaDec();
                                         addMarkerViaCatalog(aladinInstance, g2[0], g2[1], { color: 'magenta', size: 20 });
-                                        try { dbg('ensureAladinCenterAndMark: calling addFovCircle (1/15 branch)', g2[0], g2[1], eyeFov); addFovCircle(aladinInstance, g2[0], g2[1], eyeFov); } catch(e) { console.error('addFovCircle threw', e); }
+                                        try { addFovCircle(aladinInstance, g2[0], g2[1], eyeFov); } catch(e) { console.error('addFovCircle threw', e); }
                                     }, 200);
                                     return;
                                 }
                                 if (Math.abs(ratio - 15) < 0.01) {
-                                    dbg('Detected RA scaling ~15; re-applying corrected goto (multiplying by 15)');
+                                
                                     aladinInstance.gotoRaDec(intendedRaDeg * 15.0, intendedDecDeg, displayFov);
                                     setTimeout(function(){
                                         var g2 = aladinInstance.getRaDec();
                                         addMarkerViaCatalog(aladinInstance, g2[0], g2[1], { color: 'magenta', size: 20 });
-                                        try { dbg('ensureAladinCenterAndMark: calling addFovCircle (x15 branch)', g2[0], g2[1], eyeFov); addFovCircle(aladinInstance, g2[0], g2[1], eyeFov); } catch(e) { console.error('addFovCircle threw', e); }
+                                        try { addFovCircle(aladinInstance, g2[0], g2[1], eyeFov); } catch(e) { console.error('addFovCircle threw', e); }
                                     }, 200);
                                     return;
                                 }
 
                                 // No obvious scaling; just add marker at what Aladin reports
                                 addMarkerViaCatalog(aladinInstance, gotRa, gotDec, { color: 'magenta', size: 20 });
-                                try { dbg('ensureAladinCenterAndMark: calling addFovCircle (no-scaling branch)', gotRa, gotDec, eyeFov); addFovCircle(aladinInstance, gotRa, gotDec, eyeFov); } catch(e) { console.error('addFovCircle threw', e); }
+                                try { addFovCircle(aladinInstance, gotRa, gotDec, eyeFov); } catch(e) { console.error('addFovCircle threw', e); }
                             } catch (e) {
                                 console.error('Error while ensuring Aladin center', e);
                                 addMarkerViaCatalog(aladinInstance, intendedRaDeg, intendedDecDeg, { color: 'magenta', size: 20 });
-                                try { dbg('ensureAladinCenterAndMark: calling addFovCircle (error fallback)', intendedRaDeg, intendedDecDeg, eyeFov); addFovCircle(aladinInstance, intendedRaDeg, intendedDecDeg, eyeFov); } catch(e) { console.error('addFovCircle threw', e); }
+                                try { addFovCircle(aladinInstance, intendedRaDeg, intendedDecDeg, eyeFov); } catch(e) { console.error('addFovCircle threw', e); }
                             }
                         }, 250);
                     }
 
                     if (centerRaDeg !== null && centerDecDeg !== null) {
                         var aladin = Alib.aladin('#aladin-lite-container', {survey: 'P/DSS2/color', fov: displayFovDeg, cooFrame: 'ICRS'});
+                        // remember current aladin instance globally
+                        __dslCurrentAladin = aladin;
                         try { setFovOverlayWatcher(aladin, fovUsedDeg); } catch (e) {}
                         // Prune unwanted controls once created
                         try { pruneAladinControls(document.getElementById('aladin-lite-container'), aladin); } catch(e){}
+                        // Install pan shim
+                        try { installAladinPanShim(document.getElementById('aladin-lite-container'), aladin); } catch(e){}
                         // Multiply RA by 15 before sending to Aladin (user requested behavior)
                         ensureAladinCenterAndMark(aladin, centerRaDeg * 15.0, centerDecDeg, displayFovDeg, fovUsedDeg);
                             // After initial goto, adjust the display FOV iteratively so the Declination (vertical)
                             // FOV reported by Aladin matches the object's angular size (fovUsedDeg).
-                            try { callSetDisplayFovRepeated(aladin, fovUsedDeg, 24, 6, 300); } catch (e) {}
+                            try { callSetDisplayFovRepeated(aladin, fovUsedDeg, 24, 2, 160); } catch (e) {}
                     } else if (aladinDefaults && aladinDefaults.ra_raw && aladinDefaults.dec_raw) {
                         var raGuess = parseRaToDegrees(aladinDefaults.ra_raw);
                         var decGuess = parseDecToDegrees(aladinDefaults.dec_raw);
                         if (raGuess !== null && decGuess !== null) {
                             var al = Alib.aladin('#aladin-lite-container', {survey: 'P/DSS2/color', fov: displayFovDeg, cooFrame: 'ICRS'});
+                            __dslCurrentAladin = al;
                             try { setFovOverlayWatcher(al, fovUsedDeg); } catch (e) {}
                             try { pruneAladinControls(document.getElementById('aladin-lite-container'), al); } catch(e){}
+                            try { installAladinPanShim(document.getElementById('aladin-lite-container'), al); } catch(e){}
                             // Multiply RA by 15 before sending to Aladin (user requested behavior)
                             ensureAladinCenterAndMark(al, raGuess * 15.0, decGuess, displayFovDeg, fovUsedDeg);
-                            try { callSetDisplayFovRepeated(al, fovUsedDeg, 24, 6, 300); } catch (e) {}
+                            try { callSetDisplayFovRepeated(al, fovUsedDeg, 24, 2, 160); } catch (e) {}
                         } else if (sessionName) {
                                 var al2 = Alib.aladin('#aladin-lite-container', {survey: 'P/DSS2/color', fov: displayFovDeg, cooFrame: 'ICRS'});
+                                __dslCurrentAladin = al2;
                                 try { setFovOverlayWatcher(al2, fovUsedDeg); } catch (e) {}
                                 try { pruneAladinControls(document.getElementById('aladin-lite-container'), al2); } catch(e){}
+                                try { installAladinPanShim(document.getElementById('aladin-lite-container'), al2); } catch(e){}
                                 al2.gotoObject(sessionName);
                         }
                     } else if (sessionName) {
                         var al3 = Alib.aladin('#aladin-lite-container', {survey: 'P/DSS2/color', fov: displayFovDeg, cooFrame: 'ICRS'});
+                            __dslCurrentAladin = al3;
                             try { setFovOverlayWatcher(al3, fovUsedDeg); } catch (e) {}
                             try { pruneAladinControls(document.getElementById('aladin-lite-container'), al3); } catch(e){}
+                            try { installAladinPanShim(document.getElementById('aladin-lite-container'), al3); } catch(e){}
                             al3.gotoObject(sessionName);
-                                try { callSetDisplayFovRepeated(al3, fovUsedDeg, 24, 6, 300); } catch (e) {}
+                                try { callSetDisplayFovRepeated(al3, fovUsedDeg, 24, 2, 160); } catch (e) {}
                     }
                 });
+        }
+
+        // Install a pan shim that translates pointer drags into Aladin goto calls.
+        // This bypasses library-specific mouse handlers which may ignore synthetic events
+        // or rely on movementX/movementY. The shim uses the current FOV to convert
+        // pixel deltas into RA/Dec shifts and calls gotoRaDec on the instance.
+        function installAladinPanShim(containerEl, aladinInstance) {
+            try {
+                if (!containerEl || !aladinInstance) return;
+                if (containerEl.__dsl_pan_shim_installed) return;
+                containerEl.__dsl_pan_shim_installed = true;
+                var dragging = false;
+                var startX = 0, startY = 0, startRa = null, startDec = null, baseFov = null;
+                containerEl.addEventListener('pointerdown', function(e){
+                    try {
+                        if (e.button !== 0) return; // only left button
+                        if (!aladinInstance || typeof aladinInstance.getRaDec !== 'function') return;
+                        var g = aladinInstance.getRaDec && aladinInstance.getRaDec();
+                        if (!g || typeof g[0] === 'undefined') return;
+                        startRa = Number(g[0]);
+                        startDec = Number(g[1]);
+                        var f = aladinInstance.getFov && aladinInstance.getFov();
+                        baseFov = (Array.isArray(f) && f.length) ? Number(f[0]) : (Number(f) || displayFovDeg || 1.0);
+                        dragging = true;
+                        startX = e.clientX;
+                        startY = e.clientY;
+                        try { if (e.target && e.target.setPointerCapture) e.target.setPointerCapture(e.pointerId); } catch(e){}
+                        e.preventDefault();
+                    } catch (e) {}
+                }, true);
+
+                window.addEventListener('pointermove', function(e){
+                    try {
+                        if (!dragging) return;
+                        if (!aladinInstance) return;
+                        var cw = containerEl.clientWidth || containerEl.offsetWidth || 1;
+                        var ch = containerEl.clientHeight || containerEl.offsetHeight || 1;
+                        var dx = e.clientX - startX;
+                        var dy = e.clientY - startY;
+                        var effDx = dx;
+                        var effDy = dy;
+                        var display = baseFov || (typeof displayFovDeg === 'number' ? displayFovDeg : 1.0);
+                        var vFov = display * (ch / Math.max(1, cw));
+                        // Convert pixel deltas to degrees. Use effective deltas (effDx/effDy)
+                        // which are inverted when the preview is mirrored so that UI drag
+                        // direction matches visual movement.
+                        var dRa = (effDx / cw) * display;
+                        var dDec = -(effDy / ch) * vFov;
+                        var newRa = startRa + dRa;
+                        // Apply vertical mapping: pointer up should increase Dec visually; account for sign above
+                        var newDec = startDec - dDec;
+                        try { if (typeof aladinInstance.gotoRaDec === 'function') aladinInstance.gotoRaDec(newRa, newDec, display); }
+                        catch(e) {}
+                    } catch(e) {}
+                }, true);
+
+                window.addEventListener('pointerup', function(e){
+                    try {
+                        if (!dragging) return;
+                        dragging = false;
+                        try { if (e.target && e.target.releasePointerCapture) e.target.releasePointerCapture(e.pointerId); } catch(e){}
+                    } catch(e) {}
+                }, true);
+            } catch(e) {}
+        }
+
+        // Apply current selects to aladinDefaults and update preview
+        function applyAladinSelectsUpdate() {
+            try {
+                // Force-sync visible select/combobox controls into the hidden inputs
+                // so we don't read a stale value when selects update asynchronously.
+                (function forceSyncVisibleIntoHidden(){
+                    try {
+                        ['instrument','eyepiece','lens'].forEach(function(k){
+                            try {
+                                var hidden = document.getElementById('aladin-'+k+'-hidden');
+                                if (!hidden) return;
+                                var wrapper = document.querySelector('[data-dsl-field="'+k+'"]') || hidden.parentElement || null;
+                                var sel = wrapper ? wrapper.querySelector('select') : null;
+                                var v = '';
+                                if (sel) {
+                                    try { if (sel.tom && typeof sel.tom.getValue === 'function') v = sel.tom.getValue(); } catch(e){}
+                                    if (!v) v = sel.value || (sel.dataset && sel.dataset.tsValue) || '';
+                                }
+                                if (!v && wrapper) {
+                                    var control = wrapper.querySelector('input[type="text"], [role="combobox"], input');
+                                    if (control) try { v = control.value || ''; } catch(e){}
+                                }
+                                if (v !== undefined && hidden.value !== v) hidden.value = v;
+                            } catch(e){}
+                        });
+                    } catch(e){}
+                })();
+                var instHidden = document.getElementById('aladin-instrument-hidden');
+                var epHidden = document.getElementById('aladin-eyepiece-hidden');
+                var lnHidden = document.getElementById('aladin-lens-hidden');
+                if (!aladinDefaults) aladinDefaults = {};
+                // instrument
+                if (instHidden && instHidden.value) {
+                    var instId = instHidden.value;
+                    var instMeta = (DSL_AVAILABLE.instruments || []).find(function(i){ return String(i.id) === String(instId); });
+                    aladinDefaults.instrument = instMeta ? { id: instMeta.id, focal_length_mm: instMeta.focal_length_mm || instMeta.focal_length_mm_mm || null, aperture_mm: instMeta.aperture_mm || null, fixedMagnification: instMeta.fixedMagnification || null } : { id: instId };
+                } else {
+                    aladinDefaults.instrument = null;
+                }
+                // eyepiece
+                if (epHidden && epHidden.value) {
+                    var epId = epHidden.value;
+                    var epMeta = (DSL_AVAILABLE.eyepieces || []).find(function(e){ return String(e.id) === String(epId); });
+                    aladinDefaults.eyepiece = epMeta ? { id: epMeta.id, focal_length_mm: epMeta.focal_length_mm || null, apparent_fov_deg: epMeta.apparent_fov_deg || null } : { id: epId };
+                } else {
+                    aladinDefaults.eyepiece = null;
+                }
+                // lens (support explicit empty string as 'none')
+                if (lnHidden && lnHidden.value) {
+                    var lnId = lnHidden.value;
+                    var lnMeta = (DSL_AVAILABLE.lenses || []).find(function(l){ return String(l.id) === String(lnId); });
+                    aladinDefaults.lens = lnMeta ? { id: lnMeta.id, factor: lnMeta.factor || null } : { id: lnId };
+                } else {
+                    aladinDefaults.lens = null;
+                }
+
+                var eyeFovDeg = computeFovDegFromDefaults(aladinDefaults);
+                
+                // update legend
+                var fovEl = document.getElementById('aladin-fov');
+                var magEl = document.getElementById('aladin-mag');
+                if (fovEl) fovEl.textContent = (typeof eyeFovDeg === 'number' ? formatFovLabel(eyeFovDeg) : '—');
+                var magUsed = null;
+                try {
+                    if (aladinDefaults && aladinDefaults.instrument && aladinDefaults.eyepiece) {
+                        magUsed = aladinDefaults.instrument.fixedMagnification ? Number(aladinDefaults.instrument.fixedMagnification) : (aladinDefaults.instrument.focal_length_mm && aladinDefaults.eyepiece.focal_length_mm ? Number(aladinDefaults.instrument.focal_length_mm)/Number(aladinDefaults.eyepiece.focal_length_mm) : null);
+                        // Apply lens factor for overall magnification if present
+                        try { if (aladinDefaults && aladinDefaults.lens && aladinDefaults.lens.factor) { magUsed = magUsed ? Number(magUsed) * Number(aladinDefaults.lens.factor) : magUsed; } } catch (e) {}
+                        if (magUsed && aladinDefaults.eyepiece.apparent_fov_deg) {
+                            eyeFovDeg = Math.max(0.01, Number(aladinDefaults.eyepiece.apparent_fov_deg) / magUsed);
+                        } else if (magUsed) {
+                            eyeFovDeg = Math.max(0.01, 50.0 / magUsed);
+                        }
+                    }
+                } catch (e) { magUsed = null; }
+                if (magEl) magEl.textContent = magUsed ? Math.round(magUsed) + 'x' : '—';
+                // update FoV legend again in case mag/lens changed eyeFovDeg calculation
+                try { if (fovEl) fovEl.textContent = (typeof eyeFovDeg === 'number' ? formatFovLabel(eyeFovDeg) : '—'); } catch (e) {}
+
+                // update Aladin if instance already present
+                if (__dslCurrentAladin) {
+                    try {
+                        // try to set display FOV vertically and redraw overlays
+                        // store computed eyeFov on the instance so watchers/readers use latest value
+                        try { __dslCurrentAladin.__dslEyeFov = (typeof eyeFovDeg === 'number') ? eyeFovDeg : (__dslCurrentAladin.__dslEyeFov || null); } catch (e) {}
+                        setDisplayFovForVertical(__dslCurrentAladin, eyeFovDeg, 24);
+                        // reduce attempts/delay to minimize visible multiple zoom changes
+                        callSetDisplayFovRepeated(__dslCurrentAladin, eyeFovDeg, 24, 2, 180);
+                        // shorten final adjust timeout to make final settle faster
+                        try { finalAdjustFovToMatchDec(__dslCurrentAladin, eyeFovDeg); } catch (e) {}
+                        // attempt to re-center/add FOV circle using stored center
+                        if (typeof __dslCenterRaDeg === 'number' && typeof __dslCenterDecDeg === 'number') {
+                            try { addFovCircle(__dslCurrentAladin, __dslCenterRaDeg * 15.0, __dslCenterDecDeg, eyeFovDeg); } catch (e) {}
+                        }
+                    } catch (e) { console.error('Failed to update Aladin preview from selects', e); }
+                }
+                    try {
+                        // small re-checks with backoff to catch later DOM replacements
+                        setTimeout(function(){ try { if (__dslCurrentAladin) callSetDisplayFovRepeated(__dslCurrentAladin, computeFovDegFromDefaults(aladinDefaults), 24, 2, 100); } catch(e){} }, 80);
+                        setTimeout(function(){ try { if (__dslCurrentAladin) callSetDisplayFovRepeated(__dslCurrentAladin, computeFovDegFromDefaults(aladinDefaults), 24, 2, 220); } catch(e){} }, 250);
+                        setTimeout(function(){ try { if (__dslCurrentAladin) callSetDisplayFovRepeated(__dslCurrentAladin, computeFovDegFromDefaults(aladinDefaults), 24, 2, 420); } catch(e){} }, 700);
+                    } catch(e) {}
+            } catch (e) { console.error('applyAladinSelectsUpdate error', e); }
+        }
+
+        // Read hidden select inputs and merge into aladinDefaults (used during init and by update)
+        function readSelectsIntoDefaults() {
+            try {
+                var instHidden = document.getElementById('aladin-instrument-hidden');
+                var epHidden = document.getElementById('aladin-eyepiece-hidden');
+                var lnHidden = document.getElementById('aladin-lens-hidden');
+                if (!aladinDefaults) aladinDefaults = {};
+                if (instHidden && instHidden.value) {
+                    var instId = instHidden.value;
+                    var instMeta = (DSL_AVAILABLE.instruments || []).find(function(i){ return String(i.id) === String(instId); });
+                    aladinDefaults.instrument = instMeta ? { id: instMeta.id, focal_length_mm: instMeta.focal_length_mm || instMeta.focal_length_mm_mm || null, aperture_mm: instMeta.aperture_mm || null, fixedMagnification: instMeta.fixedMagnification || null } : { id: instId };
+                } else { aladinDefaults.instrument = null; }
+                if (epHidden && epHidden.value) {
+                    var epId = epHidden.value;
+                    var epMeta = (DSL_AVAILABLE.eyepieces || []).find(function(e){ return String(e.id) === String(epId); });
+                    aladinDefaults.eyepiece = epMeta ? { id: epMeta.id, focal_length_mm: epMeta.focal_length_mm || null, apparent_fov_deg: epMeta.apparent_fov_deg || null } : { id: epId };
+                } else { aladinDefaults.eyepiece = null; }
+                if (lnHidden && lnHidden.value) {
+                    var lnId = lnHidden.value;
+                    var lnMeta = (DSL_AVAILABLE.lenses || []).find(function(l){ return String(l.id) === String(lnId); });
+                    aladinDefaults.lens = lnMeta ? { id: lnMeta.id, factor: lnMeta.factor || null } : { id: lnId };
+                } else { aladinDefaults.lens = null; }
+            } catch (e) { /* ignore */ }
+        }
+
+        function scheduleApplyAladinSelectsUpdate() {
+            try {
+                if (typeof __dslAladinUpdateTimer !== 'undefined' && __dslAladinUpdateTimer) clearTimeout(__dslAladinUpdateTimer);
+                __dslAladinUpdateTimer = setTimeout(function(){ applyAladinSelectsUpdate(); }, 220);
+            } catch (e) {}
+        }
+        // expose to global so WireUI x-select handlers can call it
+        window.scheduleApplyAladinSelectsUpdate = scheduleApplyAladinSelectsUpdate;
+
+        // Update the small textual labels below each select from hidden inputs and available lists
+        function updateSelectedLabels() {
+            try {
+                var instHidden = document.getElementById('aladin-instrument-hidden');
+                var epHidden = document.getElementById('aladin-eyepiece-hidden');
+                var lnHidden = document.getElementById('aladin-lens-hidden');
+                var instLabel = document.getElementById('aladin-instrument-selected-label');
+                var epLabel = document.getElementById('aladin-eyepiece-selected-label');
+                var lnLabel = document.getElementById('aladin-lens-selected-label');
+                try {
+                    if (instHidden && instLabel) {
+                        var id = instHidden.value || '';
+                        var txt = '—';
+                        if (id) {
+                            var f = (DSL_AVAILABLE && DSL_AVAILABLE.instruments) ? (DSL_AVAILABLE.instruments.find(function(i){ return String(i.id) === String(id); }) || null) : null;
+                            txt = f ? (f.name || '') : id;
+                        } else {
+                            txt = (DSL_TEXT && DSL_TEXT.none_label) ? DSL_TEXT.none_label : '(none)';
+                        }
+                        instLabel.textContent = txt;
+                    }
+                } catch (e) {}
+                try {
+                    if (epHidden && epLabel) {
+                        var id2 = epHidden.value || '';
+                        var txt2 = '—';
+                        if (id2) {
+                            var f2 = (DSL_AVAILABLE && DSL_AVAILABLE.eyepieces) ? (DSL_AVAILABLE.eyepieces.find(function(i){ return String(i.id) === String(id2); }) || null) : null;
+                            txt2 = f2 ? (f2.name || '') : id2;
+                        } else {
+                            txt2 = (DSL_TEXT && DSL_TEXT.none_label) ? DSL_TEXT.none_label : '(none)';
+                        }
+                        epLabel.textContent = txt2;
+                    }
+                } catch (e) {}
+                try {
+                    if (lnHidden && lnLabel) {
+                        var id3 = lnHidden.value || '';
+                        var txt3 = '—';
+                        if (id3) {
+                            var f3 = (DSL_AVAILABLE && DSL_AVAILABLE.lenses) ? (DSL_AVAILABLE.lenses.find(function(i){ return String(i.id) === String(id3); }) || null) : null;
+                            txt3 = f3 ? (f3.name || '') : id3;
+                        } else {
+                            // default to localized 'No lens' or 'none'
+                            txt3 = (DSL_TEXT && DSL_TEXT.none_label) ? DSL_TEXT.none_label : 'No lens';
+                        }
+                        lnLabel.textContent = txt3;
+                    }
+                } catch (e) {}
+            } catch (e) {}
+        }
+
+        // Keep textual labels updated whenever selects are applied
+        var __dslLabelUpdateTimer = null;
+        var origSchedule = window.scheduleApplyAladinSelectsUpdate;
+        window.scheduleApplyAladinSelectsUpdate = function(){ try { if (typeof __dslLabelUpdateTimer !== 'undefined' && __dslLabelUpdateTimer) clearTimeout(__dslLabelUpdateTimer); __dslLabelUpdateTimer = setTimeout(function(){ try{ updateSelectedLabels(); }catch(e){} }, 30); } catch(e){}; try { origSchedule(); } catch(e){} };
+
+        // attach change listeners to selects when DOM is ready
+        document.addEventListener('DOMContentLoaded', function(){
+            try {
+                // Helper: sync visible <select> value into hidden input if they differ, and trigger update
+                function syncSelectToHidden(selectEl, hiddenEl) {
+                    try {
+                        if (!selectEl || !hiddenEl) return;
+                        var v = selectEl.value || '';
+                        if (!v && selectEl.dataset && selectEl.dataset.tsValue) v = selectEl.dataset.tsValue; // fallback
+                        if (hiddenEl.value !== v) {
+                            
+                            hiddenEl.value = v;
+                            try { updateSelectedLabels(); } catch(e) {}
+                            try { scheduleApplyAladinSelectsUpdate(); } catch(e) {}
+                        }
+                    } catch(e) {}
+                }
+
+                // Attach change listeners to any underlying select elements inside the select wrappers.
+                function attachSelectSyncing() {
+                    try {
+                        var instHidden = document.getElementById('aladin-instrument-hidden');
+                        var epHidden = document.getElementById('aladin-eyepiece-hidden');
+                        var lnHidden = document.getElementById('aladin-lens-hidden');
+                        if (instHidden) {
+                            var wrap = document.querySelector('[data-dsl-field="instrument"]') || instHidden.parentElement || null;
+                            var s = wrap ? wrap.querySelector('select') : null;
+                            if (s) {
+                                if (s._dsl_sync_handler) s.removeEventListener('change', s._dsl_sync_handler);
+                                s._dsl_sync_handler = function(){ syncSelectToHidden(s, instHidden); };
+                                s.addEventListener('change', s._dsl_sync_handler);
+                                try { if (s.tom && typeof s.tom.on === 'function') s.tom.on('change', s._dsl_sync_handler); } catch(e){}
+                            }
+                        }
+                        if (epHidden) {
+                            var wrap2 = document.querySelector('[data-dsl-field="eyepiece"]') || epHidden.parentElement || null;
+                            var s2 = wrap2 ? wrap2.querySelector('select') : null;
+                            if (s2) {
+                                if (s2._dsl_sync_handler) s2.removeEventListener('change', s2._dsl_sync_handler);
+                                s2._dsl_sync_handler = function(){ syncSelectToHidden(s2, epHidden); };
+                                s2.addEventListener('change', s2._dsl_sync_handler);
+                                try { if (s2.tom && typeof s2.tom.on === 'function') s2.tom.on('change', s2._dsl_sync_handler); } catch(e){}
+                            }
+                        }
+                        if (lnHidden) {
+                            var wrap3 = document.querySelector('[data-dsl-field="lens"]') || lnHidden.parentElement || null;
+                            var s3 = wrap3 ? wrap3.querySelector('select') : null;
+                            if (s3) {
+                                if (s3._dsl_sync_handler) s3.removeEventListener('change', s3._dsl_sync_handler);
+                                s3._dsl_sync_handler = function(){ syncSelectToHidden(s3, lnHidden); };
+                                s3.addEventListener('change', s3._dsl_sync_handler);
+                                try { if (s3.tom && typeof s3.tom.on === 'function') s3.tom.on('change', s3._dsl_sync_handler); } catch(e){}
+                            }
+                        }
+                    } catch(e) {}
+                }
+
+                // Bounded polling: try a few times to attach handlers and sync values in case async widgets initialize slowly
+                (function tryAttachLoop(){
+                    var attempts = 0;
+                    var maxAttempts = 8; // ~8 * 150ms = 1.2s
+                    var iv = setInterval(function(){
+                        try {
+                            attachSelectSyncing();
+                            // proactively sync visible values into hidden inputs when found
+                            var instHidden = document.getElementById('aladin-instrument-hidden');
+                            var epHidden = document.getElementById('aladin-eyepiece-hidden');
+                            var lnHidden = document.getElementById('aladin-lens-hidden');
+                            if (instHidden) { var wrapper = document.querySelector('[data-dsl-field="instrument"]') || instHidden.parentElement || null; if (wrapper) { var s = wrapper.querySelector('select'); if (s) syncSelectToHidden(s, instHidden); } }
+                            if (epHidden) { var wrapper2 = document.querySelector('[data-dsl-field="eyepiece"]') || epHidden.parentElement || null; if (wrapper2) { var s2 = wrapper2.querySelector('select'); if (s2) syncSelectToHidden(s2, epHidden); } }
+                            if (lnHidden) { var wrapper3 = document.querySelector('[data-dsl-field="lens"]') || lnHidden.parentElement || null; if (wrapper3) { var s3 = wrapper3.querySelector('select'); if (s3) syncSelectToHidden(s3, lnHidden); } }
+                        } catch(e) {}
+                        attempts++;
+                        if (attempts >= maxAttempts) {
+                            clearInterval(iv);
+                        }
+                    }, 150);
+                })();
+
+                var instHidden = document.getElementById('aladin-instrument-hidden');
+                var epHidden = document.getElementById('aladin-eyepiece-hidden');
+                var lnHidden = document.getElementById('aladin-lens-hidden');
+                var saveBtn = document.getElementById('aladin-save-btn');
+                // Parse embedded data-available and data-dsl-text now that DOM is ready
+                try {
+                    var _alc = document.getElementById('aladin-lite-container');
+                    if (_alc) {
+                        try { var dab = _alc.getAttribute('data-available'); if (dab) DSL_AVAILABLE = JSON.parse(atob(dab)); } catch (e) { /* ignore */ }
+                        try { var dslb = _alc.getAttribute('data-dsl-text'); if (dslb) DSL_TEXT = JSON.parse(atob(dslb)); } catch (e) { /* ignore */ }
+                    }
+                } catch (e) {}
+                // hidden inputs are updated by x-select change handlers; still call schedule to apply
+                if (instHidden) instHidden.addEventListener('change', scheduleApplyAladinSelectsUpdate);
+                if (epHidden) epHidden.addEventListener('change', scheduleApplyAladinSelectsUpdate);
+                if (lnHidden) lnHidden.addEventListener('change', scheduleApplyAladinSelectsUpdate);
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', function() {
+                        // show saving state
+                        try {
+                            // Ensure hidden inputs reflect the current visible widget values.
+                            // This guards against async TomSelect/WireUI widgets that haven't propagated
+                            // their value into the server-initialized hidden inputs yet.
+                            try {
+                                var mismatches = [];
+                                (function forceSyncVisibleIntoHidden(){
+                                    try {
+                                        ['instrument','eyepiece','lens'].forEach(function(k){
+                                            try{
+                                                var hidden = document.getElementById('aladin-'+k+'-hidden');
+                                                if(!hidden) return;
+                                                var wrapper = document.querySelector('[data-dsl-field="'+k+'"]') || hidden.parentElement || null;
+                                                var sel = wrapper ? wrapper.querySelector('select') : null;
+                                                var v = '';
+                                                if (sel) {
+                                                    try { if (sel.tom && typeof sel.tom.getValue === 'function') v = sel.tom.getValue(); } catch(e){}
+                                                    if (!v) v = sel.value || (sel.dataset && sel.dataset.tsValue) || '';
+                                                }
+                                                var control = (!v && wrapper) ? wrapper.querySelector('input[type="text"], [role="combobox"], input') : null;
+                                                if (!v && control) try { v = control.value || ''; } catch(e){}
+                                                if (v && hidden.value !== v) {
+                                                    hidden.value = v;
+                                                }
+                                                // Normalize empty strings vs null-ish
+                                                var hv = (hidden.value || '').toString();
+                                                var vv = (v || '').toString();
+                                                if (hv !== vv) mismatches.push({ which: k, hidden: hv, visible: vv, wrapperText: (wrapper ? (wrapper.innerText || '').trim() : '') });
+                                            } catch(e) {}
+                                        });
+                                    } catch(e) {}
+                                })();
+                                if (mismatches.length) {
+                                    // Show toast and abort save so user can retry/select
+                                    try { showDslToast((DSL_TEXT && DSL_TEXT.save_failed) ? (DSL_TEXT.save_failed + ' — mismatch') : 'Save failed — selections not synchronized'); } catch(e){}
+                                    saveBtn.disabled = false;
+                                    saveBtn.textContent = (DSL_TEXT && DSL_TEXT.save) ? DSL_TEXT.save : 'Save';
+                                    return; // abort sending
+                                }
+                            } catch(e) {
+                                // If the check throws, fall through and attempt save anyway
+                            }
+
+                            var payload = (function(){
+                                var out = { instrument_id: null, eyepiece_id: null, lens_id: null };
+                                try {
+                                    // prefer hidden inputs
+                                    if (instHidden && instHidden.value) out.instrument_id = instHidden.value;
+                                    if (epHidden && epHidden.value) out.eyepiece_id = epHidden.value;
+                                    if (lnHidden && lnHidden.value) out.lens_id = lnHidden.value;
+                                    // fall back to underlying select element if hidden input is empty
+                                    try {
+                                            if ((!out.instrument_id || out.instrument_id === '') && instHidden) {
+                                            var wrapper = document.querySelector('[data-dsl-field="instrument"]') || instHidden.parentElement || null;
+                                            var s = wrapper ? wrapper.querySelector('select') : null; if (s && s.value) out.instrument_id = s.value;
+                                            // fallback: input/text or combobox-like controls
+                                            if ((!out.instrument_id || out.instrument_id === '')) {
+                                                var control = wrapper ? wrapper.querySelector('input[type="text"], [role="combobox"], input') : null;
+                                                try { if (control && control.value) out.instrument_id = control.value; } catch(e){}
+                                            }
+                                            // fallback: try mapping visible label text to an id from DSL_AVAILABLE
+                                            if ((!out.instrument_id || out.instrument_id === '') && DSL_AVAILABLE && Array.isArray(DSL_AVAILABLE.instruments)) {
+                                                try {
+                                                    var wrapperText = instHidden.parentElement.innerText || '';
+                                                    wrapperText = wrapperText.trim();
+                                                    if (wrapperText) {
+                                                        var match = DSL_AVAILABLE.instruments.find(function(i){ return String(i.name || '').trim() === String(wrapperText).trim(); }) || null;
+                                                        if (match) out.instrument_id = match.id;
+                                                    }
+                                                } catch(e){}
+                                            }
+                                        }
+                                    } catch(e){}
+                                    try {
+                                            if ((!out.eyepiece_id || out.eyepiece_id === '') && epHidden) {
+                                            var wrapper2 = document.querySelector('[data-dsl-field="eyepiece"]') || epHidden.parentElement || null;
+                                            var s2 = wrapper2 ? wrapper2.querySelector('select') : null; if (s2 && s2.value) out.eyepiece_id = s2.value;
+                                            if ((!out.eyepiece_id || out.eyepiece_id === '')) {
+                                                var control2 = wrapper2 ? wrapper2.querySelector('input[type="text"], [role="combobox"], input') : null;
+                                                try { if (control2 && control2.value) out.eyepiece_id = control2.value; } catch(e){}
+                                            }
+                                            if ((!out.eyepiece_id || out.eyepiece_id === '') && DSL_AVAILABLE && Array.isArray(DSL_AVAILABLE.eyepieces)) {
+                                                try {
+                                                    var w2 = epHidden.parentElement.innerText || '';
+                                                    w2 = w2.trim();
+                                                    if (w2) {
+                                                        var m2 = DSL_AVAILABLE.eyepieces.find(function(i){ return String(i.name || '').trim() === String(w2).trim(); }) || null;
+                                                        if (m2) out.eyepiece_id = m2.id;
+                                                    }
+                                                } catch(e){}
+                                            }
+                                        }
+                                    } catch(e){}
+                                    try {
+                                            if ((!out.lens_id || out.lens_id === '') && lnHidden) {
+                                            var wrapper3 = document.querySelector('[data-dsl-field="lens"]') || lnHidden.parentElement || null;
+                                            var s3 = wrapper3 ? wrapper3.querySelector('select') : null; if (s3 && s3.value) out.lens_id = s3.value;
+                                            if ((!out.lens_id || out.lens_id === '')) {
+                                                var control3 = wrapper3 ? wrapper3.querySelector('input[type="text"], [role="combobox"], input') : null;
+                                                try { if (control3 && control3.value) out.lens_id = control3.value; } catch(e){}
+                                            }
+                                            if ((!out.lens_id || out.lens_id === '') && DSL_AVAILABLE && Array.isArray(DSL_AVAILABLE.lenses)) {
+                                                try {
+                                                    var w3 = lnHidden.parentElement.innerText || '';
+                                                    w3 = w3.trim();
+                                                    if (w3) {
+                                                        var m3 = DSL_AVAILABLE.lenses.find(function(i){ return String(i.name || '').trim() === String(w3).trim(); }) || null;
+                                                        if (m3) out.lens_id = m3.id;
+                                                    }
+                                                } catch(e){}
+                                            }
+                                        }
+                                    } catch(e){}
+                                } catch(e){}
+                                
+                                return out;
+                            })();
+                            var saveUrl = document.getElementById('aladin-lite-container') ? document.getElementById('aladin-lite-container').getAttribute('data-save-url') : '/api/user/aladin-defaults';
+                            fetch(saveUrl, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '' },
+                                body: JSON.stringify(payload),
+                                credentials: 'same-origin'
+                            })
+                            .then(function(r){
+                                // capture and log non-OK responses for debugging
+                                return r.text().then(function(txt){
+                                    var parsed = null;
+                                    try { parsed = txt ? JSON.parse(txt) : null; } catch(e) { parsed = txt; }
+                                    try {
+                                        // suppressed debug logging
+                                    } catch(e){}
+                                    return parsed;
+                                });
+                            })
+                            .then(function(j){
+                                if (j && j.ok) {
+                                    showDslToast(DSL_TEXT.saved || 'Saved');
+                                } else {
+                                    // show error message from server if present
+                                        try {
+                                        if (j && j.error) {
+                                            showDslToast(j.error || (DSL_TEXT.save_failed || 'Save failed'));
+                                        } else {
+                                            showDslToast(DSL_TEXT.save_failed || 'Save failed');
+                                        }
+                                    } catch(e){ showDslToast(DSL_TEXT.save_failed || 'Save failed'); }
+                                }
+                            }).catch(function(e){
+                                showDslToast(DSL_TEXT.save_failed || 'Save failed');
+                            }).finally(function(){
+                                saveBtn.disabled = false;
+                                saveBtn.textContent = (DSL_TEXT && DSL_TEXT.save) ? DSL_TEXT.save : 'Save';
+                            });
+                        } catch (e) {
+                            showDslToast(DSL_TEXT.save_failed || 'Save failed');
+                            saveBtn.disabled = false;
+                            saveBtn.textContent = (DSL_TEXT && DSL_TEXT.save) ? DSL_TEXT.save : 'Save';
+                        }
+                    });
+                }
+                // rely on server-side selected attributes for initial selection; updates handled by change listeners
+                // apply once to ensure preview matches initial selects (if any)
+                scheduleApplyAladinSelectsUpdate();
+
+                // No client-side heuristics: initial state is set server-side and x-on:selected handlers
+                // update hidden inputs and trigger Aladin updates on user interaction.
+            } catch (e) {}
+        });
+
+        // Diagnostics removed: pointer-to-mouse shim and temporary console logging were used during debugging
+        // and have been cleaned up. Pan shim remains active below.
+
+        // Minimal toast helper
+        function showDslToast(msg) {
+            try {
+                var id = 'dsl-toast';
+                var el = document.getElementById(id);
+                if (!el) {
+                    el = document.createElement('div');
+                    el.id = id;
+                    el.style.position = 'fixed';
+                    el.style.right = '16px';
+                    el.style.bottom = '16px';
+                    el.style.zIndex = 9999;
+                    document.body.appendChild(el);
+                }
+                var t = document.createElement('div');
+                t.style.background = 'rgba(0,0,0,0.8)';
+                t.style.color = 'white';
+                t.style.padding = '8px 12px';
+                t.style.borderRadius = '6px';
+                t.style.marginTop = '8px';
+                t.style.fontSize = '13px';
+                t.textContent = msg;
+                el.appendChild(t);
+                setTimeout(function(){ try { t.style.transition = 'opacity 300ms'; t.style.opacity = '0'; setTimeout(function(){ try { el.removeChild(t); } catch(e){} }, 320); } catch(e){} }, 2400);
+            } catch (e) {}
         }
 
         // Ensure the Aladin script is loaded dynamically to avoid timing / init conflicts
@@ -1327,7 +2457,6 @@
             var aladinSrc = 'https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js';
             var jQuerySrc = 'https://code.jquery.com/jquery-3.6.0.min.js';
             if (window.A && typeof window.A.aladin === 'function') {
-                dbg('Aladin already present');
                 return cb();
             }
 
@@ -1342,7 +2471,7 @@
                 s.src = src;
                 s.async = true;
                 s.setAttribute(attrName, '1');
-                s.onload = function() { dbg(src + ' loaded (onload)'); onload && onload(); };
+                s.onload = function() { onload && onload(); };
                 s.onerror = function(e) { console.error('Failed to load ' + src, e); onerror && onerror(e); };
                 document.head.appendChild(s);
                 return s;
@@ -1369,7 +2498,7 @@
             if (!window.jQuery) {
                 // inject jQuery, then aladin
                 injectScript(jQuerySrc, 'data-jquery-loader', function(){
-                    dbg('jQuery loaded, now loading Aladin');
+                    
                     loadAladinAfterJQuery();
                 }, function(e){
                     console.error('Failed to load jQuery, attempting to load Aladin anyway', e);
@@ -1383,5 +2512,69 @@
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() { ensureAladinScriptLoaded(initAladin); });
         } else { ensureAladinScriptLoaded(initAladin); }
+        // Listen for Livewire-emitted events and update hidden inputs + trigger Aladin update
+        if (typeof Livewire !== 'undefined' && Livewire.on) {
+            Livewire.on('aladin-selects-changed', function(d){
+                try {
+                    d = d || {};
+                    if (typeof d.instrument !== 'undefined') document.getElementById('aladin-instrument-hidden').value = d.instrument || '';
+                    if (typeof d.eyepiece !== 'undefined') document.getElementById('aladin-eyepiece-hidden').value = d.eyepiece || '';
+                    if (typeof d.lens !== 'undefined') document.getElementById('aladin-lens-hidden').value = d.lens || '';
+                    // update labels
+                    try { document.getElementById('aladin-instrument-selected-label').textContent = (d.instrument && DSL_AVAILABLE.instruments) ? ((DSL_AVAILABLE.instruments.find(function(i){ return String(i.id) === String(d.instrument); }) || {}).name || '(none)') : (DSL_TEXT && DSL_TEXT.none_label ? DSL_TEXT.none_label : '(none)'); } catch(e){}
+                    try { document.getElementById('aladin-eyepiece-selected-label').textContent = (d.eyepiece && DSL_AVAILABLE.eyepieces) ? ((DSL_AVAILABLE.eyepieces.find(function(i){ return String(i.id) === String(d.eyepiece); }) || {}).name || '(none)') : (DSL_TEXT && DSL_TEXT.none_label ? DSL_TEXT.none_label : '(none)'); } catch(e){}
+                    try { document.getElementById('aladin-lens-selected-label').textContent = (d.lens && DSL_AVAILABLE.lenses) ? ((DSL_AVAILABLE.lenses.find(function(i){ return String(i.id) === String(d.lens); }) || {}).name || '(none)') : (DSL_TEXT && DSL_TEXT.none_label ? DSL_TEXT.none_label : '(none)'); } catch(e){}
+                    if (window.scheduleApplyAladinSelectsUpdate) window.scheduleApplyAladinSelectsUpdate();
+                } catch(e){}
+            });
+            // Also hook into Livewire's lifecycle hook to ensure DOM updates (including select widgets)
+            // are synced into our hidden inputs. Many Livewire installations expose Livewire.hook.
+            try {
+                if (typeof Livewire.hook === 'function') {
+                    Livewire.hook('message.processed', function(){
+                        try {
+                            // Force-sync visible selects/controls into hidden inputs so applyAladinSelectsUpdate
+                            // computes FOV.
+                            ['instrument','eyepiece','lens'].forEach(function(k){
+                                try {
+                                    var hidden = document.getElementById('aladin-' + k + '-hidden');
+                                    if (!hidden) return;
+                                    var wrapper = document.querySelector('[data-dsl-field="' + k + '"]') || hidden.parentElement || null;
+                                    var sel = wrapper ? wrapper.querySelector('select') : null;
+                                    var v = '';
+                                    if (sel) {
+                                        try { if (sel.tom && typeof sel.tom.getValue === 'function') v = sel.tom.getValue(); } catch(e){}
+                                        if (!v) v = sel.value || (sel.dataset && sel.dataset.tsValue) || '';
+                                    }
+                                    if (!v && wrapper) {
+                                        var control = wrapper.querySelector('input[type="text"], [role="combobox"], input');
+                                        if (control) try { v = control.value || ''; } catch(e){}
+                                    }
+                                    if (v !== undefined && hidden.value !== v) {
+                                        hidden.value = v;
+                                    }
+                                } catch(e){}
+                            });
+                            try { updateSelectedLabels(); } catch(e){}
+                            try { if (window.scheduleApplyAladinSelectsUpdate) window.scheduleApplyAladinSelectsUpdate(); } catch(e){}
+                        } catch(e){}
+                    });
+                }
+            } catch(e){}
+        } else {
+            // Fallback to window event listener if Livewire not available yet
+            window.addEventListener('aladin-selects-changed', function(e){
+                try {
+                    var d = e.detail || {};
+                    if (typeof d.instrument !== 'undefined') document.getElementById('aladin-instrument-hidden').value = d.instrument || '';
+                    if (typeof d.eyepiece !== 'undefined') document.getElementById('aladin-eyepiece-hidden').value = d.eyepiece || '';
+                    if (typeof d.lens !== 'undefined') document.getElementById('aladin-lens-hidden').value = d.lens || '';
+                    try { document.getElementById('aladin-instrument-selected-label').textContent = (d.instrument && DSL_AVAILABLE.instruments) ? ((DSL_AVAILABLE.instruments.find(function(i){ return String(i.id) === String(d.instrument); }) || {}).name || '(none)') : (DSL_TEXT && DSL_TEXT.none_label ? DSL_TEXT.none_label : '(none)'); } catch(e){}
+                    try { document.getElementById('aladin-eyepiece-selected-label').textContent = (d.eyepiece && DSL_AVAILABLE.eyepieces) ? ((DSL_AVAILABLE.eyepieces.find(function(i){ return String(i.id) === String(d.eyepiece); }) || {}).name || '(none)') : (DSL_TEXT && DSL_TEXT.none_label ? DSL_TEXT.none_label : '(none)'); } catch(e){}
+                    try { document.getElementById('aladin-lens-selected-label').textContent = (d.lens && DSL_AVAILABLE.lenses) ? ((DSL_AVAILABLE.lenses.find(function(i){ return String(i.id) === String(d.lens); }) || {}).name || '(none)') : (DSL_TEXT && DSL_TEXT.none_label ? DSL_TEXT.none_label : '(none)'); } catch(e){}
+                    if (window.scheduleApplyAladinSelectsUpdate) window.scheduleApplyAladinSelectsUpdate();
+                } catch(e){}
+            });
+        }
     })();
 </script>

@@ -93,6 +93,28 @@
                 wire:model.live="showInches"
             />
         </div>
+
+        {{-- Default eyepiece --}}
+        <div class="col-span-6 sm:col-span-5">
+            <x-select
+                label="{{ __('Default eyepiece') }}"
+                wire:model.live="stdeyepiece"
+                :async-data="route('eyepiece.select.api')"
+                option-label="name"
+                option-value="id"
+            />
+        </div>
+
+        {{-- Default lens --}}
+        <div class="col-span-6 sm:col-span-5">
+            <x-select
+                label="{{ __('Default lens') }}"
+                wire:model.live="stdlens"
+                :async-data="route('lens.select.api')"
+                option-label="name"
+                option-value="id"
+            />
+        </div>
     </x-slot>
 
     <x-slot name="actions">

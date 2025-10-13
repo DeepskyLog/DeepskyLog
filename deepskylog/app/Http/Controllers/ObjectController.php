@@ -1030,6 +1030,100 @@ class ObjectController extends Controller
             // defensive: don't break rendering
         }
 
-        return response()->view('object.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults'));
+        // Also expose available instruments, eyepieces and lenses for the Aladin preview selects
+        $availableInstruments = [];
+        $availableEyepieces = [];
+        $availableLenses = [];
+        $selectedInstrumentId = null;
+        $selectedEyepieceId = null;
+        $selectedLensId = null;
+        try {
+            $authUser = Auth::user();
+            if ($authUser) {
+                // Read persisted selections from user columns or preferences json
+                try {
+                    if (Schema::hasColumn('users', 'stdtelescope') && $authUser->stdtelescope) {
+                        $selectedInstrumentId = $authUser->stdtelescope;
+                    } elseif ($authUser->standardInstrument) {
+                        $selectedInstrumentId = $authUser->standardInstrument->id ?? null;
+                    }
+                    if (Schema::hasColumn('users', 'stdeyepiece') && $authUser->stdeyepiece) {
+                        $selectedEyepieceId = $authUser->stdeyepiece;
+                    } elseif (Schema::hasColumn('users', 'preferences') && is_array($authUser->preferences) && isset($authUser->preferences['aladin_default_eyepiece'])) {
+                        $selectedEyepieceId = $authUser->preferences['aladin_default_eyepiece'];
+                    }
+                    if (Schema::hasColumn('users', 'stdlens') && $authUser->stdlens) {
+                        $selectedLensId = $authUser->stdlens;
+                    } elseif (Schema::hasColumn('users', 'preferences') && is_array($authUser->preferences) && isset($authUser->preferences['aladin_default_lens'])) {
+                        $selectedLensId = $authUser->preferences['aladin_default_lens'];
+                    }
+                } catch (\Throwable $_) {
+                    // ignore preference read errors
+                }
+                // Instruments: expose user's active instruments
+                $instrs = \App\Models\Instrument::where('user_id', $authUser->id)->where('active', 1)->get();
+                foreach ($instrs as $i) {
+                    $availableInstruments[] = [
+                        'id' => $i->id,
+                        'name' => $i->fullName() ?? $i->name,
+                        'focal_length_mm' => $i->focal_length_mm ?? null,
+                        'aperture_mm' => $i->aperture_mm ?? null,
+                        'fixedMagnification' => $i->fixedMagnification ?? null,
+                        // Include flip/flop flags so client can mirror preview appropriately
+                        'flip_image' => isset($i->flip_image) ? boolval($i->flip_image) : false,
+                        'flop_image' => isset($i->flop_image) ? boolval($i->flop_image) : false,
+                    ];
+                }
+
+                // Eyepieces: expose user's active eyepieces
+                $eps = \App\Models\Eyepiece::where('user_id', $authUser->id)->where('active', 1)->get();
+                foreach ($eps as $ep) {
+                    $availableEyepieces[] = [
+                        'id' => $ep->id,
+                        'name' => $ep->fullName() ?? $ep->name,
+                        'focal_length_mm' => $ep->focal_length_mm ?? null,
+                        'apparent_fov_deg' => $ep->apparentFOV ?? null,
+                    ];
+                }
+                // Lenses: expose user's active lenses
+                $lns = \App\Models\Lens::where('user_id', $authUser->id)->where('active', 1)->get();
+                foreach ($lns as $ln) {
+                    $availableLenses[] = [
+                        'id' => $ln->id,
+                        'name' => $ln->fullName() ?? $ln->name,
+                        'focal_length_mm' => $ln->focal_length_mm ?? null,
+                        'factor' => $ln->factor ?? null,
+                    ];
+                }
+                // Sort available lists for better UX: instruments by aperture desc, eyepieces by focal_length_mm desc, lenses by factor desc
+                usort($availableInstruments, function($a, $b) {
+                    $av = $a['aperture_mm'] ?? null; $bv = $b['aperture_mm'] ?? null;
+                    if ($av === $bv) return 0;
+                    if ($av === null) return 1;
+                    if ($bv === null) return -1;
+                    return ($av > $bv) ? -1 : 1;
+                });
+                usort($availableEyepieces, function($a, $b) {
+                    $av = $a['focal_length_mm'] ?? null; $bv = $b['focal_length_mm'] ?? null;
+                    if ($av === $bv) return 0;
+                    if ($av === null) return 1;
+                    if ($bv === null) return -1;
+                    return ($av > $bv) ? -1 : 1;
+                });
+                usort($availableLenses, function($a, $b) {
+                    $av = $a['factor'] ?? null; $bv = $b['factor'] ?? null;
+                    if ($av === $bv) return 0;
+                    if ($av === null) return 1;
+                    if ($bv === null) return -1;
+                    return ($av > $bv) ? -1 : 1;
+                });
+            }
+        } catch (\Throwable $_) {
+            $availableInstruments = [];
+            $availableEyepieces = [];
+            $availableLenses = [];
+        }
+
+    return response()->view('object.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId'));
     }
 }

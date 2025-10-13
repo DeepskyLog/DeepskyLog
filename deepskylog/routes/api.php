@@ -24,6 +24,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Schema;
 
 use App\Http\Controllers\SearchController;
 
@@ -430,11 +431,12 @@ Route::get('instrument.select.api', function (Request $request) {
         }
     }
 
-    // Get the instruments for the authenticated user (only active ones) and sort alphabetically
+    // Get the instruments for the authenticated user (only active ones).
+    // Sort by aperture (diameter) descending so largest diameters appear first.
     $instruments = Instrument::where('observer', auth()->user()->username)->where('active', 1)->get();
-    $instruments = $instruments->sortBy(function ($i) {
-        return Str::lower($i->fullName());
-    });
+    $instruments = $instruments->sortByDesc(function ($i) {
+        return $i->aperture_mm ?? 0;
+    })->values();
 
     foreach ($instruments as $instrument) {
         if ($request->search == '' || Str::contains(Str::lower($instrument->fullName()), Str::lower($request->search))) {
@@ -1093,3 +1095,48 @@ Route::get('/instrument/{userid}', [InstrumentController::class, 'show_from_user
 Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);
 Route::get('/lenses/{userid}', [LensController::class, 'show_from_user']);
 Route::get('/filters/{userid}', [FilterController::class, 'show_from_user']);
+
+// Persist Aladin preview defaults for the authenticated user
+Route::middleware('auth:sanctum')->post('user/aladin-defaults', function (Request $request) {
+    $user = $request->user();
+    if (! $user) return response()->json(['error' => 'Unauthenticated'], 401);
+
+    $data = $request->only(['instrument_id', 'eyepiece_id', 'lens_id']);
+    try {
+        // Instrument: prefer stdtelescope column if present
+        if (! empty($data['instrument_id']) && $data['instrument_id'] != 0) {
+            $inst = \App\Models\Instrument::where('id', $data['instrument_id'])->where('observer', $user->username)->first();
+            if (! $inst) return response()->json(['error' => 'Invalid instrument'], 422);
+            if (Schema::hasColumn('users', 'stdtelescope')) { $user->stdtelescope = $inst->id; }
+        } else {
+            if (Schema::hasColumn('users', 'stdtelescope')) { $user->stdtelescope = null; }
+        }
+
+        // Eyepiece
+        if (! empty($data['eyepiece_id']) && $data['eyepiece_id'] != 0) {
+            $ep = \App\Models\Eyepiece::where('id', $data['eyepiece_id'])->where('observer', $user->username)->first();
+            if (! $ep) return response()->json(['error' => 'Invalid eyepiece'], 422);
+            if (Schema::hasColumn('users', 'stdeyepiece')) { $user->stdeyepiece = $ep->id; }
+            else if (Schema::hasColumn('users', 'preferences')) { $prefs = $user->preferences ?? []; $prefs['aladin_default_eyepiece'] = $ep->id; $user->preferences = $prefs; }
+        } else {
+            if (Schema::hasColumn('users', 'stdeyepiece')) { $user->stdeyepiece = null; }
+            if (Schema::hasColumn('users', 'preferences')) { $prefs = $user->preferences ?? []; unset($prefs['aladin_default_eyepiece']); $user->preferences = $prefs; }
+        }
+
+        // Lens
+        if (! empty($data['lens_id']) && $data['lens_id'] != 0) {
+            $ln = \App\Models\Lens::where('id', $data['lens_id'])->where('observer', $user->username)->first();
+            if (! $ln) return response()->json(['error' => 'Invalid lens'], 422);
+            if (Schema::hasColumn('users', 'stdlens')) { $user->stdlens = $ln->id; }
+            else if (Schema::hasColumn('users', 'preferences')) { $prefs = $user->preferences ?? []; $prefs['aladin_default_lens'] = $ln->id; $user->preferences = $prefs; }
+        } else {
+            if (Schema::hasColumn('users', 'stdlens')) { $user->stdlens = null; }
+            if (Schema::hasColumn('users', 'preferences')) { $prefs = $user->preferences ?? []; unset($prefs['aladin_default_lens']); $user->preferences = $prefs; }
+        }
+
+        $user->save();
+        return response()->json(['ok' => true]);
+    } catch (\Exception $ex) {
+        return response()->json(['error' => 'Save failed', 'message' => $ex->getMessage()], 500);
+    }
+})->name('user.aladin-defaults.save');

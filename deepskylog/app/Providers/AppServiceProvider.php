@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Kudashevs\ShareButtons\ShareButtons;
 use ReflectionClass;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -40,6 +41,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Model::preventLazyLoading(! $this->app->isProduction());
+        // Explicitly register Livewire components that might not be discovered
+        // automatically due to custom namespaces or caching issues.
+        if (class_exists(Livewire::class)) {
+            if (class_exists(\App\Livewire\InstrumentTable::class)) {
+                Livewire::component('instrument-table', \App\Livewire\InstrumentTable::class);
+            }
+
+            if (class_exists(\App\Http\Livewire\AladinSelects::class)) {
+                Livewire::component('aladin-selects', \App\Http\Livewire\AladinSelects::class);
+            }
+
+            // Additional explicit registrations for app Livewire components can be added here as needed.
+        }
+
+        Model::preventLazyLoading(! $this->app->environment('production'));
     }
 }

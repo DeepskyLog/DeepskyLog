@@ -2061,16 +2061,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v12.32.5",
+            "version": "v12.33.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "77b2740391cd2a825ba59d6fada45e9b8b9bcc5a"
+                "reference": "124efc5f09d4668a4dc13f94a1018c524a58bcb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/77b2740391cd2a825ba59d6fada45e9b8b9bcc5a",
-                "reference": "77b2740391cd2a825ba59d6fada45e9b8b9bcc5a",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/124efc5f09d4668a4dc13f94a1018c524a58bcb1",
+                "reference": "124efc5f09d4668a4dc13f94a1018c524a58bcb1",
                 "shasum": ""
             },
             "require": {
@@ -2276,7 +2276,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-09-30T17:39:22+00:00"
+            "time": "2025-10-07T14:30:39+00:00"
         },
         {
             "name": "laravel/jetstream",
@@ -4978,16 +4978,16 @@
         },
         {
             "name": "power-components/livewire-powergrid",
-            "version": "v6.6.2",
+            "version": "v6.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Power-Components/livewire-powergrid.git",
-                "reference": "2b04f78f1d8e7be3fcffe9867be15446c944b2c8"
+                "reference": "7f5a8cf282d38b5f233d668aad39763a3e753aca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Power-Components/livewire-powergrid/zipball/2b04f78f1d8e7be3fcffe9867be15446c944b2c8",
-                "reference": "2b04f78f1d8e7be3fcffe9867be15446c944b2c8",
+                "url": "https://api.github.com/repos/Power-Components/livewire-powergrid/zipball/7f5a8cf282d38b5f233d668aad39763a3e753aca",
+                "reference": "7f5a8cf282d38b5f233d668aad39763a3e753aca",
                 "shasum": ""
             },
             "require": {
@@ -5044,7 +5044,7 @@
             "homepage": "https://github.com/power-components/livewire-powergrid",
             "support": {
                 "issues": "https://github.com/Power-Components/livewire-powergrid/issues",
-                "source": "https://github.com/Power-Components/livewire-powergrid/tree/v6.6.2"
+                "source": "https://github.com/Power-Components/livewire-powergrid/tree/v6.6.3"
             },
             "funding": [
                 {
@@ -5052,7 +5052,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-09-10T13:28:05+00:00"
+            "time": "2025-10-07T11:09:45+00:00"
         },
         {
             "name": "pragmarx/google2fa",
