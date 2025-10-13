@@ -362,6 +362,86 @@
                                                     } catch(e){}
 
                                                     if (instHidden && typeof window.__dsl_server_selected.instrument !== 'undefined') {
+
+                                                // Hide FoV overlay when any dropdown/menu is open (detect common patterns like aria-expanded)
+                                                (function(){
+                                                    try {
+                                                        function isElementVisible(el) {
+                                                            try { return !!(el && el.offsetParent !== null && (el.offsetWidth || el.offsetHeight)); } catch(e) { return false; }
+                                                        }
+
+                                                        function shouldHideOverlayDueToMenu() {
+                                                            try {
+                                                                // Prefer explicit aria-expanded toggles used by Alpine/Tailwind components
+                                                                var expanded = document.querySelectorAll('[aria-expanded="true"]');
+                                                                for (var i = 0; i < expanded.length; i++) {
+                                                                    if (isElementVisible(expanded[i])) return true;
+                                                                }
+                                                                // Fallback: common classes used by frameworks for visible dropdowns
+                                                                var selectors = ['.show', '.open', '[data-dropdown-open="true"]'];
+                                                                for (var s = 0; s < selectors.length; s++) {
+                                                                    var els = document.querySelectorAll(selectors[s]);
+                                                                    for (var j = 0; j < els.length; j++) {
+                                                                        if (isElementVisible(els[j])) return true;
+                                                                    }
+                                                                }
+                                                            } catch (e) {}
+                                                            return false;
+                                                        }
+
+                                                        function setOverlayHiddenByMenu(hide) {
+                                                            try {
+                                                                var ids = ['aladin-fov-dom', 'aladin-live-fov-badge', 'dsl-aladin-minimal-controls'];
+                                                                ids.forEach(function(id){
+                                                                    try {
+                                                                        var el = document.getElementById(id);
+                                                                        if (!el) return;
+                                                                        // remember original inline visibility/pointerEvents once
+                                                                        if (typeof el.__dslOrigVisibility === 'undefined') el.__dslOrigVisibility = el.style.visibility || '';
+                                                                        if (typeof el.__dslOrigPointer === 'undefined') el.__dslOrigPointer = el.style.pointerEvents || '';
+                                                                        if (hide) {
+                                                                            el.style.visibility = 'hidden';
+                                                                            el.style.pointerEvents = 'none';
+                                                                            el.__dslHiddenByMenu = true;
+                                                                        } else {
+                                                                            if (el.__dslHiddenByMenu) {
+                                                                                try { el.style.visibility = el.__dslOrigVisibility || ''; } catch(e) {}
+                                                                                try { el.style.pointerEvents = el.__dslOrigPointer || ''; } catch(e) {}
+                                                                                el.__dslHiddenByMenu = false;
+                                                                            }
+                                                                        }
+                                                                    } catch(e) {}
+                                                                });
+                                                            } catch(e) {}
+                                                        }
+
+                                                        var __dslMenuObserverTimer = null;
+                                                        function checkMenuAndUpdateOverlay() {
+                                                            try {
+                                                                var hide = shouldHideOverlayDueToMenu();
+                                                                setOverlayHiddenByMenu(hide);
+                                                            } catch(e) {}
+                                                        }
+
+                                                        // Observe attribute and subtree changes to detect menus opening/closing.
+                                                        var mo = null;
+                                                        try {
+                                                            mo = new MutationObserver(function(){
+                                                                try {
+                                                                    if (__dslMenuObserverTimer) clearTimeout(__dslMenuObserverTimer);
+                                                                    __dslMenuObserverTimer = setTimeout(checkMenuAndUpdateOverlay, 40);
+                                                                } catch(e) {}
+                                                            });
+                                                            mo.observe(document.documentElement || document.body, { attributes: true, subtree: true, attributeFilter: ['aria-expanded', 'class', 'style'] });
+                                                        } catch(e) {}
+
+                                                        // Also run checks on common interactions
+                                                        window.addEventListener('resize', checkMenuAndUpdateOverlay, { passive: true });
+                                                        document.addEventListener('click', function(){ setTimeout(checkMenuAndUpdateOverlay, 10); }, true);
+                                                        // initial run
+                                                        try { checkMenuAndUpdateOverlay(); } catch(e) {}
+                                                    } catch(e) {}
+                                                })();
                                                         instHidden.value = window.__dsl_server_selected.instrument || '';
                                                     }
                                                     if (epHidden && typeof window.__dsl_server_selected.eyepiece !== 'undefined') {

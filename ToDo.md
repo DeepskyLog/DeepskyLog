@@ -18,7 +18,7 @@
             + [X] Pan Aladin preview does not work anymore
             + [X] Add default lens?
             + [X] Flip X and/or Y axis according to the telescope settings?
-            + [ ] Add link to Aladin lite
+            + [X] Add link to Aladin lite
             + [ ] Fix default instrument set in /user/profile
             + [ ] Only show instruments, eyepieces and lenses of the default instrument set.
             + [ ] When changing the Instrument and lens in the aladin sky preview, also recalculate the contrast reserve and Optimum detection magnification.
