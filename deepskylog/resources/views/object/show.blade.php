@@ -306,7 +306,8 @@
                             </div>
                             <div class="mt-2">
                                 <div>
-                                    @livewire('aladin-selects', ['instrument' => $selectedInstrumentId ?? null, 'eyepiece' => $selectedEyepieceId ?? null, 'lens' => $selectedLensId ?? null])
+                                    @php $stdSet = auth()->user()?->stdinstrumentset ?? null; @endphp
+                                    @livewire('aladin-selects', ['instrument' => $selectedInstrumentId ?? null, 'eyepiece' => $selectedEyepieceId ?? null, 'lens' => $selectedLensId ?? null, 'instrumentSet' => $stdSet])
                                     <input type="hidden" id="aladin-instrument-hidden" value="{{ $selectedInstrumentId ?? '' }}" />
                                     <input type="hidden" id="aladin-eyepiece-hidden" value="{{ $selectedEyepieceId ?? '' }}" />
                                     <input type="hidden" id="aladin-lens-hidden" value="{{ $selectedLensId ?? '' }}" />

@@ -8,12 +8,14 @@ class AladinSelects extends Component
     public $instrument;
     public $eyepiece;
     public $lens;
+    public $instrumentSet;
 
-    public function mount($instrument = null, $eyepiece = null, $lens = null)
+    public function mount($instrument = null, $eyepiece = null, $lens = null, $instrumentSet = null)
     {
         $this->instrument = $instrument;
         $this->eyepiece = $eyepiece;
         $this->lens = $lens;
+        $this->instrumentSet = $instrumentSet;
         // Emit initial values to the front-end so the page can sync immediately
         // No server-side browser event here; Livewire will render the component with
         // the public properties and the page JS reads the hidden inputs / rendered DOM.

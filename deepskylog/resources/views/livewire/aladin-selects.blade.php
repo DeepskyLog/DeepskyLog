@@ -20,7 +20,7 @@
                     }, 120);
                 })()">
             <x-select
-                :async-data="route('instrument.select.api')"
+                :async-data="route('instrument.select.api', ['instrument_set' => $instrumentSet ?? ''])"
                 option-label="name"
                 option-value="id"
                 value="{{ $instrument ?? '' }}"
@@ -51,7 +51,7 @@
                     }, 120);
                 })()">
             <x-select
-                :async-data="route('eyepiece.select.api')"
+                :async-data="route('eyepiece.select.api', ['instrument_set' => $instrumentSet ?? ''])"
                 option-label="name"
                 option-value="id"
                 value="{{ $eyepiece ?? '' }}"
@@ -82,7 +82,7 @@
                     }, 120);
                 })()">
             <x-select
-                :async-data="route('lens.select.api')"
+                :async-data="route('lens.select.api', ['instrument_set' => $instrumentSet ?? ''])"
                 option-label="name"
                 option-value="id"
                 value="{{ $lens ?? '' }}"
