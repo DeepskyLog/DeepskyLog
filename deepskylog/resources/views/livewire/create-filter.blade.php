@@ -75,9 +75,9 @@
                             editor.save();
                             try {
                                 @this.set('description', editor.getContent());
-                            } catch (err) {
-                                if (typeof Livewire !== 'undefined') {
-                                    Livewire.emit('setDescription', editor.getContent());
+                                } catch (err) {
+                                if (typeof Livewire !== 'undefined' && typeof Livewire.dispatch === 'function') {
+                                    Livewire.dispatch('setDescription', editor.getContent());
                                 }
                             }
                         });

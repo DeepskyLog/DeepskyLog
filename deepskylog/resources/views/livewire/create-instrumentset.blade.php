@@ -53,9 +53,9 @@
                                 try {
                                     @this.set('description', editor.getContent());
                                 } catch (err) {
-                                    if (typeof Livewire !== 'undefined') {
-                                        Livewire.emit('setDescription', editor.getContent());
-                                    }
+                                        if (typeof Livewire !== 'undefined' && typeof Livewire.dispatch === 'function') {
+                                            Livewire.dispatch('setDescription', editor.getContent());
+                                        }
                                 }
                             });
 
@@ -64,9 +64,9 @@
                                 try {
                                     @this.set('description', editor.getContent());
                                 } catch (err) {
-                                    if (typeof Livewire !== 'undefined') {
-                                        Livewire.emit('setDescription', editor.getContent());
-                                    }
+                                        if (typeof Livewire !== 'undefined' && typeof Livewire.dispatch === 'function') {
+                                            Livewire.dispatch('setDescription', editor.getContent());
+                                        }
                                 }
                             });
                         }

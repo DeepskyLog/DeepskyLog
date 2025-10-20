@@ -187,11 +187,11 @@
                             setup: function (editor) {
                                 editor.on('init', function () {
                                     editor.save();
-                                    try { @this.set(id, editor.getContent()); } catch (err) { if (typeof Livewire !== 'undefined') Livewire.emit('set'+id.charAt(0).toUpperCase()+id.slice(1), editor.getContent()); }
+                                    try { @this.set(id, editor.getContent()); } catch (err) { if (typeof Livewire !== 'undefined' && typeof Livewire.dispatch === 'function') Livewire.dispatch('set'+id.charAt(0).toUpperCase()+id.slice(1), editor.getContent()); }
                                 });
                                 editor.on('change', function () {
                                     editor.save();
-                                    try { @this.set(id, editor.getContent()); } catch (err) { if (typeof Livewire !== 'undefined') Livewire.emit('set'+id.charAt(0).toUpperCase()+id.slice(1), editor.getContent()); }
+                                    try { @this.set(id, editor.getContent()); } catch (err) { if (typeof Livewire !== 'undefined' && typeof Livewire.dispatch === 'function') Livewire.dispatch('set'+id.charAt(0).toUpperCase()+id.slice(1), editor.getContent()); }
                                 });
                             }
                         });

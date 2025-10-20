@@ -361,9 +361,9 @@
                                 // Prefer direct @this.set to synchronously update the Livewire property
                                 @this.set('description', editor.getContent());
                             } catch (err) {
-                                // Fallback to emit if @this isn't available
-                                if (typeof Livewire !== 'undefined') {
-                                    Livewire.emit('setDescription', editor.getContent());
+                                // Fallback to dispatch if @this isn't available
+                                if (typeof Livewire !== 'undefined' && typeof Livewire.dispatch === 'function') {
+                                    Livewire.dispatch('setDescription', editor.getContent());
                                 }
                             }
                         });
@@ -372,9 +372,9 @@
                             editor.save();
                             try {
                                 @this.set('description', editor.getContent());
-                            } catch (err) {
-                                if (typeof Livewire !== 'undefined') {
-                                    Livewire.emit('setDescription', editor.getContent());
+                                } catch (err) {
+                                if (typeof Livewire !== 'undefined' && typeof Livewire.dispatch === 'function') {
+                                    Livewire.dispatch('setDescription', editor.getContent());
                                 }
                             }
                         });
