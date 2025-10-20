@@ -28,8 +28,8 @@
                                             }
                                         @endphp
                                         {!! implode(', ', $altLinks) !!}
-                                    </td>
-                                </tr>
+                            </td>
+                        </tr>
                             @if(isset($session->ra) && isset($session->decl))
                                 <tr>
                                     <td class="pr-4 font-medium">{{ __('RA / Dec') }}</td>
@@ -43,7 +43,8 @@
                                             @endif
                                             @if(!empty($atlasPage))
                                                 @if(!empty($atlasName))
-                                                    {{ ' ' }}
+
+                                                <!-- aladin event enrichment bridge moved to main script block -->
                                                 @endif
                                                 {{ __('page:') }}
                                             @endif                                            
@@ -95,95 +96,16 @@
                                 </tr>
                             @endif
 
-                            @if(isset($session->contrast_reserve))
-                                <tr>
-                                    <td class="pr-4 font-medium">
-                                        <span>{{ __('Contrast reserve') }}</span>
-                                        <div x-data="{ open: false }" class="inline-block relative">
-                                            <button @click.prevent="open = !open" @keydown.escape="open = false" :aria-expanded="open.toString()" aria-haspopup="true" class="ml-2 text-gray-400 hover:text-gray-200 focus:outline-none" type="button">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-8 4a1 1 0 100 2 1 1 0 000-2zm.75-6.75a.75.75 0 00-1.5 0V10a.75.75 0 001.5 0V7.25z" clip-rule="evenodd"/></svg>
-                                            </button>
-
-                                            <div x-show="open" x-cloak @click.outside="open = false" x-transition class="absolute left-0 mt-2 w-64 p-3 bg-gray-800 text-sm text-gray-100 rounded shadow-lg">
-                                                <div class="font-semibold mb-2">{{ __('contrast.reserve.tooltip_title') }}</div>
-                                                <ul class="text-xs space-y-1">
-                                                    <li>{{ __('contrast.reserve.category.very_easy') }}</li>
-                                                    <li>{{ __('contrast.reserve.category.easy') }}</li>
-                                                    <li>{{ __('contrast.reserve.category.quite_difficult') }}</li>
-                                                    <li>{{ __('contrast.reserve.category.difficult') }}</li>
-                                                    <li>{{ __('contrast.reserve.category.questionable') }}</li>
-                                                    <li>{{ __('contrast.reserve.category.not_visible') }}</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        @if($session->contrast_reserve === null)
-                                            {{ __('Unknown') }}
-                                        @else
-                                            @php
-                                                $crCat = $session->contrast_reserve_category ?? null;
-                                                $crClass = 'text-white';
-                                                // Map categories to requested colors:
-                                                if ($crCat === 'very_easy') {
-                                                    $crClass = 'text-green-400';
-                                                } elseif ($crCat === 'easy') {
-                                                    $crClass = 'text-green-700';
-                                                } elseif ($crCat === 'quite_difficult') {
-                                                    $crClass = 'text-orange-400';
-                                                } elseif ($crCat === 'difficult') {
-                                                    $crClass = 'text-orange-700';
-                                                } elseif ($crCat === 'questionable') {
-                                                    $crClass = 'text-gray-300';
-                                                } elseif ($crCat === 'not_visible') {
-                                                    $crClass = 'text-gray-600';
-                                                }
-
-                                                $categoryText = $crCat ? __('contrast.reserve.category.' . $crCat) : __('Unknown');
-                                            @endphp
-
-                                            <div x-data="{ openCR: false }" class="inline-block relative">
-                                                <button @click.prevent="openCR = !openCR" @keydown.escape="openCR = false" :aria-expanded="openCR.toString()" aria-haspopup="true" type="button" class="focus:outline-none {{ $crClass }} font-medium">
-                                                    {{ $session->contrast_reserve }}
-                                                </button>
-
-                                                <div x-show="openCR" x-cloak @click.outside="openCR = false" x-transition class="absolute z-10 left-0 mt-2 w-80 p-3 bg-gray-800 text-sm text-gray-100 rounded shadow-lg">
-                                                    <div class="text-sm mb-2">{{ __('contrast.reserve.summary', ['value' => $session->contrast_reserve, 'category' => $categoryText]) }}</div>
-                                                    <div class="text-xs text-gray-300 mb-1"><strong>{{ __('Location') }}:</strong> {{ $session->contrast_used_location ?? __('Unknown') }}</div>
-                                                    <div class="text-xs text-gray-300"><strong>{{ __('Instrument') }}:</strong> {{ $session->contrast_used_instrument ?? __('Unknown') }}</div>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endif
-
-                            {{-- Additional object fields that were present previously: optimum magnification, eyepieces, size and position angle --}}
-                            @if(!empty($session->optimum_detection_magnification))
-                                @php
-                                    $eps = [];
-                                    foreach ($session->optimum_eyepieces as $ep) {
-                                        $name = $ep['name'] ?? ($ep['label'] ?? null);
-                                        $slug = $ep['slug'] ?? null;
-                                        $userSlug = $ep['user_slug'] ?? null;
-                                        $parts = [];
-                                        if (! empty($name)) {
-                                            if (! empty($slug) && ! empty($userSlug)) {
-                                                // Build an internal route to the eyepiece show page
-                                                $url = route('eyepiece.show', ['user' => $userSlug, 'eyepiece' => $slug]);
-                                                $parts[] = '<a href="'.e($url).'" class="text-gray-300 hover:underline">'.e($name).'</a>';
-                                            } else {
-                                                $parts[] = e($name);
-                                            }
-                                        }
-                                        if (! empty($parts)) { $eps[] = implode(' — ', $parts); }
-                                    }
-                                @endphp
-                                <tr>
-                                    <td class="pr-4 font-medium">{{ __('Optimum detection magnification') }}</td>
-                                    <td>{{ $session->optimum_detection_magnification }}x - {!! implode(', ', $eps) !!}</td>
-                                </tr>
-                            @endif
+                            {{-- Live-updating contrast reserve and optimum detection magnification via Livewire --}}
+                            {{-- Embed the Livewire component directly so it can render <tr> rows inside this table --}}
+                            @livewire('aladin-preview-info', ['objectId' => (string)($session->id ?? ''), 'initial' => [
+                                        'contrast_reserve' => $session->contrast_reserve ?? null,
+                                        'contrast_reserve_category' => $session->contrast_reserve_category ?? null,
+                                        'contrast_used_location' => $session->contrast_used_location ?? null,
+                                        'contrast_used_instrument' => $session->contrast_used_instrument ?? null,
+                                        'optimum_detection_magnification' => $session->optimum_detection_magnification ?? null,
+                                        'optimum_eyepieces' => $session->optimum_eyepieces ?? [],
+                                    ]])
 
                         </table>
 
@@ -292,6 +214,8 @@
                            data-save-url="{{ url('/api/user/aladin-defaults') }}"
                            data-dsl-text="{{ base64_encode(json_encode($dslText)) }}"
                            data-available="{{ base64_encode(json_encode(['instruments' => $availableInstruments ?? [], 'eyepieces' => $availableEyepieces ?? [], 'lenses' => $availableLenses ?? []])) }}"
+                           data-object-id="{{ $session->id ?? '' }}"
+                           data-slug="{{ $session->slug ?? '' }}"
                            {{-- Server-provided initial selections encoded as safe data attributes to avoid inline Blade @json in JS --}}
                            data-selected-instrument="{{ $selectedInstrumentId ?? '' }}"
                            data-selected-eyepiece="{{ $selectedEyepieceId ?? '' }}"
@@ -307,7 +231,7 @@
                             <div class="mt-2">
                                 <div>
                                     @php $stdSet = auth()->user()?->stdinstrumentset ?? null; @endphp
-                                    @livewire('aladin-selects', ['instrument' => $selectedInstrumentId ?? null, 'eyepiece' => $selectedEyepieceId ?? null, 'lens' => $selectedLensId ?? null, 'instrumentSet' => $stdSet])
+                                    @livewire('aladin-selects', ['instrument' => $selectedInstrumentId ?? null, 'eyepiece' => $selectedEyepieceId ?? null, 'lens' => $selectedLensId ?? null, 'instrumentSet' => $stdSet, 'objectId' => (string)($session->id ?? '')])
                                     <input type="hidden" id="aladin-instrument-hidden" value="{{ $selectedInstrumentId ?? '' }}" />
                                     <input type="hidden" id="aladin-eyepiece-hidden" value="{{ $selectedEyepieceId ?? '' }}" />
                                     <input type="hidden" id="aladin-lens-hidden" value="{{ $selectedLensId ?? '' }}" />
@@ -319,6 +243,41 @@
                                     </div>
                                 </div>
                                 <!-- selects are rendered by the Livewire AladinSelects component above -->
+                                <script>
+                                    (function(){
+                                        try {
+                                            // Ensure we have the server-provided id available
+                                            var __embeddedOid = {!! json_encode((string)($session->id ?? '')) !!} || (window.__dsl_embedded_objectId || null);
+                                            // Listen for the selects emitting dsl-aladin-updated and ensure Livewire receives an enriched payload
+                                            // Prefer Livewire.dispatchTo (v3) to call the specific component method directly. Fall back to the
+                                            // central emitter (__dsl_emitAladinUpdated) which implements queueing/enrichment, or to Livewire.dispatch.
+                                            window.addEventListener('dsl-aladin-updated', function(ev){
+                                                try {
+                                                    var detail = ev && ev.detail ? ev.detail : {};
+                                                    // normalize missing/empty objectId using the embedded server-provided id
+                                                    if (!detail.objectId || String(detail.objectId).trim() === '') {
+                                                        if (__embeddedOid) detail.objectId = __embeddedOid;
+                                                    }
+
+                                                    // Prefer direct component invocation when available
+                                                    try {
+                                                        if (window.Livewire && typeof Livewire.dispatchTo === 'function') {
+                                                            try { Livewire.dispatchTo('aladin-preview-info', 'recalculate', detail); return; } catch(e){}
+                                                        }
+                                                    } catch(e){}
+
+                                                    // Fallback to centralized emitter (handles queueing/enrichment)
+                                                    try { if (typeof window.__dsl_emitAladinUpdated === 'function') { window.__dsl_emitAladinUpdated(detail); return; } } catch(e){}
+
+                                                    // Older fallback: broadcast Livewire event
+                                                    try { if (window.Livewire && typeof Livewire.dispatch === 'function') { Livewire.dispatch('aladinUpdated', detail); return; } } catch(e){}
+
+                                                    // If nothing else is available, do nothing; avoid re-dispatching the same DOM event to prevent loops.
+                                                } catch(e){}
+                                            }, { passive: true });
+                                        } catch(e){}
+                                    })();
+                                </script>
                                 {{-- One-time server-side initial sync: ensure hidden inputs match server-selected ids immediately on first render. This avoids relying on client heuristics to populate hidden fields. --}}
                                 <script>
                                     (function(){
@@ -376,6 +335,19 @@
                                                                 // Prefer explicit aria-expanded toggles used by Alpine/Tailwind components
                                                                 var expanded = document.querySelectorAll('[aria-expanded="true"]');
                                                                 for (var i = 0; i < expanded.length; i++) {
+                                                                    try {
+                                                                        var el = expanded[i];
+                                                                        // If the expanded control (or any ancestor) is inside a no-overlay-hide container, ignore it
+                                                                        if (el && typeof el.closest === 'function' && el.closest('[data-dsl-no-overlay-hide]')) continue;
+                                                                        // Also ignore if the expanded control controls a popup that itself is inside a no-overlay-hide container
+                                                                        try {
+                                                                            var ariaControls = el.getAttribute ? el.getAttribute('aria-controls') : null;
+                                                                            if (ariaControls) {
+                                                                                var ctrl = document.getElementById(ariaControls);
+                                                                                if (ctrl && typeof ctrl.closest === 'function' && ctrl.closest('[data-dsl-no-overlay-hide]')) continue;
+                                                                            }
+                                                                        } catch(e) {}
+                                                                    } catch(e){}
                                                                     if (isElementVisible(expanded[i])) return true;
                                                                 }
                                                                 // Fallback: common classes used by frameworks for visible dropdowns
@@ -383,6 +355,16 @@
                                                                 for (var s = 0; s < selectors.length; s++) {
                                                                     var els = document.querySelectorAll(selectors[s]);
                                                                     for (var j = 0; j < els.length; j++) {
+                                                                        try {
+                                                                            var jel = els[j];
+                                                                            // If this element or any of its interactive children live inside a flagged popup, ignore
+                                                                            if (jel && typeof jel.closest === 'function' && jel.closest('[data-dsl-no-overlay-hide]')) continue;
+                                                                            // If element contains any child that is inside the flagged popup, skip
+                                                                            try {
+                                                                                var children = jel.querySelectorAll ? jel.querySelectorAll('[data-dsl-no-overlay-hide]') : null;
+                                                                                if (children && children.length) continue;
+                                                                            } catch(e){}
+                                                                        } catch(e){}
                                                                         if (isElementVisible(els[j])) return true;
                                                                     }
                                                                 }
@@ -495,9 +477,9 @@
                                                             try {
                                                                 if (typeof window.__dsl_last_user_interaction_ts === 'undefined') {
                                                                     window.__dsl_last_user_interaction_ts = 0;
-                                                                    document.addEventListener('pointerdown', function(){ try { window.__dsl_last_user_interaction_ts = Date.now(); } catch(e){} }, true);
+                                                                    document.addEventListener('pointerdown', function(){ try { window.__dsl_last_user_interaction_ts = Date.now(); } catch(e){} }, { passive: true, capture: true });
                                                                     // also support touchstart for older devices
-                                                                    document.addEventListener('touchstart', function(){ try { window.__dsl_last_user_interaction_ts = Date.now(); } catch(e){} }, true);
+                                                                    document.addEventListener('touchstart', function(){ try { window.__dsl_last_user_interaction_ts = Date.now(); } catch(e){} }, { passive: true, capture: true });
                                                                 }
                                                             } catch(e){}
                                                     try { if (typeof updateSelectedLabels === 'function') updateSelectedLabels(); } catch(e){}
@@ -547,6 +529,41 @@
 
         // DSL_TEXT will be parsed from data attribute on the aladin container at init time
         var DSL_TEXT = {};
+
+        // --- Ensure server-provided objectId is available at runtime ---
+        try {
+            if (typeof window.__dsl_server_selected === 'undefined') window.__dsl_server_selected = {};
+        } catch(e){}
+        try {
+            var __dsl_server_objectId_from_server = "{{ $session->id ?? '' }}";
+            if (typeof window.__dsl_server_selected.objectId === 'undefined') {
+                var _alc_obj = document.getElementById('aladin-lite-container');
+                if (_alc_obj) {
+                    try { window.__dsl_server_selected.objectId = _alc_obj.getAttribute('data-object-id') || __dsl_server_objectId_from_server || ''; } catch(e) { window.__dsl_server_selected.objectId = __dsl_server_objectId_from_server || ''; }
+                } else {
+                    window.__dsl_server_selected.objectId = __dsl_server_objectId_from_server || '';
+                }
+            }
+        } catch(e){}
+
+        try {
+            // Ensure the DOM element has the data-object-id attribute set so client code
+            // which reads it will receive a value even if the attribute was initially
+            // empty in the rendered HTML.
+            var __alc_el = document.getElementById('aladin-lite-container');
+            if (__alc_el) {
+                var cur = __alc_el.getAttribute('data-object-id');
+                    if (!cur || cur === '') {
+                        try { __alc_el.setAttribute('data-object-id', window.__dsl_server_selected && window.__dsl_server_selected.objectId ? window.__dsl_server_selected.objectId : __dsl_server_objectId_from_server); } catch(e){}
+                    }
+            }
+        } catch(e){}
+
+        // NOTE: page-level enrichment and Livewire.emit shims were removed here.
+        // The centralized emitter and enrichment live in the `aladin-selects` Livewire
+        // Blade (window.__dsl_emitAladinUpdated and capture-phase listener). Keep
+        // server-provided object id available above; other event normalization is
+        // handled by the selects component to avoid duplicate dispatch and races.
 
     // Utility: try to parse "HH MM SS" RA or decimal into degrees
         function parseRaToDegrees(ra) {
@@ -2044,7 +2061,7 @@
                         try { if (typeof aladinInstance.gotoRaDec === 'function') aladinInstance.gotoRaDec(newRa, newDec, display); }
                         catch(e) {}
                     } catch(e) {}
-                }, true);
+                }, { passive: true, capture: true });
 
                 window.addEventListener('pointerup', function(e){
                     try {
@@ -2052,7 +2069,7 @@
                         dragging = false;
                         try { if (e.target && e.target.releasePointerCapture) e.target.releasePointerCapture(e.pointerId); } catch(e){}
                     } catch(e) {}
-                }, true);
+                }, { passive: true, capture: true });
             } catch(e) {}
         }
 
@@ -2344,9 +2361,61 @@
                     }
                 } catch (e) {}
                 // hidden inputs are updated by x-select change handlers; still call schedule to apply
-                if (instHidden) instHidden.addEventListener('change', scheduleApplyAladinSelectsUpdate);
-                if (epHidden) epHidden.addEventListener('change', scheduleApplyAladinSelectsUpdate);
-                if (lnHidden) lnHidden.addEventListener('change', scheduleApplyAladinSelectsUpdate);
+                if (instHidden) instHidden.addEventListener('change', function(e){
+                    try {
+                        scheduleApplyAladinSelectsUpdate();
+                        console.log('aladin hidden instrument changed', instHidden.value);
+                        var payload = { instrument: instHidden.value || null, eyepiece: epHidden ? (epHidden.value || null) : null, lens: lnHidden ? (lnHidden.value || null) : null };
+                        try {
+                            var __alc = document.getElementById('aladin-lite-container');
+                            var __oid = (__alc && __alc.getAttribute ? __alc.getAttribute('data-object-id') : null) || (window.__dsl_server_selected && window.__dsl_server_selected.objectId) || window.__dsl_embedded_objectId || null;
+                            if (__oid === '') __oid = null;
+                            payload.objectId = __oid;
+                        } catch(e) { payload.objectId = (window.__dsl_server_selected && window.__dsl_server_selected.objectId) || window.__dsl_embedded_objectId || null; }
+
+                        // Dispatch in a predictable order: Livewire.dispatchTo -> central emitter -> Livewire.dispatch -> DOM event
+                        try { if (window.Livewire && typeof Livewire.dispatchTo === 'function') { try { Livewire.dispatchTo('aladin-preview-info', 'recalculate', payload); return; } catch(e){} } } catch(e){}
+                        try { if (typeof window.__dsl_emitAladinUpdated === 'function') { try { window.__dsl_emitAladinUpdated(payload); return; } catch(e){} } } catch(e){}
+                        try { if (window.Livewire && typeof Livewire.dispatch === 'function') { try { Livewire.dispatch('aladinUpdated', payload); return; } catch(e){} } } catch(e){}
+                        try { window.dispatchEvent(new CustomEvent('dsl-aladin-updated', { detail: payload })); } catch(e){}
+                    } catch(e){}
+                });
+                if (epHidden) epHidden.addEventListener('change', function(e){
+                    try {
+                        scheduleApplyAladinSelectsUpdate();
+                        console.log('aladin hidden eyepiece changed', epHidden.value);
+                        var payload = { instrument: instHidden ? (instHidden.value || null) : null, eyepiece: epHidden.value || null, lens: lnHidden ? (lnHidden.value || null) : null };
+                        try {
+                            var __alc = document.getElementById('aladin-lite-container');
+                            var __oid = (__alc && __alc.getAttribute ? __alc.getAttribute('data-object-id') : null) || (window.__dsl_server_selected && window.__dsl_server_selected.objectId) || window.__dsl_embedded_objectId || null;
+                            if (__oid === '') __oid = null;
+                            payload.objectId = __oid;
+                        } catch(e) { payload.objectId = (window.__dsl_server_selected && window.__dsl_server_selected.objectId) || window.__dsl_embedded_objectId || null; }
+
+                        try { if (window.Livewire && typeof Livewire.dispatchTo === 'function') { try { Livewire.dispatchTo('aladin-preview-info', 'recalculate', payload); return; } catch(e){} } } catch(e){}
+                        try { if (typeof window.__dsl_emitAladinUpdated === 'function') { try { window.__dsl_emitAladinUpdated(payload); return; } catch(e){} } } catch(e){}
+                        try { if (window.Livewire && typeof Livewire.dispatch === 'function') { try { Livewire.dispatch('aladinUpdated', payload); return; } catch(e){} } } catch(e){}
+                        try { window.dispatchEvent(new CustomEvent('dsl-aladin-updated', { detail: payload })); } catch(e){}
+                    } catch(e){}
+                });
+                if (lnHidden) lnHidden.addEventListener('change', function(e){
+                    try {
+                        scheduleApplyAladinSelectsUpdate();
+                        console.log('aladin hidden lens changed', lnHidden.value);
+                        var payload = { instrument: instHidden ? (instHidden.value || null) : null, eyepiece: epHidden ? (epHidden.value || null) : null, lens: lnHidden.value || null };
+                        try {
+                            var __alc = document.getElementById('aladin-lite-container');
+                            var __oid = (__alc && __alc.getAttribute ? __alc.getAttribute('data-object-id') : null) || (window.__dsl_server_selected && window.__dsl_server_selected.objectId) || window.__dsl_embedded_objectId || null;
+                            if (__oid === '') __oid = null;
+                            payload.objectId = __oid;
+                        } catch(e) { payload.objectId = (window.__dsl_server_selected && window.__dsl_server_selected.objectId) || window.__dsl_embedded_objectId || null; }
+
+                        try { if (window.Livewire && typeof Livewire.dispatchTo === 'function') { try { Livewire.dispatchTo('aladin-preview-info', 'recalculate', payload); return; } catch(e){} } } catch(e){}
+                        try { if (typeof window.__dsl_emitAladinUpdated === 'function') { try { window.__dsl_emitAladinUpdated(payload); return; } catch(e){} } } catch(e){}
+                        try { if (window.Livewire && typeof Livewire.dispatch === 'function') { try { Livewire.dispatch('aladinUpdated', payload); return; } catch(e){} } } catch(e){}
+                        try { window.dispatchEvent(new CustomEvent('dsl-aladin-updated', { detail: payload })); } catch(e){}
+                    } catch(e){}
+                });
                 if (saveBtn) {
                     saveBtn.addEventListener('click', function() {
                         // show saving state
@@ -2359,10 +2428,9 @@
                                 (function forceSyncVisibleIntoHidden(){
                                     try {
                                         ['instrument','eyepiece','lens'].forEach(function(k){
-                                            try{
-                                                var hidden = document.getElementById('aladin-'+k+'-hidden');
-                                                if(!hidden) return;
-                                                var wrapper = document.querySelector('[data-dsl-field="'+k+'"]') || hidden.parentElement || null;
+                                            try {
+                                            // prefer central emitter / DOM event first
+                                            try { if (typeof window.__dsl_emitAladin === 'function') { try { if (window.__dsl_debug_aladin) console.debug('[dsl] used __dsl_emitAladinUpdated ->', payload); } catch(e){} window.__dsl_emitAladinUpdated(payload); return; } } catch(e){}
                                                 var sel = wrapper ? wrapper.querySelector('select') : null;
                                                 var v = '';
                                                 if (sel) {
@@ -2448,7 +2516,7 @@
                                             var wrapper3 = document.querySelector('[data-dsl-field="lens"]') || lnHidden.parentElement || null;
                                             var s3 = wrapper3 ? wrapper3.querySelector('select') : null; if (s3 && s3.value) out.lens_id = s3.value;
                                             if ((!out.lens_id || out.lens_id === '')) {
-                                                var control3 = wrapper3 ? wrapper3.querySelector('input[type="text"], [role="combobox"], input') : null;
+                                                var control3 = wrapper3 ? wrapper3.querySelector('input[type="text"], [role="combobox"]') : null;
                                                 try { if (control3 && control3.value) out.lens_id = control3.value; } catch(e){}
                                             }
                                             if ((!out.lens_id || out.lens_id === '') && DSL_AVAILABLE && Array.isArray(DSL_AVAILABLE.lenses)) {
@@ -2515,7 +2583,7 @@
                 // apply once to ensure preview matches initial selects (if any)
                 scheduleApplyAladinSelectsUpdate();
 
-                // No client-side heuristics: initial state is set server-side and x-on:selected handlers
+                // No client-side heuristics: initial state is set server-side and x-on-selected handlers
                 // update hidden inputs and trigger Aladin updates on user interaction.
             } catch (e) {}
         });
@@ -2560,6 +2628,7 @@
 
             function injectScript(src, attrName, onload, onerror) {
                 var existing = document.querySelector('script[' + attrName + ']');
+
                 if (existing) {
                     existing.addEventListener('load', function(){ onload && onload(); });
                     existing.addEventListener('error', function(e){ onerror && onerror(e); });
@@ -2623,6 +2692,40 @@
                     try { document.getElementById('aladin-eyepiece-selected-label').textContent = (d.eyepiece && DSL_AVAILABLE.eyepieces) ? ((DSL_AVAILABLE.eyepieces.find(function(i){ return String(i.id) === String(d.eyepiece); }) || {}).name || '(none)') : (DSL_TEXT && DSL_TEXT.none_label ? DSL_TEXT.none_label : '(none)'); } catch(e){}
                     try { document.getElementById('aladin-lens-selected-label').textContent = (d.lens && DSL_AVAILABLE.lenses) ? ((DSL_AVAILABLE.lenses.find(function(i){ return String(i.id) === String(d.lens); }) || {}).name || '(none)') : (DSL_TEXT && DSL_TEXT.none_label ? DSL_TEXT.none_label : '(none)'); } catch(e){}
                     if (window.scheduleApplyAladinSelectsUpdate) window.scheduleApplyAladinSelectsUpdate();
+                    // Also dispatch a recalc payload so the preview component updates immediately.
+                    try {
+                        var payload = {
+                            instrument: d.instrument || null,
+                            eyepiece: d.eyepiece || null,
+                            lens: d.lens || null,
+                            objectId: (document.getElementById('aladin-lite-container') && document.getElementById('aladin-lite-container').getAttribute) ? document.getElementById('aladin-lite-container').getAttribute('data-object-id') : (window.__dsl_server_selected && window.__dsl_server_selected.objectId) || window.__dsl_embedded_objectId || null
+                        };
+                        if (payload.objectId === '') payload.objectId = null;
+                        try { console.debug('[dsl] attempting recalc dispatchTo ->', payload); } catch(e){}
+                        try { if (window.Livewire && typeof Livewire.dispatchTo === 'function') { try { Livewire.dispatchTo('aladin-preview-info', 'recalculate', payload); console.debug('[dsl] dispatchTo invoked'); return; } catch(e){ console.debug('[dsl] dispatchTo threw', e); } } } catch(e){ console.debug('[dsl] dispatchTo outer threw', e); }
+                        try { console.debug('[dsl] attempting recalc via __dsl_emitAladinUpdated ->', payload); } catch(e){}
+                        try { if (typeof window.__dsl_emitAladinUpdated === 'function') { try { window.__dsl_emitAladinUpdated(payload); console.debug('[dsl] __dsl_emitAladinUpdated invoked'); return; } catch(e){ console.debug('[dsl] __dsl_emitAladinUpdated threw', e); } } } catch(e){ console.debug('[dsl] __dsl_emitAladinUpdated outer threw', e); }
+                        try { console.debug('[dsl] attempting recalc via Livewire.dispatch ->', payload); } catch(e){}
+                        try { if (window.Livewire && typeof Livewire.dispatch === 'function') { try { Livewire.dispatch('aladinUpdated', payload); console.debug('[dsl] Livewire.dispatch invoked'); return; } catch(e){ console.debug('[dsl] Livewire.dispatch threw', e); } } } catch(e){ console.debug('[dsl] Livewire.dispatch outer threw', e); }
+                        // Aggressive fallback: attempt to find a mounted aladin-preview-info instance by wire:id and call directly
+                        try {
+                            try { console.debug('[dsl] attempting Livewire.find fallback'); } catch(e){}
+                            var rootEl = document.getElementById('dsl-aladin-preview-info');
+                            var foundId = null;
+                            if (rootEl) {
+                                foundId = rootEl.getAttribute('wire:id') || rootEl.getAttribute('data-wired-id') || null;
+                                if (!foundId) {
+                                    var nested = rootEl.querySelector('[wire\\:id]');
+                                    if (nested) foundId = nested.getAttribute('wire:id') || null;
+                                }
+                            }
+                            if (foundId && window.Livewire && typeof Livewire.find === 'function') {
+                                try { Livewire.find(foundId).call('recalculate', payload); console.debug('[dsl] Livewire.find called recalculate on', foundId); return; } catch(e) { console.debug('[dsl] Livewire.find.call threw', e); }
+                            }
+                        } catch(e) { console.debug('[dsl] Livewire.find fallback outer threw', e); }
+                        try { console.debug('[dsl] attempting recalc via DOM event ->', payload); } catch(e){}
+                        try { window.dispatchEvent(new CustomEvent('dsl-aladin-updated', { detail: payload })); console.debug('[dsl] DOM event dispatched'); } catch(e){ console.debug('[dsl] DOM event dispatch threw', e); }
+                    } catch(e) { try { console.debug('[dsl] failed to build/dispatch payload', e); } catch(_){} }
                 } catch(e){}
             });
             // Also hook into Livewire's lifecycle hook to ensure DOM updates (including select widgets)
@@ -2671,8 +2774,103 @@
                     try { document.getElementById('aladin-eyepiece-selected-label').textContent = (d.eyepiece && DSL_AVAILABLE.eyepieces) ? ((DSL_AVAILABLE.eyepieces.find(function(i){ return String(i.id) === String(d.eyepiece); }) || {}).name || '(none)') : (DSL_TEXT && DSL_TEXT.none_label ? DSL_TEXT.none_label : '(none)'); } catch(e){}
                     try { document.getElementById('aladin-lens-selected-label').textContent = (d.lens && DSL_AVAILABLE.lenses) ? ((DSL_AVAILABLE.lenses.find(function(i){ return String(i.id) === String(d.lens); }) || {}).name || '(none)') : (DSL_TEXT && DSL_TEXT.none_label ? DSL_TEXT.none_label : '(none)'); } catch(e){}
                     if (window.scheduleApplyAladinSelectsUpdate) window.scheduleApplyAladinSelectsUpdate();
+                    // Also dispatch recalc so preview updates
+                    try {
+                        var payload2 = {
+                            instrument: d.instrument || null,
+                            eyepiece: d.eyepiece || null,
+                            lens: d.lens || null,
+                            objectId: (document.getElementById('aladin-lite-container') && document.getElementById('aladin-lite-container').getAttribute) ? document.getElementById('aladin-lite-container').getAttribute('data-object-id') : (window.__dsl_server_selected && window.__dsl_server_selected.objectId) || window.__dsl_embedded_objectId || null
+                        };
+                        if (payload2.objectId === '') payload2.objectId = null;
+                        try { console.debug('[dsl] attempting recalc dispatchTo ->', payload2); } catch(e){}
+                        try { if (window.Livewire && typeof Livewire.dispatchTo === 'function') { try { Livewire.dispatchTo('aladin-preview-info', 'recalculate', payload2); console.debug('[dsl] dispatchTo invoked'); return; } catch(e){ console.debug('[dsl] dispatchTo threw', e); } } } catch(e){ console.debug('[dsl] dispatchTo outer threw', e); }
+                        try { console.debug('[dsl] attempting recalc via __dsl_emitAladinUpdated ->', payload2); } catch(e){}
+                        try { if (typeof window.__dsl_emitAladinUpdated === 'function') { try { window.__dsl_emitAladinUpdated(payload2); console.debug('[dsl] __dsl_emitAladinUpdated invoked'); return; } catch(e){ console.debug('[dsl] __dsl_emitAladinUpdated threw', e); } } } catch(e){ console.debug('[dsl] __dsl_emitAladinUpdated outer threw', e); }
+                        try { console.debug('[dsl] attempting recalc via Livewire.dispatch ->', payload2); } catch(e){}
+                        try { if (window.Livewire && typeof Livewire.dispatch === 'function') { try { Livewire.dispatch('aladinUpdated', payload2); console.debug('[dsl] Livewire.dispatch invoked'); return; } catch(e){ console.debug('[dsl] Livewire.dispatch threw', e); } } } catch(e){ console.debug('[dsl] Livewire.dispatch outer threw', e); }
+                        // Aggressive fallback: attempt to find mounted component and call directly
+                        try {
+                            try { console.debug('[dsl] attempting Livewire.find fallback'); } catch(e){}
+                            var rootEl2 = document.getElementById('dsl-aladin-preview-info');
+                            var foundId2 = null;
+                            if (rootEl2) {
+                                foundId2 = rootEl2.getAttribute('wire:id') || rootEl2.getAttribute('data-wired-id') || null;
+                                if (!foundId2) {
+                                    var nested2 = rootEl2.querySelector('[wire\\:id]');
+                                    if (nested2) foundId2 = nested2.getAttribute('wire:id') || null;
+                                }
+                            }
+                            if (foundId2 && window.Livewire && typeof Livewire.find === 'function') {
+                                try { Livewire.find(foundId2).call('recalculate', payload2); console.debug('[dsl] Livewire.find called recalculate on', foundId2); return; } catch(e) { console.debug('[dsl] Livewire.find.call threw', e); }
+                            }
+                        } catch(e) { console.debug('[dsl] Livewire.find fallback outer threw', e); }
+                        try { console.debug('[dsl] attempting recalc via DOM event ->', payload2); } catch(e){}
+                        try { window.dispatchEvent(new CustomEvent('dsl-aladin-updated', { detail: payload2 })); console.debug('[dsl] DOM event dispatched'); } catch(e){ console.debug('[dsl] DOM event dispatch threw', e); }
+                    } catch(e) { try { console.debug('[dsl] failed to build/dispatch payload2', e); } catch(_){} }
                 } catch(e){}
             });
         }
     })();
+</script>
+
+<input type="hidden" id="object-id-hidden" value="{{ $session->id ?? '' }}">
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const objectIdFromHidden = (document.getElementById('object-id-hidden') && document.getElementById('object-id-hidden').value) || null;
+
+        function buildAladinPayload(extra) {
+            extra = extra || {};
+            var payload = {};
+            try {
+                var oid = null;
+                try { oid = document.getElementById('aladin-lite-container')?.getAttribute('data-object-id') || null; } catch(e) { oid = null; }
+                if (!oid || String(oid).trim() === '') oid = objectIdFromHidden || (window.__dsl_server_selected && window.__dsl_server_selected.objectId) || window.__dsl_embedded_objectId || null;
+                if (oid === '') oid = null;
+                payload.objectId = oid;
+            } catch(e) { payload.objectId = objectIdFromHidden || null; }
+            try { payload.objectSlug = document.getElementById('aladin-lite-container')?.getAttribute('data-slug') || null; } catch(e) { payload.objectSlug = null; }
+            try { payload.instrument = document.getElementById('aladin-instrument-hidden')?.value || null; } catch(e) { payload.instrument = null; }
+            try { payload.eyepiece = document.getElementById('aladin-eyepiece-hidden')?.value || null; } catch(e) { payload.eyepiece = null; }
+            try { payload.lens = document.getElementById('aladin-lens-hidden')?.value || null; } catch(e) { payload.lens = null; }
+            // mark as auto-init so server logs can recognise
+            payload.__dsl_auto_init = true;
+            try { for (var k in extra) { if (Object.prototype.hasOwnProperty.call(extra, k)) payload[k] = extra[k]; } } catch(e){}
+            return payload;
+        }
+
+        function tryDispatchInitialRecalc(attempt) {
+            attempt = attempt || 0;
+            var payload = buildAladinPayload();
+            try {
+                // Prefer direct Livewire v3 API to target the component instance
+                if (window.Livewire && typeof Livewire.dispatchTo === 'function') {
+                    try { Livewire.dispatchTo('aladin-preview-info', 'setObjectId', payload.objectId); } catch(e) {}
+                    try { Livewire.dispatchTo('aladin-preview-info', 'recalculate', payload); return true; } catch(e) {}
+                }
+                // If our central emitter exists prefer it (it will queue/enrich if needed)
+                if (typeof window.__dsl_emitAladinUpdated === 'function') { window.__dsl_emitAladinUpdated(payload); return true; }
+                // Fallback to Livewire.dispatch event if available
+                if (window.Livewire && typeof Livewire.dispatch === 'function') { try { Livewire.dispatch('aladinUpdated', payload); return true; } catch(e) {} }
+                // Else dispatch a DOM event as a last resort
+                try { window.dispatchEvent(new CustomEvent('dsl-aladin-updated', { detail: payload })); return true; } catch(e) {}
+            } catch (e) { /* ignore */ }
+            // retry a few times with backoff if Livewire not yet ready
+            if (attempt < 6) {
+                setTimeout(function(){ tryDispatchInitialRecalc(attempt + 1); }, 150 + (attempt * 150));
+            }
+            return false;
+        }
+
+        // Ensure Livewire gets the objectId and an initial recalc; retry a few times to avoid races
+        try {
+            if (window.Livewire && (typeof Livewire.dispatchTo === 'function' || typeof Livewire.dispatch === 'function')) {
+                tryDispatchInitialRecalc(0);
+            } else {
+                window.addEventListener('livewire:load', function(){ try { tryDispatchInitialRecalc(0); } catch(e){} });
+                // also try after a short delay in case Livewire is present but event already fired
+                setTimeout(function(){ tryDispatchInitialRecalc(0); }, 800);
+            }
+        } catch(e) { setTimeout(function(){ tryDispatchInitialRecalc(0); }, 800); }
+    });
 </script>

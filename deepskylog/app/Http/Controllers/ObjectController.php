@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Atlas;
 use App\Models\DeepskyObject;
@@ -566,7 +567,8 @@ class ObjectController extends Controller
             'begindate' => null,
             'enddate' => null,
             'slug' => $slug,
-            'id' => $record->id ?? null,
+            // Provide a usable id for views: prefer numeric id but fall back to canonical name
+            'id' => $record->id ?? ($record->name ?? null),
             // Human-friendly, translated label for display in views
             'source_type' => $sourceTypeLabel,
             // Raw machine-readable source type (useful for APIs/filters)
@@ -608,6 +610,9 @@ class ObjectController extends Controller
 
                 $userLocation = $authUser?->standardLocation ?? null;
                 $userInstrument = $authUser?->standardInstrument ?? null;
+                // Remember the user's standard instrument set id (if any). We'll prefer
+                // eyepieces from this set when computing magnifications.
+                $instSet = $authUser?->standardInstrumentSet ?? null;
 
                 if ($userLocation && $userInstrument) {
                     // Build AstronomyLibrary instance for today at location
@@ -647,15 +652,83 @@ class ObjectController extends Controller
                         $mag = round($userInstrument->focal_length_mm / $record->typicalEyepieceFocal);
                     }
 
-                    // If magnification not available, attempt a set of common magnifications and pick best
+                    // Determine if the user has a default lens configured and load it.
+                    $defaultLensId = $authUser?->stdlens ?? null;
+                    try {
+                        if (! $defaultLensId && Schema::hasColumn('users', 'preferences') && is_array($authUser?->preferences) && isset($authUser->preferences['aladin_default_lens'])) {
+                            $defaultLensId = $authUser->preferences['aladin_default_lens'];
+                        }
+                    } catch (\Throwable $_) {
+                        // ignore
+                    }
+                    $defaultLens = null;
+                    $lensFactor = 1.0;
+                    $defaultLensName = null;
+                    if ($defaultLensId) {
+                        try {
+                            $defaultLens = \App\Models\Lens::where('id', $defaultLensId)->first();
+                            if ($defaultLens) {
+                                $lensFactor = $defaultLens->factor ?? 1.0;
+                                // defensive: numeric and > 0
+                                if (! is_numeric($lensFactor) || $lensFactor <= 0) { $lensFactor = 1.0; }
+                                $defaultLensName = $defaultLens->name ?? null;
+                            }
+                        } catch (\Throwable $_) {
+                            $defaultLens = null;
+                        }
+                    }
+
+                    // If magnification not available, attempt a set of magnifications and pick best.
+                    // Prefer magnifications that are actually producible by eyepieces from the
+                    // user's standard instrument set when such a set is configured. If no
+                    // standard set exists, fall back to a list of common magnifications.
                     if (! $mag && $sbobj !== null && $sqm !== null && $aperture) {
+                        // Candidate magnifications used for the contrast calculation.
+                        // We'll keep this around so the optimum-detection pass can
+                        // fall back to the same candidates if no eyepieces from the
+                        // selected set produce usable values.
                         $possible = [25, 50, 75, 100, 150, 200];
+                        // Apply default lens factor to generic candidate magnifications so
+                        // contrast calculation reflects the selected lens when present.
+                        if ($lensFactor !== 1.0) {
+                            $possible = array_map(fn($v) => (int) round($v * $lensFactor), $possible);
+                        }
+                        $possibleUsedForContrast = $possible;
+
+                        // Try to derive possible magnifications from eyepieces in the
+                        // standard instrument set (if present and instrument focal length available).
+                        if ($instSet && $userInstrument?->focal_length_mm) {
+                            try {
+                                $setModel = $instSet;
+
+                                if ($setModel && count($setModel->eyepieces) > 0) {
+                                    $derived = [];
+                                    // Only consider active eyepieces here to match the
+                                    // behaviour later when building the epMap / display list.
+                                    foreach ($setModel->eyepieces as $sep) {
+                                        if ($sep->active && ! empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
+                                            // account for default lens factor when deriving achievable magnifications
+                                            $derived[] = (int) round(($userInstrument->focal_length_mm / $sep->focal_length_mm) * $lensFactor);
+                                        }
+                                    }
+                                    $derived = array_values(array_unique(array_filter($derived)));
+                                    if (! empty($derived)) {
+                                        $possible = $derived;
+                                        $possibleUsedForContrast = $possible;
+                                    }
+                                }
+                            } catch (\Throwable $_) {
+                                // ignore and use default possible list
+                            }
+                        }
+
                         $mag = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possible);
                     }
 
                     if ($sbobj !== null && $sqm !== null && $aperture && $mag) {
-                        $contrast = $target->calculateContrastReserve($sbobj, $sqm, $aperture, $mag);
-                        $session->contrast_reserve = is_numeric($contrast) ? round($contrast, 2) : null;
+                            // Show which eyepieces are used for contrast reserve calculation
+                            $contrast = $target->calculateContrastReserve($sbobj, $sqm, $aperture, $mag);
+                            $session->contrast_reserve = is_numeric($contrast) ? round($contrast, 2) : null;
 
                         // Determine a human category based on numeric ranges
                         $cat = null;
@@ -689,13 +762,23 @@ class ObjectController extends Controller
                             $epMap = [];
 
 
-                            // If user has a standard instrument set, use its eyepieces
+                            // If user has a standard instrument set, use its eyepieces. When a
+                            // standard set is configured we will NOT fall back to the user's
+                            // entire eyepiece collection; this ensures the calculations only use
+                            // equipment from the selected set.
                             $instSet = $authUser?->standardInstrumentSet ?? null;
+                            // `standardInstrumentSet` may be stored as an InstrumentSet model
+                            // or as an id. Normalize to an id so lookups succeed.
+                            if ($instSet && is_object($instSet) && isset($instSet->id)) {
+                                $instSet = $instSet->id;
+                            }
+                            $usedSetEyepieces = false;
                             if ($instSet) {
                                 $set = \App\Models\InstrumentSet::where('id', $instSet)->first();
                                 if ($set) {
                                     foreach ($set->eyepieces as $ep) {
                                         if ($ep->active && $ep->focal_length_mm) {
+                                            $usedSetEyepieces = true;
                                             $ef = $ep->focal_length_mm;
                                             $eyepieceFocals[] = $ef;
                                             // Attempt to include slugs so the view can link to eyepiece pages
@@ -705,8 +788,13 @@ class ObjectController extends Controller
                                             } catch (\Throwable $_) {
                                                 $userSlug = null;
                                             }
+                                            // Build display name; if a default lens is set, append the lens name
+                                            $displayName = $ep->fullName();
+                                            if (! empty($defaultLensName)) {
+                                                $displayName = $displayName . ' (' . $defaultLensName . ')';
+                                            }
                                             $eyepiecesForDisplay[] = [
-                                                'name' => $ep->fullName(),
+                                                'name' => $displayName,
                                                 'focal' => $ef,
                                                 'slug' => $ep->slug ?? null,
                                                 'user_slug' => $userSlug,
@@ -716,29 +804,54 @@ class ObjectController extends Controller
                                 }
                             }
 
-                            // If no eyepieces from set, fall back to all active eyepieces of the user
-                            if (empty($eyepieceFocals) && $authUser) {
-                                $userEps = \App\Models\Eyepiece::where('user_id', $authUser->id)->where('active', 1)->get();
-                                foreach ($userEps as $ep) {
-                                    if ($ep->focal_length_mm) {
-                                        $ef = $ep->focal_length_mm;
-                                        $eyepieceFocals[] = $ef;
+                            // If we did not get eyepieces from a standard set, fall back
+                            // to the user's active eyepieces so we can at least display
+                            // names even when no default instrument is configured.
+                            if (empty($eyepiecesForDisplay)) {
+                                try {
+                                    $userEps = \App\Models\Eyepiece::where('user_id', $authUser->id)->where('active', 1)->get();
+                                    foreach ($userEps as $ep) {
+                                        if (! empty($ep->focal_length_mm)) {
+                                            $ef = $ep->focal_length_mm;
+                                            $eyepieceFocals[] = $ef;
+                                        } else {
+                                            $ef = null;
+                                        }
+                                        $userSlug = null;
+                                        try {
+                                            $userSlug = $ep->user?->slug ?? \App\Models\User::where('id', $ep->user_id)->value('slug');
+                                        } catch (\Throwable $_) {
+                                            $userSlug = null;
+                                        }
+                                        $displayName = $ep->fullName() ?? $ep->name ?? null;
+                                        if (! empty($defaultLensName) && ! empty($displayName)) {
+                                            $displayName = $displayName . ' (' . $defaultLensName . ')';
+                                        }
                                         $eyepiecesForDisplay[] = [
-                                            'name' => $ep->fullName(),
+                                            'name' => $displayName,
                                             'focal' => $ef,
                                             'slug' => $ep->slug ?? null,
-                                            'user_slug' => $authUser?->slug ?? null,
+                                            'user_slug' => $userSlug,
                                         ];
                                     }
+                                } catch (\Throwable $_) {
+                                    // ignore
                                 }
                             }
+
+                            // IMPORTANT: when a standard instrument set is configured we
+                            // must only use eyepieces from that set for the calculation.
+                            // Do not fall back to the user's broader eyepiece collection here.
+                            // If the set contains no usable eyepieces, the calculation will
+                            // not produce an optimum magnification (behaviour requested).
 
                             // Build a mapping from magnification -> eyepieces (that generated that mag)
                             if (! empty($eyepieceFocals) && $userInstrument?->focal_length_mm) {
                                 foreach ($eyepiecesForDisplay as $epInfo) {
                                     $ef = $epInfo['focal'];
                                     if ($ef > 0) {
-                                        $m = (int) round($userInstrument->focal_length_mm / $ef);
+                                        // account for default lens factor in produced magnification
+                                        $m = (int) round(($userInstrument->focal_length_mm / $ef) * $lensFactor);
                                         if ($m > 0) {
                                             if (! isset($epMap[$m])) { $epMap[$m] = []; }
                                             $epMap[$m][] = $epInfo;
@@ -763,12 +876,16 @@ class ObjectController extends Controller
                                 $possibleMags = array_values(array_unique(array_filter($possibleMags)));
                             }
 
-                            if (! empty($possibleMags) && $sbobj !== null && $sqm !== null && $aperture) {
-                                $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
-                                $session->optimum_detection_magnification = $best ? (int) $best : null;
-                            } else {
-                                $session->optimum_detection_magnification = null;
-                            }
+                                // If no eyepieces are available, fall back to the same candidate magnifications used for contrast reserve
+                                if (empty($possibleMags) && !empty($possibleUsedForContrast)) {
+                                    $possibleMags = $possibleUsedForContrast;
+                                }
+                                if (! empty($possibleMags) && $sbobj !== null && $sqm !== null && $aperture) {
+                                        $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
+                                        $session->optimum_detection_magnification = $best ? (int) $best : null;
+                                    } else {
+                                        $session->optimum_detection_magnification = null;
+                                    }
 
                             // Prefer eyepieces that produce the computed best magnification.
                             // If the target algorithm returned a best magnification and we have
@@ -795,6 +912,21 @@ class ObjectController extends Controller
                                     if (! isset($uniq[$k])) {
                                         $uniq[$k] = true;
                                         $finalEps[] = $e;
+                                    }
+                                }
+                                // If we could not map eyepieces to mags (empty epMap) but
+                                // we collected eyepieces for display, show those so names
+                                // appear in the view even without a configured instrument.
+                                if (empty($finalEps) && ! empty($eyepiecesForDisplay)) {
+                                    // Deduplicate eyepiecesForDisplay as well
+                                    $uniq = [];
+                                    $finalEps = [];
+                                    foreach ($eyepiecesForDisplay as $e) {
+                                        $k = ($e['name'] ?? '') . '|' . ($e['focal'] ?? '');
+                                        if (! isset($uniq[$k])) {
+                                            $uniq[$k] = true;
+                                            $finalEps[] = $e;
+                                        }
                                     }
                                 }
                                 $session->optimum_eyepieces = $finalEps;
@@ -979,6 +1111,10 @@ class ObjectController extends Controller
                 // pick a default eyepiece: prefer first of standard set or user's eyepieces
                 $ep = null;
                 $instSet = $authUser?->standardInstrumentSet ?? null;
+                // Normalize to id if a model was returned
+                if ($instSet && is_object($instSet) && isset($instSet->id)) {
+                    $instSet = $instSet->id;
+                }
                 if ($instSet) {
                     $set = \App\Models\InstrumentSet::where('id', $instSet)->first();
                     if ($set && count($set->eyepieces) > 0) {
@@ -1075,15 +1211,37 @@ class ObjectController extends Controller
                     ];
                 }
 
-                // Eyepieces: expose user's active eyepieces
-                $eps = \App\Models\Eyepiece::where('user_id', $authUser->id)->where('active', 1)->get();
-                foreach ($eps as $ep) {
-                    $availableEyepieces[] = [
-                        'id' => $ep->id,
-                        'name' => $ep->fullName() ?? $ep->name,
-                        'focal_length_mm' => $ep->focal_length_mm ?? null,
-                        'apparent_fov_deg' => $ep->apparentFOV ?? null,
-                    ];
+                // Eyepieces: prefer eyepieces from the user's standard instrument set
+                // when a default set is configured. This ensures the Aladin preview
+                // selects only eyepieces that belong to the selected set.
+                $instSet = $authUser?->standardInstrumentSet ?? null;
+                if ($instSet) {
+                    $setModel = \App\Models\InstrumentSet::where('id', $instSet)->first();
+                    if ($setModel) {
+                        foreach ($setModel->eyepieces as $ep) {
+                            if ($ep->active) {
+                                $availableEyepieces[] = [
+                                    'id' => $ep->id,
+                                    'name' => $ep->fullName() ?? $ep->name,
+                                    'focal_length_mm' => $ep->focal_length_mm ?? null,
+                                    'apparent_fov_deg' => $ep->apparentFOV ?? null,
+                                ];
+                            }
+                        }
+                    }
+                }
+
+                // If no standard set or the set yielded no eyepieces, fall back to user's eyepieces
+                if (empty($availableEyepieces)) {
+                    $eps = \App\Models\Eyepiece::where('user_id', $authUser->id)->where('active', 1)->get();
+                    foreach ($eps as $ep) {
+                        $availableEyepieces[] = [
+                            'id' => $ep->id,
+                            'name' => $ep->fullName() ?? $ep->name,
+                            'focal_length_mm' => $ep->focal_length_mm ?? null,
+                            'apparent_fov_deg' => $ep->apparentFOV ?? null,
+                        ];
+                    }
                 }
                 // Lenses: expose user's active lenses
                 $lns = \App\Models\Lens::where('user_id', $authUser->id)->where('active', 1)->get();
@@ -1123,6 +1281,18 @@ class ObjectController extends Controller
             $availableEyepieces = [];
             $availableLenses = [];
         }
+
+    // Debug: log which record was resolved for this slug so we can verify id/name mapping
+    try {
+        Log::info('ObjectController: resolved record for show()', [
+            'requested_slug' => $slug,
+            'resolved_name' => $record->name ?? null,
+            'resolved_id' => $record->id ?? null,
+            'resolved_type' => $type ?? null,
+        ]);
+    } catch (\Throwable $_) {
+        // ignore logging failures
+    }
 
     return response()->view('object.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId'));
     }

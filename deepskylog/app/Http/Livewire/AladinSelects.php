@@ -9,13 +9,15 @@ class AladinSelects extends Component
     public $eyepiece;
     public $lens;
     public $instrumentSet;
+    public $objectId;
 
-    public function mount($instrument = null, $eyepiece = null, $lens = null, $instrumentSet = null)
+    public function mount($instrument = null, $eyepiece = null, $lens = null, $instrumentSet = null, $objectId = null)
     {
         $this->instrument = $instrument;
         $this->eyepiece = $eyepiece;
         $this->lens = $lens;
         $this->instrumentSet = $instrumentSet;
+        $this->objectId = (is_string($objectId) && trim($objectId) === '') ? null : $objectId;
         // Emit initial values to the front-end so the page can sync immediately
         // No server-side browser event here; Livewire will render the component with
         // the public properties and the page JS reads the hidden inputs / rendered DOM.
@@ -23,10 +25,31 @@ class AladinSelects extends Component
 
     public function updated($name, $value)
     {
-        // No server->client event helper is called here because the installed
-        // Livewire version does not provide dispatchBrowserEvent()/emit().
-        // Livewire will update the DOM with the new values and the page JS
-        // reads the hidden inputs / rendered DOM to update Aladin.
+        // When a select changes, notify the frontend and attempt a direct server-side
+        // emit to the preview component so it can recalculate immediately. This
+        // mirrors the behaviour of the client-side listeners and avoids requiring
+        // the user to press "Force recalculation".
+        try {
+            // Normalize empty-string selections (from client selects) to explicit null
+            $payload = [
+                'instrument' => (is_string($this->instrument) && trim($this->instrument) === '') ? null : ($this->instrument ?? null),
+                'eyepiece' => (is_string($this->eyepiece) && trim($this->eyepiece) === '') ? null : ($this->eyepiece ?? null),
+                'lens' => (is_string($this->lens) && trim($this->lens) === '') ? null : ($this->lens ?? null),
+                'objectId' => (is_string($this->objectId) && trim($this->objectId) === '') ? null : $this->objectId,
+            ];
+
+            // Emit a Livewire browser event the frontend JS listens for so hidden
+            // inputs get synced and client-side logic runs.
+            $this->dispatchBrowserEvent('aladin-selects-changed', $payload);
+
+            // Also emit a Livewire event targeted at the preview component so it
+            // performs the recalculation server-side immediately if it's mounted.
+            // Use emitTo to target the component name 'aladin-preview-info' which
+            // the preview component registers as.
+            try { $this->emitTo('aladin-preview-info', 'aladinUpdated', $payload); } catch (\Throwable $_) {}
+        } catch (\Throwable $_) {
+            // swallow to avoid breaking select updates
+        }
     }
 
     public function render()

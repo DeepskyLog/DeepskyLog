@@ -52,6 +52,14 @@ class AppServiceProvider extends ServiceProvider
                 Livewire::component('aladin-selects', \App\Http\Livewire\AladinSelects::class);
             }
 
+            if (class_exists(\App\Http\Livewire\AladinPreviewInfo::class)) {
+                Livewire::component('aladin-preview-info', \App\Http\Livewire\AladinPreviewInfo::class);
+            }
+
+            if (class_exists(\App\Http\Livewire\AladinPreviewInfo::class)) {
+                Livewire::component('aladin-preview-info', \App\Http\Livewire\AladinPreviewInfo::class);
+            }
+
             // Additional explicit registrations for app Livewire components can be added here as needed.
         }
 

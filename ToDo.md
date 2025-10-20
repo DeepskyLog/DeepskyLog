@@ -9,19 +9,7 @@
 + [ ] Targets
     + [X] Create tables for deepsky, comets, planets, moons, lunar features, and other object types.
     + [ ] Show information about an object, like type, constellation, other names, description, ...
-        + [ ] Add Aladin preview:
-            + [X] Fix RA error
-            + [X] Add circle with FoV of the eyepiece
-            + [X] Remove the Aladin preview if the object does not have coordinates
-            + [X] Remove link to Aladin Lite
-            + [X] Change eyepiece?  Default eyepiece is not available in the database yet.
-            + [X] Pan Aladin preview does not work anymore
-            + [X] Add default lens?
-            + [X] Flip X and/or Y axis according to the telescope settings?
-            + [X] Add link to Aladin lite
-            + [ ] Fix default instrument set in /user/profile
-            + [ ] Only show instruments, eyepieces and lenses of the default instrument set.
-            + [ ] When changing the Instrument and lens in the aladin sky preview, also recalculate the contrast reserve and Optimum detection magnification.
+        + [X] Add Aladin preview:
         + [ ] Add date, rise, transit, set, best time and maximum altitude.
         + [ ] Add a list of observations of this object, with a link to the observation.
         + [ ] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
