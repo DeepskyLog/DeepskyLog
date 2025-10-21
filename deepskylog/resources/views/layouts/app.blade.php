@@ -5,6 +5,82 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="csrf-token" content="{{ csrf_token() }}" />
 
+        <script>
+            // Early DSL debug: install minimal hooks as soon as possible to catch
+            // any script.src assignments that happen during initial parsing/execution.
+            (function(){
+                try {
+                    var isSuspect = function(s) {
+                        try {
+                            if (!s && s !== 0) return false;
+                            var raw = String(s || '');
+                            if (!raw) return false;
+                            if (raw.indexOf('/object/') !== -1) return true;
+                            if (/m-\d+$/.test(raw)) return true;
+                            // path-equals detection is harder here, we'll log broadly
+                        } catch(e) { return false; }
+                        return false;
+                    };
+
+                    var origScriptDesc = Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, 'src');
+                    if (origScriptDesc && origScriptDesc.set) {
+                        Object.defineProperty(HTMLScriptElement.prototype, 'src', {
+                            set: function(v) {
+                                try { if (isSuspect(v)) console.warn('[dsl-debug][early] script.src assigned suspicious value', v, '\nStack:', new Error().stack); } catch(e){}
+                                return origScriptDesc.set.call(this, v);
+                            },
+                            get: origScriptDesc.get,
+                            configurable: true,
+                            enumerable: true
+                        });
+                    }
+
+                    var origSetAttr = Element.prototype.setAttribute;
+                    Element.prototype.setAttribute = function(name, value) {
+                        try {
+                            if (this && this.tagName && this.tagName.toLowerCase() === 'script' && String(name).toLowerCase() === 'src') {
+                                if (isSuspect(value)) console.warn('[dsl-debug][early] setAttribute("src") on script', value, '\nStack:', new Error().stack);
+                            }
+                        } catch(e){}
+                        return origSetAttr.call(this, name, value);
+                    };
+
+                    // Observe additions quickly
+                    try {
+                        var moEarly = new MutationObserver(function(muts){
+                            muts.forEach(function(m){
+                                try {
+                                    if (m.type === 'childList' && m.addedNodes && m.addedNodes.length) {
+                                        m.addedNodes.forEach(function(n){
+                                            try {
+                                                if (n && n.tagName && n.tagName.toLowerCase() === 'script') {
+                                                    var raw = n.getAttribute && n.getAttribute('src');
+                                                    if (raw && isSuspect(raw)) console.warn('[dsl-debug][early] added script node', raw, '\nStack:', new Error().stack);
+                                                }
+                                            } catch(e){}
+                                        });
+                                    }
+                                } catch(e){}
+                            });
+                        });
+                        moEarly.observe(document.documentElement || document, { childList: true, subtree: true });
+                    } catch(e){}
+                    
+                    // Capture global parse/runtime errors early so we can see the filename that
+                    // produced the SyntaxError (browser reports the script origin as the filename).
+                    try {
+                        window.addEventListener('error', function(evt) {
+                            try {
+                                // Some errors are resource/script parse errors and will have a filename
+                                // like 'm-31'. Log them with a clear prefix so they can be filtered.
+                                console.warn('[dsl-debug][early error]', evt && evt.message, 'filename=', evt && evt.filename, 'lineno=', evt && evt.lineno, 'colno=', evt && evt.colno, '\nerrorObjStack=', evt && evt.error && evt.error.stack);
+                            } catch (inner) {}
+                        });
+                    } catch(e){}
+                } catch(e){}
+            })();
+        </script>
+
         <title>{{ config("app.name", "DeepskyLog") }}</title>
 
         <!-- Fonts -->
@@ -150,6 +226,131 @@
         @stack("modals")
 
         @livewireScripts
+        <!-- DSL debug: detect if any script.src is set to the current page path or a route-like value (e.g. '/object/m-31') -->
+        <script>
+            (function(){
+                try {
+                    var path = (location && location.pathname) ? location.pathname : '';
+                    var slug = null;
+                    try { slug = document.getElementById('aladin-lite-container')?.getAttribute('data-slug') || null; } catch(e){}
+
+                    function isSuspectSrc(s) {
+                        try {
+                            if (!s && s !== 0) return false;
+                            var raw = String(s || '');
+                            if (raw === path || raw === path.replace(/^\//, '')) return true;
+                            if (raw.indexOf('/object/') !== -1) return true;
+                            if (/m-\d+$/.test(raw)) return true;
+                            if (slug && (raw === slug || raw.indexOf(slug) !== -1)) return true;
+                        } catch (e) {
+                            return false;
+                        }
+                        return false;
+                    }
+
+                    function report(tag, value, el) {
+                        try {
+                            console.warn('[dsl-debug]', tag, value, 'location.pathname=', path, 'slug=', slug, '\nStack:', new Error().stack);
+                            if (el && el.setAttribute) try { el.setAttribute('data-dsl-flagged', '1'); } catch(e){}
+                        } catch(e){}
+                    }
+
+                    // 1) scan existing script tags for suspicious src attributes (raw attribute helps find relative values like "m-31")
+                    try {
+                        var scripts = document.getElementsByTagName('script');
+                        for (var i = 0; i < scripts.length; i++) {
+                            try {
+                                var s = scripts[i];
+                                var raw = s.getAttribute && s.getAttribute('src');
+                                if (raw && isSuspectSrc(raw)) report('existing script with suspicious src', raw, s);
+                            } catch(e){}
+                        }
+                    } catch(e){}
+
+                    // 2) override the script.src setter so dynamic assignments are detected
+                    try {
+                        var origDesc = Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, 'src');
+                        if (origDesc && origDesc.set) {
+                            Object.defineProperty(HTMLScriptElement.prototype, 'src', {
+                                set: function(v) {
+                                    try { if (isSuspectSrc(v)) report('script.src setter assigned suspicious value', v, this); } catch(e){}
+                                    return origDesc.set.call(this, v);
+                                },
+                                get: origDesc.get,
+                                configurable: true,
+                                enumerable: true
+                            });
+                        }
+                    } catch(e) { console.debug('[dsl-debug] failed to wrap script.src', e); }
+
+                    // 3) intercept setAttribute for scripts (some code uses setAttribute rather than property)
+                    try {
+                        var origSetAttr = Element.prototype.setAttribute;
+                        Element.prototype.setAttribute = function(name, value) {
+                            try {
+                                if (this && this.tagName && this.tagName.toLowerCase() === 'script' && String(name).toLowerCase() === 'src') {
+                                    if (isSuspectSrc(value)) report('setAttribute("src") on script', value, this);
+                                }
+                            } catch(e){}
+                            return origSetAttr.call(this, name, value);
+                        };
+                    } catch(e) { console.debug('[dsl-debug] failed to wrap setAttribute', e); }
+
+                    // 4) observe DOM mutations for newly added script nodes or attribute changes
+                    try {
+                        var mo = new MutationObserver(function(mutations){
+                            mutations.forEach(function(m){
+                                try {
+                                    if (m.type === 'childList' && m.addedNodes && m.addedNodes.length) {
+                                        m.addedNodes.forEach(function(n){
+                                            try {
+                                                if (n && n.tagName && n.tagName.toLowerCase() === 'script') {
+                                                    var raw = n.getAttribute && n.getAttribute('src');
+                                                    if (raw && isSuspectSrc(raw)) report('added script node', raw, n);
+                                                } else if (n && n.querySelectorAll) {
+                                                    var nested = n.querySelectorAll('script');
+                                                    for (var j = 0; j < nested.length; j++) {
+                                                        try { var raw2 = nested[j].getAttribute && nested[j].getAttribute('src'); if (raw2 && isSuspectSrc(raw2)) report('added nested script', raw2, nested[j]); } catch(e){}
+                                                    }
+                                                }
+                                            } catch(e){}
+                                        });
+                                    } else if (m.type === 'attributes' && m.attributeName === 'src') {
+                                        try { var t = m.target; var raw = t.getAttribute && t.getAttribute('src'); if (raw && isSuspectSrc(raw)) report('mutation attribute src', raw, t); } catch(e){}
+                                    }
+                                } catch(e){}
+                            });
+                        });
+                        mo.observe(document.documentElement || document, { childList: true, subtree: true, attributes: true, attributeFilter: ['src'] });
+                    } catch(e) { console.debug('[dsl-debug] failed to install MutationObserver', e); }
+
+                    // 5) on window.load, inspect performance resource entries for any fetched resources that look like page slugs
+                    try {
+                        window.addEventListener('load', function(){
+                            try {
+                                if (window.performance && typeof window.performance.getEntriesByType === 'function') {
+                                    var entries = window.performance.getEntriesByType('resource') || [];
+                                    for (var k = 0; k < entries.length; k++) {
+                                        try {
+                                            var url = entries[k].name || '';
+                                            try {
+                                                var p = (new URL(url, location.href)).pathname || '';
+                                                if (/\/m-\d+$/.test(p) || /(^|\/)m-\d+$/.test(p.replace(/^\//, ''))) {
+                                                    report('resource fetch matches suspicious pattern', url, null);
+                                                }
+                                            } catch(e) {}
+                                        } catch(e){}
+                                    }
+                                }
+                            } catch(e){}
+                        });
+                    } catch(e) {}
+
+                } catch (e) {
+                    console.debug('[dsl-debug] enhanced reporter failed', e);
+                }
+            })();
+        </script>
         <script>
             document.addEventListener('click', function (e) {
                 const btn = e.target.closest('.like-button');
@@ -158,7 +359,7 @@
                 const type = btn.getAttribute('data-observation-type');
                 const id = btn.getAttribute('data-observation-id');
 
-                fetch('{{ route('observation.like') }}', {
+                fetch(<?php echo json_encode(route('observation.like')); ?>, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

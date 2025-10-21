@@ -31,28 +31,69 @@ document.addEventListener('DOMContentLoaded', function () {
         var value = event.detail && event.detail.value ? event.detail.value : null;
         try { document.getElementById(fieldId).value = value || ''; } catch (e) {}
         try { if (window.scheduleApplyAladinSelectsUpdate) window.scheduleApplyAladinSelectsUpdate(); } catch (e) {}
-        try { var payload = currentPayload(overrideValues || {});
-            try { if (typeof window.__dsl_emitAladinUpdated === 'function') { try { if (window.__dsl_debug_aladin) console.debug('[dsl] used __dsl_emitAladinUpdated ->', payload); } catch(e){} window.__dsl_emitAladinUpdated(payload); return; } } catch(e){}
-            try { if (window.__dsl_debug_aladin) console.debug('[dsl] using DOM event ->', payload); } catch(e){}
-            try { window.dispatchEvent(new CustomEvent('dsl-aladin-updated', { detail: payload })); return; } catch(e){}
-            // aggressive fallback: find visible Livewire component and call directly
-            try {
-                var root = document.getElementById('dsl-aladin-preview-info');
-                // prefer the published global preview wire id, fallback to DOM lookup
-                var wireId = (window.__dsl_preview_wireId || null);
-                if (!wireId && root) {
-                    wireId = root.getAttribute('wire:id') || root.getAttribute('data-wired-id') || null;
-                    if (!wireId) {
-                        var possible = root.querySelector('[wire\\:id]');
-                        if (possible) wireId = possible.getAttribute('wire:id');
+
+            var payload = currentPayload(overrideValues || {});
+
+                // 1) Try the centralized emitter if available
+                if (typeof window.__dsl_emitAladinUpdated === 'function') {
+                    try { window.__dsl_emitAladinUpdated(payload); } catch (e) {}
+                    return;
+                }
+
+                // 2) Dispatch DOM event
+                try { window.dispatchEvent(new CustomEvent('dsl-aladin-updated', { detail: payload })); return; } catch (e) {}
+
+                // 3) Attempt to call the mounted Livewire component directly via wire:id
+                try {
+                    var root = document.getElementById('dsl-aladin-preview-info');
+                    var wireId = window.__dsl_preview_wireId || null;
+                    if (!wireId && root) {
+                        wireId = root.getAttribute('wire:id') || root.getAttribute('data-wired-id') || null;
+                        if (!wireId) {
+                            var possible = root.querySelector('[wire\\:id]');
+                            if (possible) wireId = possible.getAttribute('wire:id');
+                        }
                     }
-                }
-                if (wireId && window.Livewire && typeof Livewire.find === 'function') {
-                    try { Livewire.find(wireId).call('recalculate', payload); if (window.__dsl_debug_aladin) console.debug('[dsl] used Livewire.find ->', payload); return; } catch(e){}
-                }
-            } catch(e){}
-            try { if (window.Livewire && typeof Livewire.dispatch === 'function' && payload && payload.objectId) { try { if (window.__dsl_debug_aladin) console.debug('[dsl] used Livewire.dispatch ->', payload); } catch(e){} Livewire.dispatch('aladinUpdated', payload); return; } } catch(e){}
-        } catch (e) {}
+                    if (wireId && window.Livewire && typeof Livewire.find === 'function') {
+                        try { Livewire.find(wireId).call('recalculate', payload); return; } catch (e) {}
+                    }
+                } catch (e) {}
+
+                // 4) Use Livewire.dispatch if available and payload includes objectId
+                try {
+                    if (window.Livewire && typeof Livewire.dispatch === 'function' && payload && payload.objectId) {
+                        try { Livewire.dispatch('aladinUpdated', payload); return; } catch (e) {}
+                    }
+                } catch (e) {}
+
+                // 5) Final unconditional fallback: try Livewire.dispatch even without objectId
+                try { if (window.Livewire && typeof Livewire.dispatch === 'function') { try { Livewire.dispatch('aladinUpdated', payload); } catch (e) {} } } catch (e) {}
+
+                // Schedule a delayed unconditional dispatch to ensure the preview receives
+                // the update after the selects component's own Livewire update completes.
+                try { setTimeout(function(){ try { if (window.Livewire && typeof Livewire.dispatch === 'function') { Livewire.dispatch('aladinUpdated', payload); } } catch(e){} }, 180); } catch(e) {}
+
+                // Also schedule a delayed direct call to the preview instance by wire:id
+                try {
+                    setTimeout(function(){
+                        try {
+                            var wId = window.__dsl_preview_wireId || null;
+                            if (!wId) {
+                                var root = document.getElementById('dsl-aladin-preview-info');
+                                if (root) {
+                                    wId = root.getAttribute('wire:id') || root.getAttribute('data-wired-id') || null;
+                                    if (!wId) {
+                                        var poss = root.querySelector('[wire\:id]'); if (poss) wId = poss.getAttribute('wire:id');
+                                    }
+                                }
+                            }
+                            if (wId && window.Livewire && typeof Livewire.find === 'function') {
+                                try { Livewire.find(wId).call('recalculate', payload); } catch(e) {}
+                            }
+                        } catch(e) {}
+                    }, 220);
+                } catch(e) {}
+
     }
 
     function handleClear(fieldId, emitPayload) {
@@ -65,16 +106,15 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 if (window.Livewire && typeof Livewire.dispatchTo === 'function') {
                     Livewire.dispatchTo('aladin-preview-info', 'recalculate', payload);
-                    if (window.__dsl_debug_aladin) console.debug('[dsl] used dispatchTo ->', payload);
                 }
             } catch(e) { /* ignore */ }
 
-            try { if (typeof window.__dsl_emitAladinUpdated === 'function') { window.__dsl_emitAladinUpdated(payload); if (window.__dsl_debug_aladin) console.debug('[dsl] used __dsl_emitAladinUpdated ->', payload); } } catch(e){}
+            try { if (typeof window.__dsl_emitAladinUpdated === 'function') { window.__dsl_emitAladinUpdated(payload); } } catch(e){}
 
-            try { window.dispatchEvent(new CustomEvent('dsl-aladin-updated', { detail: payload })); if (window.__dsl_debug_aladin) console.debug('[dsl] DOM event dispatched ->', payload); } catch(e){}
+            try { window.dispatchEvent(new CustomEvent('dsl-aladin-updated', { detail: payload })); } catch(e){}
 
             try {
-                setTimeout(function(){ try { if (window.Livewire && typeof Livewire.dispatch === 'function') { Livewire.dispatch('aladinUpdated', payload); if (window.__dsl_debug_aladin) console.debug('[dsl] fallback Livewire.dispatch ->', payload); } } catch(e){} }, 40);
+                setTimeout(function(){ try { if (window.Livewire && typeof Livewire.dispatch === 'function') { Livewire.dispatch('aladinUpdated', payload); } } catch(e){} }, 40);
             } catch(e) {}
 
         } catch (e) {}

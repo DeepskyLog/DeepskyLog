@@ -23,6 +23,7 @@
         }, 60);
     } catch(e){}
 } catch(e){} })">
+    {{-- Debug script removed: preview auto-recalc now works and logging is cleaned. --}}
     {{-- live recalculation indicator removed to avoid showing "Recalculating..." text --}}
     {{-- Force recalculation button and debug info removed now that auto-recalc works --}}
     @if($last_error)
