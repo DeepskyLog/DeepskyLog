@@ -42,11 +42,10 @@ class AladinSelects extends Component
             // inputs get synced and client-side logic runs.
             $this->dispatchBrowserEvent('aladin-selects-changed', $payload);
 
-            // Also emit a Livewire event targeted at the preview component so it
+            // Also dispatch a Livewire event targeted at the preview component so it
             // performs the recalculation server-side immediately if it's mounted.
-            // Use emitTo to target the component name 'aladin-preview-info' which
-            // the preview component registers as.
-            try { $this->emitTo('aladin-preview-info', 'aladinUpdated', $payload); } catch (\Throwable $_) {}
+            // In Livewire v3 use dispatch(...)->to('component-name') instead of emitTo.
+            try { $this->dispatch('aladinUpdated', payload: $payload)->to('aladin-preview-info'); } catch (\Throwable $_) {}
         } catch (\Throwable $_) {
             // swallow to avoid breaking select updates
         }

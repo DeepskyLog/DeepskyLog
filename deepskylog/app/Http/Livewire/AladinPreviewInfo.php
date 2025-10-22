@@ -24,7 +24,13 @@ class AladinPreviewInfo extends Component
     // Keep only last_error public for error reporting; other debug info is internal now
     public $last_error = null;
 
-    protected $listeners = ['aladinUpdated' => 'recalculate'];
+    protected $listeners = ['aladinUpdated' => 'recalculate', 'ephemerisDateChanged' => 'handleEphemerisDateChange'];
+
+    public function handleEphemerisDateChange($date)
+    {
+        // forward the date to recalculate using a normalized payload
+        $this->recalculate(['date' => $date, 'objectId' => $this->objectId]);
+    }
 
     public function mount($objectId = null, $initial = [])
     {

@@ -11,6 +11,7 @@
                         <span class="text-white font-medium ml-2">{{ $session->constellation }}</span>
                     @endif
                 </p>
+            </header>
 
             <div class="grid md:grid-cols-3 gap-4 mt-3">
                 <article class="md:col-span-2">
@@ -97,65 +98,9 @@
                             @endif
 
                             {{-- Ephemerides: date, rise/transit/set, best time, maximum altitude, altitude graph provided by astronomy library --}}
-                            <tr id="ephem-date-row">
-                                <td class="pr-4 font-medium">{{ __('Date') }}</td>
-                                <td id="ephem-date-cell">
-                                    <input id="ephem-date-input" type="date" class="bg-gray-900 text-white px-2 py-1 rounded text-sm" value="{{ isset($ephemerides['date']) ? $ephemerides['date'] : \Carbon\Carbon::now()->toDateString() }}" />
-                                </td>
-                            </tr>
-                            <tr id="ephem-rts-row">
-                                <td class="pr-4 font-medium">{{ __('Rise / Transit / Set') }}</td>
-                                <td id="ephem-rts-cell">
-                                    @php
-                                        $r = $ephemerides['rising'] ?? null;
-                                        $t = $ephemerides['transit'] ?? null;
-                                        $s = $ephemerides['setting'] ?? null;
-                                        $showR = $r ?: '—';
-                                        $showT = $t ?: '—';
-                                        $showS = $s ?: '—';
-                                        // Determine helpful tooltips for placeholder cases
-                                        $max = $ephemerides['max_height_at_night'] ?? ($ephemerides['max_height'] ?? null);
-                                        $rTitle = '';
-                                        $sTitle = '';
-                                        if (is_null($r) && is_null($s)) {
-                                            if (!is_null($max)) {
-                                                // If max altitude below horizon -> never rises; otherwise circumpolar
-                                                if ((float) $max < 0.0) {
-                                                    $rTitle = $sTitle = __('Never rises at your location on this date');
-                                                } else {
-                                                    $rTitle = $sTitle = __('Circumpolar — does not set at your location on this date');
-                                                }
-                                            } else {
-                                                $rTitle = $sTitle = __('No rise/set data');
-                                            }
-                                        } else {
-                                            if (is_null($r)) $rTitle = __('Does not rise at your location on this date');
-                                            if (is_null($s)) $sTitle = __('Does not set at your location on this date');
-                                        }
-                                    @endphp
-                                    <span class="font-mono" @if($rTitle) title="{{ $rTitle }}" @endif>{{ $showR }}</span>
-                                    <span class="text-gray-400 px-2">/</span>
-                                    <span class="font-mono">{{ $showT }}</span>
-                                    <span class="text-gray-400 px-2">/</span>
-                                    <span class="font-mono" @if($sTitle) title="{{ $sTitle }}" @endif>{{ $showS }}</span>
-                                </td>
-                            </tr>
-                            <tr id="ephem-best-row">
-                                <td class="pr-4 font-medium">{{ __('Best time') }}</td>
-                                <td id="ephem-best-cell">{{ $ephemerides['best_time'] ?? '—' }}</td>
-                            </tr>
-                            <tr id="ephem-max-row">
-                                <td class="pr-4 font-medium">{{ __('Maximum altitude') }}</td>
-                                <td id="ephem-max-cell">
-                                    @if(isset($ephemerides['max_height_at_night']) && $ephemerides['max_height_at_night'] !== null)
-                                        {{ $ephemerides['max_height_at_night'] }}°
-                                    @elseif(isset($ephemerides['max_height']) && $ephemerides['max_height'] !== null)
-                                        {{ $ephemerides['max_height'] }}°
-                                    @else
-                                        —
-                                    @endif
-                                </td>
-                            </tr>
+                            {{-- Date selector moved to global aside Livewire component --}}
+                            {{-- Ephemerides rows are rendered by a Livewire component so they can update live when the aside date changes --}}
+                            @livewire('object-ephemerides', ['objectId' => (string)($session->id ?? '')])
 
                             {{-- Live-updating contrast reserve and optimum detection magnification via Livewire --}}
                             {{-- Embed the Livewire component directly so it can render <tr> rows inside this table --}}
@@ -170,12 +115,7 @@
 
                         </table>
 
-                        {{-- Altitude graph moved here: shown under the Optimum detection magnification / Livewire table when available --}}
-                        @if(isset($ephemerides) && !empty($ephemerides['altitude_graph']))
-                            <div class="mb-3 mt-3" id="dsl-altitude-graph">
-                                {!! $ephemerides['altitude_graph'] !!}
-                            </div>
-                        @endif
+                        {{-- Altitude graph now rendered by the Livewire `object-ephemerides` component to avoid duplication --}}
 
                     </div>
 

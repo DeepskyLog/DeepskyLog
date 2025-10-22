@@ -152,6 +152,10 @@
 
             <!-- Page Content -->
                 <main>
+                    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <div class="flex gap-6">
+                            @livewire('ephemeris-aside')
+                            <div class="flex-1">
                     {{-- Optional page header slot (used by pages like messages.create) --}}
                     @isset($header)
                         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 py-4">
@@ -159,11 +163,14 @@
                         </div>
                     @endisset
 
-                    @if(isset($slot))
-                        {{ $slot }}
-                    @else
-                        @yield('content')
-                    @endif
+                                @if(isset($slot))
+                                    {{ $slot }}
+                                @else
+                                    @yield('content')
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </main>
         </div>
 
