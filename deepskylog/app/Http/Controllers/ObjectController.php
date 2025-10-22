@@ -24,7 +24,6 @@ use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 use deepskylog\AstronomyLibrary\Time;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
-use deepskylog\AstronomyLibrary\Targets\Moon as AstroMoon;
 
 class ObjectController extends Controller
 {
@@ -1174,17 +1173,8 @@ class ObjectController extends Controller
             $authUser = Auth::user();
             $userLocation = $authUser?->standardLocation ?? null;
             if ($userLocation && isset($record->ra) && isset($record->decl)) {
-                // Use a default date or query param 'ephem_date' if provided
+                // Use a default date for now (no Livewire yet)
                 $date = \Carbon\Carbon::now();
-                try {
-                    $reqDate = request()->query('ephem_date');
-                    if ($reqDate) {
-                        $parsed = \Carbon\Carbon::parse($reqDate);
-                        if ($parsed) {
-                            $date = $parsed;
-                        }
-                    }
-                } catch (\Throwable $_) {}
                 // Use user's timezone if available
                 try { $date = $date->timezone($userLocation->timezone ?? config('app.timezone')); } catch (\Throwable $_) {}
 
@@ -1249,37 +1239,6 @@ class ObjectController extends Controller
                     $altitudeGraph = null;
                     try { $altitudeGraph = $target->altitudeGraph($geo_coords, $date); } catch (\Throwable $_) { $altitudeGraph = null; }
 
-                    // Additional moon & sun information for the aside
-                    $moonPhase = null;
-                    $moonIlluminated = null;
-                    $nextNewMoonDate = null;
-                    try {
-                        $moon = new AstroMoon();
-                        $moonPhase = $moon->getPhaseRatio($date);
-                        $moonIlluminated = $moon->illuminatedFraction($date);
-                        $nextNewMoon = $moon->newMoonDate($date);
-                        if ($nextNewMoon instanceof \DateTimeInterface) {
-                            try { $nextNewMoonDate = \Carbon\Carbon::instance($nextNewMoon)->timezone($tz)->toDateString(); } catch (\Throwable $_) { $nextNewMoonDate = (string)$nextNewMoon; }
-                        }
-                    } catch (\Throwable $_) {
-                        $moonPhase = null; $moonIlluminated = null; $nextNewMoonDate = null;
-                    }
-
-                    $sunrise = $sunset = $nauticalBegin = $nauticalEnd = $astroBegin = $astroEnd = null;
-                    try {
-                        $sunInfo = @date_sun_info($date->copy()->startOfDay()->timestamp, $userLocation->latitude, $userLocation->longitude);
-                        if (is_array($sunInfo)) {
-                            if (! empty($sunInfo['sunrise'])) { try { $sunrise = \Carbon\Carbon::createFromTimestamp($sunInfo['sunrise'])->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) { $sunrise = null; } }
-                            if (! empty($sunInfo['sunset'])) { try { $sunset = \Carbon\Carbon::createFromTimestamp($sunInfo['sunset'])->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) { $sunset = null; } }
-                            if (! empty($sunInfo['nautical_twilight_begin'])) { try { $nauticalBegin = \Carbon\Carbon::createFromTimestamp($sunInfo['nautical_twilight_begin'])->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) { $nauticalBegin = null; } }
-                            if (! empty($sunInfo['nautical_twilight_end'])) { try { $nauticalEnd = \Carbon\Carbon::createFromTimestamp($sunInfo['nautical_twilight_end'])->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) { $nauticalEnd = null; } }
-                            if (! empty($sunInfo['astronomical_twilight_begin'])) { try { $astroBegin = \Carbon\Carbon::createFromTimestamp($sunInfo['astronomical_twilight_begin'])->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) { $astroBegin = null; } }
-                            if (! empty($sunInfo['astronomical_twilight_end'])) { try { $astroEnd = \Carbon\Carbon::createFromTimestamp($sunInfo['astronomical_twilight_end'])->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) { $astroEnd = null; } }
-                        }
-                    } catch (\Throwable $_) {
-                        // ignore
-                    }
-
                     $ephemerides = [
                         'date' => $date->timezone($tz)->toDateString(),
                         'rising' => $rising,
@@ -1289,15 +1248,6 @@ class ObjectController extends Controller
                         'max_height_at_night' => $maxHeightAtNight,
                         'max_height' => $maxHeight,
                         'altitude_graph' => $altitudeGraph,
-                        'moon_phase_ratio' => $moonPhase,
-                        'moon_illuminated' => $moonIlluminated,
-                        'next_new_moon' => $nextNewMoonDate,
-                        'sunrise' => $sunrise,
-                        'sunset' => $sunset,
-                        'nautical_twilight_begin' => $nauticalBegin,
-                        'nautical_twilight_end' => $nauticalEnd,
-                        'astronomical_twilight_begin' => $astroBegin,
-                        'astronomical_twilight_end' => $astroEnd,
                     ];
                 }
             }
