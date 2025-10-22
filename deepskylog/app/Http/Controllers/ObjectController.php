@@ -21,6 +21,8 @@ use App\Models\DeepskyType;
 use App\Models\Constellation as ConstellationModel;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
+use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
+use deepskylog\AstronomyLibrary\Time;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 
 class ObjectController extends Controller
@@ -1165,6 +1167,93 @@ class ObjectController extends Controller
         } catch (\Throwable $_) {
             // defensive: don't break rendering
         }
+        // Ephemerides: compute rise/transit/set, best time and max altitude when possible
+        $ephemerides = null;
+        try {
+            $authUser = Auth::user();
+            $userLocation = $authUser?->standardLocation ?? null;
+            if ($userLocation && isset($record->ra) && isset($record->decl)) {
+                // Use a default date for now (no Livewire yet)
+                $date = \Carbon\Carbon::now();
+                // Use user's timezone if available
+                try { $date = $date->timezone($userLocation->timezone ?? config('app.timezone')); } catch (\Throwable $_) {}
+
+                $geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
+
+                // Prepare target and equatorial coordinates
+                $target = new AstroTarget();
+                // record->ra/decl can be strings like "00 42 44.3" or decimals; try conversion helper if available
+                $raDeg = null; $decDeg = null;
+                try {
+                    if (method_exists(\App\Models\DeepskyObject::class, 'raToDecimal')) {
+                        $raDeg = \App\Models\DeepskyObject::raToDecimal($record->ra);
+                        $decDeg = \App\Models\DeepskyObject::decToDecimal($record->decl);
+                    }
+                } catch (\Throwable $_) { $raDeg = null; $decDeg = null; }
+
+                if ($raDeg === null || $decDeg === null) {
+                    // fallback: try numeric cast (assume stored as degrees)
+                    $raDeg = is_numeric($record->ra) ? (float)$record->ra : null;
+                    $decDeg = is_numeric($record->decl) ? (float)$record->decl : null;
+                }
+
+                if ($raDeg !== null && $decDeg !== null) {
+                    $equa = new EquatorialCoordinates($raDeg, $decDeg);
+                    $target->setEquatorialCoordinates($equa);
+
+                    $greenwichSiderialTime = Time::apparentSiderialTimeGreenwich($date);
+                    $deltaT = Time::deltaT($date);
+
+                    $target->calculateEphemerides($geo_coords, $greenwichSiderialTime, $deltaT);
+
+                    // Localize results to user's timezone where applicable
+                    $transit = null; $rising = null; $setting = null; $bestTime = null; $maxHeightAtNight = null; $maxHeight = null;
+                    try { $transit = $target->getTransit(); } catch (\Throwable $_) { $transit = null; }
+                    try { $rising = $target->getRising(); } catch (\Throwable $_) { $rising = null; }
+                    try { $setting = $target->getSetting(); } catch (\Throwable $_) { $setting = null; }
+                    try { $bestTime = $target->getBestTimeToObserve(); } catch (\Throwable $_) { $bestTime = null; }
+                    try { $maxHeightAtNight = $target->getMaxHeightAtNight(); } catch (\Throwable $_) { $maxHeightAtNight = null; }
+                    try { $maxHeight = $target->getMaxHeight(); } catch (\Throwable $_) { $maxHeight = null; }
+
+                    // Format timezone-aware strings when Carbon instances returned
+                    $tz = $userLocation->timezone ?? config('app.timezone');
+                    if ($transit instanceof \DateTimeInterface) { try { $transit = \Carbon\Carbon::instance($transit)->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) { $transit = (string)$transit; } }
+                    if ($rising instanceof \DateTimeInterface) { try { $rising = \Carbon\Carbon::instance($rising)->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) { $rising = (string)$rising; } }
+                    if ($setting instanceof \DateTimeInterface) { try { $setting = \Carbon\Carbon::instance($setting)->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) { $setting = (string)$setting; } }
+                    if ($bestTime instanceof \DateTimeInterface) { try { $bestTime = \Carbon\Carbon::instance($bestTime)->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) { $bestTime = (string)$bestTime; } }
+                    // The astronomy library may return Coordinate objects. Convert to numeric values
+                    try {
+                        if (is_object($maxHeightAtNight) && method_exists($maxHeightAtNight, 'getCoordinate')) {
+                            $maxHeightAtNight = $maxHeightAtNight->getCoordinate();
+                        }
+                    } catch (\Throwable $_) {}
+                    try {
+                        if (is_object($maxHeight) && method_exists($maxHeight, 'getCoordinate')) {
+                            $maxHeight = $maxHeight->getCoordinate();
+                        }
+                    } catch (\Throwable $_) {}
+                    if (is_numeric($maxHeightAtNight)) $maxHeightAtNight = round($maxHeightAtNight, 1);
+                    if (is_numeric($maxHeight)) $maxHeight = round($maxHeight, 1);
+
+                    // Altitude graph HTML provided by target if available
+                    $altitudeGraph = null;
+                    try { $altitudeGraph = $target->altitudeGraph($geo_coords, $date); } catch (\Throwable $_) { $altitudeGraph = null; }
+
+                    $ephemerides = [
+                        'date' => $date->timezone($tz)->toDateString(),
+                        'rising' => $rising,
+                        'transit' => $transit,
+                        'setting' => $setting,
+                        'best_time' => $bestTime,
+                        'max_height_at_night' => $maxHeightAtNight,
+                        'max_height' => $maxHeight,
+                        'altitude_graph' => $altitudeGraph,
+                    ];
+                }
+            }
+        } catch (\Throwable $_) {
+            $ephemerides = null;
+        }
 
         // Also expose available instruments, eyepieces and lenses for the Aladin preview selects
         $availableInstruments = [];
@@ -1294,6 +1383,6 @@ class ObjectController extends Controller
         // ignore logging failures
     }
 
-    return response()->view('object.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId'));
+    return response()->view('object.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId', 'ephemerides'));
     }
 }

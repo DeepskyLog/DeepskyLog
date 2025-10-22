@@ -72,10 +72,10 @@
                                 @endif
                             @endif
 
-                            @if(!empty($session->pa))
+                            @if(isset($session->pa) && $session->pa !== null)
                                 <tr>
                                     <td class="pr-4 font-medium">{{ __('Position angle') }}</td>
-                                    <td>{{ $session->pa }}</td>
+                                    <td>{{ (strval($session->pa) === '999') ? '-' : $session->pa }}</td>
                                 </tr>
                             @endif
                             <tr>
@@ -96,6 +96,67 @@
                                 </tr>
                             @endif
 
+                            {{-- Ephemerides: date, rise/transit/set, best time, maximum altitude, altitude graph provided by astronomy library --}}
+                            <tr id="ephem-date-row">
+                                <td class="pr-4 font-medium">{{ __('Date') }}</td>
+                                <td id="ephem-date-cell">
+                                    <input id="ephem-date-input" type="date" class="bg-gray-900 text-white px-2 py-1 rounded text-sm" value="{{ isset($ephemerides['date']) ? $ephemerides['date'] : \Carbon\Carbon::now()->toDateString() }}" />
+                                </td>
+                            </tr>
+                            <tr id="ephem-rts-row">
+                                <td class="pr-4 font-medium">{{ __('Rise / Transit / Set') }}</td>
+                                <td id="ephem-rts-cell">
+                                    @php
+                                        $r = $ephemerides['rising'] ?? null;
+                                        $t = $ephemerides['transit'] ?? null;
+                                        $s = $ephemerides['setting'] ?? null;
+                                        $showR = $r ?: '—';
+                                        $showT = $t ?: '—';
+                                        $showS = $s ?: '—';
+                                        // Determine helpful tooltips for placeholder cases
+                                        $max = $ephemerides['max_height_at_night'] ?? ($ephemerides['max_height'] ?? null);
+                                        $rTitle = '';
+                                        $sTitle = '';
+                                        if (is_null($r) && is_null($s)) {
+                                            if (!is_null($max)) {
+                                                // If max altitude below horizon -> never rises; otherwise circumpolar
+                                                if ((float) $max < 0.0) {
+                                                    $rTitle = $sTitle = __('Never rises at your location on this date');
+                                                } else {
+                                                    $rTitle = $sTitle = __('Circumpolar — does not set at your location on this date');
+                                                }
+                                            } else {
+                                                $rTitle = $sTitle = __('No rise/set data');
+                                            }
+                                        } else {
+                                            if (is_null($r)) $rTitle = __('Does not rise at your location on this date');
+                                            if (is_null($s)) $sTitle = __('Does not set at your location on this date');
+                                        }
+                                    @endphp
+                                    <span class="font-mono" @if($rTitle) title="{{ $rTitle }}" @endif>{{ $showR }}</span>
+                                    <span class="text-gray-400 px-2">/</span>
+                                    <span class="font-mono">{{ $showT }}</span>
+                                    <span class="text-gray-400 px-2">/</span>
+                                    <span class="font-mono" @if($sTitle) title="{{ $sTitle }}" @endif>{{ $showS }}</span>
+                                </td>
+                            </tr>
+                            <tr id="ephem-best-row">
+                                <td class="pr-4 font-medium">{{ __('Best time') }}</td>
+                                <td id="ephem-best-cell">{{ $ephemerides['best_time'] ?? '—' }}</td>
+                            </tr>
+                            <tr id="ephem-max-row">
+                                <td class="pr-4 font-medium">{{ __('Maximum altitude') }}</td>
+                                <td id="ephem-max-cell">
+                                    @if(isset($ephemerides['max_height_at_night']) && $ephemerides['max_height_at_night'] !== null)
+                                        {{ $ephemerides['max_height_at_night'] }}°
+                                    @elseif(isset($ephemerides['max_height']) && $ephemerides['max_height'] !== null)
+                                        {{ $ephemerides['max_height'] }}°
+                                    @else
+                                        —
+                                    @endif
+                                </td>
+                            </tr>
+
                             {{-- Live-updating contrast reserve and optimum detection magnification via Livewire --}}
                             {{-- Embed the Livewire component directly so it can render <tr> rows inside this table --}}
                             @livewire('aladin-preview-info', ['objectId' => (string)($session->id ?? ''), 'initial' => [
@@ -108,6 +169,13 @@
                                     ]])
 
                         </table>
+
+                        {{-- Altitude graph moved here: shown under the Optimum detection magnification / Livewire table when available --}}
+                        @if(isset($ephemerides) && !empty($ephemerides['altitude_graph']))
+                            <div class="mb-3 mt-3" id="dsl-altitude-graph">
+                                {!! $ephemerides['altitude_graph'] !!}
+                            </div>
+                        @endif
 
                     </div>
 
@@ -193,6 +261,8 @@
                     @if(isset($session->ra) && isset($session->decl) && !empty($session->ra) && !empty($session->decl))
                         <div class="mt-4 bg-gray-800 p-3 rounded shadow text-gray-100">
                             <h4 class="font-semibold mb-2 text-white">{{ __('Sky preview') }}</h4>
+                            {{-- Altitude graph (from astronomy library) shown above Aladin preview when available --}}
+                            {{-- altitude graph moved to main display (under Optimum detection magnification) --}}
                             @php
                                 $dslText = [
                                     'saving' => __('Saving...'),
@@ -580,6 +650,125 @@
             }
             return null;
         }
+
+        // Listen for ephemerides updates dispatched by Livewire's AladinPreviewInfo
+        try {
+            window.addEventListener('aladin-preview-info-updated', function(ev){
+                try {
+                    var d = ev && ev.detail ? ev.detail : {};
+                    var eph = d.ephemerides || null;
+                    if (!eph) return;
+
+                    // Update date
+                    var dateCell = document.getElementById('ephem-date-cell');
+                    if (dateCell) dateCell.textContent = eph.date || '—';
+
+                    // Update rise/transit/set
+                    var rtsCell = document.getElementById('ephem-rts-cell');
+                    if (rtsCell) {
+                        var r = eph.rising || '—';
+                        var t = eph.transit || '—';
+                        var s = eph.setting || '—';
+                        // Determine titles for missing rise/set similar to server-side logic
+                        var maxh = (typeof eph.max_height_at_night !== 'undefined' && eph.max_height_at_night !== null) ? eph.max_height_at_night : (typeof eph.max_height !== 'undefined' ? eph.max_height : null);
+                        var rTitle = '';
+                        var sTitle = '';
+                        if ((eph.rising === null || typeof eph.rising === 'undefined') && (eph.setting === null || typeof eph.setting === 'undefined')) {
+                            if (maxh !== null && !isNaN(Number(maxh))) {
+                                if (Number(maxh) < 0.0) {
+                                    rTitle = sTitle = '{{ addslashes(__("Never rises at your location on this date")) }}';
+                                } else {
+                                    rTitle = sTitle = '{{ addslashes(__("Circumpolar — does not set at your location on this date")) }}';
+                                }
+                            } else {
+                                rTitle = sTitle = '{{ addslashes(__("No rise/set data")) }}';
+                            }
+                        } else {
+                            if (eph.rising === null || typeof eph.rising === 'undefined') rTitle = '{{ addslashes(__("Does not rise at your location on this date")) }}';
+                            if (eph.setting === null || typeof eph.setting === 'undefined') sTitle = '{{ addslashes(__("Does not set at your location on this date")) }}';
+                        }
+
+                        // Build inner HTML with optional title attributes
+                        var rSpan = '<span class="font-mono"' + (rTitle ? ' title="' + rTitle + '"' : '') + '>' + r + '</span>';
+                        var tSpan = '<span class="font-mono">' + t + '</span>';
+                        var sSpan = '<span class="font-mono"' + (sTitle ? ' title="' + sTitle + '"' : '') + '>' + s + '</span>';
+                        rtsCell.innerHTML = rSpan + ' <span class="text-gray-400 px-2">/</span> ' + tSpan + ' <span class="text-gray-400 px-2">/</span> ' + sSpan;
+                    }
+
+                    // Best time
+                    var bestCell = document.getElementById('ephem-best-cell');
+                    if (bestCell) bestCell.textContent = eph.best_time || '—';
+
+                    // Max altitude
+                    var maxCell = document.getElementById('ephem-max-cell');
+                    if (maxCell) {
+                        if (typeof eph.max_height_at_night !== 'undefined' && eph.max_height_at_night !== null) maxCell.textContent = eph.max_height_at_night + '°';
+                        else if (typeof eph.max_height !== 'undefined' && eph.max_height !== null) maxCell.textContent = eph.max_height + '°';
+                        else maxCell.textContent = '—';
+                    }
+
+                    // Altitude graph
+                    try {
+                        if (eph.altitude_graph) {
+                            var ag = document.getElementById('dsl-altitude-graph');
+                            if (!ag) {
+                                var alc = document.getElementById('aladin-lite-container');
+                                if (alc && alc.parentNode) {
+                                    ag = document.createElement('div');
+                                    ag.id = 'dsl-altitude-graph';
+                                    ag.className = 'mb-3';
+                                    alc.parentNode.insertBefore(ag, alc);
+                                }
+                            }
+                            if (ag) ag.innerHTML = eph.altitude_graph;
+                        }
+                    } catch(e) {}
+
+                } catch(e) {}
+            }, { passive: true });
+        } catch(e) {}
+
+        // Send a recalc request to the Livewire AladinPreviewInfo component with a date and current selects
+        function sendAladinRecalcWithDate(dateStr) {
+            try {
+                var payload = { objectId: (window.__dsl_server_selected && window.__dsl_server_selected.objectId) || (document.getElementById('aladin-lite-container') && document.getElementById('aladin-lite-container').getAttribute('data-object-id')) || '{{ $session->id ?? '' }}', date: dateStr };
+                try {
+                    // include current selects if present
+                    var inst = document.getElementById('aladin-instrument-hidden');
+                    var ep = document.getElementById('aladin-eyepiece-hidden');
+                    var ln = document.getElementById('aladin-lens-hidden');
+                    if (inst) payload.instrument = inst.value || null;
+                    if (ep) payload.eyepiece = ep.value || null;
+                    if (ln) payload.lens = ln.value || null;
+                } catch(e) {}
+
+                // Prefer direct dispatchTo to the Livewire component, fall back to dispatch
+                try {
+                    if (window.Livewire && typeof Livewire.dispatchTo === 'function') {
+                        Livewire.dispatchTo('aladin-preview-info', 'recalculate', payload);
+                        return;
+                    }
+                } catch(e) {}
+                try { if (window.Livewire && typeof Livewire.dispatch === 'function') { Livewire.dispatch('aladinUpdated', payload); return; } } catch(e) {}
+                try { if (typeof window.__dsl_emitAladinUpdated === 'function') { window.__dsl_emitAladinUpdated(payload); return; } } catch(e) {}
+            } catch(e) {}
+        }
+
+        // Hook up the date input: initial call and change events
+        try {
+            function initEphemDateInput() {
+                try {
+                    var input = document.getElementById('ephem-date-input');
+                    if (!input) return;
+                    // initial call with current value
+                    sendAladinRecalcWithDate(input.value);
+                    // debounce change to avoid rapid calls
+                    var tmr = null;
+                    input.addEventListener('change', function(ev){ try { if (tmr) clearTimeout(tmr); tmr = setTimeout(function(){ sendAladinRecalcWithDate(input.value); }, 150); } catch(e){} }, { passive: true });
+                } catch(e) {}
+            }
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initEphemDateInput); else initEphemDateInput();
+        } catch(e) {}
 
         function parseDecToDegrees(dec) {
             if (!dec) return null;

@@ -212,6 +212,22 @@ class AladinPreviewInfo extends Component
                             $obj = $found;
                         }
                     }
+
+                    // If we still don't have an object but the caller provided an objectSlug in the payload,
+                    // try a direct lookup in the objects table. This addresses legacy rows where the
+                    // 'id' column may not be present or is NULL.
+                    try {
+                        if (empty($obj) && !empty($payload) && (is_array($payload) || is_object($payload))) {
+                            $ps = (array)$payload;
+                            if (!empty($ps['objectSlug'])) {
+                                $slugCandidate = trim((string)$ps['objectSlug']);
+                                if ($slugCandidate !== '') {
+                                    $foundBySlug = DB::table('objects')->where('slug', $slugCandidate)->first();
+                                    if ($foundBySlug) $obj = $foundBySlug;
+                                }
+                            }
+                        }
+                    } catch (\Throwable $_) { /* ignore slug lookup errors */ }
                 } catch (\Throwable $_) {
                     $obj = null;
                 }
@@ -297,8 +313,9 @@ class AladinPreviewInfo extends Component
             // expose lens factor for debugging
             $debug_lens_factor = $lensFactor;
 
-            // If we don't have required pieces, clear values and return
-            if (! $obj || ! $userLocation || ! $userInstrument) {
+            // If we don't have required pieces for any computation, clear values and return
+            // Ephemerides only need an object and a user location; instrument is not required.
+            if (! $obj || ! $userLocation) {
                 $this->contrast_reserve = null;
                 $this->contrast_reserve_category = null;
                 $this->contrast_used_location = null;
@@ -320,6 +337,15 @@ class AladinPreviewInfo extends Component
 
             // perform calculations similar to ObjectController::show
             $date = \Carbon\Carbon::now();
+            // allow caller to provide a date in payload (ISO string or Y-m-d format)
+            try {
+                if (!empty($payload) && (is_array($payload) || is_object($payload))) {
+                    $p = (array)$payload;
+                    if (!empty($p['date'])) {
+                        try { $date = \Carbon\Carbon::parse($p['date']); } catch (\Throwable $_) { /* ignore parse errors */ }
+                    }
+                }
+            } catch (\Throwable $_) {}
             $coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
             $astrolib = new AstronomyLibrary($date, $coords, $userLocation->elevation ?? 0.0);
 
@@ -497,19 +523,89 @@ class AladinPreviewInfo extends Component
                 $this->optimum_eyepieces = [];
             }
 
+                // Build ephemerides for UI when possible (object coordinates and user location available)
+                $ephemerides = null;
+                try {
+                    if ($obj && $userLocation && isset($obj->ra) && isset($obj->decl)) {
+                        $tz = $userLocation->timezone ?? config('app.timezone');
+                        // attempt to convert RA/Dec using DeepskyObject helpers when available
+                        $raDeg = null; $decDeg = null;
+                        try {
+                            if (method_exists(\App\Models\DeepskyObject::class, 'raToDecimal')) {
+                                $raDeg = \App\Models\DeepskyObject::raToDecimal($obj->ra);
+                                $decDeg = \App\Models\DeepskyObject::decToDecimal($obj->decl);
+                            }
+                        } catch (\Throwable $_) { $raDeg = null; $decDeg = null; }
+                        if ($raDeg === null || $decDeg === null) {
+                            $raDeg = is_numeric($obj->ra) ? (float)$obj->ra : null;
+                            $decDeg = is_numeric($obj->decl) ? (float)$obj->decl : null;
+                        }
+                        if ($raDeg !== null && $decDeg !== null) {
+                            $geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
+                            $target2 = new AstroTarget();
+                            $equa = new \deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates($raDeg, $decDeg);
+                            $target2->setEquatorialCoordinates($equa);
+                            // compute siderial and deltaT
+                            try {
+                                $greenwichSiderialTime = \deepskylog\AstronomyLibrary\Time::apparentSiderialTimeGreenwich($date);
+                                $deltaT = \deepskylog\AstronomyLibrary\Time::deltaT($date);
+                                $target2->calculateEphemerides($geo_coords, $greenwichSiderialTime, $deltaT);
+                                $transit = $target2->getTransit();
+                                $rising = $target2->getRising();
+                                $setting = $target2->getSetting();
+                                $bestTime = $target2->getBestTimeToObserve();
+                                $maxHeightAtNight = $target2->getMaxHeightAtNight();
+                                $maxHeight = $target2->getMaxHeight();
+                                $altitudeGraph = null;
+                                try { $altitudeGraph = $target2->altitudeGraph($geo_coords, $date); } catch (\Throwable $_) { $altitudeGraph = null; }
+                                if ($transit instanceof \DateTimeInterface) { try { $transit = \Carbon\Carbon::instance($transit)->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) {} }
+                                if ($rising instanceof \DateTimeInterface) { try { $rising = \Carbon\Carbon::instance($rising)->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) {} }
+                                if ($setting instanceof \DateTimeInterface) { try { $setting = \Carbon\Carbon::instance($setting)->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) {} }
+                                if ($bestTime instanceof \DateTimeInterface) { try { $bestTime = \Carbon\Carbon::instance($bestTime)->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) {} }
+                                // The astronomy library may return Coordinate objects. Convert to numeric values
+                                try {
+                                    if (is_object($maxHeightAtNight) && method_exists($maxHeightAtNight, 'getCoordinate')) {
+                                        $maxHeightAtNight = $maxHeightAtNight->getCoordinate();
+                                    }
+                                } catch (\Throwable $_) {}
+                                try {
+                                    if (is_object($maxHeight) && method_exists($maxHeight, 'getCoordinate')) {
+                                        $maxHeight = $maxHeight->getCoordinate();
+                                    }
+                                } catch (\Throwable $_) {}
+                                if (is_numeric($maxHeightAtNight)) $maxHeightAtNight = round($maxHeightAtNight, 1);
+                                if (is_numeric($maxHeight)) $maxHeight = round($maxHeight, 1);
+                                $ephemerides = [
+                                    'date' => $date->timezone($tz)->toDateString(),
+                                    'rising' => $rising,
+                                    'transit' => $transit,
+                                    'setting' => $setting,
+                                    'best_time' => $bestTime,
+                                    'max_height_at_night' => $maxHeightAtNight,
+                                    'max_height' => $maxHeight,
+                                    'altitude_graph' => $altitudeGraph,
+                                ];
+                            } catch (\Throwable $_) {
+                                $ephemerides = null;
+                            }
+                        }
+                    }
+                } catch (\Throwable $_) { $ephemerides = null; }
+
                 // Notify frontend that a recalc finished and provide computed values
             try {
                 // Log final computed values for correlation with browser events
                 // computed results logging removed
-                $this->dispatchBrowserEvent('aladin-preview-info-updated', [
-                    'status' => 'ok',
-                    'contrast_reserve' => $this->contrast_reserve,
-                    'contrast_reserve_category' => $this->contrast_reserve_category ?? null,
-                    'optimum_detection_magnification' => $this->optimum_detection_magnification,
-                    'optimum_eyepieces' => $this->optimum_eyepieces ?? [],
-                    'payload' => $payload,
-                    'objectId' => $useObjectId ?? null,
-                ]);
+                    $this->dispatchBrowserEvent('aladin-preview-info-updated', [
+                        'status' => 'ok',
+                        'contrast_reserve' => $this->contrast_reserve,
+                        'contrast_reserve_category' => $this->contrast_reserve_category ?? null,
+                        'optimum_detection_magnification' => $this->optimum_detection_magnification,
+                        'optimum_eyepieces' => $this->optimum_eyepieces ?? [],
+                        'payload' => $payload,
+                        'objectId' => $useObjectId ?? null,
+                        'ephemerides' => $ephemerides,
+                    ]);
             } catch (\Throwable $_) {}
 
         } catch (\Throwable $e) {
