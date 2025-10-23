@@ -17,9 +17,9 @@
                 </p>
             </header>
 
-            <!-- Use a responsive flex layout: main content flexes, aside keeps a fixed width on md+ -->
-            <!-- md: flex layout for medium screens, xl: switch to a 5-column grid for very large screens -->
-            <div class="flex flex-col md:flex-row md:items-start gap-4 mt-3 xl:grid xl:grid-cols-6 xl:gap-6">
+            <!-- Use a responsive layout: default to single-column flow, switch to a 6-column grid at xl (>=1280px) -->
+            <!-- For widths <1280px the aside should stack below the main content (no side-by-side at md) -->
+            <div class="flex flex-col gap-4 mt-3 xl:grid xl:grid-cols-6 xl:gap-6">
                 <article class="w-full md:flex-1 xl:col-span-4">
                     <div class="mb-4 text-gray-100">
                         <h2 class="text-xl font-semibold text-white">{{ __('Object details') }}</h2>
@@ -127,7 +127,7 @@
 
                 </article>
 
-                                        <aside class="w-full md:w-[420px] md:flex-none xl:col-span-2 xl:w-auto">
+                                        <aside class="w-full xl:col-span-2 xl:w-auto">
                     <div class="bg-gray-800 p-3 rounded shadow text-gray-100">
                         <h4 class="font-semibold mb-2 text-white">{{ __('Quick links') }}</h4>
                         <ul class="space-y-2 text-sm">

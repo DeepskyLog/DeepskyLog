@@ -1,4 +1,4 @@
-<div class="hidden md:block w-64 self-stretch" data-dsl-ephemeris-aside>
+<div class="w-full lg:w-64 lg:flex-none lg:min-w-[16rem] self-stretch" data-dsl-ephemeris-aside>
     <div class="bg-gray-900 p-4 rounded shadow text-gray-100 flex flex-col flex-1 h-full">
         <h3 class="text-lg font-semibold mb-2 text-white">{{ __('Ephemerides') }}</h3>
 

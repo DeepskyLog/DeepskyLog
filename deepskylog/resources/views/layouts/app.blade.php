@@ -6,10 +6,13 @@
         <meta name="csrf-token" content="{{ csrf_token() }}" />
 
         <script>
-            // Early DSL debug: install minimal hooks as soon as possible to catch
-            // any script.src assignments that happen during initial parsing/execution.
+            // Early DSL debug: install minimal hooks only when explicitly requested.
+            // To enable, append `?dsl_debug=1` to the URL. This avoids expensive
+            // global instrumentation during normal page loads which can block UI.
             (function(){
                 try {
+                    if (!(location && location.search && String(location.search).indexOf('dsl_debug=1') !== -1)) return;
+
                     var isSuspect = function(s) {
                         try {
                             if (!s && s !== 0) return false;
@@ -17,7 +20,6 @@
                             if (!raw) return false;
                             if (raw.indexOf('/object/') !== -1) return true;
                             if (/m-\d+$/.test(raw)) return true;
-                            // path-equals detection is harder here, we'll log broadly
                         } catch(e) { return false; }
                         return false;
                     };
@@ -45,7 +47,7 @@
                         return origSetAttr.call(this, name, value);
                     };
 
-                    // Observe additions quickly
+                    // Observe additions quickly (only while debugging)
                     try {
                         var moEarly = new MutationObserver(function(muts){
                             muts.forEach(function(m){
@@ -66,13 +68,9 @@
                         moEarly.observe(document.documentElement || document, { childList: true, subtree: true });
                     } catch(e){}
                     
-                    // Capture global parse/runtime errors early so we can see the filename that
-                    // produced the SyntaxError (browser reports the script origin as the filename).
                     try {
                         window.addEventListener('error', function(evt) {
                             try {
-                                // Some errors are resource/script parse errors and will have a filename
-                                // like 'm-31'. Log them with a clear prefix so they can be filtered.
                                 console.warn('[dsl-debug][early error]', evt && evt.message, 'filename=', evt && evt.filename, 'lineno=', evt && evt.lineno, 'colno=', evt && evt.colno, '\nerrorObjStack=', evt && evt.error && evt.error.stack);
                             } catch (inner) {}
                         });
@@ -154,7 +152,7 @@
                 <main>
             <!-- Use full width on xl so large viewports can utilize more horizontal space -->
         <div class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
-                        <div class="flex gap-4 w-full items-stretch">
+                        <div class="flex flex-col lg:flex-row gap-4 w-full items-stretch">
                             @livewire('ephemeris-aside')
                             <div class="flex-1" data-dsl-main-content>
                     {{-- Optional page header slot (used by pages like messages.create) --}}
@@ -242,6 +240,14 @@
                         var main = document.querySelector('[data-dsl-main-content]') || document.querySelector('main');
                         var ep = document.querySelector('[data-dsl-ephemeris-aside]');
                         if (!main || !ep) return;
+                        // Only force a min-height when the layout is side-by-side (desktop)
+                        // Tailwind 'lg' breakpoint is 1024px — avoid setting a large min-height on small screens
+                        var isLarge = (window.innerWidth || document.documentElement.clientWidth) >= 1024;
+                        if (!isLarge) {
+                            // clear any previously set minHeight so the aside flows naturally on stacked layout
+                            ep.style.minHeight = '';
+                            return;
+                        }
                         // Prefer the article/container inside the main content if present
                         var source = main.querySelector('article') || main;
                         var rect = source.getBoundingClientRect();
@@ -251,34 +257,35 @@
                     }catch(e){ console.debug('[dsl-debug] syncEphemHeight failed', e); }
                 }
 
-                // Attempt multiple syncs to catch delayed Livewire rendering
+                // Attempt a few syncs to catch delayed Livewire rendering, but keep retries modest
                 function scheduleSync(retries){
-                    retries = typeof retries === 'number' ? retries : 4;
+                    retries = typeof retries === 'number' ? retries : 3;
                     var i = 0;
                     function run(){
                         syncEphemHeight();
                         i++;
-                        if (i < retries) setTimeout(run, 120);
+                        if (i < retries) setTimeout(run, 180);
                     }
                     run();
                 }
 
-                window.addEventListener('load', function(){ scheduleSync(6); }, { passive: true });
-                window.addEventListener('resize', function(){ scheduleSync(3); }, { passive: true });
+                window.addEventListener('load', function(){ scheduleSync(4); }, { passive: true });
+                window.addEventListener('resize', function(){ scheduleSync(2); }, { passive: true });
 
-                // Observe mutations that might change main height
+                // Observe mutations that might change main height — limit observation to the main content
                 try{
-                    var mo = new MutationObserver(function(){ scheduleSync(3); });
-                    mo.observe(document.body, { childList: true, subtree: true, attributes: true });
+                    var mo = new MutationObserver(function(){ scheduleSync(2); });
+                    var observedRoot = document.querySelector('[data-dsl-main-content]') || document.body;
+                    mo.observe(observedRoot, { childList: true, subtree: true, attributes: true });
                 }catch(e){}
 
                 // If Livewire is present, hook into its `message.processed` events to re-sync after updates
                 try{
                     if (window.Livewire && window.Livewire.hook) {
-                        window.Livewire.hook('message.processed', function(){ scheduleSync(3); });
+                        window.Livewire.hook('message.processed', function(){ scheduleSync(2); });
                     } else if (window.livewire && window.livewire.on) {
                         // older Livewire global
-                        window.livewire.on('message.processed', function(){ scheduleSync(3); });
+                        window.livewire.on('message.processed', function(){ scheduleSync(2); });
                     }
                 }catch(e){}
             })();
