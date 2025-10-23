@@ -77,17 +77,32 @@
                 @endif
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($sessions as $session)
+                        @php
+                            // Ensure we safely compute URL parts for session.show links. Some legacy/malformed
+                            // session records might lack a slug or id; guard against generating route() with
+                            // missing parameters which throws a UrlGenerationException.
+                            $sessionUser = optional($session->observer)->slug ?? $session->observerid ?? null;
+                            $sessionParam = $session->slug ?? $session->id ?? null;
+                        @endphp
                         <article class="bg-gray-800 p-4 rounded">
                                     @if(! empty($session->preview))
                                 <div class="mb-3">
-                                    <a href="{{ route('session.show', [optional($session->observer)->slug ?? $session->observerid, $session->slug ?? $session->id]) }}">
+                                    @if(! empty($sessionParam) && ! empty($sessionUser))
+                                        <a href="{{ route('session.show', [$sessionUser, $sessionParam]) }}">
+                                            <img src="{{ $session->preview }}" alt="{{ html_entity_decode($session->name ?? __('Session'), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}" class="w-full h-40 object-cover rounded" />
+                                        </a>
+                                    @else
                                         <img src="{{ $session->preview }}" alt="{{ html_entity_decode($session->name ?? __('Session'), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}" class="w-full h-40 object-cover rounded" />
-                                    </a>
+                                    @endif
                                 </div>
                             @endif
 
                             <h3 class="text-lg font-bold text-white mb-2">
-                                <a href="{{ route('session.show', [optional($session->observer)->slug ?? $session->observerid, $session->slug ?? $session->id]) }}" class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                                @if(! empty($sessionParam) && ! empty($sessionUser))
+                                    <a href="{{ route('session.show', [$sessionUser, $sessionParam]) }}" class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                                @else
+                                    <span class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</span>
+                                @endif
                             </h3>
 
                             <div class="text-sm text-gray-400 mb-3">
@@ -108,7 +123,11 @@
                             <p class="text-sm text-gray-300 mb-3">{{ $session->preview_text ?? Str::limit(strip_tags(html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8')), 180) }}</p>
                             <div class="flex items-center justify-between text-sm">
                                 <div class="text-gray-400">{{ __('Observers') }}: {{ $session->otherObserversCount() ?? 1 }}</div>
-                                <a href="{{ route('session.show', [$session->observer->slug ?? $session->observerid, $session->slug ?? $session->id]) }}" class="text-blue-500 hover:underline">{{ __('Read more') }}</a>
+                                @if(! empty($sessionParam) && ! empty($sessionUser))
+                                    <a href="{{ route('session.show', [$sessionUser, $sessionParam]) }}" class="text-blue-500 hover:underline">{{ __('Read more') }}</a>
+                                @else
+                                    <span class="text-gray-500">{{ __('Read more') }}</span>
+                                @endif
                             </div>
                         </article>
                     @endforeach
