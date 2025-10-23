@@ -1,6 +1,10 @@
 <x-app-layout>
     <div>
-        <div class="mx-auto max-w-7xl bg-gray-900 px-4 py-6 sm:px-4 lg:px-6">
+       <!-- Use a wider container so the object details area can take more horizontal space. 
+           Switched from max-w-7xl to max-w-screen-xl which uses more of the viewport on large screens. -->
+    <!-- wider container: default to screen-xl, but use an even wider max at xl and above -->
+    <!-- Allow full width at xl so the main area can expand; keep comfortable padding -->
+    <div class="mx-auto max-w-screen-xl xl:max-w-full bg-gray-900 px-6 py-6 sm:px-6 lg:px-8">
             <header class="mb-6">
                 <h1 class="text-3xl font-extrabold">{{ html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</h1>
                 <p class="text-sm flex items-center gap-2 text-gray-300 mt-2">
@@ -13,8 +17,10 @@
                 </p>
             </header>
 
-            <div class="grid md:grid-cols-3 gap-4 mt-3">
-                <article class="md:col-span-2">
+            <!-- Use a responsive flex layout: main content flexes, aside keeps a fixed width on md+ -->
+            <!-- md: flex layout for medium screens, xl: switch to a 5-column grid for very large screens -->
+            <div class="flex flex-col md:flex-row md:items-start gap-4 mt-3 xl:grid xl:grid-cols-6 xl:gap-6">
+                <article class="w-full md:flex-1 xl:col-span-4">
                     <div class="mb-4 text-gray-100">
                         <h2 class="text-xl font-semibold text-white">{{ __('Object details') }}</h2>
                         <table class="table-auto w-full text-sm text-gray-100">
@@ -121,7 +127,7 @@
 
                 </article>
 
-                                        <aside class="md:col-span-1">
+                                        <aside class="w-full md:w-[420px] md:flex-none xl:col-span-2 xl:w-auto">
                     <div class="bg-gray-800 p-3 rounded shadow text-gray-100">
                         <h4 class="font-semibold mb-2 text-white">{{ __('Quick links') }}</h4>
                         <ul class="space-y-2 text-sm">

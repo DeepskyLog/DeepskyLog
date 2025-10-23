@@ -152,10 +152,11 @@
 
             <!-- Page Content -->
                 <main>
-                    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div class="flex gap-6">
+            <!-- Use full width on xl so large viewports can utilize more horizontal space -->
+        <div class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
+                        <div class="flex gap-4 w-full items-stretch">
                             @livewire('ephemeris-aside')
-                            <div class="flex-1">
+                            <div class="flex-1" data-dsl-main-content>
                     {{-- Optional page header slot (used by pages like messages.create) --}}
                     @isset($header)
                         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 py-4">
@@ -233,6 +234,55 @@
         @stack("modals")
 
         @livewireScripts
+        <script>
+            // Ensure the ephemeris aside matches the main content height by copying min-height.
+            (function(){
+                function syncEphemHeight(){
+                    try{
+                        var main = document.querySelector('[data-dsl-main-content]') || document.querySelector('main');
+                        var ep = document.querySelector('[data-dsl-ephemeris-aside]');
+                        if (!main || !ep) return;
+                        // Prefer the article/container inside the main content if present
+                        var source = main.querySelector('article') || main;
+                        var rect = source.getBoundingClientRect();
+                        var h = Math.max(0, rect.height || source.offsetHeight || main.offsetHeight || document.documentElement.clientHeight);
+                        // Add small padding to ensure we cover margins/footers
+                        ep.style.minHeight = (h + 12) + 'px';
+                    }catch(e){ console.debug('[dsl-debug] syncEphemHeight failed', e); }
+                }
+
+                // Attempt multiple syncs to catch delayed Livewire rendering
+                function scheduleSync(retries){
+                    retries = typeof retries === 'number' ? retries : 4;
+                    var i = 0;
+                    function run(){
+                        syncEphemHeight();
+                        i++;
+                        if (i < retries) setTimeout(run, 120);
+                    }
+                    run();
+                }
+
+                window.addEventListener('load', function(){ scheduleSync(6); }, { passive: true });
+                window.addEventListener('resize', function(){ scheduleSync(3); }, { passive: true });
+
+                // Observe mutations that might change main height
+                try{
+                    var mo = new MutationObserver(function(){ scheduleSync(3); });
+                    mo.observe(document.body, { childList: true, subtree: true, attributes: true });
+                }catch(e){}
+
+                // If Livewire is present, hook into its `message.processed` events to re-sync after updates
+                try{
+                    if (window.Livewire && window.Livewire.hook) {
+                        window.Livewire.hook('message.processed', function(){ scheduleSync(3); });
+                    } else if (window.livewire && window.livewire.on) {
+                        // older Livewire global
+                        window.livewire.on('message.processed', function(){ scheduleSync(3); });
+                    }
+                }catch(e){}
+            })();
+        </script>
         <!-- DSL debug: detect if any script.src is set to the current page path or a route-like value (e.g. '/object/m-31') -->
         <script>
             (function(){
