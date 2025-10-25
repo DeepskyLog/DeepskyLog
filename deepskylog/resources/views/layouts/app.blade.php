@@ -290,6 +290,68 @@
                 }catch(e){}
             })();
         </script>
+        <script>
+            // Ensure popovers (WireUI) opened near viewport edges are nudged back into view.
+            // This helps the datepicker inside the narrow left ephemeris aside which would
+            // otherwise be shown partly off-screen to the left.
+            (function(){
+                function adjustPopovers(){
+                    try{
+                        var pads = 8; // px padding from viewport edges
+                        var popovers = document.querySelectorAll('[x-ref="popover"]');
+                        popovers.forEach(function(pop){
+                            // visible check
+                            if (!pop || pop.offsetParent === null) return;
+
+                            // find the panel inside the popover (the actual popover panel)
+                            var panel = pop.querySelector('div[tabindex="-1"]');
+                            if (!panel) return;
+
+                            // store original transform so we can rebase adjustments
+                            if (!panel.dataset.dslOrigTransform) panel.dataset.dslOrigTransform = panel.style.transform || '';
+
+                            // reset any previous adjustment
+                            panel.style.transform = panel.dataset.dslOrigTransform;
+
+                            var rect = panel.getBoundingClientRect();
+                            var shift = 0;
+                            if (rect.left < pads) {
+                                shift = pads - rect.left;
+                            } else if (rect.right > (window.innerWidth - pads)) {
+                                shift = (window.innerWidth - pads) - rect.right;
+                            }
+
+                            if (shift !== 0) {
+                                // apply translateX to move it into view; round to avoid subpixel blurriness
+                                var tx = Math.round(shift);
+                                panel.style.transform = (panel.dataset.dslOrigTransform ? panel.dataset.dslOrigTransform + ' ' : '') + 'translateX(' + tx + 'px)';
+                                panel.dataset.dslAdjusted = tx;
+                            } else {
+                                delete panel.dataset.dslAdjusted;
+                            }
+                        });
+                    }catch(e){ console.debug('[dsl-debug] adjustPopovers failed', e); }
+                }
+
+                // Run after clicks (opening popovers is usually a click) and on resize
+                document.addEventListener('click', function(){ setTimeout(adjustPopovers, 60); }, {capture:false, passive:true});
+                window.addEventListener('resize', function(){ setTimeout(adjustPopovers, 60); }, {passive:true});
+
+                // Also adjust when Livewire messages are processed (popover may open after update)
+                try{
+                    if (window.Livewire && window.Livewire.hook) {
+                        window.Livewire.hook('message.processed', function(){ setTimeout(adjustPopovers, 40); });
+                    } else if (window.livewire && window.livewire.on) {
+                        window.livewire.on('message.processed', function(){ setTimeout(adjustPopovers, 40); });
+                    }
+                }catch(e){}
+
+                // Initial run in case a popover is already visible
+                document.addEventListener('DOMContentLoaded', function(){ setTimeout(adjustPopovers, 120); });
+                // Expose for manual debugging
+                window.DSL_adjustPopovers = adjustPopovers;
+            })();
+        </script>
         <!-- DSL debug: detect if any script.src is set to the current page path or a route-like value (e.g. '/object/m-31') -->
         <script>
             (function(){
