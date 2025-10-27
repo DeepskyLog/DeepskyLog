@@ -7,14 +7,77 @@
     <div class="mx-auto max-w-screen-xl xl:max-w-full bg-gray-900 px-6 py-6 sm:px-6 lg:px-8">
             <header class="mb-6">
                 <h1 class="text-3xl font-extrabold">{{ html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</h1>
-                <p class="text-sm flex items-center gap-2 text-gray-300 mt-2">
-                    <span class="text-gray-400">{{ __('Object type') }}</span>
-                    <span class="text-white font-medium ml-2">{{ $session->source_type ?? __('Unknown') }}</span>
-                    @if(!empty($session->constellation))
-                        <span class="text-gray-400 ml-4">{{ __('Constellation') }}:</span>
-                        <span class="text-white font-medium ml-2">{{ $session->constellation }}</span>
-                    @endif
-                </p>
+                <div class="text-sm text-gray-300 mt-1">
+                    <div class="w-full max-w-4xl">
+                        <div class="grid grid-cols-4 gap-x-6 items-center">
+                            <div class="text-gray-400">{{ __('Object type') }}</div>
+                            <div class="text-white font-medium">{{ $session->source_type ?? __('Unknown') }}</div>
+
+                            @if(!empty($session->constellation))
+                                <div class="text-gray-400">{{ __('Constellation') }}</div>
+                                <div class="text-white font-medium">{{ $session->constellation }}</div>
+                            @else
+                                <div></div>
+                                <div></div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                @php
+                    // Legacy observation/drawing summaries from ObservationsOld
+                    $totalObservations = \App\Models\ObservationsOld::getObservationsCountForObject($session->name ?? '');
+                    $userObservations = \App\Models\ObservationsOld::getObservationsCountForUser(auth()->user() ?? null, $session->name ?? '');
+                    $lastObservedByUser = \App\Models\ObservationsOld::getLastObservationDateForUser(auth()->user() ?? null, $session->name ?? '');
+
+                    $totalDrawings = \App\Models\ObservationsOld::getDrawingsCountForObject($session->name ?? '');
+                    $userDrawings = \App\Models\ObservationsOld::getDrawingsCountForUser(auth()->user() ?? null, $session->name ?? '');
+                    $lastDrawingByUser = \App\Models\ObservationsOld::getLastDrawingDateForUser(auth()->user() ?? null, $session->name ?? '');
+                @endphp
+
+                <div class="mt-1 text-sm text-gray-300">
+                    <div class="w-full max-w-4xl">
+                        <div class="grid grid-cols-4 gap-x-6 gap-y-0 items-center">
+                        <div class="text-gray-400">{{ __('Observations') }}</div>
+                        <div class="text-white font-medium">
+                            @if(!empty($canonicalSlug))
+                                <a href="{{ url('/observations/'.$canonicalSlug) }}" class="text-white hover:underline">{{ number_format($totalObservations) }}</a>
+                            @else
+                                {{ number_format($totalObservations) }}
+                            @endif
+                        </div>
+                        <div class="text-gray-400">{{ __('Drawings') }}</div>
+                        <div class="text-white font-medium">
+                            @if(!empty($canonicalSlug))
+                                <a href="{{ url('/observations/drawings/'.$canonicalSlug) }}" class="text-white hover:underline">{{ number_format($totalDrawings) }}</a>
+                            @else
+                                {{ number_format($totalDrawings) }}
+                            @endif
+                        </div>
+
+                        <div class="text-gray-400">{{ __('Your observations') }}</div>
+                        <div class="text-white font-medium">
+                            @if(auth()->check() && !empty($canonicalSlug) && auth()->user()->slug)
+                                <a href="{{ route('observations.user.object', ['observer' => auth()->user()->slug, 'object' => $canonicalSlug]) }}" class="text-white hover:underline">{{ number_format($userObservations) }}</a>
+                            @else
+                                {{ number_format($userObservations) }}
+                            @endif
+                        </div>
+                        <div class="text-gray-400">{{ __('Last observed by you') }}</div>
+                        <div class="text-white font-medium">{{ $lastObservedByUser ? $lastObservedByUser->toDateString() : __('Never') }}</div>
+
+                        <div class="text-gray-400">{{ __('Your drawings') }}</div>
+                        <div class="text-white font-medium">
+                            @if(auth()->check() && !empty($canonicalSlug) && auth()->user()->slug)
+                                <a href="{{ route('observations.drawings.user.object', ['observer' => auth()->user()->slug, 'object' => $canonicalSlug]) }}" class="text-white hover:underline">{{ number_format($userDrawings) }}</a>
+                            @else
+                                {{ number_format($userDrawings) }}
+                            @endif
+                        </div>
+                        <div class="text-gray-400">{{ __('Last drawing by you') }}</div>
+                        <div class="text-white font-medium">{{ $lastDrawingByUser ? $lastDrawingByUser->toDateString() : __('Never') }}</div>
+                    </div>
+                </div>
             </header>
 
             <!-- Use a responsive layout: default to single-column flow, switch to a 6-column grid at xl (>=1280px) -->
@@ -102,6 +165,8 @@
                                     <td>{{ $session->subr ?? '' }}</td>
                                 </tr>
                             @endif
+
+                            {{-- (Observation/drawing stats moved to header) --}}
 
                             {{-- Ephemerides: date, rise/transit/set, best time, maximum altitude, altitude graph provided by astronomy library --}}
                             {{-- Date selector moved to global aside Livewire component --}}

@@ -82,6 +82,12 @@ Route::get('/drawings/{observer}', 'App\Http\Controllers\DrawingController@show'
 Route::get('/cometdrawings/{observer}', 'App\Http\Controllers\CometDrawingController@show')->name('cometdrawings.show');
 // Observations (deepsky + comet)
 Route::get('/observations', 'App\Http\Controllers\ObservationsController@index')->name('observations.index');
+// Object-scoped drawings listing (e.g. /observations/drawings/m-31)
+Route::get('/observations/drawings/{slug}', [App\Http\Controllers\ObservationsController::class, 'showObjectDrawings'])->name('observations.drawings.show');
+// Observations for a specific observer filtered by object (e.g. /observations/wim-de-meester/m-31)
+Route::get('/observations/{observer}/{object}', [App\Http\Controllers\ObservationsController::class, 'showObserverObject'])->name('observations.user.object');
+// Drawings for a specific observer filtered by object (e.g. /observations/drawings/wim-de-meester/m-31)
+Route::get('/observations/drawings/{observer}/{object}', [App\Http\Controllers\ObservationsController::class, 'showObserverObjectDrawings'])->name('observations.drawings.user.object');
 Route::get('/observations/{observer}', 'App\Http\Controllers\ObservationsController@show')->name('observations.show');
 // Separate comet observations pages
 Route::get('/cometobservations', 'App\\Http\\Controllers\\ObservationsController@cometIndex')->name('observations.comet.index');
