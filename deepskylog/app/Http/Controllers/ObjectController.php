@@ -1239,6 +1239,7 @@ class ObjectController extends Controller
                     $altitudeGraph = null;
                     try { $altitudeGraph = $target->altitudeGraph($geo_coords, $date); } catch (\Throwable $_) { $altitudeGraph = null; }
 
+                    $yearGraph = $target->yearGraph($geo_coords, $date);
                     $ephemerides = [
                         'date' => $date->timezone($tz)->toDateString(),
                         'rising' => $rising,
@@ -1248,6 +1249,7 @@ class ObjectController extends Controller
                         'max_height_at_night' => $maxHeightAtNight,
                         'max_height' => $maxHeight,
                         'altitude_graph' => $altitudeGraph,
+                        'year_graph' => $yearGraph,
                     ];
                 }
             }

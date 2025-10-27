@@ -564,6 +564,8 @@ class AladinPreviewInfo extends Component
                                 $maxHeight = $target2->getMaxHeight();
                                 $altitudeGraph = null;
                                 try { $altitudeGraph = $target2->altitudeGraph($geo_coords, $date); } catch (\Throwable $_) { $altitudeGraph = null; }
+                                $yearGraph = null;
+                                try { $yearGraph = $target2->yearGraph($geo_coords, $date); } catch (\Throwable $_) { $yearGraph = null; }
                                 if ($transit instanceof \DateTimeInterface) { try { $transit = \Carbon\Carbon::instance($transit)->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) {} }
                                 if ($rising instanceof \DateTimeInterface) { try { $rising = \Carbon\Carbon::instance($rising)->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) {} }
                                 if ($setting instanceof \DateTimeInterface) { try { $setting = \Carbon\Carbon::instance($setting)->timezone($tz)->isoFormat('HH:mm'); } catch (\Throwable $_) {} }
@@ -590,6 +592,7 @@ class AladinPreviewInfo extends Component
                                     'max_height_at_night' => $maxHeightAtNight,
                                     'max_height' => $maxHeight,
                                     'altitude_graph' => $altitudeGraph,
+                                    'year_graph' => $yearGraph,
                                 ];
                             } catch (\Throwable $_) {
                                 $ephemerides = null;

@@ -61,8 +61,8 @@
 			<td id="ephem-max-cell">
 				@if(isset($e['max_height_at_night']) && $e['max_height_at_night'] !== null)
 					{{ $e['max_height_at_night'] }}°
-				@elseif(isset($e['max_height']) && $e['max_height'] !== null)
-					{{ $e['max_height'] }}°
+				<!-- @elseif(isset($e['max_height']) && $e['max_height'] !== null)
+					{{ $e['max_height'] }}° -->
 				@else
 					—
 				@endif
@@ -73,6 +73,11 @@
 			<tr>
 				<td colspan="2" class="pt-3">{!! $e['altitude_graph'] !!}</td>
 			</tr>
+			@if(!empty($e['year_graph']))
+				<tr>
+					<td colspan="2" class="pt-2">{!! $e['year_graph'] !!}</td>
+				</tr>
+			@endif
 		@endif
 	@endif
 </tbody>

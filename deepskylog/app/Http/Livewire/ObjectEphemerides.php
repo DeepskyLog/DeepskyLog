@@ -141,6 +141,9 @@ class ObjectEphemerides extends Component
 			$altitudeGraph = null;
 			try { $altitudeGraph = $target->altitudeGraph($geo_coords, $date); } catch (\Throwable $_) { $altitudeGraph = null; }
 
+			$yearGraph = null;
+			try { $yearGraph = $target->yearGraph($geo_coords, $date); } catch (\Throwable $_) { $yearGraph = null; }
+
 			$this->ephemerides = [
 				'date' => $date->timezone($tz)->toDateString(),
 				'rising' => $rising,
@@ -150,6 +153,7 @@ class ObjectEphemerides extends Component
 				'max_height_at_night' => $maxHeightAtNight,
 				'max_height' => $maxHeight,
 				'altitude_graph' => $altitudeGraph,
+				'year_graph' => $yearGraph,
 			];
 
 		} catch (\Throwable $_) {

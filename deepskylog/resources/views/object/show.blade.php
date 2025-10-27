@@ -653,7 +653,7 @@
                         else maxCell.textContent = '—';
                     }
 
-                    // Altitude graph
+                    // Altitude graph (and year graph below it)
                     try {
                         if (eph.altitude_graph) {
                             var ag = document.getElementById('dsl-altitude-graph');
@@ -667,6 +667,31 @@
                                 }
                             }
                             if (ag) ag.innerHTML = eph.altitude_graph;
+
+                            // year graph: show directly under the altitude graph when present
+                            try {
+                                if (eph.year_graph) {
+                                    var yg = document.getElementById('dsl-year-graph');
+                                    if (!yg) {
+                                        // create container and place it right after altitude graph
+                                        yg = document.createElement('div');
+                                        yg.id = 'dsl-year-graph';
+                                        yg.className = 'mb-3';
+                                        if (ag && ag.parentNode) {
+                                            if (ag.nextSibling) ag.parentNode.insertBefore(yg, ag.nextSibling);
+                                            else ag.parentNode.appendChild(yg);
+                                        } else {
+                                            // fallback: insert before the aladin container
+                                            var alc2 = document.getElementById('aladin-lite-container');
+                                            if (alc2 && alc2.parentNode) alc2.parentNode.insertBefore(yg, alc2);
+                                        }
+                                    }
+                                    if (yg) yg.innerHTML = eph.year_graph;
+                                } else {
+                                    // If no year_graph provided, remove any old year graph element
+                                    try { var _old = document.getElementById('dsl-year-graph'); if (_old && _old.parentNode) _old.parentNode.removeChild(_old); } catch(e) {}
+                                }
+                            } catch(e) {}
                         }
                     } catch(e) {}
 

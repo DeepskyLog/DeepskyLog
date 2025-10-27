@@ -13,14 +13,14 @@
         + [X] Add date, rise, transit, set, best time and maximum altitude.
         + [X] Add graph with elevation of the object for a location and a certain date -> method does exist in laravel-astronomy-library
         + [X] Add moon and astronomical twilight information for that date and location.
-        + [ ] Update laravel-astronomy-library to show a line instead of points for the altitude graph.
-            + [ ] Don't show < 0 degrees altitude.
-            + [ ] Also add moon elevation to that graph.
-        + [ ] Add visibility information (best months to observe, ...).
+        + [X] Update laravel-astronomy-library to show a line instead of points for the altitude graph, add moon elevation to that graph.
+        + [X] Add visibility information (best months to observe, ...) using graph
         + [ ] Seen : Y(858/8) 20080929
         + [ ] Add a list of observations of this object, with a link to the observation.
         + [ ] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
         + [ ] Add nearby objects
+        + [ ] Add extra information for planets: diameter, moon, date of conjunction / opposition, ...
+        + [ ] Add graph of magnitude over a year for planets.
         + [ ] Add export to CSV, Excel, PDF (names PDF, details PDF), Argo Navis, SkySafari, Report, Maps
         + [ ] Add star map created from DeepskyLog or from external source (stellarium web, ...)?
         + [ ] Add lists which have this object
