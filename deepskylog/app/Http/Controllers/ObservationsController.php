@@ -17,7 +17,7 @@ class ObservationsController extends Controller
     public function index()
     {
         // Default observations page shows deepsky observations (mirrors /drawings behavior)
-        $deepsky = ObservationsOld::orderBy('id', 'desc')->paginate(20, ['*'], 'deepsky');
+        $deepsky = ObservationsOld::orderBy('id', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
         return view('observations.show', [
             'user' => '',
@@ -35,7 +35,7 @@ class ObservationsController extends Controller
         // Try to resolve the slug as a user first (existing behaviour)
         $user = User::where('slug', $slug)->first();
         if ($user) {
-            $deepsky = ObservationsOld::where('observerid', $user->username)->orderBy('date', 'desc')->paginate(20, ['*'], 'deepsky');
+            $deepsky = ObservationsOld::where('observerid', $user->username)->orderBy('date', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
             return view('observations.show', [
                 'user' => $user,
@@ -50,9 +50,13 @@ class ObservationsController extends Controller
         $lower = mb_strtolower($raw);
         $candidates = [$lower];
         $slugified = Str::slug($raw, '-');
-        if ($slugified && $slugified !== $lower) { $candidates[] = $slugified; }
+        if ($slugified && $slugified !== $lower) {
+            $candidates[] = $slugified;
+        }
         $nospace = str_replace(' ', '', $lower);
-        if ($nospace !== $lower) { $candidates[] = $nospace; }
+        if ($nospace !== $lower) {
+            $candidates[] = $nospace;
+        }
         // remove leading zeros in numeric portions (m-031 -> m-31)
         $candidates[] = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower);
         $candidates[] = str_replace('-', '', $lower);
@@ -61,9 +65,15 @@ class ObservationsController extends Controller
         $objectName = null;
         foreach ($candidates as $cand) {
             $on = DB::table('objectnames')->where('slug', $cand)->first();
-            if ($on) { $objectName = $on->objectname; break; }
+            if ($on) {
+                $objectName = $on->objectname;
+                break;
+            }
             $o = DB::table('objects')->where('slug', $cand)->first();
-            if ($o) { $objectName = $o->name; break; }
+            if ($o) {
+                $objectName = $o->name;
+                break;
+            }
         }
 
         // Fallback: try case-insensitive name/altname matches
@@ -73,15 +83,21 @@ class ObservationsController extends Controller
                     ->whereRaw('LOWER(objectname) = ?', [$cand])
                     ->orWhereRaw('LOWER(altname) = ?', [$cand])
                     ->first();
-                if ($on) { $objectName = $on->objectname; break; }
+                if ($on) {
+                    $objectName = $on->objectname;
+                    break;
+                }
 
                 $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
-                if ($o) { $objectName = $o->name; break; }
+                if ($o) {
+                    $objectName = $o->name;
+                    break;
+                }
             }
         }
 
         if ($objectName) {
-            $deepsky = ObservationsOld::where('objectname', $objectName)->orderBy('date','desc')->paginate(20, ['*'], 'deepsky');
+            $deepsky = ObservationsOld::where('objectname', $objectName)->orderBy('date', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
             // Provide a lightweight user-like object so the view header can show a title
             $fakeUser = (object) ['name' => $objectName, 'slug' => $slug, 'username' => null];
@@ -105,7 +121,7 @@ class ObservationsController extends Controller
      */
     public function cometIndex()
     {
-        $comet = CometObservationsOld::orderBy('id', 'desc')->paginate(20, ['*'], 'comet');
+        $comet = CometObservationsOld::orderBy('id', 'desc')->paginate(20, ['*'], 'comet')->appends(request()->query());
 
         return view('observations.show', [
             'user' => '',
@@ -122,7 +138,7 @@ class ObservationsController extends Controller
     {
         $user = User::where('slug', $slug)->firstOrFail();
 
-        $comet = CometObservationsOld::where('observerid', $user->username)->orderBy('date', 'desc')->paginate(20, ['*'], 'comet');
+        $comet = CometObservationsOld::where('observerid', $user->username)->orderBy('date', 'desc')->paginate(20, ['*'], 'comet')->appends(request()->query());
 
         return view('observations.show', [
             'user' => $user,
@@ -142,7 +158,7 @@ class ObservationsController extends Controller
         // If slug matches a user, reuse existing pattern but filter drawings only
         $user = User::where('slug', $slug)->first();
         if ($user) {
-            $deepsky = ObservationsOld::where('observerid', $user->username)->where('hasDrawing', 1)->orderBy('date', 'desc')->paginate(20, ['*'], 'deepsky');
+            $deepsky = ObservationsOld::where('observerid', $user->username)->where('hasDrawing', 1)->orderBy('date', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
             return view('observations.show', [
                 'user' => $user,
@@ -158,9 +174,13 @@ class ObservationsController extends Controller
         $lower = mb_strtolower($raw);
         $candidates = [$lower];
         $slugified = Str::slug($raw, '-');
-        if ($slugified && $slugified !== $lower) { $candidates[] = $slugified; }
+        if ($slugified && $slugified !== $lower) {
+            $candidates[] = $slugified;
+        }
         $nospace = str_replace(' ', '', $lower);
-        if ($nospace !== $lower) { $candidates[] = $nospace; }
+        if ($nospace !== $lower) {
+            $candidates[] = $nospace;
+        }
         $candidates[] = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower);
         $candidates[] = str_replace('-', '', $lower);
         $candidates = array_values(array_unique(array_filter($candidates)));
@@ -168,9 +188,15 @@ class ObservationsController extends Controller
         $objectName = null;
         foreach ($candidates as $cand) {
             $on = DB::table('objectnames')->where('slug', $cand)->first();
-            if ($on) { $objectName = $on->objectname; break; }
+            if ($on) {
+                $objectName = $on->objectname;
+                break;
+            }
             $o = DB::table('objects')->where('slug', $cand)->first();
-            if ($o) { $objectName = $o->name; break; }
+            if ($o) {
+                $objectName = $o->name;
+                break;
+            }
         }
 
         if (! $objectName) {
@@ -179,15 +205,21 @@ class ObservationsController extends Controller
                     ->whereRaw('LOWER(objectname) = ?', [$cand])
                     ->orWhereRaw('LOWER(altname) = ?', [$cand])
                     ->first();
-                if ($on) { $objectName = $on->objectname; break; }
+                if ($on) {
+                    $objectName = $on->objectname;
+                    break;
+                }
 
                 $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
-                if ($o) { $objectName = $o->name; break; }
+                if ($o) {
+                    $objectName = $o->name;
+                    break;
+                }
             }
         }
 
         if ($objectName) {
-            $deepsky = ObservationsOld::where('objectname', $objectName)->where('hasDrawing', 1)->orderBy('date','desc')->paginate(20, ['*'], 'deepsky');
+            $deepsky = ObservationsOld::where('objectname', $objectName)->where('hasDrawing', 1)->orderBy('date', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
             $fakeUser = (object) ['name' => $objectName, 'slug' => $slug, 'username' => null];
 
@@ -215,9 +247,13 @@ class ObservationsController extends Controller
         $lower = mb_strtolower($raw);
         $candidates = [$lower];
         $slugified = Str::slug($raw, '-');
-        if ($slugified && $slugified !== $lower) { $candidates[] = $slugified; }
+        if ($slugified && $slugified !== $lower) {
+            $candidates[] = $slugified;
+        }
         $nospace = str_replace(' ', '', $lower);
-        if ($nospace !== $lower) { $candidates[] = $nospace; }
+        if ($nospace !== $lower) {
+            $candidates[] = $nospace;
+        }
         $candidates[] = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower);
         $candidates[] = str_replace('-', '', $lower);
         $candidates = array_values(array_unique(array_filter($candidates)));
@@ -225,9 +261,15 @@ class ObservationsController extends Controller
         $objectName = null;
         foreach ($candidates as $cand) {
             $on = DB::table('objectnames')->where('slug', $cand)->first();
-            if ($on) { $objectName = $on->objectname; break; }
+            if ($on) {
+                $objectName = $on->objectname;
+                break;
+            }
             $o = DB::table('objects')->where('slug', $cand)->first();
-            if ($o) { $objectName = $o->name; break; }
+            if ($o) {
+                $objectName = $o->name;
+                break;
+            }
         }
         if (! $objectName) {
             foreach ($candidates as $cand) {
@@ -235,10 +277,16 @@ class ObservationsController extends Controller
                     ->whereRaw('LOWER(objectname) = ?', [$cand])
                     ->orWhereRaw('LOWER(altname) = ?', [$cand])
                     ->first();
-                if ($on) { $objectName = $on->objectname; break; }
+                if ($on) {
+                    $objectName = $on->objectname;
+                    break;
+                }
 
                 $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
-                if ($o) { $objectName = $o->name; break; }
+                if ($o) {
+                    $objectName = $o->name;
+                    break;
+                }
             }
         }
 
@@ -247,16 +295,16 @@ class ObservationsController extends Controller
             $query->where('objectname', $objectName);
         }
 
-        $deepsky = $query->paginate(20, ['*'], 'deepsky');
+        $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
-            return view('observations.show', [
-                'user' => $user,
-                'deepsky' => $deepsky,
-                'comet' => collect(),
-                'mode' => 'deepsky',
-                'objectFilter' => true,
-                'objectName' => $objectName,
-            ]);
+        return view('observations.show', [
+            'user' => $user,
+            'deepsky' => $deepsky,
+            'comet' => collect(),
+            'mode' => 'deepsky',
+            'objectFilter' => true,
+            'objectName' => $objectName,
+        ]);
     }
 
     /**
@@ -272,9 +320,13 @@ class ObservationsController extends Controller
         $lower = mb_strtolower($raw);
         $candidates = [$lower];
         $slugified = Str::slug($raw, '-');
-        if ($slugified && $slugified !== $lower) { $candidates[] = $slugified; }
+        if ($slugified && $slugified !== $lower) {
+            $candidates[] = $slugified;
+        }
         $nospace = str_replace(' ', '', $lower);
-        if ($nospace !== $lower) { $candidates[] = $nospace; }
+        if ($nospace !== $lower) {
+            $candidates[] = $nospace;
+        }
         $candidates[] = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower);
         $candidates[] = str_replace('-', '', $lower);
         $candidates = array_values(array_unique(array_filter($candidates)));
@@ -282,9 +334,15 @@ class ObservationsController extends Controller
         $objectName = null;
         foreach ($candidates as $cand) {
             $on = DB::table('objectnames')->where('slug', $cand)->first();
-            if ($on) { $objectName = $on->objectname; break; }
+            if ($on) {
+                $objectName = $on->objectname;
+                break;
+            }
             $o = DB::table('objects')->where('slug', $cand)->first();
-            if ($o) { $objectName = $o->name; break; }
+            if ($o) {
+                $objectName = $o->name;
+                break;
+            }
         }
         if (! $objectName) {
             foreach ($candidates as $cand) {
@@ -292,10 +350,16 @@ class ObservationsController extends Controller
                     ->whereRaw('LOWER(objectname) = ?', [$cand])
                     ->orWhereRaw('LOWER(altname) = ?', [$cand])
                     ->first();
-                if ($on) { $objectName = $on->objectname; break; }
+                if ($on) {
+                    $objectName = $on->objectname;
+                    break;
+                }
 
                 $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
-                if ($o) { $objectName = $o->name; break; }
+                if ($o) {
+                    $objectName = $o->name;
+                    break;
+                }
             }
         }
 
@@ -304,7 +368,7 @@ class ObservationsController extends Controller
             $query->where('objectname', $objectName);
         }
 
-        $deepsky = $query->paginate(20, ['*'], 'deepsky');
+        $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
         return view('observations.show', [
             'user' => $user,

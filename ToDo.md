@@ -16,10 +16,10 @@
     + [X] Update laravel-astronomy-library to show a line instead of points for the altitude graph, add moon elevation to that graph.
     + [X] Add visibility information (best months to observe, ...) using graph
     + [X] Seen : Y(858/8) 20080929
-    + [ ] Add a list of observations of this object, with a link to the observation.
+    + [X] Quick links
+    + [X] Add a list of observations of this object, with a link to the observation.
     + [ ] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
     + [ ] Add nearby objects
-    + [ ] Quick links -> what to add?
     + [ ] Add extra information for planets: diameter, moon, date of conjunction / opposition, ...
     + [ ] Add graph of magnitude over a year for planets.
     + [ ] Add export to CSV, Excel, PDF (names PDF, details PDF), Argo Navis, SkySafari, Report, Maps
