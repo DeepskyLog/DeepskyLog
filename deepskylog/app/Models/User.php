@@ -273,7 +273,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getObservedCountFromCatalog(string $catalog): int
     {
-        return DB::connection('mysqlOld')->table('objectnames')
+        return DB::connection('mysql')->table('objectnames')
             ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
             ->where('observations.observerid', $this->username)
             ->where('observations.visibility', '!=', 7)
@@ -289,7 +289,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDrawingCountFromCatalog(string $catalog): int
     {
-        return DB::connection('mysqlOld')->table('objectnames')
+        return DB::connection('mysql')->table('objectnames')
             ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
             ->where('observations.observerid', $this->username)
             ->where('observations.visibility', '!=', 7)

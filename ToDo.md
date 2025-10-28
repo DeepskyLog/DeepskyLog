@@ -2,33 +2,35 @@
 
 + [ ] See GitHub: <https://github.com/DeepskyLog/DeepskyLog/issues>
 
-### Next steps
+## Next steps
 
 + [ ] Problem with Mockery in Pest
-    + [ ] XDEBUG_MODE=off ./vendor/bin/pest --filter DeepskyObjectTest -v
+  + [ ] XDEBUG_MODE=off ./vendor/bin/pest --filter DeepskyObjectTest -v
 + [ ] Targets
-    + [X] Create tables for deepsky, comets, planets, moons, lunar features, and other object types.
-    + [ ] Show information about an object, like type, constellation, other names, description, ...
-        + [X] Add Aladin preview:
-        + [X] Add date, rise, transit, set, best time and maximum altitude.
-        + [X] Add graph with elevation of the object for a location and a certain date -> method does exist in laravel-astronomy-library
-        + [X] Add moon and astronomical twilight information for that date and location.
-        + [X] Update laravel-astronomy-library to show a line instead of points for the altitude graph, add moon elevation to that graph.
-        + [X] Add visibility information (best months to observe, ...) using graph
-        + [ ] Seen : Y(858/8) 20080929
-        + [ ] Add a list of observations of this object, with a link to the observation.
-        + [ ] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
-        + [ ] Add nearby objects
-        + [ ] Add extra information for planets: diameter, moon, date of conjunction / opposition, ...
-        + [ ] Add graph of magnitude over a year for planets.
-        + [ ] Add export to CSV, Excel, PDF (names PDF, details PDF), Argo Navis, SkySafari, Report, Maps
-        + [ ] Add star map created from DeepskyLog or from external source (stellarium web, ...)?
-        + [ ] Add lists which have this object
-    + [ ] Administrator / Database expert pages to add / edit / delete objects
-    + [ ] Search targets, first by name, then by type, constellation, ...
-    + [ ] Install sqlite3 on the server to be able to use TNTSearch
+  + [X] Create tables for deepsky, comets, planets, moons, lunar features, and other object types.
+  + [ ] Show information about an object, like type, constellation, other names, description, ...
+    + [X] Add Aladin preview:
+    + [X] Add date, rise, transit, set, best time and maximum altitude.
+    + [X] Add graph with elevation of the object for a location and a certain date -> method does exist in laravel-astronomy-library
+    + [X] Add moon and astronomical twilight information for that date and location.
+    + [X] Update laravel-astronomy-library to show a line instead of points for the altitude graph, add moon elevation to that graph.
+    + [X] Add visibility information (best months to observe, ...) using graph
+    + [X] Seen : Y(858/8) 20080929
+    + [ ] Add a list of observations of this object, with a link to the observation.
+    + [ ] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
+    + [ ] Add nearby objects
+    + [ ] Quick links -> what to add?
+    + [ ] Add extra information for planets: diameter, moon, date of conjunction / opposition, ...
+    + [ ] Add graph of magnitude over a year for planets.
+    + [ ] Add export to CSV, Excel, PDF (names PDF, details PDF), Argo Navis, SkySafari, Report, Maps
+    + [ ] Add star map created from DeepskyLog or from external source (stellarium web, <https://theskylive.com/planetarium#ra|21.926851512758986|dec|-24.11458301299462|fov|36.14999999999999>, ...)?
+    + [ ] Add lists which have this object
+
++ [ ] Administrator / Database expert pages to add / edit / delete objects
++ [ ] Search targets, first by name, then by type, constellation, ...
++ [ ] Install sqlite3 on the server to be able to use TNTSearch
 + [ ] Release new version of pyDeepskyLog
-    + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
+  + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
 ### Distant future
 
@@ -62,7 +64,7 @@
 + [X] Add object type and constellation to the list of 10 newest observations
 + [X] Automatically translate the descriptions of observations on the home page.
 + [X] Add locations, instruments, eyepieces, lenses and filters to the new version of DeepskyLog.
-    + [X] Use /instrument/user-slug/instrument-slug as url
+  + [X] Use /instrument/user-slug/instrument-slug as url
 + [X] Add description and picture to locations, instruments, eyepieces, lenses and filters.
 + [X] Add a plot with the length of the night for a whole year when showing a location.
 + [X] Add instrument sets.
@@ -83,6 +85,6 @@
 + [ ] Timezones with php: Carbon: <https://carbon.nesbot.com/docs/#api-timezone>
 + [ ] <https://jamesmills.co.uk/2019/02/28/laravel-timezone/> for timezones / date
 + [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
-    + [ ] See https://laraveldaily.teachable.com/courses/393790/lectures/6329089
-+ [ ] Feeds: https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel
-+ [ ] Check https://laravel-comments.com/ for commenting on observations, observing lists, ...
+  + [ ] See <https://laraveldaily.teachable.com/courses/393790/lectures/6329089>
++ [ ] Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
++ [ ] Check <https://laravel-comments.com/> for commenting on observations, observing lists, ...
