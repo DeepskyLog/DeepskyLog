@@ -18,10 +18,18 @@
     + [X] Seen : Y(858/8) 20080929
     + [X] Quick links
     + [X] Add a list of observations of this object, with a link to the observation.
-    + [ ] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
+    + [X] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
     + [ ] Add nearby objects
-    + [ ] Add extra information for planets: diameter, moon, date of conjunction / opposition, ...
-    + [ ] Add graph of magnitude over a year for planets.
+    + [ ] Planets:
+      + [ ] Add extra information for planets: diameter, moon, date of conjunction / opposition, ...
+      + [ ] Add graph of magnitude over a year for planets.
+    + [ ] Comets
+      + [ ] Add sketch of the week?
+      + [ ] Correct the quick links
+      + [ ] Change the exernal database
+    + [ ] Moon
+      + [ ] Add extra information for lunar features: diameter, depth, ...
+      + [ ] Add graph of libration over a year for lunar features.
     + [ ] Add export to CSV, Excel, PDF (names PDF, details PDF), Argo Navis, SkySafari, Report, Maps
     + [ ] Add star map created from DeepskyLog or from external source (stellarium web, <https://theskylive.com/planetarium#ra|21.926851512758986|dec|-24.11458301299462|fov|36.14999999999999>, ...)?
     + [ ] Add lists which have this object

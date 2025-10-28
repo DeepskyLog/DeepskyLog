@@ -220,6 +220,48 @@
 
                     </div>
 
+                    {{-- Sketches that were DeepskyLog sketch(s) of the week for this object --}}
+                    @php
+                        // The observations legacy table lives on the mysqlOld connection.
+                        // Build a list of observation ids from the legacy DB matching this object's name
+$objectSketches = collect();
+try {
+    $objName = $session->name ?? '';
+    if (!empty($objName)) {
+        $obsIds = \Illuminate\Support\Facades\DB::connection('mysqlOld')
+            ->table('observations')
+            ->where('objectname', $objName)
+            ->pluck('id')
+            ->toArray();
+
+        if (!empty($obsIds)) {
+            $objectSketches = \App\Models\SketchOfTheWeek::whereIn('observation_id', $obsIds)
+                ->orderByDesc('date')
+                ->get();
+        }
+    }
+} catch (\Throwable $_) {
+    // Fail silently: keep $objectSketches empty so the section simply doesn't render
+                            $objectSketches = collect();
+                        }
+                    @endphp
+
+                    @if ($objectSketches->isNotEmpty())
+                        <div class="mt-6">
+                            <h2 class="text-xl font-semibold text-white">{{ __('Sketch of the Week') }}</h2>
+                            <div class="mt-2">
+                                <x-card>
+                                    <div class="flex flex-wrap px-5">
+                                        @foreach ($objectSketches as $sketch)
+                                            <x-sketch :sketch="$sketch" />
+                                        @endforeach
+                                    </div>
+                                    {{-- If there are many sketches we could paginate here, but usually this is small --}}
+                                </x-card>
+                            </div>
+                        </div>
+                    @endif
+
                 </article>
 
                 <aside class="w-full xl:col-span-2 xl:w-auto">
@@ -780,12 +822,14 @@
                     var dab = _alc.getAttribute('data-available');
                     if (dab) DSL_AVAILABLE = JSON.parse(atob(dab));
                 } catch (e) {
-                    /* ignore */ }
+                    /* ignore */
+                }
                 try {
                     var dslb = _alc.getAttribute('data-dsl-text');
                     if (dslb) DSL_TEXT = JSON.parse(atob(dslb));
                 } catch (e) {
-                    /* ignore */ }
+                    /* ignore */
+                }
             }
         } catch (e) {}
 
@@ -1038,7 +1082,7 @@
                 } catch (e) {}
             }
             if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded',
-            initEphemDateInput);
+                initEphemDateInput);
             else initEphemDateInput();
         } catch (e) {}
 
@@ -1127,9 +1171,11 @@
                 try {
                     if (typeof aladinInstance.setFov === 'function') aladinInstance.setFov(desiredDisplay);
                 } catch (e) {
-                    /* ignore setFov failures */ }
+                    /* ignore setFov failures */
+                }
             } catch (e) {
-                /* ignore */ }
+                /* ignore */
+            }
         }
 
         // Helper wrapper: call setDisplayFovForVertical multiple times (with delays) to survive
@@ -1264,7 +1310,8 @@
                                 if (pos === 'absolute' || pos === 'fixed' || (!isNaN(z) && z >= 10)) hide =
                                     true;
                             } catch (e) {
-                                /* ignore */ }
+                                /* ignore */
+                            }
                             // Additionally, hide if element contains toolbar-like controls (buttons/inputs) but is not the viewport
                             try {
                                 if (!hide && ch.querySelector && (ch.querySelector(
@@ -1413,10 +1460,12 @@
                                     done = true;
                                     return;
                                 } catch (e) {
-                                    /* continue to next method */ }
+                                    /* continue to next method */
+                                }
                             }
                         } catch (e) {
-                            /* continue to next method */ }
+                            /* continue to next method */
+                        }
 
                         // Second: try to find an image element inside the container and fetch it
                         try {
@@ -1434,7 +1483,8 @@
                                         done = true;
                                         return;
                                     } catch (e) {
-                                        /* fallback to fetch below */ }
+                                        /* fallback to fetch below */
+                                    }
                                 }
                                 // Otherwise fetch the resource as blob then download. 
                                 fetch(src, {
@@ -1463,7 +1513,8 @@
                                 return;
                             }
                         } catch (e) {
-                            /* continue */ }
+                            /* continue */
+                        }
 
                         // Final fallback: open full Aladin page for manual save
                         function openFullAladin() {
@@ -1661,7 +1712,8 @@
                                 }
                             }
                         } catch (e) {
-                            /* ignore match errors */ }
+                            /* ignore match errors */
+                        }
                     }
                 } catch (e) {}
                 readSelectsIntoDefaults();
@@ -1795,7 +1847,7 @@
                                             style = (el.style && el.style.transform) || '';
                                         }
                                         return [(el.tagName || '').toLowerCase(), id, w, h, style].join(
-                                        '|');
+                                            '|');
                                     } catch (e) {
                                         return '';
                                     }
@@ -1874,7 +1926,7 @@
                                                                     'iframe' || tag === 'img' ||
                                                                     (n.querySelector && n
                                                                         .querySelector('canvas')
-                                                                        )) sawRelevant = true;
+                                                                    )) sawRelevant = true;
                                                             }
                                                         } catch (e) {}
                                                     });
@@ -2083,7 +2135,8 @@
                         } catch (e) {}
                     } catch (e) {}
                 } catch (e) {
-                    /* non-fatal */ }
+                    /* non-fatal */
+                }
             } catch (e) {}
             // expose center to global so dropdown updates can re-center overlays
             __dslCenterRaDeg = centerRaDeg;
@@ -2112,7 +2165,7 @@
                         if (sel) {
                             try {
                                 if (sel.tom && typeof sel.tom.getValue === 'function') v = sel.tom
-                                .getValue();
+                                    .getValue();
                             } catch (e) {}
                             if (!v) v = sel.value || (sel.dataset && sel.dataset.tsValue) || '';
                         }
@@ -2160,7 +2213,8 @@
                     }
                 }
             } catch (e) {
-                /* non-fatal; keep displayFovDeg as computed above */ }
+                /* non-fatal; keep displayFovDeg as computed above */
+            }
             var magUsed = null;
             try {
                 if (aladinDefaults) {
@@ -2271,7 +2325,7 @@
                             if (currentDisplay && eyeFovDeg) {
                                 // preferred: compute directly from FOV (pixel radius). Rely on Aladin's reported FOV to reflect zoom.
                                 var baseRadius = (Number(eyeFovDeg) / Number(currentDisplay)) * (minDim /
-                                2);
+                                    2);
                                 radiusPx = baseRadius;
                                 // remember this radius for future adjustments/fallbacks
                                 aladinInstance.__dslPrevRadiusPx = radiusPx;
@@ -2326,7 +2380,7 @@
                         var size = Math.max(8, Math.min(softMax, Math.round(radiusPx * 2)));
                         // If the overlay is substantially larger than the container, hide it entirely to avoid stray arcs showing.
                         var hideThreshold =
-                        1.05; // hide when diameter exceeds container min-dimension by 5%
+                            1.05; // hide when diameter exceeds container min-dimension by 5%
                         if (size > Math.round(minDim * hideThreshold)) {
                             existing.style.display = 'none';
                         } else {
@@ -2413,7 +2467,8 @@
                                 try {
                                     aladinInstance.on('zoom', aladinInstance.__dslAladinListener);
                                 } catch (e) {
-                                    /* ignore */ }
+                                    /* ignore */
+                                }
                             } else if (typeof aladinInstance.addListener === 'function') {
                                 aladinInstance.__dslAladinListener = function() {
                                     updateDomFovOverlay(aladinInstance, eyeFovDeg);
@@ -2421,7 +2476,8 @@
                                 try {
                                     aladinInstance.addListener('zoom', aladinInstance.__dslAladinListener);
                                 } catch (e) {
-                                    /* ignore */ }
+                                    /* ignore */
+                                }
                             }
                         } catch (e) {}
 
@@ -3196,7 +3252,7 @@
                 // update FoV legend again in case mag/lens changed eyeFovDeg calculation
                 try {
                     if (fovEl) fovEl.textContent = (typeof eyeFovDeg === 'number' ? formatFovLabel(eyeFovDeg) :
-                    '—');
+                        '—');
                 } catch (e) {}
 
                 // update Aladin if instance already present
@@ -3305,7 +3361,8 @@
                     aladinDefaults.lens = null;
                 }
             } catch (e) {
-                /* ignore */ }
+                /* ignore */
+            }
         }
 
         function scheduleApplyAladinSelectsUpdate() {
@@ -3408,7 +3465,7 @@
                         if (!selectEl || !hiddenEl) return;
                         var v = selectEl.value || '';
                         if (!v && selectEl.dataset && selectEl.dataset.tsValue) v = selectEl.dataset
-                        .tsValue; // fallback
+                            .tsValue; // fallback
                         if (hiddenEl.value !== v) {
 
                             hiddenEl.value = v;
@@ -3491,7 +3548,7 @@
                             attachSelectSyncing();
                             // proactively sync visible values into hidden inputs when found
                             var instHidden = document.getElementById(
-                            'aladin-instrument-hidden');
+                                'aladin-instrument-hidden');
                             var epHidden = document.getElementById('aladin-eyepiece-hidden');
                             var lnHidden = document.getElementById('aladin-lens-hidden');
                             if (instHidden) {
@@ -3514,7 +3571,7 @@
                             }
                             if (lnHidden) {
                                 var wrapper3 = document.querySelector(
-                                    '[data-dsl-field="lens"]') || lnHidden.parentElement ||
+                                        '[data-dsl-field="lens"]') || lnHidden.parentElement ||
                                     null;
                                 if (wrapper3) {
                                     var s3 = wrapper3.querySelector('select');
@@ -3541,12 +3598,14 @@
                             var dab = _alc.getAttribute('data-available');
                             if (dab) DSL_AVAILABLE = JSON.parse(atob(dab));
                         } catch (e) {
-                            /* ignore */ }
+                            /* ignore */
+                        }
                         try {
                             var dslb = _alc.getAttribute('data-dsl-text');
                             if (dslb) DSL_TEXT = JSON.parse(atob(dslb));
                         } catch (e) {
-                            /* ignore */ }
+                            /* ignore */
+                        }
                     }
                 } catch (e) {}
                 // hidden inputs are updated by x-select change handlers; still call schedule to apply
@@ -3733,7 +3792,7 @@
                                                 try {
                                                     if (typeof window
                                                         .__dsl_emitAladin === 'function'
-                                                        ) {
+                                                    ) {
                                                         try {
                                                             if (window
                                                                 .__dsl_debug_aladin)
@@ -3762,7 +3821,7 @@
                                                 var control = (!v && wrapper) ? wrapper
                                                     .querySelector(
                                                         'input[type="text"], [role="combobox"], input'
-                                                        ) : null;
+                                                    ) : null;
                                                 if (!v && control) try {
                                                     v = control.value || '';
                                                 } catch (e) {}
@@ -3771,7 +3830,7 @@
                                                 }
                                                 // Normalize empty strings vs null-ish
                                                 var hv = (hidden.value || '')
-                                            .toString();
+                                                    .toString();
                                                 var vv = (v || '').toString();
                                                 if (hv !== vv) mismatches.push({
                                                     which: k,
@@ -3780,7 +3839,7 @@
                                                     wrapperText: (wrapper ? (
                                                         wrapper
                                                         .innerText || ''
-                                                        ).trim() : '')
+                                                    ).trim() : '')
                                                 });
                                             } catch (e) {}
                                         });
@@ -3819,7 +3878,7 @@
                                     // fall back to underlying select element if hidden input is empty
                                     try {
                                         if ((!out.instrument_id || out.instrument_id ===
-                                            '') && instHidden) {
+                                                '') && instHidden) {
                                             var wrapper = document.querySelector(
                                                     '[data-dsl-field="instrument"]') ||
                                                 instHidden.parentElement || null;
@@ -3832,7 +3891,7 @@
                                                 var control = wrapper ? wrapper
                                                     .querySelector(
                                                         'input[type="text"], [role="combobox"], input'
-                                                        ) : null;
+                                                    ) : null;
                                                 try {
                                                     if (control && control.value) out
                                                         .instrument_id = control.value;
@@ -3871,18 +3930,18 @@
                                                 'select') : null;
                                             if (s2 && s2.value) out.eyepiece_id = s2.value;
                                             if ((!out.eyepiece_id || out.eyepiece_id ===
-                                                '')) {
+                                                    '')) {
                                                 var control2 = wrapper2 ? wrapper2
                                                     .querySelector(
                                                         'input[type="text"], [role="combobox"], input'
-                                                        ) : null;
+                                                    ) : null;
                                                 try {
                                                     if (control2 && control2.value) out
                                                         .eyepiece_id = control2.value;
                                                 } catch (e) {}
                                             }
                                             if ((!out.eyepiece_id || out.eyepiece_id ===
-                                                '') && DSL_AVAILABLE && Array.isArray(
+                                                    '') && DSL_AVAILABLE && Array.isArray(
                                                     DSL_AVAILABLE.eyepieces)) {
                                                 try {
                                                     var w2 = epHidden.parentElement
@@ -3914,7 +3973,7 @@
                                                 var control3 = wrapper3 ? wrapper3
                                                     .querySelector(
                                                         'input[type="text"], [role="combobox"]'
-                                                        ) : null;
+                                                    ) : null;
                                                 try {
                                                     if (control3 && control3.value) out
                                                         .lens_id = control3.value;
@@ -4187,7 +4246,7 @@
                             objectId: (document.getElementById('aladin-lite-container') && document
                                     .getElementById('aladin-lite-container').getAttribute) ? document
                                 .getElementById('aladin-lite-container').getAttribute(
-                                'data-object-id') : (window.__dsl_server_selected && window
+                                    'data-object-id') : (window.__dsl_server_selected && window
                                     .__dsl_server_selected.objectId) || window
                                 .__dsl_embedded_objectId || null
                         };
@@ -4210,7 +4269,7 @@
                         }
                         try {
                             console.debug('[dsl] attempting recalc via __dsl_emitAladinUpdated ->',
-                            payload);
+                                payload);
                         } catch (e) {}
                         try {
                             if (typeof window.__dsl_emitAladinUpdated === 'function') {
@@ -4377,7 +4436,7 @@
                             objectId: (document.getElementById('aladin-lite-container') && document
                                     .getElementById('aladin-lite-container').getAttribute) ? document
                                 .getElementById('aladin-lite-container').getAttribute(
-                                'data-object-id') : (window.__dsl_server_selected && window
+                                    'data-object-id') : (window.__dsl_server_selected && window
                                     .__dsl_server_selected.objectId) || window
                                 .__dsl_embedded_objectId || null
                         };
@@ -4570,7 +4629,8 @@
                     return true;
                 } catch (e) {}
             } catch (e) {
-                /* ignore */ }
+                /* ignore */
+            }
             // retry a few times with backoff if Livewire not yet ready
             if (attempt < 6) {
                 setTimeout(function() {
