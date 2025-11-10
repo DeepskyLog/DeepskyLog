@@ -222,4 +222,59 @@ class NearbyExportController extends Controller
             return redirect()->back()->with('error', __('Failed to generate Argo Navis export'));
         }
     }
+
+    /**
+     * Export nearby objects in SkySafari .skylist format (plain text).
+     * Delegates to the NearbyObjectsTable Livewire component if available.
+     */
+    public function skylist(Request $request, $slug = null)
+    {
+        try {
+            $ra = $request->query('ra');
+            $dec = $request->query('dec');
+            $radiusArcMin = intval($request->query('radius', 30));
+
+            if ($ra === null || $dec === null) {
+                if ($slug) {
+                    $obj = DeepskyObject::where('slug', $slug)->orWhere('name', $slug)->first();
+                    if ($obj) {
+                        $ra = $obj->ra;
+                        $dec = $obj->decl;
+                    }
+                }
+            }
+
+            if ($ra === null || $dec === null) {
+                return redirect()->back()->with('error', __('Missing coordinates for nearby export'));
+            }
+
+            // Instantiate the Livewire component and run lifecycle
+            $comp = new \App\Livewire\NearbyObjectsTable();
+            if (method_exists($comp, 'boot')) {
+                try {
+                    $comp->boot();
+                } catch (\Throwable $_) {
+                }
+            }
+            if (method_exists($comp, 'mount')) {
+                try {
+                    $comp->mount();
+                } catch (\Throwable $_) {
+                }
+            }
+
+            $comp->ra = $ra;
+            $comp->decl = $dec;
+            $comp->radiusArcMin = $radiusArcMin;
+
+            if (method_exists($comp, 'exportSkylist')) {
+                return $comp->exportSkylist();
+            }
+
+            return redirect()->back()->with('error', __('Skylist export not available'));
+        } catch (\Throwable $ex) {
+            Log::error('NearbyExportController::skylist failed', ['error' => (string)$ex]);
+            return redirect()->back()->with('error', __('Failed to generate SkySafari export'));
+        }
+    }
 }

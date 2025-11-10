@@ -142,8 +142,8 @@ class NearbyObjectsTable extends PowerGridComponent
             PowerGrid::header()->showSearchInput()->showToggleColumns(),
             PowerGrid::footer()->showPerPage($this->perPage)->showRecordCount(),
             PowerGrid::responsive()->fixedColumns('name'),
-            // Include custom 'argo' export type so the export dropdown can show it.
-            PowerGrid::exportable('export')->striped()->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV, 'argo'),
+            // Include custom 'argo' and 'skylist' export types so the export dropdown can show them.
+            PowerGrid::exportable('export')->striped()->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV, 'argo', 'skylist'),
         ];
     }
 
@@ -2705,6 +2705,234 @@ class NearbyObjectsTable extends PowerGridComponent
     }
 
     /**
+     * Export nearby objects in SkySafari .skylist format.
+     * The file starts with SkySafariObservingListVersion=3.0 and each object is a new line.
+     */
+    public function exportSkylist()
+    {
+        try {
+            $query = $this->datasource();
+            $rows = $query ? $query->get() : collect();
+
+            // Helper: format diameter/extra data (re-use Argo style summary)
+            $formatDiameter = function ($d1, $d2, $pa = null) {
+                $hasD1 = is_numeric($d1) && floatval($d1) > 0;
+                $hasD2 = is_numeric($d2) && floatval($d2) > 0;
+                if (! $hasD1 && ! $hasD2) return '';
+                $d1f = $hasD1 ? floatval($d1) : 0.0;
+                $d2f = $hasD2 ? floatval($d2) : 0.0;
+                $fmt = function ($v) {
+                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v);
+                };
+                if ($hasD1 && $hasD2) {
+                    if (max($d1f, $d2f) > 60.0) {
+                        $d1m = $d1f / 60.0;
+                        $d2m = $d2f / 60.0;
+                        $d1m_fmt = $fmt($d1m);
+                        $d2m_fmt = $fmt($d2m);
+                        if ($d1m_fmt === '0' || $d1m_fmt === '0.0' || $d2m_fmt === '0' || $d2m_fmt === '0.0') {
+                            $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
+                        } else {
+                            $size = $d1m_fmt . "'x" . $d2m_fmt . "'";
+                        }
+                    } else {
+                        $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
+                    }
+                } else {
+                    $single = $hasD1 ? $d1f : $d2f;
+                    if ($single > 60.0) {
+                        $single_fmt = $fmt($single / 60.0) . "'";
+                    } else {
+                        $single_fmt = $fmt($single) . "''";
+                    }
+                    $size = $single_fmt;
+                }
+                if (is_numeric($pa) && intval(round(floatval($pa))) !== 999) {
+                    $size .= '/' . sprintf('%d', round(floatval($pa))) . '°';
+                }
+                return $size;
+            };
+
+            // Small helper to detect planets by name
+            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
+
+            $blocks = $rows->map(function ($r) use ($formatDiameter, $planetNames) {
+                $catalog = trim((string) ($r->name ?? ''));
+                $common = '';
+                try {
+                    $common = (string) ($r->proper_name ?? $r->common_name ?? '');
+                } catch (\Throwable $_) {
+                    $common = '';
+                }
+
+                // DateObserved: use ephemerisDate if set, otherwise omit
+                $date = $this->ephemerisDate ? $this->ephemerisDate : null;
+
+                $size = $formatDiameter($r->diam1 ?? null, $r->diam2 ?? null, $r->pa ?? null);
+                $atlas = $this->includeAtlas ? ($r->atlas_page ?? '') : '';
+                $cr = isset($r->contrast_reserve) && is_numeric($r->contrast_reserve) ? number_format(round(floatval($r->contrast_reserve), 2), 2) : ($r->contrast_reserve_category ?? '');
+                $best = $this->computeBestMagForExport($r);
+
+                // Determine object type id: planets=1, stars=2, deep-sky=4 (default)
+                $lowerName = strtolower($catalog);
+                $objectId = '4,-1,-1';
+                if (in_array($lowerName, $planetNames, true) || in_array(strtolower($common), $planetNames, true)) {
+                    $objectId = '1,-1,-1';
+                } else {
+                    $rawType = strtoupper(trim((string) ($r->type ?? '')));
+                    $typeName = strtoupper(trim((string) ($r->type_name ?? '')));
+                    if (str_contains($rawType, 'STAR') || str_contains($typeName, 'STAR')) {
+                        $objectId = '2,-1,-1';
+                    }
+                }
+
+                $lines = [];
+                $lines[] = "SkyObject=BeginObject";
+                $lines[] = "   ObjectID={$objectId}";
+                if ($catalog !== '') {
+                    $lines[] = "   CatalogNumber=" . str_replace("\n", "\\n", $catalog);
+                }
+                if ($common !== '') {
+                    $lines[] = "   CommonName=" . str_replace("\n", "\\n", $common);
+                }
+                if ($date) {
+                    $lines[] = "   DateObserved={$date}";
+                }
+                // Comments intentionally omitted for SkySafari format
+                $lines[] = "EndObject=SkyObject";
+
+                return implode("\n", $lines);
+            })->values()->all();
+
+            $content = "SkySafariObservingListVersion=3.0\n" . implode("\n\n", $blocks) . "\n";
+
+            $filename = 'nearby_objects_' . date('Ymd_His') . '.skylist';
+            return response()->streamDownload(function () use ($content) {
+                echo $content;
+            }, $filename, ['Content-Type' => 'text/plain']);
+        } catch (\Throwable $ex) {
+            Log::error('NearbyObjectsTable::exportSkylist failed', ['error' => (string)$ex]);
+            session()->flash('error', __('Failed to generate SkySafari export'));
+        }
+
+        return redirect(request()->header('Referer') ?? url()->current());
+    }
+
+    /**
+     * Livewire action invoked from PowerGrid export menu to export Skylist format.
+     * If $selected is true, only export rows selected by checkboxes.
+     */
+    public function exportToSkylist($selected = false)
+    {
+        try {
+            $query = $this->datasource();
+            $rows = $query ? $query->get() : collect();
+
+            if ($selected) {
+                $selectedKeys = is_array($this->checkboxValues) ? $this->checkboxValues : [];
+                if (! empty($selectedKeys)) {
+                    $rows = $rows->filter(function ($r) use ($selectedKeys) {
+                        $key = $r->id ?? null;
+                        return in_array($key, $selectedKeys, true);
+                    })->values();
+                } else {
+                    session()->flash('error', __('No rows selected for export'));
+                    return redirect(request()->header('Referer') ?? url()->current());
+                }
+            }
+
+            // Reuse the same formatting as exportSkylist by temporarily building the content here
+            $formatDiameter = function ($d1, $d2, $pa = null) {
+                $hasD1 = is_numeric($d1) && floatval($d1) > 0;
+                $hasD2 = is_numeric($d2) && floatval($d2) > 0;
+                if (! $hasD1 && ! $hasD2) return '';
+                $d1f = $hasD1 ? floatval($d1) : 0.0;
+                $d2f = $hasD2 ? floatval($d2) : 0.0;
+                $fmt = function ($v) {
+                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v);
+                };
+                if ($hasD1 && $hasD2) {
+                    if (max($d1f, $d2f) > 60.0) {
+                        $d1m = $d1f / 60.0;
+                        $d2m = $d2f / 60.0;
+                        $d1m_fmt = $fmt($d1m);
+                        $d2m_fmt = $fmt($d2m);
+                        if ($d1m_fmt === '0' || $d1m_fmt === '0.0' || $d2m_fmt === '0' || $d2m_fmt === '0.0') {
+                            $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
+                        } else {
+                            $size = $d1m_fmt . "'x" . $d2m_fmt . "'";
+                        }
+                    } else {
+                        $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
+                    }
+                } else {
+                    $single = $hasD1 ? $d1f : $d2f;
+                    if ($single > 60.0) {
+                        $single_fmt = $fmt($single / 60.0) . "'";
+                    } else {
+                        $single_fmt = $fmt($single) . "''";
+                    }
+                    $size = $single_fmt;
+                }
+                if (is_numeric($pa) && intval(round(floatval($pa))) !== 999) {
+                    $size .= '/' . sprintf('%d', round(floatval($pa))) . '°';
+                }
+                return $size;
+            };
+
+            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
+
+            $lines = $rows->map(function ($r) use ($formatDiameter, $planetNames) {
+                $catalog = trim((string) ($r->name ?? ''));
+                $common = '';
+                try {
+                    $common = (string) ($r->proper_name ?? $r->common_name ?? '');
+                } catch (\Throwable $_) {
+                    $common = '';
+                }
+                $date = $this->ephemerisDate ? $this->ephemerisDate : date('Y-m-d');
+                $size = $formatDiameter($r->diam1 ?? null, $r->diam2 ?? null, $r->pa ?? null);
+                $atlas = $this->includeAtlas ? ($r->atlas_page ?? '') : '';
+                $cr = isset($r->contrast_reserve) && is_numeric($r->contrast_reserve) ? number_format(round(floatval($r->contrast_reserve), 2), 2) : ($r->contrast_reserve_category ?? '');
+                $best = $this->computeBestMagForExport($r);
+
+                $lowerName = strtolower($catalog);
+                $objectId = '4,-1,-1';
+                if (in_array($lowerName, $planetNames, true) || in_array(strtolower($common), $planetNames, true)) {
+                    $objectId = '1,-1,-1';
+                } else {
+                    $rawType = strtoupper(trim((string) ($r->type ?? '')));
+                    $typeName = strtoupper(trim((string) ($r->type_name ?? '')));
+                    if (str_contains($rawType, 'STAR') || str_contains($typeName, 'STAR')) {
+                        $objectId = '2,-1,-1';
+                    }
+                }
+
+                $safe = function ($v) {
+                    $s = trim((string)$v);
+                    return str_replace(',', ' ', $s);
+                };
+
+                $fields = [$safe($catalog), $safe($common), $safe($date), $objectId];
+                return implode(', ', array_filter($fields, function ($f) {
+                    return $f !== '' || $f === '0';
+                }));
+            })->values()->all();
+
+            $content = "SkySafariObservingListVersion=3.0\n" . implode("\n", $lines) . "\n";
+            $filename = 'nearby_objects_' . date('Ymd_His') . '.skylist';
+            return response()->streamDownload(function () use ($content) {
+                echo $content;
+            }, $filename, ['Content-Type' => 'text/plain']);
+        } catch (\Throwable $ex) {
+            Log::error('NearbyObjectsTable::exportToSkylist failed', ['error' => (string)$ex]);
+            session()->flash('error', __('Failed to generate SkySafari export'));
+        }
+
+        return redirect(request()->header('Referer') ?? url()->current());
+    }
+
+    /**
      * Livewire action invoked from PowerGrid export menu to export Argo format.
      * If $selected is true, only export rows selected by checkboxes.
      */
@@ -3154,6 +3382,17 @@ class NearbyObjectsTable extends PowerGridComponent
         $m = floor(($abs - $d) * 60.0);
         $s = ($abs - $d - $m / 60.0) * 3600.0;
 
+        // Round seconds to one decimal for display and normalize overflow
+        $s = round($s, 1);
+        if ($s >= 60.0) {
+            $s = 0.0;
+            $m += 1;
+        }
+        if ($m >= 60) {
+            $m = 0;
+            $d += 1;
+        }
+
         return sprintf("%s%02d° %02d' %04.1f\"", $sign, $d, $m, $s);
     }
 
@@ -3171,6 +3410,17 @@ class NearbyObjectsTable extends PowerGridComponent
         $d = floor($deg);
         $m = floor(($deg - $d) * 60.0);
         $s = ($deg - $d - $m / 60.0) * 3600.0;
+
+        // Round seconds to one decimal and normalize overflow after rounding to avoid 60.0 being displayed
+        $s = round($s, 1);
+        if ($s >= 60.0) {
+            $s = 0.0;
+            $m += 1;
+        }
+        if ($m >= 60) {
+            $m = 0;
+            $d += 1;
+        }
 
         // If there are 0 degrees, omit the degrees portion (show minutes and seconds)
         if ((int) $d === 0) {

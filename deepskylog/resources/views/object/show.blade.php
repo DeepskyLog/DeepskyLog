@@ -383,6 +383,15 @@ try {
                                                     $exportArgoBase .= '&dec=' . rawurlencode($nearbyDecDeg ?? '');
                                                     $exportArgoBase .=
                                                         '&radius=' . rawurlencode($nearbyRadiusSelected ?? 30);
+                                                    // SkySafari .skylist export URL
+                                                    $exportSkylistBase =
+                                                        route('object.nearby.skylist', [
+                                                            'slug' => $canonicalSlug ?? ($session->slug ?? ''),
+                                                        ]) . '?';
+                                                    $exportSkylistBase .= 'ra=' . rawurlencode($nearbyRaDeg ?? '');
+                                                    $exportSkylistBase .= '&dec=' . rawurlencode($nearbyDecDeg ?? '');
+                                                    $exportSkylistBase .=
+                                                        '&radius=' . rawurlencode($nearbyRadiusSelected ?? 30);
                                                 @endphp
 
                                                 <div class="relative inline-block text-left">
@@ -416,6 +425,10 @@ try {
                                                                 rel="noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export Argo Navis') }}</a>
+                                                            <a href="{{ $exportSkylistBase }}" target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                class="block px-4 py-2 hover:bg-gray-700"
+                                                                role="menuitem">{{ __('Export SkySafari (.skylist)') }}</a>
                                                         </div>
                                                     </div>
                                                 </div>

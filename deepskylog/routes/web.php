@@ -278,6 +278,10 @@ Route::get('/object/{slug}/nearby-table.pdf', [App\Http\Controllers\NearbyExport
 Route::get('/object/{slug}/nearby-argo.txt', [App\Http\Controllers\NearbyExportController::class, 'argoNavis'])
     ->name('object.nearby.argo')->middleware('doNotCacheResponse');
 
+// Nearby SkySafari .skylist export (plain text)
+Route::get('/object/{slug}/nearby-skylist.skylist', [App\Http\Controllers\NearbyExportController::class, 'skylist'])
+    ->name('object.nearby.skylist')->middleware('doNotCacheResponse');
+
 // Create session (authenticated)
 Route::get('/sessions/create', [App\Http\Controllers\SessionController::class, 'create'])
     ->name('session.create')->middleware(['auth', 'doNotCacheResponse']);
