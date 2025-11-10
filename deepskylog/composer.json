@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "barryvdh/laravel-dompdf": "^3.1",
         "cjmellor/level-up": "^1.2",
         "cviebrock/eloquent-sluggable": "^12.0",
         "deepskylog/laravel-astronomy-library": ">=6",
@@ -21,8 +22,7 @@
         "laravel/framework": "^12",
         "laravel/jetstream": "^5.1",
         "laravel/sanctum": "^4.0",
-    "laravel/tinker": "^2.7",
-    "teamtnt/tntsearch": "5.0.2",
+        "laravel/tinker": "^2.7",
         "livewire/livewire": "^3",
         "marineusde/larapex-charts": "^1.4",
         "monarobase/country-list": "^3.4",
@@ -33,12 +33,12 @@
         "stichoza/google-translate-php": "^5.2",
         "symfony/http-client": "^7",
         "symfony/mailgun-mailer": "^7",
+        "teamtnt/tntsearch": "5.0.2",
         "tinymce/tinymce": "^8",
         "wireui/wireui": "^2"
     },
     "require-dev": {
         "amirami/localizator": "v0.14.0-alpha",
-        "barryvdh/laravel-debugbar": "^3.13",
         "fakerphp/faker": "^1.9.1",
         "friendsofphp/php-cs-fixer": "^3.88",
         "laravel/pint": "*",
