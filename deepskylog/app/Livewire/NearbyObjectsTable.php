@@ -142,7 +142,8 @@ class NearbyObjectsTable extends PowerGridComponent
             PowerGrid::header()->showSearchInput()->showToggleColumns(),
             PowerGrid::footer()->showPerPage($this->perPage)->showRecordCount(),
             PowerGrid::responsive()->fixedColumns('name'),
-            PowerGrid::exportable('export')->striped()->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+            // Include custom 'argo' export type so the export dropdown can show it.
+            PowerGrid::exportable('export')->striped()->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV, 'argo'),
         ];
     }
 
@@ -2313,20 +2314,79 @@ class NearbyObjectsTable extends PowerGridComponent
             // Export-only plain CR value
             $cols[] = Column::make(__('CR'), 'contrast_reserve_plain')->hidden()->visibleInExport(true);
         }
-
         $cols = array_merge($cols, [
             Column::make(__('Size'), 'size')->sortable()->bodyAttribute('class', 'text-center'),
-            // Include the Atlas column in the server-side column list so PowerGrid's
-            // Toggle Columns UI can show it. The cell renderer (`fields()->add('atlas_page')`)
-            // returns empty when `$this->includeAtlas` is false, so it's safe to
-            // always declare the column here. Make the column sortable so users can order by atlas page.
-            Column::make($atlasTitle, 'atlas_page')
-                ->sortable()
-                ->headerAttribute('class', 'atlas-header')
-                ->bodyAttribute('class', 'text-center'),
         ]);
 
+        // Only show the Atlas column when the authenticated user has a configured standard atlas.
+        // This prevents showing an empty Atlas column to anonymous visitors.
+        try {
+            $authUser = Auth::user();
+            $showAtlasColumn = false;
+            if ($authUser && ! empty($authUser->standardAtlasCode) && preg_match('/^[A-Za-z0-9_]+$/', $authUser->standardAtlasCode)) {
+                $showAtlasColumn = true;
+            }
+        } catch (\Throwable $_) {
+            $showAtlasColumn = false;
+        }
+
+        if ($showAtlasColumn) {
+            $cols[] = Column::make($atlasTitle, 'atlas_page')
+                ->sortable()
+                ->headerAttribute('class', 'atlas-header')
+                ->bodyAttribute('class', 'text-center');
+        }
+
         return $cols;
+    }
+
+    /**
+     * Define per-row action rules so PowerGrid can attach classes to each row.
+     * We use the `rule.loop` closure so we can inspect the loop index and
+     * alternate classes for odd/even rows. PowerGrid will evaluate these
+     * rules server-side and the frontend will apply the resulting classes.
+     *
+     * @param mixed $row
+     * @return array
+     */
+    public function actionRules(mixed $row): array
+    {
+        return [
+            [
+                'forAction' => 'stripe_odd',
+                'rule' => [
+                    // apply when the loop index is even (0-based), i.e. 1st,3rd,... rows
+                    'loop' => function ($loop) {
+                        try {
+                            return (isset($loop->index) && intval($loop->index) % 2 === 0);
+                        } catch (\Throwable $_) {
+                            return false;
+                        }
+                    },
+                    'setAttribute' => [
+                        'attribute' => 'class',
+                        'value' => 'dsl-row-odd',
+                    ],
+                ],
+            ],
+            [
+                'forAction' => 'stripe_even',
+                'rule' => [
+                    // apply when the loop index is odd (0-based), i.e. 2nd,4th,... rows
+                    'loop' => function ($loop) {
+                        try {
+                            return (isset($loop->index) && intval($loop->index) % 2 === 1);
+                        } catch (\Throwable $_) {
+                            return false;
+                        }
+                    },
+                    'setAttribute' => [
+                        'attribute' => 'class',
+                        'value' => 'dsl-row-even',
+                    ],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -2383,6 +2443,660 @@ class NearbyObjectsTable extends PowerGridComponent
         }
 
         return redirect(request()->header('Referer') ?? url()->current());
+    }
+
+    /**
+     * Export the full nearby objects table to a landscape PDF.
+     * Contains: name, RA, Dec, type, constellation, magnitude, SB, Diameter, position angle,
+     * atlas page, contrast reserve, best magnification, seen, last seen.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function exportPdf()
+    {
+        try {
+            $query = $this->datasource();
+            $rows = $query ? $query->get() : collect();
+
+            // Helper to format diameter similar to the size closure used in fields()
+            $formatDiameter = function ($d1, $d2, $pa = null) {
+                $hasD1 = is_numeric($d1) && floatval($d1) > 0;
+                $hasD2 = is_numeric($d2) && floatval($d2) > 0;
+                if (! $hasD1 && ! $hasD2) return '';
+                $d1f = $hasD1 ? floatval($d1) : 0.0;
+                $d2f = $hasD2 ? floatval($d2) : 0.0;
+                $fmt = function ($v) {
+                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v);
+                };
+                if ($hasD1 && $hasD2) {
+                    if (max($d1f, $d2f) > 60.0) {
+                        $d1m = $d1f / 60.0;
+                        $d2m = $d2f / 60.0;
+                        $d1m_fmt = $fmt($d1m);
+                        $d2m_fmt = $fmt($d2m);
+                        if ($d1m_fmt === '0' || $d1m_fmt === '0.0' || $d2m_fmt === '0' || $d2m_fmt === '0.0') {
+                            $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
+                        } else {
+                            $size = $d1m_fmt . "'x" . $d2m_fmt . "'";
+                        }
+                    } else {
+                        $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
+                    }
+                } else {
+                    $single = $hasD1 ? $d1f : $d2f;
+                    if ($single > 60.0) {
+                        $single_fmt = $fmt($single / 60.0) . "'";
+                    } else {
+                        $single_fmt = $fmt($single) . "''";
+                    }
+                    $size = $single_fmt;
+                }
+                // Append position angle when present and not the sentinel 999
+                if (is_numeric($pa) && intval(round(floatval($pa))) !== 999) {
+                    $size .= '/' . sprintf('%d', round(floatval($pa))) . '°';
+                }
+
+                return $size;
+            };
+
+            $data = $rows->map(function ($r) use ($formatDiameter) {
+                $d1 = $r->diam1 ?? null;
+                $d2 = $r->diam2 ?? null;
+                $pa = $r->pa ?? null;
+                return [
+                    'name' => $r->name ?? '',
+                    'ra' => $this->formatRA($r->ra ?? null),
+                    'decl' => $this->formatDMS($r->decl ?? null, true),
+                    'type' => $r->type_name ?? $r->type ?? '',
+                    'constellation' => $r->constellation ?? '',
+                    // Present '-' when the catalogue uses the 99.9 sentinel for unknown values
+                    // or when the value is explicitly zero (treat 0.0 as missing for export)
+                    'mag' => (is_numeric($r->mag) && floatval($r->mag) != 99.9 && floatval($r->mag) != 0.0) ? (string) $r->mag : '-',
+                    'sb' => (is_numeric($r->subr) && floatval($r->subr) != 99.9 && floatval($r->subr) != 0.0) ? (string) $r->subr : '-',
+                    'diameter' => $formatDiameter($d1, $d2, $pa),
+                    // position angle intentionally omitted from export
+                    'atlas_page' => $this->includeAtlas ? ($r->atlas_page ?? '-') : '-',
+                    'cr' => isset($r->contrast_reserve) && is_numeric($r->contrast_reserve) ? number_format(round(floatval($r->contrast_reserve), 2), 2) : ($r->contrast_reserve_category ?? '-'),
+                    // Determine optimum magnification: prefer persisted optimum_detection_magnification,
+                    // otherwise fall back to best_mag. If a numeric CR exists, we expect an optimum mag
+                    // to be available; show '-' when none found. Always append 'x' to numeric values.
+                    // Use a compute helper which mirrors the interactive fallback
+                    // so exports include a computed best-mag when no persisted
+                    // per-user metric exists yet.
+                    'best_mag' => $this->computeBestMagForExport($r),
+                    'seen' => isset($r->total_observations) ? (string) $r->total_observations : '-',
+                    'last_seen' => $r->your_last_seen_date ?? '-',
+                ];
+            })->toArray();
+
+            $title = __('DeepskyLog Objects');
+
+            $html = view('pdf.nearby_objects_table', ['rows' => $data, 'title' => $title])->render();
+
+            if (class_exists(\Barryvdh\DomPDF\Facade\Pdf::class)) {
+                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)->setPaper('a4', 'landscape');
+                $filename = 'nearby_objects_' . date('Ymd_His') . '.pdf';
+                return response()->streamDownload(function () use ($pdf) {
+                    echo $pdf->output();
+                }, $filename, ['Content-Type' => 'application/pdf']);
+            }
+
+            if (class_exists(\Dompdf\Dompdf::class)) {
+                $dompdf = new \Dompdf\Dompdf();
+                $dompdf->loadHtml($html);
+                $dompdf->setPaper('A4', 'landscape');
+                $dompdf->render();
+                $output = $dompdf->output();
+                $filename = 'nearby_objects_' . date('Ymd_His') . '.pdf';
+                return response()->streamDownload(function () use ($output) {
+                    echo $output;
+                }, $filename, ['Content-Type' => 'application/pdf']);
+            }
+
+            session()->flash('error', __('PDF library not installed. Please run: composer require barryvdh/laravel-dompdf'));
+        } catch (\Throwable $ex) {
+            Log::error('NearbyObjectsTable::exportPdf failed', ['error' => (string)$ex]);
+            session()->flash('error', __('Failed to generate nearby objects PDF'));
+        }
+
+        return redirect(request()->header('Referer') ?? url()->current());
+    }
+
+    /**
+     * Export nearby objects in Argo Navis plain text format.
+     * Each line uses the format described by the user, prefixed with 'DSL '.
+     */
+    public function exportArgo()
+    {
+        try {
+            $query = $this->datasource();
+            $rows = $query ? $query->get() : collect();
+
+            // Mapping for types to Argo labels
+            $map = [
+                'ASTERISM' => 'ASTERISM',
+                'BRIGHT' => 'BRIGHT',
+            ];
+
+            // Helper: map our object type code/name to one of the allowed Argo types.
+            $typeMap = [
+                'ASTERISM' => 'ASTERISM',
+            ];
+
+            // Prepare a diameter formatter (same logic as exportPdf's helper)
+            $formatDiameter = function ($d1, $d2, $pa = null) {
+                $hasD1 = is_numeric($d1) && floatval($d1) > 0;
+                $hasD2 = is_numeric($d2) && floatval($d2) > 0;
+                if (! $hasD1 && ! $hasD2) return '';
+                $d1f = $hasD1 ? floatval($d1) : 0.0;
+                $d2f = $hasD2 ? floatval($d2) : 0.0;
+                $fmt = function ($v) {
+                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v);
+                };
+                if ($hasD1 && $hasD2) {
+                    if (max($d1f, $d2f) > 60.0) {
+                        $d1m = $d1f / 60.0;
+                        $d2m = $d2f / 60.0;
+                        $d1m_fmt = $fmt($d1m);
+                        $d2m_fmt = $fmt($d2m);
+                        if ($d1m_fmt === '0' || $d1m_fmt === '0.0' || $d2m_fmt === '0' || $d2m_fmt === '0.0') {
+                            $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
+                        } else {
+                            $size = $d1m_fmt . "'x" . $d2m_fmt . "'";
+                        }
+                    } else {
+                        $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
+                    }
+                } else {
+                    $single = $hasD1 ? $d1f : $d2f;
+                    if ($single > 60.0) {
+                        $single_fmt = $fmt($single / 60.0) . "'";
+                    } else {
+                        $single_fmt = $fmt($single) . "''";
+                    }
+                    $size = $single_fmt;
+                }
+                if (is_numeric($pa) && intval(round(floatval($pa))) !== 999) {
+                    $size .= '/' . sprintf('%d', round(floatval($pa))) . '°';
+                }
+                return $size;
+            };
+
+            // Type code -> Argo label mapping (from user-provided list)
+            $typeMap = [
+                'ASTER' => 'ASTERISM',
+                'BRTNB' => 'BRIGHT',
+                'CLANB' => 'NEBULA',
+                'DRKNB' => 'DARK',
+                'EMINB' => 'NEBULA',
+                'ENRNN' => 'NEBULA',
+                'ENSTR' => 'NEBULA',
+                'GALCL' => 'GALAXY CL',
+                'GALXY' => 'GALAXY',
+                'GLOCL' => 'GLOBULAR',
+                'GXADN' => 'NEBULA',
+                'GXAGC' => 'GLOBULAR',
+                'GACAN' => 'NEBULA',
+                'HII'   => 'NEBULA',
+                'LMCCN' => 'NEBULA',
+                'LMCDN' => 'NEBULA',
+                'LMCGC' => 'GLOBULAR',
+                'LMCOC' => 'OPEN',
+                'NONEX' => 'USER',
+                'OPNCL' => 'OPEN',
+                'PLNNB' => 'PLANETARY',
+                'REFNB' => 'NEBULA',
+                'RNHII' => 'NEBULA',
+                'SMCCN' => 'OPEN',
+                'SMCDN' => 'NEBULA',
+                'SMCGC' => 'GLOBULAR',
+                'SMCOC' => 'OPEN',
+                'SNREM' => 'NEBULA',
+                'STNEB' => 'NEBULA',
+                'QUASR' => 'USER',
+                'WRNEB' => 'NEBULA',
+                'AA1STAR' => 'STAR',
+                'DS' => 'DOUBLE',
+                'AA3STAR' => 'TRIPLE',
+                'AA4STAR' => 'ASTERISM',
+                'AA8STAR' => 'ASTERISM',
+            ];
+
+            // Build lines
+            $lines = $rows->map(function ($r) use ($formatDiameter, $typeMap) {
+                $name = 'DSL ' . ($r->name ?? '');
+                $ra = $this->formatRAColon($r->ra ?? null);
+                $dec = $this->formatDecColon($r->decl ?? null);
+
+                $rawTypeCode = strtoupper(trim((string)($r->type ?? '')));
+                $type = '';
+                if ($rawTypeCode !== '' && isset($typeMap[$rawTypeCode])) {
+                    $type = $typeMap[$rawTypeCode];
+                } else {
+                    // Fallback to human-readable type name
+                    $tn = $r->type_name ?? $r->type ?? '';
+                    $type = $tn ? strtoupper(trim((string)$tn)) : 'USER';
+                }
+
+                $mag = (is_numeric($r->mag) && floatval($r->mag) != 99.9 && floatval($r->mag) != 0.0) ? (string)$r->mag : '';
+
+                $size = $formatDiameter($r->diam1 ?? null, $r->diam2 ?? null, $r->pa ?? null);
+                $atlas = $this->includeAtlas ? ($r->atlas_page ?? '') : '';
+                $cr = isset($r->contrast_reserve) && is_numeric($r->contrast_reserve) ? number_format(round(floatval($r->contrast_reserve), 2), 2) : ($r->contrast_reserve_category ?? '-');
+                $best = $this->computeBestMagForExport($r);
+
+                $last = implode(';', array_filter([$size, $atlas, 'CR ' . ($cr === '' ? '-' : $cr), $best]));
+
+                return implode('|', [$name, $ra, $dec, $type, $mag, $last]);
+            })->values()->all();
+
+            $content = implode("\n", $lines) . "\n";
+
+            $filename = 'nearby_argo_' . date('Ymd_His') . '.argo';
+            return response()->streamDownload(function () use ($content) {
+                echo $content;
+            }, $filename, ['Content-Type' => 'text/plain']);
+        } catch (\Throwable $ex) {
+            Log::error('NearbyObjectsTable::exportArgo failed', ['error' => (string)$ex]);
+            session()->flash('error', __('Failed to generate Argo Navis export'));
+        }
+
+        return redirect(request()->header('Referer') ?? url()->current());
+    }
+
+    /**
+     * Livewire action invoked from PowerGrid export menu to export Argo format.
+     * If $selected is true, only export rows selected by checkboxes.
+     */
+    public function exportToArgo($selected = false)
+    {
+        try {
+            $query = $this->datasource();
+            $rows = $query ? $query->get() : collect();
+
+            if ($selected) {
+                $selectedKeys = is_array($this->checkboxValues) ? $this->checkboxValues : [];
+                if (! empty($selectedKeys)) {
+                    $rows = $rows->filter(function ($r) use ($selectedKeys) {
+                        // datasource aliases 'objects.name' as 'id' so id is the object name
+                        $key = $r->id ?? null;
+                        return in_array($key, $selectedKeys, true);
+                    })->values();
+                } else {
+                    // nothing selected: return early with a flash
+                    session()->flash('error', __('No rows selected for export'));
+                    return redirect(request()->header('Referer') ?? url()->current());
+                }
+            }
+
+            // Reuse exportArgo formatting by temporarily swapping datasource rows
+            // Build content similarly to exportArgo
+            $formatDiameter = function ($d1, $d2, $pa = null) {
+                $hasD1 = is_numeric($d1) && floatval($d1) > 0;
+                $hasD2 = is_numeric($d2) && floatval($d2) > 0;
+                if (! $hasD1 && ! $hasD2) return '';
+                $d1f = $hasD1 ? floatval($d1) : 0.0;
+                $d2f = $hasD2 ? floatval($d2) : 0.0;
+                $fmt = function ($v) {
+                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v);
+                };
+                if ($hasD1 && $hasD2) {
+                    if (max($d1f, $d2f) > 60.0) {
+                        $d1m = $d1f / 60.0;
+                        $d2m = $d2f / 60.0;
+                        $d1m_fmt = $fmt($d1m);
+                        $d2m_fmt = $fmt($d2m);
+                        if ($d1m_fmt === '0' || $d1m_fmt === '0.0' || $d2m_fmt === '0' || $d2m_fmt === '0.0') {
+                            $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
+                        } else {
+                            $size = $d1m_fmt . "'x" . $d2m_fmt . "'";
+                        }
+                    } else {
+                        $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
+                    }
+                } else {
+                    $single = $hasD1 ? $d1f : $d2f;
+                    if ($single > 60.0) {
+                        $single_fmt = $fmt($single / 60.0) . "'";
+                    } else {
+                        $single_fmt = $fmt($single) . "''";
+                    }
+                    $size = $single_fmt;
+                }
+                if (is_numeric($pa) && intval(round(floatval($pa))) !== 999) {
+                    $size .= '/' . sprintf('%d', round(floatval($pa))) . '°';
+                }
+                return $size;
+            };
+
+            $typeMap = [
+                'ASTER' => 'ASTERISM',
+                'BRTNB' => 'BRIGHT',
+                'CLANB' => 'NEBULA',
+                'DRKNB' => 'DARK',
+                'EMINB' => 'NEBULA',
+                'ENRNN' => 'NEBULA',
+                'ENSTR' => 'NEBULA',
+                'GALCL' => 'GALAXY CL',
+                'GALXY' => 'GALAXY',
+                'GLOCL' => 'GLOBULAR',
+                'GXADN' => 'NEBULA',
+                'GXAGC' => 'GLOBULAR',
+                'GACAN' => 'NEBULA',
+                'HII' => 'NEBULA',
+                'LMCCN' => 'NEBULA',
+                'LMCDN' => 'NEBULA',
+                'LMCGC' => 'GLOBULAR',
+                'LMCOC' => 'OPEN',
+                'NONEX' => 'USER',
+                'OPNCL' => 'OPEN',
+                'PLNNB' => 'PLANETARY',
+                'REFNB' => 'NEBULA',
+                'RNHII' => 'NEBULA',
+                'SMCCN' => 'OPEN',
+                'SMCDN' => 'NEBULA',
+                'SMCGC' => 'GLOBULAR',
+                'SMCOC' => 'OPEN',
+                'SNREM' => 'NEBULA',
+                'STNEB' => 'NEBULA',
+                'QUASR' => 'USER',
+                'WRNEB' => 'NEBULA',
+                'AA1STAR' => 'STAR',
+                'DS' => 'DOUBLE',
+                'AA3STAR' => 'TRIPLE',
+                'AA4STAR' => 'ASTERISM',
+                'AA8STAR' => 'ASTERISM',
+            ];
+
+            $lines = $rows->map(function ($r) use ($formatDiameter, $typeMap) {
+                $name = 'DSL ' . ($r->name ?? '');
+                $ra = $this->formatRAColon($r->ra ?? null);
+                $dec = $this->formatDecColon($r->decl ?? null);
+
+                $rawTypeCode = strtoupper(trim((string)($r->type ?? '')));
+                $type = '';
+                if ($rawTypeCode !== '' && isset($typeMap[$rawTypeCode])) {
+                    $type = $typeMap[$rawTypeCode];
+                } else {
+                    $tn = $r->type_name ?? $r->type ?? '';
+                    $type = $tn ? strtoupper(trim((string)$tn)) : 'USER';
+                }
+
+                $mag = (is_numeric($r->mag) && floatval($r->mag) != 99.9 && floatval($r->mag) != 0.0) ? (string)$r->mag : '';
+
+                $size = $formatDiameter($r->diam1 ?? null, $r->diam2 ?? null, $r->pa ?? null);
+                $atlas = $this->includeAtlas ? ($r->atlas_page ?? '') : '';
+                $cr = isset($r->contrast_reserve) && is_numeric($r->contrast_reserve) ? number_format(round(floatval($r->contrast_reserve), 2), 2) : ($r->contrast_reserve_category ?? '-');
+                $best = $this->computeBestMagForExport($r);
+
+                $last = implode(';', array_filter([$size, $atlas, 'CR ' . ($cr === '' ? '-' : $cr), $best]));
+
+                return implode('|', [$name, $ra, $dec, $type, $mag, $last]);
+            })->values()->all();
+
+            $content = implode("\n", $lines) . "\n";
+            $filename = 'nearby_objects_' . date('Ymd_His') . '.argo';
+            return response()->streamDownload(function () use ($content) {
+                echo $content;
+            }, $filename, ['Content-Type' => 'text/plain']);
+        } catch (\Throwable $ex) {
+            Log::error('NearbyObjectsTable::exportToArgo failed', ['error' => (string)$ex]);
+            session()->flash('error', __('Failed to generate Argo Navis export'));
+        }
+
+        return redirect(request()->header('Referer') ?? url()->current());
+    }
+
+    /**
+     * Format RA as HH:MM:SS (hours, minutes, seconds). Accepts hours or degrees; if >24 treat as degrees and convert.
+     */
+    private function formatRAColon($ra): string
+    {
+        if ($ra === null || $ra === '') return '';
+        if (!is_numeric($ra)) return (string)$ra;
+        $v = floatval($ra);
+        if ($v > 24.0) {
+            $hours = $v / 15.0;
+        } else {
+            $hours = $v;
+        }
+        $hours = fmod($hours, 24.0);
+        if ($hours < 0) $hours += 24.0;
+        $h = floor($hours);
+        $mFloat = ($hours - $h) * 60.0;
+        $m = floor($mFloat);
+        $s = round(($mFloat - $m) * 60.0);
+        if ($s >= 60) {
+            $s -= 60;
+            $m += 1;
+        }
+        if ($m >= 60) {
+            $m -= 60;
+            $h += 1;
+        }
+        $h = $h % 24;
+        return sprintf('%02d:%02d:%02d', $h, $m, $s);
+    }
+
+    /**
+     * Format declination as [+|-]DD:MM:SS
+     */
+    private function formatDecColon($dec): string
+    {
+        if ($dec === null || $dec === '') return '';
+        if (!is_numeric($dec)) return (string)$dec;
+        $v = floatval($dec);
+        $sign = ($v < 0) ? '-' : '+';
+        $abs = abs($v);
+        $d = floor($abs);
+        $mFloat = ($abs - $d) * 60.0;
+        $m = floor($mFloat);
+        $s = round(($mFloat - $m) * 60.0);
+        if ($s >= 60) {
+            $s -= 60;
+            $m += 1;
+        }
+        if ($m >= 60) {
+            $m -= 60;
+            $d += 1;
+        }
+        return sprintf('%s%02d:%02d:%02d', $sign, $d, $m, $s);
+    }
+
+    /**
+     * Compute a best magnification string for exports.
+     * Mirrors the logic used in the interactive `best_mag_plain` field so
+     * the exported PDF shows a computed value when no persisted metric exists.
+     *
+     * @param object|array $row
+     * @return string
+     */
+    private function computeBestMagForExport($row): string
+    {
+        try {
+            if (isset($row->best_mag) && is_numeric($row->best_mag)) {
+                return (int) $row->best_mag . 'x';
+            }
+
+            $authUser = Auth::user();
+            if (! $authUser) {
+                return '-';
+            }
+
+            $userLocation = $authUser?->standardLocation ?? null;
+            $userInstrument = null;
+            try {
+                if (! empty($this->previewInstrumentId)) {
+                    $userInstrument = \App\Models\Instrument::where('id', $this->previewInstrumentId)->first();
+                }
+            } catch (\Throwable $_) {
+                $userInstrument = null;
+            }
+            if (! $userInstrument) {
+                $userInstrument = $authUser?->standardInstrument ?? null;
+            }
+
+            if (! $userLocation || ! $userInstrument) {
+                return '-';
+            }
+
+            $d1 = $row->diam1 ?? null;
+            $d2 = $row->diam2 ?? null;
+            $origMag = $row->mag ?? null;
+            $origSubr = $row->subr ?? null;
+
+            $target = new AstroTarget();
+            if ($d1 && $d2) {
+                $target->setDiameter($d1, $d2);
+            }
+
+            $m = (is_numeric($origMag) && floatval($origMag) != 99.9) ? floatval($origMag) : null;
+            if ($m === null) {
+                $d1f = is_numeric($row->diam1) ? floatval($row->diam1) : (is_numeric($d1) ? floatval($d1) : null);
+                $d2f = is_numeric($row->diam2) ? floatval($row->diam2) : (is_numeric($d2) ? floatval($d2) : null);
+                $subr = is_numeric($origSubr) ? floatval($origSubr) : null;
+                if (($d1f !== null && $d1f > 0) && (empty($d2f) || $d2f <= 0)) {
+                    $d2f = $d1f;
+                } elseif (($d2f !== null && $d2f > 0) && (empty($d1f) || $d1f <= 0)) {
+                    $d1f = $d2f;
+                }
+
+                if ($subr !== null && $d1f !== null && $d2f !== null && $d1f > 0 && $d2f > 0) {
+                    $area = pi() * ($d1f / 2.0) * ($d2f / 2.0);
+                    if ($area > 0) {
+                        $estimated = $subr - 2.5 * log10($area);
+                        $m = $estimated;
+                    }
+                }
+            }
+            if ($m !== null) {
+                $target->setMagnitude($m);
+            }
+
+            $sbobj = null;
+            try {
+                $sbobj = $target->calculateSBObj();
+            } catch (\Throwable $_) {
+                $sbobj = null;
+            }
+
+            $sqm = null;
+            try {
+                $sqm = method_exists($userLocation, 'getSqm') ? $userLocation->getSqm() : ($userLocation->sqm ?? null);
+            } catch (\Throwable $_) {
+                $sqm = null;
+            }
+
+            $aperture = $userInstrument->aperture_mm ?? null;
+
+            // Determine preview lens factor
+            $lensFactor = 1.0;
+            try {
+                if (! empty($this->previewLensId)) {
+                    $ln = \App\Models\Lens::where('id', $this->previewLensId)->first();
+                    if ($ln && ! empty($ln->factor) && is_numeric($ln->factor)) {
+                        $lensFactor = floatval($ln->factor);
+                    }
+                }
+            } catch (\Throwable $_) { /* ignore */
+            }
+
+            $mag = $userInstrument->fixedMagnification ?? null;
+            if (! $mag && isset($row->typicalEyepieceFocal) && ! empty($userInstrument->focal_length_mm)) {
+                $mag = (int) round(($userInstrument->focal_length_mm / $row->typicalEyepieceFocal) * $lensFactor);
+            }
+
+            $possibleMags = [];
+            if (! empty($userInstrument?->focal_length_mm)) {
+                $epFocals = [];
+                if (! empty($this->previewEyepieceId)) {
+                    try {
+                        $ep = \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
+                        if ($ep && ! empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
+                            $epFocals[] = floatval($ep->focal_length_mm);
+                        }
+                    } catch (\Throwable $_) { /* ignore */
+                    }
+                }
+
+                // instrument set eyepieces
+                try {
+                    $instSet = $authUser?->standardInstrumentSet ?? null;
+                    if ($instSet && is_object($instSet) && isset($instSet->eyepieces) && isset($userInstrument->id)) {
+                        $useSetEyepieces = false;
+                        try {
+                            if (isset($instSet->instruments)) {
+                                foreach ($instSet->instruments as $sinst) {
+                                    try {
+                                        if (isset($sinst->id) && intval($sinst->id) === intval($userInstrument->id)) {
+                                            $useSetEyepieces = true;
+                                            break;
+                                        }
+                                    } catch (\Throwable $_) {
+                                        continue;
+                                    }
+                                }
+                            }
+                        } catch (\Throwable $_) {
+                        }
+                        if ($useSetEyepieces) {
+                            foreach ($instSet->eyepieces as $sep) {
+                                try {
+                                    if ($sep->active && ! empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
+                                        $epFocals[] = floatval($sep->focal_length_mm);
+                                    }
+                                } catch (\Throwable $_) {
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                } catch (\Throwable $_) {
+                }
+
+                if (empty($epFocals)) {
+                    try {
+                        $userEps = $this->getCachedEyepieces($authUser);
+                        foreach ($userEps as $ep) {
+                            try {
+                                if (! empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
+                                    $epFocals[] = floatval($ep->focal_length_mm);
+                                }
+                            } catch (\Throwable $_) {
+                                continue;
+                            }
+                        }
+                    } catch (\Throwable $_) {
+                    }
+                }
+
+                $epFocals = array_values(array_unique(array_filter($epFocals)));
+                foreach ($epFocals as $ef) {
+                    if ($ef > 0) {
+                        $possibleMags[] = (int) round(($userInstrument->focal_length_mm / $ef) * $lensFactor);
+                    }
+                }
+                $possibleMags = array_values(array_unique(array_filter($possibleMags)));
+            }
+
+            if (! empty($possibleMags) && isset($target) && isset($sbobj) && isset($sqm) && isset($aperture)) {
+                try {
+                    $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
+                    if ($best) {
+                        return (int) $best . 'x';
+                    }
+                } catch (\Throwable $_) {
+                }
+            }
+
+            if ($mag) {
+                return (int) $mag . 'x';
+            }
+
+            return '-';
+        } catch (\Throwable $_) {
+            return '-';
+        }
     }
 
 

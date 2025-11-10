@@ -354,23 +354,71 @@ try {
                                             <div class="text-xs text-gray-400 ml-2">
                                                 {{ __('Choose radius to search nearby objects.') }}</div>
                                             <!-- Export names (PDF) button: dispatches to the nearby-objects-table Livewire component -->
-                                            <div class="ml-auto">
+                                            <div class="ml-auto" x-data="{ open: false }" x-cloak>
                                                 @php
-                                                    // Build a safe URL for the export route using server-known coordinates
-                                                    $exportUrl =
+                                                    // Build safe base URLs for exports using server-known coordinates
+                                                    $exportNamesBase =
                                                         route('object.nearby.names.pdf', [
                                                             'slug' => $canonicalSlug ?? ($session->slug ?? ''),
                                                         ]) . '?';
-                                                    $exportUrl .= 'ra=' . rawurlencode($nearbyRaDeg ?? '');
-                                                    $exportUrl .= '&dec=' . rawurlencode($nearbyDecDeg ?? '');
-                                                    $exportUrl .=
+                                                    $exportNamesBase .= 'ra=' . rawurlencode($nearbyRaDeg ?? '');
+                                                    $exportNamesBase .= '&dec=' . rawurlencode($nearbyDecDeg ?? '');
+                                                    $exportNamesBase .=
+                                                        '&radius=' . rawurlencode($nearbyRadiusSelected ?? 30);
+
+                                                    $exportTableBase =
+                                                        route('object.nearby.table.pdf', [
+                                                            'slug' => $canonicalSlug ?? ($session->slug ?? ''),
+                                                        ]) . '?';
+                                                    $exportTableBase .= 'ra=' . rawurlencode($nearbyRaDeg ?? '');
+                                                    $exportTableBase .= '&dec=' . rawurlencode($nearbyDecDeg ?? '');
+                                                    $exportTableBase .=
+                                                        '&radius=' . rawurlencode($nearbyRadiusSelected ?? 30);
+                                                    // Argo/Navis plain-text export URL (same params as PDFs)
+                                                    $exportArgoBase =
+                                                        route('object.nearby.argo', [
+                                                            'slug' => $canonicalSlug ?? ($session->slug ?? ''),
+                                                        ]) . '?';
+                                                    $exportArgoBase .= 'ra=' . rawurlencode($nearbyRaDeg ?? '');
+                                                    $exportArgoBase .= '&dec=' . rawurlencode($nearbyDecDeg ?? '');
+                                                    $exportArgoBase .=
                                                         '&radius=' . rawurlencode($nearbyRadiusSelected ?? 30);
                                                 @endphp
-                                                <a href="{{ $exportUrl }}" target="_blank" rel="noopener noreferrer"
-                                                    class="inline-flex items-center justify-center text-sm font-medium px-3 py-1.5 rounded-md bg-blue-600 text-white hover:bg-blue-700 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                                                    aria-label="{{ __('Export names (PDF)') }}">
-                                                    {{ __('Export names (PDF)') }}
-                                                </a>
+
+                                                <div class="relative inline-block text-left">
+                                                    <button type="button" @click="open = !open"
+                                                        @keydown.escape="open = false"
+                                                        class="inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                                                        aria-haspopup="true" :aria-expanded="open.toString()">
+                                                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                            <path d="M12 5v14M5 12h14" stroke="currentColor"
+                                                                stroke-width="2" stroke-linecap="round"
+                                                                stroke-linejoin="round" />
+                                                        </svg>
+                                                        <span>{{ __('Export') }}</span>
+                                                    </button>
+
+                                                    <div x-show="open" x-transition @click.outside="open = false"
+                                                        class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+                                                        style="display:none;">
+                                                        <div class="py-1 text-sm text-gray-100" role="menu"
+                                                            aria-orientation="vertical">
+                                                            <a href="{{ $exportNamesBase }}" target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                class="block px-4 py-2 hover:bg-gray-700"
+                                                                role="menuitem">{{ __('Export names (PDF)') }}</a>
+                                                            <a href="{{ $exportTableBase }}" target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                class="block px-4 py-2 hover:bg-gray-700"
+                                                                role="menuitem">{{ __('Export table (PDF)') }}</a>
+                                                            <a href="{{ $exportArgoBase }}" target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                class="block px-4 py-2 hover:bg-gray-700"
+                                                                role="menuitem">{{ __('Export Argo Navis') }}</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -501,6 +549,37 @@ try {
                                                (portal pattern) to avoid clipping/transform/stacking-context issues. */
                                             #nearby-objects-wrapper {
                                                 overflow: visible !important;
+                                            }
+
+                                            /* Alternate row backgrounds for nearby objects table so each
+                                                              line has a subtly different background. We target any table
+                                                              rendered inside the nearby wrapper (PowerGrid output) and
+                                                              apply gentle contrasts that work with the dark theme.
+                                                              Some vendor themes set background on <td> cells; target both
+                                                              the <tr> and its <td> children to ensure the stripes are visible.
+                                                              Use !important to override vendor theme defaults when needed.
+                                                              Additionally, PowerGrid row action rules will set per-row classes
+                                                              `dsl-row-odd` and `dsl-row-even` which we also target here. */
+                                            /* odd rows */
+                                            #nearby-objects-wrapper table tbody tr.dsl-row-odd,
+                                            #nearby-objects-wrapper table tbody tr.dsl-row-odd td,
+                                            #nearby-objects-wrapper table tbody tr:nth-child(odd),
+                                            #nearby-objects-wrapper table tbody tr:nth-child(odd) td {
+                                                background-color: rgba(255, 255, 255, 0.02) !important;
+                                            }
+
+                                            /* even rows */
+                                            #nearby-objects-wrapper table tbody tr.dsl-row-even,
+                                            #nearby-objects-wrapper table tbody tr.dsl-row-even td,
+                                            #nearby-objects-wrapper table tbody tr:nth-child(even),
+                                            #nearby-objects-wrapper table tbody tr:nth-child(even) td {
+                                                background-color: rgba(255, 255, 255, 0.006) !important;
+                                            }
+
+                                            /* Preserve hover emphasis so rows still highlight on pointer over */
+                                            #nearby-objects-wrapper table tbody tr:hover,
+                                            #nearby-objects-wrapper table tbody tr:hover td {
+                                                background-color: rgba(255, 255, 255, 0.04) !important;
                                             }
 
                                             /* keep a default high z-index when moved; left/top set by JS */
@@ -1087,7 +1166,8 @@ try {
                                             {{ __('External databases') }}</li>
                                         @if ($simbadUrl)
                                             <li>
-                                                <a href="{{ $simbadUrl }}" target="_blank" rel="noopener noreferrer"
+                                                <a href="{{ $simbadUrl }}" target="_blank"
+                                                    rel="noopener noreferrer"
                                                     class="flex items-center gap-2 text-gray-300 hover:text-white">
                                                     <!-- SIMBAD icon (simple star) -->
                                                     <svg class="h-4 w-4 text-gray-300" viewBox="0 0 24 24"

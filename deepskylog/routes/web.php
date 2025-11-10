@@ -270,6 +270,14 @@ Route::get('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'sho
 Route::get('/object/{slug}/nearby-names.pdf', [App\Http\Controllers\NearbyExportController::class, 'namesPdf'])
     ->name('object.nearby.names.pdf')->middleware('doNotCacheResponse');
 
+// Nearby table PDF export (landscape full table)
+Route::get('/object/{slug}/nearby-table.pdf', [App\Http\Controllers\NearbyExportController::class, 'tablePdf'])
+    ->name('object.nearby.table.pdf')->middleware('doNotCacheResponse');
+
+// Nearby Argo Navis export (plain text)
+Route::get('/object/{slug}/nearby-argo.txt', [App\Http\Controllers\NearbyExportController::class, 'argoNavis'])
+    ->name('object.nearby.argo')->middleware('doNotCacheResponse');
+
 // Create session (authenticated)
 Route::get('/sessions/create', [App\Http\Controllers\SessionController::class, 'create'])
     ->name('session.create')->middleware(['auth', 'doNotCacheResponse']);
