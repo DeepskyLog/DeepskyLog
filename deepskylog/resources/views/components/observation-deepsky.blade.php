@@ -1,4 +1,4 @@
-@props(['observation'])
+@props(['observation', 'translator' => null])
 <div class="justify-left mt-5 flex">
     @php
         use App\Models\Constellation;
@@ -9,17 +9,16 @@
         use App\Models\ObjectsOld;
         use App\Models\User;
         use Carbon\Carbon;
-        use Stichoza\GoogleTranslate\GoogleTranslate;
-    use Illuminate\Support\Facades\Log;
+        use Illuminate\Support\Facades\Log;
 
         $date = $observation->date;
         $observation_date = substr($date, 0, 4) . '-' . substr($date, 4, 2) . '-' . substr($date, 6, 2);
-    $user = User::where('username', html_entity_decode($observation->observerid))->first();
-    $object = ObjectsOld::where('name', $observation->objectname)->first();
-    $constellation = $object ? (Constellation::where('id', $object->con)->first()?->name ?? '') : '';
+        $user = User::where('username', html_entity_decode($observation->observerid))->first();
+        $object = ObjectsOld::where('name', $observation->objectname)->first();
+        $constellation = $object ? Constellation::where('id', $object->con)->first()?->name ?? '' : '';
 
-    // preload related models and guard against nulls when rendering
-    $location = Location::where('id', $observation->locationid)->first();
+        // preload related models and guard against nulls when rendering
+        $location = Location::where('id', $observation->locationid)->first();
         $instrument = Instrument::where('id', $observation->instrumentid)->first();
         $eyepiece = $observation->eyepieceid > 0 ? Eyepiece::where('id', $observation->eyepieceid)->first() : null;
         $filter = $observation->filterid > 0 ? Filter::where('id', $observation->filterid)->first() : null;
@@ -58,20 +57,18 @@
             Log::warning('Observation component: missing filter', $logContext);
         }
 
-        if (auth()->user()) {
-                $tr = null;
-                if (auth()->check() && auth()->user()->translate) {
-                    $tr = new GoogleTranslate(auth()->user()->language);
-                }
-        }
+        // Translator instance is provided by the parent view to avoid creating
+        // a new translator object for every rendered observation (memory heavy).
+        $tr = $translator ?? null;
     @endphp
 
     <div class="mr-4">
-        <img src="{{ $user?->profile_photo_url ?? '/images/default-profile.png' }}" alt="{{ $user?->name ?? __('Unknown') }}" class="h-20 w-20 rounded-full object-cover"/>
+        <img src="{{ $user?->profile_photo_url ?? '/images/default-profile.png' }}"
+            alt="{{ $user?->name ?? __('Unknown') }}" class="h-20 w-20 rounded-full object-cover" />
     </div>
 
     <div class="max-w-[calc(100%-7rem)]">
-        @if($user)
+        @if ($user)
             <a href="/observers/{{ $user->slug }}" class="font-bold hover:underline">
                 {{ $user->name }}
             </a>
@@ -79,21 +76,29 @@
             <span class="font-bold">{{ __('Unknown observer') }}</span>
         @endif
         @php
-            $link = config('app.old_url') . "/index.php?indexAction=detail_object&object=" . $observation->objectname;
+            $link = config('app.old_url') . '/index.php?indexAction=detail_object&object=' . $observation->objectname;
         @endphp
 
         @php
             $objectLongType = $object ? $object->long_type() : null;
             $objectTypeLabel = $objectLongType ? Str::lower(__($objectLongType)) : __('object');
         @endphp
-        {!! __(' observed :object', ['object' => $objectTypeLabel . ' <a href="' . $link . '" class="font-bold hover:underline">' . $observation->objectname . '</a>']) !!}
+        {!! __(' observed :object', [
+            'object' =>
+                $objectTypeLabel .
+                ' <a href="' .
+                $link .
+                '" class="font-bold hover:underline">' .
+                $observation->objectname .
+                '</a>',
+        ]) !!}
 
         {{ __(' in ') . $constellation }}
 
         {{ __(' on ') }}
         {{ Carbon::create($observation_date)->translatedFormat('j M Y') }}
         {{ __(' from ') }}
-        @if($location)
+        @if ($location)
             <a href="/location/{{ $user?->slug ?? 'unknown' }}/{{ $location->slug }}" class="font-bold hover:underline">
                 {{ html_entity_decode($location->name) }}
             </a>
@@ -121,10 +126,11 @@
                 {{ __('bad') }}
             @endif
             {{ __('seeing') }}
-        @endif.<br/>
+        @endif.<br />
         {{ __('Used instrument was ') }}
-        @if($instrument)
-            <a href="/instrument/{{ $user?->slug ?? 'unknown' }}/{{ $instrument->slug }}" class="font-bold hover:underline">
+        @if ($instrument)
+            <a href="/instrument/{{ $user?->slug ?? 'unknown' }}/{{ $instrument->slug }}"
+                class="font-bold hover:underline">
                 {!! html_entity_decode($instrument->fullName()) !!}
             </a>
         @else
@@ -136,8 +142,9 @@
         @endif
         @if ($observation->eyepieceid > 0)
             {{ __(' using a ') }}
-            @if($eyepiece)
-                <a href="/eyepiece/{{ $user?->slug ?? 'unknown' }}/{{ $eyepiece->slug }}" class="font-bold hover:underline">
+            @if ($eyepiece)
+                <a href="/eyepiece/{{ $user?->slug ?? 'unknown' }}/{{ $eyepiece->slug }}"
+                    class="font-bold hover:underline">
                     {{ html_entity_decode($eyepiece->fullName()) }}
                 </a>
             @else
@@ -147,8 +154,9 @@
 
             @if ($observation->filterid > 0)
                 {{ __(' and a ') }}
-                @if($filter)
-                    <a href="/filter/{{ $user?->slug ?? 'unknown' }}/{{ $filter->slug }}" class="font-bold hover:underline">
+                @if ($filter)
+                    <a href="/filter/{{ $user?->slug ?? 'unknown' }}/{{ $filter->slug }}"
+                        class="font-bold hover:underline">
                         {{ html_entity_decode($filter->name) }}
                     </a>
                 @else
@@ -163,27 +171,32 @@
                 $filterName = $filterModel ? $filterModel->name : null;
             @endphp
             <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_filter&filter={{ $observation->filterid }}"
-               class="font-bold hover:underline">
+                class="font-bold hover:underline">
                 {{ html_entity_decode($filterName ?? __('Unknown filter')) }}
             </a>
             {{ __(' filter') }}
         @endif
         .
 
-        <br/>
+        <br />
         {{ __(' The following notes where made: ') }}
-        <br/>
+        <br />
         <div class="my-2 rounded-sm bg-gray-900 px-4 py-3">
             <div class="flex items-start space-x-4">
                 @if ($observation->hasDrawing)
-                    <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-deepsky-lightbox-{{ $observation->id }}'))" class="flex-shrink-0 focus:outline-none">
-                        <img src="/images/drawings/{{ $observation->id }}.jpg" alt="drawing-{{ $observation->id }}" class="w-28 rounded" />
+                    <button type="button"
+                        onclick="window.dispatchEvent(new CustomEvent('open-deepsky-lightbox-{{ $observation->id }}'))"
+                        class="flex-shrink-0 focus:outline-none">
+                        <img src="/images/drawings/{{ $observation->id }}.jpg" alt="drawing-{{ $observation->id }}"
+                            class="w-28 rounded" />
                     </button>
                 @endif
 
                 <div class="flex-1">
                     @if (auth()->user() && auth()->user()->translate)
-                        {!! ($translated = $tr->translate(html_entity_decode($observation->description))) == null ? html_entity_decode($observation->description): $translated !!}
+                        {!! ($translated = $tr->translate(html_entity_decode($observation->description))) == null
+                            ? html_entity_decode($observation->description)
+                            : $translated !!}
                     @else
                         {!! html_entity_decode($observation->description) !!}
                     @endif
@@ -192,12 +205,17 @@
 
             <!-- Modal / Lightbox (listens for custom event to open) -->
             <div x-data="{ open: false }" x-on:open-deepsky-lightbox-{{ $observation->id }}.window="open = true">
-                <div x-cloak x-show="open" x-transition.opacity="" @click.self="open = false" @keydown.escape.window="open = false" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+                <div x-cloak x-show="open" x-transition.opacity="" @click.self="open = false"
+                    @keydown.escape.window="open = false"
+                    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
                     <div class="max-w-4xl max-h-[90vh] p-4">
-                        <button type="button" @click="open = false" class="absolute top-4 right-4 z-50 rounded bg-gray-800 p-2 text-white">
+                        <button type="button" @click="open = false"
+                            class="absolute top-4 right-4 z-50 rounded bg-gray-800 p-2 text-white">
                             &times;
                         </button>
-                        <img src="/images/drawings/{{ $observation->id }}.jpg" alt="drawing-large-{{ $observation->id }}" class="max-w-full max-h-[85vh] rounded shadow-lg" />
+                        <img src="/images/drawings/{{ $observation->id }}.jpg"
+                            alt="drawing-large-{{ $observation->id }}"
+                            class="max-w-full max-h-[85vh] rounded shadow-lg" />
                     </div>
                 </div>
             </div>
@@ -205,29 +223,39 @@
 
         <div class="flex items-center space-x-3 mt-2 mb-2">
             <x-button gray icon="eye" class="align-middle"
-                      href='{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $observation->id }}'
-            >
-                {{ __("More details") }}
+                href='{{ config('app.old_url') }}/index.php?indexAction=detail_observation&observation={{ $observation->id }}'>
+                {{ __('More details') }}
             </x-button>
 
             {{-- DSL message button: opens internal composer with to=username and a prefilled subject --}}
             @auth
-            <a href="{{ route('messages.create', ['to' => $user->username , 'subject' => 'About your observation of ' . $observation->objectname]) }}" class="inline-flex items-center px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white align-middle" aria-label="{{ __('Send message about this sketch') }}">
-                {{-- envelope icon --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path d="M2.94 6.94A2 2 0 014.828 6h10.344a2 2 0 011.888.94L10 11.586 2.94 6.94z" />
-                    <path d="M18 8.118V13a2 2 0 01-2 2H4a2 2 0 01-2-2V8.118l7.293 4.377a1 1 0 001.414 0L18 8.118z" />
-                </svg>
-            </a>
+                <a href="{{ route('messages.create', ['to' => $user->username, 'subject' => 'About your observation of ' . $observation->objectname]) }}"
+                    class="inline-flex items-center px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white align-middle"
+                    aria-label="{{ __('Send message about this sketch') }}">
+                    {{-- envelope icon --}}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"
+                        aria-hidden="true">
+                        <path d="M2.94 6.94A2 2 0 014.828 6h10.344a2 2 0 011.888.94L10 11.586 2.94 6.94z" />
+                        <path d="M18 8.118V13a2 2 0 01-2 2H4a2 2 0 01-2-2V8.118l7.293 4.377a1 1 0 001.414 0L18 8.118z" />
+                    </svg>
+                </a>
             @endauth
 
             @php
                 use App\Models\ObservationLike;
-                $likesCount = ObservationLike::where('observation_type', 'deepsky')->where('observation_id', $observation->id)->count();
-                $liked = auth()->check() && ObservationLike::where('observation_type', 'deepsky')->where('observation_id', $observation->id)->where('user_id', auth()->id())->exists();
+                $likesCount = ObservationLike::where('observation_type', 'deepsky')
+                    ->where('observation_id', $observation->id)
+                    ->count();
+                $liked =
+                    auth()->check() &&
+                    ObservationLike::where('observation_type', 'deepsky')
+                        ->where('observation_id', $observation->id)
+                        ->where('user_id', auth()->id())
+                        ->exists();
             @endphp
 
-            <button data-observation-type="deepsky" data-observation-id="{{ $observation->id }}" class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white align-middle">
+            <button data-observation-type="deepsky" data-observation-id="{{ $observation->id }}"
+                class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white align-middle">
                 <span class="like-icon">{!! $liked ? '❤️' : '👍' !!}</span>
                 <span class="like-count">{{ $likesCount }}</span>
             </button>

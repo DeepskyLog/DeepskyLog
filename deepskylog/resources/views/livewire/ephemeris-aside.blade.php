@@ -3,31 +3,27 @@
         <h3 class="text-lg font-semibold mb-2 text-white">{{ __('Ephemerides') }}</h3>
 
         {{-- Use the WireUI datetime picker to match other forms (sketch/session) and bind to Livewire property --}}
-        <div class="mb-2">
-            <x-datetime-picker
-                without-time="true"
-                without-timezone="true"
-                name="ephem_date"
-                label="{{ __('Date') }}"
-                wire:model.live="date"
-                value="{{ $date }}"
-                class="w-full"
-            />
-        </div>
+        @auth
+            <div class="mb-2">
+                <x-datetime-picker without-time="true" without-timezone="true" name="ephem_date" label="{{ __('Date') }}"
+                    wire:model.live="date" value="{{ $date }}" class="w-full" />
+            </div>
+        @endauth
 
         <h4 class="text-sm font-semibold mt-2 text-white">{{ __('Moon / Sun') }}</h4>
-        <div class="text-xs text-gray-400 mt-1">{{ __('on') }} <strong class="text-gray-200">{{ $date }}</strong></div>
+        <div class="text-xs text-gray-400 mt-1">{{ __('on') }} <strong
+                class="text-gray-200">{{ $date }}</strong></div>
 
         @php
             // Split the sun_times string ("sunrise / sunset / transit") into parts
-            $sunParts = is_string($sun_times) ? array_pad(explode(' / ', $sun_times), 3, '-') : ['-','-','-'];
+            $sunParts = is_string($sun_times) ? array_pad(explode(' / ', $sun_times), 3, '-') : ['-', '-', '-'];
             [$sunrise, $sunset, $suntransit] = $sunParts;
 
             // Nautical and astronomical are already "end / begin" strings from Location helpers; display as given
-            $nauticalParts = is_string($nautical) ? array_pad(explode(' / ', $nautical), 2, '-') : ['-','-'];
+            $nauticalParts = is_string($nautical) ? array_pad(explode(' / ', $nautical), 2, '-') : ['-', '-'];
             [$nautEnd, $nautBegin] = $nauticalParts;
 
-            $astroParts = is_string($astronomical) ? array_pad(explode(' / ', $astronomical), 2, '-') : ['-','-'];
+            $astroParts = is_string($astronomical) ? array_pad(explode(' / ', $astronomical), 2, '-') : ['-', '-'];
             [$astroEnd, $astroBegin] = $astroParts;
 
             // Moon rise/set
@@ -42,26 +38,28 @@
         @endphp
 
         <table class="w-full text-sm text-gray-300 mt-2">
-            <tr>
-                <td class="py-1">{{ __('Moon') }}</td>
-                <td class="text-right py-1">{{ $moonRise }}</td>
-                <td class="text-right py-1">{{ $moonSet }}</td>
-            </tr>
-            <tr>
-                <td class="py-1">{{ __('Sun') }}</td>
-                <td class="text-right py-1">{{ $sunrise }}</td>
-                <td class="text-right py-1">{{ $sunset }}</td>
-            </tr>
-            <tr>
-                <td class="py-1">{{ __('Naut.') }}</td>
-                <td class="text-right py-1">{{ $nautBegin }}</td>
-                <td class="text-right py-1">{{ $nautEnd }}</td>
-            </tr>
-            <tr>
-                <td class="py-1">{{ __('Astro.') }}</td>
-                <td class="text-right py-1">{{ $astroBegin }}</td>
-                <td class="text-right py-1">{{ $astroEnd }}</td>
-            </tr>
+            @auth
+                <tr>
+                    <td class="py-1">{{ __('Moon') }}</td>
+                    <td class="text-right py-1">{{ $moonRise }}</td>
+                    <td class="text-right py-1">{{ $moonSet }}</td>
+                </tr>
+                <tr>
+                    <td class="py-1">{{ __('Sun') }}</td>
+                    <td class="text-right py-1">{{ $sunrise }}</td>
+                    <td class="text-right py-1">{{ $sunset }}</td>
+                </tr>
+                <tr>
+                    <td class="py-1">{{ __('Naut.') }}</td>
+                    <td class="text-right py-1">{{ $nautBegin }}</td>
+                    <td class="text-right py-1">{{ $nautEnd }}</td>
+                </tr>
+                <tr>
+                    <td class="py-1">{{ __('Astro.') }}</td>
+                    <td class="text-right py-1">{{ $astroBegin }}</td>
+                    <td class="text-right py-1">{{ $astroEnd }}</td>
+                </tr>
+            @endauth
         </table>
 
         <div class="mt-3 flex items-center">
@@ -79,8 +77,9 @@
                 $moonImg = asset("images/moon/m{$frameIndex}.gif");
             @endphp
 
-            @if(file_exists(public_path("images/moon/m{$frameIndex}.gif")))
-                <img src="{{ $moonImg }}" alt="{{ __('Moon phase') }}" class="w-20 h-20 object-contain" loading="lazy" />
+            @if (file_exists(public_path("images/moon/m{$frameIndex}.gif")))
+                <img src="{{ $moonImg }}" alt="{{ __('Moon phase') }}" class="w-20 h-20 object-contain"
+                    loading="lazy" />
             @else
                 {{-- Fallback: simple circle SVG if frames are missing --}}
                 <svg class="w-20 h-20" viewBox="0 0 60 60" aria-hidden="true" role="img">
@@ -93,7 +92,13 @@
             @endif
 
             <div class="ml-3">
-                <div class="text-sm text-gray-200">@if(!is_null($illumPct)) {{ $illumPct }}% {{ __('illum.') }} @else - @endif</div>
+                <div class="text-sm text-gray-200">
+                    @if (!is_null($illumPct))
+                        {{ $illumPct }}% {{ __('illum.') }}
+                    @else
+                        -
+                    @endif
+                </div>
                 <div class="text-xs text-gray-400 mt-1">{{ __('New moon:') }} {{ $next_new_moon ?? '--' }}</div>
             </div>
 

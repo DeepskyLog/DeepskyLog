@@ -8,222 +8,968 @@
             <header class="mb-6">
                 <h1 class="text-3xl font-extrabold">
                     {{ html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</h1>
-                <div class="text-sm text-gray-300 mt-1">
-                    <div class="w-full max-w-4xl">
-                        <div class="grid grid-cols-4 gap-x-6 items-center">
-                            <div class="text-gray-400">{{ __('Object type') }}</div>
-                            <div class="text-white font-medium">{{ $session->source_type ?? __('Unknown') }}</div>
 
-                            @if (!empty($session->constellation))
-                                <div class="text-gray-400">{{ __('Constellation') }}</div>
-                                <div class="text-white font-medium">{{ $session->constellation }}</div>
+                {{-- Summary row: object type, constellation and quick stats (observations/drawings, user-specific counts) --}}
+                @php
+                    $objectName = $session->name ?? '';
+                    // Prefer controller-provided totals when available, otherwise query legacy observations table
+                    $totalObs =
+                        isset($totalObservations) && $totalObservations !== null
+                            ? $totalObservations
+                            : \App\Models\ObservationsOld::getObservationsCountForObject($objectName);
+                    $drawingsCount =
+                        isset($drawings) && is_countable($drawings)
+                            ? count($drawings)
+                            : \App\Models\ObservationsOld::getDrawingsCountForObject($objectName);
+                    $yourObs = auth()->check()
+                        ? \App\Models\ObservationsOld::getObservationsCountForUser(auth()->user(), $objectName)
+                        : 0;
+                    $yourDrawings = auth()->check()
+                        ? \App\Models\ObservationsOld::getDrawingsCountForUser(auth()->user(), $objectName)
+                        : 0;
+                    $lastObs = auth()->check()
+                        ? \App\Models\ObservationsOld::getLastObservationDateForUser(auth()->user(), $objectName)
+                        : null;
+                    $lastDrawing = auth()->check()
+                        ? \App\Models\ObservationsOld::getLastDrawingDateForUser(auth()->user(), $objectName)
+                        : null;
+                @endphp
+
+                <div
+                    class="grid grid-cols-1 sm:inline-grid sm:grid-flow-col sm:auto-cols-max gap-y-0 sm:gap-x-6 mt-1 text-sm text-gray-300">
+                    <div>
+                        <div class="flex items-center gap-0">
+                            <span class="text-gray-400">{{ __('Object type') }}</span>
+                            <span class="text-white font-medium ml-2">{{ $session->source_type ?? __('Unknown') }}</span>
+                        </div>
+
+                        <div class="mt-1 space-y-0">
+                            @php
+                                $objSlug =
+                                    $canonicalSlug ??
+                                    ($session->slug ?? \Illuminate\Support\Str::slug($session->name ?? ''));
+                            @endphp
+
+                            <div class="flex items-center justify-start gap-0">
+                                <span class="text-gray-400">{{ __('Observations') }}</span>
+                                <a href="{{ url('/observations/' . $objSlug) }}"
+                                    class="text-white font-medium ml-2 hover:underline">{{ $totalObs ?? 0 }}</a>
+                            </div>
+
+                            @auth
+                                <div class="flex items-center justify-start gap-0">
+                                    <span class="text-gray-400">{{ __('Your observations') }}</span>
+                                    <a href="{{ url('/observations/' . auth()->user()->slug . '/' . $objSlug) }}"
+                                        class="text-white font-medium ml-2 hover:underline">{{ $yourObs ?? 0 }}</a>
+                                </div>
+
+                                <div class="flex items-center justify-start gap-0">
+                                    <span class="text-gray-400">{{ __('Your drawings') }}</span>
+                                    <a href="{{ url('/observations/drawings/' . auth()->user()->slug . '/' . $objSlug) }}"
+                                        class="text-white font-medium ml-2 hover:underline">{{ $yourDrawings ?? 0 }}</a>
+                                </div>
+                            @endauth
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center gap-0">
+                            <span class="text-gray-400">{{ __('Constellation:') }}</span>
+                            <span
+                                class="text-white font-medium ml-2">{{ $session->constellation ?? __('Unknown') }}</span>
+                        </div>
+
+                        <div class="mt-1 space-y-0">
+                            @php
+                                $objSlug =
+                                    $canonicalSlug ??
+                                    ($session->slug ?? \Illuminate\Support\Str::slug($session->name ?? ''));
+                            @endphp
+
+                            <div class="flex items-center justify-start gap-0">
+                                <span class="text-gray-400">{{ __('Drawings') }}</span>
+                                <a href="{{ url('/observations/drawings/' . $objSlug) }}"
+                                    class="text-white font-medium ml-2 hover:underline">{{ $drawingsCount ?? 0 }}</a>
+                            </div>
+
+                            @auth
+                                <div class="flex items-center justify-start gap-0"><span
+                                        class="text-gray-400">{{ __('Last observed by you') }}</span><span
+                                        class="text-white font-medium ml-2">{{ $lastObs ? $lastObs->translatedFormat('j M Y') : __('Never') }}</span>
+                                </div>
+                                <div class="flex items-center justify-start gap-0"><span
+                                        class="text-gray-400">{{ __('Last drawing by you') }}</span><span
+                                        class="text-white font-medium ml-2">{{ $lastDrawing ? $lastDrawing->translatedFormat('j M Y') : __('Never') }}</span>
+                                </div>
                             @else
-                                <div></div>
-                                <div></div>
-                            @endif
+                                {{-- If not authenticated, show last observed/drawing as non-user-specific info only if available (keep existing behaviour) --}}
+                                <div class="flex items-center justify-start gap-0"><span class="text-gray-400">&nbsp;</span>
+                                </div>
+                            @endauth
                         </div>
                     </div>
                 </div>
 
-                @php
-                    // Legacy observation/drawing summaries from ObservationsOld
-                    $totalObservations = \App\Models\ObservationsOld::getObservationsCountForObject(
-                        $session->name ?? '',
-                    );
-                    $userObservations = \App\Models\ObservationsOld::getObservationsCountForUser(
-                        auth()->user() ?? null,
-                        $session->name ?? '',
-                    );
-                    $lastObservedByUser = \App\Models\ObservationsOld::getLastObservationDateForUser(
-                        auth()->user() ?? null,
-                        $session->name ?? '',
-                    );
+                <div class="text-sm text-gray-300 mt-1">
+                    {{-- Nearby objects rendered live by the PowerGrid component below. --}}
 
-                    $totalDrawings = \App\Models\ObservationsOld::getDrawingsCountForObject($session->name ?? '');
-                    $userDrawings = \App\Models\ObservationsOld::getDrawingsCountForUser(
-                        auth()->user() ?? null,
-                        $session->name ?? '',
-                    );
-                    $lastDrawingByUser = \App\Models\ObservationsOld::getLastDrawingDateForUser(
-                        auth()->user() ?? null,
-                        $session->name ?? '',
-                    );
-                @endphp
-
-                <div class="mt-1 text-sm text-gray-300">
-                    <div class="w-full max-w-4xl">
-                        <div class="grid grid-cols-4 gap-x-6 gap-y-0 items-center">
-                            <div class="text-gray-400">{{ __('Observations') }}</div>
-                            <div class="text-white font-medium">
-                                @if (!empty($canonicalSlug))
-                                    <a href="{{ url('/observations/' . $canonicalSlug) }}"
-                                        class="text-white hover:underline">{{ number_format($totalObservations) }}</a>
-                                @else
-                                    {{ number_format($totalObservations) }}
-                                @endif
-                            </div>
-                            <div class="text-gray-400">{{ __('Drawings') }}</div>
-                            <div class="text-white font-medium">
-                                @if (!empty($canonicalSlug))
-                                    <a href="{{ url('/observations/drawings/' . $canonicalSlug) }}"
-                                        class="text-white hover:underline">{{ number_format($totalDrawings) }}</a>
-                                @else
-                                    {{ number_format($totalDrawings) }}
-                                @endif
-                            </div>
-
-                            <div class="text-gray-400">{{ __('Your observations') }}</div>
-                            <div class="text-white font-medium">
-                                @if (auth()->check() && !empty($canonicalSlug) && auth()->user()->slug)
-                                    <a href="{{ route('observations.user.object', ['observer' => auth()->user()->slug, 'object' => $canonicalSlug]) }}"
-                                        class="text-white hover:underline">{{ number_format($userObservations) }}</a>
-                                @else
-                                    {{ number_format($userObservations) }}
-                                @endif
-                            </div>
-                            <div class="text-gray-400">{{ __('Last observed by you') }}</div>
-                            <div class="text-white font-medium">
-                                {{ $lastObservedByUser ? $lastObservedByUser->toDateString() : __('Never') }}</div>
-
-                            <div class="text-gray-400">{{ __('Your drawings') }}</div>
-                            <div class="text-white font-medium">
-                                @if (auth()->check() && !empty($canonicalSlug) && auth()->user()->slug)
-                                    <a href="{{ route('observations.drawings.user.object', ['observer' => auth()->user()->slug, 'object' => $canonicalSlug]) }}"
-                                        class="text-white hover:underline">{{ number_format($userDrawings) }}</a>
-                                @else
-                                    {{ number_format($userDrawings) }}
-                                @endif
-                            </div>
-                            <div class="text-gray-400">{{ __('Last drawing by you') }}</div>
-                            <div class="text-white font-medium">
-                                {{ $lastDrawingByUser ? $lastDrawingByUser->toDateString() : __('Never') }}</div>
-                        </div>
-                    </div>
-            </header>
-
-            <!-- Use a responsive layout: default to single-column flow, switch to a 6-column grid at xl (>=1280px) -->
-            <!-- For widths <1280px the aside should stack below the main content (no side-by-side at md) -->
-            <div class="flex flex-col gap-4 mt-3 xl:grid xl:grid-cols-6 xl:gap-6">
-                <article class="w-full md:flex-1 xl:col-span-4">
-                    <div class="mb-4 text-gray-100">
-                        <h2 class="text-xl font-semibold text-white">{{ __('Object details') }}</h2>
-                        <table class="table-auto w-full text-sm text-gray-100">
-                            <td class="pr-4 font-medium">{{ __('Also known as') }}</td>
-                            <td>
-                                @php
-                                    $altLinks = [];
-                                    foreach ($alternatives as $alt) {
-                                        $altSlug = \Illuminate\Support\Str::slug($alt, '-');
-                                        $url = route('object.show', ['slug' => $altSlug]);
-                                        $altLinks[] =
-                                            '<a href="' .
-                                            e($url) .
-                                            '" class="text-gray-300 hover:underline">' .
-                                            e($alt) .
-                                            '</a>';
-                                    }
-                                @endphp
-                                {!! implode(', ', $altLinks) !!}
-                            </td>
-                            </tr>
-                            @if (isset($session->ra) && isset($session->decl))
-                                <tr>
-                                    <td class="pr-4 font-medium">{{ __('RA / Dec') }}</td>
-                                    <td>{{ $session->ra }} / {{ $session->decl }}</td>
-                                </tr>
-                                @if (!empty($atlasName) || !empty($atlasPage))
-                                    <tr>
-                                        <td class="pr-4 font-medium">
-                                            @if (!empty($atlasName))
-                                                {{ $atlasName }}
-                                            @endif
-                                            @if (!empty($atlasPage))
-                                                @if (!empty($atlasName))
-                                                    <!-- aladin event enrichment bridge moved to main script block -->
-                                                @endif
-                                                {{ __('page:') }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if (!empty($atlasPage))
-                                                {{ $atlasPage }}
-                                            @endif
-                                        </td>
+                    <!-- Use a responsive layout: default to single-column flow, switch to a 6-column grid at xl (>=1280px) -->
+                    <!-- For widths <1280px the aside should stack below the main content (no side-by-side at md) -->
+                    <div class="flex flex-col gap-4 mt-3 xl:grid xl:grid-cols-6 xl:gap-6">
+                        <article class="w-full md:flex-1 xl:col-span-4">
+                            <div class="mb-4 text-gray-100">
+                                <h2 class="text-xl font-semibold text-white">{{ __('Object details') }}</h2>
+                                <table class="table-auto w-full text-sm text-gray-100">
+                                    <td class="pr-4 font-medium">{{ __('Also known as') }}</td>
+                                    <td>
+                                        @php
+                                            $altLinks = [];
+                                            foreach ($alternatives as $alt) {
+                                                $altSlug = \Illuminate\Support\Str::slug($alt, '-');
+                                                $url = route('object.show', ['slug' => $altSlug]);
+                                                $altLinks[] =
+                                                    '<a href="' .
+                                                    e($url) .
+                                                    '" class="text-gray-300 hover:underline">' .
+                                                    e($alt) .
+                                                    '</a>';
+                                            }
+                                        @endphp
+                                        {!! implode(', ', $altLinks) !!}
+                                    </td>
                                     </tr>
-                                @endif
-                            @endif
-                            @if (isset($session->diam1) || isset($session->diam2))
-                                @if ($session->diam1 > 0.0)
+                                    @if (isset($session->ra) && isset($session->decl))
+                                        <tr>
+                                            <td class="pr-4 font-medium">{{ __('RA / Dec') }}</td>
+                                            <td>{{ $session->ra }} / {{ $session->decl }}</td>
+                                        </tr>
+                                        @if (!empty($atlasName) || !empty($atlasPage))
+                                            <tr>
+                                                <td class="pr-4 font-medium">
+                                                    @if (!empty($atlasName))
+                                                        {{ $atlasName }}
+                                                    @endif
+                                                    @if (!empty($atlasPage))
+                                                        @if (!empty($atlasName))
+                                                            <!-- aladin event enrichment bridge moved to main script block -->
+                                                        @endif
+                                                        {{ __('page:') }}
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if (!empty($atlasPage))
+                                                        {{ $atlasPage }}
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endif
+                                    @if (isset($session->diam1) || isset($session->diam2))
+                                        @if ($session->diam1 > 0.0)
+                                            <tr>
+                                                <td class="pr-4 font-medium">{{ __('Size') }}</td>
+                                                <td>
+                                                    @php
+                                                        $d1 = $session->diam1 ?? '';
+                                                        $d2 = $session->diam2 ?? '';
+                                                    @endphp
+                                                    {{ $d1 }}' @if (!empty($d1) && !empty($d2))
+                                                        x
+                                                    @endif {{ $d2 }}'
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endif
+
+                                    @if (isset($session->pa) && $session->pa !== null)
+                                        <tr>
+                                            <td class="pr-4 font-medium">{{ __('Position angle') }}</td>
+                                            <td>{{ strval($session->pa) === '999' ? '-' : $session->pa }}</td>
+                                        </tr>
+                                    @endif
                                     <tr>
-                                        <td class="pr-4 font-medium">{{ __('Size') }}</td>
-                                        <td>
-                                            @php
-                                                $d1 = $session->diam1 ?? '';
-                                                $d2 = $session->diam2 ?? '';
-                                            @endphp
-                                            {{ $d1 }}' @if (!empty($d1) && !empty($d2))
-                                                x
-                                            @endif {{ $d2 }}'
-                                        </td>
+                                        <td class="pr-4 font-medium">{{ __('Description') }}</td>
+                                        <td>{!! nl2br(e($session->comments ?? '')) !!}</td>
                                     </tr>
-                                @endif
+                                    @if (!empty($session->mag))
+                                        <tr>
+                                            <td class="pr-4 font-medium">{{ __('Magnitude') }}</td>
+                                            <td>
+                                                @php
+                                                    $mag = $session->mag;
+                                                    // Some catalogs use 99.9 as a sentinel for unknown magnitude
+                                                    $magDisplay =
+                                                        is_numeric($mag) && floatval($mag) == 99.9
+                                                            ? __('Unknown')
+                                                            : $mag;
+                                                @endphp
+                                                {{ $magDisplay }}
+                                            </td>
+                                        </tr>
+                                    @endif
+
+                                    @if (!empty($session->subr))
+                                        <tr>
+                                            <td class="pr-4 font-medium">{{ __('Surface brightness') }}</td>
+                                            <td>
+                                                @php
+                                                    $sb = $session->subr;
+                                                    // 99.9 is used in some datasets to mean unknown
+                                                    $sbDisplay =
+                                                        is_numeric($sb) && floatval($sb) == 99.9 ? __('Unknown') : $sb;
+                                                @endphp
+                                                {{ $sbDisplay }}
+                                            </td>
+                                        </tr>
+                                    @endif
+
+                                    {{-- (Observation/drawing stats moved to header) --}}
+
+                                    {{-- Ephemerides: date, rise/transit/set, best time, maximum altitude, altitude graph provided by astronomy library --}}
+                                    {{-- Date selector moved to global aside Livewire component --}}
+                                    {{-- Ephemerides rows are rendered by a Livewire component so they can update live when the aside date changes --}}
+                                    @auth
+                                        @livewire('object-ephemerides', ['objectId' => (string) ($session->id ?? '')])
+
+                                        {{-- Live-updating contrast reserve and optimum detection magnification via Livewire --}}
+                                        {{-- Embed the Livewire component directly so it can render <tr> rows inside this table --}}
+                                        @php
+                                            // Prefer per-user cached metrics when available so the preview
+                                            // shows the persisted Contrast Reserve for the signed-in user's
+// standard instrument/location. Fall back to session-provided
+// values when no cache record exists or on errors.
+$initialCR = $session->contrast_reserve ?? null;
+$initialCRCat = $session->contrast_reserve_category ?? null;
+$initialCRLoc = $session->contrast_used_location ?? null;
+$initialCRInstr = $session->contrast_used_instrument ?? null;
+$initialOptMag = $session->optimum_detection_magnification ?? null;
+$initialOptEps = $session->optimum_eyepieces ?? [];
+try {
+    if (auth()->check()) {
+        $u = auth()->user();
+        $instr = $u->standardInstrument ?? null;
+        $loc = $u->standardLocation ?? null;
+        if ($instr && $loc && !empty($session->name)) {
+            $uom = \App\Models\UserObjectMetric::where('user_id', $u->id)
+                ->where('instrument_id', $instr->id)
+                ->where('location_id', $loc->id)
+                ->where('object_name', $session->name)
+                                                            ->first();
+                                                        if ($uom) {
+                                                            if (is_numeric($uom->contrast_reserve)) {
+                                                                $initialCR = $uom->contrast_reserve;
+                                                            }
+                                                            $initialCRCat =
+                                                                $uom->contrast_reserve_category ?? $initialCRCat;
+                                                            $initialOptMag =
+                                                                $uom->optimum_detection_magnification ?? $initialOptMag;
+                                                            $initialOptEps = $uom->optimum_eyepieces
+                                                                ? json_decode(
+                                                                    json_encode($uom->optimum_eyepieces),
+                                                                    true,
+                                                                )
+                                                                : $initialOptEps;
+                                                            // record which instrument/location produced the cached value
+                                                            $initialCRLoc = $initialCRLoc ?? ($loc->name ?? null);
+                                                            $initialCRInstr = $initialCRInstr ?? ($instr->name ?? null);
+                                                        }
+                                                    }
+                                                }
+                                            } catch (\Throwable $_) {
+                                                // Fail silently and keep session-provided values
+                                            }
+                                        @endphp
+
+                                        @livewire('aladin-preview-info', [
+                                            'objectId' => (string) ($session->id ?? ''),
+                                            'initial' => [
+                                                'contrast_reserve' => $initialCR,
+                                                'contrast_reserve_category' => $initialCRCat,
+                                                'contrast_used_location' => $initialCRLoc,
+                                                'contrast_used_instrument' => $initialCRInstr,
+                                                'optimum_detection_magnification' => $initialOptMag,
+                                                'optimum_eyepieces' => $initialOptEps,
+                                            ],
+                                        ])
+                                    @endauth
+
+                                </table>
+
+                                {{-- Altitude graph now rendered by the Livewire `object-ephemerides` component to avoid duplication --}}
+
+                            </div>
+
+                            {{-- Nearby objects (powergrid) --}}
+                            @if (isset($session->ra) && isset($session->decl) && !empty($session->ra) && !empty($session->decl))
+                                <div class="mt-6">
+                                    <h2 class="text-xl font-semibold text-white">{{ __('Nearby objects') }}</h2>
+                                    <div id="nearby-objects-wrapper"
+                                        class="mt-2 bg-gray-800 p-3 rounded shadow text-gray-100">
+                                        @php
+                                            // Determine initial nearby radius and per-page to display.
+                                            // Prefer the per-user persisted setting if available.
+                                            $nearbyRadiusSelected = 30;
+                                            $nearbyPerPageSelected = 25;
+                                            try {
+                                                if (auth()->check()) {
+                                                    $uts = \App\Models\UserTableSetting::where(
+                                                        'user_id',
+                                                        auth()->user()->id,
+                                                    )
+                                                        ->where('table_name', 'nearby-objects-table')
+                                                        ->first();
+                                                    if ($uts && is_array($uts->settings)) {
+                                                        if (isset($uts->settings['radiusArcMin'])) {
+                                                            $nearbyRadiusSelected = intval(
+                                                                $uts->settings['radiusArcMin'],
+                                                            );
+                                                        }
+                                                        if (isset($uts->settings['perPage'])) {
+                                                            $nearbyPerPageSelected = intval($uts->settings['perPage']);
+                                                        }
+                                                    }
+                                                }
+                                            } catch (\Throwable $_) {
+                                                // fallback to defaults
+                                            }
+                                        @endphp
+                                        <div class="flex items-center gap-3 mb-3">
+                                            <label class="text-sm text-gray-300">{{ __('Radius:') }}</label>
+                                            <select
+                                                onchange="(function(v){try{v=parseInt(v,10); if(window.Livewire && typeof Livewire.dispatch==='function'){ Livewire.dispatch('nearbyRadiusChanged', [v]); } else if(window.Livewire && typeof Livewire.dispatchTo==='function'){ Livewire.dispatchTo('nearby-objects-table','nearbyRadiusChanged', [v]); } else if(window.Livewire && typeof Livewire.emit==='function'){ Livewire.emit('nearbyRadiusChanged', [v]); } }catch(e){} })(this.value)"
+                                                class="text-sm rounded bg-gray-700 text-gray-100 p-1">
+                                                <option value="5"
+                                                    {{ $nearbyRadiusSelected === 5 ? 'selected' : '' }}>5'</option>
+                                                <option value="10"
+                                                    {{ $nearbyRadiusSelected === 10 ? 'selected' : '' }}>10'</option>
+                                                <option value="15"
+                                                    {{ $nearbyRadiusSelected === 15 ? 'selected' : '' }}>15'</option>
+                                                <option value="30"
+                                                    {{ $nearbyRadiusSelected === 30 ? 'selected' : '' }}>30'</option>
+                                                <option value="60"
+                                                    {{ $nearbyRadiusSelected === 60 ? 'selected' : '' }}>1°</option>
+                                                <option value="120"
+                                                    {{ $nearbyRadiusSelected === 120 ? 'selected' : '' }}>2°</option>
+                                            </select>
+                                            <div class="text-xs text-gray-400 ml-2">
+                                                {{ __('Choose radius to search nearby objects.') }}</div>
+                                            <!-- Export names (PDF) button: dispatches to the nearby-objects-table Livewire component -->
+                                            <div class="ml-auto">
+                                                @php
+                                                    // Build a safe URL for the export route using server-known coordinates
+                                                    $exportUrl =
+                                                        route('object.nearby.names.pdf', [
+                                                            'slug' => $canonicalSlug ?? ($session->slug ?? ''),
+                                                        ]) . '?';
+                                                    $exportUrl .= 'ra=' . rawurlencode($nearbyRaDeg ?? '');
+                                                    $exportUrl .= '&dec=' . rawurlencode($nearbyDecDeg ?? '');
+                                                    $exportUrl .=
+                                                        '&radius=' . rawurlencode($nearbyRadiusSelected ?? 30);
+                                                @endphp
+                                                <a href="{{ $exportUrl }}" target="_blank" rel="noopener noreferrer"
+                                                    class="inline-flex items-center justify-center text-sm font-medium px-3 py-1.5 rounded-md bg-blue-600 text-white hover:bg-blue-700 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                                                    aria-label="{{ __('Export names (PDF)') }}">
+                                                    {{ __('Export names (PDF)') }}
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        @php
+                                            // Quick server-side nearby debug disabled to avoid high memory
+                                            // usage during normal page renders. If you need to run the
+                                            // diagnostic locally, re-enable the chunking logic with
+                                            // a conservative limit.
+                                            $nearbyDebug = [];
+                                        @endphp
+
+                                        {{-- Server-side nearby debug output removed — use Livewire/PowerGrid output below. --}}
+
+                                        @php
+                                            // Try to provide numeric RA/Dec (degrees) to the Livewire component.
+                                            // Controller populates $aladinDefaults with raw and possibly converted values
+                                            // (ra_raw, dec_raw, ra_deg, dec_deg). Prefer ra_deg/dec_deg when present.
+                                            $nearbyRaDeg = null;
+                                            $nearbyDecDeg = null;
+                                            try {
+                                                if (!empty($aladinDefaults['ra_deg'])) {
+                                                    $nearbyRaDeg = (float) $aladinDefaults['ra_deg'];
+                                                } elseif (!empty($aladinDefaults['ra_raw'])) {
+                                                    // try to parse simple numeric or HH MM SS style RA strings
+                                                    $r = trim($aladinDefaults['ra_raw']);
+                                                    if (is_numeric($r)) {
+                                                        $nearbyRaDeg = (float) $r;
+                                                    } else {
+                                                        // parse h m s (accept h/m/s or space-separated)
+                                                        if (
+                                                            preg_match(
+                                                                '/^(\d{1,2})[:h\s](\d{1,2})[:m\s](\d+(?:\.\d+)?)/',
+                                                                $r,
+                                                                $m,
+                                                            )
+                                                        ) {
+                                                            $h = floatval($m[1]);
+                                                            $min = floatval($m[2]);
+                                                            $sec = floatval($m[3]);
+                                                            $nearbyRaDeg = ($h + $min / 60.0 + $sec / 3600.0) * 15.0;
+                                                        }
+                                                    }
+                                                }
+
+                                                if (!empty($aladinDefaults['dec_deg'])) {
+                                                    $nearbyDecDeg = (float) $aladinDefaults['dec_deg'];
+                                                } elseif (!empty($aladinDefaults['dec_raw'])) {
+                                                    $d = trim($aladinDefaults['dec_raw']);
+                                                    if (is_numeric($d)) {
+                                                        $nearbyDecDeg = (float) $d;
+                                                    } else {
+                                                        // parse deg min sec like 41°16'06.0" or 41 16 06
+            if (
+                preg_match(
+                    '/^([\+\-]?\d{1,3})[^\d\-\+]*(\d{1,2})[^\d\-\+]*(\d+(?:\.\d+)?)/',
+                    $d,
+                    $n,
+                )
+            ) {
+                $sign = strpos($d, '-') !== false ? -1 : 1;
+                                                            $deg = floatval($n[1]);
+                                                            $min = floatval($n[2]);
+                                                            $sec = floatval($n[3]);
+                                                            $nearbyDecDeg =
+                                                                $sign * ($deg + $min / 60.0 + $sec / 3600.0);
+                                                        }
+                                                    }
+                                                }
+                                            } catch (\Throwable $_) {
+                                                $nearbyRaDeg = null;
+                                                $nearbyDecDeg = null;
+                                            }
+                                        @endphp
+
+                                        @livewire('nearby-objects-table', [
+                                            'objectId' => (int) ($session->id ?? 0),
+                                            'objectName' => $session->name ?? null,
+                                            'ra' => $nearbyRaDeg,
+                                            'decl' => $nearbyDecDeg,
+                                            'radiusArcMin' => $nearbyRadiusSelected,
+                                            'perPage' => $nearbyPerPageSelected,
+                                        ])
+                                        {{-- Ensure selects inside the nearby objects area use a dark background and light text.
+                                            PowerGrid renders its own <select> for per-page; browsers limit styling of <option>,
+                                            but we force the select box to match the site's dark theme. --}}
+                                        <style>
+                                            /* Target selects inside the nearby objects wrapper */
+                                            #nearby-objects-wrapper select {
+                                                background-color: #374151 !important;
+                                                /* tailwind bg-gray-700 */
+                                                color: #f3f4f6 !important;
+                                                /* tailwind text-gray-100 */
+                                                border-color: rgba(255, 255, 255, 0.06) !important;
+                                            }
+
+                                            /* Try to style dropdown options where the browser allows it */
+                                            #nearby-objects-wrapper select option {
+                                                background-color: #374151 !important;
+                                                color: #f3f4f6 !important;
+                                            }
+
+                                            /* Allow the PowerGrid atlas header to wrap onto multiple lines
+                                               when the title is long. The header class is added server-side
+                                               by the NearbyObjectsTable component (headerAttribute).
+                                               Target broadly to override PowerGrid's internal header markup. */
+                                            .atlas-header,
+                                            .atlas-header *,
+                                            #nearby-objects-wrapper .atlas-header,
+                                            #nearby-objects-wrapper .atlas-header * {
+                                                white-space: normal !important;
+                                                max-width: 7rem !important;
+                                                word-break: break-word !important;
+                                                overflow-wrap: break-word !important;
+                                                line-height: 1.05 !important;
+                                                text-align: center !important;
+                                            }
+
+                                            /* Ensure the clickable header label can wrap too */
+                                            .atlas-header>div,
+                                            .atlas-header>span,
+                                            .atlas-header>button {
+                                                display: inline-block !important;
+                                                white-space: normal !important;
+                                            }
+
+                                            /* Allow the PowerGrid toggle dropdown to escape clipping. We'll
+                                               move the dropdown into document.body and position it there via JS
+                                               (portal pattern) to avoid clipping/transform/stacking-context issues. */
+                                            #nearby-objects-wrapper {
+                                                overflow: visible !important;
+                                            }
+
+                                            /* keep a default high z-index when moved; left/top set by JS */
+                                            .toggle-columns-base {
+                                                position: fixed !important;
+                                                z-index: 99999 !important;
+                                                transform: none !important;
+                                            }
+                                        </style>
+                                        <script>
+                                            (function() {
+                                                // Safer dropdown positioning that keeps the dropdown inside its
+                                                // original DOM (so Alpine's x-data/x-show scope continues to work).
+                                                function isVisible(el) {
+                                                    try {
+                                                        if (!el) return false;
+                                                        var cs = window.getComputedStyle(el);
+                                                        return cs && cs.display !== 'none' && cs.visibility !== 'hidden' && el.offsetWidth > 0 && el
+                                                            .offsetHeight > 0;
+                                                    } catch (e) {
+                                                        return false;
+                                                    }
+                                                }
+
+                                                function positionDropdown(btn, dd) {
+                                                    try {
+                                                        if (!btn || !dd) return;
+                                                        var br = btn.getBoundingClientRect();
+                                                        var left = Math.round(br.left);
+                                                        var top = Math.round(br.bottom + 6);
+                                                        dd.style.position = 'fixed';
+                                                        dd.style.left = left + 'px';
+                                                        dd.style.top = top + 'px';
+                                                        dd.style.zIndex = '99999';
+
+                                                        // clamp horizontally
+                                                        var rect = dd.getBoundingClientRect();
+                                                        if (rect.right > window.innerWidth - 8) {
+                                                            var shift = rect.right - (window.innerWidth - 8);
+                                                            dd.style.left = Math.max(8, left - shift) + 'px';
+                                                        }
+                                                        // flip above if needed
+                                                        rect = dd.getBoundingClientRect();
+                                                        if (rect.bottom > window.innerHeight - 8) {
+                                                            dd.style.top = Math.max(8, Math.round(br.top - rect.height - 6)) + 'px';
+                                                        }
+                                                    } catch (e) {}
+                                                }
+
+                                                // When the toggle button is clicked, wait a short time for Alpine
+                                                // to toggle x-show, then find the dropdown and position it.
+                                                document.addEventListener('click', function(ev) {
+                                                    try {
+                                                        var target = ev.target;
+                                                        while (target && target !== document.documentElement) {
+                                                            try {
+                                                                if (target.getAttribute) {
+                                                                    var dc = target.getAttribute('data-cy');
+                                                                    if (dc && dc.indexOf('toggle-columns-') === 0) {
+                                                                        // debug: which toggle button was clicked
+                                                                        try {
+                                                                            if (console && typeof console.debug === 'function') console.debug(
+                                                                                '[dsl] toggle-columns clicked', {
+                                                                                    dataCy: dc
+                                                                                });
+                                                                        } catch (e) {}
+                                                                        // wait for Alpine to update DOM
+                                                                        setTimeout(function() {
+                                                                            try {
+                                                                                var dd = document.querySelector('.toggle-columns-base');
+                                                                                if (!dd) {
+                                                                                    try {
+                                                                                        if (console && typeof console.debug === 'function')
+                                                                                            console.debug(
+                                                                                                '[dsl] toggle-columns: no dropdown element found yet'
+                                                                                            );
+                                                                                    } catch (e) {}
+                                                                                    return;
+                                                                                }
+                                                                                // debug: dump bounding boxes before positioning
+                                                                                try {
+                                                                                    var btnRectDebug = target.getBoundingClientRect();
+                                                                                    var ddRectDebug = dd.getBoundingClientRect();
+                                                                                    if (console && typeof console.debug === 'function')
+                                                                                        console.debug(
+                                                                                            '[dsl] toggle-columns: found dropdown', {
+                                                                                                btnRect: btnRectDebug,
+                                                                                                ddRect: ddRectDebug
+                                                                                            });
+                                                                                } catch (e) {}
+                                                                                // If dd is not visible yet, watch for it becoming visible (Alpine/x-transition may delay)
+                                                                                if (!isVisible(dd)) {
+                                                                                    try {
+                                                                                        if (console && typeof console.debug === 'function')
+                                                                                            console.debug(
+                                                                                                '[dsl] dropdown not visible yet - installing observer+poll'
+                                                                                            );
+                                                                                    } catch (e) {}
+                                                                                    var mo = null;
+                                                                                    var poll = null;
+                                                                                    var attempts = 0;
+                                                                                    var maxAttempts = 33; // ~2s @ 60ms
+                                                                                    try {
+                                                                                        mo = new MutationObserver(function() {
+                                                                                            try {
+                                                                                                // Re-query the dropdown node in case Alpine recreated it
+                                                                                                dd = document.querySelector(
+                                                                                                        '.toggle-columns-base') ||
+                                                                                                    dd;
+                                                                                                if (isVisible(dd)) {
+                                                                                                    try {
+                                                                                                        if (console &&
+                                                                                                            typeof console.debug ===
+                                                                                                            'function') console
+                                                                                                            .debug(
+                                                                                                                '[dsl] dropdown became visible (observer)'
+                                                                                                            );
+                                                                                                    } catch (e) {}
+                                                                                                    positionDropdown(target, dd);
+                                                                                                    try {
+                                                                                                        if (mo) mo.disconnect();
+                                                                                                    } catch (e) {}
+                                                                                                    try {
+                                                                                                        if (poll) clearInterval(
+                                                                                                            poll);
+                                                                                                    } catch (e) {}
+                                                                                                }
+                                                                                            } catch (e) {}
+                                                                                        });
+                                                                                        // Observe the parent to catch cases where Alpine recreates the element
+                                                                                        var parent = dd && dd.parentNode ? dd.parentNode :
+                                                                                            document.body;
+                                                                                        mo.observe(parent, {
+                                                                                            childList: true,
+                                                                                            subtree: true,
+                                                                                            attributes: true,
+                                                                                            attributeFilter: ['style', 'class',
+                                                                                                'aria-hidden'
+                                                                                            ]
+                                                                                        });
+
+                                                                                        // Polling fallback for environments where MutationObserver doesn't fire or element is recreated
+                                                                                        poll = setInterval(function() {
+                                                                                            try {
+                                                                                                attempts++;
+                                                                                                var current = document
+                                                                                                    .querySelector(
+                                                                                                        '.toggle-columns-base');
+                                                                                                if (current && isVisible(current)) {
+                                                                                                    try {
+                                                                                                        if (console &&
+                                                                                                            typeof console.debug ===
+                                                                                                            'function') console
+                                                                                                            .debug(
+                                                                                                                '[dsl] dropdown became visible (poll) after',
+                                                                                                                attempts, 'attempts'
+                                                                                                            );
+                                                                                                    } catch (e) {}
+                                                                                                    positionDropdown(target,
+                                                                                                        current);
+                                                                                                    try {
+                                                                                                        if (mo) mo.disconnect();
+                                                                                                    } catch (e) {}
+                                                                                                    clearInterval(poll);
+                                                                                                } else if (attempts >=
+                                                                                                    maxAttempts) {
+                                                                                                    try {
+                                                                                                        if (console &&
+                                                                                                            typeof console.debug ===
+                                                                                                            'function') console
+                                                                                                            .debug(
+                                                                                                                '[dsl] dropdown poll timed out'
+                                                                                                            );
+                                                                                                    } catch (e) {}
+                                                                                                    try {
+                                                                                                        if (mo) mo.disconnect();
+                                                                                                    } catch (e) {}
+                                                                                                    clearInterval(poll);
+                                                                                                    // Last-resort: force the dropdown visible for debugging so we can inspect it
+                                                                                                    try {
+                                                                                                        var final = document
+                                                                                                            .querySelector(
+                                                                                                                '.toggle-columns-base'
+                                                                                                            );
+                                                                                                        if (final) {
+                                                                                                            try {
+                                                                                                                final.style
+                                                                                                                    .display =
+                                                                                                                    'block';
+                                                                                                                final.style
+                                                                                                                    .visibility =
+                                                                                                                    'visible';
+                                                                                                                final.style
+                                                                                                                    .opacity = '1';
+                                                                                                                final.style
+                                                                                                                    .position =
+                                                                                                                    'fixed';
+                                                                                                                final.style.zIndex =
+                                                                                                                    '99999';
+                                                                                                            } catch (e) {}
+                                                                                                            try {
+                                                                                                                if (console &&
+                                                                                                                    typeof console
+                                                                                                                    .debug ===
+                                                                                                                    'function')
+                                                                                                                    console.debug(
+                                                                                                                        '[dsl] forced dropdown visible for debug', {
+                                                                                                                            ddRect: final
+                                                                                                                                .getBoundingClientRect(),
+                                                                                                                            computed: window
+                                                                                                                                .getComputedStyle(
+                                                                                                                                    final
+                                                                                                                                )
+                                                                                                                        });
+                                                                                                            } catch (e) {}
+                                                                                                            try {
+                                                                                                                positionDropdown(
+                                                                                                                    target,
+                                                                                                                    final);
+                                                                                                            } catch (e) {}
+                                                                                                        }
+                                                                                                    } catch (e) {}
+                                                                                                }
+                                                                                            } catch (e) {}
+                                                                                        }, 60);
+                                                                                    } catch (e) {
+                                                                                        // fallback: try one delayed attempt
+                                                                                        setTimeout(function() {
+                                                                                            try {
+                                                                                                var cur = document.querySelector(
+                                                                                                    '.toggle-columns-base');
+                                                                                                if (cur && isVisible(cur))
+                                                                                                    positionDropdown(target, cur);
+                                                                                            } catch (e) {}
+                                                                                        }, 220);
+                                                                                    }
+                                                                                    return;
+                                                                                }
+                                                                                positionDropdown(target, dd);
+                                                                            } catch (e) {}
+                                                                        }, 80);
+                                                                        return;
+                                                                    }
+                                                                }
+                                                            } catch (e) {}
+                                                            target = target.parentElement;
+                                                        }
+                                                    } catch (e) {}
+                                                }, true);
+
+                                                // reposition on resize/scroll while the dropdown is visible
+                                                var reposition = function() {
+                                                    try {
+                                                        var dd = document.querySelector('.toggle-columns-base');
+                                                        if (!dd || !isVisible(dd)) return;
+                                                        // try to find nearest toggle button
+                                                        var buttons = Array.from(document.querySelectorAll('[data-cy]')).filter(function(b) {
+                                                            try {
+                                                                return b.getAttribute && b.getAttribute('data-cy') && b.getAttribute('data-cy')
+                                                                    .indexOf('toggle-columns-') === 0;
+                                                            } catch (e) {
+                                                                return false;
+                                                            }
+                                                        });
+                                                        if (!buttons.length) return;
+                                                        // pick the closest by horizontal distance
+                                                        var rect = dd.getBoundingClientRect();
+                                                        var best = buttons.reduce(function(acc, b) {
+                                                            try {
+                                                                var br = b.getBoundingClientRect();
+                                                                var dist = Math.abs(br.left - rect.left) + Math.abs(br.top - rect.top);
+                                                                if (acc === null || dist < acc.dist) return {
+                                                                    btn: b,
+                                                                    dist: dist
+                                                                };
+                                                                return acc;
+                                                            } catch (e) {
+                                                                return acc;
+                                                            }
+                                                        }, null);
+                                                        if (best && best.btn) {
+                                                            try {
+                                                                if (console && typeof console.debug === 'function') console.debug(
+                                                                    '[dsl] repositioning dropdown', {
+                                                                        bestBtnDataCy: best.btn.getAttribute && best.btn.getAttribute('data-cy'),
+                                                                        ddRect: dd.getBoundingClientRect()
+                                                                    });
+                                                            } catch (e) {}
+                                                            positionDropdown(best.btn, dd);
+                                                        }
+                                                    } catch (e) {}
+                                                };
+                                                window.addEventListener('resize', reposition, {
+                                                    passive: true
+                                                });
+                                                window.addEventListener('scroll', reposition, {
+                                                    passive: true
+                                                });
+                                            })();
+                                        </script>
+                                        <script>
+                                            // Debug-forwarder: intercept PowerGrid toggleColumn events and
+                                            // forward a correctly-shaped message to Livewire while emitting
+                                            // helpful console debug logs. Also install a tiny XHR observer
+                                            // to log outgoing Livewire requests for the nearby table.
+                                            (function() {
+                                                try {
+                                                    var evName = 'pg:toggleColumn-' + 'nearby-objects-table';
+
+                                                    // Lightweight XHR observer: logs outgoing requests to the nearby table endpoint
+                                                    (function() {
+                                                        try {
+                                                            if (window.__dsl_xhr_obs_installed) return;
+                                                            window.__dsl_xhr_obs_installed = true;
+                                                            // XHR observer
+                                                            var origOpen = XMLHttpRequest.prototype.open;
+                                                            var origSend = XMLHttpRequest.prototype.send;
+                                                            XMLHttpRequest.prototype.open = function(method, url) {
+                                                                try {
+                                                                    this.__dsl_url = url;
+                                                                } catch (e) {}
+                                                                return origOpen.apply(this, arguments);
+                                                            };
+                                                            XMLHttpRequest.prototype.send = function(body) {
+                                                                try {
+                                                                    if (this.__dsl_url && String(this.__dsl_url).indexOf(
+                                                                            '/livewire/message/nearby-objects-table') !== -1) {
+                                                                        try {
+                                                                            console.debug('[dsl][xhr] Livewire nearby-table XHR request:', this
+                                                                                .__dsl_url, body);
+                                                                        } catch (e) {}
+                                                                        this.addEventListener('load', function() {
+                                                                            try {
+                                                                                console.debug(
+                                                                                    '[dsl][xhr] Livewire nearby-table XHR response status:',
+                                                                                    this.status);
+                                                                            } catch (e) {}
+                                                                        });
+                                                                    }
+                                                                } catch (e) {}
+                                                                return origSend.apply(this, arguments);
+                                                            };
+
+                                                            // fetch() observer
+                                                            try {
+                                                                if (window.fetch && !window.__dsl_fetch_obs_installed) {
+                                                                    window.__dsl_fetch_obs_installed = true;
+                                                                    var origFetch = window.fetch.bind(window);
+                                                                    window.fetch = function(input, init) {
+                                                                        try {
+                                                                            var url = (typeof input === 'string') ? input : (input && input.url) ||
+                                                                                '';
+                                                                            if (String(url).indexOf('/livewire/message/nearby-objects-table') !== -
+                                                                                1) {
+                                                                                try {
+                                                                                    console.debug(
+                                                                                        '[dsl][fetch] Livewire nearby-table fetch request:',
+                                                                                        url, init || input);
+                                                                                } catch (e) {}
+                                                                                return origFetch(input, init).then(function(res) {
+                                                                                    try {
+                                                                                        console.debug(
+                                                                                            '[dsl][fetch] Livewire nearby-table fetch response status:',
+                                                                                            res.status);
+                                                                                    } catch (e) {}
+                                                                                    return res;
+                                                                                });
+                                                                            }
+                                                                        } catch (e) {}
+                                                                        return origFetch(input, init);
+                                                                    };
+                                                                }
+                                                            } catch (e) {}
+                                                        } catch (e) {}
+                                                    })();
+
+                                                    document.addEventListener(evName, function(e) {
+                                                        try {
+                                                            if (window.__dsl_forwarding_in_progress) {
+                                                                console.debug('[dsl] forwarding already in progress, ignoring event');
+                                                                return;
+                                                            }
+
+                                                            // Extract requested field
+                                                            var field = null;
+                                                            try {
+                                                                if (Array.isArray(e && e.detail) && e.detail.length) {
+                                                                    field = e.detail[0];
+                                                                } else if (e && e.detail && typeof e.detail === 'object' && 'field' in e.detail) {
+                                                                    field = e.detail.field;
+                                                                } else if (typeof e.detail === 'string') {
+                                                                    field = e.detail;
+                                                                }
+                                                            } catch (er) {
+                                                                console.debug('[dsl] field extraction failed', er);
+                                                            }
+
+                                                            console.debug('[dsl] pg:toggleColumn received', {
+                                                                field: field,
+                                                                detail: e && e.detail
+                                                            });
+                                                            if (!field) return;
+
+                                                            // Do NOT stop propagation or prevent default: allow PowerGrid/Alpine
+                                                            // built-in handlers to run and produce the Livewire network request.
+                                                            // Previously we intercepted and stopped the event which prevented
+                                                            // the request from being sent.
+
+                                                            window.__dsl_forwarding_in_progress = true;
+                                                            try {
+                                                                if (window.Livewire && typeof Livewire.dispatchTo === 'function') {
+                                                                    console.debug(
+                                                                        '[dsl] dispatching via Livewire.dispatchTo to nearby-objects-table',
+                                                                        field);
+                                                                    Livewire.dispatchTo('nearby-objects-table', '__dispatch', [
+                                                                        'pg:toggleColumn-nearby-objects-table', [field]
+                                                                    ]);
+                                                                } else if (window.Livewire && typeof Livewire.dispatch === 'function') {
+                                                                    console.debug('[dsl] dispatching via Livewire.dispatch', field);
+                                                                    Livewire.dispatch('pg:toggleColumn-nearby-objects-table', [field]);
+                                                                } else if (window.Livewire && typeof Livewire.emit === 'function') {
+                                                                    console.debug('[dsl] dispatching via Livewire.emit', field);
+                                                                    Livewire.emit('pg:toggleColumn-nearby-objects-table', [field]);
+                                                                } else {
+                                                                    console.debug(
+                                                                        '[dsl] no Livewire API found; skipping manual dispatch (allowing native handlers)'
+                                                                    );
+                                                                }
+                                                            } catch (err) {
+                                                                console.debug('[dsl] dispatch error', err);
+                                                            } finally {
+                                                                setTimeout(function() {
+                                                                    try {
+                                                                        window.__dsl_forwarding_in_progress = false;
+                                                                    } catch (e) {}
+                                                                }, 50);
+                                                            }
+
+                                                            // Close the dropdown by clicking the toggle button which flips
+                                                            // the Alpine `open` state. Delay slightly so the Livewire calls
+                                                            // can be dispatched first.
+                                                            try {
+                                                                var btn = document.querySelector('[data-cy="toggle-columns-nearby-objects-table"]');
+                                                                if (btn) setTimeout(function() {
+                                                                    try {
+                                                                        btn.click();
+                                                                    } catch (e) {}
+                                                                }, 20);
+                                                            } catch (err) {}
+                                                        } catch (err) {
+                                                            console.debug('[dsl] forwarder outer error', err);
+                                                        }
+                                                    }, {
+                                                        passive: false,
+                                                        capture: true
+                                                    });
+                                                } catch (err) {
+                                                    console.debug('[dsl] forwarder init error', err);
+                                                }
+                                            })();
+                                        </script>
+                                    </div>
+                                </div>
                             @endif
 
-                            @if (isset($session->pa) && $session->pa !== null)
-                                <tr>
-                                    <td class="pr-4 font-medium">{{ __('Position angle') }}</td>
-                                    <td>{{ strval($session->pa) === '999' ? '-' : $session->pa }}</td>
-                                </tr>
-                            @endif
-                            <tr>
-                                <td class="pr-4 font-medium">{{ __('Description') }}</td>
-                                <td>{!! nl2br(e($session->comments ?? '')) !!}</td>
-                            </tr>
-                            @if (!empty($session->mag))
-                                <tr>
-                                    <td class="pr-4 font-medium">{{ __('Magnitude') }}</td>
-                                    <td>{{ $session->mag ?? '' }}</td>
-                                </tr>
-                            @endif
-
-                            @if (!empty($session->subr))
-                                <tr>
-                                    <td class="pr-4 font-medium">{{ __('Surface brightness') }}</td>
-                                    <td>{{ $session->subr ?? '' }}</td>
-                                </tr>
-                            @endif
-
-                            {{-- (Observation/drawing stats moved to header) --}}
-
-                            {{-- Ephemerides: date, rise/transit/set, best time, maximum altitude, altitude graph provided by astronomy library --}}
-                            {{-- Date selector moved to global aside Livewire component --}}
-                            {{-- Ephemerides rows are rendered by a Livewire component so they can update live when the aside date changes --}}
-                            @livewire('object-ephemerides', ['objectId' => (string) ($session->id ?? '')])
-
-                            {{-- Live-updating contrast reserve and optimum detection magnification via Livewire --}}
-                            {{-- Embed the Livewire component directly so it can render <tr> rows inside this table --}}
-                            @livewire('aladin-preview-info', [
-                                'objectId' => (string) ($session->id ?? ''),
-                                'initial' => [
-                                    'contrast_reserve' => $session->contrast_reserve ?? null,
-                                    'contrast_reserve_category' => $session->contrast_reserve_category ?? null,
-                                    'contrast_used_location' => $session->contrast_used_location ?? null,
-                                    'contrast_used_instrument' => $session->contrast_used_instrument ?? null,
-                                    'optimum_detection_magnification' => $session->optimum_detection_magnification ?? null,
-                                    'optimum_eyepieces' => $session->optimum_eyepieces ?? [],
-                                ],
-                            ])
-
-                        </table>
-
-                        {{-- Altitude graph now rendered by the Livewire `object-ephemerides` component to avoid duplication --}}
-
-                    </div>
-
-                    {{-- Sketches that were DeepskyLog sketch(s) of the week for this object --}}
-                    @php
-                        // The observations legacy table lives on the mysqlOld connection.
-                        // Build a list of observation ids from the legacy DB matching this object's name
+                            {{-- Sketches that were DeepskyLog sketch(s) of the week for this object --}}
+                            @php
+                                // The observations legacy table lives on the mysqlOld connection.
+                                // Build a list of observation ids from the legacy DB matching this object's name
 $objectSketches = collect();
 try {
     $objName = $session->name ?? '';
@@ -235,561 +981,580 @@ try {
             ->toArray();
 
         if (!empty($obsIds)) {
-            $objectSketches = \App\Models\SketchOfTheWeek::whereIn('observation_id', $obsIds)
+            $objectSketches = \App\Models\SketchOfTheWeek::whereIn(
+                'observation_id',
+                $obsIds,
+            )
                 ->orderByDesc('date')
                 ->get();
         }
     }
 } catch (\Throwable $_) {
     // Fail silently: keep $objectSketches empty so the section simply doesn't render
-                            $objectSketches = collect();
-                        }
-                    @endphp
-
-                    @if ($objectSketches->isNotEmpty())
-                        <div class="mt-6">
-                            <h2 class="text-xl font-semibold text-white">{{ __('Sketch of the Week') }}</h2>
-                            <div class="mt-2">
-                                <x-card>
-                                    <div class="flex flex-wrap px-5">
-                                        @foreach ($objectSketches as $sketch)
-                                            <x-sketch :sketch="$sketch" />
-                                        @endforeach
-                                    </div>
-                                    {{-- If there are many sketches we could paginate here, but usually this is small --}}
-                                </x-card>
-                            </div>
-                        </div>
-                    @endif
-
-                </article>
-
-                <aside class="w-full xl:col-span-2 xl:w-auto">
-                    <div class="bg-gray-800 p-3 rounded shadow text-gray-100">
-                        <h4 class="font-semibold mb-2 text-white">{{ __('Quick links') }}</h4>
-                        <ul class="space-y-2 text-sm">
-                            <li>
-                                @if (!empty($canonicalSlug))
-                                    <a href="{{ url('/observations/' . $canonicalSlug) }}"
-                                        class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
-                                @else
-                                    <a href="{{ route('observations.index') }}"
-                                        class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
-                                @endif
-                            </li>
-                            <li>
-                                @if (!empty($canonicalSlug))
-                                    <a href="{{ route('observations.drawings.show', ['slug' => $canonicalSlug]) }}"
-                                        class="text-gray-300 hover:underline">{{ __('All drawings') }}</a>
-                                @else
-                                    <a href="{{ route('drawings.index') }}"
-                                        class="text-gray-300 hover:underline">{{ __('All drawings') }}</a>
-                                @endif
-                            </li>
-                            @auth
-                                @if (!empty($canonicalSlug) && auth()->user()->slug)
-                                    <li><a href="{{ route('observations.user.object', ['observer' => auth()->user()->slug, 'object' => $canonicalSlug]) }}"
-                                            class="text-gray-300 hover:underline">{{ __('My observations') }}</a></li>
-                                    <li><a href="{{ route('observations.drawings.user.object', ['observer' => auth()->user()->slug, 'object' => $canonicalSlug]) }}"
-                                            class="text-gray-300 hover:underline">{{ __('My drawings') }}</a></li>
-                                @else
-                                    <li><a href="{{ route('observations.show', ['observer' => auth()->user()->slug]) }}"
-                                            class="text-gray-300 hover:underline">{{ __('My observations') }}</a></li>
-                                    <li><a href="{{ route('drawings.show', ['observer' => auth()->user()->slug]) }}"
-                                            class="text-gray-300 hover:underline">{{ __('My drawings') }}</a></li>
-                                @endif
-                            @endauth
-                            @php
-                                // Prepare name and coordinates for external links
-                                $objectName = $session->name ?? null;
-                                $hasCoords =
-                                    isset($session->ra) &&
-                                    isset($session->decl) &&
-                                    !empty($session->ra) &&
-                                    !empty($session->decl);
-                                // SIMBAD: prefer name search, otherwise use coordinates (format: %2B12+34+56+%2B12+34+56 not necessary here, use basic coords)
-                                $simbadUrl = null;
-                                $nedUrl = null;
-                                $wikipediaUrl = null;
-                                $aladinUrl = null;
-
-                                if ($objectName) {
-                                    $encName = rawurlencode($objectName);
-                                    $simbadUrl = "https://simbad.cds.unistra.fr/simbad/sim-id?Ident=$encName";
-                                    $nedUrl = "https://ned.ipac.caltech.edu/byname?objname=$encName";
-                                    $wikipediaUrl = "https://en.wikipedia.org/wiki/Special:Search?search=$encName";
-                                    // Add Aladin Lite pointing to the object name when available
-                                    $aladinUrl = "https://aladin.u-strasbg.fr/AladinLite/?target=$encName";
-                                } elseif ($hasCoords) {
-                                    // Fallback: point Aladin Lite to coordinates when no name is available
-                                    $raParam = rawurlencode($session->ra ?? '');
-                                    $decParam = rawurlencode($session->decl ?? '');
-                                    if (!empty($raParam) && !empty($decParam)) {
-                                        $aladinUrl = "https://aladin.u-strasbg.fr/AladinLite/?ra={$raParam}&dec={$decParam}";
-                                    }
+                                    $objectSketches = collect();
                                 }
-
                             @endphp
 
-                            @if ($simbadUrl || $nedUrl || $wikipediaUrl || $aladinUrl)
-                                <li class="pt-2 border-t border-gray-700 text-xs text-gray-400">
-                                    {{ __('External databases') }}</li>
-                                @if ($simbadUrl)
-                                    <li>
-                                        <a href="{{ $simbadUrl }}" target="_blank" rel="noopener noreferrer"
-                                            class="flex items-center gap-2 text-gray-300 hover:text-white">
-                                            <!-- SIMBAD icon (simple star) -->
-                                            <svg class="h-4 w-4 text-gray-300" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                <path
-                                                    d="M12 2l2.39 4.85L19 8.27l-3.5 3.41L16.18 19 12 16.27 7.82 19l.68-7.32L4.999 8.27l4.61-.42L12 2z"
-                                                    fill="currentColor" />
-                                            </svg>
-                                            <span>SIMBAD</span>
-                                        </a>
-                                    </li>
-                                @endif
-                                @if ($nedUrl)
-                                    <li>
-                                        <a href="{{ $nedUrl }}" target="_blank" rel="noopener noreferrer"
-                                            class="flex items-center gap-2 text-gray-300 hover:text-white">
-                                            <!-- NED icon (globe) -->
-                                            <svg class="h-4 w-4 text-gray-300" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                <path
-                                                    d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 2.06v2.04a6.002 6.002 0 013.364 3.364H17A8 8 0 0013 4.06zM6.636 7.48A6.002 6.002 0 0111 4.1V2.06A8 8 0 006.636 7.48zM4.06 11H6.1a6.002 6.002 0 010 2H4.06A8 8 0 004.06 11zM6.636 16.52A8 8 0 0011 21.94v-2.04a6.002 6.002 0 01-4.364-3.38zM13 19.94v-2.04a6.002 6.002 0 01-3.364-3.364H11a8 8 0 002 5.404z"
-                                                    fill="currentColor" />
-                                            </svg>
-                                            <span>NED</span>
-                                        </a>
-                                    </li>
-                                @endif
-                                @if ($wikipediaUrl)
-                                    <li>
-                                        <a href="{{ $wikipediaUrl }}" target="_blank" rel="noopener noreferrer"
-                                            class="flex items-center gap-2 text-gray-300 hover:text-white">
-                                            <!-- Wikipedia icon (W) -->
-                                            <svg class="h-4 w-4 text-gray-300" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                <path
-                                                    d="M12 2l2.5 4.9L19 8l-4 3.6L16 19 12 16.2 8 19l1-7.4L5 8l4.5-.9L12 2z"
-                                                    fill="currentColor" />
-                                            </svg>
-                                            <span>Wikipedia</span>
-                                        </a>
-                                    </li>
-                                @endif
-                                @if ($aladinUrl)
-                                    <li>
-                                        <a href="{{ $aladinUrl }}" target="_blank" rel="noopener noreferrer"
-                                            class="flex items-center gap-2 text-gray-300 hover:text-white">
-                                            <!-- Aladin icon (map pin / telescope simplified) -->
-                                            <svg class="h-4 w-4 text-gray-300" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                <path
-                                                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6.5a2.5 2.5 0 010 5z"
-                                                    fill="currentColor" />
-                                            </svg>
-                                            <span>{{ __('aladin.lite') }}</span>
-                                        </a>
-                                    </li>
-                                @endif
-                            @endif
-                        </ul>
-                    </div>
-                    {{-- Aladin Lite preview --}}
-                    @if (isset($session->ra) && isset($session->decl) && !empty($session->ra) && !empty($session->decl))
-                        <div class="mt-4 bg-gray-800 p-3 rounded shadow text-gray-100">
-                            <h4 class="font-semibold mb-2 text-white">{{ __('Sky preview') }}</h4>
-                            {{-- Altitude graph (from astronomy library) shown above Aladin preview when available --}}
-                            {{-- altitude graph moved to main display (under Optimum detection magnification) --}}
-                            @php
-                                $dslText = [
-                                    'saving' => __('Saving...'),
-                                    'save' => __('Save'),
-                                    'saved' => __('Saved'),
-                                    'save_failed' => __('Save failed'),
-                                    'fov_label' => __('FoV'),
-                                    'fov_object_size' => __('(object size)'),
-                                    'fov_eyepiece' => __('(eyepiece)'),
-                                    'fov_instrument' => __('(instrument)'),
-                                    'none_label' => __('(none)'),
-                                ];
-                            @endphp
-                            <div id="aladin-lite-container" class="w-full h-64 rounded bg-black"
-                                style="min-height:240px;"
-                                data-aladin="{{ base64_encode(json_encode($aladinDefaults ?? [])) }}"
-                                data-ra="{{ e($session->ra ?? '') }}" data-dec="{{ e($session->decl ?? '') }}"
-                                data-name="{{ e($session->name ?? '') }}"
-                                data-save-url="{{ url('/api/user/aladin-defaults') }}"
-                                data-dsl-text="{{ base64_encode(json_encode($dslText)) }}"
-                                data-available="{{ base64_encode(json_encode(['instruments' => $availableInstruments ?? [], 'eyepieces' => $availableEyepieces ?? [], 'lenses' => $availableLenses ?? []])) }}"
-                                data-object-id="{{ $session->id ?? '' }}" data-slug="{{ $session->slug ?? '' }}"
-                                {{-- Server-provided initial selections encoded as safe data attributes to avoid inline Blade @json in JS --}} data-selected-instrument="{{ $selectedInstrumentId ?? '' }}"
-                                data-selected-eyepiece="{{ $selectedEyepieceId ?? '' }}"
-                                data-selected-lens="{{ $selectedLensId ?? '' }}">
-                                {{-- Aladin will render into this container --}}
-                            </div>
-                            <div id="aladin-legend" class="mt-2 text-sm text-gray-300 flex items-center gap-3">
-                                <div id="aladin-fov-label" class="text-xs text-gray-400">{{ __('FoV:') }}</div>
-                                <div id="aladin-fov" class="font-medium">—</div>
-                                <div class="text-xs text-gray-400">{{ __('Magnification:') }}</div>
-                                <div id="aladin-mag" class="font-medium">—</div>
-                            </div>
-                            <div class="mt-2">
-                                <div>
-                                    @php $stdSet = auth()->user()?->stdinstrumentset ?? null; @endphp
-                                    @livewire('aladin-selects', ['instrument' => $selectedInstrumentId ?? null, 'eyepiece' => $selectedEyepieceId ?? null, 'lens' => $selectedLensId ?? null, 'instrumentSet' => $stdSet, 'objectId' => (string) ($session->id ?? '')])
-                                    <input type="hidden" id="aladin-instrument-hidden"
-                                        value="{{ $selectedInstrumentId ?? '' }}" />
-                                    <input type="hidden" id="aladin-eyepiece-hidden"
-                                        value="{{ $selectedEyepieceId ?? '' }}" />
-                                    <input type="hidden" id="aladin-lens-hidden"
-                                        value="{{ $selectedLensId ?? '' }}" />
-                                    <!-- Selected labels removed per UI preference -->
+                            @if ($objectSketches->isNotEmpty())
+                                <div class="mt-6">
+                                    <h2 class="text-xl font-semibold text-white">{{ __('Sketch of the Week') }}</h2>
                                     <div class="mt-2">
-                                        <button id="aladin-save-btn" type="button"
-                                            class="inline-flex items-center justify-center text-sm font-medium px-3 py-1.5 rounded-md bg-green-600 text-white hover:bg-green-700 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-green-400 transition">
-                                            {{ __('Save') }}
-                                        </button>
+                                        <x-card>
+                                            <div class="flex flex-wrap px-5">
+                                                @foreach ($objectSketches as $sketch)
+                                                    <x-sketch :sketch="$sketch" />
+                                                @endforeach
+                                            </div>
+                                            {{-- If there are many sketches we could paginate here, but usually this is small --}}
+                                        </x-card>
                                     </div>
                                 </div>
-                                <!-- selects are rendered by the Livewire AladinSelects component above -->
-                                <script>
-                                    (function() {
-                                        try {
-                                            // Ensure we have the server-provided id available
-                                            var __embeddedOid = {!! json_encode((string) ($session->id ?? '')) !!} || (window.__dsl_embedded_objectId || null);
-                                            // Listen for the selects emitting dsl-aladin-updated and ensure Livewire receives an enriched payload
-                                            // Prefer Livewire.dispatchTo (v3) to call the specific component method directly. Fall back to the
-                                            // central emitter (__dsl_emitAladinUpdated) which implements queueing/enrichment, or to Livewire.dispatch.
-                                            window.addEventListener('dsl-aladin-updated', function(ev) {
+                            @endif
+
+                        </article>
+
+                        <aside class="w-full xl:col-span-2 xl:w-auto">
+                            <div class="bg-gray-800 p-3 rounded shadow text-gray-100">
+                                <h4 class="font-semibold mb-2 text-white">{{ __('Quick links') }}</h4>
+                                <ul class="space-y-2 text-sm">
+                                    <li>
+                                        @if (!empty($canonicalSlug))
+                                            <a href="{{ url('/observations/' . $canonicalSlug) }}"
+                                                class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
+                                        @else
+                                            <a href="{{ route('observations.index') }}"
+                                                class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        @if (!empty($canonicalSlug))
+                                            <a href="{{ route('observations.drawings.show', ['slug' => $canonicalSlug]) }}"
+                                                class="text-gray-300 hover:underline">{{ __('All drawings') }}</a>
+                                        @else
+                                            <a href="{{ route('drawings.index') }}"
+                                                class="text-gray-300 hover:underline">{{ __('All drawings') }}</a>
+                                        @endif
+                                    </li>
+                                    @auth
+                                        @if (!empty($canonicalSlug) && auth()->user()->slug)
+                                            <li><a href="{{ route('observations.user.object', ['observer' => auth()->user()->slug, 'object' => $canonicalSlug]) }}"
+                                                    class="text-gray-300 hover:underline">{{ __('My observations') }}</a>
+                                            </li>
+                                            <li><a href="{{ route('observations.drawings.user.object', ['observer' => auth()->user()->slug, 'object' => $canonicalSlug]) }}"
+                                                    class="text-gray-300 hover:underline">{{ __('My drawings') }}</a></li>
+                                        @else
+                                            <li><a href="{{ route('observations.show', ['observer' => auth()->user()->slug]) }}"
+                                                    class="text-gray-300 hover:underline">{{ __('My observations') }}</a>
+                                            </li>
+                                            <li><a href="{{ route('drawings.show', ['observer' => auth()->user()->slug]) }}"
+                                                    class="text-gray-300 hover:underline">{{ __('My drawings') }}</a></li>
+                                        @endif
+                                    @endauth
+                                    @php
+                                        // Prepare name and coordinates for external links
+                                        $objectName = $session->name ?? null;
+                                        $hasCoords =
+                                            isset($session->ra) &&
+                                            isset($session->decl) &&
+                                            !empty($session->ra) &&
+                                            !empty($session->decl);
+                                        // SIMBAD: prefer name search, otherwise use coordinates (format: %2B12+34+56+%2B12+34+56 not necessary here, use basic coords)
+                                        $simbadUrl = null;
+                                        $nedUrl = null;
+                                        $wikipediaUrl = null;
+                                        $aladinUrl = null;
+
+                                        if ($objectName) {
+                                            $encName = rawurlencode($objectName);
+                                            $simbadUrl = "https://simbad.cds.unistra.fr/simbad/sim-id?Ident=$encName";
+                                            $nedUrl = "https://ned.ipac.caltech.edu/byname?objname=$encName";
+                                            $wikipediaUrl = "https://en.wikipedia.org/wiki/Special:Search?search=$encName";
+                                            // Add Aladin Lite pointing to the object name when available
+                                            $aladinUrl = "https://aladin.u-strasbg.fr/AladinLite/?target=$encName";
+                                        } elseif ($hasCoords) {
+                                            // Fallback: point Aladin Lite to coordinates when no name is available
+                                            $raParam = rawurlencode($session->ra ?? '');
+                                            $decParam = rawurlencode($session->decl ?? '');
+                                            if (!empty($raParam) && !empty($decParam)) {
+                                                $aladinUrl = "https://aladin.u-strasbg.fr/AladinLite/?ra={$raParam}&dec={$decParam}";
+                                            }
+                                        }
+
+                                    @endphp
+
+                                    @if ($simbadUrl || $nedUrl || $wikipediaUrl || $aladinUrl)
+                                        <li class="pt-2 border-t border-gray-700 text-xs text-gray-400">
+                                            {{ __('External databases') }}</li>
+                                        @if ($simbadUrl)
+                                            <li>
+                                                <a href="{{ $simbadUrl }}" target="_blank" rel="noopener noreferrer"
+                                                    class="flex items-center gap-2 text-gray-300 hover:text-white">
+                                                    <!-- SIMBAD icon (simple star) -->
+                                                    <svg class="h-4 w-4 text-gray-300" viewBox="0 0 24 24"
+                                                        fill="none" xmlns="http://www.w3.org/2000/svg"
+                                                        aria-hidden="true">
+                                                        <path
+                                                            d="M12 2l2.39 4.85L19 8.27l-3.5 3.41L16.18 19 12 16.27 7.82 19l.68-7.32L4.999 8.27l4.61-.42L12 2z"
+                                                            fill="currentColor" />
+                                                    </svg>
+                                                    <span>SIMBAD</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if ($nedUrl)
+                                            <li>
+                                                <a href="{{ $nedUrl }}" target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="flex items-center gap-2 text-gray-300 hover:text-white">
+                                                    <!-- NED icon (globe) -->
+                                                    <svg class="h-4 w-4 text-gray-300" viewBox="0 0 24 24"
+                                                        fill="none" xmlns="http://www.w3.org/2000/svg"
+                                                        aria-hidden="true">
+                                                        <path
+                                                            d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 2.06v2.04a6.002 6.002 0 013.364 3.364H17A8 8 0 0013 4.06zM6.636 7.48A6.002 6.002 0 0111 4.1V2.06A8 8 0 006.636 7.48zM4.06 11H6.1a6.002 6.002 0 010 2H4.06A8 8 0 004.06 11zM6.636 16.52A8 8 0 0011 21.94v-2.04a6.002 6.002 0 01-4.364-3.38zM13 19.94v-2.04a6.002 6.002 0 01-3.364-3.364H11a8 8 0 002 5.404z"
+                                                            fill="currentColor" />
+                                                    </svg>
+                                                    <span>NED</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if ($wikipediaUrl)
+                                            <li>
+                                                <a href="{{ $wikipediaUrl }}" target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="flex items-center gap-2 text-gray-300 hover:text-white">
+                                                    <!-- Wikipedia icon (W) -->
+                                                    <svg class="h-4 w-4 text-gray-300" viewBox="0 0 24 24"
+                                                        fill="none" xmlns="http://www.w3.org/2000/svg"
+                                                        aria-hidden="true">
+                                                        <path
+                                                            d="M12 2l2.5 4.9L19 8l-4 3.6L16 19 12 16.2 8 19l1-7.4L5 8l4.5-.9L12 2z"
+                                                            fill="currentColor" />
+                                                    </svg>
+                                                    <span>Wikipedia</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                        @if ($aladinUrl)
+                                            <li>
+                                                <a href="{{ $aladinUrl }}" target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="flex items-center gap-2 text-gray-300 hover:text-white">
+                                                    <!-- Aladin icon (map pin / telescope simplified) -->
+                                                    <svg class="h-4 w-4 text-gray-300" viewBox="0 0 24 24"
+                                                        fill="none" xmlns="http://www.w3.org/2000/svg"
+                                                        aria-hidden="true">
+                                                        <path
+                                                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6.5a2.5 2.5 0 010 5z"
+                                                            fill="currentColor" />
+                                                    </svg>
+                                                    <span>{{ __('aladin.lite') }}</span>
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endif
+                                </ul>
+                            </div>
+                            {{-- Aladin Lite preview --}}
+                            @if (isset($session->ra) && isset($session->decl) && !empty($session->ra) && !empty($session->decl))
+                                <div class="mt-4 bg-gray-800 p-3 rounded shadow text-gray-100">
+                                    <h4 class="font-semibold mb-2 text-white">{{ __('Sky preview') }}</h4>
+                                    {{-- Altitude graph (from astronomy library) shown above Aladin preview when available --}}
+                                    {{-- altitude graph moved to main display (under Optimum detection magnification) --}}
+                                    @php
+                                        $dslText = [
+                                            'saving' => __('Saving...'),
+                                            'save' => __('Save'),
+                                            'saved' => __('Saved'),
+                                            'save_failed' => __('Save failed'),
+                                            'fov_label' => __('FoV'),
+                                            'fov_object_size' => __('(object size)'),
+                                            'fov_eyepiece' => __('(eyepiece)'),
+                                            'fov_instrument' => __('(instrument)'),
+                                            'none_label' => __('(none)'),
+                                        ];
+                                    @endphp
+                                    <div id="aladin-lite-container" class="w-full h-64 rounded bg-black"
+                                        style="min-height:240px;"
+                                        data-aladin="{{ base64_encode(json_encode($aladinDefaults ?? [])) }}"
+                                        data-ra="{{ e($session->ra ?? '') }}"
+                                        data-dec="{{ e($session->decl ?? '') }}"
+                                        data-name="{{ e($session->name ?? '') }}"
+                                        data-save-url="{{ url('/api/user/aladin-defaults') }}"
+                                        data-dsl-text="{{ base64_encode(json_encode($dslText)) }}"
+                                        data-available="{{ base64_encode(json_encode(['instruments' => $availableInstruments ?? [], 'eyepieces' => $availableEyepieces ?? [], 'lenses' => $availableLenses ?? []])) }}"
+                                        data-object-id="{{ $session->id ?? '' }}"
+                                        data-slug="{{ $session->slug ?? '' }}" {{-- Server-provided initial selections encoded as safe data attributes to avoid inline Blade @json in JS --}}
+                                        data-selected-instrument="{{ $selectedInstrumentId ?? '' }}"
+                                        data-selected-eyepiece="{{ $selectedEyepieceId ?? '' }}"
+                                        data-selected-lens="{{ $selectedLensId ?? '' }}">
+                                        {{-- Aladin will render into this container --}}
+                                    </div>
+                                    <div id="aladin-legend"
+                                        class="mt-2 text-sm text-gray-300 flex items-center gap-3">
+                                        <div id="aladin-fov-label" class="text-xs text-gray-400">{{ __('FoV:') }}
+                                        </div>
+                                        <div id="aladin-fov" class="font-medium">—</div>
+                                        <div class="text-xs text-gray-400">{{ __('Magnification:') }}</div>
+                                        <div id="aladin-mag" class="font-medium">—</div>
+                                    </div>
+                                    <div class="mt-2">
+                                        @auth
+                                            <div>
+                                                @php $stdSet = auth()->user()?->stdinstrumentset ?? null; @endphp
+                                                @livewire('aladin-selects', ['instrument' => $selectedInstrumentId ?? null, 'eyepiece' => $selectedEyepieceId ?? null, 'lens' => $selectedLensId ?? null, 'instrumentSet' => $stdSet, 'objectId' => (string) ($session->id ?? '')])
+                                                <input type="hidden" id="aladin-instrument-hidden"
+                                                    value="{{ $selectedInstrumentId ?? '' }}" />
+                                                <input type="hidden" id="aladin-eyepiece-hidden"
+                                                    value="{{ $selectedEyepieceId ?? '' }}" />
+                                                <input type="hidden" id="aladin-lens-hidden"
+                                                    value="{{ $selectedLensId ?? '' }}" />
+                                                <!-- Selected labels removed per UI preference -->
+                                                <div class="mt-2">
+                                                    <button id="aladin-save-btn" type="button"
+                                                        class="inline-flex items-center justify-center text-sm font-medium px-3 py-1.5 rounded-md bg-green-600 text-white hover:bg-green-700 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-green-400 transition">
+                                                        {{ __('Save') }}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        @endauth
+                                        <!-- selects are rendered by the Livewire AladinSelects component above -->
+                                        <script>
+                                            (function() {
                                                 try {
-                                                    var detail = ev && ev.detail ? ev.detail : {};
-                                                    // normalize missing/empty objectId using the embedded server-provided id
-                                                    if (!detail.objectId || String(detail.objectId).trim() === '') {
-                                                        if (__embeddedOid) detail.objectId = __embeddedOid;
-                                                    }
+                                                    // Ensure we have the server-provided id available
+                                                    var __embeddedOid = {!! json_encode((string) ($session->id ?? '')) !!} || (window.__dsl_embedded_objectId || null);
+                                                    // Listen for the selects emitting dsl-aladin-updated and ensure Livewire receives an enriched payload
+                                                    // Prefer Livewire.dispatchTo (v3) to call the specific component method directly. Fall back to the
+                                                    // central emitter (__dsl_emitAladinUpdated) which implements queueing/enrichment, or to Livewire.dispatch.
+                                                    window.addEventListener('dsl-aladin-updated', function(ev) {
+                                                        try {
+                                                            var detail = ev && ev.detail ? ev.detail : {};
+                                                            // normalize missing/empty objectId using the embedded server-provided id
+                                                            if (!detail.objectId || String(detail.objectId).trim() === '') {
+                                                                if (__embeddedOid) detail.objectId = __embeddedOid;
+                                                            }
 
-                                                    // Prefer direct component invocation when available
-                                                    try {
-                                                        if (window.Livewire && typeof Livewire.dispatchTo === 'function') {
+                                                            // Prefer direct component invocation when available
                                                             try {
-                                                                Livewire.dispatchTo('aladin-preview-info', 'recalculate', detail);
-                                                                return;
-                                                            } catch (e) {}
-                                                        }
-                                                    } catch (e) {}
-
-                                                    // Fallback to centralized emitter (handles queueing/enrichment)
-                                                    try {
-                                                        if (typeof window.__dsl_emitAladinUpdated === 'function') {
-                                                            window.__dsl_emitAladinUpdated(detail);
-                                                            return;
-                                                        }
-                                                    } catch (e) {}
-
-                                                    // Older fallback: broadcast Livewire event
-                                                    try {
-                                                        if (window.Livewire && typeof Livewire.dispatch === 'function') {
-                                                            Livewire.dispatch('aladinUpdated', detail);
-                                                            return;
-                                                        }
-                                                    } catch (e) {}
-
-                                                    // If nothing else is available, do nothing; avoid re-dispatching the same DOM event to prevent loops.
-                                                } catch (e) {}
-                                            }, {
-                                                passive: true
-                                            });
-                                        } catch (e) {}
-                                    })();
-                                </script>
-                                {{-- One-time server-side initial sync: ensure hidden inputs match server-selected ids immediately on first render. This avoids relying on client heuristics to populate hidden fields. --}}
-                                <script>
-                                    (function() {
-                                        try {
-                                            // Only run once and only when DOMContentLoaded has already fired or will fire soon
-                                            function runInitSync() {
-                                                try {
-                                                    var instHidden = document.getElementById('aladin-instrument-hidden');
-                                                    var epHidden = document.getElementById('aladin-eyepiece-hidden');
-                                                    var lnHidden = document.getElementById('aladin-lens-hidden');
-                                                    // Server-provided values (blade variables) — encoded safely into attributes to avoid inline php printing issues
-                                                    try {
-                                                        if (typeof window.__dsl_server_selected === 'undefined') {
-                                                            window.__dsl_server_selected = {};
-                                                        }
-                                                    } catch (e) {}
-                                                    try {
-                                                        if (typeof window.__dsl_server_selected.instrument === 'undefined') {
-                                                            var _alc_sel = document.getElementById('aladin-lite-container');
-                                                            if (_alc_sel) {
-                                                                window.__dsl_server_selected.instrument = _alc_sel.getAttribute(
-                                                                    'data-selected-instrument') || '';
-                                                            } else {
-                                                                window.__dsl_server_selected.instrument = '';
-                                                            }
-                                                        }
-                                                    } catch (e) {}
-                                                    try {
-                                                        if (typeof window.__dsl_server_selected.eyepiece === 'undefined') {
-                                                            var _alc_sel2 = document.getElementById('aladin-lite-container');
-                                                            if (_alc_sel2) {
-                                                                window.__dsl_server_selected.eyepiece = _alc_sel2.getAttribute(
-                                                                    'data-selected-eyepiece') || '';
-                                                            } else {
-                                                                window.__dsl_server_selected.eyepiece = '';
-                                                            }
-                                                        }
-                                                    } catch (e) {}
-                                                    try {
-                                                        if (typeof window.__dsl_server_selected.lens === 'undefined') {
-                                                            var _alc_sel3 = document.getElementById('aladin-lite-container');
-                                                            if (_alc_sel3) {
-                                                                window.__dsl_server_selected.lens = _alc_sel3.getAttribute('data-selected-lens') ||
-                                                                    '';
-                                                            } else {
-                                                                window.__dsl_server_selected.lens = '';
-                                                            }
-                                                        }
-                                                    } catch (e) {}
-
-                                                    if (instHidden && typeof window.__dsl_server_selected.instrument !== 'undefined') {
-
-                                                        // Hide FoV overlay when any dropdown/menu is open (detect common patterns like aria-expanded)
-                                                        (function() {
-                                                            try {
-                                                                function isElementVisible(el) {
+                                                                if (window.Livewire && typeof Livewire.dispatchTo === 'function') {
                                                                     try {
-                                                                        return !!(el && el.offsetParent !== null && (el.offsetWidth || el
-                                                                            .offsetHeight));
-                                                                    } catch (e) {
-                                                                        return false;
+                                                                        Livewire.dispatchTo('aladin-preview-info', 'recalculate', detail);
+                                                                        return;
+                                                                    } catch (e) {}
+                                                                }
+                                                            } catch (e) {}
+
+                                                            // Fallback to centralized emitter (handles queueing/enrichment)
+                                                            try {
+                                                                if (typeof window.__dsl_emitAladinUpdated === 'function') {
+                                                                    window.__dsl_emitAladinUpdated(detail);
+                                                                    return;
+                                                                }
+                                                            } catch (e) {}
+
+                                                            // Older fallback: broadcast Livewire event
+                                                            try {
+                                                                if (window.Livewire && typeof Livewire.dispatch === 'function') {
+                                                                    Livewire.dispatch('aladinUpdated', detail);
+                                                                    return;
+                                                                }
+                                                            } catch (e) {}
+
+                                                            // If nothing else is available, do nothing; avoid re-dispatching the same DOM event to prevent loops.
+                                                        } catch (e) {}
+                                                    }, {
+                                                        passive: true
+                                                    });
+                                                } catch (e) {}
+                                            })();
+                                        </script>
+                                        {{-- One-time server-side initial sync: ensure hidden inputs match server-selected ids immediately on first render. This avoids relying on client heuristics to populate hidden fields. --}}
+                                        <script>
+                                            (function() {
+                                                try {
+                                                    // Only run once and only when DOMContentLoaded has already fired or will fire soon
+                                                    function runInitSync() {
+                                                        try {
+                                                            var instHidden = document.getElementById('aladin-instrument-hidden');
+                                                            var epHidden = document.getElementById('aladin-eyepiece-hidden');
+                                                            var lnHidden = document.getElementById('aladin-lens-hidden');
+                                                            // Server-provided values (blade variables) — encoded safely into attributes to avoid inline php printing issues
+                                                            try {
+                                                                if (typeof window.__dsl_server_selected === 'undefined') {
+                                                                    window.__dsl_server_selected = {};
+                                                                }
+                                                            } catch (e) {}
+                                                            try {
+                                                                if (typeof window.__dsl_server_selected.instrument === 'undefined') {
+                                                                    var _alc_sel = document.getElementById('aladin-lite-container');
+                                                                    if (_alc_sel) {
+                                                                        window.__dsl_server_selected.instrument = _alc_sel.getAttribute(
+                                                                            'data-selected-instrument') || '';
+                                                                    } else {
+                                                                        window.__dsl_server_selected.instrument = '';
                                                                     }
                                                                 }
+                                                            } catch (e) {}
+                                                            try {
+                                                                if (typeof window.__dsl_server_selected.eyepiece === 'undefined') {
+                                                                    var _alc_sel2 = document.getElementById('aladin-lite-container');
+                                                                    if (_alc_sel2) {
+                                                                        window.__dsl_server_selected.eyepiece = _alc_sel2.getAttribute(
+                                                                            'data-selected-eyepiece') || '';
+                                                                    } else {
+                                                                        window.__dsl_server_selected.eyepiece = '';
+                                                                    }
+                                                                }
+                                                            } catch (e) {}
+                                                            try {
+                                                                if (typeof window.__dsl_server_selected.lens === 'undefined') {
+                                                                    var _alc_sel3 = document.getElementById('aladin-lite-container');
+                                                                    if (_alc_sel3) {
+                                                                        window.__dsl_server_selected.lens = _alc_sel3.getAttribute('data-selected-lens') ||
+                                                                            '';
+                                                                    } else {
+                                                                        window.__dsl_server_selected.lens = '';
+                                                                    }
+                                                                }
+                                                            } catch (e) {}
 
-                                                                function shouldHideOverlayDueToMenu() {
+                                                            if (instHidden && typeof window.__dsl_server_selected.instrument !== 'undefined') {
+
+                                                                // Hide FoV overlay when any dropdown/menu is open (detect common patterns like aria-expanded)
+                                                                (function() {
                                                                     try {
-                                                                        // Prefer explicit aria-expanded toggles used by Alpine/Tailwind components
-                                                                        var expanded = document.querySelectorAll('[aria-expanded="true"]');
-                                                                        for (var i = 0; i < expanded.length; i++) {
+                                                                        function isElementVisible(el) {
                                                                             try {
-                                                                                var el = expanded[i];
-                                                                                // If the expanded control (or any ancestor) is inside a no-overlay-hide container, ignore it
-                                                                                if (el && typeof el.closest === 'function' && el.closest(
-                                                                                        '[data-dsl-no-overlay-hide]')) continue;
-                                                                                // Also ignore if the expanded control controls a popup that itself is inside a no-overlay-hide container
-                                                                                try {
-                                                                                    var ariaControls = el.getAttribute ? el.getAttribute(
-                                                                                        'aria-controls') : null;
-                                                                                    if (ariaControls) {
-                                                                                        var ctrl = document.getElementById(ariaControls);
-                                                                                        if (ctrl && typeof ctrl.closest === 'function' && ctrl
-                                                                                            .closest('[data-dsl-no-overlay-hide]')) continue;
-                                                                                    }
-                                                                                } catch (e) {}
-                                                                            } catch (e) {}
-                                                                            if (isElementVisible(expanded[i])) return true;
-                                                                        }
-                                                                        // Fallback: common classes used by frameworks for visible dropdowns
-                                                                        var selectors = ['.show', '.open', '[data-dropdown-open="true"]'];
-                                                                        for (var s = 0; s < selectors.length; s++) {
-                                                                            var els = document.querySelectorAll(selectors[s]);
-                                                                            for (var j = 0; j < els.length; j++) {
-                                                                                try {
-                                                                                    var jel = els[j];
-                                                                                    // If this element or any of its interactive children live inside a flagged popup, ignore
-                                                                                    if (jel && typeof jel.closest === 'function' && jel.closest(
-                                                                                            '[data-dsl-no-overlay-hide]')) continue;
-                                                                                    // If element contains any child that is inside the flagged popup, skip
-                                                                                    try {
-                                                                                        var children = jel.querySelectorAll ? jel
-                                                                                            .querySelectorAll('[data-dsl-no-overlay-hide]') :
-                                                                                            null;
-                                                                                        if (children && children.length) continue;
-                                                                                    } catch (e) {}
-                                                                                } catch (e) {}
-                                                                                if (isElementVisible(els[j])) return true;
+                                                                                return !!(el && el.offsetParent !== null && (el.offsetWidth || el
+                                                                                    .offsetHeight));
+                                                                            } catch (e) {
+                                                                                return false;
                                                                             }
                                                                         }
-                                                                    } catch (e) {}
-                                                                    return false;
-                                                                }
 
-                                                                function setOverlayHiddenByMenu(hide) {
-                                                                    try {
-                                                                        var ids = ['aladin-fov-dom', 'aladin-live-fov-badge',
-                                                                            'dsl-aladin-minimal-controls'
-                                                                        ];
-                                                                        ids.forEach(function(id) {
+                                                                        function shouldHideOverlayDueToMenu() {
                                                                             try {
-                                                                                var el = document.getElementById(id);
-                                                                                if (!el) return;
-                                                                                // remember original inline visibility/pointerEvents once
-                                                                                if (typeof el.__dslOrigVisibility === 'undefined') el
-                                                                                    .__dslOrigVisibility = el.style.visibility || '';
-                                                                                if (typeof el.__dslOrigPointer === 'undefined') el
-                                                                                    .__dslOrigPointer = el.style.pointerEvents || '';
-                                                                                if (hide) {
-                                                                                    el.style.visibility = 'hidden';
-                                                                                    el.style.pointerEvents = 'none';
-                                                                                    el.__dslHiddenByMenu = true;
-                                                                                } else {
-                                                                                    if (el.__dslHiddenByMenu) {
+                                                                                // Prefer explicit aria-expanded toggles used by Alpine/Tailwind components
+                                                                                var expanded = document.querySelectorAll('[aria-expanded="true"]');
+                                                                                for (var i = 0; i < expanded.length; i++) {
+                                                                                    try {
+                                                                                        var el = expanded[i];
+                                                                                        // If the expanded control (or any ancestor) is inside a no-overlay-hide container, ignore it
+                                                                                        if (el && typeof el.closest === 'function' && el.closest(
+                                                                                                '[data-dsl-no-overlay-hide]')) continue;
+                                                                                        // Also ignore if the expanded control controls a popup that itself is inside a no-overlay-hide container
                                                                                         try {
-                                                                                            el.style.visibility = el
-                                                                                                .__dslOrigVisibility || '';
+                                                                                            var ariaControls = el.getAttribute ? el.getAttribute(
+                                                                                                'aria-controls') : null;
+                                                                                            if (ariaControls) {
+                                                                                                var ctrl = document.getElementById(ariaControls);
+                                                                                                if (ctrl && typeof ctrl.closest === 'function' && ctrl
+                                                                                                    .closest('[data-dsl-no-overlay-hide]')) continue;
+                                                                                            }
                                                                                         } catch (e) {}
+                                                                                    } catch (e) {}
+                                                                                    if (isElementVisible(expanded[i])) return true;
+                                                                                }
+                                                                                // Fallback: common classes used by frameworks for visible dropdowns
+                                                                                var selectors = ['.show', '.open', '[data-dropdown-open="true"]'];
+                                                                                for (var s = 0; s < selectors.length; s++) {
+                                                                                    var els = document.querySelectorAll(selectors[s]);
+                                                                                    for (var j = 0; j < els.length; j++) {
                                                                                         try {
-                                                                                            el.style.pointerEvents = el
-                                                                                                .__dslOrigPointer || '';
+                                                                                            var jel = els[j];
+                                                                                            // If this element or any of its interactive children live inside a flagged popup, ignore
+                                                                                            if (jel && typeof jel.closest === 'function' && jel.closest(
+                                                                                                    '[data-dsl-no-overlay-hide]')) continue;
+                                                                                            // If element contains any child that is inside the flagged popup, skip
+                                                                                            try {
+                                                                                                var children = jel.querySelectorAll ? jel
+                                                                                                    .querySelectorAll('[data-dsl-no-overlay-hide]') :
+                                                                                                    null;
+                                                                                                if (children && children.length) continue;
+                                                                                            } catch (e) {}
                                                                                         } catch (e) {}
-                                                                                        el.__dslHiddenByMenu = false;
+                                                                                        if (isElementVisible(els[j])) return true;
                                                                                     }
                                                                                 }
                                                                             } catch (e) {}
-                                                                        });
-                                                                    } catch (e) {}
-                                                                }
+                                                                            return false;
+                                                                        }
 
-                                                                var __dslMenuObserverTimer = null;
+                                                                        function setOverlayHiddenByMenu(hide) {
+                                                                            try {
+                                                                                var ids = ['aladin-fov-dom', 'aladin-live-fov-badge',
+                                                                                    'dsl-aladin-minimal-controls'
+                                                                                ];
+                                                                                ids.forEach(function(id) {
+                                                                                    try {
+                                                                                        var el = document.getElementById(id);
+                                                                                        if (!el) return;
+                                                                                        // remember original inline visibility/pointerEvents once
+                                                                                        if (typeof el.__dslOrigVisibility === 'undefined') el
+                                                                                            .__dslOrigVisibility = el.style.visibility || '';
+                                                                                        if (typeof el.__dslOrigPointer === 'undefined') el
+                                                                                            .__dslOrigPointer = el.style.pointerEvents || '';
+                                                                                        if (hide) {
+                                                                                            el.style.visibility = 'hidden';
+                                                                                            el.style.pointerEvents = 'none';
+                                                                                            el.__dslHiddenByMenu = true;
+                                                                                        } else {
+                                                                                            if (el.__dslHiddenByMenu) {
+                                                                                                try {
+                                                                                                    el.style.visibility = el
+                                                                                                        .__dslOrigVisibility || '';
+                                                                                                } catch (e) {}
+                                                                                                try {
+                                                                                                    el.style.pointerEvents = el
+                                                                                                        .__dslOrigPointer || '';
+                                                                                                } catch (e) {}
+                                                                                                el.__dslHiddenByMenu = false;
+                                                                                            }
+                                                                                        }
+                                                                                    } catch (e) {}
+                                                                                });
+                                                                            } catch (e) {}
+                                                                        }
 
-                                                                function checkMenuAndUpdateOverlay() {
-                                                                    try {
-                                                                        var hide = shouldHideOverlayDueToMenu();
-                                                                        setOverlayHiddenByMenu(hide);
-                                                                    } catch (e) {}
-                                                                }
+                                                                        var __dslMenuObserverTimer = null;
 
-                                                                // Observe attribute and subtree changes to detect menus opening/closing.
-                                                                var mo = null;
-                                                                try {
-                                                                    mo = new MutationObserver(function() {
+                                                                        function checkMenuAndUpdateOverlay() {
+                                                                            try {
+                                                                                var hide = shouldHideOverlayDueToMenu();
+                                                                                setOverlayHiddenByMenu(hide);
+                                                                            } catch (e) {}
+                                                                        }
+
+                                                                        // Observe attribute and subtree changes to detect menus opening/closing.
+                                                                        var mo = null;
                                                                         try {
-                                                                            if (__dslMenuObserverTimer) clearTimeout(
-                                                                                __dslMenuObserverTimer);
-                                                                            __dslMenuObserverTimer = setTimeout(
-                                                                                checkMenuAndUpdateOverlay, 40);
+                                                                            mo = new MutationObserver(function() {
+                                                                                try {
+                                                                                    if (__dslMenuObserverTimer) clearTimeout(
+                                                                                        __dslMenuObserverTimer);
+                                                                                    __dslMenuObserverTimer = setTimeout(
+                                                                                        checkMenuAndUpdateOverlay, 40);
+                                                                                } catch (e) {}
+                                                                            });
+                                                                            mo.observe(document.documentElement || document.body, {
+                                                                                attributes: true,
+                                                                                subtree: true,
+                                                                                attributeFilter: ['aria-expanded', 'class', 'style']
+                                                                            });
                                                                         } catch (e) {}
-                                                                    });
-                                                                    mo.observe(document.documentElement || document.body, {
-                                                                        attributes: true,
-                                                                        subtree: true,
-                                                                        attributeFilter: ['aria-expanded', 'class', 'style']
-                                                                    });
-                                                                } catch (e) {}
 
-                                                                // Also run checks on common interactions
-                                                                window.addEventListener('resize', checkMenuAndUpdateOverlay, {
-                                                                    passive: true
-                                                                });
-                                                                document.addEventListener('click', function() {
-                                                                    setTimeout(checkMenuAndUpdateOverlay, 10);
-                                                                }, true);
-                                                                // initial run
+                                                                        // Also run checks on common interactions
+                                                                        window.addEventListener('resize', checkMenuAndUpdateOverlay, {
+                                                                            passive: true
+                                                                        });
+                                                                        document.addEventListener('click', function() {
+                                                                            setTimeout(checkMenuAndUpdateOverlay, 10);
+                                                                        }, true);
+                                                                        // initial run
+                                                                        try {
+                                                                            checkMenuAndUpdateOverlay();
+                                                                        } catch (e) {}
+                                                                    } catch (e) {}
+                                                                })();
+                                                                instHidden.value = window.__dsl_server_selected.instrument || '';
+                                                            }
+                                                            if (epHidden && typeof window.__dsl_server_selected.eyepiece !== 'undefined') {
+                                                                epHidden.value = window.__dsl_server_selected.eyepiece || '';
+                                                            }
+                                                            if (lnHidden && typeof window.__dsl_server_selected.lens !== 'undefined') {
+                                                                lnHidden.value = window.__dsl_server_selected.lens || '';
+                                                            }
+                                                            // If the visible select widget already has a value (async data), ensure
+                                                            // hidden inputs match the visible selects on first load. This is a
+                                                            // conservative one-time sync only; user interactions remain driven
+                                                            // by x-on:selected handlers.
+                                                            try {
                                                                 try {
-                                                                    checkMenuAndUpdateOverlay();
+                                                                    if (instHidden) {
+                                                                        var wrapper = document.querySelector('[data-dsl-field="instrument"]') || (instHidden
+                                                                            .parentElement || null);
+                                                                        if (wrapper) {
+                                                                            var s = wrapper.querySelector('select');
+                                                                            if (s && s.value && (!instHidden.value || instHidden.value !== s.value)) {
+                                                                                instHidden.value = s.value;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                } catch (e) {}
+                                                                try {
+                                                                    if (epHidden) {
+                                                                        var wrapper2 = document.querySelector('[data-dsl-field="eyepiece"]') || (epHidden
+                                                                            .parentElement || null);
+                                                                        if (wrapper2) {
+                                                                            var s2 = wrapper2.querySelector('select');
+                                                                            if (s2 && s2.value && (!epHidden.value || epHidden.value !== s2.value)) {
+                                                                                epHidden.value = s2.value;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                } catch (e) {}
+                                                                try {
+                                                                    if (lnHidden) {
+                                                                        var wrapper3 = document.querySelector('[data-dsl-field="lens"]') || (lnHidden
+                                                                            .parentElement || null);
+                                                                        if (wrapper3) {
+                                                                            var s3 = wrapper3.querySelector('select');
+                                                                            if (s3 && s3.value && (!lnHidden.value || lnHidden.value !== s3.value)) {
+                                                                                lnHidden.value = s3.value;
+                                                                            }
+                                                                        }
+                                                                    }
                                                                 } catch (e) {}
                                                             } catch (e) {}
-                                                        })();
-                                                        instHidden.value = window.__dsl_server_selected.instrument || '';
-                                                    }
-                                                    if (epHidden && typeof window.__dsl_server_selected.eyepiece !== 'undefined') {
-                                                        epHidden.value = window.__dsl_server_selected.eyepiece || '';
-                                                    }
-                                                    if (lnHidden && typeof window.__dsl_server_selected.lens !== 'undefined') {
-                                                        lnHidden.value = window.__dsl_server_selected.lens || '';
-                                                    }
-                                                    // If the visible select widget already has a value (async data), ensure
-                                                    // hidden inputs match the visible selects on first load. This is a
-                                                    // conservative one-time sync only; user interactions remain driven
-                                                    // by x-on:selected handlers.
-                                                    try {
-                                                        try {
-                                                            if (instHidden) {
-                                                                var wrapper = document.querySelector('[data-dsl-field="instrument"]') || (instHidden
-                                                                    .parentElement || null);
-                                                                if (wrapper) {
-                                                                    var s = wrapper.querySelector('select');
-                                                                    if (s && s.value && (!instHidden.value || instHidden.value !== s.value)) {
-                                                                        instHidden.value = s.value;
-                                                                    }
+                                                            // Install a capture-level pointerdown listener so real user interactions
+                                                            // update a timestamp we use to distinguish init-time events from user events.
+                                                            try {
+                                                                if (typeof window.__dsl_last_user_interaction_ts === 'undefined') {
+                                                                    window.__dsl_last_user_interaction_ts = 0;
+                                                                    document.addEventListener('pointerdown', function() {
+                                                                        try {
+                                                                            window.__dsl_last_user_interaction_ts = Date.now();
+                                                                        } catch (e) {}
+                                                                    }, {
+                                                                        passive: true,
+                                                                        capture: true
+                                                                    });
+                                                                    // also support touchstart for older devices
+                                                                    document.addEventListener('touchstart', function() {
+                                                                        try {
+                                                                            window.__dsl_last_user_interaction_ts = Date.now();
+                                                                        } catch (e) {}
+                                                                    }, {
+                                                                        passive: true,
+                                                                        capture: true
+                                                                    });
                                                                 }
-                                                            }
+                                                            } catch (e) {}
+                                                            try {
+                                                                if (typeof updateSelectedLabels === 'function') updateSelectedLabels();
+                                                            } catch (e) {}
+                                                            try {
+                                                                if (typeof scheduleApplyAladinSelectsUpdate === 'function')
+                                                                    scheduleApplyAladinSelectsUpdate();
+                                                            } catch (e) {}
                                                         } catch (e) {}
-                                                        try {
-                                                            if (epHidden) {
-                                                                var wrapper2 = document.querySelector('[data-dsl-field="eyepiece"]') || (epHidden
-                                                                    .parentElement || null);
-                                                                if (wrapper2) {
-                                                                    var s2 = wrapper2.querySelector('select');
-                                                                    if (s2 && s2.value && (!epHidden.value || epHidden.value !== s2.value)) {
-                                                                        epHidden.value = s2.value;
-                                                                    }
-                                                                }
-                                                            }
-                                                        } catch (e) {}
-                                                        try {
-                                                            if (lnHidden) {
-                                                                var wrapper3 = document.querySelector('[data-dsl-field="lens"]') || (lnHidden
-                                                                    .parentElement || null);
-                                                                if (wrapper3) {
-                                                                    var s3 = wrapper3.querySelector('select');
-                                                                    if (s3 && s3.value && (!lnHidden.value || lnHidden.value !== s3.value)) {
-                                                                        lnHidden.value = s3.value;
-                                                                    }
-                                                                }
-                                                            }
-                                                        } catch (e) {}
-                                                    } catch (e) {}
-                                                    // Install a capture-level pointerdown listener so real user interactions
-                                                    // update a timestamp we use to distinguish init-time events from user events.
-                                                    try {
-                                                        if (typeof window.__dsl_last_user_interaction_ts === 'undefined') {
-                                                            window.__dsl_last_user_interaction_ts = 0;
-                                                            document.addEventListener('pointerdown', function() {
-                                                                try {
-                                                                    window.__dsl_last_user_interaction_ts = Date.now();
-                                                                } catch (e) {}
-                                                            }, {
-                                                                passive: true,
-                                                                capture: true
-                                                            });
-                                                            // also support touchstart for older devices
-                                                            document.addEventListener('touchstart', function() {
-                                                                try {
-                                                                    window.__dsl_last_user_interaction_ts = Date.now();
-                                                                } catch (e) {}
-                                                            }, {
-                                                                passive: true,
-                                                                capture: true
-                                                            });
-                                                        }
-                                                    } catch (e) {}
-                                                    try {
-                                                        if (typeof updateSelectedLabels === 'function') updateSelectedLabels();
-                                                    } catch (e) {}
-                                                    try {
-                                                        if (typeof scheduleApplyAladinSelectsUpdate === 'function')
-                                                            scheduleApplyAladinSelectsUpdate();
-                                                    } catch (e) {}
+                                                    }
+                                                    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', runInitSync);
+                                                    else runInitSync();
                                                 } catch (e) {}
-                                            }
-                                            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', runInitSync);
-                                            else runInitSync();
-                                        } catch (e) {}
-                                    })();
-                                </script>
-                            </div>
-                            <div class="text-xs text-gray-400 mt-2">
-                                {{ __('Aladin Lite preview (uses default eyepiece/instrument if available)') }}</div>
-                        </div>
-                    @endif
-                </aside>
-            </div>
+                                            })();
+                                        </script>
+                                    </div>
+                                    <div class="text-xs text-gray-400 mt-2">
+                                        {{ __('Aladin Lite preview (uses default eyepiece/instrument if available)') }}
+                                    </div>
+                                </div>
+                            @endif
+                        </aside>
+                    </div>
+                </div>
         </div>
-    </div>
 </x-app-layout>
 
 <!-- Aladin Lite assets (inline so layout stack is not required) -->
@@ -897,7 +1662,98 @@ try {
         }
 
         // Listen for ephemerides updates dispatched by Livewire's AladinPreviewInfo
+        // Also install a lightweight always-forwarding listener that forwards the
+        // event to the nearby table regardless of whether ephemerides are present.
         try {
+            try {
+                /* debug removed */
+            } catch (e) {}
+
+            // Always-forward listener: ensures instrument/eyepiece/lens changes
+            // are propagated to the nearby table even when ephemerides are not included
+            // in the event payload.
+            try {
+                window.addEventListener('aladin-preview-info-updated', function(ev) {
+                    try {
+                        var _detail = ev && ev.detail ? ev.detail : {};
+                        try {
+                            /* debug removed */
+                        } catch (e) {}
+
+                        // Attempt to forward to Livewire: prefer emitTo, then Livewire.find fallback
+                        try {
+                            // Prefer a global broadcast-style emit which delivers an event to
+                            // any component listening for it. This avoids calling component
+                            // methods directly which can produce MethodNotFound exceptions
+                            // if we accidentally target the wrong component instance.
+                            if (window.livewire && typeof window.livewire.emit === 'function') {
+                                window.livewire.emit('aladinPreviewUpdated', _detail);
+                                return;
+                            }
+                            if (window.Livewire && typeof window.Livewire.emit === 'function') {
+                                window.Livewire.emit('aladinPreviewUpdated', _detail);
+                                return;
+                            }
+
+                            // If emitTo exists prefer targeting the specific component by name
+                            if (window.livewire && typeof window.livewire.emitTo === 'function') {
+                                window.livewire.emitTo('nearby-objects-table', 'aladinPreviewUpdated',
+                                    _detail);
+                                return;
+                            }
+                            if (window.Livewire && typeof window.Livewire.emitTo === 'function') {
+                                window.Livewire.emitTo('nearby-objects-table', 'aladinPreviewUpdated',
+                                    _detail);
+                                return;
+                            }
+
+                            // Last resort: attempt to find mounted components and emit the
+                            // event on each instance. Do NOT call arbitrary public methods
+                            // (comp.call) since that causes the MethodNotFound exception when
+                            // the method doesn't exist on the targeted component.
+                            // No per-instance fallback: prefer global emit/emitTo only. Livewire
+                            // instance methods (comp.emit / comp.call) differ between Livewire
+                            // versions and can cause MethodNotFound exceptions when invoked on
+                            // unrelated components. Avoid calling them here.
+                            if (window.Livewire && typeof window.Livewire.find === 'function') {
+                                // Livewire.find is present but we intentionally avoid calling per-instance
+                                // methods (comp.emit/comp.call) because that can trigger server-side
+                                // MethodNotFound exceptions when the wrong component instance is targeted.
+                                // Log available component ids for debugging instead and rely on global
+                                // emit / emitTo paths above which are safe across Livewire versions.
+                                try {
+                                    var els = Array.from(document.querySelectorAll(
+                                        '[wire\\:id],[data-wired-id]'));
+                                    for (var i = 0; i < els.length; i++) {
+                                        try {
+                                            var id = els[i].getAttribute('wire:id') || els[i].getAttribute(
+                                                'data-wired-id');
+                                            if (!id) continue;
+                                            // debug log removed
+                                        } catch (e) {}
+                                    }
+                                } catch (e) {}
+                            }
+                            // debug log removed
+                        } catch (e) {
+                            /* debug removed */
+                        }
+                    } catch (e) {}
+                });
+            } catch (e) {}
+
+            // Global debug listener: always log when the browser receives the
+            // dispatched 'aladin-preview-info-updated' event. This helps verify
+            // whether Livewire's dispatchBrowserEvent reaches the client even when
+            // the more elaborate forwarder code fails to run.
+            try {
+                window.addEventListener('aladin-preview-info-updated', function(ev) {
+                    try {
+                        /* debug removed */
+                    } catch (e) {}
+                });
+            } catch (e) {}
+
             window.addEventListener('aladin-preview-info-updated', function(ev) {
                 try {
                     var d = ev && ev.detail ? ev.detail : {};
@@ -908,6 +1764,55 @@ try {
                     var dateCell = document.getElementById('ephem-date-cell');
                     if (dateCell) dateCell.textContent = eph.date || '—';
 
+                    // Forward the Aladin preview update into Livewire so other components (eg. nearby table)
+                    // can react to instrument / lens / eyepiece changes. Emit directly from this handler
+                    // rather than installing an inner listener to avoid duplicate/malformed client calls.
+                    try {
+                        var _detail = ev && ev.detail ? ev.detail : {};
+                        // Debug: log that we received the browser event and what detail it contains
+                        try {
+                            /* debug removed */
+                        } catch (e) {}
+
+                        // Prefer the modern client API if present (window.livewire), otherwise fall back
+                        // to the global Livewire object. Use emitTo to target the specific component.
+                        try {
+                            if (window.livewire && typeof window.livewire.emit === 'function') {
+                                /* debug removed */
+                                window.livewire.emit('aladinPreviewUpdated', _detail);
+                            } else if (window.Livewire && typeof window.Livewire.emit === 'function') {
+                                /* debug removed */
+                                window.Livewire.emit('aladinPreviewUpdated', _detail);
+                            } else if (window.livewire && typeof window.livewire.emitTo === 'function') {
+                                /* debug removed */
+                                window.livewire.emitTo('nearby-objects-table', 'aladinPreviewUpdated',
+                                    _detail);
+                            } else if (window.Livewire && typeof window.Livewire.emitTo === 'function') {
+                                /* debug removed */
+                                window.Livewire.emitTo('nearby-objects-table', 'aladinPreviewUpdated',
+                                    _detail);
+                            } else {
+                                /* debug removed */
+                                // If Livewire.find exists, list component ids for debugging but avoid per-instance calls
+                                try {
+                                    if (window.Livewire && typeof window.Livewire.find === 'function') {
+                                        var _els = Array.from(document.querySelectorAll(
+                                            '[wire\\:id],[data-wired-id]'));
+                                        for (var _i = 0; _i < _els.length; _i++) {
+                                            try {
+                                                var _id = _els[_i].getAttribute('wire:id') || _els[_i]
+                                                    .getAttribute('data-wired-id');
+                                                if (!_id) continue;
+                                                // debug removed
+                                            } catch (e) {}
+                                        }
+                                    }
+                                } catch (e) {}
+                            }
+                        } catch (e) {
+                            /* debug removed */
+                        }
+                    } catch (e) {}
                     // Update rise/transit/set
                     var rtsCell = document.getElementById('ephem-rts-cell');
                     if (rtsCell) {

@@ -95,14 +95,22 @@ Route::get('/cometobservations/{observer}', 'App\\Http\\Controllers\\Observation
 
 // Sketch of the week / month
 Route::get('/sketch-of-the-week', function () {
-    return view('sketch-of-the-week-month',
-        ['sketches' => SketchOfTheWeek::orderBy('date', 'desc')->paginate(20),
-            'week_month' => __('Week')]);
+    return view(
+        'sketch-of-the-week-month',
+        [
+            'sketches' => SketchOfTheWeek::orderBy('date', 'desc')->paginate(20),
+            'week_month' => __('Week')
+        ]
+    );
 })->name('sketch-of-the-week');
 Route::get('/sketch-of-the-month', function () {
-    return view('sketch-of-the-week-month',
-        ['sketches' => SketchOfTheMonth::orderBy('date', 'desc')->paginate(20),
-            'week_month' => __('Month')]);
+    return view(
+        'sketch-of-the-week-month',
+        [
+            'sketches' => SketchOfTheMonth::orderBy('date', 'desc')->paginate(20),
+            'week_month' => __('Month')
+        ]
+    );
 })->name('sketch-of-the-month');
 Route::get('/sketch-of-the-week/create', 'App\Http\Controllers\SketchOfTheWeekController@create')->name('sketch-of-the-week.create')->can('add_sketch', User::class);
 Route::post('/sketch-of-the-week', 'App\Http\Controllers\SketchOfTheWeekController@store')->name('sketch-of-the-week.store')->can('add_sketch', User::class);
@@ -258,6 +266,10 @@ Route::get('/session/{user}/{session}', 'App\Http\Controllers\SessionController@
 Route::get('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'show'])
     ->name('object.show')->middleware('doNotCacheResponse');
 
+// Nearby names PDF export (uses query params ra, dec, radius)
+Route::get('/object/{slug}/nearby-names.pdf', [App\Http\Controllers\NearbyExportController::class, 'namesPdf'])
+    ->name('object.nearby.names.pdf')->middleware('doNotCacheResponse');
+
 // Create session (authenticated)
 Route::get('/sessions/create', [App\Http\Controllers\SessionController::class, 'create'])
     ->name('session.create')->middleware(['auth', 'doNotCacheResponse']);
@@ -343,12 +355,12 @@ Route::get('/sitemap.xml', function () {
 
         $urls = [];
         // Static / important pages
-        $urls[] = ['loc' => $base.'/', 'lastmod' => $now, 'changefreq' => 'daily', 'priority' => '1.0'];
-        $urls[] = ['loc' => $base.'/sessions', 'lastmod' => $now, 'changefreq' => 'daily', 'priority' => '0.8'];
-        $urls[] = ['loc' => $base.'/popular-sessions', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
-        $urls[] = ['loc' => $base.'/popular-observations', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
-        $urls[] = ['loc' => $base.'/drawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
-        $urls[] = ['loc' => $base.'/cometdrawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
+        $urls[] = ['loc' => $base . '/', 'lastmod' => $now, 'changefreq' => 'daily', 'priority' => '1.0'];
+        $urls[] = ['loc' => $base . '/sessions', 'lastmod' => $now, 'changefreq' => 'daily', 'priority' => '0.8'];
+        $urls[] = ['loc' => $base . '/popular-sessions', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
+        $urls[] = ['loc' => $base . '/popular-observations', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
+        $urls[] = ['loc' => $base . '/drawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
+        $urls[] = ['loc' => $base . '/cometdrawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
 
         // Recent public sessions (limit to avoid heavy queries)
         try {
@@ -360,7 +372,7 @@ Route::get('/sitemap.xml', function () {
             foreach ($sessions as $s) {
                 $user = User::where('username', $s->observerid)->first();
                 $slug = $user ? $user->slug : $s->observerid;
-                $loc = $base.'/session/'.($slug ?? $s->observerid).'/'.($s->slug ?? $s->id);
+                $loc = $base . '/session/' . ($slug ?? $s->observerid) . '/' . ($s->slug ?? $s->id);
                 $urls[] = ['loc' => $loc, 'lastmod' => optional($s->updated_at)->toAtomString() ?? $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
             }
         } catch (\Throwable $e) {
@@ -375,12 +387,12 @@ Route::get('/sitemap.xml', function () {
             $xml .= "  <url>" . PHP_EOL;
             // Use XML-safe escaping
             $loc = htmlspecialchars($u['loc'], ENT_XML1 | ENT_COMPAT, 'UTF-8');
-            $xml .= '    <loc>'.$loc."</loc>" . PHP_EOL;
+            $xml .= '    <loc>' . $loc . "</loc>" . PHP_EOL;
             if (! empty($u['lastmod'])) {
-                $xml .= '    <lastmod>'.$u['lastmod']."</lastmod>" . PHP_EOL;
+                $xml .= '    <lastmod>' . $u['lastmod'] . "</lastmod>" . PHP_EOL;
             }
-            $xml .= '    <changefreq>'.$u['changefreq']."</changefreq>" . PHP_EOL;
-            $xml .= '    <priority>'.$u['priority']."</priority>" . PHP_EOL;
+            $xml .= '    <changefreq>' . $u['changefreq'] . "</changefreq>" . PHP_EOL;
+            $xml .= '    <priority>' . $u['priority'] . "</priority>" . PHP_EOL;
             $xml .= "  </url>" . PHP_EOL;
         }
         $xml .= '</urlset>' . PHP_EOL;
@@ -390,3 +402,123 @@ Route::get('/sitemap.xml', function () {
 
     return Response::make($xml, 200, ['Content-Type' => 'application/xml']);
 })->name('sitemap');
+
+// Local-only debug route to inspect Contrast Reserve inputs and result for an object/user
+Route::get('/debug/cr', function (\Illuminate\Http\Request $request) {
+    if (! app()->environment('local')) {
+        abort(404);
+    }
+
+    $objParam = $request->query('object');
+    $userId = $request->query('user', 1);
+
+    $user = App\Models\User::find($userId);
+    if (! $user) {
+        return response()->json(['error' => 'user not found'], 404);
+    }
+
+    $obj = null;
+    if (is_numeric($objParam)) {
+        $obj = App\Models\DeepskyObject::where('id', $objParam)->first();
+    } else {
+        $obj = App\Models\DeepskyObject::where('name', $objParam)->first();
+    }
+
+    if (! $obj) {
+        return response()->json(['error' => 'object not found'], 404);
+    }
+
+    // Mirror the logic from NearbyObjectsTable::fields()->contrast_reserve
+    $result = [
+        'object' => ['id' => $obj->id ?? null, 'name' => $obj->name ?? null, 'mag' => $obj->mag ?? null, 'diam1' => $obj->diam1 ?? null, 'diam2' => $obj->diam2 ?? null, 'subr' => $obj->subr ?? null],
+        'user' => ['id' => $user->id ?? null, 'has_standard_location' => (bool) ($user->standardLocation ?? null), 'has_standard_instrument' => (bool) ($user->standardInstrument ?? null)],
+        'estimated_mag' => null,
+        'sqm' => null,
+        'aperture_mm' => null,
+        'instrument_fixedMag' => null,
+        'instrument_focal_length_mm' => null,
+        'calc_sbobj_ok' => false,
+        'contrast' => null,
+        'errors' => [],
+    ];
+
+    try {
+        if (! ($user->standardLocation ?? null)) {
+            $result['errors'][] = 'user missing standardLocation';
+        }
+        if (! ($user->standardInstrument ?? null)) {
+            $result['errors'][] = 'user missing standardInstrument';
+        }
+
+        $target = new \deepskylog\AstronomyLibrary\Targets\Target();
+        if ($obj->diam1 && $obj->diam2) {
+            $target->setDiameter($obj->diam1, $obj->diam2);
+        }
+
+        $m = ($obj->mag && $obj->mag != 99.9) ? $obj->mag : null;
+        if ($m === null) {
+            $d1f = is_numeric($obj->diam1) ? floatval($obj->diam1) : null;
+            $d2f = is_numeric($obj->diam2) ? floatval($obj->diam2) : null;
+            $subr = is_numeric($obj->subr) ? floatval($obj->subr) : null;
+            if (($d1f !== null && $d1f > 0) && (empty($d2f) || $d2f <= 0)) {
+                $d2f = $d1f;
+            } elseif (($d2f !== null && $d2f > 0) && (empty($d1f) || $d1f <= 0)) {
+                $d1f = $d2f;
+            }
+            if ($subr !== null && $d1f !== null && $d2f !== null && $d1f > 0 && $d2f > 0) {
+                $area = pi() * ($d1f / 2.0) * ($d2f / 2.0);
+                if ($area > 0) {
+                    $estimated = $subr - 2.5 * log10($area);
+                    $m = $estimated;
+                    $result['estimated_mag'] = $m;
+                }
+            }
+        }
+
+        if ($m !== null) {
+            $target->setMagnitude($m);
+        }
+
+        try {
+            $sbobj = $target->calculateSBObj();
+            $result['calc_sbobj_ok'] = true;
+        } catch (\Throwable $ex) {
+            $result['errors'][] = 'calculateSBObj failed: ' . $ex->getMessage();
+            $sbobj = null;
+        }
+
+        // SQM
+        try {
+            $sqm = method_exists($user->standardLocation, 'getSqm') ? $user->standardLocation->getSqm() : ($user->standardLocation->sqm ?? null);
+            $result['sqm'] = $sqm;
+        } catch (\Throwable $ex) {
+            $result['errors'][] = 'getSqm failed: ' . $ex->getMessage();
+            $sqm = null;
+        }
+
+        $instrument = $user->standardInstrument ?? null;
+        $result['aperture_mm'] = $instrument->aperture_mm ?? null;
+        $result['instrument_fixedMag'] = $instrument->fixedMagnification ?? null;
+        $result['instrument_focal_length_mm'] = $instrument->focal_length_mm ?? null;
+
+        $mag = $instrument->fixedMagnification ?? null;
+        if (! $mag && isset($obj->typicalEyepieceFocal) && ! empty($instrument->focal_length_mm)) {
+            $mag = round($instrument->focal_length_mm / $obj->typicalEyepieceFocal);
+        }
+
+        if ($sbobj !== null && $sqm !== null && $result['aperture_mm'] && $mag) {
+            try {
+                $contrast = $target->calculateContrastReserve($sbobj, $sqm, $result['aperture_mm'], $mag);
+                $result['contrast'] = $contrast;
+            } catch (\Throwable $ex) {
+                $result['errors'][] = 'calculateContrastReserve failed: ' . $ex->getMessage();
+            }
+        } else {
+            $result['errors'][] = 'missing inputs for calculateContrastReserve';
+        }
+    } catch (\Throwable $ex) {
+        $result['errors'][] = 'outer exception: ' . $ex->getMessage();
+    }
+
+    return response()->json($result);
+})->name('debug.cr');

@@ -13,6 +13,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Jobs\EnqueueComputeCRForUser;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -915,5 +917,33 @@ class User extends Authenticatable implements MustVerifyEmail
     public function instrumentSets(): HasMany
     {
         return $this->hasMany(related: InstrumentSet::class);
+    }
+
+    /**
+     * Register model event hooks to react when the user's standard instrument or
+     * standard location changes. We enqueue a background job to recompute
+     * contrast-reserve metrics for the user so the cached per-user metrics stay
+     * in sync with profile changes.
+     */
+    protected static function booted()
+    {
+        static::updated(function (self $user) {
+            try {
+                // Field names used in the database: stdtelescope (instrument) and stdlocation
+                $instrumentDirty = $user->wasChanged('stdtelescope');
+                $locationDirty = $user->wasChanged('stdlocation');
+
+                if ($instrumentDirty || $locationDirty) {
+                    $instrId = $user->stdtelescope ?? null;
+                    $locId = $user->stdlocation ?? null;
+                    Log::info('User: standard instrument/location changed - enqueuing metrics recompute', ['user_id' => $user->id, 'stdtelescope' => $instrId, 'stdlocation' => $locId]);
+
+                    // Enqueue the job so it runs asynchronously (and itself will dispatch per-object jobs)
+                    EnqueueComputeCRForUser::dispatch($user->id, $instrId, $locId);
+                }
+            } catch (\Throwable $ex) {
+                Log::error('User: failed to enqueue metrics recompute', ['error' => $ex->getMessage(), 'user_id' => $user->id]);
+            }
+        });
     }
 }

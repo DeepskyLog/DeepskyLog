@@ -36,7 +36,7 @@ class NoCacheForAuth
         ];
 
         foreach ($authPaths as $p) {
-            if ($path === $p || str_starts_with($path, rtrim($p, '/').'/')) {
+            if ($path === $p || str_starts_with($path, rtrim($p, '/') . '/')) {
                 $request->attributes->set('responsecache.doNotCache', true);
                 break;
             }

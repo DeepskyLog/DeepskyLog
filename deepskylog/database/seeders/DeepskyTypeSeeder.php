@@ -28,12 +28,11 @@ class DeepskyTypeSeeder extends Seeder
             ['code' => 'SNREM', 'name' => 'Supernova remnant'],
             ['code' => 'WRNEB', 'name' => 'Wolf-Rayet nebula / weird nebula'],
             ['code' => 'QUASR', 'name' => 'Quasar / Active nucleus'],
-            // Additional legacy/uncategorized codes found in the live DB
             ['code' => 'DS',    'name' => 'Double star / multiple system'],
             ['code' => 'GALCL', 'name' => 'Galaxy cluster / grouping'],
             ['code' => 'DRKNB', 'name' => 'Dark nebula'],
             ['code' => 'ASTER', 'name' => 'Asterism / informal grouping'],
-            ['code' => 'AA1STAR','name' => '1 star'],
+            ['code' => 'AA1STAR', 'name' => '1 star'],
             ['code' => 'NONEX', 'name' => 'Non-existent / catalog error'],
             ['code' => 'BRTNB', 'name' => 'Bright nebula / emission/reflection'],
             ['code' => 'GXAGC', 'name' => 'Globular cluster in galaxy'],
