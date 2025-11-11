@@ -143,7 +143,7 @@ class NearbyObjectsTable extends PowerGridComponent
             PowerGrid::footer()->showPerPage($this->perPage)->showRecordCount(),
             PowerGrid::responsive()->fixedColumns('name'),
             // Include custom 'argo' and 'skylist' export types so the export dropdown can show them.
-            PowerGrid::exportable('export')->striped()->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV, 'argo', 'skylist'),
+            PowerGrid::exportable('export')->striped()->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV, 'argo', 'skylist', 'stxt'),
         ];
     }
 
@@ -2440,6 +2440,76 @@ class NearbyObjectsTable extends PowerGridComponent
         } catch (\Throwable $ex) {
             Log::error('NearbyObjectsTable::exportNamesPdf failed', ['error' => (string)$ex]);
             session()->flash('error', __('Failed to generate names PDF'));
+        }
+
+        return redirect(request()->header('Referer') ?? url()->current());
+    }
+
+    /**
+     * Export nearby objects as a plain TXT file suitable for SkyTools 4.
+     * Each line contains only the object name.
+     * This is exposed in the export dropdown as type 'stxt'.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function exportStxt()
+    {
+        try {
+            $query = $this->datasource();
+            $rows = $query ? $query->get() : collect();
+
+            $names = $rows->pluck('name')->filter()->values();
+
+            $content = implode("\n", $names->all()) . "\n";
+
+            $filename = 'nearby_objects_' . date('Ymd_His') . '.txt';
+            return response()->streamDownload(function () use ($content) {
+                echo $content;
+            }, $filename, ['Content-Type' => 'text/plain']);
+        } catch (\Throwable $ex) {
+            Log::error('NearbyObjectsTable::exportStxt failed', ['error' => (string)$ex]);
+            session()->flash('error', __('Failed to generate SkyTools TXT export'));
+        }
+
+        return redirect(request()->header('Referer') ?? url()->current());
+    }
+
+    /**
+     * Livewire action invoked from PowerGrid export menu to export SkyTools TXT format.
+     * If $selected is true, only export rows selected by checkboxes.
+     */
+    public function exportToStxt($selected = false)
+    {
+        try {
+            $query = $this->datasource();
+            $rows = $query ? $query->get() : collect();
+
+            if ($selected) {
+                $selectedKeys = is_array($this->checkboxValues) ? $this->checkboxValues : [];
+                if (! empty($selectedKeys)) {
+                    $rows = $rows->filter(function ($r) use ($selectedKeys) {
+                        // datasource aliases 'objects.name' as 'id' in the inner subquery,
+                        // but PowerGrid checkbox values are object ids (here we used name as id),
+                        // so match against the 'id' alias if present, otherwise fall back to name.
+                        $key = $r->id ?? $r->name ?? null;
+                        return in_array($key, $selectedKeys, true);
+                    })->values();
+                } else {
+                    // nothing selected: return early with a flash
+                    session()->flash('error', __('No rows selected for export'));
+                    return redirect(request()->header('Referer') ?? url()->current());
+                }
+            }
+
+            $names = $rows->pluck('name')->filter()->values();
+            $content = implode("\n", $names->all()) . "\n";
+            $filename = 'nearby_objects_' . date('Ymd_His') . '.txt';
+            return response()->streamDownload(function () use ($content) {
+                echo $content;
+            }, $filename, ['Content-Type' => 'text/plain']);
+        } catch (\Throwable $ex) {
+            Log::error('NearbyObjectsTable::exportToStxt failed', ['error' => (string)$ex]);
+            session()->flash('error', __('Failed to generate SkyTools TXT export'));
         }
 
         return redirect(request()->header('Referer') ?? url()->current());

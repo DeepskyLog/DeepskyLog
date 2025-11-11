@@ -277,4 +277,55 @@ class NearbyExportController extends Controller
             return redirect()->back()->with('error', __('Failed to generate SkySafari export'));
         }
     }
+
+    /**
+     * Export nearby objects as a plain TXT file (SkyTools simple list: one name per line).
+     */
+    public function stxt(Request $request, $slug = null)
+    {
+        try {
+            $ra = $request->query('ra');
+            $dec = $request->query('dec');
+            $radiusArcMin = intval($request->query('radius', 30));
+
+            if ($ra === null || $dec === null) {
+                if ($slug) {
+                    $obj = DeepskyObject::where('slug', $slug)->orWhere('name', $slug)->first();
+                    if ($obj) {
+                        $ra = $obj->ra;
+                        $dec = $obj->decl;
+                    }
+                }
+            }
+
+            if ($ra === null || $dec === null) {
+                return redirect()->back()->with('error', __('Missing coordinates for nearby export'));
+            }
+
+            $comp = new \App\Livewire\NearbyObjectsTable();
+            if (method_exists($comp, 'boot')) {
+                try {
+                    $comp->boot();
+                } catch (\Throwable $_) {}
+            }
+            if (method_exists($comp, 'mount')) {
+                try {
+                    $comp->mount();
+                } catch (\Throwable $_) {}
+            }
+
+            $comp->ra = $ra;
+            $comp->decl = $dec;
+            $comp->radiusArcMin = $radiusArcMin;
+
+            if (method_exists($comp, 'exportStxt')) {
+                return $comp->exportStxt();
+            }
+
+            return redirect()->back()->with('error', __('TXT export not available'));
+        } catch (\Throwable $ex) {
+            Log::error('NearbyExportController::stxt failed', ['error' => (string)$ex]);
+            return redirect()->back()->with('error', __('Failed to generate SkyTools TXT export'));
+        }
+    }
 }

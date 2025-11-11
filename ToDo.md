@@ -21,6 +21,7 @@
     + [X] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
     + [ ] Add nearby objects
       + [ ] Add export to Report, Maps
+    + [ ] Try when not logged in
     + [ ] Planets:
       + [ ] Add extra information for planets: diameter, moon, date of conjunction / opposition, ...
       + [ ] Add graph of magnitude and size over a year for planets.

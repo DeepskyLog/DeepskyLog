@@ -429,6 +429,18 @@ try {
                                                                 rel="noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export SkySafari (.skylist)') }}</a>
+                                                            @php
+                                                                $exportStxtBase = route('object.nearby.stxt', [
+                                                                    'slug' => $canonicalSlug ?? ($session->slug ?? ''),
+                                                                ]) . '?';
+                                                                $exportStxtBase .= 'ra=' . rawurlencode($nearbyRaDeg ?? '');
+                                                                $exportStxtBase .= '&dec=' . rawurlencode($nearbyDecDeg ?? '');
+                                                                $exportStxtBase .= '&radius=' . rawurlencode($nearbyRadiusSelected ?? 30);
+                                                            @endphp
+                                                            <a href="{{ $exportStxtBase }}" target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                class="block px-4 py-2 hover:bg-gray-700"
+                                                                role="menuitem">{{ __('Export SkyTools (.txt)') }}</a>
                                                         </div>
                                                     </div>
                                                 </div>
