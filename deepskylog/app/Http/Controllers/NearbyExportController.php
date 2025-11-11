@@ -306,12 +306,14 @@ class NearbyExportController extends Controller
             if (method_exists($comp, 'boot')) {
                 try {
                     $comp->boot();
-                } catch (\Throwable $_) {}
+                } catch (\Throwable $_) {
+                }
             }
             if (method_exists($comp, 'mount')) {
                 try {
                     $comp->mount();
-                } catch (\Throwable $_) {}
+                } catch (\Throwable $_) {
+                }
             }
 
             $comp->ra = $ra;
