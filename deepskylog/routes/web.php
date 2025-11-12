@@ -286,6 +286,10 @@ Route::get('/object/{slug}/nearby-skylist.skylist', [App\Http\Controllers\Nearby
 Route::get('/object/{slug}/nearby-stxt.txt', [App\Http\Controllers\NearbyExportController::class, 'stxt'])
     ->name('object.nearby.stxt')->middleware('doNotCacheResponse');
 
+// Nearby AstroPlanner .apd export (SQLite database file)
+Route::get('/object/{slug}/nearby-apd.apd', [App\Http\Controllers\NearbyExportController::class, 'apd'])
+    ->name('object.nearby.apd')->middleware('doNotCacheResponse');
+
 // Create session (authenticated)
 Route::get('/sessions/create', [App\Http\Controllers\SessionController::class, 'create'])
     ->name('session.create')->middleware(['auth', 'doNotCacheResponse']);

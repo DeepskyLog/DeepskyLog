@@ -442,11 +442,29 @@ try {
                                                                 $exportStxtBase .=
                                                                     '&radius=' .
                                                                     rawurlencode($nearbyRadiusSelected ?? 30);
+
+                                                                // APD export: route to controller action that delegates to the Livewire component
+                                                                $exportApdBase =
+                                                                    route('object.nearby.apd', [
+                                                                        'slug' =>
+                                                                            $canonicalSlug ?? ($session->slug ?? ''),
+                                                                    ]) . '?';
+                                                                $exportApdBase .=
+                                                                    'ra=' . rawurlencode($nearbyRaDeg ?? '');
+                                                                $exportApdBase .=
+                                                                    '&dec=' . rawurlencode($nearbyDecDeg ?? '');
+                                                                $exportApdBase .=
+                                                                    '&radius=' .
+                                                                    rawurlencode($nearbyRadiusSelected ?? 30);
                                                             @endphp
                                                             <a href="{{ $exportStxtBase }}" target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export SkyTools (.txt)') }}</a>
+                                                            <a href="{{ $exportApdBase }}" target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                class="block px-4 py-2 hover:bg-gray-700"
+                                                                role="menuitem">{{ __('Export AstroPlanner (.apd)') }}</a>
                                                         </div>
                                                     </div>
                                                 </div>

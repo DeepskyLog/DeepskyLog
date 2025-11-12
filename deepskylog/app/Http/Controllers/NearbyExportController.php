@@ -330,4 +330,58 @@ class NearbyExportController extends Controller
             return redirect()->back()->with('error', __('Failed to generate SkyTools TXT export'));
         }
     }
+
+    /**
+     * Export nearby objects as an AstroPlanner .apd file (SQLite database).
+     * Delegates to NearbyObjectsTable::exportApd() when available.
+     */
+    public function apd(Request $request, $slug = null)
+    {
+        try {
+            $ra = $request->query('ra');
+            $dec = $request->query('dec');
+            $radiusArcMin = intval($request->query('radius', 30));
+
+            if ($ra === null || $dec === null) {
+                if ($slug) {
+                    $obj = DeepskyObject::where('slug', $slug)->orWhere('name', $slug)->first();
+                    if ($obj) {
+                        $ra = $obj->ra;
+                        $dec = $obj->decl;
+                    }
+                }
+            }
+
+            if ($ra === null || $dec === null) {
+                return redirect()->back()->with('error', __('Missing coordinates for nearby export'));
+            }
+
+            $comp = new \App\Livewire\NearbyObjectsTable();
+            if (method_exists($comp, 'boot')) {
+                try {
+                    $comp->boot();
+                } catch (\Throwable $_) {
+                }
+            }
+            if (method_exists($comp, 'mount')) {
+                try {
+                    $comp->mount();
+                } catch (\Throwable $_) {
+                }
+            }
+
+            $comp->ra = $ra;
+            $comp->decl = $dec;
+            $comp->radiusArcMin = $radiusArcMin;
+
+            if (method_exists($comp, 'exportApd')) {
+                return $comp->exportApd();
+            }
+
+            return redirect()->back()->with('error', __('APD export not available'));
+        } catch (\Throwable $ex) {
+            Log::error('NearbyExportController::apd failed', ['error' => (string)$ex]);
+            return redirect()->back()->with('error', __('Failed to generate AstroPlanner APD export'));
+        }
+    }
 }

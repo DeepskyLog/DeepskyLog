@@ -19,8 +19,7 @@
     + [X] Quick links
     + [X] Add a list of observations of this object, with a link to the observation.
     + [X] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
-    + [ ] Add nearby objects
-      + [ ] Add export to Report, Maps
+    + [ ] Incorrect moon phase picture in the ephemerides
     + [ ] Try when not logged in
     + [ ] Planets:
       + [ ] Add extra information for planets: diameter, moon, date of conjunction / opposition, ...
@@ -35,6 +34,7 @@
     + [ ] Add star map created from DeepskyLog or from external source (stellarium web, <https://theskylive.com/planetarium#ra|21.926851512758986|dec|-24.11458301299462|fov|36.14999999999999>, ...)?
     + [ ] Add lists which have this object
   + [ ] Administrator / Database expert pages to add / edit / delete objects
+  + [ ] Add export to Report (does not work in current version of DeepskyLog), Maps (works partly)
   + [ ] Search targets, first by name, then by type, constellation, ...
   + [ ] Install sqlite3 on the server to be able to use TNTSearch
   + [ ] After installation, make sure to run the queue worker to compute the contrast reserve and optimum eyepieces for all users / instruments / locations.  See Tips.md for more information about the queue worker.

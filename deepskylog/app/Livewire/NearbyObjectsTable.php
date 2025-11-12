@@ -143,7 +143,7 @@ class NearbyObjectsTable extends PowerGridComponent
             PowerGrid::footer()->showPerPage($this->perPage)->showRecordCount(),
             PowerGrid::responsive()->fixedColumns('name'),
             // Include custom 'argo' and 'skylist' export types so the export dropdown can show them.
-            PowerGrid::exportable('export')->striped()->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV, 'argo', 'skylist', 'stxt'),
+            PowerGrid::exportable('export')->striped()->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV, 'argo', 'skylist', 'stxt', 'apd'),
         ];
     }
 
@@ -2446,6 +2446,22 @@ class NearbyObjectsTable extends PowerGridComponent
     }
 
     /**
+     * Livewire action invoked from PowerGrid export menu to export APD format.
+     * If $selected is true, only export rows selected by checkboxes.
+     */
+    public function exportToApd($selected = false)
+    {
+        try {
+            return $this->exportApd($selected);
+        } catch (\Throwable $ex) {
+            Log::error('NearbyObjectsTable::exportToApd failed', ['error' => (string)$ex]);
+            session()->flash('error', __('Failed to generate AstroPlanner APD export'));
+        }
+
+        return redirect(request()->header('Referer') ?? url()->current());
+    }
+
+    /**
      * Export nearby objects as a plain TXT file suitable for SkyTools 4.
      * Each line contains only the object name.
      * This is exposed in the export dropdown as type 'stxt'.
@@ -2772,6 +2788,139 @@ class NearbyObjectsTable extends PowerGridComponent
         }
 
         return redirect(request()->header('Referer') ?? url()->current());
+    }
+
+    /**
+     * Export nearby objects as an AstroPlanner .apd (SQLite) file.
+     * If $selected is true, only export selected rows.
+     */
+    public function exportApd($selected = false)
+    {
+        try {
+            $query = $this->datasource();
+            $rows = $query ? $query->get() : collect();
+
+            if ($selected) {
+                $selectedKeys = is_array($this->checkboxValues) ? $this->checkboxValues : [];
+                if (! empty($selectedKeys)) {
+                    $rows = $rows->filter(function ($r) use ($selectedKeys) {
+                        $key = $r->id ?? $r->name ?? null;
+                        return in_array($key, $selectedKeys, true);
+                    })->values();
+                } else {
+                    session()->flash('error', __('No rows selected for export'));
+                    return redirect(request()->header('Referer') ?? url()->current());
+                }
+            }
+
+            // Create a temporary sqlite file
+            $tmp = tempnam(sys_get_temp_dir(), 'dsl_apd_');
+            if ($tmp === false) {
+                throw new \RuntimeException('Failed to create temporary file for APD export');
+            }
+
+            // Initialize SQLite DB and create minimal tables AstroPlanner expects
+            $db = new \PDO('sqlite:' . $tmp);
+            $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+            // Create Objects table matching structure found in sample test.apd
+            $db->exec("CREATE TABLE Objects (Number integer PRIMARY KEY, ID varchar, Name varchar, Type varchar, RA double, Dec double, Magnitude double, Magnitude2 double, Separation double, PosAngle integer, Size varchar, Catalogue varchar, Notes varchar, Comp varchar, CatNotes varchar, CatIdx integer, SortOrder integer, Period double, Force integer, UserDefined varchar, ObsID varchar, Association integer, AssociationSeqNumber integer, AssociatedData varchar, Origin varchar, Spect varchar, Orbits VarChar);");
+            $db->exec("CREATE TABLE Prefs (ID Integer Primary Key Autoincrement, Name text, Value text);");
+            $db->exec("CREATE TABLE ID (UID Text);");
+
+            $insert = $db->prepare('INSERT INTO Objects (Number, ID, Name, Type, RA, Dec, Magnitude, Size, Catalogue, Notes) VALUES (:num, :id, :name, :type, :ra, :dec, :mag, :size, :cat, :notes)');
+
+            $i = 1;
+            foreach ($rows as $r) {
+                $name = $r->name ?? '';
+                $id = $r->id ?? $name;
+                $type = $r->type_name ?? $r->type ?? '';
+                // RA/Dec as degrees in DB (AstroPlanner appears to store degrees)
+                $ra = is_numeric($r->ra) ? floatval($r->ra) : null;
+                $dec = is_numeric($r->decl) ? floatval($r->decl) : null;
+                $mag = (is_numeric($r->mag) && floatval($r->mag) != 99.9) ? floatval($r->mag) : null;
+                $size = '';
+                try {
+                    $size = $this->formatSizeForApd($r);
+                } catch (\Throwable $_) {
+                    $size = '';
+                }
+                $catalogue = $this->includeAtlas ? ($r->atlas_page ?? '') : '';
+                $notes = '';
+
+                $insert->execute([
+                    ':num' => $i,
+                    ':id' => $id,
+                    ':name' => $name,
+                    ':type' => $type,
+                    ':ra' => $ra,
+                    ':dec' => $dec,
+                    ':mag' => $mag,
+                    ':size' => $size,
+                    ':cat' => $catalogue,
+                    ':notes' => $notes,
+                ]);
+                $i++;
+            }
+
+            // Close DB connection to flush file
+            $db = null;
+
+            $filename = 'nearby_objects_' . date('Ymd_His') . '.apd';
+            return response()->streamDownload(function () use ($tmp) {
+                readfile($tmp);
+            }, $filename, ['Content-Type' => 'application/x-sqlite3']);
+        } catch (\Throwable $ex) {
+            Log::error('NearbyObjectsTable::exportApd failed', ['error' => (string)$ex]);
+            session()->flash('error', __('Failed to generate AstroPlanner APD export'));
+        }
+
+        return redirect(request()->header('Referer') ?? url()->current());
+    }
+
+    /**
+     * Helper: format size string for APD size field similar to Objects.Size
+     */
+    private function formatSizeForApd($r): string
+    {
+        $d1 = $r->diam1 ?? null;
+        $d2 = $r->diam2 ?? null;
+        $pa = $r->pa ?? null;
+        $hasD1 = is_numeric($d1) && floatval($d1) > 0;
+        $hasD2 = is_numeric($d2) && floatval($d2) > 0;
+        if (! $hasD1 && ! $hasD2) return '';
+        $d1f = $hasD1 ? floatval($d1) : 0.0;
+        $d2f = $hasD2 ? floatval($d2) : 0.0;
+        $fmt = function ($v) {
+            return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v);
+        };
+        if ($hasD1 && $hasD2) {
+            if (max($d1f, $d2f) > 60.0) {
+                $d1m = $d1f / 60.0;
+                $d2m = $d2f / 60.0;
+                $d1m_fmt = $fmt($d1m);
+                $d2m_fmt = $fmt($d2m);
+                if ($d1m_fmt === '0' || $d1m_fmt === '0.0' || $d2m_fmt === '0' || $d2m_fmt === '0.0') {
+                    $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
+                } else {
+                    $size = $d1m_fmt . "'x" . $d2m_fmt . "'";
+                }
+            } else {
+                $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
+            }
+        } else {
+            $single = $hasD1 ? $d1f : $d2f;
+            if ($single > 60.0) {
+                $single_fmt = $fmt($single / 60.0) . "'";
+            } else {
+                $single_fmt = $fmt($single) . "''";
+            }
+            $size = $single_fmt;
+        }
+        if (is_numeric($pa) && intval(round(floatval($pa))) !== 999) {
+            $size .= '/' . sprintf('%d', round(floatval($pa))) . '°';
+        }
+        return (string)$size;
     }
 
     /**
