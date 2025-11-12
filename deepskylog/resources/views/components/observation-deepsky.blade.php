@@ -222,10 +222,10 @@
         </div>
 
         <div class="flex items-center space-x-3 mt-2 mb-2">
-            <x-button gray icon="eye" class="align-middle"
-                href='{{ config('app.old_url') }}/index.php?indexAction=detail_observation&observation={{ $observation->id }}'>
+            <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_observation&observation={{ $observation->id }}"
+                class="inline-flex items-center px-4 py-2 rounded bg-gray-700 hover:bg-gray-600 text-white align-middle">
                 {{ __('More details') }}
-            </x-button>
+            </a>
 
             {{-- DSL message button: opens internal composer with to=username and a prefilled subject --}}
             @auth

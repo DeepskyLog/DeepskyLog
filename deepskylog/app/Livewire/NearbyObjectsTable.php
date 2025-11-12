@@ -2278,6 +2278,13 @@ class NearbyObjectsTable extends PowerGridComponent
 
         // Build columns in Astrometry-first order:
         // Name, RA, Dec, Distance, Type, Constellation, Mag, SB, (CR), Size, Atlas
+        $authUser = null;
+        try {
+            $authUser = Auth::user();
+        } catch (\Throwable $_) {
+            $authUser = null;
+        }
+
         $cols = [
             Column::make(__('Name'), 'name')->searchable()->sortable()->bodyAttribute('class', 'font-medium'),
             // Export-only plain name (no HTML)
@@ -2296,23 +2303,33 @@ class NearbyObjectsTable extends PowerGridComponent
             // provides display renderers (see 'seen' and 'last_seen') while
             // these columns use concrete aliases that exist in the SQL.
             Column::make(__('Seen'), 'total_observations')->sortable()->bodyAttribute('class', 'text-center'),
-            Column::make(__('Last seen'), 'your_last_seen_date')->sortable()->bodyAttribute('class', 'text-center'),
-            Column::make(__('Best mag'), 'best_mag')->sortable()->bodyAttribute('class', 'text-center'),
-            Column::make(__('Best mag'), 'best_mag_plain')->hidden()->visibleInExport(true),
-            // Ephemerides columns (rise, transit, set, best time, max altitude)
-            Column::make(__('Rise'), 'rise')->bodyAttribute('class', 'text-center'),
-            Column::make(__('Transit'), 'transit')->bodyAttribute('class', 'text-center'),
-            Column::make(__('Set'), 'setting')->bodyAttribute('class', 'text-center'),
-            Column::make(__('Best time'), 'best_time')->bodyAttribute('class', 'text-center'),
-            Column::make(__('Max altitude'), 'max_altitude')->bodyAttribute('class', 'text-right'),
-            Column::make(__('Max altitude'), 'max_altitude_plain')->hidden()->visibleInExport(true),
+            // The following columns are sensitive to user-specific context (per-user metrics or ephemerides)
+            // and are shown only when an authenticated user is present. See below where we append them
+            // when $authUser is available.
         ];
+
+        // If a user is logged in, add per-user and ephemerides columns
+        if ($authUser) {
+            $cols[] = Column::make(__('Last seen'), 'your_last_seen_date')->sortable()->bodyAttribute('class', 'text-center');
+            // Show Best mag and include it in exports (avoid a separate export-only column
+            // which could be toggled/persisted and lead to duplicate headers).
+            $cols[] = Column::make(__('Best mag'), 'best_mag')->sortable()->bodyAttribute('class', 'text-center')->visibleInExport(true);
+            // Ephemerides columns (rise, transit, set, best time, max altitude)
+            $cols[] = Column::make(__('Rise'), 'rise')->bodyAttribute('class', 'text-center');
+            $cols[] = Column::make(__('Transit'), 'transit')->bodyAttribute('class', 'text-center');
+            $cols[] = Column::make(__('Set'), 'setting')->bodyAttribute('class', 'text-center');
+            $cols[] = Column::make(__('Best time'), 'best_time')->bodyAttribute('class', 'text-center');
+            // Max altitude visible in the table and included in exports. Remove the
+            // separate "_plain" export-only column to avoid duplicate headers.
+            $cols[] = Column::make(__('Max altitude'), 'max_altitude')->bodyAttribute('class', 'text-right')->visibleInExport(true);
+        }
 
         if ($showContrast) {
             // Make CR sortable when the per-user cached metric is available (joined into the query).
-            $cols[] = Column::make(__('CR'), 'contrast_reserve')->sortable()->bodyAttribute('class', 'text-center');
-            // Export-only plain CR value
-            $cols[] = Column::make(__('CR'), 'contrast_reserve_plain')->hidden()->visibleInExport(true);
+            // Also include it in exports. Avoid adding a separate export-only column
+            // (contrast_reserve_plain) which can lead to duplicate headers when
+            // column visibility is persisted or toggled client-side.
+            $cols[] = Column::make(__('CR'), 'contrast_reserve')->sortable()->bodyAttribute('class', 'text-center')->visibleInExport(true);
         }
         $cols = array_merge($cols, [
             Column::make(__('Size'), 'size')->sortable()->bodyAttribute('class', 'text-center'),

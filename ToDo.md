@@ -19,8 +19,6 @@
     + [X] Quick links
     + [X] Add a list of observations of this object, with a link to the observation.
     + [X] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
-    + [ ] Incorrect moon phase picture in the ephemerides
-    + [ ] Try when not logged in
     + [ ] Planets:
       + [ ] Add extra information for planets: diameter, moon, date of conjunction / opposition, ...
       + [ ] Add graph of magnitude and size over a year for planets.
