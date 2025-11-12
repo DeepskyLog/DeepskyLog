@@ -69,17 +69,31 @@
             @php
                 // Ensure phase is in [0,1]
                 $phaseNorm = is_null($phase) ? 0.0 : max(0.0, min(1.0, (float) $phase));
-                // There are 41 frames: m0..m40. Map 0..1 -> 0..40
-                $frameCount = 40; // max index
-                $frameIndex = (int) round($phaseNorm * $frameCount);
-                // clamp
-                $frameIndex = max(0, min($frameCount, $frameIndex));
+
+                // Prefer mapping by illuminated fraction (0..1) to better match the displayed
+                // illumination percentage. The pre-rendered frames are indexed 0..40 where
+                // 0 = new, 20 = full, 40 = new. We'll compute an index on the half-cycle
+                // (0..20) from the illuminated fraction then mirror it when the moon is waning
+                // (phase > 0.5) so the lit side is on the correct side.
+                $illum = is_null($moon_illuminated) ? 0.0 : max(0.0, min(1.0, (float) $moon_illuminated));
+                // Map illumination to 0..20 (new->full)
+                $idxHalf = (int) round($illum * 20);
+                $idxHalf = max(0, min(20, $idxHalf));
+
+                if ($phaseNorm <= 0.5) {
+                    // Waxing/up to full: use the half-index directly (0..20)
+                    $frameIndex = $idxHalf;
+                } else {
+                    // Waning: mirror across the full frame (20) so the lit side is correct
+                    $frameIndex = 40 - $idxHalf;
+                }
+
                 $moonImg = asset("images/moon/m{$frameIndex}.gif");
             @endphp
 
             @if (file_exists(public_path("images/moon/m{$frameIndex}.gif")))
                 <img src="{{ $moonImg }}" alt="{{ __('Moon phase') }}" class="w-20 h-20 object-contain"
-                    loading="lazy" />
+                    loading="lazy" data-moon-frame="{{ $frameIndex }}" />
             @else
                 {{-- Fallback: simple circle SVG if frames are missing --}}
                 <svg class="w-20 h-20" viewBox="0 0 60 60" aria-hidden="true" role="img">
