@@ -1,5 +1,27 @@
 <x-app-layout>
     <div>
+        <script>
+            // Ensure console.debug logs are visible in environments where
+            // devtools may hide debug-level output — polyfill to console.log.
+            try {
+                if (typeof window !== 'undefined' && window.console) {
+                    if (typeof window.console.debug !== 'function' && typeof window.console.log === 'function') {
+                        window.console.debug = function() {
+                            try {
+                                return window.console.log.apply(window.console, arguments);
+                            } catch (e) {}
+                        };
+                    }
+                    if (typeof window.console.info !== 'function' && typeof window.console.log === 'function') {
+                        window.console.info = function() {
+                            try {
+                                return window.console.log.apply(window.console, arguments);
+                            } catch (e) {}
+                        };
+                    }
+                }
+            } catch (e) {}
+        </script>
         <!-- Use a wider container so the object details area can take more horizontal space.
            Switched from max-w-7xl to max-w-screen-xl which uses more of the viewport on large screens. -->
         <!-- wider container: default to screen-xl, but use an even wider max at xl and above -->
@@ -75,9 +97,93 @@
                     <div>
                         <div class="flex items-center gap-0">
                             <span class="text-gray-400">{{ __('Constellation:') }}</span>
-                            <span
-                                class="text-white font-medium ml-2">{{ $session->constellation ?? __('Unknown') }}</span>
+                            @php
+                                $objectIdForConstellation =
+                                    $session->id ?? ($canonicalSlug ?? ($session->slug ?? ($session->name ?? null)));
+                            @endphp
+                            <livewire:object-constellation :initial-constellation="$session->constellation ?? null" :object-id="$objectIdForConstellation" />
                         </div>
+                        <script>
+                            // Debug hook: log the `dsl-top-constellation` after Livewire updates
+                            try {
+                                window.addEventListener('livewire:update', function() {
+                                    try {
+                                        var el = document.getElementById('dsl-top-constellation');
+                                        if (window.console && typeof console.debug === 'function') console.debug(
+                                            '[dsl] livewire:update - dsl-top-constellation=', el ? el.textContent : null);
+                                    } catch (e) {}
+                                });
+                                // Also listen to Livewire message processed hook when available
+                                if (window.Livewire && typeof window.Livewire.hook === 'function') {
+                                    try {
+                                        Livewire.hook('message.processed', function(message, component) {
+                                            try {
+                                                var el = document.getElementById('dsl-top-constellation');
+                                                if (window.console && typeof console.debug === 'function') console.debug(
+                                                    '[dsl] Livewire.message.processed - dsl-top-constellation=', el ? el
+                                                    .textContent : null);
+                                            } catch (e) {}
+                                        });
+                                    } catch (e) {}
+                                }
+                            } catch (e) {}
+                        </script>
+                        <script>
+                            // Client-side handler for server-sent `dsl-force-constellation`.
+                            // Attempts to locate the mounted Livewire component corresponding
+                            // to the objectId and set its `constellation` public property
+                            // immediately using the Livewire JS API.
+                            try {
+                                window.addEventListener('dsl-force-constellation', function(ev) {
+                                    try {
+                                        var payload = ev && ev.detail ? ev.detail : null;
+                                        if (!payload) return;
+                                        var oid = payload.objectId ?? null;
+                                        var cons = payload.constellation ?? null;
+                                        if (!oid || !cons) return;
+
+                                        // Find the span we rendered for the Livewire object-constellation
+                                        var selector = '[data-dsl-object-id="' + String(oid) + '"]';
+                                        var span = document.querySelector(selector);
+                                        if (!span) return;
+
+                                        // Walk up to find the Livewire root element that contains wire:id
+                                        var root = span.closest('[wire\:id], [wire:id]');
+                                        var wireId = null;
+                                        if (root) {
+                                            wireId = root.getAttribute('wire:id') || root.getAttribute('wire\:id');
+                                        }
+
+                                        if (wireId && window.Livewire && typeof Livewire.find === 'function') {
+                                            try {
+                                                var comp = Livewire.find(wireId);
+                                                if (comp && typeof comp.set === 'function') {
+                                                    comp.set('constellation', cons);
+                                                    if (window.console && typeof console.debug === 'function') console.debug(
+                                                        '[dsl] set Livewire component', wireId, 'constellation=', cons);
+                                                    return;
+                                                }
+                                            } catch (e) {}
+                                        }
+
+                                        // Fallback: emit a global Livewire event which our component also listens for
+                                        try {
+                                            if (window.Livewire && typeof Livewire.emit === 'function') {
+                                                Livewire.emit('objectConstellationUpdated', {
+                                                    objectId: oid,
+                                                    constellation: cons
+                                                });
+                                                if (window.console && typeof console.debug === 'function') console.debug(
+                                                    '[dsl] fallback emitted objectConstellationUpdated', {
+                                                        objectId: oid,
+                                                        constellation: cons
+                                                    });
+                                            }
+                                        } catch (e) {}
+                                    } catch (e) {}
+                                });
+                            } catch (e) {}
+                        </script>
 
                         <div class="mt-1 space-y-0">
                             @php
@@ -120,28 +226,131 @@
                             <div class="mb-4 text-gray-100">
                                 <h2 class="text-xl font-semibold text-white">{{ __('Object details') }}</h2>
                                 <table class="table-auto w-full text-sm text-gray-100">
-                                    <td class="pr-4 font-medium">{{ __('Also known as') }}</td>
-                                    <td>
+                                    @if (!empty($alternatives) && count($alternatives) > 0)
+                                        <td class="pr-4 font-medium">{{ __('Also known as') }}</td>
+                                        <td>
+                                            @php
+                                                $altLinks = [];
+                                                foreach ($alternatives as $alt) {
+                                                    $altSlug = \Illuminate\Support\Str::slug($alt, '-');
+                                                    $url = route('object.show', ['slug' => $altSlug]);
+                                                    $altLinks[] =
+                                                        '<a href="' .
+                                                        e($url) .
+                                                        '" class="text-gray-300 hover:underline">' .
+                                                        e($alt) .
+                                                        '</a>';
+                                                }
+                                            @endphp
+                                            {!! implode(', ', $altLinks) !!}
+                                        </td>
+                                        </tr>
+                                    @endif
+
+                                    {{-- If this is a planet and the server computed a diameter, show it for non-authenticated users (Livewire handles auth users) --}}
+                                    @if (($session->source_type_raw ?? '') === 'planet' && isset($session->planet_diam1))
+                                        <tr>
+                                            <td class="pr-4 font-medium">{{ __('Diameter') }}</td>
+                                            <td id="dsl-top-diameter">
+                                                @php
+                                                    $pd1 = $session->planet_diam1 ?? null;
+                                                    $pd2 = $session->planet_diam2 ?? null;
+                                                @endphp
+                                                @if (is_numeric($pd1))
+                                                    {{ number_format($pd1, 1) }}"@if (is_numeric($pd2) && $pd2 !== $pd1)
+                                                        x {{ number_format($pd2, 1) }}"
+                                                    @endif
+                                                @else
+                                                    —
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endif
+                                    @if (isset($session->ra) && isset($session->decl))
                                         @php
-                                            $altLinks = [];
-                                            foreach ($alternatives as $alt) {
-                                                $altSlug = \Illuminate\Support\Str::slug($alt, '-');
-                                                $url = route('object.show', ['slug' => $altSlug]);
-                                                $altLinks[] =
-                                                    '<a href="' .
-                                                    e($url) .
-                                                    '" class="text-gray-300 hover:underline">' .
-                                                    e($alt) .
-                                                    '</a>';
+                                            // Prepare server-side display values for RA/Dec in HMS / DMS
+                                            $rawRa = $session->ra;
+                                            $rawDec = $session->decl;
+
+                                            // Helper: format RA in degrees to HhMMSs
+                                            $formatRa = function ($raDeg) {
+                                                if ($raDeg === null || $raDeg === '' || !is_numeric($raDeg)) {
+                                                    return null;
+                                                }
+                                                $totalHours = floatval($raDeg) / 15.0;
+                                                if (!is_finite($totalHours)) {
+                                                    return null;
+                                                }
+                                                $h = floor($totalHours);
+                                                $m = floor(($totalHours - $h) * 60);
+                                                $s = round((($totalHours - $h) * 60 - $m) * 60);
+                                                if ($s >= 60) {
+                                                    $s = 0;
+                                                    $m += 1;
+                                                }
+                                                if ($m >= 60) {
+                                                    $m = 0;
+                                                    $h = ($h + 1) % 24;
+                                                }
+                                                return sprintf('%dh%02dm%02ds', $h, $m, $s);
+                                            };
+
+                                            // Helper: format Dec degrees to ±D°MM'SS"
+$formatDec = function ($decDeg) {
+    if ($decDeg === null || $decDeg === '' || !is_numeric($decDeg)) {
+        return null;
+    }
+    $dabs = abs(floatval($decDeg));
+    $sign = floatval($decDeg) < 0 ? '-' : '';
+    $d = floor($dabs);
+    $m = floor(($dabs - $d) * 60);
+    $s = round((($dabs - $d) * 60 - $m) * 60);
+    if ($s >= 60) {
+        $s = 0;
+        $m += 1;
+    }
+    if ($m >= 60) {
+        $m = 0;
+        $d += 1;
+    }
+    return sprintf('%s%d°%02d\'%02d"', $sign, $d, $m, $s);
+                                            };
+
+                                            // Determine display values: if server already provided strings (HMS/DMS), keep them.
+                                            $topRaDisplay = null;
+                                            $topDecDisplay = null;
+                                            try {
+                                                // If raw values look numeric, convert to formatted strings
+                                                if (is_numeric($rawRa)) {
+                                                    $topRaDisplay = $formatRa($rawRa);
+                                                } else {
+                                                    // Attempt to detect h/m/s or colon-separated formats — keep as-is
+                                                    $topRaDisplay = trim((string) $rawRa);
+                                                }
+                                            } catch (\Throwable $_) {
+                                                $topRaDisplay = trim((string) $rawRa);
+                                            }
+                                            try {
+                                                if (is_numeric($rawDec)) {
+                                                    $topDecDisplay = $formatDec($rawDec);
+                                                } else {
+                                                    $topDecDisplay = trim((string) $rawDec);
+                                                }
+                                            } catch (\Throwable $_) {
+                                                $topDecDisplay = trim((string) $rawDec);
+                                            }
+
+                                            // Fallback to em dash when missing
+                                            if (empty($topRaDisplay)) {
+                                                $topRaDisplay = '—';
+                                            }
+                                            if (empty($topDecDisplay)) {
+                                                $topDecDisplay = '—';
                                             }
                                         @endphp
-                                        {!! implode(', ', $altLinks) !!}
-                                    </td>
-                                    </tr>
-                                    @if (isset($session->ra) && isset($session->decl))
                                         <tr>
                                             <td class="pr-4 font-medium">{{ __('RA / Dec') }}</td>
-                                            <td>{{ $session->ra }} / {{ $session->decl }}</td>
+                                            <td id="dsl-top-ra-dec">{{ $topRaDisplay }} / {{ $topDecDisplay }}</td>
                                         </tr>
                                         @if (!empty($atlasName) || !empty($atlasPage))
                                             <tr>
@@ -187,14 +396,16 @@
                                             <td>{{ strval($session->pa) === '999' ? '-' : $session->pa }}</td>
                                         </tr>
                                     @endif
-                                    <tr>
-                                        <td class="pr-4 font-medium">{{ __('Description') }}</td>
-                                        <td>{!! nl2br(e($session->comments ?? '')) !!}</td>
-                                    </tr>
+                                    @if (!empty(trim($session->comments ?? '')))
+                                        <tr>
+                                            <td class="pr-4 font-medium">{{ __('Description') }}</td>
+                                            <td>{!! nl2br(e($session->comments ?? '')) !!}</td>
+                                        </tr>
+                                    @endif
                                     @if (!empty($session->mag))
                                         <tr>
                                             <td class="pr-4 font-medium">{{ __('Magnitude') }}</td>
-                                            <td>
+                                            <td id="dsl-top-mag">
                                                 @php
                                                     $mag = $session->mag;
                                                     // Some catalogs use 99.9 as a sentinel for unknown magnitude
@@ -206,7 +417,21 @@
                                                 {{ $magDisplay }}
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td class="pr-4 font-medium">{{ __('Illuminated') }}</td>
+                                            <td id="dsl-top-illum">
+                                                @php
+                                                    $illum = $session->illuminated_fraction ?? null;
+                                                    $illumDisplay = is_numeric($illum)
+                                                        ? number_format(floatval($illum) * 100.0, 1) . '%'
+                                                        : '—';
+                                                @endphp
+                                                {{ $illumDisplay }}
+                                            </td>
+                                        </tr>
                                     @endif
+
+
 
                                     @if (!empty($session->subr))
                                         <tr>
@@ -228,9 +453,10 @@
                                     {{-- Ephemerides: date, rise/transit/set, best time, maximum altitude, altitude graph provided by astronomy library --}}
                                     {{-- Date selector moved to global aside Livewire component --}}
                                     {{-- Ephemerides rows are rendered by a Livewire component so they can update live when the aside date changes --}}
-                                    @auth
-                                        @livewire('object-ephemerides', ['objectId' => (string) ($session->id ?? '')])
+                                    {{-- Render ephemerides for all visitors (not auth-only) so planet event rows are visible for Mercury/Venus. --}}
+                                    @livewire('object-ephemerides', ['objectId' => (string) ($session->id ?? ''), 'initial' => $ephemerides ?? null, 'objectName' => $session->name ?? null, 'sourceTypeRaw' => $session->source_type_raw ?? null])
 
+                                    @auth
                                         {{-- Live-updating contrast reserve and optimum detection magnification via Livewire --}}
                                         {{-- Embed the Livewire component directly so it can render <tr> rows inside this table --}}
                                         @php
@@ -300,7 +526,11 @@ try {
                             </div>
 
                             {{-- Nearby objects (powergrid) --}}
-                            @if (isset($session->ra) && isset($session->decl) && !empty($session->ra) && !empty($session->decl))
+                            @if (isset($session->ra) &&
+                                    isset($session->decl) &&
+                                    !empty($session->ra) &&
+                                    !empty($session->decl) &&
+                                    ($session->source_type_raw ?? '') !== 'planet')
                                 <div class="mt-6">
                                     <h2 class="text-xl font-semibold text-white">{{ __('Nearby objects') }}</h2>
                                     <div id="nearby-objects-wrapper"
@@ -822,7 +1052,49 @@ try {
                                                                                                                     .visibility =
                                                                                                                     'visible';
                                                                                                                 final.style
-                                                                                                                    .opacity = '1';
+                                                                                                                // Update constellation label when provided (MutationObserver path)
+                                                                                                                try {
+                                                                                                                    var consEl2 =
+                                                                                                                        document
+                                                                                                                        .getElementById(
+                                                                                                                            'dsl-top-constellation'
+                                                                                                                        );
+                                                                                                                    if (consEl2) {
+                                                                                                                        var serverCons =
+                                                                                                                            (typeof obj
+                                                                                                                                .constellation !==
+                                                                                                                                'undefined' &&
+                                                                                                                                obj
+                                                                                                                                .constellation
+                                                                                                                            ) ?
+                                                                                                                            obj
+                                                                                                                            .constellation :
+                                                                                                                            (obj.payload &&
+                                                                                                                                obj
+                                                                                                                                .payload
+                                                                                                                                .constellation ?
+                                                                                                                                obj
+                                                                                                                                .payload
+                                                                                                                                .constellation :
+                                                                                                                                null
+                                                                                                                            );
+                                                                                                                        if (serverCons &&
+                                                                                                                            typeof serverCons ===
+                                                                                                                            'string' &&
+                                                                                                                            serverCons
+                                                                                                                            .trim() !==
+                                                                                                                            '') {
+                                                                                                                            try {
+                                                                                                                                consEl2
+                                                                                                                                    .textContent =
+                                                                                                                                    serverCons;
+                                                                                                                            } catch (
+                                                                                                                                e
+                                                                                                                            ) {}
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                } catch (e) {}
+                                                                                                                .opacity = '1';
                                                                                                                 final.style
                                                                                                                     .position =
                                                                                                                     'fixed';
@@ -1285,7 +1557,11 @@ try {
                                 </ul>
                             </div>
                             {{-- Aladin Lite preview --}}
-                            @if (isset($session->ra) && isset($session->decl) && !empty($session->ra) && !empty($session->decl))
+                            @if (isset($session->ra) &&
+                                    isset($session->decl) &&
+                                    !empty($session->ra) &&
+                                    !empty($session->decl) &&
+                                    ($session->source_type_raw ?? '') !== 'planet')
                                 <div class="mt-4 bg-gray-800 p-3 rounded shadow text-gray-100">
                                     <h4 class="font-semibold mb-2 text-white">{{ __('Sky preview') }}</h4>
                                     {{-- Altitude graph (from astronomy library) shown above Aladin preview when available --}}
@@ -1398,6 +1674,460 @@ try {
                                                 } catch (e) {}
                                             })();
                                         </script>
+                                        <script>
+                                            // Formatting helpers for RA/Dec (available globally)
+                                            (function() {
+                                                try {
+                                                    if (!window.__dsl_formatRA) {
+                                                        window.__dsl_formatRA = function(raDeg) {
+                                                            try {
+                                                                if (raDeg === null || typeof raDeg === 'undefined' || isNaN(Number(raDeg))) return '—';
+                                                                var totalHours = Number(raDeg) / 15.0;
+                                                                if (!isFinite(totalHours)) return '—';
+                                                                var h = Math.floor(totalHours);
+                                                                var m = Math.floor((totalHours - h) * 60);
+                                                                var s = Math.round((((totalHours - h) * 60) - m) * 60);
+                                                                if (s >= 60) {
+                                                                    s = 0;
+                                                                    m += 1;
+                                                                }
+                                                                if (m >= 60) {
+                                                                    m = 0;
+                                                                    h = (h + 1) % 24;
+                                                                }
+
+                                                                function pad(n) {
+                                                                    return (n < 10 ? '0' + n : '' + n);
+                                                                }
+                                                                return h + 'h' + pad(m) + 'm' + pad(s) + 's';
+                                                            } catch (e) {
+                                                                return '—';
+                                                            }
+                                                        };
+                                                    }
+                                                } catch (e) {}
+                                                try {
+                                                    if (!window.__dsl_formatDec) {
+                                                        window.__dsl_formatDec = function(decDeg) {
+                                                            try {
+                                                                if (decDeg === null || typeof decDeg === 'undefined' || isNaN(Number(decDeg)))
+                                                                    return '—';
+                                                                var dabs = Math.abs(Number(decDeg));
+                                                                var sign = Number(decDeg) < 0 ? '-' : '';
+                                                                var d = Math.floor(dabs);
+                                                                var m = Math.floor((dabs - d) * 60);
+                                                                var s = Math.round((((dabs - d) * 60) - m) * 60);
+                                                                if (s >= 60) {
+                                                                    s = 0;
+                                                                    m += 1;
+                                                                }
+                                                                if (m >= 60) {
+                                                                    m = 0;
+                                                                    d += 1;
+                                                                }
+
+                                                                function pad(n) {
+                                                                    return (n < 10 ? '0' + n : '' + n);
+                                                                }
+                                                                return sign + d + '°' + pad(m) + "'" + pad(s) + '"';
+                                                            } catch (e) {
+                                                                return '—';
+                                                            }
+                                                        };
+                                                    }
+                                                } catch (e) {}
+                                            })();
+                                        </script>
+                                        <script>
+                                            // Update the top-of-page RA/Dec, Magnitude and Diameter cells
+                                            // when the server dispatches the `aladin-preview-info-updated` browser event.
+                                            window.addEventListener('aladin-preview-info-updated', function(ev) {
+                                                    try {
+                                                        var d = ev && ev.detail ? ev.detail : {};
+                                                        // DEBUG: log receipt so developer console shows incoming events
+                                                        try {
+                                                            if (window.console && typeof console.log === 'function') {
+                                                                console.log('aladin-preview-info-updated event received', d);
+                                                                if (d && d.payload) console.log('aladin-preview-info-updated nested payload', d.payload);
+                                                            }
+                                                        } catch (e) {}
+                                                        // payload fields may be at the top-level (ObjectEphemerides dispatch)
+                                                        // or wrapped in a `payload` key by Livewire's dispatch.
+                                                        function findField(key) {
+                                                            try {
+                                                                if (typeof d[key] !== 'undefined') return d[key];
+                                                                if (d && d.ephemerides && typeof d.ephemerides === 'object' && typeof d.ephemerides[key] !==
+                                                                    'undefined') return d.ephemerides[key];
+                                                                if (d && d.payload && typeof d.payload === 'object' && typeof d.payload[key] !==
+                                                                    'undefined') return d.payload[key];
+                                                                if (d && d.payload && d.payload.ephemerides && typeof d.payload.ephemerides === 'object' &&
+                                                                    typeof d.payload.ephemerides[key] !== 'undefined') return d.payload.ephemerides[key];
+                                                                if (d && d.payload && d.payload.payload && typeof d.payload.payload === 'object' && typeof d
+                                                                    .payload.payload[key] !== 'undefined') return d.payload.payload[key];
+                                                                if (d && d.payload && d.payload.payload && d.payload.payload.ephemerides && typeof d.payload
+                                                                    .payload.ephemerides === 'object' && typeof d.payload.payload.ephemerides[key] !==
+                                                                    'undefined') return d.payload.payload.ephemerides[key];
+                                                            } catch (e) {
+                                                                return null;
+                                                            }
+                                                            return null;
+                                                        }
+                                                        // payload fields: raDeg, decDeg, diam1, diam2, mag
+                                                        var ra = findField('raDeg');
+                                                        var dec = findField('decDeg');
+                                                        var mag = findField('mag');
+                                                        var diam1 = findField('diam1');
+                                                        var diam2 = (typeof findField('diam2') !== 'undefined' && findField('diam2') !== null) ? findField(
+                                                            'diam2') : diam1;
+                                                        // DEBUG: log chosen numeric values for quick inspection
+                                                        try {
+                                                            if (window.console && typeof console.log === 'function') {
+                                                                console.log('aladin chosen values', {
+                                                                    ra: ra,
+                                                                    dec: dec,
+                                                                    mag: mag,
+                                                                    diam1: diam1,
+                                                                    diam2: diam2
+                                                                });
+                                                            }
+                                                        } catch (e) {}
+
+                                                        var raEl = document.getElementById('dsl-top-ra-dec');
+                                                        var magEl = document.getElementById('dsl-top-mag');
+                                                        var diamEl = document.getElementById('dsl-top-diameter');
+                                                        var illumEl = document.getElementById('dsl-top-illum');
+                                                    }
+                                                } catch (e) {
+                                                    // If formatting RA/Dec fails, fall back to raw numeric display
+                                                    try {
+                                                        var raEl = document.getElementById('dsl-top-ra-dec');
+                                                        if (raEl) raEl.textContent = Number(ra).toFixed(6) + '°, ' + Number(dec).toFixed(6) + '°';
+                                                    } catch (err) {}
+                                                }
+                                            } // else: leave existing value to avoid overwriting with empty
+                                            }
+                                            if (magEl) {
+                                                if (mag !== null && mag !== '' && !isNaN(Number(mag))) {
+                                                    magEl.textContent = Number(mag).toFixed(2);
+                                                } // else: leave existing value
+                                            }
+                                            if (illumEl) {
+                                                try {
+                                                    // Try multiple candidate locations/keys for illuminated fraction
+                                                    var illum = findField('illuminated_fraction');
+                                                    if ((illum === null || illum === undefined) && typeof findField('illuminatedFraction') !== 'undefined')
+                                                        illum = findField('illuminatedFraction');
+                                                    // direct nested checks as a last resort
+                                                    try {
+                                                        if ((illum === null || illum === undefined) && d && d.ephemerides && typeof d.ephemerides ===
+                                                            'object') {
+                                                            if (typeof d.ephemerides.illuminated_fraction !== 'undefined') illum = d.ephemerides
+                                                                .illuminated_fraction;
+                                                            if ((illum === null || illum === undefined) && typeof d.ephemerides.illuminatedFraction !==
+                                                                'undefined') illum = d.ephemerides.illuminatedFraction;
+                                                        }
+                                                    } catch (e) {}
+                                                    try {
+                                                        if (window.console && typeof console.log === 'function') console.log(
+                                                            'aladin findField illuminated_fraction candidates ->', illum);
+                                                    } catch (e) {}
+                                                    if (illum !== null && illum !== '' && !isNaN(Number(illum))) {
+                                                        try {
+                                                            illumEl.textContent = (Number(illum) * 100.0).toFixed(1) + '%';
+                                                            if (window.console && typeof console.debug === 'function') console.debug(
+                                                                'aladin set illuminated from value', illum);
+                                                        } catch (e) {}
+                                                    }
+                                                } catch (e) {}
+                                            }
+                                            if (diamEl) {
+                                                if (diam1 !== null && diam1 !== '' && !isNaN(Number(diam1))) {
+                                                    var s = Number(diam1).toFixed(1) + '"';
+                                                    if (diam2 !== null && diam2 !== '' && !isNaN(Number(diam2)) && Number(diam2) !== Number(
+                                                            diam1)) {
+                                                        s += ' x ' + Number(diam2).toFixed(1) + '"';
+                                                    }
+                                                    diamEl.textContent = s;
+                                                } // else: leave existing value
+                                            }
+                                            // Update constellation label when provided
+                                            try {
+                                                var consEl = document.getElementById('dsl-top-constellation');
+                                                if (consEl) {
+                                                    var cons = findField('constellation');
+                                                    if (!cons && d && d.payload && d.payload.constellation) cons = d.payload.constellation;
+                                                    if (cons && typeof cons === 'string' && cons.trim() !== '') {
+                                                        try {
+                                                            consEl.textContent = cons;
+                                                        } catch (e) {}
+                                                    }
+                                                }
+                                            } catch (e) {}
+                                            } catch (e) {
+                                                // fail silently
+                                            }
+                                            }, {
+                                                passive: true
+                                            });
+                                        </script>
+
+                                        <script>
+                                            // Listen for Livewire event `objectEphemeridesUpdated` as an
+                                            // additional reliable path to update top-of-page fields
+                                            // when the ephemeris date changes.
+                                            (function attachLivewireListener() {
+                                                var attached = false;
+
+                                                function install() {
+                                                    try {
+                                                        if (window.Livewire && typeof Livewire.on === 'function') {
+                                                            Livewire.on('objectEphemeridesUpdated', function(payload) {
+                                                                try {
+                                                                    try {
+                                                                        if (window.console && typeof console.log === 'function') console.log(
+                                                                            'Livewire.objectEphemeridesUpdated payload', payload);
+                                                                    } catch (e) {}
+                                                                    var p = payload || {};
+                                                                    if (p.payload && typeof p.payload === 'object') p = p.payload;
+                                                                    if (p.ephemerides && typeof p.ephemerides === 'object') {
+                                                                        try {
+                                                                            var dbg = p.ephemerides;
+                                                                            if (window.console && typeof console.log === 'function') console.log(
+                                                                                'Livewire.ephemerides (nested)', dbg);
+                                                                        } catch (e) {}
+                                                                    }
+                                                                    var illum = (typeof p.illuminated_fraction !== 'undefined') ? p
+                                                                        .illuminated_fraction : (p.ephemerides && p.ephemerides
+                                                                            .illuminated_fraction ? p.ephemerides.illuminated_fraction : null);
+                                                                    if (illum !== null && illum !== '' && !isNaN(Number(illum))) {
+                                                                        var top = document.getElementById('dsl-top-illum');
+                                                                        if (top) {
+                                                                            top.textContent = (Number(illum) * 100.0).toFixed(1) + '%';
+                                                                            try {
+                                                                                if (window.console && typeof console.log === 'function') console
+                                                                                    .log('Livewire set illuminated from payload', illum);
+                                                                            } catch (e) {}
+                                                                        }
+                                                                    } else {
+                                                                        // Try nested ephemerides keys
+                                                                        try {
+                                                                            var alt = (p && p.ephemerides && typeof p.ephemerides === 'object') ? (p
+                                                                                .ephemerides.illuminated_fraction ?? p.ephemerides
+                                                                                .illuminatedFraction ?? null) : null;
+                                                                            if (alt !== null && alt !== '' && !isNaN(Number(alt))) {
+                                                                                var top2 = document.getElementById('dsl-top-illum');
+                                                                                if (top2) {
+                                                                                    top2.textContent = (Number(alt) * 100.0).toFixed(1) + '%';
+                                                                                    try {
+                                                                                        if (window.console && typeof console.log === 'function')
+                                                                                            console.log(
+                                                                                                'Livewire set illuminated from ephemerides nested',
+                                                                                                alt);
+                                                                                    } catch (e) {}
+                                                                                }
+                                                                            }
+                                                                        } catch (e) {}
+                                                                    }
+                                                                } catch (e) {}
+                                                            });
+                                                            attached = true;
+                                                            try {
+                                                                if (window.console && typeof console.log === 'function') console.log(
+                                                                    '[dsl] attached Livewire.objectEphemeridesUpdated listener');
+                                                            } catch (e) {}
+                                                        }
+                                                    } catch (e) {}
+                                                }
+                                                install();
+                                                var poll = null;
+                                                if (!attached) {
+                                                    poll = setInterval(function() {
+                                                        install();
+                                                        if (attached && poll) {
+                                                            clearInterval(poll);
+                                                            poll = null;
+                                                        }
+                                                    }, 200);
+                                                    // stop polling after 5s
+                                                    setTimeout(function() {
+                                                        if (poll) {
+                                                            clearInterval(poll);
+                                                            poll = null;
+                                                        }
+                                                    }, 5000);
+                                                }
+                                            })();
+                                        </script>
+
+                                        <script>
+                                            // MutationObserver fallback: detect Livewire-injected hidden payload
+                                            // element (`data-dsl-ephem-payload`) and re-dispatch the
+                                            // `aladin-preview-info-updated` event with the decoded payload.
+                                            (function() {
+                                                try {
+                                                    if (window.__dsl_payloadObserverInstalled) return;
+                                                    window.__dsl_payloadObserverInstalled = true;
+
+                                                    function handleEl(el) {
+                                                        try {
+                                                            if (!el || !el.getAttribute) return;
+                                                            var raw = el.getAttribute('data-dsl-ephem-payload');
+                                                            if (!raw) return;
+                                                            // If we've already processed this exact payload value, skip.
+                                                            try {
+                                                                var prev = el.getAttribute('data-dsl-ephem-processed');
+                                                                if (prev && prev === raw) return;
+                                                            } catch (e) {}
+                                                            if (!raw) return;
+                                                            var obj = null;
+                                                            try {
+                                                                obj = JSON.parse(atob(raw));
+                                                            } catch (e) {
+                                                                try {
+                                                                    obj = JSON.parse(raw);
+                                                                } catch (e2) {
+                                                                    obj = null;
+                                                                }
+                                                            }
+                                                            if (obj) {
+                                                                try {
+                                                                    // Dispatch event for existing listeners
+                                                                    try {
+                                                                        window.dispatchEvent(new CustomEvent('aladin-preview-info-updated', {
+                                                                            detail: obj
+                                                                        }));
+                                                                    } catch (e) {}
+                                                                    // As a robust fallback, update the top-of-page fields directly
+                                                                    try {
+                                                                        var ra = (typeof obj.raDeg !== 'undefined') ? obj.raDeg : (obj.payload && obj
+                                                                            .payload.raDeg ? obj.payload.raDeg : null);
+                                                                        var dec = (typeof obj.decDeg !== 'undefined') ? obj.decDeg : (obj.payload && obj
+                                                                            .payload.decDeg ? obj.payload.decDeg : null);
+                                                                        var mag = (typeof obj.mag !== 'undefined') ? obj.mag : (obj.payload && obj.payload
+                                                                            .mag ? obj.payload.mag : null);
+                                                                        var diam1 = (typeof obj.diam1 !== 'undefined') ? obj.diam1 : (obj.payload && obj
+                                                                            .payload.diam1 ? obj.payload.diam1 : null);
+                                                                        var diam2 = (typeof obj.diam2 !== 'undefined') ? obj.diam2 : (obj.payload && obj
+                                                                            .payload.diam2 ? obj.payload.diam2 : null);
+                                                                        var raEl = document.getElementById('dsl-top-ra-dec');
+                                                                        var magEl = document.getElementById('dsl-top-mag');
+                                                                        var diamEl = document.getElementById('dsl-top-diameter');
+                                                                        var illumEl = document.getElementById('dsl-top-illum');
+                                                                        try {
+                                                                            if (raEl) {
+                                                                                var serverRaHms = (typeof obj.raHms !== 'undefined' && obj.raHms) ? obj
+                                                                                    .raHms : (obj.payload && obj.payload.raHms ? obj.payload.raHms : null);
+                                                                                var serverDecDms = (typeof obj.decDms !== 'undefined' && obj.decDms) ? obj
+                                                                                    .decDms : (obj.payload && obj.payload.decDms ? obj.payload.decDms :
+                                                                                        null);
+                                                                                if (serverRaHms && serverDecDms) {
+                                                                                    try {
+                                                                                        raEl.textContent = serverRaHms + ' / ' + serverDecDms;
+                                                                                    } catch (e) {}
+                                                                                } else if (ra !== null && dec !== null && !isNaN(Number(ra)) && !isNaN(
+                                                                                        Number(dec))) {
+                                                                                    try {
+                                                                                        if (window.__dsl_formatRA && window.__dsl_formatDec) {
+                                                                                            raEl.textContent = window.__dsl_formatRA(Number(ra)) + ' / ' +
+                                                                                                window.__dsl_formatDec(Number(dec));
+                                                                                        } else {
+                                                                                            raEl.textContent = Number(ra).toFixed(6) + '°, ' + Number(dec)
+                                                                                                .toFixed(6) + '°';
+                                                                                        }
+                                                                                    } catch (e) {
+                                                                                        raEl.textContent = Number(ra).toFixed(6) + '°, ' + Number(dec)
+                                                                                            .toFixed(6) + '°';
+                                                                                    }
+                                                                                } // else: leave existing value
+                                                                            }
+                                                                            if (magEl) {
+                                                                                if (mag !== null && mag !== '' && !isNaN(Number(mag))) {
+                                                                                    magEl.textContent = Number(mag).toFixed(2);
+                                                                                } // else: leave existing value
+                                                                            }
+                                                                            if (diamEl) {
+                                                                                if (diam1 !== null && diam1 !== '' && !isNaN(Number(diam1))) {
+                                                                                    var s = Number(diam1).toFixed(1) + '"';
+                                                                                    if (diam2 !== null && diam2 !== '' && !isNaN(Number(diam2)) && Number(
+                                                                                            diam2) !== Number(diam1)) {
+                                                                                        s += ' x ' + Number(diam2).toFixed(1) + '"';
+                                                                                    }
+                                                                                    diamEl.textContent = s;
+                                                                                } // else: leave existing value
+                                                                            }
+                                                                            if (illumEl) {
+                                                                                try {
+                                                                                    var illum = (typeof obj.illuminated_fraction !== 'undefined') ? obj
+                                                                                        .illuminated_fraction : (obj.payload && obj.payload
+                                                                                            .illuminated_fraction ? obj.payload.illuminated_fraction : null
+                                                                                            );
+                                                                                    try {
+                                                                                        if (window.console && typeof console.log === 'function') console
+                                                                                            .log('mutation-observer illum ->', illum);
+                                                                                    } catch (e) {}
+                                                                                    if (illum !== null && illum !== '' && !isNaN(Number(illum))) {
+                                                                                        illumEl.textContent = (Number(illum) * 100.0).toFixed(1) + '%';
+                                                                                    }
+                                                                                } catch (e) {}
+                                                                            }
+                                                                        } catch (e) {}
+                                                                    } catch (e) {}
+                                                                } catch (e) {}
+                                                            }
+                                                            try {
+                                                                el.setAttribute('data-dsl-ephem-processed', raw);
+                                                            } catch (e) {}
+                                                        } catch (e) {}
+                                                    }
+
+                                                    // run initial pass in case element already present
+                                                    try {
+                                                        var existing = document.querySelector('[data-dsl-ephem-payload]:not([data-dsl-ephem-processed])');
+                                                        if (existing) handleEl(existing);
+                                                    } catch (e) {}
+
+                                                    var mo = new MutationObserver(function(muts) {
+                                                        try {
+                                                            muts.forEach(function(m) {
+                                                                try {
+                                                                    // handle newly added nodes
+                                                                    Array.prototype.forEach.call(m.addedNodes || [], function(n) {
+                                                                        try {
+                                                                            if (n && n.nodeType === 1) {
+                                                                                if (n.hasAttribute && n.hasAttribute(
+                                                                                        'data-dsl-ephem-payload')) handleEl(n);
+                                                                                try {
+                                                                                    var inner = n.querySelector && n.querySelector(
+                                                                                        '[data-dsl-ephem-payload]:not([data-dsl-ephem-processed])'
+                                                                                    );
+                                                                                    if (inner) handleEl(inner);
+                                                                                } catch (e) {}
+                                                                            }
+                                                                        } catch (e) {}
+                                                                    });
+                                                                    // handle attribute changes on existing elements
+                                                                    if (m.type === 'attributes' && m.target && m.target.getAttribute && m
+                                                                        .attributeName === 'data-dsl-ephem-payload') {
+                                                                        try {
+                                                                            handleEl(m.target);
+                                                                        } catch (e) {}
+                                                                    }
+                                                                } catch (e) {}
+                                                            });
+                                                        } catch (e) {}
+                                                    });
+                                                    try {
+                                                        mo.observe(document.body, {
+                                                            childList: true,
+                                                            subtree: true,
+                                                            attributes: true,
+                                                            attributeFilter: ['data-dsl-ephem-payload']
+                                                        });
+                                                    } catch (e) {}
+                                                } catch (e) {}
+                                            })();
+                                        </script>
+
                                         {{-- One-time server-side initial sync: ensure hidden inputs match server-selected ids immediately on first render. This avoids relying on client heuristics to populate hidden fields. --}}
                                         <script>
                                             (function() {
@@ -5696,4 +6426,246 @@ try {
             }, 800);
         }
     });
+</script>
+
+<!-- Fallback payload observer installer: ensures an observer is present even if earlier script didn't run -->
+<script>
+    (function() {
+        try {
+            // If a payload observer was installed earlier, do nothing.
+            if (window.__dsl_payloadObserverInstalled) {
+                try {
+                    if (typeof console !== 'undefined' && typeof console.debug === 'function') console.debug(
+                        '[dsl] payload observer already installed');
+                } catch (e) {}
+                return;
+            }
+
+            // Minimal handler: decode payload, dispatch event and update top-of-page cells.
+            function __dsl_minimalHandleEl(el) {
+                try {
+                    if (!el || !el.getAttribute) return;
+                    var raw = el.getAttribute('data-dsl-ephem-payload');
+                    if (!raw) return;
+                    var prev = null;
+                    try {
+                        prev = el.getAttribute('data-dsl-ephem-processed');
+                    } catch (e) {}
+                    if (prev && prev === raw) return;
+                    var obj = null;
+                    try {
+                        obj = JSON.parse(atob(raw));
+                    } catch (e) {
+                        try {
+                            obj = JSON.parse(raw);
+                        } catch (e2) {
+                            obj = null;
+                        }
+                    }
+                    if (!obj) return;
+                    try {
+                        // Log that the minimal handler is processing a payload (helps debugging)
+                        try {
+                            var dbgIll = (typeof obj.illuminated_fraction !== 'undefined') ? obj
+                                .illuminated_fraction : (obj.payload && obj.payload.illuminated_fraction ? obj
+                                    .payload.illuminated_fraction : null);
+                            if (typeof console !== 'undefined' && typeof console.log === 'function') console.log(
+                                '[dsl] minimalHandleEl processing payload, illum=', dbgIll, ' _ts=', (obj && obj
+                                    ._ts) ? obj._ts : null);
+                        } catch (e) {}
+                        // Re-dispatch existing event for backward compatibility
+                        try {
+                            window.dispatchEvent(new CustomEvent('aladin-preview-info-updated', {
+                                detail: obj
+                            }));
+                        } catch (e) {}
+
+                        // Directly update the top-of-page cells as a robust fallback
+                        try {
+                            var ra = (typeof obj.raDeg !== 'undefined') ? obj.raDeg : (obj.payload && obj.payload
+                                .raDeg ? obj.payload.raDeg : null);
+                            var dec = (typeof obj.decDeg !== 'undefined') ? obj.decDeg : (obj.payload && obj.payload
+                                .decDeg ? obj.payload.decDeg : null);
+                            var mag = (typeof obj.mag !== 'undefined') ? obj.mag : (obj.payload && obj.payload.mag ?
+                                obj.payload.mag : null);
+                            var diam1 = (typeof obj.diam1 !== 'undefined') ? obj.diam1 : (obj.payload && obj.payload
+                                .diam1 ? obj.payload.diam1 : null);
+                            var diam2 = (typeof obj.diam2 !== 'undefined') ? obj.diam2 : (obj.payload && obj.payload
+                                .diam2 ? obj.payload.diam2 : null);
+                            var raEl = document.getElementById('dsl-top-ra-dec');
+                            var magEl = document.getElementById('dsl-top-mag');
+                            var diamEl = document.getElementById('dsl-top-diameter');
+                            var illumEl = document.getElementById('dsl-top-illum');
+                            var consEl = document.getElementById('dsl-top-constellation');
+                            try {
+                                if (raEl) {
+                                    // prefer server-formatted strings when present
+                                    var sra = (typeof obj.raHms !== 'undefined' && obj.raHms) ? obj.raHms : (obj
+                                        .payload && obj.payload.raHms ? obj.payload.raHms : null);
+                                    var sdec = (typeof obj.decDms !== 'undefined' && obj.decDms) ? obj.decDms : (obj
+                                        .payload && obj.payload.decDms ? obj.payload.decDms : null);
+                                    if (sra && sdec) {
+                                        try {
+                                            raEl.textContent = sra + ' / ' + sdec;
+                                        } catch (e) {}
+                                    } else if (ra !== null && dec !== null && !isNaN(Number(ra)) && !isNaN(Number(
+                                            dec))) {
+                                        try {
+                                            if (window.__dsl_formatRA && window.__dsl_formatDec) {
+                                                raEl.textContent = window.__dsl_formatRA(Number(ra)) + ' / ' +
+                                                    window.__dsl_formatDec(Number(dec));
+                                            } else {
+                                                raEl.textContent = Number(ra).toFixed(6) + '°, ' + Number(dec)
+                                                    .toFixed(6) + '°';
+                                            }
+                                        } catch (e) {
+                                            raEl.textContent = Number(ra).toFixed(6) + '°, ' + Number(dec).toFixed(
+                                                6) + '°';
+                                        }
+                                    } // else: leave existing value
+                                }
+                                if (magEl) {
+                                    if (mag !== null && mag !== '' && !isNaN(Number(mag))) {
+                                        magEl.textContent = Number(mag).toFixed(2);
+                                    } // else: leave existing value
+                                }
+                                if (illumEl) {
+                                    try {
+                                        // Try to read illuminated fraction directly from the decoded payload
+                                        var iVal = null;
+                                        try {
+                                            if (typeof obj.illuminated_fraction !== 'undefined') iVal = obj
+                                                .illuminated_fraction;
+                                        } catch (e) {}
+                                        try {
+                                            if ((iVal === null || iVal === undefined) && obj && obj.ephemerides &&
+                                                typeof obj.ephemerides.illuminated_fraction !== 'undefined') iVal =
+                                                obj.ephemerides.illuminated_fraction;
+                                        } catch (e) {}
+                                        try {
+                                            if ((iVal === null || iVal === undefined) && typeof obj
+                                                .illuminatedFraction !== 'undefined') iVal = obj
+                                            .illuminatedFraction;
+                                        } catch (e) {}
+                                        try {
+                                            if ((iVal === null || iVal === undefined) && obj && obj.ephemerides &&
+                                                typeof obj.ephemerides.illuminatedFraction !== 'undefined') iVal =
+                                                obj.ephemerides.illuminatedFraction;
+                                        } catch (e) {}
+                                        try {
+                                            if ((iVal === null || iVal === undefined) && obj && obj.payload &&
+                                                typeof obj.payload.illuminated_fraction !== 'undefined') iVal = obj
+                                                .payload.illuminated_fraction;
+                                        } catch (e) {}
+                                        try {
+                                            if ((iVal === null || iVal === undefined) && obj && obj.payload && obj
+                                                .payload.ephemerides && typeof obj.payload.ephemerides
+                                                .illuminated_fraction !== 'undefined') iVal = obj.payload
+                                                .ephemerides.illuminated_fraction;
+                                        } catch (e) {}
+
+                                        if (iVal !== null && iVal !== '' && !isNaN(Number(iVal))) {
+                                            try {
+                                                illumEl.textContent = (Number(iVal) * 100.0).toFixed(1) + '%';
+                                                if (typeof console !== 'undefined' && typeof console.log ===
+                                                    'function') console.log(
+                                                    '[dsl] minimalHandleEl set illum directly ->', iVal,
+                                                    ' _ts=', (obj && obj._ts) ? obj._ts : null);
+                                            } catch (e) {}
+                                        }
+                                    } catch (e) {}
+                                }
+                                if (diamEl) {
+                                    if (diam1 !== null && diam1 !== '' && !isNaN(Number(diam1))) {
+                                        var s = Number(diam1).toFixed(1) + '"';
+                                        if (diam2 !== null && diam2 !== '' && !isNaN(Number(diam2)) && Number(
+                                                diam2) !== Number(diam1)) {
+                                            s += ' x ' + Number(diam2).toFixed(1) + '"';
+                                        }
+                                        diamEl.textContent = s;
+                                    } // else: leave existing value
+                                }
+                                // Update constellation directly when provided in the payload
+                                try {
+                                    if (consEl) {
+                                        var pcons = (typeof obj.constellation !== 'undefined' && obj
+                                            .constellation) ? obj.constellation : (obj.payload && obj.payload
+                                            .constellation ? obj.payload.constellation : null);
+                                        if (pcons && typeof pcons === 'string' && pcons.trim() !== '') {
+                                            try {
+                                                consEl.textContent = pcons;
+                                            } catch (e) {}
+                                        }
+                                    }
+                                } catch (e) {}
+                            } catch (e) {}
+                        } catch (e) {}
+                    } catch (e) {}
+                    try {
+                        el.setAttribute('data-dsl-ephem-processed', raw);
+                    } catch (e) {}
+                } catch (e) {}
+            }
+
+            // Initial scan
+            try {
+                var initial = document.querySelector('[data-dsl-ephem-payload]:not([data-dsl-ephem-processed])');
+                if (initial) __dsl_minimalHandleEl(initial);
+            } catch (e) {}
+
+            // Install a small MutationObserver focused on the payload attribute/node
+            try {
+                var __dsl_min_mo = new MutationObserver(function(muts) {
+                    try {
+                        muts.forEach(function(m) {
+                            try {
+                                Array.prototype.forEach.call(m.addedNodes || [], function(n) {
+                                    try {
+                                        if (n && n.nodeType === 1) {
+                                            if (n.hasAttribute && n.hasAttribute(
+                                                    'data-dsl-ephem-payload'))
+                                                __dsl_minimalHandleEl(n);
+                                            try {
+                                                var inner = n.querySelector && n
+                                                    .querySelector(
+                                                        '[data-dsl-ephem-payload]:not([data-dsl-ephem-processed])'
+                                                    );
+                                                if (inner) __dsl_minimalHandleEl(inner);
+                                            } catch (e) {}
+                                        }
+                                    } catch (e) {}
+                                });
+                                if (m.type === 'attributes' && m.target && m.attributeName ===
+                                    'data-dsl-ephem-payload') {
+                                    try {
+                                        __dsl_minimalHandleEl(m.target);
+                                    } catch (e) {}
+                                }
+                            } catch (e) {}
+                        });
+                    } catch (e) {}
+                });
+                __dsl_min_mo.observe(document.body, {
+                    childList: true,
+                    subtree: true,
+                    attributes: true,
+                    attributeFilter: ['data-dsl-ephem-payload']
+                });
+            } catch (e) {}
+
+            // Mark installed
+            try {
+                window.__dsl_payloadObserverInstalled = true;
+            } catch (e) {}
+            try {
+                if (typeof console !== 'undefined' && typeof console.debug === 'function') console.debug(
+                    '[dsl] minimal payload observer installed');
+            } catch (e) {}
+        } catch (e) {
+            try {
+                if (typeof console !== 'undefined' && typeof console.debug === 'function') console.debug(
+                    '[dsl] failed to install minimal payload observer', e);
+            } catch (e) {}
+        }
+    })();
 </script>

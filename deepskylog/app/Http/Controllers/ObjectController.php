@@ -1262,7 +1262,11 @@ class ObjectController extends Controller
                 }
 
                 if ($raDeg !== null && $decDeg !== null) {
-                    $equa = new EquatorialCoordinates($raDeg, $decDeg);
+                    // EquatorialCoordinates expects RA in hours (0..24).
+                    // Some legacy storage may hold RA as degrees (>24) or as hours (<=24).
+                    // Normalize: if value > 24 assume degrees and convert to hours.
+                    $raHours = (is_numeric($raDeg) && $raDeg > 24.0) ? ((float)$raDeg / 15.0) : (float)$raDeg;
+                    $equa = new EquatorialCoordinates($raHours, (float)$decDeg);
                     $target->setEquatorialCoordinates($equa);
 
                     $greenwichSiderialTime = Time::apparentSiderialTimeGreenwich($date);
@@ -1378,6 +1382,615 @@ class ObjectController extends Controller
             }
         } catch (\Throwable $_) {
             $ephemerides = null;
+        }
+
+        // If this is a planet, compute current RA/Dec and magnitude using the
+        // installed astronomy library when possible. We prefer topocentric
+        // coordinates if the authenticated user has a standard location set;
+        // otherwise fall back to apparent (geocentric) coordinates.
+        try {
+            if ($sourceTypeRaw === 'planet' || $type === 'planet') {
+                $planetName = $record->name ?? null;
+                if (! empty($planetName)) {
+                    $key = mb_strtolower(trim($planetName));
+                    $map = [
+                        'mercury' => 'Mercury',
+                        'venus' => 'Venus',
+                        'earth' => 'Earth',
+                        'mars' => 'Mars',
+                        'jupiter' => 'Jupiter',
+                        'saturn' => 'Saturn',
+                        'uranus' => 'Uranus',
+                        'neptune' => 'Neptune',
+                        'pluto' => 'Pluto',
+                    ];
+                    if (isset($map[$key])) {
+                        $className = $map[$key];
+                        $fqcn = "\\deepskylog\\AstronomyLibrary\\Targets\\{$className}";
+                        if (class_exists($fqcn)) {
+                            $planet = new $fqcn();
+                            $date = \Carbon\Carbon::now();
+
+                            // Prefer user's standard location for topocentric coords
+                            $authUser = Auth::user();
+                            $userLocation = $authUser?->standardLocation ?? null;
+                            if ($userLocation && isset($userLocation->longitude) && isset($userLocation->latitude)) {
+                                $geo = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
+                                $height = $userLocation->elevation ?? 0.0;
+                                try {
+                                    // calculateEquatorialCoordinates populates topocentric coords
+                                    if (method_exists($planet, 'calculateEquatorialCoordinates')) {
+                                        $planet->calculateEquatorialCoordinates($date, $geo, $height);
+                                    } elseif (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
+                                        $planet->calculateApparentEquatorialCoordinates($date);
+                                    }
+                                } catch (\Throwable $_) {
+                                    // fallback to apparent if topocentric calc fails
+                                    try {
+                                        if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
+                                            $planet->calculateApparentEquatorialCoordinates($date);
+                                        }
+                                    } catch (\Throwable $_) {
+                                        // give up silently
+                                    }
+                                }
+                            } else {
+                                // no user location: use apparent (geocentric) coordinates
+                                try {
+                                    if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
+                                        $planet->calculateApparentEquatorialCoordinates($date);
+                                    }
+                                } catch (\Throwable $_) {
+                                    // ignore
+                                }
+                            }
+
+                            // Read equatorial coordinates when available
+                            try {
+                                if (method_exists($planet, 'getEquatorialCoordinatesToday')) {
+                                    $coords = $planet->getEquatorialCoordinatesToday();
+                                } elseif (method_exists($planet, 'getEquatorialCoordinates')) {
+                                    $coords = $planet->getEquatorialCoordinates();
+                                } else {
+                                    $coords = null;
+                                }
+                                if ($coords) {
+                                    // EquatorialCoordinates provides human-readable printing methods
+                                    try {
+                                        if (method_exists($coords, 'printRA')) {
+                                            $session->ra = $coords->printRA();
+                                        }
+                                    } catch (\Throwable $_) {
+                                    }
+                                    try {
+                                        if (method_exists($coords, 'printDeclination')) {
+                                            $session->decl = $coords->printDeclination();
+                                        }
+                                    } catch (\Throwable $_) {
+                                    }
+                                }
+                            } catch (\Throwable $_) {
+                                // ignore coordinate extraction errors
+                            }
+
+                            // Try to derive constellation from computed equatorial coordinates
+                            try {
+                                // Preferred: EquatorialCoordinates or Planet may expose a helper
+                                $consName = null;
+                                $consCode = null;
+                                if (isset($coords) && $coords) {
+                                    // Common method names to try on the coords object
+                                    if (method_exists($coords, 'getConstellation')) {
+                                        try {
+                                            $c = $coords->getConstellation();
+                                            if (is_string($c) && ! empty($c)) {
+                                                $consName = $c;
+                                            } elseif (is_object($c)) {
+                                                // If object has name/id
+                                                if (isset($c->name)) $consName = $c->name;
+                                                if (isset($c->id)) $consCode = $c->id;
+                                            }
+                                        } catch (\Throwable $_) {
+                                            // ignore
+                                        }
+                                    }
+                                    // Try alternative accessor names
+                                    if (! $consName && method_exists($coords, 'constellation')) {
+                                        try {
+                                            $c = $coords->constellation();
+                                            if (is_string($c) && ! empty($c)) $consName = $c;
+                                        } catch (\Throwable $_) {
+                                        }
+                                    }
+                                }
+
+                                // Planet-level helpers
+                                if (! $consName && isset($planet) && $planet) {
+                                    if (method_exists($planet, 'getConstellation')) {
+                                        try {
+                                            $c = $planet->getConstellation();
+                                            if (is_string($c) && ! empty($c)) $consName = $c;
+                                        } catch (\Throwable $_) {
+                                        }
+                                    }
+                                    if (! $consName && method_exists($planet, 'constellation')) {
+                                        try {
+                                            $c = $planet->constellation();
+                                            if (is_string($c) && ! empty($c)) $consName = $c;
+                                        } catch (\Throwable $_) {
+                                        }
+                                    }
+                                }
+
+                                // If we found a constellation name, try to resolve a human name and id from DB
+                                if ($consName) {
+                                    try {
+                                        $found = ConstellationModel::where('name', $consName)->orWhere('id', $consName)->first();
+                                        if ($found) {
+                                            $session->constellation = $found->name;
+                                            $session->constellation_code = $found->id;
+                                        } else {
+                                            // If no DB mapping, just expose the raw name
+                                            $session->constellation = $consName;
+                                        }
+                                    } catch (\Throwable $_) {
+                                        $session->constellation = $consName;
+                                    }
+                                } elseif ($consCode) {
+                                    try {
+                                        $found = ConstellationModel::where('id', $consCode)->first();
+                                        if ($found) {
+                                            $session->constellation = $found->name;
+                                            $session->constellation_code = $found->id;
+                                        }
+                                    } catch (\Throwable $_) {
+                                    }
+                                }
+                            } catch (\Throwable $_) {
+                                // ignore constellation resolution errors
+                            }
+
+                            // Compute ephemerides (rise/transit/set, best time, max altitude) for planets
+                            try {
+                                $authUser = Auth::user();
+                                $userLocation = $authUser?->standardLocation ?? null;
+                                if ($userLocation) {
+                                    // Try to obtain numeric RA/Dec in degrees from $coords
+                                    $raDeg = null;
+                                    $decDeg = null;
+                                    try {
+                                        if (isset($coords) && $coords) {
+                                            // Prefer numeric accessors
+                                            if (method_exists($coords, 'getRA')) {
+                                                $raObj = $coords->getRA();
+                                                if (is_object($raObj) && method_exists($raObj, 'getCoordinate')) {
+                                                    $raHours = $raObj->getCoordinate();
+                                                    if (is_numeric($raHours)) $raDeg = (float) $raHours * 15.0;
+                                                } elseif (is_numeric($raObj)) {
+                                                    // sometimes RA provided as hours numeric
+                                                    $raDeg = (float) $raObj * 15.0;
+                                                }
+                                            }
+                                            if (method_exists($coords, 'getDeclination')) {
+                                                $decObj = $coords->getDeclination();
+                                                if (is_object($decObj) && method_exists($decObj, 'getCoordinate')) {
+                                                    $dec = $decObj->getCoordinate();
+                                                    if (is_numeric($dec)) $decDeg = (float) $dec;
+                                                } elseif (is_numeric($decObj)) {
+                                                    $decDeg = (float) $decObj;
+                                                }
+                                            }
+                                            // Fallback: try parsing printed strings using DeepskyObject helpers
+                                            if (($raDeg === null || $decDeg === null) && method_exists($coords, 'printRA') && method_exists($coords, 'printDeclination')) {
+                                                try {
+                                                    $raStr = $coords->printRA();
+                                                    $decStr = $coords->printDeclination();
+                                                    if (($raDeg === null) && method_exists(\App\Models\DeepskyObject::class, 'raToDecimal')) {
+                                                        $tmp = \App\Models\DeepskyObject::raToDecimal($raStr);
+                                                        if (is_numeric($tmp)) $raDeg = (float) $tmp;
+                                                    }
+                                                    if (($decDeg === null) && method_exists(\App\Models\DeepskyObject::class, 'decToDecimal')) {
+                                                        $tmp = \App\Models\DeepskyObject::decToDecimal($decStr);
+                                                        if (is_numeric($tmp)) $decDeg = (float) $tmp;
+                                                    }
+                                                } catch (\Throwable $_) {
+                                                    // ignore parse failures
+                                                }
+                                            }
+                                        }
+                                    } catch (\Throwable $_) {
+                                        $raDeg = null;
+                                        $decDeg = null;
+                                    }
+
+                                    if (is_numeric($raDeg) && is_numeric($decDeg)) {
+                                        try {
+                                            $geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
+                                            $target = new AstroTarget();
+                                            // EquatorialCoordinates expects RA in hours (0..24).
+                                            $raHours = (is_numeric($raDeg) && $raDeg > 24.0) ? ((float)$raDeg / 15.0) : (float)$raDeg;
+                                            $equa = new EquatorialCoordinates($raHours, (float)$decDeg);
+                                            $target->setEquatorialCoordinates($equa);
+
+                                            $greenwichSiderialTime = Time::apparentSiderialTimeGreenwich($date);
+                                            $deltaT = Time::deltaT($date);
+
+                                            $target->calculateEphemerides($geo_coords, $greenwichSiderialTime, $deltaT);
+
+                                            // Extract results similar to the deepsky branch
+                                            $transit = null;
+                                            $rising = null;
+                                            $setting = null;
+                                            $bestTime = null;
+                                            $maxHeightAtNight = null;
+                                            $maxHeight = null;
+                                            try {
+                                                $transit = $target->getTransit();
+                                            } catch (\Throwable $_) {
+                                                $transit = null;
+                                            }
+                                            try {
+                                                $rising = $target->getRising();
+                                            } catch (\Throwable $_) {
+                                                $rising = null;
+                                            }
+                                            try {
+                                                $setting = $target->getSetting();
+                                            } catch (\Throwable $_) {
+                                                $setting = null;
+                                            }
+                                            try {
+                                                $bestTime = $target->getBestTimeToObserve();
+                                            } catch (\Throwable $_) {
+                                                $bestTime = null;
+                                            }
+                                            try {
+                                                $maxHeightAtNight = $target->getMaxHeightAtNight();
+                                            } catch (\Throwable $_) {
+                                                $maxHeightAtNight = null;
+                                            }
+                                            try {
+                                                $maxHeight = $target->getMaxHeight();
+                                            } catch (\Throwable $_) {
+                                                $maxHeight = null;
+                                            }
+
+                                            // Format timezone-aware strings when Carbon instances returned
+                                            $tz = $userLocation->timezone ?? config('app.timezone');
+                                            if ($transit instanceof \DateTimeInterface) {
+                                                try {
+                                                    $transit = \Carbon\Carbon::instance($transit)->timezone($tz)->isoFormat('HH:mm');
+                                                } catch (\Throwable $_) {
+                                                    $transit = (string)$transit;
+                                                }
+                                            }
+                                            if ($rising instanceof \DateTimeInterface) {
+                                                try {
+                                                    $rising = \Carbon\Carbon::instance($rising)->timezone($tz)->isoFormat('HH:mm');
+                                                } catch (\Throwable $_) {
+                                                    $rising = (string)$rising;
+                                                }
+                                            }
+                                            if ($setting instanceof \DateTimeInterface) {
+                                                try {
+                                                    $setting = \Carbon\Carbon::instance($setting)->timezone($tz)->isoFormat('HH:mm');
+                                                } catch (\Throwable $_) {
+                                                    $setting = (string)$setting;
+                                                }
+                                            }
+                                            if ($bestTime instanceof \DateTimeInterface) {
+                                                try {
+                                                    $bestTime = \Carbon\Carbon::instance($bestTime)->timezone($tz)->isoFormat('HH:mm');
+                                                } catch (\Throwable $_) {
+                                                    $bestTime = (string)$bestTime;
+                                                }
+                                            }
+                                            try {
+                                                if (is_object($maxHeightAtNight) && method_exists($maxHeightAtNight, 'getCoordinate')) $maxHeightAtNight = $maxHeightAtNight->getCoordinate();
+                                            } catch (\Throwable $_) {
+                                            }
+                                            try {
+                                                if (is_object($maxHeight) && method_exists($maxHeight, 'getCoordinate')) $maxHeight = $maxHeight->getCoordinate();
+                                            } catch (\Throwable $_) {
+                                            }
+                                            if (is_numeric($maxHeightAtNight)) $maxHeightAtNight = round($maxHeightAtNight, 1);
+                                            if (is_numeric($maxHeight)) $maxHeight = round($maxHeight, 1);
+
+                                            $altitudeGraph = null;
+                                            try {
+                                                $altitudeGraph = $target->altitudeGraph($geo_coords, $date);
+                                            } catch (\Throwable $_) {
+                                                $altitudeGraph = null;
+                                            }
+                                            $yearGraph = null;
+                                            try {
+                                                $yearGraph = $target->yearGraph($geo_coords, $date);
+                                            } catch (\Throwable $_) {
+                                                $yearGraph = null;
+                                            }
+
+                                            $ephemerides = [
+                                                'date' => $date->timezone($tz)->toDateString(),
+                                                'rising' => $rising,
+                                                'transit' => $transit,
+                                                'setting' => $setting,
+                                                'best_time' => $bestTime,
+                                                'max_height_at_night' => $maxHeightAtNight,
+                                                'max_height' => $maxHeight,
+                                                'altitude_graph' => $altitudeGraph,
+                                                'year_graph' => $yearGraph,
+                                            ];
+                                        } catch (\Throwable $_) {
+                                            // ignore ephemerides errors for planets
+                                        }
+                                    } // end if numeric coords
+                                }
+                            } catch (\Throwable $_) {
+                                // ignore top-level planet ephemerides errors
+                            }
+
+                            // Attempt to read magnitude from the planet implementation.
+                            // If a magnitude(Carbon $date) method exists use it; otherwise
+                            // fall back to legacy DB value (handled later).
+                            try {
+                                $mag = null;
+                                if (method_exists($planet, 'magnitude')) {
+                                    $mag = $planet->magnitude($date);
+                                } elseif (method_exists($planet, 'getMagnitude')) {
+                                    $mag = $planet->getMagnitude();
+                                }
+                                if (is_numeric($mag)) {
+                                    // round to two decimals for display
+                                    $session->mag = is_float($mag) ? round($mag, 2) : $mag;
+                                }
+                                // Attempt to calculate diameter from the planet implementation.
+                                try {
+                                    if (method_exists($planet, 'calculateDiameter')) {
+                                        $planet->calculateDiameter($date);
+                                        $pd = $planet->getDiameter();
+                                        if (is_array($pd) && isset($pd[0]) && is_numeric($pd[0])) {
+                                            // store planet diameters (arcseconds) separately to avoid
+                                            // conflicting units with deepsky object diam1/diam2 (arcminutes)
+                                            $session->planet_diam1 = is_float($pd[0]) ? round($pd[0], 1) : $pd[0];
+                                            $session->planet_diam2 = isset($pd[1]) && is_numeric($pd[1]) ? (is_float($pd[1]) ? round($pd[1], 1) : $pd[1]) : $session->planet_diam1;
+                                        }
+                                    }
+                                } catch (\Throwable $_) {
+                                    // ignore diameter calculation errors
+                                }
+                                // Also compute initial contrast reserve and optimum detection magnification for planets
+                                // so the detail page shows values even before Livewire recalculation runs.
+                                try {
+                                    $authUser = Auth::user();
+                                    $userLocation = $authUser?->standardLocation ?? null;
+                                    $userInstrument = $authUser?->standardInstrument ?? null;
+
+                                    if ($userLocation && $userInstrument && isset($session->planet_diam1) && isset($session->mag)) {
+                                        $target = new AstroTarget();
+                                        // planet diameters are in arcseconds
+                                        $d1 = is_numeric($session->planet_diam1) ? $session->planet_diam1 : null;
+                                        $d2 = is_numeric($session->planet_diam2) ? $session->planet_diam2 : $d1;
+                                        if ($d1) $target->setDiameter($d1, $d2 ?? $d1);
+                                        $mval = is_numeric($session->mag) ? $session->mag : null;
+                                        if ($mval !== null) $target->setMagnitude($mval);
+
+                                        $sbobj = $target->calculateSBObj();
+                                        $sqm = $userLocation->getSqm();
+                                        $aperture = $userInstrument->aperture_mm ?? null;
+
+                                        // Lens factor / default lens handling similar to deepsky branch
+                                        $defaultLensId = $authUser?->stdlens ?? null;
+                                        try {
+                                            if (! $defaultLensId && Schema::hasColumn('users', 'preferences') && is_array($authUser?->preferences) && isset($authUser->preferences['aladin_default_lens'])) {
+                                                $defaultLensId = $authUser->preferences['aladin_default_lens'];
+                                            }
+                                        } catch (\Throwable $_) {
+                                            // ignore
+                                        }
+                                        $defaultLens = null;
+                                        $lensFactor = 1.0;
+                                        if ($defaultLensId) {
+                                            try {
+                                                $defaultLens = \App\Models\Lens::where('id', $defaultLensId)->first();
+                                                if ($defaultLens) {
+                                                    $lensFactor = $defaultLens->factor ?? 1.0;
+                                                    if (! is_numeric($lensFactor) || $lensFactor <= 0) $lensFactor = 1.0;
+                                                }
+                                            } catch (\Throwable $_) {
+                                                $defaultLens = null;
+                                            }
+                                        }
+
+                                        // Choose candidate magnifications and compute best when possible
+                                        if ($sbobj !== null && $sqm !== null && $aperture && $userInstrument) {
+                                            $mag = $userInstrument->fixedMagnification ?? null;
+                                            if (! $mag && $userInstrument->focal_length_mm && isset($session->typicalEyepieceFocal)) {
+                                                $mag = round($userInstrument->focal_length_mm / $session->typicalEyepieceFocal);
+                                            }
+
+                                            $possible = [25, 50, 75, 100, 150, 200];
+                                            if ($lensFactor !== 1.0) $possible = array_map(fn($v) => (int) round($v * $lensFactor), $possible);
+
+                                            // Try deriving from user's instrument set eyepieces
+                                            $instSet = $authUser?->standardInstrumentSet ?? null;
+                                            if ($instSet && $userInstrument?->focal_length_mm) {
+                                                try {
+                                                    $setModel = $instSet;
+                                                    if ($setModel && count($setModel->eyepieces) > 0) {
+                                                        $derived = [];
+                                                        foreach ($setModel->eyepieces as $sep) {
+                                                            if ($sep->active && ! empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
+                                                                $derived[] = (int) round(($userInstrument->focal_length_mm / $sep->focal_length_mm) * $lensFactor);
+                                                            }
+                                                        }
+                                                        $derived = array_values(array_unique(array_filter($derived)));
+                                                        if (! empty($derived)) {
+                                                            $possible = $derived;
+                                                        }
+                                                    }
+                                                } catch (\Throwable $_) {
+                                                }
+                                            }
+
+                                            $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possible);
+                                            $session->optimum_detection_magnification = $best ? (int) $best : null;
+
+                                            if (! empty($session->optimum_detection_magnification)) {
+                                                $contrast = $target->calculateContrastReserve($sbobj, $sqm, $aperture, $session->optimum_detection_magnification);
+                                                $session->contrast_reserve = is_numeric($contrast) ? round($contrast, 2) : null;
+                                                $cat = null;
+                                                if (is_numeric($session->contrast_reserve)) {
+                                                    $c = (float) $session->contrast_reserve;
+                                                    if ($c > 1.0) $cat = 'very_easy';
+                                                    elseif ($c > 0.5) $cat = 'easy';
+                                                    elseif ($c > 0.35) $cat = 'quite_difficult';
+                                                    elseif ($c > 0.1) $cat = 'difficult';
+                                                    elseif ($c > -0.2) $cat = 'questionable';
+                                                    else $cat = 'not_visible';
+                                                }
+                                                $session->contrast_reserve_category = $cat;
+                                                $session->contrast_used_location = $userLocation?->name ?? null;
+                                                $session->contrast_used_instrument = $userInstrument?->fullName() ?? ($userInstrument?->name ?? null);
+                                                // Build eyepiece display list and map eyepieces to produced magnifications
+                                                try {
+                                                    $eyepiecesForDisplay = [];
+                                                    $epMap = [];
+                                                    $defaultLensName = $defaultLens ? ($defaultLens->fullName() ?? $defaultLens->name) : null;
+
+                                                    // Prefer eyepieces from the user's standard instrument set when present
+                                                    $instSet = $authUser?->standardInstrumentSet ?? null;
+                                                    if ($instSet) {
+                                                        try {
+                                                            $setModel = $instSet;
+                                                            if ($setModel && count($setModel->eyepieces) > 0) {
+                                                                foreach ($setModel->eyepieces as $ep) {
+                                                                    if (! $ep->active) continue;
+                                                                    $ef = $ep->focal_length_mm ?? null;
+                                                                    $userSlug = null;
+                                                                    try {
+                                                                        $userSlug = $ep->user?->slug ?? \App\Models\User::where('id', $ep->user_id)->value('slug');
+                                                                    } catch (\Throwable $_) {
+                                                                        $userSlug = null;
+                                                                    }
+                                                                    $displayName = $ep->fullName() ?? $ep->name ?? null;
+                                                                    if (! empty($defaultLensName) && ! empty($displayName)) {
+                                                                        $displayName = $displayName . ' (' . $defaultLensName . ')';
+                                                                    }
+                                                                    $eyepiecesForDisplay[] = [
+                                                                        'name' => $displayName,
+                                                                        'focal' => $ef,
+                                                                        'slug' => $ep->slug ?? null,
+                                                                        'user_slug' => $userSlug,
+                                                                    ];
+                                                                }
+                                                            }
+                                                        } catch (\Throwable $_) {
+                                                            // ignore
+                                                        }
+                                                    }
+
+                                                    // If no eyepieces found in the instrument set, fall back to user's eyepieces
+                                                    if (empty($eyepiecesForDisplay)) {
+                                                        try {
+                                                            $eps = \App\Models\Eyepiece::where('user_id', $authUser->id)->where('active', 1)->get();
+                                                            foreach ($eps as $ep) {
+                                                                $ef = $ep->focal_length_mm ?? null;
+                                                                $userSlug = null;
+                                                                try {
+                                                                    $userSlug = $ep->user?->slug ?? \App\Models\User::where('id', $ep->user_id)->value('slug');
+                                                                } catch (\Throwable $_) {
+                                                                    $userSlug = null;
+                                                                }
+                                                                $displayName = $ep->fullName() ?? $ep->name ?? null;
+                                                                if (! empty($defaultLensName) && ! empty($displayName)) {
+                                                                    $displayName = $displayName . ' (' . $defaultLensName . ')';
+                                                                }
+                                                                $eyepiecesForDisplay[] = [
+                                                                    'name' => $displayName,
+                                                                    'focal' => $ef,
+                                                                    'slug' => $ep->slug ?? null,
+                                                                    'user_slug' => $userSlug,
+                                                                ];
+                                                            }
+                                                        } catch (\Throwable $_) {
+                                                            // ignore
+                                                        }
+                                                    }
+
+                                                    // Build mapping magnification -> eyepieces that produce it
+                                                    if (! empty($eyepiecesForDisplay) && $userInstrument?->focal_length_mm) {
+                                                        foreach ($eyepiecesForDisplay as $epInfo) {
+                                                            $ef = $epInfo['focal'];
+                                                            if ($ef > 0) {
+                                                                $m = (int) round(($userInstrument->focal_length_mm / $ef) * $lensFactor);
+                                                                if ($m > 0) {
+                                                                    if (! isset($epMap[$m])) $epMap[$m] = [];
+                                                                    $epMap[$m][] = $epInfo;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+
+                                                    // Candidate magnifications: prefer eyepiece-produced mags, else fall back to earlier possible list
+                                                    $possibleMags = [];
+                                                    if (! empty($epMap)) {
+                                                        $possibleMags = array_values(array_unique(array_keys($epMap)));
+                                                    } elseif (! empty($possible)) {
+                                                        $possibleMags = $possible;
+                                                    }
+
+                                                    // Select eyepieces corresponding to the computed best mag (if any)
+                                                    if (! empty($best) && isset($epMap[(int) $best])) {
+                                                        $session->optimum_eyepieces = $epMap[(int) $best];
+                                                    } else {
+                                                        $selectedEps = [];
+                                                        foreach ($possibleMags as $pm) {
+                                                            if (isset($epMap[$pm])) {
+                                                                foreach ($epMap[$pm] as $epInfo) {
+                                                                    $selectedEps[] = $epInfo;
+                                                                }
+                                                            }
+                                                        }
+                                                        $uniq = [];
+                                                        $finalEps = [];
+                                                        foreach ($selectedEps as $e) {
+                                                            $k = ($e['name'] ?? '') . '|' . ($e['focal'] ?? '');
+                                                            if (! isset($uniq[$k])) {
+                                                                $uniq[$k] = true;
+                                                                $finalEps[] = $e;
+                                                            }
+                                                        }
+                                                        if (empty($finalEps) && ! empty($eyepiecesForDisplay)) {
+                                                            $uniq = [];
+                                                            $finalEps = [];
+                                                            foreach ($eyepiecesForDisplay as $e) {
+                                                                $k = ($e['name'] ?? '') . '|' . ($e['focal'] ?? '');
+                                                                if (! isset($uniq[$k])) {
+                                                                    $uniq[$k] = true;
+                                                                    $finalEps[] = $e;
+                                                                }
+                                                            }
+                                                        }
+                                                        $session->optimum_eyepieces = $finalEps;
+                                                    }
+                                                } catch (\Throwable $_) {
+                                                    $session->optimum_eyepieces = [];
+                                                }
+                                            }
+                                        }
+                                    }
+                                } catch (\Throwable $_) {
+                                    // don't let this break the planet rendering
+                                }
+                            } catch (\Throwable $_) {
+                                // ignore magnitude errors and keep legacy fallback
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (\Throwable $_) {
+            // Defensive: never break object page rendering if the library fails
         }
 
         // Also expose available instruments, eyepieces and lenses for the Aladin preview selects

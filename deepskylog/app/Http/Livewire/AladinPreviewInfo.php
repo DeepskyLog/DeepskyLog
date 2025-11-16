@@ -22,10 +22,17 @@ class AladinPreviewInfo extends Component
     public $contrast_used_instrument;
     public $optimum_detection_magnification;
     public $optimum_eyepieces = [];
+    // Planet-specific dynamic values (arcseconds)
+    public $planet_diameter_primary = null;
+    public $planet_diameter_secondary = null;
+    // Latest server-provided coordinates and magnitude (degrees / mag)
+    public $object_ra_deg = null;
+    public $object_dec_deg = null;
+    public $object_mag = null;
     // Keep only last_error public for error reporting; other debug info is internal now
     public $last_error = null;
 
-    protected $listeners = ['aladinUpdated' => 'recalculate', 'ephemerisDateChanged' => 'handleEphemerisDateChange'];
+    protected $listeners = ['aladinUpdated' => 'recalculate', 'ephemerisDateChanged' => 'handleEphemerisDateChange', 'objectEphemeridesUpdated' => 'handleObjectEphemeridesUpdated'];
 
     public function handleEphemerisDateChange($date)
     {
@@ -342,16 +349,32 @@ class AladinPreviewInfo extends Component
             // expose lens factor for debugging
             $debug_lens_factor = $lensFactor;
 
-            // If we don't have required pieces for any computation, clear values and return
+            // If we don't have required pieces for any computation, bail out early.
             // Ephemerides only need an object and a user location; instrument is not required.
-            if (! $obj || ! $userLocation) {
-                $this->contrast_reserve = null;
-                $this->contrast_reserve_category = null;
-                $this->contrast_used_location = null;
-                $this->contrast_used_instrument = null;
-                $this->optimum_detection_magnification = null;
-                $this->optimum_eyepieces = [];
-                // Notify frontend that a recalc ran but could not compute due to missing data
+            // However, if the payload provides appearance values (diameter/magnitude)
+            // we can proceed without a DB object as long as the user's location is
+            // available. This lets ObjectEphemerides drive updates for planets that
+            // don't exist in the DB.
+            $payloadDiam1 = $payloadArr['diam1'] ?? null;
+            $payloadMag = array_key_exists('mag', $payloadArr) ? $payloadArr['mag'] : null;
+
+            if (empty($userLocation)) {
+                try {
+                    $this->dispatchBrowserEvent('aladin-preview-info-updated', [
+                        'status' => 'incomplete',
+                        'contrast_reserve' => $this->contrast_reserve,
+                        'optimum_detection_magnification' => $this->optimum_detection_magnification,
+                        'payload' => $payload,
+                        'objectId' => $useObjectId ?? null,
+                    ]);
+                } catch (\Throwable $_) {
+                }
+                return;
+            }
+
+            // If we have neither an object record nor payload-provided diam/mag,
+            // we cannot compute contrast/optimum.
+            if (! $obj && $payloadDiam1 === null && $payloadMag === null) {
                 try {
                     $this->dispatchBrowserEvent('aladin-preview-info-updated', [
                         'status' => 'incomplete',
@@ -383,15 +406,178 @@ class AladinPreviewInfo extends Component
             $coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
             $astrolib = new AstronomyLibrary($date, $coords, $userLocation->elevation ?? 0.0);
 
-            $target = new AstroTarget();
-            $diam1 = $obj->diam1 ?? null;
-            $diam2 = $obj->diam2 ?? null;
-            if ($diam1 && $diam2) {
-                $target->setDiameter($diam1, $diam2);
+            // If this object is a planet, use the astronomy library to compute
+            // topocentric/apparent coordinates, diameter and magnitude for the
+            // requested date so ephemerides and contrast adapt when the date changes.
+            // However, prefer numeric values provided in the payload (emitted by
+            // ObjectEphemerides) to avoid redundant heavy calculations and to
+            // guarantee the preview updates when the date changes even if the
+            // DB record is missing.
+            $computedDiam1 = null;
+            $computedDiam2 = null;
+            $computedMag = null;
+            $computedCoords = null; // EquatorialCoordinates object when available
+            $skipPlanetCompute = false;
+            // Accept payload-provided values when present
+            try {
+                if (!empty($payloadArr['diam1']) || !empty($payloadArr['diam2']) || isset($payloadArr['mag'])) {
+                    $computedDiam1 = $payloadArr['diam1'] ?? null;
+                    $computedDiam2 = $payloadArr['diam2'] ?? null;
+                    $computedMag = array_key_exists('mag', $payloadArr) ? $payloadArr['mag'] : null;
+                    $skipPlanetCompute = true;
+                }
+                // If RA/Dec were provided, we could construct computedCoords here,
+                // but ephemerides are already computed server-side by ObjectEphemerides
+                // and included in the payload; the preview primarily needs diam/mag
+                // to update contrast/optimum calculations.
+            } catch (\Throwable $_) {
+                // fall back to computing via AstronomyLibrary below
+                $computedDiam1 = null;
+                $computedDiam2 = null;
+                $computedMag = null;
+                $skipPlanetCompute = false;
             }
-            $m = ($obj->mag && $obj->mag != 99.9) ? $obj->mag : null;
+
+            try {
+                $isPlanet = false;
+                $planetClass = null;
+                // Try to detect planetary objects by a raw type field or by name
+                try {
+                    $rawType = $obj->source_type_raw ?? $obj->source_type ?? null;
+                    if (is_string($rawType) && strtolower($rawType) === 'planet') $isPlanet = true;
+                } catch (\Throwable $_) {
+                }
+                // Fallback: check name mapping
+                if (! $isPlanet) {
+                    try {
+                        $pname = trim(strtolower($obj->name ?? ''));
+                        $map = ['mercury' => 'Mercury', 'venus' => 'Venus', 'earth' => 'Earth', 'mars' => 'Mars', 'jupiter' => 'Jupiter', 'saturn' => 'Saturn', 'uranus' => 'Uranus', 'neptune' => 'Neptune', 'pluto' => 'Pluto', 'sun' => 'Sun', 'moon' => 'Moon'];
+                        $key = preg_replace('/[^a-z]/', '', $pname);
+                        if ($key && isset($map[$key])) {
+                            $isPlanet = true;
+                            $planetClass = "\\deepskylog\\AstronomyLibrary\\Targets\\" . $map[$key];
+                        }
+                    } catch (\Throwable $_) {
+                    }
+                }
+
+                if ($isPlanet && empty($planetClass)) {
+                    // If we detected planet via raw type but didn't set class, still try by name
+                    try {
+                        $pname = trim(strtolower($obj->name ?? ''));
+                        $map = ['mercury' => 'Mercury', 'venus' => 'Venus', 'earth' => 'Earth', 'mars' => 'Mars', 'jupiter' => 'Jupiter', 'saturn' => 'Saturn', 'uranus' => 'Uranus', 'neptune' => 'Neptune', 'pluto' => 'Pluto', 'sun' => 'Sun', 'moon' => 'Moon'];
+                        $key = preg_replace('/[^a-z]/', '', $pname);
+                        if ($key && isset($map[$key])) {
+                            $planetClass = "\\deepskylog\\AstronomyLibrary\\Targets\\" . $map[$key];
+                        }
+                    } catch (\Throwable $_) {
+                    }
+                }
+
+                if (! $skipPlanetCompute && $isPlanet && $planetClass && class_exists($planetClass)) {
+                    $planet = new $planetClass();
+                    // determine date from payload if provided
+                    $calcDate = \Carbon\Carbon::now();
+                    if (! empty($payload) && (is_array($payload) || is_object($payload))) {
+                        $pp = (array)$payload;
+                        if (! empty($pp['date'])) {
+                            try {
+                                $calcDate = \Carbon\Carbon::parse($pp['date']);
+                            } catch (\Throwable $_) {
+                            }
+                        }
+                    }
+                    // Use user's location for topocentric coords when available
+                    if ($userLocation && isset($userLocation->longitude) && isset($userLocation->latitude)) {
+                        $geo = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
+                        $height = $userLocation->elevation ?? 0.0;
+                        try {
+                            if (method_exists($planet, 'calculateEquatorialCoordinates')) {
+                                $planet->calculateEquatorialCoordinates($calcDate, $geo, $height);
+                            } elseif (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
+                                $planet->calculateApparentEquatorialCoordinates($calcDate);
+                            }
+                        } catch (\Throwable $_) {
+                            try {
+                                if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
+                                    $planet->calculateApparentEquatorialCoordinates($calcDate);
+                                }
+                            } catch (\Throwable $_) {
+                            }
+                        }
+                    } else {
+                        try {
+                            if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
+                                $planet->calculateApparentEquatorialCoordinates($calcDate);
+                            }
+                        } catch (\Throwable $_) {
+                        }
+                    }
+
+                    // extract equatorial coordinates when available
+                    try {
+                        if (method_exists($planet, 'getEquatorialCoordinatesToday')) {
+                            $computedCoords = $planet->getEquatorialCoordinatesToday();
+                        } elseif (method_exists($planet, 'getEquatorialCoordinates')) {
+                            $computedCoords = $planet->getEquatorialCoordinates();
+                        }
+                    } catch (\Throwable $_) {
+                        $computedCoords = null;
+                    }
+
+                    // calculate diameter and magnitude when supported
+                    try {
+                        if (method_exists($planet, 'calculateDiameter')) {
+                            $planet->calculateDiameter($calcDate);
+                            $pd = $planet->getDiameter();
+                            if (is_array($pd) && isset($pd[0])) {
+                                $computedDiam1 = $pd[0];
+                                $computedDiam2 = $pd[1] ?? $pd[0];
+                            }
+                        }
+                    } catch (\Throwable $_) {
+                    }
+                    try {
+                        if (method_exists($planet, 'magnitude')) {
+                            $computedMag = $planet->magnitude($calcDate);
+                        }
+                    } catch (\Throwable $_) {
+                    }
+                }
+            } catch (\Throwable $_) {
+                // ignore errors and fall back to DB values
+                $computedDiam1 = null;
+                $computedDiam2 = null;
+                $computedMag = null;
+                $computedCoords = null;
+            }
+
+            $target = new AstroTarget();
+            // Prefer computed planetary values when available
+            $diam1 = $computedDiam1 ?? ($obj->diam1 ?? null);
+            $diam2 = $computedDiam2 ?? ($obj->diam2 ?? null);
+            if ($diam1) {
+                // For planets use the primary diameter as the effective diameter
+                // when calculating surface brightness / contrast reserve. This
+                // ensures the first diameter is always the input into contrast
+                // calculations as requested.
+                if (!empty($isPlanet)) {
+                    $target->setDiameter($diam1, $diam1);
+                } else {
+                    $target->setDiameter($diam1, $diam2 ?? $diam1);
+                }
+            }
+            $m = ($computedMag !== null) ? $computedMag : (($obj->mag && $obj->mag != 99.9) ? $obj->mag : null);
             if ($m !== null) {
                 $target->setMagnitude($m);
+            }
+            // expose planet diameters for the Livewire view so the UI can update when the date changes
+            try {
+                $this->planet_diameter_primary = is_numeric($diam1) ? round($diam1, 1) : null;
+                $this->planet_diameter_secondary = is_numeric($diam2) ? round($diam2, 1) : $this->planet_diameter_primary;
+            } catch (\Throwable $_) {
+                $this->planet_diameter_primary = null;
+                $this->planet_diameter_secondary = null;
             }
             $sbobj = $target->calculateSBObj();
             // show sbobj presence/value for debug (locals)
@@ -613,7 +799,11 @@ class AladinPreviewInfo extends Component
             // Build ephemerides for UI when possible (object coordinates and user location available)
             $ephemerides = null;
             try {
-                if ($obj && $userLocation && isset($obj->ra) && isset($obj->decl)) {
+                // If planetary coords were computed above, prefer them over stored RA/Dec
+                if (isset($computedCoords) && $computedCoords) {
+                    $coords = $computedCoords;
+                }
+                if ($obj && $userLocation && (isset($obj->ra) && isset($obj->decl) || isset($coords))) {
                     $tz = $userLocation->timezone ?? config('app.timezone');
                     // attempt to convert RA/Dec using DeepskyObject helpers when available
                     $raDeg = null;
@@ -658,6 +848,30 @@ class AladinPreviewInfo extends Component
                                 $yearGraph = $target2->yearGraph($geo_coords, $date);
                             } catch (\Throwable $_) {
                                 $yearGraph = null;
+                            }
+                            // Prefer a payload-provided year magnitude graph when available,
+                            // otherwise compute via the target helper.
+                            $yearMagGraph = null;
+                            try {
+                                if (!empty($payloadArr['ephemerides']['year_magnitude_graph'])) {
+                                    $yearMagGraph = $payloadArr['ephemerides']['year_magnitude_graph'];
+                                } else {
+                                    $yearMagGraph = $target2->yearMagnitudeGraph($geo_coords, $date);
+                                }
+                            } catch (\Throwable $_) {
+                                $yearMagGraph = null;
+                            }
+                            // Prefer a payload-provided year diameter graph when available,
+                            // otherwise compute via the target helper.
+                            $yearDiamGraph = null;
+                            try {
+                                if (!empty($payloadArr['ephemerides']['year_diameter_graph'])) {
+                                    $yearDiamGraph = $payloadArr['ephemerides']['year_diameter_graph'];
+                                } else {
+                                    $yearDiamGraph = $target2->yearDiameterGraph($geo_coords, $date);
+                                }
+                            } catch (\Throwable $_) {
+                                $yearDiamGraph = null;
                             }
                             if ($transit instanceof \DateTimeInterface) {
                                 try {
@@ -708,6 +922,8 @@ class AladinPreviewInfo extends Component
                                 'max_height' => $maxHeight,
                                 'altitude_graph' => $altitudeGraph,
                                 'year_graph' => $yearGraph,
+                                'year_magnitude_graph' => $yearMagGraph,
+                                'year_diameter_graph' => $yearDiamGraph,
                             ];
                         } catch (\Throwable $_) {
                             $ephemerides = null;
@@ -775,6 +991,55 @@ class AladinPreviewInfo extends Component
                 ]);
             } catch (\Throwable $_) {
             }
+        }
+    }
+
+    /**
+     * Handle ephemerides emitted by the server-side ObjectEphemerides component.
+     * This ensures the preview component updates diameters/magnitude and then
+     * triggers a recalc so contrast reserve and optimum detection magnification
+     * are recalculated immediately when the date changes.
+     */
+    public function handleObjectEphemeridesUpdated($payload = null)
+    {
+        try {
+            try {
+                Log::info('AladinPreviewInfo: received objectEphemeridesUpdated', ['payload' => is_array($payload) ? $payload : (is_object($payload) ? (array)$payload : $payload), 'objectId' => $this->objectId, 'user_id' => Auth::id()]);
+            } catch (\Throwable $_) {
+                // ignore logging errors
+            }
+            $p = is_array($payload) ? $payload : (is_object($payload) ? (array)$payload : []);
+            if (! empty($p['diam1'])) {
+                $this->planet_diameter_primary = is_numeric($p['diam1']) ? round($p['diam1'], 1) : $p['diam1'];
+            }
+            if (! empty($p['diam2'])) {
+                $this->planet_diameter_secondary = is_numeric($p['diam2']) ? round($p['diam2'], 1) : $p['diam2'];
+            }
+            // store server-provided RA/Dec and magnitude so the preview can
+            // display them immediately and use them when building ephemerides
+            if (isset($p['raDeg'])) {
+                $this->object_ra_deg = is_numeric($p['raDeg']) ? (float)$p['raDeg'] : null;
+            }
+            if (isset($p['decDeg'])) {
+                $this->object_dec_deg = is_numeric($p['decDeg']) ? (float)$p['decDeg'] : null;
+            }
+            if (array_key_exists('mag', $p)) {
+                $this->object_mag = is_numeric($p['mag']) ? (float)$p['mag'] : $p['mag'];
+            }
+
+            // Trigger a recalc using the provided date/objectId so all dependent
+            // preview values (contrast reserve, optimum detection magnification)
+            // are recomputed on the server with the new geometry.
+            $date = $p['date'] ?? null;
+            $oid = $p['objectId'] ?? $this->objectId;
+            // Ensure the payload we pass into recalculate contains the useful
+            // numeric values emitted by ObjectEphemerides so recalculate() can
+            // prefer them without needing a DB lookup / heavy recompute.
+            $recalcPayload = $p;
+            if (empty($recalcPayload['objectId'])) $recalcPayload['objectId'] = $oid;
+            $this->recalculate($recalcPayload);
+        } catch (\Throwable $_) {
+            // non-fatal
         }
     }
 

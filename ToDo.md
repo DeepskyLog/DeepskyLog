@@ -20,22 +20,34 @@
     + [X] Add a list of observations of this object, with a link to the observation.
     + [X] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
     + [ ] Planets:
-      + [ ] Add extra information for planets: diameter, moon, date of conjunction / opposition, ...
-      + [ ] Add graph of magnitude and size over a year for planets.
+      + [X] Add graph of magnitude and size over a year for planets.
+      + [ ] Part of / Belongs to?  Also for the deepsky objects.
+      + [ ] Test when not logged in
     + [ ] Comets
       + [ ] Add sketch of the week?
       + [ ] Correct the quick links
+      + [ ] Add coordinates
+      + [ ] Add magnitude
+      + [ ] Add distance to Earth and Sun
       + [ ] Change the exernal database
+      + [ ] Test when not logged in
     + [ ] Moon
       + [ ] Add extra information for lunar features: diameter, depth, ...
       + [ ] Add graph of libration over a year for lunar features.
+      + [ ] Test when not logged in
+    + [ ] Sun
+      + [ ] Add extra information for solar features: diameter, ...
+      + [ ] Solar eclipses?
+      + [ ] Test when not logged in
     + [ ] Add star map created from DeepskyLog or from external source (stellarium web, <https://theskylive.com/planetarium#ra|21.926851512758986|dec|-24.11458301299462|fov|36.14999999999999>, ...)?
+    + [ ] Add export to map?
     + [ ] Add lists which have this object
-  + [ ] Administrator / Database expert pages to add / edit / delete objects
-  + [ ] Add export to Report (does not work in current version of DeepskyLog), Maps (works partly)
-  + [ ] Search targets, first by name, then by type, constellation, ...
-  + [ ] Install sqlite3 on the server to be able to use TNTSearch
-  + [ ] After installation, make sure to run the queue worker to compute the contrast reserve and optimum eyepieces for all users / instruments / locations.  See Tips.md for more information about the queue worker.
+
++ [ ] Administrator / Database expert pages to add / edit / delete objects
++ [ ] Add export to Report (does not work in current version of DeepskyLog), Maps (works partly)
++ [ ] Search targets, first by name, then by type, constellation, ...
++ [ ] Install sqlite3 on the server to be able to use TNTSearch
++ [ ] After installation, make sure to run the queue worker to compute the contrast reserve and optimum eyepieces for all users / instruments / locations.  See Tips.md for more information about the queue worker.
 + [ ] Release new version of pyDeepskyLog
   + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
