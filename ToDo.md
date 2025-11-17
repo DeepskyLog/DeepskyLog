@@ -21,7 +21,7 @@
     + [X] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
     + [ ] Planets:
       + [X] Add graph of magnitude and size over a year for planets.
-      + [ ] Part of / Belongs to?  Also for the deepsky objects.
+      + [X] Part of / Belongs to?  Also for the deepsky objects.
       + [ ] Test when not logged in
     + [ ] Comets
       + [ ] Add sketch of the week?

@@ -170,7 +170,31 @@
             </tr>
         @endif
 
-        @if (!empty($e['year_magnitude_graph']))
+        @php
+            // Decide whether this object appears to be a planet.
+            $objectSlugLocal = $e['objectSlug'] ?? ($e['objectId'] ?? null);
+            $planetKeyLocal = null;
+            if (!empty($objectSlugLocal) && is_string($objectSlugLocal)) {
+                $planetKeyLocal = preg_replace('/[^a-z]/', '', mb_strtolower($objectSlugLocal));
+            }
+            $knownPlanets = [
+                'mercury',
+                'venus',
+                'earth',
+                'mars',
+                'jupiter',
+                'saturn',
+                'uranus',
+                'neptune',
+                'pluto',
+                'sun',
+                'moon',
+            ];
+            $isPlanetLocal =
+                ($sourceTypeRaw ?? '') === 'planet' || ($planetKeyLocal && in_array($planetKeyLocal, $knownPlanets));
+        @endphp
+
+        @if ($isPlanetLocal && !empty($e['year_magnitude_graph']))
             <tr>
                 <td colspan="2" class="pr-4 font-medium pt-4">{{ __('Magnitude during the year') }}</td>
             </tr>
@@ -178,7 +202,7 @@
                 <td colspan="2" class="pt-2">{!! $e['year_magnitude_graph'] !!}</td>
             </tr>
         @endif
-        @if (!empty($e['year_diameter_graph']))
+        @if ($isPlanetLocal && !empty($e['year_diameter_graph']))
             <tr>
                 <td colspan="2" class="pr-4 font-medium pt-4">{{ __('Diameter during the year') }}</td>
             </tr>

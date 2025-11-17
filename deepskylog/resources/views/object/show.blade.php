@@ -28,8 +28,14 @@
         <!-- Allow full width at xl so the main area can expand; keep comfortable padding -->
         <div class="mx-auto max-w-screen-xl xl:max-w-full bg-gray-900 px-6 py-6 sm:px-6 lg:px-8">
             <header class="mb-6">
+                @php
+                    $objSlugTop =
+                        $canonicalSlug ?? ($session->slug ?? \Illuminate\Support\Str::slug($session->name ?? ''));
+                @endphp
                 <h1 class="text-3xl font-extrabold">
-                    {{ html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</h1>
+                    <a href="{{ route('object.show', ['slug' => $objSlugTop]) }}"
+                        class="hover:underline">{{ html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                </h1>
 
                 {{-- Summary row: object type, constellation and quick stats (observations/drawings, user-specific counts) --}}
                 @php
@@ -417,18 +423,22 @@ $formatDec = function ($decDeg) {
                                                 {{ $magDisplay }}
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td class="pr-4 font-medium">{{ __('Illuminated') }}</td>
-                                            <td id="dsl-top-illum">
-                                                @php
-                                                    $illum = $session->illuminated_fraction ?? null;
-                                                    $illumDisplay = is_numeric($illum)
-                                                        ? number_format(floatval($illum) * 100.0, 1) . '%'
-                                                        : '—';
-                                                @endphp
-                                                {{ $illumDisplay }}
-                                            </td>
-                                        </tr>
+
+                                        {{-- Show illuminated only for planets --}}
+                                        @if (($session->source_type_raw ?? '') === 'planet')
+                                            <tr>
+                                                <td class="pr-4 font-medium">{{ __('Illuminated') }}</td>
+                                                <td id="dsl-top-illum">
+                                                    @php
+                                                        $illum = $session->illuminated_fraction ?? null;
+                                                        $illumDisplay = is_numeric($illum)
+                                                            ? number_format(floatval($illum) * 100.0, 1) . '%'
+                                                            : '—';
+                                                    @endphp
+                                                    {{ $illumDisplay }}
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endif
 
 
@@ -445,6 +455,162 @@ $formatDec = function ($decDeg) {
                                                 @endphp
                                                 {{ $sbDisplay }}
                                             </td>
+                                        </tr>
+                                    @endif
+
+                                    @php
+                                        $partOf = null;
+                                        $partOfUrl = null;
+                                        $partOfLabel = __('Part of');
+                                        try {
+                                            $objNameLocal = $session->name ?? '';
+                                            if (
+                                                !empty($objNameLocal) &&
+                                                class_exists(\App\Models\ObjectPartOf::class)
+                                            ) {
+                                                $p = \App\Models\ObjectPartOf::where(
+                                                    'objectname',
+                                                    $objNameLocal,
+                                                )->first();
+                                                if ($p && !empty($p->partofname)) {
+                                                    $partOf = $p->partofname;
+                                                    // If the parent is a planet, label as 'Moon of' and link to planet record
+                                                    try {
+                                                        $planet = \App\Models\Planet::where('name', $partOf)->first();
+                                                        if ($planet) {
+                                                            $partOfLabel = __('Moon of');
+                                                            $slug =
+                                                                $planet->slug ??
+                                                                \Illuminate\Support\Str::slug($planet->name);
+                                                            $partOfUrl = route('object.show', ['slug' => $slug]);
+                                                        } else {
+                                                            // Try legacy objects table for a link
+                                                            $objRow = \Illuminate\Support\Facades\DB::table('objects')
+                                                                ->where('name', $partOf)
+                                                                ->first();
+                                                            if ($objRow) {
+                                                                $partOfUrl = route('object.show', [
+                                                                    'slug' => \Illuminate\Support\Str::slug($partOf),
+                                                                ]);
+                                                            }
+                                                        }
+                                                    } catch (\Throwable $_) {
+                                                    }
+                                                }
+                                            }
+                                        } catch (\Throwable $_) {
+                                            $partOf = null;
+                                            $partOfUrl = null;
+                                        }
+
+                                        // Inverse relations: Moons for planets, Contains for deepsky
+                                        $moonsList = [];
+                                        $containsList = [];
+                                        try {
+                                            if (($session->source_type_raw ?? '') === 'planet') {
+                                                if (\Illuminate\Support\Facades\Schema::hasTable('moons')) {
+                                                    $rows = \Illuminate\Support\Facades\DB::table('moons')
+                                                        ->where('planet_id', $session->id)
+                                                        ->get();
+                                                    foreach ($rows as $r) {
+                                                        $slug = $r->slug ?? \Illuminate\Support\Str::slug($r->name);
+                                                        $moonsList[] =
+                                                            '<a href="' .
+                                                            e(route('object.show', ['slug' => $slug])) .
+                                                            '" class="text-gray-300 hover:underline">' .
+                                                            e($r->name) .
+                                                            '</a>';
+                                                    }
+                                                }
+                                                // Fallback to legacy objectpartof table
+                                                if (class_exists(\App\Models\ObjectPartOf::class)) {
+                                                    $po = \App\Models\ObjectPartOf::where('partofname', $session->name)
+                                                        ->pluck('objectname')
+                                                        ->unique();
+                                                    foreach ($po as $on) {
+                                                        $slug = \Illuminate\Support\Str::slug($on);
+                                                        $moonsList[] =
+                                                            '<a href="' .
+                                                            e(route('object.show', ['slug' => $slug])) .
+                                                            '" class="text-gray-300 hover:underline">' .
+                                                            e($on) .
+                                                            '</a>';
+                                                    }
+                                                }
+                                            } else {
+                                                if (class_exists(\App\Models\ObjectPartOf::class)) {
+                                                    // Try exact case-insensitive match first
+                                                    $po = \App\Models\ObjectPartOf::whereRaw('LOWER(partofname) = ?', [
+                                                        mb_strtolower($session->name ?? ''),
+                                                    ])
+                                                        ->pluck('objectname')
+                                                        ->unique()
+                                                        ->toArray();
+
+                                                    // If nothing found, try slug-based matching which handles variations like "Hickson 56" vs "HCG 56"
+                                                    if (empty($po)) {
+                                                        try {
+                                                            $targetSlug = \Illuminate\Support\Str::slug(
+                                                                $session->name ?? '',
+                                                            );
+                                                            $all = \Illuminate\Support\Facades\DB::table('objectpartof')
+                                                                ->select(['objectname', 'partofname'])
+                                                                ->get();
+                                                            foreach ($all as $r) {
+                                                                if (
+                                                                    \Illuminate\Support\Str::slug(
+                                                                        $r->partofname ?? '',
+                                                                    ) === $targetSlug
+                                                                ) {
+                                                                    $po[] = $r->objectname;
+                                                                }
+                                                            }
+                                                            $po = array_values(array_unique($po));
+                                                        } catch (\Throwable $_) {
+                                                            $po = $po;
+                                                        }
+                                                    }
+
+                                                    foreach ($po as $on) {
+                                                        $slug = \Illuminate\Support\Str::slug($on);
+                                                        $containsList[] =
+                                                            '<a href="' .
+                                                            e(route('object.show', ['slug' => $slug])) .
+                                                            '" class="text-gray-300 hover:underline">' .
+                                                            e($on) .
+                                                            '</a>';
+                                                    }
+                                                }
+                                            }
+                                        } catch (\Throwable $_) {
+                                        }
+                                    @endphp
+
+                                    @if (!empty($partOf))
+                                        <tr>
+                                            <td class="pr-4 font-medium">{{ $partOfLabel }}</td>
+                                            <td>
+                                                @if (!empty($partOfUrl))
+                                                    <a href="{{ $partOfUrl }}"
+                                                        class="text-gray-300 hover:underline">{{ e($partOf) }}</a>
+                                                @else
+                                                    {{ e($partOf) }}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endif
+
+                                    @if (!empty($moonsList))
+                                        <tr>
+                                            <td class="pr-4 font-medium">{{ __('Moons') }}</td>
+                                            <td>{!! implode(', ', array_unique($moonsList)) !!}</td>
+                                        </tr>
+                                    @endif
+
+                                    @if (!empty($containsList))
+                                        <tr>
+                                            <td class="pr-4 font-medium">{{ __('Contains') }}</td>
+                                            <td>{!! implode(', ', array_unique($containsList)) !!}</td>
                                         </tr>
                                     @endif
 
@@ -2060,7 +2226,7 @@ try {
                                                                                     var illum = (typeof obj.illuminated_fraction !== 'undefined') ? obj
                                                                                         .illuminated_fraction : (obj.payload && obj.payload
                                                                                             .illuminated_fraction ? obj.payload.illuminated_fraction : null
-                                                                                            );
+                                                                                        );
                                                                                     try {
                                                                                         if (window.console && typeof console.log === 'function') console
                                                                                             .log('mutation-observer illum ->', illum);
@@ -6545,7 +6711,7 @@ try {
                                         try {
                                             if ((iVal === null || iVal === undefined) && typeof obj
                                                 .illuminatedFraction !== 'undefined') iVal = obj
-                                            .illuminatedFraction;
+                                                .illuminatedFraction;
                                         } catch (e) {}
                                         try {
                                             if ((iVal === null || iVal === undefined) && obj && obj.ephemerides &&
