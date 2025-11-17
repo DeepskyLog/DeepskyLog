@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\Legacy;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TargetLegacy extends Model
+class ObjectName extends Model
 {
-    protected $table = 'objects';
+    protected $table = 'objectnames';
     protected $guarded = [];
     public $timestamps = false;
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\Legacy;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CometObjectLegacy extends Model
+class CometObject extends Model
 {
     protected $table = 'cometobjects';
     protected $guarded = [];
