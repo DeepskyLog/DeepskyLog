@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Bacon/BaconQrCode.git",
-                "reference": "f9cc1f52b5a463062251d666761178dbdb6b544f"
+                "reference": "fe259c55425b8178f77fb6d1f84ba2473e21ed55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Bacon/BaconQrCode/zipball/f9cc1f52b5a463062251d666761178dbdb6b544f",
-                "reference": "f9cc1f52b5a463062251d666761178dbdb6b544f",
+                "url": "https://api.github.com/repos/Bacon/BaconQrCode/zipball/fe259c55425b8178f77fb6d1f84ba2473e21ed55",
+                "reference": "fe259c55425b8178f77fb6d1f84ba2473e21ed55",
                 "shasum": ""
             },
             "require": {
@@ -27,8 +27,9 @@
             },
             "require-dev": {
                 "phly/keep-a-changelog": "^2.12",
-                "phpunit/phpunit": "^10.5.11 || 11.0.4",
+                "phpunit/phpunit": "^10.5.11 || ^11.0.4",
                 "spatie/phpunit-snapshot-assertions": "^5.1.5",
+                "spatie/pixelmatch-php": "^1.2.0",
                 "squizlabs/php_codesniffer": "^3.9"
             },
             "suggest": {
@@ -56,9 +57,9 @@
             "homepage": "https://github.com/Bacon/BaconQrCode",
             "support": {
                 "issues": "https://github.com/Bacon/BaconQrCode/issues",
-                "source": "https://github.com/Bacon/BaconQrCode/tree/v3.0.1"
+                "source": "https://github.com/Bacon/BaconQrCode/tree/v3.0.2"
             },
-            "time": "2024-10-01T13:55:55+00:00"
+            "time": "2025-11-16T22:59:48+00:00"
         },
         {
             "name": "barryvdh/laravel-dompdf",
@@ -5279,16 +5280,16 @@
         },
         {
             "name": "power-components/livewire-powergrid",
-            "version": "v6.7.0",
+            "version": "v6.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Power-Components/livewire-powergrid.git",
-                "reference": "88bf56b4952fd5fe217a7f91f30e780da61ebbba"
+                "reference": "8fc7b7f93f8b3a14ef7d404a39e0eb9bf0e79122"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Power-Components/livewire-powergrid/zipball/88bf56b4952fd5fe217a7f91f30e780da61ebbba",
-                "reference": "88bf56b4952fd5fe217a7f91f30e780da61ebbba",
+                "url": "https://api.github.com/repos/Power-Components/livewire-powergrid/zipball/8fc7b7f93f8b3a14ef7d404a39e0eb9bf0e79122",
+                "reference": "8fc7b7f93f8b3a14ef7d404a39e0eb9bf0e79122",
                 "shasum": ""
             },
             "require": {
@@ -5345,7 +5346,7 @@
             "homepage": "https://github.com/power-components/livewire-powergrid",
             "support": {
                 "issues": "https://github.com/Power-Components/livewire-powergrid/issues",
-                "source": "https://github.com/Power-Components/livewire-powergrid/tree/v6.7.0"
+                "source": "https://github.com/Power-Components/livewire-powergrid/tree/v6.7.1"
             },
             "funding": [
                 {
@@ -5353,7 +5354,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-06T12:08:05+00:00"
+            "time": "2025-11-15T13:23:58+00:00"
         },
         {
             "name": "pragmarx/google2fa",
@@ -9361,16 +9362,16 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "8.2.1",
+            "version": "8.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "18afc89787771029c09238e08ef5c6f6b64169b5"
+                "reference": "8d7491f2ee341c201b68cc7c3701d54703edd474"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/18afc89787771029c09238e08ef5c6f6b64169b5",
-                "reference": "18afc89787771029c09238e08ef5c6f6b64169b5",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/8d7491f2ee341c201b68cc7c3701d54703edd474",
+                "reference": "8d7491f2ee341c201b68cc7c3701d54703edd474",
                 "shasum": ""
             },
             "type": "component",
@@ -9414,9 +9415,9 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/8.2.1"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/8.2.2"
             },
-            "time": "2025-11-06T00:55:35+00:00"
+            "time": "2025-11-17T03:22:11+00:00"
         },
         {
             "name": "umpirsky/country-list",
