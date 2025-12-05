@@ -26,7 +26,7 @@
         "flatpickr": "^4.6.13",
         "leaflet": "^1.9.4",
         "leaflet-control-geocoder": "^3",
-        "leaflet.fullscreen": "^4.0.0",
+        "leaflet.fullscreen": "^5.0.0",
         "tailwindcss": "^4.1.7",
         "tinymce": "^8"
     }

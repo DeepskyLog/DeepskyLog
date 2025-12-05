@@ -26,7 +26,7 @@
         "livewire/livewire": "^3",
         "marineusde/larapex-charts": "^1.4",
         "monarobase/country-list": "^3.4",
-        "openspout/openspout": "^4.13",
+        "openspout/openspout": "^5.0",
         "petercoles/multilingual-language-list": "^1.16",
         "power-components/livewire-powergrid": "^6",
         "spatie/laravel-responsecache": "^7.0",

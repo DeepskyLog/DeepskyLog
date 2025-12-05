@@ -12,7 +12,7 @@ flatpickr.l10ns.default.firstDayOfWeek = 1;
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.fullscreen';
-import 'leaflet.fullscreen/Control.FullScreen.css';
+import 'leaflet.fullscreen/dist/Control.FullScreen.css';
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 import Geocoder from 'leaflet-control-geocoder';
 window.L = L;
