@@ -19,21 +19,22 @@
     + [X] Quick links
     + [X] Add a list of observations of this object, with a link to the observation.
     + [X] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
-    + [ ] Planets:
+    + [X] Planets:
       + [X] Add graph of magnitude and size over a year for planets.
       + [X] Part of / Belongs to?  Also for the deepsky objects.
-      + [ ] Test when not logged in
-    + [ ] Comets
-      + [ ] Add sketch of the week?
-      + [ ] Correct the quick links
-      + [ ] Add coordinates
-      + [ ] Add magnitude
-      + [ ] Add distance to Earth and Sun
-      + [ ] Change the exernal database
-      + [ ] Test when not logged in
+      + [X] Test when not logged in
+    + [X] Comets
+      + [X] Correct the quick links
+      + [X] Add sketch of the week
+      + [X] Add Number of observations, sketches, ...
+      + [X] Add observations, sketches, ...
+      + [X] Add coordinates.  Fix coordinates...
+      + [X] Test when not logged in
     + [ ] Moon
+      + [ ] Add information (coordinates, illumination, ...) for the moon
       + [ ] Add extra information for lunar features: diameter, depth, ...
       + [ ] Add graph of libration over a year for lunar features.
+      + [ ] Lunar eclipses
       + [ ] Test when not logged in
     + [ ] Sun
       + [ ] Add extra information for solar features: diameter, ...
@@ -41,8 +42,8 @@
       + [ ] Test when not logged in
     + [ ] Add star map created from DeepskyLog or from external source (stellarium web, <https://theskylive.com/planetarium#ra|21.926851512758986|dec|-24.11458301299462|fov|36.14999999999999>, ...)?
     + [ ] Add export to map?
+    + [ ] Automatically update the photometry: astronomy:updateCometPhotometry
     + [ ] Add lists which have this object
-
 + [ ] Administrator / Database expert pages to add / edit / delete objects
 + [ ] Add export to Report (does not work in current version of DeepskyLog), Maps (works partly)
 + [ ] Search targets, first by name, then by type, constellation, ...
