@@ -27,10 +27,10 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command(updateAchievementsCommand::class)->everySixHours();
-Schedule::command(updateUserTableCommand::class)->everyFiveMinutes();
+Schedule::command(updateUserTableCommand::class)->everyFifteenMinutes();
 Schedule::command(updateObservationsCommand::class)->daily();
-Schedule::command(updateOldInstrumentTableCommand::class)->everyFiveMinutes();
-Schedule::command(updateOldEyepieceTableCommand::class)->everyFiveMinutes();
-Schedule::command(updateOldLensTableCommand::class)->everyFifteenMinutes();
-Schedule::command(updateOldFilterTableCommand::class)->everyFifteenMinutes();
-Schedule::command(updateOldLocationTableCommand::class)->everyFifteenMinutes();
+Schedule::command(updateOldInstrumentTableCommand::class)->everyFifteenMinutes();
+Schedule::command(updateOldEyepieceTableCommand::class)->everyFifteenMinutes();
+Schedule::command(updateOldLensTableCommand::class)->everyThirtyMinutes();
+Schedule::command(updateOldFilterTableCommand::class)->everyThirtyMinutes();
+Schedule::command(updateOldLocationTableCommand::class)->everyThirtyMinutes();

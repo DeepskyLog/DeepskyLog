@@ -26,8 +26,9 @@ class Kernel extends ConsoleKernel
         // appear exactly once in `artisan schedule:list`.
         $schedule->command('astronomy:updateDeltat')->quarterly();
         $schedule->command('astronomy:updateOrbitalElements')->weeklyOn(1, '4:30');
-    // Incremental TNTSearch index update
-    $schedule->command('tntsearch:incremental-index --storage=storage/tnt')->everyFiveMinutes();
+        $schedule->command('astronomy:updateCometPhotometry')->weeklyOn(2, '4:30');
+        // Incremental TNTSearch index update
+        $schedule->command('tntsearch:incremental-index --storage=storage/tnt')->everyFiveMinutes();
     }
 
     /**
@@ -35,7 +36,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         // Commands in app/Console/Commands will be autoloaded by $this->load().
         require base_path('routes/console.php');
