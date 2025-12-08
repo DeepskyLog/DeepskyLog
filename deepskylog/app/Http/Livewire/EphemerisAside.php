@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Livewire;
 
 use Livewire\Component;
@@ -8,6 +9,7 @@ use App\Models\Location;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Targets\Moon as AstroMoon;
+use deepskylog\AstronomyLibrary\Targets\AstroTarget;
 use deepskylog\AstronomyLibrary\Time;
 
 class EphemerisAside extends Component
@@ -37,6 +39,10 @@ class EphemerisAside extends Component
     {
         // Broadcast an event so other Livewire components can update (Livewire v3 uses dispatch())
         try {
+            try {
+                \Illuminate\Support\Facades\Log::debug('EphemerisAside: updatedDate dispatching', ['date' => $this->date]);
+            } catch (\Throwable $_) {
+            }
             // Target commonly-listening components so server-side listeners receive the date change
             try {
                 $this->dispatch('ephemerisDateChanged', date: $this->date)->to('object-ephemerides');
@@ -62,10 +68,12 @@ class EphemerisAside extends Component
         try {
             try {
                 $this->dispatch('ephemerisDateChanged', date: $this->date)->to('object-ephemerides');
-            } catch (\Throwable $_) {}
+            } catch (\Throwable $_) {
+            }
             try {
                 $this->dispatch('ephemerisDateChanged', date: $this->date)->to('aladin-preview-info');
-            } catch (\Throwable $_) {}
+            } catch (\Throwable $_) {
+            }
             $this->dispatch('ephemerisDateChanged', date: $this->date);
         } catch (\Throwable $_) {
             // fallback
@@ -120,7 +128,7 @@ class EphemerisAside extends Component
             // Format with timezone
             $tz = $timezone;
             $this->sun_times = (
-                isset($sun_info['sunrise']) && is_int($sun_info['sunrise']) ? Carbon::createFromTimestamp($sun_info['sunrise'])->timezone($tz)->isoFormat('HH:mm') : '-' 
+                isset($sun_info['sunrise']) && is_int($sun_info['sunrise']) ? Carbon::createFromTimestamp($sun_info['sunrise'])->timezone($tz)->isoFormat('HH:mm') : '-'
             ) . ' / ' . (
                 isset($sun_info['sunset']) && is_int($sun_info['sunset']) ? Carbon::createFromTimestamp($sun_info['sunset'])->timezone($tz)->isoFormat('HH:mm') : '-'
             ) . ' / ' . (
@@ -175,14 +183,45 @@ class EphemerisAside extends Component
                     $greenwichSiderialTime = Time::apparentSiderialTimeGreenwich($d);
                     $deltaT = Time::deltaT($d);
 
-                    // calculate equatorial coords for moon (today/yesterday/tomorrow)
-                    $moonTarget->calculateEquatorialCoordinates($d->copy(), $geo_coords, $loc->elevation ?? 0.0);
-                    // calculate rise/transit/set
-                    $moonTarget->calculateEphemerides($geo_coords, $greenwichSiderialTime, $deltaT);
+                    // Calculate equatorial coords for the Moon using the local
+                    // astronomy library. This avoids unnecessary external proxy
+                    // calls (which were logging a "Moon" designation) and is
+                    // accurate for the Moon. Use the proxy only as a fallback
+                    // if the library calculation fails for some reason.
+                    try {
+                        $moonTarget->calculateEquatorialCoordinates($d->copy(), $geo_coords, $loc->elevation ?? 0.0);
+                        // calculate rise/transit/set
+                        $moonTarget->calculateEphemerides($geo_coords, $greenwichSiderialTime, $deltaT);
+                    } catch (\Throwable $_) {
+                        try {
+                            $proxyResult = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($moonTarget, $d->copy(), $geo_coords, $loc->elevation ?? 0.0, ['obj' => null]);
+                            if (! empty($proxyResult) && ! empty($proxyResult['coords'])) {
+                                $coords = $proxyResult['coords'];
+                                if (method_exists($moonTarget, 'setEquatorialCoordinates')) {
+                                    try {
+                                        $moonTarget->setEquatorialCoordinates($coords);
+                                        $moonTarget->calculateEphemerides($geo_coords, $greenwichSiderialTime, $deltaT);
+                                    } catch (\Throwable $_) {
+                                    }
+                                }
+                            }
+                        } catch (\Throwable $_) {
+                            // give up silently
+                        }
+                    }
 
-                    $moonRise = null; $moonSet = null;
-                    try { $moonRise = $moonTarget->getRising(); } catch (\Throwable $_) { $moonRise = null; }
-                    try { $moonSet = $moonTarget->getSetting(); } catch (\Throwable $_) { $moonSet = null; }
+                    $moonRise = null;
+                    $moonSet = null;
+                    try {
+                        $moonRise = $moonTarget->getRising();
+                    } catch (\Throwable $_) {
+                        $moonRise = null;
+                    }
+                    try {
+                        $moonSet = $moonTarget->getSetting();
+                    } catch (\Throwable $_) {
+                        $moonSet = null;
+                    }
 
                     $this->moon_rise = $moonRise instanceof \DateTimeInterface ? Carbon::instance($moonRise)->timezone($tz)->isoFormat('HH:mm') : '-';
                     $this->moon_set = $moonSet instanceof \DateTimeInterface ? Carbon::instance($moonSet)->timezone($tz)->isoFormat('HH:mm') : '-';

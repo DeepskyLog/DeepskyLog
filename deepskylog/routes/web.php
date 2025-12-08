@@ -79,6 +79,9 @@ Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@sho
 Route::get('/drawings', 'App\Http\Controllers\DrawingController@index')->name('drawings.index');
 Route::get('/cometdrawings', 'App\Http\Controllers\CometDrawingController@index')->name('cometdrawings.index');
 Route::get('/drawings/{observer}', 'App\Http\Controllers\DrawingController@show')->name('drawings.show');
+// Support object-scoped comet drawings and observer+object comet drawings
+Route::get('/cometdrawings/{observer}/{object}', 'App\Http\Controllers\CometDrawingController@showObserverObject')->name('cometdrawings.user.object');
+// Per-observer comet drawings (keep after the observer+object route to avoid capture)
 Route::get('/cometdrawings/{observer}', 'App\Http\Controllers\CometDrawingController@show')->name('cometdrawings.show');
 // Observations (deepsky + comet)
 Route::get('/observations', 'App\Http\Controllers\ObservationsController@index')->name('observations.index');
@@ -90,6 +93,9 @@ Route::get('/observations/{observer}/{object}', [App\Http\Controllers\Observatio
 Route::get('/observations/drawings/{observer}/{object}', [App\Http\Controllers\ObservationsController::class, 'showObserverObjectDrawings'])->name('observations.drawings.user.object');
 Route::get('/observations/{observer}', 'App\Http\Controllers\ObservationsController@show')->name('observations.show');
 // Separate comet observations pages
+// Comet observations: support object-scoped pages and observer pages
+Route::get('/cometobservations/{observer}/{object}', 'App\\Http\\Controllers\\ObservationsController@cometShowObserverObject')->name('observations.comet.user.object');
+Route::get('/cometobservations/{object}', 'App\\Http\\Controllers\\ObservationsController@cometIndexByObject')->name('observations.comet.object');
 Route::get('/cometobservations', 'App\\Http\\Controllers\\ObservationsController@cometIndex')->name('observations.comet.index');
 Route::get('/cometobservations/{observer}', 'App\\Http\\Controllers\\ObservationsController@cometShow')->name('observations.comet.show');
 

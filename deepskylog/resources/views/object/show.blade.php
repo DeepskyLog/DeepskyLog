@@ -459,6 +459,31 @@ $formatDec = function ($decDeg) {
                                     @endif
 
                                     @php
+                                        $__dsl_top_raw = is_array($comet_magnitudes ?? null)
+                                            ? count($comet_magnitudes)
+                                            : 0;
+                                        $__dsl_top_filtered = 0;
+                                        $__dsl_top_chart_points = [];
+                                        if (!empty($comet_magnitudes) && is_array($comet_magnitudes)) {
+                                            foreach ($comet_magnitudes as $p) {
+                                                $m = $p['mag'] ?? null;
+                                                if ($m === 99.9 || $m === -99.9) {
+                                                    continue;
+                                                }
+                                                if (is_numeric($m)) {
+                                                    $__dsl_top_chart_points[] = [
+                                                        'date' => $p['date'] ?? null,
+                                                        'mag' => floatval($m),
+                                                    ];
+                                                }
+                                            }
+                                            $__dsl_top_filtered = count($__dsl_top_chart_points);
+                                        }
+                                    @endphp
+
+                                    {{-- comet magnitude chart moved below the altitude/year graphs --}}
+
+                                    @php
                                         $partOf = null;
                                         $partOfUrl = null;
                                         $partOfLabel = __('Part of');
@@ -672,20 +697,109 @@ try {
                                             }
                                         @endphp
 
-                                        @livewire('aladin-preview-info', [
-                                            'objectId' => (string) ($session->id ?? ''),
-                                            'initial' => [
-                                                'contrast_reserve' => $initialCR,
-                                                'contrast_reserve_category' => $initialCRCat,
-                                                'contrast_used_location' => $initialCRLoc,
-                                                'contrast_used_instrument' => $initialCRInstr,
-                                                'optimum_detection_magnification' => $initialOptMag,
-                                                'optimum_eyepieces' => $initialOptEps,
-                                            ],
-                                        ])
+                                        @php $isCometLocal = strtolower(trim((string) ($session->source_type_raw ?? '')) ) === 'comet'; @endphp
+                                        @if (!$isCometLocal)
+                                            @livewire('aladin-preview-info', [
+                                                'objectId' => (string) ($session->id ?? ''),
+                                                'initial' => [
+                                                    'contrast_reserve' => $initialCR,
+                                                    'contrast_reserve_category' => $initialCRCat,
+                                                    'contrast_used_location' => $initialCRLoc,
+                                                    'contrast_used_instrument' => $initialCRInstr,
+                                                    'optimum_detection_magnification' => $initialOptMag,
+                                                    'optimum_eyepieces' => $initialOptEps,
+                                                ],
+                                            ])
+                                        @endif
                                     @endauth
 
                                 </table>
+
+                                {{-- Comet magnitude chart: show under Optimum detection magnification --}}
+                                @php $isCometLocal = strtolower(trim((string) ($session->source_type_raw ?? '')) ) === 'comet'; @endphp
+                                @if ($isCometLocal && $__dsl_top_filtered > 0)
+                                    <div class="mt-4">
+                                        <canvas id="comet-mag-chart-top" width="600" height="240"></canvas>
+                                    </div>
+
+                                    <script>
+                                        (function() {
+                                            try {
+                                                var pts = @json($__dsl_top_chart_points);
+                                                if (!Array.isArray(pts) || pts.length === 0) return;
+
+                                                var labels = pts.map(function(p) {
+                                                    return p.date || '';
+                                                });
+                                                var data = pts.map(function(p) {
+                                                    return p.mag;
+                                                });
+
+                                                function renderChart() {
+                                                    try {
+                                                        if (typeof Chart === 'undefined') {
+                                                            var s = document.createElement('script');
+                                                            s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+                                                            s.onload = function() {
+                                                                renderChart();
+                                                            };
+                                                            document.head.appendChild(s);
+                                                            return;
+                                                        }
+
+                                                        var ctx = document.getElementById('comet-mag-chart-top').getContext('2d');
+                                                        new Chart(ctx, {
+                                                            type: 'line',
+                                                            data: {
+                                                                labels: labels,
+                                                                datasets: [{
+                                                                    label: 'Magnitude',
+                                                                    data: data,
+                                                                    borderColor: '#3b82f6',
+                                                                    backgroundColor: 'rgba(59,130,246,0.1)',
+                                                                    tension: 0.2,
+                                                                    fill: true,
+                                                                }]
+                                                            },
+                                                            options: {
+                                                                scales: {
+                                                                    y: {
+                                                                        reverse: false,
+                                                                        title: {
+                                                                            display: true,
+                                                                            text: 'mag'
+                                                                        }
+                                                                    },
+                                                                    x: {
+                                                                        title: {
+                                                                            display: true,
+                                                                            text: 'date'
+                                                                        }
+                                                                    }
+                                                                },
+                                                                plugins: {
+                                                                    legend: {
+                                                                        display: false
+                                                                    }
+                                                                },
+                                                            }
+                                                        });
+                                                    } catch (e) {
+                                                        console.debug('[dsl] comet chart render failed', e);
+                                                    }
+                                                }
+
+                                                if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                                                    setTimeout(renderChart, 10);
+                                                } else {
+                                                    document.addEventListener('DOMContentLoaded', renderChart);
+                                                }
+                                            } catch (err) {
+                                                console.debug('[dsl] comet chart init failed', err);
+                                            }
+                                        })();
+                                    </script>
+                                @endif
 
                                 {{-- Altitude graph now rendered by the Livewire `object-ephemerides` component to avoid duplication --}}
 
@@ -1769,6 +1883,7 @@ try {
                                         <div class="text-xs text-gray-400">{{ __('Magnification:') }}</div>
                                         <div id="aladin-mag" class="font-medium">—</div>
                                     </div>
+
                                     <div class="mt-2">
                                         @auth
                                             <div>
@@ -4906,8 +5021,8 @@ try {
                     try {
                         installAladinPanShim(document.getElementById('aladin-lite-container'), aladin);
                     } catch (e) {}
-                    // Multiply RA by 15 before sending to Aladin (user requested behavior)
-                    ensureAladinCenterAndMark(aladin, centerRaDeg * 15.0, centerDecDeg, displayFovDeg,
+                    // RA is provided in decimal degrees; pass directly to Aladin helper
+                    ensureAladinCenterAndMark(aladin, centerRaDeg, centerDecDeg, displayFovDeg,
                         fovUsedDeg);
                     // After initial goto, adjust the display FOV iteratively so the Declination (vertical)
                     // FOV reported by Aladin matches the object's angular size (fovUsedDeg).
@@ -4934,7 +5049,7 @@ try {
                             installAladinPanShim(document.getElementById('aladin-lite-container'), al);
                         } catch (e) {}
                         // Multiply RA by 15 before sending to Aladin (user requested behavior)
-                        ensureAladinCenterAndMark(al, raGuess * 15.0, decGuess, displayFovDeg, fovUsedDeg);
+                        ensureAladinCenterAndMark(al, raGuess, decGuess, displayFovDeg, fovUsedDeg);
                         try {
                             callSetDisplayFovRepeated(al, fovUsedDeg, 24, 2, 160);
                         } catch (e) {}
@@ -5204,7 +5319,7 @@ try {
                         // attempt to re-center/add FOV circle using stored center
                         if (typeof __dslCenterRaDeg === 'number' && typeof __dslCenterDecDeg === 'number') {
                             try {
-                                addFovCircle(__dslCurrentAladin, __dslCenterRaDeg * 15.0, __dslCenterDecDeg,
+                                addFovCircle(__dslCurrentAladin, __dslCenterRaDeg, __dslCenterDecDeg,
                                     eyeFovDeg);
                             } catch (e) {}
                         }

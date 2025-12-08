@@ -132,6 +132,146 @@ class ObservationsController extends Controller
     }
 
     /**
+     * Show comet observations filtered by object slug (object-scoped comet list).
+     * URL: /cometobservations/{object}
+     */
+    public function cometIndexByObject(string $slug)
+    {
+        // Try to resolve slug to a comet object id/name. Support both modern and legacy tables.
+        $raw = (string) $slug;
+        $lower = mb_strtolower($raw);
+        $candidates = [$lower];
+        $slugified = Str::slug($raw, '-');
+        if ($slugified && $slugified !== $lower) $candidates[] = $slugified;
+        $nospace = str_replace(' ', '', $lower);
+        if ($nospace !== $lower) $candidates[] = $nospace;
+        $candidates[] = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower);
+        $candidates[] = str_replace('-', '', $lower);
+        $candidates = array_values(array_unique(array_filter($candidates)));
+
+        $objectName = null;
+        $objectId = null;
+
+        // Try modern CometObject first
+        try {
+            foreach ($candidates as $cand) {
+                $co = \App\Models\CometObject::whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                if ($co) {
+                    $objectName = $co->name;
+                    $objectId = $co->id;
+                    break;
+                }
+            }
+        } catch (\Throwable $_) {
+        }
+
+        // Try legacy cometobjects on mysqlOld
+        if (! $objectId) {
+            try {
+                foreach ($candidates as $cand) {
+                    $row = DB::connection('mysqlOld')->table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                    if ($row) {
+                        $objectName = $row->name ?? null;
+                        $objectId = $row->id ?? null;
+                        break;
+                    }
+                }
+            } catch (\Throwable $_) {
+            }
+        }
+
+        // If slug resolves to a user instead, forward to cometShow (observer view)
+        try {
+            $maybeUser = User::where('slug', $slug)->first();
+            if ($maybeUser && ! $objectId) {
+                return $this->cometShow($slug);
+            }
+        } catch (\Throwable $_) {
+        }
+
+        if (! $objectId) {
+            abort(404);
+        }
+
+        $comet = CometObservationsOld::where('objectid', $objectId)->orderBy('date', 'desc')->paginate(20, ['*'], 'comet')->appends(request()->query());
+
+        $fakeUser = (object) ['name' => $objectName ?? $slug, 'slug' => $slug, 'username' => null];
+
+        return view('observations.show', [
+            'user' => $fakeUser,
+            'deepsky' => collect(),
+            'comet' => $comet,
+            'mode' => 'comet',
+            'objectFilter' => true,
+            'objectName' => $objectName,
+        ]);
+    }
+
+    /**
+     * Show comet observations for a specific observer filtered by object.
+     * URL: /cometobservations/{observer}/{object}
+     */
+    public function cometShowObserverObject(string $observerSlug, string $objectSlug)
+    {
+        $user = User::where('slug', $observerSlug)->firstOrFail();
+
+        // Resolve object slug to comet object id (reuse logic above)
+        $raw = (string) $objectSlug;
+        $lower = mb_strtolower($raw);
+        $candidates = [$lower];
+        $slugified = Str::slug($raw, '-');
+        if ($slugified && $slugified !== $lower) $candidates[] = $slugified;
+        $nospace = str_replace(' ', '', $lower);
+        if ($nospace !== $lower) $candidates[] = $nospace;
+        $candidates[] = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower);
+        $candidates[] = str_replace('-', '', $lower);
+        $candidates = array_values(array_unique(array_filter($candidates)));
+
+        $objectName = null;
+        $objectId = null;
+        try {
+            foreach ($candidates as $cand) {
+                $co = \App\Models\CometObject::whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                if ($co) {
+                    $objectName = $co->name;
+                    $objectId = $co->id;
+                    break;
+                }
+            }
+        } catch (\Throwable $_) {
+        }
+        if (! $objectId) {
+            try {
+                foreach ($candidates as $cand) {
+                    $row = DB::connection('mysqlOld')->table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                    if ($row) {
+                        $objectName = $row->name ?? null;
+                        $objectId = $row->id ?? null;
+                        break;
+                    }
+                }
+            } catch (\Throwable $_) {
+            }
+        }
+
+        $query = CometObservationsOld::where('observerid', $user->username)->orderBy('date', 'desc');
+        if ($objectId) {
+            $query->where('objectid', $objectId);
+        }
+
+        $comet = $query->paginate(20, ['*'], 'comet')->appends(request()->query());
+
+        return view('observations.show', [
+            'user' => $user,
+            'deepsky' => collect(),
+            'comet' => $comet,
+            'mode' => 'comet',
+            'objectFilter' => true,
+            'objectName' => $objectName,
+        ]);
+    }
+
+    /**
      * Show comet-only observations for a specific observer
      */
     public function cometShow(string $slug)
@@ -229,6 +369,38 @@ class ObservationsController extends Controller
                 'comet' => collect(),
                 'mode' => 'deepsky',
             ]);
+        }
+
+        // Not a deepsky object — maybe this slug refers to a comet object (modern or legacy).
+        // If so, redirect to the comet drawings handler so comet drawings are displayed.
+        $objectSlug = $slug;
+        $objectId = null;
+        try {
+            foreach ($candidates as $cand) {
+                $co = \App\Models\CometObject::whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                if ($co) {
+                    $objectId = $co->id;
+                    break;
+                }
+            }
+        } catch (\Throwable $_) {
+        }
+
+        if (! $objectId) {
+            try {
+                foreach ($candidates as $cand) {
+                    $row = DB::connection('mysqlOld')->table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                    if ($row) {
+                        $objectId = $row->id ?? null;
+                        break;
+                    }
+                }
+            } catch (\Throwable $_) {
+            }
+        }
+
+        if ($objectId) {
+            return redirect()->route('cometdrawings.show', ['observer' => $objectSlug]);
         }
 
         abort(404);

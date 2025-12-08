@@ -24,6 +24,11 @@ use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 use deepskylog\AstronomyLibrary\Time;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
+use deepskylog\AstronomyLibrary\Targets\Elliptic;
+use deepskylog\AstronomyLibrary\Targets\Parabolic;
+use deepskylog\AstronomyLibrary\Targets\NearParabolic;
+use App\Helpers\HorizonsWrapper;
+use App\Helpers\HorizonsDesignation;
 
 class ObjectController extends Controller
 {
@@ -120,6 +125,23 @@ class ObjectController extends Controller
                     $record = DB::table('objects')->where('name', $o->name)->first();
                     if ($record) {
                         $type = 'deepsky';
+                    }
+                }
+
+                // Try slug candidates on cometobjects.slug so comet pages can be addressed by slug
+                if (! $record) {
+                    $co = null;
+                    foreach ($candidates as $cand) {
+                        try {
+                            $co = DB::table('cometobjects')->where('slug', $cand)->first();
+                        } catch (\Throwable $_) {
+                            $co = null;
+                        }
+                        if ($co) break;
+                    }
+                    if ($co) {
+                        $record = $co;
+                        $type = 'comet';
                     }
                 }
 
@@ -601,6 +623,12 @@ class ObjectController extends Controller
             'pa' => null,
         ];
 
+        // Track if a wrapper-provided Horizons coordinate was used for this request.
+        // This ensures later ephemerides calculations do not overwrite wrapper results.
+        $wrapperUsedGlobal = false;
+        $wrapperRaHours = null;
+        $wrapperDecDeg = null;
+
         // Location and observations are not relevant; pass empty arrays where session.show expects them
         $location = null;
         $image = null;
@@ -619,6 +647,55 @@ class ObjectController extends Controller
             // Format RA/Dec for human readable output using runtime DeepskyObject
             $session->ra = DeepskyObject::formatRa($record->ra);
             $session->decl = DeepskyObject::formatDec($record->decl);
+        }
+
+        // Prefer project wrapper Horizons diagnostics for comets when available
+        try {
+            $isComet = ($sourceTypeRaw === 'comet' || $type === 'comet') || (isset($record->name) && preg_match('/\b(\d{1,4}P|C\/\d{4}[A-Z0-9-]*)\b/i', $record->name));
+            if ($isComet) {
+                // Build canonical candidate list for Horizons lookup
+                $cands = [];
+                // Prefer a canonicalized designation for consistent vendor queries
+                $canon = HorizonsDesignation::canonicalize($record->name ?? null);
+                if ($canon) $cands[] = $canon;
+                // Also add any short numeric periodic code if present
+                if (! empty($record->name) && preg_match('/\b(\d{1,4}P|C\/\d{4}[A-Z0-9-]*)\b/i', $record->name, $m)) {
+                    $short = HorizonsDesignation::canonicalize(strtoupper($m[1]));
+                    if ($short) $cands[] = $short;
+                }
+                $res = HorizonsWrapper::latestCoordinatesForDesignation($cands, null, 86400);
+                if ($res && isset($res['ra_hours']) && isset($res['dec_deg'])) {
+                    $session->ra = \App\Models\DeepskyObject::formatRa($res['ra_hours']);
+                    $session->decl = \App\Models\DeepskyObject::formatDec($res['dec_deg']);
+                    // Preserve wrapper coords for later ephemerides computation
+                    $wrapperUsedGlobal = true;
+                    $wrapperRaHours = $res['ra_hours'];
+                    $wrapperDecDeg = $res['dec_deg'];
+                    // Force skipping any external Horizons helper for this request
+                    $forceUseWrapperSkipHorizons = true;
+                    // Provide initial ephemerides payload so Livewire mounts with wrapper coords
+                    try {
+                        $ephemerides = [
+                            'date' => \Carbon\Carbon::now()->toDateString(),
+                            'raDeg' => (float)$res['ra_hours'] * 15.0,
+                            'decDeg' => (float)$res['dec_deg'],
+                            // Mark that these coordinates came from the server-side wrapper
+                            // so Livewire can avoid re-calling the external Horizons helper.
+                            '_usedWrapper' => true,
+                            '_wrapper_source_file' => $res['source_file'] ?? null,
+                        ];
+                    } catch (\Throwable $_) {
+                        // ignore
+                    }
+                    try {
+                        Log::info('ObjectController: using HorizonsWrapper coords for page', ['file' => $res['source_file'] ?? null, 'ra_hours' => $res['ra_hours'], 'dec_deg' => $res['dec_deg'], 'object' => $record->name ?? null]);
+                    } catch (\Throwable $_) {
+                        // ignore logging error
+                    }
+                }
+            }
+        } catch (\Throwable $_) {
+            // ignore helper failures
         }
 
         // Compute contrast reserve for deep-sky objects when possible
@@ -968,13 +1045,26 @@ class ObjectController extends Controller
 
         // Populate additional display fields if present on the legacy objects row.
         // Use common column names and fallbacks where appropriate.
-        $session->mag = $record->mag;
-        $session->diam1 = round($record->diam1 / 60.0, 1);
-        $session->diam2 = round($record->diam2 / 60.0, 1);
+        // Populate numeric display fields defensively: some source tables (eg. comets)
+        // may not provide these columns. Use null when missing and only perform
+        // numeric transformations when values are present and numeric.
+        $session->mag = isset($record->mag) ? $record->mag : null;
+
+        if (isset($record->diam1) && is_numeric($record->diam1)) {
+            $session->diam1 = round($record->diam1 / 60.0, 1);
+        } else {
+            $session->diam1 = null;
+        }
+        if (isset($record->diam2) && is_numeric($record->diam2)) {
+            $session->diam2 = round($record->diam2 / 60.0, 1);
+        } else {
+            $session->diam2 = $session->diam1;
+        }
+
         // surface brightness column sometimes abbreviated as subr or sb or surface_brightness
-        $session->subr = round($record->subr, 1);
+        $session->subr = (isset($record->subr) && is_numeric($record->subr)) ? round($record->subr, 1) : null;
         // position angle: pa is common
-        $session->pa = $record->pa;
+        $session->pa = isset($record->pa) ? $record->pa : null;
 
         // If this is a deepsky object, attempt to resolve the legacy type code to a human-friendly label
         if (($type === 'deepsky' || $type === 'objects') && isset($record->type)) {
@@ -1072,11 +1162,77 @@ class ObjectController extends Controller
             $canonicalSlug = null;
         }
 
+        // Request-scoped guard to force skipping any external Horizons helper calls
+        // when wrapper-provided coordinates are available.
+        $forceUseWrapperSkipHorizons = false;
+
+        // Early: prefer project wrapper Horizons diagnostics for comets when available.
+        // Doing this early ensures downstream ephemerides code and Livewire mounting
+        // can observe wrapper-provided coordinates and avoid re-calling the external
+        // Horizons helper.
+        try {
+            $isCometEarly = ($sourceTypeRaw === 'comet' || $type === 'comet') || (isset($record->name) && preg_match('/\b(\d{1,4}P|C\/\d{4}[A-Z0-9-]*)\b/i', $record->name));
+            if ($isCometEarly) {
+                $earlyCands = [];
+                $canonName = \App\Helpers\HorizonsDesignation::canonicalize($record->name ?? null);
+                if ($canonName) $earlyCands[] = $canonName;
+                if (! empty($record->name) && preg_match('/\b(\d{1,4}P|C\/\d{4}[A-Z0-9-]*)\b/i', $record->name, $mm)) {
+                    $short = \App\Helpers\HorizonsDesignation::canonicalize(strtoupper($mm[1]));
+                    if ($short) $earlyCands[] = $short;
+                }
+                if (! empty($earlyCands)) {
+                    $earlyRes = \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($earlyCands, null, 86400);
+                    if ($earlyRes && isset($earlyRes['ra_hours']) && isset($earlyRes['dec_deg'])) {
+                        // set session RA/Dec display and preserve wrapper coords for later logic
+                        try {
+                            $session->ra = \App\Models\DeepskyObject::formatRa($earlyRes['ra_hours']);
+                            $session->decl = \App\Models\DeepskyObject::formatDec($earlyRes['dec_deg']);
+                        } catch (\Throwable $_) {
+                            // ignore formatting errors
+                        }
+                        $wrapperUsedGlobal = true;
+                        $wrapperRaHours = $earlyRes['ra_hours'];
+                        $wrapperDecDeg = $earlyRes['dec_deg'];
+                        // Strong guard: if we found wrapper coords early, force skipping
+                        // any subsequent calls to the external Horizons helper for
+                        // this request so wrapper results remain authoritative.
+                        $forceUseWrapperSkipHorizons = true;
+                        try {
+                            $ephemerides = [
+                                'date' => \Carbon\Carbon::now()->toDateString(),
+                                'raDeg' => (float)$earlyRes['ra_hours'] * 15.0,
+                                'decDeg' => (float)$earlyRes['dec_deg'],
+                                // Mark these as wrapper-provided so Livewire can avoid recalc
+                                '_usedWrapper' => true,
+                                '_wrapper_source_file' => $earlyRes['source_file'] ?? null,
+                            ];
+                        } catch (\Throwable $_) {
+                            // ignore
+                        }
+                        try {
+                            Log::info('ObjectController: early using HorizonsWrapper coords for page', ['file' => $earlyRes['source_file'] ?? null, 'ra_hours' => $earlyRes['ra_hours'], 'dec_deg' => $earlyRes['dec_deg'], 'object' => $record->name ?? null]);
+                        } catch (\Throwable $_) {
+                            // ignore logging errors
+                        }
+                    }
+                }
+            }
+        } catch (\Throwable $_) {
+            // ignore
+        }
+
+        // Ensure observation-related variables are defined so view compact() doesn't fail
+        $totalObservations = $totalObservations ?? null;
+        $drawings = $drawings ?? null;
+        $yourObservations = $yourObservations ?? null;
+        $yourDrawings = $yourDrawings ?? null;
+
         // Compute legacy observation/drawing counts when possible so the view shows accurate totals
         try {
             if (! empty($session->name)) {
-                // Use the legacy ObservationsOld helper when available
-                if (class_exists(\App\Models\ObservationsOld::class)) {
+                // Skip legacy name-based counts for planets — legacy table rows for planet names
+                // can be noisy. Only consult the legacy `observations` table for non-planet objects.
+                if ((($session->source_type_raw ?? '') !== 'planet') && class_exists(\App\Models\ObservationsOld::class)) {
                     try {
                         $totalObservations = \App\Models\ObservationsOld::getObservationsCountForObject($session->name);
                     } catch (\Throwable $_) {
@@ -1091,9 +1247,88 @@ class ObjectController extends Controller
                         // ignore
                     }
                 }
+                // If this object is a comet, also attempt to read legacy comet observations
+                try {
+                    if (class_exists(\App\Models\CometObservationsOld::class)) {
+                        $hasCometObsTable = false;
+                        try {
+                            $hasCometObsTable = DB::connection('mysqlOld')->getSchemaBuilder()->hasTable('cometobservations');
+                        } catch (\Throwable $_) {
+                            $hasCometObsTable = false;
+                        }
+
+                        if ($hasCometObsTable) {
+                            $coObjId = null;
+                            // Prefer numeric session id when available (legacy cometobservations.objectid stores numeric comet id)
+                            if (isset($session->id) && is_numeric($session->id)) {
+                                $coObjId = (int) $session->id;
+                            } else {
+                                // Try resolving by modern CometObject (legacy table fallback removed)
+                                try {
+                                    $coModel = \App\Models\CometObject::where('name', $session->name ?? '')->first();
+                                    if ($coModel) $coObjId = $coModel->id ?? null;
+                                } catch (\Throwable $_) {
+                                }
+                                if (empty($coObjId)) {
+                                    try {
+                                        if (class_exists(\App\Models\CometObject::class)) {
+                                            $coOld = \App\Models\CometObject::where('name', $session->name ?? '')->first();
+                                            if ($coOld) $coObjId = $coOld->id ?? null;
+                                        }
+                                    } catch (\Throwable $_) {
+                                    }
+                                }
+                            }
+
+                            if (! empty($coObjId)) {
+                                try {
+                                    $totalObservations = \App\Models\CometObservationsOld::where('objectid', $coObjId)->count();
+                                } catch (\Throwable $_) {
+                                    // ignore and leave existing totalObservations
+                                }
+
+                                try {
+                                    // Provide drawings as a numeric count; view will handle numeric values
+                                    $drawings = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('hasDrawing', 1)->count();
+                                } catch (\Throwable $_) {
+                                    $drawings = $drawings ?? null;
+                                }
+
+                                // Provide per-user counts when user is authenticated
+                                try {
+                                    if (Auth::check()) {
+                                        $uname = Auth::user()->username ?? Auth::user()->slug ?? null;
+                                        if (! empty($uname)) {
+                                            $yourObservations = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('observerid', $uname)->count();
+                                            $yourDrawings = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('observerid', $uname)->where('hasDrawing', 1)->count();
+                                        }
+                                    }
+                                } catch (\Throwable $_) {
+                                    // ignore per-user errors
+                                }
+                            }
+                        }
+                    }
+                } catch (\Throwable $_) {
+                    // ignore comet counting errors
+                }
             }
         } catch (\Throwable $_) {
             // defensive: ignore count errors and leave variables as-is
+        }
+
+        // Defensive override: ensure planets never show legacy observation counts.
+        // There are currently no planet observations in the database; force zeros
+        // to avoid misleading totals derived from legacy name-based rows.
+        try {
+            if (($session->source_type_raw ?? '') === 'planet' || ($type ?? '') === 'planet') {
+                $totalObservations = 0;
+                $drawings = 0;
+                $yourObservations = 0;
+                $yourDrawings = 0;
+            }
+        } catch (\Throwable $_) {
+            // ignore
         }
 
         // Atlas page: if a user is logged in and they have a standardAtlasCode set,
@@ -1418,11 +1653,29 @@ class ObjectController extends Controller
                                 $geo = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
                                 $height = $userLocation->elevation ?? 0.0;
                                 try {
-                                    // calculateEquatorialCoordinates populates topocentric coords
-                                    if (method_exists($planet, 'calculateEquatorialCoordinates')) {
-                                        $planet->calculateEquatorialCoordinates($date, $geo, $height);
-                                    } elseif (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-                                        $planet->calculateApparentEquatorialCoordinates($date);
+                                    // Prefer wrapper-provided coordinates via proxy; fall back to library
+                                    try {
+                                        $proxyRes = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($planet, $date, $geo, $height, ['obj' => null, 'designation' => $planetName ?? null]);
+                                    } catch (\Throwable $_) {
+                                        $proxyRes = null;
+                                    }
+                                    if (empty($proxyRes) || empty($proxyRes['usedWrapper'])) {
+                                        // calculateEquatorialCoordinates populates topocentric coords
+                                        if (method_exists($planet, 'calculateEquatorialCoordinates')) {
+                                            $planet->calculateEquatorialCoordinates($date, $geo, $height);
+                                        } elseif (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
+                                            $planet->calculateApparentEquatorialCoordinates($date);
+                                        }
+                                    } else {
+                                        // Apply wrapper coords into the planet instance so subsequent
+                                        // accessors (getEquatorialCoordinatesToday, etc.) can read them.
+                                        $coords = $proxyRes['coords'] ?? null;
+                                        if ($coords && method_exists($planet, 'setEquatorialCoordinates')) {
+                                            try {
+                                                $planet->setEquatorialCoordinates($coords);
+                                            } catch (\Throwable $_) {
+                                            }
+                                        }
                                     }
                                 } catch (\Throwable $_) {
                                     // fallback to apparent if topocentric calc fails
@@ -1454,7 +1707,7 @@ class ObjectController extends Controller
                                 } else {
                                     $coords = null;
                                 }
-                                if ($coords) {
+                                if (empty($usedWrapper) && $coords) {
                                     // EquatorialCoordinates provides human-readable printing methods
                                     try {
                                         if (method_exists($coords, 'printRA')) {
@@ -2124,6 +2377,787 @@ class ObjectController extends Controller
             // ignore logging failures
         }
 
-        return response()->view('object.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId', 'ephemerides'));
+        // If ephemerides still empty and this is a comet, attempt a minimal
+        // server-side calculation so the initial inline payload contains
+        // coordinates when possible. Keep this logic compact to avoid heavy
+        // nesting and reduce risk of errors during page render.
+        try {
+            if (empty($ephemerides) && ($sourceTypeRaw === 'comet' || $type === 'comet')) {
+                $authUser = Auth::user();
+                $userLocation = $authUser?->standardLocation ?? null;
+                if ($userLocation && Schema::hasTable('comets_orbital_elements')) {
+                    $nameToMatch = $record->name ?? null;
+                    if (! empty($nameToMatch)) {
+                        $cometRow = DB::table('comets_orbital_elements')->where('name', $nameToMatch)->first();
+                        if (! $cometRow) {
+                            $clean = preg_replace('/\s+/', ' ', trim($nameToMatch));
+                            $cometRow = DB::table('comets_orbital_elements')->where('name', 'like', "%{$clean}%")->first();
+                        }
+                        // Fallback: some comet names include the discoverer in
+                        // parentheses (e.g. "C/2023 A3 (Tsuchinshan-ATLAS)").
+                        // Try matching after removing parentheses from the
+                        // stored name to handle records where the object
+                        // name in our objects table doesn't include them.
+                        if (! $cometRow) {
+                            try {
+                                $cleanNoPar = preg_replace('/[()]/', '', $clean);
+                                $pattern = '%' . strtolower($cleanNoPar) . '%';
+                                $cometRow = DB::table('comets_orbital_elements')
+                                    ->whereRaw("LOWER(REPLACE(REPLACE(name, '(', ''), ')', '')) LIKE ?", [$pattern])
+                                    ->first();
+                            } catch (\Throwable $_) {
+                                // ignore DB errors and continue without cometRow
+                                $cometRow = null;
+                            }
+                        }
+                        if ($cometRow) {
+                            try {
+                                Log::info('ObjectController: comets_orbital_elements match', ['name' => $cometRow->name ?? null, 'Tp' => $cometRow->Tp ?? null, 'epoch' => $cometRow->epoch ?? null]);
+                            } catch (\Throwable $_) {
+                                // ignore logging errors
+                            }
+                            // Basic perihelion parsing
+                            $peri = null;
+                            $Tp = $cometRow->Tp ?? null;
+                            if ($Tp !== null && is_numeric($Tp)) {
+                                $tpInt = (int)$Tp;
+                                $tpStr = str_pad((string)$tpInt, 8, '0', STR_PAD_LEFT);
+                                $Y = substr($tpStr, 0, 4);
+                                $M = substr($tpStr, 4, 2) ?: '01';
+                                $D = substr($tpStr, 6, 2) ?: '01';
+                                if ($M === '00') $M = '01';
+                                if ($D === '00') $D = '01';
+                                $peri = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', "{$Y}-{$M}-{$D} 12:00:00", 'UTC');
+                            } elseif (! empty($Tp)) {
+                                try {
+                                    $peri = \Carbon\Carbon::parse($Tp);
+                                } catch (\Throwable $_) {
+                                    $peri = null;
+                                }
+                            }
+                            if (! $peri && isset($cometRow->epoch) && is_numeric($cometRow->epoch)) {
+                                try {
+                                    $peri = Time::fromJd($cometRow->epoch);
+                                } catch (\Throwable $_) {
+                                    $peri = null;
+                                }
+                            }
+                            if (! $peri) $peri = \Carbon\Carbon::now('UTC');
+
+                            // semi-major axis
+                            $a = null;
+                            if (isset($cometRow->q) && isset($cometRow->e) && ((float)$cometRow->e != 1.0)) {
+                                $a = (float)$cometRow->q / (1.0 - (float)$cometRow->e);
+                            } elseif (isset($cometRow->a)) {
+                                $a = (float)$cometRow->a;
+                            }
+
+                            if ($a !== null) {
+                                $date = \Carbon\Carbon::now();
+                                try {
+                                    $date = $date->timezone($userLocation->timezone ?? config('app.timezone'));
+                                } catch (\Throwable $_) {
+                                }
+                                $geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
+
+                                $eVal = isset($cometRow->e) ? (float)$cometRow->e : 0.0;
+                                $qVal = isset($cometRow->q) ? (float)$cometRow->q : null;
+                                $coords = null;
+
+                                try {
+                                    if ($eVal === 1.0) {
+                                        // Parabolic
+                                        $par = new Parabolic();
+                                        $par->setOrbitalElements((float)$qVal, (float)($cometRow->i ?? 0.0), (float)($cometRow->w ?? 0.0), (float)($cometRow->node ?? 0.0), $peri);
+                                        $coordsFromProxy = false;
+                                        try {
+                                            try {
+                                                $proxyRes = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($par, $date, $geo_coords, $userLocation->elevation ?? 0.0, ['designation' => $hDesig ?? null, 'obj' => $record ?? null]);
+                                            } catch (\Throwable $_) {
+                                                $proxyRes = null;
+                                            }
+                                            if (empty($proxyRes) || empty($proxyRes['usedWrapper'])) {
+                                                try {
+                                                    $par->calculateEquatorialCoordinates($date, $geo_coords);
+                                                } catch (\Throwable $_) {
+                                                    try {
+                                                        $par->calculateEquatorialCoordinates($date);
+                                                    } catch (\Throwable $_) {
+                                                    }
+                                                }
+                                            } else {
+                                                $coords = $proxyRes['coords'] ?? null;
+                                                $coordsFromProxy = true;
+                                                if ($coords && method_exists($par, 'setEquatorialCoordinates')) {
+                                                    try {
+                                                        $par->setEquatorialCoordinates($coords);
+                                                    } catch (\Throwable $_) {
+                                                    }
+                                                }
+                                            }
+                                        } catch (\Throwable $_) { /* ignore */
+                                        }
+                                        if (!empty($coordsFromProxy)) {
+                                            // coords already set from proxy
+                                        } else {
+                                            if (method_exists($par, 'getEquatorialCoordinatesToday')) $coords = $par->getEquatorialCoordinatesToday();
+                                            elseif (method_exists($par, 'getEquatorialCoordinates')) $coords = $par->getEquatorialCoordinates();
+                                        }
+                                    } elseif ($eVal < 1.0) {
+                                        // Elliptic
+                                        $ell = new Elliptic();
+                                        $ell->setOrbitalElements((float)$a, $eVal, (float)($cometRow->i ?? 0.0), (float)($cometRow->w ?? 0.0), (float)($cometRow->node ?? 0.0), $peri);
+                                        try {
+                                            // Prefer Horizons ephemerides when supported by the library.
+                                            try {
+                                                if (method_exists($ell, 'setUseHorizons')) {
+                                                    $ell->setUseHorizons(true);
+                                                    // Attempt to derive a Horizons designation from the orbital row or object name.
+                                                    // Prefer the full resolved object name (e.g. "12P/Pons-Brooks") as the
+                                                    // Horizons designation. Fall back to legacy `designation` or a
+                                                    // short-code extracted from the name when full name is not available.
+                                                    $hDesig = null;
+                                                    $fullName = $record->name ?? ($cometRow->name ?? null);
+                                                    if (! empty($fullName)) {
+                                                        $hDesig = \App\Helpers\HorizonsDesignation::canonicalize((string) $fullName);
+                                                    } elseif (isset($cometRow->designation) && ! empty($cometRow->designation)) {
+                                                        $hDesig = \App\Helpers\HorizonsDesignation::canonicalize((string) $cometRow->designation);
+                                                    } else {
+                                                        $nameCandidate = $cometRow->name ?? $record->name ?? null;
+                                                        if (! empty($nameCandidate) && preg_match('/\b([0-9]{1,4}P|C\/\d{4}[A-Z0-9-]*)\b/i', $nameCandidate, $m)) {
+                                                            $hDesig = \App\Helpers\HorizonsDesignation::canonicalize(strtoupper($m[1]));
+                                                        }
+                                                    }
+                                                    if ($hDesig && method_exists($ell, 'setHorizonsDesignation')) {
+                                                        $ell->setHorizonsDesignation($hDesig);
+                                                    }
+                                                }
+                                            } catch (\Throwable $_) {
+                                                // non-fatal: fall back to local propagation if Horizons not available
+                                            }
+                                            // If Horizons mode is enabled, Horizons helper expects UTC datetimes.
+                                            $calcDate = $date;
+                                            try {
+                                                if (method_exists($ell, 'setUseHorizons') && $ell instanceof Elliptic && property_exists($ell, '_useHorizons')) {
+                                                    // Use a UTC clone so the helper receives UTC time string
+                                                    $calcDate = $date->copy()->timezone('UTC');
+                                                }
+                                            } catch (\Throwable $_) {
+                                                $calcDate = $date;
+                                            }
+
+                                            // If an earlier wrapper lookup supplied coordinates for this request,
+                                            // prefer those and skip calling the Horizons helper again. Honor
+                                            // the explicit request-scoped guard `$forceUseWrapperSkipHorizons`
+                                            // if it was set during early lookup so we never hit the helper.
+                                            try {
+                                                if (! empty($forceUseWrapperSkipHorizons) && is_numeric($wrapperRaHours) && is_numeric($wrapperDecDeg)) {
+                                                    $coords = new EquatorialCoordinates($wrapperRaHours, $wrapperDecDeg);
+                                                    $usedWrapper = true;
+                                                    $raDeg = (float)$wrapperRaHours * 15.0;
+                                                    $decDeg = (float)$wrapperDecDeg;
+                                                    $wrapperUsedGlobal = true;
+                                                    \Illuminate\Support\Facades\Log::info('Elliptic: using HorizonsWrapper coords (controller, forced skip)', ['ra_hours' => $wrapperRaHours, 'dec_deg' => $wrapperDecDeg, 'designation' => $hDesig ?? null]);
+                                                } elseif (! empty($wrapperUsedGlobal) && is_numeric($wrapperRaHours) && is_numeric($wrapperDecDeg)) {
+                                                    $coords = new EquatorialCoordinates($wrapperRaHours, $wrapperDecDeg);
+                                                    $usedWrapper = true;
+                                                    $raDeg = (float)$wrapperRaHours * 15.0;
+                                                    $decDeg = (float)$wrapperDecDeg;
+                                                    \Illuminate\Support\Facades\Log::info('Elliptic: using HorizonsWrapper coords (controller, global)', ['ra_hours' => $wrapperRaHours, 'dec_deg' => $wrapperDecDeg, 'designation' => $hDesig ?? null]);
+                                                } else {
+                                                    // Check project wrapper diagnostics and use them if available
+                                                    try {
+                                                        // Build canonical candidate list for wrapper lookup
+                                                        $candList = [];
+                                                        if (! empty($hDesig)) {
+                                                            $candList[] = \App\Helpers\HorizonsDesignation::canonicalize($hDesig);
+                                                        }
+                                                        if (! empty($hDesig) && preg_match('/\b(\d{1,4}P|C\/\d{4}[A-Z0-9-]*)\b/i', $hDesig, $mm)) {
+                                                            $candList[] = \App\Helpers\HorizonsDesignation::canonicalize(strtoupper($mm[1]));
+                                                        }
+                                                        // Also include the record slug/name to match wrapper runs that used alternate identifiers
+                                                        try {
+                                                            if (isset($record) && ! empty($record->slug)) {
+                                                                $candList[] = \App\Helpers\HorizonsDesignation::canonicalize($record->slug);
+                                                            }
+                                                        } catch (\Throwable $_) {
+                                                        }
+                                                        try {
+                                                            if (! empty($fullName) && ($fullName !== ($hDesig ?? null))) {
+                                                                $candList[] = \App\Helpers\HorizonsDesignation::canonicalize($fullName);
+                                                            }
+                                                        } catch (\Throwable $_) {
+                                                        }
+                                                        $candList = array_values(array_unique(array_filter($candList)));
+                                                        $wrapperCoords = \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($candList, $calcDate, 86400, 120);
+                                                        if ($wrapperCoords && isset($wrapperCoords['ra_hours']) && isset($wrapperCoords['dec_deg'])) {
+                                                            try {
+                                                                $coords = new EquatorialCoordinates($wrapperCoords['ra_hours'], $wrapperCoords['dec_deg']);
+                                                                // Treat wrapper result as authoritative for this request
+                                                                $usedWrapper = true;
+                                                                $raDeg = (float)$wrapperCoords['ra_hours'] * 15.0;
+                                                                $decDeg = (float)$wrapperCoords['dec_deg'];
+                                                                // Also record globally so other blocks can observe we're using wrapper
+                                                                $wrapperUsedGlobal = true;
+                                                                $wrapperRaHours = $wrapperCoords['ra_hours'];
+                                                                $wrapperDecDeg = $wrapperCoords['dec_deg'];
+                                                                \Illuminate\Support\Facades\Log::info('Elliptic: using HorizonsWrapper coords (controller)', ['file' => $wrapperCoords['source_file'] ?? null, 'ra_hours' => $wrapperCoords['ra_hours'], 'dec_deg' => $wrapperCoords['dec_deg'], 'designation' => $hDesig ?? null]);
+                                                            } catch (\Throwable $_) {
+                                                                // failed to construct coords; fall back to helper
+                                                            }
+                                                        }
+                                                    } catch (\Throwable $_) {
+                                                        // ignore wrapper failures
+                                                    }
+                                                }
+                                            } catch (\Throwable $_) {
+                                                // ignore global wrapper handling errors
+                                            }
+
+                                            // Only call the Horizons helper if we don't already have coords from the wrapper
+                                            if (empty($coords)) {
+                                                // Perform a permissive wrapper lookup immediately before calling the Horizons helper
+                                                try {
+                                                    $robustCandidates = $candList ?? [];
+                                                    if (! empty($hDesig)) $robustCandidates[] = $hDesig;
+                                                    try {
+                                                        if (! empty($fullName)) $robustCandidates[] = $fullName;
+                                                    } catch (\Throwable $_) {
+                                                    }
+                                                    try {
+                                                        if (isset($record) && ! empty($record->slug)) $robustCandidates[] = $record->slug;
+                                                    } catch (\Throwable $_) {
+                                                    }
+                                                    $extra = [];
+                                                    foreach ($robustCandidates as $rc) {
+                                                        if (! $rc) continue;
+                                                        $s = trim((string)$rc);
+                                                        $extra[] = $s;
+                                                        $extra[] = strtoupper($s);
+                                                        $extra[] = strtolower($s);
+                                                        $extra[] = str_replace('/', ' ', $s);
+                                                        $extra[] = str_replace(' ', '', $s);
+                                                    }
+                                                    $robustCandidates = array_values(array_unique(array_filter(array_merge($robustCandidates, $extra))));
+                                                    $robWrapper = \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($robustCandidates, $calcDate, 7 * 86400, 3600);
+                                                    if ($robWrapper && isset($robWrapper['ra_hours']) && isset($robWrapper['dec_deg'])) {
+                                                        $coords = new EquatorialCoordinates($robWrapper['ra_hours'], $robWrapper['dec_deg']);
+                                                        $usedWrapper = true;
+                                                        $raDeg = (float)$robWrapper['ra_hours'] * 15.0;
+                                                        $decDeg = (float)$robWrapper['dec_deg'];
+                                                        $wrapperUsedGlobal = true;
+                                                        $wrapperRaHours = $robWrapper['ra_hours'];
+                                                        $wrapperDecDeg = $robWrapper['dec_deg'];
+                                                        \Illuminate\Support\Facades\Log::info('Elliptic: using HorizonsWrapper coords (pre-call robust)', ['file' => $robWrapper['source_file'] ?? null, 'ra_hours' => $robWrapper['ra_hours'], 'dec_deg' => $robWrapper['dec_deg'], 'designation' => $hDesig ?? null]);
+                                                    }
+                                                } catch (\Throwable $_) {
+                                                    // ignore robust probe failures and continue
+                                                }
+
+                                                if (empty($coords)) {
+                                                    try {
+                                                        \Illuminate\Support\Facades\Log::info('Elliptic: calling Horizons helper', [
+                                                            'designation' => $hDesig ?? null,
+                                                            'date_utc' => $calcDate->toIso8601String(),
+                                                            'object' => $record->name ?? null,
+                                                        ]);
+                                                    } catch (\Throwable $_) {
+                                                        // ignore logging errors
+                                                    }
+
+                                                    // Use centralized proxy to consult HorizonsWrapper first
+                                                    try {
+                                                        $proxyResult = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($ell, $calcDate, $geo_coords, $userLocation->elevation ?? 0.0, ['designation' => $hDesig ?? null, 'obj' => $record ?? null]);
+                                                        if (!empty($proxyResult) && !empty($proxyResult['usedWrapper'])) {
+                                                            $coords = $proxyResult['coords'] ?? null;
+                                                            $usedWrapper = true;
+                                                            $wrapperUsedGlobal = true;
+                                                            if ($coords && method_exists($coords, 'getRA')) {
+                                                                try {
+                                                                    $raHoursVal = $coords->getRA()->getCoordinate();
+                                                                    $raDeg = is_numeric($raHoursVal) ? (float)$raHoursVal * 15.0 : $raDeg;
+                                                                } catch (\Throwable $_) {
+                                                                }
+                                                            }
+                                                            if ($coords && method_exists($coords, 'getDeclination')) {
+                                                                try {
+                                                                    $decVal = $coords->getDeclination()->getCoordinate();
+                                                                    $decDeg = is_numeric($decVal) ? (float)$decVal : $decDeg;
+                                                                } catch (\Throwable $_) {
+                                                                }
+                                                            }
+                                                            $wrapperRaHours = $wrapperRaHours ?? ($coords && method_exists($coords, 'getRA') ? $coords->getRA()->getCoordinate() : $wrapperRaHours);
+                                                            $wrapperDecDeg = $wrapperDecDeg ?? ($coords && method_exists($coords, 'getDeclination') ? $coords->getDeclination()->getCoordinate() : $wrapperDecDeg);
+                                                        }
+                                                    } catch (\Throwable $_) {
+                                                        // ignore proxy failures and allow underlying code to continue
+                                                    }
+                                                } else {
+                                                    // Using wrapper coords - skip helper
+                                                }
+                                            } else {
+                                                // Using wrapper coords - skip helper (coords pre-populated)
+                                            }
+                                        } catch (\Throwable $_) { /* ignore */
+                                        }
+                                        if (method_exists($ell, 'getEquatorialCoordinatesToday')) $coords = $ell->getEquatorialCoordinatesToday();
+                                        elseif (method_exists($ell, 'getEquatorialCoordinates')) $coords = $ell->getEquatorialCoordinates();
+                                        try {
+                                            if ($coords) {
+                                                $raLog = null;
+                                                $decLog = null;
+                                                try {
+                                                    $raObj = method_exists($coords, 'getRA') ? $coords->getRA() : ($coords->ra ?? null);
+                                                    $raLog = (is_object($raObj) && method_exists($raObj, 'getCoordinate')) ? $raObj->getCoordinate() : $raObj;
+                                                } catch (\Throwable $_) {
+                                                }
+                                                try {
+                                                    $decObj = method_exists($coords, 'getDeclination') ? $coords->getDeclination() : ($coords->dec ?? null);
+                                                    $decLog = (is_object($decObj) && method_exists($decObj, 'getCoordinate')) ? $decObj->getCoordinate() : $decObj;
+                                                } catch (\Throwable $_) {
+                                                }
+                                                \Illuminate\Support\Facades\Log::info('Elliptic: coords after calculate', ['designation' => $hDesig ?? null, 'ra' => $raLog, 'dec' => $decLog, 'object' => $record->name ?? null]);
+                                            }
+                                        } catch (\Throwable $_) {
+                                            // ignore logging errors
+                                        }
+                                    } else {
+                                        // Hyperbolic / near-parabolic
+                                        $near = new NearParabolic();
+                                        $near->setOrbitalElements((float)$qVal, $eVal, (float)($cometRow->i ?? 0.0), (float)($cometRow->w ?? 0.0), (float)($cometRow->node ?? 0.0), $peri);
+                                        $coordsFromProxy = false;
+                                        try {
+                                            try {
+                                                $proxyRes = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($near, $date, null, null, ['designation' => $hDesig ?? null, 'obj' => $record ?? null]);
+                                            } catch (\Throwable $_) {
+                                                $proxyRes = null;
+                                            }
+                                            if (empty($proxyRes) || empty($proxyRes['usedWrapper'])) {
+                                                try {
+                                                    $near->calculateEquatorialCoordinates($date);
+                                                } catch (\Throwable $_) { /* ignore */
+                                                }
+                                            } else {
+                                                $coords = $proxyRes['coords'] ?? null;
+                                                $coordsFromProxy = true;
+                                                if ($coords && method_exists($near, 'setEquatorialCoordinates')) {
+                                                    try {
+                                                        $near->setEquatorialCoordinates($coords);
+                                                    } catch (\Throwable $_) {
+                                                    }
+                                                }
+                                            }
+                                        } catch (\Throwable $_) { /* ignore */
+                                        }
+                                        if (! empty($coordsFromProxy)) {
+                                            // coords already fulfilled by proxy
+                                        } else {
+                                            if (method_exists($near, 'getEquatorialCoordinatesToday')) $coords = $near->getEquatorialCoordinatesToday();
+                                            elseif (method_exists($near, 'getEquatorialCoordinates')) $coords = $near->getEquatorialCoordinates();
+                                        }
+                                    }
+                                } catch (\Throwable $_) {
+                                    $coords = null;
+                                }
+
+                                if ($coords) {
+                                    $raDeg = null;
+                                    $decDeg = null;
+                                    try {
+                                        $raObj = method_exists($coords, 'getRA') ? $coords->getRA() : ($coords->ra ?? null);
+                                        $raVal = (is_object($raObj) && method_exists($raObj, 'getCoordinate')) ? $raObj->getCoordinate() : $raObj;
+                                        if (is_numeric($raVal)) $raDeg = ((float)$raVal <= 24.0) ? ((float)$raVal * 15.0) : (float)$raVal;
+                                    } catch (\Throwable $_) {
+                                        $raDeg = null;
+                                    }
+                                    try {
+                                        $decObj = method_exists($coords, 'getDeclination') ? $coords->getDeclination() : ($coords->dec ?? null);
+                                        $decVal = (is_object($decObj) && method_exists($decObj, 'getCoordinate')) ? $decObj->getCoordinate() : $decObj;
+                                        if (is_numeric($decVal)) $decDeg = (float)$decVal;
+                                    } catch (\Throwable $_) {
+                                        $decDeg = null;
+                                    }
+
+                                    if (is_numeric($raDeg) && is_numeric($decDeg)) {
+                                        // Build ephemerides briefly using AstroTarget so view gets rising/transit/setting
+                                        try {
+                                            $raHours = ($raDeg > 24.0) ? ($raDeg / 15.0) : $raDeg;
+                                            $equa = new EquatorialCoordinates((float)$raHours, (float)$decDeg);
+                                            $target = new AstroTarget();
+                                            $target->setEquatorialCoordinates($equa);
+                                            $gst = Time::apparentSiderialTimeGreenwich($date);
+                                            $dt = Time::deltaT($date);
+                                            $target->calculateEphemerides($geo_coords, $gst, $dt);
+
+                                            $transit = null;
+                                            $rising = null;
+                                            $setting = null;
+                                            $bestTime = null;
+                                            $maxHeightAtNight = null;
+                                            $maxHeight = null;
+                                            try {
+                                                $transit = $target->getTransit();
+                                            } catch (\Throwable $_) {
+                                                $transit = null;
+                                            }
+                                            try {
+                                                $rising = $target->getRising();
+                                            } catch (\Throwable $_) {
+                                                $rising = null;
+                                            }
+                                            try {
+                                                $setting = $target->getSetting();
+                                            } catch (\Throwable $_) {
+                                                $setting = null;
+                                            }
+                                            try {
+                                                $bestTime = $target->getBestTimeToObserve();
+                                            } catch (\Throwable $_) {
+                                                $bestTime = null;
+                                            }
+
+                                            $tz = $userLocation->timezone ?? config('app.timezone');
+                                            if ($transit instanceof \DateTimeInterface) {
+                                                try {
+                                                    $transit = \Carbon\Carbon::instance($transit)->timezone($tz)->isoFormat('HH:mm');
+                                                } catch (\Throwable $_) {
+                                                    $transit = (string)$transit;
+                                                }
+                                            }
+                                            if ($rising instanceof \DateTimeInterface) {
+                                                try {
+                                                    $rising = \Carbon\Carbon::instance($rising)->timezone($tz)->isoFormat('HH:mm');
+                                                } catch (\Throwable $_) {
+                                                    $rising = (string)$rising;
+                                                }
+                                            }
+                                            if ($setting instanceof \DateTimeInterface) {
+                                                try {
+                                                    $setting = \Carbon\Carbon::instance($setting)->timezone($tz)->isoFormat('HH:mm');
+                                                } catch (\Throwable $_) {
+                                                    $setting = (string)$setting;
+                                                }
+                                            }
+                                            if ($bestTime instanceof \DateTimeInterface) {
+                                                try {
+                                                    $bestTime = \Carbon\Carbon::instance($bestTime)->timezone($tz)->isoFormat('HH:mm');
+                                                } catch (\Throwable $_) {
+                                                    $bestTime = (string)$bestTime;
+                                                }
+                                            }
+
+                                            $altitudeGraph = null;
+                                            try {
+                                                $altitudeGraph = $target->altitudeGraph($geo_coords, $date);
+                                            } catch (\Throwable $_) {
+                                                $altitudeGraph = null;
+                                            }
+                                            $yearGraph = null;
+                                            try {
+                                                $yearGraph = $target->yearGraph($geo_coords, $date);
+                                            } catch (\Throwable $_) {
+                                                $yearGraph = null;
+                                            }
+
+                                            $ephemerides = [
+                                                'date' => $date->timezone($tz)->toDateString(),
+                                                'rising' => $rising,
+                                                'transit' => $transit,
+                                                'setting' => $setting,
+                                                'best_time' => $bestTime,
+                                                'max_height_at_night' => $maxHeightAtNight,
+                                                'max_height' => $maxHeight,
+                                                'altitude_graph' => $altitudeGraph,
+                                                'year_graph' => $yearGraph,
+                                                'raDeg' => $raDeg,
+                                                'decDeg' => $decDeg,
+                                                // Expose comet magnitude when available (legacy DB value)
+                                                'mag' => $record->mag ?? null,
+                                            ];
+                                            try {
+                                                Log::info('ObjectController: computed comet ephemerides for initial payload', ['name' => $record->name ?? null, 'raDeg' => $raDeg, 'decDeg' => $decDeg]);
+                                            } catch (\Throwable $_) {
+                                            }
+                                        } catch (\Throwable $_) { /* ignore */
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (\Throwable $_) { /* ignore */
+        }
+
+        // If we discovered wrapper coordinates at any point but did not populate
+        // the initial ephemerides payload, ensure the view receives the wrapper
+        // coordinates so Livewire mounts with authoritative values and will
+        // avoid calling the external Horizons helper.
+        try {
+            if (! empty($wrapperUsedGlobal) && is_numeric($wrapperRaHours) && is_numeric($wrapperDecDeg)) {
+                if (empty($ephemerides) || ! (isset($ephemerides['raDeg']) && isset($ephemerides['decDeg']))) {
+                    $raDegVal = (float)$wrapperRaHours * 15.0;
+                    $decDegVal = (float)$wrapperDecDeg;
+                    $extra = [];
+                    // Attempt to compute rise/transit/setting and constellation when we have a user location
+                    try {
+                        if (isset($userLocation) && $userLocation) {
+                            $geo_coords_local = new \deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
+                            $tmpTarget = new AstroTarget();
+                            // EquatorialCoordinates constructor expects RA in hours and declination in degrees
+                            $equaTmp = new EquatorialCoordinates((float)$wrapperRaHours, (float)$wrapperDecDeg);
+                            $tmpTarget->setEquatorialCoordinates($equaTmp);
+                            $gstTmp = Time::apparentSiderialTimeGreenwich(\Carbon\Carbon::now());
+                            $dtTmp = Time::deltaT(\Carbon\Carbon::now());
+                            try {
+                                $tmpTarget->calculateEphemerides($geo_coords_local, $gstTmp, $dtTmp);
+                                $trans = null;
+                                $rising = null;
+                                $setting = null;
+                                $bestTime = null;
+                                $maxHeightAtNight = null;
+                                $maxHeight = null;
+                                try {
+                                    $trans = $tmpTarget->getTransit();
+                                } catch (\Throwable $_) {
+                                    $trans = null;
+                                }
+                                try {
+                                    $rising = $tmpTarget->getRising();
+                                } catch (\Throwable $_) {
+                                    $rising = null;
+                                }
+                                try {
+                                    $setting = $tmpTarget->getSetting();
+                                } catch (\Throwable $_) {
+                                    $setting = null;
+                                }
+                                try {
+                                    $bestTime = $tmpTarget->getBestTimeToObserve();
+                                } catch (\Throwable $_) {
+                                    $bestTime = null;
+                                }
+                                try {
+                                    $maxHeightAtNight = $tmpTarget->getMaxHeightAtNight();
+                                } catch (\Throwable $_) {
+                                    $maxHeightAtNight = null;
+                                }
+                                try {
+                                    $maxHeight = $tmpTarget->getMaxHeight();
+                                } catch (\Throwable $_) {
+                                    $maxHeight = null;
+                                }
+                                $tzLocal = $userLocation->timezone ?? config('app.timezone');
+                                if ($trans instanceof \DateTimeInterface) {
+                                    try {
+                                        $trans = \Carbon\Carbon::instance($trans)->timezone($tzLocal)->isoFormat('HH:mm');
+                                    } catch (\Throwable $_) {
+                                        $trans = (string)$trans;
+                                    }
+                                }
+                                if ($rising instanceof \DateTimeInterface) {
+                                    try {
+                                        $rising = \Carbon\Carbon::instance($rising)->timezone($tzLocal)->isoFormat('HH:mm');
+                                    } catch (\Throwable $_) {
+                                        $rising = (string)$rising;
+                                    }
+                                }
+                                if ($setting instanceof \DateTimeInterface) {
+                                    try {
+                                        $setting = \Carbon\Carbon::instance($setting)->timezone($tzLocal)->isoFormat('HH:mm');
+                                    } catch (\Throwable $_) {
+                                        $setting = (string)$setting;
+                                    }
+                                }
+                                if ($bestTime instanceof \DateTimeInterface) {
+                                    try {
+                                        $bestTime = \Carbon\Carbon::instance($bestTime)->timezone($tzLocal)->isoFormat('HH:mm');
+                                    } catch (\Throwable $_) {
+                                        $bestTime = (string)$bestTime;
+                                    }
+                                }
+                                if (is_object($maxHeightAtNight) && method_exists($maxHeightAtNight, 'getCoordinate')) $maxHeightAtNight = $maxHeightAtNight->getCoordinate();
+                                if (is_object($maxHeight) && method_exists($maxHeight, 'getCoordinate')) $maxHeight = $maxHeight->getCoordinate();
+                                if (is_numeric($maxHeightAtNight)) $maxHeightAtNight = round($maxHeightAtNight, 1);
+                                if (is_numeric($maxHeight)) $maxHeight = round($maxHeight, 1);
+                                $extra['transit'] = $trans;
+                                $extra['rising'] = $rising;
+                                $extra['setting'] = $setting;
+                                $extra['best_time'] = $bestTime;
+                                $extra['max_height_at_night'] = $maxHeightAtNight;
+                                $extra['max_height'] = $maxHeight;
+                            } catch (\Throwable $_) {
+                                // ignore ephemerides calc failures
+                            }
+                            // Attempt to derive constellation
+                            try {
+                                $cons = null;
+                                if (method_exists($equaTmp, 'getConstellation')) {
+                                    $cons = $equaTmp->getConstellation();
+                                } elseif (method_exists($tmpTarget, 'getConstellation')) {
+                                    $cons = $tmpTarget->getConstellation();
+                                }
+                                if ($cons) {
+                                    // resolve DB mapping when possible
+                                    try {
+                                        $foundCons = ConstellationModel::where('name', $cons)->orWhere('id', $cons)->first();
+                                        if ($foundCons) {
+                                            $extra['constellation'] = $foundCons->name;
+                                            $extra['constellation_code'] = $foundCons->id;
+                                        } else {
+                                            $extra['constellation'] = $cons;
+                                        }
+                                    } catch (\Throwable $_) {
+                                        $extra['constellation'] = $cons;
+                                    }
+                                }
+                            } catch (\Throwable $_) {
+                                // ignore
+                            }
+                        }
+                    } catch (\Throwable $_) {
+                        // ignore location-based calculations
+                    }
+
+                    $ephemerides = array_merge([
+                        'date' => \Carbon\Carbon::now()->toDateString(),
+                        'raDeg' => $raDegVal,
+                        'decDeg' => $decDegVal,
+                        '_usedWrapper' => true,
+                        '_wrapper_source_file' => $wrapperSourceFile ?? ($wrapperCoords['source_file'] ?? null) ?? null,
+                    ], $extra);
+                    try {
+                        Log::info('ObjectController: forcing ephemerides from wrapper before render', ['ra_hours' => $wrapperRaHours, 'dec_deg' => $wrapperDecDeg, 'object' => $record->name ?? null]);
+                    } catch (\Throwable $_) {
+                    }
+                    // Also ensure downstream code honors the wrapper for this request
+                    $forceUseWrapperSkipHorizons = true;
+                }
+            }
+        } catch (\Throwable $_) {
+            // ignore
+        }
+
+        // Prepare legacy comet magnitude time-series when available
+        $comet_magnitudes = [];
+        $comet_min_mag = null;
+        $comet_max_mag = null;
+        $cometMagnitudeChart = null;
+        try {
+            if (class_exists(\App\Models\CometObservationsOld::class)) {
+                $hasCometObsTable = false;
+                try {
+                    $hasCometObsTable = DB::connection('mysqlOld')->getSchemaBuilder()->hasTable('cometobservations');
+                } catch (\Throwable $_) {
+                    $hasCometObsTable = false;
+                }
+
+                if ($hasCometObsTable) {
+                    $coObjId = null;
+                    if (isset($session->id) && is_numeric($session->id)) {
+                        $coObjId = (int) $session->id;
+                    } else {
+                        try {
+                            $coModel = \App\Models\CometObject::where('name', $session->name ?? '')->first();
+                            if ($coModel) $coObjId = $coModel->id ?? null;
+                        } catch (\Throwable $_) {
+                        }
+                    }
+
+                    if (!empty($coObjId)) {
+                        try {
+                            $rows = \App\Models\CometObservationsOld::where('objectid', $coObjId)->orderBy('date')->get();
+                            foreach ($rows as $r) {
+                                try {
+                                    $attrs = $r->getAttributes();
+                                    $mag = null;
+                                    foreach (['mag', 'mag_v', 'magnitude', 'estmag', 'mag_v_est', 'vmag', 'magv', 'm'] as $k) {
+                                        if (array_key_exists($k, $attrs) && $attrs[$k] !== null && $attrs[$k] !== '') {
+                                            $mag = floatval($attrs[$k]);
+                                            break;
+                                        }
+                                    }
+                                    if ($mag === null) continue;
+
+                                    $dateStr = (string) ($r->date ?? '');
+                                    $formatted = null;
+                                    if (preg_match('/^\d{8}$/', $dateStr)) {
+                                        $formatted = substr($dateStr, 0, 4) . '-' . substr($dateStr, 4, 2) . '-' . substr($dateStr, 6, 2);
+                                    } else {
+                                        try {
+                                            $formatted = \Carbon\Carbon::parse($r->date)->toDateString();
+                                        } catch (\Throwable $_) {
+                                            $formatted = null;
+                                        }
+                                    }
+
+                                    if ($formatted) {
+                                        $comet_magnitudes[] = ['date' => $formatted, 'mag' => $mag];
+                                        if (!is_null($mag)) {
+                                            if (is_null($comet_min_mag) || $mag < $comet_min_mag) $comet_min_mag = $mag;
+                                            if (is_null($comet_max_mag) || $mag > $comet_max_mag) $comet_max_mag = $mag;
+                                        }
+                                    }
+                                } catch (\Throwable $_) {
+                                    // ignore individual row errors
+                                }
+                            }
+                        } catch (\Throwable $_) {
+                            // ignore fetch errors
+                        }
+                    }
+                }
+            }
+        } catch (\Throwable $_) {
+            // defensive: ignore overall errors
+            $comet_magnitudes = [];
+        }
+        // Filter out sentinel/invalid magnitudes (e.g. -99.9) before building chart
+        $filtered_points = [];
+        try {
+            if (!empty($comet_magnitudes) && is_array($comet_magnitudes)) {
+                $filtered_points = array_values(array_filter($comet_magnitudes, function ($p) {
+                    if (!is_array($p)) return false;
+                    if (!isset($p['mag'])) return false;
+                    if (!is_numeric($p['mag'])) return false;
+                    $m = floatval($p['mag']);
+                    // exclude common sentinel values and obviously invalid mags
+                    if ($m === 99.9 || $m === -99.9) return false;
+                    if (!is_finite($m)) return false;
+                    return true;
+                }));
+
+                // sort by date ascending when possible
+                usort($filtered_points, function ($a, $b) {
+                    $da = strtotime($a['date'] ?? '');
+                    $db = strtotime($b['date'] ?? '');
+                    return $da <=> $db;
+                });
+
+                // recompute min/max from filtered points
+                $comet_min_mag = null;
+                $comet_max_mag = null;
+                foreach ($filtered_points as $p) {
+                    $m = floatval($p['mag']);
+                    if (is_null($comet_min_mag) || $m < $comet_min_mag) $comet_min_mag = $m;
+                    if (is_null($comet_max_mag) || $m > $comet_max_mag) $comet_max_mag = $m;
+                }
+            }
+        } catch (\Throwable $_) {
+            $filtered_points = [];
+        }
+
+        // Build Larapex chart if we have valid filtered points
+        try {
+            if (!empty($filtered_points) && class_exists(\App\Charts\CometMagnitudeChart::class)) {
+                $chartBuilder = new \App\Charts\CometMagnitudeChart();
+                $cometMagnitudeChart = $chartBuilder->build($session->name ?? '', $filtered_points);
+            }
+        } catch (\Throwable $_) {
+            $cometMagnitudeChart = null;
+        }
+
+        return response()->view('object.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId', 'ephemerides', 'yourObservations', 'yourDrawings', 'comet_magnitudes', 'comet_min_mag', 'comet_max_mag', 'cometMagnitudeChart'));
     }
 }

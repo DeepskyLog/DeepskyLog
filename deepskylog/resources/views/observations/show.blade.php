@@ -63,7 +63,8 @@
                 @endphp
 
                 <div class="flex space-x-2">
-                    @if ($mode !== 'deepsky')
+                    {{-- Hide the deepsky toggle when viewing a comet object page (object-scoped comet listing) --}}
+                    @if ($mode !== 'deepsky' && !($mode === 'comet' && !empty($objectFilter)))
                         <x-button gray icon="eye" class="mb-2" href="{{ $deepskyUrl }}">
                             {{ __('Show deepsky observations') }}
                         </x-button>

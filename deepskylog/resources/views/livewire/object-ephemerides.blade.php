@@ -2,18 +2,20 @@
 
 <tbody wire:key="object-ephemerides-{{ $objectId ?? 'none' }}">
     @if (!$e)
-        <tr>
-            <td class="pr-4 font-medium">{{ __('Rise / Transit / Set') }}</td>
-            <td class="text-sm text-gray-500">{{ __('Ephemerides not available for this object or location.') }}</td>
-        </tr>
-        <tr>
-            <td class="pr-4 font-medium">{{ __('Best time') }}</td>
-            <td class="text-sm text-gray-500">—</td>
-        </tr>
-        <tr>
-            <td class="pr-4 font-medium">{{ __('Maximum altitude') }}</td>
-            <td class="text-sm text-gray-500">—</td>
-        </tr>
+        @auth
+            <tr>
+                <td class="pr-4 font-medium">{{ __('Rise / Transit / Set') }}</td>
+                <td class="text-sm text-gray-500">{{ __('Ephemerides not available for this object or location.') }}</td>
+            </tr>
+            <tr>
+                <td class="pr-4 font-medium">{{ __('Best time') }}</td>
+                <td class="text-sm text-gray-500">—</td>
+            </tr>
+            <tr>
+                <td class="pr-4 font-medium">{{ __('Maximum altitude') }}</td>
+                <td class="text-sm text-gray-500">—</td>
+            </tr>
+        @endauth
     @else
         @php
             $r = $e['rising'] ?? null;
@@ -44,37 +46,123 @@
                 }
             }
         @endphp
-        <tr id="ephem-rts-row-live">
-            <td class="pr-4 font-medium">{{ __('Rise / Transit / Set') }}</td>
-            <td id="ephem-rts-cell">
-                <span class="font-mono"
-                    @if ($rTitle) title="{{ $rTitle }}" @endif>{{ $showR }}</span>
-                <span class="text-gray-400 px-2">/</span>
-                <span class="font-mono">{{ $showT }}</span>
-                <span class="text-gray-400 px-2">/</span>
-                <span class="font-mono"
-                    @if ($sTitle) title="{{ $sTitle }}" @endif>{{ $showS }}</span>
-            </td>
-        </tr>
+        {{-- RA/Dec and ephemerides rows rendered by Livewire so guests also receive them when available --}}
+        @if (empty($suppressTopRaDec))
+            <tr>
+                <td class="pr-4 font-medium">{{ __('RA / Dec') }}</td>
+                <td id="dsl-top-ra-dec">
+                    @if (isset($e['raDeg']) && isset($e['decDeg']) && is_numeric($e['raDeg']) && is_numeric($e['decDeg']))
+                        @php
+                            // Format RA (degrees) to HhMmSs and Dec to ±D°MM'SS"
+$raDeg = floatval($e['raDeg']);
+$decDeg = floatval($e['decDeg']);
 
-        <tr id="ephem-best-row-live">
-            <td class="pr-4 font-medium">{{ __('Best time') }}</td>
-            <td id="ephem-best-cell">{{ $e['best_time'] ?? '—' }}</td>
-        </tr>
+$totalHours = $raDeg / 15.0;
+$h = floor($totalHours);
+$m = floor(($totalHours - $h) * 60);
+$s = round((($totalHours - $h) * 60 - $m) * 60);
+if ($s >= 60) {
+    $s = 0;
+    $m += 1;
+}
+if ($m >= 60) {
+    $m = 0;
+    $h = ($h + 1) % 24;
+}
+$raStr = sprintf('%dh%02dm%02ds', $h, $m, $s);
 
-        <tr id="ephem-max-row-live">
-            <td class="pr-4 font-medium">{{ __('Maximum altitude') }}</td>
-            <td id="ephem-max-cell">
-                @if (isset($e['max_height_at_night']) && $e['max_height_at_night'] !== null)
-                    {{ $e['max_height_at_night'] }}°
-                    <!--
-@elseif(isset($e['max_height']) && $e['max_height'] !== null)
-{{ $e['max_height'] }}° -->
-                @else
-                    —
-                @endif
-            </td>
-        </tr>
+$dabs = abs($decDeg);
+$sign = $decDeg < 0 ? '-' : '';
+$d = floor($dabs);
+$dm = floor(($dabs - $d) * 60);
+$ds = round((($dabs - $d) * 60 - $dm) * 60);
+if ($ds >= 60) {
+    $ds = 0;
+    $dm += 1;
+}
+if ($dm >= 60) {
+    $dm = 0;
+    $d += 1;
+}
+$decStr =
+    $sign .
+    $d .
+    '°' .
+    str_pad($dm, 2, '0', STR_PAD_LEFT) .
+    "'" .
+    str_pad($ds, 2, '0', STR_PAD_LEFT) .
+    '"';
+                        @endphp
+                        {{ $raStr }} / {{ $decStr }}
+                    @else
+                        —
+                    @endif
+                </td>
+            </tr>
+        @endif
+
+        @auth
+            <tr id="ephem-rts-row-live">
+                <td class="pr-4 font-medium">{{ __('Rise / Transit / Set') }}</td>
+                <td id="ephem-rts-cell">
+                    <span class="font-mono"
+                        @if ($rTitle) title="{{ $rTitle }}" @endif>{{ $showR }}</span>
+                    <span class="text-gray-400 px-2">/</span>
+                    <span class="font-mono">{{ $showT }}</span>
+                    <span class="text-gray-400 px-2">/</span>
+                    <span class="font-mono"
+                        @if ($sTitle) title="{{ $sTitle }}" @endif>{{ $showS }}</span>
+                </td>
+            </tr>
+
+            <tr id="ephem-best-row-live">
+                <td class="pr-4 font-medium">{{ __('Best time') }}</td>
+                <td id="ephem-best-cell">{{ $e['best_time'] ?? '—' }}</td>
+            </tr>
+
+            <tr id="ephem-max-row-live">
+                <td class="pr-4 font-medium">{{ __('Maximum altitude') }}</td>
+                <td id="ephem-max-cell">
+                    @if (isset($e['max_height_at_night']) && $e['max_height_at_night'] !== null)
+                        {{ $e['max_height_at_night'] }}°
+                    @else
+                        —
+                    @endif
+                </td>
+            </tr>
+        @endauth
+
+        @guest
+            {{-- Guests: show ephemerides rows when Livewire has computed them --}}
+            <tr id="ephem-rts-row-guest">
+                <td class="pr-4 font-medium">{{ __('Rise / Transit / Set') }}</td>
+                <td id="ephem-rts-cell-guest">
+                    <span class="font-mono"
+                        @if ($rTitle) title="{{ $rTitle }}" @endif>{{ $showR }}</span>
+                    <span class="text-gray-400 px-2">/</span>
+                    <span class="font-mono">{{ $showT }}</span>
+                    <span class="text-gray-400 px-2">/</span>
+                    <span class="font-mono"
+                        @if ($sTitle) title="{{ $sTitle }}" @endif>{{ $showS }}</span>
+                </td>
+            </tr>
+
+            <tr id="ephem-best-row-guest">
+                <td class="pr-4 font-medium">{{ __('Best time') }}</td>
+                <td id="ephem-best-cell-guest">{{ $e['best_time'] ?? '—' }}</td>
+            </tr>
+
+            <tr id="ephem-max-row-guest">
+                <td class="pr-4 font-medium">{{ __('Maximum altitude') }}</td>
+                <td id="ephem-max-cell-guest">
+                    @if (isset($e['max_height_at_night']) && $e['max_height_at_night'] !== null)
+                        {{ $e['max_height_at_night'] }}°
+                    @else
+                        —
+                    @endif
+                </td>
+            </tr>
+        @endguest
 
         {{-- Inner-planet events (Mercury/Venus): inferior/superior conjunction and greatest elongations --}}
         @php
@@ -158,17 +246,19 @@
             @endif
         @endif
 
-        @if (!empty($e['altitude_graph']))
-            <tr>
-                <td colspan="2" class="pt-3">{!! $e['altitude_graph'] !!}</td>
-            </tr>
-        @endif
+        @auth
+            @if (!empty($e['altitude_graph']))
+                <tr>
+                    <td colspan="2" class="pt-3">{!! $e['altitude_graph'] !!}</td>
+                </tr>
+            @endif
 
-        @if (!empty($e['year_graph']))
-            <tr>
-                <td colspan="2" class="pt-2">{!! $e['year_graph'] !!}</td>
-            </tr>
-        @endif
+            @if (!empty($e['year_graph']))
+                <tr>
+                    <td colspan="2" class="pt-2">{!! $e['year_graph'] !!}</td>
+                </tr>
+            @endif
+        @endauth
 
         @php
             // Decide whether this object appears to be a planet.
@@ -255,9 +345,33 @@ $formatDec = function ($decDeg) {
     return sprintf('%s%d°%02d\'%02d"', $sign, $d, $m, $s);
             };
 
+            // Build a sanitized ephemerides payload for embedding in the page.
+            // This must not contain any heavy graph HTML blobs which are
+            // unnecessary for preview consumers and can leak into the aside.
+            $sanitizedEphem = [];
+            if (is_array($e)) {
+                $sanitizedEphem = $e;
+            } elseif (is_object($e)) {
+                $sanitizedEphem = (array) $e;
+            } else {
+                try {
+                    $decoded = @json_decode((string) $e, true);
+                    if (is_array($decoded)) {
+                        $sanitizedEphem = $decoded;
+                    }
+                } catch (\Throwable $_) {
+                    $sanitizedEphem = [];
+                }
+            }
+            foreach (['altitude_graph', 'year_graph', 'year_magnitude_graph', 'year_diameter_graph'] as $gk) {
+                if (isset($sanitizedEphem[$gk])) {
+                    unset($sanitizedEphem[$gk]);
+                }
+            }
+
             $inlinePayload = [
                 'objectId' => $objectId ?? null,
-                'objectSlug' => $objectId ?? null,
+                'objectSlug' => $objectSlug ?? ($objectId ?? null),
                 'date' => $e['date'] ?? null,
                 'raDeg' => $e['raDeg'] ?? null,
                 'decDeg' => $e['decDeg'] ?? null,
@@ -277,7 +391,8 @@ $formatDec = function ($decDeg) {
                 'diam2' => $e['diam2'] ?? null,
                 'mag' => $e['mag'] ?? null,
                 'illuminated_fraction' => $e['illuminated_fraction'] ?? null,
-                'ephemerides' => $e,
+                // Embed sanitized ephemerides (graphs removed)
+                'ephemerides' => $sanitizedEphem,
                 '_ts' => \Carbon\Carbon::now()->toIso8601String(),
             ];
             $encoded = base64_encode(json_encode($inlinePayload));

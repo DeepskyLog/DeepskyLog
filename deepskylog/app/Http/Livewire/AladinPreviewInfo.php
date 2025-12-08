@@ -22,6 +22,8 @@ class AladinPreviewInfo extends Component
     public $contrast_used_instrument;
     public $optimum_detection_magnification;
     public $optimum_eyepieces = [];
+    // Raw object type passed from the page (e.g. 'comet', 'planet', etc.)
+    public $object_type = null;
     // Planet-specific dynamic values (arcseconds)
     public $planet_diameter_primary = null;
     public $planet_diameter_secondary = null;
@@ -54,6 +56,8 @@ class AladinPreviewInfo extends Component
         $this->contrast_used_instrument = $initial['contrast_used_instrument'] ?? null;
         $this->optimum_detection_magnification = $initial['optimum_detection_magnification'] ?? null;
         $this->optimum_eyepieces = $initial['optimum_eyepieces'] ?? [];
+        // accept object_type so blade can decide when to hide comet-only rows
+        $this->object_type = $initial['object_type'] ?? null;
     }
 
     /**
@@ -492,10 +496,50 @@ class AladinPreviewInfo extends Component
                         $geo = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
                         $height = $userLocation->elevation ?? 0.0;
                         try {
-                            if (method_exists($planet, 'calculateEquatorialCoordinates')) {
-                                $planet->calculateEquatorialCoordinates($calcDate, $geo, $height);
-                            } elseif (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-                                $planet->calculateApparentEquatorialCoordinates($calcDate);
+                            // Prefer wrapper-provided coordinates via proxy; fall back to library
+                            if (method_exists(\App\Helpers\HorizonsProxy::class, 'calculateEquatorialCoordinates')) {
+                                // Compute a robust designation to pass into the proxy so
+                                // wrapper lookups can succeed. Use designation, slug,
+                                // name or payload-provided objectName as fallbacks.
+                                try {
+                                    $hDesig = null;
+                                    if (isset($obj) && $obj) {
+                                        $hDesig = $obj->designation ?? $obj->slug ?? $obj->name ?? null;
+                                    }
+                                    if (empty($hDesig) && ! empty($payloadArr['objectName'] ?? null)) {
+                                        $hDesig = $payloadArr['objectName'];
+                                    }
+                                } catch (\Throwable $_) {
+                                    $hDesig = null;
+                                }
+                                try {
+                                    \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calling HorizonsProxy (planet)', ['designation' => $hDesig ?? null, 'objectId' => $obj->id ?? null]);
+                                } catch (\Throwable $_) {
+                                }
+                                try {
+                                    $proxyResult = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($planet, $calcDate, $geo, $height, ['obj' => $obj ?? null, 'designation' => $hDesig ?? null]);
+                                } catch (\Throwable $_) {
+                                    $proxyResult = null;
+                                }
+                            } else {
+                                $proxyResult = null;
+                            }
+
+                            if (is_array($proxyResult) && !empty($proxyResult['coords'])) {
+                                $computedCoords = $proxyResult['coords'];
+                                try {
+                                    if (method_exists($planet, 'setEquatorialCoordinates')) {
+                                        $planet->setEquatorialCoordinates($computedCoords);
+                                    }
+                                } catch (\Throwable $_) {
+                                }
+                            } else {
+                                // If proxy did not return coords, fall back to library calculations
+                                if (method_exists($planet, 'calculateEquatorialCoordinates')) {
+                                    $planet->calculateEquatorialCoordinates($calcDate, $geo, $height);
+                                } elseif (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
+                                    $planet->calculateApparentEquatorialCoordinates($calcDate);
+                                }
                             }
                         } catch (\Throwable $_) {
                             try {
@@ -955,6 +999,13 @@ class AladinPreviewInfo extends Component
                 // can fire them as browser events.
                 // Logging removed: browser dispatch debug log
                 try {
+                    // Remove heavy/large embedded graph HTML from the preview payload.
+                    // Altitude and year graphs belong in the main page display only.
+                    $previewEphemerides = $ephemerides;
+                    if (is_array($previewEphemerides)) {
+                        unset($previewEphemerides['altitude_graph'], $previewEphemerides['year_graph'], $previewEphemerides['year_magnitude_graph'], $previewEphemerides['year_diameter_graph']);
+                    }
+
                     $this->dispatch('aladin-preview-info-updated', [
                         'status' => 'ok',
                         'contrast_reserve' => $this->contrast_reserve,
@@ -963,7 +1014,7 @@ class AladinPreviewInfo extends Component
                         'optimum_eyepieces' => $this->optimum_eyepieces ?? [],
                         'payload' => $payload,
                         'objectId' => $useObjectId ?? null,
-                        'ephemerides' => $ephemerides,
+                        'ephemerides' => $previewEphemerides,
                     ]);
                     // Logging removed: browser dispatch debug log
                 } catch (\Throwable $ex) {
