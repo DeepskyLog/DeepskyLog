@@ -24,16 +24,31 @@ class ObjectEphemerides extends Component
 	public $objectId;
 	public $objectName;
 	public $sourceTypeRaw;
+
+	// Suppression flags set by the parent view when a type-specific
+	// component (e.g. MoonDetails) will render those rows instead.
+	public $suppressTopRaDec = false;
+	public $suppressEphemerides = false;
 	public $ephemerides = null;
 
 	// Listen for the global date change dispatched by EphemerisAside
-	protected $listeners = ['ephemerisDateChanged' => 'handleEphemerisDateChange'];
+	protected $listeners = [
+		'ephemerisDateChanged' => 'handleEphemerisDateChange',
+		// Full payload updates allow authoritative server-side ephemerides updates
+		'ephemerisPayloadUpdated' => 'handleEphemerisPayload',
+	];
 
-	public function mount($objectId = null, $initial = null, $objectName = null, $sourceTypeRaw = null)
+	public function mount($objectId = null, $initial = null, $objectName = null, $sourceTypeRaw = null, $suppressTopRaDec = false, $suppressEphemerides = false)
 	{
 		$this->objectId = (is_string($objectId) && trim($objectId) === '') ? null : $objectId;
 		$this->objectName = $objectName ?? null;
 		$this->sourceTypeRaw = $sourceTypeRaw ?? null;
+
+		// Accept suppression flags from the parent so the component can avoid
+		// rendering duplicated ephemerides/ra-dec rows when a type-specific
+		// Livewire component (like MoonDetails) is mounted on the page.
+		$this->suppressTopRaDec = $suppressTopRaDec ?? false;
+		$this->suppressEphemerides = $suppressEphemerides ?? false;
 
 		if (! empty($initial) && is_array($initial)) {
 			$this->ephemerides = $initial;
@@ -85,7 +100,61 @@ class ObjectEphemerides extends Component
 	public function handleEphemerisDateChange($date)
 	{
 		// forward the date as part of a normalized payload
+		try {
+			Log::debug('ObjectEphemerides: handleEphemerisDateChange', ['date' => $date, 'objectId' => $this->objectId]);
+		} catch (\Throwable $_) {
+		}
 		$this->recalculate(['date' => $date, 'objectId' => $this->objectId, 'objectName' => $this->objectName, 'sourceTypeRaw' => $this->sourceTypeRaw]);
+	}
+
+	public function handleEphemerisPayload($payload = null)
+	{
+		try {
+			try {
+				$raw = is_array($payload) ? $payload : (is_object($payload) ? (array)$payload : $payload);
+				$hasIllum = false;
+				$illumVal = null;
+				try {
+					if (is_array($raw) && array_key_exists('illuminated_fraction', $raw)) {
+						$hasIllum = true;
+						$illumVal = $raw['illuminated_fraction'];
+					} elseif (is_array($raw) && isset($raw['payload']) && is_array($raw['payload']) && array_key_exists('illuminated_fraction', $raw['payload'])) {
+						$hasIllum = true;
+						$illumVal = $raw['payload']['illuminated_fraction'];
+					} elseif (is_array($raw) && isset($raw['ephemerides']) && is_array($raw['ephemerides']) && array_key_exists('illuminated_fraction', $raw['ephemerides'])) {
+						$hasIllum = true;
+						$illumVal = $raw['ephemerides']['illuminated_fraction'];
+					}
+				} catch (\Throwable $_) {
+				}
+				Log::debug('ObjectEphemerides: handleEphemerisPayload incoming', ['objectId' => $this->objectId, 'payload_has_illuminated_fraction' => $hasIllum, 'illuminated_fraction' => $illumVal, 'raw_payload' => $raw]);
+			} catch (\Throwable $_) {
+			}
+			// Existing sanitization: remove moon illum unless targeting Moon
+			$payloadArr = is_array($payload) ? $payload : (is_object($payload) ? (array)$payload : []);
+			$keepIllum = false;
+			$checkVals = [
+				$payloadArr['objectId'] ?? null,
+				$payloadArr['objectSlug'] ?? null,
+				$payloadArr['sourceTypeRaw'] ?? null,
+				$this->objectId ?? null,
+				$this->sourceTypeRaw ?? null,
+			];
+			foreach ($checkVals as $v) {
+				if (!empty($v) && is_string($v) && mb_strtolower(trim((string)$v)) === 'moon') {
+					$keepIllum = true;
+					break;
+				}
+			}
+			if (! $keepIllum) {
+				if (array_key_exists('illuminated_fraction', $payloadArr)) unset($payloadArr['illuminated_fraction']);
+				if (isset($payloadArr['payload']) && is_array($payloadArr['payload']) && array_key_exists('illuminated_fraction', $payloadArr['payload'])) unset($payloadArr['payload']['illuminated_fraction']);
+				if (isset($payloadArr['ephemerides']) && is_array($payloadArr['ephemerides']) && array_key_exists('illuminated_fraction', $payloadArr['ephemerides'])) unset($payloadArr['ephemerides']['illuminated_fraction']);
+			}
+			$this->recalculate($payloadArr);
+		} catch (\Throwable $_) {
+			// swallow errors
+		}
 	}
 
 	/**
@@ -1111,6 +1180,50 @@ class ObjectEphemerides extends Component
 				'objectSlug' => $obj->slug ?? ($obj->name ?? null),
 			];
 
+			// Ensure the small `object-constellation` preview receives the computed
+			// constellation immediately (defensive: do not overwrite non-empty values
+			// on the client because `ObjectConstellation` ignores null clears).
+			try {
+				if (!empty($consName)) {
+					$this->emitTo('object-constellation', 'setConstellation', $consName);
+				}
+			} catch (\Throwable $_) {
+				// ignore emit failures
+			}
+
+			// Defensive: do not expose RA/Dec for the Moon — users requested hiding
+			// Moon coordinates and they are not useful in the main object header.
+			try {
+				$sourceLowerCheck = is_string($payloadArr['sourceTypeRaw'] ?? '') ? mb_strtolower($payloadArr['sourceTypeRaw']) : null;
+				$slugCheck = isset($obj) && (isset($obj->slug) || isset($obj->name)) ? (string) ($obj->slug ?? $obj->name) : null;
+				$isMoonObj = false;
+				if ($sourceLowerCheck === 'moon') $isMoonObj = true;
+				if (!$isMoonObj && $slugCheck) {
+					$key = preg_replace('/[^a-z]/', '', mb_strtolower($slugCheck));
+					if ($key === 'moon') $isMoonObj = true;
+				}
+				if ($isMoonObj) {
+					try {
+						$this->ephemerides['raDeg'] = null;
+					} catch (\Throwable $_) {
+					}
+					try {
+						$this->ephemerides['decDeg'] = null;
+					} catch (\Throwable $_) {
+					}
+					// Also clear local computed variables so they are not emitted to clients
+					try {
+						$raDeg = null;
+					} catch (\Throwable $_) {
+					}
+					try {
+						$decDeg = null;
+					} catch (\Throwable $_) {
+					}
+				}
+			} catch (\Throwable $_) {
+			}
+
 			// Notify the aladin preview component with computed coordinates and
 			// appearance (diameter/magnitude) so it can update contrast / optimum
 			// detection calculations immediately when the date changes.
@@ -1141,6 +1254,7 @@ class ObjectEphemerides extends Component
 					'diam2' => $computedDiam2 ?? ($obj->diam2 ?? null),
 					'mag' => $computedMag ?? ($obj->mag ?? null),
 					'illuminated_fraction' => $this->ephemerides['illuminated_fraction'] ?? null,
+					'illumination' => $this->ephemerides['illuminated_fraction'] ?? null,
 					'ephemerides' => $this->ephemerides,
 					'constellation' => $this->ephemerides['constellation'] ?? null,
 					'constellation_code' => $this->ephemerides['constellation_code'] ?? null,
@@ -1181,36 +1295,73 @@ class ObjectEphemerides extends Component
 				}
 				$previewPayload = $emitPayload;
 				$previewPayload['ephemerides'] = $sanitizedEphemerides;
-				$this->emit('objectEphemeridesUpdated', $previewPayload);
-				// Also emit to the `object-constellation` Livewire component (if mounted)
-				try {
-					$this->emitTo('object-constellation', 'setConstellation', $emitPayload['constellation'] ?? null);
-					// Also broadcast a generic event for other listeners if needed
-					$this->emit('objectConstellationUpdated', ['objectId' => $emitPayload['objectId'] ?? null, 'constellation' => $emitPayload['constellation'] ?? null]);
-				} catch (\Throwable $_) {
-					// non-fatal if emitTo fails (component not mounted)
-				}
-				// Also dispatch a browser event so non-authenticated pages (no Livewire preview mounted)
-				// still receive the computed ephemerides and update client-side UI listeners.
-				// dispatching browser event logging removed
-				try {
-					// Dispatch browser event with sanitized preview payload so the client-side
-					// Aladin preview doesn't receive raw embedded graph HTML.
-					$this->dispatchBrowserEvent('aladin-preview-info-updated', $previewPayload);
-					// Also dispatch a specialized event to force-update the small Livewire
-					// `object-constellation` component instance on the client. The client
-					// listener will locate the mounted Livewire component and set its
-					// `constellation` public property immediately.
+
+				// If parent requested suppression of ephemerides (e.g. MoonDetails mounted)
+				// avoid emitting or dispatching browser events that could overwrite the
+				// authoritative per-type Livewire component. This prevents later
+				// out-of-order updates on Moon pages.
+				if (empty($this->suppressEphemerides)) {
 					try {
-						$this->dispatchBrowserEvent('dsl-force-constellation', [
-							'objectId' => $emitPayload['objectId'] ?? null,
-							'constellation' => $emitPayload['constellation'] ?? null,
-						]);
+						Log::debug('ObjectEphemerides: about to emit objectEphemeridesUpdated', ['objectId' => $previewPayload['objectId'] ?? null, 'ephemerides' => $previewPayload['ephemerides'] ?? null]);
 					} catch (\Throwable $_) {
-						// non-fatal
 					}
-				} catch (\Throwable $_) {
-					// non-fatal if browser event dispatch fails in the server environment
+					$this->emit('objectEphemeridesUpdated', $previewPayload);
+					// Also emit to the `object-constellation` Livewire component (if mounted)
+					try {
+						$this->emitTo('object-constellation', 'setConstellation', $emitPayload['constellation'] ?? null);
+						// Also broadcast a generic event for other listeners if needed
+						$this->emit('objectConstellationUpdated', ['objectId' => $emitPayload['objectId'] ?? null, 'constellation' => $emitPayload['constellation'] ?? null]);
+					} catch (\Throwable $_) {
+						// non-fatal if emitTo fails (component not mounted)
+					}
+					// Also dispatch a browser event so non-authenticated pages (no Livewire preview mounted)
+					// still receive the computed ephemerides and update client-side UI listeners.
+					try {
+						// Dispatch browser event with sanitized preview payload so the client-side
+						// Aladin preview doesn't receive raw embedded graph HTML.
+						// Convert any Moon illuminated_fraction into a moon_illumination key
+						// so generic page handlers do not treat it as the object's
+						// illuminated_fraction (prevents moon illumination from
+						// overwriting other object pages).
+						$browserPreview = $previewPayload;
+						try {
+							$targetName = '';
+							if (!empty($browserPreview['objectSlug'])) $targetName = mb_strtolower(trim((string)$browserPreview['objectSlug']));
+							elseif (!empty($browserPreview['objectName'])) $targetName = mb_strtolower(trim((string)$browserPreview['objectName']));
+							// If the payload targets the Moon, move the illuminated_fraction
+							// into a dedicated `moon_illumination` field and remove the
+							// generic `illuminated_fraction` so broad handlers won't pick it up.
+							if ($targetName === 'moon') {
+								if (array_key_exists('illuminated_fraction', $browserPreview)) {
+									$browserPreview['moon_illumination'] = $browserPreview['illuminated_fraction'];
+									unset($browserPreview['illuminated_fraction']);
+								}
+								if (isset($browserPreview['ephemerides']) && is_array($browserPreview['ephemerides']) && array_key_exists('illuminated_fraction', $browserPreview['ephemerides'])) {
+									$browserPreview['ephemerides']['moon_illumination'] = $browserPreview['ephemerides']['illuminated_fraction'];
+									unset($browserPreview['ephemerides']['illuminated_fraction']);
+								}
+							}
+						} catch (\Throwable $_) {
+							// ignore sanitization errors and fall back to raw preview
+							$browserPreview = $previewPayload;
+						}
+
+						$this->dispatchBrowserEvent('aladin-preview-info-updated', $browserPreview);
+						// Also dispatch a specialized event to force-update the small Livewire
+						// `object-constellation` component instance on the client. The client
+						// listener will locate the mounted Livewire component and set its
+						// `constellation` public property immediately.
+						try {
+							$this->dispatchBrowserEvent('dsl-force-constellation', [
+								'objectId' => $emitPayload['objectId'] ?? null,
+								'constellation' => $emitPayload['constellation'] ?? null,
+							]);
+						} catch (\Throwable $_) {
+							// non-fatal
+						}
+					} catch (\Throwable $_) {
+						// non-fatal if browser event dispatch fails in the server environment
+					}
 				}
 			} catch (\Throwable $_) {
 				// non-fatal if emit fails

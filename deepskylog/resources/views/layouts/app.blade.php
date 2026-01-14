@@ -103,7 +103,19 @@
     <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" />
 
     <!-- Scripts -->
-    <wireui:scripts />
+    {{-- Inline WireUI hooks (defines window.Wireui) then load WireUI client script from same origin --}}
+    <script>
+        window.Wireui = {
+            cache: {},
+            hook: function(hookName, callback) {
+                window.addEventListener('wireui:' + hookName, callback);
+            },
+            dispatchHook: function(hookName) {
+                window.dispatchEvent(new Event('wireui:' + hookName));
+            }
+        };
+    </script>
+    <script src="/wireui/assets/scripts" defer></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
     <style>
@@ -161,9 +173,15 @@
 
     <!-- Styles -->
     @livewireStyles
-</head>
+    {{-- layout-level deep-sky CSS removed; deep-sky page layout is handled in the object view to match moon-page markup --}}
+    <script>
+        // Global flag to enable DSL debug traces when `?dsl_debug=1` is present.
+        window.__dsl_debug_enabled = !!(location && location.search && String(location.search).indexOf('dsl_debug=1') !== -
+            1);
+    </script>
+    </head>
 
-<body class="font-sans antialiased dark">
+    <body class="font-sans antialiased dark">
     <div class="min-h-[calc(100vh-56px)] bg-gray-800 text-gray-300">
         @livewire('navigation-menu')
 
@@ -173,9 +191,21 @@
         <main>
             <!-- Use full width on xl so large viewports can utilize more horizontal space -->
             <div class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-col lg:flex-row gap-4 w-full items-stretch">
-                    @livewire('ephemeris-aside')
-                    <div class="flex-1" data-dsl-main-content>
+                {{-- If a page requests the deep-sky full container, wrap the
+                     entire side-by-side layout (ephemeris aside + main)
+                     inside the wider `max-w-screen-xl` container so both
+                     asides remain visible and aligned. Only deep-sky pages
+                     set this section. --}}
+                @if(!empty($dsl_deepsky_full_container) || \View::hasSection('dsl_deepsky_full_container'))
+                    <div class="mx-auto max-w-screen-xl xl:max-w-full bg-gray-900 px-6 py-6 sm:px-6 lg:px-8">
+                        <div class="flex flex-col lg:flex-row gap-4 w-full items-stretch">
+                            @livewire('ephemeris-aside')
+                            <div class="flex-1" data-dsl-main-content>
+                @else
+                    <div class="flex flex-col lg:flex-row gap-4 w-full items-stretch">
+                        @livewire('ephemeris-aside')
+                        <div class="flex-1" data-dsl-main-content>
+                @endif
                         {{-- Optional page header slot (used by pages like messages.create) --}}
                         @isset($header)
                             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 py-4">
@@ -190,6 +220,9 @@
                         @endif
                     </div>
                 </div>
+                @if(!empty($dsl_deepsky_full_container) || \View::hasSection('dsl_deepsky_full_container'))
+                    </div>
+                @endif
             </div>
         </main>
     </div>
@@ -229,23 +262,7 @@
         </div>
     </footer>
     <script>
-        try {
-            // Small diagnostic logs to help debug missing comet charts
-            console.log('dsl-debug: ApexCharts type=', typeof window.ApexCharts);
-            console.log('dsl-debug: comet wrapper present (v1)=', !!document.getElementById('dsl-comet-mag-chart-wrapper'));
-            console.log('dsl-debug: comet wrapper present (v2)=', !!document.getElementById(
-                'dsl-comet-mag-chart-wrapper-2'));
-            // Log any script tags that look like chart/CDN includes
-            Array.from(document.querySelectorAll('script[src]')).forEach(function(s) {
-                try {
-                    if (/apex|larapex|cdn.jsdelivr|apexcharts|chart.js/i.test(s.src)) {
-                        console.log('dsl-debug: script tag:', s.src);
-                    }
-                } catch (e) {}
-            });
-        } catch (e) {
-            console.error('dsl-debug: error', e);
-        }
+        // Legacy comet chart debug logs removed — Livewire handles comet UI now.
     </script>
 
     @stack('scripts')
@@ -276,7 +293,7 @@
                     // Add small padding to ensure we cover margins/footers
                     ep.style.minHeight = (h + 12) + 'px';
                 } catch (e) {
-                    console.debug('[dsl-debug] syncEphemHeight failed', e);
+                    if (window.__dsl_debug_enabled) console.debug('[dsl-debug] syncEphemHeight failed', e);
                 }
             }
 
@@ -375,7 +392,7 @@
                         }
                     });
                 } catch (e) {
-                    console.debug('[dsl-debug] adjustPopovers failed', e);
+                    if (window.__dsl_debug_enabled) console.debug('[dsl-debug] adjustPopovers failed', e);
                 }
             }
 
@@ -417,6 +434,7 @@
     <script>
         (function() {
             try {
+                if (!window.__dsl_debug_enabled) return;
                 var path = (location && location.pathname) ? location.pathname : '';
                 var slug = null;
                 try {
@@ -558,7 +576,7 @@
                                         try {
                                             var p = (new URL(url, location.href)).pathname || '';
                                             if (/\/m-\d+$/.test(p) || /(^|\/)m-\d+$/.test(p.replace(/^\//,
-                                                ''))) {
+                                                    ''))) {
                                                 report('resource fetch matches suspicious pattern', url, null);
                                             }
                                         } catch (e) {}

@@ -4,6 +4,7 @@ User-agent: *
 
 # Allow main public pages
 Allow: /
+Disallow: /index.php
 
 # Disallow common admin and account pages
 Disallow: /admin/

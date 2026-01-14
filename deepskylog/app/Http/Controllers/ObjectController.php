@@ -1248,69 +1248,71 @@ class ObjectController extends Controller
                     }
                 }
                 // If this object is a comet, also attempt to read legacy comet observations
-                try {
-                    if (class_exists(\App\Models\CometObservationsOld::class)) {
-                        $hasCometObsTable = false;
-                        try {
-                            $hasCometObsTable = DB::connection('mysqlOld')->getSchemaBuilder()->hasTable('cometobservations');
-                        } catch (\Throwable $_) {
+                if ((($session->source_type_raw ?? '') === 'comet') || (($type ?? '') === 'comet')) {
+                    try {
+                        if (class_exists(\App\Models\CometObservationsOld::class)) {
                             $hasCometObsTable = false;
-                        }
+                            try {
+                                $hasCometObsTable = DB::connection('mysqlOld')->getSchemaBuilder()->hasTable('cometobservations');
+                            } catch (\Throwable $_) {
+                                $hasCometObsTable = false;
+                            }
 
-                        if ($hasCometObsTable) {
-                            $coObjId = null;
-                            // Prefer numeric session id when available (legacy cometobservations.objectid stores numeric comet id)
-                            if (isset($session->id) && is_numeric($session->id)) {
-                                $coObjId = (int) $session->id;
-                            } else {
-                                // Try resolving by modern CometObject (legacy table fallback removed)
-                                try {
-                                    $coModel = \App\Models\CometObject::where('name', $session->name ?? '')->first();
-                                    if ($coModel) $coObjId = $coModel->id ?? null;
-                                } catch (\Throwable $_) {
-                                }
-                                if (empty($coObjId)) {
+                            if ($hasCometObsTable) {
+                                $coObjId = null;
+                                // Prefer numeric session id when available (legacy cometobservations.objectid stores numeric comet id)
+                                if (isset($session->id) && is_numeric($session->id)) {
+                                    $coObjId = (int) $session->id;
+                                } else {
+                                    // Try resolving by modern CometObject (legacy table fallback removed)
                                     try {
-                                        if (class_exists(\App\Models\CometObject::class)) {
-                                            $coOld = \App\Models\CometObject::where('name', $session->name ?? '')->first();
-                                            if ($coOld) $coObjId = $coOld->id ?? null;
-                                        }
+                                        $coModel = \App\Models\CometObject::where('name', $session->name ?? '')->first();
+                                        if ($coModel) $coObjId = $coModel->id ?? null;
                                     } catch (\Throwable $_) {
                                     }
-                                }
-                            }
-
-                            if (! empty($coObjId)) {
-                                try {
-                                    $totalObservations = \App\Models\CometObservationsOld::where('objectid', $coObjId)->count();
-                                } catch (\Throwable $_) {
-                                    // ignore and leave existing totalObservations
-                                }
-
-                                try {
-                                    // Provide drawings as a numeric count; view will handle numeric values
-                                    $drawings = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('hasDrawing', 1)->count();
-                                } catch (\Throwable $_) {
-                                    $drawings = $drawings ?? null;
-                                }
-
-                                // Provide per-user counts when user is authenticated
-                                try {
-                                    if (Auth::check()) {
-                                        $uname = Auth::user()->username ?? Auth::user()->slug ?? null;
-                                        if (! empty($uname)) {
-                                            $yourObservations = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('observerid', $uname)->count();
-                                            $yourDrawings = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('observerid', $uname)->where('hasDrawing', 1)->count();
+                                    if (empty($coObjId)) {
+                                        try {
+                                            if (class_exists(\App\Models\CometObject::class)) {
+                                                $coOld = \App\Models\CometObject::where('name', $session->name ?? '')->first();
+                                                if ($coOld) $coObjId = $coOld->id ?? null;
+                                            }
+                                        } catch (\Throwable $_) {
                                         }
                                     }
-                                } catch (\Throwable $_) {
-                                    // ignore per-user errors
+                                }
+
+                                if (! empty($coObjId)) {
+                                    try {
+                                        $totalObservations = \App\Models\CometObservationsOld::where('objectid', $coObjId)->count();
+                                    } catch (\Throwable $_) {
+                                        // ignore and leave existing totalObservations
+                                    }
+
+                                    try {
+                                        // Provide drawings as a numeric count; view will handle numeric values
+                                        $drawings = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('hasDrawing', 1)->count();
+                                    } catch (\Throwable $_) {
+                                        $drawings = $drawings ?? null;
+                                    }
+
+                                    // Provide per-user counts when user is authenticated
+                                    try {
+                                        if (Auth::check()) {
+                                            $uname = Auth::user()->username ?? Auth::user()->slug ?? null;
+                                            if (! empty($uname)) {
+                                                $yourObservations = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('observerid', $uname)->count();
+                                                $yourDrawings = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('observerid', $uname)->where('hasDrawing', 1)->count();
+                                            }
+                                        }
+                                    } catch (\Throwable $_) {
+                                        // ignore per-user errors
+                                    }
                                 }
                             }
                         }
+                    } catch (\Throwable $_) {
+                        // ignore comet counting errors
                     }
-                } catch (\Throwable $_) {
-                    // ignore comet counting errors
                 }
             }
         } catch (\Throwable $_) {
@@ -2010,6 +2012,27 @@ class ObjectController extends Controller
                                     }
                                 } catch (\Throwable $_) {
                                     // ignore diameter calculation errors
+                                }
+                                // Compute illuminated fraction for planets for the initial page payload
+                                try {
+                                    $illum = null;
+                                    if (method_exists($planet, 'illuminatedFraction')) {
+                                        $v = $planet->illuminatedFraction($date);
+                                        if (is_numeric($v)) $illum = (float)$v;
+                                        elseif ($v instanceof \JsonSerializable || is_string($v)) $illum = (float)$v;
+                                    }
+                                } catch (\Throwable $_) {
+                                    $illum = null;
+                                }
+                                try {
+                                    $session->illuminated_fraction = $illum ?? null;
+                                } catch (\Throwable $_) {
+                                }
+                                try {
+                                    if (isset($ephemerides) && is_array($ephemerides)) {
+                                        $ephemerides['illuminated_fraction'] = $illum ?? ($ephemerides['illuminated_fraction'] ?? null);
+                                    }
+                                } catch (\Throwable $_) {
                                 }
                                 // Also compute initial contrast reserve and optimum detection magnification for planets
                                 // so the detail page shows values even before Livewire recalculation runs.
@@ -3158,6 +3181,32 @@ class ObjectController extends Controller
             $cometMagnitudeChart = null;
         }
 
-        return response()->view('object.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId', 'ephemerides', 'yourObservations', 'yourDrawings', 'comet_magnitudes', 'comet_min_mag', 'comet_max_mag', 'cometMagnitudeChart'));
+        // For comet detail pages we should not embed server-side ephemerides into
+        // the initial HTML payload. Ephemerides can be stale across sessions or
+        // driven by wrapper diagnostics; prefer Livewire's EphemerisAside as the
+        // authoritative source so interactive date selection and reloads match.
+        try {
+            if ((($session->source_type_raw ?? '') === 'comet') || (($type ?? '') === 'comet')) {
+                $ephemerides = null;
+            }
+        } catch (\Throwable $_) {
+            // defensive: ignore errors and leave ephemerides as-is if something fails
+        }
+
+        // Use the moon-style page for lunar features so coordinates/constellation are hidden
+        if ((($session->source_type_raw ?? '') === 'lunar_feature') || (($type ?? '') === 'lunar_feature')) {
+            return response()->view('object.moon-page', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId', 'ephemerides', 'yourObservations', 'yourDrawings', 'comet_magnitudes', 'comet_min_mag', 'comet_max_mag', 'cometMagnitudeChart'));
+        }
+
+        $vars = compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId', 'ephemerides', 'yourObservations', 'yourDrawings', 'comet_magnitudes', 'comet_min_mag', 'comet_max_mag', 'cometMagnitudeChart');
+        try {
+            if (($type === 'deepsky' || $type === 'objects')) {
+                $vars['dsl_deepsky_full_container'] = true;
+            }
+        } catch (\Throwable $_) {
+            // ignore
+        }
+
+        return response()->view('object.show', $vars);
     }
 }

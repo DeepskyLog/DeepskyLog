@@ -101,68 +101,70 @@ $decStr =
             </tr>
         @endif
 
-        @auth
-            <tr id="ephem-rts-row-live">
-                <td class="pr-4 font-medium">{{ __('Rise / Transit / Set') }}</td>
-                <td id="ephem-rts-cell">
-                    <span class="font-mono"
-                        @if ($rTitle) title="{{ $rTitle }}" @endif>{{ $showR }}</span>
-                    <span class="text-gray-400 px-2">/</span>
-                    <span class="font-mono">{{ $showT }}</span>
-                    <span class="text-gray-400 px-2">/</span>
-                    <span class="font-mono"
-                        @if ($sTitle) title="{{ $sTitle }}" @endif>{{ $showS }}</span>
-                </td>
-            </tr>
+        @if (empty($suppressEphemerides))
+            @auth
+                <tr id="ephem-rts-row-live">
+                    <td class="pr-4 font-medium">{{ __('Rise / Transit / Set') }}</td>
+                    <td id="ephem-rts-cell">
+                        <span class="font-mono"
+                            @if ($rTitle) title="{{ $rTitle }}" @endif>{{ $showR }}</span>
+                        <span class="text-gray-400 px-2">/</span>
+                        <span class="font-mono">{{ $showT }}</span>
+                        <span class="text-gray-400 px-2">/</span>
+                        <span class="font-mono"
+                            @if ($sTitle) title="{{ $sTitle }}" @endif>{{ $showS }}</span>
+                    </td>
+                </tr>
 
-            <tr id="ephem-best-row-live">
-                <td class="pr-4 font-medium">{{ __('Best time') }}</td>
-                <td id="ephem-best-cell">{{ $e['best_time'] ?? '—' }}</td>
-            </tr>
+                <tr id="ephem-best-row-live">
+                    <td class="pr-4 font-medium">{{ __('Best time') }}</td>
+                    <td id="ephem-best-cell">{{ $e['best_time'] ?? '—' }}</td>
+                </tr>
 
-            <tr id="ephem-max-row-live">
-                <td class="pr-4 font-medium">{{ __('Maximum altitude') }}</td>
-                <td id="ephem-max-cell">
-                    @if (isset($e['max_height_at_night']) && $e['max_height_at_night'] !== null)
-                        {{ $e['max_height_at_night'] }}°
-                    @else
-                        —
-                    @endif
-                </td>
-            </tr>
-        @endauth
+                <tr id="ephem-max-row-live">
+                    <td class="pr-4 font-medium">{{ __('Maximum altitude') }}</td>
+                    <td id="ephem-max-cell">
+                        @if (isset($e['max_height_at_night']) && $e['max_height_at_night'] !== null)
+                            {{ $e['max_height_at_night'] }}°
+                        @else
+                            —
+                        @endif
+                    </td>
+                </tr>
+            @endauth
 
-        @guest
-            {{-- Guests: show ephemerides rows when Livewire has computed them --}}
-            <tr id="ephem-rts-row-guest">
-                <td class="pr-4 font-medium">{{ __('Rise / Transit / Set') }}</td>
-                <td id="ephem-rts-cell-guest">
-                    <span class="font-mono"
-                        @if ($rTitle) title="{{ $rTitle }}" @endif>{{ $showR }}</span>
-                    <span class="text-gray-400 px-2">/</span>
-                    <span class="font-mono">{{ $showT }}</span>
-                    <span class="text-gray-400 px-2">/</span>
-                    <span class="font-mono"
-                        @if ($sTitle) title="{{ $sTitle }}" @endif>{{ $showS }}</span>
-                </td>
-            </tr>
+            @guest
+                {{-- Guests: show ephemerides rows when Livewire has computed them --}}
+                <tr id="ephem-rts-row-guest">
+                    <td class="pr-4 font-medium">{{ __('Rise / Transit / Set') }}</td>
+                    <td id="ephem-rts-cell-guest">
+                        <span class="font-mono"
+                            @if ($rTitle) title="{{ $rTitle }}" @endif>{{ $showR }}</span>
+                        <span class="text-gray-400 px-2">/</span>
+                        <span class="font-mono">{{ $showT }}</span>
+                        <span class="text-gray-400 px-2">/</span>
+                        <span class="font-mono"
+                            @if ($sTitle) title="{{ $sTitle }}" @endif>{{ $showS }}</span>
+                    </td>
+                </tr>
 
-            <tr id="ephem-best-row-guest">
-                <td class="pr-4 font-medium">{{ __('Best time') }}</td>
-                <td id="ephem-best-cell-guest">{{ $e['best_time'] ?? '—' }}</td>
-            </tr>
+                <tr id="ephem-best-row-guest">
+                    <td class="pr-4 font-medium">{{ __('Best time') }}</td>
+                    <td id="ephem-best-cell-guest">{{ $e['best_time'] ?? '—' }}</td>
+                </tr>
 
-            <tr id="ephem-max-row-guest">
-                <td class="pr-4 font-medium">{{ __('Maximum altitude') }}</td>
-                <td id="ephem-max-cell-guest">
-                    @if (isset($e['max_height_at_night']) && $e['max_height_at_night'] !== null)
-                        {{ $e['max_height_at_night'] }}°
-                    @else
-                        —
-                    @endif
-                </td>
-            </tr>
-        @endguest
+                <tr id="ephem-max-row-guest">
+                    <td class="pr-4 font-medium">{{ __('Maximum altitude') }}</td>
+                    <td id="ephem-max-cell-guest">
+                        @if (isset($e['max_height_at_night']) && $e['max_height_at_night'] !== null)
+                            {{ $e['max_height_at_night'] }}°
+                        @else
+                            —
+                        @endif
+                    </td>
+                </tr>
+            @endguest
+        @endif
 
         {{-- Inner-planet events (Mercury/Venus): inferior/superior conjunction and greatest elongations --}}
         @php
@@ -247,13 +249,14 @@ $decStr =
         @endif
 
         @auth
-            @if (!empty($e['altitude_graph']))
+            {{-- Do not render heavy graph blobs for the Moon: Moon pages use a Livewire-only flow and avoid inline graphs. --}}
+            @if (!empty($e['altitude_graph']) && ($sourceTypeRaw ?? '') !== 'moon')
                 <tr>
                     <td colspan="2" class="pt-3">{!! $e['altitude_graph'] !!}</td>
                 </tr>
             @endif
 
-            @if (!empty($e['year_graph']))
+            @if (!empty($e['year_graph']) && ($sourceTypeRaw ?? '') !== 'moon')
                 <tr>
                     <td colspan="2" class="pt-2">{!! $e['year_graph'] !!}</td>
                 </tr>
@@ -363,6 +366,26 @@ $formatDec = function ($decDeg) {
                     $sanitizedEphem = [];
                 }
             }
+
+            // Normalise payload shapes: some callers may supply an indexed array
+            // of ephemerides entries (e.g. [0 => [...], 1 => [...]]) while the
+            // view expects a single associative ephemerides object. Prefer the
+            // first numeric entry when present to avoid embedding an array-of-arrays
+            // into the inline payload which leads to inconsistent client snapshots.
+            try {
+                if (
+                    is_array($sanitizedEphem) &&
+                    isset($sanitizedEphem[0]) &&
+                    is_array($sanitizedEphem[0]) &&
+                    (isset($sanitizedEphem[0]['date']) ||
+                        isset($sanitizedEphem[0]['rising']) ||
+                        isset($sanitizedEphem[0]['transit']))
+                ) {
+                    $sanitizedEphem = $sanitizedEphem[0];
+                }
+            } catch (\Throwable $_) {
+                // no-op: keep original shape on error
+            }
             foreach (['altitude_graph', 'year_graph', 'year_magnitude_graph', 'year_diameter_graph'] as $gk) {
                 if (isset($sanitizedEphem[$gk])) {
                     unset($sanitizedEphem[$gk]);
@@ -397,46 +420,52 @@ $formatDec = function ($decDeg) {
             ];
             $encoded = base64_encode(json_encode($inlinePayload));
         @endphp
-        <tr id="dsl-ephem-payload-row" style="display:none">
-            <td colspan="2">
-                <div id="dsl-ephem-payload" data-dsl-ephem-payload="{{ $encoded }}" style="display:none"></div>
-            </td>
-        </tr>
-        <script>
-            (function() {
-                try {
-                    // Immediate fallback: decode the inline Base64 payload (if present)
-                    // and update the top-of-page illuminated fraction so guests and
-                    // any clients get a fast synchronous update even if other handlers
-                    // miss the Livewire event. This runs during initial render.
-                    var el = document.getElementById('dsl-ephem-payload');
-                    if (!el) return;
-                    var raw = el.getAttribute('data-dsl-ephem-payload');
-                    if (!raw) return;
-                    var obj = null;
+        @if (empty($suppressEphemerides))
+            <tr id="dsl-ephem-payload-row" style="display:none">
+                <td colspan="2">
+                    <div id="dsl-ephem-payload" data-dsl-ephem-payload="{{ $encoded }}" style="display:none">
+                    </div>
+                </td>
+            </tr>
+            <script>
+                (function() {
                     try {
-                        obj = JSON.parse(atob(raw));
-                    } catch (e) {
+                        // Immediate fallback: decode the inline Base64 payload (if present)
+                        // and update the top-of-page illuminated fraction so guests and
+                        // any clients get a fast synchronous update even if other handlers
+                        // miss the Livewire event. This runs during initial render.
+                        // If a Moon-specific Livewire component is present on the page,
+                        // prefer that authoritative path and skip the inline payload fallback.
+                        if (document.getElementById('dsl-moon-ephem-cell')) return;
+                        var el = document.getElementById('dsl-ephem-payload');
+                        if (!el) return;
+                        var raw = el.getAttribute('data-dsl-ephem-payload');
+                        if (!raw) return;
+                        var obj = null;
                         try {
-                            obj = JSON.parse(raw);
-                        } catch (e2) {
-                            obj = null;
-                        }
-                    }
-                    if (!obj) return;
-                    var illum = (typeof obj.illuminated_fraction !== 'undefined') ? obj.illuminated_fraction : (obj
-                        .ephemerides && obj.ephemerides.illuminated_fraction ? obj.ephemerides.illuminated_fraction :
-                        null);
-                    if (illum !== null && illum !== '' && !isNaN(Number(illum))) {
-                        var top = document.getElementById('dsl-top-illum');
-                        if (top) {
+                            obj = JSON.parse(atob(raw));
+                        } catch (e) {
                             try {
-                                top.textContent = (Number(illum) * 100.0).toFixed(1) + '%';
-                            } catch (e) {}
+                                obj = JSON.parse(raw);
+                            } catch (e2) {
+                                obj = null;
+                            }
                         }
-                    }
-                } catch (e) {}
-            })();
-        </script>
+                        if (!obj) return;
+                        var illum = (typeof obj.illuminated_fraction !== 'undefined') ? obj.illuminated_fraction : (obj
+                            .ephemerides && obj.ephemerides.illuminated_fraction ? obj.ephemerides.illuminated_fraction :
+                            null);
+                        if (illum !== null && illum !== '' && !isNaN(Number(illum))) {
+                            var top = document.getElementById('dsl-top-illum');
+                            if (top) {
+                                try {
+                                    top.textContent = (Number(illum) * 100.0).toFixed(1) + '%';
+                                } catch (e) {}
+                            }
+                        }
+                    } catch (e) {}
+                })();
+            </script>
+        @endif
     @endif
 </tbody>

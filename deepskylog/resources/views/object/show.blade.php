@@ -1086,6 +1086,25 @@ try {
                                             .atlas-header,
                                             .atlas-header *,
                                             #nearby-objects-wrapper .atlas-header,
+                                                          /* Contain the PowerGrid table so it cannot push the whole page width.
+                                                              Use a fixed table layout and reduced padding to keep the table narrower
+                                                              by default. Override inline `width: max-content` styles emitted by
+                                                              PowerGrid to allow columns to shrink and ellipsize overflowing text. */
+                                                          #nearby-objects-wrapper { box-sizing: border-box; max-width:100%; overflow-x:auto !important; }
+                                                          #nearby-objects-wrapper table { table-layout: fixed !important; width:100% !important; min-width:0 !important; }
+                                                        /* Neutralize negative margins and wide min-width helpers emitted by PowerGrid's layout */
+                                                        #nearby-objects-wrapper [class*="-my-"] { margin-top: 0 !important; margin-bottom: 0 !important; }
+                                                        #nearby-objects-wrapper [class*="-mx-"] { margin-left: 0 !important; margin-right: 0 !important; padding-left: 0 !important; padding-right: 0 !important; }
+                                                        #nearby-objects-wrapper [class*=":-mx-"] { margin-left: 0 !important; margin-right: 0 !important; }
+                                                        /* Override utility that sets a large min-width */
+                                                        #nearby-objects-wrapper .min-w-full { min-width: 0 !important; }
+                                                          #nearby-objects-wrapper thead th, #nearby-objects-wrapper tbody td { white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+                                                          #nearby-objects-wrapper thead th, #nearby-objects-wrapper tbody td { padding-top: 0.45rem !important; padding-bottom: 0.45rem !important; padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
+                                                          /* Reduce font-size slightly so text fits more compactly */
+                                                          #nearby-objects-wrapper table { font-size: 0.875rem !important; }
+                                                          /* Override PowerGrid inline max-content widths */
+                                                          #nearby-objects-wrapper [style*="max-content"] { width: auto !important; max-width: 1%; }
+                                                          #nearby-objects-wrapper th[style*="max-content"], #nearby-objects-wrapper td[style*="max-content"] { width: auto !important; max-width: 1% !important; }
                                             #nearby-objects-wrapper .atlas-header * {
                                                 white-space: normal !important;
                                                 max-width: 7rem !important;
@@ -1693,7 +1712,7 @@ try {
 
                         </article>
 
-                        <aside class="w-full xl:col-span-2 xl:w-auto">
+                        <aside class="w-full xl:col-span-2 xl:w-auto lg:flex-none lg:max-w-[420px] space-y-4">
                             <div class="bg-gray-800 p-3 rounded shadow text-gray-100">
                                 <h4 class="font-semibold mb-2 text-white">{{ __('Quick links') }}</h4>
                                 <ul class="space-y-2 text-sm">

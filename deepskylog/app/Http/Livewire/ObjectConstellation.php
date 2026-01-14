@@ -20,6 +20,39 @@ class ObjectConstellation extends Component
     {
         $this->constellation = $initialConstellation ?? null;
         $this->objectId = $objectId ?? null;
+        // If no initial constellation provided, request an authoritative
+        // ephemerides recompute from the `object-ephemerides` component so
+        // it can emit `objectEphemeridesUpdated` with a computed constellation.
+        try {
+            if (empty($this->constellation) && ! empty($this->objectId)) {
+                // Request a server-side ephemerides recompute by emitting the
+                // normalized payload event that `ObjectEphemerides` listens to.
+                $this->emit('ephemerisPayloadUpdated', ['objectId' => $this->objectId]);
+            }
+        } catch (\Throwable $_) {
+            // ignore
+        }
+
+        // Defensive server-side recompute: instantiate the ObjectEphemerides
+        // Livewire class and call recalculate() so we can obtain an
+        // authoritative constellation immediately on the server.
+        try {
+            if (empty($this->constellation) && ! empty($this->objectId) && class_exists(\App\Http\Livewire\ObjectEphemerides::class)) {
+                $lw = new \App\Http\Livewire\ObjectEphemerides();
+                $lw->objectId = $this->objectId;
+                $lw->suppressEphemerides = false;
+                try {
+                    $lw->recalculate(['objectId' => $this->objectId]);
+                } catch (\Throwable $_) {
+                    // ignore recalc failures
+                }
+                if (!empty($lw->ephemerides) && is_array($lw->ephemerides) && !empty($lw->ephemerides['constellation'])) {
+                    $this->constellation = $lw->ephemerides['constellation'];
+                }
+            }
+        } catch (\Throwable $_) {
+            // ignore
+        }
     }
 
     public function setConstellation($value)
@@ -40,8 +73,16 @@ class ObjectConstellation extends Component
                 if (isset($arr['objectId']) && $arr['objectId'] !== null && $this->objectId !== null) {
                     if ((string)$arr['objectId'] !== (string)$this->objectId) return;
                 }
-                if (isset($arr['constellation'])) {
-                    $this->constellation = $arr['constellation'];
+                if (array_key_exists('constellation', $arr)) {
+                    $incoming = $arr['constellation'];
+                    // Defensive: if an incoming payload would clear the constellation
+                    // (null/empty) but we already have a non-empty value established
+                    // from the server-rendered initial payload, prefer the existing
+                    // value to avoid briefly showing 'Unknown' on the client.
+                    if (($incoming === null || $incoming === '') && !empty($this->constellation)) {
+                        return;
+                    }
+                    $this->constellation = $incoming;
                 }
             }
         } catch (\Throwable $_) {

@@ -4,46 +4,18 @@
 
 ## Next steps
 
-+ [ ] Problem with Mockery in Pest
-  + [ ] XDEBUG_MODE=off ./vendor/bin/pest --filter DeepskyObjectTest -v
 + [ ] Targets
   + [X] Create tables for deepsky, comets, planets, moons, lunar features, and other object types.
-  + [ ] Show information about an object, like type, constellation, other names, description, ...
-    + [X] Add Aladin preview:
-    + [X] Add date, rise, transit, set, best time and maximum altitude.
-    + [X] Add graph with elevation of the object for a location and a certain date -> method does exist in laravel-astronomy-library
-    + [X] Add moon and astronomical twilight information for that date and location.
-    + [X] Update laravel-astronomy-library to show a line instead of points for the altitude graph, add moon elevation to that graph.
-    + [X] Add visibility information (best months to observe, ...) using graph
-    + [X] Seen : Y(858/8) 20080929
-    + [X] Quick links
-    + [X] Add a list of observations of this object, with a link to the observation.
-    + [X] Add a list of drawings of this object, with a link to the drawing.  At least the sketches of the week / month should be shown.
-    + [X] Planets:
-      + [X] Add graph of magnitude and size over a year for planets.
-      + [X] Part of / Belongs to?  Also for the deepsky objects.
-      + [X] Test when not logged in
-    + [X] Comets
-      + [X] Correct the quick links
-      + [X] Add sketch of the week
-      + [X] Add Number of observations, sketches, ...
-      + [X] Add observations, sketches, ...
-      + [X] Add coordinates.  Fix coordinates...
-      + [X] Test when not logged in
-    + [ ] Moon
-      + [ ] Add information (coordinates, illumination, ...) for the moon
-      + [ ] Add extra information for lunar features: diameter, depth, ...
-      + [ ] Add graph of libration over a year for lunar features.
-      + [ ] Lunar eclipses
-      + [ ] Test when not logged in
-    + [ ] Sun
-      + [ ] Add extra information for solar features: diameter, ...
-      + [ ] Solar eclipses?
-      + [ ] Test when not logged in
-    + [ ] Add star map created from DeepskyLog or from external source (stellarium web, <https://theskylive.com/planetarium#ra|21.926851512758986|dec|-24.11458301299462|fov|36.14999999999999>, ...)?
-    + [ ] Add export to map?
-    + [ ] Automatically update the photometry: astronomy:updateCometPhotometry
-    + [ ] Add lists which have this object
+  + [X] Deep-sky objects
+  + [X] Planets:
+  + [X] Comets
+  + [X] Moon
+  + [X] Lunar features
+  + [X] Sun
+  + [ ] Create the links to new new object pages.
+  + [ ] Automatically update the photometry: astronomy:updateCometPhotometry
++ [ ] Add page with links to observing guides: Alvin Huey, Reiner Vogel, Clearskies, ...
++ [ ] New version does not work anymore on the VPS.  All websites just hang after enabling the test.deepskylog.org.conf file.
 + [ ] Administrator / Database expert pages to add / edit / delete objects
 + [ ] Add export to Report (does not work in current version of DeepskyLog), Maps (works partly)
 + [ ] Search targets, first by name, then by type, constellation, ...

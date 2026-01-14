@@ -35,10 +35,12 @@
         </tr>
     @endif
     @php
-        $isComet = in_array(strtolower(trim((string) ($object_type ?? ''))), ['comet', 'cometobjects'], true);
+        $objTypeNormalized = strtolower(trim((string) ($object_type ?? '')));
+        $isComet = in_array($objTypeNormalized, ['comet', 'cometobjects'], true);
+        $isMoon = $objTypeNormalized === 'moon';
     @endphp
 
-    @unless ($isComet)
+    @unless ($isComet || $isMoon)
         <tr>
             <td class="pr-4 font-medium">
                 <div class="inline-flex items-center space-x-2">
@@ -153,7 +155,7 @@
     @endunless
     {{-- The RA/Dec, Magnitude and Diameter rows were removed from this preview
          area because those values are shown at the top of the page. --}}
-    @unless ($isComet)
+    @unless ($isComet || $isMoon)
         <tr>
             <td class="pr-4 font-medium">{{ __('Optimum detection magnification') }}</td>
             <td>

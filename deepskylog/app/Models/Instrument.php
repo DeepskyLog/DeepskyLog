@@ -81,11 +81,18 @@ class Instrument extends Model
                 continue;
             }
             $ep = Eyepiece::where('id', $eyepiece)->first();
+            if (!$ep || !$ep->user) {
+                continue;
+            }
             $to_return .= "<a href='/eyepiece/".$ep->user->slug.'/'.$ep->slug."'>".
                 $ep->fullName().'</a>'.', ';
         }
 
-        // Remove the trailing comma and space
+        // Remove the trailing comma and space (if any)
+        if ($to_return === '') {
+            return '';
+        }
+
         return substr($to_return, 0, -2);
     }
 
@@ -115,11 +122,18 @@ class Instrument extends Model
                 continue;
             }
             $filt = Filter::where('id', $filter)->first();
+            if (!$filt || !$filt->user) {
+                continue;
+            }
             $to_return .= "<a href='/filter/".$filt->user->slug.'/'.$filt->slug."'>".
                 $filt->name.'</a>'.', ';
         }
 
-        // Remove the trailing comma and space
+        // Remove the trailing comma and space (if any)
+        if ($to_return === '') {
+            return '';
+        }
+
         return substr($to_return, 0, -2);
     }
 
@@ -139,11 +153,18 @@ class Instrument extends Model
                 continue;
             }
             $lns = Lens::where('id', $lens)->first();
+            if (!$lns || !$lns->user) {
+                continue;
+            }
             $to_return .= "<a href='/lens/".$lns->user->slug.'/'.$lns->slug."'>".
                 $lns->name.'</a>'.', ';
         }
 
-        // Remove the trailing comma and space
+        // Remove the trailing comma and space (if any)
+        if ($to_return === '') {
+            return '';
+        }
+
         return substr($to_return, 0, -2);
     }
 
@@ -163,11 +184,18 @@ class Instrument extends Model
                 continue;
             }
             $loc = Location::where('id', $location)->first();
+            if (!$loc || !$loc->user) {
+                continue;
+            }
             $to_return .= "<a href='/location/".$loc->user->slug.'/'.$loc->slug."'>".
                 $loc->name.'</a>'.', ';
         }
 
-        // Remove the trailing comma and space
+        // Remove the trailing comma and space (if any)
+        if ($to_return === '') {
+            return '';
+        }
+
         return substr($to_return, 0, -2);
     }
 

@@ -269,6 +269,77 @@ Route::get('/session/{user}/{session}', 'App\Http\Controllers\SessionController@
     ->name('session.show')->middleware('doNotCacheResponse');
 
 // Object detail pages: /object/{type}/{slugOrId}
+// Specific Moon path: serve a Livewire-first Moon page at /object/moon
+Route::get('/object/moon', function () {
+    // Compute initial ephemerides using the same logic as the aside so
+    // Livewire can hydrate immediately with correct values.
+    try {
+        $aside = new App\Http\Livewire\EphemerisAside();
+        // Ensure mount() runs the calculations and populates properties
+        if (method_exists($aside, 'mount')) $aside->mount();
+        $payload = [
+            'date' => $aside->date ?? \Carbon\Carbon::now()->toDateString(),
+            'rising' => $aside->moon_rise ?? null,
+            'setting' => $aside->moon_set ?? null,
+            'illuminated_fraction' => $aside->moon_illuminated ?? null,
+            'next_new_moon' => $aside->next_new_moon ?? null,
+            '_ts' => \Carbon\Carbon::now()->toIso8601String(),
+        ];
+    } catch (\Throwable $_) {
+        $payload = [
+            'date' => \Carbon\Carbon::now()->toDateString(),
+            'rising' => null,
+            'setting' => null,
+            'illuminated_fraction' => null,
+            'next_new_moon' => null,
+            '_ts' => \Carbon\Carbon::now()->toIso8601String(),
+        ];
+    }
+
+    $session = (object) [
+        'source_type_raw' => 'moon',
+        'source_type' => 'Moon',
+        'name' => 'Moon',
+        'id' => 'moon',
+        'slug' => 'moon',
+    ];
+
+    return view('object.moon-page', ['session' => $session, 'ephemerides' => $payload]);
+})->name('object.show.moon')->middleware('doNotCacheResponse');
+
+// Specific Sun path: serve a Livewire-first Sun page at /object/sun
+Route::get('/object/sun', function () {
+    try {
+        $aside = new App\Http\Livewire\EphemerisAside();
+        if (method_exists($aside, 'mount')) $aside->mount();
+        $payload = [
+            'date' => $aside->date ?? \Carbon\Carbon::now()->toDateString(),
+            'sun_times' => $aside->sun_times ?? null,
+            'nautical' => $aside->nautical ?? null,
+            'astronomical' => $aside->astronomical ?? null,
+            '_ts' => \Carbon\Carbon::now()->toIso8601String(),
+        ];
+    } catch (\Throwable $_) {
+        $payload = [
+            'date' => \Carbon\Carbon::now()->toDateString(),
+            'sun_times' => null,
+            'nautical' => null,
+            'astronomical' => null,
+            '_ts' => \Carbon\Carbon::now()->toIso8601String(),
+        ];
+    }
+
+    $session = (object) [
+        'source_type_raw' => 'sun',
+        'source_type' => 'Sun',
+        'name' => 'Sun',
+        'id' => 'sun',
+        'slug' => 'sun',
+    ];
+
+    return view('object.sun-page', ['session' => $session, 'ephemerides' => $payload]);
+})->name('object.show.sun')->middleware('doNotCacheResponse');
+
 Route::get('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'show'])
     ->name('object.show')->middleware('doNotCacheResponse');
 
@@ -428,123 +499,3 @@ Route::get('/sitemap.xml', function () {
 
     return Response::make($xml, 200, ['Content-Type' => 'application/xml']);
 })->name('sitemap');
-
-// Local-only debug route to inspect Contrast Reserve inputs and result for an object/user
-Route::get('/debug/cr', function (\Illuminate\Http\Request $request) {
-    if (! app()->environment('local')) {
-        abort(404);
-    }
-
-    $objParam = $request->query('object');
-    $userId = $request->query('user', 1);
-
-    $user = App\Models\User::find($userId);
-    if (! $user) {
-        return response()->json(['error' => 'user not found'], 404);
-    }
-
-    $obj = null;
-    if (is_numeric($objParam)) {
-        $obj = App\Models\DeepskyObject::where('id', $objParam)->first();
-    } else {
-        $obj = App\Models\DeepskyObject::where('name', $objParam)->first();
-    }
-
-    if (! $obj) {
-        return response()->json(['error' => 'object not found'], 404);
-    }
-
-    // Mirror the logic from NearbyObjectsTable::fields()->contrast_reserve
-    $result = [
-        'object' => ['id' => $obj->id ?? null, 'name' => $obj->name ?? null, 'mag' => $obj->mag ?? null, 'diam1' => $obj->diam1 ?? null, 'diam2' => $obj->diam2 ?? null, 'subr' => $obj->subr ?? null],
-        'user' => ['id' => $user->id ?? null, 'has_standard_location' => (bool) ($user->standardLocation ?? null), 'has_standard_instrument' => (bool) ($user->standardInstrument ?? null)],
-        'estimated_mag' => null,
-        'sqm' => null,
-        'aperture_mm' => null,
-        'instrument_fixedMag' => null,
-        'instrument_focal_length_mm' => null,
-        'calc_sbobj_ok' => false,
-        'contrast' => null,
-        'errors' => [],
-    ];
-
-    try {
-        if (! ($user->standardLocation ?? null)) {
-            $result['errors'][] = 'user missing standardLocation';
-        }
-        if (! ($user->standardInstrument ?? null)) {
-            $result['errors'][] = 'user missing standardInstrument';
-        }
-
-        $target = new \deepskylog\AstronomyLibrary\Targets\Target();
-        if ($obj->diam1 && $obj->diam2) {
-            $target->setDiameter($obj->diam1, $obj->diam2);
-        }
-
-        $m = ($obj->mag && $obj->mag != 99.9) ? $obj->mag : null;
-        if ($m === null) {
-            $d1f = is_numeric($obj->diam1) ? floatval($obj->diam1) : null;
-            $d2f = is_numeric($obj->diam2) ? floatval($obj->diam2) : null;
-            $subr = is_numeric($obj->subr) ? floatval($obj->subr) : null;
-            if (($d1f !== null && $d1f > 0) && (empty($d2f) || $d2f <= 0)) {
-                $d2f = $d1f;
-            } elseif (($d2f !== null && $d2f > 0) && (empty($d1f) || $d1f <= 0)) {
-                $d1f = $d2f;
-            }
-            if ($subr !== null && $d1f !== null && $d2f !== null && $d1f > 0 && $d2f > 0) {
-                $area = pi() * ($d1f / 2.0) * ($d2f / 2.0);
-                if ($area > 0) {
-                    $estimated = $subr - 2.5 * log10($area);
-                    $m = $estimated;
-                    $result['estimated_mag'] = $m;
-                }
-            }
-        }
-
-        if ($m !== null) {
-            $target->setMagnitude($m);
-        }
-
-        try {
-            $sbobj = $target->calculateSBObj();
-            $result['calc_sbobj_ok'] = true;
-        } catch (\Throwable $ex) {
-            $result['errors'][] = 'calculateSBObj failed: ' . $ex->getMessage();
-            $sbobj = null;
-        }
-
-        // SQM
-        try {
-            $sqm = method_exists($user->standardLocation, 'getSqm') ? $user->standardLocation->getSqm() : ($user->standardLocation->sqm ?? null);
-            $result['sqm'] = $sqm;
-        } catch (\Throwable $ex) {
-            $result['errors'][] = 'getSqm failed: ' . $ex->getMessage();
-            $sqm = null;
-        }
-
-        $instrument = $user->standardInstrument ?? null;
-        $result['aperture_mm'] = $instrument->aperture_mm ?? null;
-        $result['instrument_fixedMag'] = $instrument->fixedMagnification ?? null;
-        $result['instrument_focal_length_mm'] = $instrument->focal_length_mm ?? null;
-
-        $mag = $instrument->fixedMagnification ?? null;
-        if (! $mag && isset($obj->typicalEyepieceFocal) && ! empty($instrument->focal_length_mm)) {
-            $mag = round($instrument->focal_length_mm / $obj->typicalEyepieceFocal);
-        }
-
-        if ($sbobj !== null && $sqm !== null && $result['aperture_mm'] && $mag) {
-            try {
-                $contrast = $target->calculateContrastReserve($sbobj, $sqm, $result['aperture_mm'], $mag);
-                $result['contrast'] = $contrast;
-            } catch (\Throwable $ex) {
-                $result['errors'][] = 'calculateContrastReserve failed: ' . $ex->getMessage();
-            }
-        } else {
-            $result['errors'][] = 'missing inputs for calculateContrastReserve';
-        }
-    } catch (\Throwable $ex) {
-        $result['errors'][] = 'outer exception: ' . $ex->getMessage();
-    }
-
-    return response()->json($result);
-})->name('debug.cr');
