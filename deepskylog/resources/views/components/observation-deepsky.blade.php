@@ -76,7 +76,8 @@
             <span class="font-bold">{{ __('Unknown observer') }}</span>
         @endif
         @php
-            $link = config('app.old_url') . '/index.php?indexAction=detail_object&object=' . $observation->objectname;
+            $slug = $object?->slug ?? \Illuminate\Support\Str::slug($observation->objectname ?? '', '-');
+            $link = route('object.show', $slug);
         @endphp
 
         @php

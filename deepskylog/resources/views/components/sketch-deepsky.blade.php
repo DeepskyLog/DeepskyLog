@@ -1,7 +1,14 @@
 {{-- Avoid inline `use` in Blade views; use fully-qualified class names instead --}}
 @props(['observation_id' => null, 'observer_name' => null, 'observer_username' => null, 'observation_date' => null])
 <div>
-    <a href="{{ config('app.old_url') }}/index.php?indexAction=detail_observation&observation={{ $observation_id }}">
+    @php
+        $obs = \App\Models\ObservationsOld::find($observation_id);
+        $objectName = $obs ? ($obs->objectname ?? __('Unknown')) : __('Unknown');
+        $objectModel = $obs ? \App\Models\ObjectsOld::where('name', $objectName)->first() : null;
+        $slug = $objectModel?->slug ?? \Illuminate\Support\Str::slug($objectName ?? '', '-');
+        $objectUrl = route('object.show', $slug);
+    @endphp
+    <a href="{{ $objectUrl }}">
         <img width="400" src="/images/drawings/{{ $observation_id }}.jpg" />
 
         <div class="text-center">
@@ -17,12 +24,8 @@
     <div class="text-center mt-2 mb-3 flex items-center justify-center gap-3">
         <div>
             {!! ShareButtons::page(
-                'https://www.deepskylog.org/index.php?indexAction=detail_observation&observation=' . $observation_id,
-                __('Look at this sketch of ') .
-                    \App\Models\ObservationsOld::find($observation_id)->objectname .
-                    __(' by ') .
-                    $observer_name .
-                    __(' on #deepskylog'),
+                $objectUrl,
+                __('Look at this sketch of ') . ($objectName ?? __('Unknown')) . __(' by ') . $observer_name . __(' on #deepskylog'),
                 [
                     'title' => __('Share this sketch'),
                     'class' => 'text-gray-500 hover:text-gray-700',

@@ -1,7 +1,14 @@
 {{-- Avoid inline `use` in Blade; use fully-qualified class names instead --}}
 @props(["observation_id" => null, "observer_name" => null, "observer_username" => null, "observation_date" => null])
 <div>
-    <a class="no-underline" href="{{ config("app.old_url") }}/index.php?indexAction=comets_detail_observation&observation={{ $observation_id }}">
+    @php
+        $obs = \App\Models\CometObservationsOld::find($observation_id);
+        $comet = $obs && isset($obs->object) ? \App\Models\CometObject::where('id', $obs->object->id)->first() : null;
+        $cometName = $comet?->name ?? ($obs?->object->name ?? __('Unknown comet'));
+        $slug = $comet?->slug ?? \Illuminate\Support\Str::slug($cometName ?? '', '-');
+        $objectUrl = route('object.show', $slug);
+    @endphp
+    <a class="no-underline" href="{{ $objectUrl }}">
         <img width="400" src="/images/cometdrawings/{{ $observation_id }}.jpg"/>
 
         <div class="text-center">
@@ -19,8 +26,8 @@
         <div>
             {!!
                 ShareButtons::page(
-                    "https://www.deepskylog.org/index.php?indexAction=comets_detail_observation&observation=" . $observation_id,
-                    __("Look at this sketch of ") . \App\Models\CometObservationsOld::find($observation_id)->object->name . __(" by ") . $observer_name . __(" on #deepskylog"),
+                    $objectUrl,
+                    __("Look at this sketch of ") . ($cometName ?? __('Unknown comet')) . __(" by ") . $observer_name . __(" on #deepskylog"),
                     [
                         "title" => __("Share this sketch"),
                         "class" => "text-gray-500 hover:text-gray-700",

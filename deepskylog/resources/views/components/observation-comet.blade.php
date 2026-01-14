@@ -33,10 +33,10 @@
 
 
         @php
-            $link =
-                config('app.old_url') . '/index.php?indexAction=comets_detail_object&object=' . $observation->objectid;
             $cometOld = \App\Models\CometObject::where('id', $observation->objectid)->first();
             $cometName = $cometOld ? $cometOld->name : __('Unknown comet');
+            $slug = $cometOld?->slug ?? \Illuminate\Support\Str::slug($cometName ?? '', '-');
+            $link = route('object.show', $slug);
         @endphp
 
         @php
