@@ -11,7 +11,7 @@
         <div class="mt-3 space-y-1">
             <x-dropdown.item
                 icon="rectangle-stack"
-                href="{{ config('app.old_url') }}/index.php?indexAction=downloadAstroImageCatalogs"
+                href="/downloads/image-catalogs"
                 label="{!! __('Image catalogs') !!}"
             />
             <x-dropdown.item

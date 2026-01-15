@@ -127,6 +127,8 @@ Route::get('/', [App\Http\Controllers\SessionController::class, 'homepage']);
 Route::view('/privacy', 'privacy')->name('privacy');
 Route::view('/sponsors', 'layouts.sponsors');
 Route::view('/downloads/magazines', 'layouts.downloads.magazines');
+Route::view('/downloads/dsl-image-catalogs', 'layouts.downloads.dsl_image_catalogs');
+Route::view('/downloads/image-catalogs', 'layouts.downloads.image_catalogs');
 Route::view('/downloads/forms', 'layouts.downloads.forms');
 
 // Instruments

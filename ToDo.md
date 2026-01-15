@@ -4,23 +4,17 @@
 
 ## Next steps
 
+
++ [ ] Fix ugly forms page.
++ [ ] Create a page with atlasses, also add links to online atlasses like Taki, Torres, Deepsky Hunter.
++ [ ] Translations
++ [ ] Speed for the deepsky pages
++ [ ] New version does not work anymore on the VPS.  All websites just hang after enabling the test.deepskylog.org.conf file.  Start without crontab?
 + [ ] Targets
-  + [X] Create tables for deepsky, comets, planets, moons, lunar features, and other object types.
-  + [X] Deep-sky objects
-  + [X] Planets:
-  + [X] Comets
-  + [X] Moon
-  + [X] Lunar features
-  + [X] Sun
-  + [ ] Create the links to new new object pages.
-  + [ ] Automatically update the photometry: astronomy:updateCometPhotometry
-+ [ ] Add page with links to observing guides: Alvin Huey, Reiner Vogel, Clearskies, ...
-+ [ ] New version does not work anymore on the VPS.  All websites just hang after enabling the test.deepskylog.org.conf file.
-+ [ ] Administrator / Database expert pages to add / edit / delete objects
-+ [ ] Add export to Report (does not work in current version of DeepskyLog), Maps (works partly)
-+ [ ] Search targets, first by name, then by type, constellation, ...
-+ [ ] Install sqlite3 on the server to be able to use TNTSearch
-+ [ ] After installation, make sure to run the queue worker to compute the contrast reserve and optimum eyepieces for all users / instruments / locations.  See Tips.md for more information about the queue worker.
+  + [ ] Administrator / Database expert pages to add / edit / delete objects
+  + [ ] Search targets, first by name, then by type, constellation, ...
+  + [ ] Install sqlite3 on the server to be able to use TNTSearch
+  + [ ] After installation, make sure to run the queue worker to compute the contrast reserve and optimum eyepieces for all users / instruments / locations.  See Tips.md for more information about the queue worker.
 + [ ] Release new version of pyDeepskyLog
   + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
