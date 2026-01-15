@@ -16,7 +16,7 @@
             />
             <x-dropdown.item
                 icon="arrow-down-tray"
-                href="{{ config('app.old_url') }}/index.php?indexAction=view_atlaspages"
+                href="/downloads/atlases"
                 label="{{ __('Atlases') }}"
             />
             <x-dropdown.item

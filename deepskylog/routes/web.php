@@ -129,6 +129,8 @@ Route::view('/sponsors', 'layouts.sponsors');
 Route::view('/downloads/magazines', 'layouts.downloads.magazines');
 Route::view('/downloads/dsl-image-catalogs', 'layouts.downloads.dsl_image_catalogs');
 Route::view('/downloads/image-catalogs', 'layouts.downloads.image_catalogs');
+Route::view('/downloads/atlases', 'layouts.downloads.atlases');
+Route::view('/downloads/dsl-atlas', 'layouts.downloads.dsl_atlas');
 Route::view('/downloads/forms', 'layouts.downloads.forms');
 
 // Instruments

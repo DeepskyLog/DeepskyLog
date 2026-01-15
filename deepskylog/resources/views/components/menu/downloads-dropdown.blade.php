@@ -9,7 +9,7 @@
             </x-slot>
 
             <x-menu.item icon="rectangle-stack" href="/downloads/image-catalogs">{!! __('Image catalogs') !!}</x-menu.item>
-            <x-menu.item icon="arrow-down-tray" href="{{ config('app.old_url') }}/index.php?indexAction=view_atlaspages">{{ __('Atlases') }}</x-menu.item>
+            <x-menu.item icon="arrow-down-tray" href="/downloads/atlases">{{ __('Atlases') }}</x-menu.item>
             <x-menu.item icon="clipboard" href="/downloads/forms">{{ __('Forms') }}</x-menu.item>
 
             <x-menu.item icon="book-open" href="/downloads/magazines">{{ __('Deep-sky magazines') }}</x-menu.item>

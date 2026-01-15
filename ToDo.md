@@ -4,8 +4,6 @@
 
 ## Next steps
 
-
-+ [ ] Create a page with atlasses, also add links to online atlasses like Taki, Torres, Deepsky Hunter.
 + [ ] Messages: 
   + [ ] Only show unread messages.
   + [ ] Delete all messages.
