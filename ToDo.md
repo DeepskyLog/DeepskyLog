@@ -4,9 +4,6 @@
 
 ## Next steps
 
-+ [ ] Messages: 
-  + [ ] Only show unread messages.
-  + [ ] Delete all messages.
 + [ ] Translations
 + [ ] Speed for the deepsky pages
 + [ ] New version does not work anymore on the VPS.  All websites just hang after enabling the test.deepskylog.org.conf file.  Start without crontab?

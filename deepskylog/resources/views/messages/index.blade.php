@@ -6,11 +6,15 @@
             <div class="overflow-hidden bg-gray-900 shadow-sm sm:rounded-lg p-4">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
-            <a href="{{ route('messages.create') }}" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">{{ __('New Message') }}</a>
-            <form method="post" action="{{ route('messages.markAllRead') }}" id="mark-all-read-form">
-                @csrf
-                <button type="button" id="mark-all-read-btn" class="inline-flex items-center px-3 py-2 bg-gray-600 text-white text-sm font-medium rounded hover:bg-gray-500">{{ __('Mark all read') }}</button>
-            </form>
+                    <a href="{{ route('messages.create') }}" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">{{ __('New Message') }}</a>
+                    <form method="post" action="{{ route('messages.markAllRead') }}" id="mark-all-read-form">
+                        @csrf
+                        <button type="button" id="mark-all-read-btn" class="inline-flex items-center px-3 py-2 bg-gray-600 text-white text-sm font-medium rounded hover:bg-gray-500">{{ __('Mark all read') }}</button>
+                    </form>
+                    <form method="post" action="{{ route('messages.deleteAll') }}" id="delete-all-form" class="ml-2">
+                        @csrf
+                        <button type="button" id="delete-all-btn" class="inline-flex items-center px-3 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700">{{ __('Delete all') }}</button>
+                    </form>
         </div>
         <div class="text-sm text-gray-400 flex items-center gap-4">
             <div>
@@ -23,6 +27,10 @@
                 {{ __('Sent') }}: <span class="font-medium text-gray-200">{{ $sentGroupsCount ?? 0 }}</span>
             </div>
             <form method="get" action="" class="flex items-center gap-2">
+                <label class="text-xs text-gray-400 flex items-center gap-2">
+                    <input type="checkbox" name="unread" value="1" onchange="this.form.submit()" {{ request()->query('unread') == '1' ? 'checked' : '' }} class="h-4 w-4" />
+                    <span>{{ __('Only unread') }}</span>
+                </label>
                 <label for="per_page" class="text-xs text-gray-400">{{ __('Per page') }}</label>
                 <select id="per_page" name="per_page" onchange="this.form.submit()" class="bg-gray-800 text-white text-xs rounded px-2 py-1 appearance-none" style="background-image: none;">
                     @foreach([10,20,50,100] as $n)
@@ -174,6 +182,18 @@
                     </div>
                 </div>
 
+                <!-- Delete all confirmation modal -->
+                <div id="deleteAllModal" class="fixed inset-0 z-50 bg-black bg-opacity-60 hidden items-center justify-center">
+                    <div class="bg-gray-900 rounded-lg p-6 max-w-md w-full mx-4 shadow-lg max-h-[90vh] overflow-auto">
+                        <h3 class="text-lg font-semibold text-white">{{ __('Confirm') }}</h3>
+                        <p class="mt-2 text-sm text-gray-300">{{ __('Are you sure you want to delete ALL messages? This will hide them from your inbox and cannot be undone.') }}</p>
+                        <div class="mt-4 flex justify-end gap-2">
+                            <button id="deleteAllCancel" class="px-3 py-2 bg-gray-700 text-white rounded">{{ __('Cancel') }}</button>
+                            <button id="deleteAllConfirm" class="px-3 py-2 bg-red-600 text-white rounded">{{ __('Confirm') }}</button>
+                        </div>
+                    </div>
+                </div>
+
                 <script>
                     // confirmation handler for delete forms (localized message)
                     (function(){
@@ -188,6 +208,19 @@
                         var cancel = document.getElementById('markAllReadCancel');
                         var confirm = document.getElementById('markAllReadConfirm');
                         var form = document.getElementById('mark-all-read-form');
+
+                        if(btn && modal && cancel && confirm && form) {
+                            btn.addEventListener('click', function(){ document.body.classList.add('overflow-hidden'); modal.classList.remove('hidden'); modal.classList.add('flex'); });
+                            cancel.addEventListener('click', function(){ document.body.classList.remove('overflow-hidden'); modal.classList.add('hidden'); modal.classList.remove('flex'); });
+                            confirm.addEventListener('click', function(){ document.body.classList.remove('overflow-hidden'); form.submit(); });
+                        }
+                    })();
+                    (function(){
+                        var btn = document.getElementById('delete-all-btn');
+                        var modal = document.getElementById('deleteAllModal');
+                        var cancel = document.getElementById('deleteAllCancel');
+                        var confirm = document.getElementById('deleteAllConfirm');
+                        var form = document.getElementById('delete-all-form');
 
                         if(btn && modal && cancel && confirm && form) {
                             btn.addEventListener('click', function(){ document.body.classList.add('overflow-hidden'); modal.classList.remove('hidden'); modal.classList.add('flex'); });

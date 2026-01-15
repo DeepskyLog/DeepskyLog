@@ -434,6 +434,11 @@ Route::post('/messages/mark-all-read', [App\Http\Controllers\MessagesController:
     ->name('messages.markAllRead')
     ->middleware(['auth', 'doNotCacheResponse']);
 
+// Delete all messages for current user (mark as deleted)
+Route::post('/messages/delete-all', [App\Http\Controllers\MessagesController::class, 'deleteAll'])
+    ->name('messages.deleteAll')
+    ->middleware(['auth', 'doNotCacheResponse']);
+
 // Reply data (plain-text message) for prefill via AJAX
 Route::get('/messages/{id}/reply-data', [App\Http\Controllers\MessagesController::class, 'replyData'])
     ->name('messages.replyData')
