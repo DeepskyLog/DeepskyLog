@@ -1,7 +1,10 @@
 @php use App\Models\ObservationsOld; @endphp
 @php use App\Models\CometObservationsOld; @endphp
 @php use App\Models\User; @endphp
-<x-app-layout>
+
+@extends('layouts.app')
+
+@section('content')
     <div>
         <div class="mx-auto max-w-screen bg-gray-900 px-2 py-10 sm:px-6 lg:px-8">
             <div class="grids-rows-2 grid grid-cols-2">
@@ -14,9 +17,7 @@
                     </h2>
                     <div class="mx-left">
                         {{ __('DeepskyLog observer since ') }}
-                        @php
-                            echo Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $user->created_at)->format('Y');
-                        @endphp
+                          {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $user->created_at)->format('Y') }}
 
                         <br />
                         {{-- First observation on / last observation on --}}
@@ -399,7 +400,7 @@
                 </table>
 
                 <br />
-                <x-button gray icon="eye" class="mb-2" href='{{ url('/observations/' . $user->slug) }}'>
+                  <x-button gray icon="eye" class="mb-2" href="{{ url('/observations/' . $user->slug) }}">
                     {{ __('All observations of ') . $user->name }}
                 </x-button>
 
@@ -408,12 +409,7 @@
                     {{ __('All drawings of ') . $user->name }}
                 </x-button>
 
-                @php
-                    $hasActiveSessions = \App\Models\ObservationSession::where('observerid', $user->username)
-                        ->where('active', 1)
-                        ->exists();
-                @endphp
-                @if ($hasActiveSessions)
+                  @if (\App\Models\ObservationSession::where('observerid', $user->username)->where('active', 1)->exists())
                     <x-button gray icon="calendar" class="mb-2"
                         href="{{ route('session.user', [$user->slug ?? $user->username]) }}">
                         {{ __('All sessions of ') . $user->name }}
@@ -582,4 +578,4 @@
     {{ $objectTypesChart->script() }}
     {{ $countriesChart->script() }}
 
-</x-app-layout>
+@endsection

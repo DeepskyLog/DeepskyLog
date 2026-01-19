@@ -5,7 +5,7 @@ This file contains focused, actionable information to help an AI coding agent be
 ### Big picture
 
 - Laravel 12 application (PHP 8.3). Main app lives in `deepskylog/`.
-- Frontend assets built with Vite + Tailwind; Livewire (v3) and WireUI are used for interactive UI components.
+- Frontend assets built with Vite + Tailwind; Livewire (v4) and WireUI are used for interactive UI components.
 - Key domain model: observation sessions, instruments, eyepieces, sketches. Core models live in `app/Models`.
 - Routing is classical server-side: see `deepskylog/routes/web.php` for the route surface (examples: `/session/{user}/{session}`, `/object/{slug}`).
 
