@@ -63,6 +63,35 @@
                     </div>
                 </div>
             </x-card>
+            
+            <br />
+            <x-card title="Stellaversum Maps">
+                <div class="flex-justify-center flex">
+                    <div class="px-5">
+                        <a href="https://www.josefpirkl.com/stellaversum_maps.php?page=2">
+                            <img src="/images/stellaversum.png" alt="Stellaversum Maps" class="w-64" />
+                        </a>
+                    </div>
+                    <div>
+                        {!! __("Stellaversum provides printable star maps and atlases created by Josef Pirkl.") !!}
+                    </div>
+                </div>
+            </x-card>
+            
+            <br />
+            <x-card title="Mag-7 Star Atlas Project">
+                <div class="flex-justify-center flex">
+                    <div class="px-5">
+                        <a href="https://www.astro.cz/mirror/atlas/">
+                            <img src="/images/mag7.png" alt="Mag-7 Star Atlas" class="w-64" />
+                        </a>
+
+                    </div>
+                    <div>
+                        {!! __("The Mag-7 Star Atlas Project offers printable atlas pages and maps focused on stars down to approximately magnitude 7 — useful for visual observers.") !!}
+                    </div>
+                </div>
+            </x-card>
         </div>
     </div>
 </x-app-layout>
