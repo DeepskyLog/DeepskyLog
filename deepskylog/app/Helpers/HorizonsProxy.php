@@ -63,10 +63,7 @@ class HorizonsProxy
             }
             $candidates = array_values(array_unique(array_filter(array_merge($cand, $extra))));
 
-            try {
-                Log::debug('HorizonsProxy: calculateEquatorialCoordinates called', ['designation' => $designation ?? null, 'ignore_wrapper' => $ignoreWrapper, 'candidates' => $candidates]);
-            } catch (\Throwable $_) {
-            }
+            // entry point - silently proceed
 
             if (! $ignoreWrapper) {
                 // permissive window: 7 days age, 1 hour tolerance
@@ -184,12 +181,6 @@ class HorizonsProxy
             }
             Log::info('HorizonsProxy: vendor helper invoked', ['designation' => $designation ?? null, 'date_utc' => $date->toIso8601String()]);
 
-            try {
-                $vc_preview = ['has_method_getEquatorialCoordinatesToday' => method_exists($target, 'getEquatorialCoordinatesToday'), 'has_method_getEquatorialCoordinates' => method_exists($target, 'getEquatorialCoordinates'), 'has_method_getEquatorialCoordinatesFor' => method_exists($target, 'getEquatorialCoordinatesFor')];
-                Log::debug('HorizonsProxy: extracting vendor coordinates, target capabilities', $vc_preview);
-            } catch (\Throwable $_) {
-            }
-
             // Attempt to extract equatorial coordinates from the concrete target
             try {
                 if (method_exists($target, 'getEquatorialCoordinatesToday')) {
@@ -203,10 +194,7 @@ class HorizonsProxy
             } catch (\Throwable $_) {
                 $vendorCoords = null;
             }
-            try {
-                Log::debug('HorizonsProxy: vendor result', ['designation' => $designation ?? null, 'vendorCoords_present' => ($vendorCoords !== null), 'vendorCoords_class' => is_object($vendorCoords) ? get_class($vendorCoords) : null]);
-            } catch (\Throwable $_) {
-            }
+            // vendor result available in $vendorCoords
         } catch (\Throwable $_) {
             // best-effort: ignore
         }
@@ -245,44 +233,13 @@ class HorizonsProxy
 
                 // Verify the script exists and is readable before attempting to run it.
                 if (! file_exists($script)) {
-                    Log::debug('HorizonsProxy: wrapper script missing', ['script' => $script]);
+                    // wrapper script missing; continue silently
                 } else {
                     // Log script permissions and resolved PHP interpreter for diagnostics.
-                    try {
-                        // Choose a sensible PHP interpreter for invoking the wrapper.
-                        $php_exec_diag = null;
-                        $chosenInterpreter = null;
-                        if (defined('PHP_BINARY') && trim((string)PHP_BINARY) !== '') {
-                            $chosenInterpreter = (string)PHP_BINARY;
-                        }
-                        $candidates = ['/usr/bin/php', '/usr/local/bin/php', '/bin/php'];
-                        foreach ($candidates as $cand) {
-                            if ($chosenInterpreter === null && file_exists($cand) && is_executable($cand)) {
-                                $chosenInterpreter = $cand;
-                                break;
-                            }
-                        }
-                        if ($chosenInterpreter === null) {
-                            // fall back to env if no explicit php binary found
-                            $php_exec_diag = '/usr/bin/env php';
-                        } else {
-                            $php_exec_diag = $chosenInterpreter;
-                        }
-                        $info = [
-                            'script' => $script,
-                            'exists' => file_exists($script),
-                            'readable' => is_readable($script),
-                            'executable' => is_executable($script),
-                            'perms' => substr(sprintf('%o', fileperms($script)), -4),
-                            'php_exec' => $php_exec_diag,
-                        ];
-                        Log::debug('HorizonsProxy: wrapper script diagnostics', $info);
-                    } catch (\Throwable $_) {
-                    }
+                        // wrapper script diagnostic suppressed
 
                     if (! is_readable($script)) {
-                        // If it's not readable, trying to execute it will likely fail.
-                        Log::debug('HorizonsProxy: wrapper script not readable; skipping exec', ['script' => $script]);
+                        // If it's not readable, skip executing it.
                     } else {
                         // Construct the command with an explicit interpreter. If PHP_BINARY
                         // is not available, use '/usr/bin/env' with 'php' as a separate arg
@@ -314,10 +271,7 @@ class HorizonsProxy
                         $ret = 0;
                         exec($cmd, $out, $ret);
                         $outStr = implode("\n", $out);
-                        try {
-                            Log::debug('HorizonsProxy: wrapper script exit', ['cmd' => $cmd, 'exit' => $ret, 'output' => $outStr]);
-                        } catch (\Throwable $_) {
-                        }
+                        // wrapper script exit logged to diagnostics files; suppress debug log here
 
                         // If the wrapper script printed the explicit diagnostics path (WROTE_DIAG: /path/to/file),
                         // try to load that file directly and return coords immediately. This avoids any subtle

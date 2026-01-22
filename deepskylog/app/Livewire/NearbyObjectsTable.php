@@ -211,6 +211,11 @@ class NearbyObjectsTable extends PowerGridComponent
 
     public function datasource(): ?Builder
     {
+        $dsStart = microtime(true);
+        try {
+            Log::debug('NearbyObjectsTable: datasource start', ['objectId' => $this->objectId ?? null, 'objectName' => $this->objectName ?? null, 'ra' => $this->ra, 'decl' => $this->decl, 'radiusArcMin' => $this->radiusArcMin]);
+        } catch (\Throwable $_) {
+        }
         if ($this->ra === null || $this->decl === null) {
             return DeepskyObject::query()->whereRaw('0 = 1');
         }
@@ -280,6 +285,12 @@ class NearbyObjectsTable extends PowerGridComponent
                     MAX(CASE WHEN o.observerid = {$quotedUser} AND o.hasDrawing = 1 THEN o.date END) AS your_last_drawing_date
                 FROM `" . $oldDbName . "`.`observations` o
                 GROUP BY o.objectname";
+
+                try {
+                    $aggElapsed = round((microtime(true) - $dsStart) * 1000, 2);
+                    Log::debug('NearbyObjectsTable: built obsAggSql', ['oldDbName' => $oldDbName, 'elapsed_ms' => $aggElapsed]);
+                } catch (\Throwable $_) {
+                }
 
                 // Ensure the inner select includes the obs.* aliases so the
                 // outer wrapper (used by PowerGrid) can reference and sort them.

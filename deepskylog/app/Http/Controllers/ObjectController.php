@@ -41,6 +41,10 @@ class ObjectController extends Controller
     {
         $record = null;
         $type = null;
+        $tStart = microtime(true);
+        try {
+            Log::debug('ObjectController: show start', ['slug' => $slug]);
+        } catch (\Throwable $_) { }
 
         // Build a list of slug candidates to try (case-insensitive and normalized variants)
         $candidates = [];
@@ -225,6 +229,10 @@ class ObjectController extends Controller
 
         // If slug fast-path resolved an object, skip the heavier lookup and render directly.
         if ($record) {
+            try {
+                $elapsed = round((microtime(true) - $tStart) * 1000, 2);
+                Log::debug('ObjectController: fast-path hit', ['slug' => $slug, 'type' => $type ?? null, 'resolved_id' => $record->id ?? null, 'elapsed_ms' => $elapsed]);
+            } catch (\Throwable $_) { }
             goto render_object;
         }
 
@@ -541,6 +549,11 @@ class ObjectController extends Controller
         if (! $record) {
             abort(404);
         }
+
+        try {
+            $preRenderElapsed = round((microtime(true) - $tStart) * 1000, 2);
+            Log::debug('ObjectController: pre-render timing', ['slug' => $slug, 'pre_render_elapsed_ms' => $preRenderElapsed]);
+        } catch (\Throwable $_) { }
 
         render_object:
         // Build a minimal $user-like object for links (use current authenticated user if available)
@@ -2381,6 +2394,10 @@ class ObjectController extends Controller
                     if ($bv === null) return -1;
                     return ($av > $bv) ? -1 : 1;
                 });
+                try {
+                    $instrElapsed = round((microtime(true) - $tStart) * 1000, 2);
+                    Log::debug('ObjectController: loaded instruments/eyepieces/lenses', ['user_id' => $authUser->id ?? null, 'instr_elapsed_ms' => $instrElapsed, 'counts' => ['instruments' => count($availableInstruments), 'eyepieces' => count($availableEyepieces), 'lenses' => count($availableLenses)]]);
+                } catch (\Throwable $_) { }
             }
         } catch (\Throwable $_) {
             $availableInstruments = [];

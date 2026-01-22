@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Helpers;
+use Illuminate\Support\Facades\Log;
 
 class HorizonsWrapper
 {
@@ -11,6 +12,7 @@ class HorizonsWrapper
     public static function latestCoordinatesForDesignation(array $candidates, $targetDate = null, int $maxAgeSeconds = 86400, int $toleranceSeconds = 120)
     {
         if (empty($candidates)) return null;
+        $checked = 0;
         $candidates = array_values(array_filter(array_map(fn($v) => $v === null ? null : trim((string)$v), $candidates)));
         // Normalize candidates to canonical form to improve matching with wrapper diagnostics
         try {
@@ -33,6 +35,7 @@ class HorizonsWrapper
         if (! is_dir($logdir)) return null;
 
         $files = glob($logdir . '/horizons_wrapper_*.json');
+        $filesFound = is_array($files) ? count($files) : 0;
         if (! $files) return null;
 
         // Sort newest first by modification time
@@ -52,6 +55,7 @@ class HorizonsWrapper
             }
         }
         foreach ($files as $f) {
+            $checked++;
             $mtime = @filemtime($f) ?: 0;
             if ($now - $mtime > $maxAgeSeconds) {
                 // file too old, stop searching further (files are sorted newest-first)
@@ -99,14 +103,15 @@ class HorizonsWrapper
             $fileDesig = isset($json['designation']) ? (string)$json['designation'] : null;
             $parsed = $json['parsed_stdout'] ?? ($json['stdout'] ? @json_decode($json['stdout'], true) : null);
 
-            foreach ($candidates as $cand) {
+                foreach ($candidates as $cand) {
                 if ($cand === null || $cand === '') continue;
                 // direct match against top-level designation
                 if ($fileDesig && stripos($fileDesig, $cand) !== false) {
-                    if (is_array($parsed) && isset($parsed['ra_hours']) && isset($parsed['dec_deg'])) {
-                        return ['ra_hours' => $parsed['ra_hours'], 'dec_deg' => $parsed['dec_deg'], 'source_file' => $f];
+                        if (is_array($parsed) && isset($parsed['ra_hours']) && isset($parsed['dec_deg'])) {
+                            // match found in wrapper diagnostics
+                            return ['ra_hours' => $parsed['ra_hours'], 'dec_deg' => $parsed['dec_deg'], 'source_file' => $f];
+                        }
                     }
-                }
                 // sometimes wrapper stores short code while hDesig contains full name; allow substring match both ways
                 if ($fileDesig && stripos($cand, $fileDesig) !== false) {
                     if (is_array($parsed) && isset($parsed['ra_hours']) && isset($parsed['dec_deg'])) {
@@ -116,11 +121,14 @@ class HorizonsWrapper
                 // check parsed stdout for designation-like fields
                 if (is_array($parsed) && isset($parsed['used_command']) && stripos($parsed['used_command'], $cand) !== false) {
                     if (isset($parsed['ra_hours']) && isset($parsed['dec_deg'])) {
+                        // match found in parsed stdout
                         return ['ra_hours' => $parsed['ra_hours'], 'dec_deg' => $parsed['dec_deg'], 'source_file' => $f];
                     }
                 }
             }
         }
+
+        // no match found in wrapper diagnostics
 
         return null;
     }
