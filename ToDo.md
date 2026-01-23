@@ -4,8 +4,8 @@
 
 ## Next steps
 
-+ [ ] Save in Sky Preview does not work...
 + [ ] Heel traag wanneer er geen instrument set is gekozen...
++ [ ] Test when logged out
 + [ ] New version does not work anymore on the VPS.  All websites just hang after enabling the test.deepskylog.org.conf file.  Start without crontab?
 + [ ] Targets
   + [ ] Administrator / Database expert pages to add / edit / delete objects

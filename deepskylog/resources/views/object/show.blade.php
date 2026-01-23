@@ -1290,4 +1290,52 @@ try {
 <script src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js"></script>
 <script src="/js/object-show-inline.js"></script>
 
+<script>
+// Attach Save handler for Aladin preview defaults
+(function () {
+    try {
+        var btn = document.getElementById('aladin-save-btn');
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+            var container = document.getElementById('aladin-lite-container');
+            if (!container) return;
+            var saveUrl = container.getAttribute('data-save-url') || '/api/user/aladin-defaults';
+            var inst = document.getElementById('aladin-instrument-hidden')?.value || null;
+            var ep = document.getElementById('aladin-eyepiece-hidden')?.value || null;
+            var ln = document.getElementById('aladin-lens-hidden')?.value || null;
+
+            // UI feedback
+            var origText = btn.innerHTML;
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            fetch(saveUrl, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '' ,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ instrument_id: inst, eyepiece_id: ep, lens_id: ln })
+            }).then(function (r) {
+                return r.json().catch(function () { return { error: 'invalid-json' }; });
+            }).then(function (json) {
+                if (json && json.ok) {
+                    btn.textContent = 'Saved';
+                    setTimeout(function () { btn.textContent = origText; btn.disabled = false; }, 1000);
+                } else {
+                    console.warn('Save failed', json);
+                    btn.textContent = 'Save failed';
+                    setTimeout(function () { btn.textContent = origText; btn.disabled = false; }, 2000);
+                }
+            }).catch(function (err) {
+                console.error('Save error', err);
+                btn.textContent = 'Save failed';
+                setTimeout(function () { btn.textContent = origText; btn.disabled = false; }, 2000);
+            });
+        });
+    } catch (e) { console.warn('aladin save handler failed', e); }
+})();
+</script>
 </x-app-layout>
