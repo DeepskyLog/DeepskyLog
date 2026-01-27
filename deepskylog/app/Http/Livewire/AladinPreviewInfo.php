@@ -7,12 +7,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 
 class AladinPreviewInfo extends Component
 {
+    // debounce window (milliseconds) to ignore rapid repeated preview updates
+    private const PREVIEW_DEBOUNCE_MS = 1000;
+
     public $objectId;
     public $contrast_reserve;
     public $contrast_reserve_category;
@@ -127,6 +131,8 @@ class AladinPreviewInfo extends Component
         // Log receipt for debugging
         try {
             // recalculate invoked (debug logging removed)
+            $tStart = microtime(true);
+            try { Log::debug('AladinPreviewInfo: recalculate start', ['user_id' => Auth::id(), 'objectId' => $this->objectId]); } catch (\Throwable $_) {}
             $obj = null;
             // Prefer explicit objectId provided in the payload (from the page) to ensure
             // we operate on the correct object instance. Fall back to the component's
@@ -264,6 +270,27 @@ class AladinPreviewInfo extends Component
                 }
             }
 
+            // Server-side debounce: avoid repeated heavy recalculations when
+            // the preview is being updated rapidly. Use a per-user+object cache
+            // entry to track last dispatch time (microtime) and ignore requests
+            // within the debounce window.
+            try {
+                $userId = Auth::id() ?? 'guest';
+                $incomingObj = $payloadObjectId ?: $this->objectId ?: 'none';
+                $cacheKey = "aladin_preview_last_dispatch:{$userId}:{$incomingObj}";
+                $last = Cache::get($cacheKey);
+                if ($last && (microtime(true) - $last) < (self::PREVIEW_DEBOUNCE_MS / 1000)) {
+                    try { Log::debug('AladinPreviewInfo: recalc debounced', ['user_id' => $userId, 'object' => $incomingObj, 'since_last_ms' => round((microtime(true) - $last) * 1000, 2)]); } catch (\Throwable $_) {}
+                    return;
+                }
+                // record last dispatch time for a short period so other rapid
+                // requests get suppressed. Keep the cache entry for 30s to avoid
+                // leaving stale keys around.
+                Cache::put($cacheKey, microtime(true), 30);
+            } catch (\Throwable $_) {
+                // don't block processing if cache/backend fails
+            }
+
             // populate local debug variables for logging
             $debug_obj_id = $obj?->id ?? null;
             $debug_diam1 = $obj?->diam1 ?? null;
@@ -294,6 +321,43 @@ class AladinPreviewInfo extends Component
             }
 
             $debug_user_instrument = (bool) $userInstrument;
+
+            // If the authenticated user has no configured standard instrument set
+            // and the incoming payload does not supply any instrument/eyepiece/lens
+            // or appearance values, short-circuit to avoid performing heavy
+            // astronomy calculations (HorizonsProxy, AstronomyLibrary, etc.).
+            // This addresses slow page loads for logged-in users who haven't
+            // configured an instrument set yet — the Sky preview is effectively
+            // incomplete until the user provides selections.
+            try {
+                $hasStdSet = false;
+                try { $hasStdSet = (bool) ($authUser?->stdinstrumentset ?? null); } catch (\Throwable $_) { $hasStdSet = false; }
+                $hasPayloadSelection = false;
+                try {
+                    $hasPayloadSelection = (
+                        array_key_exists('instrument', $payloadArr) && ! empty($payloadArr['instrument'])
+                    ) || (
+                        array_key_exists('eyepiece', $payloadArr) && ! empty($payloadArr['eyepiece'])
+                    ) || (
+                        array_key_exists('lens', $payloadArr) && ! empty($payloadArr['lens'])
+                    );
+                } catch (\Throwable $_) { $hasPayloadSelection = false; }
+
+                if (Auth::check() && ! $hasStdSet && ! $hasPayloadSelection && $payloadDiam1 === null && $payloadMag === null) {
+                    try {
+                        $this->dispatchBrowserEvent('aladin-preview-info-updated', [
+                            'status' => 'incomplete',
+                            'contrast_reserve' => $this->contrast_reserve,
+                            'optimum_detection_magnification' => $this->optimum_detection_magnification,
+                            'payload' => $payload,
+                            'objectId' => $useObjectId ?? null,
+                        ]);
+                    } catch (\Throwable $_) { }
+                    return;
+                }
+            } catch (\Throwable $_) {
+                // ignore guard failures and continue with normal processing
+            }
 
             $defaultLens = null;
             $lensFactor = 1.0;
@@ -513,13 +577,14 @@ class AladinPreviewInfo extends Component
                                     $hDesig = null;
                                 }
                                 try {
-                                    \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calling HorizonsProxy (planet)', ['designation' => $hDesig ?? null, 'objectId' => $obj->id ?? null]);
-                                } catch (\Throwable $_) {
-                                }
-                                try {
+                                    try { \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calling HorizonsProxy (planet) start', ['designation' => $hDesig ?? null, 'objectId' => $obj->id ?? null]); } catch (\Throwable $_) {}
+                                    $proxyT0 = microtime(true);
                                     $proxyResult = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($planet, $calcDate, $geo, $height, ['obj' => $obj ?? null, 'designation' => $hDesig ?? null]);
-                                } catch (\Throwable $_) {
+                                    $proxyElapsed = round((microtime(true) - $proxyT0) * 1000, 2);
+                                    try { \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calling HorizonsProxy (planet) end', ['elapsed_ms' => $proxyElapsed, 'designation' => $hDesig ?? null, 'objectId' => $obj->id ?? null]); } catch (\Throwable $_) {}
+                                } catch (\Throwable $proxyEx) {
                                     $proxyResult = null;
+                                    try { \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: HorizonsProxy exception', ['message' => $proxyEx->getMessage()]); } catch (\Throwable $_) {}
                                 }
                             } else {
                                 $proxyResult = null;
@@ -535,10 +600,17 @@ class AladinPreviewInfo extends Component
                                 }
                             } else {
                                 // If proxy did not return coords, fall back to library calculations
-                                if (method_exists($planet, 'calculateEquatorialCoordinates')) {
-                                    $planet->calculateEquatorialCoordinates($calcDate, $geo, $height);
-                                } elseif (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-                                    $planet->calculateApparentEquatorialCoordinates($calcDate);
+                                try {
+                                    $libT0 = microtime(true);
+                                    if (method_exists($planet, 'calculateEquatorialCoordinates')) {
+                                        $planet->calculateEquatorialCoordinates($calcDate, $geo, $height);
+                                    } elseif (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
+                                        $planet->calculateApparentEquatorialCoordinates($calcDate);
+                                    }
+                                    $libElapsed = round((microtime(true) - $libT0) * 1000, 2);
+                                    try { \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: planet library compute elapsed', ['elapsed_ms' => $libElapsed, 'objectId' => $obj->id ?? null]); } catch (\Throwable $_) {}
+                                } catch (\Throwable $libEx) {
+                                    try { \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: planet library exception', ['message' => $libEx->getMessage()]); } catch (\Throwable $_) {}
                                 }
                             }
                         } catch (\Throwable $_) {
@@ -623,7 +695,15 @@ class AladinPreviewInfo extends Component
                 $this->planet_diameter_primary = null;
                 $this->planet_diameter_secondary = null;
             }
-            $sbobj = $target->calculateSBObj();
+            try {
+                $sbT0 = microtime(true);
+                $sbobj = $target->calculateSBObj();
+                $sbElapsed = round((microtime(true) - $sbT0) * 1000, 2);
+                try { \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calculateSBObj elapsed', ['elapsed_ms' => $sbElapsed, 'objectId' => $obj->id ?? null]); } catch (\Throwable $_) {}
+            } catch (\Throwable $sbEx) {
+                try { \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: calculateSBObj exception', ['message' => $sbEx->getMessage()]); } catch (\Throwable $_) {}
+                $sbobj = null;
+            }
             // show sbobj presence/value for debug (locals)
             $debug_sbobj = $sbobj !== null ? $sbobj : null;
             $sqm = $userLocation->getSqm();
@@ -674,9 +754,17 @@ class AladinPreviewInfo extends Component
                 $debug_mag = $mag;
             }
 
-            if ($sbobj !== null && $sqm !== null && $aperture && $mag) {
-                $contrast = $target->calculateContrastReserve($sbobj, $sqm, $aperture, $mag);
-                $this->contrast_reserve = is_numeric($contrast) ? round($contrast, 2) : null;
+                if ($sbobj !== null && $sqm !== null && $aperture && $mag) {
+                    try {
+                        $crT0 = microtime(true);
+                        $contrast = $target->calculateContrastReserve($sbobj, $sqm, $aperture, $mag);
+                        $crElapsed = round((microtime(true) - $crT0) * 1000, 2);
+                        try { \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calculateContrastReserve elapsed', ['elapsed_ms' => $crElapsed, 'objectId' => $obj->id ?? null]); } catch (\Throwable $_) {}
+                    } catch (\Throwable $crEx) {
+                        try { \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: calculateContrastReserve exception', ['message' => $crEx->getMessage()]); } catch (\Throwable $_) {}
+                        $contrast = null;
+                    }
+                    $this->contrast_reserve = is_numeric($contrast) ? round($contrast, 2) : null;
                 $cat = null;
                 if (is_numeric($this->contrast_reserve)) {
                     $c = (float) $this->contrast_reserve;
@@ -726,17 +814,50 @@ class AladinPreviewInfo extends Component
                 if ($instSet) {
                     $set = \App\Models\InstrumentSet::where('id', $instSet)->first();
                     if ($set) {
+                        // Precompute instruments for eyepieces in this set to avoid per-eyepiece legacy queries
+                        try {
+                            $eyepieceIds = [];
+                            foreach ($set->eyepieces as $tmpEp) {
+                                if (isset($tmpEp->id) && $tmpEp->id) $eyepieceIds[] = $tmpEp->id;
+                            }
+                            $eyepieceIds = array_values(array_unique($eyepieceIds));
+                            if (! empty($eyepieceIds)) {
+                                $map = \App\Models\ObservationsOld::getInstrumentsForEyepieceIds($eyepieceIds);
+                                \App\Models\Eyepiece::setBulkUsedInstrumentsMap($map);
+                                try {
+                                    $firstMap = \App\Models\ObservationsOld::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                    \App\Models\Eyepiece::setBulkFirstObservationMap($firstMap);
+                                } catch (\Throwable $_) {
+                                }
+                                try {
+                                    $lastMap = \App\Models\ObservationsOld::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                    \App\Models\Eyepiece::setBulkLastObservationMap($lastMap);
+                                } catch (\Throwable $_) {
+                                }
+                            }
+                        } catch (\Throwable $_) {
+                        }
+
+                        // Batch user slug lookup for set eyepieces
+                        $epUserIds = [];
+                        foreach ($set->eyepieces as $tmpEp) {
+                            if (isset($tmpEp->user_id) && $tmpEp->user_id) $epUserIds[] = $tmpEp->user_id;
+                        }
+                        $epUserIds = array_values(array_unique($epUserIds));
+                        $epUserSlugMap = [];
+                        if (! empty($epUserIds)) {
+                            try {
+                                $epUserSlugMap = \App\Models\User::whereIn('id', $epUserIds)->pluck('slug', 'id')->toArray();
+                            } catch (\Throwable $_) {
+                                $epUserSlugMap = [];
+                            }
+                        }
                         foreach ($set->eyepieces as $ep) {
                             if ($ep->active && $ep->focal_length_mm) {
                                 $usedSetEyepieces = true;
                                 $ef = $ep->focal_length_mm;
                                 $eyepieceFocals[] = $ef;
-                                $userSlug = null;
-                                try {
-                                    $userSlug = $ep->user?->slug ?? \App\Models\User::where('id', $ep->user_id)->value('slug');
-                                } catch (\Throwable $_) {
-                                    $userSlug = null;
-                                }
+                                $userSlug = $epUserSlugMap[$ep->user_id] ?? null;
                                 $displayName = $ep->fullName();
                                 if (! $explicitNoLens && ! empty($defaultLensName)) {
                                     $displayName = $displayName . ' (' . $defaultLensName . ')';
@@ -749,6 +870,20 @@ class AladinPreviewInfo extends Component
                 if (empty($eyepiecesForDisplay)) {
                     try {
                         $userEps = \App\Models\Eyepiece::where('user_id', $authUser->id)->where('active', 1)->get();
+                        // Batch user slug lookup for user's eyepieces
+                        $epUserIds = [];
+                        foreach ($userEps as $tmpEp) {
+                            if (isset($tmpEp->user_id) && $tmpEp->user_id) $epUserIds[] = $tmpEp->user_id;
+                        }
+                        $epUserIds = array_values(array_unique($epUserIds));
+                        $epUserSlugMap = [];
+                        if (! empty($epUserIds)) {
+                            try {
+                                $epUserSlugMap = \App\Models\User::whereIn('id', $epUserIds)->pluck('slug', 'id')->toArray();
+                            } catch (\Throwable $_) {
+                                $epUserSlugMap = [];
+                            }
+                        }
                         foreach ($userEps as $ep) {
                             if (! empty($ep->focal_length_mm)) {
                                 $ef = $ep->focal_length_mm;
@@ -756,12 +891,7 @@ class AladinPreviewInfo extends Component
                             } else {
                                 $ef = null;
                             }
-                            $userSlug = null;
-                            try {
-                                $userSlug = $ep->user?->slug ?? \App\Models\User::where('id', $ep->user_id)->value('slug');
-                            } catch (\Throwable $_) {
-                                $userSlug = null;
-                            }
+                            $userSlug = $epUserSlugMap[$ep->user_id] ?? null;
                             $displayName = $ep->fullName() ?? $ep->name ?? null;
                             if (! $explicitNoLens && ! empty($defaultLensName) && ! empty($displayName)) {
                                 $displayName = $displayName . ' (' . $defaultLensName . ')';
@@ -1023,6 +1153,12 @@ class AladinPreviewInfo extends Component
                     } catch (\Throwable $_) {
                     }
                 }
+                try {
+                    if (isset($tStart)) {
+                        $totalElapsed = round((microtime(true) - $tStart) * 1000, 2);
+                        Log::debug('AladinPreviewInfo: recalculate end', ['user_id' => Auth::id(), 'objectId' => $this->objectId, 'total_elapsed_ms' => $totalElapsed]);
+                    }
+                } catch (\Throwable $_) {}
             } catch (\Throwable $_) {
             }
         } catch (\Throwable $e) {

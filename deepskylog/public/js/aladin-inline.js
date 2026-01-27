@@ -139,6 +139,21 @@
         window.__dsl_emitAladinUpdated = function (detail) {
             try {
                 if (!detail || typeof detail !== 'object') detail = {};
+                // Deduplicate identical emits within a short window to avoid
+                // double-processing when multiple callers invoke the emitter
+                // (several scripts may call __dsl_emitAladinUpdated). We
+                // normalize the key to the commonly used fields and skip
+                // duplicates emitted under 500ms.
+                try {
+                    var _now = Date.now();
+                    var _norm = { objectId: detail.objectId || null, objectSlug: detail.objectSlug || null, instrument: detail.instrument || null, eyepiece: detail.eyepiece || null, lens: (typeof detail.lens !== 'undefined' ? detail.lens : null) };
+                    var _key = JSON.stringify(_norm);
+                    if (window.__dsl_last_emit && window.__dsl_last_emit.key === _key && (_now - (window.__dsl_last_emit.ts || 0)) < 500) {
+                        try { if (window.__dsl_debug_enabled && console.debug) console.debug('[dsl] suppress duplicate emit', _now, _norm); } catch (e) { }
+                        return;
+                    }
+                    window.__dsl_last_emit = { key: _key, ts: _now };
+                } catch (e) { }
                 var oid = resolveObjectId(detail.objectId);
                 // attach resolved objectId if available
                 if (oid && String(oid).trim() !== '') {
@@ -591,112 +606,9 @@
     } catch (e) { }
 })();
 
-// Additional bootstrapping for the selects -> Livewire integration
-(function () {
-    document.addEventListener('DOMContentLoaded', function () {
-        function currentPayload(overrides) {
-            overrides = overrides || {};
-            var inst = null, ep = null, ln = null;
-            try { var __el_inst = document.getElementById('aladin-instrument-hidden'); inst = (__el_inst && __el_inst.value) || null; } catch (e) { inst = null; }
-            try { var __el_ep = document.getElementById('aladin-eyepiece-hidden'); ep = (__el_ep && __el_ep.value) || null; } catch (e) { ep = null; }
-            try { var __el_ln = document.getElementById('aladin-lens-hidden'); ln = (__el_ln && __el_ln.value) || null; } catch (e) { ln = null; }
-            var oid = null;
-            try {
-                var __el_oid = document.getElementById('object-id-hidden');
-                oid = (__el_oid && __el_oid.value) || null;
-                if ((!oid || String(oid).trim() === '') && document.getElementById('aladin-lite-container')) {
-                    oid = document.getElementById('aladin-lite-container').getAttribute('data-object-id') || oid;
-                }
-                if ((!oid || String(oid).trim() === '') && typeof window.__dsl_server_selected !== 'undefined' && window.__dsl_server_selected && window.__dsl_server_selected.objectId) {
-                    oid = window.__dsl_server_selected.objectId || oid;
-                }
-                if ((!oid || String(oid).trim() === '') && typeof window.__dsl_embedded_objectId !== 'undefined' && window.__dsl_embedded_objectId) {
-                    oid = window.__dsl_embedded_objectId || oid;
-                }
-            } catch (e) { oid = oid || null; }
-            var slug = null;
-            try { var __el_slug = document.getElementById('aladin-lite-container'); slug = (__el_slug && __el_slug.getAttribute && __el_slug.getAttribute('data-slug')) || null; } catch (e) { slug = null; }
-            var payload = { objectId: oid, objectSlug: slug, instrument: inst, eyepiece: ep, lens: ln };
-            try { for (var k in overrides) { if (Object.prototype.hasOwnProperty.call(overrides, k)) payload[k] = overrides[k]; } } catch (e) { }
-            return payload;
-        }
-
-        function handleSelected(event, fieldId, overrideValues) {
-            var value = event.detail && event.detail.value ? event.detail.value : null;
-            try { document.getElementById(fieldId).value = value || ''; } catch (e) { }
-            try { if (window.scheduleApplyAladinSelectsUpdate) window.scheduleApplyAladinSelectsUpdate(); } catch (e) { }
-            try {
-                var payload = currentPayload(overrideValues || {});
-                try { if (typeof window.__dsl_emitAladinUpdated === 'function') { window.__dsl_emitAladinUpdated(payload); return; } } catch (e) { }
-                try { window.dispatchEvent(new CustomEvent('dsl-aladin-updated', { detail: payload })); return; } catch (e) { }
-                try {
-                    var root = document.getElementById('dsl-aladin-preview-info');
-                    var wireId = (window.__dsl_preview_wireId || null);
-                    if (!wireId && root) {
-                        wireId = root.getAttribute('wire:id') || root.getAttribute('data-wired-id') || null;
-                        if (!wireId) {
-                            var possible = root.querySelector('[wire\\:id]');
-                            if (possible) wireId = possible.getAttribute('wire:id');
-                        }
-                    }
-                    if (wireId && window.Livewire && typeof Livewire.find === 'function') {
-                        try { Livewire.find(wireId).call('recalculate', payload); return; } catch (e) { }
-                    }
-                } catch (e) { }
-                try { if (window.Livewire && typeof Livewire.dispatch === 'function' && payload && payload.objectId) { Livewire.dispatch('aladinUpdated', payload); return; } } catch (e) { }
-                // final unconditional fallback: ensure Livewire receives the update even if previous paths failed
-                try { if (window.Livewire && typeof Livewire.dispatch === 'function') { Livewire.dispatch('aladinUpdated', payload); } } catch (e) { }
-            } catch (e) { }
-        }
-
-        function handleClear(fieldId, emitPayload) {
-            try { document.getElementById(fieldId).value = ''; } catch (e) { }
-            try { if (window.scheduleApplyAladinSelectsUpdate) window.scheduleApplyAladinSelectsUpdate(); } catch (e) { }
-
-            try {
-                var payload = currentPayload(emitPayload || {});
-
-                try {
-                    if (window.Livewire && typeof Livewire.dispatchTo === 'function') {
-                        Livewire.dispatchTo('aladin-preview-info', 'recalculate', payload);
-                    }
-                } catch (e) { }
-
-                try { if (typeof window.__dsl_emitAladinUpdated === 'function') { window.__dsl_emitAladinUpdated(payload); } } catch (e) { }
-
-                try { window.dispatchEvent(new CustomEvent('dsl-aladin-updated', { detail: payload })); } catch (e) { }
-
-                try {
-                    setTimeout(function () { try { if (window.Livewire && typeof Livewire.dispatch === 'function') { Livewire.dispatch('aladinUpdated', payload); } } catch (e) { } }, 40);
-                    // unconditional fallback as well
-                    try { if (window.Livewire && typeof Livewire.dispatch === 'function') { Livewire.dispatch('aladinUpdated', payload); } } catch (e) { }
-                } catch (e) { }
-
-            } catch (e) { }
-        }
-
-        document.addEventListener('selected', function (ev) {
-            try {
-                var el = ev && ev.target ? ev.target : null;
-                var wrapper = el ? el.closest('[data-dsl-field]') : null;
-                var field = wrapper ? (wrapper.getAttribute('data-dsl-field') || null) : null;
-                if (!field) return;
-                if (field === 'instrument') handleSelected(ev, 'aladin-instrument-hidden', { instrument: ev.detail && ev.detail.value ? ev.detail.value : null });
-                else if (field === 'eyepiece') handleSelected(ev, 'aladin-eyepiece-hidden', { eyepiece: ev.detail && ev.detail.value ? ev.detail.value : null });
-                else if (field === 'lens') handleSelected(ev, 'aladin-lens-hidden', { lens: ev.detail && ev.detail.value ? ev.detail.value : null });
-            } catch (e) { }
-        }, true);
-
-        document.addEventListener('clear', function (ev) {
-            try {
-                var el = ev && ev.target ? ev.target : null;
-                var wrapper = el ? el.closest('[data-dsl-field]') : null;
-                var field = wrapper ? (wrapper.getAttribute('data-dsl-field') || null) : null;
-                if (!field) return;
-                if (field === 'instrument') handleClear('aladin-instrument-hidden', { instrument: null });
-                else if (field === 'eyepiece') handleClear('aladin-eyepiece-hidden', { eyepiece: null });
-                else if (field === 'lens') handleClear('aladin-lens-hidden', { lens: null });
-            } catch (e) { }
-        }, true);
-    });
-})();
+// Duplicate selects -> Livewire integration removed from this file.
+// The dedicated `public/js/aladin-selects.js` file now provides the
+// selects event handling and emits preview updates via the centralized
+// `__dsl_emitAladinUpdated` entrypoint. Keeping duplicate listeners here
+// caused the same payload to be emitted twice; that logic was removed
+// to avoid double-processing.

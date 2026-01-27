@@ -17,7 +17,7 @@ This file contains focused, actionable information to help an AI coding agent be
 - Routes: `deepskylog/routes/web.php` — useful to map URLs to controllers/Livewire.
 - Config and services: `deepskylog/config/*.php` (mail, geocoder, responsecache, etc.).
 - Database seeds/fact data: `deepskylog/database/seeders`, and CSVs in `deepskylog/database/` (e.g. `conlines.csv`).
-- log files are in storage/logs/laravel-YYYY-MM-DD.log
+- log files are in deepskylog/storage/logs/laravel-YYYY-MM-DD.log
 
 ### Developer workflows & commands (concrete)
 

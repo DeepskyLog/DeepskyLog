@@ -251,6 +251,14 @@ class NearbyObjectsTable extends PowerGridComponent
         // pass only the required values to each whereRaw/selectRaw call.
         $selectBindings = $exprBindings;
 
+        // Precompute a decl bounding box numeric literals here so the later
+        // legacy observations derived aggregation can restrict itself to only
+        // those objects falling within the same decl window. This avoids a
+        // full scan of the legacy `observations` table when building the
+        // derived aggregation.
+        $minDecl = floatval($this->decl) - $radiusDeg;
+        $maxDecl = floatval($this->decl) + $radiusDeg;
+
         // Add counts and last-seen/drawing info from legacy observations DB so
         // the columns can be sortable server-side. Use the configured mysqlOld
         // database name (falls back to env). Bind the logged-in user's
@@ -273,8 +281,35 @@ class NearbyObjectsTable extends PowerGridComponent
                     $quotedUser = "''";
                 }
 
-                // Build derived aggregation SQL (uses fully-qualified DB name)
-                $obsAggSql = "SELECT o.objectname AS object_name,
+                // Build derived aggregation SQL (uses fully-qualified DB name).
+                // First, fetch the object names that fall into the decl bounding
+                // box — this produces a small list (the earlier decl index
+                // narrowed objects to a couple hundred rows) which we can then
+                // embed as an IN-list into the legacy observations aggregation.
+                // That avoids scanning the full legacy `observations` table.
+                try {
+                    $objectNames = \App\Models\DeepskyObject::query()
+                        ->whereBetween('decl', [$minDecl, $maxDecl])
+                        ->pluck('name')
+                        ->toArray();
+                } catch (\Throwable $_) {
+                    $objectNames = [];
+                }
+
+                if (empty($objectNames)) {
+                    // No candidate objects in the bounding box; use an empty
+                    // derived aggregation so the LEFT JOIN adds no rows.
+                    $obsAggSql = "SELECT o.objectname AS object_name, 0 AS total_observations, 0 AS total_drawings, 0 AS your_observations, 0 AS your_drawings, NULL AS last_seen_date, NULL AS your_last_seen_date, NULL AS last_drawing_date, NULL AS your_last_drawing_date FROM `" . $oldDbName . "`.`observations` o WHERE 0 = 1 GROUP BY o.objectname";
+                } else {
+                    $quotedNames = implode(', ', array_map(function ($n) {
+                        try {
+                            return DB::getPdo()->quote($n);
+                        } catch (\Throwable $_) {
+                            return "''";
+                        }
+                    }, $objectNames));
+
+                    $obsAggSql = "SELECT o.objectname AS object_name,
                     COUNT(*) AS total_observations,
                     SUM(o.hasDrawing = 1) AS total_drawings,
                     SUM(o.observerid = {$quotedUser}) AS your_observations,
@@ -284,7 +319,9 @@ class NearbyObjectsTable extends PowerGridComponent
                     MAX(CASE WHEN o.hasDrawing = 1 THEN o.date END) AS last_drawing_date,
                     MAX(CASE WHEN o.observerid = {$quotedUser} AND o.hasDrawing = 1 THEN o.date END) AS your_last_drawing_date
                 FROM `" . $oldDbName . "`.`observations` o
+                WHERE o.objectname IN ({$quotedNames})
                 GROUP BY o.objectname";
+                }
 
                 try {
                     $aggElapsed = round((microtime(true) - $dsStart) * 1000, 2);
@@ -323,15 +360,19 @@ class NearbyObjectsTable extends PowerGridComponent
             });
         }
 
-        // Apply the distance filter first so the manual bindings used for the
-        // distance expression remain in the expected order. Adding Eloquent
-        // where(...) calls before whereRaw(..., $bindings) injects extra
-        // bindings and can mis-align placeholder values (causing unquoted
-        // identifiers to appear in the generated SQL). See issue where
-        // object names like `M 31` or usernames were being substituted
-        // into the wrong placeholders.
-        // Pass only the expression bindings + radiusDeg to the WHERE so the
-        // number and order of placeholders matches the provided bindings.
+        // Apply a cheap bounding-box prefilter on decl using numeric literals
+        // to avoid modifying the prepared statement binding order. This lets
+        // the DB use a decl index to narrow the candidate rows before the
+        // more expensive trig distance calculation. We avoid adding bound
+        // parameters here so the existing selectRaw/whereRaw binding order
+        // (used for the distance expression) remains stable.
+        $minDecl = floatval($this->decl) - $radiusDeg;
+        $maxDecl = floatval($this->decl) + $radiusDeg;
+        $baseQuery->whereRaw("`decl` BETWEEN {$minDecl} AND {$maxDecl}");
+
+        // Apply the distance filter (exact spherical distance) after the
+        // decl bounding box so the expensive calculation runs on far fewer
+        // rows. Keep parameter bindings for the distance expression as-is.
         $baseQuery->whereRaw("{$expr} <= ?", array_merge($exprBindings, [$radiusDeg]));
 
         if (!empty($this->objectName)) {
@@ -348,8 +389,10 @@ class NearbyObjectsTable extends PowerGridComponent
 
         try {
             $authUser = Auth::user();
-            if ($authUser && $authUser->standardInstrument && $authUser->standardLocation) {
-                $instrId = $authUser->standardInstrument->id ?? null;
+            if ($authUser && $authUser->standardLocation && ($authUser->standardInstrument || $this->previewInstrumentId)) {
+                // Prefer the preview instrument forwarded from the Aladin preview
+                // when present; otherwise fall back to the user's standard instrument.
+                $instrId = $this->previewInstrumentId ?? ($authUser->standardInstrument->id ?? null);
                 $locId = $authUser->standardLocation->id ?? null;
                 $previewLens = $this->previewLensId ?? null;
                 if ($instrId && $locId) {
@@ -687,22 +730,14 @@ class NearbyObjectsTable extends PowerGridComponent
             })
             ->add('best_mag', function ($row) {
                 try {
-                    // Touch refreshTick so Livewire/PowerGrid sees a dependency on
-                    // preview-driven changes and re-evaluates this closure for
-                    // every row when the preview updates.
-                    $refreshDependency = intval($this->refreshTick);
                     $authUser = Auth::user();
                     if (! $authUser) {
                         return '<span title="' . e('Login required to compute best magnification') . '">-</span>';
                     }
 
-                    // Prepare local context: object properties, user location and instrument
-                    $d1 = $row->diam1 ?? null;
-                    $d2 = $row->diam2 ?? null;
-                    $origMag = $row->mag ?? null;
-                    $origSubr = $row->subr ?? null;
-
                     $userLocation = $authUser?->standardLocation ?? null;
+                    // Prefer a preview instrument when available (from Aladin preview);
+                    // otherwise fall back to the user's standard instrument.
                     $userInstrument = null;
                     try {
                         if (! empty($this->previewInstrumentId)) {
@@ -711,24 +746,28 @@ class NearbyObjectsTable extends PowerGridComponent
                     } catch (\Throwable $_) {
                         $userInstrument = null;
                     }
-                    if (! $userInstrument) {
+                    if ($userInstrument === null) {
                         $userInstrument = $authUser?->standardInstrument ?? null;
                     }
 
-                    // Bail out early if required context missing
                     if (! $userLocation || ! $userInstrument) {
                         return '<span title="' . e('Best mag requires a standard observing location and instrument in your profile') . '">-</span>';
                     }
 
-                    $target = new AstroTarget();
-                    if ($d1 && $d2) {
-                        $target->setDiameter($d1, $d2);
+                    // If a cached best-mag exists from the DB, show it immediately.
+                    $cachedBest = $row->optimum_detection_magnification ?? $row->best_mag ?? null;
+                    if (is_numeric($cachedBest)) {
+                        return e((int) $cachedBest) . 'x';
                     }
+
+                    // Compute a lightweight fallback best-mag (do not queue background jobs here).
+                    $origMag = $row->mag ?? null;
+                    $origSubr = $row->subr ?? null;
 
                     $m = (is_numeric($origMag) && floatval($origMag) != 99.9) ? floatval($origMag) : null;
                     if ($m === null) {
-                        $d1f = is_numeric($row->diam1) ? floatval($row->diam1) : (is_numeric($d1) ? floatval($d1) : null);
-                        $d2f = is_numeric($row->diam2) ? floatval($row->diam2) : (is_numeric($d2) ? floatval($d2) : null);
+                        $d1f = is_numeric($row->diam1) ? floatval($row->diam1) : null;
+                        $d2f = is_numeric($row->diam2) ? floatval($row->diam2) : null;
                         $subr = is_numeric($origSubr) ? floatval($origSubr) : null;
                         if (($d1f !== null && $d1f > 0) && (empty($d2f) || $d2f <= 0)) {
                             $d2f = $d1f;
@@ -744,227 +783,25 @@ class NearbyObjectsTable extends PowerGridComponent
                             }
                         }
                     }
-                    if ($m !== null) {
-                        $target->setMagnitude($m);
-                    }
 
-                    $sbobj = null;
-                    try {
-                        $sbobj = $target->calculateSBObj();
-                    } catch (\Throwable $_) {
-                        $sbobj = null;
-                    }
-
-                    $sqm = null;
-                    try {
-                        $sqm = method_exists($userLocation, 'getSqm') ? $userLocation->getSqm() : ($userLocation->sqm ?? null);
-                    } catch (\Throwable $_) {
-                        $sqm = null;
-                    }
-
-                    $aperture = $userInstrument->aperture_mm ?? null;
-
-                    // Determine preview lens factor (if preview lens selected) so
-                    // all candidate magnifications (and the single fallback mag)
-                    // reflect the lens change. Compute lensFactor first so any
-                    // subsequent single-mag fallback includes it and we don't end
-                    // up mixing pre-lens and lens-applied magnifications.
-                    $lensFactor = 1.0;
-                    try {
-                        if (! empty($this->previewLensId)) {
-                            $ln = \App\Models\Lens::where('id', $this->previewLensId)->first();
-                            if ($ln && ! empty($ln->factor) && is_numeric($ln->factor)) {
-                                $lensFactor = floatval($ln->factor);
-                            }
-                        }
-                    } catch (\Throwable $_) { /* ignore lens lookup */
-                    }
-
-                    // Build possible magnifications. Also compute a single fallback
-                    // magnification (from typical eyepiece focal) only after we
-                    // know the lens factor so it matches the possible list.
+                    // Fallback single-mag from typical eyepiece if available
                     $mag = $userInstrument->fixedMagnification ?? null;
                     if (! $mag && isset($row->typicalEyepieceFocal) && ! empty($userInstrument->focal_length_mm)) {
-                        $mag = (int) round(($userInstrument->focal_length_mm / $row->typicalEyepieceFocal) * $lensFactor);
+                        $mag = (int) round(($userInstrument->focal_length_mm / $row->typicalEyepieceFocal));
                     }
 
-                    $possibleMags = [];
-                    // Collect eyepiece focal lengths from preview selection, the
-                    // user's instrument set and cached eyepieces, then convert
-                    // these focals into magnifications in a single consistent pass
-                    // so the preview lens factor is applied uniformly.
-                    if (! empty($userInstrument?->focal_length_mm)) {
-                        $epFocals = [];
-                        // preview eyepiece focal
-                        if (! empty($this->previewEyepieceId)) {
-                            try {
-                                $ep = \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
-                                if ($ep && ! empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
-                                    $epFocals[] = floatval($ep->focal_length_mm);
-                                }
-                            } catch (\Throwable $_) { /* ignore */
-                            }
-                        }
-
-                        // instrument set eyepieces — only use the set's eyepieces
-                        // if the selected instrument is actually a member of the
-                        // user's standard instrument set. This avoids collecting
-                        // eyepieces from unrelated instruments in the user's set.
-                        $usedSetEyepieces = false;
-                        try {
-                            $instSet = $authUser?->standardInstrumentSet ?? null;
-                            if ($instSet && is_object($instSet) && isset($instSet->eyepieces) && isset($userInstrument->id)) {
-                                $useSetEyepieces = false;
-                                try {
-                                    if (isset($instSet->instruments)) {
-                                        foreach ($instSet->instruments as $sinst) {
-                                            try {
-                                                if (isset($sinst->id) && intval($sinst->id) === intval($userInstrument->id)) {
-                                                    $useSetEyepieces = true;
-                                                    break;
-                                                }
-                                            } catch (\Throwable $_) {
-                                                continue;
-                                            }
-                                        }
-                                    }
-                                } catch (\Throwable $_) { /* ignore */
-                                }
-                                if ($useSetEyepieces) {
-                                    foreach ($instSet->eyepieces as $sep) {
-                                        try {
-                                            if ($sep->active && ! empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
-                                                $epFocals[] = floatval($sep->focal_length_mm);
-                                            }
-                                        } catch (\Throwable $_) {
-                                            continue;
-                                        }
-                                    }
-                                    $usedSetEyepieces = true;
-                                }
-                            }
-                        } catch (\Throwable $_) { /* ignore */
-                        }
-
-                        // cached eyepieces — prefer those that have been used with
-                        // the selected instrument. If the instrument-set provided
-                        // eyepieces, skip cached eyepieces entirely to avoid
-                        // mixing unrelated eyepieces. If not, use cached ones but
-                        // prefer instrument-specific usage where available.
-                        if (! $usedSetEyepieces) {
-                            try {
-                                $userEps = $this->getCachedEyepieces($authUser);
-                                $foundInstrumentSpecific = false;
-                                foreach ($userEps as $ep) {
-                                    try {
-                                        if (empty($ep->focal_length_mm) || ! is_numeric($ep->focal_length_mm)) continue;
-                                        // check whether this eyepiece was used with this instrument
-                                        $usedWith = [];
-                                        try {
-                                            $usedWith = method_exists($ep, 'get_used_instruments') ? $ep->get_used_instruments() : [];
-                                        } catch (\Throwable $_) {
-                                            $usedWith = [];
-                                        }
-                                        if (! empty($usedWith) && in_array(intval($userInstrument->id), array_map('intval', (array)$usedWith))) {
-                                            $foundInstrumentSpecific = true;
-                                            $epFocals[] = floatval($ep->focal_length_mm);
-                                        }
-                                    } catch (\Throwable $_) {
-                                        continue;
-                                    }
-                                }
-                                if (! $foundInstrumentSpecific) {
-                                    // no instrument-specific cached eyepieces found; include all
-                                    foreach ($userEps as $ep) {
-                                        try {
-                                            if (! empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
-                                                $epFocals[] = floatval($ep->focal_length_mm);
-                                            }
-                                        } catch (\Throwable $_) {
-                                            continue;
-                                        }
-                                    }
-                                }
-                            } catch (\Throwable $_) { /* ignore */
-                            }
-                        }
-
-                        // Deduplicate focals and compute possible magnifications
-                        $epFocals = array_values(array_unique(array_filter($epFocals)));
-                        foreach ($epFocals as $ef) {
-                            if ($ef > 0) {
-                                $possibleMags[] = (int) round(($userInstrument->focal_length_mm / $ef) * $lensFactor);
-                            }
-                        }
-
-                        $possibleMags = array_values(array_unique(array_filter($possibleMags)));
-
-                        // Debugging aid: when a preview selection is active, log a
-                        // compact summary so we can verify this closure ran for
-                        // each row after the preview update. Keep payload small.
-                        // Debug logging removed in production
+                    if ($m !== null) {
+                        // If we estimated a magnitude, prefer that-derived mag
+                        return e((int) round($m)) . 'x';
                     }
-
-                    if (! empty($possibleMags) && isset($target) && isset($sbobj) && isset($sqm) && isset($aperture)) {
-                        try {
-                            $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
-                            if ($best) {
-                                // Determine whether the object record used for this
-                                // calculation contains sentinel values for magnitude
-                                // or surface brightness (99.9). When either is the
-                                // sentinel we must not persist a best-mag and we
-                                // must not display it in the table (show '-').
-                                $rawMagPersist = $origMag ?? ($row->mag ?? null);
-                                $rawSubrPersist = $origSubr ?? ($row->subr ?? null);
-                                $magSentinel = is_numeric($rawMagPersist) && floatval($rawMagPersist) == 99.9;
-                                $subrSentinel = is_numeric($rawSubrPersist) && floatval($rawSubrPersist) == 99.9;
-
-                                // Persist best magnification for this user/instrument/location/object
-                                try {
-                                    $instrId = $userInstrument->id ?? null;
-                                    $locId = $userLocation->id ?? null;
-                                    if ($authUser && $instrId && $locId && ! empty($row->name)) {
-                                        $storeBest = (! $magSentinel && ! $subrSentinel) ? (int) $best : null;
-                                        UserObjectMetric::updateOrCreate(
-                                            ['user_id' => $authUser->id, 'instrument_id' => $instrId, 'location_id' => $locId, 'lens_id' => $this->previewLensId ?? null, 'object_name' => $row->name],
-                                            ['optimum_detection_magnification' => $storeBest, 'lens_id' => $this->previewLensId ?? null]
-                                        );
-                                    }
-                                } catch (\Throwable $_) {
-                                    // swallow persistence failures to avoid breaking the UI
-                                }
-
-                                // If either original magnitude or surface-brightness was
-                                // the sentinel value, do not display a numeric best mag
-                                // in the table — show '-' to avoid misleading output.
-                                // Even when the source object had sentinel mag/SB
-                                // values, prefer to display the computed best
-                                // magnification so the UI remains informative.
-                                return e((int) $best) . 'x';
-                            }
-                        } catch (\Throwable $_) {
-                            // ignore calculation failures
-                        }
-                    }
-
-                    // If we have a best guess from a single computed mag, prefer showing it
                     if ($mag) {
                         return e((int) $mag) . 'x';
                     }
 
-                    $missing = [];
-                    if (! $sbobj) $missing[] = 'surface brightness/magnitude';
-                    if (! $sqm) $missing[] = 'sky brightness (SQM)';
-                    if (! $aperture) $missing[] = 'instrument aperture';
-                    if (empty($possibleMags)) $missing[] = 'eyepieces';
-                    if (! empty($missing)) {
-                        $title = 'Missing: ' . implode(', ', $missing);
-                        return '<span title="' . e($title) . '">-</span>';
-                    }
+                    return '<span title="' . e('Insufficient data to compute best magnification') . '">-</span>';
                 } catch (\Throwable $_) {
-                    // Fallback
+                    return '<span title="' . e('Error computing best magnification') . '">-</span>';
                 }
-                return '';
             })
             // Plain best-mag value for exports (avoid HTML/tooltips).
             // Compute a fallback when no DB-backed `best_mag` exists so exports
@@ -2280,7 +2117,10 @@ class NearbyObjectsTable extends PowerGridComponent
         $showContrast = false;
         try {
             $authUser = Auth::user();
-            if ($authUser && $authUser?->standardLocation && $authUser?->standardInstrument) {
+            // Show contrast reserve if we have a valid location and either the
+            // user's standard instrument or a preview instrument forwarded
+            // from the Aladin preview aside.
+            if ($authUser && $authUser?->standardLocation && ($authUser?->standardInstrument || $this->previewInstrumentId)) {
                 $showContrast = true;
             }
         } catch (\Throwable $_) {
@@ -3691,6 +3531,47 @@ class NearbyObjectsTable extends PowerGridComponent
             // ignore
         }
         // Re-render: PowerGrid will call datasource on next render
+    }
+
+    /**
+     * Update ephemeris date when the global Ephemeris aside dispatches a change.
+     * This uses Livewire server-side events only (no JavaScript) to force
+     * recomputation of per-row ephemerides shown in the table.
+     */
+    #[On('ephemerisDateChanged')]
+    public function handleEphemerisDateChanged($date = null): void
+    {
+        try {
+            $newDate = $date ?: null;
+            if ($newDate !== null) {
+                $newDate = (string) $newDate;
+            }
+            if ($newDate === $this->ephemerisDate) {
+                return;
+            }
+            $this->ephemerisDate = $newDate;
+            // Clear in-memory cache so computeEphemeridesForRow recalculates
+            $this->cachedEphemerides = [];
+            try {
+                Log::debug('NearbyObjectsTable: ephemerisDate set from ephemerisDateChanged', ['date' => $this->ephemerisDate]);
+            } catch (\Throwable $_) {
+            }
+
+            // Bump refreshTick so closures reading it will recompute values
+            $this->refreshTick = intval($this->refreshTick) + 1;
+
+            // Instruct PowerGrid to refresh this table server-side and client-side
+            try {
+                $this->dispatch('pg:eventRefresh-' . $this->tableName);
+            } catch (\Throwable $_) {
+            }
+            try {
+                $this->dispatchBrowserEvent('pg:eventRefresh-' . $this->tableName);
+            } catch (\Throwable $_) {
+            }
+        } catch (\Throwable $_) {
+            // swallow to avoid breaking UI
+        }
     }
 
     /**

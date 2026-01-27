@@ -4,7 +4,6 @@
 
 ## Next steps
 
-+ [ ] Heel traag wanneer er geen instrument set is gekozen...
 + [ ] Test when logged out
 + [ ] New version does not work anymore on the VPS.  All websites just hang after enabling the test.deepskylog.org.conf file.  Start without crontab?
 + [ ] Targets

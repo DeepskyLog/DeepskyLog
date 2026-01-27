@@ -493,17 +493,31 @@ try {
 
                                         @php $isCometLocal = strtolower(trim((string) ($session->source_type_raw ?? '')) ) === 'comet'; @endphp
                                         @if (!$isCometLocal)
-                                            @livewire('aladin-preview-info', [
-                                                'objectId' => (string) ($session->id ?? ''),
-                                                'initial' => [
-                                                    'contrast_reserve' => $initialCR,
-                                                    'contrast_reserve_category' => $initialCRCat,
-                                                    'contrast_used_location' => $initialCRLoc,
-                                                    'contrast_used_instrument' => $initialCRInstr,
-                                                    'optimum_detection_magnification' => $initialOptMag,
-                                                    'optimum_eyepieces' => $initialOptEps,
-                                                ],
-                                            ])
+                                            @php
+                                                // Only mount the heavy Aladin preview when the user has a
+                                                // configured standard instrument set or explicit saved
+                                                // selections. This avoids expensive Livewire/server work
+                                                // for users who haven't configured instruments yet.
+                                                $authUser = auth()->user();
+                                                $hasStdSet = $authUser?->stdinstrumentset ?? null;
+                                                $hasSavedSelection = !empty($selectedInstrumentId) || !empty($selectedEyepieceId) || !empty($selectedLensId);
+                                            @endphp
+
+                                            @if ($hasStdSet || $hasSavedSelection)
+                                                @livewire('aladin-preview-info', [
+                                                    'objectId' => (string) ($session->id ?? ''),
+                                                    'initial' => [
+                                                        'contrast_reserve' => $initialCR,
+                                                        'contrast_reserve_category' => $initialCRCat,
+                                                        'contrast_used_location' => $initialCRLoc,
+                                                        'contrast_used_instrument' => $initialCRInstr,
+                                                        'optimum_detection_magnification' => $initialOptMag,
+                                                        'optimum_eyepieces' => $initialOptEps,
+                                                    ],
+                                                ])
+                                            @else
+                                                <div class="text-sm text-gray-400">{{ __('Aladin preview disabled — configure a default instrument set or select instrument/eyepiece to enable.') }}</div>
+                                            @endif
                                         @endif
                                     @endauth
 
@@ -852,7 +866,23 @@ try {
                                             'decl' => $nearbyDecDeg,
                                             'radiusArcMin' => $nearbyRadiusSelected,
                                             'perPage' => $nearbyPerPageSelected,
+                                            // Initialize server-side `lazy` as false so datasource runs immediately
+                                            'lazy' => false,
                                         ])
+                                        <script>
+                                            // Defer loading the nearby table data so the main page can
+                                            // render quickly. Trigger the Livewire component to load
+                                            // after a short delay.
+                                            (function(){
+                                                try {
+                                                    setTimeout(function(){
+                                                        if (window.Livewire && typeof Livewire.dispatchTo === 'function') {
+                                                            try { Livewire.dispatchTo('nearby-objects-table', 'loadNearby'); } catch (e) { }
+                                                        }
+                                                    }, 800);
+                                                } catch (e) { }
+                                            })();
+                                        </script>
                                         {{-- Ensure selects inside the nearby objects area use a dark background and light text.
                                             PowerGrid renders its own <select> for per-page; browsers limit styling of <option>,
                                             but we force the select box to match the site's dark theme. --}}
@@ -1287,7 +1317,7 @@ try {
 <!-- Fallback payload observer installer: ensures an observer is present even if earlier script didn't run -->
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js"></script>
+<script defer src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js"></script>
 <script src="/js/object-show-inline.js"></script>
 
 <script>

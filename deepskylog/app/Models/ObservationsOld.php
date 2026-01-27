@@ -305,4 +305,88 @@ class ObservationsOld extends Model
             return null;
         }
     }
+
+    /**
+     * Return a mapping eyepiece_id => [instrumentid, ...] for the provided eyepiece ids.
+     * Uses a grouped query to fetch all instrumentids for multiple eyepieces in one call.
+     * Returns an associative array where keys are eyepiece ids (int) and values are arrays of instrument ids (int[]).
+     */
+    public static function getInstrumentsForEyepieceIds(array $eyepieceIds): array
+    {
+        if (empty($eyepieceIds)) return [];
+        $rows = \DB::connection('mysqlOld')->table((new self())->getTable())
+            ->select('eyepieceid', 'instrumentid')
+            ->whereIn('eyepieceid', $eyepieceIds)
+            ->whereNotNull('instrumentid')
+            ->groupBy('eyepieceid', 'instrumentid')
+            ->get();
+
+        $map = [];
+        foreach ($rows as $r) {
+            $eid = (int) $r->eyepieceid;
+            $iid = (int) $r->instrumentid;
+            if (! isset($map[$eid])) $map[$eid] = [];
+            $map[$eid][] = $iid;
+        }
+        return $map;
+    }
+
+    /**
+     * Return a mapping eyepiece_id => ['date' => int, 'id' => int] for the first (earliest)
+     * observation for each eyepiece id in the provided array. The method performs a
+     * single query ordered by eyepieceid,date asc and picks the first row per eyepiece.
+     *
+     * @param int[] $eyepieceIds
+     * @return array
+     */
+    public static function getFirstObservationDateAndIdForEyepieceIds(array $eyepieceIds): array
+    {
+        if (empty($eyepieceIds)) return [];
+
+        $rows = \DB::connection('mysqlOld')->table((new self())->getTable())
+            ->select('eyepieceid', 'date', 'id')
+            ->whereIn('eyepieceid', $eyepieceIds)
+            ->orderBy('eyepieceid')
+            ->orderBy('date')
+            ->get();
+
+        $map = [];
+        foreach ($rows as $r) {
+            $eid = (int) $r->eyepieceid;
+            if (! isset($map[$eid])) {
+                $map[$eid] = ['date' => (int) $r->date, 'id' => (int) $r->id];
+            }
+        }
+
+        return $map;
+    }
+
+    /**
+     * Return a mapping eyepiece_id => ['date' => int, 'id' => int] for the last (latest)
+     * observation for each eyepiece id in the provided array.
+     *
+     * @param int[] $eyepieceIds
+     * @return array
+     */
+    public static function getLastObservationDateAndIdForEyepieceIds(array $eyepieceIds): array
+    {
+        if (empty($eyepieceIds)) return [];
+
+        $rows = \DB::connection('mysqlOld')->table((new self())->getTable())
+            ->select('eyepieceid', 'date', 'id')
+            ->whereIn('eyepieceid', $eyepieceIds)
+            ->orderBy('eyepieceid')
+            ->orderBy('date', 'desc')
+            ->get();
+
+        $map = [];
+        foreach ($rows as $r) {
+            $eid = (int) $r->eyepieceid;
+            if (! isset($map[$eid])) {
+                $map[$eid] = ['date' => (int) $r->date, 'id' => (int) $r->id];
+            }
+        }
+
+        return $map;
+    }
 }

@@ -471,6 +471,37 @@ window.__dsl_debug_enabled = !!(location && location.search && String(location.s
         }
 
         // 5) on window.load, inspect performance resource entries for any fetched resources that look like page slugs
+        // Livewire client-side timing hooks (dev-only). Enable by appending ?dsl_debug=1
+        (function () {
+            try {
+                if (!(location && location.search && String(location.search).indexOf('dsl_debug=1') !== -1)) return;
+                if (window.Livewire && typeof window.Livewire.hook === 'function') {
+                    window.__dsl_livewire_timing = {};
+                    window.Livewire.hook('message.sent', function (message) {
+                        try {
+                            var id = (message && message.id) ? message.id : ('m' + Math.random().toString(36).slice(2, 8));
+                            window.__dsl_livewire_timing[id] = { sent: performance.now(), payloadSize: 0 };
+                            try { window.__dsl_livewire_timing[id].payloadSize = JSON.stringify(message).length; } catch (e) { window.__dsl_livewire_timing[id].payloadSize = 0; }
+                            console.debug('[dsl-debug][livewire] sent', id, 'component=', message && message.component, 'payloadBytes=', window.__dsl_livewire_timing[id].payloadSize);
+                            // attach id back so processed hook can correlate
+                            try { message.__dsl_id = id; } catch (e) { }
+                        } catch (e) { }
+                    });
+
+                    window.Livewire.hook('message.processed', function (message) {
+                        try {
+                            var id = (message && message.__dsl_id) ? message.__dsl_id : null;
+                            var now = performance.now();
+                            var sentAt = id && window.__dsl_livewire_timing && window.__dsl_livewire_timing[id] ? window.__dsl_livewire_timing[id].sent : null;
+                            var payloadSize = id && window.__dsl_livewire_timing && window.__dsl_livewire_timing[id] ? window.__dsl_livewire_timing[id].payloadSize : (message ? (JSON.stringify(message).length || 0) : 0);
+                            var dur = sentAt ? Math.round(now - sentAt) : null;
+                            console.debug('[dsl-debug][livewire] processed', id, 'component=', message && message.component, 'duration_ms=', dur, 'responseBytes=', (message && message.response && message.response.effects) ? JSON.stringify(message.response).length : payloadSize);
+                            if (id && window.__dsl_livewire_timing) try { delete window.__dsl_livewire_timing[id]; } catch (e) { }
+                        } catch (e) { }
+                    });
+                }
+            } catch (e) { }
+        })();
         try {
             window.addEventListener('load', function () {
                 try {

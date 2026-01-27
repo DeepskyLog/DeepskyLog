@@ -29,6 +29,7 @@ use deepskylog\AstronomyLibrary\Targets\Parabolic;
 use deepskylog\AstronomyLibrary\Targets\NearParabolic;
 use App\Helpers\HorizonsWrapper;
 use App\Helpers\HorizonsDesignation;
+use Illuminate\Support\Facades\Cache;
 
 class ObjectController extends Controller
 {
@@ -676,7 +677,12 @@ class ObjectController extends Controller
                     $short = HorizonsDesignation::canonicalize(strtoupper($m[1]));
                     if ($short) $cands[] = $short;
                 }
-                $res = HorizonsWrapper::latestCoordinatesForDesignation($cands, null, 86400);
+                try {
+                    $key = 'horizons_wrapper:' . md5(implode('|', $cands ?? []));
+                    $res = Cache::remember($key, 3600, fn() => HorizonsWrapper::latestCoordinatesForDesignation($cands, null, 86400));
+                } catch (\Throwable $_) {
+                    $res = HorizonsWrapper::latestCoordinatesForDesignation($cands, null, 86400);
+                }
                 if ($res && isset($res['ra_hours']) && isset($res['dec_deg'])) {
                     $session->ra = \App\Models\DeepskyObject::formatRa($res['ra_hours']);
                     $session->decl = \App\Models\DeepskyObject::formatDec($res['dec_deg']);
@@ -888,18 +894,51 @@ class ObjectController extends Controller
                             if ($instSet) {
                                 $set = \App\Models\InstrumentSet::where('id', $instSet)->first();
                                 if ($set) {
+                                    // Precompute instruments used per eyepiece to avoid per-eyepiece queries
+                                    try {
+                                        $eyepieceIds = [];
+                                        foreach ($set->eyepieces as $tmpEp) {
+                                            if (isset($tmpEp->id) && $tmpEp->id) $eyepieceIds[] = $tmpEp->id;
+                                        }
+                                        $eyepieceIds = array_values(array_unique($eyepieceIds));
+                                        if (! empty($eyepieceIds)) {
+                                            $map = \App\Models\ObservationsOld::getInstrumentsForEyepieceIds($eyepieceIds);
+                                            \App\Models\Eyepiece::setBulkUsedInstrumentsMap($map);
+                                            try {
+                                                $firstMap = \App\Models\ObservationsOld::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                                \App\Models\Eyepiece::setBulkFirstObservationMap($firstMap);
+                                            } catch (\Throwable $_) {
+                                            }
+                                            try {
+                                                $lastMap = \App\Models\ObservationsOld::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                                \App\Models\Eyepiece::setBulkLastObservationMap($lastMap);
+                                            } catch (\Throwable $_) {
+                                            }
+                                        }
+                                    } catch (\Throwable $_) {
+                                    }
+
+                                    // Batch user slug lookup to avoid N+1 queries
+                                    $epUserIds = [];
+                                    foreach ($set->eyepieces as $tmpEp) {
+                                        if (isset($tmpEp->user_id) && $tmpEp->user_id) $epUserIds[] = $tmpEp->user_id;
+                                    }
+                                    $epUserIds = array_values(array_unique($epUserIds));
+                                    $epUserSlugMap = [];
+                                    if (! empty($epUserIds)) {
+                                        try {
+                                            $epUserSlugMap = \App\Models\User::whereIn('id', $epUserIds)->pluck('slug', 'id')->toArray();
+                                        } catch (\Throwable $_) {
+                                            $epUserSlugMap = [];
+                                        }
+                                    }
                                     foreach ($set->eyepieces as $ep) {
                                         if ($ep->active && $ep->focal_length_mm) {
                                             $usedSetEyepieces = true;
                                             $ef = $ep->focal_length_mm;
                                             $eyepieceFocals[] = $ef;
                                             // Attempt to include slugs so the view can link to eyepiece pages
-                                            $userSlug = null;
-                                            try {
-                                                $userSlug = $ep->user?->slug ?? \App\Models\User::where('id', $ep->user_id)->value('slug');
-                                            } catch (\Throwable $_) {
-                                                $userSlug = null;
-                                            }
+                                            $userSlug = $epUserSlugMap[$ep->user_id] ?? null;
                                             // Build display name; if a default lens is set, append the lens name
                                             $displayName = $ep->fullName();
                                             if (! empty($defaultLensName)) {
@@ -922,6 +961,20 @@ class ObjectController extends Controller
                             if (empty($eyepiecesForDisplay)) {
                                 try {
                                     $userEps = \App\Models\Eyepiece::where('user_id', $authUser->id)->where('active', 1)->get();
+                                    // Batch user slug lookup for user's eyepieces
+                                    $epUserIds = [];
+                                    foreach ($userEps as $tmpEp) {
+                                        if (isset($tmpEp->user_id) && $tmpEp->user_id) $epUserIds[] = $tmpEp->user_id;
+                                    }
+                                    $epUserIds = array_values(array_unique($epUserIds));
+                                    $epUserSlugMap = [];
+                                    if (! empty($epUserIds)) {
+                                        try {
+                                            $epUserSlugMap = \App\Models\User::whereIn('id', $epUserIds)->pluck('slug', 'id')->toArray();
+                                        } catch (\Throwable $_) {
+                                            $epUserSlugMap = [];
+                                        }
+                                    }
                                     foreach ($userEps as $ep) {
                                         if (! empty($ep->focal_length_mm)) {
                                             $ef = $ep->focal_length_mm;
@@ -929,12 +982,7 @@ class ObjectController extends Controller
                                         } else {
                                             $ef = null;
                                         }
-                                        $userSlug = null;
-                                        try {
-                                            $userSlug = $ep->user?->slug ?? \App\Models\User::where('id', $ep->user_id)->value('slug');
-                                        } catch (\Throwable $_) {
-                                            $userSlug = null;
-                                        }
+                                        $userSlug = $epUserSlugMap[$ep->user_id] ?? null;
                                         $displayName = $ep->fullName() ?? $ep->name ?? null;
                                         if (! empty($defaultLensName) && ! empty($displayName)) {
                                             $displayName = $displayName . ' (' . $defaultLensName . ')';
@@ -1194,7 +1242,12 @@ class ObjectController extends Controller
                     if ($short) $earlyCands[] = $short;
                 }
                 if (! empty($earlyCands)) {
-                    $earlyRes = \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($earlyCands, null, 86400);
+                    try {
+                        $key = 'horizons_wrapper:' . md5(implode('|', $earlyCands ?? []));
+                        $earlyRes = Cache::remember($key, 3600, fn() => \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($earlyCands, null, 86400));
+                    } catch (\Throwable $_) {
+                        $earlyRes = \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($earlyCands, null, 86400);
+                    }
                     if ($earlyRes && isset($earlyRes['ra_hours']) && isset($earlyRes['dec_deg'])) {
                         // set session RA/Dec display and preserve wrapper coords for later logic
                         try {
@@ -2152,15 +2205,48 @@ class ObjectController extends Controller
                                                         try {
                                                             $setModel = $instSet;
                                                             if ($setModel && count($setModel->eyepieces) > 0) {
+                                                                // Precompute instruments for eyepieces in this set to avoid per-eyepiece legacy queries
+                                                                try {
+                                                                    $eyepieceIds = [];
+                                                                    foreach ($setModel->eyepieces as $tmpEp) {
+                                                                        if (isset($tmpEp->id) && $tmpEp->id) $eyepieceIds[] = $tmpEp->id;
+                                                                    }
+                                                                    $eyepieceIds = array_values(array_unique($eyepieceIds));
+                                                                    if (! empty($eyepieceIds)) {
+                                                                        $map = \App\Models\ObservationsOld::getInstrumentsForEyepieceIds($eyepieceIds);
+                                                                        \App\Models\Eyepiece::setBulkUsedInstrumentsMap($map);
+                                                                        try {
+                                                                            $firstMap = \App\Models\ObservationsOld::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                                                            \App\Models\Eyepiece::setBulkFirstObservationMap($firstMap);
+                                                                        } catch (\Throwable $_) {
+                                                                        }
+                                                                        try {
+                                                                            $lastMap = \App\Models\ObservationsOld::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                                                            \App\Models\Eyepiece::setBulkLastObservationMap($lastMap);
+                                                                        } catch (\Throwable $_) {
+                                                                        }
+                                                                    }
+                                                                } catch (\Throwable $_) {
+                                                                }
+
+                                                                // Batch user slug lookup for set eyepieces
+                                                                $epUserIds = [];
+                                                                foreach ($setModel->eyepieces as $tmpEp) {
+                                                                    if (isset($tmpEp->user_id) && $tmpEp->user_id) $epUserIds[] = $tmpEp->user_id;
+                                                                }
+                                                                $epUserIds = array_values(array_unique($epUserIds));
+                                                                $epUserSlugMap = [];
+                                                                if (! empty($epUserIds)) {
+                                                                    try {
+                                                                        $epUserSlugMap = \App\Models\User::whereIn('id', $epUserIds)->pluck('slug', 'id')->toArray();
+                                                                    } catch (\Throwable $_) {
+                                                                        $epUserSlugMap = [];
+                                                                    }
+                                                                }
                                                                 foreach ($setModel->eyepieces as $ep) {
                                                                     if (! $ep->active) continue;
                                                                     $ef = $ep->focal_length_mm ?? null;
-                                                                    $userSlug = null;
-                                                                    try {
-                                                                        $userSlug = $ep->user?->slug ?? \App\Models\User::where('id', $ep->user_id)->value('slug');
-                                                                    } catch (\Throwable $_) {
-                                                                        $userSlug = null;
-                                                                    }
+                                                                    $userSlug = $epUserSlugMap[$ep->user_id] ?? null;
                                                                     $displayName = $ep->fullName() ?? $ep->name ?? null;
                                                                     if (! empty($defaultLensName) && ! empty($displayName)) {
                                                                         $displayName = $displayName . ' (' . $defaultLensName . ')';
@@ -2182,14 +2268,23 @@ class ObjectController extends Controller
                                                     if (empty($eyepiecesForDisplay)) {
                                                         try {
                                                             $eps = \App\Models\Eyepiece::where('user_id', $authUser->id)->where('active', 1)->get();
+                                                            // Batch user slug lookup for user's eyepieces
+                                                            $epUserIds = [];
+                                                            foreach ($eps as $tmpEp) {
+                                                                if (isset($tmpEp->user_id) && $tmpEp->user_id) $epUserIds[] = $tmpEp->user_id;
+                                                            }
+                                                            $epUserIds = array_values(array_unique($epUserIds));
+                                                            $epUserSlugMap = [];
+                                                            if (! empty($epUserIds)) {
+                                                                try {
+                                                                    $epUserSlugMap = \App\Models\User::whereIn('id', $epUserIds)->pluck('slug', 'id')->toArray();
+                                                                } catch (\Throwable $_) {
+                                                                    $epUserSlugMap = [];
+                                                                }
+                                                            }
                                                             foreach ($eps as $ep) {
                                                                 $ef = $ep->focal_length_mm ?? null;
-                                                                $userSlug = null;
-                                                                try {
-                                                                    $userSlug = $ep->user?->slug ?? \App\Models\User::where('id', $ep->user_id)->value('slug');
-                                                                } catch (\Throwable $_) {
-                                                                    $userSlug = null;
-                                                                }
+                                                                $userSlug = $epUserSlugMap[$ep->user_id] ?? null;
                                                                 $displayName = $ep->fullName() ?? $ep->name ?? null;
                                                                 if (! empty($defaultLensName) && ! empty($displayName)) {
                                                                     $displayName = $displayName . ' (' . $defaultLensName . ')';
@@ -2629,7 +2724,12 @@ class ObjectController extends Controller
                                                         } catch (\Throwable $_) {
                                                         }
                                                         $candList = array_values(array_unique(array_filter($candList)));
-                                                        $wrapperCoords = \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($candList, $calcDate, 86400, 120);
+                                                        try {
+                                                            $key = 'horizons_wrapper:' . md5(implode('|', $candList ?? []) . '|' . ($calcDate ? $calcDate->toDateString() : 'none'));
+                                                            $wrapperCoords = Cache::remember($key, 3600, fn() => \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($candList, $calcDate, 86400, 120));
+                                                        } catch (\Throwable $_) {
+                                                            $wrapperCoords = \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($candList, $calcDate, 86400, 120);
+                                                        }
                                                         if ($wrapperCoords && isset($wrapperCoords['ra_hours']) && isset($wrapperCoords['dec_deg'])) {
                                                             try {
                                                                 $coords = new EquatorialCoordinates($wrapperCoords['ra_hours'], $wrapperCoords['dec_deg']);
@@ -2679,7 +2779,12 @@ class ObjectController extends Controller
                                                         $extra[] = str_replace(' ', '', $s);
                                                     }
                                                     $robustCandidates = array_values(array_unique(array_filter(array_merge($robustCandidates, $extra))));
-                                                    $robWrapper = \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($robustCandidates, $calcDate, 7 * 86400, 3600);
+                                                    try {
+                                                        $key = 'horizons_wrapper:' . md5(implode('|', $robustCandidates ?? []) . '|' . ($calcDate ? $calcDate->toDateString() : 'none'));
+                                                        $robWrapper = Cache::remember($key, 3600, fn() => \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($robustCandidates, $calcDate, 7 * 86400, 3600));
+                                                    } catch (\Throwable $_) {
+                                                        $robWrapper = \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($robustCandidates, $calcDate, 7 * 86400, 3600);
+                                                    }
                                                     if ($robWrapper && isset($robWrapper['ra_hours']) && isset($robWrapper['dec_deg'])) {
                                                         $coords = new EquatorialCoordinates($robWrapper['ra_hours'], $robWrapper['dec_deg']);
                                                         $usedWrapper = true;
