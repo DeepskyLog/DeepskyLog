@@ -16,7 +16,8 @@ Disallow: /messages
 
 # Optional: discourage crawling of URLs with query strings (may hide paginated/filter pages)
 # Uncomment if you want to block query-strings site-wide
-# Disallow: /*?*
+# Disallow URLs with query strings — keep only first page crawled
+Disallow: /*?*
 
 # Sitemap - update to full URL if you prefer an absolute URL
 # Example: Sitemap: https://your-domain.example/sitemap.xml

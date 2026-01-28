@@ -83,6 +83,19 @@ class NearbyObjectsTable extends PowerGridComponent
     private array $cachedEphemerides = [];
 
     /**
+     * Per-render cached preview models to avoid N+1 lookups in row closures.
+     * These are populated at the start of datasource() and reused by fields().
+     * @var \App\Models\Instrument|null
+     */
+    private ?\App\Models\Instrument $previewInstrumentModel = null;
+
+    /** @var \App\Models\Lens|null */
+    private ?\App\Models\Lens $previewLensModel = null;
+
+    /** @var \App\Models\Eyepiece|null */
+    private ?\App\Models\Eyepiece $previewEyepieceModel = null;
+
+    /**
      * Derived aggregation SQL for legacy observations (populated when legacy DB exists).
      * Stored here so we can attach it as a LEFT JOIN after the main select is built.
      * @var string|null
@@ -218,6 +231,32 @@ class NearbyObjectsTable extends PowerGridComponent
         }
         if ($this->ra === null || $this->decl === null) {
             return DeepskyObject::query()->whereRaw('0 = 1');
+        }
+
+        // Populate per-render cached preview models to avoid doing DB lookups
+        // inside per-row closures (which causes N+1 queries).
+        try {
+            if (! empty($this->previewInstrumentId)) {
+                $this->previewInstrumentModel = \App\Models\Instrument::find($this->previewInstrumentId);
+            } else {
+                $this->previewInstrumentModel = null;
+            }
+
+            if (! empty($this->previewLensId)) {
+                $this->previewLensModel = \App\Models\Lens::find($this->previewLensId);
+            } else {
+                $this->previewLensModel = null;
+            }
+
+            if (! empty($this->previewEyepieceId)) {
+                $this->previewEyepieceModel = \App\Models\Eyepiece::find($this->previewEyepieceId);
+            } else {
+                $this->previewEyepieceModel = null;
+            }
+        } catch (\Throwable $_) {
+            $this->previewInstrumentModel = null;
+            $this->previewLensModel = null;
+            $this->previewEyepieceModel = null;
         }
 
         $radiusDeg = $this->radiusArcMin / 60.0;
@@ -650,6 +689,15 @@ class NearbyObjectsTable extends PowerGridComponent
                         $outer->orderByRaw("(COALESCE(uom.contrast_reserve, objects.contrast_reserve) IS NULL) ASC, COALESCE(uom.contrast_reserve, objects.contrast_reserve) DESC");
                     }
                 }
+                // Ensure PowerGrid's internal ordering (which may append an
+                // additional ORDER BY using the component's `sortField`) uses
+                // a fully-qualified column to avoid ambiguous column errors
+                // when joins expose the same column name on multiple tables.
+                try {
+                    $this->sortField = 'objects.contrast_reserve';
+                } catch (\Throwable $_) {
+                    // ignore; ordering already applied above
+                }
                 return;
             }
 
@@ -818,7 +866,7 @@ class NearbyObjectsTable extends PowerGridComponent
                     $userInstrument = null;
                     try {
                         if (! empty($this->previewInstrumentId)) {
-                            $userInstrument = \App\Models\Instrument::where('id', $this->previewInstrumentId)->first();
+                            $userInstrument = $this->previewInstrumentModel ?? \App\Models\Instrument::where('id', $this->previewInstrumentId)->first();
                         }
                     } catch (\Throwable $_) {
                         $userInstrument = null;
@@ -902,7 +950,7 @@ class NearbyObjectsTable extends PowerGridComponent
                     $userInstrument = null;
                     try {
                         if (! empty($this->previewInstrumentId)) {
-                            $userInstrument = \App\Models\Instrument::where('id', $this->previewInstrumentId)->first();
+                            $userInstrument = $this->previewInstrumentModel ?? \App\Models\Instrument::where('id', $this->previewInstrumentId)->first();
                         }
                     } catch (\Throwable $_) {
                         $userInstrument = null;
@@ -968,7 +1016,7 @@ class NearbyObjectsTable extends PowerGridComponent
                     $lensFactor = 1.0;
                     try {
                         if (! empty($this->previewLensId)) {
-                            $ln = \App\Models\Lens::where('id', $this->previewLensId)->first();
+                            $ln = $this->previewLensModel ?? \App\Models\Lens::where('id', $this->previewLensId)->first();
                             if ($ln && ! empty($ln->factor) && is_numeric($ln->factor)) {
                                 $lensFactor = floatval($ln->factor);
                             }
@@ -987,7 +1035,7 @@ class NearbyObjectsTable extends PowerGridComponent
                         $epFocals = [];
                         if (! empty($this->previewEyepieceId)) {
                             try {
-                                $ep = \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
+                                $ep = $this->previewEyepieceModel ?? \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
                                 if ($ep && ! empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
                                     $epFocals[] = floatval($ep->focal_length_mm);
                                 }
@@ -1160,7 +1208,7 @@ class NearbyObjectsTable extends PowerGridComponent
                     $userInstrument = null;
                     try {
                         if (! empty($this->previewInstrumentId)) {
-                            $userInstrument = \App\Models\Instrument::where('id', $this->previewInstrumentId)->first();
+                            $userInstrument = $this->previewInstrumentModel ?? \App\Models\Instrument::where('id', $this->previewInstrumentId)->first();
                         }
                     } catch (\Throwable $_) {
                         $userInstrument = null;
@@ -1326,7 +1374,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                 $lensFactorInline = 1.0;
                                 try {
                                     if (! empty($this->previewLensId)) {
-                                        $ln = \App\Models\Lens::where('id', $this->previewLensId)->first();
+                                        $ln = $this->previewLensModel ?? \App\Models\Lens::where('id', $this->previewLensId)->first();
                                         if ($ln && ! empty($ln->factor) && is_numeric($ln->factor)) {
                                             $lensFactorInline = floatval($ln->factor);
                                         }
@@ -1346,7 +1394,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                     $epFocalsInline = [];
                                     if (! empty($this->previewEyepieceId)) {
                                         try {
-                                            $ep = \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
+                                            $ep = $this->previewEyepieceModel ?? \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
                                             if ($ep && ! empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
                                                 $epFocalsInline[] = floatval($ep->focal_length_mm);
                                             }
@@ -1633,7 +1681,7 @@ class NearbyObjectsTable extends PowerGridComponent
                     $lensFactor = 1.0;
                     try {
                         if (! empty($this->previewLensId)) {
-                            $ln = \App\Models\Lens::where('id', $this->previewLensId)->first();
+                            $ln = $this->previewLensModel ?? \App\Models\Lens::where('id', $this->previewLensId)->first();
                             if ($ln && ! empty($ln->factor) && is_numeric($ln->factor)) {
                                 $lensFactor = floatval($ln->factor);
                             }
@@ -1657,7 +1705,7 @@ class NearbyObjectsTable extends PowerGridComponent
                             // preview eyepiece focal
                             if (! empty($this->previewEyepieceId)) {
                                 try {
-                                    $ep = \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
+                                    $ep = $this->previewEyepieceModel ?? \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
                                     if ($ep && ! empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
                                         $epFocals[] = floatval($ep->focal_length_mm);
                                     }
@@ -3319,7 +3367,7 @@ class NearbyObjectsTable extends PowerGridComponent
             $userInstrument = null;
             try {
                 if (! empty($this->previewInstrumentId)) {
-                    $userInstrument = \App\Models\Instrument::where('id', $this->previewInstrumentId)->first();
+                    $userInstrument = $this->previewInstrumentModel ?? \App\Models\Instrument::where('id', $this->previewInstrumentId)->first();
                 }
             } catch (\Throwable $_) {
                 $userInstrument = null;
@@ -3385,7 +3433,7 @@ class NearbyObjectsTable extends PowerGridComponent
             $lensFactor = 1.0;
             try {
                 if (! empty($this->previewLensId)) {
-                    $ln = \App\Models\Lens::where('id', $this->previewLensId)->first();
+                    $ln = $this->previewLensModel ?? \App\Models\Lens::where('id', $this->previewLensId)->first();
                     if ($ln && ! empty($ln->factor) && is_numeric($ln->factor)) {
                         $lensFactor = floatval($ln->factor);
                     }
@@ -3403,7 +3451,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 $epFocals = [];
                 if (! empty($this->previewEyepieceId)) {
                     try {
-                        $ep = \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
+                        $ep = $this->previewEyepieceModel ?? \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
                         if ($ep && ! empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
                             $epFocals[] = floatval($ep->focal_length_mm);
                         }
