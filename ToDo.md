@@ -4,10 +4,8 @@
 
 ## Next steps
 
-+ [ ] Nearby table werkt niet zo goed met livewire 4...  Niet alles is zichtbaar, kollommen weghalen lukt niet...
-+ [ ] Test when logged out
 + [ ] Make old version work with the new object tables?
-+ [ ] New version does not work anymore on the VPS.  All websites just hang after enabling the test.deepskylog.org.conf file.
++ [ ] New version does not work anymore on the VPS.  All websites just hang after enabling the test.deepskylog.org.conf file. -> Ok?
 + [ ] Targets
   + [ ] Administrator / Database expert pages to add / edit / delete objects
   + [ ] Search targets, first by name, then by type, constellation, ...

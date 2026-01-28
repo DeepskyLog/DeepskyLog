@@ -2265,8 +2265,8 @@ class NearbyObjectsTable extends PowerGridComponent
             Column::make(__('Name'), 'name')->searchable()->sortable()->bodyAttribute('class', 'font-medium whitespace-normal')->bodyAttribute('style', 'white-space:normal; overflow:visible;')->headerAttribute('class', 'whitespace-normal')->headerAttribute('style', 'white-space:normal;'),
             // Export-only plain name (no HTML)
             Column::make(__('Name'), 'name_plain')->hidden()->visibleInExport(true),
-            Column::make(__('RA'), 'ra')->sortable()->bodyAttribute('class', 'whitespace-normal')->bodyAttribute('style', 'white-space:normal; overflow:visible;')->headerAttribute('class', 'whitespace-normal')->headerAttribute('style', 'white-space:normal;'),
-            Column::make(__('Dec'), 'decl')->sortable()->bodyAttribute('class', 'whitespace-normal')->bodyAttribute('style', 'white-space:normal; overflow:visible;')->headerAttribute('class', 'whitespace-normal')->headerAttribute('style', 'white-space:normal;'),
+            Column::make(__('RA'), 'ra')->sortable()->bodyAttribute('class', 'whitespace-nowrap')->bodyAttribute('style', 'white-space:nowrap; overflow:visible;')->headerAttribute('class', 'whitespace-nowrap')->headerAttribute('style', 'white-space:nowrap;'),
+            Column::make(__('Dec'), 'decl')->sortable()->bodyAttribute('class', 'whitespace-nowrap')->bodyAttribute('style', 'white-space:nowrap; overflow:visible;')->headerAttribute('class', 'whitespace-nowrap')->headerAttribute('style', 'white-space:nowrap;'),
             Column::make(__('Distance'), 'distance_deg')->sortable()->bodyAttribute('class', 'text-right'),
             // These are computed/aliased fields (from subqueries) so they are not real DB columns.
             // Avoid marking them searchable to prevent PowerGrid generating WHERE clauses
@@ -2330,6 +2330,8 @@ class NearbyObjectsTable extends PowerGridComponent
                 ->bodyAttribute('class', 'text-center');
         }
 
+        // (Removed) per-row action column: not needed for Nearby objects UI.
+
         return $cols;
     }
 
@@ -2381,6 +2383,8 @@ class NearbyObjectsTable extends PowerGridComponent
             ],
         ];
     }
+
+    // actionsFromView removed: Nearby objects don't render a per-row actions column.
 
     /**
      * Export only the object names for the current nearby query to a PDF.
