@@ -288,7 +288,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 // embed as an IN-list into the legacy observations aggregation.
                 // That avoids scanning the full legacy `observations` table.
                 try {
-                    $objectNames = \App\Models\DeepskyObject::query()
+                    $objectNames = DeepskyObject::query()
                         ->whereBetween('decl', [$minDecl, $maxDecl])
                         ->pluck('name')
                         ->toArray();
@@ -424,7 +424,7 @@ class NearbyObjectsTable extends PowerGridComponent
                             DB::raw('COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification) as best_mag'),
                         ]);
                     } else {
-                        // No preview lens: join legacy lens-less metrics (preserves previous behaviour)
+                        // No preview lens: join legacy lens-less metrics (preserves previous behavior)
                         $outer->leftJoin('user_object_metrics as uom', function ($join) use ($instrId, $locId, $authUser) {
                             $join->on('objects.name', '=', 'uom.object_name')
                                 ->where('uom.user_id', '=', $authUser->id)
@@ -447,6 +447,11 @@ class NearbyObjectsTable extends PowerGridComponent
 
         $sortField = $this->sortField ?? 'distance_deg';
         $sortDirection = $this->sortDirection ?? 'asc';
+        // Validate sort direction to accept only 'asc' or 'desc' (case-insensitive).
+        $sortDirection = is_string($sortDirection) ? strtolower($sortDirection) : 'asc';
+        if (! in_array($sortDirection, ['asc', 'desc'], true)) {
+            $sortDirection = 'asc';
+        }
 
         // Persist sort changes proactively here. PowerGrid sometimes invokes a
         // server-side method (eg. sortBy) rather than a simple property update
@@ -501,119 +506,8 @@ class NearbyObjectsTable extends PowerGridComponent
             $sortField = 'your_last_seen_date';
         }
 
-        $outer->getQuery()->orders = null;
-
-        if ($sortField === 'size') {
-            $outer->getQuery()->orders = null;
-            $sizeExpr = 'GREATEST(COALESCE(objects.diam1,0), COALESCE(objects.diam2,0))';
-            if (strtolower($sortDirection) === 'asc') {
-                $outer->orderByRaw("({$sizeExpr} = 0) ASC, {$sizeExpr} ASC");
-            } else {
-                $outer->orderByRaw("({$sizeExpr} = 0) ASC, {$sizeExpr} DESC");
-            }
-        } else {
-            if ($sortField === 'name') {
-                $outer->getQuery()->orders = null;
-                $prefixExpr = "LOWER(REGEXP_SUBSTR(objects.name, '^[^0-9]+'))";
-                $numExprAsc = "COALESCE(CAST(REGEXP_SUBSTR(objects.name, '[0-9]+') AS UNSIGNED), 4294967295)";
-                $numExprDesc = "COALESCE(CAST(REGEXP_SUBSTR(objects.name, '[0-9]+') AS SIGNED), -1)";
-
-                if (strtolower($sortDirection) === 'asc') {
-                    $outer->orderByRaw("{$prefixExpr} ASC, {$numExprAsc} ASC, objects.name ASC");
-                } else {
-                    $outer->orderByRaw("{$prefixExpr} DESC, {$numExprDesc} DESC, objects.name DESC");
-                }
-            } else {
-                if ($sortField === 'best_mag') {
-                    $outer->getQuery()->orders = null;
-                    // When a preview lens is active we joined uom_lens and uom_default.
-                    // Use COALESCE to prefer lens-specific values but fall back to the default.
-                    if (! empty($this->previewLensId)) {
-                        if (strtolower($sortDirection) === 'asc') {
-                            $outer->orderByRaw("(COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification) IS NULL) ASC, COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification) ASC");
-                        } else {
-                            $outer->orderByRaw("(COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification) IS NULL) ASC, COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification) DESC");
-                        }
-                    } else {
-                        if (strtolower($sortDirection) === 'asc') {
-                            $outer->orderByRaw("(uom.optimum_detection_magnification IS NULL) ASC, uom.optimum_detection_magnification ASC");
-                        } else {
-                            $outer->orderByRaw("(uom.optimum_detection_magnification IS NULL) ASC, uom.optimum_detection_magnification DESC");
-                        }
-                    }
-                } elseif ($sortField === 'contrast_reserve') {
-                    $outer->getQuery()->orders = null;
-                    if (! empty($this->previewLensId)) {
-                        if (strtolower($sortDirection) === 'asc') {
-                            $outer->orderByRaw("(COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve) IS NULL) ASC, COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve) ASC");
-                        } else {
-                            $outer->orderByRaw("(COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve) IS NULL) ASC, COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve) DESC");
-                        }
-                    } else {
-                        if (strtolower($sortDirection) === 'asc') {
-                            $outer->orderByRaw("(uom.contrast_reserve IS NULL) ASC, uom.contrast_reserve ASC");
-                        } else {
-                            $outer->orderByRaw("(uom.contrast_reserve IS NULL) ASC, uom.contrast_reserve DESC");
-                        }
-                    }
-                } else {
-                    // Special-case sorting for magnitude and surface brightness (subr):
-                    // treat sentinel values (99.9) and explicit zero as "missing" and
-                    // order them after real numeric values to match the presentation
-                    // where these are shown as '-'. Use objects.<field> to reference
-                    // the outer subquery columns reliably.
-                    if ($sortField === 'mag' || $sortField === 'subr') {
-                        $col = "objects.{$sortField}";
-                        if (strtolower($sortDirection) === 'asc') {
-                            // Non-missing first, then missing; within non-missing order ascending
-                            $outer->orderByRaw("({$col} = 0 OR {$col} = 99.9 OR {$col} IS NULL) ASC, {$col} ASC");
-                        } else {
-                            // Non-missing first, then missing; within non-missing order descending
-                            $outer->orderByRaw("({$col} = 0 OR {$col} = 99.9 OR {$col} IS NULL) ASC, {$col} DESC");
-                        }
-                    } else {
-                        // Support ordering by aggregated aliases inserted into the subquery
-                        // Consolidated handling for 'seen' and 'last_seen' to make sorting
-                        // deterministic and tie-break using per-user counts where useful.
-                        if ($sortField === 'seen' || $sortField === 'total_observations') {
-                            $outer->getQuery()->orders = null;
-                            $col = 'objects.total_observations';
-                            $userCol = 'objects.your_observations';
-                            if (strtolower($sortDirection) === 'asc') {
-                                // Put missing/zero totals last, then order ascending by total.
-                                // Break ties by user's own observations ascending.
-                                $outer->orderByRaw("(COALESCE({$col},0) = 0) ASC, COALESCE({$col},0) ASC, COALESCE({$userCol},0) ASC");
-                            } else {
-                                // Put missing/zero totals last, then order descending by total.
-                                // Break ties by user's own observations descending so rows where
-                                // the current user has more observations appear earlier.
-                                $outer->orderByRaw("(COALESCE({$col},0) = 0) ASC, COALESCE({$col},0) DESC, COALESCE({$userCol},0) DESC");
-                            }
-                        } elseif ($sortField === 'last_seen' || $sortField === 'your_last_seen_date') {
-                            $outer->getQuery()->orders = null;
-                            $col = 'objects.your_last_seen_date';
-                            if (strtolower($sortDirection) === 'asc') {
-                                $outer->orderByRaw("({$col} IS NULL) ASC, {$col} ASC");
-                            } else {
-                                $outer->orderByRaw("({$col} IS NULL) ASC, {$col} DESC");
-                            }
-                        } else {
-                            $outer->orderBy($sortField, $sortDirection);
-                        }
-                    }
-                }
-            }
-        }
-
-        if ($sortField === 'atlas_page' && $this->includeAtlas) {
-            $outer->getQuery()->orders = null;
-            $atlasExpr = 'objects.atlas_page';
-            if (strtolower($sortDirection) === 'asc') {
-                $outer->orderByRaw("({$atlasExpr} = '' OR {$atlasExpr} IS NULL) ASC, {$atlasExpr} ASC");
-            } else {
-                $outer->orderByRaw("({$atlasExpr} = '' OR {$atlasExpr} IS NULL) ASC, {$atlasExpr} DESC");
-            }
-        }
+        // Centralize ordering through helper to avoid duplicated logic
+        $this->applySortingToQuery($outer, $sortField, $sortDirection);
 
 
         // Debug: log final ordering so we can see what PowerGrid requested
@@ -627,7 +521,190 @@ class NearbyObjectsTable extends PowerGridComponent
             // swallowing logging errors to avoid breaking rendering
         }
 
+        // Ordering already applied through helper; skip normalization.
+
+        try {
+            Log::debug('NearbyObjectsTable final SQL', ['sql' => $outer->toSql(), 'bindings' => $outer->getBindings()]);
+        } catch (\Throwable $_) {
+            // ignore logging failures
+        }
+
+        // Do not mutate `$this->sortField` here; keep the component's sort
+        // property stable (unqualified) so repeated header clicks toggle the
+        // direction as PowerGrid expects. Ordering is enforced on the SQL
+        // using fully-qualified expressions inside `applySortingToQuery()`.
+
         return $outer;
+    }
+
+    /**
+     * Apply the given sort field and pre-validated direction to the outer query.
+     *
+     * This method centralises all ordering logic for the table's outer query
+     * (the wrapper around the inner subquery aliased as `objects`). It:
+     *
+     * - Clears any existing ORDER clauses on the provided query so a
+     *   deterministic, fully-qualified ORDER BY can be applied.
+     * - Implements special-case ordering for virtual/derived fields and
+     *   application-specific tie-break rules (see list below).
+     * - Validates the fallback column name before applying a default ORDER BY
+     *   to avoid SQL injection and ambiguous column errors.
+     *
+     * Supported special cases and behaviour:
+     * - `size`: orders by the greatest of `objects.diam1`/`objects.diam2`;
+     *   rows with size 0 are treated as missing and ordered after real values.
+     * - `name`: performs a natural-like sort by extracting a non-numeric
+     *   prefix and a numeric suffix (via `REGEXP_SUBSTR`) so entries like
+     *   `NGC1`, `NGC2`, `NGC10` sort in an expected human order.
+     * - `best_mag`: prefers lens-specific metrics (`uom_lens`), then default
+     *   metrics (`uom_default`/`uom`), then the inner placeholder
+     *   `objects.best_mag`. NULL values are pushed after numeric values.
+     * - `contrast_reserve`: similar preference ordering as `best_mag` and
+     *   treats NULL/empty as missing (ordered last).
+     * - `mag` / `subr`: sentinel values (`99.9`) and explicit zero are
+     *   considered missing and ordered after real numeric values.
+     * - `seen` / `total_observations`: orders by aggregated totals with
+     *   missing/zero totals last; ties broken by the current user's own counts
+     *   (`your_observations`) so rows where the user has contributed appear
+     *   earlier/later depending on direction.
+     * - `last_seen` / `your_last_seen_date`: orders NULLs last then by date.
+     * - `atlas_page`: when atlas columns are included, empty/NULL atlas pages
+     *   are ordered after non-empty values.
+     *
+     * Fallback behaviour:
+     * - For any other field the method will attempt a fully-qualified
+     *   `ORDER BY objects.<field> <ASC|DESC>` where `<field>` is validated
+     *   with a conservative regex and `Schema::hasColumn('objects', $field)`.
+     *
+     * Error handling and guarantees:
+     * - The method catches and swallows exceptions to avoid breaking the
+     *   Livewire render cycle; if ordering fails the query may be returned
+     *   without these deterministic ORDER clauses.
+     * - All raw SQL fragments are fully qualified (prefix `objects.` or
+     *   explicit table aliases) to prevent ambiguous column errors when joins
+     *   are present.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $outer         Outer query builder (expects inner subquery aliased as `objects`)
+     * @param string                                   $sortField     Unqualified field/alias name (pre-processed by caller)
+     * @param string                                   $sortDirection Pre-validated direction: 'asc' or 'desc'
+     *
+     * @return void
+     */
+    private function applySortingToQuery(\Illuminate\Database\Eloquent\Builder $outer, string $sortField, string $sortDirection): void
+    {
+        try {
+            $outer->getQuery()->orders = null;
+            $sf = $sortField;
+            $sd = ($sortDirection === 'asc') ? 'ASC' : 'DESC';
+
+            if ($sf === 'size') {
+                $sizeExpr = 'GREATEST(COALESCE(objects.diam1,0), COALESCE(objects.diam2,0))';
+                if ($sd === 'ASC') {
+                    $outer->orderByRaw("({$sizeExpr} = 0) ASC, {$sizeExpr} ASC");
+                } else {
+                    $outer->orderByRaw("({$sizeExpr} = 0) ASC, {$sizeExpr} DESC");
+                }
+                return;
+            }
+
+            if ($sf === 'name') {
+                $prefixExpr = "LOWER(REGEXP_SUBSTR(objects.name, '^[^0-9]+'))";
+                $numExprAsc = "COALESCE(CAST(REGEXP_SUBSTR(objects.name, '[0-9]+') AS UNSIGNED), 4294967295)";
+                $numExprDesc = "COALESCE(CAST(REGEXP_SUBSTR(objects.name, '[0-9]+') AS SIGNED), -1)";
+                if ($sd === 'ASC') {
+                    $outer->orderByRaw("{$prefixExpr} ASC, {$numExprAsc} ASC, objects.name ASC");
+                } else {
+                    $outer->orderByRaw("{$prefixExpr} DESC, {$numExprDesc} DESC, objects.name DESC");
+                }
+                return;
+            }
+
+            if ($sf === 'best_mag') {
+                if (! empty($this->previewLensId)) {
+                    if ($sd === 'ASC') {
+                        $outer->orderByRaw("(COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification, objects.best_mag) IS NULL) ASC, COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification, objects.best_mag) ASC");
+                    } else {
+                        $outer->orderByRaw("(COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification, objects.best_mag) IS NULL) ASC, COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification, objects.best_mag) DESC");
+                    }
+                } else {
+                    if ($sd === 'ASC') {
+                        $outer->orderByRaw("(uom.optimum_detection_magnification IS NULL) ASC, uom.optimum_detection_magnification ASC");
+                    } else {
+                        $outer->orderByRaw("(uom.optimum_detection_magnification IS NULL) ASC, uom.optimum_detection_magnification DESC");
+                    }
+                }
+                return;
+            }
+
+            if ($sf === 'contrast_reserve') {
+                if (! empty($this->previewLensId)) {
+                    if ($sd === 'ASC') {
+                        $outer->orderByRaw("(COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve, objects.contrast_reserve) IS NULL) ASC, COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve, objects.contrast_reserve) ASC");
+                    } else {
+                        $outer->orderByRaw("(COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve, objects.contrast_reserve) IS NULL) ASC, COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve, objects.contrast_reserve) DESC");
+                    }
+                } else {
+                    if ($sd === 'ASC') {
+                        $outer->orderByRaw("(COALESCE(uom.contrast_reserve, objects.contrast_reserve) IS NULL) ASC, COALESCE(uom.contrast_reserve, objects.contrast_reserve) ASC");
+                    } else {
+                        $outer->orderByRaw("(COALESCE(uom.contrast_reserve, objects.contrast_reserve) IS NULL) ASC, COALESCE(uom.contrast_reserve, objects.contrast_reserve) DESC");
+                    }
+                }
+                return;
+            }
+
+            if ($sf === 'mag' || $sf === 'subr') {
+                $col = "objects.{$sf}";
+                if ($sd === 'ASC') {
+                    $outer->orderByRaw("({$col} = 0 OR {$col} = 99.9 OR {$col} IS NULL) ASC, {$col} ASC");
+                } else {
+                    $outer->orderByRaw("({$col} = 0 OR {$col} = 99.9 OR {$col} IS NULL) ASC, {$col} DESC");
+                }
+                return;
+            }
+
+            if ($sf === 'seen' || $sf === 'total_observations') {
+                $col = 'objects.total_observations';
+                $userCol = 'objects.your_observations';
+                if ($sd === 'ASC') {
+                    $outer->orderByRaw("(COALESCE({$col},0) = 0) ASC, COALESCE({$col},0) ASC, COALESCE({$userCol},0) ASC");
+                } else {
+                    $outer->orderByRaw("(COALESCE({$col},0) = 0) ASC, COALESCE({$col},0) DESC, COALESCE({$userCol},0) DESC");
+                }
+                return;
+            }
+
+            if ($sf === 'last_seen' || $sf === 'your_last_seen_date') {
+                $col = 'objects.your_last_seen_date';
+                if ($sd === 'ASC') {
+                    $outer->orderByRaw("({$col} IS NULL) ASC, {$col} ASC");
+                } else {
+                    $outer->orderByRaw("({$col} IS NULL) ASC, {$col} DESC");
+                }
+                return;
+            }
+
+            if ($sf === 'atlas_page' && $this->includeAtlas) {
+                $atlasExpr = 'objects.atlas_page';
+                if ($sd === 'ASC') {
+                    $outer->orderByRaw("({$atlasExpr} = '' OR {$atlasExpr} IS NULL) ASC, {$atlasExpr} ASC");
+                } else {
+                    $outer->orderByRaw("({$atlasExpr} = '' OR {$atlasExpr} IS NULL) ASC, {$atlasExpr} DESC");
+                }
+                return;
+            }
+
+            // Normalise sort direction to a safe value.
+            $sd = strtoupper($sd) === 'DESC' ? 'DESC' : 'ASC';
+
+            // Default fallback (fully-qualified), with validation to avoid SQL injection.
+            if (is_string($sf) && preg_match('/^[A-Za-z0-9_]+$/', $sf) && Schema::hasColumn('objects', $sf)) {
+                $outer->orderBy("objects.{$sf}", $sd);
+            }
+        } catch (\Throwable $_) {
+            // keep rendering even if ordering fails
+        }
+
     }
 
     public function fields(): PowerGridFields
@@ -1629,7 +1706,7 @@ class NearbyObjectsTable extends PowerGridComponent
                             // cached eyepieces — prefer those that have been used with
                             // the selected instrument. If none are found, fall back to
                             // including all cached eyepieces to preserve previous
-                            // behaviour for users without instrument-specific usage.
+                            // behavior for users without instrument-specific usage.
                             try {
                                 $userEps = $this->getCachedEyepieces($authUser);
                                 $foundInstrumentSpecific = false;
@@ -2137,17 +2214,17 @@ class NearbyObjectsTable extends PowerGridComponent
         }
 
         $cols = [
-            Column::make(__('Name'), 'name')->searchable()->sortable()->bodyAttribute('class', 'font-medium'),
+            Column::make(__('Name'), 'name')->searchable()->sortable()->bodyAttribute('class', 'font-medium whitespace-normal')->bodyAttribute('style', 'white-space:normal; overflow:visible;')->headerAttribute('class', 'whitespace-normal')->headerAttribute('style', 'white-space:normal;'),
             // Export-only plain name (no HTML)
             Column::make(__('Name'), 'name_plain')->hidden()->visibleInExport(true),
-            Column::make(__('RA'), 'ra')->sortable(),
-            Column::make(__('Dec'), 'decl')->sortable(),
+            Column::make(__('RA'), 'ra')->sortable()->bodyAttribute('class', 'whitespace-normal')->bodyAttribute('style', 'white-space:normal; overflow:visible;')->headerAttribute('class', 'whitespace-normal')->headerAttribute('style', 'white-space:normal;'),
+            Column::make(__('Dec'), 'decl')->sortable()->bodyAttribute('class', 'whitespace-normal')->bodyAttribute('style', 'white-space:normal; overflow:visible;')->headerAttribute('class', 'whitespace-normal')->headerAttribute('style', 'white-space:normal;'),
             Column::make(__('Distance'), 'distance_deg')->sortable()->bodyAttribute('class', 'text-right'),
             // These are computed/aliased fields (from subqueries) so they are not real DB columns.
             // Avoid marking them searchable to prevent PowerGrid generating WHERE clauses
             // that reference non-existent columns during count queries.
-            Column::make(__('Type'), 'type_name')->sortable(),
-            Column::make(__('Constellation'), 'constellation')->sortable(),
+            Column::make(__('Type'), 'type_name')->sortable()->bodyAttribute('class', 'whitespace-normal')->bodyAttribute('style', 'white-space:normal; overflow:visible;')->headerAttribute('class', 'whitespace-normal')->headerAttribute('style', 'white-space:normal;'),
+            Column::make(__('Constellation'), 'constellation')->sortable()->bodyAttribute('class', 'whitespace-normal')->bodyAttribute('style', 'white-space:normal; overflow:visible;')->headerAttribute('class', 'whitespace-normal')->headerAttribute('style', 'white-space:normal;'),
             Column::make(__('Mag'), 'mag')->sortable()->searchable(),
             Column::make(__('SB'), 'subr')->sortable()->searchable(),
             // Use DB-backed field names for sorting. The fields() mapper
