@@ -468,6 +468,11 @@ function addXmlObservations()
         }
         $siteInfoArray['latitude'] = $latitude;
 
+        $siteInfoArray['elevation'] = $site->getElementsByTagName('elevation')
+            ->item(0)->nodeValue;
+
+
+
         // Get the timezone
         $xmlfile2 = 'http://api.geonames.org/timezone?lat='
                 . $latitude . '&lng=' . $longitude
@@ -475,8 +480,6 @@ function addXmlObservations()
         $timezones = simplexml_load_file($xmlfile2);
 
         $siteInfoArray['timezone'] = $timezones->timezone->timezoneId;
-        $siteInfoArray['country'] = $timezones->timezone->countryName;
-
         $siteInfoArray['country'] = $timezones->timezone->countryName;
 
         if ($siteInfoArray['timezone'] == '') {
@@ -1029,6 +1032,16 @@ foreach ($observation as $observation) {
                     'timezone',
                     $sa['timezone']
                 );
+                $objLocation->setLocationProperty(
+                    $locId,
+                    'country',
+                    $sa['country']
+                );
+                $objLocation->setLocationProperty(
+                    $locId,
+                    'elevation',
+                    $sa['elevation']
+                );
             } else {
                 // Add the new site!
                 $locId = $objLocation->addLocation(
@@ -1036,7 +1049,8 @@ foreach ($observation as $observation) {
                     $sa['longitude'],
                     $sa['latitude'],
                     $sa['country'],
-                    $sa['timezone']
+                    $sa['timezone'],
+                    $sa['elevation']
                 );
                 $objDatabase_new->execSQL(
                     'update locations set observer = "'
@@ -1047,7 +1061,6 @@ foreach ($observation as $observation) {
         } else {
             $siteValid = false;
         }
-
         $instId = -1;
         // Check if the instrument already exists in DeepskyLog
         if ($observation->getElementsByTagName('scope')->item(0)) {
@@ -1087,7 +1100,7 @@ foreach ($observation as $observation) {
                 $objInstrument->setInstrumentProperty(
                     $instId,
                     'instrument_type_id',
-                    $ia['type']
+                    $ia['type'] + 1
                 );
                 $objInstrument->setInstrumentProperty(
                     $instId,
@@ -1133,7 +1146,6 @@ foreach ($observation as $observation) {
                 );
             }
         }
-
         // Filter is not mandatory
         if ($observation->getElementsByTagName('filter')->item(0)) {
             // Check if the filter already exists in DeepskyLog
@@ -1155,11 +1167,11 @@ foreach ($observation as $observation) {
                     $_SESSION['deepskylog_id']
                 );
                 $objFilter->setFilterProperty($filtId, 'name', $fa['name']);
-                $objFilter->setFilterProperty($filtId, 'type_id', $fa['type']);
+                $objFilter->setFilterProperty($filtId, 'type_id', $fa['type'] + 1);
                 $objFilter->setFilterProperty(
                     $filtId,
                     'color_id',
-                    $fa['color']
+                    $fa['color'] + 1
                 );
                 $objFilter->setFilterProperty(
                     $filtId,
@@ -1247,7 +1259,6 @@ foreach ($observation as $observation) {
                 );
             }
         }
-
         // Lens is not mandatory
         if ($observation->getElementsByTagName('lens')->item(0)) {
             // Check if the eyepiece already exists in DeepskyLog
