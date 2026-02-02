@@ -1910,7 +1910,22 @@ class PrintAtlas
                     $longitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'longitude');
                     $latitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'latitude');
                     $timezone = $objLocation->getLocationPropertyFromId($theLocation, 'timezone');
-                    $dateTimeZone = new DateTimeZone($timezone);
+                    $timezone = trim((string)$timezone);
+                    if (!$timezone) {
+                        $timezone = date_default_timezone_get() ?: 'UTC';
+                    }
+                    if (!in_array($timezone, timezone_identifiers_list())) {
+                        $fallback = date_default_timezone_get() ?: 'UTC';
+                        error_log("Invalid timezone '" . $timezone . "' for stdLocation; falling back to '" . $fallback . "'.");
+                        $timezone = $fallback;
+                    }
+                    try {
+                        $dateTimeZone = new DateTimeZone($timezone);
+                    } catch (Exception $e) {
+                        $fallback = date_default_timezone_get() ?: 'UTC';
+                        error_log("DateTimeZone failed for '" . $timezone . "': " . $e->getMessage() . "; falling back to '" . $fallback . "'.");
+                        $dateTimeZone = new DateTimeZone($fallback);
+                    }
                     for($i = 1;$i < 13;$i++) {
                         $datestr = sprintf("%02d", $i)."/".sprintf("%02d", 1)."/".$_SESSION['globalYear'];
                         $dateTime = new DateTime($datestr, $dateTimeZone);

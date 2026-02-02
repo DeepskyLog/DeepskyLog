@@ -65,10 +65,26 @@ function menu_moon()
 	  $latitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'latitude');
 	  if((!($objUtil->checkSessionKey('efemerides'))) || ($_SESSION['efemerides']['base']!=$jd."/".$longitude."/".$latitude))
 	  { if ($longitude > -199)
-	    { $timezone=$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'),'timezone');
-	      $dateTimeZone=new DateTimeZone($timezone);
-	      $datestr=sprintf("%02d",$_SESSION['globalMonth'])."/".sprintf("%02d",$_SESSION['globalDay'])."/".$_SESSION['globalYear'];
-	      $dateTime = new DateTime($datestr, $dateTimeZone);
+	    { 
+	        $timezone = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'),'timezone');
+	        $timezone = trim((string)$timezone);
+	        if (!$timezone) {
+	            $timezone = date_default_timezone_get() ?: 'UTC';
+	        }
+	        if (!in_array($timezone, timezone_identifiers_list())) {
+	            $fallback = date_default_timezone_get() ?: 'UTC';
+	            error_log("Invalid timezone '" . $timezone . "' for stdLocation; falling back to '" . $fallback . "'.");
+	            $timezone = $fallback;
+	        }
+	        try {
+	            $dateTimeZone = new DateTimeZone($timezone);
+	        } catch (Exception $e) {
+	            $fallback = date_default_timezone_get() ?: 'UTC';
+	            error_log("DateTimeZone failed for '" . $timezone . "': " . $e->getMessage() . "; falling back to '" . $fallback . "'.");
+	            $dateTimeZone = new DateTimeZone($fallback);
+	        }
+	        $datestr=sprintf("%02d",$_SESSION['globalMonth'])."/".sprintf("%02d",$_SESSION['globalDay'])."/".$_SESSION['globalYear'];
+	        $dateTime = new DateTime($datestr, $dateTimeZone);
 	      // Geeft tijdsverschil terug in seconden
 	      $timedifference = $dateTimeZone->getOffset($dateTime);
 	      $timedifference = $timedifference / 3600.0;

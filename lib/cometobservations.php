@@ -195,7 +195,14 @@ class CometObservations
 
                 $datearray = sscanf($date, "%4d%2d%2d");
 
-                $dateTimeZone = new DateTimeZone($timezone);
+                if (!isset($timezone) || trim($timezone) == '') {
+                    $timezone = 'UTC';
+                }
+                try {
+                      $dateTimeZone = new DateTimeZone($timezone);
+                } catch (Exception $ex) {
+                    $dateTimeZone = new DateTimeZone('UTC');
+                }
                 $date = sprintf("%02d", $datearray [1]) . "/" . sprintf("%02d", $datearray [2]) . "/" . $datearray [0];
 
                 $dateTime = new DateTime($date, $dateTimeZone);
@@ -267,8 +274,14 @@ class CometObservations
                     $date = sscanf($date, "%4d%2d%2d");
 
                     $timezone = $locations->getLocationPropertyFromId($loc, 'timezone');
-
-                    $dateTimeZone = new DateTimeZone($timezone);
+                    if (!isset($timezone) || trim($timezone) == '') {
+                        $timezone = 'UTC';
+                    }
+                    try {
+                        $dateTimeZone = new DateTimeZone($timezone);
+                    } catch (Exception $ex) {
+                        $dateTimeZone = new DateTimeZone('UTC');
+                    }
 
                     $datestr = sprintf("%02d", $date [1]) . "/" . sprintf("%02d", $date [2]) . "/" . $date [0];
                     $dateTime = new DateTime($datestr, $dateTimeZone);
@@ -354,8 +367,14 @@ class CometObservations
                 $date = sscanf($date, "%4d%2d%2d");
 
                 $timezone = $locations->getLocationPropertyFromId($loc, 'timezone');
-
-                $dateTimeZone = new DateTimeZone($timezone);
+                if (!isset($timezone) || trim($timezone) == '') {
+                    $timezone = 'UTC';
+                }
+                try {
+                    $dateTimeZone = new DateTimeZone($timezone);
+                } catch (Exception $ex) {
+                    $dateTimeZone = new DateTimeZone('UTC');
+                }
 
                 $datestr = sprintf("%02d", $date [1]) . "/" . sprintf("%02d", $date [2]) . "/" . $date [0];
 

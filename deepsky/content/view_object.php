@@ -234,8 +234,22 @@ function showObjectEphemerides($theLocation)
     global $baseURL, $object, $theMonth, $theDay, $objLocation, $objObject, $objPresentations, $objUtil;
     $longitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'longitude');
     $latitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'latitude');
-    $timezone = $objLocation->getLocationPropertyFromId($theLocation, 'timezone');
-    $dateTimeZone = new DateTimeZone($timezone);
+    $timezone = (string)$objLocation->getLocationPropertyFromId($theLocation, 'timezone');
+    $timezone = trim($timezone);
+    if ($timezone === '') {
+        $timezone = @date_default_timezone_get() ?: 'UTC';
+    }
+    $validTimezones = timezone_identifiers_list();
+    if (!in_array($timezone, $validTimezones, true)) {
+        error_log('[view_object.php] Invalid timezone "'.$timezone.'" for location '.$theLocation.'; falling back to default.');
+        $timezone = @date_default_timezone_get() ?: 'UTC';
+    }
+    try {
+        $dateTimeZone = new DateTimeZone($timezone);
+    } catch (Exception $e) {
+        error_log('[view_object.php] DateTimeZone::__construct failed: '.$e->getMessage().". Falling back to server default or UTC.");
+        $dateTimeZone = new DateTimeZone(@date_default_timezone_get() ?: 'UTC');
+    }
 
     $theMonth = $_SESSION['globalMonth'];
     $theDay = $_SESSION['globalDay'];

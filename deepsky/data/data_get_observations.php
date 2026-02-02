@@ -99,6 +99,28 @@ function data_get_observations()
                    "minobservation"   => ($objUtil->checkGetKey('newobservations') ? $objObserver->getObserverProperty($loggedUser, 'lastReadObservationId', 0) : 0),
                    "seen"             => $objUtil->checkGetKey('seen', 'A'),
                    "includefile"      => $includeFile);
+    // If user requested only new observations, clear any cached query
+    // so we fetch fresh results for this session.
+    if ($objUtil->checkGetKey('newobservations')) {
+        if (isset($_SESSION['Qobs'])) {
+            unset($_SESSION['Qobs']);
+        }
+        if (isset($_SESSION['QobsParams'])) {
+            unset($_SESSION['QobsParams']);
+        }
+        if (isset($_SESSION['QobsTotal'])) {
+            unset($_SESSION['QobsTotal']);
+        }
+        if (isset($_SESSION['QobsMaxCnt'])) {
+            unset($_SESSION['QobsMaxCnt']);
+        }
+        if (isset($_SESSION['QobsSort'])) {
+            unset($_SESSION['QobsSort']);
+        }
+        if (isset($_SESSION['QobsSortDirection'])) {
+            unset($_SESSION['QobsSortDirection']);
+        }
+    }
     //============================================ CHECK TO SEE IF OBSERVATIONS ALREADY FETCHED BEFORE, OTHERWISE FETCH DATA FROM DB ===============================
     $validQobs = false;
     if(array_key_exists('QobsParams', $_SESSION) && (count($_SESSION['QobsParams']) > 1) && array_key_exists('Qobs', $_SESSION) && (count($_SESSION['Qobs']) > 0) && array_key_exists('QobsMaxCnt', $_SESSION) && ($_SESSION['QobsMaxCnt'] == $MaxCnt)) {

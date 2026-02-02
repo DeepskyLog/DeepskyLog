@@ -721,9 +721,15 @@ class Utils
             );
 
             $timezone = $siteChild->appendChild($dom->createElement('timezone'));
-            $dateTimeZone = new DateTimeZone(
-                $location->getLocationPropertyFromId($value, 'timezone')
-            );
+            $tzstr = $location->getLocationPropertyFromId($value, 'timezone');
+            if (!isset($tzstr) || trim($tzstr) == '') {
+                $tzstr = 'UTC';
+            }
+            try {
+                $dateTimeZone = new DateTimeZone($tzstr);
+            } catch (Exception $ex) {
+                $dateTimeZone = new DateTimeZone('UTC');
+            }
             $datestr = "01/01/2008";
             $dateTime = new DateTime($datestr, $dateTimeZone);
             // Returns the time difference in seconds

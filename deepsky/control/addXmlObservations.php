@@ -33,7 +33,7 @@ function addXmlObservations()
     global $loggedUser, $objConstellation, $objObject, $objCatalog;
     global $objLocation, $objInstrument, $objFilter, $objEyepiece, $objLens;
     global $objDatabase, $objObserver, $objObservation, $developversion;
-    global $objMessage;
+    global $objMessage, $objDatabase_new;
 
     if (!$_POST['obsid']) {
         if ($_FILES['xml']['tmp_name'] != '') {
@@ -55,7 +55,6 @@ function addXmlObservations()
     } else {
         $xmlfile = realpath($xmlfile);
     }
-
     $dom->Load($xmlfile);
 
     $searchNode = $dom->getElementsByTagName('observations');
@@ -804,9 +803,12 @@ function addXmlObservations()
 
     // Add the sessions
     foreach ($sessionArray as $key => $value) {
+        // The session can have seconds here, but not in the database.  In the database, the seconds are always 00.
+        // Therefore, we have to check if the session already exists without the seconds.
+
         if (count(
-            $objDatabase->selectRecordArray(
-                'SELECT * from sessions where begindate = "'
+            $objDatabase_new->selectRecordArray(
+                'SELECT * from observation_sessions where begindate = "'
                 . $sessionArray[$key]['begindate']
                 . '" and enddate = "' . $sessionArray[$key]['enddate'] . '";'
             )
@@ -814,8 +816,8 @@ function addXmlObservations()
         ) {
             $sessionid = 0;
         } else {
-            $sessionid = $objDatabase->selectRecordArray(
-                'SELECT * from sessions where begindate = "'
+            $sessionid = $objDatabase_new->selectRecordArray(
+                'SELECT * from observation_sessions where begindate = "'
                 . $sessionArray[$key]['begindate']
                 . '" and enddate = "' . $sessionArray[$key]['enddate'] . '";'
             );
@@ -842,7 +844,7 @@ function addXmlObservations()
 
     $sa = $siteArray[$sessionArray[$key]['site']];
     if (count(
-        $objDatabase->selectRecordArray(
+        $objDatabase_new->selectRecordArray(
             'SELECT * from locations where observer = "'
             . $_SESSION['deepskylog_id'] . '" and name = "'
             . $site . '";'
@@ -850,7 +852,7 @@ function addXmlObservations()
     ) > 0
     ) {
         // Update the coordinates
-        $run = $objDatabase->selectRecordset(
+        $run = $objDatabase_new->selectRecordset(
             'SELECT id FROM locations WHERE observer = "'
             . $_SESSION['deepskylog_id'] . '" and name = "'
             . $site . '";'
@@ -885,17 +887,16 @@ function addXmlObservations()
             $sa['name'],
             $sa['longitude'],
             $sa['latitude'],
-            '',
             $sa['country'],
             $sa['timezone'],
             0
         );
-        $objDatabase->execSQL(
+        $objDatabase_new->execSQL(
             'update locations set observer = "'
             . $_SESSION['deepskylog_id'] . '" where id = "'
             . $locId . '";'
         );
-        $objDatabase->execSQL(
+        $objDatabase_new->execSQL(
             'update locations set checked = "0" where id = "'
             . $locId . '";'
         );
@@ -975,8 +976,6 @@ function addXmlObservations()
             $language
         );
     }
-}
-
 // Check if there are observations for the given observer
 $searchNode = $dom->getElementsByTagName('observations');
 $observation = $searchNode->item(0)->getElementsByTagName('observation');
@@ -998,7 +997,7 @@ foreach ($observation as $observation) {
             $site = $sa['name'];
 
             if (count(
-                $objDatabase->selectRecordArray(
+                $objDatabase_new->selectRecordArray(
                     'SELECT * from locations where observer = "'
                     . $_SESSION['deepskylog_id'] . '" and name = "'
                     . $site . '";'
@@ -1006,7 +1005,7 @@ foreach ($observation as $observation) {
             ) > 0
             ) {
                 // Update the coordinates
-                $run = $objDatabase->selectRecordset(
+                $run = $objDatabase_new->selectRecordset(
                     'SELECT id FROM locations WHERE observer = "'
                     . $_SESSION['deepskylog_id'] . '" and name = "'
                     . $site . '";'
@@ -1036,11 +1035,10 @@ foreach ($observation as $observation) {
                     $sa['name'],
                     $sa['longitude'],
                     $sa['latitude'],
-                    '',
                     $sa['country'],
                     $sa['timezone']
                 );
-                $objDatabase->execSQL(
+                $objDatabase_new->execSQL(
                     'update locations set observer = "'
                     . $_SESSION['deepskylog_id']
                     . '" where id = "' . $locId . '";'
@@ -1058,7 +1056,7 @@ foreach ($observation as $observation) {
             $instrument = $ia['name'];
 
             if (count(
-                $objDatabase->selectRecordArray(
+                $objDatabase_new->selectRecordArray(
                     'SELECT * from instruments where observer = "'
                     . $_SESSION['deepskylog_id'] . '" and name = "'
                     . $instrument . '";'
@@ -1078,17 +1076,17 @@ foreach ($observation as $observation) {
                 );
                 $objInstrument->setInstrumentProperty(
                     $instId,
-                    'diameter',
+                    'aperture_mm',
                     $ia['diameter']
                 );
                 $objInstrument->setInstrumentProperty(
                     $instId,
-                    'fd',
-                    $ia['fd']
+                    'focal_length_mm',
+                    $ia['fd'] * $ia['diameter']
                 );
                 $objInstrument->setInstrumentProperty(
                     $instId,
-                    'type',
+                    'instrument_type_id',
                     $ia['type']
                 );
                 $objInstrument->setInstrumentProperty(
@@ -1101,7 +1099,7 @@ foreach ($observation as $observation) {
                 $instId = $objInstrument->addInstrument(
                     $ia['name'],
                     $ia['diameter'],
-                    $ia['fd'],
+                    $ia['fd'] * $ia['diameter'],
                     $ia['type'],
                     $ia['fixedMagnification'],
                     $_SESSION['deepskylog_id']
@@ -1144,7 +1142,7 @@ foreach ($observation as $observation) {
             $filter = $fa['name'];
 
             if (count(
-                $objDatabase->selectRecordArray(
+                $objDatabase_new->selectRecordArray(
                     'SELECT * from filters where observer = "'
                     . $_SESSION['deepskylog_id'] . '" and name = "'
                     . $filter . '";'
@@ -1157,10 +1155,10 @@ foreach ($observation as $observation) {
                     $_SESSION['deepskylog_id']
                 );
                 $objFilter->setFilterProperty($filtId, 'name', $fa['name']);
-                $objFilter->setFilterProperty($filtId, 'type', $fa['type']);
+                $objFilter->setFilterProperty($filtId, 'type_id', $fa['type']);
                 $objFilter->setFilterProperty(
                     $filtId,
-                    'color',
+                    'color_id',
                     $fa['color']
                 );
                 $objFilter->setFilterProperty(
@@ -1198,7 +1196,7 @@ foreach ($observation as $observation) {
             $eyepiece = $ea['name'];
 
             if (count(
-                $objDatabase->selectRecordArray(
+                $objDatabase_new->selectRecordArray(
                     'SELECT * from eyepieces where observer = "'
                     . $_SESSION['deepskylog_id']
                     . '" and name = "' . $ea['name'] . '";'
@@ -1217,7 +1215,7 @@ foreach ($observation as $observation) {
                 );
                 $objEyepiece->setEyepieceProperty(
                     $eyepId,
-                    'focalLength',
+                    'focal_length_mm',
                     $ea['focalLength']
                 );
                 $objEyepiece->setEyepieceProperty(
@@ -1227,7 +1225,7 @@ foreach ($observation as $observation) {
                 );
                 $objEyepiece->setEyepieceProperty(
                     $eyepId,
-                    'maxFocalLength',
+                    'max_focal_length_mm',
                     $ea['maxFocalLength']
                 );
             } else {
@@ -1244,7 +1242,7 @@ foreach ($observation as $observation) {
                 );
                 $objEyepiece->setEyepieceProperty(
                     $eyepId,
-                    'maxFocalLength',
+                    'max_focal_length_mm',
                     $ea['maxFocalLength']
                 );
             }
@@ -1258,7 +1256,7 @@ foreach ($observation as $observation) {
             $lens = $la['name'];
 
             if (count(
-                $objDatabase->selectRecordArray(
+                $objDatabase_new->selectRecordArray(
                     'SELECT * from lenses where observer = "'
                     . $_SESSION['deepskylog_id']
                     . '" and name = "' . $lens . '";'
@@ -1569,6 +1567,7 @@ foreach ($observation as $observation) {
                         } else {
                             $li = 0;
                         }
+                        // Add the observation
                         $obsId = $objObservation->addDSObservation2(
                             $objeId,
                             $_SESSION['deepskylog_id'],
@@ -1917,6 +1916,26 @@ foreach ($observation as $observation) {
             }
         }
     }
+
+    // Clear cached observation query so UI shows newly imported observations
+    if (isset($_SESSION['Qobs'])) {
+        unset($_SESSION['Qobs']);
+    }
+    if (isset($_SESSION['QobsParams'])) {
+        unset($_SESSION['QobsParams']);
+    }
+    if (isset($_SESSION['QobsTotal'])) {
+        unset($_SESSION['QobsTotal']);
+    }
+    if (isset($_SESSION['QobsMaxCnt'])) {
+        unset($_SESSION['QobsMaxCnt']);
+    }
+    if (isset($_SESSION['QobsSort'])) {
+        unset($_SESSION['QobsSort']);
+    }
+    if (isset($_SESSION['QobsSortDirection'])) {
+        unset($_SESSION['QobsSortDirection']);
+    }
 }
 $_GET['indexAction'] = 'default_action';
 
@@ -1934,3 +1953,4 @@ $entryMessage = sprintf(
 
 //    return;
 //}
+}

@@ -35,7 +35,22 @@ function getMoonPic($date, $realTime, $latitude, $longitude, $timezone){
 		// Get the julian day of the observation...
 		$jd = gregoriantojd ( $month+0, $day+0, $year+0 );
 	
-		$dateTimeZone = new DateTimeZone ( $timezone );
+		$timezone = trim((string)$timezone);
+		if (!$timezone) {
+			$timezone = date_default_timezone_get() ?: 'UTC';
+		}
+		if (!in_array($timezone, timezone_identifiers_list())) {
+			$fallback = date_default_timezone_get() ?: 'UTC';
+			error_log("Invalid timezone '" . $timezone . "' for moonpic; falling back to '" . $fallback . "'.");
+			$timezone = $fallback;
+		}
+		try {
+			$dateTimeZone = new DateTimeZone ( $timezone );
+		} catch (Exception $e) {
+			$fallback = date_default_timezone_get() ?: 'UTC';
+			error_log("DateTimeZone failed for '" . $timezone . "' in moonpic: " . $e->getMessage() . "; falling back to '" . $fallback . "'.");
+			$dateTimeZone = new DateTimeZone($fallback);
+		}
 	
 		$datestr = sprintf ( "%02d", $month ) . "/" . sprintf ( "%02d", $day ) . "/" . $year;
 		$dateTime = new DateTime ( $datestr, $dateTimeZone );

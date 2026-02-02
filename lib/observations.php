@@ -712,6 +712,8 @@ Correct observations which have been imported will not be registered for a secon
         ) {
             return 0;
         } else {
+            // Create a timestamp
+            $timestamp = date("YmdHis");
             $objDatabase->execSQL(
                 "INSERT INTO observations (objectname,
                                             observerid,
@@ -727,7 +729,8 @@ Correct observations which have been imported will not be registered for a secon
                                             eyepieceid,
                                             filterid,
                                             lensid,
-                                            SQM)
+                                            SQM,
+                                            timestamp)
                                 VALUES (\"$objectname\",
                                             \"$observerid\",
                                             \"$instrumentid\",
@@ -742,7 +745,8 @@ Correct observations which have been imported will not be registered for a secon
                                             $eyepieceid,
                                             $filterid,
                                             $lensid,
-                                            $sqm)"
+                                            $sqm,
+                                            $timestamp)"
             );
         }
         // Return the obsid
@@ -824,7 +828,23 @@ Correct observations which have been imported will not be registered for a secon
                     $get->locationid,
                     'timezone'
                 );
-                $dateTimeZone = new DateTimeZone($timezone);
+                $timezone = trim((string)$timezone);
+                if (!$timezone) {
+                    $timezone = date_default_timezone_get() ?: 'UTC';
+                }
+                if (!in_array($timezone, timezone_identifiers_list())) {
+                    // Fallback to server default if the stored timezone is invalid
+                    $fallback = date_default_timezone_get() ?: 'UTC';
+                    error_log("Invalid timezone '" . $timezone . "' for location id " . $loc . ". Falling back to '" . $fallback . "'.");
+                    $timezone = $fallback;
+                }
+                try {
+                    $dateTimeZone = new DateTimeZone($timezone);
+                } catch (Exception $e) {
+                    $fallback = date_default_timezone_get() ?: 'UTC';
+                    error_log("DateTimeZone failed for '" . $timezone . "': " . $e->getMessage() . "; falling back to '" . $fallback . "'.");
+                    $dateTimeZone = new DateTimeZone($fallback);
+                }
                 $time = sscanf(sprintf("%04d", $time), "%2d%2d");
 
                 $datestr = $date[0] . "-" . sprintf("%02d", $date[1]) . "-"
@@ -865,7 +885,22 @@ Correct observations which have been imported will not be registered for a secon
                     $get->locationid,
                     'timezone'
                 );
-                $dateTimeZone = new DateTimeZone($timezone);
+                $timezone = trim((string)$timezone);
+                if (!$timezone) {
+                    $timezone = date_default_timezone_get() ?: 'UTC';
+                }
+                if (!in_array($timezone, timezone_identifiers_list())) {
+                    $fallback = date_default_timezone_get() ?: 'UTC';
+                    error_log("Invalid timezone '" . $timezone . "' for location id " . $loc . ". Falling back to '" . $fallback . "'.");
+                    $timezone = $fallback;
+                }
+                try {
+                    $dateTimeZone = new DateTimeZone($timezone);
+                } catch (Exception $e) {
+                    $fallback = date_default_timezone_get() ?: 'UTC';
+                    error_log("DateTimeZone failed for '" . $timezone . "': " . $e->getMessage() . "; falling back to '" . $fallback . "'.");
+                    $dateTimeZone = new DateTimeZone($fallback);
+                }
                 $time = sscanf(sprintf("%04d", $time), "%2d%2d");
 
                 $datestr = $date[0] . "-" . sprintf("%02d", $date[1]) . "-"
