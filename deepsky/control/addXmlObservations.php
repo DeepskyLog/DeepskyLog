@@ -1347,6 +1347,7 @@ foreach ($observation as $observation) {
                             $objeId = $objObject->getDsObjectName(
                                 $targetName
                             );
+                            break;
                         }
                     }
                     if ($objeId == -1) {
