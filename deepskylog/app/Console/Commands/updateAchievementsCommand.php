@@ -9,6 +9,7 @@ use App\Models\SketchOfTheWeek;
 use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use LevelUp\Experience\Models\Achievement;
 use LevelUp\Experience\Models\Pivots\AchievementUser;
 
@@ -17,10 +18,32 @@ class updateAchievementsCommand extends Command
     protected $signature = 'update:achievements';
 
     protected $description = 'Updates the achievements';
+    /**
+     * Cached achievements keyed by name to avoid repeating DB queries.
+     *
+     * @var \Illuminate\Support\Collection|null
+     */
+    private $achievementMap = null;
+    /**
+     * Cached counts maps to avoid per-user queries.
+     */
+    private $catalogObservedMap = [];
+    private $catalogDrawingsMap = [];
+    private $typeObservedMap = [];
+    private $typeDrawingsMap = [];
+    private $totalDrawingsMap = [];
+    private $uniqueObjectsMap = [];
+    private $uniqueObjectsDrawingsMap = [];
+    private $cometObservationsMap = [];
+    private $cometDrawingsMap = [];
+    private $uniqueCometMap = [];
 
     public function handle(): void
     {
         $this->info('Updating achievements');
+
+        // Load all achievements once and keep in memory to avoid repeated DB queries
+        $this->achievementMap = Achievement::all()->keyBy('name');
 
         // Get all DeepskyLog sketches of the week
         $sketches = SketchOfTheWeek::all();
@@ -31,7 +54,7 @@ class updateAchievementsCommand extends Command
                 $user = $this->getSketchData($sketch);
 
                 // Get the SketchOfTheWeek achievement
-                $achievement = Achievement::where('name', 'DeepskyLog sketch of the week')->get()[0];
+                $achievement = $this->getAchievement('DeepskyLog sketch of the week');
 
                 // Add achievement to user
                 $this->addAchievementToUser($user, $achievement);
@@ -49,7 +72,7 @@ class updateAchievementsCommand extends Command
                 $user = $this->getSketchData($sketch);
 
                 // Get the SketchOfTheWeek achievement
-                $achievement = Achievement::where('name', 'DeepskyLog sketch of the month')->get()[0];
+                $achievement = $this->getAchievement('DeepskyLog sketch of the month');
 
                 // Add achievement to user
                 $this->addAchievementToUser($user, $achievement);
@@ -61,36 +84,146 @@ class updateAchievementsCommand extends Command
         // Get all users
         $users = User::all();
 
+        // Precompute top-ten observers once to avoid re-running the heavy aggregation per user
+        $topTenObservers = collect(DB::connection('mysqlOld')->table('observations')
+            ->select(DB::raw('count(*) as count, observerid'))
+            ->groupBy('observerid')
+            ->orderBy('count', 'desc')
+            ->limit(10)
+            ->pluck('observerid'))
+            ->map(fn ($v) => (string) $v)
+            ->toArray();
+
+        // Build maps for catalog-level observed/drawing counts
+        $catalogRows = DB::connection('mysqlOld')->table('objectnames')
+            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
+            ->where('observations.visibility', '!=', 7)
+            ->select('observations.observerid', 'objectnames.catalog', DB::raw('COUNT(DISTINCT objectnames.catindex) as cnt'))
+            ->groupBy('observations.observerid', 'objectnames.catalog')
+            ->get();
+
+        foreach ($catalogRows as $r) {
+            $this->catalogObservedMap[$r->observerid][(string)$r->catalog] = (int)$r->cnt;
+        }
+
+        $catalogDrawingRows = DB::connection('mysqlOld')->table('objectnames')
+            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
+            ->where('observations.visibility', '!=', 7)
+            ->where('observations.hasDrawing', 1)
+            ->select('observations.observerid', 'objectnames.catalog', DB::raw('COUNT(DISTINCT objectnames.catindex) as cnt'))
+            ->groupBy('observations.observerid', 'objectnames.catalog')
+            ->get();
+
+        foreach ($catalogDrawingRows as $r) {
+            $this->catalogDrawingsMap[$r->observerid][(string)$r->catalog] = (int)$r->cnt;
+        }
+
+        // Build maps for object type counts (distinct object names)
+        $typeRows = DB::connection('mysqlOld')->table('objects')
+            ->join('observations', 'objects.name', '=', 'observations.objectname')
+            ->select('observations.observerid', 'objects.type', DB::raw('COUNT(DISTINCT objects.name) as cnt'))
+            ->groupBy('observations.observerid', 'objects.type')
+            ->get();
+
+        foreach ($typeRows as $r) {
+            $this->typeObservedMap[$r->observerid][(string)$r->type] = (int)$r->cnt;
+        }
+
+        $typeDrawingRows = DB::connection('mysqlOld')->table('objects')
+            ->join('observations', 'objects.name', '=', 'observations.objectname')
+            ->where('observations.hasDrawing', 1)
+            ->select('observations.observerid', 'objects.type', DB::raw('COUNT(DISTINCT objects.name) as cnt'))
+            ->groupBy('observations.observerid', 'objects.type')
+            ->get();
+
+        foreach ($typeDrawingRows as $r) {
+            $this->typeDrawingsMap[$r->observerid][(string)$r->type] = (int)$r->cnt;
+        }
+
+        // Total drawings per user
+        $td = DB::connection('mysqlOld')->table('observations')
+            ->where('hasDrawing', 1)
+            ->select('observerid', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('observerid')
+            ->get();
+        foreach ($td as $r) {
+            $this->totalDrawingsMap[$r->observerid] = (int)$r->cnt;
+        }
+
+        // Unique objects observed/drawn per user
+        $uo = DB::connection('mysqlOld')->table('observations')
+            ->select('observerid', DB::raw('COUNT(DISTINCT objectname) as cnt'))
+            ->groupBy('observerid')
+            ->get();
+        foreach ($uo as $r) {
+            $this->uniqueObjectsMap[$r->observerid] = (int)$r->cnt;
+        }
+
+        $uod = DB::connection('mysqlOld')->table('observations')
+            ->where('hasDrawing', 1)
+            ->select('observerid', DB::raw('COUNT(DISTINCT objectname) as cnt'))
+            ->groupBy('observerid')
+            ->get();
+        foreach ($uod as $r) {
+            $this->uniqueObjectsDrawingsMap[$r->observerid] = (int)$r->cnt;
+        }
+
+        // Comet counts
+        $cometObs = DB::connection('mysqlOld')->table('cometobservations')
+            ->select('observerid', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('observerid')
+            ->get();
+        foreach ($cometObs as $r) {
+            $this->cometObservationsMap[$r->observerid] = (int)$r->cnt;
+        }
+
+        $cometDraw = DB::connection('mysqlOld')->table('cometobservations')
+            ->where('hasDrawing', 1)
+            ->select('observerid', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('observerid')
+            ->get();
+        foreach ($cometDraw as $r) {
+            $this->cometDrawingsMap[$r->observerid] = (int)$r->cnt;
+        }
+
+        $uniqueComet = DB::connection('mysqlOld')->table('cometobservations')
+            ->select('observerid', DB::raw('COUNT(DISTINCT objectid) as cnt'))
+            ->groupBy('observerid')
+            ->get();
+        foreach ($uniqueComet as $r) {
+            $this->uniqueCometMap[$r->observerid] = (int)$r->cnt;
+        }
+
         // Loop over all users
         foreach ($users as $user) {
             // Get the Accomplishments for the selected user
-            $achievement = Achievement::where('name', 'Top ten observer')->get()[0];
+            $achievement = $this->getAchievement('Top ten observer');
             try {
                 //                dump($user->);
-                if ($user->isInTopTenOfObservers()) {
+                if (in_array($user->username, $topTenObservers, true)) {
                     // Add the top ten observer achievement
                     $this->addAchievementToUser($user, $achievement);
                 } else {
                     $this->removeAchievementFromUser($user, $achievement);
                 }
 
-                // Calculate number of Caldwell objects seen
-                $total = $user->getObservedCountFromCatalog('M');
+                // Calculate number of Messier objects seen
+                $total = $this->getCatalogObserved($user->username, 'M');
 
                 // Remove the messier achievements
-                $messierGold = Achievement::where('name', 'Messier Gold')->get()[0];
-                $messierSilver = Achievement::where('name', 'Messier Silver')->get()[0];
-                $messierBronze = Achievement::where('name', 'Messier Bronze')->get()[0];
+                $messierGold = $this->getAchievement('Messier Gold');
+                $messierSilver = $this->getAchievement('Messier Silver');
+                $messierBronze = $this->getAchievement('Messier Bronze');
 
                 $this->setAchievement3($user, $messierGold, $messierSilver, $messierBronze, $total, 110);
 
                 // Calculate number of Messier objects drawn
-                $total = $user->getDrawingCountFromCatalog('M');
+                $total = $this->getCatalogDrawings($user->username, 'M');
 
                 // Remove the messier achievements
-                $messierGoldDrawing = Achievement::where('name', 'Messier Drawing Gold')->get()[0];
-                $messierSilverDrawing = Achievement::where('name', 'Messier Drawing Silver')->get()[0];
-                $messierBronzeDrawing = Achievement::where('name', 'Messier Drawing Bronze')->get()[0];
+                $messierGoldDrawing = $this->getAchievement('Messier Drawing Gold');
+                $messierSilverDrawing = $this->getAchievement('Messier Drawing Silver');
+                $messierBronzeDrawing = $this->getAchievement('Messier Drawing Bronze');
 
                 $this->setAchievement3(
                     $user,
@@ -102,12 +235,12 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of Caldwell objects seen
-                $total = $user->getObservedCountFromCatalog('Caldwell');
+                $total = $this->getCatalogObserved($user->username, 'Caldwell');
 
                 // Remove the Caldwell achievements
-                $caldwellGold = Achievement::where('name', 'Caldwell Gold')->get()[0];
-                $caldwellSilver = Achievement::where('name', 'Caldwell Silver')->get()[0];
-                $caldwellBronze = Achievement::where('name', 'Caldwell Bronze')->get()[0];
+                $caldwellGold = $this->getAchievement('Caldwell Gold');
+                $caldwellSilver = $this->getAchievement('Caldwell Silver');
+                $caldwellBronze = $this->getAchievement('Caldwell Bronze');
 
                 $this->setAchievement3(
                     $user,
@@ -119,12 +252,12 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of Caldwell objects drawn
-                $total = $user->getDrawingCountFromCatalog('Caldwell');
+                $total = $this->getCatalogDrawings($user->username, 'Caldwell');
 
                 // Remove the Caldwell achievements
-                $caldwellGoldDrawing = Achievement::where('name', 'Caldwell Drawing Gold')->get()[0];
-                $caldwellSilverDrawing = Achievement::where('name', 'Caldwell Drawing Silver')->get()[0];
-                $caldwellBronzeDrawing = Achievement::where('name', 'Caldwell Drawing Bronze')->get()[0];
+                $caldwellGoldDrawing = $this->getAchievement('Caldwell Drawing Gold');
+                $caldwellSilverDrawing = $this->getAchievement('Caldwell Drawing Silver');
+                $caldwellBronzeDrawing = $this->getAchievement('Caldwell Drawing Bronze');
 
                 $this->setAchievement3(
                     $user,
@@ -136,13 +269,13 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of Herschel 400 objects seen
-                $total = $user->getObservedCountFromCatalog('H400');
+                $total = $this->getCatalogObserved($user->username, 'H400');
 
-                $h400Platinum = Achievement::where('name', 'Herschel 400 Platinum')->get()[0];
-                $h400Diamond = Achievement::where('name', 'Herschel 400 Diamond')->get()[0];
-                $h400Gold = Achievement::where('name', 'Herschel 400 Gold')->get()[0];
-                $h400Silver = Achievement::where('name', 'Herschel 400 Silver')->get()[0];
-                $h400Bronze = Achievement::where('name', 'Herschel 400 Bronze')->get()[0];
+                $h400Platinum = $this->getAchievement('Herschel 400 Platinum');
+                $h400Diamond = $this->getAchievement('Herschel 400 Diamond');
+                $h400Gold = $this->getAchievement('Herschel 400 Gold');
+                $h400Silver = $this->getAchievement('Herschel 400 Silver');
+                $h400Bronze = $this->getAchievement('Herschel 400 Bronze');
 
                 $this->setAchievement5(
                     $user,
@@ -156,13 +289,13 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of Herschel 400 objects drawn
-                $total = $user->getDrawingCountFromCatalog('H400');
+                $total = $this->getCatalogDrawings($user->username, 'H400');
 
-                $h400PlatinumDrawing = Achievement::where('name', 'Herschel 400 Drawing Platinum')->get()[0];
-                $h400DiamondDrawing = Achievement::where('name', 'Herschel 400 Drawing Diamond')->get()[0];
-                $h400GoldDrawing = Achievement::where('name', 'Herschel 400 Drawing Gold')->get()[0];
-                $h400SilverDrawing = Achievement::where('name', 'Herschel 400 Drawing Silver')->get()[0];
-                $h400BronzeDrawing = Achievement::where('name', 'Herschel 400 Drawing Bronze')->get()[0];
+                $h400PlatinumDrawing = $this->getAchievement('Herschel 400 Drawing Platinum');
+                $h400DiamondDrawing = $this->getAchievement('Herschel 400 Drawing Diamond');
+                $h400GoldDrawing = $this->getAchievement('Herschel 400 Drawing Gold');
+                $h400SilverDrawing = $this->getAchievement('Herschel 400 Drawing Silver');
+                $h400BronzeDrawing = $this->getAchievement('Herschel 400 Drawing Bronze');
 
                 $this->setAchievement5(
                     $user,
@@ -176,13 +309,13 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of Herschel II objects seen
-                $total = $user->getObservedCountFromCatalog('H400-II');
+                $total = $this->getCatalogObserved($user->username, 'H400-II');
 
-                $hIIPlatinum = Achievement::where('name', 'Herschel II Platinum')->get()[0];
-                $hIIDiamond = Achievement::where('name', 'Herschel II Diamond')->get()[0];
-                $hIIGold = Achievement::where('name', 'Herschel II Gold')->get()[0];
-                $hIISilver = Achievement::where('name', 'Herschel II Silver')->get()[0];
-                $hIIBronze = Achievement::where('name', 'Herschel II Bronze')->get()[0];
+                $hIIPlatinum = $this->getAchievement('Herschel II Platinum');
+                $hIIDiamond = $this->getAchievement('Herschel II Diamond');
+                $hIIGold = $this->getAchievement('Herschel II Gold');
+                $hIISilver = $this->getAchievement('Herschel II Silver');
+                $hIIBronze = $this->getAchievement('Herschel II Bronze');
 
                 $this->setAchievement5(
                     $user,
@@ -196,13 +329,13 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of Herschel II objects drawn
-                $total = $user->getDrawingCountFromCatalog('H400-II');
+                $total = $this->getCatalogDrawings($user->username, 'H400-II');
 
-                $hIIPlatinumDrawing = Achievement::where('name', 'Herschel II Drawing Platinum')->get()[0];
-                $hIIDiamondDrawing = Achievement::where('name', 'Herschel II Drawing Diamond')->get()[0];
-                $hIIGoldDrawing = Achievement::where('name', 'Herschel II Drawing Gold')->get()[0];
-                $hIISilverDrawing = Achievement::where('name', 'Herschel II Drawing Silver')->get()[0];
-                $hIIBronzeDrawing = Achievement::where('name', 'Herschel II Drawing Bronze')->get()[0];
+                $hIIPlatinumDrawing = $this->getAchievement('Herschel II Drawing Platinum');
+                $hIIDiamondDrawing = $this->getAchievement('Herschel II Drawing Diamond');
+                $hIIGoldDrawing = $this->getAchievement('Herschel II Drawing Gold');
+                $hIISilverDrawing = $this->getAchievement('Herschel II Drawing Silver');
+                $hIIBronzeDrawing = $this->getAchievement('Herschel II Drawing Bronze');
 
                 $this->setAchievement5(
                     $user,
@@ -216,18 +349,18 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate total number of drawings
-                $total = $user->getTotalNumberOfDrawings();
+                $total = $this->getTotalDrawingsForUser($user->username);
 
-                $achievement10 = Achievement::where('name', 'Drawing 1')->get()[0];
-                $achievement9 = Achievement::where('name', 'Drawings 10')->get()[0];
-                $achievement8 = Achievement::where('name', 'Drawings 25')->get()[0];
-                $achievement7 = Achievement::where('name', 'Drawings 50')->get()[0];
-                $achievement6 = Achievement::where('name', 'Drawings 100')->get()[0];
-                $achievement5 = Achievement::where('name', 'Drawings 250')->get()[0];
-                $achievement4 = Achievement::where('name', 'Drawings 500')->get()[0];
-                $achievement3 = Achievement::where('name', 'Drawings 1000')->get()[0];
-                $achievement2 = Achievement::where('name', 'Drawings 2500')->get()[0];
-                $achievement1 = Achievement::where('name', 'Drawings 5000')->get()[0];
+                $achievement10 = $this->getAchievement('Drawing 1');
+                $achievement9 = $this->getAchievement('Drawings 10');
+                $achievement8 = $this->getAchievement('Drawings 25');
+                $achievement7 = $this->getAchievement('Drawings 50');
+                $achievement6 = $this->getAchievement('Drawings 100');
+                $achievement5 = $this->getAchievement('Drawings 250');
+                $achievement4 = $this->getAchievement('Drawings 500');
+                $achievement3 = $this->getAchievement('Drawings 1000');
+                $achievement2 = $this->getAchievement('Drawings 2500');
+                $achievement1 = $this->getAchievement('Drawings 5000');
 
                 $this->setAchievement10(
                     $user,
@@ -255,18 +388,18 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of open clusters seen
-                $total = $user->getOpenClusterObservations();
+                $total = ($this->getTypeObserved($user->username, 'OPNCL') ?? 0) + ($this->getTypeObserved($user->username, 'CLANB') ?? 0);
 
-                $achievement10 = Achievement::where('name', 'Open Cluster 1')->get()[0];
-                $achievement9 = Achievement::where('name', 'Open Clusters 5')->get()[0];
-                $achievement8 = Achievement::where('name', 'Open Clusters 10')->get()[0];
-                $achievement7 = Achievement::where('name', 'Open Clusters 25')->get()[0];
-                $achievement6 = Achievement::where('name', 'Open Clusters 50')->get()[0];
-                $achievement5 = Achievement::where('name', 'Open Clusters 100')->get()[0];
-                $achievement4 = Achievement::where('name', 'Open Clusters 200')->get()[0];
-                $achievement3 = Achievement::where('name', 'Open Clusters 500')->get()[0];
-                $achievement2 = Achievement::where('name', 'Open Clusters 1000')->get()[0];
-                $achievement1 = Achievement::where('name', 'Open Clusters 2500')->get()[0];
+                $achievement10 = $this->getAchievement('Open Cluster 1');
+                $achievement9 = $this->getAchievement('Open Clusters 5');
+                $achievement8 = $this->getAchievement('Open Clusters 10');
+                $achievement7 = $this->getAchievement('Open Clusters 25');
+                $achievement6 = $this->getAchievement('Open Clusters 50');
+                $achievement5 = $this->getAchievement('Open Clusters 100');
+                $achievement4 = $this->getAchievement('Open Clusters 200');
+                $achievement3 = $this->getAchievement('Open Clusters 500');
+                $achievement2 = $this->getAchievement('Open Clusters 1000');
+                $achievement1 = $this->getAchievement('Open Clusters 2500');
 
                 $this->setAchievement10(
                     $user,
@@ -294,18 +427,18 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of open clusters drawn
-                $total = $user->getOpenClusterDrawings();
+                $total = ($this->getTypeDrawings($user->username, 'OPNCL') ?? 0) + ($this->getTypeDrawings($user->username, 'CLANB') ?? 0);
 
-                $achievement10 = Achievement::where('name', 'Open Cluster 1 Drawing')->get()[0];
-                $achievement9 = Achievement::where('name', 'Open Clusters 5 Drawings')->get()[0];
-                $achievement8 = Achievement::where('name', 'Open Clusters 10 Drawings')->get()[0];
-                $achievement7 = Achievement::where('name', 'Open Clusters 25 Drawings')->get()[0];
-                $achievement6 = Achievement::where('name', 'Open Clusters 50 Drawings')->get()[0];
-                $achievement5 = Achievement::where('name', 'Open Clusters 100 Drawings')->get()[0];
-                $achievement4 = Achievement::where('name', 'Open Clusters 200 Drawings')->get()[0];
-                $achievement3 = Achievement::where('name', 'Open Clusters 500 Drawings')->get()[0];
-                $achievement2 = Achievement::where('name', 'Open Clusters 1000 Drawings')->get()[0];
-                $achievement1 = Achievement::where('name', 'Open Clusters 2500 Drawings')->get()[0];
+                $achievement10 = $this->getAchievement('Open Cluster 1 Drawing');
+                $achievement9 = $this->getAchievement('Open Clusters 5 Drawings');
+                $achievement8 = $this->getAchievement('Open Clusters 10 Drawings');
+                $achievement7 = $this->getAchievement('Open Clusters 25 Drawings');
+                $achievement6 = $this->getAchievement('Open Clusters 50 Drawings');
+                $achievement5 = $this->getAchievement('Open Clusters 100 Drawings');
+                $achievement4 = $this->getAchievement('Open Clusters 200 Drawings');
+                $achievement3 = $this->getAchievement('Open Clusters 500 Drawings');
+                $achievement2 = $this->getAchievement('Open Clusters 1000 Drawings');
+                $achievement1 = $this->getAchievement('Open Clusters 2500 Drawings');
 
                 $this->setAchievement10(
                     $user,
@@ -333,18 +466,18 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of globular clusters seen
-                $total = $user->getGlobularClusterObservations();
+                $total = $this->getTypeObserved($user->username, 'GLOCL');
 
-                $achievement10 = Achievement::where('name', 'Globular Cluster 1')->get()[0];
-                $achievement9 = Achievement::where('name', 'Globular Clusters 3')->get()[0];
-                $achievement8 = Achievement::where('name', 'Globular Clusters 5')->get()[0];
-                $achievement7 = Achievement::where('name', 'Globular Clusters 10')->get()[0];
-                $achievement6 = Achievement::where('name', 'Globular Clusters 15')->get()[0];
-                $achievement5 = Achievement::where('name', 'Globular Clusters 25')->get()[0];
-                $achievement4 = Achievement::where('name', 'Globular Clusters 50')->get()[0];
-                $achievement3 = Achievement::where('name', 'Globular Clusters 75')->get()[0];
-                $achievement2 = Achievement::where('name', 'Globular Clusters 100')->get()[0];
-                $achievement1 = Achievement::where('name', 'Globular Clusters 150')->get()[0];
+                $achievement10 = $this->getAchievement('Globular Cluster 1');
+                $achievement9 = $this->getAchievement('Globular Clusters 3');
+                $achievement8 = $this->getAchievement('Globular Clusters 5');
+                $achievement7 = $this->getAchievement('Globular Clusters 10');
+                $achievement6 = $this->getAchievement('Globular Clusters 15');
+                $achievement5 = $this->getAchievement('Globular Clusters 25');
+                $achievement4 = $this->getAchievement('Globular Clusters 50');
+                $achievement3 = $this->getAchievement('Globular Clusters 75');
+                $achievement2 = $this->getAchievement('Globular Clusters 100');
+                $achievement1 = $this->getAchievement('Globular Clusters 150');
 
                 $this->setAchievement10(
                     $user,
@@ -372,18 +505,18 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of globular clusters drawn
-                $total = $user->getGlobularClusterDrawings();
+                $total = $this->getTypeDrawings($user->username, 'GLOCL');
 
-                $achievement10 = Achievement::where('name', 'Globular Cluster 1 Drawing')->get()[0];
-                $achievement9 = Achievement::where('name', 'Globular Clusters 3 Drawings')->get()[0];
-                $achievement8 = Achievement::where('name', 'Globular Clusters 5 Drawings')->get()[0];
-                $achievement7 = Achievement::where('name', 'Globular Clusters 10 Drawings')->get()[0];
-                $achievement6 = Achievement::where('name', 'Globular Clusters 15 Drawings')->get()[0];
-                $achievement5 = Achievement::where('name', 'Globular Clusters 25 Drawings')->get()[0];
-                $achievement4 = Achievement::where('name', 'Globular Clusters 50 Drawings')->get()[0];
-                $achievement3 = Achievement::where('name', 'Globular Clusters 75 Drawings')->get()[0];
-                $achievement2 = Achievement::where('name', 'Globular Clusters 100 Drawings')->get()[0];
-                $achievement1 = Achievement::where('name', 'Globular Clusters 150 Drawings')->get()[0];
+                $achievement10 = $this->getAchievement('Globular Cluster 1 Drawing');
+                $achievement9 = $this->getAchievement('Globular Clusters 3 Drawings');
+                $achievement8 = $this->getAchievement('Globular Clusters 5 Drawings');
+                $achievement7 = $this->getAchievement('Globular Clusters 10 Drawings');
+                $achievement6 = $this->getAchievement('Globular Clusters 15 Drawings');
+                $achievement5 = $this->getAchievement('Globular Clusters 25 Drawings');
+                $achievement4 = $this->getAchievement('Globular Clusters 50 Drawings');
+                $achievement3 = $this->getAchievement('Globular Clusters 75 Drawings');
+                $achievement2 = $this->getAchievement('Globular Clusters 100 Drawings');
+                $achievement1 = $this->getAchievement('Globular Clusters 150 Drawings');
 
                 $this->setAchievement10(
                     $user,
@@ -411,18 +544,18 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of planetary nebulae seen
-                $total = $user->getPlanetaryNebulaObservations();
+                $total = $this->getTypeObserved($user->username, 'PLNNB');
 
-                $achievement10 = Achievement::where('name', 'Planetary Nebula 1')->get()[0];
-                $achievement9 = Achievement::where('name', 'Planetary Nebula 3')->get()[0];
-                $achievement8 = Achievement::where('name', 'Planetary Nebula 5')->get()[0];
-                $achievement7 = Achievement::where('name', 'Planetary Nebula 10')->get()[0];
-                $achievement6 = Achievement::where('name', 'Planetary Nebula 25')->get()[0];
-                $achievement5 = Achievement::where('name', 'Planetary Nebula 50')->get()[0];
-                $achievement4 = Achievement::where('name', 'Planetary Nebula 100')->get()[0];
-                $achievement3 = Achievement::where('name', 'Planetary Nebula 250')->get()[0];
-                $achievement2 = Achievement::where('name', 'Planetary Nebula 500')->get()[0];
-                $achievement1 = Achievement::where('name', 'Planetary Nebula 1000')->get()[0];
+                $achievement10 = $this->getAchievement('Planetary Nebula 1');
+                $achievement9 = $this->getAchievement('Planetary Nebula 3');
+                $achievement8 = $this->getAchievement('Planetary Nebula 5');
+                $achievement7 = $this->getAchievement('Planetary Nebula 10');
+                $achievement6 = $this->getAchievement('Planetary Nebula 25');
+                $achievement5 = $this->getAchievement('Planetary Nebula 50');
+                $achievement4 = $this->getAchievement('Planetary Nebula 100');
+                $achievement3 = $this->getAchievement('Planetary Nebula 250');
+                $achievement2 = $this->getAchievement('Planetary Nebula 500');
+                $achievement1 = $this->getAchievement('Planetary Nebula 1000');
 
                 $this->setAchievement10(
                     $user,
@@ -450,18 +583,18 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of planetary nebulae drawn
-                $total = $user->getPlanetaryNebulaDrawings();
+                $total = $this->getTypeDrawings($user->username, 'PLNNB');
 
-                $achievement10 = Achievement::where('name', 'Planetary Nebula 1 Drawings')->get()[0];
-                $achievement9 = Achievement::where('name', 'Planetary Nebula 3 Drawings')->get()[0];
-                $achievement8 = Achievement::where('name', 'Planetary Nebula 5 Drawings')->get()[0];
-                $achievement7 = Achievement::where('name', 'Planetary Nebula 10 Drawings')->get()[0];
-                $achievement6 = Achievement::where('name', 'Planetary Nebula 25 Drawings')->get()[0];
-                $achievement5 = Achievement::where('name', 'Planetary Nebula 50 Drawings')->get()[0];
-                $achievement4 = Achievement::where('name', 'Planetary Nebula 100 Drawings')->get()[0];
-                $achievement3 = Achievement::where('name', 'Planetary Nebula 250 Drawings')->get()[0];
-                $achievement2 = Achievement::where('name', 'Planetary Nebula 500 Drawings')->get()[0];
-                $achievement1 = Achievement::where('name', 'Planetary Nebula 1000 Drawings')->get()[0];
+                $achievement10 = $this->getAchievement('Planetary Nebula 1 Drawings');
+                $achievement9 = $this->getAchievement('Planetary Nebula 3 Drawings');
+                $achievement8 = $this->getAchievement('Planetary Nebula 5 Drawings');
+                $achievement7 = $this->getAchievement('Planetary Nebula 10 Drawings');
+                $achievement6 = $this->getAchievement('Planetary Nebula 25 Drawings');
+                $achievement5 = $this->getAchievement('Planetary Nebula 50 Drawings');
+                $achievement4 = $this->getAchievement('Planetary Nebula 100 Drawings');
+                $achievement3 = $this->getAchievement('Planetary Nebula 250 Drawings');
+                $achievement2 = $this->getAchievement('Planetary Nebula 500 Drawings');
+                $achievement1 = $this->getAchievement('Planetary Nebula 1000 Drawings');
 
                 $this->setAchievement10(
                     $user,
@@ -489,18 +622,18 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of galaxies seen
-                $total = $user->getGalaxyObservations();
+                $total = $this->getTypeObserved($user->username, 'GALXY');
 
-                $achievement10 = Achievement::where('name', 'Galaxy 1')->get()[0];
-                $achievement9 = Achievement::where('name', 'Galaxies 10')->get()[0];
-                $achievement8 = Achievement::where('name', 'Galaxies 25')->get()[0];
-                $achievement7 = Achievement::where('name', 'Galaxies 50')->get()[0];
-                $achievement6 = Achievement::where('name', 'Galaxies 100')->get()[0];
-                $achievement5 = Achievement::where('name', 'Galaxies 250')->get()[0];
-                $achievement4 = Achievement::where('name', 'Galaxies 500')->get()[0];
-                $achievement3 = Achievement::where('name', 'Galaxies 1000')->get()[0];
-                $achievement2 = Achievement::where('name', 'Galaxies 2500')->get()[0];
-                $achievement1 = Achievement::where('name', 'Galaxies 5000')->get()[0];
+                $achievement10 = $this->getAchievement('Galaxy 1');
+                $achievement9 = $this->getAchievement('Galaxies 10');
+                $achievement8 = $this->getAchievement('Galaxies 25');
+                $achievement7 = $this->getAchievement('Galaxies 50');
+                $achievement6 = $this->getAchievement('Galaxies 100');
+                $achievement5 = $this->getAchievement('Galaxies 250');
+                $achievement4 = $this->getAchievement('Galaxies 500');
+                $achievement3 = $this->getAchievement('Galaxies 1000');
+                $achievement2 = $this->getAchievement('Galaxies 2500');
+                $achievement1 = $this->getAchievement('Galaxies 5000');
 
                 $this->setAchievement10(
                     $user,
@@ -528,18 +661,18 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of galaxies drawn
-                $total = $user->getGalaxyDrawings();
+                $total = $this->getTypeDrawings($user->username, 'GALXY');
 
-                $achievement10 = Achievement::where('name', 'Galaxy 1 Drawing')->get()[0];
-                $achievement9 = Achievement::where('name', 'Galaxies 10 Drawings')->get()[0];
-                $achievement8 = Achievement::where('name', 'Galaxies 25 Drawings')->get()[0];
-                $achievement7 = Achievement::where('name', 'Galaxies 50 Drawings')->get()[0];
-                $achievement6 = Achievement::where('name', 'Galaxies 100 Drawings')->get()[0];
-                $achievement5 = Achievement::where('name', 'Galaxies 250 Drawings')->get()[0];
-                $achievement4 = Achievement::where('name', 'Galaxies 500 Drawings')->get()[0];
-                $achievement3 = Achievement::where('name', 'Galaxies 1000 Drawings')->get()[0];
-                $achievement2 = Achievement::where('name', 'Galaxies 2500 Drawings')->get()[0];
-                $achievement1 = Achievement::where('name', 'Galaxies 5000 Drawings')->get()[0];
+                $achievement10 = $this->getAchievement('Galaxy 1 Drawing');
+                $achievement9 = $this->getAchievement('Galaxies 10 Drawings');
+                $achievement8 = $this->getAchievement('Galaxies 25 Drawings');
+                $achievement7 = $this->getAchievement('Galaxies 50 Drawings');
+                $achievement6 = $this->getAchievement('Galaxies 100 Drawings');
+                $achievement5 = $this->getAchievement('Galaxies 250 Drawings');
+                $achievement4 = $this->getAchievement('Galaxies 500 Drawings');
+                $achievement3 = $this->getAchievement('Galaxies 1000 Drawings');
+                $achievement2 = $this->getAchievement('Galaxies 2500 Drawings');
+                $achievement1 = $this->getAchievement('Galaxies 5000 Drawings');
 
                 $this->setAchievement10(
                     $user,
@@ -567,18 +700,22 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of nebulae seen
-                $total = $user->getNebulaObservations();
+                $nebulaTypes = ['EMINB','ENRNN','ENSTR','REFNB','RNHII','HII','SNREM','WRNEB'];
+                $total = 0;
+                foreach ($nebulaTypes as $t) {
+                    $total += $this->getTypeObserved($user->username, $t) ?? 0;
+                }
 
-                $achievement10 = Achievement::where('name', 'Nebula 1')->get()[0];
-                $achievement9 = Achievement::where('name', 'Nebulae 5')->get()[0];
-                $achievement8 = Achievement::where('name', 'Nebulae 10')->get()[0];
-                $achievement7 = Achievement::where('name', 'Nebulae 25')->get()[0];
-                $achievement6 = Achievement::where('name', 'Nebulae 50')->get()[0];
-                $achievement5 = Achievement::where('name', 'Nebulae 75')->get()[0];
-                $achievement4 = Achievement::where('name', 'Nebulae 100')->get()[0];
-                $achievement3 = Achievement::where('name', 'Nebulae 150')->get()[0];
-                $achievement2 = Achievement::where('name', 'Nebulae 200')->get()[0];
-                $achievement1 = Achievement::where('name', 'Nebulae 300')->get()[0];
+                $achievement10 = $this->getAchievement('Nebula 1');
+                $achievement9 = $this->getAchievement('Nebulae 5');
+                $achievement8 = $this->getAchievement('Nebulae 10');
+                $achievement7 = $this->getAchievement('Nebulae 25');
+                $achievement6 = $this->getAchievement('Nebulae 50');
+                $achievement5 = $this->getAchievement('Nebulae 75');
+                $achievement4 = $this->getAchievement('Nebulae 100');
+                $achievement3 = $this->getAchievement('Nebulae 150');
+                $achievement2 = $this->getAchievement('Nebulae 200');
+                $achievement1 = $this->getAchievement('Nebulae 300');
 
                 $this->setAchievement10(
                     $user,
@@ -606,18 +743,22 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of nebulae drawn
-                $total = $user->getNebulaDrawings();
+                $nebulaTypes = ['EMINB','ENRNN','ENSTR','REFNB','RNHII','HII','SNREM','WRNEB'];
+                $total = 0;
+                foreach ($nebulaTypes as $t) {
+                    $total += $this->getTypeDrawings($user->username, $t) ?? 0;
+                }
 
-                $achievement10 = Achievement::where('name', 'Nebula 1 Drawing')->get()[0];
-                $achievement9 = Achievement::where('name', 'Nebulae 5 Drawings')->get()[0];
-                $achievement8 = Achievement::where('name', 'Nebulae 10 Drawings')->get()[0];
-                $achievement7 = Achievement::where('name', 'Nebulae 25 Drawings')->get()[0];
-                $achievement6 = Achievement::where('name', 'Nebulae 50 Drawings')->get()[0];
-                $achievement5 = Achievement::where('name', 'Nebulae 75 Drawings')->get()[0];
-                $achievement4 = Achievement::where('name', 'Nebulae 100 Drawings')->get()[0];
-                $achievement3 = Achievement::where('name', 'Nebulae 150 Drawings')->get()[0];
-                $achievement2 = Achievement::where('name', 'Nebulae 200 Drawings')->get()[0];
-                $achievement1 = Achievement::where('name', 'Nebulae 300 Drawings')->get()[0];
+                $achievement10 = $this->getAchievement('Nebula 1 Drawing');
+                $achievement9 = $this->getAchievement('Nebulae 5 Drawings');
+                $achievement8 = $this->getAchievement('Nebulae 10 Drawings');
+                $achievement7 = $this->getAchievement('Nebulae 25 Drawings');
+                $achievement6 = $this->getAchievement('Nebulae 50 Drawings');
+                $achievement5 = $this->getAchievement('Nebulae 75 Drawings');
+                $achievement4 = $this->getAchievement('Nebulae 100 Drawings');
+                $achievement3 = $this->getAchievement('Nebulae 150 Drawings');
+                $achievement2 = $this->getAchievement('Nebulae 200 Drawings');
+                $achievement1 = $this->getAchievement('Nebulae 300 Drawings');
 
                 $this->setAchievement10(
                     $user,
@@ -645,18 +786,18 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of unique objects seen
-                $total = $user->getUniqueObjectsObservations();
+                $total = $this->getUniqueObjectsObserved($user->username);
 
-                $achievement10 = Achievement::where('name', 'Object 1')->get()[0];
-                $achievement9 = Achievement::where('name', 'Objects 10')->get()[0];
-                $achievement8 = Achievement::where('name', 'Objects 25')->get()[0];
-                $achievement7 = Achievement::where('name', 'Objects 50')->get()[0];
-                $achievement6 = Achievement::where('name', 'Objects 100')->get()[0];
-                $achievement5 = Achievement::where('name', 'Objects 250')->get()[0];
-                $achievement4 = Achievement::where('name', 'Objects 500')->get()[0];
-                $achievement3 = Achievement::where('name', 'Objects 1000')->get()[0];
-                $achievement2 = Achievement::where('name', 'Objects 2500')->get()[0];
-                $achievement1 = Achievement::where('name', 'Objects 5000')->get()[0];
+                $achievement10 = $this->getAchievement('Object 1');
+                $achievement9 = $this->getAchievement('Objects 10');
+                $achievement8 = $this->getAchievement('Objects 25');
+                $achievement7 = $this->getAchievement('Objects 50');
+                $achievement6 = $this->getAchievement('Objects 100');
+                $achievement5 = $this->getAchievement('Objects 250');
+                $achievement4 = $this->getAchievement('Objects 500');
+                $achievement3 = $this->getAchievement('Objects 1000');
+                $achievement2 = $this->getAchievement('Objects 2500');
+                $achievement1 = $this->getAchievement('Objects 5000');
 
                 $this->setAchievement10(
                     $user,
@@ -684,18 +825,18 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of unique objects drawn
-                $total = $user->getUniqueObjectsDrawings();
+                $total = $this->getUniqueObjectsDrawn($user->username);
 
-                $achievement10 = Achievement::where('name', 'Object 1 Drawing')->get()[0];
-                $achievement9 = Achievement::where('name', 'Objects 10 Drawings')->get()[0];
-                $achievement8 = Achievement::where('name', 'Objects 25 Drawings')->get()[0];
-                $achievement7 = Achievement::where('name', 'Objects 50 Drawings')->get()[0];
-                $achievement6 = Achievement::where('name', 'Objects 100 Drawings')->get()[0];
-                $achievement5 = Achievement::where('name', 'Objects 250 Drawings')->get()[0];
-                $achievement4 = Achievement::where('name', 'Objects 500 Drawings')->get()[0];
-                $achievement3 = Achievement::where('name', 'Objects 1000 Drawings')->get()[0];
-                $achievement2 = Achievement::where('name', 'Objects 2500 Drawings')->get()[0];
-                $achievement1 = Achievement::where('name', 'Objects 5000 Drawings')->get()[0];
+                $achievement10 = $this->getAchievement('Object 1 Drawing');
+                $achievement9 = $this->getAchievement('Objects 10 Drawings');
+                $achievement8 = $this->getAchievement('Objects 25 Drawings');
+                $achievement7 = $this->getAchievement('Objects 50 Drawings');
+                $achievement6 = $this->getAchievement('Objects 100 Drawings');
+                $achievement5 = $this->getAchievement('Objects 250 Drawings');
+                $achievement4 = $this->getAchievement('Objects 500 Drawings');
+                $achievement3 = $this->getAchievement('Objects 1000 Drawings');
+                $achievement2 = $this->getAchievement('Objects 2500 Drawings');
+                $achievement1 = $this->getAchievement('Objects 5000 Drawings');
 
                 $this->setAchievement10(
                     $user,
@@ -723,18 +864,18 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of comets seen
-                $total = $user->getCometObservations();
+                $total = $this->getCometObservationsForUser($user->username);
 
-                $achievement10 = Achievement::where('name', 'Comet 1')->get()[0];
-                $achievement9 = Achievement::where('name', 'Comets 10')->get()[0];
-                $achievement8 = Achievement::where('name', 'Comets 25')->get()[0];
-                $achievement7 = Achievement::where('name', 'Comets 50')->get()[0];
-                $achievement6 = Achievement::where('name', 'Comets 100')->get()[0];
-                $achievement5 = Achievement::where('name', 'Comets 250')->get()[0];
-                $achievement4 = Achievement::where('name', 'Comets 500')->get()[0];
-                $achievement3 = Achievement::where('name', 'Comets 1000')->get()[0];
-                $achievement2 = Achievement::where('name', 'Comets 2500')->get()[0];
-                $achievement1 = Achievement::where('name', 'Comets 5000')->get()[0];
+                $achievement10 = $this->getAchievement('Comet 1');
+                $achievement9 = $this->getAchievement('Comets 10');
+                $achievement8 = $this->getAchievement('Comets 25');
+                $achievement7 = $this->getAchievement('Comets 50');
+                $achievement6 = $this->getAchievement('Comets 100');
+                $achievement5 = $this->getAchievement('Comets 250');
+                $achievement4 = $this->getAchievement('Comets 500');
+                $achievement3 = $this->getAchievement('Comets 1000');
+                $achievement2 = $this->getAchievement('Comets 2500');
+                $achievement1 = $this->getAchievement('Comets 5000');
 
                 $this->setAchievement10(
                     $user,
@@ -762,18 +903,18 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of comets drawn
-                $total = $user->getCometDrawings();
+                $total = $this->getCometDrawingsForUser($user->username);
 
-                $achievement10 = Achievement::where('name', 'Comet 1 Drawing')->get()[0];
-                $achievement9 = Achievement::where('name', 'Comets 10 Drawings')->get()[0];
-                $achievement8 = Achievement::where('name', 'Comets 25 Drawings')->get()[0];
-                $achievement7 = Achievement::where('name', 'Comets 50 Drawings')->get()[0];
-                $achievement6 = Achievement::where('name', 'Comets 100 Drawings')->get()[0];
-                $achievement5 = Achievement::where('name', 'Comets 250 Drawings')->get()[0];
-                $achievement4 = Achievement::where('name', 'Comets 500 Drawings')->get()[0];
-                $achievement3 = Achievement::where('name', 'Comets 1000 Drawings')->get()[0];
-                $achievement2 = Achievement::where('name', 'Comets 2500 Drawings')->get()[0];
-                $achievement1 = Achievement::where('name', 'Comets 5000 Drawings')->get()[0];
+                $achievement10 = $this->getAchievement('Comet 1 Drawing');
+                $achievement9 = $this->getAchievement('Comets 10 Drawings');
+                $achievement8 = $this->getAchievement('Comets 25 Drawings');
+                $achievement7 = $this->getAchievement('Comets 50 Drawings');
+                $achievement6 = $this->getAchievement('Comets 100 Drawings');
+                $achievement5 = $this->getAchievement('Comets 250 Drawings');
+                $achievement4 = $this->getAchievement('Comets 500 Drawings');
+                $achievement3 = $this->getAchievement('Comets 1000 Drawings');
+                $achievement2 = $this->getAchievement('Comets 2500 Drawings');
+                $achievement1 = $this->getAchievement('Comets 5000 Drawings');
 
                 $this->setAchievement10(
                     $user,
@@ -801,18 +942,18 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of unique comets seen
-                $total = $user->getUniqueCometObservations();
+                $total = $this->getUniqueCometObservationsForUser($user->username);
 
-                $achievement10 = Achievement::where('name', 'Different Comets 1')->get()[0];
-                $achievement9 = Achievement::where('name', 'Different Comets 10')->get()[0];
-                $achievement8 = Achievement::where('name', 'Different Comets 25')->get()[0];
-                $achievement7 = Achievement::where('name', 'Different Comets 50')->get()[0];
-                $achievement6 = Achievement::where('name', 'Different Comets 100')->get()[0];
-                $achievement5 = Achievement::where('name', 'Different Comets 250')->get()[0];
-                $achievement4 = Achievement::where('name', 'Different Comets 500')->get()[0];
-                $achievement3 = Achievement::where('name', 'Different Comets 1000')->get()[0];
-                $achievement2 = Achievement::where('name', 'Different Comets 2500')->get()[0];
-                $achievement1 = Achievement::where('name', 'Different Comets 5000')->get()[0];
+                $achievement10 = $this->getAchievement('Different Comets 1');
+                $achievement9 = $this->getAchievement('Different Comets 10');
+                $achievement8 = $this->getAchievement('Different Comets 25');
+                $achievement7 = $this->getAchievement('Different Comets 50');
+                $achievement6 = $this->getAchievement('Different Comets 100');
+                $achievement5 = $this->getAchievement('Different Comets 250');
+                $achievement4 = $this->getAchievement('Different Comets 500');
+                $achievement3 = $this->getAchievement('Different Comets 1000');
+                $achievement2 = $this->getAchievement('Different Comets 2500');
+                $achievement1 = $this->getAchievement('Different Comets 5000');
 
                 $this->setAchievement10(
                     $user,
@@ -1297,5 +1438,77 @@ class updateAchievementsCommand extends Command
         $this->removeAchievementFromUser($user, $achievement7);
         $this->removeAchievementFromUser($user, $achievement8);
         $this->removeAchievementFromUser($user, $achievement9);
+    }
+
+    /**
+     * Get an achievement by name from the cached map.
+     *
+     * @param string $name
+     * @return Achievement
+     * @throws Exception
+     */
+    private function getAchievement(string $name): Achievement
+    {
+        if ($this->achievementMap === null) {
+            $this->achievementMap = Achievement::all()->keyBy('name');
+        }
+
+        $achievement = $this->achievementMap->get($name);
+
+        if ($achievement === null) {
+            throw new Exception('Achievement not found: '.$name);
+        }
+
+        return $achievement;
+    }
+
+    private function getCatalogObserved(string $username, string $catalog): int
+    {
+        return $this->catalogObservedMap[$username][$catalog] ?? 0;
+    }
+
+    private function getCatalogDrawings(string $username, string $catalog): int
+    {
+        return $this->catalogDrawingsMap[$username][$catalog] ?? 0;
+    }
+
+    private function getTypeObserved(string $username, string $type): int
+    {
+        return $this->typeObservedMap[$username][$type] ?? 0;
+    }
+
+    private function getTypeDrawings(string $username, string $type): int
+    {
+        return $this->typeDrawingsMap[$username][$type] ?? 0;
+    }
+
+    private function getTotalDrawingsForUser(string $username): int
+    {
+        return $this->totalDrawingsMap[$username] ?? 0;
+    }
+
+    private function getUniqueObjectsObserved(string $username): int
+    {
+        return $this->uniqueObjectsMap[$username] ?? 0;
+    }
+
+    private function getUniqueObjectsDrawn(string $username): int
+    {
+        return $this->uniqueObjectsDrawingsMap[$username] ?? 0;
+    }
+
+    private function getCometObservationsForUser(string $username): int
+    {
+        return $this->cometObservationsMap[$username] ?? 0;
+    }
+
+    private function getCometDrawingsForUser(string $username): int
+    {
+        return $this->cometDrawingsMap[$username] ?? 0;
+    }
+
+    private function getUniqueCometObservationsForUser(string $username): int
+    {
+        return $this->uniqueCometMap[$username] ?? 0;
     }
 }

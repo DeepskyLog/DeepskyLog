@@ -7,6 +7,7 @@ use App\Models\Location;
 use App\Models\ObservationsOld;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class updateObservationsCommand extends Command
 {
@@ -92,14 +93,23 @@ class updateObservationsCommand extends Command
         // Get all locations
         $locations = Location::all();
 
-        // Check if the user with the given username already exists in the new database
-        // If not, create a new user with the given username
-        foreach ($locations as $location) {
-            try {
-                $observations = ObservationsOld::where('locationid', $location->id)->count();
-                $cometObservations = CometObservationsOld::where('locationid', $location->id)->count();
+        // Precompute counts grouped by location in the old DB to avoid per-location queries
+        $obsCounts = DB::connection('mysqlOld')->table('observations')
+            ->select('locationid', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('locationid')
+            ->pluck('cnt', 'locationid')
+            ->toArray();
 
-                $observations = $observations + $cometObservations;
+        $cometCounts = DB::connection('mysqlOld')->table('cometobservations')
+            ->select('locationid', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('locationid')
+            ->pluck('cnt', 'locationid')
+            ->toArray();
+
+        foreach ($locations as $location) {
+            $observations = 0;
+            try {
+                $observations = ($obsCounts[$location->id] ?? 0) + ($cometCounts[$location->id] ?? 0);
             } catch (Exception $e) {
                 $observations = 0;
             }
