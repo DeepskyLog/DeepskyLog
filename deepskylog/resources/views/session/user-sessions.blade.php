@@ -1,32 +1,30 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-200 leading-tight">{{ $u->name ?? $userSlug }} - {{ __('Sessions') }}</h2>
-            @php
-                $viewer = $user ?? null;
-                $pageOwner = $u ?? null;
-                $ownerMatch = false;
-                if ($viewer) {
-                    if ($pageOwner && isset($pageOwner->id) && $viewer->id === $pageOwner->id) {
-                        $ownerMatch = true;
-                    } elseif ($pageOwner && isset($pageOwner->slug) && ($viewer->slug ?? $viewer->username) === $pageOwner->slug) {
-                        $ownerMatch = true;
-                    } elseif (($viewer->username ?? null) === ($pageOwner->username ?? $userSlug)) {
-                        $ownerMatch = true;
-                    }
-                }
-            @endphp
-            @if($ownerMatch)
-                <div>
-                    <a href="{{ route('session.create') }}" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">{{ __('Add session') }}</a>
-                </div>
-            @endif
-        </div>
-    </x-slot>
-
-    <div class="py-6">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <div class="pb-6">
+        <div class="px-4 sm:px-6 lg:px-8">
             <div class="bg-gray-900 shadow-sm sm:rounded-lg p-6">
+                {{-- Page header inside the dark container --}}
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="font-semibold text-xl text-gray-200 leading-tight">{{ $u->name ?? $userSlug }} - {{ __('Sessions') }}</h2>
+                    @php
+                        $viewer = $user ?? null;
+                        $pageOwner = $u ?? null;
+                        $ownerMatch = false;
+                        if ($viewer) {
+                            if ($pageOwner && isset($pageOwner->id) && $viewer->id === $pageOwner->id) {
+                                $ownerMatch = true;
+                            } elseif ($pageOwner && isset($pageOwner->slug) && ($viewer->slug ?? $viewer->username) === $pageOwner->slug) {
+                                $ownerMatch = true;
+                            } elseif (($viewer->username ?? null) === ($pageOwner->username ?? $userSlug)) {
+                                $ownerMatch = true;
+                            }
+                        }
+                    @endphp
+                    @if($ownerMatch)
+                        <div>
+                            <a href="{{ route('session.create') }}" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">{{ __('Add session') }}</a>
+                        </div>
+                    @endif
+                </div>
                 {{-- preview_text and preview are prepared in the controller; views stay simple --}}
 
                 @if(isset($inactiveSessions) && $inactiveSessions->isNotEmpty())
@@ -75,7 +73,7 @@
                         </div>
                     </div>
                 @endif
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                     @foreach($sessions as $session)
                         @php
                             // Ensure we safely compute URL parts for session.show links. Some legacy/malformed

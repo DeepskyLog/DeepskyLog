@@ -1,13 +1,12 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-200 leading-tight">{{ __('All sessions') }}</h2>
-    </x-slot>
-
-    <div class="py-6">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <div class="pb-6">
+        <div class="px-4 sm:px-6 lg:px-8">
             <div class="bg-gray-900 shadow-sm sm:rounded-lg p-6">
+                {{-- Page header inside the dark container --}}
+                <h2 class="font-semibold text-xl text-gray-200 leading-tight mb-6">{{ __('All sessions') }}</h2>
+                
                 {{-- preview_text and preview are prepared in the controller; views stay simple --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                     @foreach($sessions as $session)
                         <article class="bg-gray-800 p-4 rounded">
                             @if(! empty($session->preview))

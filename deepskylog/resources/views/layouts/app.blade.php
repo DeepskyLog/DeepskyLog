@@ -208,7 +208,7 @@
                 @endif
                         {{-- Optional page header slot (used by pages like messages.create) --}}
                         @isset($header)
-                            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 py-4">
+                            <div class="px-4 sm:px-6 lg:px-8 py-4">
                                 <h1 class="text-xl font-semibold text-gray-100">{{ $header }}</h1>
                             </div>
                         @endisset
