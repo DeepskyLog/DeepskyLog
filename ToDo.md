@@ -4,10 +4,8 @@
 
 ## Next steps
 
++ [ ] Speed up the welcome page
 + [ ] Make old version work with the new object tables?
-+ [ ] Popular observations:
-    + [ ] Sorteren?
-    + [ ] Zoeken crasht de pagina... 
 
 + [ ] Targets
   + [ ] Administrator / Database expert pages to add / edit / delete objects

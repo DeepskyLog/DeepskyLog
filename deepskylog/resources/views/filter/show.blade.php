@@ -7,8 +7,8 @@
                     <img class="w-64 mx-auto object-cover" src="{{ $image }}"
                          alt="{{ $filter->name }}">
                     @if (!empty($filter->description))
-                        <div class="mt-4 p-3 border border-gray-700 bg-gray-800 text-gray-100 rounded">
-                            {!! $filter->description !!}
+                        <div class="mt-4 p-3 border border-gray-700 bg-gray-800 text-gray-100 rounded prose prose-invert">
+                            {!! html_entity_decode($filter->description ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') !!}
                         </div>
                     @endif
                 </div>
