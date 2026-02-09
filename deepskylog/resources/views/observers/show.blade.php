@@ -245,155 +245,153 @@
             <!-- Personal tab -->
             <div class="py-4">
 
-                <table>
+                <table class="mb-4">
                     <!-- Copyright notice -->
                     <tr>
-                        <td>{!! __('Copyright notice') !!}</td>
+                        <td class="pr-4">{!! __('Copyright notice') !!}</td>
                         <td>{!! $user->getCopyright() !!}</td>
                     </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                    </tr>
                 </table>
-                <table class="table-auto">
+                
+                <table class="w-auto">
                     <thead>
-                        <tr class="align-left">
-                            <th></th>
-                            <th>{{ __('Total') }}</th>
-                            <th>{{ __('Deepsky') }}</th>
-                            <th>{{ __('Comets') }}</th>
+                        <tr class="text-left">
+                            <th class="pr-8"></th>
+                            <th class="px-4">{{ __('Total') }}</th>
+                            <th class="px-4">{{ __('Deepsky') }}</th>
+                            <th class="px-4">{{ __('Comets') }}</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <tr>
-                            <td>{!! __('Number of observations') !!}</td>
-                            <td>{{ $observations->count() + $cometObservations }}
+                            <td class="pr-8">{!! __('Number of observations') !!}</td>
+                            <td class="px-4">{{ $observations->count() + $cometObservations }}
                                 / {{ $totalObservations + $totalCometObservations }}
                             </td>
-                            <td>{{ $observations->count() }}
+                            <td class="px-4">{{ $observations->count() }}
                                 / {{ $totalObservations }}
                             </td>
-                            <td>{{ $cometObservations }}
+                            <td class="px-4">{{ $cometObservations }}
                                 / {{ $totalCometObservations }}
                             </td>
                         </tr>
 
                         <tr>
-                            <td>{!! __('Observations last year') !!}</td>
-                            <td>{{ $observationsLastYear + $cometObservationsLastYear }} /
+                            <td class="pr-8">{!! __('Observations last year') !!}</td>
+                            <td class="px-4">{{ $observationsLastYear + $cometObservationsLastYear }} /
                                 {{ $totalObservationsLastYear + $totalCometObservationsLastYear }}
                             </td>
-                            <td>{{ $observationsLastYear }}
+                            <td class="px-4">{{ $observationsLastYear }}
                                 / {{ $totalObservationsLastYear }}
                             </td>
-                            <td>{{ $cometObservationsLastYear }}
+                            <td class="px-4">{{ $cometObservationsLastYear }}
                                 / {{ $totalCometObservationsLastYear }}
                             </td>
                         </tr>
 
                         <tr>
-                            <td>{{ __('Number of drawings') }}</td>
-                            <td>{{ $observations->where('hasDrawing', 1)->count() + $cometDrawings }}
+                            <td class="pr-8">{{ __('Number of drawings') }}</td>
+                            <td class="px-4">{{ $observations->where('hasDrawing', 1)->count() + $cometDrawings }}
                                 /
                                 {{ $totalNumberOfDrawings + $totalCometDrawings }}
                             </td>
-                            <td>{{ $observations->where('hasDrawing', 1)->count() }}
+                            <td class="px-4">{{ $observations->where('hasDrawing', 1)->count() }}
                                 /
                                 {{ $totalNumberOfDrawings }}
                             </td>
-                            <td>{{ $cometDrawings }}
+                            <td class="px-4">{{ $cometDrawings }}
                                 /
                                 {{ $totalCometDrawings }}
                             </td>
                         </tr>
 
                         <tr>
-                            <td>{!! __('Drawings last year') !!}</td>
+                            <td class="pr-8">{!! __('Drawings last year') !!}</td>
                             @php
                                 $totalDrawings = ObservationsOld::getTotalDrawingsLastYear();
                             @endphp
-                            <td>{{ $user->getDeepskyDrawingsLastYear() + $user->getCometDrawingsLastYear() }} /
+                            <td class="px-4">{{ $user->getDeepskyDrawingsLastYear() + $user->getCometDrawingsLastYear() }} /
                                 {{ $totalDrawings + CometObservationsOld::getTotalDrawingsLastYear() }}
                             </td>
-                            <td>{{ $user->getDeepskyDrawingsLastYear() }}
+                            <td class="px-4">{{ $user->getDeepskyDrawingsLastYear() }}
                                 / {{ $totalDrawings }}
                             </td>
-                            <td>{{ $user->getCometDrawingsLastYear() }}
+                            <td class="px-4">{{ $user->getCometDrawingsLastYear() }}
                                 / {{ CometObservationsOld::getTotalDrawingsLastYear() }}
                             </td>
                         </tr>
 
                         <tr>
-                            <td>{{ __('Different objects') }}</td>
-                            <td>{{ $user->getUniqueObjectsObservations() + $user->getUniqueCometObservations() }} /
+                            <td class="pr-8">{{ __('Different objects') }}</td>
+                            <td class="px-4">{{ $user->getUniqueObjectsObservations() + $user->getUniqueCometObservations() }} /
                                 {{ $totalUniqueObjects + CometObservationsOld::getUniqueObjectsObserved() }}</td>
-                            <td>{{ $user->getUniqueObjectsObservations() }}
+                            <td class="px-4">{{ $user->getUniqueObjectsObservations() }}
                                 / {{ $totalUniqueObjects }}</td>
-                            <td>{{ $user->getUniqueCometObservations() }} /
+                            <td class="px-4">{{ $user->getUniqueCometObservations() }} /
                                 {{ CometObservationsOld::getUniqueObjectsObserved() }}</td>
                         </tr>
 
                         <tr>
-                            <td>{{ __('Messier objects') }}</td>
-                            <td></td>
-                            <td>{{ $user->getObservedCountFromCatalog('M') }} / 110</td>
-                            <td></td>
+                            <td class="pr-8">{{ __('Messier objects') }}</td>
+                            <td class="px-4"></td>
+                            <td class="px-4">{{ $user->getObservedCountFromCatalog('M') }} / 110</td>
+                            <td class="px-4"></td>
                         </tr>
 
                         <tr>
-                            <td>{!! __('Drawings of Messier objects') !!}</td>
-                            <td></td>
-                            <td>{{ $user->getDrawingCountFromCatalog('M') }} / 110</td>
-                            <td></td>
+                            <td class="pr-8">{!! __('Drawings of Messier objects') !!}</td>
+                            <td class="px-4"></td>
+                            <td class="px-4">{{ $user->getDrawingCountFromCatalog('M') }} / 110</td>
+                            <td class="px-4"></td>
                         </tr>
 
                         <tr>
-                            <td>{{ __('Caldwell objects') }}</td>
-                            <td></td>
-                            <td>{{ $user->getObservedCountFromCatalog('Caldwell') }} / 109</td>
-                            <td></td>
+                            <td class="pr-8">{{ __('Caldwell objects') }}</td>
+                            <td class="px-4"></td>
+                            <td class="px-4">{{ $user->getObservedCountFromCatalog('Caldwell') }} / 109</td>
+                            <td class="px-4"></td>
                         </tr>
 
                         <tr>
-                            <td>{!! __('Drawings of Caldwell objects') !!}</td>
-                            <td></td>
-                            <td>{{ $user->getDrawingCountFromCatalog('Caldwell') }} / 109</td>
-                            <td></td>
+                            <td class="pr-8">{!! __('Drawings of Caldwell objects') !!}</td>
+                            <td class="px-4"></td>
+                            <td class="px-4">{{ $user->getDrawingCountFromCatalog('Caldwell') }} / 109</td>
+                            <td class="px-4"></td>
                         </tr>
 
                         <tr>
-                            <td>{{ __('H400 objects') }}</td>
-                            <td></td>
-                            <td>{{ $user->getObservedCountFromCatalog('H400') }} / 400</td>
-                            <td></td>
+                            <td class="pr-8">{{ __('H400 objects') }}</td>
+                            <td class="px-4"></td>
+                            <td class="px-4">{{ $user->getObservedCountFromCatalog('H400') }} / 400</td>
+                            <td class="px-4"></td>
                         </tr>
 
                         <tr>
-                            <td>{!! __('Drawings of H400 objects') !!}</td>
-                            <td></td>
-                            <td>{{ $user->getDrawingCountFromCatalog('H400') }} / 400</td>
-                            <td></td>
+                            <td class="pr-8">{!! __('Drawings of H400 objects') !!}</td>
+                            <td class="px-4"></td>
+                            <td class="px-4">{{ $user->getDrawingCountFromCatalog('H400') }} / 400</td>
+                            <td class="px-4"></td>
                         </tr>
 
                         <tr>
-                            <td>{{ __('H400-II objects') }}</td>
-                            <td></td>
-                            <td>{{ $user->getObservedCountFromCatalog('H400-II') }} / 400</td>
-                            <td></td>
+                            <td class="pr-8">{{ __('H400-II objects') }}</td>
+                            <td class="px-4"></td>
+                            <td class="px-4">{{ $user->getObservedCountFromCatalog('H400-II') }} / 400</td>
+                            <td class="px-4"></td>
                         </tr>
 
                         <tr>
-                            <td>{!! __('Drawings of H400-II objects') !!}</td>
-                            <td></td>
-                            <td>{{ $user->getDrawingCountFromCatalog('H400-II') }} / 400</td>
-                            <td></td>
+                            <td class="pr-8">{!! __('Drawings of H400-II objects') !!}</td>
+                            <td class="px-4"></td>
+                            <td class="px-4">{{ $user->getDrawingCountFromCatalog('H400-II') }} / 400</td>
+                            <td class="px-4"></td>
                         </tr>
 
                         <tr>
-                            <td>{{ __('Rank') }}</td>
-                            <td>{{ $user->getRank() }} / {{ User::count() }} </td>
-                            <td></td>
+                            <td class="pr-8">{{ __('Rank') }}</td>
+                            <td class="px-4">{{ $user->getRank() }} / {{ User::count() }} </td>
+                            <td class="px-4"></td>
                         </tr>
                     </tbody>
                 </table>
