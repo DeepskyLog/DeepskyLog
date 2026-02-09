@@ -45,6 +45,12 @@ Run from the `deepskylog/` directory.
 - Team-based operations rely on Jetstream teams (see `routes/web.php` override for `current-team.update`). Use `Auth::user()` and `->isAdministrator()` helpers in codebase.
 - Livewire-powergrid is used for tables — check `app/Livewire/*Table.php` for column definitions and filters.
 - Translations are stored in `deepskylog/resources/lang/i18n` and updated via `php artisan localize <lang>` (see `Tips.md`).
+- **Always preload data in controllers** before passing to views
+- **Never query in Blade loops** - preload everything
+- **Use caching** for expensive queries that don't change often
+- **Profile pages regularly** with Laravel Debugbar or Telescope
+- **Add database indexes** for frequently queried columns
+- **Consider eager loading** with `->with()` for Eloquent relationships
 
 ### Integrations & external services
 

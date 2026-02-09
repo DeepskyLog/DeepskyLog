@@ -145,7 +145,9 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                             @foreach($drawings as $drawing)
                                 @php
-                                    $observer_name = \App\Models\User::where('username', $drawing->observerid)->first()->name ?? $drawing->observerid;
+                                    // Use preloaded user data to avoid N+1 query
+                                    $drawingUser = $drawingUsers[$drawing->observerid] ?? null;
+                                    $observer_name = $drawingUser ? $drawingUser->name : $drawing->observerid;
                                     $observation_date = substr($drawing->date, 0, 4) . "-" . substr($drawing->date, 4, 2) . "-" . substr($drawing->date, 6, 2);
                                 @endphp
 

@@ -12,14 +12,30 @@
                         <article class="bg-gray-800 p-4 rounded">
                             @if(! empty($session->preview))
                                 <div class="mb-3">
-                                    <a href="{{ route('session.show', [optional($session->observer)->slug ?? $session->observerid, $session->slug ?? $session->id]) }}">
+                                    @php
+                                        $sessionUser = optional($session->observer)->slug ?? $session->observerid ?? null;
+                                        $sessionParam = $session->slug ?? $session->id ?? null;
+                                    @endphp
+                                    @if($sessionUser && $sessionParam)
+                                        <a href="{{ route('session.show', [$sessionUser, $sessionParam]) }}">
+                                            <img src="{{ $session->preview }}" alt="{{ html_entity_decode($session->name ?? __('Session'), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}" class="w-full h-40 object-cover rounded" />
+                                        </a>
+                                    @else
                                         <img src="{{ $session->preview }}" alt="{{ html_entity_decode($session->name ?? __('Session'), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}" class="w-full h-40 object-cover rounded" />
-                                    </a>
+                                    @endif
                                 </div>
                             @endif
 
                             <h3 class="text-lg font-bold text-white mb-2">
-                                <a href="{{ route('session.show', [optional($session->observer)->slug ?? $session->observerid, $session->slug ?? $session->id]) }}" class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                                @php
+                                    $sessionUser = optional($session->observer)->slug ?? $session->observerid ?? null;
+                                    $sessionParam = $session->slug ?? $session->id ?? null;
+                                @endphp
+                                @if($sessionUser && $sessionParam)
+                                    <a href="{{ route('session.show', [$sessionUser, $sessionParam]) }}" class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                                @else
+                                    <span class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</span>
+                                @endif
                             </h3>
 
                             <div class="text-sm text-gray-400 mb-2">
@@ -49,7 +65,15 @@
                             <p class="text-sm text-gray-300 mb-3">{{ $session->preview_text ?? Str::limit(strip_tags(html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8')), 180) }}</p>
                             <div class="flex items-center justify-between text-sm">
                                 <div class="text-gray-400">{{ __('Observers') }}: {{ $session->otherObserversCount() ?? 1 }}</div>
-                                <a href="{{ route('session.show', [optional($session->observer)->slug ?? $session->observerid, $session->slug ?? $session->id]) }}" class="text-blue-500 hover:underline">{{ __('Read more') }}</a>
+                                @php
+                                    $sessionUser = optional($session->observer)->slug ?? $session->observerid ?? null;
+                                    $sessionParam = $session->slug ?? $session->id ?? null;
+                                @endphp
+                                @if($sessionUser && $sessionParam)
+                                    <a href="{{ route('session.show', [$sessionUser, $sessionParam]) }}" class="text-blue-500 hover:underline">{{ __('Read more') }}</a>
+                                @else
+                                    <span class="text-blue-500">{{ __('Read more') }}</span>
+                                @endif
                             </div>
                         </article>
                     @endforeach

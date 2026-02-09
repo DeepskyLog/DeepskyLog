@@ -1,4 +1,4 @@
-@props(['observation', 'translator' => null])
+@props(['observation', 'translator' => null, 'preloaded_user' => null, 'preloaded_object' => null, 'preloaded_location' => null, 'preloaded_instrument' => null, 'preloaded_eyepiece' => null, 'preloaded_filter' => null, 'preloaded_constellations' => null])
 <div class="justify-left mt-5 flex">
     @php
         use App\Models\Constellation;
@@ -9,19 +9,27 @@
         use App\Models\ObjectsOld;
         use App\Models\User;
         use Carbon\Carbon;
+        use Illuminate\Support\Facades\Cache;
         use Illuminate\Support\Facades\Log;
 
         $date = $observation->date;
         $observation_date = substr($date, 0, 4) . '-' . substr($date, 4, 2) . '-' . substr($date, 6, 2);
-        $user = User::where('username', html_entity_decode($observation->observerid))->first();
-        $object = ObjectsOld::where('name', $observation->objectname)->first();
-        $constellation = $object ? Constellation::where('id', $object->con)->first()?->name ?? '' : '';
+        
+        // Use preloaded data if available, otherwise fall back to DB queries
+        $user = $preloaded_user ?? User::where('username', html_entity_decode($observation->observerid))->first();
+        $object = $preloaded_object ?? ObjectsOld::where('name', $observation->objectname)->first();
+        
+        if ($preloaded_constellations && $object) {
+            $constellation = $preloaded_constellations[$object->con]->name ?? '';
+        } else {
+            $constellation = $object ? Constellation::where('id', $object->con)->first()?->name ?? '' : '';
+        }
 
         // preload related models and guard against nulls when rendering
-        $location = Location::where('id', $observation->locationid)->first();
-        $instrument = Instrument::where('id', $observation->instrumentid)->first();
-        $eyepiece = $observation->eyepieceid > 0 ? Eyepiece::where('id', $observation->eyepieceid)->first() : null;
-        $filter = $observation->filterid > 0 ? Filter::where('id', $observation->filterid)->first() : null;
+        $location = $preloaded_location ?? Location::where('id', $observation->locationid)->first();
+        $instrument = $preloaded_instrument ?? Instrument::where('id', $observation->instrumentid)->first();
+        $eyepiece = $preloaded_eyepiece ?? ($observation->eyepieceid > 0 ? Eyepiece::where('id', $observation->eyepieceid)->first() : null);
+        $filter = $preloaded_filter ?? ($observation->filterid > 0 ? Filter::where('id', $observation->filterid)->first() : null);
 
         // Collect context to help debugging when related models are missing
         $logContext = [
@@ -195,9 +203,17 @@
 
                 <div class="flex-1">
                     @if (auth()->user() && auth()->user()->translate)
-                        {!! ($translated = $tr->translate(html_entity_decode($observation->description))) == null
-                            ? html_entity_decode($observation->description)
-                            : $translated !!}
+                        @php
+                            $cacheKey = 'observation_deepsky_translation:' . $observation->id . ':' . auth()->user()->language;
+                            $translated = Cache::remember($cacheKey, 60 * 24 * 30, function() use ($observation, $tr) {
+                                try {
+                                    return $tr->translate(html_entity_decode($observation->description));
+                                } catch (\Throwable $e) {
+                                    return null;
+                                }
+                            });
+                        @endphp
+                        {!! $translated ?? html_entity_decode($observation->description) !!}
                     @else
                         {!! html_entity_decode($observation->description) !!}
                     @endif

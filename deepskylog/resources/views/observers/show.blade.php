@@ -268,44 +268,43 @@
                     <tbody>
                         <tr>
                             <td>{!! __('Number of observations') !!}</td>
-                            <td>{{ $observations->count() + CometObservationsOld::where('observerid', $user->username)->count() }}
-                                / {{ $totalObservations + CometObservationsOld::getTotalObservations() }}
+                            <td>{{ $observations->count() + $cometObservations }}
+                                / {{ $totalObservations + $totalCometObservations }}
                             </td>
                             <td>{{ $observations->count() }}
                                 / {{ $totalObservations }}
                             </td>
-                            <td>{{ CometObservationsOld::where('observerid', $user->username)->count() }}
-                                / {{ CometObservationsOld::getTotalObservations() }}
+                            <td>{{ $cometObservations }}
+                                / {{ $totalCometObservations }}
                             </td>
                         </tr>
 
                         <tr>
                             <td>{!! __('Observations last year') !!}</td>
-                            <td>{{ $observationsLastYear + $user->getCometObservationsLastYear() }} /
-                                {{ $totalObservationsLastYear + CometObservationsOld::getTotalObservationsLastYear() }}
+                            <td>{{ $observationsLastYear + $cometObservationsLastYear }} /
+                                {{ $totalObservationsLastYear + $totalCometObservationsLastYear }}
                             </td>
                             <td>{{ $observationsLastYear }}
                                 / {{ $totalObservationsLastYear }}
                             </td>
-                            <td>{{ $user->getCometObservationsLastYear() }}
-                                / {{ CometObservationsOld::getTotalObservationsLastYear() }}
+                            <td>{{ $cometObservationsLastYear }}
+                                / {{ $totalCometObservationsLastYear }}
                             </td>
                         </tr>
 
                         <tr>
                             <td>{{ __('Number of drawings') }}</td>
-                            <td>{{ $observations->where('hasDrawing', 1)->count() +
-                                CometObservationsOld::where('observerid', $user->username)->where('hasDrawing', 1)->count() }}
+                            <td>{{ $observations->where('hasDrawing', 1)->count() + $cometDrawings }}
                                 /
-                                {{ $totalNumberOfDrawings + CometObservationsOld::where('hasDrawing', 1)->count() }}
+                                {{ $totalNumberOfDrawings + $totalCometDrawings }}
                             </td>
                             <td>{{ $observations->where('hasDrawing', 1)->count() }}
                                 /
                                 {{ $totalNumberOfDrawings }}
                             </td>
-                            <td>{{ CometObservationsOld::where('observerid', $user->username)->where('hasDrawing', 1)->count() }}
+                            <td>{{ $cometDrawings }}
                                 /
-                                {{ CometObservationsOld::where('hasDrawing', 1)->count() }}
+                                {{ $totalCometDrawings }}
                             </td>
                         </tr>
 

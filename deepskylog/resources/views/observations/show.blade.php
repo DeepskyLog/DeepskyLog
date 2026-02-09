@@ -118,6 +118,7 @@
                                 <div class="mt-3 max-w-xl pr-3">
                                     @php
                                         $observer_name =
+                                            ($preloaded_users ?? collect())->get($observation->observerid)?->name ?? 
                                             \App\Models\User::where('username', $observation->observerid)->first()
                                                 ?->name ?? $observation->observerid;
                                         $observation_date =
@@ -144,7 +145,20 @@
                             </h3>
                             <div class="grid grid-cols-1 gap-4 px-5">
                                 @foreach ($comet as $observation)
-                                    <x-observation-comet :observation="$observation" />
+                                    @php
+                                        // Pass preloaded data to comet observation component
+                                        $preloaded_user = ($preloaded_users ?? collect())->get($observation->observerid);
+                                        $preloaded_comet = ($preloaded_comets ?? collect())->get($observation->objectid);
+                                        $preloaded_location = ($preloaded_locations ?? collect())->get($observation->locationid);
+                                        $preloaded_instrument = ($preloaded_instruments ?? collect())->get($observation->instrumentid);
+                                    @endphp
+                                    <x-observation-comet 
+                                        :observation="$observation" 
+                                        :preloaded_user="$preloaded_user"
+                                        :preloaded_comet="$preloaded_comet"
+                                        :preloaded_location="$preloaded_location"
+                                        :preloaded_instrument="$preloaded_instrument"
+                                    />
                                 @endforeach
                             </div>
                             <div class="mt-4">{{ $comet->links() }}</div>
@@ -159,7 +173,26 @@
                             </h3>
                             <div class="grid grid-cols-1 gap-4 px-5">
                                 @foreach ($deepsky as $observation)
-                                    <x-observation-deepsky :observation="$observation" :translator="$tr" />
+                                    @php
+                                        // Pass preloaded data to deepsky observation component
+                                        $preloaded_user = ($preloaded_users ?? collect())->get($observation->observerid);
+                                        $preloaded_object = ($preloaded_objects ?? collect())->get($observation->objectname);
+                                        $preloaded_location = ($preloaded_locations ?? collect())->get($observation->locationid);
+                                        $preloaded_instrument = ($preloaded_instruments ?? collect())->get($observation->instrumentid);
+                                        $preloaded_eyepiece = ($preloaded_eyepieces ?? collect())->get($observation->eyepieceid);
+                                        $preloaded_filter = ($preloaded_filters ?? collect())->get($observation->filterid);
+                                    @endphp
+                                    <x-observation-deepsky 
+                                        :observation="$observation" 
+                                        :translator="$tr"
+                                        :preloaded_user="$preloaded_user"
+                                        :preloaded_object="$preloaded_object"
+                                        :preloaded_location="$preloaded_location"
+                                        :preloaded_instrument="$preloaded_instrument"
+                                        :preloaded_eyepiece="$preloaded_eyepiece"
+                                        :preloaded_filter="$preloaded_filter"
+                                        :preloaded_constellations="$preloaded_constellations ?? collect()"
+                                    />
                                 @endforeach
                             </div>
                             <div class="mt-4">{{ $deepsky->links() }}</div>

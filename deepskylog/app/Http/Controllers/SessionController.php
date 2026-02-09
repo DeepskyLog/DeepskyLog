@@ -289,10 +289,17 @@ class SessionController extends Controller
             // ignore logging failures
         }
 
+        // Preload users for drawings to avoid N+1 queries in the view
+        $drawingUsers = [];
+        if (isset($drawings) && $drawings->count() > 0) {
+            $drawingObserverIds = $drawings->pluck('observerid')->unique()->filter()->all();
+            $drawingUsers = User::whereIn('username', $drawingObserverIds)->get()->keyBy('username');
+        }
+
     // Provide the selected observer username and display name to the view so it can highlight the active observer in the sidebar
     $selectedObserverUsername = $targetObserver;
 
-    return $this->noCacheResponse(response()->view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName')));
+    return $this->noCacheResponse(response()->view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'drawingUsers', 'observerStats', 'selectedObserverUsername', 'selectedObserverName')));
     }
 
     /**

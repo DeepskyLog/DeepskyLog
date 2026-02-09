@@ -1,10 +1,12 @@
 {{-- Avoid inline `use` in Blade; use fully-qualified class names within PHP blocks --}}
-@props(['observation'])
+@props(['observation', 'preloaded_user' => null, 'preloaded_comet' => null, 'preloaded_location' => null, 'preloaded_instrument' => null, 'likes_count' => null, 'liked' => null])
 <div class="justify-left mt-5 flex">
     @php
         $date = $observation->date;
         $observation_date = substr($date, 0, 4) . '-' . substr($date, 4, 2) . '-' . substr($date, 6, 2);
-        $user = \App\Models\User::where('username', html_entity_decode($observation->observerid))->first();
+        
+        // Use preloaded data when available, otherwise fall back to queries
+        $user = $preloaded_user ?? \App\Models\User::where('username', html_entity_decode($observation->observerid))->first();
         // Fallbacks when user cannot be found
         if (!$user) {
             $user = (object) [
@@ -33,7 +35,8 @@
 
 
         @php
-            $cometOld = \App\Models\CometObject::where('id', $observation->objectid)->first();
+            // Use preloaded comet when available
+            $cometOld = $preloaded_comet ?? \App\Models\CometObject::where('id', $observation->objectid)->first();
             $cometName = $cometOld ? $cometOld->name : __('Unknown comet');
             $slug = $cometOld?->slug ?? \Illuminate\Support\Str::slug($cometName ?? '', '-');
             $link = route('object.show', $slug);
@@ -160,7 +163,8 @@
         @if ($observation->locationid > 0)
             {{ __(' from ') }}
             @php
-                $location = \App\Models\Location::where('id', $observation->locationid)->first();
+                // Use preloaded location when available
+                $location = $preloaded_location ?? \App\Models\Location::where('id', $observation->locationid)->first();
                 $locationSlug = $location ? $location->slug : '';
                 $locationName = $location ? $location->name : __('Unknown location');
             @endphp
@@ -172,7 +176,8 @@
         <br />
         @if ($observation->instrumentid > 0)
             @php
-                $instrument = \App\Models\Instrument::where('id', $observation->instrumentid)->first();
+                // Use preloaded instrument when available
+                $instrument = $preloaded_instrument ?? \App\Models\Instrument::where('id', $observation->instrumentid)->first();
                 $instrumentSlug = $instrument ? $instrument->slug : '';
                 $instrumentName = $instrument ? $instrument->fullName() : __('Unknown instrument');
             @endphp
@@ -201,14 +206,16 @@
                     <div class="flex-1">
                         @if ($tr)
                             @php
-                                $translated = null;
-                                try {
-                                    $translated = $tr->translate(html_entity_decode($observation->description));
-                                } catch (\Throwable $e) {
-                                    $translated = null;
-                                }
+                                $cacheKey = 'observation_comet_translation:' . $observation->id . ':' . auth()->user()->language;
+                                $translated = \Illuminate\Support\Facades\Cache::remember($cacheKey, 60 * 24 * 30, function() use ($observation, $tr) {
+                                    try {
+                                        return $tr->translate(html_entity_decode($observation->description));
+                                    } catch (\Throwable $e) {
+                                        return null;
+                                    }
+                                });
                             @endphp
-                            {!! $translated === null ? html_entity_decode($observation->description) : $translated !!}
+                            {!! $translated ?? html_entity_decode($observation->description) !!}
                         @else
                             {!! html_entity_decode($observation->description) !!}
                         @endif
@@ -242,7 +249,7 @@
 
             {{-- DSL message button: opens internal composer with to=username and a prefilled subject --}}
             @php if (auth()->check()) { @endphp
-                <a href="{{ route('messages.create', ['to' => $user->username, 'subject' => 'About your observation of ' . \App\Models\CometObject::where('id', $observation->objectid)->first()->name]) }}"
+                <a href="{{ route('messages.create', ['to' => $user->username, 'subject' => 'About your observation of ' . $cometName]) }}"
                     class="inline-flex items-center px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white align-middle"
                     aria-label="{{ __('Send message about this sketch') }}">
                     {{-- envelope icon --}}
@@ -255,20 +262,25 @@
             @php } @endphp
 
             @php
-                $likesCount = \App\Models\ObservationLike::where('observation_type', 'comet')
-                    ->where('observation_id', $observation->id)
-                    ->count();
-                $liked =
-                    auth()->check() &&
-                    \App\Models\ObservationLike::where('observation_type', 'comet')
+                // Use preloaded likes data when available
+                if ($likes_count !== null && $liked !== null) {
+                    $likesCount = $likes_count;
+                    $isLiked = $liked;
+                } else {
+                    $likesCount = \App\Models\ObservationLike::where('observation_type', 'comet')
                         ->where('observation_id', $observation->id)
-                        ->where('user_id', auth()->id())
-                        ->exists();
+                        ->count();
+                    $isLiked = auth()->check() &&
+                        \App\Models\ObservationLike::where('observation_type', 'comet')
+                            ->where('observation_id', $observation->id)
+                            ->where('user_id', auth()->id())
+                            ->exists();
+                }
             @endphp
 
             <button data-observation-type="comet" data-observation-id="{{ $observation->id }}"
                 class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white align-middle">
-                <span class="like-icon">{!! $liked ? '❤️' : '👍' !!}</span>
+                <span class="like-icon">{!! $isLiked ? '❤️' : '👍' !!}</span>
                 <span class="like-count">{{ $likesCount }}</span>
             </button>
         </div>

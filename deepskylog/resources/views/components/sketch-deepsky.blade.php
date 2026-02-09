@@ -1,21 +1,33 @@
 {{-- Avoid inline `use` in Blade views; use fully-qualified class names instead --}}
-@props(['observation_id' => null, 'observer_name' => null, 'observer_username' => null, 'observation_date' => null])
+@props(['observation_id' => null, 'observer_name' => null, 'observer_username' => null, 'observation_date' => null, 'observation' => null, 'object' => null, 'likes_count' => null, 'liked' => null])
 <div>
     @php
-        $obs = \App\Models\ObservationsOld::find($observation_id);
+        // Use preloaded data if available, otherwise fetch from DB (fallback for backward compatibility)
+        $obs = $observation ?? \App\Models\ObservationsOld::find($observation_id);
         $objectName = $obs ? ($obs->objectname ?? __('Unknown')) : __('Unknown');
-        $objectModel = $obs ? \App\Models\ObjectsOld::where('name', $objectName)->first() : null;
+        $objectModel = $object ?? ($obs ? \App\Models\ObjectsOld::where('name', $objectName)->first() : null);
         $slug = $objectModel?->slug ?? \Illuminate\Support\Str::slug($objectName ?? '', '-');
         $objectUrl = route('object.show', $slug);
+        
+        // Use preloaded likes data if available, otherwise query (fallback)
+        if ($likes_count !== null && $liked !== null) {
+            $likesCount = $likes_count;
+            $isLiked = $liked;
+        } else {
+            $likesCount = \App\Models\ObservationLike::where('observation_type', 'deepsky')
+                ->where('observation_id', $observation_id)
+                ->count();
+            $isLiked = auth()->check() &&
+                \App\Models\ObservationLike::where('observation_type', 'deepsky')
+                    ->where('observation_id', $observation_id)
+                    ->where('user_id', auth()->id())
+                    ->exists();
+        }
     @endphp
     <a href="{{ $objectUrl }}">
         <img width="400" src="/images/drawings/{{ $observation_id }}.jpg" />
 
         <div class="text-center">
-            @php
-                $obs = \App\Models\ObservationsOld::find($observation_id);
-                $objectName = $obs ? $obs->objectname ?? __('Unknown') : __('Unknown');
-            @endphp
             {{ $observer_name }} - {{ $objectName }} -
             {{ \Carbon\Carbon::create($observation_date)->translatedFormat('j M Y') }}
         </div>
@@ -34,27 +46,13 @@
             )->facebook(['class' => 'hover', 'rel' => 'follow'])->twitter(['class' => 'hover', 'rel' => 'follow'])->copylink()->mailto(['class' => 'hover', 'rel' => 'nofollow'])->whatsapp()->render() !!}
         </div>
 
-        @php
-            $likesCount = \App\Models\ObservationLike::where('observation_type', 'deepsky')
-                ->where('observation_id', $observation_id)
-                ->count();
-            $liked =
-                auth()->check() &&
-                \App\Models\ObservationLike::where('observation_type', 'deepsky')
-                    ->where('observation_id', $observation_id)
-                    ->where('user_id', auth()->id())
-                    ->exists();
-        @endphp
-
         <button data-observation-type="deepsky" data-observation-id="{{ $observation_id }}"
             class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white">
-            <span class="like-icon">{!! $liked ? '❤️' : '👍' !!}</span>
+            <span class="like-icon">{!! $isLiked ? '❤️' : '👍' !!}</span>
             <span class="like-count">{{ $likesCount }}</span>
         </button>
 
         @php
-            $obs = \App\Models\ObservationsOld::find($observation_id);
-            $objectName = $obs ? $obs->objectname ?? __('Unknown') : __('Unknown');
             $messageSubject = __('About your sketch of :object', ['object' => $objectName]);
         @endphp
 

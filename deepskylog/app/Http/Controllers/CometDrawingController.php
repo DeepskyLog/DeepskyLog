@@ -48,7 +48,11 @@ class CometDrawingController extends Controller
 
         $sketches = $query->paginate(20);
 
-        return view('cometdrawings.show', ['user' => '', 'sketches' => $sketches]);
+        // Preload users to avoid N+1 queries in the view
+        $observerIds = $sketches->pluck('observerid')->unique()->all();
+        $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+
+        return view('cometdrawings.show', ['user' => '', 'sketches' => $sketches, 'sketchUsers' => $sketchUsers]);
     }
 
     /**
@@ -79,7 +83,11 @@ class CometDrawingController extends Controller
 
         $sketches = $query->paginate(20);
 
-        return view('cometdrawings.show', ['user' => $user, 'sketches' => $sketches]);
+        // Preload users to avoid N+1 queries in the view
+        $observerIds = $sketches->pluck('observerid')->unique()->all();
+        $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+
+        return view('cometdrawings.show', ['user' => $user, 'sketches' => $sketches, 'sketchUsers' => $sketchUsers]);
     }
 
     /**
@@ -102,7 +110,11 @@ class CometDrawingController extends Controller
             $sketches = CometObservationsOld::where('observerid', $user->username)->where('hasDrawing', 1)
                 ->orderBy('date', 'desc')->paginate(20);
 
-            return view('cometdrawings.show', ['user' => $user, 'sketches' => $sketches]);
+            // Preload users to avoid N+1 queries in the view
+            $observerIds = $sketches->pluck('observerid')->unique()->all();
+            $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+
+            return view('cometdrawings.show', ['user' => $user, 'sketches' => $sketches, 'sketchUsers' => $sketchUsers]);
         }
 
         // Not a user: try to resolve slug to an object and show object-scoped drawings
@@ -125,7 +137,11 @@ class CometDrawingController extends Controller
         if ($objectId) $query->where('objectid', $objectId);
         $sketches = $query->paginate(20);
 
+        // Preload users to avoid N+1 queries in the view
+        $observerIds = $sketches->pluck('observerid')->unique()->all();
+        $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+
         $fakeUser = (object) ['name' => $objectSlug, 'slug' => $objectSlug, 'username' => null];
-        return view('cometdrawings.show', ['user' => $fakeUser, 'sketches' => $sketches]);
+        return view('cometdrawings.show', ['user' => $fakeUser, 'sketches' => $sketches, 'sketchUsers' => $sketchUsers]);
     }
 }

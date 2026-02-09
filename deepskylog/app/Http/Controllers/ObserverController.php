@@ -7,6 +7,7 @@ use App\Charts\ObjectTypesChart;
 use App\Charts\ObservationsPerMonthChart;
 use App\Charts\ObservationsPerYearChart;
 use App\Models\ObservationsOld;
+use App\Models\CometObservationsOld;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -47,6 +48,14 @@ class ObserverController extends Controller
 
         $totalNumberOfDrawings = ObservationsOld::where('hasDrawing', 1)->count();
         $totalUniqueObjects = ObservationsOld::getUniqueObjectsObserved();
+
+        // Calculate comet statistics once to avoid repeated queries in the view
+        $cometObservations = CometObservationsOld::where('observerid', $user->username)->count();
+        $totalCometObservations = CometObservationsOld::getTotalObservations();
+        $cometObservationsLastYear = $user->getCometObservationsLastYear();
+        $totalCometObservationsLastYear = CometObservationsOld::getTotalObservationsLastYear();
+        $cometDrawings = CometObservationsOld::where('observerid', $user->username)->where('hasDrawing', 1)->count();
+        $totalCometDrawings = CometObservationsOld::where('hasDrawing', 1)->count();
 
         // Determine if this user has any observations with likes (deepsky or comet)
         $hasPopularObservations = false;
@@ -157,6 +166,14 @@ class ObserverController extends Controller
             'totalObservationsLastYear' => $totalObservationsLastYear,
             'totalNumberOfDrawings' => $totalNumberOfDrawings,
             'totalUniqueObjects' => $totalUniqueObjects,
+            // Comet statistics (precomputed to avoid N+1 queries in view)
+            'cometObservations' => $cometObservations,
+            'totalCometObservations' => $totalCometObservations,
+            'cometObservationsLastYear' => $cometObservationsLastYear,
+            'totalCometObservationsLastYear' => $totalCometObservationsLastYear,
+            'cometDrawings' => $cometDrawings,
+            'totalCometDrawings' => $totalCometDrawings,
+            // Charts
             'observationsPerYearChart' => $chart->build($user),
             'observationsPerMonthChart' => $chart2->build($user),
             'objectTypesChart' => $chart3->build($user),

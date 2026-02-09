@@ -5,6 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\ObservationsOld;
 use App\Models\CometObservationsOld;
 use App\Models\User;
+use App\Models\ObjectsOld;
+use App\Models\Location;
+use App\Models\Instrument;
+use App\Models\Eyepiece;
+use App\Models\Filter;
+use App\Models\Constellation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -19,12 +25,15 @@ class ObservationsController extends Controller
         // Default observations page shows deepsky observations (mirrors /drawings behavior)
         $deepsky = ObservationsOld::orderBy('id', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
-        return view('observations.show', [
+        // Preload related data to avoid N+1 queries
+        $preloadedData = $this->preloadDeepskyData($deepsky);
+
+        return view('observations.show', array_merge([
             'user' => '',
             'deepsky' => $deepsky,
             'comet' => collect(),
             'mode' => 'deepsky',
-        ]);
+        ], $preloadedData));
     }
 
     /**
@@ -37,12 +46,15 @@ class ObservationsController extends Controller
         if ($user) {
             $deepsky = ObservationsOld::where('observerid', $user->username)->orderBy('date', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
-            return view('observations.show', [
+            // Preload related data to avoid N+1 queries
+            $preloadedData = $this->preloadDeepskyData($deepsky);
+
+            return view('observations.show', array_merge([
                 'user' => $user,
                 'deepsky' => $deepsky,
                 'comet' => collect(),
                 'mode' => 'deepsky',
-            ]);
+            ], $preloadedData));
         }
 
         // Not a user: attempt to resolve the slug to a deepsky object (objectnames / objects)
@@ -102,7 +114,10 @@ class ObservationsController extends Controller
             // Provide a lightweight user-like object so the view header can show a title
             $fakeUser = (object) ['name' => $objectName, 'slug' => $slug, 'username' => null];
 
-            return view('observations.show', [
+            // Preload related data to avoid N+1 queries
+            $preloadedData = $this->preloadDeepskyData($deepsky);
+
+            return view('observations.show', array_merge([
                 'user' => $fakeUser,
                 'deepsky' => $deepsky,
                 'comet' => collect(),
@@ -110,7 +125,7 @@ class ObservationsController extends Controller
                 'objectFilter' => true,
                 'drawingsOnly' => true,
                 'objectName' => $objectName,
-            ]);
+            ], $preloadedData));
         }
 
         abort(404);
@@ -123,12 +138,15 @@ class ObservationsController extends Controller
     {
         $comet = CometObservationsOld::orderBy('id', 'desc')->paginate(20, ['*'], 'comet')->appends(request()->query());
 
-        return view('observations.show', [
+        // Preload related data to avoid N+1 queries
+        $preloadedData = $this->preloadCometData($comet);
+
+        return view('observations.show', array_merge([
             'user' => '',
             'deepsky' => collect(),
             'comet' => $comet,
             'mode' => 'comet',
-        ]);
+        ], $preloadedData));
     }
 
     /**
@@ -197,14 +215,17 @@ class ObservationsController extends Controller
 
         $fakeUser = (object) ['name' => $objectName ?? $slug, 'slug' => $slug, 'username' => null];
 
-        return view('observations.show', [
+        // Preload related data to avoid N+1 queries
+        $preloadedData = $this->preloadCometData($comet);
+
+        return view('observations.show', array_merge([
             'user' => $fakeUser,
             'deepsky' => collect(),
             'comet' => $comet,
             'mode' => 'comet',
             'objectFilter' => true,
             'objectName' => $objectName,
-        ]);
+        ], $preloadedData));
     }
 
     /**
@@ -261,14 +282,17 @@ class ObservationsController extends Controller
 
         $comet = $query->paginate(20, ['*'], 'comet')->appends(request()->query());
 
-        return view('observations.show', [
+        // Preload related data to avoid N+1 queries
+        $preloadedData = $this->preloadCometData($comet);
+
+        return view('observations.show', array_merge([
             'user' => $user,
             'deepsky' => collect(),
             'comet' => $comet,
             'mode' => 'comet',
             'objectFilter' => true,
             'objectName' => $objectName,
-        ]);
+        ], $preloadedData));
     }
 
     /**
@@ -280,12 +304,15 @@ class ObservationsController extends Controller
 
         $comet = CometObservationsOld::where('observerid', $user->username)->orderBy('date', 'desc')->paginate(20, ['*'], 'comet')->appends(request()->query());
 
-        return view('observations.show', [
+        // Preload related data to avoid N+1 queries
+        $preloadedData = $this->preloadCometData($comet);
+
+        return view('observations.show', array_merge([
             'user' => $user,
             'deepsky' => collect(),
             'comet' => $comet,
             'mode' => 'comet',
-        ]);
+        ], $preloadedData));
     }
 
     /**
@@ -300,13 +327,16 @@ class ObservationsController extends Controller
         if ($user) {
             $deepsky = ObservationsOld::where('observerid', $user->username)->where('hasDrawing', 1)->orderBy('date', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
-            return view('observations.show', [
+            // Preload related data to avoid N+1 queries
+            $preloadedData = $this->preloadDeepskyData($deepsky);
+
+            return view('observations.show', array_merge([
                 'user' => $user,
                 'deepsky' => $deepsky,
                 'comet' => collect(),
                 'mode' => 'deepsky',
                 'drawingsOnly' => true,
-            ]);
+            ], $preloadedData));
         }
 
         // Attempt to resolve the slug to an object name (objectnames / objects)
@@ -363,12 +393,15 @@ class ObservationsController extends Controller
 
             $fakeUser = (object) ['name' => $objectName, 'slug' => $slug, 'username' => null];
 
-            return view('observations.show', [
+            // Preload related data to avoid N+1 queries
+            $preloadedData = $this->preloadDeepskyData($deepsky);
+
+            return view('observations.show', array_merge([
                 'user' => $fakeUser,
                 'deepsky' => $deepsky,
                 'comet' => collect(),
                 'mode' => 'deepsky',
-            ]);
+            ], $preloadedData));
         }
 
         // Not a deepsky object — maybe this slug refers to a comet object (modern or legacy).
@@ -469,14 +502,17 @@ class ObservationsController extends Controller
 
         $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
-        return view('observations.show', [
+        // Preload related data to avoid N+1 queries
+        $preloadedData = $this->preloadDeepskyData($deepsky);
+
+        return view('observations.show', array_merge([
             'user' => $user,
             'deepsky' => $deepsky,
             'comet' => collect(),
             'mode' => 'deepsky',
             'objectFilter' => true,
             'objectName' => $objectName,
-        ]);
+        ], $preloadedData));
     }
 
     /**
@@ -542,12 +578,97 @@ class ObservationsController extends Controller
 
         $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
-        return view('observations.show', [
+        // Preload related data to avoid N+1 queries
+        $preloadedData = $this->preloadDeepskyData($deepsky);
+
+        return view('observations.show', array_merge([
             'user' => $user,
             'deepsky' => $deepsky,
             'comet' => collect(),
             'mode' => 'deepsky',
             'objectFilter' => true,
-        ]);
+        ], $preloadedData));
+    }
+
+    /**
+     * Preload all related data for deepsky observations to avoid N+1 queries.
+     */
+    private function preloadDeepskyData($observations)
+    {
+        if ($observations->isEmpty()) {
+            return [];
+        }
+
+        // Extract all unique IDs from the observations
+        $usernames = $observations->pluck('observerid')->unique()->filter();
+        $objectNames = $observations->pluck('objectname')->unique()->filter();
+        $locationIds = $observations->pluck('locationid')->unique()->filter();
+        $instrumentIds = $observations->pluck('instrumentid')->unique()->filter();
+        $eyepieceIds = $observations->pluck('eyepieceid')->unique()->filter()->reject(fn($id) => $id <= 0);
+        $filterIds = $observations->pluck('filterid')->unique()->filter()->reject(fn($id) => $id <= 0);
+
+        // Batch load all related models
+        $users = User::whereIn('username', $usernames)->get()->keyBy('username');
+        $objects = ObjectsOld::whereIn('name', $objectNames)->get()->keyBy('name');
+        $locations = Location::whereIn('id', $locationIds)->get()->keyBy('id');
+        $instruments = Instrument::whereIn('id', $instrumentIds)->get()->keyBy('id');
+        $eyepieces = $eyepieceIds->isNotEmpty() ? Eyepiece::whereIn('id', $eyepieceIds)->get()->keyBy('id') : collect();
+        $filters = $filterIds->isNotEmpty() ? Filter::whereIn('id', $filterIds)->get()->keyBy('id') : collect();
+        
+        // Load constellations for all objects
+        $constellationIds = $objects->pluck('con')->unique()->filter();
+        $constellations = Constellation::whereIn('id', $constellationIds)->get()->keyBy('id');
+
+        return [
+            'preloaded_users' => $users,
+            'preloaded_objects' => $objects,
+            'preloaded_locations' => $locations,
+            'preloaded_instruments' => $instruments,
+            'preloaded_eyepieces' => $eyepieces,
+            'preloaded_filters' => $filters,
+            'preloaded_constellations' => $constellations,
+        ];
+    }
+
+    /**
+     * Preload all related data for comet observations to avoid N+1 queries.
+     */
+    private function preloadCometData($observations)
+    {
+        if ($observations->isEmpty()) {
+            return [];
+        }
+
+        // Extract all unique IDs from the observations
+        $usernames = $observations->pluck('observerid')->unique()->filter();
+        $objectIds = $observations->pluck('objectid')->unique()->filter();
+        $locationIds = $observations->pluck('locationid')->unique()->filter();
+        $instrumentIds = $observations->pluck('instrumentid')->unique()->filter();
+
+        // Batch load all related models
+        $users = User::whereIn('username', $usernames)->get()->keyBy('username');
+        $locations = Location::whereIn('id', $locationIds)->get()->keyBy('id');
+        $instruments = Instrument::whereIn('id', $instrumentIds)->get()->keyBy('id');
+        
+        // Load comet objects from modern table
+        $comets = collect();
+        try {
+            $comets = \App\Models\CometObject::whereIn('id', $objectIds)->get()->keyBy('id');
+        } catch (\Throwable $_) {
+            // Fallback to legacy table if modern table doesn't exist
+            try {
+                $legacyComets = DB::connection('mysqlOld')->table('cometobjects')
+                    ->whereIn('id', $objectIds)
+                    ->get();
+                $comets = collect($legacyComets)->keyBy('id');
+            } catch (\Throwable $_) {}
+        }
+
+        return [
+            'preloaded_users' => $users,
+            'preloaded_comets' => $comets,
+            'preloaded_locations' => $locations,
+            'preloaded_instruments' => $instruments,
+        ];
     }
 }
