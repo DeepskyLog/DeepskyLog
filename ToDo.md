@@ -4,6 +4,7 @@
 
 ## Next steps
 
++ [ ] Session -> when clicking on the observations of another observer, show these observations in the new version of DeepskyLog.
 + [ ] Make old version work with the new object tables?
 
 + [ ] Targets
