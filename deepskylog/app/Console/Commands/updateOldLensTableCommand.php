@@ -19,14 +19,15 @@ class updateOldLensTableCommand extends Command
         // Get all lens from the new database
         $lenses = Lens::all();
 
+        // Preload all existing lens IDs from old DB to avoid per-lens queries
+        $existingIds = LensesOld::pluck('id')->flip()->all();
+
         // Check if the lens with the given id already exists in the old database
         // If not, create a new lens
         foreach ($lenses as $lens) {
             $id = html_entity_decode($lens->id);
 
-            $old_lens = LensesOld::where('id', $id)->first();
-
-            if (! $old_lens) {
+            if (!isset($existingIds[$id])) {
                 $this->info('Adding lens: '.$id);
                 $old_lens = new LensesOld;
                 $old_lens->id = $id;

@@ -31,12 +31,14 @@ class updateUserTableCommand extends Command
 
         $team = Team::where('name', 'Observers')->first();
 
+        // Preload all existing usernames from new DB to avoid per-observer queries
+        $existingUsernames = User::pluck('username')->flip()->all();
+
         // Check if the user with the given username already exists in the new database
         // If not, create a new user with the given username
         foreach ($observers as $observer) {
             $username = html_entity_decode($observer->id);
-            $user = User::where('username', html_entity_decode($username))->first();
-            if (! $user) {
+            if (!isset($existingUsernames[$username])) {
                 // Check if the user has been approved
                 if ($observer->role === 1) {
                     echo 'Adding user: '.$observer->id.PHP_EOL;

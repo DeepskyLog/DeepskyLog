@@ -4,8 +4,7 @@
 
 ## Next steps
 
-+ [ ] Detail of a location -> click on number of observations -> wrong link, also for instruments, eyepieces, lenses and filters?
-  + [ ] First make sure to run the schedule:list and all the artisan commands to see the number of observations with the instruments, eyepieces, lenses and filters.  Then check the links on the location and instrument pages.
++ [ ] See the number of observations with the instruments, eyepieces, lenses and filters.  
 + [ ] Make old version work with the new object tables?
 
 + [ ] Targets

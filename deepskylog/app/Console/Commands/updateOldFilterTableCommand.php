@@ -19,14 +19,15 @@ class updateOldFilterTableCommand extends Command
         // Get all filters from the new database
         $filters = Filter::all();
 
+        // Preload all existing filter IDs from old DB to avoid per-filter queries
+        $existingIds = FiltersOld::pluck('id')->flip()->all();
+
         // Check if the filter with the given id already exists in the old database
         // If not, create a new filter
         foreach ($filters as $filter) {
             $id = html_entity_decode($filter->id);
 
-            $old_filter = FiltersOld::where('id', $id)->first();
-
-            if (! $old_filter) {
+            if (!isset($existingIds[$id])) {
                 $this->info('Adding filter: '.$id);
                 $old_filter = new FiltersOld;
                 $old_filter->id = $id;

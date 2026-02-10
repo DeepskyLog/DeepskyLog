@@ -19,13 +19,15 @@ class updateOldInstrumentTableCommand extends Command
         // Get all instrument from the new database
         $instruments = Instrument::all();
 
+        // Preload all existing instrument IDs from old DB to avoid per-instrument queries
+        $existingIds = InstrumentsOld::pluck('id')->flip()->all();
+
         // Check if the instrument with the given id already exists in the old database
         // If not, create a new instrument
         foreach ($instruments as $instrument) {
             $id = html_entity_decode($instrument->id);
 
-            $old_instrument = InstrumentsOld::where('id', $id)->first();
-            if (! $old_instrument) {
+            if (!isset($existingIds[$id])) {
                 $this->info('Adding instrument: '.$id);
                 $old_instrument = new InstrumentsOld;
                 $old_instrument->id = $id;

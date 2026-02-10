@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
         // Backfill session slugs regularly (idempotent)
         $schedule->command('sessions:backfill-slugs')->everyFiveMinutes();
 
+        $schedule->command('astronomy:updateCometPhotometry')->weeklyOn(2, '4:30');
         // Incremental TNTSearch index update
         $schedule->command('tntsearch:incremental-index --storage=storage/tnt')->everyFiveMinutes();
     }
