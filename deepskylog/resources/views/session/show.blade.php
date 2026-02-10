@@ -1,7 +1,11 @@
 {{-- Location model is referenced via $location variable; avoid inline `use` in Blade which breaks compiled PHP --}}
 <x-app-layout>
+    @php
+        // Compute session parameter for route generation: use slug if available, otherwise fall back to id
+        $sessionParam = trim($session->slug ?: '') ?: ($session->id ?? null);
+    @endphp
     <div>
-    <div class="mx-auto max-w-7xl bg-gray-900 px-4 py-6 sm:px-4 lg:px-6">
+    <div class="mx-auto max-w-full bg-gray-900 px-4 py-6 sm:px-4 lg:px-6">
         <header class="mb-6">
             <h1 class="text-3xl font-extrabold">{{ html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</h1>
             <p class="text-sm flex items-center gap-2 text-gray-300">
@@ -9,7 +13,7 @@
                 <a class="text-white hover:underline font-medium" href="{{ route('observer.show', $user->slug) }}">{{ $user->name }}</a>
                 @if(!empty($observerStats))
                     <span class="text-gray-500">&middot;</span>
-                    <a class="text-gray-300 hover:underline" href="{{ route('session.show', [$user->slug, $session->slug]) }}?observer={{ urlencode($session->observerid) }}">{{ $totalObservations }} {{ __('observations') }}</a>
+                    <a class="text-gray-300 hover:underline" href="{{ route('session.show', [$user->slug, $sessionParam]) }}?observer={{ urlencode($session->observerid) }}">{{ $totalObservations }} {{ __('observations') }}</a>
                 @endif
             </p>
 
@@ -21,8 +25,8 @@
             </div>
         </header>
 
-    <div class="grid md:grid-cols-3 gap-4">
-                <article class="md:col-span-2">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_20rem] xl:grid-cols-[1fr_22rem] gap-4">
+                <article>
                     @if(!empty($image))
                     <img class="w-full rounded shadow mb-3" src="{{ $image }}" alt="{{ html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') }}">
                 @endif
@@ -190,7 +194,7 @@
                 </section>
             </article>
 
-            <aside class="md:col-span-1">
+            <aside>
                 <div class="bg-gray-800 p-3 rounded shadow text-gray-100">
                     <h4 class="font-semibold mb-2 text-white">{{ __('Observers') }}</h4>
                         <ul class="space-y-2">
@@ -202,7 +206,7 @@
                                 $isSelected = isset($selectedObserverUsername) && $selectedObserverUsername === $observerUsername;
                                 // Merge current query parameters but force observer to this username so pagination is preserved when possible
                                 $qs = array_merge(request()->query(), ['observer' => $observerUsername]);
-                                $link = route('session.show', [$user->slug, $session->slug]) . '?' . http_build_query($qs);
+                                $link = route('session.show', [$user->slug, $sessionParam]) . '?' . http_build_query($qs);
                             @endphp
 
                             <li class="flex items-center justify-between">
@@ -232,7 +236,7 @@
                         {{-- Share buttons for session (same options as sketches) --}}
                         <div>
                             {!!
-                                ShareButtons::page(url(route('session.show', [$user->slug, $session->slug])), __('Look at this session :session by :owner', ['session' => $session->name, 'owner' => $user->name]), [
+                                ShareButtons::page(url(route('session.show', [$user->slug, $sessionParam])), __('Look at this session :session by :owner', ['session' => $session->name, 'owner' => $user->name]), [
                                     'title' => __('Share this session'),
                                     'class' => 'text-gray-500 hover:text-gray-700',
                                     'rel' => 'nofollow noopener noreferrer',

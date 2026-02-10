@@ -21,8 +21,15 @@ class SessionController extends Controller
         $user = User::where('slug', $user_slug)->firstOrFail();
 
         // observation_sessions uses observerid which maps to User::username in this app
-        $session = ObservationSession::where('slug', $session_slug)
-            ->where('observerid', $user->username)
+        // Try to find by slug first, then by ID if the parameter is numeric
+        $session = ObservationSession::where('observerid', $user->username)
+            ->where(function ($query) use ($session_slug) {
+                $query->where('slug', $session_slug);
+                // If the parameter is numeric, also allow lookup by ID
+                if (is_numeric($session_slug)) {
+                    $query->orWhere('id', $session_slug);
+                }
+            })
             ->firstOrFail();
 
         // If the session is inactive (draft / active==0) only the owner or an administrator
