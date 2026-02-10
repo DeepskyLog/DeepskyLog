@@ -1,5 +1,9 @@
 {{-- Location model is referenced via $location variable; avoid inline `use` in Blade which breaks compiled PHP --}}
 <x-app-layout>
+    @php
+        // Compute session parameter for route generation: use slug if available, otherwise fall back to id
+        $sessionParam = trim($session->slug ?: '') ?: ($session->id ?? null);
+    @endphp
     <div>
     <div class="mx-auto max-w-7xl bg-gray-900 px-4 py-6 sm:px-4 lg:px-6">
         <header class="mb-6">
@@ -9,7 +13,7 @@
                 <a class="text-white hover:underline font-medium" href="{{ route('observer.show', $user->slug) }}">{{ $user->name }}</a>
                 @if(!empty($observerStats))
                     <span class="text-gray-500">&middot;</span>
-                    <a class="text-gray-300 hover:underline" href="{{ route('session.show', [$user->slug, $session->slug]) }}?observer={{ urlencode($session->observerid) }}">{{ $totalObservations }} {{ __('observations') }}</a>
+                    <a class="text-gray-300 hover:underline" href="{{ route('session.show', [$user->slug, $sessionParam]) }}?observer={{ urlencode($session->observerid) }}">{{ $totalObservations }} {{ __('observations') }}</a>
                 @endif
             </p>
 
@@ -202,7 +206,7 @@
                                 $isSelected = isset($selectedObserverUsername) && $selectedObserverUsername === $observerUsername;
                                 // Merge current query parameters but force observer to this username so pagination is preserved when possible
                                 $qs = array_merge(request()->query(), ['observer' => $observerUsername]);
-                                $link = route('session.show', [$user->slug, $session->slug]) . '?' . http_build_query($qs);
+                                $link = route('session.show', [$user->slug, $sessionParam]) . '?' . http_build_query($qs);
                             @endphp
 
                             <li class="flex items-center justify-between">
@@ -232,7 +236,7 @@
                         {{-- Share buttons for session (same options as sketches) --}}
                         <div>
                             {!!
-                                ShareButtons::page(url(route('session.show', [$user->slug, $session->slug])), __('Look at this session :session by :owner', ['session' => $session->name, 'owner' => $user->name]), [
+                                ShareButtons::page(url(route('session.show', [$user->slug, $sessionParam])), __('Look at this session :session by :owner', ['session' => $session->name, 'owner' => $user->name]), [
                                     'title' => __('Share this session'),
                                     'class' => 'text-gray-500 hover:text-gray-700',
                                     'rel' => 'nofollow noopener noreferrer',

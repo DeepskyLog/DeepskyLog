@@ -79,8 +79,8 @@
                             // Ensure we safely compute URL parts for session.show links. Some legacy/malformed
                             // session records might lack a slug or id; guard against generating route() with
                             // missing parameters which throws a UrlGenerationException.
-                            $sessionUser = optional($session->observer)->slug ?? $session->observerid ?? null;
-                            $sessionParam = $session->slug ?? $session->id ?? null;
+                            $sessionUser = trim(optional($session->observer)->slug ?: '') ?: ($session->observerid ?? null);
+                            $sessionParam = trim($session->slug ?: '') ?: ($session->id ?? null);
                         @endphp
                         <article class="bg-gray-800 p-4 rounded">
                                     @if(! empty($session->preview))
