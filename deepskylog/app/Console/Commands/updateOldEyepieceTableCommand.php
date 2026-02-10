@@ -19,13 +19,15 @@ class updateOldEyepieceTableCommand extends Command
         // Get all eyepieces from the new database
         $eyepieces = Eyepiece::all();
 
+        // Preload all existing eyepiece IDs from old DB to avoid per-eyepiece queries
+        $existingIds = EyepiecesOld::pluck('id')->flip()->all();
+
         // Check if the eyepiece with the given id already exists in the old database
         // If not, create a new eyepiece
         foreach ($eyepieces as $eyepiece) {
             $id = html_entity_decode($eyepiece->id);
 
-            $old_eyepiece = EyepiecesOld::where('id', $id)->first();
-            if (! $old_eyepiece) {
+            if (!isset($existingIds[$id])) {
                 $this->info('Adding eyepiece: '.$id);
                 $old_eyepiece = new EyepiecesOld;
                 $old_eyepiece->id = $id;

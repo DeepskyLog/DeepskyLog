@@ -37,6 +37,7 @@ class updateAchievementsCommand extends Command
     private $cometObservationsMap = [];
     private $cometDrawingsMap = [];
     private $uniqueCometMap = [];
+    private $userAchievementsMap = [];
 
     public function handle(): void
     {
@@ -45,13 +46,36 @@ class updateAchievementsCommand extends Command
         // Load all achievements once and keep in memory to avoid repeated DB queries
         $this->achievementMap = Achievement::all()->keyBy('name');
 
+        // Preload all existing user achievements to avoid per-user queries
+        $existingAchievements = AchievementUser::all();
+        foreach ($existingAchievements as $ua) {
+            if (!isset($this->userAchievementsMap[$ua->user_id])) {
+                $this->userAchievementsMap[$ua->user_id] = [];
+            }
+            $this->userAchievementsMap[$ua->user_id][$ua->achievement_id] = true;
+        }
+
         // Get all DeepskyLog sketches of the week
         $sketches = SketchOfTheWeek::all();
+
+        // Preload observations and users for sketches to avoid N+1 queries
+        $sketchObsIds = $sketches->pluck('observation_id')->filter(fn($id) => $id > 0)->all();
+        $sketchCometObsIds = $sketches->pluck('observation_id')->filter(fn($id) => $id < 0)->map(fn($id) => -$id)->all();
+        
+        $sketchObservations = ObservationsOld::whereIn('id', $sketchObsIds)->get()->keyBy('id');
+        $sketchCometObservations = CometObservationsOld::whereIn('id', $sketchCometObsIds)->get()->keyBy('id');
+        
+        $observerIds = $sketchObservations->pluck('observerid')
+            ->merge($sketchCometObservations->pluck('observerid'))
+            ->map(fn($id) => html_entity_decode($id))
+            ->unique()
+            ->all();
+        $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
 
         // Loop over all sketches
         foreach ($sketches as $sketch) {
             try {
-                $user = $this->getSketchData($sketch);
+                $user = $this->getSketchDataFromCache($sketch, $sketchObservations, $sketchCometObservations, $sketchUsers);
 
                 // Get the SketchOfTheWeek achievement
                 $achievement = $this->getAchievement('DeepskyLog sketch of the week');
@@ -63,13 +87,27 @@ class updateAchievementsCommand extends Command
             }
         }
 
-        // Get all DeepskyLog sketches of the week
+        // Get all DeepskyLog sketches of the month
         $sketches = SketchOfTheMonth::all();
+
+        // Preload observations and users for sketches to avoid N+1 queries
+        $sketchObsIds = $sketches->pluck('observation_id')->filter(fn($id) => $id > 0)->all();
+        $sketchCometObsIds = $sketches->pluck('observation_id')->filter(fn($id) => $id < 0)->map(fn($id) => -$id)->all();
+        
+        $sketchObservations = ObservationsOld::whereIn('id', $sketchObsIds)->get()->keyBy('id');
+        $sketchCometObservations = CometObservationsOld::whereIn('id', $sketchCometObsIds)->get()->keyBy('id');
+        
+        $observerIds = $sketchObservations->pluck('observerid')
+            ->merge($sketchCometObservations->pluck('observerid'))
+            ->map(fn($id) => html_entity_decode($id))
+            ->unique()
+            ->all();
+        $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
 
         // Loop over all sketches
         foreach ($sketches as $sketch) {
             try {
-                $user = $this->getSketchData($sketch);
+                $user = $this->getSketchDataFromCache($sketch, $sketchObservations, $sketchCometObservations, $sketchUsers);
 
                 // Get the SketchOfTheWeek achievement
                 $achievement = $this->getAchievement('DeepskyLog sketch of the month');
@@ -1011,6 +1049,39 @@ class updateAchievementsCommand extends Command
     }
 
     /**
+     * Retrieves the user associated with a given sketch using preloaded data.
+     *
+     * @param  mixed  $sketch  The sketch object.
+     * @param  \Illuminate\Support\Collection  $observations  Preloaded observations.
+     * @param  \Illuminate\Support\Collection  $cometObservations  Preloaded comet observations.
+     * @param  \Illuminate\Support\Collection  $users  Preloaded users.
+     * @return User The user object associated with the sketch.
+     *
+     * @throws Exception If the sketch observation ID is invalid or if there is an error retrieving the observation or user.
+     */
+    public function getSketchDataFromCache(mixed $sketch, $observations, $cometObservations, $users): User
+    {
+        if ($sketch->observation_id < 0) {
+            $observation = $cometObservations->get(-$sketch->observation_id);
+        } else {
+            $observation = $observations->get($sketch->observation_id);
+        }
+        
+        if (!$observation) {
+            throw new Exception('Observation not found for sketch: ' . $sketch->observation_id);
+        }
+        
+        $observerid = html_entity_decode($observation->observerid);
+        
+        $user = $users->get($observerid);
+        if (!$user) {
+            throw new Exception('User not found: ' . $observerid);
+        }
+        
+        return $user;
+    }
+
+    /**
      * Adds an achievement to a user.
      *
      * @param  mixed  $user  The user to whom the achievement is being added.
@@ -1020,11 +1091,18 @@ class updateAchievementsCommand extends Command
      */
     public function addAchievementToUser(mixed $user, mixed $achievement): void
     {
-        // Add achievement to user
-        try {
-            $user->grantAchievement($achievement);
-        } catch (Exception) {
-            // dump('Unable to add achievement: '.$e->getMessage());
+        // Check if user already has this achievement using our in-memory map
+        if (!isset($this->userAchievementsMap[$user->id][$achievement->id])) {
+            try {
+                $user->grantAchievement($achievement);
+                // Update our in-memory map
+                if (!isset($this->userAchievementsMap[$user->id])) {
+                    $this->userAchievementsMap[$user->id] = [];
+                }
+                $this->userAchievementsMap[$user->id][$achievement->id] = true;
+            } catch (Exception) {
+                // dump('Unable to add achievement: '.$e->getMessage());
+            }
         }
     }
 
@@ -1036,11 +1114,43 @@ class updateAchievementsCommand extends Command
      */
     private function removeAchievementFromUser(mixed $user, mixed $achievement): void
     {
-        // Remove achievement from user
-        try {
-            AchievementUser::where('user_id', $user->id)->where('achievement_id', $achievement->id)->delete();
-        } catch (Exception) {
-            // dump('Unable to remove achievement: '.$e->getMessage());
+        // Check if user has this achievement using our in-memory map
+        if (isset($this->userAchievementsMap[$user->id][$achievement->id])) {
+            try {
+                AchievementUser::where('user_id', $user->id)->where('achievement_id', $achievement->id)->delete();
+                // Update our in-memory map
+                unset($this->userAchievementsMap[$user->id][$achievement->id]);
+            } catch (Exception) {
+                // dump('Unable to remove achievement: '.$e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Removes multiple achievements from a user in a single query.
+     *
+     * @param  mixed  $user  The user object.
+     * @param  array  $achievements  Array of achievement objects.
+     */
+    private function removeMultipleAchievementsFromUser(mixed $user, array $achievements): void
+    {
+        $achievementIds = [];
+        foreach ($achievements as $achievement) {
+            if (isset($this->userAchievementsMap[$user->id][$achievement->id])) {
+                $achievementIds[] = $achievement->id;
+            }
+        }
+        
+        if (!empty($achievementIds)) {
+            try {
+                AchievementUser::where('user_id', $user->id)->whereIn('achievement_id', $achievementIds)->delete();
+                // Update our in-memory map
+                foreach ($achievementIds as $achievementId) {
+                    unset($this->userAchievementsMap[$user->id][$achievementId]);
+                }
+            } catch (Exception) {
+                // dump('Unable to remove achievements: '.$e->getMessage());
+            }
         }
     }
 
@@ -1067,20 +1177,15 @@ class updateAchievementsCommand extends Command
         // Re-add the achievements
         if ($total == $max) {
             $this->addAchievementToUser($user, $gold);
-            $this->removeAchievementFromUser($user, $silver);
-            $this->removeAchievementFromUser($user, $bronze);
+            $this->removeMultipleAchievementsFromUser($user, [$silver, $bronze]);
         } elseif ($total >= 50) {
             $this->addAchievementToUser($user, $silver);
-            $this->removeAchievementFromUser($user, $gold);
-            $this->removeAchievementFromUser($user, $bronze);
+            $this->removeMultipleAchievementsFromUser($user, [$gold, $bronze]);
         } elseif ($total >= 25) {
             $this->addAchievementToUser($user, $bronze);
-            $this->removeAchievementFromUser($user, $gold);
-            $this->removeAchievementFromUser($user, $silver);
+            $this->removeMultipleAchievementsFromUser($user, [$gold, $silver]);
         } else {
-            $this->removeAchievementFromUser($user, $gold);
-            $this->removeAchievementFromUser($user, $silver);
-            $this->removeAchievementFromUser($user, $bronze);
+            $this->removeMultipleAchievementsFromUser($user, [$gold, $silver, $bronze]);
         }
     }
 
@@ -1111,40 +1216,21 @@ class updateAchievementsCommand extends Command
         // Re-add the achievements
         if ($total == $max) {
             $this->addAchievementToUser($user, $platinum);
-            $this->removeAchievementFromUser($user, $diamond);
-            $this->removeAchievementFromUser($user, $gold);
-            $this->removeAchievementFromUser($user, $silver);
-            $this->removeAchievementFromUser($user, $bronze);
+            $this->removeMultipleAchievementsFromUser($user, [$diamond, $gold, $silver, $bronze]);
         } elseif ($total >= 200) {
             $this->addAchievementToUser($user, $diamond);
-            $this->removeAchievementFromUser($user, $platinum);
-            $this->removeAchievementFromUser($user, $silver);
-            $this->removeAchievementFromUser($user, $gold);
-            $this->removeAchievementFromUser($user, $bronze);
+            $this->removeMultipleAchievementsFromUser($user, [$platinum, $gold, $silver, $bronze]);
         } elseif ($total >= 100) {
             $this->addAchievementToUser($user, $gold);
-            $this->removeAchievementFromUser($user, $platinum);
-            $this->removeAchievementFromUser($user, $silver);
-            $this->removeAchievementFromUser($user, $diamond);
-            $this->removeAchievementFromUser($user, $bronze);
+            $this->removeMultipleAchievementsFromUser($user, [$platinum, $diamond, $silver, $bronze]);
         } elseif ($total >= 50) {
             $this->addAchievementToUser($user, $silver);
-            $this->removeAchievementFromUser($user, $platinum);
-            $this->removeAchievementFromUser($user, $diamond);
-            $this->removeAchievementFromUser($user, $gold);
-            $this->removeAchievementFromUser($user, $bronze);
+            $this->removeMultipleAchievementsFromUser($user, [$platinum, $diamond, $gold, $bronze]);
         } elseif ($total >= 25) {
-            $this->removeAchievementFromUser($user, $platinum);
-            $this->removeAchievementFromUser($user, $diamond);
             $this->addAchievementToUser($user, $bronze);
-            $this->removeAchievementFromUser($user, $gold);
-            $this->removeAchievementFromUser($user, $silver);
+            $this->removeMultipleAchievementsFromUser($user, [$platinum, $diamond, $gold, $silver]);
         } else {
-            $this->removeAchievementFromUser($user, $platinum);
-            $this->removeAchievementFromUser($user, $diamond);
-            $this->removeAchievementFromUser($user, $gold);
-            $this->removeAchievementFromUser($user, $silver);
-            $this->removeAchievementFromUser($user, $bronze);
+            $this->removeMultipleAchievementsFromUser($user, [$platinum, $diamond, $gold, $silver, $bronze]);
         }
     }
 
@@ -1389,17 +1475,19 @@ class updateAchievementsCommand extends Command
         mixed $achievement10
     ): void {
         $this->addAchievementToUser($user, $achievement1);
-        $this->removeAllAchievements(
+        $this->removeMultipleAchievementsFromUser(
             $user,
-            $achievement2,
-            $achievement3,
-            $achievement4,
-            $achievement5,
-            $achievement6,
-            $achievement7,
-            $achievement8,
-            $achievement9,
-            $achievement10
+            [
+                $achievement2,
+                $achievement3,
+                $achievement4,
+                $achievement5,
+                $achievement6,
+                $achievement7,
+                $achievement8,
+                $achievement9,
+                $achievement10
+            ]
         );
     }
 
@@ -1429,15 +1517,20 @@ class updateAchievementsCommand extends Command
         mixed $achievement8,
         mixed $achievement9
     ): void {
-        $this->removeAchievementFromUser($user, $achievement1);
-        $this->removeAchievementFromUser($user, $achievement2);
-        $this->removeAchievementFromUser($user, $achievement3);
-        $this->removeAchievementFromUser($user, $achievement4);
-        $this->removeAchievementFromUser($user, $achievement5);
-        $this->removeAchievementFromUser($user, $achievement6);
-        $this->removeAchievementFromUser($user, $achievement7);
-        $this->removeAchievementFromUser($user, $achievement8);
-        $this->removeAchievementFromUser($user, $achievement9);
+        $this->removeMultipleAchievementsFromUser(
+            $user,
+            [
+                $achievement1,
+                $achievement2,
+                $achievement3,
+                $achievement4,
+                $achievement5,
+                $achievement6,
+                $achievement7,
+                $achievement8,
+                $achievement9
+            ]
+        );
     }
 
     /**

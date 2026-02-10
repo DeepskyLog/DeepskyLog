@@ -19,14 +19,15 @@ class updateOldLocationTableCommand extends Command
         // Get all locations from the new database
         $locations = Location::all();
 
+        // Preload all existing location IDs from old DB to avoid per-location queries
+        $existingIds = LocationsOld::pluck('id')->flip()->all();
+
         // Check if the location with the given id already exists in the old database
         // If not, create a new location
         foreach ($locations as $location) {
             $id = html_entity_decode($location->id);
 
-            $old_location = LocationsOld::where('id', $id)->first();
-
-            if (! $old_location) {
+            if (!isset($existingIds[$id])) {
                 $this->info('Adding location: '.$id);
                 $old_location = new LocationsOld;
                 $old_location->id = $id;

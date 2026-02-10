@@ -136,9 +136,7 @@
                         <tr>
                             <td>{{ __("Number of observations") }}</td>
                             <td>
-                                <a href="/observation/location/{{ $location->id }}">
                                     {{  $location->observations }}
-                                </a>
                             </td>
                         </tr>
                         <tr>
