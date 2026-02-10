@@ -5,6 +5,7 @@
 ## Next steps
 
 + [ ] Session -> when clicking on the observations of another observer, show these observations in the new version of DeepskyLog.
+  + [ ] The whole width of the page is not used.
 + [ ] Make old version work with the new object tables?
 
 + [ ] Targets
