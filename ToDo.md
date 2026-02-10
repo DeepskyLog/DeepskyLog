@@ -4,7 +4,6 @@
 
 ## Next steps
 
-+ [ ] Speed up the welcome page
 + [ ] Make old version work with the new object tables?
 
 + [ ] Targets
@@ -20,7 +19,10 @@
 ### Distant future
 
 + [ ] Observing lists
+  + [ ] Comment on observing lists
+  + [ ] Like observing lists
 + [ ] Observations
+  + [ ] Comment on observations
 + [ ] All missing pages
 + [ ] Friends? Add friends and see their observations / sessions / ... Different lists for Murzim, Capella, ...
 
@@ -56,10 +58,6 @@
 + [X] Like observations and sketches
 + [X] Rework message system
 + [X] Totally reworked the sessions.  They are now more blog-like
-
-## Eloquent
-
-+ Check Target.php -> protected $with = ['type', 'constellation'];
 
 ## Small issues
 
