@@ -4,9 +4,8 @@
 
 ## Next steps
 
-+ [ ] Session -> when clicking on the observations of another observer, show these observations in the new version of DeepskyLog.
-  + [ ] The whole width of the page is not used.
-+ [ ] Detail of a location -> click on number of observations -> wrong link
++ [ ] Detail of a location -> click on number of observations -> wrong link, also for instruments, eyepieces, lenses and filters?
+  + [ ] First make sure to run the schedule:list and all the artisan commands to see the number of observations with the instruments, eyepieces, lenses and filters.  Then check the links on the location and instrument pages.
 + [ ] Make old version work with the new object tables?
 
 + [ ] Targets

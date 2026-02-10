@@ -22,11 +22,6 @@ class Kernel extends ConsoleKernel
         // Backfill session slugs regularly (idempotent)
         $schedule->command('sessions:backfill-slugs')->everyFiveMinutes();
 
-        // Explicitly schedule the astronomy package commands here so they
-        // appear exactly once in `artisan schedule:list`.
-        $schedule->command('astronomy:updateDeltat')->quarterly();
-        $schedule->command('astronomy:updateOrbitalElements')->weeklyOn(1, '4:30');
-        $schedule->command('astronomy:updateCometPhotometry')->weeklyOn(2, '4:30');
         // Incremental TNTSearch index update
         $schedule->command('tntsearch:incremental-index --storage=storage/tnt')->everyFiveMinutes();
     }

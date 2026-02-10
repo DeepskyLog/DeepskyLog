@@ -5,7 +5,7 @@
         $sessionParam = trim($session->slug ?: '') ?: ($session->id ?? null);
     @endphp
     <div>
-    <div class="mx-auto max-w-7xl bg-gray-900 px-4 py-6 sm:px-4 lg:px-6">
+    <div class="mx-auto max-w-full bg-gray-900 px-4 py-6 sm:px-4 lg:px-6">
         <header class="mb-6">
             <h1 class="text-3xl font-extrabold">{{ html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</h1>
             <p class="text-sm flex items-center gap-2 text-gray-300">
@@ -25,8 +25,8 @@
             </div>
         </header>
 
-    <div class="grid md:grid-cols-3 gap-4">
-                <article class="md:col-span-2">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_20rem] xl:grid-cols-[1fr_22rem] gap-4">
+                <article>
                     @if(!empty($image))
                     <img class="w-full rounded shadow mb-3" src="{{ $image }}" alt="{{ html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') }}">
                 @endif
@@ -194,7 +194,7 @@
                 </section>
             </article>
 
-            <aside class="md:col-span-1">
+            <aside>
                 <div class="bg-gray-800 p-3 rounded shadow text-gray-100">
                     <h4 class="font-semibold mb-2 text-white">{{ __('Observers') }}</h4>
                         <ul class="space-y-2">
