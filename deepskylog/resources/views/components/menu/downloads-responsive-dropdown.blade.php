@@ -11,12 +11,12 @@
         <div class="mt-3 space-y-1">
             <x-dropdown.item
                 icon="rectangle-stack"
-                href="{{ config('app.old_url') }}/index.php?indexAction=downloadAstroImageCatalogs"
+                href="/downloads/image-catalogs"
                 label="{!! __('Image catalogs') !!}"
             />
             <x-dropdown.item
                 icon="arrow-down-tray"
-                href="{{ config('app.old_url') }}/index.php?indexAction=view_atlaspages"
+                href="/downloads/atlases"
                 label="{{ __('Atlases') }}"
             />
             <x-dropdown.item

@@ -61,7 +61,14 @@ class CreateInstrument extends Component
                 $this->aperture_mm = $this->instrument->aperture_mm;
                 $this->focal_length_mm = $this->instrument->focal_length_mm;
             }
-            $this->f_d = round(floatval($this->focal_length_mm) / floatval($this->aperture_mm), 1);
+            // Only calculate focal ratio if aperture is a positive number
+            $ap = floatval($this->aperture_mm);
+            $fl = floatval($this->focal_length_mm);
+            if ($ap > 0) {
+                $this->f_d = round($fl / $ap, 1);
+            } else {
+                $this->f_d = null;
+            }
             $this->fixedMagnification = $this->instrument->fixedMagnification;
             if ($this->instrument->obstruction_perc != 0) {
                 $this->obstruction_perc = $this->instrument->obstruction_perc;
@@ -86,17 +93,42 @@ class CreateInstrument extends Component
 
     public function updateAperture(): void
     {
+        // If focal length is already set and aperture becomes valid, compute f/d
+        $ap = floatval($this->aperture_mm);
+        $fl = floatval($this->focal_length_mm);
+
+        if ($ap > 0 && $fl > 0) {
+            $this->f_d = round($fl / $ap, 1);
+            return;
+        }
+
+        // Fallback: if user updated aperture but f_d and focal length are present,
+        // try to update focal length from f_d (existing behaviour)
         $this->updateFocal();
     }
 
     public function updateFocal(): void
     {
-        $this->focal_length_mm = round(floatval($this->f_d) * floatval($this->aperture_mm), 1);
+        // Only update focal length if f_d and aperture are valid numbers
+        $ap = floatval($this->aperture_mm);
+        if ($this->f_d === '' || $this->f_d === null || $ap <= 0) {
+            // don't attempt calculation when inputs are missing or invalid
+            return;
+        }
+
+        $this->focal_length_mm = round(floatval($this->f_d) * $ap, 1);
     }
 
     public function updateFd(): void
     {
-        $this->f_d = round(floatval($this->focal_length_mm) / floatval($this->aperture_mm), 1);
+        // Guard against division by zero or empty aperture
+        $ap = floatval($this->aperture_mm);
+        if ($ap <= 0) {
+            $this->f_d = null;
+            return;
+        }
+
+        $this->f_d = round(floatval($this->focal_length_mm) / $ap, 1);
     }
 
     public function updateFlipFlop(): void

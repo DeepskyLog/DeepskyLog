@@ -15,17 +15,18 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(
             [
-                //                GroupSeeder::class, UsersTableSeeder::class, addSlug::class,
-                //                SketchOfTheWeekSeeder::class,
-                //                SketchOfTheMonthSeeder::class,
-                //                addAchievementsSeeder::class,
-                //                InstrumentSeeder::class,
-                //                EyepieceSeeder::class,
-                //                LensSeeder::class,
-                //                FilterSeeder::class,
-                // LocationSeeder::class,
-                // MigrateOldMessagesSeeder::class,
-                LegacySessionsSeeder::class,
+                // Register legacy migration seeder
+                \Database\Seeders\LegacyObjectsSeeder::class,
+                \Database\Seeders\AsteroidsSeeder::class,
+                \Database\Seeders\PlanetsSeeder::class,
+                \Database\Seeders\MoonsSeeder::class,
+                \Database\Seeders\LunarFeaturesSeeder::class,
+                \Database\Seeders\ObjectNameTranslationsSeeder::class,
+                \Database\Seeders\PopulateObjectSlugsSeeder::class,
+                \Database\Seeders\BackfillPlanetSlugsSeeder::class,
+                \Database\Seeders\BackfillMoonSlugsSeeder::class,
+                \Database\Seeders\BackfillLunarFeatureSlugsSeeder::class,
+                \Database\Seeders\BackfillAsteroidSlugsSeeder::class,
             ]
         );
 

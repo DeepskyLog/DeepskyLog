@@ -1,0 +1,117 @@
+openapi: 3.0.3
+info:
+  title: DeepskyLog Search API (fragment)
+  version: '1.0'
+paths:
+  /api/search:
+    get:
+      summary: Unified search across objects, comets, planets, moons and lunar features
+      description: |
+        Search the unified `search_index`. Supports fulltext ranking, prefix and substring fallback, and optional filters to restrict results to specific source tables or object types.
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: The query string to search for. When `substring=1` a contains match is used (LIKE '%q%'). Otherwise fulltext is attempted and falls back to prefix LIKE ('q%').
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: Max number of results to return. Defaults to 50.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 50
+        - name: substring
+          in: query
+          required: false
+          description: If true (1) do a substring search using LIKE '%q%'. More expensive on large datasets.
+          schema:
+            type: boolean
+        - name: source
+          in: query
+          required: false
+          description: |
+            Comma-separated list of source tables to restrict results to. Allowed values: `objects`, `cometobjects`, `planets`, `moons`, `lunar_features`, `asteroids`.
+          schema:
+            type: string
+            example: "planets,moons"
+        - name: object_type
+          in: query
+          required: false
+          description: |
+            Comma-separated list of source_type values to restrict results to. Common values: `object`, `comet`, `planet`, `moon`, `crater`, `mare`, `lunar_feature`.
+          schema:
+            type: string
+            example: "planet,moon"
+      responses:
+        '200':
+          description: A list of search result items (may be empty)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: internal search_index id
+                        name:
+                          type: string
+                          description: primary name used for searching
+                        display_name:
+                          type: string
+                          description: human-friendly display name
+                        source_table:
+                          type: string
+                          description: the source table (objects, planets, ...)
+                        source_pk:
+                          type: string
+                          description: primary key value in the source table
+                        source_type:
+                          type: string
+                          description: semantic type (planet, moon, comet, crater, mare, ...)
+                        ra:
+                          type: number
+                          nullable: true
+                          description: right ascension in degrees when available
+                        decl:
+                          type: number
+                          nullable: true
+                          description: declination in degrees when available
+                        score:
+                          type: number
+                          nullable: true
+                          description: fulltext relevance score when fulltext search used
+              examples:
+                basic:
+                  value:
+                    data:
+                      - id: 133867
+                        name: "Earth"
+                        display_name: "Earth"
+                        source_table: "planets"
+                        source_pk: "4"
+                        source_type: "planet"
+                        ra: null
+                        decl: null
+                        score: 26.23733139038086
+        '400':
+          description: Invalid parameters (for example an invalid token in `source` or `object_type`)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                invalid_source:
+                  value:
+                    error: "Invalid source tokens: plannets"

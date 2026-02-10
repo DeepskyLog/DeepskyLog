@@ -289,10 +289,17 @@ class SessionController extends Controller
             // ignore logging failures
         }
 
+        // Preload users for drawings to avoid N+1 queries in the view
+        $drawingUsers = [];
+        if (isset($drawings) && $drawings->count() > 0) {
+            $drawingObserverIds = $drawings->pluck('observerid')->unique()->filter()->all();
+            $drawingUsers = User::whereIn('username', $drawingObserverIds)->get()->keyBy('username');
+        }
+
     // Provide the selected observer username and display name to the view so it can highlight the active observer in the sidebar
     $selectedObserverUsername = $targetObserver;
 
-    return $this->noCacheResponse(response()->view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName')));
+    return $this->noCacheResponse(response()->view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'drawingUsers', 'observerStats', 'selectedObserverUsername', 'selectedObserverName')));
     }
 
     /**
@@ -324,6 +331,32 @@ class SessionController extends Controller
         }
 
         $sessionImageDir = public_path('images/sessions');
+        $storageSessionDir = storage_path('app/public/photos/sessions');
+
+        // Pre-scan image directories once and build maps session_id => image URL
+        $storageSessionMap = [];
+        if (is_dir($storageSessionDir)) {
+            $glob = glob($storageSessionDir.'/*');
+            if (! empty($glob)) {
+                foreach ($glob as $p) {
+                    $base = basename($p);
+                    $id = pathinfo($base, PATHINFO_FILENAME);
+                    $storageSessionMap[$id] = asset('storage/photos/sessions/'.$base);
+                }
+            }
+        }
+
+        $publicSessionMap = [];
+        if (is_dir($sessionImageDir)) {
+            $glob = glob($sessionImageDir.'/*');
+            if (! empty($glob)) {
+                foreach ($glob as $p) {
+                    $base = basename($p);
+                    $id = pathinfo($base, PATHINFO_FILENAME);
+                    $publicSessionMap[$id] = '/images/sessions/'.$base;
+                }
+            }
+        }
 
         // Precompute observation counts for the sessions in this page to avoid N+1 queries
         $sessionIds = $collection->pluck('id')->filter()->unique()->values()->all();
@@ -357,6 +390,32 @@ class SessionController extends Controller
         $observerUsers = [];
         if (! empty($observerUsernames)) {
             $observerUsers = User::whereIn('username', $observerUsernames)->get()->keyBy('username');
+        }
+
+        // Pre-scan image directories once and build maps session_id => image URL
+        $storageSessionDir = storage_path('app/public/photos/sessions');
+        $storageSessionMap = [];
+        if (is_dir($storageSessionDir)) {
+            $glob = glob($storageSessionDir.'/*');
+            if (! empty($glob)) {
+                foreach ($glob as $p) {
+                    $base = basename($p);
+                    $id = pathinfo($base, PATHINFO_FILENAME);
+                    $storageSessionMap[$id] = asset('storage/photos/sessions/'.$base);
+                }
+            }
+        }
+
+        $publicSessionMap = [];
+        if (is_dir($sessionImageDir)) {
+            $glob = glob($sessionImageDir.'/*');
+            if (! empty($glob)) {
+                foreach ($glob as $p) {
+                    $base = basename($p);
+                    $id = pathinfo($base, PATHINFO_FILENAME);
+                    $publicSessionMap[$id] = '/images/sessions/'.$base;
+                }
+            }
         }
 
         $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang, $observerUsers) {
@@ -458,6 +517,32 @@ class SessionController extends Controller
         }
 
         $sessionImageDir = public_path('images/sessions');
+        $storageSessionDir = storage_path('app/public/photos/sessions');
+
+        // Pre-scan image directories once and build maps session_id => image URL
+        $storageSessionMap = [];
+        if (is_dir($storageSessionDir)) {
+            $glob = glob($storageSessionDir.'/*');
+            if (! empty($glob)) {
+                foreach ($glob as $p) {
+                    $base = basename($p);
+                    $id = pathinfo($base, PATHINFO_FILENAME);
+                    $storageSessionMap[$id] = asset('storage/photos/sessions/'.$base);
+                }
+            }
+        }
+
+        $publicSessionMap = [];
+        if (is_dir($sessionImageDir)) {
+            $glob = glob($sessionImageDir.'/*');
+            if (! empty($glob)) {
+                foreach ($glob as $p) {
+                    $base = basename($p);
+                    $id = pathinfo($base, PATHINFO_FILENAME);
+                    $publicSessionMap[$id] = '/images/sessions/'.$base;
+                }
+            }
+        }
 
         // Precompute observation counts for the sessions in this page to avoid N+1 queries
         $sessionIds = $collection->pluck('id')->filter()->unique()->values()->all();
@@ -895,33 +980,42 @@ class SessionController extends Controller
             $observerUsers = User::whereIn('username', $observerUsernames)->get()->keyBy('username');
         }
 
-        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang, $observerUsers) {
+        // Pre-scan image directories once and build maps session_id => image URL (homepage)
+        $storageSessionDir = storage_path('app/public/photos/sessions');
+        $storageSessionMap = [];
+        if (is_dir($storageSessionDir)) {
+            $glob = glob($storageSessionDir.'/*');
+            if (! empty($glob)) {
+                foreach ($glob as $p) {
+                    $base = basename($p);
+                    $id = pathinfo($base, PATHINFO_FILENAME);
+                    $storageSessionMap[$id] = asset('storage/photos/sessions/'.$base);
+                }
+            }
+        }
+
+        $publicSessionMap = [];
+        if (is_dir($sessionImageDir)) {
+            $glob = glob($sessionImageDir.'/*');
+            if (! empty($glob)) {
+                foreach ($glob as $p) {
+                    $base = basename($p);
+                    $id = pathinfo($base, PATHINFO_FILENAME);
+                    $publicSessionMap[$id] = '/images/sessions/'.$base;
+                }
+            }
+        }
+
+        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang, $observerUsers, $storageSessionMap, $publicSessionMap) {
             if (empty($session->observer)) {
                 $session->observer = isset($observerUsers[$session->observerid]) ? $observerUsers[$session->observerid] : (object) ['name' => $session->observerid, 'slug' => null];
             }
+            // Lookup pre-scanned image maps to avoid per-session filesystem checks
             $image = null;
-
-            // Prefer images stored under public/images/sessions/{id}.*
-            if (is_dir($sessionImageDir)) {
-                $patterns = [
-                    $sessionImageDir.'/'.$session->id.'.jpg',
-                    $sessionImageDir.'/'.$session->id.'.jpeg',
-                    $sessionImageDir.'/'.$session->id.'.png',
-                    $sessionImageDir.'/'.$session->id.'.gif',
-                ];
-                foreach ($patterns as $p) {
-                    if (file_exists($p)) {
-                        $image = '/images/sessions/'.basename($p);
-                        break;
-                    }
-                }
-
-                if (empty($image)) {
-                    $glob = glob($sessionImageDir.'/'.$session->id.'.*');
-                    if (! empty($glob)) {
-                        $image = '/images/sessions/'.basename($glob[0]);
-                    }
-                }
+            if (isset($storageSessionMap[$session->id])) {
+                $image = $storageSessionMap[$session->id];
+            } elseif (isset($publicSessionMap[$session->id])) {
+                $image = $publicSessionMap[$session->id];
             }
 
             // Fallback: session->picture (legacy) if present

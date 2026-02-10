@@ -2,19 +2,27 @@
 
 + [ ] See GitHub: <https://github.com/DeepskyLog/DeepskyLog/issues>
 
-### Next steps
+## Next steps
+
++ [ ] Make old version work with the new object tables?
 
 + [ ] Targets
-    + [ ] Create tables for deepsky and comet objects.
-    + [ ] Create extra tables for other objects (planets, sun, moon, moon features, ...)
-    + [ ] Search targets, first by name, then by type, constellation, ...
+  + [ ] Administrator / Database expert pages to add / edit / delete objects
+    + [ ] Get information from Simbad
+  + [ ] Catalogs page
+  + [ ] Search targets, first by name, then by type, constellation, ...
+  + [ ] Install sqlite3 on the server to be able to use TNTSearch
+  + [ ] After installation, make sure to run the queue worker to compute the contrast reserve and optimum eyepieces for all users / instruments / locations.  See Tips.md for more information about the queue worker.
 + [ ] Release new version of pyDeepskyLog
-    + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
+  + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
 ### Distant future
 
 + [ ] Observing lists
+  + [ ] Comment on observing lists
+  + [ ] Like observing lists
 + [ ] Observations
+  + [ ] Comment on observations
 + [ ] All missing pages
 + [ ] Friends? Add friends and see their observations / sessions / ... Different lists for Murzim, Capella, ...
 
@@ -43,17 +51,13 @@
 + [X] Add object type and constellation to the list of 10 newest observations
 + [X] Automatically translate the descriptions of observations on the home page.
 + [X] Add locations, instruments, eyepieces, lenses and filters to the new version of DeepskyLog.
-    + [X] Use /instrument/user-slug/instrument-slug as url
+  + [X] Use /instrument/user-slug/instrument-slug as url
 + [X] Add description and picture to locations, instruments, eyepieces, lenses and filters.
 + [X] Add a plot with the length of the night for a whole year when showing a location.
 + [X] Add instrument sets.
 + [X] Like observations and sketches
 + [X] Rework message system
 + [X] Totally reworked the sessions.  They are now more blog-like
-
-## Eloquent
-
-+ Check Target.php -> protected $with = ['type', 'constellation'];
 
 ## Small issues
 
@@ -64,6 +68,6 @@
 + [ ] Timezones with php: Carbon: <https://carbon.nesbot.com/docs/#api-timezone>
 + [ ] <https://jamesmills.co.uk/2019/02/28/laravel-timezone/> for timezones / date
 + [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
-    + [ ] See https://laraveldaily.teachable.com/courses/393790/lectures/6329089
-+ [ ] Feeds: https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel
-+ [ ] Check https://laravel-comments.com/ for commenting on observations, observing lists, ...
+  + [ ] See <https://laraveldaily.teachable.com/courses/393790/lectures/6329089>
++ [ ] Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
++ [ ] Check <https://laravel-comments.com/> for commenting on observations, observing lists, ...

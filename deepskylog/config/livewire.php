@@ -13,6 +13,9 @@ return [
     |
     */
 
+    // Project places Livewire components under App\Livewire (historical project structure).
+    // Revert to the original namespace so existing components like
+    // App\Livewire\CreateInstrument are auto-discovered correctly.
     'class_namespace' => 'App\\Livewire',
 
     /*

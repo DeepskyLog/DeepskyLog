@@ -28,3 +28,8 @@ storage/framework/messages/
 /.idea/*
 /orig/
 deepskylog/public/images/sessions/*
+deepskylog/composer.json
+deepskylog/storage/tnt/tnt.sqlite
+deepskylog/storage/tnt/search_index
+deepskylog/storage/tnt/search_index-shm
+deepskylog/storage/tnt/search_index-wal

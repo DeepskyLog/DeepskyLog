@@ -70,16 +70,24 @@ class Eyepiece extends Model
     {
         $language = app()->getLocale();
 
+        // Prefer a request-scoped bulk map when available to avoid per-eyepiece queries
+        if (isset(self::$bulkFirstObservationMap) && array_key_exists($this->id, self::$bulkFirstObservationMap)) {
+            $entry = self::$bulkFirstObservationMap[$this->id];
+            if (! $entry) return [null, null];
+            $firstObservation = $entry['date'];
+            $id = $entry['id'];
+            $date = Carbon::createFromFormat('Ymd', (string) $firstObservation)->locale($language)->isoFormat('LL');
+            return [$date, $id];
+        }
+
         $firstDeepskyObservation = ObservationsOld::where('eyepieceid', $this->id)->min('date');
 
-        if ($firstDeepskyObservation != null) {
-            $firstObservation = $firstDeepskyObservation;
-        } else {
+        if ($firstDeepskyObservation == null) {
             return [null, null];
         }
 
+        $firstObservation = $firstDeepskyObservation;
         $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
-
         $id = ObservationsOld::where('eyepieceid', $this->id)->where('date', $firstObservation)->first()['id'];
 
         return [$date, $id];
@@ -101,6 +109,16 @@ class Eyepiece extends Model
     {
         $language = app()->getLocale();
 
+        // Prefer a request-scoped bulk map when available to avoid per-eyepiece queries
+        if (isset(self::$bulkLastObservationMap) && array_key_exists($this->id, self::$bulkLastObservationMap)) {
+            $entry = self::$bulkLastObservationMap[$this->id];
+            if (! $entry) return [null, null];
+            $lastObservation = $entry['date'];
+            $id = $entry['id'];
+            $date = Carbon::createFromFormat('Ymd', (string) $lastObservation)->locale($language)->isoFormat('LL');
+            return [$date, $id];
+        }
+
         $lastDeepskyObservation = ObservationsOld::where('eyepieceid', $this->id)->max('date');
 
         if ($lastDeepskyObservation == null) {
@@ -108,7 +126,6 @@ class Eyepiece extends Model
         }
 
         $date = Carbon::createFromFormat('Ymd', $lastDeepskyObservation)->locale($language)->isoFormat('LL');
-
         $id = ObservationsOld::where('eyepieceid', $this->id)->where('date', $lastDeepskyObservation)->first()['id'];
 
         return [$date, $id];
@@ -138,7 +155,52 @@ class Eyepiece extends Model
 
     public function get_used_instruments(): Collection
     {
+        // If a bulk map has been provided for this request, prefer it to avoid
+        // issuing a separate DB query per eyepiece (removes N+1 behaviour).
+        if (isset(self::$bulkUsedInstrumentsMap) && is_array(self::$bulkUsedInstrumentsMap) && array_key_exists($this->id, self::$bulkUsedInstrumentsMap)) {
+            return collect(self::$bulkUsedInstrumentsMap[$this->id]);
+        }
+
+        // Fast-path: if the authenticated user has a standard instrument set
+        // or a selected standard instrument, restrict calculations to that
+        // instrument only. This avoids many legacy per-eyepiece queries
+        // against the old `observations` table when the user expects
+        // calculations only for their default instrument.
+        try {
+            $authUser = auth()->user();
+            if ($authUser && ! empty($authUser->standardInstrument)) {
+                $inst = $authUser->standardInstrument;
+                if ($inst && isset($inst->id)) {
+                    return collect([$inst->id]);
+                }
+            }
+        } catch (\Throwable $_) {
+            // ignore and fall back to legacy behaviour
+        }
+
         return ObservationsOld::where('eyepieceid', $this->id)->groupby('instrumentid')->distinct()->pluck('instrumentid');
+    }
+
+    // Request-scoped bulk map of eyepiece_id => array of instrument ids.
+    protected static array $bulkUsedInstrumentsMap = [];
+
+    // Request-scoped bulk map eyepiece_id => ['date'=>..., 'id'=>...] for first/last observations
+    protected static array $bulkFirstObservationMap = [];
+    protected static array $bulkLastObservationMap = [];
+
+    public static function setBulkUsedInstrumentsMap(array $map): void
+    {
+        self::$bulkUsedInstrumentsMap = $map;
+    }
+
+    public static function setBulkFirstObservationMap(array $map): void
+    {
+        self::$bulkFirstObservationMap = $map;
+    }
+
+    public static function setBulkLastObservationMap(array $map): void
+    {
+        self::$bulkLastObservationMap = $map;
     }
 
     /**

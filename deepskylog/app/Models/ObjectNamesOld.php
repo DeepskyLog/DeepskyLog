@@ -1,12 +1,7 @@
 <?php
 
-namespace App\Models;
+// Deprecated: ObjectNamesOld has been removed. Use App\Models\ObjectNames instead.
+// This file remains temporarily to avoid breaking installs that still reference
+// the old class name; remove this file once all references are updated.
 
-use Illuminate\Database\Eloquent\Model;
-
-class ObjectNamesOld extends Model
-{
-    protected $connection = 'mysqlOld';
-
-    protected $table = 'objectnames';
-}
+// No class is defined here intentionally.

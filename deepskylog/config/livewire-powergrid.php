@@ -111,6 +111,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Persist driver
+    |--------------------------------------------------------------------------
+    |
+    | By default PowerGrid persists table state (filters, columns, sorting)
+    | into cookies which can cause very large Cookie headers for heavy
+    | table state. Store persist state in the session or cache instead to
+    | avoid oversized request headers (recommended: 'session').
+    |
+    */
+    'persist_driver' => env('POWERGRID_PERSIST_DRIVER', 'session'),
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Exportable class
     |--------------------------------------------------------------------------
     |

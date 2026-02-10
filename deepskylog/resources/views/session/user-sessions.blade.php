@@ -1,32 +1,30 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-gray-200 leading-tight">{{ $u->name ?? $userSlug }} - {{ __('Sessions') }}</h2>
-            @php
-                $viewer = $user ?? null;
-                $pageOwner = $u ?? null;
-                $ownerMatch = false;
-                if ($viewer) {
-                    if ($pageOwner && isset($pageOwner->id) && $viewer->id === $pageOwner->id) {
-                        $ownerMatch = true;
-                    } elseif ($pageOwner && isset($pageOwner->slug) && ($viewer->slug ?? $viewer->username) === $pageOwner->slug) {
-                        $ownerMatch = true;
-                    } elseif (($viewer->username ?? null) === ($pageOwner->username ?? $userSlug)) {
-                        $ownerMatch = true;
-                    }
-                }
-            @endphp
-            @if($ownerMatch)
-                <div>
-                    <a href="{{ route('session.create') }}" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">{{ __('Add session') }}</a>
-                </div>
-            @endif
-        </div>
-    </x-slot>
-
-    <div class="py-6">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <div class="pb-6">
+        <div class="px-4 sm:px-6 lg:px-8">
             <div class="bg-gray-900 shadow-sm sm:rounded-lg p-6">
+                {{-- Page header inside the dark container --}}
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="font-semibold text-xl text-gray-200 leading-tight">{{ $u->name ?? $userSlug }} - {{ __('Sessions') }}</h2>
+                    @php
+                        $viewer = $user ?? null;
+                        $pageOwner = $u ?? null;
+                        $ownerMatch = false;
+                        if ($viewer) {
+                            if ($pageOwner && isset($pageOwner->id) && $viewer->id === $pageOwner->id) {
+                                $ownerMatch = true;
+                            } elseif ($pageOwner && isset($pageOwner->slug) && ($viewer->slug ?? $viewer->username) === $pageOwner->slug) {
+                                $ownerMatch = true;
+                            } elseif (($viewer->username ?? null) === ($pageOwner->username ?? $userSlug)) {
+                                $ownerMatch = true;
+                            }
+                        }
+                    @endphp
+                    @if($ownerMatch)
+                        <div>
+                            <a href="{{ route('session.create') }}" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">{{ __('Add session') }}</a>
+                        </div>
+                    @endif
+                </div>
                 {{-- preview_text and preview are prepared in the controller; views stay simple --}}
 
                 @if(isset($inactiveSessions) && $inactiveSessions->isNotEmpty())
@@ -75,19 +73,34 @@
                         </div>
                     </div>
                 @endif
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                     @foreach($sessions as $session)
+                        @php
+                            // Ensure we safely compute URL parts for session.show links. Some legacy/malformed
+                            // session records might lack a slug or id; guard against generating route() with
+                            // missing parameters which throws a UrlGenerationException.
+                            $sessionUser = optional($session->observer)->slug ?? $session->observerid ?? null;
+                            $sessionParam = $session->slug ?? $session->id ?? null;
+                        @endphp
                         <article class="bg-gray-800 p-4 rounded">
                                     @if(! empty($session->preview))
                                 <div class="mb-3">
-                                    <a href="{{ route('session.show', [optional($session->observer)->slug ?? $session->observerid, $session->slug ?? $session->id]) }}">
+                                    @if(! empty($sessionParam) && ! empty($sessionUser))
+                                        <a href="{{ route('session.show', [$sessionUser, $sessionParam]) }}">
+                                            <img src="{{ $session->preview }}" alt="{{ html_entity_decode($session->name ?? __('Session'), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}" class="w-full h-40 object-cover rounded" />
+                                        </a>
+                                    @else
                                         <img src="{{ $session->preview }}" alt="{{ html_entity_decode($session->name ?? __('Session'), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}" class="w-full h-40 object-cover rounded" />
-                                    </a>
+                                    @endif
                                 </div>
                             @endif
 
                             <h3 class="text-lg font-bold text-white mb-2">
-                                <a href="{{ route('session.show', [optional($session->observer)->slug ?? $session->observerid, $session->slug ?? $session->id]) }}" class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                                @if(! empty($sessionParam) && ! empty($sessionUser))
+                                    <a href="{{ route('session.show', [$sessionUser, $sessionParam]) }}" class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                                @else
+                                    <span class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</span>
+                                @endif
                             </h3>
 
                             <div class="text-sm text-gray-400 mb-3">
@@ -108,7 +121,11 @@
                             <p class="text-sm text-gray-300 mb-3">{{ $session->preview_text ?? Str::limit(strip_tags(html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8')), 180) }}</p>
                             <div class="flex items-center justify-between text-sm">
                                 <div class="text-gray-400">{{ __('Observers') }}: {{ $session->otherObserversCount() ?? 1 }}</div>
-                                <a href="{{ route('session.show', [$session->observer->slug ?? $session->observerid, $session->slug ?? $session->id]) }}" class="text-blue-500 hover:underline">{{ __('Read more') }}</a>
+                                @if(! empty($sessionParam) && ! empty($sessionUser))
+                                    <a href="{{ route('session.show', [$sessionUser, $sessionParam]) }}" class="text-blue-500 hover:underline">{{ __('Read more') }}</a>
+                                @else
+                                    <span class="text-gray-500">{{ __('Read more') }}</span>
+                                @endif
                             </div>
                         </article>
                     @endforeach

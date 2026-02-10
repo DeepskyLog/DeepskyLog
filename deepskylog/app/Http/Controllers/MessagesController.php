@@ -35,6 +35,8 @@ class MessagesController extends Controller
         $sort = $request->query('sort');
         $direction = strtolower($request->query('direction', 'desc')) === 'asc' ? 'asc' : 'desc';
         $column = $allowed[$sort] ?? 'date';
+        // If the user wants to view only unread messages, query param 'unread'=1
+        $onlyUnread = (string) $request->query('unread') === '1';
 
     // If sorting by 'from', order by the users.name (full name) using a left join.
         // messages lives on the 'mysqlOld' connection; the users table is on the default connection.
@@ -47,6 +49,11 @@ class MessagesController extends Controller
             $q->where('receiver', $user->username)
                 ->orWhere('receiver', 'all');
         })->whereNotIn('id', $deleted)->where('sender', '!=', $user->username);
+
+        // If filtering to unread-only, exclude messages that already have a read row
+        if ($onlyUnread) {
+            $receivedQuery = $receivedQuery->whereNotIn('id', $read->toArray());
+        }
 
         // Load these into a collection
         $received = $receivedQuery->get()->map(function ($m) {
@@ -95,8 +102,8 @@ class MessagesController extends Controller
                 return $obj;
             });
 
-        // Merge collections
-        $all = $received->concat($sentGroups);
+        // If onlyUnread is active we only show received (unread) messages; hide grouped sent messages
+        $all = $received->concat($onlyUnread ? collect() : $sentGroups);
 
         // Eager-fetch user models (senders and receivers) so we can sort by full name
         $usernames = $all->pluck('sender')->merge($all->pluck('receiver'))->unique()->values()->filter(function ($u) {
@@ -385,6 +392,44 @@ class MessagesController extends Controller
         // Redirect back to the inbox page (preserves query params) so the refreshed
         // list shows updated read/unread state.
         return redirect()->back()->with('status', __('All messages marked as read'));
+    }
+
+    /**
+     * Mark all messages as deleted for the current user (legacy messages_deleted table).
+     */
+    public function deleteAll(Request $request)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Exclude messages that are already marked deleted for this user
+        $alreadyDeleted = MessageDeleted::where('receiver', $user->username)->pluck('id')->toArray();
+
+        // Find all message ids relevant to this user: received/broadcast and any sent rows
+        $allIds = Message::where(function ($q) use ($user) {
+            $q->where('receiver', $user->username)
+                ->orWhere('receiver', 'all')
+                ->orWhere('sender', $user->username);
+        })->whereNotIn('id', $alreadyDeleted)->pluck('id')->all();
+
+        $rows = [];
+        foreach ($allIds as $id) {
+            $rows[] = ['id' => $id, 'receiver' => $user->username, 'deleted_at' => now()];
+        }
+
+        if (! empty($rows)) {
+            foreach (array_chunk($rows, 500) as $chunk) {
+                try {
+                    foreach ($chunk as $r) {
+                        DB::table('messages_deleted')->insert($r);
+                    }
+                } catch (\Exception $e) {
+                    // ignore duplicates or DB errors per-row
+                }
+            }
+        }
+
+        return redirect()->route('messages.index')->with('status', __('All messages deleted'));
     }
 
     /**

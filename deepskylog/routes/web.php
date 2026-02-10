@@ -79,24 +79,44 @@ Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@sho
 Route::get('/drawings', 'App\Http\Controllers\DrawingController@index')->name('drawings.index');
 Route::get('/cometdrawings', 'App\Http\Controllers\CometDrawingController@index')->name('cometdrawings.index');
 Route::get('/drawings/{observer}', 'App\Http\Controllers\DrawingController@show')->name('drawings.show');
+// Support object-scoped comet drawings and observer+object comet drawings
+Route::get('/cometdrawings/{observer}/{object}', 'App\Http\Controllers\CometDrawingController@showObserverObject')->name('cometdrawings.user.object');
+// Per-observer comet drawings (keep after the observer+object route to avoid capture)
 Route::get('/cometdrawings/{observer}', 'App\Http\Controllers\CometDrawingController@show')->name('cometdrawings.show');
 // Observations (deepsky + comet)
 Route::get('/observations', 'App\Http\Controllers\ObservationsController@index')->name('observations.index');
+// Object-scoped drawings listing (e.g. /observations/drawings/m-31)
+Route::get('/observations/drawings/{slug}', [App\Http\Controllers\ObservationsController::class, 'showObjectDrawings'])->name('observations.drawings.show');
+// Observations for a specific observer filtered by object (e.g. /observations/wim-de-meester/m-31)
+Route::get('/observations/{observer}/{object}', [App\Http\Controllers\ObservationsController::class, 'showObserverObject'])->name('observations.user.object');
+// Drawings for a specific observer filtered by object (e.g. /observations/drawings/wim-de-meester/m-31)
+Route::get('/observations/drawings/{observer}/{object}', [App\Http\Controllers\ObservationsController::class, 'showObserverObjectDrawings'])->name('observations.drawings.user.object');
 Route::get('/observations/{observer}', 'App\Http\Controllers\ObservationsController@show')->name('observations.show');
 // Separate comet observations pages
+// Comet observations: support object-scoped pages and observer pages
+Route::get('/cometobservations/{observer}/{object}', 'App\\Http\\Controllers\\ObservationsController@cometShowObserverObject')->name('observations.comet.user.object');
+Route::get('/cometobservations/{object}', 'App\\Http\\Controllers\\ObservationsController@cometIndexByObject')->name('observations.comet.object');
 Route::get('/cometobservations', 'App\\Http\\Controllers\\ObservationsController@cometIndex')->name('observations.comet.index');
 Route::get('/cometobservations/{observer}', 'App\\Http\\Controllers\\ObservationsController@cometShow')->name('observations.comet.show');
 
 // Sketch of the week / month
 Route::get('/sketch-of-the-week', function () {
-    return view('sketch-of-the-week-month',
-        ['sketches' => SketchOfTheWeek::orderBy('date', 'desc')->paginate(20),
-            'week_month' => __('Week')]);
+    return view(
+        'sketch-of-the-week-month',
+        [
+            'sketches' => SketchOfTheWeek::orderBy('date', 'desc')->paginate(20),
+            'week_month' => __('Week')
+        ]
+    );
 })->name('sketch-of-the-week');
 Route::get('/sketch-of-the-month', function () {
-    return view('sketch-of-the-week-month',
-        ['sketches' => SketchOfTheMonth::orderBy('date', 'desc')->paginate(20),
-            'week_month' => __('Month')]);
+    return view(
+        'sketch-of-the-week-month',
+        [
+            'sketches' => SketchOfTheMonth::orderBy('date', 'desc')->paginate(20),
+            'week_month' => __('Month')
+        ]
+    );
 })->name('sketch-of-the-month');
 Route::get('/sketch-of-the-week/create', 'App\Http\Controllers\SketchOfTheWeekController@create')->name('sketch-of-the-week.create')->can('add_sketch', User::class);
 Route::post('/sketch-of-the-week', 'App\Http\Controllers\SketchOfTheWeekController@store')->name('sketch-of-the-week.store')->can('add_sketch', User::class);
@@ -107,6 +127,10 @@ Route::get('/', [App\Http\Controllers\SessionController::class, 'homepage']);
 Route::view('/privacy', 'privacy')->name('privacy');
 Route::view('/sponsors', 'layouts.sponsors');
 Route::view('/downloads/magazines', 'layouts.downloads.magazines');
+Route::view('/downloads/dsl-image-catalogs', 'layouts.downloads.dsl_image_catalogs');
+Route::view('/downloads/image-catalogs', 'layouts.downloads.image_catalogs');
+Route::view('/downloads/atlases', 'layouts.downloads.atlases');
+Route::view('/downloads/dsl-atlas', 'layouts.downloads.dsl_atlas');
 Route::view('/downloads/forms', 'layouts.downloads.forms');
 
 // Instruments
@@ -248,6 +272,105 @@ Route::get('/instrumentset/{user}/{instrumentset}', 'App\Http\Controllers\Instru
 Route::get('/session/{user}/{session}', 'App\Http\Controllers\SessionController@show')
     ->name('session.show')->middleware('doNotCacheResponse');
 
+// Object detail pages: /object/{type}/{slugOrId}
+// Specific Moon path: serve a Livewire-first Moon page at /object/moon
+Route::get('/object/moon', function () {
+    // Compute initial ephemerides using the same logic as the aside so
+    // Livewire can hydrate immediately with correct values.
+    try {
+        $aside = new App\Http\Livewire\EphemerisAside();
+        // Ensure mount() runs the calculations and populates properties
+        if (method_exists($aside, 'mount')) $aside->mount();
+        $payload = [
+            'date' => $aside->date ?? \Carbon\Carbon::now()->toDateString(),
+            'rising' => $aside->moon_rise ?? null,
+            'setting' => $aside->moon_set ?? null,
+            'illuminated_fraction' => $aside->moon_illuminated ?? null,
+            'next_new_moon' => $aside->next_new_moon ?? null,
+            '_ts' => \Carbon\Carbon::now()->toIso8601String(),
+        ];
+    } catch (\Throwable $_) {
+        $payload = [
+            'date' => \Carbon\Carbon::now()->toDateString(),
+            'rising' => null,
+            'setting' => null,
+            'illuminated_fraction' => null,
+            'next_new_moon' => null,
+            '_ts' => \Carbon\Carbon::now()->toIso8601String(),
+        ];
+    }
+
+    $session = (object) [
+        'source_type_raw' => 'moon',
+        'source_type' => 'Moon',
+        'name' => 'Moon',
+        'id' => 'moon',
+        'slug' => 'moon',
+    ];
+
+    return view('object.moon-page', ['session' => $session, 'ephemerides' => $payload]);
+})->name('object.show.moon')->middleware('doNotCacheResponse');
+
+// Specific Sun path: serve a Livewire-first Sun page at /object/sun
+Route::get('/object/sun', function () {
+    try {
+        $aside = new App\Http\Livewire\EphemerisAside();
+        if (method_exists($aside, 'mount')) $aside->mount();
+        $payload = [
+            'date' => $aside->date ?? \Carbon\Carbon::now()->toDateString(),
+            'sun_times' => $aside->sun_times ?? null,
+            'nautical' => $aside->nautical ?? null,
+            'astronomical' => $aside->astronomical ?? null,
+            '_ts' => \Carbon\Carbon::now()->toIso8601String(),
+        ];
+    } catch (\Throwable $_) {
+        $payload = [
+            'date' => \Carbon\Carbon::now()->toDateString(),
+            'sun_times' => null,
+            'nautical' => null,
+            'astronomical' => null,
+            '_ts' => \Carbon\Carbon::now()->toIso8601String(),
+        ];
+    }
+
+    $session = (object) [
+        'source_type_raw' => 'sun',
+        'source_type' => 'Sun',
+        'name' => 'Sun',
+        'id' => 'sun',
+        'slug' => 'sun',
+    ];
+
+    return view('object.sun-page', ['session' => $session, 'ephemerides' => $payload]);
+})->name('object.show.sun')->middleware('doNotCacheResponse');
+
+Route::get('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'show'])
+    ->name('object.show')->middleware('doNotCacheResponse');
+
+// Nearby names PDF export (uses query params ra, dec, radius)
+Route::get('/object/{slug}/nearby-names.pdf', [App\Http\Controllers\NearbyExportController::class, 'namesPdf'])
+    ->name('object.nearby.names.pdf')->middleware('doNotCacheResponse');
+
+// Nearby table PDF export (landscape full table)
+Route::get('/object/{slug}/nearby-table.pdf', [App\Http\Controllers\NearbyExportController::class, 'tablePdf'])
+    ->name('object.nearby.table.pdf')->middleware('doNotCacheResponse');
+
+// Nearby Argo Navis export (plain text)
+Route::get('/object/{slug}/nearby-argo.txt', [App\Http\Controllers\NearbyExportController::class, 'argoNavis'])
+    ->name('object.nearby.argo')->middleware('doNotCacheResponse');
+
+// Nearby SkySafari .skylist export (plain text)
+Route::get('/object/{slug}/nearby-skylist.skylist', [App\Http\Controllers\NearbyExportController::class, 'skylist'])
+    ->name('object.nearby.skylist')->middleware('doNotCacheResponse');
+
+// Nearby SkyTools plain TXT export (one object name per line)
+Route::get('/object/{slug}/nearby-stxt.txt', [App\Http\Controllers\NearbyExportController::class, 'stxt'])
+    ->name('object.nearby.stxt')->middleware('doNotCacheResponse');
+
+// Nearby AstroPlanner .apd export (SQLite database file)
+Route::get('/object/{slug}/nearby-apd.apd', [App\Http\Controllers\NearbyExportController::class, 'apd'])
+    ->name('object.nearby.apd')->middleware('doNotCacheResponse');
+
 // Create session (authenticated)
 Route::get('/sessions/create', [App\Http\Controllers\SessionController::class, 'create'])
     ->name('session.create')->middleware(['auth', 'doNotCacheResponse']);
@@ -311,6 +434,11 @@ Route::post('/messages/mark-all-read', [App\Http\Controllers\MessagesController:
     ->name('messages.markAllRead')
     ->middleware(['auth', 'doNotCacheResponse']);
 
+// Delete all messages for current user (mark as deleted)
+Route::post('/messages/delete-all', [App\Http\Controllers\MessagesController::class, 'deleteAll'])
+    ->name('messages.deleteAll')
+    ->middleware(['auth', 'doNotCacheResponse']);
+
 // Reply data (plain-text message) for prefill via AJAX
 Route::get('/messages/{id}/reply-data', [App\Http\Controllers\MessagesController::class, 'replyData'])
     ->name('messages.replyData')
@@ -333,12 +461,12 @@ Route::get('/sitemap.xml', function () {
 
         $urls = [];
         // Static / important pages
-        $urls[] = ['loc' => $base.'/', 'lastmod' => $now, 'changefreq' => 'daily', 'priority' => '1.0'];
-        $urls[] = ['loc' => $base.'/sessions', 'lastmod' => $now, 'changefreq' => 'daily', 'priority' => '0.8'];
-        $urls[] = ['loc' => $base.'/popular-sessions', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
-        $urls[] = ['loc' => $base.'/popular-observations', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
-        $urls[] = ['loc' => $base.'/drawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
-        $urls[] = ['loc' => $base.'/cometdrawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
+        $urls[] = ['loc' => $base . '/', 'lastmod' => $now, 'changefreq' => 'daily', 'priority' => '1.0'];
+        $urls[] = ['loc' => $base . '/sessions', 'lastmod' => $now, 'changefreq' => 'daily', 'priority' => '0.8'];
+        $urls[] = ['loc' => $base . '/popular-sessions', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
+        $urls[] = ['loc' => $base . '/popular-observations', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
+        $urls[] = ['loc' => $base . '/drawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
+        $urls[] = ['loc' => $base . '/cometdrawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
 
         // Recent public sessions (limit to avoid heavy queries)
         try {
@@ -350,7 +478,7 @@ Route::get('/sitemap.xml', function () {
             foreach ($sessions as $s) {
                 $user = User::where('username', $s->observerid)->first();
                 $slug = $user ? $user->slug : $s->observerid;
-                $loc = $base.'/session/'.($slug ?? $s->observerid).'/'.($s->slug ?? $s->id);
+                $loc = $base . '/session/' . ($slug ?? $s->observerid) . '/' . ($s->slug ?? $s->id);
                 $urls[] = ['loc' => $loc, 'lastmod' => optional($s->updated_at)->toAtomString() ?? $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
             }
         } catch (\Throwable $e) {
@@ -365,12 +493,12 @@ Route::get('/sitemap.xml', function () {
             $xml .= "  <url>" . PHP_EOL;
             // Use XML-safe escaping
             $loc = htmlspecialchars($u['loc'], ENT_XML1 | ENT_COMPAT, 'UTF-8');
-            $xml .= '    <loc>'.$loc."</loc>" . PHP_EOL;
+            $xml .= '    <loc>' . $loc . "</loc>" . PHP_EOL;
             if (! empty($u['lastmod'])) {
-                $xml .= '    <lastmod>'.$u['lastmod']."</lastmod>" . PHP_EOL;
+                $xml .= '    <lastmod>' . $u['lastmod'] . "</lastmod>" . PHP_EOL;
             }
-            $xml .= '    <changefreq>'.$u['changefreq']."</changefreq>" . PHP_EOL;
-            $xml .= '    <priority>'.$u['priority']."</priority>" . PHP_EOL;
+            $xml .= '    <changefreq>' . $u['changefreq'] . "</changefreq>" . PHP_EOL;
+            $xml .= '    <priority>' . $u['priority'] . "</priority>" . PHP_EOL;
             $xml .= "  </url>" . PHP_EOL;
         }
         $xml .= '</urlset>' . PHP_EOL;

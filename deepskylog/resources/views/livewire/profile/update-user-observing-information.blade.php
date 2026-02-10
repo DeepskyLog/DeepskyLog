@@ -45,7 +45,7 @@
             <x-select
                 label="{!! __('Default observing site') !!}"
                 wire:model.live="stdlocation"
-                :async-data="route('locations.api')"
+                :async-data="route('locations.api', ['instrument_set' => $stdinstrumentset ?? ''])"
                 option-label="name"
                 option-value="id"
             />
@@ -56,7 +56,7 @@
             <x-select
                 label="{{ __('Default instrument') }}"
                 wire:model.live="stdtelescope"
-                :async-data="route('instrument.api')"
+                :async-data="route('instrument.api', ['instrument_set' => $stdinstrumentset ?? ''])"
                 option-label="name"
                 option-value="id"
             />
@@ -91,6 +91,28 @@
                 name="showInches"
                 id="showInches"
                 wire:model.live="showInches"
+            />
+        </div>
+
+        {{-- Default eyepiece --}}
+        <div class="col-span-6 sm:col-span-5">
+            <x-select
+                label="{{ __('Default eyepiece') }}"
+                wire:model.live="stdeyepiece"
+                :async-data="route('eyepiece.select.api', ['instrument_set' => $stdinstrumentset ?? ''])"
+                option-label="name"
+                option-value="id"
+            />
+        </div>
+
+        {{-- Default lens --}}
+        <div class="col-span-6 sm:col-span-5">
+            <x-select
+                label="{{ __('Default lens') }}"
+                wire:model.live="stdlens"
+                :async-data="route('lens.select.api', ['instrument_set' => $stdinstrumentset ?? ''])"
+                option-label="name"
+                option-value="id"
             />
         </div>
     </x-slot>

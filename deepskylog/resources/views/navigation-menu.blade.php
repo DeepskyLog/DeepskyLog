@@ -1,22 +1,68 @@
 <nav x-data="{ open: false }" class="border-b border-gray-700 bg-gray-900">
     <!-- Primary Navigation Menu -->
     <div class="relative">
-    <!-- Left brand (flush left) -->
-    <div class="absolute left-0 inset-y-0 hidden lg:flex items-center pl-4 lg:pl-6">
+        <!-- Left brand (flush left) -->
+        <div class="absolute left-0 inset-y-0 hidden lg:flex items-center pl-4 lg:pl-6 z-60">
             <x-nav-link href="/">
                 <div class="text-xl font-bold text-gray-200">
-                    {{ __("DeepskyLog") }}
+                    {{ __('DeepskyLog') }}
                 </div>
             </x-nav-link>
         </div>
 
-        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <div class="flex h-16 justify-between pl-6 lg:pl-8">
+        @php
+            // Default centered nav container
+            $navContainerClass = 'mx-auto max-w-6xl px-4 sm:px-6 lg:px-8';
+
+            // If we're on an object page, try a lightweight lookup to detect
+            // whether the requested slug maps to a deepsky object. When true,
+            // render the nav container full-bleed so header/background align
+            // with the page container (prevents a white gap at the top).
+            try {
+                if (request()->is('object/*')) {
+                    $slug = request()->segment(2) ?? '';
+                    $candidates = [];
+                    if (! empty($slug)) {
+                        $raw = (string) $slug;
+                        $lower = mb_strtolower($raw);
+                        $candidates[] = $lower;
+                        $candidates[] = \Illuminate\Support\Str::slug($raw, '-');
+                        $candidates[] = str_replace('-', '', $lower);
+                        $candidates = array_values(array_unique(array_filter($candidates)));
+                    }
+
+                    $found = false;
+                    foreach ($candidates as $c) {
+                        // Check canonical objectnames mapping first
+                        $on = \Illuminate\Support\Facades\DB::table('objectnames')->where('slug', $c)->first();
+                        if ($on) {
+                            $found = true;
+                            break;
+                        }
+                        // Check objects table for matching slug
+                        $o = \Illuminate\Support\Facades\DB::table('objects')->where('slug', $c)->first();
+                        if ($o) {
+                            $found = true;
+                            break;
+                        }
+                    }
+
+                    if ($found) {
+                        $navContainerClass = 'w-full px-4 sm:px-6 lg:px-8';
+                    }
+                }
+            } catch (\Throwable $_) {
+                // keep default on error
+            }
+        @endphp
+
+        <div class="{{ $navContainerClass }}">
+            <div class="flex h-16 justify-between pl-6 lg:pl-36">
                 <!-- Mobile brand (visible on small screens) -->
-                <div class="flex items-center lg:hidden pl-0">
+                <div class="flex items-center lg:hidden pl-0 z-60">
                     <x-nav-link href="/">
                         <div class="text-lg font-bold text-gray-200">
-                            {{ __("DeepskyLog") }}
+                            {{ __('DeepskyLog') }}
                         </div>
                     </x-nav-link>
                 </div>
@@ -24,229 +70,178 @@
                 <div class="flex">
                     <!-- Navigation Links -->
 
-                <!-- View Dropdown -->
-                <x-menu.view-dropdown />
+                    <!-- View Dropdown -->
+                    <x-menu.view-dropdown />
 
-                <!-- Search Dropdown -->
-                <x-menu.search-dropdown />
+                    <!-- Search Dropdown -->
+                    <x-menu.search-dropdown />
 
-                <!-- Add Dropdown -->
-                <x-menu.add-dropdown />
+                    <!-- Add Dropdown -->
+                    <x-menu.add-dropdown />
 
-                <!-- Administration Dropdown -->
-                <x-menu.admin-dropdown />
+                    <!-- Administration Dropdown -->
+                    <x-menu.admin-dropdown />
 
-                <!-- Downloads Dropdown -->
-                <x-menu.downloads-dropdown />
+                    <!-- Downloads Dropdown -->
+                    <x-menu.downloads-dropdown />
 
-                <!-- Help Dropdown -->
-                <x-menu.help-dropdown />
-            </div>
-            <div class="flex">
-                <div class="hidden lg:ml-6 lg:flex lg:items-center">
-                    <!-- Teams Dropdown -->
-                    <x-menu.team-dropdown />
+                    <!-- Help Dropdown -->
+                    <x-menu.help-dropdown />
+                </div>
+                <div class="flex">
+                    <div class="hidden lg:ml-6 lg:flex lg:items-center">
+                        <!-- Teams Dropdown -->
+                        <x-menu.team-dropdown />
 
-                    <!-- Settings Dropdown -->
-                    <x-menu.settings-dropdown />
+                        <!-- Settings Dropdown -->
+                        <x-menu.settings-dropdown />
+                    </div>
+
+                    <!-- Language selection -->
+                    <x-language_selection />
+
+                    <!-- Login / Register dropdown -->
+                    @if (Auth::guest())
+                        <div class="flex h-16 items-center justify-between">
+                            <!-- Navigation Links -->
+                            <div class="space-x-8 sm:-my-px sm:ml-10 sm:flex-none">
+                                <a href="{{ route('login') }}"
+                                    class="text-sm text-gray-700 underline dark:text-gray-500">
+                                    {{ __('Log in') }}
+                                </a>
+
+                                @if (Route::has('register'))
+                                    <a href="{{ route('register') }}"
+                                        class="ml-4 text-sm text-gray-700 underline dark:text-gray-500">
+                                        {!! __('Register') !!}
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+                </div>
+                <div class="flex items-center">
+                    {{-- Post box --}}
+                    @if (!Auth::guest())
+                        <div class="space-x-2 lg:ml-6 lg:flex lg:items-center">
+                            <x-nav-link href="{{ route('messages.index') }}">
+                                <div class="flex space-x-2">
+                                    <x-icon name="inbox" class="h-5 w-5" />
+                                    <x-mini-badge rounded secondary
+                                        label="{{ App\Models\Message::getNumberOfUnreadMails(Auth::user()->username) }}" />
+                                </div>
+                            </x-nav-link>
+                        </div>
+                    @endif
                 </div>
 
-                <!-- Language selection -->
-                <x-language_selection />
+                <!-- Hamburger -->
+                <div class="-mr-2 flex items-center lg:hidden">
+                    <button @click="open = ! open"
+                        class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition hover:bg-gray-800 hover:text-gray-500 focus:bg-gray-800 focus:text-gray-500 focus:outline-hidden">
+                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                            <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
 
-                <!-- Login / Register dropdown -->
-                @if (Auth::guest())
-                    <div class="flex h-16 items-center justify-between">
-                        <!-- Navigation Links -->
-                        <div class="space-x-8 sm:-my-px sm:ml-10 sm:flex-none">
-                            <a
-                                href="{{ route("login") }}"
-                                class="text-sm text-gray-700 underline dark:text-gray-500"
-                            >
-                                {{ __("Log in") }}
-                            </a>
+            <!-- Responsive Navigation Menu -->
+            <div :class="{ 'block': open, 'hidden': !open }" class="hidden">
+                <!-- Responsive Observer Quick Links (first entry) -->
+                <x-menu.observer-responsive-dropdown />
 
-                            @if (Route::has("register"))
-                                <a
-                                    href="{{ route("register") }}"
-                                    class="ml-4 text-sm text-gray-700 underline dark:text-gray-500"
-                                >
-                                    {!! __("Register") !!}
-                                </a>
+                <!-- Responsive View Dropdown -->
+                <x-menu.view-responsive-dropdown />
+
+                <!-- Responsive Search Dropdown -->
+                <x-menu.search-responsive-dropdown />
+
+                <!-- Responsive Add Dropdown -->
+                <x-menu.add-responsive-dropdown />
+
+                <!-- Responsive Administration Dropdown -->
+                <x-menu.admin-responsive-dropdown />
+
+                <!-- Responsive Downloads Dropdown -->
+                <x-menu.downloads-responsive-dropdown />
+
+                <!-- Responsive Help Dropdown -->
+                <x-menu.help-responsive-dropdown />
+
+                <!-- Responsive Settings Options -->
+                @if (Auth::user())
+                    <div class="border-t border-gray-400 pb-1 pt-4">
+                        <div class="flex items-center px-4">
+                            @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
+                                <div class="mr-3 shrink-0">
+                                    <img class="h-10 w-10 rounded-full object-cover"
+                                        src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                                </div>
+                            @endif
+
+                            <div>
+                                <div class="text-base font-medium text-gray-400">
+                                    {{ Auth::user()->name }}
+                                </div>
+                                <div class="text-sm font-medium text-gray-400">
+                                    {{ Auth::user()->email }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 space-y-1">
+                            <x-dropdown.item icon="user-circle" href="/observers/{{ Auth::user()->slug }}"
+                                label="{{ __('Details') }}" />
+
+                            <!-- Account Management -->
+                            <x-dropdown.item icon="cog" href="{{ route('profile.show') }}"
+                                label="{{ __('Profile') }}" />
+
+                            @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
+                                <x-dropdown.item href="{{ route('api-tokens.index') }}"
+                                    label="{{ __('API Tokens') }}" />
+                            @endif
+
+                            <!-- Authentication -->
+                            <form method="POST" action="{{ route('logout') }}" x-data>
+                                @csrf
+
+                                <x-dropdown.item icon="arrow-left-start-on-rectangle" href="{{ route('logout') }}"
+                                    @click.prevent="$root.submit();" label='{{ __('Log Out') }}' />
+                            </form>
+
+                            <!-- Team Management -->
+                            @if (Auth::user() && Laravel\Jetstream\Jetstream::hasTeamFeatures() && Auth::user()->teams->count() > 1)
+                                <div class="border-t border-gray-400"></div>
+
+                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                    {!! __('Manage Team') !!}
+                                </div>
+
+                                <!-- Team Settings -->
+                                <x-dropdown.item href="{{ route('teams.show', Auth::user()->currentTeam->slug) }}"
+                                    :active="@json(request()->routeIs('teams.show'))" label='{!! __('Team Settings') !!}' />
+
+                                <div class="border-t border-gray-400"></div>
+
+                                <!-- Team Switcher -->
+                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                    {!! __('Switch Teams') !!}
+                                </div>
+
+                                @foreach (Auth::user()->allTeams() as $team)
+                                    <x-switchable-team :team="$team" component="link" />
+                                @endforeach
                             @endif
                         </div>
                     </div>
                 @endif
             </div>
-            <div class="flex items-center">
-                {{-- Post box --}}
-                @if (! Auth::guest())
-                    <div class="space-x-2 lg:ml-6 lg:flex lg:items-center">
-                        <x-nav-link
-                            href="{{ route('messages.index') }}"
-                        >
-                            <div class="flex space-x-2">
-                                <x-icon name="inbox" class="h-5 w-5" />
-                                    <x-mini-badge
-                                        rounded
-                                        secondary
-                                        label="{{ App\Models\Message::getNumberOfUnreadMails(Auth::user()->username) }}"
-                                    />
-                            </div>
-                        </x-nav-link>
-                    </div>
-                @endif
-            </div>
-
-            <!-- Hamburger -->
-            <div class="-mr-2 flex items-center lg:hidden">
-                <button
-                    @click="open = ! open"
-                    class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition hover:bg-gray-800 hover:text-gray-500 focus:bg-gray-800 focus:text-gray-500 focus:outline-hidden"
-                >
-                    <svg
-                        class="h-6 w-6"
-                        stroke="currentColor"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            :class="{ 'hidden': open, 'inline-flex': !open }"
-                            class="inline-flex"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"
-                        />
-                        <path
-                            :class="{ 'hidden': !open, 'inline-flex': open }"
-                            class="hidden"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                        />
-                    </svg>
-                </button>
-            </div>
         </div>
-
-        <!-- Responsive Navigation Menu -->
-        <div :class="{ 'block': open, 'hidden': !open }" class="hidden">
-            <!-- Responsive Observer Quick Links (first entry) -->
-            <x-menu.observer-responsive-dropdown />
-
-            <!-- Responsive View Dropdown -->
-            <x-menu.view-responsive-dropdown />
-
-            <!-- Responsive Search Dropdown -->
-            <x-menu.search-responsive-dropdown />
-
-            <!-- Responsive Add Dropdown -->
-            <x-menu.add-responsive-dropdown />
-
-            <!-- Responsive Administration Dropdown -->
-            <x-menu.admin-responsive-dropdown />
-
-            <!-- Responsive Downloads Dropdown -->
-            <x-menu.downloads-responsive-dropdown />
-
-            <!-- Responsive Help Dropdown -->
-            <x-menu.help-responsive-dropdown />
-
-            <!-- Responsive Settings Options -->
-            @if (Auth::user())
-                <div class="border-t border-gray-400 pb-1 pt-4">
-                    <div class="flex items-center px-4">
-                        @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                            <div class="mr-3 shrink-0">
-                                <img
-                                    class="h-10 w-10 rounded-full object-cover"
-                                    src="{{ Auth::user()->profile_photo_url }}"
-                                    alt="{{ Auth::user()->name }}"
-                                />
-                            </div>
-                        @endif
-
-                        <div>
-                            <div class="text-base font-medium text-gray-400">
-                                {{ Auth::user()->name }}
-                            </div>
-                            <div class="text-sm font-medium text-gray-400">
-                                {{ Auth::user()->email }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-3 space-y-1">
-                        <x-dropdown.item
-                            icon="user-circle"
-                            href="/observers/{{ Auth::user()->slug }}"
-                            label="{{ __('Details') }}"
-                        />
-
-                        <!-- Account Management -->
-                        <x-dropdown.item
-                            icon="cog"
-                            href="{{ route('profile.show') }}"
-                            label="{{ __('Profile') }}"
-                        />
-
-                        @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                            <x-dropdown.item
-                                href="{{ route('api-tokens.index') }}"
-                                label="{{ __('API Tokens') }}"
-                            />
-                        @endif
-
-                        <!-- Authentication -->
-                        <form
-                            method="POST"
-                            action="{{ route("logout") }}"
-                            x-data
-                        >
-                            @csrf
-
-                            <x-dropdown.item
-                                icon="arrow-left-start-on-rectangle"
-                                href="{{ route('logout') }}"
-                                @click.prevent="$root.submit();"
-                                label='{{ __("Log Out") }}'
-                            />
-                        </form>
-
-                        <!-- Team Management -->
-                        @if (Auth::user() && Laravel\Jetstream\Jetstream::hasTeamFeatures() && Auth::user()->teams->count() > 1)
-                            <div class="border-t border-gray-400"></div>
-
-                            <div class="block px-4 py-2 text-xs text-gray-400">
-                                {!! __("Manage Team") !!}
-                            </div>
-
-                            <!-- Team Settings -->
-                            <x-dropdown.item
-                                href="{{ route('teams.show', Auth::user()->currentTeam->slug) }}"
-                                :active="request()->routeIs('teams.show')"
-                                label='{!! __("Team Settings") !!}'
-                            />
-
-                            <div class="border-t border-gray-400"></div>
-
-                            <!-- Team Switcher -->
-                            <div class="block px-4 py-2 text-xs text-gray-400">
-                                {!! __("Switch Teams") !!}
-                            </div>
-
-                            @foreach (Auth::user()->allTeams() as $team)
-                                <x-switchable-team
-                                    :team="$team"
-                                    component="link"
-                                />
-                            @endforeach
-                        @endif
-                    </div>
-                </div>
-            @endif
-        </div>
-    </div>
 </nav>

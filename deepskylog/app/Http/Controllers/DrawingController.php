@@ -20,7 +20,11 @@ class DrawingController extends Controller
     {
         $sketches = ObservationsOld::where('hasDrawing', 1)->orderBy('id', 'desc')->paginate(20);
 
-        return view('drawings.show', ['user' => '', 'sketches' => $sketches]);
+        // Preload users to avoid N+1 queries in the view
+        $observerIds = $sketches->pluck('observerid')->unique()->all();
+        $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+
+        return view('drawings.show', ['user' => '', 'sketches' => $sketches, 'sketchUsers' => $sketchUsers]);
     }
 
     /**
@@ -41,6 +45,10 @@ class DrawingController extends Controller
         $sketches = ObservationsOld::where('observerid', $user->username)
             ->where('hasDrawing', 1)->orderBy('date', 'desc')->paginate(20);
 
-        return view('drawings.show', ['user' => $user, 'sketches' => $sketches]);
+        // Preload users to avoid N+1 queries in the view
+        $observerIds = $sketches->pluck('observerid')->unique()->all();
+        $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+
+        return view('drawings.show', ['user' => $user, 'sketches' => $sketches, 'sketchUsers' => $sketchUsers]);
     }
 }

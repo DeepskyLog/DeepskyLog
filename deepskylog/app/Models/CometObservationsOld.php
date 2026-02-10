@@ -86,7 +86,7 @@ class CometObservationsOld extends Model
 
     public function object(): HasOne
     {
-        return $this->hasOne(CometObjectsOld::class, 'id', 'objectid');
+        return $this->hasOne(CometObject::class, 'id', 'objectid');
     }
 
     /**

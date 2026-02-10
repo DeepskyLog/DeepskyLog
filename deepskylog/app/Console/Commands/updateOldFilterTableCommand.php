@@ -33,8 +33,10 @@ class updateOldFilterTableCommand extends Command
                 $old_filter->name = html_entity_decode($filter->name);
                 $old_filter->type = $filter->type;
                 $old_filter->color = $filter->color;
-                $old_filter->wratten = $filter->wratten;
-                $old_filter->schott = $filter->schott;
+                // The old DB requires non-null values for some columns (eg. `wratten`).
+                // Ensure we write a safe default when the new record has nulls.
+                $old_filter->wratten = $filter->wratten ?? '';
+                $old_filter->schott = $filter->schott ?? '';
                 $old_filter->observer = $filter->observer;
                 $old_filter->filteractive = $filter->filteractive;
                 $old_filter->save();

@@ -175,10 +175,17 @@ class InstrumentTable extends PowerGridComponent
         return view('actions.instrument', ['row' => $row]);
     }
 
-    public function onUpdatedToggleable($id, $field, $value): void
+    /**
+     * PowerGrid expects string types for the toggleable update callback.
+     * Match the base signature: onUpdatedToggleable(string $id, string $field, string $value): void
+     */
+    public function onUpdatedToggleable(string $id, string $field, string $value): void
     {
+        // $id may be numeric in string form; cast where needed
+        $bool = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+
         Instrument::query()->where('id', $id)->update([
-            $field => boolval($value),
+            $field => $bool,
         ]);
     }
 

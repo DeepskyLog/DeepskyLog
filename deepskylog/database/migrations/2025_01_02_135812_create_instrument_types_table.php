@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('instrument_types', function (Blueprint $table) {
-            $table->id()->primary()->startingValue(0);
+            $table->id()->startingValue(0);
             $table->string('name')->unique();
             $table->boolean('flip_image')->default(false);
             $table->boolean('flop_image')->default(false);

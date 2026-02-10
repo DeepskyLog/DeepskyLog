@@ -68,9 +68,11 @@ final class PopularObservationsTable extends PowerGridComponent
         if ($oldDbName) {
             $obsTable = "`{$oldDbName}`.`observations`";
             $cometTable = "`{$oldDbName}`.`cometobservations`";
+            $cometObjectTable = "`{$oldDbName}`.`cometobjects`";
         } else {
             $obsTable = '`observations`';
             $cometTable = '`cometobservations`';
+            $cometObjectTable = '`cometobjects`';
         }
 
         $aggQuery = ObservationLike::selectRaw(
@@ -80,6 +82,21 @@ final class PopularObservationsTable extends PowerGridComponent
             ."WHEN observation_type = 'comet' "
             ."THEN CAST((SELECT c.date FROM {$cometTable} c WHERE c.id = observation_id LIMIT 1) AS UNSIGNED) "
             .'ELSE NULL END) as obs_date'
+            .", (CASE WHEN observation_type = 'deepsky' "
+            ."THEN (SELECT o.observerid FROM {$obsTable} o WHERE o.id = observation_id LIMIT 1) "
+            ."WHEN observation_type = 'comet' "
+            ."THEN (SELECT c.observerid FROM {$cometTable} c WHERE c.id = observation_id LIMIT 1) "
+            .'ELSE NULL END) as observerid'
+            .", (CASE WHEN observation_type = 'deepsky' "
+            ."THEN (SELECT COALESCE((SELECT u.name FROM users u WHERE u.username = o.observerid LIMIT 1), o.observerid) FROM {$obsTable} o WHERE o.id = observation_id LIMIT 1) "
+            ."WHEN observation_type = 'comet' "
+            ."THEN (SELECT COALESCE((SELECT u.name FROM users u WHERE u.username = c.observerid LIMIT 1), c.observerid) FROM {$cometTable} c WHERE c.id = observation_id LIMIT 1) "
+            .'ELSE NULL END) as observer_display'
+            .", (CASE WHEN observation_type = 'deepsky' "
+            ."THEN (SELECT o.objectname FROM {$obsTable} o WHERE o.id = observation_id LIMIT 1) "
+            ."WHEN observation_type = 'comet' "
+            ."THEN (SELECT co.name FROM {$cometObjectTable} co JOIN {$cometTable} c ON co.id = c.objectid WHERE c.id = observation_id LIMIT 1) "
+            .'ELSE NULL END) as objectname_sort'
         )
             ->whereIn('observation_type', ['deepsky', 'comet'])
             ->groupBy('observation_type', 'observation_id')
@@ -135,6 +152,9 @@ final class PopularObservationsTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('type')
             ->add('id')
+            ->add('observerid')
+            ->add('observer_display')
+            ->add('objectname_sort')
             ->add('objectname', function ($row) {
                 // $row is the aggregated ObservationLike model instance
                 $objectName = null;
@@ -302,15 +322,17 @@ final class PopularObservationsTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make(__('Object'), 'objectname')
-                ->searchable(), // objectname is computed from related models; sorting requires a DB join. Disable here.
+            Column::make(__('Object'), 'objectname', 'objectname_sort')
+                ->searchable()
+                ->sortable(),
 
             Column::make(__('Object'), 'objectname_plain')
                 ->hidden()
                 ->visibleInExport(true),
 
-            Column::make(__('Observer'), 'observer_name')
+            Column::make(__('Observer'), 'observer_name', 'observer_display')
                 ->searchable()
+                ->sortable()
                 ->visibleInExport(false), // hide HTML link in exports
 
             Column::make(__('Observer'), 'observer_name_plain')
@@ -318,11 +340,13 @@ final class PopularObservationsTable extends PowerGridComponent
                 ->visibleInExport(true),
 
             // Map the displayed formatted date ('date') to the DB field 'obs_date'.
-            // Sorting is disabled because the date is computed/derived.
+            // Sorting enabled via the derived `obs_date` alias.
             Column::make(__('Date'), 'date', 'obs_date')
-                ->searchable(),
+                ->searchable()
+                ->sortable(),
 
-            Column::make(__('Likes'), 'likes'),
+            Column::make(__('Likes'), 'likes')
+                ->sortable(),
         ];
     }
 }

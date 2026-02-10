@@ -1,0 +1,524 @@
+openapi: 3.0.3
+# Correct top-level info and servers
+info:
+  title: DeepskyLog API
+  version: '1.0.0'
+  description: Full OpenAPI specification for DeepskyLog (includes search API).
+servers:
+  - url: https://api.example.com
+    description: Production server (replace with your deployment URL)
+  - url: http://localhost:8000
+    description: Local development server
+
+# Paths (merged from search fragment)
+paths:
+  /api/search:
+    get:
+      summary: Unified search across objects, comets, planets, moons and lunar features
+      description: |
+        Search the unified `search_index`. Supports fulltext ranking, prefix and substring fallback, and optional filters to restrict results to specific source tables or object types.
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: The query string to search for. When `substring=1` a contains match is used (LIKE '%q%'). Otherwise fulltext is attempted and falls back to prefix LIKE ('q%').
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: Max number of results to return. Defaults to 50.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 50
+        - name: substring
+          in: query
+          required: false
+          description: If true (1) do a substring search using LIKE '%q%'. More expensive on large datasets.
+          schema:
+            type: boolean
+        - name: source
+          in: query
+          required: false
+          description: |
+            Comma-separated list of source tables to restrict results to. Allowed values: `objects`, `cometobjects`, `planets`, `moons`, `lunar_features`, `asteroids`.
+          schema:
+            type: string
+            example: "planets,moons"
+        - name: object_type
+          in: query
+          required: false
+          description: |
+            Comma-separated list of source_type values to restrict results to. Common values: `object`, `comet`, `planet`, `moon`, `crater`, `mare`, `lunar_feature`.
+          schema:
+            type: string
+            example: "planet,moon"
+      responses:
+        '200':
+          description: A list of search result items (may be empty)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: internal search_index id
+                        name:
+                          type: string
+                          description: primary name used for searching
+                        display_name:
+                          type: string
+                          description: human-friendly display name
+                        source_table:
+                          type: string
+                          description: the source table (objects, planets, ...)
+                        source_pk:
+                          type: string
+                          description: primary key value in the source table
+                        source_type:
+                          type: string
+                          description: semantic type (planet, moon, comet, crater, mare, ...)
+                        ra:
+                          type: number
+                          nullable: true
+                          description: right ascension in degrees when available
+                        decl:
+                          type: number
+                          nullable: true
+                          description: declination in degrees when available
+                        score:
+                          type: number
+                          nullable: true
+                          description: fulltext relevance score when fulltext search used
+              examples:
+                basic:
+                  value:
+                    data:
+                      - id: 133867
+                        name: "Earth"
+                        display_name: "Earth"
+                        source_table: "planets"
+                        source_pk: "4"
+                        source_type: "planet"
+                        ra: null
+                        decl: null
+                        score: 26.23733139038086
+        '400':
+          description: Invalid parameters (for example an invalid token in `source` or `object_type`)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                invalid_source:
+                  value:
+                    error: "Invalid source tokens: plannets"
+
+  # Auto-generated skeletons for api/* routes (minimal; fill in details as needed)
+  /api/addUserToTeam:
+    get:
+      summary: addUserToTeam index (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/atlas:
+    get:
+      summary: atlas index (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/countries:
+    get:
+      summary: list countries (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/eyepiece/select:
+    get:
+      summary: eyepiece select (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/eyepiece_makes:
+    get:
+      summary: eyepiece makes (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/eyepiece_types:
+    get:
+      summary: eyepiece types (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/eyepieces/{userid}:
+    get:
+      summary: eyepieces for a user (skeleton)
+      parameters:
+        - name: userid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of eyepieces for the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Eyepiece'
+
+  /api/filter/select:
+    get:
+      summary: filter select (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/filter_colors:
+    get:
+      summary: filter colors (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/filter_makes:
+    get:
+      summary: filter makes (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/filter_types:
+    get:
+      summary: filter types (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/filters/{userid}:
+    get:
+      summary: filters for a user (skeleton)
+      parameters:
+        - name: userid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of filters for the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Filter'
+
+  /api/instrument:
+    get:
+      summary: instrument select (skeleton)
+      responses:
+        '200':
+          description: Instrument select list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SelectItem'
+
+  /api/instrument/select:
+    get:
+      summary: instrument select (skeleton)
+      responses:
+        '200':
+          description: Instrument select list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SelectItem'
+
+  /api/instrument/{userid}:
+    get:
+      summary: instruments for a user (skeleton)
+      parameters:
+        - name: userid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of instruments for the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Instrument'
+
+  /api/instrument_makes:
+    get:
+      summary: instrument makes (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/instrument_types:
+    get:
+      summary: instrument types (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/instrumentset:
+    get:
+      summary: instrumentset (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/instrumentset/select:
+    get:
+      summary: instrumentset select (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/lens/select:
+    get:
+      summary: lens select (skeleton)
+      responses:
+        '200':
+          description: Lens select list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SelectItem'
+
+  /api/lens_makes:
+    get:
+      summary: lens makes (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/lenses/{userid}:
+    get:
+      summary: lenses for a user (skeleton)
+      parameters:
+        - name: userid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of lenses for the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lens'
+
+  /api/licenses:
+    get:
+      summary: licenses (skeleton)
+      responses:
+        '200':
+          description: License list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LicenseItem'
+
+  /api/location/select:
+    get:
+      summary: location select (skeleton)
+      responses:
+        '200':
+          description: Location select list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SelectItem'
+
+  /api/locations:
+    get:
+      summary: locations (skeleton)
+      responses:
+        '200':
+          description: List of known locations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+
+  /api/mount_types:
+    get:
+      summary: mount types (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/observation_languages:
+    get:
+      summary: observation languages (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/ui_languages:
+    get:
+      summary: ui languages (skeleton)
+      responses:
+        '200':
+          description: OK
+
+  /api/user:
+    get:
+      summary: current authenticated user (skeleton)
+      responses:
+        '200':
+          description: Authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /api/users/select:
+    get:
+      summary: users select (skeleton)
+      responses:
+        '200':
+          description: Selection list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SelectItem'
+
+components:
+  schemas:
+    SelectItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        label:
+          type: string
+      required: [id, name]
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required: [id, name, email]
+    Eyepiece:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        focal_length:
+          type: number
+          nullable: true
+        type:
+          type: string
+      required: [id, name]
+    Instrument:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        make:
+          type: string
+        type:
+          type: string
+      required: [id, name]
+    Lens:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        make:
+          type: string
+      required: [id, name]
+    Location:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        lat:
+          type: number
+          nullable: true
+        lon:
+          type: number
+          nullable: true
+      required: [id, name]
+    Filter:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        color:
+          type: string
+      required: [id, name]
+    LicenseItem:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+      required: [code]

@@ -24,6 +24,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Schema;
+
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +52,8 @@ Route::get('countries.index', function (Request $request) {
             'name' => Countries::getOne(auth()->user()->country, $request->lang),
         ];
     }
+
+    Route::get('search', [SearchController::class, 'search'])->name('api.search');
     foreach (Countries::getList($request->lang) as $code => $name) {
         if ($request->search == '' || Str::contains(Str::lower($name), Str::lower($request->search))) {
             $allCountries[] = [
@@ -115,6 +120,27 @@ Route::get('locations.api', function (Request $request) {
                     'description' => $loc->description ?? '',
                 ];
             }
+        }
+    }
+
+    // If an instrument_set is provided, try to return only locations that belong to that set
+    if ($request->filled('instrument_set')) {
+        $set = InstrumentSet::where('id', $request->instrument_set)->first();
+        if ($set) {
+            $locations = $set->locations()->where('active', 1)->get();
+            if ($locations->isNotEmpty()) {
+                foreach ($locations as $location) {
+                    if ($request->search == '' || Str::contains(Str::lower($location->name), Str::lower($request->search))) {
+                        $allLocations[] = [
+                            'id' => $location->id,
+                            'name' => $location->name,
+                            'description' => $location->description ?? '',
+                        ];
+                    }
+                }
+                return $allLocations;
+            }
+            // empty set -> fall through to global list
         }
     }
 
@@ -232,6 +258,27 @@ Route::get('instrument.api', function (Request $request) {
             'name' => Instrument::where('id', auth()->user()->stdtelescope)->first()->fullName(),
             'description' => Instrument::where('id', auth()->user()->stdtelescope)->first()->description,
         ];
+    }
+
+    // If an instrument_set is provided, try to return only instruments that belong to that set
+    if ($request->filled('instrument_set')) {
+        $set = InstrumentSet::where('id', $request->instrument_set)->first();
+        if ($set) {
+            $instruments = $set->instruments()->where('active', 1)->get();
+            if ($instruments->isNotEmpty()) {
+                foreach ($instruments as $instrument) {
+                    if ($request->search == '' || Str::contains(Str::lower($instrument->fullName()), Str::lower($request->search))) {
+                        $allInstruments[] = [
+                            'id' => $instrument->id,
+                            'name' => $instrument->fullName(),
+                            'description' => $instrument->description,
+                        ];
+                    }
+                }
+                return $allInstruments;
+            }
+            // empty set -> fall through to global list
+        }
     }
 
     // Get the instruments, but they should be active
@@ -426,11 +473,46 @@ Route::get('instrument.select.api', function (Request $request) {
         }
     }
 
-    // Get the instruments for the authenticated user (only active ones) and sort alphabetically
+    // Get the instruments for the authenticated user (only active ones).
+    // Sort by aperture (diameter) descending so largest diameters appear first.
     $instruments = Instrument::where('observer', auth()->user()->username)->where('active', 1)->get();
-    $instruments = $instruments->sortBy(function ($i) {
-        return Str::lower($i->fullName());
-    });
+    $instruments = $instruments->sortByDesc(function ($i) {
+        return $i->aperture_mm ?? 0;
+    })->values();
+
+    // If an instrument_set is provided, try to return only instruments that belong to that set
+    if ($request->filled('instrument_set')) {
+        $set = InstrumentSet::where('id', $request->instrument_set)->first();
+        if ($set) {
+            $setInstruments = $set->instruments()->where('active', 1)->get();
+            if ($setInstruments->isNotEmpty()) {
+                // Sort by aperture descending (largest first)
+                $setInstruments = $setInstruments->sortByDesc(function ($i) {
+                    return $i->aperture_mm ?? 0;
+                })->values();
+                foreach ($setInstruments as $instrument) {
+                    if ($request->search == '' || Str::contains(Str::lower($instrument->fullName()), Str::lower($request->search))) {
+                        $allInstruments[] = [
+                            'id' => $instrument->id,
+                            'name' => $instrument->fullName(),
+                            'description' => $instrument->description,
+                        ];
+                    }
+                }
+                // Remove duplicates while preserving order
+                $seen = [];
+                $uniqueInstruments = [];
+                foreach ($allInstruments as $instrument) {
+                    if (! isset($seen[$instrument['id']])) {
+                        $seen[$instrument['id']] = true;
+                        $uniqueInstruments[] = $instrument;
+                    }
+                }
+                return $uniqueInstruments;
+            }
+            // empty set -> fall through to global list
+        }
+    }
 
     foreach ($instruments as $instrument) {
         if ($request->search == '' || Str::contains(Str::lower($instrument->fullName()), Str::lower($request->search))) {
@@ -885,6 +967,40 @@ Route::get('eyepiece.select.api', function (Request $request) {
         }
     }
 
+    // If an instrument_set is provided, try to return only eyepieces that belong to that set
+    if ($request->filled('instrument_set')) {
+        $set = InstrumentSet::where('id', $request->instrument_set)->first();
+        if ($set) {
+            $eyepieces = $set->eyepieces()->where('active', 1)->get();
+            if ($eyepieces->isNotEmpty()) {
+                // Sort numerically by focal_length_mm in descending order, nulls last
+                $eyepieces = $eyepieces->sortByDesc(function ($e) {
+                    return $e->focal_length_mm === null ? -1 : (int) $e->focal_length_mm;
+                });
+                foreach ($eyepieces as $eyepiece) {
+                    if ($request->search == '' || Str::contains(Str::lower($eyepiece->fullName()), Str::lower($request->search))) {
+                        $allEyepieces[] = [
+                            'id' => $eyepiece->id,
+                            'name' => $eyepiece->name,
+                            'description' => $eyepiece->description,
+                        ];
+                    }
+                }
+                // Remove duplicates while preserving order
+                $seen = [];
+                $uniqueEyepieces = [];
+                foreach ($allEyepieces as $eyepiece) {
+                    if (! isset($seen[$eyepiece['id']])) {
+                        $seen[$eyepiece['id']] = true;
+                        $uniqueEyepieces[] = $eyepiece;
+                    }
+                }
+                return $uniqueEyepieces;
+            }
+            // empty set -> fall through to global list
+        }
+    }
+
     // Get the eyepieces for the authenticated user (only active ones) and sort by focal length descending
     $eyepieces = Eyepiece::where('observer', auth()->user()->username)->where('active', 1)->get();
     // Sort numerically by focal_length_mm in descending order, nulls last
@@ -976,6 +1092,39 @@ Route::get('lens.select.api', function (Request $request) {
     $lenses = $lenses->sortBy(function ($ln) {
         return Str::lower($ln->fullName());
     });
+
+    // If an instrument_set is provided, try to return only lenses that belong to that set
+    if ($request->filled('instrument_set')) {
+        $set = InstrumentSet::where('id', $request->instrument_set)->first();
+        if ($set) {
+            $setLenses = $set->lenses()->where('active', 1)->get();
+            if ($setLenses->isNotEmpty()) {
+                $setLenses = $setLenses->sortBy(function ($ln) {
+                    return Str::lower($ln->fullName());
+                });
+                foreach ($setLenses as $lens) {
+                    if ($request->search == '' || Str::contains(Str::lower($lens->fullName()), Str::lower($request->search))) {
+                        $allLenses[] = [
+                            'id' => $lens->id,
+                            'name' => $lens->fullName(),
+                            'description' => $lens->description,
+                        ];
+                    }
+                }
+                // Remove duplicates while preserving order
+                $seen = [];
+                $uniqueLenses = [];
+                foreach ($allLenses as $lens) {
+                    if (! isset($seen[$lens['id']])) {
+                        $seen[$lens['id']] = true;
+                        $uniqueLenses[] = $lens;
+                    }
+                }
+                return $uniqueLenses;
+            }
+            // empty set -> fall through to global list
+        }
+    }
 
     foreach ($lenses as $lens) {
         if ($request->search == '' || Str::contains(Str::lower($lens->fullName()), Str::lower($request->search))) {
@@ -1089,3 +1238,48 @@ Route::get('/instrument/{userid}', [InstrumentController::class, 'show_from_user
 Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);
 Route::get('/lenses/{userid}', [LensController::class, 'show_from_user']);
 Route::get('/filters/{userid}', [FilterController::class, 'show_from_user']);
+
+// Persist Aladin preview defaults for the authenticated user
+Route::middleware('auth:sanctum')->post('user/aladin-defaults', function (Request $request) {
+    $user = $request->user();
+    if (! $user) return response()->json(['error' => 'Unauthenticated'], 401);
+
+    $data = $request->only(['instrument_id', 'eyepiece_id', 'lens_id']);
+    try {
+        // Instrument: prefer stdtelescope column if present
+        if (! empty($data['instrument_id']) && $data['instrument_id'] != 0) {
+            $inst = \App\Models\Instrument::where('id', $data['instrument_id'])->where('observer', $user->username)->first();
+            if (! $inst) return response()->json(['error' => 'Invalid instrument'], 422);
+            if (Schema::hasColumn('users', 'stdtelescope')) { $user->stdtelescope = $inst->id; }
+        } else {
+            if (Schema::hasColumn('users', 'stdtelescope')) { $user->stdtelescope = null; }
+        }
+
+        // Eyepiece
+        if (! empty($data['eyepiece_id']) && $data['eyepiece_id'] != 0) {
+            $ep = \App\Models\Eyepiece::where('id', $data['eyepiece_id'])->where('observer', $user->username)->first();
+            if (! $ep) return response()->json(['error' => 'Invalid eyepiece'], 422);
+            if (Schema::hasColumn('users', 'stdeyepiece')) { $user->stdeyepiece = $ep->id; }
+            else if (Schema::hasColumn('users', 'preferences')) { $prefs = $user->preferences ?? []; $prefs['aladin_default_eyepiece'] = $ep->id; $user->preferences = $prefs; }
+        } else {
+            if (Schema::hasColumn('users', 'stdeyepiece')) { $user->stdeyepiece = null; }
+            if (Schema::hasColumn('users', 'preferences')) { $prefs = $user->preferences ?? []; unset($prefs['aladin_default_eyepiece']); $user->preferences = $prefs; }
+        }
+
+        // Lens
+        if (! empty($data['lens_id']) && $data['lens_id'] != 0) {
+            $ln = \App\Models\Lens::where('id', $data['lens_id'])->where('observer', $user->username)->first();
+            if (! $ln) return response()->json(['error' => 'Invalid lens'], 422);
+            if (Schema::hasColumn('users', 'stdlens')) { $user->stdlens = $ln->id; }
+            else if (Schema::hasColumn('users', 'preferences')) { $prefs = $user->preferences ?? []; $prefs['aladin_default_lens'] = $ln->id; $user->preferences = $prefs; }
+        } else {
+            if (Schema::hasColumn('users', 'stdlens')) { $user->stdlens = null; }
+            if (Schema::hasColumn('users', 'preferences')) { $prefs = $user->preferences ?? []; unset($prefs['aladin_default_lens']); $user->preferences = $prefs; }
+        }
+
+        $user->save();
+        return response()->json(['ok' => true]);
+    } catch (\Exception $ex) {
+        return response()->json(['error' => 'Save failed', 'message' => $ex->getMessage()], 500);
+    }
+})->name('user.aladin-defaults.save');

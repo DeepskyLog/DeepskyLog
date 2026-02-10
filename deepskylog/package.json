@@ -17,7 +17,7 @@
         "postcss": "^8.4.14",
         "prettier": "^3.3.3",
         "prettier-plugin-blade": "^2.1.19",
-        "prettier-plugin-tailwindcss": "^0.6.11",
+        "prettier-plugin-tailwindcss": "^0.7",
         "vite": "^7.0.0"
     },
     "dependencies": {
@@ -26,7 +26,7 @@
         "flatpickr": "^4.6.13",
         "leaflet": "^1.9.4",
         "leaflet-control-geocoder": "^3",
-        "leaflet.fullscreen": "^4.0.0",
+        "leaflet.fullscreen": "^5.0.0",
         "tailwindcss": "^4.1.7",
         "tinymce": "^8"
     }
