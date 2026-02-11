@@ -274,12 +274,13 @@ class NearbyObjectsTable extends PowerGridComponent
             $atlasSelect = ", objects.`{$acol}` as atlas_page";
         }
 
-        // Always include placeholder aliases for per-user metrics in the inner
-        // subquery so references like `objects.contrast_reserve` remain valid
-        // when PowerGrid or export routines prefix the sort column with the
-        // outer subquery alias. The real per-user metric columns (from
-        // `user_object_metrics`) are joined into the outer query and will
-        // override these placeholders when present.
+        // Include NULL placeholder columns for per-user metrics in the inner query
+        // so they are part of the `objects.*` expansion. This allows PowerGrid to
+        // reference `objects.contrast_reserve` in ORDER BY clauses. The outer query's
+        // addSelect (via user_object_metrics joins) will override these NULLs with
+        // actual values when available. Without these placeholders, sorting by
+        // contrast_reserve fails because PowerGrid references `objects.contrast_reserve`
+        // but that column wouldn't exist in the subquery alias.
         $selectRaw = "objects.* , constellations.name as constellation, deepskytypes.name as type_name, GREATEST(COALESCE(objects.diam1,0), COALESCE(objects.diam2,0)) as size, {$expr} as distance_deg, objects.name as id" . $atlasSelect
             . ", NULL as contrast_reserve, NULL as contrast_reserve_category, NULL as best_mag";
 
@@ -667,9 +668,9 @@ class NearbyObjectsTable extends PowerGridComponent
                     }
                 } else {
                     if ($sd === 'ASC') {
-                        $outer->orderByRaw("(uom.optimum_detection_magnification IS NULL) ASC, uom.optimum_detection_magnification ASC");
+                        $outer->orderByRaw("(COALESCE(uom.optimum_detection_magnification, objects.best_mag) IS NULL) ASC, COALESCE(uom.optimum_detection_magnification, objects.best_mag) ASC");
                     } else {
-                        $outer->orderByRaw("(uom.optimum_detection_magnification IS NULL) ASC, uom.optimum_detection_magnification DESC");
+                        $outer->orderByRaw("(COALESCE(uom.optimum_detection_magnification, objects.best_mag) IS NULL) ASC, COALESCE(uom.optimum_detection_magnification, objects.best_mag) DESC");
                     }
                 }
                 return;
@@ -688,15 +689,6 @@ class NearbyObjectsTable extends PowerGridComponent
                     } else {
                         $outer->orderByRaw("(COALESCE(uom.contrast_reserve, objects.contrast_reserve) IS NULL) ASC, COALESCE(uom.contrast_reserve, objects.contrast_reserve) DESC");
                     }
-                }
-                // Ensure PowerGrid's internal ordering (which may append an
-                // additional ORDER BY using the component's `sortField`) uses
-                // a fully-qualified column to avoid ambiguous column errors
-                // when joins expose the same column name on multiple tables.
-                try {
-                    $this->sortField = 'objects.contrast_reserve';
-                } catch (\Throwable $_) {
-                    // ignore; ordering already applied above
                 }
                 return;
             }
