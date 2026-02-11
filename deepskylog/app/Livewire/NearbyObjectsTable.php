@@ -103,6 +103,13 @@ class NearbyObjectsTable extends PowerGridComponent
     private ?string $obsAggSql = null;
 
     /**
+     * Cached type names to avoid N+1 queries when resolving type codes.
+     * Keyed by type code (e.g., 'PLNNB') with values being the full names.
+     * @var array<string, string>
+     */
+    private array $cachedTypeNames = [];
+
+    /**
      * Persisted list of visible column fields (PowerGrid uses this in the toggle UI).
      * We persist it so toggling via the UI is remembered in the session.
      *
@@ -759,7 +766,35 @@ class NearbyObjectsTable extends PowerGridComponent
                 return html_entity_decode((string) ($row->name ?? ''));
             })
             ->add('type_name', function ($row) {
-                return e($row->type_name ?? $row->type ?? '');
+                $typeName = $row->type_name ?? $row->type ?? '';
+                
+                // If type_name looks like a code (all uppercase, <= 6 chars), try to resolve
+                // the full name from the DeepskyType model. This handles cases where the
+                // production database hasn't been properly seeded with full type names.
+                if (!empty($typeName) && strlen($typeName) <= 6 && $typeName === strtoupper($typeName)) {
+                    $typeCode = strtoupper($typeName);
+                    
+                    // Check cache first to avoid repeated DB queries
+                    if (!isset($this->cachedTypeNames[$typeCode])) {
+                        try {
+                            $typeModel = \App\Models\DeepskyType::find($typeCode);
+                            if ($typeModel && !empty($typeModel->name) && $typeModel->name !== $typeCode) {
+                                // Found a different (non-code) name in the model
+                                $this->cachedTypeNames[$typeCode] = $typeModel->name;
+                            } else {
+                                // Store the code itself to avoid re-querying
+                                $this->cachedTypeNames[$typeCode] = $typeName;
+                            }
+                        } catch (\Throwable $_) {
+                            // Fall back to the original value if lookup fails
+                            $this->cachedTypeNames[$typeCode] = $typeName;
+                        }
+                    }
+                    
+                    $typeName = $this->cachedTypeNames[$typeCode];
+                }
+                
+                return e($typeName);
             })
             ->add('constellation')
             ->add('mag', function ($row) {
