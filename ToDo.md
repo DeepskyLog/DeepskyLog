@@ -4,7 +4,6 @@
 
 ## Next steps
 
-+ [ ] See the number of observations with the instruments, eyepieces, lenses and filters.  
 + [ ] Make old version work with the new object tables?
 
 + [ ] Targets
@@ -59,6 +58,8 @@
 + [X] Like observations and sketches
 + [X] Rework message system
 + [X] Totally reworked the sessions.  They are now more blog-like
++ [X] New objects detail page
++ [X] Added planets, lunar features, ...
 
 ## Small issues
 

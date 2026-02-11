@@ -871,6 +871,98 @@ try {
                                             'lazy' => false,
                                         ])
                                         <script>
+                                            // Auto-poll the nearby table to refresh when queue jobs complete
+                                            (function(){
+                                                let pollInterval = null;
+                                                let retryCount = 0;
+                                                const maxRetries = 10;
+                                                
+                                                function getComponent() {
+                                                    try {
+                                                        // Try multiple ways to find the component
+                                                        const element = document.querySelector('[wire\\:id*="nearby-objects-table"]') ||
+                                                                       document.querySelector('[wire\\:id]');
+                                                        
+                                                        if (!element) return null;
+                                                        
+                                                        const wireId = element.getAttribute('wire:id');
+                                                        if (!wireId) return null;
+                                                        
+                                                        return window.Livewire?.find(wireId);
+                                                    } catch (e) {
+                                                        return null;
+                                                    }
+                                                }
+                                                
+                                                function checkAndPoll() {
+                                                    try {
+                                                        const component = getComponent();
+                                                        
+                                                        if (!component) {
+                                                            if (retryCount < maxRetries) {
+                                                                retryCount++;
+                                                                console.log('[NearbyTable] Component not ready, retry ' + retryCount + '/' + maxRetries);
+                                                                setTimeout(checkAndPoll, 1000);
+                                                            }
+                                                            return;
+                                                        }
+                                                        
+                                                        // Found component - reset retry counter
+                                                        retryCount = 0;
+                                                        
+                                                        // Check the hasPendingCalculations property (works across all pages!)
+                                                        const hasPending = component.hasPendingCalculations || false;
+                                                        
+                                                        if (hasPending) {
+                                                            // Start polling if not already polling
+                                                            if (!pollInterval) {
+                                                                console.log('[NearbyTable] Pending calculations detected, starting auto-refresh (30s interval)');
+                                                                pollInterval = setInterval(() => {
+                                                                    try {
+                                                                        if (window.Livewire) {
+                                                                            Livewire.dispatch('pg:eventRefresh-nearby-objects-table');
+                                                                        }
+                                                                        // Re-check if we should stop polling
+                                                                        setTimeout(checkAndPoll, 2000);
+                                                                    } catch (e) {
+                                                                        console.error('[NearbyTable] Refresh error:', e);
+                                                                    }
+                                                                }, 30000); // 30 seconds
+                                                            }
+                                                        } else {
+                                                            // Stop polling when no more pending calculations
+                                                            if (pollInterval) {
+                                                                console.log('[NearbyTable] All calculations complete (across all pages), stopping auto-refresh');
+                                                                clearInterval(pollInterval);
+                                                                pollInterval = null;
+                                                            }
+                                                        }
+                                                    } catch (e) {
+                                                        console.error('[NearbyTable] Poll check error:', e);
+                                                    }
+                                                }
+                                                
+                                                // Initial check after table loads - wait longer for component to initialize
+                                                setTimeout(() => {
+                                                    checkAndPoll();
+                                                }, 3000);
+                                                
+                                                // Listen for Livewire updates
+                                                if (window.Livewire) {
+                                                    Livewire.hook('commit', ({ component, succeed }) => {
+                                                        succeed(() => {
+                                                            setTimeout(checkAndPoll, 500);
+                                                        });
+                                                    });
+                                                }
+                                                
+                                                // Cleanup on page unload
+                                                window.addEventListener('beforeunload', () => {
+                                                    if (pollInterval) clearInterval(pollInterval);
+                                                });
+                                            })();
+                                        </script>
+                                        <script>
                                             // Defer loading the nearby table data so the main page can
                                             // render quickly. Trigger the Livewire component to load
                                             // after a short delay.

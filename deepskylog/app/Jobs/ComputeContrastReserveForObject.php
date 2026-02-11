@@ -19,6 +19,20 @@ class ComputeContrastReserveForObject implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout = 60;
+
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 3;
+
     public int $userId;
     public ?int $instrumentId;
     public ?int $locationId;
@@ -38,13 +52,21 @@ class ComputeContrastReserveForObject implements ShouldQueue
     {
         try {
             $obj = DeepskyObject::where('name', $this->objectName)->first();
-            if (! $obj) {
+            if (!$obj) {
                 return;
             }
 
             $target = new AstroTarget();
             $d1 = is_numeric($obj->diam1) ? floatval($obj->diam1) : null;
             $d2 = is_numeric($obj->diam2) ? floatval($obj->diam2) : null;
+
+            // Handle cases where only one diameter is provided - treat object as circular
+            if (($d1 !== null && $d1 > 0) && (empty($d2) || $d2 <= 0)) {
+                $d2 = $d1;
+            } elseif (($d2 !== null && $d2 > 0) && (empty($d1) || $d1 <= 0)) {
+                $d1 = $d2;
+            }
+
             if ($d1 && $d2) {
                 $target->setDiameter($d1, $d2);
             }
@@ -73,47 +95,50 @@ class ComputeContrastReserveForObject implements ShouldQueue
             $possibleMags = [];
             // Determine lens factor (if provided) so candidate mags reflect lens multiplier
             $lensFactor = 1.0;
-            if (! empty($this->lensId)) {
+            if (!empty($this->lensId)) {
                 try {
                     $ln = \App\Models\Lens::where('id', $this->lensId)->first();
-                    if ($ln && ! empty($ln->factor) && is_numeric($ln->factor)) {
+                    if ($ln && !empty($ln->factor) && is_numeric($ln->factor)) {
                         $lensFactor = floatval($ln->factor);
                     }
                 } catch (\Throwable $_) { /* ignore */
                 }
             }
-            if ($instrument && ! empty($instrument->fixedMagnification)) {
+            // For instruments with fixed magnification (binoculars, etc.), use only that value
+            if ($instrument && !empty($instrument->fixedMagnification)) {
                 $possibleMags[] = (int) round($instrument->fixedMagnification * $lensFactor);
-            }
-            if ($instrument && ! empty($instrument->focal_length_mm)) {
+            } elseif ($instrument && !empty($instrument->focal_length_mm)) {
+                // For telescopes with eyepieces, calculate magnifications
                 try {
                     $instSet = $user?->standardInstrumentSet ?? null;
                     if ($instSet && isset($instSet->eyepieces)) {
                         foreach ($instSet->eyepieces as $ep) {
-                            if (! empty($ep->focal_length_mm) && $ep->active) {
+                            if (!empty($ep->focal_length_mm) && $ep->active) {
                                 $possibleMags[] = (int) round(($instrument->focal_length_mm / $ep->focal_length_mm) * $lensFactor);
                             }
                         }
                     }
                 } catch (\Throwable $_) { /* ignore */
                 }
-            }
-            if (empty($possibleMags) && $user) {
-                try {
-                    $userEps = \App\Models\Eyepiece::where('user_id', $user->id)->where('active', 1)->get();
-                    foreach ($userEps as $ep) {
-                        if (! empty($ep->focal_length_mm) && ! empty($instrument->focal_length_mm)) {
-                            $possibleMags[] = (int) round(($instrument->focal_length_mm / $ep->focal_length_mm) * $lensFactor);
+
+                // Fall back to all user eyepieces if no instrument set or no eyepieces in set
+                if (empty($possibleMags) && $user) {
+                    try {
+                        $userEps = \App\Models\Eyepiece::where('user_id', $user->id)->where('active', 1)->get();
+                        foreach ($userEps as $ep) {
+                            if (!empty($ep->focal_length_mm)) {
+                                $possibleMags[] = (int) round(($instrument->focal_length_mm / $ep->focal_length_mm) * $lensFactor);
+                            }
                         }
+                    } catch (\Throwable $_) { /* ignore */
                     }
-                } catch (\Throwable $_) { /* ignore */
                 }
             }
 
             $possibleMags = array_values(array_unique(array_filter($possibleMags)));
             $bestMag = null;
             $optEps = [];
-            if (! empty($possibleMags) && $sbobj !== null && $sqm !== null && $aperture) {
+            if (!empty($possibleMags) && $sbobj !== null && $sqm !== null && $aperture) {
                 try {
                     $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
                     if ($best) {
@@ -126,7 +151,7 @@ class ComputeContrastReserveForObject implements ShouldQueue
                                 try {
                                     if (isset($instSet) && $instSet && isset($instSet->eyepieces)) {
                                         foreach ($instSet->eyepieces as $ep) {
-                                            if (! empty($ep->focal_length_mm) && $instrument->focal_length_mm) {
+                                            if (!empty($ep->focal_length_mm) && $instrument->focal_length_mm) {
                                                 $calc = (int) round(($instrument->focal_length_mm / $ep->focal_length_mm) * $lensFactor);
                                                 if ($calc === $bestMag) {
                                                     $optEps[] = ['name' => ($ep->name ?? null), 'focal_length_mm' => $ep->focal_length_mm];
@@ -140,7 +165,7 @@ class ComputeContrastReserveForObject implements ShouldQueue
                                 try {
                                     $userEps = \App\Models\Eyepiece::where('user_id', $this->userId)->where('active', 1)->get();
                                     foreach ($userEps as $ep) {
-                                        if (! empty($ep->focal_length_mm) && $instrument->focal_length_mm) {
+                                        if (!empty($ep->focal_length_mm) && $instrument->focal_length_mm) {
                                             $calc = (int) round(($instrument->focal_length_mm / $ep->focal_length_mm) * $lensFactor);
                                             if ($calc === $bestMag) {
                                                 $optEps[] = ['name' => ($ep->name ?? null), 'focal_length_mm' => $ep->focal_length_mm];
@@ -187,7 +212,7 @@ class ComputeContrastReserveForObject implements ShouldQueue
                     'contrast_reserve' => $contrast,
                     'contrast_reserve_category' => $category,
                     'optimum_detection_magnification' => $bestMag,
-                    'optimum_eyepieces' => ! empty($optEps) ? $optEps : null,
+                    'optimum_eyepieces' => !empty($optEps) ? $optEps : null,
                     'lens_id' => $this->lensId,
                 ]
             );

@@ -49,6 +49,14 @@ class ComputeContrastReserve extends Command
                     $target = new AstroTarget();
                     $d1 = is_numeric($obj->diam1) ? floatval($obj->diam1) : null;
                     $d2 = is_numeric($obj->diam2) ? floatval($obj->diam2) : null;
+
+                    // Handle cases where only one diameter is provided - treat object as circular
+                    if (($d1 !== null && $d1 > 0) && (empty($d2) || $d2 <= 0)) {
+                        $d2 = $d1;
+                    } elseif (($d2 !== null && $d2 > 0) && (empty($d1) || $d1 <= 0)) {
+                        $d1 = $d2;
+                    }
+
                     if ($d1 && $d2) {
                         $target->setDiameter($d1, $d2);
                     }
@@ -65,7 +73,7 @@ class ComputeContrastReserve extends Command
                         $sbobj = null;
                     }
 
-                    if (! $instrumentId || ! $locationId) {
+                    if (!$instrumentId || !$locationId) {
                         UserObjectMetric::updateOrCreate(
                             ['user_id' => $userId, 'instrument_id' => $instrumentId, 'location_id' => $locationId, 'lens_id' => $lensId, 'object_name' => $obj->name],
                             ['contrast_reserve' => null, 'contrast_reserve_category' => null, 'lens_id' => $lensId]
@@ -74,12 +82,12 @@ class ComputeContrastReserve extends Command
                     }
 
                     $user = \App\Models\User::find($userId);
-                    if (! $user) {
+                    if (!$user) {
                         continue;
                     }
                     $instrument = \App\Models\Instrument::find($instrumentId);
                     $location = \App\Models\Location::find($locationId);
-                    if (! $instrument || ! $location) {
+                    if (!$instrument || !$location) {
                         continue;
                     }
 
@@ -89,10 +97,10 @@ class ComputeContrastReserve extends Command
                     // Determine lens factor (if lens specified) so candidate mags
                     // reflect the lens multiplier consistently.
                     $lensFactor = 1.0;
-                    if (! empty($lensId)) {
+                    if (!empty($lensId)) {
                         try {
                             $ln = \App\Models\Lens::where('id', $lensId)->first();
-                            if ($ln && ! empty($ln->factor) && is_numeric($ln->factor)) {
+                            if ($ln && !empty($ln->factor) && is_numeric($ln->factor)) {
                                 $lensFactor = floatval($ln->factor);
                             }
                         } catch (\Throwable $_) { /* ignore */
@@ -101,38 +109,41 @@ class ComputeContrastReserve extends Command
 
                     // Determine candidate magnifications
                     $possibleMags = [];
-                    if (! empty($instrument->fixedMagnification)) {
+                    // For instruments with fixed magnification (binoculars, etc.), use only that value
+                    if (!empty($instrument->fixedMagnification)) {
                         $possibleMags[] = (int) round($instrument->fixedMagnification * $lensFactor);
-                    }
-                    if (! empty($instrument->focal_length_mm)) {
+                    } elseif (!empty($instrument->focal_length_mm)) {
+                        // For telescopes with eyepieces, calculate magnifications
                         try {
                             $instSet = $user?->standardInstrumentSet ?? null;
                             if ($instSet && isset($instSet->eyepieces)) {
                                 foreach ($instSet->eyepieces as $ep) {
-                                    if (! empty($ep->focal_length_mm) && $ep->active) {
+                                    if (!empty($ep->focal_length_mm) && $ep->active) {
                                         $possibleMags[] = (int) round(($instrument->focal_length_mm / $ep->focal_length_mm) * $lensFactor);
                                     }
                                 }
                             }
                         } catch (\Throwable $_) { /* ignore */
                         }
-                    }
-                    if (empty($possibleMags)) {
-                        try {
-                            $userEps = \App\Models\Eyepiece::where('user_id', $user->id)->where('active', 1)->get();
-                            foreach ($userEps as $ep) {
-                                if (! empty($ep->focal_length_mm) && ! empty($instrument->focal_length_mm)) {
-                                    $possibleMags[] = (int) round(($instrument->focal_length_mm / $ep->focal_length_mm) * $lensFactor);
+
+                        // Fall back to all user eyepieces if no instrument set or no eyepieces in set
+                        if (empty($possibleMags)) {
+                            try {
+                                $userEps = \App\Models\Eyepiece::where('user_id', $user->id)->where('active', 1)->get();
+                                foreach ($userEps as $ep) {
+                                    if (!empty($ep->focal_length_mm)) {
+                                        $possibleMags[] = (int) round(($instrument->focal_length_mm / $ep->focal_length_mm) * $lensFactor);
+                                    }
                                 }
+                            } catch (\Throwable $_) { /* ignore */
                             }
-                        } catch (\Throwable $_) { /* ignore */
                         }
                     }
 
                     $possibleMags = array_values(array_unique(array_filter($possibleMags)));
                     $bestMag = null;
                     $optEps = [];
-                    if (! empty($possibleMags) && $sbobj !== null && $sqm !== null && $aperture) {
+                    if (!empty($possibleMags) && $sbobj !== null && $sqm !== null && $aperture) {
                         try {
                             $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
                             if ($best) {
@@ -141,7 +152,7 @@ class ComputeContrastReserve extends Command
                                 try {
                                     if (isset($instSet) && $instSet && isset($instSet->eyepieces)) {
                                         foreach ($instSet->eyepieces as $ep) {
-                                            if (! empty($ep->focal_length_mm) && $instrument->focal_length_mm) {
+                                            if (!empty($ep->focal_length_mm) && $instrument->focal_length_mm) {
                                                 $calc = (int) round(($instrument->focal_length_mm / $ep->focal_length_mm) * $lensFactor);
                                                 if ($calc === $bestMag) {
                                                     $optEps[] = ['name' => ($ep->name ?? null), 'focal_length_mm' => $ep->focal_length_mm];
@@ -154,7 +165,7 @@ class ComputeContrastReserve extends Command
                                 try {
                                     $userEps = \App\Models\Eyepiece::where('user_id', $user->id)->where('active', 1)->get();
                                     foreach ($userEps as $ep) {
-                                        if (! empty($ep->focal_length_mm) && $instrument->focal_length_mm) {
+                                        if (!empty($ep->focal_length_mm) && $instrument->focal_length_mm) {
                                             $calc = (int) round(($instrument->focal_length_mm / $ep->focal_length_mm) * $lensFactor);
                                             if ($calc === $bestMag) {
                                                 $optEps[] = ['name' => ($ep->name ?? null), 'focal_length_mm' => $ep->focal_length_mm];
@@ -198,7 +209,7 @@ class ComputeContrastReserve extends Command
                             'contrast_reserve' => $contrast,
                             'contrast_reserve_category' => $category,
                             'optimum_detection_magnification' => $bestMag,
-                            'optimum_eyepieces' => ! empty($optEps) ? $optEps : null,
+                            'optimum_eyepieces' => !empty($optEps) ? $optEps : null,
                             'lens_id' => null,
                         ]
                     );

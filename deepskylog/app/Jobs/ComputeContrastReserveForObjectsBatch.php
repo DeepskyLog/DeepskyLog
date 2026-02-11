@@ -17,6 +17,20 @@ class ComputeContrastReserveForObjectsBatch implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout = 300;
+
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 2;
+
     public int $userId;
     public ?int $instrumentId;
     public ?int $locationId;
@@ -52,12 +66,12 @@ class ComputeContrastReserveForObjectsBatch implements ShouldQueue
                     $succeeded++;
                 } catch (\Throwable $ex) {
                     $failed++;
-                    Log::debug('ComputeContrastReserveForObjectsBatch: per-object compute failed', ['object' => $oname, 'error' => (string)$ex]);
+                    Log::debug('ComputeContrastReserveForObjectsBatch: per-object compute failed', ['object' => $oname, 'error' => (string) $ex]);
                     // continue with other objects
                 }
             }
         } catch (\Throwable $ex) {
-            Log::debug('ComputeContrastReserveForObjectsBatch: batch job failed', ['error' => (string)$ex]);
+            Log::debug('ComputeContrastReserveForObjectsBatch: batch job failed', ['error' => (string) $ex]);
         } finally {
             $elapsed = round((microtime(true) - $start) * 1000, 2);
             Log::debug('ComputeContrastReserveForObjectsBatch: end', ['user_id' => $this->userId, 'instrument_id' => $this->instrumentId, 'location_id' => $this->locationId, 'count' => $total, 'succeeded' => $succeeded, 'failed' => $failed, 'elapsed_ms' => $elapsed]);
