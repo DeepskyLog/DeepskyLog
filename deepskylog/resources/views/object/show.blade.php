@@ -654,18 +654,19 @@ try {
                                             <label class="text-sm text-gray-300">{{ __('Radius:') }}</label>
                                             <select
                                                 onchange="(function(v){try{v=parseInt(v,10); if(window.Livewire && typeof Livewire.dispatch==='function'){ Livewire.dispatch('nearbyRadiusChanged', [v]); } else if(window.Livewire && typeof Livewire.dispatchTo==='function'){ Livewire.dispatchTo('nearby-objects-table','nearbyRadiusChanged', [v]); } else if(window.Livewire && typeof Livewire.emit==='function'){ Livewire.emit('nearbyRadiusChanged', [v]); } }catch(e){} })(this.value)"
-                                                class="text-sm rounded bg-gray-700 text-gray-100 p-1">
-                                                <option value="5"
+                                                class="text-sm rounded bg-gray-700 text-gray-100 p-1 border-gray-600"
+                                                style="background-color: #374151; color: #f3f4f6;">
+                                                <option value="5" style="background-color: #374151; color: #f3f4f6;"
                                                     {{ $nearbyRadiusSelected === 5 ? 'selected' : '' }}>5'</option>
-                                                <option value="10"
+                                                <option value="10" style="background-color: #374151; color: #f3f4f6;"
                                                     {{ $nearbyRadiusSelected === 10 ? 'selected' : '' }}>10'</option>
-                                                <option value="15"
+                                                <option value="15" style="background-color: #374151; color: #f3f4f6;"
                                                     {{ $nearbyRadiusSelected === 15 ? 'selected' : '' }}>15'</option>
-                                                <option value="30"
+                                                <option value="30" style="background-color: #374151; color: #f3f4f6;"
                                                     {{ $nearbyRadiusSelected === 30 ? 'selected' : '' }}>30'</option>
-                                                <option value="60"
+                                                <option value="60" style="background-color: #374151; color: #f3f4f6;"
                                                     {{ $nearbyRadiusSelected === 60 ? 'selected' : '' }}>1°</option>
-                                                <option value="120"
+                                                <option value="120" style="background-color: #374151; color: #f3f4f6;"
                                                     {{ $nearbyRadiusSelected === 120 ? 'selected' : '' }}>2°</option>
                                             </select>
                                             <div class="text-xs text-gray-400 ml-2">
