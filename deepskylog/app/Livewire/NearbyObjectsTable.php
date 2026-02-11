@@ -60,6 +60,14 @@ class NearbyObjectsTable extends PowerGridComponent
     public int $bulkInlineLimit = 100;
 
     /**
+     * Indicates whether there are any objects with pending CR calculations
+     * (across all pages, not just current page). Used by JavaScript to 
+     * automatically poll for updates and stop when all calculations complete.
+     * @var bool
+     */
+    public bool $hasPendingCalculations = false;
+
+    /**
      * Cached eyepieces for the authenticated user during a single component render.
      * This prevents re-querying the DB for each table row which can cause high memory
      * and DB load when rendering many rows.
@@ -101,6 +109,13 @@ class NearbyObjectsTable extends PowerGridComponent
      * @var string|null
      */
     private ?string $obsAggSql = null;
+
+    /**
+     * Cached type names to avoid N+1 queries when resolving type codes.
+     * Keyed by type code (e.g., 'PLNNB') with values being the full names.
+     * @var array<string, string>
+     */
+    private array $cachedTypeNames = [];
 
     /**
      * Persisted list of visible column fields (PowerGrid uses this in the toggle UI).
@@ -180,6 +195,13 @@ class NearbyObjectsTable extends PowerGridComponent
                     $s = $row->settings;
                     if (isset($s['sortField'])) {
                         $this->sortField = $s['sortField'];
+                        // Remap old field names to new computed column names
+                        if ($this->sortField === 'contrast_reserve') {
+                            $this->sortField = 'computed_contrast_reserve';
+                        }
+                        if ($this->sortField === 'best_mag') {
+                            $this->sortField = 'computed_best_mag';
+                        }
                     }
                     if (isset($s['sortDirection'])) {
                         $this->sortDirection = $s['sortDirection'];
@@ -274,14 +296,9 @@ class NearbyObjectsTable extends PowerGridComponent
             $atlasSelect = ", objects.`{$acol}` as atlas_page";
         }
 
-        // Always include placeholder aliases for per-user metrics in the inner
-        // subquery so references like `objects.contrast_reserve` remain valid
-        // when PowerGrid or export routines prefix the sort column with the
-        // outer subquery alias. The real per-user metric columns (from
-        // `user_object_metrics`) are joined into the outer query and will
-        // override these placeholders when present.
-        $selectRaw = "objects.* , constellations.name as constellation, deepskytypes.name as type_name, GREATEST(COALESCE(objects.diam1,0), COALESCE(objects.diam2,0)) as size, {$expr} as distance_deg, objects.name as id" . $atlasSelect
-            . ", NULL as contrast_reserve, NULL as contrast_reserve_category, NULL as best_mag";
+        // Don't include placeholder columns in the inner query to avoid duplicate column names
+        // when the outer query uses addSelect() to add the actual computed values.
+        $selectRaw = "objects.* , constellations.name as constellation, deepskytypes.name as type_name, GREATEST(COALESCE(objects.diam1,0), COALESCE(objects.diam2,0)) as size, {$expr} as distance_deg, objects.name as id" . $atlasSelect;
 
         // Bindings for the distance expression (used in both the SELECT and WHERE).
         $exprBindings = [$this->decl, $this->decl, $centerRaDeg];
@@ -457,10 +474,12 @@ class NearbyObjectsTable extends PowerGridComponent
                         });
 
                         $outer->addSelect([
-                            DB::raw('COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve) as contrast_reserve'),
-                            DB::raw('COALESCE(uom_lens.contrast_reserve_category, uom_default.contrast_reserve_category) as contrast_reserve_category'),
+                            DB::raw('COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve) as computed_contrast_reserve'),
+                            DB::raw('COALESCE(uom_lens.contrast_reserve_category, uom_default.contrast_reserve_category) as computed_contrast_reserve_category'),
                             // Prefetch stored optimum detection magnification so the column can be sorted server-side
-                            DB::raw('COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification) as best_mag'),
+                            DB::raw('COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification) as computed_best_mag'),
+                            // Flag to indicate whether a metric exists (for distinguishing NULL from no-record)
+                            DB::raw('COALESCE(uom_lens.id, uom_default.id) as metric_exists'),
                         ]);
                     } else {
                         // No preview lens: join legacy lens-less metrics (preserves previous behavior)
@@ -472,10 +491,12 @@ class NearbyObjectsTable extends PowerGridComponent
                                 ->whereNull('uom.lens_id');
                         });
                         $outer->addSelect([
-                            'uom.contrast_reserve as contrast_reserve',
-                            'uom.contrast_reserve_category as contrast_reserve_category',
+                            'uom.contrast_reserve as computed_contrast_reserve',
+                            'uom.contrast_reserve_category as computed_contrast_reserve_category',
                             // Prefetch stored optimum detection magnification so the column can be sorted server-side
-                            'uom.optimum_detection_magnification as best_mag',
+                            'uom.optimum_detection_magnification as computed_best_mag',
+                            // Flag to indicate whether a metric exists (for distinguishing NULL from no-record)
+                            'uom.id as metric_exists',
                         ]);
                     }
                 }
@@ -526,16 +547,18 @@ class NearbyObjectsTable extends PowerGridComponent
         }
         $sortField = preg_replace('/.*\./', '', $sortField);
 
-        $allowedSorts = ['distance_deg', 'name', 'type_name', 'constellation', 'mag', 'subr', 'ra', 'decl', 'size', 'atlas_page', 'contrast_reserve', 'best_mag', 'seen', 'last_seen', 'total_observations', 'your_last_seen_date'];
-        if (!in_array($sortField, $allowedSorts, true)) {
-            $sortField = 'distance_deg';
+        // Remap old column names to computed column names to avoid ambiguity
+        // when the JOIN has columns with the same name as our computed aliases.
+        // Do this BEFORE the allowedSorts check so the remapped names are validated.
+        if ($sortField === 'contrast_reserve') {
+            $this->sortField = 'computed_contrast_reserve';
+            $sortField = 'computed_contrast_reserve';
         }
-
-        // If PowerGrid provided a virtual sort key (eg. 'seen'/'last_seen'),
-        // update the component property so subsequent PowerGrid ordering
-        // uses a real column name instead of the virtual field name. This
-        // prevents PowerGrid from appending `ORDER BY seen` which does not
-        // exist in the SQL. We keep $sortField in sync for our manual ordering.
+        if ($sortField === 'best_mag') {
+            $this->sortField = 'computed_best_mag';
+            $sortField = 'computed_best_mag';
+        }
+        // Remap virtual field names to real column names
         if ($sortField === 'seen') {
             $this->sortField = 'total_observations';
             $sortField = 'total_observations';
@@ -545,9 +568,21 @@ class NearbyObjectsTable extends PowerGridComponent
             $sortField = 'your_last_seen_date';
         }
 
+        $allowedSorts = ['distance_deg', 'name', 'type_name', 'constellation', 'mag', 'subr', 'ra', 'decl', 'size', 'atlas_page', 'contrast_reserve', 'computed_contrast_reserve', 'best_mag', 'computed_best_mag', 'seen', 'last_seen', 'total_observations', 'your_last_seen_date'];
+        if (!in_array($sortField, $allowedSorts, true)) {
+            $sortField = 'distance_deg';
+        }
+
         // Centralize ordering through helper to avoid duplicated logic
         $this->applySortingToQuery($outer, $sortField, $sortDirection);
 
+        // Debug: log the actual SQL query to understand the ambiguity issue
+        try {
+            $sql = $outer->toSql();
+            $bindings = $outer->getBindings();
+            Log::debug('NearbyObjectsTable SQL query', ['sql' => $sql, 'bindings' => $bindings]);
+        } catch (\Throwable $_) {
+        }
 
         // Debug: log final ordering so we can see what PowerGrid requested
         try {
@@ -572,6 +607,22 @@ class NearbyObjectsTable extends PowerGridComponent
         // property stable (unqualified) so repeated header clicks toggle the
         // direction as PowerGrid expects. Ordering is enforced on the SQL
         // using fully-qualified expressions inside `applySortingToQuery()`.
+
+        // Check if there are any objects with pending CR calculations (across all pages)
+        // This is used by JavaScript auto-polling to know when to stop refreshing
+        try {
+            $authUser = Auth::user();
+            if ($authUser) {
+                // Clone the query to count objects without metrics
+                $checkQuery = clone $outer;
+                $pendingCount = $checkQuery->whereNull('metric_exists')->count();
+                $this->hasPendingCalculations = $pendingCount > 0;
+            } else {
+                $this->hasPendingCalculations = false;
+            }
+        } catch (\Throwable $_) {
+            $this->hasPendingCalculations = false;
+        }
 
         return $outer;
     }
@@ -658,45 +709,41 @@ class NearbyObjectsTable extends PowerGridComponent
                 return;
             }
 
-            if ($sf === 'best_mag') {
-                if (! empty($this->previewLensId)) {
+            if ($sf === 'best_mag' || $sf === 'computed_best_mag') {
+                // Check if user has required instrument/location for best_mag sorting
+                $authUser = Auth::user();
+                $hasUserMetrics = $authUser && $authUser->standardLocation && ($authUser->standardInstrument || $this->previewInstrumentId);
+                
+                if ($hasUserMetrics) {
+                    // Reference the computed alias we created
                     if ($sd === 'ASC') {
-                        $outer->orderByRaw("(COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification, objects.best_mag) IS NULL) ASC, COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification, objects.best_mag) ASC");
+                        $outer->orderByRaw("(computed_best_mag IS NULL) ASC, computed_best_mag ASC");
                     } else {
-                        $outer->orderByRaw("(COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification, objects.best_mag) IS NULL) ASC, COALESCE(uom_lens.optimum_detection_magnification, uom_default.optimum_detection_magnification, objects.best_mag) DESC");
+                        $outer->orderByRaw("(computed_best_mag IS NULL) ASC, computed_best_mag DESC");
                     }
                 } else {
-                    if ($sd === 'ASC') {
-                        $outer->orderByRaw("(uom.optimum_detection_magnification IS NULL) ASC, uom.optimum_detection_magnification ASC");
-                    } else {
-                        $outer->orderByRaw("(uom.optimum_detection_magnification IS NULL) ASC, uom.optimum_detection_magnification DESC");
-                    }
+                    // No user metrics available, fall back to sorting by distance
+                    $outer->orderBy('objects.distance_deg', 'ASC');
                 }
                 return;
             }
 
-            if ($sf === 'contrast_reserve') {
-                if (! empty($this->previewLensId)) {
+            if ($sf === 'contrast_reserve' || $sf === 'computed_contrast_reserve') {
+                // Check if user has required instrument/location for CR sorting
+                $authUser = Auth::user();
+                $hasUserMetrics = $authUser && $authUser->standardLocation && ($authUser->standardInstrument || $this->previewInstrumentId);
+                
+                if ($hasUserMetrics) {
+                    // Reference the computed alias we created
                     if ($sd === 'ASC') {
-                        $outer->orderByRaw("(COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve, objects.contrast_reserve) IS NULL) ASC, COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve, objects.contrast_reserve) ASC");
+                        $outer->orderByRaw("(computed_contrast_reserve IS NULL) ASC, computed_contrast_reserve ASC");
                     } else {
-                        $outer->orderByRaw("(COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve, objects.contrast_reserve) IS NULL) ASC, COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve, objects.contrast_reserve) DESC");
+                        $outer->orderByRaw("(computed_contrast_reserve IS NULL) ASC, computed_contrast_reserve DESC");
                     }
                 } else {
-                    if ($sd === 'ASC') {
-                        $outer->orderByRaw("(COALESCE(uom.contrast_reserve, objects.contrast_reserve) IS NULL) ASC, COALESCE(uom.contrast_reserve, objects.contrast_reserve) ASC");
-                    } else {
-                        $outer->orderByRaw("(COALESCE(uom.contrast_reserve, objects.contrast_reserve) IS NULL) ASC, COALESCE(uom.contrast_reserve, objects.contrast_reserve) DESC");
-                    }
-                }
-                // Ensure PowerGrid's internal ordering (which may append an
-                // additional ORDER BY using the component's `sortField`) uses
-                // a fully-qualified column to avoid ambiguous column errors
-                // when joins expose the same column name on multiple tables.
-                try {
-                    $this->sortField = 'objects.contrast_reserve';
-                } catch (\Throwable $_) {
-                    // ignore; ordering already applied above
+                    // No user metrics available, sort by placeholder only (always NULL)
+                    // Fall back to sorting by distance instead of showing ambiguous column error
+                    $outer->orderBy('objects.distance_deg', 'ASC');
                 }
                 return;
             }
@@ -767,7 +814,35 @@ class NearbyObjectsTable extends PowerGridComponent
                 return html_entity_decode((string) ($row->name ?? ''));
             })
             ->add('type_name', function ($row) {
-                return e($row->type_name ?? $row->type ?? '');
+                $typeName = $row->type_name ?? $row->type ?? '';
+                
+                // If type_name looks like a code (all uppercase, <= 6 chars), try to resolve
+                // the full name from the DeepskyType model. This handles cases where the
+                // production database hasn't been properly seeded with full type names.
+                if (!empty($typeName) && strlen($typeName) <= 6 && $typeName === strtoupper($typeName)) {
+                    $typeCode = strtoupper($typeName);
+                    
+                    // Check cache first to avoid repeated DB queries
+                    if (!isset($this->cachedTypeNames[$typeCode])) {
+                        try {
+                            $typeModel = \App\Models\DeepskyType::find($typeCode);
+                            if ($typeModel && !empty($typeModel->name) && $typeModel->name !== $typeCode) {
+                                // Found a different (non-code) name in the model
+                                $this->cachedTypeNames[$typeCode] = $typeModel->name;
+                            } else {
+                                // Store the code itself to avoid re-querying
+                                $this->cachedTypeNames[$typeCode] = $typeName;
+                            }
+                        } catch (\Throwable $_) {
+                            // Fall back to the original value if lookup fails
+                            $this->cachedTypeNames[$typeCode] = $typeName;
+                        }
+                    }
+                    
+                    $typeName = $this->cachedTypeNames[$typeCode];
+                }
+                
+                return e($typeName);
             })
             ->add('constellation')
             ->add('mag', function ($row) {
@@ -853,7 +928,7 @@ class NearbyObjectsTable extends PowerGridComponent
                     return '';
                 }
             })
-            ->add('best_mag', function ($row) {
+            ->add('computed_best_mag', function ($row) {
                 try {
                     $authUser = Auth::user();
                     if (! $authUser) {
@@ -880,7 +955,16 @@ class NearbyObjectsTable extends PowerGridComponent
                     }
 
                     // If a cached best-mag exists from the DB, show it immediately.
-                    $cachedBest = $row->optimum_detection_magnification ?? $row->best_mag ?? null;
+                    $cachedBest = $row->optimum_detection_magnification ?? $row->computed_best_mag ?? null;
+                    $metricExists = $row->metric_exists ?? null;
+                    
+                    // If a metric EXISTS but optimum_detection_magnification is NULL, that means
+                    // it was previously calculated and determined to be uncalculable.
+                    // Don't attempt recalculation - just show "-".
+                    if ($metricExists !== null && $cachedBest === null) {
+                        return '<span title="' . e('Best magnification unavailable for this object') . '">-</span>';
+                    }
+                    
                     if (is_numeric($cachedBest)) {
                         return e((int) $cachedBest) . 'x';
                     }
@@ -933,8 +1017,8 @@ class NearbyObjectsTable extends PowerGridComponent
             // match the on-screen table which may compute a best mag inline.
             ->add('best_mag_plain', function ($row) {
                 try {
-                    if (isset($row->best_mag) && is_numeric($row->best_mag)) {
-                        return (int) $row->best_mag . 'x';
+                    if (isset($row->computed_best_mag) && is_numeric($row->computed_best_mag)) {
+                        return (int) $row->computed_best_mag . 'x';
                     }
 
                     // Attempt to compute a best-mag fallback using the same
@@ -1194,7 +1278,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
                 return e($size);
             })
-            ->add('contrast_reserve', function ($row) {
+            ->add('computed_contrast_reserve', function ($row) {
                 try {
                     // Ensure contrast reserve cells re-evaluate when the
                     // preview selection changes (see $this->refreshTick).
@@ -1220,16 +1304,28 @@ class NearbyObjectsTable extends PowerGridComponent
                         return '<span title="' . e("Contrast reserve requires a standard observing location and instrument in your profile") . '">-</span>';
                     }
 
-                    $cached = $row->contrast_reserve ?? null;
-                    $cachedCat = $row->contrast_reserve_category ?? null;
+                    $cached = $row->computed_contrast_reserve ?? null;
+                    $cachedCat = $row->computed_contrast_reserve_category ?? null;
+                    $metricExists = $row->metric_exists ?? null;
+                    
+                    // If a metric EXISTS but contrast_reserve is NULL, that means
+                    // it was previously calculated and determined to be uncalculable
+                    // (e.g., due to sentinel values in object data). Return "-" immediately.
+                    // Don't attempt recalculation for objects where we've already determined CR is impossible.
+                    $standardInstrId = $authUser?->standardInstrument?->id ?? null;
+                    $previewInstrId = $this->previewInstrumentId ?? null;
+                    $previewDiffers = ! empty($previewInstrId) && intval($previewInstrId) !== intval($standardInstrId);
+                    
+                    if ($metricExists !== null && $cached === null && ! $previewDiffers) {
+                        return '<span title="' . e('Contrast reserve unavailable for this object') . '">-</span>';
+                    }
+                    
                     // If we have a cached CR for the user's standard instrument,
                     // use it unless a preview instrument is active and differs
                     // from the user's standard instrument. When the preview
                     // instrument equals the standard instrument it's safe to use
                     // the cached value (the datasource joined metrics for the
                     // standard instrument).
-                    $standardInstrId = $authUser?->standardInstrument?->id ?? null;
-                    $previewInstrId = $this->previewInstrumentId ?? null;
                     $previewDiffers = ! empty($previewInstrId) && intval($previewInstrId) !== intval($standardInstrId);
 
                     if (is_numeric($cached) && ! $previewDiffers) {
@@ -1568,7 +1664,27 @@ class NearbyObjectsTable extends PowerGridComponent
                                 // inline compute failed; will fall back to background dispatch
                             }
 
-                            // If inline compute did not succeed, dispatch background job once and show placeholder
+                            // Check if we already have a stored result from a previous computation
+                            try {
+                                $existingMetric = UserObjectMetric::where([
+                                    'user_id' => $authUser->id,
+                                    'instrument_id' => $instrId,
+                                    'location_id' => $locId,
+                                    'object_name' => $row->name
+                                ])->where(function ($q) use ($row) {
+                                    $q->where('lens_id', $this->previewLensId ?? null)
+                                      ->orWhereNull('lens_id');
+                                })->first();
+
+                                if ($existingMetric && $existingMetric->optimum_detection_magnification !== null) {
+                                    // Use the cached value instead of showing "Computing..."
+                                    return '<span title="' . e('Cached: ' . number_format(round(floatval($existingMetric->contrast_reserve ?? 0), 2), 2)) . '">' . e((int) $existingMetric->optimum_detection_magnification) . 'x</span>';
+                                }
+                            } catch (\Throwable $_) {
+                                // If we can't check for existing metrics, continue to dispatch
+                            }
+
+                            // If inline compute did not succeed and no cached result exists, dispatch background job once and show placeholder
                             $pendingKey = 'uom_pending:' . ($authUser->id ?? 'anon') . ':' . $instrId . ':' . $locId . ':' . $row->name;
                             if (Cache::add($pendingKey, true, 300)) {
                                 ComputeContrastReserveForObject::dispatch($authUser->id, $instrId, $locId, $row->name, $this->previewLensId ?? null);
@@ -1925,10 +2041,10 @@ class NearbyObjectsTable extends PowerGridComponent
             // Plain contrast reserve for exports (numeric or category)
             ->add('contrast_reserve_plain', function ($row) {
                 try {
-                    if (isset($row->contrast_reserve) && is_numeric($row->contrast_reserve)) {
-                        return number_format(round(floatval($row->contrast_reserve), 2), 2);
+                    if (isset($row->computed_contrast_reserve) && is_numeric($row->computed_contrast_reserve)) {
+                        return number_format(round(floatval($row->computed_contrast_reserve), 2), 2);
                     }
-                    if (isset($row->contrast_reserve_category) && ! empty($row->contrast_reserve_category)) {
+                    if (isset($row->computed_contrast_reserve_category) && ! empty($row->computed_contrast_reserve_category)) {
                         return (string) $row->contrast_reserve_category;
                     }
                 } catch (\Throwable $_) {
@@ -2289,7 +2405,10 @@ class NearbyObjectsTable extends PowerGridComponent
             $cols[] = Column::make(__('Last seen'), 'your_last_seen_date')->sortable()->bodyAttribute('class', 'text-center');
             // Show Best mag and include it in exports (avoid a separate export-only column
             // which could be toggled/persisted and lead to duplicate headers).
-            $cols[] = Column::make(__('Best mag'), 'best_mag')->sortable()->bodyAttribute('class', 'text-center')->visibleInExport(true);
+            $cols[] = Column::make(__('Best mag'), 'computed_best_mag')
+                ->sortable()
+                ->bodyAttribute('class', 'text-center')
+                ->visibleInExport(true);
             // Ephemerides columns (rise, transit, set, best time, max altitude)
             $cols[] = Column::make(__('Rise'), 'rise')->bodyAttribute('class', 'text-center');
             $cols[] = Column::make(__('Transit'), 'transit')->bodyAttribute('class', 'text-center');
@@ -2305,7 +2424,10 @@ class NearbyObjectsTable extends PowerGridComponent
             // Also include it in exports. Avoid adding a separate export-only column
             // (contrast_reserve_plain) which can lead to duplicate headers when
             // column visibility is persisted or toggled client-side.
-            $cols[] = Column::make(__('CR'), 'contrast_reserve')->sortable()->bodyAttribute('class', 'text-center')->visibleInExport(true);
+            $cols[] = Column::make(__('CR'), 'computed_contrast_reserve')
+                ->sortable()
+                ->bodyAttribute('class', 'text-center')
+                ->visibleInExport(true);
         }
         $cols = array_merge($cols, [
             Column::make(__('Size'), 'size')->sortable()->bodyAttribute('class', 'text-center'),
@@ -3946,6 +4068,14 @@ class NearbyObjectsTable extends PowerGridComponent
                 } catch (\Throwable $_) {
                     // ignore logging failures
                 }
+                // Remap old field names to new computed column names before saving
+                if ($value === 'contrast_reserve') {
+                    $value = 'computed_contrast_reserve';
+                }
+                if ($value === 'best_mag') {
+                    $value = 'computed_best_mag';
+                }
+                $this->sortField = $value; // Update the property too
                 $this->saveUserTableSettings(['sortField' => $value]);
                 return;
             }
@@ -3983,7 +4113,16 @@ class NearbyObjectsTable extends PowerGridComponent
 
                 $toSave = [];
                 if (isset($payload['sortField'])) {
-                    $toSave['sortField'] = $payload['sortField'];
+                    $sortField = $payload['sortField'];
+                    // Remap old field names to new computed column names
+                    if ($sortField === 'contrast_reserve') {
+                        $sortField = 'computed_contrast_reserve';
+                    }
+                    if ($sortField === 'best_mag') {
+                        $sortField = 'computed_best_mag';
+                    }
+                    $toSave['sortField'] = $sortField;
+                    $this->sortField = $sortField; // Update the property too
                 }
                 if (isset($payload['sortDirection'])) {
                     $toSave['sortDirection'] = $payload['sortDirection'];

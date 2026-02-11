@@ -654,18 +654,19 @@ try {
                                             <label class="text-sm text-gray-300">{{ __('Radius:') }}</label>
                                             <select
                                                 onchange="(function(v){try{v=parseInt(v,10); if(window.Livewire && typeof Livewire.dispatch==='function'){ Livewire.dispatch('nearbyRadiusChanged', [v]); } else if(window.Livewire && typeof Livewire.dispatchTo==='function'){ Livewire.dispatchTo('nearby-objects-table','nearbyRadiusChanged', [v]); } else if(window.Livewire && typeof Livewire.emit==='function'){ Livewire.emit('nearbyRadiusChanged', [v]); } }catch(e){} })(this.value)"
-                                                class="text-sm rounded bg-gray-700 text-gray-100 p-1">
-                                                <option value="5"
+                                                class="text-sm rounded bg-gray-700 text-gray-100 p-1 border-gray-600"
+                                                style="background-color: #374151; color: #f3f4f6;">
+                                                <option value="5" style="background-color: #374151; color: #f3f4f6;"
                                                     {{ $nearbyRadiusSelected === 5 ? 'selected' : '' }}>5'</option>
-                                                <option value="10"
+                                                <option value="10" style="background-color: #374151; color: #f3f4f6;"
                                                     {{ $nearbyRadiusSelected === 10 ? 'selected' : '' }}>10'</option>
-                                                <option value="15"
+                                                <option value="15" style="background-color: #374151; color: #f3f4f6;"
                                                     {{ $nearbyRadiusSelected === 15 ? 'selected' : '' }}>15'</option>
-                                                <option value="30"
+                                                <option value="30" style="background-color: #374151; color: #f3f4f6;"
                                                     {{ $nearbyRadiusSelected === 30 ? 'selected' : '' }}>30'</option>
-                                                <option value="60"
+                                                <option value="60" style="background-color: #374151; color: #f3f4f6;"
                                                     {{ $nearbyRadiusSelected === 60 ? 'selected' : '' }}>1°</option>
-                                                <option value="120"
+                                                <option value="120" style="background-color: #374151; color: #f3f4f6;"
                                                     {{ $nearbyRadiusSelected === 120 ? 'selected' : '' }}>2°</option>
                                             </select>
                                             <div class="text-xs text-gray-400 ml-2">
@@ -869,6 +870,98 @@ try {
                                             // Initialize server-side `lazy` as false so datasource runs immediately
                                             'lazy' => false,
                                         ])
+                                        <script>
+                                            // Auto-poll the nearby table to refresh when queue jobs complete
+                                            (function(){
+                                                let pollInterval = null;
+                                                let retryCount = 0;
+                                                const maxRetries = 10;
+                                                
+                                                function getComponent() {
+                                                    try {
+                                                        // Try multiple ways to find the component
+                                                        const element = document.querySelector('[wire\\:id*="nearby-objects-table"]') ||
+                                                                       document.querySelector('[wire\\:id]');
+                                                        
+                                                        if (!element) return null;
+                                                        
+                                                        const wireId = element.getAttribute('wire:id');
+                                                        if (!wireId) return null;
+                                                        
+                                                        return window.Livewire?.find(wireId);
+                                                    } catch (e) {
+                                                        return null;
+                                                    }
+                                                }
+                                                
+                                                function checkAndPoll() {
+                                                    try {
+                                                        const component = getComponent();
+                                                        
+                                                        if (!component) {
+                                                            if (retryCount < maxRetries) {
+                                                                retryCount++;
+                                                                console.log('[NearbyTable] Component not ready, retry ' + retryCount + '/' + maxRetries);
+                                                                setTimeout(checkAndPoll, 1000);
+                                                            }
+                                                            return;
+                                                        }
+                                                        
+                                                        // Found component - reset retry counter
+                                                        retryCount = 0;
+                                                        
+                                                        // Check the hasPendingCalculations property (works across all pages!)
+                                                        const hasPending = component.hasPendingCalculations || false;
+                                                        
+                                                        if (hasPending) {
+                                                            // Start polling if not already polling
+                                                            if (!pollInterval) {
+                                                                console.log('[NearbyTable] Pending calculations detected, starting auto-refresh (30s interval)');
+                                                                pollInterval = setInterval(() => {
+                                                                    try {
+                                                                        if (window.Livewire) {
+                                                                            Livewire.dispatch('pg:eventRefresh-nearby-objects-table');
+                                                                        }
+                                                                        // Re-check if we should stop polling
+                                                                        setTimeout(checkAndPoll, 2000);
+                                                                    } catch (e) {
+                                                                        console.error('[NearbyTable] Refresh error:', e);
+                                                                    }
+                                                                }, 30000); // 30 seconds
+                                                            }
+                                                        } else {
+                                                            // Stop polling when no more pending calculations
+                                                            if (pollInterval) {
+                                                                console.log('[NearbyTable] All calculations complete (across all pages), stopping auto-refresh');
+                                                                clearInterval(pollInterval);
+                                                                pollInterval = null;
+                                                            }
+                                                        }
+                                                    } catch (e) {
+                                                        console.error('[NearbyTable] Poll check error:', e);
+                                                    }
+                                                }
+                                                
+                                                // Initial check after table loads - wait longer for component to initialize
+                                                setTimeout(() => {
+                                                    checkAndPoll();
+                                                }, 3000);
+                                                
+                                                // Listen for Livewire updates
+                                                if (window.Livewire) {
+                                                    Livewire.hook('commit', ({ component, succeed }) => {
+                                                        succeed(() => {
+                                                            setTimeout(checkAndPoll, 500);
+                                                        });
+                                                    });
+                                                }
+                                                
+                                                // Cleanup on page unload
+                                                window.addEventListener('beforeunload', () => {
+                                                    if (pollInterval) clearInterval(pollInterval);
+                                                });
+                                            })();
+                                        </script>
                                         <script>
                                             // Defer loading the nearby table data so the main page can
                                             // render quickly. Trigger the Livewire component to load
