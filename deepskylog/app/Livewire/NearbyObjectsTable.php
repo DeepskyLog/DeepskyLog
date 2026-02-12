@@ -159,7 +159,6 @@ class NearbyObjectsTable extends PowerGridComponent
         } catch (\Throwable $_) {
             // ignore early-load failures; mount() will try again
         }
-
     }
 
     public function setUp(): array
@@ -246,6 +245,17 @@ class NearbyObjectsTable extends PowerGridComponent
 
         // Trigger bulk precompute on initial page load
         $this->triggerBulkPrecompute();
+
+        // Check and dispatch initial pending calculations state
+        $this->updateHasPendingCalculations();
+    }
+
+    /**
+     * Called before each render - check and update pending calculations state.
+     */
+    public function rendering(): void
+    {
+        $this->updateHasPendingCalculations();
     }
 
     /**
@@ -285,6 +295,13 @@ class NearbyObjectsTable extends PowerGridComponent
                 ->leftJoin('deepskytypes', 'deepskytypes.code', '=', 'objects.type')
                 ->whereRaw("{$expr} <= ?", array_merge($exprBindings, [$radiusDeg]));
 
+            // Exclude the current object (same as datasource() method)
+            if (!empty($this->objectName)) {
+                $query->where('objects.name', '<>', $this->objectName);
+            } elseif (!empty($this->objectId)) {
+                $query->where('objects.name', '<>', (string) $this->objectId);
+            }
+
             // Join user_object_metrics based on lens configuration
             if ($lensId === null) {
                 $query->leftJoin('user_object_metrics as uom', function ($join) use ($authUser, $instrId, $locId) {
@@ -318,6 +335,12 @@ class NearbyObjectsTable extends PowerGridComponent
             )->count();
 
             $this->hasPendingCalculations = $pendingCount > 0;
+
+            // Dispatch browser event to notify JavaScript of the current state
+            try {
+                $this->dispatch('hasPendingCalculationsUpdated', hasPending: $this->hasPendingCalculations);
+            } catch (\Throwable $_) {
+            }
         } catch (\Throwable $e) {
             $this->hasPendingCalculations = false;
         }
@@ -341,12 +364,12 @@ class NearbyObjectsTable extends PowerGridComponent
                     // Add returns true only when the key did not exist.
                     if (Cache::add($bulkKey, true, 600)) { // 10 minutes
                         try {
-                            // Limit the precompute to the configured inline limit
+                            // Phase 1: Process first batch inline for fast feedback
                             // (default 100). This is intentionally conservative to
                             // avoid blocking the request for too long.
-                            $limit = intval($this->bulkInlineLimit) > 0 ? intval($this->bulkInlineLimit) : 100;
-                            $names = $this->datasource()->limit($limit)->pluck('name');
-                            foreach ($names as $oname) {
+                            $inlineLimit = intval($this->bulkInlineLimit) > 0 ? intval($this->bulkInlineLimit) : 100;
+                            $firstBatch = $this->datasource()->limit($inlineLimit)->pluck('name');
+                            foreach ($firstBatch as $oname) {
                                 try {
                                     // If a lens is active, check for a lens-specific row,
                                     // otherwise check for the legacy lens-less row.
@@ -381,6 +404,37 @@ class NearbyObjectsTable extends PowerGridComponent
                                 } catch (\Throwable $_) {
                                     // ignore per-object failures
                                 }
+                            }
+
+                            // Phase 2: Queue ALL remaining objects that need metrics
+                            // Get all object names from the full nearby set (no limit)
+                            try {
+                                $allNames = $this->datasource()->pluck('name');
+                                foreach ($allNames as $oname) {
+                                    try {
+                                        $q = UserObjectMetric::where('user_id', $authUser->id)
+                                            ->where('instrument_id', $instrId)
+                                            ->where('location_id', $locId)
+                                            ->where('object_name', $oname);
+                                        if ($lensId === null) {
+                                            $q = $q->whereNull('lens_id');
+                                        } else {
+                                            $q = $q->where('lens_id', $lensId);
+                                        }
+                                        // Queue if metric doesn't exist
+                                        if (!$q->exists()) {
+                                            try {
+                                                ComputeContrastReserveForObject::dispatch($authUser->id, $instrId, $locId, $oname, $lensId);
+                                            } catch (\Throwable $_) {
+                                                // swallow; per-object queue failure
+                                            }
+                                        }
+                                    } catch (\Throwable $_) {
+                                        // ignore per-object check failures
+                                    }
+                                }
+                            } catch (\Throwable $_) {
+                                // ignore failures during full set enumeration
                             }
                         } catch (\Throwable $_) {
                             // ignore failures during bulk enumeration
@@ -3963,6 +4017,10 @@ class NearbyObjectsTable extends PowerGridComponent
             // Clear in-memory eyepiece cache so subsequent calculations pick up
             // the user's current eyepiece set / instrument selection.
             $this->cachedEyepieces = null;
+
+            // Store previous lens ID to detect changes
+            $previousLensId = $this->previewLensId;
+
             // Normalize incoming payload and store preview selections so fields()
             // can prefer the preview instrument/eyepiece when computing values.
             try {
@@ -4061,20 +4119,33 @@ class NearbyObjectsTable extends PowerGridComponent
             } catch (\Throwable $_) {
                 // ignore browser event failures
             }
+
+            // Clear bulk precompute cache if lens selection changed
+            // This allows new calculations to be dispatched for the new configuration
+            if ($previousLensId !== $this->previewLensId) {
+                try {
+                    $authUser = Auth::user();
+                    if ($authUser) {
+                        $instrId = $this->previewInstrumentId ?? ($authUser->standardInstrument?->id ?? null);
+                        $locId = $authUser->standardLocation?->id ?? null;
+                        if ($instrId && $locId) {
+                            // Clear cache for both old and new lens configurations
+                            $oldKey = 'uom_bulk_pending:' . $authUser->id . ':' . $instrId . ':' . $locId . ':' . ($previousLensId === null ? 'nolens' : (string) $previousLensId);
+                            $newKey = 'uom_bulk_pending:' . $authUser->id . ':' . $instrId . ':' . $locId . ':' . ($this->previewLensId === null ? 'nolens' : (string) $this->previewLensId);
+                            Cache::forget($oldKey);
+                            Cache::forget($newKey);
+                        }
+                    }
+                } catch (\Throwable $_) {
+                    // ignore cache clear failures
+                }
+            }
+
             // Trigger bulk precompute when preview settings change
             $this->triggerBulkPrecompute();
         } catch (\Throwable $_) {
             // don't let listener failures break the UI
         }
-    }
-
-    /**
-     * Livewire lifecycle hook called after every render.
-     * Update hasPendingCalculations so JavaScript polling knows when to stop.
-     */
-    public function rendering(): void
-    {
-        $this->updateHasPendingCalculations();
     }
 
     /**

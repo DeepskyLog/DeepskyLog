@@ -878,6 +878,15 @@ try {
                                                 const maxRetries = 10;
                                                 let pollStartTime = null;
                                                 const maxPollDuration = 300000; // 5 minutes max
+                                                let hasPendingCalculations = false;
+                                                
+                                                // Listen for Livewire events from the server
+                                                document.addEventListener('hasPendingCalculationsUpdated', function(event) {
+                                                    const detail = event.detail || event;
+                                                    const newValue = detail.hasPending || detail[0]?.hasPending || false;
+                                                    hasPendingCalculations = newValue;
+                                                    checkAndPoll();
+                                                });
                                                 
                                                 function getComponent() {
                                                     try {
@@ -911,24 +920,6 @@ try {
                                                         // Found component - reset retry counter
                                                         retryCount = 0;
                                                         
-                                                        // Check the hasPendingCalculations property (works across all pages!)
-                                                        // Access the raw data state, not the proxy function
-                                                        let hasPending = false;
-                                                        try {
-                                                            // Try multiple ways to access the actual boolean value
-                                                            if (component.__instance && component.__instance.data && typeof component.__instance.data.hasPendingCalculations === 'boolean') {
-                                                                hasPending = component.__instance.data.hasPendingCalculations;
-                                                            } else if (component.$wire && typeof component.$wire.$get === 'function') {
-                                                                hasPending = component.$wire.$get('hasPendingCalculations') || false;
-                                                            } else if (component.state && typeof component.state.hasPendingCalculations === 'boolean') {
-                                                                hasPending = component.state.hasPendingCalculations;
-                                                            } else if (component.data && typeof component.data.hasPendingCalculations === 'boolean') {
-                                                                hasPending = component.data.hasPendingCalculations;
-                                                            }
-                                                        } catch (e) {
-                                                            // Silently continue if property access fails
-                                                        }
-                                                        
                                                         // Check if we've been polling too long
                                                         if (pollStartTime && (Date.now() - pollStartTime) > maxPollDuration) {
                                                             if (pollInterval) {
@@ -939,7 +930,7 @@ try {
                                                             return;
                                                         }
                                                         
-                                                        if (hasPending) {
+                                                        if (hasPendingCalculations) {
                                                             // Start polling if not already polling
                                                             if (!pollInterval) {
                                                                 pollStartTime = Date.now();
