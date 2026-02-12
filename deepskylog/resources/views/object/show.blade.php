@@ -876,6 +876,8 @@ try {
                                                 let pollInterval = null;
                                                 let retryCount = 0;
                                                 const maxRetries = 10;
+                                                let pollStartTime = null;
+                                                const maxPollDuration = 300000; // 5 minutes max
                                                 
                                                 function getComponent() {
                                                     try {
@@ -901,7 +903,6 @@ try {
                                                         if (!component) {
                                                             if (retryCount < maxRetries) {
                                                                 retryCount++;
-                                                                console.log('[NearbyTable] Component not ready, retry ' + retryCount + '/' + maxRetries);
                                                                 setTimeout(checkAndPoll, 1000);
                                                             }
                                                             return;
@@ -911,30 +912,53 @@ try {
                                                         retryCount = 0;
                                                         
                                                         // Check the hasPendingCalculations property (works across all pages!)
-                                                        const hasPending = component.hasPendingCalculations || false;
+                                                        // Access the raw data state, not the proxy function
+                                                        let hasPending = false;
+                                                        try {
+                                                            // Try multiple ways to access the actual boolean value
+                                                            if (component.__instance && component.__instance.data && typeof component.__instance.data.hasPendingCalculations === 'boolean') {
+                                                                hasPending = component.__instance.data.hasPendingCalculations;
+                                                            } else if (component.$wire && typeof component.$wire.$get === 'function') {
+                                                                hasPending = component.$wire.$get('hasPendingCalculations') || false;
+                                                            } else if (component.state && typeof component.state.hasPendingCalculations === 'boolean') {
+                                                                hasPending = component.state.hasPendingCalculations;
+                                                            } else if (component.data && typeof component.data.hasPendingCalculations === 'boolean') {
+                                                                hasPending = component.data.hasPendingCalculations;
+                                                            }
+                                                        } catch (e) {
+                                                            // Silently continue if property access fails
+                                                        }
+                                                        
+                                                        // Check if we've been polling too long
+                                                        if (pollStartTime && (Date.now() - pollStartTime) > maxPollDuration) {
+                                                            if (pollInterval) {
+                                                                clearInterval(pollInterval);
+                                                                pollInterval = null;
+                                                                pollStartTime = null;
+                                                            }
+                                                            return;
+                                                        }
                                                         
                                                         if (hasPending) {
                                                             // Start polling if not already polling
                                                             if (!pollInterval) {
-                                                                console.log('[NearbyTable] Pending calculations detected, starting auto-refresh (30s interval)');
+                                                                pollStartTime = Date.now();
                                                                 pollInterval = setInterval(() => {
                                                                     try {
                                                                         if (window.Livewire) {
                                                                             Livewire.dispatch('pg:eventRefresh-nearby-objects-table');
                                                                         }
-                                                                        // Re-check if we should stop polling
-                                                                        setTimeout(checkAndPoll, 2000);
                                                                     } catch (e) {
                                                                         console.error('[NearbyTable] Refresh error:', e);
                                                                     }
-                                                                }, 30000); // 30 seconds
+                                                                }, 5000); // 5 seconds
                                                             }
                                                         } else {
                                                             // Stop polling when no more pending calculations
                                                             if (pollInterval) {
-                                                                console.log('[NearbyTable] All calculations complete (across all pages), stopping auto-refresh');
                                                                 clearInterval(pollInterval);
                                                                 pollInterval = null;
+                                                                pollStartTime = null;
                                                             }
                                                         }
                                                     } catch (e) {

@@ -159,6 +159,7 @@ class NearbyObjectsTable extends PowerGridComponent
         } catch (\Throwable $_) {
             // ignore early-load failures; mount() will try again
         }
+
     }
 
     public function setUp(): array
@@ -220,12 +221,12 @@ class NearbyObjectsTable extends PowerGridComponent
 
         try {
             $authUser = Auth::user();
-            if ($authUser && ! empty($authUser->standardAtlasCode) && preg_match('/^[A-Za-z0-9_]+$/', $authUser->standardAtlasCode)) {
+            if ($authUser && !empty($authUser->standardAtlasCode) && preg_match('/^[A-Za-z0-9_]+$/', $authUser->standardAtlasCode)) {
                 $this->includeAtlas = true;
                 $this->atlasCode = (string) $authUser->standardAtlasCode;
                 try {
                     $m = Atlas::where('code', (string) $this->atlasCode)->first();
-                    if (! $m) {
+                    if (!$m) {
                         $m = Atlas::whereRaw('LOWER(`code`) = ?', [strtolower((string) $this->atlasCode)])->first();
                     }
                     $this->atlasName = $m?->name ?? null;
@@ -242,15 +243,159 @@ class NearbyObjectsTable extends PowerGridComponent
             $this->atlasCode = null;
             $this->atlasName = null;
         }
+
+        // Trigger bulk precompute on initial page load
+        $this->triggerBulkPrecompute();
+    }
+
+    /**
+     * Update the hasPendingCalculations property by checking for objects without metrics.
+     * This is called on every boot() so JavaScript polling can detect when to stop.
+     */
+    protected function updateHasPendingCalculations(): void
+    {
+        try {
+            $authUser = Auth::user();
+            if (!$authUser || !is_numeric($this->ra) || !is_numeric($this->decl)) {
+                $this->hasPendingCalculations = false;
+                return;
+            }
+
+            $instrId = $this->previewInstrumentId ?? ($authUser->standardInstrument?->id ?? null);
+            $locId = $authUser->standardLocation?->id ?? null;
+            $lensId = $this->previewLensId ?? null;
+
+            if (!$instrId || !$locId) {
+                $this->hasPendingCalculations = false;
+                return;
+            }
+
+            // Build a simplified query to count objects without metrics
+            $radiusDeg = $this->radiusArcMin / 60.0;
+            $centerRaDeg = floatval($this->ra);
+            if ($centerRaDeg <= 24.0) {
+                $centerRaDeg = $centerRaDeg * 15.0;
+            }
+
+            $expr = "DEGREES(ACOS(LEAST(1, GREATEST(-1, SIN(RADIANS(?))*SIN(RADIANS(`decl`)) + COS(RADIANS(?))*COS(RADIANS(`decl`))*COS(RADIANS((?)-(CASE WHEN `ra` <= 24 THEN `ra`*15 ELSE `ra` END))) ))))";
+            $exprBindings = [$this->decl, $this->decl, $centerRaDeg];
+
+            $query = DeepskyObject::selectRaw('objects.name')
+                ->leftJoin('constellations', 'objects.con', '=', 'constellations.id')
+                ->leftJoin('deepskytypes', 'deepskytypes.code', '=', 'objects.type')
+                ->whereRaw("{$expr} <= ?", array_merge($exprBindings, [$radiusDeg]));
+
+            // Join user_object_metrics based on lens configuration
+            if ($lensId === null) {
+                $query->leftJoin('user_object_metrics as uom', function ($join) use ($authUser, $instrId, $locId) {
+                    $join->on('objects.name', '=', 'uom.object_name')
+                        ->where('uom.user_id', $authUser->id)
+                        ->where('uom.instrument_id', $instrId)
+                        ->where('uom.location_id', $locId)
+                        ->whereNull('uom.lens_id');
+                });
+            } else {
+                $query->leftJoin('user_object_metrics as uom_lens', function ($join) use ($authUser, $instrId, $locId, $lensId) {
+                    $join->on('objects.name', '=', 'uom_lens.object_name')
+                        ->where('uom_lens.user_id', $authUser->id)
+                        ->where('uom_lens.instrument_id', $instrId)
+                        ->where('uom_lens.location_id', $locId)
+                        ->where('uom_lens.lens_id', $lensId);
+                })
+                    ->leftJoin('user_object_metrics as uom_default', function ($join) use ($authUser, $instrId, $locId) {
+                        $join->on('objects.name', '=', 'uom_default.object_name')
+                            ->where('uom_default.user_id', $authUser->id)
+                            ->where('uom_default.instrument_id', $instrId)
+                            ->where('uom_default.location_id', $locId)
+                            ->whereNull('uom_default.lens_id');
+                    });
+            }
+
+            $pendingCount = $query->whereRaw(
+                $lensId === null
+                ? 'uom.id IS NULL'
+                : 'COALESCE(uom_lens.id, uom_default.id) IS NULL'
+            )->count();
+
+            $this->hasPendingCalculations = $pendingCount > 0;
+        } catch (\Throwable $e) {
+            $this->hasPendingCalculations = false;
+        }
+    }
+
+    /**
+     * Kick off a background bulk precompute for the current nearby result
+     * set so objects not yet present in `user_object_metrics` are
+     * computed for the selected user/instrument/location/lens.
+     */
+    protected function triggerBulkPrecompute(): void
+    {
+        try {
+            $authUser = Auth::user();
+            if ($authUser) {
+                $instrId = $this->previewInstrumentId ?? ($authUser->standardInstrument?->id ?? null);
+                $locId = $authUser->standardLocation?->id ?? null;
+                $lensId = $this->previewLensId ?? null;
+                if ($instrId && $locId && is_numeric($this->radiusArcMin) && is_numeric($this->ra) && is_numeric($this->decl)) {
+                    $bulkKey = 'uom_bulk_pending:' . $authUser->id . ':' . $instrId . ':' . $locId . ':' . ($lensId === null ? 'nolens' : (string) $lensId);
+                    // Add returns true only when the key did not exist.
+                    if (Cache::add($bulkKey, true, 600)) { // 10 minutes
+                        try {
+                            // Limit the precompute to the configured inline limit
+                            // (default 100). This is intentionally conservative to
+                            // avoid blocking the request for too long.
+                            $limit = intval($this->bulkInlineLimit) > 0 ? intval($this->bulkInlineLimit) : 100;
+                            $names = $this->datasource()->limit($limit)->pluck('name');
+                            foreach ($names as $oname) {
+                                try {
+                                    // If a lens is active, check for a lens-specific row,
+                                    // otherwise check for the legacy lens-less row.
+                                    $q = UserObjectMetric::where('user_id', $authUser->id)
+                                        ->where('instrument_id', $instrId)
+                                        ->where('location_id', $locId)
+                                        ->where('object_name', $oname);
+                                    if ($lensId === null) {
+                                        $q = $q->whereNull('lens_id');
+                                    } else {
+                                        $q = $q->where('lens_id', $lensId);
+                                    }
+                                    if (!$q->exists()) {
+                                        // Perform inline computation by invoking the
+                                        // ComputeContrastReserveForObject job's handle
+                                        // method synchronously. This keeps behavior
+                                        // consistent with the queued job but runs
+                                        // in-process as requested.
+                                        $job = new ComputeContrastReserveForObject($authUser->id, $instrId, $locId, $oname, $lensId);
+                                        try {
+                                            $job->handle();
+                                        } catch (\Throwable $_) {
+                                            // If inline job fails, fallback to enqueueing
+                                            // a queued version to avoid losing the work.
+                                            try {
+                                                ComputeContrastReserveForObject::dispatch($authUser->id, $instrId, $locId, $oname, $lensId);
+                                            } catch (\Throwable $__) {
+                                                // swallow; per-object failure
+                                            }
+                                        }
+                                    }
+                                } catch (\Throwable $_) {
+                                    // ignore per-object failures
+                                }
+                            }
+                        } catch (\Throwable $_) {
+                            // ignore failures during bulk enumeration
+                        }
+                    }
+                }
+            }
+        } catch (\Throwable $_) {
+            // swallow background precompute failures to avoid breaking the UI
+        }
     }
 
     public function datasource(): ?Builder
     {
         $dsStart = microtime(true);
-        try {
-            Log::debug('NearbyObjectsTable: datasource start', ['objectId' => $this->objectId ?? null, 'objectName' => $this->objectName ?? null, 'ra' => $this->ra, 'decl' => $this->decl, 'radiusArcMin' => $this->radiusArcMin]);
-        } catch (\Throwable $_) {
-        }
         if ($this->ra === null || $this->decl === null) {
             return DeepskyObject::query()->whereRaw('0 = 1');
         }
@@ -258,19 +403,19 @@ class NearbyObjectsTable extends PowerGridComponent
         // Populate per-render cached preview models to avoid doing DB lookups
         // inside per-row closures (which causes N+1 queries).
         try {
-            if (! empty($this->previewInstrumentId)) {
+            if (!empty($this->previewInstrumentId)) {
                 $this->previewInstrumentModel = \App\Models\Instrument::find($this->previewInstrumentId);
             } else {
                 $this->previewInstrumentModel = null;
             }
 
-            if (! empty($this->previewLensId)) {
+            if (!empty($this->previewLensId)) {
                 $this->previewLensModel = \App\Models\Lens::find($this->previewLensId);
             } else {
                 $this->previewLensModel = null;
             }
 
-            if (! empty($this->previewEyepieceId)) {
+            if (!empty($this->previewEyepieceId)) {
                 $this->previewEyepieceModel = \App\Models\Eyepiece::find($this->previewEyepieceId);
             } else {
                 $this->previewEyepieceModel = null;
@@ -324,7 +469,7 @@ class NearbyObjectsTable extends PowerGridComponent
             $oldDbName = config('database.connections.mysqlOld.database') ?? env('DB_DATABASE_OLD');
             $authUser = Auth::user();
             $legacyUser = $authUser?->username ?? '';
-            if (! empty($oldDbName)) {
+            if (!empty($oldDbName)) {
                 // Replace many correlated subqueries with a single derived aggregation
                 // subquery. This computes all observation aggregates for every
                 // object in one pass and makes sorting by these aggregates fast.
@@ -379,12 +524,6 @@ class NearbyObjectsTable extends PowerGridComponent
                 GROUP BY o.objectname";
                 }
 
-                try {
-                    $aggElapsed = round((microtime(true) - $dsStart) * 1000, 2);
-                    Log::debug('NearbyObjectsTable: built obsAggSql', ['oldDbName' => $oldDbName, 'elapsed_ms' => $aggElapsed]);
-                } catch (\Throwable $_) {
-                }
-
                 // Ensure the inner select includes the obs.* aliases so the
                 // outer wrapper (used by PowerGrid) can reference and sort them.
                 // Also expose aliases that match the PowerGrid field names ('seen', 'last_seen')
@@ -410,7 +549,7 @@ class NearbyObjectsTable extends PowerGridComponent
         // If we constructed a derived aggregation SQL for legacy observations,
         // attach it as a LEFT JOIN so the inner subquery exposes obs.* aliases
         // and the outer wrapper can sort/filter on them efficiently.
-        if (! empty($this->obsAggSql)) {
+        if (!empty($this->obsAggSql)) {
             $baseQuery->leftJoin(DB::raw('(' . $this->obsAggSql . ') as obs'), function ($join) {
                 $join->on('obs.object_name', '=', 'objects.name');
             });
@@ -454,7 +593,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 if ($instrId && $locId) {
                     // If a preview lens is active, prefer lens-specific cached metrics
                     // but fall back to the lens-less (legacy) metrics when available.
-                    if (! empty($previewLens)) {
+                    if (!empty($previewLens)) {
                         $outer->leftJoin('user_object_metrics as uom_lens', function ($join) use ($instrId, $locId, $authUser, $previewLens) {
                             $join->on('objects.name', '=', 'uom_lens.object_name')
                                 ->where('uom_lens.user_id', '=', $authUser->id)
@@ -509,7 +648,7 @@ class NearbyObjectsTable extends PowerGridComponent
         $sortDirection = $this->sortDirection ?? 'asc';
         // Validate sort direction to accept only 'asc' or 'desc' (case-insensitive).
         $sortDirection = is_string($sortDirection) ? strtolower($sortDirection) : 'asc';
-        if (! in_array($sortDirection, ['asc', 'desc'], true)) {
+        if (!in_array($sortDirection, ['asc', 'desc'], true)) {
             $sortDirection = 'asc';
         }
 
@@ -538,7 +677,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 if (($existing['sortDirection'] ?? null) !== $sortDirection) {
                     $need['sortDirection'] = $sortDirection;
                 }
-                if (! empty($need)) {
+                if (!empty($need)) {
                     $this->saveUserTableSettings($need);
                 }
             }
@@ -576,53 +715,10 @@ class NearbyObjectsTable extends PowerGridComponent
         // Centralize ordering through helper to avoid duplicated logic
         $this->applySortingToQuery($outer, $sortField, $sortDirection);
 
-        // Debug: log the actual SQL query to understand the ambiguity issue
-        try {
-            $sql = $outer->toSql();
-            $bindings = $outer->getBindings();
-            Log::debug('NearbyObjectsTable SQL query', ['sql' => $sql, 'bindings' => $bindings]);
-        } catch (\Throwable $_) {
-        }
-
-        // Debug: log final ordering so we can see what PowerGrid requested
-        try {
-            // orders may be an array of objects or null; keep payload small
-            $orders = $outer->getQuery()->orders;
-            Log::debug('NearbyObjectsTable final ordering', ['sortField' => $sortField, 'sortDirection' => $sortDirection, 'orders' => is_array($orders) ? array_map(function ($o) {
-                return is_object($o) ? (array)$o : $o;
-            }, $orders) : $orders]);
-        } catch (\Throwable $_) {
-            // swallowing logging errors to avoid breaking rendering
-        }
-
-        // Ordering already applied through helper; skip normalization.
-
-        try {
-            Log::debug('NearbyObjectsTable final SQL', ['sql' => $outer->toSql(), 'bindings' => $outer->getBindings()]);
-        } catch (\Throwable $_) {
-            // ignore logging failures
-        }
-
         // Do not mutate `$this->sortField` here; keep the component's sort
         // property stable (unqualified) so repeated header clicks toggle the
         // direction as PowerGrid expects. Ordering is enforced on the SQL
         // using fully-qualified expressions inside `applySortingToQuery()`.
-
-        // Check if there are any objects with pending CR calculations (across all pages)
-        // This is used by JavaScript auto-polling to know when to stop refreshing
-        try {
-            $authUser = Auth::user();
-            if ($authUser) {
-                // Clone the query to count objects without metrics
-                $checkQuery = clone $outer;
-                $pendingCount = $checkQuery->whereNull('metric_exists')->count();
-                $this->hasPendingCalculations = $pendingCount > 0;
-            } else {
-                $this->hasPendingCalculations = false;
-            }
-        } catch (\Throwable $_) {
-            $this->hasPendingCalculations = false;
-        }
 
         return $outer;
     }
@@ -713,7 +809,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 // Check if user has required instrument/location for best_mag sorting
                 $authUser = Auth::user();
                 $hasUserMetrics = $authUser && $authUser->standardLocation && ($authUser->standardInstrument || $this->previewInstrumentId);
-                
+
                 if ($hasUserMetrics) {
                     // Reference the computed alias we created
                     if ($sd === 'ASC') {
@@ -732,7 +828,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 // Check if user has required instrument/location for CR sorting
                 $authUser = Auth::user();
                 $hasUserMetrics = $authUser && $authUser->standardLocation && ($authUser->standardInstrument || $this->previewInstrumentId);
-                
+
                 if ($hasUserMetrics) {
                     // Reference the computed alias we created
                     if ($sd === 'ASC') {
@@ -815,13 +911,13 @@ class NearbyObjectsTable extends PowerGridComponent
             })
             ->add('type_name', function ($row) {
                 $typeName = $row->type_name ?? $row->type ?? '';
-                
+
                 // If type_name looks like a code (all uppercase, <= 6 chars), try to resolve
                 // the full name from the DeepskyType model. This handles cases where the
                 // production database hasn't been properly seeded with full type names.
                 if (!empty($typeName) && strlen($typeName) <= 6 && $typeName === strtoupper($typeName)) {
                     $typeCode = strtoupper($typeName);
-                    
+
                     // Check cache first to avoid repeated DB queries
                     if (!isset($this->cachedTypeNames[$typeCode])) {
                         try {
@@ -838,10 +934,10 @@ class NearbyObjectsTable extends PowerGridComponent
                             $this->cachedTypeNames[$typeCode] = $typeName;
                         }
                     }
-                    
+
                     $typeName = $this->cachedTypeNames[$typeCode];
                 }
-                
+
                 return e($typeName);
             })
             ->add('constellation')
@@ -889,13 +985,14 @@ class NearbyObjectsTable extends PowerGridComponent
             ->add('your_last_seen_date', function ($row) {
                 try {
                     $d = $row->your_last_seen_date ?? null;
-                    if (! $d) return '';
-                    $s = (string)$d;
+                    if (!$d)
+                        return '';
+                    $s = (string) $d;
                     try {
                         $c = \Carbon\Carbon::createFromFormat('Ymd', $s);
                         return $c->translatedFormat('j M Y');
                     } catch (\Throwable $_) {
-                        return (string)$d;
+                        return (string) $d;
                     }
                 } catch (\Throwable $_) {
                     return '';
@@ -904,10 +1001,11 @@ class NearbyObjectsTable extends PowerGridComponent
             ->add('last_seen', function ($row) {
                 try {
                     $fmt = function ($d) {
-                        if (! $d) return '';
+                        if (!$d)
+                            return '';
                         try {
                             // legacy date stored as Ymd integer/string
-                            $s = (string)$d;
+                            $s = (string) $d;
                             $c = \Carbon\Carbon::createFromFormat('Ymd', $s);
                             return $c->translatedFormat('j M Y');
                         } catch (\Throwable $_) {
@@ -931,7 +1029,7 @@ class NearbyObjectsTable extends PowerGridComponent
             ->add('computed_best_mag', function ($row) {
                 try {
                     $authUser = Auth::user();
-                    if (! $authUser) {
+                    if (!$authUser) {
                         return '<span title="' . e('Login required to compute best magnification') . '">-</span>';
                     }
 
@@ -940,7 +1038,7 @@ class NearbyObjectsTable extends PowerGridComponent
                     // otherwise fall back to the user's standard instrument.
                     $userInstrument = null;
                     try {
-                        if (! empty($this->previewInstrumentId)) {
+                        if (!empty($this->previewInstrumentId)) {
                             $userInstrument = $this->previewInstrumentModel ?? \App\Models\Instrument::where('id', $this->previewInstrumentId)->first();
                         }
                     } catch (\Throwable $_) {
@@ -950,21 +1048,21 @@ class NearbyObjectsTable extends PowerGridComponent
                         $userInstrument = $authUser?->standardInstrument ?? null;
                     }
 
-                    if (! $userLocation || ! $userInstrument) {
+                    if (!$userLocation || !$userInstrument) {
                         return '<span title="' . e('Best mag requires a standard observing location and instrument in your profile') . '">-</span>';
                     }
 
                     // If a cached best-mag exists from the DB, show it immediately.
                     $cachedBest = $row->optimum_detection_magnification ?? $row->computed_best_mag ?? null;
                     $metricExists = $row->metric_exists ?? null;
-                    
+
                     // If a metric EXISTS but optimum_detection_magnification is NULL, that means
                     // it was previously calculated and determined to be uncalculable.
                     // Don't attempt recalculation - just show "-".
                     if ($metricExists !== null && $cachedBest === null) {
                         return '<span title="' . e('Best magnification unavailable for this object') . '">-</span>';
                     }
-                    
+
                     if (is_numeric($cachedBest)) {
                         return e((int) $cachedBest) . 'x';
                     }
@@ -995,7 +1093,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
                     // Fallback single-mag from typical eyepiece if available
                     $mag = $userInstrument->fixedMagnification ?? null;
-                    if (! $mag && isset($row->typicalEyepieceFocal) && ! empty($userInstrument->focal_length_mm)) {
+                    if (!$mag && isset($row->typicalEyepieceFocal) && !empty($userInstrument->focal_length_mm)) {
                         $mag = (int) round(($userInstrument->focal_length_mm / $row->typicalEyepieceFocal));
                     }
 
@@ -1026,24 +1124,24 @@ class NearbyObjectsTable extends PowerGridComponent
                     // exported files include the computed value even when the
                     // per-user metric hasn't been persisted yet.
                     $authUser = Auth::user();
-                    if (! $authUser) {
+                    if (!$authUser) {
                         return '-';
                     }
 
                     $userLocation = $authUser?->standardLocation ?? null;
                     $userInstrument = null;
                     try {
-                        if (! empty($this->previewInstrumentId)) {
+                        if (!empty($this->previewInstrumentId)) {
                             $userInstrument = $this->previewInstrumentModel ?? \App\Models\Instrument::where('id', $this->previewInstrumentId)->first();
                         }
                     } catch (\Throwable $_) {
                         $userInstrument = null;
                     }
-                    if (! $userInstrument) {
+                    if (!$userInstrument) {
                         $userInstrument = $authUser?->standardInstrument ?? null;
                     }
 
-                    if (! $userLocation || ! $userInstrument) {
+                    if (!$userLocation || !$userInstrument) {
                         return '-';
                     }
 
@@ -1099,9 +1197,9 @@ class NearbyObjectsTable extends PowerGridComponent
                     // Determine preview lens factor
                     $lensFactor = 1.0;
                     try {
-                        if (! empty($this->previewLensId)) {
+                        if (!empty($this->previewLensId)) {
                             $ln = $this->previewLensModel ?? \App\Models\Lens::where('id', $this->previewLensId)->first();
-                            if ($ln && ! empty($ln->factor) && is_numeric($ln->factor)) {
+                            if ($ln && !empty($ln->factor) && is_numeric($ln->factor)) {
                                 $lensFactor = floatval($ln->factor);
                             }
                         }
@@ -1110,17 +1208,17 @@ class NearbyObjectsTable extends PowerGridComponent
 
                     // Build possible magnifications (and single fallback mag)
                     $mag = $userInstrument->fixedMagnification ?? null;
-                    if (! $mag && isset($row->typicalEyepieceFocal) && ! empty($userInstrument->focal_length_mm)) {
+                    if (!$mag && isset($row->typicalEyepieceFocal) && !empty($userInstrument->focal_length_mm)) {
                         $mag = (int) round(($userInstrument->focal_length_mm / $row->typicalEyepieceFocal) * $lensFactor);
                     }
 
                     $possibleMags = [];
-                    if (! empty($userInstrument?->focal_length_mm)) {
+                    if (!empty($userInstrument?->focal_length_mm)) {
                         $epFocals = [];
-                        if (! empty($this->previewEyepieceId)) {
+                        if (!empty($this->previewEyepieceId)) {
                             try {
                                 $ep = $this->previewEyepieceModel ?? \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
-                                if ($ep && ! empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
+                                if ($ep && !empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
                                     $epFocals[] = floatval($ep->focal_length_mm);
                                 }
                             } catch (\Throwable $_) { /* ignore */
@@ -1150,7 +1248,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                 if ($useSetEyepieces) {
                                     foreach ($instSet->eyepieces as $sep) {
                                         try {
-                                            if ($sep->active && ! empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
+                                            if ($sep->active && !empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
                                                 $epFocals[] = floatval($sep->focal_length_mm);
                                             }
                                         } catch (\Throwable $_) {
@@ -1163,20 +1261,21 @@ class NearbyObjectsTable extends PowerGridComponent
                         } catch (\Throwable $_) { /* ignore */
                         }
 
-                        if (! $usedSetEyepieces) {
+                        if (!$usedSetEyepieces) {
                             try {
                                 $userEps = $this->getCachedEyepieces($authUser);
                                 $foundInstrumentSpecific = false;
                                 foreach ($userEps as $ep) {
                                     try {
-                                        if (empty($ep->focal_length_mm) || ! is_numeric($ep->focal_length_mm)) continue;
+                                        if (empty($ep->focal_length_mm) || !is_numeric($ep->focal_length_mm))
+                                            continue;
                                         $usedWith = [];
                                         try {
                                             $usedWith = method_exists($ep, 'get_used_instruments') ? $ep->get_used_instruments() : [];
                                         } catch (\Throwable $_) {
                                             $usedWith = [];
                                         }
-                                        if (! empty($usedWith) && in_array(intval($userInstrument->id), array_map('intval', (array)$usedWith))) {
+                                        if (!empty($usedWith) && in_array(intval($userInstrument->id), array_map('intval', (array) $usedWith))) {
                                             $foundInstrumentSpecific = true;
                                             $epFocals[] = floatval($ep->focal_length_mm);
                                         }
@@ -1184,10 +1283,10 @@ class NearbyObjectsTable extends PowerGridComponent
                                         continue;
                                     }
                                 }
-                                if (! $foundInstrumentSpecific) {
+                                if (!$foundInstrumentSpecific) {
                                     foreach ($userEps as $ep) {
                                         try {
-                                            if (! empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
+                                            if (!empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
                                                 $epFocals[] = floatval($ep->focal_length_mm);
                                             }
                                         } catch (\Throwable $_) {
@@ -1208,7 +1307,7 @@ class NearbyObjectsTable extends PowerGridComponent
                         $possibleMags = array_values(array_unique(array_filter($possibleMags)));
                     }
 
-                    if (! empty($possibleMags) && isset($target) && isset($sbobj) && isset($sqm) && isset($aperture)) {
+                    if (!empty($possibleMags) && isset($target) && isset($sbobj) && isset($sqm) && isset($aperture)) {
                         try {
                             $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
                             if ($best) {
@@ -1235,7 +1334,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 $hasD1 = is_numeric($d1) && floatval($d1) > 0;
                 $hasD2 = is_numeric($d2) && floatval($d2) > 0;
 
-                if (! $hasD1 && ! $hasD2) {
+                if (!$hasD1 && !$hasD2) {
                     return '';
                 }
 
@@ -1284,51 +1383,51 @@ class NearbyObjectsTable extends PowerGridComponent
                     // preview selection changes (see $this->refreshTick).
                     $refreshDependency = intval($this->refreshTick);
                     $authUser = Auth::user();
-                    if (! $authUser) {
+                    if (!$authUser) {
                         return '<span title="' . e('Login required to compute contrast reserve') . '">-</span>';
                     }
                     $userLocation = $authUser?->standardLocation ?? null;
                     // Prefer preview instrument when available so CR reflects preview
                     $userInstrument = null;
                     try {
-                        if (! empty($this->previewInstrumentId)) {
+                        if (!empty($this->previewInstrumentId)) {
                             $userInstrument = $this->previewInstrumentModel ?? \App\Models\Instrument::where('id', $this->previewInstrumentId)->first();
                         }
                     } catch (\Throwable $_) {
                         $userInstrument = null;
                     }
-                    if (! $userInstrument) {
+                    if (!$userInstrument) {
                         $userInstrument = $authUser?->standardInstrument ?? null;
                     }
-                    if (! $userLocation || ! $userInstrument) {
+                    if (!$userLocation || !$userInstrument) {
                         return '<span title="' . e("Contrast reserve requires a standard observing location and instrument in your profile") . '">-</span>';
                     }
 
                     $cached = $row->computed_contrast_reserve ?? null;
                     $cachedCat = $row->computed_contrast_reserve_category ?? null;
                     $metricExists = $row->metric_exists ?? null;
-                    
+
                     // If a metric EXISTS but contrast_reserve is NULL, that means
                     // it was previously calculated and determined to be uncalculable
                     // (e.g., due to sentinel values in object data). Return "-" immediately.
                     // Don't attempt recalculation for objects where we've already determined CR is impossible.
                     $standardInstrId = $authUser?->standardInstrument?->id ?? null;
                     $previewInstrId = $this->previewInstrumentId ?? null;
-                    $previewDiffers = ! empty($previewInstrId) && intval($previewInstrId) !== intval($standardInstrId);
-                    
-                    if ($metricExists !== null && $cached === null && ! $previewDiffers) {
+                    $previewDiffers = !empty($previewInstrId) && intval($previewInstrId) !== intval($standardInstrId);
+
+                    if ($metricExists !== null && $cached === null && !$previewDiffers) {
                         return '<span title="' . e('Contrast reserve unavailable for this object') . '">-</span>';
                     }
-                    
+
                     // If we have a cached CR for the user's standard instrument,
                     // use it unless a preview instrument is active and differs
                     // from the user's standard instrument. When the preview
                     // instrument equals the standard instrument it's safe to use
                     // the cached value (the datasource joined metrics for the
                     // standard instrument).
-                    $previewDiffers = ! empty($previewInstrId) && intval($previewInstrId) !== intval($standardInstrId);
+                    $previewDiffers = !empty($previewInstrId) && intval($previewInstrId) !== intval($standardInstrId);
 
-                    if (is_numeric($cached) && ! $previewDiffers) {
+                    if (is_numeric($cached) && !$previewDiffers) {
                         $display = number_format(round(floatval($cached), 2), 2);
                         // Derive qualitative category from numeric value to avoid stale cached categories
                         $contrastVal = floatval($cached);
@@ -1347,7 +1446,7 @@ class NearbyObjectsTable extends PowerGridComponent
                         }
 
                         // Defensive fallback to legacy cached category names
-                        if (empty($crCat) && ! empty($cachedCat)) {
+                        if (empty($crCat) && !empty($cachedCat)) {
                             $map = [
                                 'excellent' => 'very_easy',
                                 'good' => 'easy',
@@ -1401,7 +1500,7 @@ class NearbyObjectsTable extends PowerGridComponent
                     try {
                         $instrId = $userInstrument->id ?? null;
                         $locId = $userLocation->id ?? null;
-                        if (! is_numeric($cached) && $instrId && $locId && ! empty($row->name)) {
+                        if (!is_numeric($cached) && $instrId && $locId && !empty($row->name)) {
                             // If both the magnitude and the surface brightness are
                             // sentinel values (99.9) there's nothing meaningful to
                             // compute — show '-' and avoid dispatching jobs or
@@ -1469,9 +1568,9 @@ class NearbyObjectsTable extends PowerGridComponent
                                 // Determine preview lens factor early
                                 $lensFactorInline = 1.0;
                                 try {
-                                    if (! empty($this->previewLensId)) {
+                                    if (!empty($this->previewLensId)) {
                                         $ln = $this->previewLensModel ?? \App\Models\Lens::where('id', $this->previewLensId)->first();
-                                        if ($ln && ! empty($ln->factor) && is_numeric($ln->factor)) {
+                                        if ($ln && !empty($ln->factor) && is_numeric($ln->factor)) {
                                             $lensFactorInline = floatval($ln->factor);
                                         }
                                     }
@@ -1480,18 +1579,18 @@ class NearbyObjectsTable extends PowerGridComponent
 
                                 // Determine a suitable magnification to evaluate (same logic as above)
                                 $magInline = $userInstrument->fixedMagnification ?? null;
-                                if (! $magInline && isset($row->typicalEyepieceFocal) && ! empty($userInstrument->focal_length_mm)) {
+                                if (!$magInline && isset($row->typicalEyepieceFocal) && !empty($userInstrument->focal_length_mm)) {
                                     $magInline = (int) round(($userInstrument->focal_length_mm / $row->typicalEyepieceFocal) * $lensFactorInline);
                                 }
 
                                 // If no single fallback mag, build possible mags from eyepieces
                                 $possibleMagsInline = [];
-                                if (! $magInline && ! empty($userInstrument?->focal_length_mm)) {
+                                if (!$magInline && !empty($userInstrument?->focal_length_mm)) {
                                     $epFocalsInline = [];
-                                    if (! empty($this->previewEyepieceId)) {
+                                    if (!empty($this->previewEyepieceId)) {
                                         try {
                                             $ep = $this->previewEyepieceModel ?? \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
-                                            if ($ep && ! empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
+                                            if ($ep && !empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
                                                 $epFocalsInline[] = floatval($ep->focal_length_mm);
                                             }
                                         } catch (\Throwable $_) { /* ignore */
@@ -1520,7 +1619,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                             if ($useSet) {
                                                 foreach ($instSetInline->eyepieces as $sep) {
                                                     try {
-                                                        if ($sep->active && ! empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
+                                                        if ($sep->active && !empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
                                                             $epFocalsInline[] = floatval($sep->focal_length_mm);
                                                         }
                                                     } catch (\Throwable $_) {
@@ -1533,20 +1632,21 @@ class NearbyObjectsTable extends PowerGridComponent
                                     } catch (\Throwable $_) { /* ignore */
                                     }
 
-                                    if (! $usedSetInline) {
+                                    if (!$usedSetInline) {
                                         try {
                                             $userEpsInline = $this->getCachedEyepieces($authUser);
                                             $foundInstSpecific = false;
                                             foreach ($userEpsInline as $ep) {
                                                 try {
-                                                    if (empty($ep->focal_length_mm) || ! is_numeric($ep->focal_length_mm)) continue;
+                                                    if (empty($ep->focal_length_mm) || !is_numeric($ep->focal_length_mm))
+                                                        continue;
                                                     $usedWith = [];
                                                     try {
                                                         $usedWith = method_exists($ep, 'get_used_instruments') ? $ep->get_used_instruments() : [];
                                                     } catch (\Throwable $_) {
                                                         $usedWith = [];
                                                     }
-                                                    if (! empty($usedWith) && in_array(intval($userInstrument->id), array_map('intval', (array)$usedWith))) {
+                                                    if (!empty($usedWith) && in_array(intval($userInstrument->id), array_map('intval', (array) $usedWith))) {
                                                         $foundInstSpecific = true;
                                                         $epFocalsInline[] = floatval($ep->focal_length_mm);
                                                     }
@@ -1554,10 +1654,10 @@ class NearbyObjectsTable extends PowerGridComponent
                                                     continue;
                                                 }
                                             }
-                                            if (! $foundInstSpecific) {
+                                            if (!$foundInstSpecific) {
                                                 foreach ($userEpsInline as $ep) {
                                                     try {
-                                                        if (! empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
+                                                        if (!empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
                                                             $epFocalsInline[] = floatval($ep->focal_length_mm);
                                                         }
                                                     } catch (\Throwable $_) {
@@ -1580,7 +1680,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                 $possibleMagsInline = array_values(array_unique(array_filter($possibleMagsInline)));
 
                                 $bestInline = null;
-                                if (! empty($possibleMagsInline) && $sbobjInline !== null && $sqmInline !== null && $apertureInline) {
+                                if (!empty($possibleMagsInline) && $sbobjInline !== null && $sqmInline !== null && $apertureInline) {
                                     try {
                                         $bestInline = $targetInline->calculateBestMagnification($sbobjInline, $sqmInline, $apertureInline, $possibleMagsInline);
                                     } catch (\Throwable $_) {
@@ -1627,7 +1727,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
                                         $storeContrast = null;
                                         $storeCategory = null;
-                                        if (! $magSentinel && ! $subrSentinel && is_numeric($contrastInline)) {
+                                        if (!$magSentinel && !$subrSentinel && is_numeric($contrastInline)) {
                                             $storeContrast = floatval($contrastInline);
                                             $storeCategory = $categoryInline;
                                         }
@@ -1638,7 +1738,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                         $rawSubrPersist_local = $row->subr ?? null;
                                         $magSentinel_local = is_numeric($rawMagPersist_local) && floatval($rawMagPersist_local) == 99.9;
                                         $subrSentinel_local = is_numeric($rawSubrPersist_local) && floatval($rawSubrPersist_local) == 99.9;
-                                        $storeBestInline = (! $magSentinel_local && ! $subrSentinel_local) ? (int) $bestInline : null;
+                                        $storeBestInline = (!$magSentinel_local && !$subrSentinel_local) ? (int) $bestInline : null;
 
                                         UserObjectMetric::updateOrCreate(
                                             ['user_id' => $authUser->id, 'instrument_id' => $instrId, 'location_id' => $locId, 'lens_id' => $this->previewLensId ?? null, 'object_name' => $row->name],
@@ -1673,7 +1773,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                     'object_name' => $row->name
                                 ])->where(function ($q) use ($row) {
                                     $q->where('lens_id', $this->previewLensId ?? null)
-                                      ->orWhereNull('lens_id');
+                                        ->orWhereNull('lens_id');
                                 })->first();
 
                                 if ($existingMetric && $existingMetric->optimum_detection_magnification !== null) {
@@ -1701,12 +1801,12 @@ class NearbyObjectsTable extends PowerGridComponent
                     $origMag = $row->mag ?? null;
                     $origSubr = $row->subr ?? null;
 
-                    $magMissing = ! is_numeric($row->mag) || floatval($row->mag) == 99.9;
-                    $subrMissing = ! is_numeric($row->subr) || floatval($row->subr) == 99.9;
-                    $diam1Missing = ! is_numeric($row->diam1) || floatval($row->diam1) <= 0.0;
-                    $diam2Missing = ! is_numeric($row->diam2) || floatval($row->diam2) <= 0.0;
+                    $magMissing = !is_numeric($row->mag) || floatval($row->mag) == 99.9;
+                    $subrMissing = !is_numeric($row->subr) || floatval($row->subr) == 99.9;
+                    $diam1Missing = !is_numeric($row->diam1) || floatval($row->diam1) <= 0.0;
+                    $diam2Missing = !is_numeric($row->diam2) || floatval($row->diam2) <= 0.0;
 
-                    if (($magMissing || $subrMissing || $diam1Missing || $diam2Missing) && ! empty($row->name)) {
+                    if (($magMissing || $subrMissing || $diam1Missing || $diam2Missing) && !empty($row->name)) {
                         try {
                             $fallback = DeepskyObject::where('name', $row->name)->first();
                             if ($fallback) {
@@ -1762,13 +1862,13 @@ class NearbyObjectsTable extends PowerGridComponent
                     $hasSubr = is_numeric($row->subr) && floatval($row->subr) != 99.9;
                     $hasMag = is_numeric($m);
 
-                    $origMagMissing = ! is_numeric($origMag) || floatval($origMag) == 99.9;
-                    $origSubrMissing = ! is_numeric($origSubr) || floatval($origSubr) == 99.9;
+                    $origMagMissing = !is_numeric($origMag) || floatval($origMag) == 99.9;
+                    $origSubrMissing = !is_numeric($origSubr) || floatval($origSubr) == 99.9;
                     if ($origMagMissing && $origSubrMissing) {
                         // Contrast reserve skipped - original object record missing mag and subr
                         return '<span title="' . e('Contrast reserve requires either a magnitude or a surface brightness value in the object record') . '">-</span>';
                     }
-                    if (! $hasMag && ! $hasSubr) {
+                    if (!$hasMag && !$hasSubr) {
                         // Contrast reserve skipped - no magnitude and no surface brightness
                         return '<span title="' . e('Contrast reserve requires either a magnitude or a surface brightness value for the object') . '">-</span>';
                     }
@@ -1796,9 +1896,9 @@ class NearbyObjectsTable extends PowerGridComponent
                     // and lens-applied magnifications.
                     $lensFactor = 1.0;
                     try {
-                        if (! empty($this->previewLensId)) {
+                        if (!empty($this->previewLensId)) {
                             $ln = $this->previewLensModel ?? \App\Models\Lens::where('id', $this->previewLensId)->first();
-                            if ($ln && ! empty($ln->factor) && is_numeric($ln->factor)) {
+                            if ($ln && !empty($ln->factor) && is_numeric($ln->factor)) {
                                 $lensFactor = floatval($ln->factor);
                             }
                         }
@@ -1806,23 +1906,23 @@ class NearbyObjectsTable extends PowerGridComponent
                     }
 
                     $mag = $userInstrument->fixedMagnification ?? null;
-                    if (! $mag && isset($row->typicalEyepieceFocal) && !empty($userInstrument->focal_length_mm)) {
+                    if (!$mag && isset($row->typicalEyepieceFocal) && !empty($userInstrument->focal_length_mm)) {
                         $mag = (int) round(($userInstrument->focal_length_mm / $row->typicalEyepieceFocal) * $lensFactor);
                     }
 
-                    if (! $mag && ! empty($userInstrument?->focal_length_mm)) {
+                    if (!$mag && !empty($userInstrument?->focal_length_mm)) {
                         // Build possible magnifications from a single unified
                         // source: the preview eyepiece (if present), the user's
                         // instrument set, and cached eyepieces. Apply the
                         // preview lens factor uniformly.
                         $possibleMags = [];
-                        if (! empty($userInstrument?->focal_length_mm)) {
+                        if (!empty($userInstrument?->focal_length_mm)) {
                             $epFocals = [];
                             // preview eyepiece focal
-                            if (! empty($this->previewEyepieceId)) {
+                            if (!empty($this->previewEyepieceId)) {
                                 try {
                                     $ep = $this->previewEyepieceModel ?? \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
-                                    if ($ep && ! empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
+                                    if ($ep && !empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
                                         $epFocals[] = floatval($ep->focal_length_mm);
                                     }
                                 } catch (\Throwable $_) { /* ignore */
@@ -1855,7 +1955,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                     if ($useSetEyepieces) {
                                         foreach ($instSet->eyepieces as $sep) {
                                             try {
-                                                if ($sep->active && ! empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
+                                                if ($sep->active && !empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
                                                     $epFocals[] = floatval($sep->focal_length_mm);
                                                 }
                                             } catch (\Throwable $_) {
@@ -1876,14 +1976,15 @@ class NearbyObjectsTable extends PowerGridComponent
                                 $foundInstrumentSpecific = false;
                                 foreach ($userEps as $ep) {
                                     try {
-                                        if (empty($ep->focal_length_mm) || ! is_numeric($ep->focal_length_mm)) continue;
+                                        if (empty($ep->focal_length_mm) || !is_numeric($ep->focal_length_mm))
+                                            continue;
                                         $usedWith = [];
                                         try {
                                             $usedWith = method_exists($ep, 'get_used_instruments') ? $ep->get_used_instruments() : [];
                                         } catch (\Throwable $_) {
                                             $usedWith = [];
                                         }
-                                        if (! empty($usedWith) && in_array(intval($userInstrument->id), array_map('intval', (array)$usedWith))) {
+                                        if (!empty($usedWith) && in_array(intval($userInstrument->id), array_map('intval', (array) $usedWith))) {
                                             $foundInstrumentSpecific = true;
                                             $epFocals[] = floatval($ep->focal_length_mm);
                                         }
@@ -1891,11 +1992,11 @@ class NearbyObjectsTable extends PowerGridComponent
                                         continue;
                                     }
                                 }
-                                if (! $foundInstrumentSpecific) {
+                                if (!$foundInstrumentSpecific) {
                                     // no instrument-specific cached eyepieces found; include all
                                     foreach ($userEps as $ep) {
                                         try {
-                                            if (! empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
+                                            if (!empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
                                                 $epFocals[] = floatval($ep->focal_length_mm);
                                             }
                                         } catch (\Throwable $_) {
@@ -1915,7 +2016,7 @@ class NearbyObjectsTable extends PowerGridComponent
                         }
                     }
                     $possibleMags = array_values(array_unique(array_filter($possibleMags)));
-                    if (! empty($possibleMags) && isset($target) && isset($sbobj) && isset($sqm) && isset($aperture)) {
+                    if (!empty($possibleMags) && isset($target) && isset($sbobj) && isset($sqm) && isset($aperture)) {
                         try {
                             $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
                             if ($best) {
@@ -1927,7 +2028,7 @@ class NearbyObjectsTable extends PowerGridComponent
                     }
 
                     // Reduced logging: avoid emitting large objects to the logger
-
+    
                     if ($sbobj !== null && $sqm !== null && $aperture && $mag) {
                         try {
                             $contrast = $target->calculateContrastReserve($sbobj, $sqm, $aperture, $mag);
@@ -1983,7 +2084,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                 try {
                                     $instrId = $userInstrument->id ?? null;
                                     $locId = $userLocation->id ?? null;
-                                    if ($authUser && $instrId && $locId && ! empty($row->name)) {
+                                    if ($authUser && $instrId && $locId && !empty($row->name)) {
                                         $categoryToStore = null;
                                         if ($crCat === 'very_easy') {
                                             $categoryToStore = 'excellent';
@@ -2003,7 +2104,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                         $rawSubrPersist3 = $row->subr ?? null;
                                         $magSentinel3 = is_numeric($rawMagPersist3) && floatval($rawMagPersist3) == 99.9;
                                         $subrSentinel3 = is_numeric($rawSubrPersist3) && floatval($rawSubrPersist3) == 99.9;
-                                        $storeBest3 = (! $magSentinel3 && ! $subrSentinel3 && is_numeric($mag)) ? (int)$mag : null;
+                                        $storeBest3 = (!$magSentinel3 && !$subrSentinel3 && is_numeric($mag)) ? (int) $mag : null;
 
                                         UserObjectMetric::updateOrCreate(
                                             ['user_id' => $authUser->id, 'instrument_id' => $instrId, 'location_id' => $locId, 'lens_id' => $this->previewLensId ?? null, 'object_name' => $row->name],
@@ -2026,10 +2127,14 @@ class NearbyObjectsTable extends PowerGridComponent
                         }
                     } else {
                         $missing = [];
-                        if (! $sbobj) $missing[] = 'surface brightness/magnitude';
-                        if (! $sqm) $missing[] = 'sky brightness (SQM)';
-                        if (! $aperture) $missing[] = 'instrument aperture';
-                        if (! $mag) $missing[] = 'magnification';
+                        if (!$sbobj)
+                            $missing[] = 'surface brightness/magnitude';
+                        if (!$sqm)
+                            $missing[] = 'sky brightness (SQM)';
+                        if (!$aperture)
+                            $missing[] = 'instrument aperture';
+                        if (!$mag)
+                            $missing[] = 'magnification';
                         $title = 'Missing: ' . implode(', ', $missing);
                         return '<span title="' . e($title) . '">-</span>';
                     }
@@ -2044,7 +2149,7 @@ class NearbyObjectsTable extends PowerGridComponent
                     if (isset($row->computed_contrast_reserve) && is_numeric($row->computed_contrast_reserve)) {
                         return number_format(round(floatval($row->computed_contrast_reserve), 2), 2);
                     }
-                    if (isset($row->computed_contrast_reserve_category) && ! empty($row->computed_contrast_reserve_category)) {
+                    if (isset($row->computed_contrast_reserve_category) && !empty($row->computed_contrast_reserve_category)) {
                         return (string) $row->contrast_reserve_category;
                     }
                 } catch (\Throwable $_) {
@@ -2053,7 +2158,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 return '-';
             })
             ->add('atlas_page', function ($row) {
-                if (! $this->includeAtlas) {
+                if (!$this->includeAtlas) {
                     return '';
                 }
                 $page = $row->atlas_page ?? null;
@@ -2077,7 +2182,8 @@ class NearbyObjectsTable extends PowerGridComponent
                 try {
                     $refreshDependency = intval($this->refreshTick);
                     $e = $this->computeEphemeridesForRow($row);
-                    if (! $e) return '';
+                    if (!$e)
+                        return '';
                     return e($e['rising'] ?? '-');
                 } catch (\Throwable $_) {
                     return '';
@@ -2087,7 +2193,8 @@ class NearbyObjectsTable extends PowerGridComponent
                 try {
                     $refreshDependency = intval($this->refreshTick);
                     $e = $this->computeEphemeridesForRow($row);
-                    if (! $e) return '';
+                    if (!$e)
+                        return '';
                     return e($e['transit'] ?? '-');
                 } catch (\Throwable $_) {
                     return '';
@@ -2097,7 +2204,8 @@ class NearbyObjectsTable extends PowerGridComponent
                 try {
                     $refreshDependency = intval($this->refreshTick);
                     $e = $this->computeEphemeridesForRow($row);
-                    if (! $e) return '';
+                    if (!$e)
+                        return '';
                     return e($e['setting'] ?? '-');
                 } catch (\Throwable $_) {
                     return '';
@@ -2107,7 +2215,8 @@ class NearbyObjectsTable extends PowerGridComponent
                 try {
                     $refreshDependency = intval($this->refreshTick);
                     $e = $this->computeEphemeridesForRow($row);
-                    if (! $e) return '';
+                    if (!$e)
+                        return '';
                     return e($e['best_time'] ?? '-');
                 } catch (\Throwable $_) {
                     return '';
@@ -2117,7 +2226,8 @@ class NearbyObjectsTable extends PowerGridComponent
                 try {
                     $refreshDependency = intval($this->refreshTick);
                     $e = $this->computeEphemeridesForRow($row);
-                    if (! $e) return '';
+                    if (!$e)
+                        return '';
                     $v = $e['max_altitude'] ?? null;
                     $vn = $e['max_altitude_at_night'] ?? null;
                     if (is_numeric($v)) {
@@ -2176,7 +2286,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
         $this->cachedEyepieces = [];
         try {
-            if (! $user || ! isset($user->id)) {
+            if (!$user || !isset($user->id)) {
                 return $this->cachedEyepieces;
             }
 
@@ -2212,9 +2322,11 @@ class NearbyObjectsTable extends PowerGridComponent
     {
         try {
             $authUser = Auth::user();
-            if (! $authUser) return null;
+            if (!$authUser)
+                return null;
             $userLocation = $authUser?->standardLocation ?? null;
-            if (! $userLocation) return null;
+            if (!$userLocation)
+                return null;
 
             // If no ephemeris date was forwarded from the Ephemerides aside,
             // fall back to the current date so the table shows values on initial load.
@@ -2248,8 +2360,8 @@ class NearbyObjectsTable extends PowerGridComponent
                 $decDeg = null;
             }
             if ($raDeg === null || $decDeg === null) {
-                $raDeg = is_numeric($row->ra) ? (float)$row->ra : null;
-                $decDeg = is_numeric($row->decl) ? (float)$row->decl : null;
+                $raDeg = is_numeric($row->ra) ? (float) $row->ra : null;
+                $decDeg = is_numeric($row->decl) ? (float) $row->decl : null;
             }
             if ($raDeg === null || $decDeg === null) {
                 $this->cachedEphemerides[$cacheKey] = ['rising' => null, 'transit' => null, 'setting' => null, 'best_time' => null, 'max_altitude' => null];
@@ -2339,10 +2451,10 @@ class NearbyObjectsTable extends PowerGridComponent
         $atlasTitle = __('Atlas');
         try {
             $authUser = Auth::user();
-            if ($authUser && ! empty($authUser->standardAtlasCode) && preg_match('/^[A-Za-z0-9_]+$/', $authUser->standardAtlasCode)) {
+            if ($authUser && !empty($authUser->standardAtlasCode) && preg_match('/^[A-Za-z0-9_]+$/', $authUser->standardAtlasCode)) {
                 $requested = (string) $authUser->standardAtlasCode;
                 $m = Atlas::where('code', $requested)->first();
-                if (! $m) {
+                if (!$m) {
                     $m = Atlas::whereRaw('LOWER(`code`) = ?', [strtolower($requested)])->first();
                 }
                 if ($m?->name) {
@@ -2438,7 +2550,7 @@ class NearbyObjectsTable extends PowerGridComponent
         try {
             $authUser = Auth::user();
             $showAtlasColumn = false;
-            if ($authUser && ! empty($authUser->standardAtlasCode) && preg_match('/^[A-Za-z0-9_]+$/', $authUser->standardAtlasCode)) {
+            if ($authUser && !empty($authUser->standardAtlasCode) && preg_match('/^[A-Za-z0-9_]+$/', $authUser->standardAtlasCode)) {
                 $showAtlasColumn = true;
             }
         } catch (\Throwable $_) {
@@ -2557,7 +2669,7 @@ class NearbyObjectsTable extends PowerGridComponent
             // No PDF library installed
             session()->flash('error', __('PDF library not installed. Please run: composer require barryvdh/laravel-dompdf'));
         } catch (\Throwable $ex) {
-            Log::error('NearbyObjectsTable::exportNamesPdf failed', ['error' => (string)$ex]);
+            Log::error('NearbyObjectsTable::exportNamesPdf failed', ['error' => (string) $ex]);
             session()->flash('error', __('Failed to generate names PDF'));
         }
 
@@ -2573,7 +2685,7 @@ class NearbyObjectsTable extends PowerGridComponent
         try {
             return $this->exportApd($selected);
         } catch (\Throwable $ex) {
-            Log::error('NearbyObjectsTable::exportToApd failed', ['error' => (string)$ex]);
+            Log::error('NearbyObjectsTable::exportToApd failed', ['error' => (string) $ex]);
             session()->flash('error', __('Failed to generate AstroPlanner APD export'));
         }
 
@@ -2602,7 +2714,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 echo $content;
             }, $filename, ['Content-Type' => 'text/plain']);
         } catch (\Throwable $ex) {
-            Log::error('NearbyObjectsTable::exportStxt failed', ['error' => (string)$ex]);
+            Log::error('NearbyObjectsTable::exportStxt failed', ['error' => (string) $ex]);
             session()->flash('error', __('Failed to generate SkyTools TXT export'));
         }
 
@@ -2621,7 +2733,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
             if ($selected) {
                 $selectedKeys = is_array($this->checkboxValues) ? $this->checkboxValues : [];
-                if (! empty($selectedKeys)) {
+                if (!empty($selectedKeys)) {
                     $rows = $rows->filter(function ($r) use ($selectedKeys) {
                         // datasource aliases 'objects.name' as 'id' in the inner subquery,
                         // but PowerGrid checkbox values are object ids (here we used name as id),
@@ -2643,7 +2755,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 echo $content;
             }, $filename, ['Content-Type' => 'text/plain']);
         } catch (\Throwable $ex) {
-            Log::error('NearbyObjectsTable::exportToStxt failed', ['error' => (string)$ex]);
+            Log::error('NearbyObjectsTable::exportToStxt failed', ['error' => (string) $ex]);
             session()->flash('error', __('Failed to generate SkyTools TXT export'));
         }
 
@@ -2667,7 +2779,8 @@ class NearbyObjectsTable extends PowerGridComponent
             $formatDiameter = function ($d1, $d2, $pa = null) {
                 $hasD1 = is_numeric($d1) && floatval($d1) > 0;
                 $hasD2 = is_numeric($d2) && floatval($d2) > 0;
-                if (! $hasD1 && ! $hasD2) return '';
+                if (!$hasD1 && !$hasD2)
+                    return '';
                 $d1f = $hasD1 ? floatval($d1) : 0.0;
                 $d2f = $hasD2 ? floatval($d2) : 0.0;
                 $fmt = function ($v) {
@@ -2760,7 +2873,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
             session()->flash('error', __('PDF library not installed. Please run: composer require barryvdh/laravel-dompdf'));
         } catch (\Throwable $ex) {
-            Log::error('NearbyObjectsTable::exportPdf failed', ['error' => (string)$ex]);
+            Log::error('NearbyObjectsTable::exportPdf failed', ['error' => (string) $ex]);
             session()->flash('error', __('Failed to generate nearby objects PDF'));
         }
 
@@ -2792,7 +2905,8 @@ class NearbyObjectsTable extends PowerGridComponent
             $formatDiameter = function ($d1, $d2, $pa = null) {
                 $hasD1 = is_numeric($d1) && floatval($d1) > 0;
                 $hasD2 = is_numeric($d2) && floatval($d2) > 0;
-                if (! $hasD1 && ! $hasD2) return '';
+                if (!$hasD1 && !$hasD2)
+                    return '';
                 $d1f = $hasD1 ? floatval($d1) : 0.0;
                 $d2f = $hasD2 ? floatval($d2) : 0.0;
                 $fmt = function ($v) {
@@ -2842,7 +2956,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 'GXADN' => 'NEBULA',
                 'GXAGC' => 'GLOBULAR',
                 'GACAN' => 'NEBULA',
-                'HII'   => 'NEBULA',
+                'HII' => 'NEBULA',
                 'LMCCN' => 'NEBULA',
                 'LMCDN' => 'NEBULA',
                 'LMCGC' => 'GLOBULAR',
@@ -2873,17 +2987,17 @@ class NearbyObjectsTable extends PowerGridComponent
                 $ra = $this->formatRAColon($r->ra ?? null);
                 $dec = $this->formatDecColon($r->decl ?? null);
 
-                $rawTypeCode = strtoupper(trim((string)($r->type ?? '')));
+                $rawTypeCode = strtoupper(trim((string) ($r->type ?? '')));
                 $type = '';
                 if ($rawTypeCode !== '' && isset($typeMap[$rawTypeCode])) {
                     $type = $typeMap[$rawTypeCode];
                 } else {
                     // Fallback to human-readable type name
                     $tn = $r->type_name ?? $r->type ?? '';
-                    $type = $tn ? strtoupper(trim((string)$tn)) : 'USER';
+                    $type = $tn ? strtoupper(trim((string) $tn)) : 'USER';
                 }
 
-                $mag = (is_numeric($r->mag) && floatval($r->mag) != 99.9 && floatval($r->mag) != 0.0) ? (string)$r->mag : '';
+                $mag = (is_numeric($r->mag) && floatval($r->mag) != 99.9 && floatval($r->mag) != 0.0) ? (string) $r->mag : '';
 
                 $size = $formatDiameter($r->diam1 ?? null, $r->diam2 ?? null, $r->pa ?? null);
                 $atlas = $this->includeAtlas ? ($r->atlas_page ?? '') : '';
@@ -2902,7 +3016,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 echo $content;
             }, $filename, ['Content-Type' => 'text/plain']);
         } catch (\Throwable $ex) {
-            Log::error('NearbyObjectsTable::exportArgo failed', ['error' => (string)$ex]);
+            Log::error('NearbyObjectsTable::exportArgo failed', ['error' => (string) $ex]);
             session()->flash('error', __('Failed to generate Argo Navis export'));
         }
 
@@ -2921,7 +3035,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
             if ($selected) {
                 $selectedKeys = is_array($this->checkboxValues) ? $this->checkboxValues : [];
-                if (! empty($selectedKeys)) {
+                if (!empty($selectedKeys)) {
                     $rows = $rows->filter(function ($r) use ($selectedKeys) {
                         $key = $r->id ?? $r->name ?? null;
                         return in_array($key, $selectedKeys, true);
@@ -2990,7 +3104,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 readfile($tmp);
             }, $filename, ['Content-Type' => 'application/x-sqlite3']);
         } catch (\Throwable $ex) {
-            Log::error('NearbyObjectsTable::exportApd failed', ['error' => (string)$ex]);
+            Log::error('NearbyObjectsTable::exportApd failed', ['error' => (string) $ex]);
             session()->flash('error', __('Failed to generate AstroPlanner APD export'));
         }
 
@@ -3007,7 +3121,8 @@ class NearbyObjectsTable extends PowerGridComponent
         $pa = $r->pa ?? null;
         $hasD1 = is_numeric($d1) && floatval($d1) > 0;
         $hasD2 = is_numeric($d2) && floatval($d2) > 0;
-        if (! $hasD1 && ! $hasD2) return '';
+        if (!$hasD1 && !$hasD2)
+            return '';
         $d1f = $hasD1 ? floatval($d1) : 0.0;
         $d2f = $hasD2 ? floatval($d2) : 0.0;
         $fmt = function ($v) {
@@ -3039,7 +3154,7 @@ class NearbyObjectsTable extends PowerGridComponent
         if (is_numeric($pa) && intval(round(floatval($pa))) !== 999) {
             $size .= '/' . sprintf('%d', round(floatval($pa))) . '°';
         }
-        return (string)$size;
+        return (string) $size;
     }
 
     /**
@@ -3056,7 +3171,8 @@ class NearbyObjectsTable extends PowerGridComponent
             $formatDiameter = function ($d1, $d2, $pa = null) {
                 $hasD1 = is_numeric($d1) && floatval($d1) > 0;
                 $hasD2 = is_numeric($d2) && floatval($d2) > 0;
-                if (! $hasD1 && ! $hasD2) return '';
+                if (!$hasD1 && !$hasD2)
+                    return '';
                 $d1f = $hasD1 ? floatval($d1) : 0.0;
                 $d2f = $hasD2 ? floatval($d2) : 0.0;
                 $fmt = function ($v) {
@@ -3149,7 +3265,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 echo $content;
             }, $filename, ['Content-Type' => 'text/plain']);
         } catch (\Throwable $ex) {
-            Log::error('NearbyObjectsTable::exportSkylist failed', ['error' => (string)$ex]);
+            Log::error('NearbyObjectsTable::exportSkylist failed', ['error' => (string) $ex]);
             session()->flash('error', __('Failed to generate SkySafari export'));
         }
 
@@ -3168,7 +3284,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
             if ($selected) {
                 $selectedKeys = is_array($this->checkboxValues) ? $this->checkboxValues : [];
-                if (! empty($selectedKeys)) {
+                if (!empty($selectedKeys)) {
                     $rows = $rows->filter(function ($r) use ($selectedKeys) {
                         $key = $r->id ?? null;
                         return in_array($key, $selectedKeys, true);
@@ -3183,7 +3299,8 @@ class NearbyObjectsTable extends PowerGridComponent
             $formatDiameter = function ($d1, $d2, $pa = null) {
                 $hasD1 = is_numeric($d1) && floatval($d1) > 0;
                 $hasD2 = is_numeric($d2) && floatval($d2) > 0;
-                if (! $hasD1 && ! $hasD2) return '';
+                if (!$hasD1 && !$hasD2)
+                    return '';
                 $d1f = $hasD1 ? floatval($d1) : 0.0;
                 $d2f = $hasD2 ? floatval($d2) : 0.0;
                 $fmt = function ($v) {
@@ -3247,7 +3364,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 }
 
                 $safe = function ($v) {
-                    $s = trim((string)$v);
+                    $s = trim((string) $v);
                     return str_replace(',', ' ', $s);
                 };
 
@@ -3263,7 +3380,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 echo $content;
             }, $filename, ['Content-Type' => 'text/plain']);
         } catch (\Throwable $ex) {
-            Log::error('NearbyObjectsTable::exportToSkylist failed', ['error' => (string)$ex]);
+            Log::error('NearbyObjectsTable::exportToSkylist failed', ['error' => (string) $ex]);
             session()->flash('error', __('Failed to generate SkySafari export'));
         }
 
@@ -3282,7 +3399,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
             if ($selected) {
                 $selectedKeys = is_array($this->checkboxValues) ? $this->checkboxValues : [];
-                if (! empty($selectedKeys)) {
+                if (!empty($selectedKeys)) {
                     $rows = $rows->filter(function ($r) use ($selectedKeys) {
                         // datasource aliases 'objects.name' as 'id' so id is the object name
                         $key = $r->id ?? null;
@@ -3300,7 +3417,8 @@ class NearbyObjectsTable extends PowerGridComponent
             $formatDiameter = function ($d1, $d2, $pa = null) {
                 $hasD1 = is_numeric($d1) && floatval($d1) > 0;
                 $hasD2 = is_numeric($d2) && floatval($d2) > 0;
-                if (! $hasD1 && ! $hasD2) return '';
+                if (!$hasD1 && !$hasD2)
+                    return '';
                 $d1f = $hasD1 ? floatval($d1) : 0.0;
                 $d2f = $hasD2 ? floatval($d2) : 0.0;
                 $fmt = function ($v) {
@@ -3379,16 +3497,16 @@ class NearbyObjectsTable extends PowerGridComponent
                 $ra = $this->formatRAColon($r->ra ?? null);
                 $dec = $this->formatDecColon($r->decl ?? null);
 
-                $rawTypeCode = strtoupper(trim((string)($r->type ?? '')));
+                $rawTypeCode = strtoupper(trim((string) ($r->type ?? '')));
                 $type = '';
                 if ($rawTypeCode !== '' && isset($typeMap[$rawTypeCode])) {
                     $type = $typeMap[$rawTypeCode];
                 } else {
                     $tn = $r->type_name ?? $r->type ?? '';
-                    $type = $tn ? strtoupper(trim((string)$tn)) : 'USER';
+                    $type = $tn ? strtoupper(trim((string) $tn)) : 'USER';
                 }
 
-                $mag = (is_numeric($r->mag) && floatval($r->mag) != 99.9 && floatval($r->mag) != 0.0) ? (string)$r->mag : '';
+                $mag = (is_numeric($r->mag) && floatval($r->mag) != 99.9 && floatval($r->mag) != 0.0) ? (string) $r->mag : '';
 
                 $size = $formatDiameter($r->diam1 ?? null, $r->diam2 ?? null, $r->pa ?? null);
                 $atlas = $this->includeAtlas ? ($r->atlas_page ?? '') : '';
@@ -3406,7 +3524,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 echo $content;
             }, $filename, ['Content-Type' => 'text/plain']);
         } catch (\Throwable $ex) {
-            Log::error('NearbyObjectsTable::exportToArgo failed', ['error' => (string)$ex]);
+            Log::error('NearbyObjectsTable::exportToArgo failed', ['error' => (string) $ex]);
             session()->flash('error', __('Failed to generate Argo Navis export'));
         }
 
@@ -3418,8 +3536,10 @@ class NearbyObjectsTable extends PowerGridComponent
      */
     private function formatRAColon($ra): string
     {
-        if ($ra === null || $ra === '') return '';
-        if (!is_numeric($ra)) return (string)$ra;
+        if ($ra === null || $ra === '')
+            return '';
+        if (!is_numeric($ra))
+            return (string) $ra;
         $v = floatval($ra);
         if ($v > 24.0) {
             $hours = $v / 15.0;
@@ -3427,7 +3547,8 @@ class NearbyObjectsTable extends PowerGridComponent
             $hours = $v;
         }
         $hours = fmod($hours, 24.0);
-        if ($hours < 0) $hours += 24.0;
+        if ($hours < 0)
+            $hours += 24.0;
         $h = floor($hours);
         $mFloat = ($hours - $h) * 60.0;
         $m = floor($mFloat);
@@ -3449,8 +3570,10 @@ class NearbyObjectsTable extends PowerGridComponent
      */
     private function formatDecColon($dec): string
     {
-        if ($dec === null || $dec === '') return '';
-        if (!is_numeric($dec)) return (string)$dec;
+        if ($dec === null || $dec === '')
+            return '';
+        if (!is_numeric($dec))
+            return (string) $dec;
         $v = floatval($dec);
         $sign = ($v < 0) ? '-' : '+';
         $abs = abs($v);
@@ -3485,24 +3608,24 @@ class NearbyObjectsTable extends PowerGridComponent
             }
 
             $authUser = Auth::user();
-            if (! $authUser) {
+            if (!$authUser) {
                 return '-';
             }
 
             $userLocation = $authUser?->standardLocation ?? null;
             $userInstrument = null;
             try {
-                if (! empty($this->previewInstrumentId)) {
+                if (!empty($this->previewInstrumentId)) {
                     $userInstrument = $this->previewInstrumentModel ?? \App\Models\Instrument::where('id', $this->previewInstrumentId)->first();
                 }
             } catch (\Throwable $_) {
                 $userInstrument = null;
             }
-            if (! $userInstrument) {
+            if (!$userInstrument) {
                 $userInstrument = $authUser?->standardInstrument ?? null;
             }
 
-            if (! $userLocation || ! $userInstrument) {
+            if (!$userLocation || !$userInstrument) {
                 return '-';
             }
 
@@ -3558,9 +3681,9 @@ class NearbyObjectsTable extends PowerGridComponent
             // Determine preview lens factor
             $lensFactor = 1.0;
             try {
-                if (! empty($this->previewLensId)) {
+                if (!empty($this->previewLensId)) {
                     $ln = $this->previewLensModel ?? \App\Models\Lens::where('id', $this->previewLensId)->first();
-                    if ($ln && ! empty($ln->factor) && is_numeric($ln->factor)) {
+                    if ($ln && !empty($ln->factor) && is_numeric($ln->factor)) {
                         $lensFactor = floatval($ln->factor);
                     }
                 }
@@ -3568,17 +3691,17 @@ class NearbyObjectsTable extends PowerGridComponent
             }
 
             $mag = $userInstrument->fixedMagnification ?? null;
-            if (! $mag && isset($row->typicalEyepieceFocal) && ! empty($userInstrument->focal_length_mm)) {
+            if (!$mag && isset($row->typicalEyepieceFocal) && !empty($userInstrument->focal_length_mm)) {
                 $mag = (int) round(($userInstrument->focal_length_mm / $row->typicalEyepieceFocal) * $lensFactor);
             }
 
             $possibleMags = [];
-            if (! empty($userInstrument?->focal_length_mm)) {
+            if (!empty($userInstrument?->focal_length_mm)) {
                 $epFocals = [];
-                if (! empty($this->previewEyepieceId)) {
+                if (!empty($this->previewEyepieceId)) {
                     try {
                         $ep = $this->previewEyepieceModel ?? \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
-                        if ($ep && ! empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
+                        if ($ep && !empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
                             $epFocals[] = floatval($ep->focal_length_mm);
                         }
                     } catch (\Throwable $_) { /* ignore */
@@ -3608,7 +3731,7 @@ class NearbyObjectsTable extends PowerGridComponent
                         if ($useSetEyepieces) {
                             foreach ($instSet->eyepieces as $sep) {
                                 try {
-                                    if ($sep->active && ! empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
+                                    if ($sep->active && !empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
                                         $epFocals[] = floatval($sep->focal_length_mm);
                                     }
                                 } catch (\Throwable $_) {
@@ -3625,7 +3748,7 @@ class NearbyObjectsTable extends PowerGridComponent
                         $userEps = $this->getCachedEyepieces($authUser);
                         foreach ($userEps as $ep) {
                             try {
-                                if (! empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
+                                if (!empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
                                     $epFocals[] = floatval($ep->focal_length_mm);
                                 }
                             } catch (\Throwable $_) {
@@ -3645,7 +3768,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 $possibleMags = array_values(array_unique(array_filter($possibleMags)));
             }
 
-            if (! empty($possibleMags) && isset($target) && isset($sbobj) && isset($sqm) && isset($aperture)) {
+            if (!empty($possibleMags) && isset($target) && isset($sbobj) && isset($sqm) && isset($aperture)) {
                 try {
                     $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
                     if ($best) {
@@ -3837,16 +3960,6 @@ class NearbyObjectsTable extends PowerGridComponent
     public function onAladinPreviewUpdated($payload = null): void
     {
         try {
-            try {
-                Log::debug('NearbyObjectsTable::onAladinPreviewUpdated called', ['payload_preview' => is_string($payload) ? (strlen($payload) > 200 ? substr($payload, 0, 200) . '...[truncated]' : $payload) : (is_array($payload) ? '[array size=' . (count($payload)) . ']' : (is_object($payload) ? get_class($payload) : (string)$payload))]);
-            } catch (\Throwable $_) {
-            }
-
-            // Temporary info-level marker so this listener shows up in default log output
-            try {
-                Log::info('NearbyObjectsTable: onAladinPreviewUpdated fired', ['payload_preview' => is_array($payload) ? '[array size=' . count($payload) . ']' : (is_object($payload) ? get_class($payload) : (is_string($payload) ? (strlen($payload) > 200 ? substr($payload, 0, 200) . '...[truncated]' : $payload) : (string)$payload))]);
-            } catch (\Throwable $_) {
-            }
             // Clear in-memory eyepiece cache so subsequent calculations pick up
             // the user's current eyepiece set / instrument selection.
             $this->cachedEyepieces = null;
@@ -3875,12 +3988,15 @@ class NearbyObjectsTable extends PowerGridComponent
 
                     // Helper: recursive finder to locate a key anywhere inside nested payloads
                     $finder = function ($needle, $haystack) use (&$finder) {
-                        if (!is_array($haystack)) return null;
-                        if (array_key_exists($needle, $haystack)) return $haystack[$needle];
+                        if (!is_array($haystack))
+                            return null;
+                        if (array_key_exists($needle, $haystack))
+                            return $haystack[$needle];
                         foreach ($haystack as $v) {
                             if (is_array($v)) {
                                 $res = $finder($needle, $v);
-                                if ($res !== null) return $res;
+                                if ($res !== null)
+                                    return $res;
                             }
                         }
                         return null;
@@ -3892,11 +4008,12 @@ class NearbyObjectsTable extends PowerGridComponent
                             $ephem = $p['ephemerides'];
                         } else {
                             $found = $finder('ephemerides', $p);
-                            if (is_array($found)) $ephem = $found;
+                            if (is_array($found))
+                                $ephem = $found;
                         }
 
                         if ($ephem !== null && isset($ephem['date'])) {
-                            $newDate = (string)$ephem['date'];
+                            $newDate = (string) $ephem['date'];
                             if ($newDate !== $this->ephemerisDate) {
                                 $this->ephemerisDate = $newDate;
                                 $this->cachedEphemerides = [];
@@ -3906,7 +4023,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                 }
                             }
                         } elseif (isset($p['date'])) {
-                            $newDate = (string)$p['date'];
+                            $newDate = (string) $p['date'];
                             if ($newDate !== $this->ephemerisDate) {
                                 $this->ephemerisDate = $newDate;
                                 $this->cachedEphemerides = [];
@@ -3944,76 +4061,20 @@ class NearbyObjectsTable extends PowerGridComponent
             } catch (\Throwable $_) {
                 // ignore browser event failures
             }
-            // Kick off a background bulk precompute for the current nearby result
-            // set so objects not yet present in `user_object_metrics` are
-            // computed for the selected user/instrument/location/lens. We do
-            // this in the background to avoid delaying the Livewire response
-            // and guard with a cache key to avoid repeated enqueues while the
-            // user interacts with the preview controls.
-            try {
-                $authUser = Auth::user();
-                if ($authUser) {
-                    $instrId = $this->previewInstrumentId ?? ($authUser->standardInstrument?->id ?? null);
-                    $locId = $authUser->standardLocation?->id ?? null;
-                    $lensId = $this->previewLensId ?? null;
-                    if ($instrId && $locId && is_numeric($this->radiusArcMin) && is_numeric($this->ra) && is_numeric($this->decl)) {
-                        $bulkKey = 'uom_bulk_pending:' . $authUser->id . ':' . $instrId . ':' . $locId . ':' . ($lensId === null ? 'nolens' : (string)$lensId);
-                        // Add returns true only when the key did not exist.
-                        if (Cache::add($bulkKey, true, 600)) { // 10 minutes
-                            try {
-                                // Limit the precompute to the configured inline limit
-                                // (default 100). This is intentionally conservative to
-                                // avoid blocking the request for too long.
-                                $limit = intval($this->bulkInlineLimit) > 0 ? intval($this->bulkInlineLimit) : 100;
-                                $names = $this->datasource()->limit($limit)->pluck('name');
-                                foreach ($names as $oname) {
-                                    try {
-                                        // If a lens is active, check for a lens-specific row,
-                                        // otherwise check for the legacy lens-less row.
-                                        $q = UserObjectMetric::where('user_id', $authUser->id)
-                                            ->where('instrument_id', $instrId)
-                                            ->where('location_id', $locId)
-                                            ->where('object_name', $oname);
-                                        if ($lensId === null) {
-                                            $q = $q->whereNull('lens_id');
-                                        } else {
-                                            $q = $q->where('lens_id', $lensId);
-                                        }
-                                        if (! $q->exists()) {
-                                            // Perform inline computation by invoking the
-                                            // ComputeContrastReserveForObject job's handle
-                                            // method synchronously. This keeps behavior
-                                            // consistent with the queued job but runs
-                                            // in-process as requested.
-                                            $job = new ComputeContrastReserveForObject($authUser->id, $instrId, $locId, $oname, $lensId);
-                                            try {
-                                                $job->handle();
-                                            } catch (\Throwable $_) {
-                                                // If inline job fails, fallback to enqueueing
-                                                // a queued version to avoid losing the work.
-                                                try {
-                                                    ComputeContrastReserveForObject::dispatch($authUser->id, $instrId, $locId, $oname, $lensId);
-                                                } catch (\Throwable $__) {
-                                                    // swallow; per-object failure
-                                                }
-                                            }
-                                        }
-                                    } catch (\Throwable $_) {
-                                        // ignore per-object failures
-                                    }
-                                }
-                            } catch (\Throwable $_) {
-                                // ignore failures during bulk enumeration
-                            }
-                        }
-                    }
-                }
-            } catch (\Throwable $_) {
-                // swallow background precompute failures to avoid breaking the UI
-            }
+            // Trigger bulk precompute when preview settings change
+            $this->triggerBulkPrecompute();
         } catch (\Throwable $_) {
             // don't let listener failures break the UI
         }
+    }
+
+    /**
+     * Livewire lifecycle hook called after every render.
+     * Update hasPendingCalculations so JavaScript polling knows when to stop.
+     */
+    public function rendering(): void
+    {
+        $this->updateHasPendingCalculations();
     }
 
     /**
@@ -4021,53 +4082,9 @@ class NearbyObjectsTable extends PowerGridComponent
      */
     public function updated($name, $value): void
     {
-        // Temporary debug: log incoming Livewire update payloads so we can
-        // inspect what PowerGrid actually sends when the user sorts columns.
-        try {
-            $valForLog = null;
-            // Be defensive with logging: avoid json-encoding potentially very large
-            // arrays/objects which can spike memory usage during render. Instead
-            // log a compact type/size summary to help debugging without blowing
-            // up the process.
-            if (is_string($value)) {
-                $valForLog = strlen($value) > 200 ? substr($value, 0, 200) . '...[truncated]' : $value;
-            } elseif (is_array($value)) {
-                $cnt = count($value);
-                $valForLog = '[array size=' . $cnt . ']';
-            } elseif (is_object($value)) {
-                $class = get_class($value);
-                // If object is Countable try to report size without serializing
-                $size = null;
-                if ($value instanceof \Countable) {
-                    try {
-                        $size = count($value);
-                    } catch (\Throwable $_) {
-                        $size = null;
-                    }
-                }
-                $valForLog = $class . ($size !== null ? ' size=' . $size : '');
-            } else {
-                $valForLog = is_null($value) ? 'null' : (string) $value;
-            }
-
-            // Emit a debug-level log entry (will go to the configured channel).
-            try {
-                Log::debug('NearbyObjectsTable::updated incoming', ['name' => $name, 'value_preview' => $valForLog]);
-            } catch (\Throwable $_) {
-                // ignore logging failures
-            }
-        } catch (\Throwable $_) {
-            // ignore logging failures
-        }
-
         try {
             // Direct property updates (simple Livewire updates)
             if ($name === 'sortField') {
-                try {
-                    Log::info('NearbyObjectsTable: sortField update received', ['sortField' => $value]);
-                } catch (\Throwable $_) {
-                    // ignore logging failures
-                }
                 // Remap old field names to new computed column names before saving
                 if ($value === 'contrast_reserve') {
                     $value = 'computed_contrast_reserve';
@@ -4080,11 +4097,6 @@ class NearbyObjectsTable extends PowerGridComponent
                 return;
             }
             if ($name === 'sortDirection') {
-                try {
-                    Log::info('NearbyObjectsTable: sortDirection update received', ['sortDirection' => $value]);
-                } catch (\Throwable $_) {
-                    // ignore logging failures
-                }
                 $this->saveUserTableSettings(['sortDirection' => $value]);
                 return;
             }
@@ -4134,7 +4146,7 @@ class NearbyObjectsTable extends PowerGridComponent
                     $toSave['radiusArcMin'] = intval($maybe['radiusArcMin']);
                 }
 
-                if (! empty($toSave)) {
+                if (!empty($toSave)) {
                     $this->saveUserTableSettings($toSave);
                 }
                 return;
@@ -4150,7 +4162,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 if (isset($payload['radiusArcMin'])) {
                     $toSave['radiusArcMin'] = intval($payload['radiusArcMin']);
                 }
-                if (! empty($toSave)) {
+                if (!empty($toSave)) {
                     $this->saveUserTableSettings($toSave);
                 }
                 return;
@@ -4189,7 +4201,7 @@ class NearbyObjectsTable extends PowerGridComponent
     private function saveUserTableSettings(array $overrides): void
     {
         $authUser = Auth::user();
-        if (! $authUser) {
+        if (!$authUser) {
             return;
         }
 
