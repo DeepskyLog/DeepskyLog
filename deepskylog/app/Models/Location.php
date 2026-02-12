@@ -20,8 +20,19 @@ class Location extends Model
     use Sluggable;
 
     protected $fillable = [
-        'user_id', 'name', 'longitude', 'latitude', 'country', 'timezone', 'limitingMagnitude', 'skyBackground',
-        'elevation', 'active', 'observer', 'picture', 'hidden',
+        'user_id',
+        'name',
+        'longitude',
+        'latitude',
+        'country',
+        'timezone',
+        'limitingMagnitude',
+        'skyBackground',
+        'elevation',
+        'active',
+        'observer',
+        'picture',
+        'hidden',
         'description',
     ];
 
@@ -34,6 +45,18 @@ class Location extends Model
         'active' => 'boolean',
         'hidden' => 'boolean',
     ];
+
+    /**
+     * Delete cached metrics when location sky conditions change.
+     */
+    protected static function booted()
+    {
+        static::updated(function (self $location) {
+            if ($location->wasChanged('skyBackground') || $location->wasChanged('limitingMagnitude')) {
+                UserObjectMetric::where('location_id', $location->id)->delete();
+            }
+        });
+    }
 
     /**
      * Convert decimal degrees to DMS format with direction.
@@ -86,8 +109,8 @@ class Location extends Model
                 continue;
             }
             $inst = Instrument::where('id', $instrument)->first();
-            $to_return .= "<a href='/instrument/".$inst->user->slug.'/'.$inst->slug."'>".
-                $inst->fullName().'</a>'.', ';
+            $to_return .= "<a href='/instrument/" . $inst->user->slug . '/' . $inst->slug . "'>" .
+                $inst->fullName() . '</a>' . ', ';
         }
 
         // Remove the trailing comma and space
@@ -204,27 +227,27 @@ class Location extends Model
         $timezone = $this->timezone ?? config('app.timezone');
 
         // Sunrise
-        if (! isset($sun_info['sunrise']) || $sun_info['sunrise'] === true || $sun_info['sunrise'] === false) {
+        if (!isset($sun_info['sunrise']) || $sun_info['sunrise'] === true || $sun_info['sunrise'] === false) {
             $sunrise = '-';
         } else {
             $sunrise = Carbon::createFromTimestamp($sun_info['sunrise'])->timezone($timezone)->isoFormat('HH:mm');
         }
 
         // Sunset
-        if (! isset($sun_info['sunset']) || $sun_info['sunset'] === true || $sun_info['sunset'] === false) {
+        if (!isset($sun_info['sunset']) || $sun_info['sunset'] === true || $sun_info['sunset'] === false) {
             $sunset = '-';
         } else {
             $sunset = Carbon::createFromTimestamp($sun_info['sunset'])->timezone($timezone)->isoFormat('HH:mm');
         }
 
         // Transit
-        if (! isset($sun_info['transit']) || $sun_info['transit'] === true || $sun_info['transit'] === false) {
+        if (!isset($sun_info['transit']) || $sun_info['transit'] === true || $sun_info['transit'] === false) {
             $transit = '-';
         } else {
             $transit = Carbon::createFromTimestamp($sun_info['transit'])->timezone($timezone)->isoFormat('HH:mm');
         }
 
-        return $sunrise.' / '.$sunset.' / '.$transit;
+        return $sunrise . ' / ' . $sunset . ' / ' . $transit;
     }
 
     /**
@@ -253,19 +276,19 @@ class Location extends Model
 
         $timezone = $this->timezone ?? config('app.timezone');
 
-        if (! isset($sun_info['civil_twilight_end']) || $sun_info['civil_twilight_end'] === true || $sun_info['civil_twilight_end'] === false) {
+        if (!isset($sun_info['civil_twilight_end']) || $sun_info['civil_twilight_end'] === true || $sun_info['civil_twilight_end'] === false) {
             $end = '-';
         } else {
             $end = Carbon::createFromTimestamp($sun_info['civil_twilight_end'])->timezone($timezone)->isoFormat('HH:mm');
         }
 
-        if (! isset($sun_info['civil_twilight_begin']) || $sun_info['civil_twilight_begin'] === true || $sun_info['civil_twilight_begin'] === false) {
+        if (!isset($sun_info['civil_twilight_begin']) || $sun_info['civil_twilight_begin'] === true || $sun_info['civil_twilight_begin'] === false) {
             $start = '-';
         } else {
             $start = Carbon::createFromTimestamp($sun_info['civil_twilight_begin'])->timezone($timezone)->isoFormat('HH:mm');
         }
 
-        return $end.' / '.$start;
+        return $end . ' / ' . $start;
     }
 
     /**
@@ -293,19 +316,19 @@ class Location extends Model
 
         $timezone = $this->timezone ?? config('app.timezone');
 
-        if (! isset($sun_info['nautical_twilight_end']) || $sun_info['nautical_twilight_end'] === true || $sun_info['nautical_twilight_end'] === false) {
+        if (!isset($sun_info['nautical_twilight_end']) || $sun_info['nautical_twilight_end'] === true || $sun_info['nautical_twilight_end'] === false) {
             $end = '-';
         } else {
             $end = Carbon::createFromTimestamp($sun_info['nautical_twilight_end'])->timezone($timezone)->isoFormat('HH:mm');
         }
 
-        if (! isset($sun_info['nautical_twilight_begin']) || $sun_info['nautical_twilight_begin'] === true || $sun_info['nautical_twilight_begin'] === false) {
+        if (!isset($sun_info['nautical_twilight_begin']) || $sun_info['nautical_twilight_begin'] === true || $sun_info['nautical_twilight_begin'] === false) {
             $start = '-';
         } else {
             $start = Carbon::createFromTimestamp($sun_info['nautical_twilight_begin'])->timezone($timezone)->isoFormat('HH:mm');
         }
 
-        return $end.' / '.$start;
+        return $end . ' / ' . $start;
     }
 
     /**
@@ -333,19 +356,19 @@ class Location extends Model
 
         $timezone = $this->timezone ?? config('app.timezone');
 
-        if (! isset($sun_info['astronomical_twilight_end']) || $sun_info['astronomical_twilight_end'] === true || $sun_info['astronomical_twilight_end'] === false) {
+        if (!isset($sun_info['astronomical_twilight_end']) || $sun_info['astronomical_twilight_end'] === true || $sun_info['astronomical_twilight_end'] === false) {
             $end = '-';
         } else {
             $end = Carbon::createFromTimestamp($sun_info['astronomical_twilight_end'])->timezone($timezone)->isoFormat('HH:mm');
         }
 
-        if (! isset($sun_info['astronomical_twilight_begin']) || $sun_info['astronomical_twilight_begin'] === true || $sun_info['astronomical_twilight_begin'] === false) {
+        if (!isset($sun_info['astronomical_twilight_begin']) || $sun_info['astronomical_twilight_begin'] === true || $sun_info['astronomical_twilight_begin'] === false) {
             $start = '-';
         } else {
             $start = Carbon::createFromTimestamp($sun_info['astronomical_twilight_begin'])->timezone($timezone)->isoFormat('HH:mm');
         }
 
-        return $end.' / '.$start;
+        return $end . ' / ' . $start;
     }
 
     /**
