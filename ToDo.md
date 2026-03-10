@@ -7,8 +7,9 @@
 + [ ] Make old version work with the new object tables?
 
 + [ ] Targets
-  + [ ] Administrator / Database expert pages to add / edit / delete objects
-    + [ ] Get information from Simbad
+  + [ ] Administrator / Database expert pages to add / delete objects
+    + [ ] Delete object, but make sure to check because we don't want to delete an object that is used in an observation, session, ...
+    + [ ] Add object, with option to fetch data from Simbad.  For all DeepskyLog users.
   + [ ] Catalogs page
   + [ ] Search targets, first by name, then by type, constellation, ...
   + [ ] Install sqlite3 on the server to be able to use TNTSearch
@@ -60,6 +61,7 @@
 + [X] Totally reworked the sessions.  They are now more blog-like
 + [X] New objects detail page
 + [X] Added planets, lunar features, ...
++ [X] Add a page to edit objects.  More user-friendly than before, with a button to fetch data from Simbad.
 
 ## Small issues
 
