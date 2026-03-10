@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\ConnectedAccount;
+use App\Models\DeepskyObject;
 use App\Models\Team;
 use App\Models\User;
 use App\Policies\ConnectedAccountPolicy;
+use App\Policies\DeepskyObjectPolicy;
 use App\Policies\TeamPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -21,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
         Team::class => TeamPolicy::class,
         ConnectedAccount::class => ConnectedAccountPolicy::class,
         User::class => UserPolicy::class,
+        DeepskyObject::class => DeepskyObjectPolicy::class,
     ];
 
     /**

@@ -37,7 +37,7 @@ Route::middleware([
     Route::put('/current-team', function (\Illuminate\Http\Request $request) {
         $team = Laravel\Jetstream\Jetstream::newTeamModel()->findOrFail($request->team_id);
 
-        if (! $request->user()->switchTeam($team)) {
+        if (!$request->user()->switchTeam($team)) {
             abort(403);
         }
 
@@ -52,7 +52,7 @@ Route::middleware([
     Route::get('/switch-team/{team}', function (\Illuminate\Http\Request $request, $team) {
         $teamModel = Laravel\Jetstream\Jetstream::newTeamModel()->findOrFail($team);
 
-        if (! $request->user()->switchTeam($teamModel)) {
+        if (!$request->user()->switchTeam($teamModel)) {
             abort(403);
         }
 
@@ -280,7 +280,8 @@ Route::get('/object/moon', function () {
     try {
         $aside = new App\Http\Livewire\EphemerisAside();
         // Ensure mount() runs the calculations and populates properties
-        if (method_exists($aside, 'mount')) $aside->mount();
+        if (method_exists($aside, 'mount'))
+            $aside->mount();
         $payload = [
             'date' => $aside->date ?? \Carbon\Carbon::now()->toDateString(),
             'rising' => $aside->moon_rise ?? null,
@@ -315,7 +316,8 @@ Route::get('/object/moon', function () {
 Route::get('/object/sun', function () {
     try {
         $aside = new App\Http\Livewire\EphemerisAside();
-        if (method_exists($aside, 'mount')) $aside->mount();
+        if (method_exists($aside, 'mount'))
+            $aside->mount();
         $payload = [
             'date' => $aside->date ?? \Carbon\Carbon::now()->toDateString(),
             'sun_times' => $aside->sun_times ?? null,
@@ -346,6 +348,18 @@ Route::get('/object/sun', function () {
 
 Route::get('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'show'])
     ->name('object.show')->middleware('doNotCacheResponse');
+
+// Edit object (only for admins and database experts)
+Route::get('/object/{slug}/edit', [App\Http\Controllers\ObjectController::class, 'edit'])
+    ->name('object.edit')->middleware(['auth', 'doNotCacheResponse']);
+
+// Update object (only for admins and database experts)
+Route::put('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'update'])
+    ->name('object.update')->middleware(['auth', 'doNotCacheResponse']);
+
+// Update object from SIMBAD (only for admins and database experts)
+Route::post('/object/{slug}/update-from-simbad', [App\Http\Controllers\ObjectController::class, 'updateFromSimbad'])
+    ->name('object.updateFromSimbad')->middleware(['auth', 'doNotCacheResponse']);
 
 // Nearby names PDF export (uses query params ra, dec, radius)
 Route::get('/object/{slug}/nearby-names.pdf', [App\Http\Controllers\NearbyExportController::class, 'namesPdf'])
@@ -494,7 +508,7 @@ Route::get('/sitemap.xml', function () {
             // Use XML-safe escaping
             $loc = htmlspecialchars($u['loc'], ENT_XML1 | ENT_COMPAT, 'UTF-8');
             $xml .= '    <loc>' . $loc . "</loc>" . PHP_EOL;
-            if (! empty($u['lastmod'])) {
+            if (!empty($u['lastmod'])) {
                 $xml .= '    <lastmod>' . $u['lastmod'] . "</lastmod>" . PHP_EOL;
             }
             $xml .= '    <changefreq>' . $u['changefreq'] . "</changefreq>" . PHP_EOL;

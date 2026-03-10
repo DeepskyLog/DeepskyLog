@@ -10,10 +10,36 @@
                     $objSlugTop =
                         $canonicalSlug ?? ($session->slug ?? \Illuminate\Support\Str::slug($session->name ?? ''));
                 @endphp
-                <h1 class="text-3xl font-extrabold">
-                    <a href="{{ route('object.show', ['slug' => $objSlugTop]) }}"
-                        class="hover:underline">{{ html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
-                </h1>
+                <div class="flex items-center gap-4">
+                    <h1 class="text-3xl font-extrabold">
+                        <a href="{{ route('object.show', ['slug' => $objSlugTop]) }}"
+                            class="hover:underline">{{ html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                    </h1>
+                    
+                    @auth
+                        @php
+                            // Check if user is administrator or database expert
+                            $currentUser = auth()->user();
+                            $canEditObject = $currentUser->isAdministrator() || $currentUser->isDatabaseExpert();
+                            
+                            // Check if this is a deepsky object (from objects table)
+                            // Deepsky objects have original_type set, or source_type_raw is not planet/comet/moon/lunar_feature/asteroid
+                            $sourceType = $session->source_type_raw ?? '';
+                            $isDeepskyObject = !in_array($sourceType, ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun']) 
+                                && !empty($sourceType);
+                        @endphp
+                        
+                        @if ($canEditObject && $isDeepskyObject)
+                            <a href="{{ route('object.edit', ['slug' => $objSlugTop]) }}"
+                               class="inline-flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium text-sm">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                                {{ __('Edit Object') }}
+                            </a>
+                        @endif
+                    @endauth
+                </div>
 
                 {{-- Summary row: object type, constellation and quick stats (observations/drawings, user-specific counts) --}}
                 @php
@@ -175,12 +201,11 @@
                                                 <td class="pr-4 font-medium">{{ __('Size') }}</td>
                                                 <td>
                                                     @php
-                                                        $d1 = $session->diam1 ?? '';
-                                                        $d2 = $session->diam2 ?? '';
+                                                        // Controller already converts from arcseconds to arcminutes
+                                                        $d1 = $session->diam1 ?? 0;
+                                                        $d2 = $session->diam2 ?? 0;
                                                     @endphp
-                                                    {{ $d1 }}' @if (!empty($d1) && !empty($d2))
-                                                        x
-                                                    @endif {{ $d2 }}'
+                                                    {{ $d1 }}'@if ($d1 > 0 && $d2 > 0) x {{ $d2 }}'@endif
                                                 </td>
                                             </tr>
                                         @endif
@@ -442,6 +467,12 @@
                                     @livewire('object-ephemerides', ['objectId' => (string) ($session->id ?? ''), 'initial' => $ephemerides ?? null, 'objectName' => $session->name ?? null, 'sourceTypeRaw' => $session->source_type_raw ?? null])
 
                                     @auth
+                                        @php
+                                            // Check if user should see contrast reserve and optimum detection magnification
+                                            $showContrastInfo = !(auth()->user()->isAdministrator() || auth()->user()->isDatabaseExpert());
+                                        @endphp
+                                        
+                                        @if ($showContrastInfo)
                                         {{-- Live-updating contrast reserve and optimum detection magnification via Livewire --}}
                                         {{-- Embed the Livewire component directly so it can render <tr> rows inside this table --}}
                                         @php
@@ -518,6 +549,7 @@ try {
                                             @else
                                                 <div class="text-sm text-gray-400">{{ __('Aladin preview disabled — configure a default instrument set or select instrument/eyepiece to enable.') }}</div>
                                             @endif
+                                        @endif
                                         @endif
                                     @endauth
 
@@ -1232,7 +1264,11 @@ try {
                                 </ul>
                             </div>
                             {{-- Aladin Lite preview --}}
-                                @if (isset($session->ra) &&
+                                @php
+                                    // Hide sky preview for administrators and database experts
+                                    $showSkyPreview = !auth()->check() || !(auth()->user()->isAdministrator() || auth()->user()->isDatabaseExpert());
+                                @endphp
+                                @if ($showSkyPreview && isset($session->ra) &&
                                     isset($session->decl) &&
                                     !empty($session->ra) &&
                                     !empty($session->decl) &&

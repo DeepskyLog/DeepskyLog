@@ -11,6 +11,14 @@ class DeepskyObject extends Model
 
     public $timestamps = false;
 
+    // Primary key is 'name' (string)
+    protected $primaryKey = 'name';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    // Allow mass assignment for all fields (used for admin edits)
+    protected $guarded = [];
+
     /**
      * Instance helper: formatted RA
      */
@@ -98,8 +106,9 @@ class DeepskyObject extends Model
      */
     public static function raToDecimal($ra): ?float
     {
-        if ($ra === null || $ra === '') return null;
-        $s = trim((string)$ra);
+        if ($ra === null || $ra === '')
+            return null;
+        $s = trim((string) $ra);
         // If numeric, accept either hours (<=24) or degrees (>24)
         if (is_numeric($s)) {
             $v = floatval($s);
@@ -136,9 +145,11 @@ class DeepskyObject extends Model
      */
     public static function decToDecimal($dec): ?float
     {
-        if ($dec === null || $dec === '') return null;
-        $s = trim((string)$dec);
-        if (is_numeric($s)) return floatval($s);
+        if ($dec === null || $dec === '')
+            return null;
+        $s = trim((string) $dec);
+        if (is_numeric($s))
+            return floatval($s);
 
         // Match ±DD:MM:SS or D M S
         if (preg_match('/^([\+\-]?\d{1,3})[:°\s](\d{1,2})[:\'"\s](\d+(?:\.\d+)?)/', $s, $m)) {
