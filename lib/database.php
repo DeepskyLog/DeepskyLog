@@ -11,7 +11,7 @@ class Database
     private $databaseId;
     private function mysql_query_encaps($sql)
     {
-        global $loggedUser, $developversion;
+        global $loggedUser, $developversion, $databaseDebug;
         try {
             // Log the exact SQL prior to execution to help diagnose
             // syntax issues that may be caused by stray characters.
@@ -19,9 +19,11 @@ class Database
             // Log the full SQL with clear delimiters so we can spot
             // leading/trailing parentheses or semicolons.
             $full = is_string($sql) ? $sql : '';
-            error_log('=== Database (OLD) executing SQL START (len=' . $len . ') ===');
-            error_log($full);
-            error_log('=== Database (OLD) executing SQL END ===');
+            if (!empty($databaseDebug)) {
+                error_log('=== Database (OLD) executing SQL START (len=' . $len . ') ===');
+                error_log($full);
+                error_log('=== Database (OLD) executing SQL END ===');
+            }
             $run = null;
             $run = $this->databaseId->query($sql);
         } catch (PDOException $ex) {
