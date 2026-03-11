@@ -1315,13 +1315,13 @@ foreach ($observation as $observation) {
                 // Check if the object with the given name exists. If this is
                 // the case, set the objeId, else check the alternative names
                 $targetName = $objCatalog->checkObject($targetName);
-                if (count(
-                    $objDatabase->selectRecordArray(
-                        'SELECT objectnames.objectname FROM objectnames '
-                        . 'WHERE (objectnames.altname = "'
-                        . $targetName . '");'
-                    )
-                ) > 0
+                        if (count(
+                            $objDatabase_new->selectRecordArray(
+                                'SELECT objectnames.objectname FROM objectnames '
+                                . 'WHERE (objectnames.altname = "'
+                                . $targetName . '");'
+                            )
+                        ) > 0
                 ) {
                     $objeId = $objObject->getDsObjectName($targetName);
                 } else {
@@ -1336,7 +1336,7 @@ foreach ($observation as $observation) {
                         $targetName = str_replace('  ', ' ', $targetName);
                         $targetName = $objCatalog->checkObject($targetName);
                         if (count(
-                            $objDatabase->selectRecordArray(
+                            $objDatabase_new->selectRecordArray(
                                 'SELECT objectnames.objectname FROM '
                                 . 'objectnames WHERE '
                                 . '(objectnames.altname = "'
@@ -1368,10 +1368,10 @@ foreach ($observation as $observation) {
                                 . ' and decl < ' . ($ta['dec'] + 0.0001)
                                 . ' and type = "' . $ta['type'] . '"';
                         if (count(
-                            $objDatabase->selectRecordArray($sql)
+                            $objDatabase_new->selectRecordArray($sql)
                         ) > 0
                         ) {
-                            $run = $objDatabase->selectRecordset($sql);
+                            $run = $objDatabase_new->selectRecordset($sql);
                             $get = $run->fetch(PDO::FETCH_OBJ);
 
                             $objeId = $get->name;

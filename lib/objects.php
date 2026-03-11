@@ -8,20 +8,80 @@ if ((!isset($inIndex)) || (!$inIndex)) {
 }
 class Objects
 {
+    // create a URL-friendly slug from a name and ensure uniqueness
+    private function uniqueSlug($name)
+    {
+        global $objDatabase;
+
+        $slug = strtolower($name);
+        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+        $slug = trim($slug, '-');
+
+        $base = $slug;
+        $counter = 1;
+
+        // ensure slug is unique across objects table
+        while (true) {
+            $checkSql = "SELECT COUNT(*) as cnt FROM objects WHERE slug = \"" . $slug . "\"";
+            $run = $objDatabase->selectRecordset($checkSql);
+            if ($run) {
+                $get = $run->fetch(PDO::FETCH_OBJ);
+                if ($get && intval($get->cnt) === 0) {
+                    break;
+                }
+            } else {
+                // if the check failed for any reason, stop and use current slug
+                break;
+            }
+
+            $counter++;
+            $slug = $base . '-' . $counter;
+        }
+
+        return $slug;
+    }
+
     public function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec, $mag, $subr, $diam1, $diam2, $pa, $datasource) // addObject adds a new object to the database. The name, alternative name, type, constellation, right ascension, declination, magnitude, surface brightness, diam1, diam2, position angle and info about the catalogs should be given as parameters. The chart numbers for different atlasses are put in the database. $datasource describes where the data comes from e.g. : SAC7.2, DeepskyLogUser or E&T 2.5
     {
         global $objDatabase;
+        // generate slug and include in INSERT
+        $slug = $this->uniqueSlug($name);
+
+        // sanitize numeric inputs to avoid inserting empty strings into numeric columns
+        if ($ra === '' || $ra === null) {
+            $ra = '0';
+        }
+        if ($dec === '' || $dec === null) {
+            $dec = '0';
+        }
+        if ($mag === '' || $mag === null) {
+            $mag = '99.9';
+        }
+        if ($subr === '' || $subr === null) {
+            $subr = '0';
+        }
+        if ($diam1 === '' || $diam1 === null) {
+            $diam1 = '0';
+        }
+        if ($diam2 === '' || $diam2 === null) {
+            $diam2 = '0';
+        }
+        if ($pa === '' || $pa === null) {
+            $pa = '0';
+        }
+
         $array = [
-                "INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki, psa, torresB, torresBC, torresC, milleniumbase)
-	                  VALUES (\"$name\", \"$type\", \"$con\", \"$ra\", \"$dec\", \"$mag\", \"$subr\", \"$diam1\", \"$diam2\", \"$pa\", \"$datasource\", \"0\", \"0\", \"0\", \"0\", \"0\", \"0\", \"0\", \"0\", \"0\", \"0\")",
+            "INSERT INTO objects (name, slug, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki, psa, torresB, torresBC, torresC, milleniumbase, timestamp)\n\t                  VALUES (\"$name\", \"$slug\", \"$type\", \"$con\", \"$ra\", \"$dec\", \"$mag\", \"$subr\", \"$diam1\", \"$diam2\", \"$pa\", \"$datasource\", \"0\", \"0\", \"0\", \"0\", \"0\", \"0\", \"0\", \"0\", \"0\", \"0\", NOW())",
         ];
         $sql = implode('', $array);
+        @file_put_contents('/tmp/objects_sql.log', $sql . "\n", FILE_APPEND);
         $objDatabase->execSQL($sql);
         // Check if the combination objectname - altname does already exist.  If this is the case, don't add the combination a second time to the database.
         $newcatindex = ucwords(trim($catindex));
         $objectnames = $objDatabase->selectSingleArray('SELECT * FROM objectnames WHERE objectname="' . $name . '" AND altname="' . $cat . ' ' . $newcatindex . '"', 'objectname');
         if (count($objectnames) == 0) {
-            $objDatabase->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")))");
+            // include slug so objectnames in the new DB can be matched by slug-based searches
+            $objDatabase->execSQL("INSERT INTO objectnames (objectname, slug, catalog, catindex, altname, timestamp) VALUES (\"$name\", \"$slug\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")), NOW())");
         }
         $this->setDsObjectAtlasPages($name);
         $this->setDsObjectSBObj(($name));
@@ -290,7 +350,10 @@ class Objects
 
     public function getExactDsObject($value, $cat = '', $catindex = '') // returns the exact name of an object
     {
-        global $objDatabase, $objCatalog;
+        global $objDatabase, $objDatabase_new, $objCatalog;
+        // Prefer the new database connection for object lookups when available.
+        $db = (isset($objDatabase_new) && $objDatabase_new) ? $objDatabase_new : $objDatabase;
+
         if ($value) {
             $value = $objCatalog->checkObject($value);
             $sql = 'SELECT objectnames.objectname FROM objectnames '.'WHERE UPPER(altname) = "'.strtoupper(trim($value)).'" '.'OR altname = "'.trim($value).'"';
@@ -298,10 +361,10 @@ class Objects
             $catandindex = $objCatalog->checkObject($cat.' '.ucwords(trim($catindex)));
             $sql = 'SELECT objectnames.objectname FROM objectnames '.'WHERE UPPER(altname) = "'.strtoupper(trim($catandindex)).'" '.'OR altname = "'.trim($catandindex).'"';
         }
-        if ((!($object = $objDatabase->selectSingleValue($sql, 'objectname', ''))) && $value) {
+        if ((!($object = $db->selectSingleValue($sql, 'objectname', ''))) && $value) {
             $value = $objCatalog->checkObject($value);
             $sql = 'SELECT objectnames.objectname FROM objectnames '.'WHERE CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex))="'.strtoupper(str_replace(' ', '', $value)).'"';
-            $object = $objDatabase->selectSingleValue($sql, 'objectname', '');
+            $object = $db->selectSingleValue($sql, 'objectname', '');
         }
 
         return $object;
@@ -398,6 +461,25 @@ class Objects
                 $sqland = $sqland.' AND (objectnames.catalog = "'.$queries['name'].'")';
             } elseif ($exact == 1) {
                 $sqland = $sqland.' AND (UPPER(objectnames.altname) like "'.strtoupper($objCatalog->checkObject($queries['name'])).'")';
+            }
+        }
+        // If this is an exact catalog+number lookup, try a direct objectnames-only
+        // query first. This avoids cross-database JOIN routing problems when the
+        // objects table may be routed to a different DB than objectnames.
+        if (array_key_exists('name', $queries) && $queries['name'] != '' && ($exact == 1)) {
+            $namecheck = strtoupper($objCatalog->checkObject($queries['name']));
+            $alt = $objCatalog->checkObject($queries['name']);
+            $directSql = 'SELECT DISTINCT objectname, altname FROM objectnames WHERE UPPER(altname) like "'.$namecheck.'" OR altname = "'.$alt.'"';
+            $runDirect = $objDatabase->selectRecordset($directSql);
+            $directObs = [];
+            $j = 0;
+            while ($getd = $runDirect->fetch(PDO::FETCH_OBJ)) {
+                if (!array_key_exists($getd->altname, $directObs)) {
+                    $directObs[$getd->altname] = [$j++, $getd->objectname];
+                }
+            }
+            if (count($directObs) > 0) {
+                return $this->getSeenObjectDetails($directObs, $seen);
             }
         }
         // $sqland = $sqland . " AND (CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex)) like \"" . strtoupper(str_replace(' ','',$queries["name"])) . "\") ";
@@ -641,8 +723,22 @@ class Objects
             $latitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'latitude');
 
             $timezone = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'timezone');
-
-            $dateTimeZone = new DateTimeZone($timezone);
+            $timezone = trim((string)$timezone);
+            if (!$timezone) {
+                $timezone = date_default_timezone_get() ?: 'UTC';
+            }
+            if (!in_array($timezone, timezone_identifiers_list())) {
+                $fallback = date_default_timezone_get() ?: 'UTC';
+                error_log("Invalid timezone '" . $timezone . "' for stdLocation; falling back to '" . $fallback . "'.");
+                $timezone = $fallback;
+            }
+            try {
+                $dateTimeZone = new DateTimeZone($timezone);
+            } catch (Exception $e) {
+                $fallback = date_default_timezone_get() ?: 'UTC';
+                error_log("DateTimeZone failed for '" . $timezone . "': " . $e->getMessage() . "; falling back to '" . $fallback . "'.");
+                $dateTimeZone = new DateTimeZone($fallback);
+            }
             $datestr = sprintf('%02d', $theMonth).'/'.sprintf('%02d', $theDay).'/'.$theYear;
             $dateTime = new DateTime($datestr, $dateTimeZone);
             // Geeft tijdsverschil terug in seconden
@@ -954,7 +1050,22 @@ class Objects
                         $longitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'longitude');
                         $latitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'latitude');
                         $timezone = $objLocation->getLocationPropertyFromId($theLocation, 'timezone');
-                        $dateTimeZone = new DateTimeZone($timezone);
+                        $timezone = trim((string)$timezone);
+                        if (!$timezone) {
+                            $timezone = date_default_timezone_get() ?: 'UTC';
+                        }
+                        if (!in_array($timezone, timezone_identifiers_list())) {
+                            $fallback = date_default_timezone_get() ?: 'UTC';
+                            error_log("Invalid timezone '" . $timezone . "' for location id " . $theLocation . "; falling back to '" . $fallback . "'.");
+                            $timezone = $fallback;
+                        }
+                        try {
+                            $dateTimeZone = new DateTimeZone($timezone);
+                        } catch (Exception $e) {
+                            $fallback = date_default_timezone_get() ?: 'UTC';
+                            error_log("DateTimeZone failed for '" . $timezone . "': " . $e->getMessage() . "; falling back to '" . $fallback . "'.");
+                            $dateTimeZone = new DateTimeZone($fallback);
+                        }
                         $maxalt = '-';
                         $maxaltstart = '-';
                         $maxaltend = '-';
@@ -1682,12 +1793,14 @@ class Objects
 
             // We fill out the number in the Catalog
             echo '  <input type="text" class="form-inline" name="newnumber" value="'.$theindex.'"/>';
+            // Allow admins to enter a custom catalog name instead of selecting from the list
+            echo '  <input type="text" class="form-inline" name="newcatalog_custom" placeholder="'._('Or enter custom catalog').'" style="margin-left:8px;" />';
             echo '</td>';
 
             // We add a button to create a new Catalog
-            // TODO: Show a modal to add a new, empty catalog
+            // Submitting the form with newaction=NewAltName will add the alt name to `objectnames`
             echo '<td colspan="3">';
-            echo '<span class="pull-right"><button type="button" class="btn btn-success" data-dismiss="modal">'._('Create new empty catalog').'</button></span>';
+            echo '<span class="pull-right"><button type="submit" name="newaction" value="NewAltName" class="btn btn-success">'._('Create new empty catalog').'</button></span>';
             echo '</td>';
             echo '<td colspan="3">';
             echo '</td>';
@@ -1809,8 +1922,22 @@ class Objects
             $latitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'latitude');
 
             $timezone = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'timezone');
-
-            $dateTimeZone = new DateTimeZone($timezone);
+            $timezone = trim((string)$timezone);
+            if (!$timezone) {
+                $timezone = date_default_timezone_get() ?: 'UTC';
+            }
+            if (!in_array($timezone, timezone_identifiers_list())) {
+                $fallback = date_default_timezone_get() ?: 'UTC';
+                error_log("Invalid timezone '" . $timezone . "' for stdLocation; falling back to '" . $fallback . "'.");
+                $timezone = $fallback;
+            }
+            try {
+                $dateTimeZone = new DateTimeZone($timezone);
+            } catch (Exception $e) {
+                $fallback = date_default_timezone_get() ?: 'UTC';
+                error_log("DateTimeZone failed for '" . $timezone . "': " . $e->getMessage() . "; falling back to '" . $fallback . "'.");
+                $dateTimeZone = new DateTimeZone($fallback);
+            }
             $datestr = sprintf('%02d', $theMonth).'/'.sprintf('%02d', $theDay).'/'.$theYear;
             $dateTime = new DateTime($datestr, $dateTimeZone);
             // Geeft tijdsverschil terug in seconden
@@ -2349,7 +2476,8 @@ class Objects
             if ($check) { // position angle
                 $posangle = '999';
                 if ($_POST['posangle']) {
-                    if (!$objUtil->checkLimitsInclusive('posangle', 0, 359)) {
+                    // validate the numeric value of the posted posangle, not the literal string 'posangle'
+                    if (!$objUtil->checkLimitsInclusive($objUtil->checkPostKey('posangle'), 0, 359)) {
                         $entryMessage = _('Wrong position angle!');
                         $_GET['indexAction'] = 'add_object';
                         $check = false;

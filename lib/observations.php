@@ -2489,7 +2489,7 @@ Correct observations which have been imported will not be registered for a secon
                     . urlencode($value['instrumentid']) . "\">"
                     . (($value['instrumentname'] == "Naked eye")
                     ? _("Naked Eye") : $value['instrumentname']
-                    . " &nbsp;(" . round($value['instrumentdiameter'], 0)
+                    . " &nbsp;(" . round(floatval($value['instrumentdiameter']), 0)
                     . "&nbsp;mm)") . "</a></td>";
                 echo "<td>" . date(
                     $dateformat,

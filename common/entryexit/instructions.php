@@ -815,6 +815,10 @@ function instructions()
 
     if (array_key_exists('admin', $_SESSION) && $_SESSION ['admin'] == "yes") {
         if (array_key_exists("newaction", $_GET)) {
+            // Prefer an explicitly provided custom catalog name when present
+            if (array_key_exists('newcatalog_custom', $_GET) && trim($_GET['newcatalog_custom']) != '') {
+                $_GET['newcatalog'] = trim($_GET['newcatalog_custom']);
+            }
             if ($_GET ['newaction'] == "NewName") {
                 $objObject->newName($_GET ['object'], $_GET ['newcatalog'], $_GET ['newnumber']);
                 $_GET ['object'] = trim($_GET ['newcatalog'] . " " . ucwords(trim($_GET ['newnumber'])));

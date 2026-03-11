@@ -15,8 +15,14 @@ class database_new
         try {
             $run = $this->databaseId->query($sql);
         } catch (PDOException $ex) {
-            $entryMessage = "A database error occured!"; // user friendly message
-            print $entryMessage;
+                        $entryMessage = "A database error occured! (" . $ex->getMessage() . ")"; // include exception for debugging
+            error_log($entryMessage);
+            $run = new class {
+                public function fetch($mode = null) { return false; }
+                public function fetchColumn() { return false; }
+                public function execute($params = null) { return false; }
+                public function rowCount() { return 0; }
+            };
         }
         return $run;
     }
@@ -79,7 +85,13 @@ class database_new
             $run = $this->databaseId->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
             $run->execute($values);
         } catch (PDOException $ex) {
-            $entryMessage = "A database error occured!"; // user friendly message
+            $entryMessage = "A database error occured! (" . $ex->getMessage() . ")"; // include exception for debugging
+            $run = new class {
+                public function fetch($mode = null) { return false; }
+                public function fetchColumn() { return false; }
+                public function execute($params = null) { return false; }
+                public function rowCount() { return 0; }
+            };
         }
 
         $result = array();
@@ -104,7 +116,13 @@ class database_new
         try {
             $run = $this->databaseId->query($sql);
         } catch (PDOException $ex) {
-            $entryMessage = "A database error occured!"; // user friendly message
+            $entryMessage = "A database error occured! (" . $ex->getMessage() . ")"; // include exception for debugging
+            $run = new class {
+                public function fetch($mode = null) { return false; }
+                public function fetchColumn() { return false; }
+                public function execute($params = null) { return false; }
+                public function rowCount() { return 0; }
+            };
         }
 
         $result = array();
@@ -127,7 +145,14 @@ class database_new
         try {
             $run = $this->databaseId->query($sql);
         } catch (PDOException $ex) {
-            $entryMessage = "A database error occured!"; // user friendly message
+            $entryMessage = "A database error occured! (" . $ex->getMessage() . ")"; // include exception for debugging
+            error_log($entryMessage);
+            $run = new class {
+                public function fetch($mode = null) { return false; }
+                public function fetchColumn() { return false; }
+                public function execute($params = null) { return false; }
+                public function rowCount() { return 0; }
+            };
         }
 
         $result = array();
@@ -153,7 +178,15 @@ class database_new
         try {
             $run = $this->databaseId->query($sql);
         } catch (PDOException $ex) {
-            $entryMessage = "A database error occured!"; // user friendly message
+            $entryMessage = "A database error occured! (" . $ex->getMessage() . ")"; // include exception for debugging
+            error_log($entryMessage);
+            // Provide a harmless stub so subsequent calls don't fatally error.
+            $run = new class {
+                public function fetch($mode = null) { return false; }
+                public function fetchColumn() { return false; }
+                public function execute($params = null) { return false; }
+                public function rowCount() { return 0; }
+            };
         }
 
         $get = $run->fetch(PDO::FETCH_ASSOC);
@@ -171,7 +204,12 @@ class database_new
     {
         global $dbnameNew, $host, $user, $pass;
         if (!$this->databaseId) {
-            $this->databaseId = new PDO('mysql:host=' . $host . ';dbname=' . $dbnameNew . ';charset=utf8', $user, $pass);
+            $this->databaseId = new PDO(
+                'mysql:host=' . $host . ';dbname=' . $dbnameNew . ';charset=utf8',
+                $user,
+                $pass,
+                array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+            );
         }
         return $this->databaseId;
     }

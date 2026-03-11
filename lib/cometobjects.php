@@ -11,6 +11,39 @@ include_once "cometobservations.php";
 
 class CometObjects
 {
+    // create a URL-friendly slug from a name and ensure uniqueness
+    private function uniqueSlug($name)
+    {
+        global $objDatabase;
+
+        $slug = strtolower($name);
+        $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+        $slug = trim($slug, '-');
+
+        $base = $slug;
+        $counter = 1;
+
+        // ensure slug is unique across cometobjects
+        while (true) {
+            $checkSql = "SELECT COUNT(id) as cnt FROM cometobjects WHERE slug = \"" . $slug . "\"";
+            $run = $objDatabase->selectRecordset($checkSql);
+            if ($run) {
+                $get = $run->fetch(PDO::FETCH_OBJ);
+                if ($get && intval($get->cnt) === 0) {
+                    break;
+                }
+            } else {
+                // if the check failed for any reason, stop and use current slug
+                break;
+            }
+
+            $counter++;
+            $slug = $base . '-' . $counter;
+        }
+
+        return $slug;
+    }
+
     // addObject adds a new object to the database. The name and icqname should be given as
     // parameters.
     public function addObject($name)
@@ -20,7 +53,10 @@ class CometObjects
             $_SESSION['lang'] = "English";
         }
 
-        $array = array("INSERT INTO cometobjects (name) VALUES (\"$name\")");
+        // generate a slug and include it in the INSERT
+        $slug = $this->uniqueSlug($name);
+
+        $array = array("INSERT INTO cometobjects (name, slug) VALUES (\"$name\", \"$slug\")");
 
         $sql = implode("", $array);
 

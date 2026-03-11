@@ -76,7 +76,7 @@ class Lists
             } else {
                 $public = 0;
             }
-            $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, public) VALUES (\"" . $loggedUser . "\", \"\", \"" . $name . "\", '0', \"\", \"" . $public . "\")");
+            $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, public, timestamp) VALUES (\"" . $loggedUser . "\", \"\", \"" . $name . "\", '0', \"\", \"" . $public . "\", DATE_FORMAT(NOW(), '%Y%m%d%H%i%S'))");
             if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
                 unset($_SESSION ['QobjParams']);
             }
@@ -97,7 +97,7 @@ class Lists
             } else {
                 $public = 0;
             }
-            $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, description, public) VALUES (\"" . $loggedUser . "\", \"$name\", \"$listname\", \"" . (($objDatabase->selectSingleValue("SELECT MAX(objectplace) AS ObjPlace FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"$listname\"", 'ObjPlace', 0)) + 1) . "\", \"$showname\", \"" . $objDatabase->selectSingleValue("SELECT description FROM objects WHERE name=\"" . $name . "\"", 'description') . "\", \"" . $public . "\")");
+            $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, description, public, timestamp) VALUES (\"" . $loggedUser . "\", \"$name\", \"$listname\", \"" . (($objDatabase->selectSingleValue("SELECT MAX(objectplace) AS ObjPlace FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"$listname\"", 'ObjPlace', 0)) + 1) . "\", \"$showname\", \"" . $objDatabase->selectSingleValue("SELECT description FROM objects WHERE name=\"" . $name . "\"", 'description') . "\", \"" . $public . "\", DATE_FORMAT(NOW(), '%Y%m%d%H%i%S'))");
         }
         if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
             unset($_SESSION ['QobjParams']);
@@ -116,7 +116,7 @@ class Lists
             $description .= ') ' . $objPresentations->br2nl($get ['description']);
             $get = $objDatabase->selectRecordArray("SELECT objectplace AS ObjPl, description FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $listname . "\" AND objectname=\"" . $name . "\"");
             if (!$get) {
-                $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, description) " . "VALUES (\"" . $loggedUser . "\", \"" . $name . "\", \"" . $listname . "\"," . " \"" . (($objDatabase->selectSingleValue("SELECT MAX(objectplace) AS ObjPl FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $listname . "\"", 'ObjPl', 0)) + 1) . "\", " . "\"" . $name . "\", \"" . substr((($tempDescription = $objDatabase->selectSingleValue("SELECT description FROM objects WHERE name=\"" . $name . "\"", 'description')) ? ($tempDescription . ' \n') : '') . $description, 0, 1024) . "\")");
+                $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, description, timestamp) " . "VALUES (\"" . $loggedUser . "\", \"" . $name . "\", \"" . $listname . "\"," . " \"" . (($objDatabase->selectSingleValue("SELECT MAX(objectplace) AS ObjPl FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $listname . "\"", 'ObjPl', 0)) + 1) . "\", " . "\"" . $name . "\", \"" . substr((($tempDescription = $objDatabase->selectSingleValue("SELECT description FROM objects WHERE name=\"" . $name . "\"", 'description')) ? ($tempDescription . ' \n') : '') . $description, 0, 1024) . "\", DATE_FORMAT(NOW(), '%Y%m%d%H%i%S'))");
             } else {
                 $objDatabase->execSQL("UPDATE observerobjectlist SET description = \"" . substr((($get ['description']) ? ($get ['description'] . " ") : '') . $description, 0, 1024) . "\" WHERE observerid = \"" . $loggedUser . "\" AND listname=\"" . $listname . "\" AND objectname=\"" . $name . "\"");
             }
@@ -211,28 +211,27 @@ class Lists
         global $objDatabase, $loggedUser;
         $result = array();
 
-        if (array_key_exists('deepskylog_id', $_SESSION)) {
-            $run = $objDatabase->selectRecordset("SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid=\"" . $loggedUser . "\" ORDER BY observerobjectlist.listname");
-            $get = $run->fetch(PDO::FETCH_OBJ);
-            $result1 = array();
-            if ($get) {
-                while ($get) {
-                    $result1 [] = $get->listname;
-                    $get = $run->fetch(PDO::FETCH_OBJ);
-                }
+        // Return both private lists for the user and public lists.
+        $run = $objDatabase->selectRecordset("SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid=\"" . $loggedUser . "\" ORDER BY observerobjectlist.listname");
+        $get = $run->fetch(PDO::FETCH_OBJ);
+        $result1 = array();
+        if ($get) {
+            while ($get) {
+                $result1 [] = $get->listname;
+                $get = $run->fetch(PDO::FETCH_OBJ);
             }
-
-            $run = $objDatabase->selectRecordset("SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE public=\"1%\" ORDER BY observerobjectlist.listname");
-            $get = $run->fetch(PDO::FETCH_OBJ);
-            $result2 = array();
-            if ($get) {
-                while ($get) {
-                    $result2 [] = $get->listname;
-                    $get = $run->fetch(PDO::FETCH_OBJ);
-                }
-            }
-            $result = array_merge($result1, $result2);
         }
+
+        $run = $objDatabase->selectRecordset("SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE public=\"1\" ORDER BY observerobjectlist.listname");
+        $get = $run->fetch(PDO::FETCH_OBJ);
+        $result2 = array();
+        if ($get) {
+            while ($get) {
+                $result2 [] = $get->listname;
+                $get = $run->fetch(PDO::FETCH_OBJ);
+            }
+        }
+        $result = array_merge($result1, $result2);
 
         return $result;
     }
