@@ -12,7 +12,7 @@ class DatabaseMux
     private $routeTables;
     private $lastUsedDb;
 
-    public function __construct($oldDb, $newDb, $routeTables = [])
+    public function __construct($oldDb, $newDb, $routeTables = [], $debug = false)
     {
         $this->oldDb = $oldDb;
         $this->newDb = $newDb;
@@ -20,6 +20,7 @@ class DatabaseMux
         $defaults = ['objects', 'cometobjects', 'objectnames'];
         $this->routeTables = array_map('strtolower', array_unique(array_merge($defaults, $routeTables)));
         $this->lastUsedDb = $oldDb;
+        $this->debug = (bool)$debug;
     }
 
     // Sanitize a rewritten SQL string to remove outer parentheses and
@@ -69,7 +70,9 @@ class DatabaseMux
         }
         $low = strtolower($sql);
         // Log the full original SQL for debugging (may be long)
-        error_log('DatabaseMux: attempting rewrite for SQL: ' . $sql);
+        if ($this->debug) {
+            error_log('DatabaseMux: attempting rewrite for SQL: ' . $sql);
+        }
 
         // Quick sanity: ensure quotes are balanced. If not, abort rewrite.
         $singleQuotes = substr_count($sql, "'");
@@ -115,12 +118,16 @@ class DatabaseMux
 
         if (count($foundRouteTables) > 0) {
             $this->lastUsedDb = $this->newDb;
-            error_log("DatabaseMux: routing to NEW DB for SQL: " . substr($sql, 0, 200));
+            if ($this->debug) {
+                error_log("DatabaseMux: routing to NEW DB for SQL: " . substr($sql, 0, 200));
+            }
             return $this->newDb;
         }
 
         $this->lastUsedDb = $this->oldDb;
-        error_log("DatabaseMux: routing to OLD DB for SQL: " . substr($sql, 0, 200));
+        if ($this->debug) {
+            error_log("DatabaseMux: routing to OLD DB for SQL: " . substr($sql, 0, 200));
+        }
         return $this->oldDb;
     }
 
@@ -325,8 +332,10 @@ class DatabaseMux
                 }
                 $newSql = $innerNoClose . ' )' . (strlen($tail) ? ' ' . ltrim($tail) : '');
                 // Log both original and rewritten SQL for debugging
-                error_log('DatabaseMux: original SQL: ' . substr($sql, 0, 1000));
-                error_log('DatabaseMux: rewritten SQL: ' . substr($newSql, 0, 1000));
+                if ($this->debug) {
+                    error_log('DatabaseMux: original SQL: ' . substr($sql, 0, 1000));
+                    error_log('DatabaseMux: rewritten SQL: ' . substr($newSql, 0, 1000));
+                }
                 // final sanity check
                 if (preg_match('/\bWHERE\b\s*\(\s*\)/i', $newSql) || preg_match('/^\)/', $newSql) || preg_match('/\)\s+\)/', $newSql)) {
                     // try to repair common issues rather than aborting outright
@@ -335,7 +344,9 @@ class DatabaseMux
                     $newSql = ltrim($newSql, ") ");
                     // if still problematic, log but continue with OLD DB execution
                     if (preg_match('/^\)/', $newSql)) {
-                        error_log('DatabaseMux: rewrite produced leading ) but will attempt OLD DB execution; original SQL: ' . substr($sql,0,1000));
+                        if ($this->debug) {
+                            error_log('DatabaseMux: rewrite produced leading ) but will attempt OLD DB execution; original SQL: ' . substr($sql,0,1000));
+                        }
                     }
                 }
                 // Strip any language-restriction predicates that were added
@@ -416,8 +427,10 @@ class DatabaseMux
         }
 
         // Log both original and rewritten SQL for debugging
-        error_log('DatabaseMux: original SQL: ' . substr($sql, 0, 1000));
-        error_log('DatabaseMux: rewritten SQL: ' . substr($newSql, 0, 1000));
+        if ($this->debug) {
+            error_log('DatabaseMux: original SQL: ' . substr($sql, 0, 1000));
+            error_log('DatabaseMux: rewritten SQL: ' . substr($newSql, 0, 1000));
+        }
 
         // Last sanity check: attempt light repair of common formatting issues
         if (preg_match('/\)\s+\)/', $newSql)) {
@@ -429,7 +442,9 @@ class DatabaseMux
         $newSql = ltrim($newSql);
         if (preg_match('/^\)/', $newSql)) {
             // log but proceed; caller expects OLD DB results if available
-            error_log('DatabaseMux: rewritten SQL starts with ) after cleanup; proceeding with OLD DB execution.');
+            if ($this->debug) {
+                error_log('DatabaseMux: rewritten SQL starts with ) after cleanup; proceeding with OLD DB execution.');
+            }
         }
 
         // Fix common incorrect insertion where the IN-clause was appended
@@ -503,7 +518,9 @@ class DatabaseMux
                 // expecting a PDOStatement continue to work.
                 $rows = $this->newDb->selectRecordsetArray($sql);
                 if (is_array($rows) && count($rows) > 0) {
-                    error_log('DatabaseMux: used NEW DB result for observations+objectnames query');
+                    if ($this->debug) {
+                        error_log('DatabaseMux: used NEW DB result for observations+objectnames query');
+                    }
                     $stub = new class($rows) {
                         private $rows;
                         private $idx = 0;
@@ -553,7 +570,9 @@ class DatabaseMux
             try {
                 $res = $this->newDb->selectSingleArray($sql, $name);
                 if ($res && count($res) > 0) {
-                    error_log('DatabaseMux: used NEW DB single-array result for observations+objectnames query');
+                    if ($this->debug) {
+                        error_log('DatabaseMux: used NEW DB single-array result for observations+objectnames query');
+                    }
                     return $res;
                 }
             } catch (Exception $e) {
@@ -585,7 +604,9 @@ class DatabaseMux
             try {
                 $val = $this->newDb->selectSingleValue($sql, $name, $nullvalue);
                 if ($val !== $nullvalue && $val !== null) {
-                    error_log('DatabaseMux: used NEW DB single-value result for observations+objectnames query');
+                    if ($this->debug) {
+                        error_log('DatabaseMux: used NEW DB single-value result for observations+objectnames query');
+                    }
                     return $val;
                 }
             } catch (Exception $e) {
@@ -617,7 +638,9 @@ class DatabaseMux
             try {
                 $res = $this->newDb->selectRecordsetArray($sql);
                 if ($res && count($res) > 0) {
-                    error_log('DatabaseMux: used NEW DB recordset-array for observations+objectnames query');
+                    if ($this->debug) {
+                        error_log('DatabaseMux: used NEW DB recordset-array for observations+objectnames query');
+                    }
                     return $res;
                 }
             } catch (Exception $e) {
@@ -649,7 +672,9 @@ class DatabaseMux
             try {
                 $res = $this->newDb->selectRecordArray($sql);
                 if ($res && count($res) > 0) {
-                    error_log('DatabaseMux: used NEW DB record-array for observations+objectnames query');
+                    if ($this->debug) {
+                        error_log('DatabaseMux: used NEW DB record-array for observations+objectnames query');
+                    }
                     return $res;
                 }
             } catch (Exception $e) {
