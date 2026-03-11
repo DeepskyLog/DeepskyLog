@@ -1300,24 +1300,26 @@ Correct observations which have been imported will not be registered for a secon
         $sqland = "";
         $alternative = "";
         if (!array_key_exists('countquery', $queries)) {
-            $sql1 = "SELECT DISTINCT observations.id as observationid,
-                                observations.objectname as objectname,
-                                observations.date as observationdate,
-                                observations.description as observationdescription,
-                                observers.id as observerid,
-                                CONCAT(observers.firstname , ' ' , observers.name)
-                                as observername,
-                                CONCAT(observers.name , ' ' , observers.firstname)
-                                as observersortname,
-                                objects.con as objectconstellation,
-                                objects.type as objecttype,
-                                objects.mag as objectmagnitude,
-                                objects.subr as objectsurfacebrigthness,
-                                instruments.id as instrumentid,
-                                instruments.name as instrumentname,
-                                instruments.diameter as instrumentdiameter,
-                        CONCAT(10000+instruments.diameter,' mm ',instruments.name)
-                                as instrumentsort ";
+            // Select the full observations row to avoid many single-column
+            // queries later (reduces N+1 DB queries when rendering lists).
+            $sql1 = "SELECT DISTINCT observations.*, observations.id as observationid,
+                    observations.objectname as objectname,
+                    observations.date as observationdate,
+                    observations.description as observationdescription,
+                    observers.id as observerid,
+                    CONCAT(observers.firstname , ' ' , observers.name)
+                    as observername,
+                    CONCAT(observers.name , ' ' , observers.firstname)
+                    as observersortname,
+                    objects.con as objectconstellation,
+                    objects.type as objecttype,
+                    objects.mag as objectmagnitude,
+                    objects.subr as objectsurfacebrigthness,
+                    instruments.id as instrumentid,
+                    instruments.name as instrumentname,
+                    instruments.diameter as instrumentdiameter,
+                CONCAT(10000+instruments.diameter,' mm ',instruments.name)
+                    as instrumentsort ";
         } else {
             $sql1 = "SELECT count(DISTINCT observations.id) as ObsCnt ";
         }
@@ -2351,10 +2353,10 @@ Correct observations which have been imported will not be registered for a secon
                 $hasDrawing = false;
             } else {
                 $rowspan = 2;
-                $hasDrawing = $this->getDsObservationProperty(
+                $hasDrawing = (isset($value['hasDrawing']) ? $value['hasDrawing'] : $this->getDsObservationProperty(
                     $value['observationid'],
                     'hasDrawing'
-                );
+                ));
                 if ($hasDrawing) {
                     $rowspan++;
                 }
@@ -2553,10 +2555,10 @@ Correct observations which have been imported will not be registered for a secon
                         echo "<td colspan=\"5\">";
                         $toClose = false;
                         if ($loggedUser != "") {
-                            if ($usedLang != $this->getDsObservationProperty(
+                            if ($usedLang != (isset($value['language']) ? $value['language'] : $this->getDsObservationProperty(
                                 $value['observationid'],
                                 'language'
-                            )
+                            ))
                             ) {
                                 $toClose = true;
 
@@ -2578,10 +2580,10 @@ Correct observations which have been imported will not be registered for a secon
                         echo "<td colspan=\"4\">";
                         $toClose = false;
                         if ($loggedUser != "") {
-                            if ($usedLang != $this->getDsObservationProperty(
+                            if ($usedLang != (isset($value['language']) ? $value['language'] : $this->getDsObservationProperty(
                                 $value['observationid'],
                                 'language'
-                            )
+                            ))
                             ) {
                                 $toClose = true;
                                 // Make the google translate control node
@@ -2628,10 +2630,7 @@ Correct observations which have been imported will not be registered for a secon
                         . " tablesorter-childRow\">";
                     if ($lco == "C") {
                         echo "<td colspan=\"7\">"
-                            . (($this->getDsObservationProperty(
-                                $value['observationid'],
-                                'hasDrawing'
-                            ))
+                            . ((isset($value['hasDrawing']) && $value['hasDrawing'])
                             ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/"
                             . $value['observationid']
                             . ".jpg\" data-lightbox=" . $value['observationid']
@@ -2650,20 +2649,17 @@ Correct observations which have been imported will not be registered for a secon
                             } else {
                                 echo "<td> &nbsp; </td>
                                       <td colspan=\"6\">"
-                                    . (($this->getDsObservationProperty(
-                                        $value['observationid'],
-                                        'hasDrawing'
-                                    ))
-                                      ? "<p>"
-                                      . "<a href=\"" . $baseURL
-                                      . "deepsky/drawings/"
-                                      . $value['observationid']
-                                      . ".jpg\"  title=\"\">
-                                         <img class=\"account\" src=\""
-                                      . $baseURL . "deepsky/drawings/"
-                                      . $value['observationid']
-                                      . "_resized.jpg\" alt=\"" . $title . "\"></img>
-                                        </a>" . "</p>" : "") . "</td>";
+                                                                        . ((isset($value['hasDrawing']) && $value['hasDrawing'])
+                                                                            ? "<p>"
+                                                                            . "<a href=\"" . $baseURL
+                                                                            . "deepsky/drawings/"
+                                                                            . $value['observationid']
+                                                                            . ".jpg\"  title=\"\">
+                                                                                 <img class=\"account\" src=\""
+                                                                            . $baseURL . "deepsky/drawings/"
+                                                                            . $value['observationid']
+                                                                            . "_resized.jpg\" alt=\"" . $title . "\"></img>
+                                                                                </a>" . "</p>" : "") . "</td>";
                             }
                         } else {
                             $obid = $value['observationid'];
@@ -2672,20 +2668,17 @@ Correct observations which have been imported will not be registered for a secon
                                     . "&nbsp;</td>";
                             } else {
                                 echo "<td colspan=\"6\">"
-                                    . ($this->getDsObservationProperty(
-                                        $value['observationid'],
-                                        'hasDrawing'
-                                    )
-                                    ? "<p>"
-                                    . "<a  href=\"" . $baseURL . "deepsky/drawings/"
-                                    . $value['observationid']
-                                    . ".jpg\" data-lightbox=\"image-1\" " .
-                                    "data-title=\"\">
-                                       <img class=\"account\" src=\"" . $baseURL
-                                    . "deepsky/drawings/" . $value['observationid']
-                                    . "_resized.jpg\" alt=\""
-                                    . $title . "\"></img>
-                                      </a>" . "</p>" : "") . "</td>";
+                                                . ((isset($value['hasDrawing']) && $value['hasDrawing'])
+                                                ? "<p>"
+                                                . "<a  href=\"" . $baseURL . "deepsky/drawings/"
+                                                . $value['observationid']
+                                                . ".jpg\" data-lightbox=\"image-1\" " .
+                                                "data-title=\"\">
+                                                    <img class=\"account\" src=\"" . $baseURL
+                                                . "deepsky/drawings/" . $value['observationid']
+                                                . "_resized.jpg\" alt=\""
+                                                . $title . "\"></img>
+                                                  </a>" . "</p>" : "") . "</td>";
                             }
                         }
                         echo "<td colspan=\"4\">"
