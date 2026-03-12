@@ -80,12 +80,36 @@ class DatabaseMux
             error_log('DatabaseMux: attempting rewrite for SQL: ' . $sql);
         }
 
-        // Quick sanity: ensure quotes are balanced. If not, abort rewrite.
-        $singleQuotes = substr_count($sql, "'");
-        $doubleQuotes = substr_count($sql, '"');
-        if (($singleQuotes % 2) !== 0 || ($doubleQuotes % 2) !== 0) {
-            error_log('DatabaseMux: rewrite aborted due to unbalanced quotes; original SQL: ' . substr($sql,0,2000));
-            // conservative fallback: route to old DB to avoid returning null
+        // Quick sanity: ensure quotes are balanced. Use a simple parser that
+        // toggles quote state and treats doubled quotes as SQL-escaped
+        // characters. This avoids counting single quotes found inside
+        // double-quoted literals (e.g. "Markarian's Chain") as unbalanced.
+        $inSingle = false;
+        $inDouble = false;
+        $len = strlen($sql);
+        for ($i = 0; $i < $len; $i++) {
+            $ch = $sql[$i];
+            if ($ch === "'" && !$inDouble) {
+                // handle doubled single-quotes as escaped single-quote
+                if ($inSingle && ($i + 1 < $len) && $sql[$i + 1] === "'") {
+                    $i++;
+                    continue;
+                }
+                $inSingle = !$inSingle;
+                continue;
+            }
+            if ($ch === '"' && !$inSingle) {
+                // handle doubled double-quotes as escaped double-quote
+                if ($inDouble && ($i + 1 < $len) && $sql[$i + 1] === '"') {
+                    $i++;
+                    continue;
+                }
+                $inDouble = !$inDouble;
+                continue;
+            }
+        }
+        if ($inSingle || $inDouble) {
+            error_log('DatabaseMux: rewrite aborted due to unbalanced quotes; original SQL: ' . substr($sql, 0, 2000));
             $this->lastUsedDb = $this->oldDb;
             return $this->oldDb;
         }
