@@ -41,16 +41,22 @@ class DatabaseMux
                 $s = trim($inner);
             }
         }
-        // If the SQL still starts with a '(' or ends with ')' (possibly because
-        // the rewritten SQL produced mismatched parentheses), and this is an
-        // observations query, aggressively strip outer parens to avoid PDO
-        // syntax errors. This is conservative for rewritten catalog queries
-        // which we produce ourselves.
+        // If the SQL looks like it's wrapped in a single outer pair of
+        // parentheses and references `observations`, unwrap that single
+        // pair only when the inner text has balanced parentheses. The
+        // previous aggressive stripping removed required closing parens
+        // (e.g. the closing ')' of an IN(...) clause) and produced
+        // syntax errors; this is safer.
         if (preg_match('/from\s+observations/i', $s)) {
-            // remove any leading '(' chars and trailing ')' chars
-            $s = preg_replace('/^\s*\(+/', '', $s);
-            $s = preg_replace('/\)+\s*$/', '', $s);
             $s = trim($s);
+            if (strlen($s) > 1 && $s[0] === '(' && substr($s, -1) === ')') {
+                $inner = substr($s, 1, -1);
+                $open = substr_count($inner, '(');
+                $close = substr_count($inner, ')');
+                if ($open === $close) {
+                    $s = trim($inner);
+                }
+            }
         }
         // final trim
         return trim($s);
