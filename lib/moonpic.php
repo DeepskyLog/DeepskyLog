@@ -66,10 +66,16 @@ function getMoonPic($date, $realTime, $latitude, $longitude, $timezone){
 			// Now we know when the moon rises and sets. We have to convert the time and compare with the time of the observation.
 			// $moonCalc[0] = rise
 			// $moonCalc[2] = set
-			$moonriseArray = sscanf ( $moonCalc [0], "%d:%d" );
-			$moonsetArray = sscanf ( $moonCalc [2], "%d:%d" );
-			$moonRise = $moonriseArray [0] * 100.0 + $moonriseArray [1];
-			$moonSet = $moonsetArray [0] * 100.0 + $moonsetArray [1];
+			$moonriseArray = sscanf( isset($moonCalc[0]) ? $moonCalc[0] : '', "%d:%d" );
+			$moonsetArray = sscanf( isset($moonCalc[2]) ? $moonCalc[2] : '', "%d:%d" );
+			if (!is_array($moonriseArray) || !isset($moonriseArray[0]) || !isset($moonriseArray[1])) {
+				$moonriseArray = array(0, 0);
+			}
+			if (!is_array($moonsetArray) || !isset($moonsetArray[0]) || !isset($moonsetArray[1])) {
+				$moonsetArray = array(0, 0);
+			}
+			$moonRise = $moonriseArray[0] * 100.0 + $moonriseArray[1];
+			$moonSet = $moonsetArray[0] * 100.0 + $moonsetArray[1];
 	
 			$moonAboveHorizon = true;
 			if ($moonRise > $moonSet) {
