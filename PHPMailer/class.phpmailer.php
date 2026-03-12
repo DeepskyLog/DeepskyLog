@@ -31,6 +31,14 @@ if (!function_exists('get_magic_quotes_gpc')) {
     }
 }
 
+// Ensure the SMTP class is available for SMTP transports (legacy layout)
+if (!class_exists('SMTP')) {
+    $smtpPath = dirname(__FILE__) . '/class.smtp.php';
+    if (file_exists($smtpPath)) {
+        require_once $smtpPath;
+    }
+}
+
 /**
  * PHPMailer - PHP email creation and transport class.
  * @package PHPMailer
