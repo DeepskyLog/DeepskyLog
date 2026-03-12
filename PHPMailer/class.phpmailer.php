@@ -17,6 +17,20 @@
  * FITNESS FOR A PARTICULAR PURPOSE.
  */
 
+// Compatibility shim for PHP versions where magic-quotes functions were removed
+if (!function_exists('get_magic_quotes_runtime')) {
+    function get_magic_quotes_runtime()
+    {
+        return false;
+    }
+}
+if (!function_exists('get_magic_quotes_gpc')) {
+    function get_magic_quotes_gpc()
+    {
+        return false;
+    }
+}
+
 /**
  * PHPMailer - PHP email creation and transport class.
  * @package PHPMailer

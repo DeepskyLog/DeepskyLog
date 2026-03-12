@@ -2255,9 +2255,9 @@ Correct observations which have been imported will not be registered for a secon
                 }
             }
             $alt = substr($alt, 6);
-            $explanation = "(" . $GLOBALS[$value['objecttype']]
+            $explanation = "(" . (isset($value['objecttype']) && isset($GLOBALS[$value['objecttype']]) ? $GLOBALS[$value['objecttype']] : '')
                 . " " . _("in") . " "
-                . $GLOBALS[$value['objectconstellation']]
+                . (isset($value['objectconstellation']) && isset($GLOBALS[$value['objectconstellation']]) ? $GLOBALS[$value['objectconstellation']] : '')
                 . (($value['objectmagnitude'] != '')
                 && ($value['objectmagnitude'] < 99.9) ? ", "
                 . _("mag.") . " "
@@ -2481,7 +2481,7 @@ Correct observations which have been imported will not be registered for a secon
                 $this->showObservation($value['observationid']);
                 echo "</td>";
             } else {
-                echo "<td>" . $GLOBALS[$value['objectconstellation']] . "</td>";
+                echo "<td>" . (isset($value['objectconstellation']) && isset($GLOBALS[$value['objectconstellation']]) ? $GLOBALS[$value['objectconstellation']] : '') . "</td>";
                 echo "<td><a href=\"" . $baseURL
                     . "index.php?indexAction=detail_observer&amp;user="
                     . urlencode($value['observerid']) . "\">"
