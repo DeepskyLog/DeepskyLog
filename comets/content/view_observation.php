@@ -20,7 +20,7 @@ function view_observation() {
 	{
 		echo "<div id=\"main\">";
 		$content = "";
-		if ($_SESSION ['observation_query']) 		// array of observations
+		if (! empty ( $_SESSION ['observation_query'] )) 		// array of observations
 		{
 			$arrayIndex = array_search ( $_GET ['observation'], $_SESSION ['observation_query'] );
 			$previousIndex = $arrayIndex + 1;

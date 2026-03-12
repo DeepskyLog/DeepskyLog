@@ -13,6 +13,7 @@ function data_get_objects()
 {
     global $showPartOfs, $listname, $loggedUser, $objAtlas, $objObserver, $objObservation, $objCatalog, $objList, $objObject, $objUtil;
     $showPartOfs = $objUtil->checkGetKey('showPartOfs', $objUtil->checkSessionKey('QobjPO', 0));
+    $listname = $objUtil->checkGetKey('listname', $objUtil->checkSessionKey('listname', ''));
     // ========================================= filter objects from observation query
     if ($objUtil->checkGetKey('source') == 'observation_query') {
         $validQobj = false;
