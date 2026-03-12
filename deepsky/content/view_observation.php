@@ -36,16 +36,17 @@ function view_observation() {
 	echo "<br /><br />";
 	$objObject->showObject ( $object );
 	$content = '';
+	$dalm = isset($_GET['dalm']) ? $_GET['dalm'] : '';
 	if ($loggedUser) // LOGGED IN
 {
-		if ($_GET ['dalm'] != "D")
+		if ($dalm != "D")
 			$content = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=D\" title=\"" . _("Details of this observation") . "\">" . "D" . "</a>" . "&nbsp;";
-		if ($_GET ["dalm"] != "AO")
+		if ($dalm != "AO")
 			$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=AO\" title=\"" . _("Compare this observation with all observations of this object") . "\">" . "AO" . "</a>" . "&nbsp;";
 		if ($objObservation->getObservationsUserObject ( $loggedUser, $object ) > 0) {
-			if ($_GET ['dalm'] != "MO")
+			if ($dalm != "MO")
 				$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=MO\" title=\"" . _("Compare this observation with all my observations of this object") . "\">" . "MO" . "</a>" . "&nbsp;";
-			if ($_GET ['dalm'] != "LO")
+			if ($dalm != "LO")
 				$content .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=LO\" title=\"" . _("Compare this observation with my last observation of this object") . "\">" . "LO" . "</a>" . "&nbsp;";
 		}
 		$content .= _("(*) All Observations(AO), My observations(MO), my Last observations(LO) of this object");
@@ -53,11 +54,11 @@ function view_observation() {
 		echo "<br /><br />";
 	}
 	$objObservation->showObservation ( $_GET ['observation'] );
-	if ($_GET ['dalm'] == "AO") {
+	if ($dalm == "AO") {
 		$AOid = $objObservation->getAOObservationsId ( $object, $_GET ['observation'] );
-	} elseif ($_GET ['dalm'] == "MO") {
+	} elseif ($dalm == "MO") {
 		$AOid = $objObservation->getMOObservationsId ( $object, $loggedUser, $_GET ['observation'] );
-	} elseif ($_GET ['dalm'] == "LO") {
+	} elseif ($dalm == "LO") {
 		$AOid = array (
 				$objObservation->getLOObservationId ( $object, $loggedUser, $_GET ['observation'] )
 		);

@@ -1519,6 +1519,7 @@ class Objects
             ];
         }
         $popup = '';
+        $magnifications = [];
         $magnificationsName = [];
         $fov = [];
         if (!($loggedUser)) {

@@ -1667,7 +1667,10 @@ Correct observations which have been imported will not be registered for a secon
             return $result;
         } else {
             $get = $run->fetch(PDO::FETCH_OBJ);
-            return $get->ObsCnt;
+            if ($get && isset($get->ObsCnt)) {
+                return $get->ObsCnt;
+            }
+            return 0;
         }
     }
 
@@ -3011,6 +3014,12 @@ Correct observations which have been imported will not be registered for a secon
             // $moonCalc[2] = set
             $moonriseArray = sscanf($moonCalc[0], "%d:%d");
             $moonsetArray = sscanf($moonCalc[2], "%d:%d");
+            if (!is_array($moonriseArray) || !isset($moonriseArray[0]) || !isset($moonriseArray[1])) {
+                $moonriseArray = array(0, 0);
+            }
+            if (!is_array($moonsetArray) || !isset($moonsetArray[0]) || !isset($moonsetArray[1])) {
+                $moonsetArray = array(0, 0);
+            }
             $moonRise = $moonriseArray[0] * 100.0 + $moonriseArray[1];
             $moonSet = $moonsetArray[0] * 100.0 + $moonsetArray[1];
 
