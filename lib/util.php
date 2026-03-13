@@ -2421,7 +2421,8 @@ class Utils
         $pdf = new Cezpdf('a4', 'landscape');
         $pdf->ezStartPageNumbers(450, 15, 10);
         $pdf->selectFont($instDir . 'lib/fonts/Helvetica.afm');
-        $pdf->ezText(mb_convert_encoding(html_entity_decode($_GET['pdfTitle']), 'ISO-8859-1', 'UTF-8'), 18);
+        $pdfTitle = isset($_GET['pdfTitle']) ? $_GET['pdfTitle'] : _('Object names');
+        $pdf->ezText(mb_convert_encoding(html_entity_decode($pdfTitle), 'ISO-8859-1', 'UTF-8'), 18);
         $pdf->ezText("\n", 5);
         $pdf->ezColumnsStart(array('num' => 10));
         $pdf->ezTable(
@@ -2455,14 +2456,21 @@ class Utils
      */
     public function sortResult($result)
     {
-        $sortOrderArray = explode(",", trim($_COOKIE['sortOrder'], "|"));
+        $cookieVal = isset($_COOKIE['sortOrder']) ? $_COOKIE['sortOrder'] : '';
+        if (trim($cookieVal) === '') {
+            return $result;
+        }
+
+        $sortOrderArray = explode(",", trim($cookieVal, "|"));
+        $sortName = array();
+        $sortOrder = array();
 
         foreach ($sortOrderArray as $sort) {
             $sort = trim($sort, ")");
-            $sort = explode("(", $sort);
-            $sortName[] = $sort[0];
+            $parts = explode("(", $sort);
+            $sortName[] = isset($parts[0]) && $parts[0] !== '' ? $parts[0] : 'objectname';
             // 0 = up, 1 = down
-            $sortOrder[] = $sort[1];
+            $sortOrder[] = isset($parts[1]) ? $parts[1] : 0;
         }
         // Multicolumn sort
         $sort = array();
@@ -2474,14 +2482,14 @@ class Utils
                     $sName = 'objectname';
                 }
                 if (is_array($v) && $v[$sName] == "") {
-                    if ($sortOrder[$cnt] == 1) {
+                    if (isset($sortOrder[$cnt]) && $sortOrder[$cnt] == 1) {
                         $sort[$sName][$k] = -99.0;
                     } else {
                         $sort[$sName][$k] = +99.0;
                     }
                 } else {
                     if (is_array($v)) {
-                        $sort[$sName][$k] = $v[$sName];
+                        $sort[$sName][$k] = isset($v[$sName]) ? $v[$sName] : '';
                     }
                 }
             }
@@ -4420,7 +4428,8 @@ class Utils
         $pdf = new Cezpdf('a4', 'portrait');
         $pdf->ezStartPageNumbers(300, 30, 10);
         $pdf->selectFont($instDir . 'lib/fonts/Helvetica.afm');
-        $pdf->ezText(mb_convert_encoding(html_entity_decode($_GET['pdfTitle']) . "\n", 'ISO-8859-1', 'UTF-8'));
+        $pdfTitle = isset($_GET['pdfTitle']) ? $_GET['pdfTitle'] : _('Observations');
+        $pdf->ezText(mb_convert_encoding(html_entity_decode($pdfTitle) . "\n", 'ISO-8859-1', 'UTF-8'));
         $i = 0;
         foreach ($result as $key => $value) {
             if ($i++ > 0) {
