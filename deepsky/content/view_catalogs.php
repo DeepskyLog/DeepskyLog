@@ -1,19 +1,25 @@
 <?php
-global $instDir;
+global $instDir, $baseURL;
 
 echo "<script type=\"text/javascript\" src=\"" . $baseURL . "deepsky/content/view_catalogs.js\"></script>";
 echo '<div id="catalogs" class="catalogs">';
 
 // Show a drop-down with all catalogs
-include_once $instDir . "/lib/catalogs.php";
-$objCatalog = new catalogs();
-$catalogs = $objCatalog->getCatalogs();
+if (!empty($instDir) && file_exists($instDir . "/lib/catalogs.php")) {
+  include_once $instDir . "/lib/catalogs.php";
+} else {
+  // fallback to repository lib directory
+  include_once __DIR__ . '/../../lib/catalogs.php';
+}
+
+$objCatalog = class_exists('catalogs') ? new catalogs() : null;
+$catalogs = is_object($objCatalog) ? $objCatalog->getCatalogs() : array();
 
 echo '<form>
 <div class="form-group">
 <select class="form-control" onchange="view_catalog(this.value);">';
 foreach ($catalogs as $key => $value) {
-  print '<option><value="' . $value . '">' . $value . '</a></option>';
+  print '<option value="' . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . '</option>';
 }
 echo '</select>';
 echo '  </div>

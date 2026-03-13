@@ -1,13 +1,18 @@
 <?php
-global $loggedUser, $loggedUserName, $objList;
+global $loggedUser, $loggedUserName, $objList, $baseURL;
+
+if (session_status() == PHP_SESSION_NONE) {
+	@session_start();
+}
 
 // Show the list that is currently activated
 echo "<h2>" . _("Active list") . "</h2>";
-if ($_SESSION ['listname'] != '' && $_SESSION ['listname'] != '----------') {
-	echo "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . $_SESSION ['listname'] . "\">";
-	echo $_SESSION ['listname'];
+$listname = isset($_SESSION['listname']) ? $_SESSION['listname'] : '';
+if ($listname !== '' && $listname !== '----------') {
+	echo "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . htmlspecialchars($listname, ENT_QUOTES, 'UTF-8') . "\">";
+	echo htmlspecialchars($listname, ENT_QUOTES, 'UTF-8');
 	echo "</a>";
-	
+
 	echo _(" is your active list. You can search for objects and add these objects to this list.");
 } else {
 	echo _("There is no active list. Select one of the lists to make that list active. You can search for objects and add these objects to your active lists.");
@@ -21,7 +26,11 @@ echo " <a class=\"btn btn-success pull-right\" data-toggle=\"modal\" data-target
   		 <span class=\"glyphicon glyphicon-plus\"></span>&nbsp;" . _("Create a new observing list") . "</a>" . "</h2>";
 
 // Show all public lists
-$objList->showLists ( true );
+if (is_object($objList)) {
+	$objList->showLists(true);
+} else {
+	echo '<p>' . _('No lists available') . '</p>';
+}
 
 // We show the private lists of the observer.
 echo "<h2>" . sprintf(_("Private lists of %s"), $loggedUserName);
@@ -31,5 +40,9 @@ echo " <a class=\"btn btn-success pull-right\" data-toggle=\"modal\" data-target
   		 <span class=\"glyphicon glyphicon-plus\"></span>&nbsp;" . _("Create a new observing list") . "</a>" . "</h2>";
 
 // Show all personal lists
-$objList->showLists ( false );
+if (is_object($objList)) {
+	$objList->showLists(false);
+} else {
+	echo '<p>' . _('No lists available') . '</p>';
+}
 ?>

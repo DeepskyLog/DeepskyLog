@@ -1,4 +1,4 @@
-<?php require_once 'lib/datatables_setup.php'; ?>
+<?php require_once __DIR__ . '/../../lib/datatables_setup.php'; ?>
 
 <script type="text/javascript">		 
 		$(document).ready(function() {

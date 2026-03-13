@@ -1,5 +1,5 @@
 <?php
-global $objObject,$baseURL;
+global $objObject,$baseURL,$dirAstroImageCatalogs;
 
 
 echo "<h4>" . _("Image Catalogs") . "</h4>";
@@ -64,8 +64,8 @@ echo "<table class=\"table\">
 
 
 
-foreach ($constellations as $key=>$value)
-{  $cons[$value] = $GLOBALS[$value];
+foreach ($constellations as $key=>$value) {
+  $cons[$value] = isset($GLOBALS[$value]) ? $GLOBALS[$value] : $value;
 }
 asort($cons);
 reset($cons);
@@ -75,7 +75,7 @@ foreach ($cons as $key=>$value) {
   if ($count % 3 == 0) {
     print "</tr><tr>";
   }
-  echo "<td class=\"catalog\"><a href=\"".$dirAstroImageCatalogs."constellations/".$key.".pdf\">".${$key}."</a></td>";
+  echo "<td class=\"catalog\"><a href=\"".$dirAstroImageCatalogs."constellations/".$key.".pdf\">".$value."</a></td>";
   if ($count % 3 == 0) {
   }
   $count++;
