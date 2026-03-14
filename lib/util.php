@@ -1401,7 +1401,8 @@ class Utils
             $site->appendChild($dom->createTextNode("site_" . $loc));
 
             // Check whether this observation is part of a session...
-            for ($scnt = 0; $scnt < count($usedSessions); $scnt++) {
+            if (!empty($usedSessions) && is_array($usedSessions)) {
+                for ($scnt = 0; $scnt < count($usedSessions); $scnt++) {
                 $sessionObs = $objDatabase->selectRecordsetArray(
                     "select * from sessionObservations where sessionid = \"" .
                     $usedSessions [$scnt] . "\" and observationid = \"" .
@@ -1415,6 +1416,7 @@ class Utils
                     $session->appendChild(
                         $dom->createTextNode("se_" . $usedSessions[$scnt])
                     );
+                }
                 }
             }
 

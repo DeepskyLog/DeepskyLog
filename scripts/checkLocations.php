@@ -9,6 +9,15 @@ $objDatabase = new Database ();
 $objLocation = new Locations ();
 print "Database update will correct all the bad locations.<br />\n";
 
+// Ensure 'checked' column exists before attempting to query it.
+$col = $objDatabase->selectRecordArray(
+    "SHOW FULL COLUMNS FROM locations WHERE Field = 'checked'"
+);
+if (empty($col)) {
+  print "Column 'checked' not present in locations; nothing to do.<br />\n";
+  exit;
+}
+
 $locationsToCheck = $objDatabase->selectRecordsetArray ( "SELECT id FROM locations where checked=\"1\"", 'id' );
 
 print sizeof($locationsToCheck);

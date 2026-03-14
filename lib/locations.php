@@ -251,6 +251,18 @@ class Locations
     public function setLocationProperty($id, $property, $propertyValue)
     {
         global $objDatabase_new;
+        // Do not attempt to set non-existent or generated columns.
+        $col = $objDatabase_new->selectRecordArray(
+            "SHOW FULL COLUMNS FROM locations WHERE Field = \"" . $property . "\""
+        );
+        if (empty($col) || !isset($col['Field'])) {
+            return false;
+        }
+        if (isset($col['Extra']) && stripos($col['Extra'], 'GENERATED') !== false) {
+            // Column is generated (virtual/stored); ignore attempted write.
+            return false;
+        }
+
         return $objDatabase_new->execSQL(
             "UPDATE locations SET " . $property . " = \""
             . $propertyValue . "\" WHERE id = \"" . $id . "\""

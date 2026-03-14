@@ -666,12 +666,14 @@ function viewObserver()
         . "\" group by YEAR(date);", "YEAR(date)", "count(*)"
     );
 
-    if (sizeof($sql) == 0) {
-        $startYear = min(array_keys($sql2));
-    } else if (sizeof($sql2) == 0) {
-        $startYear = min(array_keys($sql));
-    } else {
+    if (!empty($sql) && !empty($sql2)) {
         $startYear = min([min(array_keys($sql)), min(array_keys($sql2))]);
+    } else if (!empty($sql)) {
+        $startYear = min(array_keys($sql));
+    } else if (!empty($sql2)) {
+        $startYear = min(array_keys($sql2));
+    } else {
+        $startYear = $currentYear;
     }
 
     // Add the JavaScript to initialize the chart on document ready

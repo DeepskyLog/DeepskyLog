@@ -899,10 +899,14 @@ function addXmlObservations()
             . $_SESSION['deepskylog_id'] . '" where id = "'
             . $locId . '";'
         );
-        $objDatabase_new->execSQL(
-            'update locations set checked = "0" where id = "'
-            . $locId . '";'
+        $col = $objDatabase_new->selectRecordArray(
+            "SHOW FULL COLUMNS FROM locations WHERE Field = 'checked'"
         );
+        if (!empty($col)) {
+            $objDatabase_new->execSQL(
+                'update locations set checked = "0" where id = "' . $locId . '";'
+            );
+        }
     }
 
     $location = $locId;
