@@ -36,7 +36,7 @@ function ajaxinterface() {
 		$theset = '';
 		if ($objFilter->getFilterPropertyFromId ( $objUtil->checkGetKey ( 'id', 0 ), 'observer', - 1 ) == $loggedUser) {
 			$theset = ($objUtil->checkGetKey ( 'filteractive', true ) == 'true' ? 1 : 0);
-			$objFilter->setFilterProperty ( $objUtil->checkGetKey ( 'id', - 1 ), 'filteractive', $theset );
+			$objFilter->setFilterProperty ( $objUtil->checkGetKey ( 'id', - 1 ), 'active', $theset );
 		}
 		echo $theset;
 	} elseif ($ajaxInstruction == "setlensactivation") {
@@ -50,7 +50,7 @@ function ajaxinterface() {
 		$theset = '';
 		if ($objLocation->getLocationPropertyFromId ( $objUtil->checkGetKey ( 'id', 0 ), 'observer', - 1 ) == $loggedUser) {
 			$theset = ($objUtil->checkGetKey ( 'locationactive', true ) == 'true' ? 1 : 0);
-			$objLocation->setLocationProperty ( $objUtil->checkGetKey ( 'id', - 1 ), 'locationactive', $theset );
+			$objLocation->setLocationProperty ( $objUtil->checkGetKey ( 'id', - 1 ), 'active', $theset );
 		}
 		echo $theset;
 	} elseif ($ajaxInstruction == "setinstrumentactivation") {
