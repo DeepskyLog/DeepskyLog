@@ -389,6 +389,7 @@ class Locations
                         )
                     );
                 }
+                $bortle = "&nbsp;";
                 if ($sb > 0) {
                     $bortle = $objContrast->calculateBortleFromSQM($sb);
                 }

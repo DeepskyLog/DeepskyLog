@@ -1590,7 +1590,7 @@ class Objects
                     $get6bis = $run6bis->fetch(PDO::FETCH_OBJ);
                     $fstOffset = $get6bis->fstOffset;
 
-                    if (($get6->limitingMagnitude < -900) && ($get6->skyBackground < -900)) {
+                    if (!$get6 || (($get6->limitingMagnitude < -900) && ($get6->skyBackground < -900))) {
                         $popup = _('Contrast reserve can only be calculated when you have set a typical limiting magnitude or sky background for your standard location...');
                     } else {
                         if ($get6->skyBackground < -900) {

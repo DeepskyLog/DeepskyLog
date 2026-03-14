@@ -226,7 +226,7 @@ class Accomplishments
     public function deleteObserver($observerId)
     {
         global $objDatabase;
-        $sql = "DELETE FROM accomplishments WHERE observer = \"". $observerId ."\");";
+        $sql = "DELETE FROM accomplishments WHERE observer = \"". $observerId ."\";";
         $objDatabase->execSQL($sql);
     }
 
