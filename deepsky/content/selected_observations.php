@@ -54,9 +54,14 @@ function selected_observations()
         // Debug: log whether drawings filter applied and how many observations returned
         if (function_exists('error_log')) {
             $draw = $objUtil->checkGetKey('drawings', 'off');
-            error_log("selected_observations: observer=" . $queries['observer'] . " drawings=" . $draw . " Qobs_count=" . count(
-                (array) $_SESSION['Qobs']
-            ));
+            $total = count((array) $_SESSION['Qobs']);
+            $hasCount = 0;
+            foreach ((array) $_SESSION['Qobs'] as $qo) {
+                if (isset($qo['hasDrawing']) && ($qo['hasDrawing'] == 1 || $qo['hasDrawing'] === '1' || $qo['hasDrawing'] === true)) {
+                    $hasCount++;
+                }
+            }
+            error_log("selected_observations: observer=" . $queries['observer'] . " drawings=" . $draw . " Qobs_count=" . $total . " hasDrawing_count=" . $hasCount);
         }
     }
     foreach ($_GET as $key => $value) {
