@@ -64,26 +64,7 @@ function selected_observations()
             // adjust total count as well
             $_SESSION['QobsTotal'] = count($_SESSION['Qobs']);
         }
-        // Debug: log whether drawings filter applied and how many observations returned
-        if (function_exists('error_log')) {
-            $draw = $objUtil->checkGetKey('drawings', 'off');
-            $total = count((array) $_SESSION['Qobs']);
-            $hasCount = 0;
-            foreach ((array) $_SESSION['Qobs'] as $qo) {
-                if (isset($qo['hasDrawing']) && ($qo['hasDrawing'] == 1 || $qo['hasDrawing'] === '1' || $qo['hasDrawing'] === true)) {
-                    $hasCount++;
-                }
-            }
-            error_log("selected_observations: observer=" . $queries['observer'] . " drawings=" . $draw . " Qobs_count=" . $total . " hasDrawing_count=" . $hasCount);
-            if ($total > 0 && function_exists('error_log')) {
-                $first = $_SESSION['Qobs'][0];
-                $keys = implode(',', array_keys((array)$first));
-                error_log("selected_observations: first_keys=" . $keys);
-                // dump a few representative fields
-                $dump = array_intersect_key((array)$first, array_flip(array('observationid','observerid','hasdrawing','hasDrawing','observationdescription')));
-                error_log('selected_observations: first_sample=' . var_export($dump, true));
-            }
-        }
+        
     }
     // If a full query was submitted (from object links), run the query builder
     // to populate $_SESSION['Qobs'] (this honors the drawings filter).
