@@ -22,7 +22,9 @@ function selected_observations()
     // include those filters so both observer and object selection are applied.
     if (array_key_exists('observer', $_GET) && ($_GET['observer'] != '')) {
         $queries = array(
-            'observer' => $objUtil->checkGetKey('observer')
+            'observer' => $objUtil->checkGetKey('observer'),
+            'hasDrawing' => $objUtil->checkGetKey('drawings', 'off'),
+            'hasNoDrawing' => $objUtil->checkGetKey('nodrawings', 'off')
         );
         if (array_key_exists('object', $_GET) && ($_GET['object'] != '')) {
             $queries['object'] = $objUtil->checkGetKey('object');
