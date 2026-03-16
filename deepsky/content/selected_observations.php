@@ -17,6 +17,18 @@ function selected_observations()
         $sessionid = $_GET['sessionid'];
         $_SESSION['Qobs'] = $objSession->getObservations($sessionid);
     }
+    // If an observer is requested directly via GET, fetch observations
+    // for that observer so the page shows the correct filtered results.
+    if (array_key_exists('observer', $_GET) && ($_GET['observer'] != '')) {
+        $queries = array(
+            'observer' => $objUtil->checkGetKey('observer')
+        );
+        $_SESSION['Qobs'] = $objObservation->getObservationFromQuery(
+            $queries,
+            $objUtil->checkGetKey('seen', 'A'),
+            $objUtil->checkGetKey('exactinstrumentlocation', 0)
+        );
+    }
     foreach ($_GET as $key => $value) {
         if (!in_array($key, [
                 'indexAction',
