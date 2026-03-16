@@ -2191,7 +2191,9 @@ Correct observations which have been imported will not be registered for a secon
         parse_str($parsed, $query);
 
         if (array_key_exists('object', $query)) {
-            // Build query preserving object and optional related filters
+            // Build query preserving object and optional related filters.
+            // Prefer the current request's observer (from $_GET) to avoid losing
+            // the observer filter when links include only the object.
             $queries = array(
                 "object" => $query['object']
             );
@@ -2201,11 +2203,14 @@ Correct observations which have been imported will not be registered for a secon
             if (array_key_exists('number', $query) && ($query['number'] != '')) {
                 $queries['number'] = $query['number'];
             }
-            if (array_key_exists('observer', $query) && ($query['observer'] != '')) {
+            // prefer explicit current GET observer, fallback to parsed query observer
+            if (array_key_exists('observer', $_GET) && ($_GET['observer'] != '')) {
+                $queries['observer'] = $objUtil->checkGetKey('observer');
+            } elseif (array_key_exists('observer', $query) && ($query['observer'] != '')) {
                 $queries['observer'] = $query['observer'];
             }
-            $seenpar = (array_key_exists('seen', $query) && ($query['seen'] != '')) ? $query['seen'] : 'A';
-            $exact = (array_key_exists('exactinstrumentlocation', $query) && ($query['exactinstrumentlocation'] != '')) ? $query['exactinstrumentlocation'] : 0;
+            $seenpar = (array_key_exists('seen', $_GET) && ($_GET['seen'] != '')) ? $_GET['seen'] : ((array_key_exists('seen', $query) && ($query['seen'] != '')) ? $query['seen'] : 'A');
+            $exact = (array_key_exists('exactinstrumentlocation', $_GET) && ($_GET['exactinstrumentlocation'] != '')) ? $_GET['exactinstrumentlocation'] : ((array_key_exists('exactinstrumentlocation', $query) && ($query['exactinstrumentlocation'] != '')) ? $query['exactinstrumentlocation'] : 0);
             $_SESSION['Qobs'] = $objObservation->getObservationFromQuery($queries, $seenpar, $exact);
         }
         echo "<table class=\"table sort-tableObject tablesorter custom-popup\">";
