@@ -1664,6 +1664,10 @@ Correct observations which have been imported will not be registered for a secon
                     foreach ($get as $key => $value) {
                         $result[$j][$key] = $value;
                     }
+                    // Normalize common column name casing differences (e.g. hasdrawing -> hasDrawing)
+                    if (array_key_exists('hasdrawing', $result[$j]) && !array_key_exists('hasDrawing', $result[$j])) {
+                        $result[$j]['hasDrawing'] = $result[$j]['hasdrawing'];
+                    }
                     $j++;
                 }
             }
