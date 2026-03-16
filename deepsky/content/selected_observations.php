@@ -62,6 +62,14 @@ function selected_observations()
                 }
             }
             error_log("selected_observations: observer=" . $queries['observer'] . " drawings=" . $draw . " Qobs_count=" . $total . " hasDrawing_count=" . $hasCount);
+            if ($total > 0 && function_exists('error_log')) {
+                $first = $_SESSION['Qobs'][0];
+                $keys = implode(',', array_keys((array)$first));
+                error_log("selected_observations: first_keys=" . $keys);
+                // dump a few representative fields
+                $dump = array_intersect_key((array)$first, array_flip(array('observationid','observerid','hasdrawing','hasDrawing','observationdescription')));
+                error_log('selected_observations: first_sample=' . var_export($dump, true));
+            }
         }
     }
     foreach ($_GET as $key => $value) {
