@@ -1636,6 +1636,10 @@ Correct observations which have been imported will not be registered for a secon
             $sql .= " ORDER BY observationid DESC";
         }
         $sql = $sql . ";";
+        // Debug: if caller requested only observations with drawings, log the SQL
+        if (isset($queries["hasDrawing"]) && ($queries["hasDrawing"] == 'on') && function_exists('error_log')) {
+            error_log("getObservationFromQuery: hasDrawing=on SQL=" . str_replace("\n", " ", $sql));
+        }
         $run = $objDatabase->selectRecordset($sql);
         if (!array_key_exists('countquery', $queries)) {
             $j = 0;
