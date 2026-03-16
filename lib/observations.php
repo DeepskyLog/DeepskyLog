@@ -1639,8 +1639,8 @@ Correct observations which have been imported will not be registered for a secon
             $sql .= " ORDER BY observationid DESC";
         }
         $sql = $sql . ";";
-        //echo $sql.'<p>'; //======================================= HANDY DEBUG LINE
-        //exit;
+        // DEBUG: log the final SQL to diagnose why observer filter isn't applied
+        error_log("[getObservationFromQuery] SQL: " . $sql);
         $run = $objDatabase->selectRecordset($sql);
         if (!array_key_exists('countquery', $queries)) {
             $j = 0;
