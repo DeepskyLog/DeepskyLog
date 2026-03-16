@@ -2191,10 +2191,22 @@ Correct observations which have been imported will not be registered for a secon
         parse_str($parsed, $query);
 
         if (array_key_exists('object', $query)) {
+            // Build query preserving object and optional related filters
             $queries = array(
-                    "object" => $query['object']
+                "object" => $query['object']
             );
-            $_SESSION['Qobs'] = $objObservation->getObservationFromQuery($queries);
+            if (array_key_exists('catalog', $query) && ($query['catalog'] != '')) {
+                $queries['catalog'] = $query['catalog'];
+            }
+            if (array_key_exists('number', $query) && ($query['number'] != '')) {
+                $queries['number'] = $query['number'];
+            }
+            if (array_key_exists('observer', $query) && ($query['observer'] != '')) {
+                $queries['observer'] = $query['observer'];
+            }
+            $seenpar = (array_key_exists('seen', $query) && ($query['seen'] != '')) ? $query['seen'] : 'A';
+            $exact = (array_key_exists('exactinstrumentlocation', $query) && ($query['exactinstrumentlocation'] != '')) ? $query['exactinstrumentlocation'] : 0;
+            $_SESSION['Qobs'] = $objObservation->getObservationFromQuery($queries, $seenpar, $exact);
         }
         echo "<table class=\"table sort-tableObject tablesorter custom-popup\">";
         echo "<thead>";
