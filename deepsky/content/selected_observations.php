@@ -51,6 +51,19 @@ function selected_observations()
             $objUtil->checkGetKey('seen', 'A'),
             $objUtil->checkGetKey('exactinstrumentlocation', 0)
         );
+        // If drawings filter requested, ensure only observations with a drawing remain
+        if ($objUtil->checkGetKey('drawings', 'off') == 'on') {
+            $filtered = array();
+            foreach ((array) $_SESSION['Qobs'] as $qo) {
+                $has = (isset($qo['hasDrawing']) ? $qo['hasDrawing'] : $objObservation->getDsObservationProperty($qo['observationid'], 'hasDrawing'));
+                if ($has) {
+                    $filtered[] = $qo;
+                }
+            }
+            $_SESSION['Qobs'] = $filtered;
+            // adjust total count as well
+            $_SESSION['QobsTotal'] = count($_SESSION['Qobs']);
+        }
         // Debug: log whether drawings filter applied and how many observations returned
         if (function_exists('error_log')) {
             $draw = $objUtil->checkGetKey('drawings', 'off');
