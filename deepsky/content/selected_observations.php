@@ -85,6 +85,11 @@ function selected_observations()
             }
         }
     }
+    // If a full query was submitted (from object links), run the query builder
+    // to populate $_SESSION['Qobs'] (this honors the drawings filter).
+    if (array_key_exists('query', $_GET) && ($_GET['query'] != '')) {
+        include_once __DIR__ . '/../data/data_get_observations.php';
+    }
     foreach ($_GET as $key => $value) {
         if (!in_array($key, [
                 'indexAction',
