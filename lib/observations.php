@@ -1292,10 +1292,7 @@ Correct observations which have been imported will not be registered for a secon
      */
     public function getObservationFromQuery($queries, $seenpar = "A", $exact = "0")
     {
-        // DEBUG: log incoming query parameters to help diagnose filtering issues
-        if (array_key_exists('observer', $queries) || array_key_exists('object', $queries)) {
-            error_log("[getObservationFromQuery] queries=" . print_r($queries, true) . " seenpar=$seenpar exact=$exact");
-        }
+        
         global $objInstrument, $objEyepiece, $objFilter, $objLens, $objLocation;
         global $objDatabase, $loggedUser;
         @ini_set('memory_limit', '512M');
@@ -1639,8 +1636,6 @@ Correct observations which have been imported will not be registered for a secon
             $sql .= " ORDER BY observationid DESC";
         }
         $sql = $sql . ";";
-        // DEBUG: log the final SQL to diagnose why observer filter isn't applied
-        error_log("[getObservationFromQuery] SQL: " . $sql);
         $run = $objDatabase->selectRecordset($sql);
         if (!array_key_exists('countquery', $queries)) {
             $j = 0;

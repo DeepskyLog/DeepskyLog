@@ -99,10 +99,6 @@ function data_get_observations()
                    "minobservation"   => ($objUtil->checkGetKey('newobservations') ? $objObserver->getObserverProperty($loggedUser, 'lastReadObservationId', 0) : 0),
                    "seen"             => $objUtil->checkGetKey('seen', 'A'),
                    "includefile"      => $includeFile);
-    // DEBUG: log constructed query parameters for troubleshooting observer filtering
-    if (isset($_GET['observer']) || isset($_GET['catalog']) || isset($_GET['number'])) {
-        error_log("[data_get_observations] query params: " . print_r($query, true));
-    }
     // If user requested only new observations, clear any cached query
     // so we fetch fresh results for this session.
     if ($objUtil->checkGetKey('newobservations')) {
