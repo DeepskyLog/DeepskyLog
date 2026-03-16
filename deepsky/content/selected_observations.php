@@ -89,6 +89,18 @@ function selected_observations()
     // to populate $_SESSION['Qobs'] (this honors the drawings filter).
     if (array_key_exists('query', $_GET) && ($_GET['query'] != '')) {
         include_once __DIR__ . '/../data/data_get_observations.php';
+        // If drawings filter requested for a full query, ensure only observations with drawings remain
+        if ($objUtil->checkGetKey('drawings', 'off') == 'on' && array_key_exists('Qobs', $_SESSION)) {
+            $filtered = array();
+            foreach ((array) $_SESSION['Qobs'] as $qo) {
+                $has = (isset($qo['hasDrawing']) ? $qo['hasDrawing'] : $objObservation->getDsObservationProperty($qo['observationid'], 'hasDrawing'));
+                if ($has) {
+                    $filtered[] = $qo;
+                }
+            }
+            $_SESSION['Qobs'] = $filtered;
+            $_SESSION['QobsTotal'] = count($_SESSION['Qobs']);
+        }
     }
     foreach ($_GET as $key => $value) {
         if (!in_array($key, [
