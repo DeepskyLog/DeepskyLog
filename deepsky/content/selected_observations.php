@@ -26,6 +26,16 @@ function selected_observations()
             'hasDrawing' => $objUtil->checkGetKey('drawings', 'off'),
             'hasNoDrawing' => $objUtil->checkGetKey('nodrawings', 'off')
         );
+        // Clear any cached query results to ensure filters like drawings are applied
+        if (isset($_SESSION['Qobs'])) {
+            unset($_SESSION['Qobs']);
+        }
+        if (isset($_SESSION['QobsParams'])) {
+            unset($_SESSION['QobsParams']);
+        }
+        if (isset($_SESSION['QobsTotal'])) {
+            unset($_SESSION['QobsTotal']);
+        }
         if (array_key_exists('object', $_GET) && ($_GET['object'] != '')) {
             $queries['object'] = $objUtil->checkGetKey('object');
         } else {
@@ -41,6 +51,13 @@ function selected_observations()
             $objUtil->checkGetKey('seen', 'A'),
             $objUtil->checkGetKey('exactinstrumentlocation', 0)
         );
+        // Debug: log whether drawings filter applied and how many observations returned
+        if (function_exists('error_log')) {
+            $draw = $objUtil->checkGetKey('drawings', 'off');
+            error_log("selected_observations: observer=" . $queries['observer'] . " drawings=" . $draw . " Qobs_count=" . count(
+                (array) $_SESSION['Qobs']
+            ));
+        }
     }
     foreach ($_GET as $key => $value) {
         if (!in_array($key, [
