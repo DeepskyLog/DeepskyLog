@@ -436,8 +436,12 @@ class Observers
             "SELECT firstname, name FROM observers WHERE id = \""
             . $id . "\""
         );
+        if ((!is_array($names)) || (count($names) == 0)) {
+            return '';
+        }
         $name = $names[0];
-        return $name["firstname"] . " " . $name["name"];
+        return (isset($name["firstname"]) ? $name["firstname"] : '')
+            . " " . (isset($name["name"]) ? $name["name"] : '');
     }
     /**
      * Shows a page with the top observers.
