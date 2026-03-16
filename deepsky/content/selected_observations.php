@@ -18,11 +18,22 @@ function selected_observations()
         $_SESSION['Qobs'] = $objSession->getObservations($sessionid);
     }
     // If an observer is requested directly via GET, fetch observations
-    // for that observer so the page shows the correct filtered results.
+    // for that observer. If an object/catalog+number is provided as well,
+    // include those filters so both observer and object selection are applied.
     if (array_key_exists('observer', $_GET) && ($_GET['observer'] != '')) {
         $queries = array(
             'observer' => $objUtil->checkGetKey('observer')
         );
+        if (array_key_exists('object', $_GET) && ($_GET['object'] != '')) {
+            $queries['object'] = $objUtil->checkGetKey('object');
+        } else {
+            $cat = $objUtil->checkGetKey('catalog');
+            $num = $objUtil->checkGetKey('number');
+            if ($cat || $num) {
+                $queries['catalog'] = $cat;
+                $queries['number'] = $num;
+            }
+        }
         $_SESSION['Qobs'] = $objObservation->getObservationFromQuery(
             $queries,
             $objUtil->checkGetKey('seen', 'A'),
