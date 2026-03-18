@@ -24,4 +24,13 @@ class DeepskyObjectPolicy
     {
         return $user->isAdministrator() || $user->isDatabaseExpert();
     }
+
+    /**
+     * Determine if the user can delete the object.
+     * Only Administrators and Database Experts can delete objects.
+     */
+    public function delete(User $user, DeepskyObject $object): bool
+    {
+        return $user->isAdministrator() || $user->isDatabaseExpert();
+    }
 }

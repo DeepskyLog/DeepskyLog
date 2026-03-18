@@ -361,6 +361,10 @@ Route::put('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'upd
 Route::post('/object/{slug}/update-from-simbad', [App\Http\Controllers\ObjectController::class, 'updateFromSimbad'])
     ->name('object.updateFromSimbad')->middleware(['auth', 'doNotCacheResponse']);
 
+// Delete object (only for admins and database experts)
+Route::delete('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'destroy'])
+    ->name('object.destroy')->middleware(['auth', 'doNotCacheResponse']);
+
 // Nearby names PDF export (uses query params ra, dec, radius)
 Route::get('/object/{slug}/nearby-names.pdf', [App\Http\Controllers\NearbyExportController::class, 'namesPdf'])
     ->name('object.nearby.names.pdf')->middleware('doNotCacheResponse');

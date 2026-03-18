@@ -4,11 +4,8 @@
 
 ## Next steps
 
-+ [ ] Make old version work with the new object tables?
-
 + [ ] Targets
-  + [ ] Administrator / Database expert pages to add / delete objects
-    + [ ] Delete object, but make sure to check because we don't want to delete an object that is used in an observation, session, ...
+  + [ ] Administrator / Database expert pages to add  objects
     + [ ] Add object, with option to fetch data from Simbad.  For all DeepskyLog users.
   + [ ] Catalogs page
   + [ ] Search targets, first by name, then by type, constellation, ...
