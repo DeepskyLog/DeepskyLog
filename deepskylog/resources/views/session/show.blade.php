@@ -176,10 +176,16 @@
 
                 <section>
                     <h3 class="text-lg font-semibold text-white">{{ __('Observations by :owner', ['owner' => $selectedObserverName ?? $user->name]) }}</h3>
+                    @php
+                        $tr = null;
+                        if (auth()->check() && auth()->user()->translate) {
+                            $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(auth()->user()->language);
+                        }
+                    @endphp
                     @if($observations->count() > 0)
                         @foreach($observations as $observation)
                             @if(isset($observation->objectname))
-                                <x-observation-deepsky :observation="$observation" />
+                                <x-observation-deepsky :observation="$observation" :translator="$tr" />
                             @else
                                 <x-observation-comet :observation="$observation" />
                             @endif

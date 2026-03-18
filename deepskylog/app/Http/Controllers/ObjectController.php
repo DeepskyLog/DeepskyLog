@@ -4246,4 +4246,102 @@ class ObjectController extends Controller
             return redirect()->back()->with('error', __('An error occurred while updating from SIMBAD: ') . $e->getMessage());
         }
     }
+
+    /**
+     * Delete an object. If a moveToSlug is provided, move all observations to the target object first.
+     * Only Administrators and Database Experts can delete objects.
+     */
+    public function destroy(Request $request, string $slug)
+    {
+        // Resolve the object
+        $record = null;
+        $on = DB::table('objectnames')
+            ->where('slug', $slug)
+            ->orWhereRaw('LOWER(objectname) = ?', [mb_strtolower($slug)])
+            ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($slug)])
+            ->first();
+
+        if ($on) {
+            $record = DB::table('objects')->where('name', $on->objectname)->first();
+        }
+        if (!$record) {
+            $record = DB::table('objects')->where('slug', $slug)->first();
+        }
+        if (!$record) {
+            $record = DB::table('objects')->where('name', $slug)->first();
+        }
+
+        if (!$record) {
+            abort(404, 'Object not found');
+        }
+
+        $object = DeepskyObject::where('name', $record->name)->firstOrFail();
+
+        // Authorize – only admins and database experts
+        $this->authorize('delete', $object);
+
+        $objectName = $object->name;
+
+        // Move observations to another object if requested
+        $moveToSlug = $request->input('move_to_slug');
+        if (!empty($moveToSlug)) {
+            // Resolve the target object
+            $targetRecord = null;
+            $targetOn = DB::table('objectnames')
+                ->where('slug', $moveToSlug)
+                ->orWhereRaw('LOWER(objectname) = ?', [mb_strtolower($moveToSlug)])
+                ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($moveToSlug)])
+                ->first();
+
+            if ($targetOn) {
+                $targetRecord = DB::table('objects')->where('name', $targetOn->objectname)->first();
+            }
+            if (!$targetRecord) {
+                $targetRecord = DB::table('objects')->where('slug', $moveToSlug)->first();
+            }
+            if (!$targetRecord) {
+                $targetRecord = DB::table('objects')->where('name', $moveToSlug)->first();
+            }
+
+            if (!$targetRecord) {
+                return redirect()->back()->with('error', __('Target object not found.'));
+            }
+
+            $targetName = $targetRecord->name;
+
+            // Move observations in the legacy database
+            DB::connection('mysqlOld')
+                ->table('observations')
+                ->where('objectname', $objectName)
+                ->update(['objectname' => $targetName]);
+
+            // Move observing list entries in the legacy database
+            DB::connection('mysqlOld')
+                ->table('observerobjectlist')
+                ->where('objectname', $objectName)
+                ->update(['objectname' => $targetName]);
+        } else {
+            // No move target — remove any observing list entries for this object
+            DB::connection('mysqlOld')
+                ->table('observerobjectlist')
+                ->where('objectname', $objectName)
+                ->delete();
+        }
+
+        // Remove associated records
+        DB::table('objectnames')->where('objectname', $objectName)->delete();
+        DB::table('objectpartof')->where('objectname', $objectName)->orWhere('partofname', $objectName)->delete();
+        DB::table('search_index')->where('name', $objectName)->delete();
+
+        // Delete the object itself
+        $object->delete();
+
+        Log::info('Object deleted', [
+            'object' => $objectName,
+            'moved_to' => $moveToSlug ?? null,
+            'deleted_by' => Auth::id(),
+        ]);
+
+        return redirect()->route('dashboard')->with('success', __('Object :name has been deleted.', ['name' => $objectName]));
+    }
 }

@@ -67,7 +67,11 @@
 
         // Translator instance is provided by the parent view to avoid creating
         // a new translator object for every rendered observation (memory heavy).
+        // Fall back to creating one if none was provided but translation is on.
         $tr = $translator ?? null;
+        if ($tr === null && auth()->check() && auth()->user()->translate) {
+            $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(auth()->user()->language);
+        }
     @endphp
 
     <div class="mr-4">

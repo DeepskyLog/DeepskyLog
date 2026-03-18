@@ -37,6 +37,11 @@
                                 </svg>
                                 {{ __('Edit Object') }}
                             </a>
+
+                            @livewire('delete-object-modal', [
+                                'objectSlug' => $objSlugTop,
+                                'objectName' => html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                            ])
                         @endif
                     @endauth
                 </div>
