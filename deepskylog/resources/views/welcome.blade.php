@@ -341,9 +341,16 @@
             <div class="mt-2">
                 <x-card>
                     <div class="grid-cols-1 px-5">
+                        @php
+                            $tr = null;
+                            if (auth()->check() && auth()->user()->translate) {
+                                $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(auth()->user()->language);
+                            }
+                        @endphp
                         @foreach ($observations as $observation)
                             <x-observation-deepsky
                                 :observation="$observation"
+                                :translator="$tr"
                                 :preloaded_user="$preloadedUsers[$observation->observerid] ?? null"
                                 :preloaded_object="$preloadedObjects[$observation->objectname] ?? null"
                                 :preloaded_location="$preloadedLocations[$observation->locationid] ?? null"
