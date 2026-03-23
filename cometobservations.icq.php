@@ -164,8 +164,8 @@
   global $objCometObject;
   global $objInstrument;
 
-  $_SESSION['module'] = 'comets';
-  $result = $_SESSION['observation_query'];
+    $_SESSION['module'] = 'comets';
+    $result = (isset($objUtil) && method_exists($objUtil, 'checkSessionKey')) ? $objUtil->checkSessionKey('observation_query', array()) : (isset($_SESSION['observation_query']) ? $_SESSION['observation_query'] : array());
 
   if (!empty($result)) {
       //print "ICQ LIST OF OBSERVATIONS";

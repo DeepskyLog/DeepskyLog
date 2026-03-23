@@ -75,7 +75,7 @@ function overview_observations()
 
             $temp = $objCometObservation->getInstrumentId($value);
             $instrument = $objInstrument->getInstrumentPropertyFromId($temp, 'name');
-            $instrumentsize = round($objInstrument->getInstrumentPropertyFromId($temp, 'diameter'), 0);
+            $instrumentsize = round(floatval($objInstrument->getInstrumentPropertyFromId($temp, 'diameter')), 0);
             if ($instrument == "Naked eye") {
                 $instrument = _("Naked Eye");
             }

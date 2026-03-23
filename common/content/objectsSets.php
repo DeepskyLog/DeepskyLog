@@ -26,6 +26,9 @@ function objectsSets()
     $starsd = $objObserver->getObserverProperty($loggedUser, 'detailstars', '');
     $foto1 = $objObserver->getObserverProperty($loggedUser, 'photosize1', '');
     $foto2 = $objObserver->getObserverProperty($loggedUser, 'photosize2', '');
+    if (!array_key_exists('Qobj', $_SESSION) || !is_array($_SESSION['Qobj'])) {
+        $_SESSION['Qobj'] = array();
+    }
     $k = count($_SESSION['Qobj']);
     echo "<script type=\"text/javascript\" src=\"".$baseURL."common/content/objectsSets.js\"></script>";
     echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";

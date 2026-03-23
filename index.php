@@ -52,7 +52,13 @@ try {
 
     include_once 'common/entryexit/menu.php';
     echo "   <div class=\"col-sm-10 move\">";
-    include_once $includeFile;
+    if (!empty($includeFile) && is_string($includeFile) && is_file($includeFile) && is_readable($includeFile)) {
+        include_once $includeFile;
+    } else {
+        error_log('index.php: includeFile missing or not found: ' . var_export($includeFile, true));
+        // Fallback to default main page
+        include_once 'deepsky/content/main.php';
+    }
     echo "    </div>
     </div>
     </div>";
@@ -126,7 +132,7 @@ if ($includeFile == 'deepsky/content/view_catalogs.php') {
 echo "</script>";
 
 // Modal to make a new list
-if ($_SESSION['module'] == 'deepsky' && $loggedUser) {
+if (isset($_SESSION['module']) && $_SESSION['module'] == 'deepsky' && $loggedUser) {
     echo "<div class=\"modal fade\" id=\"addList\">
     <div class=\"modal-dialog\">
     <div class=\"modal-content\">

@@ -337,9 +337,9 @@ class Objects
         if ($loggedUser) {
             if (substr($seenDetails, 0, 1) == 'Y') {
                 // object has been seen by the observer logged in
-                $obj = preg_split('/ /', $object);
-                $cat = $obj[0];
-                $number = $obj[1];
+                $obj = preg_split('/\s+/', $object, 2);
+                $cat = isset($obj[0]) ? $obj[0] : '';
+                $number = isset($obj[1]) ? $obj[1] : '';
                 $seen = '<a href="'.$baseURL.'index.php?indexAction=result_selected_observations&amp;catalog='.$cat.'&amp;number='.rawurlencode($number).'&amp;observer='.urlencode($loggedUser).'" title="'.
                     _('Object already observed by me').'">'.$seenDetails.'</a>';
             }
@@ -860,9 +860,9 @@ class Objects
         echo '  <td>'._('Number of drawings').'</td>';
         $run4 = $objDatabase->selectRecordset('SELECT COUNT(observations.id) As totDraw FROM observations WHERE objectname = "'.$object.'" AND visibility != 7 AND hasDrawing=1');
         $totDraw = $run4->fetch(PDO::FETCH_OBJ)->totDraw;
-        $obj = preg_split('/ /', $object);
-        $cat = $obj[0];
-        $number = $obj[1];
+        $obj = preg_split('/\s+/', $object, 2);
+        $cat = isset($obj[0]) ? $obj[0] : '';
+        $number = isset($obj[1]) ? $obj[1] : '';
         if ($totDraw > 0) {
             echo '  <td><a href="'.$baseURL.'index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog='.$cat.'&number='.rawurlencode($number).'&drawings=on">'.$totDraw.'</a></td>';
         } else {

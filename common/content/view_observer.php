@@ -28,7 +28,7 @@ function viewObserver()
 {
     global $user, $modules, $deepsky, $comets, $baseURL, $instDir, $loggedUser;
     global $objDatabase, $objAccomplishments, $objInstrument, $objPresentations;
-    global $objObservation, $objUtil, $objCometObservation, $objObserver;
+    global $objObservation, $objUtil, $objCometObservation, $objObserver, $objObject;
     global $objLocation;
 
     $name = $objObserver->getObserverProperty($user, 'name');
@@ -325,7 +325,7 @@ function viewObserver()
                 $objObserver->setObserverProperty(
                     $loggedUser, 'stdtelescope', $_GET['activeTelescopeId']
                 );
-                if (array_key_exists('Qobj', $_SESSION)) {
+                if (array_key_exists('Qobj', $_SESSION) && isset($objObject) && is_object($objObject)) {
                     $_SESSION['Qobj'] = $objObject->getObjectVisibilities(
                         $_SESSION ['Qobj']
                     );

@@ -246,6 +246,7 @@ class Lists
 
         // Get all the lists of the observer
         $lists = $this->getMyLists();
+        $results = array();
 
         if ($public) {
             foreach ($lists as $list) {

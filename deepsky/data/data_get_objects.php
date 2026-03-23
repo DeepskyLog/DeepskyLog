@@ -21,16 +21,18 @@ function data_get_objects()
             $validQobj = true;
         }
         if ($validQobj) {
-            foreach ($_SERVER['QobjParams'] as $key => $value) {
-                if ((!array_key_exists($key, $_SESSION['QobsParams']) || ($value != $_SESSION['QobsParams'][$key])) && ($key != 'source')) {
+            foreach ($objUtil->checkSessionKey('QobjParams', array()) as $key => $value) {
+                $qobs = $objUtil->checkSessionKey('QobsParams', array());
+                if ((!array_key_exists($key, $qobs) || ($value != $qobs[$key])) && ($key != 'source')) {
                     $validQobj = false;
                     break;
                 }
             }
         }
         if ($validQobj) {
-            foreach ($_SESSION['QobsParams'] as $key => $value) {
-                if (!array_key_exists($key, $_SESSION ['QobjParams']) || ($value != $_SESSION ['QobjParams'] [$key])) {
+            foreach ($objUtil->checkSessionKey('QobsParams', array()) as $key => $value) {
+                $qobj = $objUtil->checkSessionKey('QobjParams', array());
+                if (!array_key_exists($key, $qobj) || ($value != $qobj[$key])) {
                     $validQobj = false;
                     break;
                 }
@@ -41,9 +43,9 @@ function data_get_objects()
         }
         if (!$validQobj) {
             $obj = $objObject->getSeenObjectDetails($objObservation->getObjectsFromObservations($_SESSION ['Qobs'], $showPartOfs), 'A');
-            $_SESSION ['QobjParams'] = array_merge(array(
+                $_SESSION ['QobjParams'] = array_merge(array(
                     'source' => 'observation_query'
-            ), $_SESSION ['QobsParams']);
+                ), $objUtil->checkSessionKey('QobsParams', array()));
             $_SESSION ['QobjPO'] = $showPartOfs;
             $_SESSION ['Qobj'] = $obj;
         }
@@ -260,7 +262,7 @@ function data_get_objects()
             } else {
                 $size_min_units = 'min';
                 $minSize = $_GET ['minSize'];
-                $minSizeC = $_GET ['minSize'] * 60;
+                $minSizeC = floatval($_GET ['minSize']) * 60;
             }
         }
         // MAXIMUM SIZE
@@ -276,7 +278,7 @@ function data_get_objects()
             } else {
                 $size_max_units = 'min';
                 $maxSize = $_GET ['maxSize'];
-                $maxSizeC = $_GET ['maxSize'] * 60;
+                $maxSizeC = floatval($_GET ['maxSize']) * 60;
             }
         }
         // MIN CONTRAST
@@ -297,7 +299,7 @@ function data_get_objects()
         }
         // DESCRIPTION CONTAINS
         $descriptioncontains = $objUtil->checkGetKey('descriptioncontains');
-        if ($minDecl && $maxDecl && ($minDecl < $MaxDecl)) {
+        if ($minDecl && $maxDecl && ($minDecl < $maxDecl)) {
             $minDeclError = true;
             $maxDeclError = true;
         }

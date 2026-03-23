@@ -18,8 +18,8 @@ function data_get_observations()
     $object = '';
     $MaxCnt = $objObservation->getMaxObservation();
     //=========================================================================================== LOOKING FOR SPECIFIC OBJECT, OR LOOKING FOR SOME OTHER CHARACTERISTIC ============================================================
-    if(array_key_exists('number', $_GET) && $_GET['number']) {
-        $objectarray = $objObject->getLikeDsObject("", $_GET['catalog'], $_GET['number']);
+    if ($objUtil->checkGetKey('number')) {
+        $objectarray = $objObject->getLikeDsObject("", $objUtil->checkGetKey('catalog'), $objUtil->checkGetKey('number'));
         if(count($objectarray) == 1) {
             $object = $objectarray[0];
         }

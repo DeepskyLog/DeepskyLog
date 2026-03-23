@@ -90,6 +90,10 @@ class DatabaseMux
         for ($i = 0; $i < $len; $i++) {
             $ch = $sql[$i];
             if ($ch === "'" && !$inDouble) {
+                // treat backslash-escaped single-quotes as escaped too
+                if ($i > 0 && $sql[$i - 1] === '\\') {
+                    continue;
+                }
                 // handle doubled single-quotes as escaped single-quote
                 if ($inSingle && ($i + 1 < $len) && $sql[$i + 1] === "'") {
                     $i++;
@@ -99,6 +103,10 @@ class DatabaseMux
                 continue;
             }
             if ($ch === '"' && !$inSingle) {
+                // treat backslash-escaped double-quotes as escaped too
+                if ($i > 0 && $sql[$i - 1] === '\\') {
+                    continue;
+                }
                 // handle doubled double-quotes as escaped double-quote
                 if ($inDouble && ($i + 1 < $len) && $sql[$i + 1] === '"') {
                     $i++;
@@ -316,6 +324,10 @@ class DatabaseMux
             for ($i = 0; $i < $len; $i++) {
                 $ch = $s[$i];
                 if ($ch === "'" && !$inDouble) {
+                    // treat backslash-escaped single-quotes as escaped too
+                    if ($i > 0 && $s[$i - 1] === '\\') {
+                        continue;
+                    }
                     // handle doubled single-quotes as escaped quotes
                     if ($inSingle && ($i+1 < $len) && $s[$i+1] === "'") {
                         $i++; // skip escaped quote
@@ -325,6 +337,10 @@ class DatabaseMux
                     continue;
                 }
                 if ($ch === '"' && !$inSingle) {
+                    // treat backslash-escaped double-quotes as escaped too
+                    if ($i > 0 && $s[$i - 1] === '\\') {
+                        continue;
+                    }
                     if ($inDouble && ($i+1 < $len) && $s[$i+1] === '"') {
                         $i++;
                         continue;
