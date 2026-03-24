@@ -1,6 +1,6 @@
 @php $e = $ephemerides ?? null; @endphp
 
-<tbody wire:key="object-ephemerides-{{ $objectId ?? 'none' }}">
+<tbody wire:key="object-ephemerides-{{ $objectId ?? 'none' }}" @if(empty($ephemerides)) wire:poll.5s="pollCache" @endif>
     @if (!$e)
         @auth
             <tr>
