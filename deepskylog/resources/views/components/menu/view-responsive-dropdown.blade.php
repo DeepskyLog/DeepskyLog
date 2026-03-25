@@ -67,7 +67,7 @@
             <x-dropdown.item
                 separator
                 icon="pencil-square"
-                href="{{ config('app.old_url') }}/index.php?indexAction=view_catalogs"
+                href="{{ url('/catalogs') }}"
                 label="{{ __('Catalogs') }}"
             />
         </div>
