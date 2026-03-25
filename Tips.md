@@ -11,9 +11,8 @@
 ## Installation on the server
 
 ```bash
-cd /var/www/test.deepskylog.org/DeepskyLog/deepskylog
+cd /mnt/bigdisk/var/www/test.deepskylog.org/deepskylog
 git pull
-module load php83
 php artisan storage:link
 composer update
 npm update
