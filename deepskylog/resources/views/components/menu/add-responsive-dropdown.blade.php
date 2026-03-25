@@ -1,5 +1,5 @@
 <!-- Add Dropdown -->
-@if (! Auth::guest() && ! Auth::user()->isAdministrator() && ! Auth::user()->isDatabaseExpert())
+@if (! Auth::guest())
     <div>
         <div class="border-t border-gray-400 pb-1 pt-4">
             <div class="flex items-center px-4">
@@ -10,6 +10,7 @@
                 </div>
             </div>
             <div class="mt-3 space-y-1">
+                @unless(Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
                 <x-dropdown.item
                     icon="user-plus"
                     href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming"
@@ -63,9 +64,16 @@
                 <x-dropdown.item
                     separator
                     icon="plus-circle"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=add_object"
+                    href="{{ route('object.create') }}"
                     label="{{ __('Object') }}"
                 />
+                @else
+                <x-dropdown.item
+                    icon="plus-circle"
+                    href="{{ route('object.create') }}"
+                    label="{{ __('Object') }}"
+                />
+                @endunless
             </div>
         </div>
     </div>

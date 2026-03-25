@@ -1422,7 +1422,11 @@ class ObjectController extends Controller
                 $atlasCode = $authUser->standardAtlasCode;
                 // Be defensive: only try to read the column if it exists on objects table
                 if (Schema::hasColumn('objects', $atlasCode) && isset($record->{$atlasCode})) {
-                    $atlasPage = $record->{$atlasCode};
+                    // For Millenium Star Atlas use the formatted 'millenium' column (e.g. "158/I") instead of the bare base number
+                    $atlasReadColumn = ($atlasCode === 'milleniumbase' && isset($record->millenium) && !empty($record->millenium))
+                        ? 'millenium'
+                        : $atlasCode;
+                    $atlasPage = $record->{$atlasReadColumn};
                     // Try to load a human-friendly atlas name from Atlas model
                     try {
                         $atlasModel = Atlas::where('code', $atlasCode)->first();
@@ -3800,12 +3804,53 @@ class ObjectController extends Controller
         // Store the original name before updating, for updating related tables
         $originalName = $object->getOriginal('name');
 
+        // Auto-recalculate constellation and all atlas pages from the new coordinates.
+        // parseRaInput() returns degrees; EquatorialCoordinates expects hours.
+        $raHours = $raDegrees / 15.0;
+        $newCon = $validated['con'] ?? $object->con;
+        $atlasData = [];
+        try {
+            $coords = new EquatorialCoordinates($raHours, $declDegrees);
+
+            // Constellation
+            $newCon = $coords->getConstellation();
+
+            // All 17 supported atlas keys
+            foreach ([
+                'urano',
+                'urano_new',
+                'sky',
+                'taki',
+                'psa',
+                'torresB',
+                'torresBC',
+                'torresC',
+                'milleniumbase',
+                'DSLDL',
+                'DSLDP',
+                'DSLLL',
+                'DSLLP',
+                'DSLOL',
+                'DSLOP',
+                'DeepskyHunter',
+                'Interstellarum'
+            ] as $atlasKey) {
+                $atlasData[$atlasKey] = $coords->calculateAtlasPage($atlasKey);
+            }
+
+            // Millenium Star Atlas volume: I=0–8h, II=8–16h, III=>16h
+            $milVol = $raHours <= 8 ? 'I' : ($raHours <= 16 ? 'II' : 'III');
+            $atlasData['millenium'] = $atlasData['milleniumbase'] . '/' . $milVol;
+        } catch (\Throwable $e) {
+            Log::warning('Atlas/constellation recalculation failed during object update', ['error' => $e->getMessage()]);
+        }
+
         // Update the object
-        $object->fill([
+        $object->fill(array_merge([
             'name' => $validated['name'],
             'ra' => $raDegrees,
             'decl' => $declDegrees,
-            'con' => $validated['con'] ?? $object->con,
+            'con' => $newCon,
             'type' => $validated['type'],
             'mag' => $mag,
             'subr' => $subr,
@@ -3815,7 +3860,7 @@ class ObjectController extends Controller
             'pa' => $pa,
             'description' => $validated['description'] ?? $object->description,
             'datasource' => $validated['datasource'] ?? $object->datasource,
-        ]);
+        ], $atlasData));
 
         $object->save();
 
@@ -4098,6 +4143,622 @@ class ObjectController extends Controller
             Log::error('SIMBAD fetch failed', ['error' => $e->getMessage(), 'object' => $object->name]);
             return response()->json(['error' => 'An error occurred while fetching from SIMBAD: ' . $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * Show initial create form (enter name/catalog)
+     */
+    public function create(Request $request)
+    {
+        // Use distinct object catalog codes from objectnames, not atlas chart codes
+        $catalogs = DB::table('objectnames')
+            ->select('catalog')
+            ->whereNotNull('catalog')
+            ->where('catalog', '!=', '')
+            ->distinct()
+            ->orderBy('catalog')
+            ->pluck('catalog');
+
+        return view('object.create_name', compact('catalogs'));
+    }
+
+    /**
+     * POST step 1: validate the name input and redirect to the GET search page.
+     */
+    public function checkName(Request $request)
+    {
+        $request->validate([
+            'catalog' => 'nullable|string',
+            'number' => 'nullable|string',
+            'name' => 'nullable|string',
+        ]);
+
+        return redirect()->route('object.nameSearch', $request->only(['catalog', 'number', 'name']));
+    }
+
+    /**
+     * GET: show paginated similar-name candidates.
+     *
+     * Search strategy when a catalog + numeric number are given (e.g. catalog=M, number=111):
+     *  1. Every object sharing that catindex in *any* catalog (Bochum 111, NGC 111, …)
+     *  2. Objects in the *same* catalog whose catindex is within ±3 (M 108 … M 114)
+     * For a free-text name (DB experts): substring match on objectname / altname.
+     */
+    public function nameSearch(Request $request)
+    {
+        $catalog = trim((string) $request->input('catalog', ''));
+        $number = trim((string) $request->input('number', ''));
+        $freeName = trim((string) $request->input('name', ''));
+
+        // Canonical display name carried through the wizard
+        if ($freeName !== '') {
+            $name = $freeName;
+        } elseif ($catalog !== '' || $number !== '') {
+            $name = trim("$catalog $number");
+        } else {
+            $name = '';
+        }
+
+        // Base query: objectnames → objects → target_types (for human-readable type label)
+        $base = DB::table('objectnames')
+            ->join('objects', 'objectnames.slug', '=', 'objects.slug')
+            ->leftJoin('target_types', 'objects.type', '=', 'target_types.id')
+            ->select(
+                'objectnames.objectname',
+                'objectnames.catalog',
+                'objectnames.catindex',
+                'objects.ra',
+                'objects.decl',
+                'objects.type',
+                'target_types.type as type_label',
+                'objects.slug'
+            );
+
+        $catindex = is_numeric($number) ? (int) $number : null;
+
+        if ($catindex !== null) {
+            $candidates = (clone $base)
+                ->where(function ($q) use ($catindex, $catalog) {
+                    $q->where('objectnames.catindex', $catindex);
+                    if ($catalog !== '') {
+                        $q->orWhere(function ($q2) use ($catalog, $catindex) {
+                            $q2->where('objectnames.catalog', $catalog)
+                                ->whereBetween('objectnames.catindex', [$catindex - 3, $catindex + 3]);
+                        });
+                    }
+                })
+                ->orderBy('objectnames.catalog')
+                ->orderBy('objectnames.catindex')
+                ->paginate(25)
+                ->withQueryString();
+        } elseif ($name !== '') {
+            $q = mb_strtolower($name);
+            $candidates = (clone $base)
+                ->where(function ($qb) use ($q) {
+                    $qb->whereRaw('LOWER(objectnames.objectname) LIKE ?', ["%{$q}%"])
+                        ->orWhereRaw('LOWER(objectnames.altname) LIKE ?', ["%{$q}%"]);
+                })
+                ->orderBy('objectnames.catalog')
+                ->orderBy('objectnames.catindex')
+                ->paginate(25)
+                ->withQueryString();
+        } else {
+            $candidates = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 25);
+        }
+
+        return view('object.name_check', compact('name', 'candidates'));
+    }
+
+    /**
+     * Show coordinates entry form
+     */
+    public function coordsForm(Request $request)
+    {
+        $name = $request->input('name');
+        return view('object.coords', compact('name'));
+    }
+
+    /**
+     * Check nearby objects for given coords
+     */
+    public function checkCoords(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'ra' => 'required|string',
+            'decl' => 'required|string',
+        ]);
+
+        // Validate coordinates before redirecting so we can surface errors early
+        if (
+            DeepskyObject::raToDecimal($request->input('ra')) === null ||
+            DeepskyObject::decToDecimal($request->input('decl')) === null
+        ) {
+            return redirect()->back()->withErrors(['coords' => __('Invalid coordinates provided.')])->withInput();
+        }
+
+        return redirect()->route('object.coordsSearch', $request->only(['name', 'ra', 'decl']));
+    }
+
+    /**
+     * GET: show paginated list of objects near the given coordinates.
+     */
+    public function coordsSearch(Request $request)
+    {
+        $name = $request->input('name');
+        $raInput = $request->input('ra');
+        $decInput = $request->input('decl');
+
+        $raDeg = DeepskyObject::raToDecimal($raInput);
+        $decDeg = DeepskyObject::decToDecimal($decInput);
+
+        if ($raDeg === null || $decDeg === null) {
+            return redirect()->route('object.coordsForm', ['name' => $name])
+                ->withErrors(['coords' => __('Invalid coordinates provided.')]);
+        }
+
+        // DB stores RA in decimal hours (0–24); raToDecimal() returns degrees (0–360).
+        // Convert to hours so the whereBetween comparison is in the same unit as the DB.
+        $raHours = $raDeg / 15.0;
+        $decRadius = 0.5;          // degrees
+        $raRadius = $decRadius / 15.0; // equivalent hours
+
+        $nearby = DB::table('objects')
+            ->leftJoin('target_types', 'objects.type', '=', 'target_types.id')
+            ->select(
+                'objects.name',
+                'objects.slug',
+                'objects.ra',
+                'objects.decl',
+                'objects.type',
+                'target_types.type as type_label'
+            )
+            ->whereBetween('objects.ra', [$raHours - $raRadius, $raHours + $raRadius])
+            ->whereBetween('objects.decl', [$decDeg - $decRadius, $decDeg + $decRadius])
+            ->orderByRaw('ABS(objects.ra - ?) + ABS(objects.decl - ?)', [$raHours, $decDeg])
+            ->paginate(25)
+            ->withQueryString();
+
+        return view('object.coords_check', compact('name', 'raInput', 'decInput', 'nearby'));
+    }
+
+    /**
+     * Show details form for final input
+     */
+    public function detailsForm(Request $request)
+    {
+        $name = $request->input('name');
+        $ra = $request->input('ra');
+        $decl = $request->input('decl');
+        $types = DeepskyType::all();
+
+        $constellation = null;
+        $constellationName = null;
+        try {
+            $raDeg = DeepskyObject::raToDecimal($ra);
+            $decDeg = DeepskyObject::decToDecimal($decl);
+            if ($raDeg !== null && $decDeg !== null) {
+                $raHours = $raDeg / 15.0;
+                $coords = new EquatorialCoordinates($raHours, $decDeg);
+                $constellation = $coords->getConstellation();
+                $constellationName = ConstellationModel::find($constellation)?->name ?? $constellation;
+            }
+        } catch (\Throwable $e) {
+            // Leave $constellation null; it will be auto-calculated in store()
+        }
+
+        return view('object.details', compact('name', 'ra', 'decl', 'types', 'constellation', 'constellationName'));
+    }
+
+    /**
+     * Persist the new object to DB
+     */
+    public function store(Request $request)
+    {
+        // If a new catalog code was provided, normalize to uppercase before validation
+        if ($request->filled('catalog_create_code')) {
+            $request->merge(['catalog_create_code' => strtoupper(trim($request->input('catalog_create_code')))]);
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'ra' => 'nullable|string',
+            'decl' => 'nullable|string',
+            'type' => 'nullable|string',
+            'mag' => 'nullable|numeric',
+            'subr' => 'nullable|numeric',
+            'diam1' => 'nullable|numeric',
+            'diam2' => 'nullable|numeric',
+            'pa' => 'nullable|integer',
+            'catalog' => 'nullable|string',
+            'catalog_create_code' => ['nullable', 'string', 'regex:/^[A-Z0-9_-]{1,10}$/', 'unique:atlases,code'],
+            'catalog_create_description' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        // Convert RA to decimal hours (DB stores hours, not degrees)
+        if (!empty($validated['ra'])) {
+            $raDeg = DeepskyObject::raToDecimal($validated['ra']);
+            if ($raDeg !== null)
+                $validated['ra'] = $raDeg / 15.0;
+        }
+        if (!empty($validated['decl'])) {
+            $decDeg = DeepskyObject::decToDecimal($validated['decl']);
+            if ($decDeg !== null)
+                $validated['decl'] = $decDeg;
+        }
+
+        // Auto-calculate constellation and atlas pages from RA/Dec
+        if (!empty($validated['ra']) && !empty($validated['decl'])) {
+            try {
+                $coords = new EquatorialCoordinates($validated['ra'], $validated['decl']);
+                $validated['con'] = $coords->getConstellation();
+
+                // Calculate atlas page numbers for all supported atlases
+                foreach ([
+                    'urano',
+                    'urano_new',
+                    'sky',
+                    'taki',
+                    'psa',
+                    'torresB',
+                    'torresBC',
+                    'torresC',
+                    'milleniumbase',
+                    'DSLDL',
+                    'DSLDP',
+                    'DSLLL',
+                    'DSLLP',
+                    'DSLOL',
+                    'DSLOP',
+                    'DeepskyHunter',
+                    'Interstellarum'
+                ] as $atlasKey) {
+                    $validated[$atlasKey] = $coords->calculateAtlasPage($atlasKey);
+                }
+
+                // Millenium Star Atlas full ref: page/volume (I=0-8h, II=8-16h, III=16-24h)
+                $raH = $validated['ra'];
+                $milVol = $raH <= 8 ? 'I' : ($raH <= 16 ? 'II' : 'III');
+                $validated['millenium'] = $validated['milleniumbase'] . '/' . $milVol;
+            } catch (\Throwable $e) {
+                Log::warning('Constellation/atlas auto-calculation failed', ['error' => $e->getMessage()]);
+            }
+        }
+
+        // Auto-calculate SBObj: mag + 2.5*log10(2827 * (diam1/60) * (diam2/60))
+        // Use diam2 = diam1 when only one diameter is given (circular object)
+        // At this point diam1/diam2 are in arcminutes (as entered by the user).
+        $mag = $validated['mag'] ?? null;
+        $diam1 = $validated['diam1'] ?? null;
+        $diam2 = $validated['diam2'] ?? null;
+        if ($mag !== null && $mag != 0 && $mag != 99.9 && ($diam1 || $diam2)) {
+            $d1 = ($diam1 ?: $diam2) / 60.0;
+            $d2 = ($diam2 ?: $diam1) / 60.0;
+            $validated['SBObj'] = $mag + 2.5 * log10(2827.0 * $d1 * $d2);
+        }
+
+        // The DB stores diameters in arcseconds; convert from arcminutes before persisting.
+        if (!empty($validated['diam1'])) {
+            $validated['diam1'] = $validated['diam1'] * 60.0;
+        }
+        if (!empty($validated['diam2'])) {
+            $validated['diam2'] = $validated['diam2'] * 60.0;
+        }
+
+        // If privileged user requested creating a new catalog, persist it first
+        try {
+            $user = Auth::user();
+            if ($user && ($user->isAdministrator() || $user->isDatabaseExpert())) {
+                $newCode = trim($request->input('catalog_create_code'));
+                if (!empty($newCode)) {
+                    // Insert if not exists
+                    DB::table('atlases')->insertOrIgnore([
+                        'code' => $newCode,
+                        'name' => $newCode,
+                    ]);
+                    // Make sure the object's catalog references the new code
+                    $validated['catalog'] = $newCode;
+                }
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Catalog creation during object add failed', ['error' => $e->getMessage()]);
+        }
+
+        // Create a DeepskyObject record — only pass columns that exist in the objects table.
+        // Provide empty/zero defaults for legacy NOT NULL columns that have no DB default.
+        try {
+            $defaults = [
+                'ra' => 0.0,
+                'decl' => 0.0,
+                'type' => '',
+                'con' => '',
+                'mag' => 0.0,
+                'subr' => 0.0,
+                'diam1' => 0.0,
+                'diam2' => 0.0,
+                'urano' => 0,
+                'urano_new' => 0,
+                'sky' => 0,
+                'millenium' => '',
+                'taki' => '',
+                'SBObj' => 0.0,
+                'description' => '',
+                'psa' => '',
+                'torresB' => '',
+                'torresBC' => '',
+                'torresC' => '',
+                'milleniumbase' => '',
+                'DSLDL' => '',
+                'DSLDP' => '',
+                'DSLLL' => '',
+                'DSLLP' => '',
+                'DSLOL' => '',
+                'DSLOP' => '',
+                'DeepskyHunter' => '',
+                'Interstellarum' => '',
+            ];
+            $userValues = array_filter(array_intersect_key($validated, array_flip([
+                'name',
+                'type',
+                'con',
+                'ra',
+                'decl',
+                'mag',
+                'subr',
+                'pa',
+                'diam1',
+                'diam2',
+                'SBObj',
+                'urano',
+                'urano_new',
+                'sky',
+                'millenium',
+                'taki',
+                'psa',
+                'torresB',
+                'torresBC',
+                'torresC',
+                'milleniumbase',
+                'DSLDL',
+                'DSLDP',
+                'DSLLL',
+                'DSLLP',
+                'DSLOL',
+                'DSLOP',
+                'DeepskyHunter',
+                'Interstellarum',
+            ])), fn($v) => $v !== null && $v !== '');
+            $objectData = array_merge($defaults, $userValues);
+            $objectData['name'] = $validated['name'];
+            $objectData['slug'] = \Illuminate\Support\Str::slug($validated['name'], '-');
+            $obj = DeepskyObject::create($objectData);
+        } catch (\Exception $e) {
+            Log::error('Failed to create object', ['error' => $e->getMessage(), 'data' => $validated]);
+            return redirect()->back()->withInput()->with('error', __('Failed to create object: :msg', ['msg' => $e->getMessage()]));
+        }
+
+        // Insert a primary entry into objectnames so the catalog appears in the dropdown
+        // on the create page and so object lookups via objectnames.slug work correctly.
+        try {
+            $objName = $objectData['name'];
+            $objSlug = $objectData['slug'];
+
+            // Extract catalog code and catindex from the name (e.g. "Wdm 1" → "Wdm", "1")
+            $catalogCode = '';
+            $catindex = '';
+            if (preg_match('/^([A-Za-z][A-Za-z0-9\-]*)\s+(\S.*)$/', $objName, $m)) {
+                $catalogCode = $m[1];
+                $catindex = $m[2];
+            }
+
+            // Only insert if there is no existing entry for this object name
+            $exists = DB::table('objectnames')->where('objectname', $objName)->exists();
+            if (!$exists) {
+                DB::table('objectnames')->insert([
+                    'objectname' => $objName,
+                    'catalog' => $catalogCode,
+                    'catindex' => $catindex,
+                    'altname' => $objName,
+                    'slug' => $objSlug,
+                    'timestamp' => now(),
+                ]);
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Failed to insert objectnames entry for new object', [
+                'error' => $e->getMessage(),
+                'name' => $objectData['name'] ?? null,
+            ]);
+        }
+
+        return redirect()->route('object.show', ['slug' => $obj->slug ?? $obj->name])->with('success', __('Object added successfully.'));
+    }
+
+    /**
+     * Lookup SIMBAD by arbitrary name (for create wizard)
+     */
+    public function simbadLookupByName(Request $request)
+    {
+        $request->validate(['name' => 'required|string']);
+        $name = $request->input('name');
+        $name = $this->translateObjectNameForSimbad($name);
+
+        $simbadUrl = "https://simbad.cds.unistra.fr/simbad/sim-id?output.format=votable&Ident=" . urlencode($name);
+        $response = @file_get_contents($simbadUrl);
+        if ($response === false) {
+            return response()->json(['error' => 'Failed to fetch data from SIMBAD.'], 500);
+        }
+
+        $xml = simplexml_load_string($response);
+        if (!$xml) {
+            return response()->json(['error' => 'Failed to parse SIMBAD response.'], 500);
+        }
+
+        $namespaces = $xml->getNamespaces(true);
+        $votNs = $namespaces[''] ?? null;
+
+        if ($votNs) {
+            $xml->registerXPathNamespace('vot', $votNs);
+            $rows = $xml->xpath('//vot:TR');
+        } else {
+            $rows = $xml->xpath('//TR');
+        }
+
+        if (empty($rows)) {
+            return response()->json(['error' => 'No data found in SIMBAD for this name.'], 404);
+        }
+
+        $row = $rows[0];
+        $cells = $votNs ? $row->children($votNs) : $row->children();
+        $fields = $votNs ? $xml->xpath('//vot:FIELD') : $xml->xpath('//FIELD');
+
+        // Mapping from SIMBAD OTYPE_S short codes to DeepskyLog type codes
+        $simbadTypeMap = [
+            // Galaxies
+            'G' => 'GALXY',
+            'GiC' => 'GALXY',
+            'GiG' => 'GALXY',
+            'GiP' => 'GALXY',
+            'GiA' => 'GALXY',
+            'BiG' => 'GALXY',
+            'LSB' => 'GALXY',
+            'bCG' => 'GALXY',
+            'EmG' => 'GALXY',
+            'H2G' => 'GALXY',
+            'HzG' => 'GALXY',
+            'IG' => 'GALXY',
+            'Compact_Eg' => 'GALXY',
+            'Sa' => 'GALXY',
+            'SB' => 'GALXY',
+            // AGN / Quasars
+            'AGN' => 'QUASR',
+            'SyG' => 'QUASR',
+            'Sy1' => 'QUASR',
+            'Sy2' => 'QUASR',
+            'QSO' => 'QUASR',
+            'BLL' => 'QUASR',
+            'LIN' => 'QUASR',
+            'Seyfert' => 'QUASR',
+            // Galaxy groups/clusters
+            'ClG' => 'GALCL',
+            'GrG' => 'GALCL',
+            'CGG' => 'GALCL',
+            'PaG' => 'GALCL',
+            // Globular clusters
+            'GlC' => 'GLOCL',
+            'GlA' => 'GLOCL',
+            // Open clusters
+            'Cl*' => 'OPNCL',
+            'OpC' => 'OPNCL',
+            // Associations / Asterisms
+            'As*' => 'ASTER',
+            // Planetary nebulae
+            'PN' => 'PLNNB',
+            'PNe' => 'PLNNB',
+            // Supernova remnants
+            'SNR' => 'SNREM',
+            // Supernovae
+            'SN*' => 'SNOVA',
+            // HII regions
+            'HII' => 'HII',
+            // Reflection nebulae
+            'RNe' => 'REFNB',
+            'RfN' => 'REFNB',
+            // Dark nebulae / molecular clouds
+            'DkN' => 'DRKNB',
+            'MoC' => 'DRKNB',
+            'DNe' => 'DRKNB',
+            // Double/multiple stars
+            '**' => 'DS',
+            // Stars
+            '*' => 'AA1STAR',
+            'V*' => 'AA1STAR',
+            // Emission nebulae
+            'EmO' => 'EMINB',
+            'Neb' => 'BRTNB',
+        ];
+
+        // Priority order for magnitude: V > B > R > G > I (use best available optical band)
+        $magPriority = ['FLUX_V', 'FLUX_B', 'FLUX_R', 'FLUX_G', 'FLUX_I'];
+        $magBestRank = count($magPriority) + 1;
+
+        $data = [];
+        $columnIndex = 0;
+        foreach ($fields as $field) {
+            $fieldName = (string) $field['name'];
+            $value = trim((string) ($cells[$columnIndex] ?? ''));
+            switch ($fieldName) {
+                case 'RA':
+                case 'RA_d':
+                    if ($value !== '' && is_numeric($value)) {
+                        $data['ra'] = floatval($value);
+                    }
+                    break;
+                case 'DEC':
+                case 'DEC_d':
+                    if ($value !== '' && is_numeric($value)) {
+                        $data['decl'] = floatval($value);
+                    }
+                    break;
+                case 'FLUX_V':
+                case 'FLUX_B':
+                case 'FLUX_R':
+                case 'FLUX_G':
+                case 'FLUX_I':
+                    if ($value !== '' && is_numeric($value)) {
+                        $rank = array_search($fieldName, $magPriority);
+                        if ($rank < $magBestRank) {
+                            $magBestRank = $rank;
+                            $data['mag'] = round(floatval($value), 2);
+                        }
+                    }
+                    break;
+                case 'OTYPE_S':
+                    $otype = $value;
+                    // Strip candidate suffix (e.g. AGN_Candidate -> AGN, G_Candidate -> G)
+                    $otypeBase = preg_replace('/_Candidate$/i', '', $otype);
+                    foreach ([$otype, $otypeBase] as $candidate) {
+                        if (!empty($candidate) && isset($simbadTypeMap[$candidate])) {
+                            $data['type_code'] = $simbadTypeMap[$candidate];
+                            break;
+                        }
+                    }
+                    break;
+                case 'GALDIM_MAJAXIS':
+                    if ($value !== '' && is_numeric($value)) {
+                        $data['diam1'] = round(floatval($value), 2);
+                    }
+                    break;
+                case 'GALDIM_MINAXIS':
+                    if ($value !== '' && is_numeric($value)) {
+                        $data['diam2'] = round(floatval($value), 2);
+                    }
+                    break;
+                case 'GALDIM_ANGLE':
+                    if ($value !== '' && is_numeric($value)) {
+                        $data['pa'] = intval(round(floatval($value)));
+                    }
+                    break;
+            }
+            $columnIndex++;
+        }
+
+        // Calculate surface brightness from mag + diameters when available
+        // GALDIM values are in arcminutes; formula: mag + 2.5*log10(2827 * d1 * d2)
+        if (
+            isset($data['mag']) && isset($data['diam1']) && isset($data['diam2'])
+            && $data['diam1'] > 0 && $data['diam2'] > 0
+        ) {
+            $data['subr'] = round(
+                $data['mag'] + 2.5 * log10(2827.0 * ($data['diam1'] / 60.0) * ($data['diam2'] / 60.0)),
+                2
+            );
+        }
+
+        if (empty($data)) {
+            return response()->json(['error' => 'No relevant data found in SIMBAD response.'], 404);
+        }
+
+        return response()->json(['success' => true, 'data' => $data]);
     }
 
     public function updateFromSimbad(Request $request, string $slug)

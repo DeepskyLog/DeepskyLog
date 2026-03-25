@@ -5,8 +5,6 @@
 ## Next steps
 
 + [ ] Targets
-  + [ ] Administrator / Database expert pages to add  objects
-    + [ ] Add object, with option to fetch data from Simbad.  For all DeepskyLog users.
   + [ ] Catalogs page
   + [ ] Search targets, first by name, then by type, constellation, ...
   + [ ] Install sqlite3 on the server to be able to use TNTSearch

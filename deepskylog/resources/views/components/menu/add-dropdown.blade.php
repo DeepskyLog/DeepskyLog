@@ -1,5 +1,5 @@
 <!-- Add Dropdown (converted to reusable menu component) -->
-@if (!Auth::guest() && !Auth::user()->isAdministrator() && !Auth::user()->isDatabaseExpert())
+@if (!Auth::guest())
     <div class="hidden lg:ml-1 lg:flex lg:items-center">
         <div class="relative mr-0 text-sm">
             <x-menu.dropdown :width="56">
@@ -9,6 +9,7 @@
                     </button>
                 </x-slot>
 
+                @unless(Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
                 <x-menu.item icon="user-plus" href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming">{{ __('Observation') }}</x-menu.item>
 
                 {{-- observing list placeholder (kept commented) --}}
@@ -45,7 +46,10 @@
                     {{ __('Instrument sets') }}
                 </x-menu.item>
 
-                <x-menu.item separator icon="plus-circle" href="{{ config('app.old_url') }}/index.php?indexAction=add_object">{{ __('Object') }}</x-menu.item>
+                <x-menu.item separator icon="plus-circle" href="{{ route('object.create') }}">{{ __('Object') }}</x-menu.item>
+                @else
+                <x-menu.item icon="plus-circle" href="{{ route('object.create') }}">{{ __('Object') }}</x-menu.item>
+                @endunless
 
             </x-menu.dropdown>
         </div>

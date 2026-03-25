@@ -346,6 +346,31 @@ Route::get('/object/sun', function () {
     return view('object.sun-page', ['session' => $session, 'ephemerides' => $payload]);
 })->name('object.show.sun')->middleware('doNotCacheResponse');
 
+// Create object multi-step wizard (must be before /object/{slug} so 'create' isn't captured as a slug)
+Route::get('/object/create', [App\Http\Controllers\ObjectController::class, 'create'])
+    ->name('object.create')->middleware(['auth', 'doNotCacheResponse']);
+
+Route::post('/object/check-name', [App\Http\Controllers\ObjectController::class, 'checkName'])
+    ->name('object.checkName')->middleware(['auth', 'doNotCacheResponse']);
+
+Route::get('/object/name-search', [App\Http\Controllers\ObjectController::class, 'nameSearch'])
+    ->name('object.nameSearch')->middleware(['auth', 'doNotCacheResponse']);
+
+Route::get('/object/coords', [App\Http\Controllers\ObjectController::class, 'coordsForm'])
+    ->name('object.coordsForm')->middleware(['auth', 'doNotCacheResponse']);
+
+Route::post('/object/check-coords', [App\Http\Controllers\ObjectController::class, 'checkCoords'])
+    ->name('object.checkCoords')->middleware(['auth', 'doNotCacheResponse']);
+
+Route::get('/object/coords-search', [App\Http\Controllers\ObjectController::class, 'coordsSearch'])
+    ->name('object.coordsSearch')->middleware(['auth', 'doNotCacheResponse']);
+
+Route::get('/object/details', [App\Http\Controllers\ObjectController::class, 'detailsForm'])
+    ->name('object.details')->middleware(['auth', 'doNotCacheResponse']);
+
+Route::post('/object', [App\Http\Controllers\ObjectController::class, 'store'])
+    ->name('object.store')->middleware(['auth', 'doNotCacheResponse']);
+
 Route::get('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'show'])
     ->name('object.show')->middleware('doNotCacheResponse');
 

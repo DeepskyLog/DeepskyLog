@@ -48,6 +48,8 @@ Route::get('search', [SearchController::class, 'search'])->name('api.search');
 Route::get('objects.search', [ObjectController::class, 'searchObjects'])->name('api.objects.search');
 Route::get('constellation-from-coords', [ObjectController::class, 'getConstellationFromCoords'])->name('api.constellation-from-coords');
 Route::get('objects/{slug}/simbad-data', [ObjectController::class, 'fetchSimbadData'])->name('api.objects.simbad-data')->middleware('auth');
+// Lookup SIMBAD by arbitrary name (used by object creation wizard)
+Route::get('objects/simbad-lookup', [ObjectController::class, 'simbadLookupByName'])->name('api.objects.simbad-lookup')->middleware('auth');
 
 Route::get('countries.index', function (Request $request) {
     $allCountries = [];
