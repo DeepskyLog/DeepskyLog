@@ -90,11 +90,9 @@ class CatalogsPage extends Component
         $objects = null;
 
         if (!empty($this->selected)) {
-            // Resolve catalog variants: some rows use short code like 'C' while others use 'Caldwell'.
+            // Resolve catalog variants conservatively: prefer exact (case-insensitive) matches only.
             $catalogVariants = DB::table('objectnames')
                 ->whereRaw('LOWER(catalog) = ?', [strtolower($this->selected)])
-                ->orWhere('catalog', 'like', $this->selected . '%')
-                ->orWhere('catalog', 'like', '%' . $this->selected)
                 ->distinct()
                 ->pluck('catalog')
                 ->toArray();
@@ -102,8 +100,6 @@ class CatalogsPage extends Component
             try {
                 $oldCats = DB::connection('mysqlOld')->table('objectnames')
                     ->whereRaw('LOWER(catalog) = ?', [strtolower($this->selected)])
-                    ->orWhere('catalog', 'like', $this->selected . '%')
-                    ->orWhere('catalog', 'like', '%' . $this->selected)
                     ->distinct()
                     ->pluck('catalog')
                     ->toArray();
@@ -112,8 +108,9 @@ class CatalogsPage extends Component
                 // ignore
             }
 
-            if (empty($catalogVariants)) {
-                $catalogVariants = [$this->selected];
+            // Always include the selected literal value as a fallback (covers exact matches).
+            if (!in_array($this->selected, $catalogVariants, true)) {
+                $catalogVariants[] = $this->selected;
             }
             // Gather slugs from primary objectnames table
             $slugs = DB::table('objectnames')
@@ -138,7 +135,8 @@ class CatalogsPage extends Component
 
             // Ensure non-empty and remove null/empty values
             $slugs = array_values(array_filter($slugs, function ($s) {
-                return !empty($s); }));
+                return !empty($s);
+            }));
 
             // If slugs are missing for many entries, try a fallback: match objects.name
             // against objectnames.objectname and objectnames.altname from primary and legacy tables.
@@ -295,7 +293,8 @@ class CatalogsPage extends Component
 
                 // For any remaining slugs try joining on objects.name -> objectnames.objectname|altname
                 $missing = array_values(array_filter($pageSlugs, function ($s) use ($displayNames) {
-                    return !isset($displayNames[$s]); }));
+                    return !isset($displayNames[$s]);
+                }));
                 if (!empty($missing)) {
                     $joined = DB::table('objects as o')
                         ->join('objectnames as n', function ($join) {
@@ -364,7 +363,8 @@ class CatalogsPage extends Component
 
                 // Finally, ensure every slug has at least the main object name
                 $objsMap = collect($objects->items())->mapWithKeys(function ($o) {
-                    return [$o->slug => $o->name]; })->toArray();
+                    return [$o->slug => $o->name];
+                })->toArray();
                 foreach ($objsMap as $slug => $mainName) {
                     if (!isset($displayNames[$slug]) || empty($displayNames[$slug])) {
                         $displayNames[$slug] = $mainName;
