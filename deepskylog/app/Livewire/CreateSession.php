@@ -231,6 +231,18 @@ class CreateSession extends Component
                 'active' => $activeToSave,
             ]);
 
+            // Bust translation cache so stale cached values (e.g. from when fields were empty)
+            // are not served after the session content is updated.
+            foreach (Cache::get('laravel_locales', ['en', 'nl', 'fr', 'de', 'es']) as $locale) {
+                Cache::forget('session_weather:' . $this->session->id . ':' . $locale);
+                Cache::forget('session_equipment:' . $this->session->id . ':' . $locale);
+                Cache::forget('session_comments:' . $this->session->id . ':' . $locale);
+            }
+            // Always clear 'en' explicitly as a safeguard
+            Cache::forget('session_weather:' . $this->session->id . ':en');
+            Cache::forget('session_equipment:' . $this->session->id . ':en');
+            Cache::forget('session_comments:' . $this->session->id . ':en');
+
             // Keep component state in sync
             $this->session->active = $activeToSave;
             $this->active = $activeToSave;

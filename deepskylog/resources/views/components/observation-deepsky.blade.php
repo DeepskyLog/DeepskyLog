@@ -206,16 +206,12 @@
                 @endif
 
                 <div class="flex-1">
-                    @if (auth()->user() && auth()->user()->translate)
+                    @if (auth()->user() && auth()->user()->translate && ($observation->language ?? 'nl') !== auth()->user()->language)
                         @php
                             $cacheKey = 'observation_deepsky_translation:' . $observation->id . ':' . auth()->user()->language;
-                            $translated = Cache::remember($cacheKey, 60 * 24 * 30, function() use ($observation, $tr) {
-                                try {
-                                    return $tr->translate(html_entity_decode($observation->description));
-                                } catch (\Throwable $e) {
-                                    return null;
-                                }
-                            });
+                            // Non-blocking: serve from cache if available, otherwise show original.
+                            // A background job (TranslateObservationDescriptions) populates the cache asynchronously.
+                            $translated = Cache::get($cacheKey);
                         @endphp
                         {!! $translated ?? html_entity_decode($observation->description) !!}
                     @else

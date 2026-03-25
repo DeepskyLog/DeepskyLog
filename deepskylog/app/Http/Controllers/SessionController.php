@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\TranslateObservationDescriptions;
 use App\Models\CometObservationsOld;
 use App\Models\Location;
 use App\Models\ObservationSession;
@@ -223,52 +224,91 @@ class SessionController extends Controller
             }
         }
 
-        $rawWeather = html_entity_decode($session->weather ?? __('Unknown'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        $weatherTranslated = $rawWeather;
-        if ($shouldTranslate && $lang) {
-            $cacheKey = 'session_weather:'.$session->id.':'.$lang;
-            $weatherTranslated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawWeather, $lang) {
-                try {
-                    $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
-                    $t = $tr->translate($rawWeather);
-
-                    return $t !== null ? $t : $rawWeather;
-                } catch (\Throwable $e) {
-                    return $rawWeather;
-                }
-            });
+        // Dispatch background job to pre-warm translation cache for deep-sky observations on this page.
+        // The blade component uses Cache::get() (non-blocking), so this job populates cache asynchronously.
+        if ($shouldTranslate && $lang && isset($itemsForCurrentPage)) {
+            $deepIds = $itemsForCurrentPage
+                ->filter(fn ($obs) => isset($obs->objectname))
+                ->filter(fn ($obs) => ($obs->language ?? 'nl') !== $lang)  // skip when languages already match
+                ->filter(fn ($obs) => ! Cache::has('observation_deepsky_translation:' . $obs->id . ':' . $lang))
+                ->pluck('id')
+                ->values()
+                ->all();
+            if (! empty($deepIds)) {
+                TranslateObservationDescriptions::dispatch($deepIds, $lang);
+            }
         }
 
-        $rawEquipment = html_entity_decode($session->equipment ?? __('Unknown'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        $equipmentTranslated = $rawEquipment;
-        if ($shouldTranslate && $lang) {
-            $cacheKey = 'session_equipment:'.$session->id.':'.$lang;
-            $equipmentTranslated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawEquipment, $lang) {
+        // Only translate session fields when the user's language actually differs from the session's language.
+        // When they match (e.g. both English), serve the original HTML to preserve TinyMCE formatting.
+        $sessionLanguage = $session->language ?? 'en';
+        $needsTranslation = $shouldTranslate && $lang && $lang !== $sessionLanguage;
+
+        $rawWeather = html_entity_decode($session->weather ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $weatherTranslated = $rawWeather;
+        if ($needsTranslation && trim(strip_tags($rawWeather)) !== '') {
+            $cacheKey = 'session_weather:'.$session->id.':'.$lang;
+            $cached = Cache::get($cacheKey);
+            if ($cached !== null && $cached !== '') {
+                $weatherTranslated = $cached;
+            } else {
+                // Translate plain text to avoid Google Translate mangling HTML markup
+                $plainWeather = trim(strip_tags($rawWeather));
                 try {
                     $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
-                    $t = $tr->translate($rawEquipment);
-
-                    return $t !== null ? $t : $rawEquipment;
+                    $t = $tr->translate($plainWeather);
+                    if ($t !== null && $t !== '') {
+                        Cache::put($cacheKey, $t, now()->addDays(30));
+                        $weatherTranslated = $t;
+                    }
                 } catch (\Throwable $e) {
-                    return $rawEquipment;
+                    // Fall back to original HTML on translation failure
                 }
-            });
+            }
+        }
+
+        $rawEquipment = html_entity_decode($session->equipment ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $equipmentTranslated = $rawEquipment;
+        if ($needsTranslation && trim(strip_tags($rawEquipment)) !== '') {
+            $cacheKey = 'session_equipment:'.$session->id.':'.$lang;
+            $cached = Cache::get($cacheKey);
+            if ($cached !== null && $cached !== '') {
+                $equipmentTranslated = $cached;
+            } else {
+                $plainEquipment = trim(strip_tags($rawEquipment));
+                try {
+                    $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
+                    $t = $tr->translate($plainEquipment);
+                    if ($t !== null && $t !== '') {
+                        Cache::put($cacheKey, $t, now()->addDays(30));
+                        $equipmentTranslated = $t;
+                    }
+                } catch (\Throwable $e) {
+                    // Fall back to original HTML on translation failure
+                }
+            }
         }
 
         $rawComments = html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $commentsTranslated = $rawComments;
-        if ($shouldTranslate && $lang) {
+        if ($needsTranslation && trim(strip_tags($rawComments)) !== '') {
             $cacheKey = 'session_comments:'.$session->id.':'.$lang;
-            $commentsTranslated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawComments, $lang) {
+            $cached = Cache::get($cacheKey);
+            if ($cached !== null && $cached !== '') {
+                $commentsTranslated = $cached;
+            } else {
+                $plainComments = trim(strip_tags($rawComments));
                 try {
                     $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
-                    $t = $tr->translate($rawComments);
-
-                    return $t !== null ? $t : $rawComments;
+                    $t = $tr->translate($plainComments);
+                    if ($t !== null && $t !== '') {
+                        Cache::put($cacheKey, $t, now()->addDays(30));
+                        $commentsTranslated = $t;
+                    }
                 } catch (\Throwable $e) {
-                    return $rawComments;
+                    // Fall back to original HTML on translation failure
                 }
-            });
+            }
         }
 
         // Ensure preview and observation counts are available to views
