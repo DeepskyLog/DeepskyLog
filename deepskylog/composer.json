@@ -22,7 +22,7 @@
         "laravel/framework": "^12",
         "laravel/jetstream": "^5.1",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.7",
+        "laravel/tinker": "^3.0",
         "livewire/livewire": "^4",
         "marineusde/larapex-charts": "^1.4",
         "monarobase/country-list": "^3.4",
@@ -33,7 +33,7 @@
         "stichoza/google-translate-php": "^5.2",
         "symfony/http-client": "^7",
         "symfony/mailgun-mailer": "^7",
-        "teamtnt/tntsearch": "5.0.2",
+        "teamtnt/tntsearch": "^5.0",
         "tinymce/tinymce": "^8",
         "wireui/wireui": "^2"
     },
