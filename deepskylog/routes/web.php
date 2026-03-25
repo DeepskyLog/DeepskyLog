@@ -374,6 +374,10 @@ Route::post('/object', [App\Http\Controllers\ObjectController::class, 'store'])
 Route::get('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'show'])
     ->name('object.show')->middleware('doNotCacheResponse');
 
+// Catalogs overview page
+Route::get('/catalogs', [App\Http\Controllers\CatalogController::class, 'index'])
+    ->name('catalogs.index');
+
 // Edit object (only for admins and database experts)
 Route::get('/object/{slug}/edit', [App\Http\Controllers\ObjectController::class, 'edit'])
     ->name('object.edit')->middleware(['auth', 'doNotCacheResponse']);

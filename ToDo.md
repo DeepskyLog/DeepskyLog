@@ -4,8 +4,8 @@
 
 ## Next steps
 
++ [ ] Changing or adding sessions is very slow on the real server...
 + [ ] Targets
-  + [ ] Catalogs page
   + [ ] Search targets, first by name, then by type, constellation, ...
   + [ ] Install sqlite3 on the server to be able to use TNTSearch
   + [ ] After installation, make sure to run the queue worker to compute the contrast reserve and optimum eyepieces for all users / instruments / locations.  See Tips.md for more information about the queue worker.
