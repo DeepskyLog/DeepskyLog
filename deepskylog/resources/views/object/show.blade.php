@@ -278,6 +278,15 @@
                                         </tr>
                                     @endif
 
+                                    @auth
+                                        @if (!empty($atlasPage))
+                                            <tr>
+                                                <td class="pr-4 font-medium">{{ $atlasName ?? __('Atlas page') }}</td>
+                                                <td>{{ $atlasPage }}</td>
+                                            </tr>
+                                        @endif
+                                    @endauth
+
                                     @php
                                         $__dsl_top_raw = is_array($comet_magnitudes ?? null)
                                             ? count($comet_magnitudes)
@@ -837,19 +846,18 @@ try {
                                         {{-- Server-side nearby debug output removed — use Livewire/PowerGrid output below. --}}
 
                                         @php
-                                            // Try to provide numeric RA/Dec (degrees) to the Livewire component.
-                                            // Controller populates $aladinDefaults with raw and possibly converted values
-                                            // (ra_raw, dec_raw, ra_deg, dec_deg). Prefer ra_deg/dec_deg when present.
+                                            // Provide RA/Dec to the Livewire nearby component.
+                                            // IMPORTANT: NearbyObjectsTable expects RA in *hours* (0-24) and applies
+                                            // its own ≤24 → ×15 conversion internally. So we must pass hours, NOT
+                                            // the pre-converted degrees from ra_deg (which would get doubled).
                                             $nearbyRaDeg = null;
                                             $nearbyDecDeg = null;
                                             try {
-                                                if (!empty($aladinDefaults['ra_deg'])) {
-                                                    $nearbyRaDeg = (float) $aladinDefaults['ra_deg'];
-                                                } elseif (!empty($aladinDefaults['ra_raw'])) {
-                                                    // try to parse simple numeric or HH MM SS style RA strings
-                                                    $r = trim($aladinDefaults['ra_raw']);
+                                                // Prefer ra_raw (hours as stored in DB) so the component can convert
+                                                if (!empty($aladinDefaults['ra_raw'])) {
+                                                    $r = trim((string) $aladinDefaults['ra_raw']);
                                                     if (is_numeric($r)) {
-                                                        $nearbyRaDeg = (float) $r;
+                                                        $nearbyRaDeg = (float) $r; // hours; component will ×15
                                                     } else {
                                                         // parse h m s (accept h/m/s or space-separated)
                                                         if (
@@ -862,9 +870,13 @@ try {
                                                             $h = floatval($m[1]);
                                                             $min = floatval($m[2]);
                                                             $sec = floatval($m[3]);
-                                                            $nearbyRaDeg = ($h + $min / 60.0 + $sec / 3600.0) * 15.0;
+                                                            $nearbyRaDeg = $h + $min / 60.0 + $sec / 3600.0; // hours
                                                         }
                                                     }
+                                                } elseif (!empty($aladinDefaults['ra_deg'])) {
+                                                    // Fallback: ra_deg is in degrees — only safe to pass directly if > 24
+                                                    $raDegVal = (float) $aladinDefaults['ra_deg'];
+                                                    $nearbyRaDeg = $raDegVal > 24.0 ? $raDegVal : $raDegVal / 15.0;
                                                 }
 
                                                 if (!empty($aladinDefaults['dec_deg'])) {
@@ -1053,9 +1065,11 @@ try {
             $objectSketches = \App\Models\SketchOfTheWeek::whereIn('observation_id', $obsIds)
                 ->orderByDesc('date')
                 ->get();
-        } else {
-            // Fallback: try tokenized LIKE search on legacy objectname in case
-            // the legacy DB uses a slightly different formatting for comet names.
+        } elseif (strtolower(trim((string) ($session->source_type_raw ?? ''))) === 'comet') {
+            // Fallback tokenized LIKE search is only for comets, whose names may differ
+            // slightly between tables. For regular deepsky objects with no recorded
+            // observations, leave $objectSketches empty rather than doing a broad LIKE
+            // match that would catch unrelated objects.
             try {
                 $simple = preg_replace('/[^A-Za-z0-9 ]+/', ' ', $objName);
                 $tokens = array_filter(array_map('trim', preg_split('/\s+/', $simple)));

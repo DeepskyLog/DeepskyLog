@@ -25,6 +25,9 @@ class ObjectEphemerides extends Component
 	public $objectName;
 	public $sourceTypeRaw;
 
+	public $requestedDate = null;
+	public $requestedLocationId = null;
+
 	// Suppression flags set by the parent view when a type-specific
 	// component (e.g. MoonDetails) will render those rows instead.
 	public $suppressTopRaDec = false;
@@ -50,7 +53,7 @@ class ObjectEphemerides extends Component
 		$this->suppressTopRaDec = $suppressTopRaDec ?? false;
 		$this->suppressEphemerides = $suppressEphemerides ?? false;
 
-		if (! empty($initial) && is_array($initial)) {
+		if (!empty($initial) && is_array($initial)) {
 			$this->ephemerides = $initial;
 			// If initial payload is missing planet-specific event fields or appearance
 			// values, trigger a server-side recalc so logged-in pages get the
@@ -58,7 +61,7 @@ class ObjectEphemerides extends Component
 			$needsRecalc = false;
 			$requiredKeys = ['raDeg', 'decDeg', 'inferior_conjunction', 'superior_conjunction', 'greatest_western_elongation', 'greatest_eastern_elongation', 'diam1', 'mag'];
 			foreach ($requiredKeys as $k) {
-				if (! array_key_exists($k, $initial) || $initial[$k] === null) {
+				if (!array_key_exists($k, $initial) || $initial[$k] === null) {
 					$needsRecalc = true;
 					break;
 				}
@@ -111,7 +114,7 @@ class ObjectEphemerides extends Component
 	{
 		try {
 			try {
-				$raw = is_array($payload) ? $payload : (is_object($payload) ? (array)$payload : $payload);
+				$raw = is_array($payload) ? $payload : (is_object($payload) ? (array) $payload : $payload);
 				$hasIllum = false;
 				$illumVal = null;
 				try {
@@ -131,7 +134,7 @@ class ObjectEphemerides extends Component
 			} catch (\Throwable $_) {
 			}
 			// Existing sanitization: remove moon illum unless targeting Moon
-			$payloadArr = is_array($payload) ? $payload : (is_object($payload) ? (array)$payload : []);
+			$payloadArr = is_array($payload) ? $payload : (is_object($payload) ? (array) $payload : []);
 			$keepIllum = false;
 			$checkVals = [
 				$payloadArr['objectId'] ?? null,
@@ -141,19 +144,46 @@ class ObjectEphemerides extends Component
 				$this->sourceTypeRaw ?? null,
 			];
 			foreach ($checkVals as $v) {
-				if (!empty($v) && is_string($v) && mb_strtolower(trim((string)$v)) === 'moon') {
+				if (!empty($v) && is_string($v) && mb_strtolower(trim((string) $v)) === 'moon') {
 					$keepIllum = true;
 					break;
 				}
 			}
-			if (! $keepIllum) {
-				if (array_key_exists('illuminated_fraction', $payloadArr)) unset($payloadArr['illuminated_fraction']);
-				if (isset($payloadArr['payload']) && is_array($payloadArr['payload']) && array_key_exists('illuminated_fraction', $payloadArr['payload'])) unset($payloadArr['payload']['illuminated_fraction']);
-				if (isset($payloadArr['ephemerides']) && is_array($payloadArr['ephemerides']) && array_key_exists('illuminated_fraction', $payloadArr['ephemerides'])) unset($payloadArr['ephemerides']['illuminated_fraction']);
+			if (!$keepIllum) {
+				if (array_key_exists('illuminated_fraction', $payloadArr))
+					unset($payloadArr['illuminated_fraction']);
+				if (isset($payloadArr['payload']) && is_array($payloadArr['payload']) && array_key_exists('illuminated_fraction', $payloadArr['payload']))
+					unset($payloadArr['payload']['illuminated_fraction']);
+				if (isset($payloadArr['ephemerides']) && is_array($payloadArr['ephemerides']) && array_key_exists('illuminated_fraction', $payloadArr['ephemerides']))
+					unset($payloadArr['ephemerides']['illuminated_fraction']);
 			}
 			$this->recalculate($payloadArr);
 		} catch (\Throwable $_) {
 			// swallow errors
+		}
+	}
+
+	/**
+	 * Poll cache for previously-computed ephemerides and update component state
+	 * when available. This is intended to be triggered by a blade `wire:poll`.
+	 */
+	public function pollCache()
+	{
+		try {
+			if (empty($this->objectId) || empty($this->requestedDate))
+				return;
+			$ident = is_numeric((string) $this->objectId) ? (string) $this->objectId : (string) $this->objectId;
+			$loc = $this->requestedLocationId ?? '0';
+			$cacheKey = 'ephemerides:' . md5($ident . '|' . $this->requestedDate . '|' . ($loc ?? '0'));
+			if (\Illuminate\Support\Facades\Cache::has($cacheKey)) {
+				$cached = \Illuminate\Support\Facades\Cache::get($cacheKey);
+				if (is_array($cached)) {
+					$this->ephemerides = $cached;
+					// Let Livewire re-render; callers may stop polling client-side when present.
+				}
+			}
+		} catch (\Throwable $_) {
+			// swallow
 		}
 	}
 
@@ -167,7 +197,7 @@ class ObjectEphemerides extends Component
 		// (debug logs removed)
 
 		try {
-			$payloadArr = is_array($payload) ? $payload : (is_object($payload) ? (array)$payload : []);
+			$payloadArr = is_array($payload) ? $payload : (is_object($payload) ? (array) $payload : []);
 
 			// Accept pre-supplied ephemerides (for example authoritative wrapper coords)
 			// and prefer them when computing derived ephemerides. These may be passed
@@ -177,13 +207,19 @@ class ObjectEphemerides extends Component
 			$preSuppliedDate = null;
 			if (!empty($payloadArr['ephemerides']) && is_array($payloadArr['ephemerides'])) {
 				$pe = $payloadArr['ephemerides'];
-				if (isset($pe['raDeg'])) $preSuppliedRaDeg = $pe['raDeg'];
-				if (isset($pe['decDeg'])) $preSuppliedDecDeg = $pe['decDeg'];
-				if (isset($pe['date'])) $preSuppliedDate = $pe['date'];
+				if (isset($pe['raDeg']))
+					$preSuppliedRaDeg = $pe['raDeg'];
+				if (isset($pe['decDeg']))
+					$preSuppliedDecDeg = $pe['decDeg'];
+				if (isset($pe['date']))
+					$preSuppliedDate = $pe['date'];
 			}
-			if (isset($payloadArr['raDeg'])) $preSuppliedRaDeg = $payloadArr['raDeg'];
-			if (isset($payloadArr['decDeg'])) $preSuppliedDecDeg = $payloadArr['decDeg'];
-			if (isset($payloadArr['ephemerides']['date'])) $preSuppliedDate = $payloadArr['ephemerides']['date'];
+			if (isset($payloadArr['raDeg']))
+				$preSuppliedRaDeg = $payloadArr['raDeg'];
+			if (isset($payloadArr['decDeg']))
+				$preSuppliedDecDeg = $payloadArr['decDeg'];
+			if (isset($payloadArr['ephemerides']['date']))
+				$preSuppliedDate = $payloadArr['ephemerides']['date'];
 
 			// Determine object id/slug to use
 			$useObjectId = $payloadArr['objectId'] ?? $this->objectId;
@@ -211,10 +247,10 @@ class ObjectEphemerides extends Component
 			$obj = null;
 			try {
 				// (debug removed)
-				if (is_numeric((string)$useObjectId)) {
+				if (is_numeric((string) $useObjectId)) {
 					// Prefer Eloquent model find which respects model settings
 					try {
-						$foundModel = Target::find((int)$useObjectId);
+						$foundModel = Target::find((int) $useObjectId);
 						if ($foundModel) {
 							$obj = $foundModel;
 						}
@@ -225,7 +261,7 @@ class ObjectEphemerides extends Component
 
 				// If not found by id (or identifier was non-numeric) try slug/name
 				if (empty($obj)) {
-					$searchVal = trim((string)$useObjectId);
+					$searchVal = trim((string) $useObjectId);
 					// (debug removed)
 					try {
 						$foundModel = Target::where('slug', $searchVal)->orWhere('name', $searchVal)->first();
@@ -248,8 +284,8 @@ class ObjectEphemerides extends Component
 						$explicitSourceType = $payloadArr['sourceTypeRaw'] ?? $this->sourceTypeRaw ?? null;
 						$explicitIsPlanet = is_string($explicitSourceType) && mb_strtolower($explicitSourceType) === 'planet';
 
-						if (is_numeric((string)$useObjectId)) {
-							$co = CometObject::find((int)$useObjectId);
+						if (is_numeric((string) $useObjectId)) {
+							$co = CometObject::find((int) $useObjectId);
 							if ($co) {
 								if ($explicitIsPlanet) {
 									// (debug removed)
@@ -259,7 +295,7 @@ class ObjectEphemerides extends Component
 							}
 						}
 						if (empty($obj)) {
-							$searchVal = trim((string)$useObjectId);
+							$searchVal = trim((string) $useObjectId);
 							$co = CometObject::where('slug', $searchVal)->orWhere('name', $searchVal)->first();
 							if ($co) {
 								if ($explicitIsPlanet) {
@@ -280,10 +316,10 @@ class ObjectEphemerides extends Component
 					$planetName = $payloadArr['objectName'] ?? $this->objectName ?? null;
 					$sourceType = $payloadArr['sourceTypeRaw'] ?? $this->sourceTypeRaw ?? null;
 					if (!empty($planetName) && is_string($sourceType) && mb_strtolower($sourceType) === 'planet') {
-						$obj = (object)['id' => null, 'name' => $planetName];
+						$obj = (object) ['id' => null, 'name' => $planetName];
 					} else {
 						if (!is_null($preSuppliedRaDeg) && !is_null($preSuppliedDecDeg)) {
-							$obj = (object)[
+							$obj = (object) [
 								'id' => null,
 								'name' => $payloadArr['objectName'] ?? $this->objectName ?? null,
 								'ra' => null,
@@ -300,7 +336,7 @@ class ObjectEphemerides extends Component
 								}
 								if (is_array($probeRes) && !empty($probeRes['coords'])) {
 									$coords = $probeRes['coords'];
-									$obj = (object)['id' => null, 'name' => $designationProbe, 'designation' => $designationProbe];
+									$obj = (object) ['id' => null, 'name' => $designationProbe, 'designation' => $designationProbe];
 								}
 							}
 							if (empty($obj)) {
@@ -321,12 +357,12 @@ class ObjectEphemerides extends Component
 			// If no authenticated user's standard location is available (guest view),
 			// attempt to use a public/default active Location so we can still compute
 			// ephemerides for anonymous visitors (useful for planets like Mercury/Venus).
-			if (! $userLocation) {
+			if (!$userLocation) {
 				try {
 					// Prefer an active location with no user_id (site-level location)
 					$userLocation = \App\Models\Location::where('active', true)->whereNull('user_id')->first();
 					// Fallback: any active location
-					if (! $userLocation) {
+					if (!$userLocation) {
 						$userLocation = \App\Models\Location::where('active', true)->first();
 					}
 				} catch (\Throwable $_) {
@@ -334,7 +370,8 @@ class ObjectEphemerides extends Component
 				}
 			}
 			// (debug removed)
-			if (! $userLocation) return;
+			if (!$userLocation)
+				return;
 
 			// Date handling: allow payload-provided date
 			$date = Carbon::now();
@@ -349,7 +386,60 @@ class ObjectEphemerides extends Component
 			} catch (\Throwable $_) {
 			}
 
+			// Persist requested date (ISO) so the poller can look up cache entries
+			try {
+				$this->requestedDate = $date->toIso8601String();
+			} catch (\Throwable $_) {
+				$this->requestedDate = null;
+			}
+
 			$geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
+
+			// remember location id for poller/cache key
+			try {
+				$this->requestedLocationId = $userLocation->id ?? null;
+			} catch (\Throwable $_) {
+				$this->requestedLocationId = null;
+			}
+
+			// Cache lookup key for ephemerides: object identifier + date + location
+			$cacheKey = null;
+			try {
+				$ident = is_object($obj) ? ($obj->id ?? ($obj->slug ?? ($obj->name ?? ''))) : (string) ($useObjectId ?? '');
+				$cacheKey = 'ephemerides:' . md5($ident . '|' . ($date->toIso8601String() ?? '') . '|' . ($userLocation->id ?? '0'));
+			} catch (\Throwable $_) {
+				$cacheKey = null;
+			}
+
+			// If cached ephemerides exist, use them and avoid recomputing
+			try {
+				if (!empty($cacheKey) && \Illuminate\Support\Facades\Cache::has($cacheKey)) {
+					$cached = \Illuminate\Support\Facades\Cache::get($cacheKey);
+					if (is_array($cached)) {
+						$raDeg = $cached['raDeg'] ?? null;
+						$decDeg = $cached['decDeg'] ?? null;
+						$computedDiam1 = $cached['diam1'] ?? null;
+						$computedDiam2 = $cached['diam2'] ?? null;
+						$computedMag = $cached['mag'] ?? null;
+						$this->ephemerides = $cached;
+						return;
+					}
+				}
+			} catch (\Throwable $_) {
+			}
+
+			// If the caller requested ephemerides computation, enqueue a job and
+			// continue — the job will populate the cache for subsequent retrieval.
+			$computeEphem = $computeEphem ?? (!empty($payloadArr['computeEphemerides']) && $payloadArr['computeEphemerides']);
+			if ($computeEphem && !empty($cacheKey)) {
+				try {
+					\App\Jobs\ComputeEphemerides::dispatch($useObjectId, $date->toIso8601String(), $userLocation->id ?? null);
+				} catch (\Throwable $_) {
+				}
+				// Return for now; cached value will be available after job finishes.
+				$this->ephemerides = null;
+				return;
+			}
 
 			// Prepare target and equatorial coordinates (degrees)
 			$raDeg = null;
@@ -358,6 +448,11 @@ class ObjectEphemerides extends Component
 			$computedDiam2 = null;
 			$computedMag = null;
 			$recomputeForced = false;
+
+			// Allow callers to request heavy ephemerides computation (comet/orbital
+			// element work). By default we defer these expensive calculations so
+			// interactive flows (like session creation) don't block the web request.
+			$computeEphem = !empty($payloadArr['computeEphemerides']) && $payloadArr['computeEphemerides'];
 			try {
 				if (method_exists(\App\Models\DeepskyObject::class, 'raToDecimal')) {
 					$raDeg = \App\Models\DeepskyObject::raToDecimal($obj->ra ?? $obj->RA ?? null);
@@ -373,10 +468,10 @@ class ObjectEphemerides extends Component
 			// computed using the wrapper RA/Dec.
 			try {
 				if (!is_null($preSuppliedRaDeg) && is_numeric($preSuppliedRaDeg)) {
-					$raDeg = (float)$preSuppliedRaDeg;
+					$raDeg = (float) $preSuppliedRaDeg;
 				}
 				if (!is_null($preSuppliedDecDeg) && is_numeric($preSuppliedDecDeg)) {
-					$decDeg = (float)$preSuppliedDecDeg;
+					$decDeg = (float) $preSuppliedDecDeg;
 				}
 			} catch (\Throwable $_) {
 				// ignore override errors
@@ -398,7 +493,7 @@ class ObjectEphemerides extends Component
 				if (is_string($sourceType) && mb_strtolower($sourceType) === 'planet') {
 					$isPlanet = true;
 				}
-				if (! $isPlanet && is_string($planetName)) {
+				if (!$isPlanet && is_string($planetName)) {
 					$key = preg_replace('/[^a-z]/', '', mb_strtolower($planetName));
 					$map = [
 						'mercury' => 'Mercury',
@@ -501,10 +596,10 @@ class ObjectEphemerides extends Component
 										$raVal = $raObj;
 									}
 									if (is_numeric($raVal)) {
-										if ((float)$raVal <= 24.0) {
-											$raDeg = (float)$raVal * 15.0;
+										if ((float) $raVal <= 24.0) {
+											$raDeg = (float) $raVal * 15.0;
 										} else {
-											$raDeg = (float)$raVal;
+											$raDeg = (float) $raVal;
 										}
 									}
 								} catch (\Throwable $_) {
@@ -524,7 +619,7 @@ class ObjectEphemerides extends Component
 										$decVal = $decObj;
 									}
 									if (is_numeric($decVal)) {
-										$decDeg = (float)$decVal;
+										$decDeg = (float) $decVal;
 									}
 								} catch (\Throwable $_) {
 									$decDeg = null;
@@ -565,8 +660,10 @@ class ObjectEphemerides extends Component
 							try {
 								if (method_exists($planet, 'inferior_conjunction')) {
 									$v = $planet->inferior_conjunction($date);
-									if ($v instanceof \DateTimeInterface) $inferiorConjunction = Carbon::instance($v)->toIso8601String();
-									elseif (is_string($v)) $inferiorConjunction = $v;
+									if ($v instanceof \DateTimeInterface)
+										$inferiorConjunction = Carbon::instance($v)->toIso8601String();
+									elseif (is_string($v))
+										$inferiorConjunction = $v;
 								}
 							} catch (\Throwable $_) {
 								$inferiorConjunction = null;
@@ -574,8 +671,10 @@ class ObjectEphemerides extends Component
 							try {
 								if (method_exists($planet, 'superior_conjunction')) {
 									$v = $planet->superior_conjunction($date);
-									if ($v instanceof \DateTimeInterface) $superiorConjunction = Carbon::instance($v)->toIso8601String();
-									elseif (is_string($v)) $superiorConjunction = $v;
+									if ($v instanceof \DateTimeInterface)
+										$superiorConjunction = Carbon::instance($v)->toIso8601String();
+									elseif (is_string($v))
+										$superiorConjunction = $v;
 								}
 							} catch (\Throwable $_) {
 								$superiorConjunction = null;
@@ -583,8 +682,10 @@ class ObjectEphemerides extends Component
 							try {
 								if (method_exists($planet, 'greatest_western_elongation')) {
 									$v = $planet->greatest_western_elongation($date);
-									if ($v instanceof \DateTimeInterface) $greatestWesternElongation = Carbon::instance($v)->toIso8601String();
-									elseif (is_string($v)) $greatestWesternElongation = $v;
+									if ($v instanceof \DateTimeInterface)
+										$greatestWesternElongation = Carbon::instance($v)->toIso8601String();
+									elseif (is_string($v))
+										$greatestWesternElongation = $v;
 								}
 							} catch (\Throwable $_) {
 								$greatestWesternElongation = null;
@@ -592,8 +693,10 @@ class ObjectEphemerides extends Component
 							try {
 								if (method_exists($planet, 'greatest_eastern_elongation')) {
 									$v = $planet->greatest_eastern_elongation($date);
-									if ($v instanceof \DateTimeInterface) $greatestEasternElongation = Carbon::instance($v)->toIso8601String();
-									elseif (is_string($v)) $greatestEasternElongation = $v;
+									if ($v instanceof \DateTimeInterface)
+										$greatestEasternElongation = Carbon::instance($v)->toIso8601String();
+									elseif (is_string($v))
+										$greatestEasternElongation = $v;
 								}
 							} catch (\Throwable $_) {
 								$greatestEasternElongation = null;
@@ -602,8 +705,10 @@ class ObjectEphemerides extends Component
 							try {
 								if (method_exists($planet, 'illuminatedFraction')) {
 									$v = $planet->illuminatedFraction($date);
-									if (is_numeric($v)) $illuminatedFraction = (float)$v;
-									elseif ($v instanceof \JsonSerializable || is_string($v)) $illuminatedFraction = (float)$v;
+									if (is_numeric($v))
+										$illuminatedFraction = (float) $v;
+									elseif ($v instanceof \JsonSerializable || is_string($v))
+										$illuminatedFraction = (float) $v;
 								}
 							} catch (\Throwable $_) {
 								$illuminatedFraction = null;
@@ -612,8 +717,10 @@ class ObjectEphemerides extends Component
 							try {
 								if (method_exists($planet, 'opposition')) {
 									$v = $planet->opposition($date);
-									if ($v instanceof \DateTimeInterface) $opposition = Carbon::instance($v)->toIso8601String();
-									elseif (is_string($v)) $opposition = $v;
+									if ($v instanceof \DateTimeInterface)
+										$opposition = Carbon::instance($v)->toIso8601String();
+									elseif (is_string($v))
+										$opposition = $v;
 								}
 							} catch (\Throwable $_) {
 								$opposition = null;
@@ -621,8 +728,10 @@ class ObjectEphemerides extends Component
 							try {
 								if (method_exists($planet, 'conjunction')) {
 									$v = $planet->conjunction($date);
-									if ($v instanceof \DateTimeInterface) $conjunction = Carbon::instance($v)->toIso8601String();
-									elseif (is_string($v)) $conjunction = $v;
+									if ($v instanceof \DateTimeInterface)
+										$conjunction = Carbon::instance($v)->toIso8601String();
+									elseif (is_string($v))
+										$conjunction = $v;
 								}
 							} catch (\Throwable $_) {
 								$conjunction = null;
@@ -631,8 +740,10 @@ class ObjectEphemerides extends Component
 							try {
 								if (method_exists($planet, 'perihelionDate')) {
 									$v = $planet->perihelionDate($date);
-									if ($v instanceof \DateTimeInterface) $perihelionDate = Carbon::instance($v)->toIso8601String();
-									elseif (is_string($v)) $perihelionDate = $v;
+									if ($v instanceof \DateTimeInterface)
+										$perihelionDate = Carbon::instance($v)->toIso8601String();
+									elseif (is_string($v))
+										$perihelionDate = $v;
 								}
 							} catch (\Throwable $_) {
 								$perihelionDate = null;
@@ -640,8 +751,10 @@ class ObjectEphemerides extends Component
 							try {
 								if (method_exists($planet, 'aphelionDate')) {
 									$v = $planet->aphelionDate($date);
-									if ($v instanceof \DateTimeInterface) $aphelionDate = Carbon::instance($v)->toIso8601String();
-									elseif (is_string($v)) $aphelionDate = $v;
+									if ($v instanceof \DateTimeInterface)
+										$aphelionDate = Carbon::instance($v)->toIso8601String();
+									elseif (is_string($v))
+										$aphelionDate = $v;
 								}
 							} catch (\Throwable $_) {
 								$aphelionDate = null;
@@ -668,7 +781,7 @@ class ObjectEphemerides extends Component
 						$isComet = true;
 					}
 				}
-				if ($isComet && !empty($payloadArr['date']) && ($preSuppliedDate === null || (string)$preSuppliedDate !== (string)$payloadArr['date'])) {
+				if ($isComet && !empty($payloadArr['date']) && ($preSuppliedDate === null || (string) $preSuppliedDate !== (string) $payloadArr['date'])) {
 					// If a different date was requested than the pre-supplied wrapper
 					// coordinates, force recomputation so orbital-element/proxy
 					// calculations run for the requested date.
@@ -677,6 +790,14 @@ class ObjectEphemerides extends Component
 					$raDeg = null;
 					$decDeg = null;
 					$recomputeForced = true;
+				}
+
+				// Defer heavy comet calculations unless explicitly requested by the
+				// caller via the `computeEphemerides` flag. When deferred, return
+				// without attempting NearParabolic/Parabolic/Elliptic computations.
+				if ($isComet && empty($computeEphem)) {
+					$this->ephemerides = null;
+					return;
 				}
 			} catch (\Throwable $_) {
 				// ignore
@@ -687,9 +808,9 @@ class ObjectEphemerides extends Component
 			if ($raDeg === null || $decDeg === null) {
 				// Try computing coordinates for comet-like objects using orbital elements
 				try {
-					$eVal = isset($obj->e) ? (float)$obj->e : null;
-					$qVal = isset($obj->q) ? (float)$obj->q : null;
-					$aVal = isset($obj->a) ? (float)$obj->a : null;
+					$eVal = isset($obj->e) ? (float) $obj->e : null;
+					$qVal = isset($obj->q) ? (float) $obj->q : null;
+					$aVal = isset($obj->a) ? (float) $obj->a : null;
 					// comet orbital elements logging removed
 					// Build a robust designation to pass to HorizonsProxy: prefer explicit designation,
 					// then slug, then name, then any payload-provided objectName.
@@ -709,10 +830,11 @@ class ObjectEphemerides extends Component
 								$peri = null;
 							}
 						}
-						if (! $peri) $peri = Carbon::now('UTC');
+						if (!$peri)
+							$peri = Carbon::now('UTC');
 						if ($eVal === 1.0) {
 							$par = new Parabolic();
-							$par->setOrbitalElements((float)$qVal, (float)($obj->i ?? 0.0), (float)($obj->w ?? 0.0), (float)($obj->node ?? 0.0), $peri);
+							$par->setOrbitalElements((float) $qVal, (float) ($obj->i ?? 0.0), (float) ($obj->w ?? 0.0), (float) ($obj->node ?? 0.0), $peri);
 							// If photometry parameters exist in comets_orbital_elements, apply them
 							try {
 								$phot = DB::table('comets_orbital_elements')->where('name', $obj->name ?? ($obj->designation ?? null))->first();
@@ -752,12 +874,14 @@ class ObjectEphemerides extends Component
 									} catch (\Throwable $_) {
 									}
 								}
-								if (method_exists($par, 'getEquatorialCoordinatesToday')) $coords = $par->getEquatorialCoordinatesToday();
-								elseif (method_exists($par, 'getEquatorialCoordinates')) $coords = $par->getEquatorialCoordinates();
+								if (method_exists($par, 'getEquatorialCoordinatesToday'))
+									$coords = $par->getEquatorialCoordinatesToday();
+								elseif (method_exists($par, 'getEquatorialCoordinates'))
+									$coords = $par->getEquatorialCoordinates();
 							}
 						} elseif ($eVal !== null && $eVal < 1.0 && $aVal !== null) {
 							$ell = new Elliptic();
-							$ell->setOrbitalElements((float)$aVal, $eVal, (float)($obj->i ?? 0.0), (float)($obj->w ?? 0.0), (float)($obj->node ?? 0.0), $peri);
+							$ell->setOrbitalElements((float) $aVal, $eVal, (float) ($obj->i ?? 0.0), (float) ($obj->w ?? 0.0), (float) ($obj->node ?? 0.0), $peri);
 							// For elliptic (periodic) comets/asteroids, prefer H/G when available
 							try {
 								$phot = DB::table('comets_orbital_elements')->where('name', $obj->name ?? ($obj->designation ?? null))->first();
@@ -790,12 +914,14 @@ class ObjectEphemerides extends Component
 									$ell->calculateEquatorialCoordinates($date, $geo_coords, $userLocation->elevation ?? 0.0);
 								} catch (\Throwable $_) {
 								}
-								if (method_exists($ell, 'getEquatorialCoordinatesToday')) $coords = $ell->getEquatorialCoordinatesToday();
-								elseif (method_exists($ell, 'getEquatorialCoordinates')) $coords = $ell->getEquatorialCoordinates();
+								if (method_exists($ell, 'getEquatorialCoordinatesToday'))
+									$coords = $ell->getEquatorialCoordinatesToday();
+								elseif (method_exists($ell, 'getEquatorialCoordinates'))
+									$coords = $ell->getEquatorialCoordinates();
 							}
 						} else {
 							$near = new NearParabolic();
-							$near->setOrbitalElements((float)$qVal, $eVal ?? 1.0, (float)($obj->i ?? 0.0), (float)($obj->w ?? 0.0), (float)($obj->node ?? 0.0), $peri);
+							$near->setOrbitalElements((float) $qVal, $eVal ?? 1.0, (float) ($obj->i ?? 0.0), (float) ($obj->w ?? 0.0), (float) ($obj->node ?? 0.0), $peri);
 							// Apply comet photometry params when present
 							try {
 								$phot = DB::table('comets_orbital_elements')->where('name', $obj->name ?? ($obj->designation ?? null))->first();
@@ -831,23 +957,31 @@ class ObjectEphemerides extends Component
 									$near->calculateEquatorialCoordinates($date);
 								} catch (\Throwable $_) {
 								}
-								if (method_exists($near, 'getEquatorialCoordinatesToday')) $coords = $near->getEquatorialCoordinatesToday();
-								elseif (method_exists($near, 'getEquatorialCoordinates')) $coords = $near->getEquatorialCoordinates();
+								if (method_exists($near, 'getEquatorialCoordinatesToday'))
+									$coords = $near->getEquatorialCoordinatesToday();
+								elseif (method_exists($near, 'getEquatorialCoordinates'))
+									$coords = $near->getEquatorialCoordinates();
 							}
 						}
 						if ($coords) {
 							try {
-								if (method_exists($coords, 'getRA')) $raObj = $coords->getRA();
-								else $raObj = $coords->ra ?? null;
+								if (method_exists($coords, 'getRA'))
+									$raObj = $coords->getRA();
+								else
+									$raObj = $coords->ra ?? null;
 								$raVal = (is_object($raObj) && method_exists($raObj, 'getCoordinate')) ? $raObj->getCoordinate() : $raObj;
-								if (is_numeric($raVal)) $raDeg = ((float)$raVal <= 24.0) ? (float)$raVal * 15.0 : (float)$raVal;
+								if (is_numeric($raVal))
+									$raDeg = ((float) $raVal <= 24.0) ? (float) $raVal * 15.0 : (float) $raVal;
 							} catch (\Throwable $_) {
 							}
 							try {
-								if (method_exists($coords, 'getDeclination')) $decObj = $coords->getDeclination();
-								else $decObj = $coords->dec ?? null;
+								if (method_exists($coords, 'getDeclination'))
+									$decObj = $coords->getDeclination();
+								else
+									$decObj = $coords->dec ?? null;
 								$decVal = (is_object($decObj) && method_exists($decObj, 'getCoordinate')) ? $decObj->getCoordinate() : $decObj;
-								if (is_numeric($decVal)) $decDeg = (float)$decVal;
+								if (is_numeric($decVal))
+									$decDeg = (float) $decVal;
 							} catch (\Throwable $_) {
 							}
 						}
@@ -871,17 +1005,23 @@ class ObjectEphemerides extends Component
 							if (is_array($probeRes) && !empty($probeRes['coords'])) {
 								$coords = $probeRes['coords'];
 								try {
-									if (method_exists($coords, 'getRA')) $raObj = $coords->getRA();
-									else $raObj = $coords->ra ?? null;
+									if (method_exists($coords, 'getRA'))
+										$raObj = $coords->getRA();
+									else
+										$raObj = $coords->ra ?? null;
 									$raVal = (is_object($raObj) && method_exists($raObj, 'getCoordinate')) ? $raObj->getCoordinate() : $raObj;
-									if (is_numeric($raVal)) $raDeg = ((float)$raVal <= 24.0) ? (float)$raVal * 15.0 : (float)$raVal;
+									if (is_numeric($raVal))
+										$raDeg = ((float) $raVal <= 24.0) ? (float) $raVal * 15.0 : (float) $raVal;
 								} catch (\Throwable $_) {
 								}
 								try {
-									if (method_exists($coords, 'getDeclination')) $decObj = $coords->getDeclination();
-									else $decObj = $coords->dec ?? null;
+									if (method_exists($coords, 'getDeclination'))
+										$decObj = $coords->getDeclination();
+									else
+										$decObj = $coords->dec ?? null;
 									$decVal = (is_object($decObj) && method_exists($decObj, 'getCoordinate')) ? $decObj->getCoordinate() : $decObj;
-									if (is_numeric($decVal)) $decDeg = (float)$decVal;
+									if (is_numeric($decVal))
+										$decDeg = (float) $decVal;
 								} catch (\Throwable $_) {
 								}
 							}
@@ -899,8 +1039,8 @@ class ObjectEphemerides extends Component
 
 
 			// EquatorialCoordinates expects RA in hours (0..24).
-			$raHours = (float)$raDeg / 15.0;
-			$equa = new EquatorialCoordinates($raHours, (float)$decDeg);
+			$raHours = (float) $raDeg / 15.0;
+			$equa = new EquatorialCoordinates($raHours, (float) $decDeg);
 			$target = new AstroTarget();
 			$target->setEquatorialCoordinates($equa);
 
@@ -956,20 +1096,20 @@ class ObjectEphemerides extends Component
 				try {
 					$transit = Carbon::instance($transit)->timezone($tz)->isoFormat('HH:mm');
 				} catch (\Throwable $_) {
-					$transit = (string)$transit;
+					$transit = (string) $transit;
 				}
 			}
 			if ($rising instanceof \DateTimeInterface) {
 				try {
 					$rising = Carbon::instance($rising)->timezone($tz)->isoFormat('HH:mm');
 				} catch (\Throwable $_) {
-					$rising = (string)$rising;
+					$rising = (string) $rising;
 				}
 			}
 			if ($setting instanceof \DateTimeInterface) {
 				try {
 					$setting = Carbon::instance($setting)->timezone($tz)->isoFormat('HH:mm');
-					$setting = (string)$setting;
+					$setting = (string) $setting;
 				} catch (\Throwable $_) {
 				}
 			}
@@ -977,7 +1117,7 @@ class ObjectEphemerides extends Component
 				try {
 					$bestTime = Carbon::instance($bestTime)->timezone($tz)->isoFormat('HH:mm');
 				} catch (\Throwable $_) {
-					$bestTime = (string)$bestTime;
+					$bestTime = (string) $bestTime;
 				}
 			}
 
@@ -993,8 +1133,10 @@ class ObjectEphemerides extends Component
 				}
 			} catch (\Throwable $_) {
 			}
-			if (is_numeric($maxHeightAtNight)) $maxHeightAtNight = round($maxHeightAtNight, 1);
-			if (is_numeric($maxHeight)) $maxHeight = round($maxHeight, 1);
+			if (is_numeric($maxHeightAtNight))
+				$maxHeightAtNight = round($maxHeightAtNight, 1);
+			if (is_numeric($maxHeight))
+				$maxHeight = round($maxHeight, 1);
 
 			$altitudeGraph = null;
 			try {
@@ -1072,8 +1214,8 @@ class ObjectEphemerides extends Component
 			// (getConstellation / constellation) can operate consistently.
 			try {
 				if ((empty($coords) || $coords === null) && is_numeric($raDeg) && is_numeric($decDeg)) {
-					$raHoursTmp = (float)$raDeg / 15.0;
-					$coords = new EquatorialCoordinates($raHoursTmp, (float)$decDeg);
+					$raHoursTmp = (float) $raDeg / 15.0;
+					$coords = new EquatorialCoordinates($raHoursTmp, (float) $decDeg);
 				}
 			} catch (\Throwable $_) {
 				// ignore failures — constellation will remain unset
@@ -1087,36 +1229,41 @@ class ObjectEphemerides extends Component
 					if (method_exists($coords, 'getConstellation')) {
 						try {
 							$c = $coords->getConstellation();
-							if (is_string($c) && ! empty($c)) {
+							if (is_string($c) && !empty($c)) {
 								$consName = $c;
 							} elseif (is_object($c)) {
-								if (isset($c->name)) $consName = $c->name;
-								if (isset($c->id)) $consCode = $c->id;
+								if (isset($c->name))
+									$consName = $c->name;
+								if (isset($c->id))
+									$consCode = $c->id;
 							}
 						} catch (\Throwable $_) {
 						}
 					}
-					if (! $consName && method_exists($coords, 'constellation')) {
+					if (!$consName && method_exists($coords, 'constellation')) {
 						try {
 							$c = $coords->constellation();
-							if (is_string($c) && ! empty($c)) $consName = $c;
+							if (is_string($c) && !empty($c))
+								$consName = $c;
 						} catch (\Throwable $_) {
 						}
 					}
 				}
 
-				if (! $consName && isset($planet) && $planet) {
+				if (!$consName && isset($planet) && $planet) {
 					if (method_exists($planet, 'getConstellation')) {
 						try {
 							$c = $planet->getConstellation();
-							if (is_string($c) && ! empty($c)) $consName = $c;
+							if (is_string($c) && !empty($c))
+								$consName = $c;
 						} catch (\Throwable $_) {
 						}
 					}
-					if (! $consName && method_exists($planet, 'constellation')) {
+					if (!$consName && method_exists($planet, 'constellation')) {
 						try {
 							$c = $planet->constellation();
-							if (is_string($c) && ! empty($c)) $consName = $c;
+							if (is_string($c) && !empty($c))
+								$consName = $c;
 						} catch (\Throwable $_) {
 						}
 					}
@@ -1197,10 +1344,12 @@ class ObjectEphemerides extends Component
 				$sourceLowerCheck = is_string($payloadArr['sourceTypeRaw'] ?? '') ? mb_strtolower($payloadArr['sourceTypeRaw']) : null;
 				$slugCheck = isset($obj) && (isset($obj->slug) || isset($obj->name)) ? (string) ($obj->slug ?? $obj->name) : null;
 				$isMoonObj = false;
-				if ($sourceLowerCheck === 'moon') $isMoonObj = true;
+				if ($sourceLowerCheck === 'moon')
+					$isMoonObj = true;
 				if (!$isMoonObj && $slugCheck) {
 					$key = preg_replace('/[^a-z]/', '', mb_strtolower($slugCheck));
-					if ($key === 'moon') $isMoonObj = true;
+					if ($key === 'moon')
+						$isMoonObj = true;
 				}
 				if ($isMoonObj) {
 					try {
@@ -1278,12 +1427,13 @@ class ObjectEphemerides extends Component
 					if (is_array($emitPayload['ephemerides'])) {
 						$sanitizedEphemerides = $emitPayload['ephemerides'];
 					} elseif (is_object($emitPayload['ephemerides'])) {
-						$sanitizedEphemerides = (array)$emitPayload['ephemerides'];
+						$sanitizedEphemerides = (array) $emitPayload['ephemerides'];
 					} else {
 						// Fallback: attempt json decode if a string was provided
 						try {
-							$decoded = @json_decode((string)$emitPayload['ephemerides'], true);
-							if (is_array($decoded)) $sanitizedEphemerides = $decoded;
+							$decoded = @json_decode((string) $emitPayload['ephemerides'], true);
+							if (is_array($decoded))
+								$sanitizedEphemerides = $decoded;
 						} catch (\Throwable $_) {
 							$sanitizedEphemerides = [];
 						}
@@ -1291,7 +1441,8 @@ class ObjectEphemerides extends Component
 				}
 				// Remove graph HTML keys unconditionally
 				foreach (['altitude_graph', 'year_graph', 'year_magnitude_graph', 'year_diameter_graph'] as $gk) {
-					if (isset($sanitizedEphemerides[$gk])) unset($sanitizedEphemerides[$gk]);
+					if (isset($sanitizedEphemerides[$gk]))
+						unset($sanitizedEphemerides[$gk]);
 				}
 				$previewPayload = $emitPayload;
 				$previewPayload['ephemerides'] = $sanitizedEphemerides;
@@ -1326,8 +1477,10 @@ class ObjectEphemerides extends Component
 						$browserPreview = $previewPayload;
 						try {
 							$targetName = '';
-							if (!empty($browserPreview['objectSlug'])) $targetName = mb_strtolower(trim((string)$browserPreview['objectSlug']));
-							elseif (!empty($browserPreview['objectName'])) $targetName = mb_strtolower(trim((string)$browserPreview['objectName']));
+							if (!empty($browserPreview['objectSlug']))
+								$targetName = mb_strtolower(trim((string) $browserPreview['objectSlug']));
+							elseif (!empty($browserPreview['objectName']))
+								$targetName = mb_strtolower(trim((string) $browserPreview['objectName']));
 							// If the payload targets the Moon, move the illuminated_fraction
 							// into a dedicated `moon_illumination` field and remove the
 							// generic `illuminated_fraction` so broad handlers won't pick it up.
