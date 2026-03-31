@@ -2425,7 +2425,8 @@ class NearbyObjectsTable extends PowerGridComponent
             $tz = $userLocation->timezone ?? config('app.timezone');
             $geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
             $target = new AstroTarget();
-            $equa = new \deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates($raDeg, $decDeg);
+            $raHours = (is_numeric($raDeg) ? (float) $raDeg / 15.0 : $raDeg);
+            $equa = new \deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates($raHours, $decDeg);
             $target->setEquatorialCoordinates($equa);
             $greenwichSiderialTime = \deepskylog\AstronomyLibrary\Time::apparentSiderialTimeGreenwich($date);
             $deltaT = \deepskylog\AstronomyLibrary\Time::deltaT($date);

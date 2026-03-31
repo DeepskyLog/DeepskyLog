@@ -998,7 +998,8 @@ class AladinPreviewInfo extends Component
                     if ($raDeg !== null && $decDeg !== null) {
                         $geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
                         $target2 = new AstroTarget();
-                        $equa = new \deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates($raDeg, $decDeg);
+                        $raHours = (is_numeric($raDeg) ? (float) $raDeg / 15.0 : $raDeg);
+                        $equa = new \deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates($raHours, $decDeg);
                         $target2->setEquatorialCoordinates($equa);
                         // compute siderial and deltaT
                         try {
