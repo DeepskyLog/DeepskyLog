@@ -46,12 +46,12 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/socialstream.php', 'socialstream');
+        $this->mergeConfigFrom(__DIR__ . '/../config/socialstream.php', 'socialstream');
 
         $this->registerResponseBindings();
 
         // if there's no fortify, we need to bind a stateful guard to the container
-        if (! config('fortify.guard')) {
+        if (!config('fortify.guard')) {
             $this->app->bind(StatefulGuard::class, function () {
                 return Auth::guard(config('socialstream.guard'));
             });
@@ -82,7 +82,7 @@ class SocialstreamServiceProvider extends ServiceProvider
         $this->configureRefreshTokenResolvers();
         $this->bootLaravelJetstream();
 
-        if(config('jetstream.stack') === 'livewire' && class_exists(Livewire::class)) {
+        if (config('jetstream.stack') === 'livewire' && class_exists(Livewire::class)) {
             Livewire::component('profile.set-password-form', SetPasswordForm::class);
             Livewire::component('profile.connected-accounts-form', ConnectedAccountsForm::class);
         }
@@ -90,7 +90,7 @@ class SocialstreamServiceProvider extends ServiceProvider
 
     private function configureAuth(): void
     {
-        Auth::provider('eloquent', fn ($app, array $config) => new SocialstreamUserProvider(
+        Auth::provider('eloquent', fn($app, array $config) => new SocialstreamUserProvider(
             hasher: $app['hash'],
             model: $config['model']
         ));
@@ -101,7 +101,7 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     private function configureDefaults(): void
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'socialstream');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'socialstream');
 
         Socialstream::useConnectedAccountModel(ConnectedAccount::class);
         Gate::policy(Socialstream::connectedAccountModel(), Policies\ConnectedAccountPolicy::class);
@@ -123,11 +123,11 @@ class SocialstreamServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
+                __DIR__ . '/../routes/socialstream.php' => base_path('routes/socialstream.php'),
             ], 'socialstream-routes');
         }
 
-        if (! Socialstream::$registersRoutes) {
+        if (!Socialstream::$registersRoutes) {
             return;
         }
 
@@ -136,8 +136,8 @@ class SocialstreamServiceProvider extends ServiceProvider
             'domain' => config('socialstream.domain'),
             'prefix' => config('socialstream.prefix', config('socialstream.path')),
         ], function () {
-            $this->loadRoutesFrom(path: __DIR__.'/../routes/web.php');
-            $this->loadRoutesFrom(path: __DIR__.'/../routes/'.config('jetstream.stack', 'livewire').'.php');
+            $this->loadRoutesFrom(path: __DIR__ . '/../routes/web.php');
+            $this->loadRoutesFrom(path: __DIR__ . '/../routes/' . config('jetstream.stack', 'livewire') . '.php');
         });
     }
 
@@ -146,7 +146,7 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function configureCommands(): void
     {
-        if (! $this->app->runningInConsole()) {
+        if (!$this->app->runningInConsole()) {
             return;
         }
 
@@ -177,7 +177,7 @@ class SocialstreamServiceProvider extends ServiceProvider
      */
     protected function bootLaravelJetstream(): void
     {
-        if (! $this->hasComposerPackage('laravel/jetstream') || ! class_exists(Jetstream::class)) {
+        if (!$this->hasComposerPackage('laravel/jetstream') || !class_exists(Jetstream::class)) {
             return;
         }
 
@@ -193,34 +193,34 @@ class SocialstreamServiceProvider extends ServiceProvider
                 'domain' => config('socialstream.domain'),
                 'prefix' => config('socialstream.prefix', config('socialstream.path')),
             ], function () {
-                $this->loadRoutesFrom(path: __DIR__.'/../routes/'.config('jetstream.stack').'.php');
+                $this->loadRoutesFrom(path: __DIR__ . '/../routes/' . config('jetstream.stack') . '.php');
             });
         }
 
-        if (! $this->app->runningInConsole()) {
+        if (!$this->app->runningInConsole()) {
             return;
         }
 
         $this->publishes([
-            __DIR__.'/../config/socialstream.php' => config_path('socialstream.php'),
+            __DIR__ . '/../config/socialstream.php' => config_path('socialstream.php'),
         ], 'socialstream-config');
 
         $this->publishes(array_merge([
-            __DIR__.'/../stubs/app/Actions/Socialstream/' => app_path('Actions/Socialstream/'),
-            __DIR__.'/../stubs/app/Actions/Jetstream/DeleteUser.php' => app_path('Actions/Jetstream/DeleteUser.php'),
+            __DIR__ . '/../stubs/app/Actions/Socialstream/' => app_path('Actions/Socialstream/'),
+            __DIR__ . '/../stubs/app/Actions/Jetstream/DeleteUser.php' => app_path('Actions/Jetstream/DeleteUser.php'),
         ], Jetstream::hasTeamFeatures() ? [
-            __DIR__.'/../stubs/app/Actions/Socialstream/CreateUserWithTeamsFromProvider.php' => app_path('Actions/Socialstream/CreateUserFromProvider.php'),
-        ] : []), 'socialstream-actions');
+                __DIR__ . '/../stubs/app/Actions/Socialstream/CreateUserWithTeamsFromProvider.php' => app_path('Actions/Socialstream/CreateUserFromProvider.php'),
+            ] : []), 'socialstream-actions');
 
         $this->publishesMigrations([
-            __DIR__.'/../database/migrations/0001_01_01_000000_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000000_make_password_nullable_on_users_table.php'),
-            __DIR__.'/../database/migrations/0001_01_01_000001_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000001_create_connected_accounts_table.php'),
+            __DIR__ . '/../database/migrations/0001_01_01_000000_make_password_nullable_on_users_table.php' => database_path('migrations/0001_01_01_000000_make_password_nullable_on_users_table.php'),
+            __DIR__ . '/../database/migrations/0001_01_01_000001_create_connected_accounts_table.php' => database_path('migrations/0001_01_01_000001_create_connected_accounts_table.php'),
         ], 'socialstream-migrations');
 
         $this->publishes(config('jetstream.stack') === 'inertia' ? [
-            __DIR__.'/../routes/inertia.php' => base_path('routes/socialstream.php'),
+            __DIR__ . '/../routes/inertia.php' => base_path('routes/socialstream.php'),
         ] : [
-            __DIR__.'/../routes/socialstream.php' => base_path('routes/socialstream.php'),
+            __DIR__ . '/../routes/socialstream.php' => base_path('routes/socialstream.php'),
         ], 'socialstream-routes');
     }
 }
