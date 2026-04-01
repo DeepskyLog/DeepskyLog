@@ -1,5 +1,5 @@
-import {defineConfig} from 'vite';
-import laravel, {refreshPaths} from 'laravel-vite-plugin';
+import { defineConfig } from 'vite';
+import laravel, { refreshPaths } from 'laravel-vite-plugin';
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
@@ -18,10 +18,5 @@ export default defineConfig({
     ],
     optimizeDeps: {
         exclude: ['leaflet-control-geocoder']
-    },
-    build: {
-        commonjsOptions: {
-            include: [/leaflet-control-geocoder/, /node_modules/]
-        }
     },
 });
