@@ -275,11 +275,11 @@
                      set this section. --}}
                 @if(!empty($dsl_deepsky_full_container) || \View::hasSection('dsl_deepsky_full_container'))
                     <div class="mx-auto max-w-screen-xl xl:max-w-full bg-gray-900 px-6 py-6 sm:px-6 lg:px-8">
-                        <div class="flex flex-col lg:flex-row gap-4 w-full @if(!(function_exists('str_contains') ? str_contains($bodyClass, 'search-results') : (strpos($bodyClass, 'search-results') !== false))) items-stretch @endif">
+                        <div class="flex flex-col lg:flex-row gap-4 w-full items-start">
                             @livewire('ephemeris-aside')
                             <div class="flex-1" data-dsl-main-content>
                 @else
-                    <div class="flex flex-col lg:flex-row gap-4 w-full @if(!(function_exists('str_contains') ? str_contains($bodyClass, 'search-results') : (strpos($bodyClass, 'search-results') !== false))) items-stretch @endif">
+                    <div class="flex flex-col lg:flex-row gap-4 w-full items-start">
                         @livewire('ephemeris-aside')
                         <div class="flex-1" data-dsl-main-content>
                 @endif
@@ -387,13 +387,18 @@
                         ep.style.minHeight = '';
                         return;
                     }
+                    // Reset aside minHeight before measuring to get the main content's natural
+                    // height rather than the previously-stretched/forced height. Without this,
+                    // repeated calls compound the minHeight and create excessive empty space.
+                    ep.style.minHeight = '';
                     // Prefer the article/container inside the main content if present
                     var source = main.querySelector('article') || main;
-                    var rect = source.getBoundingClientRect();
-                    var h = Math.max(0, rect.height || source.offsetHeight || main.offsetHeight || document
-                        .documentElement.clientHeight);
-                    // Add small padding to ensure we cover margins/footers
-                    ep.style.minHeight = (h + 12) + 'px';
+                    var h = Math.max(0, source.scrollHeight || source.offsetHeight || main.offsetHeight);
+                    // Only set a minHeight when the aside is shorter than the main content
+                    var epNaturalH = ep.getBoundingClientRect().height || ep.offsetHeight || 0;
+                    if (h > epNaturalH) {
+                        ep.style.minHeight = h + 'px';
+                    }
                 } catch (e) {
                     if (window.__dsl_debug_enabled) console.debug('[dsl-debug] syncEphemHeight failed', e);
                 }
