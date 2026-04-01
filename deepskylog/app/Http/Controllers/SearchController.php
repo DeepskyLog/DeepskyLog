@@ -16,13 +16,13 @@ class SearchController extends Controller
 
         $limit = (int) $request->get('limit', 20);
 
-    // Filters: source (comma-separated source_table values) and object_type (comma-separated source_type)
-    $sourceFilter = $request->get('source');
-    $typeFilter = $request->get('object_type');
+        // Filters: source (comma-separated source_table values) and object_type (comma-separated source_type)
+        $sourceFilter = $request->get('source');
+        $typeFilter = $request->get('object_type');
 
-    // Allowed tokens to prevent typos and injection-like values. Update these lists if you add new source tables or types.
-    $allowedSources = ['objects', 'cometobjects', 'planets', 'moons', 'lunar_features', 'asteroids'];
-    $allowedTypes = ['object', 'comet', 'planet', 'moon', 'crater', 'mare', 'lunar_feature', 'asteroid'];
+        // Allowed tokens to prevent typos and injection-like values. Update these lists if you add new source tables or types.
+        $allowedSources = ['objects', 'cometobjects', 'planets', 'moons', 'lunar_features', 'asteroids'];
+        $allowedTypes = ['object', 'comet', 'planet', 'moon', 'crater', 'mare', 'lunar_feature', 'asteroid'];
 
         // If any filter is provided, use query builder and apply WHERE IN clauses safely.
         if (!empty($sourceFilter) || !empty($typeFilter)) {
@@ -127,5 +127,14 @@ class SearchController extends Controller
         }
 
         return response()->json($results);
+    }
+
+    /**
+     * Render a simple search results page that mounts a Livewire table.
+     */
+    public function results(Request $request)
+    {
+        $q = trim($request->get('q', ''));
+        return view('search.results', ['q' => $q]);
     }
 }

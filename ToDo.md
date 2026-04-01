@@ -4,8 +4,10 @@
 
 ## Next steps
 
++ [ ] Update to laravel 13, vite 8.
 + [ ] Targets
-  + [ ] Search targets, first by name, then by type, constellation, ...
+  + [ ] Search targets
+    + [ ] Main search page: first by name, then by type, constellation, ...
   + [ ] Install sqlite3 on the server to be able to use TNTSearch
   + [ ] After installation, make sure to run the queue worker to compute the contrast reserve and optimum eyepieces for all users / instruments / locations.  See Tips.md for more information about the queue worker.
 + [ ] Release new version of pyDeepskyLog
@@ -56,6 +58,9 @@
 + [X] New objects detail page
 + [X] Added planets, lunar features, ...
 + [X] Add a page to edit objects.  More user-friendly than before, with a button to fetch data from Simbad.
++ [X] Add a page to add a new object, with the same user-friendly form and Simbad fetching.
++ [X] Add a page to show the catalog of objects, with filters and search.
++ [X] Quick search in the left aside.  Use '/' to jump to the search field.
 
 ## Small issues
 

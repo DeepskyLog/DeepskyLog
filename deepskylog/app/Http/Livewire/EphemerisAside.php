@@ -36,6 +36,25 @@ class EphemerisAside extends Component
     {
         $this->date = Carbon::now()->toDateString();
         $this->recalculate();
+        // Persist canonical aside date in session so other server-rendered
+        // components can read it during initial render and compute matching
+        // ephemerides without waiting for Livewire hydration events.
+        try {
+            session()->put('dsl_ephemeris_date', $this->date);
+        } catch (\Throwable $_) {
+            // ignore session failures
+        }
+        // Broadcast initial date so other Livewire components (tables, previews)
+        // receive the same ephemeris date on first render.
+        try {
+            $this->emit('ephemerisDateChanged', $this->date);
+        } catch (\Throwable $_) {
+            try {
+                $this->dispatch('ephemerisDateChanged', date: $this->date);
+            } catch (\Throwable $_) {
+                // ignore
+            }
+        }
     }
 
     public function updatedDate($value)
@@ -81,6 +100,12 @@ class EphemerisAside extends Component
             // fallback for older Livewire versions (noop)
         }
         $this->recalculate();
+        // Keep session in sync with updated aside date
+        try {
+            session()->put('dsl_ephemeris_date', $this->date);
+        } catch (\Throwable $_) {
+            // ignore
+        }
         // Dispatch a lightweight browser event with the freshly computed aside payload
         try {
             $payload = [
@@ -96,7 +121,8 @@ class EphemerisAside extends Component
             // receive the Moon's illuminated fraction (prevents moon illumination
             // overwriting planet illumination on object pages).
             $payloadForObjects = $payload;
-            if (array_key_exists('illuminated_fraction', $payloadForObjects)) unset($payloadForObjects['illuminated_fraction']);
+            if (array_key_exists('illuminated_fraction', $payloadForObjects))
+                unset($payloadForObjects['illuminated_fraction']);
 
             try {
                 // Dispatch a sanitized browser event to avoid exposing the Moon's
@@ -159,7 +185,7 @@ class EphemerisAside extends Component
                             // the aside recompute from overwriting planet pages with
                             // Moon illumination.
                             $sanitizedPreview = $preview;
-                            $targetId = is_string($useObjectId) ? mb_strtolower(trim((string)$useObjectId)) : null;
+                            $targetId = is_string($useObjectId) ? mb_strtolower(trim((string) $useObjectId)) : null;
                             // Remove moon illumination fields for non-moon targets
                             if ($targetId !== 'moon') {
                                 if (isset($sanitizedPreview['ephemerides']) && is_array($sanitizedPreview['ephemerides'])) {
@@ -170,8 +196,10 @@ class EphemerisAside extends Component
                                         unset($sanitizedPreview['ephemerides']['moon_illumination']);
                                     }
                                 }
-                                if (array_key_exists('illuminated_fraction', $sanitizedPreview)) unset($sanitizedPreview['illuminated_fraction']);
-                                if (array_key_exists('moon_illumination', $sanitizedPreview)) unset($sanitizedPreview['moon_illumination']);
+                                if (array_key_exists('illuminated_fraction', $sanitizedPreview))
+                                    unset($sanitizedPreview['illuminated_fraction']);
+                                if (array_key_exists('moon_illumination', $sanitizedPreview))
+                                    unset($sanitizedPreview['moon_illumination']);
                             } else {
                                 // For moon target, ensure we expose the moon_illumination key
                                 if (isset($sanitizedPreview['ephemerides']) && is_array($sanitizedPreview['ephemerides'])) {
@@ -256,7 +284,8 @@ class EphemerisAside extends Component
             ];
             // Build sanitized payload for object listeners
             $payloadForObjects = $payload;
-            if (array_key_exists('illuminated_fraction', $payloadForObjects)) unset($payloadForObjects['illuminated_fraction']);
+            if (array_key_exists('illuminated_fraction', $payloadForObjects))
+                unset($payloadForObjects['illuminated_fraction']);
             try {
                 // See above: dispatch sanitized payload to avoid leaking Moon illum
                 $browserPayload = $payloadForObjects;
@@ -305,7 +334,7 @@ class EphemerisAside extends Component
             }
 
             // default placeholders if no location available
-            if (! $loc instanceof Location) {
+            if (!$loc instanceof Location) {
                 $this->sun_times = '- / - / -';
                 $this->nautical = '- / -';
                 $this->astronomical = '- / -';
@@ -402,7 +431,7 @@ class EphemerisAside extends Component
                     } catch (\Throwable $_) {
                         try {
                             $proxyResult = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($moonTarget, $d->copy(), $geo_coords, $loc->elevation ?? 0.0, ['obj' => null]);
-                            if (! empty($proxyResult) && ! empty($proxyResult['coords'])) {
+                            if (!empty($proxyResult) && !empty($proxyResult['coords'])) {
                                 $coords = $proxyResult['coords'];
                                 if (method_exists($moonTarget, 'setEquatorialCoordinates')) {
                                     try {

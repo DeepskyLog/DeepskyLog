@@ -374,6 +374,24 @@ Route::post('/object', [App\Http\Controllers\ObjectController::class, 'store'])
 Route::get('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'show'])
     ->name('object.show')->middleware('doNotCacheResponse');
 
+// Search results page (Livewire-powered)
+Route::get('/search', [App\Http\Controllers\SearchController::class, 'results'])
+    ->name('search.results')->middleware('doNotCacheResponse');
+
+// Search exports (PDF / plain text / APD)
+Route::get('/search/names.pdf', [App\Http\Controllers\SearchExportController::class, 'namesPdf'])
+    ->name('search.names.pdf')->middleware('doNotCacheResponse');
+Route::get('/search/table.pdf', [App\Http\Controllers\SearchExportController::class, 'tablePdf'])
+    ->name('search.table.pdf')->middleware('doNotCacheResponse');
+Route::get('/search/argo.txt', [App\Http\Controllers\SearchExportController::class, 'argoNavis'])
+    ->name('search.argo')->middleware('doNotCacheResponse');
+Route::get('/search/skylist.skylist', [App\Http\Controllers\SearchExportController::class, 'skylist'])
+    ->name('search.skylist')->middleware('doNotCacheResponse');
+Route::get('/search/stxt.txt', [App\Http\Controllers\SearchExportController::class, 'stxt'])
+    ->name('search.stxt')->middleware('doNotCacheResponse');
+Route::get('/search/apd.apd', [App\Http\Controllers\SearchExportController::class, 'apd'])
+    ->name('search.apd')->middleware('doNotCacheResponse');
+
 // Catalogs overview page
 Route::get('/catalogs', [App\Http\Controllers\CatalogController::class, 'index'])
     ->name('catalogs.index');

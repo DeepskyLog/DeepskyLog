@@ -701,7 +701,7 @@ class ObjectController extends Controller
                     // Provide initial ephemerides payload so Livewire mounts with wrapper coords
                     try {
                         $ephemerides = [
-                            'date' => \Carbon\Carbon::now()->toDateString(),
+                            'date' => $this->getCanonicalEphemerisDate()->toDateString(),
                             'raDeg' => (float) $res['ra_hours'] * 15.0,
                             'decDeg' => (float) $res['dec_deg'],
                             // Mark that these coordinates came from the server-side wrapper
@@ -1276,7 +1276,7 @@ class ObjectController extends Controller
                         $forceUseWrapperSkipHorizons = true;
                         try {
                             $ephemerides = [
-                                'date' => \Carbon\Carbon::now()->toDateString(),
+                                'date' => $this->getCanonicalEphemerisDate()->toDateString(),
                                 'raDeg' => (float) $earlyRes['ra_hours'] * 15.0,
                                 'decDeg' => (float) $earlyRes['dec_deg'],
                                 // Mark these as wrapper-provided so Livewire can avoid recalc
@@ -1550,8 +1550,8 @@ class ObjectController extends Controller
             $authUser = Auth::user();
             $userLocation = $authUser?->standardLocation ?? null;
             if ($userLocation && isset($record->ra) && isset($record->decl)) {
-                // Use a default date for now (no Livewire yet)
-                $date = \Carbon\Carbon::now();
+                // Use a canonical ephemeris date: prefer session or request, fall back to now
+                $date = $this->getCanonicalEphemerisDate();
                 // Use user's timezone if available
                 try {
                     $date = $date->timezone($userLocation->timezone ?? config('app.timezone'));
@@ -1731,7 +1731,7 @@ class ObjectController extends Controller
                         $fqcn = "\\deepskylog\\AstronomyLibrary\\Targets\\{$className}";
                         if (class_exists($fqcn)) {
                             $planet = new $fqcn();
-                            $date = \Carbon\Carbon::now();
+                            $date = $this->getCanonicalEphemerisDate();
 
                             // Prefer user's standard location for topocentric coords
                             $authUser = Auth::user();
@@ -2650,7 +2650,7 @@ class ObjectController extends Controller
                             }
 
                             if ($a !== null) {
-                                $date = \Carbon\Carbon::now();
+                                $date = $this->getCanonicalEphemerisDate();
                                 try {
                                     $date = $date->timezone($userLocation->timezone ?? config('app.timezone'));
                                 } catch (\Throwable $_) {
@@ -3244,7 +3244,7 @@ class ObjectController extends Controller
                     }
 
                     $ephemerides = array_merge([
-                        'date' => \Carbon\Carbon::now()->toDateString(),
+                        'date' => $this->getCanonicalEphemerisDate()->toDateString(),
                         'raDeg' => $raDegVal,
                         'decDeg' => $decDegVal,
                         '_usedWrapper' => true,
@@ -3419,6 +3419,47 @@ class ObjectController extends Controller
         }
 
         return response()->view('object.show', $vars);
+    }
+
+    /**
+     * Return the canonical ephemeris date for this request.
+     * Preference order: request query `date`, session `dsl_ephemeris_date`, now().
+     *
+     * @return \Carbon\Carbon
+     */
+    private function getCanonicalEphemerisDate()
+    {
+        try {
+            $q = request()->query('date');
+            if (!empty($q)) {
+                try {
+                    return \Carbon\Carbon::parse($q);
+                } catch (\Throwable $_) {
+                    // ignore parse errors
+                }
+            }
+        } catch (\Throwable $_) {
+            // ignore
+        }
+
+        try {
+            $sess = session()->get('dsl_ephemeris_date');
+            if (!empty($sess)) {
+                try {
+                    return \Carbon\Carbon::createFromFormat('Y-m-d', $sess);
+                } catch (\Throwable $_) {
+                    try {
+                        return \Carbon\Carbon::parse($sess);
+                    } catch (\Throwable $_) {
+                        // ignore
+                    }
+                }
+            }
+        } catch (\Throwable $_) {
+            // ignore
+        }
+
+        return \Carbon\Carbon::now();
     }
 
     /**
@@ -4854,7 +4895,12 @@ class ObjectController extends Controller
                     case 'RA':
                     case 'RA_d':
                         if (!empty($value) && is_numeric($value)) {
-                            $updates['ra'] = floatval($value);
+                            // Parse RA value to decimal degrees and store as hours
+                            // (database stores RA in decimal hours 0..24).
+                            $raDeg = \App\Models\DeepskyObject::raToDecimal($value);
+                            if ($raDeg !== null) {
+                                $updates['ra'] = $raDeg / 15.0;
+                            }
                         }
                         break;
                     case 'DEC':
