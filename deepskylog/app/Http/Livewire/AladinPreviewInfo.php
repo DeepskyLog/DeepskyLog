@@ -94,17 +94,21 @@ class AladinPreviewInfo extends Component
                 // Recursive search helper
                 $finder = function ($needle, $haystack) use (&$finder) {
                     if (is_array($haystack)) {
-                        if (array_key_exists($needle, $haystack)) return $haystack[$needle];
+                        if (array_key_exists($needle, $haystack))
+                            return $haystack[$needle];
                         foreach ($haystack as $v) {
                             $res = $finder($needle, $v);
-                            if (!is_null($res)) return $res;
+                            if (!is_null($res))
+                                return $res;
                         }
                     } elseif (is_object($haystack)) {
                         $arr = (array) $haystack;
-                        if (array_key_exists($needle, $arr)) return $arr[$needle];
+                        if (array_key_exists($needle, $arr))
+                            return $arr[$needle];
                         foreach ($arr as $v) {
                             $res = $finder($needle, $v);
-                            if (!is_null($res)) return $res;
+                            if (!is_null($res))
+                                return $res;
                         }
                     }
                     return null;
@@ -132,7 +136,10 @@ class AladinPreviewInfo extends Component
         try {
             // recalculate invoked (debug logging removed)
             $tStart = microtime(true);
-            try { Log::debug('AladinPreviewInfo: recalculate start', ['user_id' => Auth::id(), 'objectId' => $this->objectId]); } catch (\Throwable $_) {}
+            try {
+                Log::debug('AladinPreviewInfo: recalculate start', ['user_id' => Auth::id(), 'objectId' => $this->objectId]);
+            } catch (\Throwable $_) {
+            }
             $obj = null;
             // Prefer explicit objectId provided in the payload (from the page) to ensure
             // we operate on the correct object instance. Fall back to the component's
@@ -141,7 +148,7 @@ class AladinPreviewInfo extends Component
             try {
                 if (is_array($payload) || is_object($payload)) {
                     // Guard against payload values like 'undefined' or 'null' strings
-                    if (array_key_exists('objectId', (array)$payload)) {
+                    if (array_key_exists('objectId', (array) $payload)) {
                         $raw = (string) ($payload['objectId'] ?? '');
                         $raw_trim = trim($raw);
                         if ($raw_trim !== '' && strtolower($raw_trim) !== 'undefined' && strtolower($raw_trim) !== 'null') {
@@ -171,7 +178,7 @@ class AladinPreviewInfo extends Component
                         }
                     }
                     // query string fallback
-                    if ((!$candidate || trim((string)$candidate) === '') && $req) {
+                    if ((!$candidate || trim((string) $candidate) === '') && $req) {
                         try {
                             $candidate = $req->query('id') ?? $req->query('object') ?? null;
                         } catch (\Throwable $_) {
@@ -179,11 +186,11 @@ class AladinPreviewInfo extends Component
                         }
                     }
                     // lastly, check for an explicitly injected server variable via Livewire's initial payload
-                    if ((!$candidate || trim((string)$candidate) === '') && !empty($this->objectId)) {
+                    if ((!$candidate || trim((string) $candidate) === '') && !empty($this->objectId)) {
                         $candidate = $this->objectId;
                     }
-                    if ($candidate && trim((string)$candidate) !== '') {
-                        $useObjectId = trim((string)$candidate);
+                    if ($candidate && trim((string) $candidate) !== '') {
+                        $useObjectId = trim((string) $candidate);
                     }
                     // If still empty, attempt to resolve from payload.objectSlug if provided
                     if (empty($useObjectId) && !empty($payload) && (is_array($payload) || is_object($payload))) {
@@ -195,19 +202,19 @@ class AladinPreviewInfo extends Component
                                     try {
                                         // First, check legacy objectnames table for the slug to find canonical objectname
                                         $objNameRow = DB::table('objectnames')->where('slug', $slugCandidate)->first();
-                                        if (! $objNameRow) {
+                                        if (!$objNameRow) {
                                             // try altname/name variants in the legacy table
                                             $objNameRow = DB::table('objectnames')
                                                 ->whereRaw('LOWER(objectname) = ?', [mb_strtolower($slugCandidate)])
                                                 ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($slugCandidate)])
                                                 ->first();
                                         }
-                                        if ($objNameRow && ! empty($objNameRow->objectname)) {
+                                        if ($objNameRow && !empty($objNameRow->objectname)) {
                                             // The canonical legacy object name is stored in objectnames.objectname
                                             $canonicalName = $objNameRow->objectname;
                                             // The objects table links via 'name' (legacy) or sometimes 'object' column. Try both.
                                             $found = DB::table('objects')->where('name', $canonicalName)->first();
-                                            if (! $found && Schema::hasColumn('objects', 'object')) {
+                                            if (!$found && Schema::hasColumn('objects', 'object')) {
                                                 $found = DB::table('objects')->where('object', $canonicalName)->first();
                                             }
                                             if ($found) {
@@ -235,12 +242,12 @@ class AladinPreviewInfo extends Component
             // component-mounted id is $this->objectId
             if ($useObjectId) {
                 try {
-                    if (is_numeric((string)$useObjectId)) {
+                    if (is_numeric((string) $useObjectId)) {
                         $obj = \App\Models\DeepskyObject::where('id', $useObjectId)->first();
                     } else {
                         // non-numeric identifier: try to find by name or legacy 'object' column
                         $found = DB::table('objects')->where('name', $useObjectId)->first();
-                        if (! $found && Schema::hasColumn('objects', 'object')) {
+                        if (!$found && Schema::hasColumn('objects', 'object')) {
                             $found = DB::table('objects')->where('object', $useObjectId)->first();
                         }
                         if ($found) {
@@ -254,12 +261,13 @@ class AladinPreviewInfo extends Component
                     // 'id' column may not be present or is NULL.
                     try {
                         if (empty($obj) && !empty($payload) && (is_array($payload) || is_object($payload))) {
-                            $ps = (array)$payload;
+                            $ps = (array) $payload;
                             if (!empty($ps['objectSlug'])) {
-                                $slugCandidate = trim((string)$ps['objectSlug']);
+                                $slugCandidate = trim((string) $ps['objectSlug']);
                                 if ($slugCandidate !== '') {
                                     $foundBySlug = DB::table('objects')->where('slug', $slugCandidate)->first();
-                                    if ($foundBySlug) $obj = $foundBySlug;
+                                    if ($foundBySlug)
+                                        $obj = $foundBySlug;
                                 }
                             }
                         }
@@ -280,7 +288,10 @@ class AladinPreviewInfo extends Component
                 $cacheKey = "aladin_preview_last_dispatch:{$userId}:{$incomingObj}";
                 $last = Cache::get($cacheKey);
                 if ($last && (microtime(true) - $last) < (self::PREVIEW_DEBOUNCE_MS / 1000)) {
-                    try { Log::debug('AladinPreviewInfo: recalc debounced', ['user_id' => $userId, 'object' => $incomingObj, 'since_last_ms' => round((microtime(true) - $last) * 1000, 2)]); } catch (\Throwable $_) {}
+                    try {
+                        Log::debug('AladinPreviewInfo: recalc debounced', ['user_id' => $userId, 'object' => $incomingObj, 'since_last_ms' => round((microtime(true) - $last) * 1000, 2)]);
+                    } catch (\Throwable $_) {
+                    }
                     return;
                 }
                 // record last dispatch time for a short period so other rapid
@@ -307,7 +318,7 @@ class AladinPreviewInfo extends Component
             $debug_user_instrument = false;
 
             // If the user selected a specific instrument in the aladin selects, use that
-            if (! empty($payload['instrument'])) {
+            if (!empty($payload['instrument'])) {
                 try {
                     $userInstrument = \App\Models\Instrument::where('id', $payload['instrument'])->first();
                 } catch (\Throwable $_) {
@@ -316,7 +327,7 @@ class AladinPreviewInfo extends Component
             }
 
             // Fall back to authenticated user's standard instrument if not provided
-            if (! $userInstrument) {
+            if (!$userInstrument) {
                 $userInstrument = $authUser?->standardInstrument ?? null;
             }
 
@@ -331,19 +342,25 @@ class AladinPreviewInfo extends Component
             // incomplete until the user provides selections.
             try {
                 $hasStdSet = false;
-                try { $hasStdSet = (bool) ($authUser?->stdinstrumentset ?? null); } catch (\Throwable $_) { $hasStdSet = false; }
+                try {
+                    $hasStdSet = (bool) ($authUser?->stdinstrumentset ?? null);
+                } catch (\Throwable $_) {
+                    $hasStdSet = false;
+                }
                 $hasPayloadSelection = false;
                 try {
                     $hasPayloadSelection = (
-                        array_key_exists('instrument', $payloadArr) && ! empty($payloadArr['instrument'])
+                        array_key_exists('instrument', $payloadArr) && !empty($payloadArr['instrument'])
                     ) || (
-                        array_key_exists('eyepiece', $payloadArr) && ! empty($payloadArr['eyepiece'])
+                        array_key_exists('eyepiece', $payloadArr) && !empty($payloadArr['eyepiece'])
                     ) || (
-                        array_key_exists('lens', $payloadArr) && ! empty($payloadArr['lens'])
+                        array_key_exists('lens', $payloadArr) && !empty($payloadArr['lens'])
                     );
-                } catch (\Throwable $_) { $hasPayloadSelection = false; }
+                } catch (\Throwable $_) {
+                    $hasPayloadSelection = false;
+                }
 
-                if (Auth::check() && ! $hasStdSet && ! $hasPayloadSelection && $payloadDiam1 === null && $payloadMag === null) {
+                if (Auth::check() && !$hasStdSet && !$hasPayloadSelection && $payloadDiam1 === null && $payloadMag === null) {
                     try {
                         $this->dispatchBrowserEvent('aladin-preview-info-updated', [
                             'status' => 'incomplete',
@@ -352,7 +369,8 @@ class AladinPreviewInfo extends Component
                             'payload' => $payload,
                             'objectId' => $useObjectId ?? null,
                         ]);
-                    } catch (\Throwable $_) { }
+                    } catch (\Throwable $_) {
+                    }
                     return;
                 }
             } catch (\Throwable $_) {
@@ -380,7 +398,7 @@ class AladinPreviewInfo extends Component
                 // explicit selection (could be null) — try to load when non-empty.
                 // Treat string 'null' or 'undefined' (occasionally sent by the client) as explicit null.
                 $rawLens = $payloadArr['lens'] ?? null;
-                $rawLensStr = is_null($rawLens) ? null : (is_string($rawLens) ? trim($rawLens) : (string)$rawLens);
+                $rawLensStr = is_null($rawLens) ? null : (is_string($rawLens) ? trim($rawLens) : (string) $rawLens);
                 if ($rawLensStr === null || $rawLensStr === '' || in_array(strtolower($rawLensStr), ['null', 'undefined'], true)) {
                     // explicit null/empty -> do not fallback; keep $defaultLens null
                     $defaultLens = null;
@@ -396,7 +414,7 @@ class AladinPreviewInfo extends Component
                 // No lens specified in payload: fall back to user's default lens/preferences
                 $defaultLensId = $authUser?->stdlens ?? null;
                 try {
-                    if (! $defaultLensId && Schema::hasColumn('users', 'preferences') && is_array($authUser?->preferences) && isset($authUser->preferences['aladin_default_lens'])) {
+                    if (!$defaultLensId && Schema::hasColumn('users', 'preferences') && is_array($authUser?->preferences) && isset($authUser->preferences['aladin_default_lens'])) {
                         $defaultLensId = $authUser->preferences['aladin_default_lens'];
                     }
                 } catch (\Throwable $_) {
@@ -411,7 +429,8 @@ class AladinPreviewInfo extends Component
             }
             if ($defaultLens) {
                 $lensFactor = $defaultLens->factor ?? 1.0;
-                if (! is_numeric($lensFactor) || $lensFactor <= 0) $lensFactor = 1.0;
+                if (!is_numeric($lensFactor) || $lensFactor <= 0)
+                    $lensFactor = 1.0;
                 $defaultLensName = $defaultLens->name ?? null;
             }
             // expose lens factor for debugging
@@ -442,7 +461,7 @@ class AladinPreviewInfo extends Component
 
             // If we have neither an object record nor payload-provided diam/mag,
             // we cannot compute contrast/optimum.
-            if (! $obj && $payloadDiam1 === null && $payloadMag === null) {
+            if (!$obj && $payloadDiam1 === null && $payloadMag === null) {
                 try {
                     $this->dispatchBrowserEvent('aladin-preview-info-updated', [
                         'status' => 'incomplete',
@@ -461,7 +480,7 @@ class AladinPreviewInfo extends Component
             // allow caller to provide a date in payload (ISO string or Y-m-d format)
             try {
                 if (!empty($payload) && (is_array($payload) || is_object($payload))) {
-                    $p = (array)$payload;
+                    $p = (array) $payload;
                     if (!empty($p['date'])) {
                         try {
                             $date = \Carbon\Carbon::parse($p['date']);
@@ -512,11 +531,12 @@ class AladinPreviewInfo extends Component
                 // Try to detect planetary objects by a raw type field or by name
                 try {
                     $rawType = $obj->source_type_raw ?? $obj->source_type ?? null;
-                    if (is_string($rawType) && strtolower($rawType) === 'planet') $isPlanet = true;
+                    if (is_string($rawType) && strtolower($rawType) === 'planet')
+                        $isPlanet = true;
                 } catch (\Throwable $_) {
                 }
                 // Fallback: check name mapping
-                if (! $isPlanet) {
+                if (!$isPlanet) {
                     try {
                         $pname = trim(strtolower($obj->name ?? ''));
                         $map = ['mercury' => 'Mercury', 'venus' => 'Venus', 'earth' => 'Earth', 'mars' => 'Mars', 'jupiter' => 'Jupiter', 'saturn' => 'Saturn', 'uranus' => 'Uranus', 'neptune' => 'Neptune', 'pluto' => 'Pluto', 'sun' => 'Sun', 'moon' => 'Moon'];
@@ -542,13 +562,13 @@ class AladinPreviewInfo extends Component
                     }
                 }
 
-                if (! $skipPlanetCompute && $isPlanet && $planetClass && class_exists($planetClass)) {
+                if (!$skipPlanetCompute && $isPlanet && $planetClass && class_exists($planetClass)) {
                     $planet = new $planetClass();
                     // determine date from payload if provided
                     $calcDate = \Carbon\Carbon::now();
-                    if (! empty($payload) && (is_array($payload) || is_object($payload))) {
-                        $pp = (array)$payload;
-                        if (! empty($pp['date'])) {
+                    if (!empty($payload) && (is_array($payload) || is_object($payload))) {
+                        $pp = (array) $payload;
+                        if (!empty($pp['date'])) {
                             try {
                                 $calcDate = \Carbon\Carbon::parse($pp['date']);
                             } catch (\Throwable $_) {
@@ -570,21 +590,30 @@ class AladinPreviewInfo extends Component
                                     if (isset($obj) && $obj) {
                                         $hDesig = $obj->designation ?? $obj->slug ?? $obj->name ?? null;
                                     }
-                                    if (empty($hDesig) && ! empty($payloadArr['objectName'] ?? null)) {
+                                    if (empty($hDesig) && !empty($payloadArr['objectName'] ?? null)) {
                                         $hDesig = $payloadArr['objectName'];
                                     }
                                 } catch (\Throwable $_) {
                                     $hDesig = null;
                                 }
                                 try {
-                                    try { \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calling HorizonsProxy (planet) start', ['designation' => $hDesig ?? null, 'objectId' => $obj->id ?? null]); } catch (\Throwable $_) {}
+                                    try {
+                                        \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calling HorizonsProxy (planet) start', ['designation' => $hDesig ?? null, 'objectId' => $obj->id ?? null]);
+                                    } catch (\Throwable $_) {
+                                    }
                                     $proxyT0 = microtime(true);
                                     $proxyResult = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($planet, $calcDate, $geo, $height, ['obj' => $obj ?? null, 'designation' => $hDesig ?? null]);
                                     $proxyElapsed = round((microtime(true) - $proxyT0) * 1000, 2);
-                                    try { \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calling HorizonsProxy (planet) end', ['elapsed_ms' => $proxyElapsed, 'designation' => $hDesig ?? null, 'objectId' => $obj->id ?? null]); } catch (\Throwable $_) {}
+                                    try {
+                                        \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calling HorizonsProxy (planet) end', ['elapsed_ms' => $proxyElapsed, 'designation' => $hDesig ?? null, 'objectId' => $obj->id ?? null]);
+                                    } catch (\Throwable $_) {
+                                    }
                                 } catch (\Throwable $proxyEx) {
                                     $proxyResult = null;
-                                    try { \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: HorizonsProxy exception', ['message' => $proxyEx->getMessage()]); } catch (\Throwable $_) {}
+                                    try {
+                                        \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: HorizonsProxy exception', ['message' => $proxyEx->getMessage()]);
+                                    } catch (\Throwable $_) {
+                                    }
                                 }
                             } else {
                                 $proxyResult = null;
@@ -608,9 +637,15 @@ class AladinPreviewInfo extends Component
                                         $planet->calculateApparentEquatorialCoordinates($calcDate);
                                     }
                                     $libElapsed = round((microtime(true) - $libT0) * 1000, 2);
-                                    try { \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: planet library compute elapsed', ['elapsed_ms' => $libElapsed, 'objectId' => $obj->id ?? null]); } catch (\Throwable $_) {}
+                                    try {
+                                        \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: planet library compute elapsed', ['elapsed_ms' => $libElapsed, 'objectId' => $obj->id ?? null]);
+                                    } catch (\Throwable $_) {
+                                    }
                                 } catch (\Throwable $libEx) {
-                                    try { \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: planet library exception', ['message' => $libEx->getMessage()]); } catch (\Throwable $_) {}
+                                    try {
+                                        \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: planet library exception', ['message' => $libEx->getMessage()]);
+                                    } catch (\Throwable $_) {
+                                    }
                                 }
                             }
                         } catch (\Throwable $_) {
@@ -699,9 +734,15 @@ class AladinPreviewInfo extends Component
                 $sbT0 = microtime(true);
                 $sbobj = $target->calculateSBObj();
                 $sbElapsed = round((microtime(true) - $sbT0) * 1000, 2);
-                try { \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calculateSBObj elapsed', ['elapsed_ms' => $sbElapsed, 'objectId' => $obj->id ?? null]); } catch (\Throwable $_) {}
+                try {
+                    \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calculateSBObj elapsed', ['elapsed_ms' => $sbElapsed, 'objectId' => $obj->id ?? null]);
+                } catch (\Throwable $_) {
+                }
             } catch (\Throwable $sbEx) {
-                try { \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: calculateSBObj exception', ['message' => $sbEx->getMessage()]); } catch (\Throwable $_) {}
+                try {
+                    \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: calculateSBObj exception', ['message' => $sbEx->getMessage()]);
+                } catch (\Throwable $_) {
+                }
                 $sbobj = null;
             }
             // show sbobj presence/value for debug (locals)
@@ -714,13 +755,13 @@ class AladinPreviewInfo extends Component
             // try to derive magnification
             $mag = $userInstrument->fixedMagnification ?? null;
             $debug_mag = $mag;
-            if (! $mag && $userInstrument->focal_length_mm && isset($obj->typicalEyepieceFocal)) {
+            if (!$mag && $userInstrument->focal_length_mm && isset($obj->typicalEyepieceFocal)) {
                 $mag = round($userInstrument->focal_length_mm / $obj->typicalEyepieceFocal);
             }
 
 
             $possibleUsedForContrast = null;
-            if (! $mag && $sbobj !== null && $sqm !== null && $aperture) {
+            if (!$mag && $sbobj !== null && $sqm !== null && $aperture) {
                 $possible = [25, 50, 75, 100, 150, 200];
                 if (!empty($possible) && !$explicitNoLens && $lensFactor !== 1.0) {
                     $possible = array_map(fn($v) => (int) round($v * $lensFactor), $possible);
@@ -734,12 +775,12 @@ class AladinPreviewInfo extends Component
                         if ($setModel && count($setModel->eyepieces) > 0) {
                             $derived = [];
                             foreach ($setModel->eyepieces as $sep) {
-                                if ($sep->active && ! empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
+                                if ($sep->active && !empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
                                     $derived[] = (int) round(($userInstrument->focal_length_mm / $sep->focal_length_mm) * ($explicitNoLens ? 1.0 : $lensFactor));
                                 }
                             }
                             $derived = array_values(array_unique(array_filter($derived)));
-                            if (! empty($derived)) {
+                            if (!empty($derived)) {
                                 $possible = $derived;
                                 $possibleUsedForContrast = $possible;
                             }
@@ -747,33 +788,45 @@ class AladinPreviewInfo extends Component
                     } catch (\Throwable $_) {
                     }
                 }
-                if (! empty($possible)) {
+                if (!empty($possible)) {
                     $mag = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possible);
                 }
                 $debug_possible_used_for_contrast = $possibleUsedForContrast;
                 $debug_mag = $mag;
             }
 
-                if ($sbobj !== null && $sqm !== null && $aperture && $mag) {
+            if ($sbobj !== null && $sqm !== null && $aperture && $mag) {
+                try {
+                    $crT0 = microtime(true);
+                    $contrast = $target->calculateContrastReserve($sbobj, $sqm, $aperture, $mag);
+                    $crElapsed = round((microtime(true) - $crT0) * 1000, 2);
                     try {
-                        $crT0 = microtime(true);
-                        $contrast = $target->calculateContrastReserve($sbobj, $sqm, $aperture, $mag);
-                        $crElapsed = round((microtime(true) - $crT0) * 1000, 2);
-                        try { \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calculateContrastReserve elapsed', ['elapsed_ms' => $crElapsed, 'objectId' => $obj->id ?? null]); } catch (\Throwable $_) {}
-                    } catch (\Throwable $crEx) {
-                        try { \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: calculateContrastReserve exception', ['message' => $crEx->getMessage()]); } catch (\Throwable $_) {}
-                        $contrast = null;
+                        \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calculateContrastReserve elapsed', ['elapsed_ms' => $crElapsed, 'objectId' => $obj->id ?? null]);
+                    } catch (\Throwable $_) {
                     }
-                    $this->contrast_reserve = is_numeric($contrast) ? round($contrast, 2) : null;
+                } catch (\Throwable $crEx) {
+                    try {
+                        \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: calculateContrastReserve exception', ['message' => $crEx->getMessage()]);
+                    } catch (\Throwable $_) {
+                    }
+                    $contrast = null;
+                }
+                $this->contrast_reserve = is_numeric($contrast) ? round($contrast, 2) : null;
                 $cat = null;
                 if (is_numeric($this->contrast_reserve)) {
                     $c = (float) $this->contrast_reserve;
-                    if ($c > 1.0) $cat = 'very_easy';
-                    elseif ($c > 0.5) $cat = 'easy';
-                    elseif ($c > 0.35) $cat = 'quite_difficult';
-                    elseif ($c > 0.1) $cat = 'difficult';
-                    elseif ($c > -0.2) $cat = 'questionable';
-                    else $cat = 'not_visible';
+                    if ($c > 1.0)
+                        $cat = 'very_easy';
+                    elseif ($c > 0.5)
+                        $cat = 'easy';
+                    elseif ($c > 0.35)
+                        $cat = 'quite_difficult';
+                    elseif ($c > 0.1)
+                        $cat = 'difficult';
+                    elseif ($c > -0.2)
+                        $cat = 'questionable';
+                    else
+                        $cat = 'not_visible';
                 }
                 $this->contrast_reserve_category = $cat;
                 $this->contrast_used_location = $userLocation?->name ?? null;
@@ -809,7 +862,8 @@ class AladinPreviewInfo extends Component
                 $epMap = [];
 
                 $instSet = $authUser?->standardInstrumentSet ?? null;
-                if ($instSet && is_object($instSet) && isset($instSet->id)) $instSet = $instSet->id;
+                if ($instSet && is_object($instSet) && isset($instSet->id))
+                    $instSet = $instSet->id;
                 $usedSetEyepieces = false;
                 if ($instSet) {
                     $set = \App\Models\InstrumentSet::where('id', $instSet)->first();
@@ -818,10 +872,11 @@ class AladinPreviewInfo extends Component
                         try {
                             $eyepieceIds = [];
                             foreach ($set->eyepieces as $tmpEp) {
-                                if (isset($tmpEp->id) && $tmpEp->id) $eyepieceIds[] = $tmpEp->id;
+                                if (isset($tmpEp->id) && $tmpEp->id)
+                                    $eyepieceIds[] = $tmpEp->id;
                             }
                             $eyepieceIds = array_values(array_unique($eyepieceIds));
-                            if (! empty($eyepieceIds)) {
+                            if (!empty($eyepieceIds)) {
                                 $map = \App\Models\ObservationsOld::getInstrumentsForEyepieceIds($eyepieceIds);
                                 \App\Models\Eyepiece::setBulkUsedInstrumentsMap($map);
                                 try {
@@ -841,11 +896,12 @@ class AladinPreviewInfo extends Component
                         // Batch user slug lookup for set eyepieces
                         $epUserIds = [];
                         foreach ($set->eyepieces as $tmpEp) {
-                            if (isset($tmpEp->user_id) && $tmpEp->user_id) $epUserIds[] = $tmpEp->user_id;
+                            if (isset($tmpEp->user_id) && $tmpEp->user_id)
+                                $epUserIds[] = $tmpEp->user_id;
                         }
                         $epUserIds = array_values(array_unique($epUserIds));
                         $epUserSlugMap = [];
-                        if (! empty($epUserIds)) {
+                        if (!empty($epUserIds)) {
                             try {
                                 $epUserSlugMap = \App\Models\User::whereIn('id', $epUserIds)->pluck('slug', 'id')->toArray();
                             } catch (\Throwable $_) {
@@ -859,7 +915,7 @@ class AladinPreviewInfo extends Component
                                 $eyepieceFocals[] = $ef;
                                 $userSlug = $epUserSlugMap[$ep->user_id] ?? null;
                                 $displayName = $ep->fullName();
-                                if (! $explicitNoLens && ! empty($defaultLensName)) {
+                                if (!$explicitNoLens && !empty($defaultLensName)) {
                                     $displayName = $displayName . ' (' . $defaultLensName . ')';
                                 }
                                 $eyepiecesForDisplay[] = ['name' => $displayName, 'focal' => $ef, 'slug' => $ep->slug ?? null, 'user_slug' => $userSlug];
@@ -873,11 +929,12 @@ class AladinPreviewInfo extends Component
                         // Batch user slug lookup for user's eyepieces
                         $epUserIds = [];
                         foreach ($userEps as $tmpEp) {
-                            if (isset($tmpEp->user_id) && $tmpEp->user_id) $epUserIds[] = $tmpEp->user_id;
+                            if (isset($tmpEp->user_id) && $tmpEp->user_id)
+                                $epUserIds[] = $tmpEp->user_id;
                         }
                         $epUserIds = array_values(array_unique($epUserIds));
                         $epUserSlugMap = [];
-                        if (! empty($epUserIds)) {
+                        if (!empty($epUserIds)) {
                             try {
                                 $epUserSlugMap = \App\Models\User::whereIn('id', $epUserIds)->pluck('slug', 'id')->toArray();
                             } catch (\Throwable $_) {
@@ -885,7 +942,7 @@ class AladinPreviewInfo extends Component
                             }
                         }
                         foreach ($userEps as $ep) {
-                            if (! empty($ep->focal_length_mm)) {
+                            if (!empty($ep->focal_length_mm)) {
                                 $ef = $ep->focal_length_mm;
                                 $eyepieceFocals[] = $ef;
                             } else {
@@ -893,7 +950,7 @@ class AladinPreviewInfo extends Component
                             }
                             $userSlug = $epUserSlugMap[$ep->user_id] ?? null;
                             $displayName = $ep->fullName() ?? $ep->name ?? null;
-                            if (! $explicitNoLens && ! empty($defaultLensName) && ! empty($displayName)) {
+                            if (!$explicitNoLens && !empty($defaultLensName) && !empty($displayName)) {
                                 $displayName = $displayName . ' (' . $defaultLensName . ')';
                             }
                             $eyepiecesForDisplay[] = ['name' => $displayName, 'focal' => $ef, 'slug' => $ep->slug ?? null, 'user_slug' => $userSlug];
@@ -902,13 +959,14 @@ class AladinPreviewInfo extends Component
                     }
                 }
 
-                if (! empty($eyepieceFocals) && $userInstrument?->focal_length_mm) {
+                if (!empty($eyepieceFocals) && $userInstrument?->focal_length_mm) {
                     foreach ($eyepiecesForDisplay as $epInfo) {
                         $ef = $epInfo['focal'];
                         if ($ef > 0) {
                             $m = (int) round(($userInstrument->focal_length_mm / $ef) * ($explicitNoLens ? 1.0 : $lensFactor));
                             if ($m > 0) {
-                                if (! isset($epMap[$m])) $epMap[$m] = [];
+                                if (!isset($epMap[$m]))
+                                    $epMap[$m] = [];
                                 $epMap[$m][] = $epInfo;
                             }
                         }
@@ -916,48 +974,50 @@ class AladinPreviewInfo extends Component
                 }
 
                 $possibleMags = [];
-                if (! empty($epMap)) {
+                if (!empty($epMap)) {
                     $possibleMags = array_values(array_unique(array_keys($epMap)));
-                } elseif (! empty($eyepieceFocals) && $userInstrument?->focal_length_mm) {
+                } elseif (!empty($eyepieceFocals) && $userInstrument?->focal_length_mm) {
                     foreach ($eyepieceFocals as $ef) {
-                        if ($ef > 0) $possibleMags[] = (int) round($userInstrument->focal_length_mm / $ef);
+                        if ($ef > 0)
+                            $possibleMags[] = (int) round($userInstrument->focal_length_mm / $ef);
                     }
                     $possibleMags = array_values(array_unique(array_filter($possibleMags)));
                 }
-                if (empty($possibleMags) && ! empty($possibleUsedForContrast)) {
+                if (empty($possibleMags) && !empty($possibleUsedForContrast)) {
                     $possibleMags = $possibleUsedForContrast;
                 }
-                if (! empty($possibleMags) && $sbobj !== null && $sqm !== null && $aperture) {
+                if (!empty($possibleMags) && $sbobj !== null && $sqm !== null && $aperture) {
                     $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
                     $this->optimum_detection_magnification = $best ? (int) $best : null;
                 } else {
                     $this->optimum_detection_magnification = null;
                 }
 
-                if (! empty($best) && isset($epMap[(int)$best])) {
-                    $this->optimum_eyepieces = $epMap[(int)$best];
+                if (!empty($best) && isset($epMap[(int) $best])) {
+                    $this->optimum_eyepieces = $epMap[(int) $best];
                 } else {
                     $selectedEps = [];
                     foreach ($possibleMags as $pm) {
                         if (isset($epMap[$pm])) {
-                            foreach ($epMap[$pm] as $epInfo) $selectedEps[] = $epInfo;
+                            foreach ($epMap[$pm] as $epInfo)
+                                $selectedEps[] = $epInfo;
                         }
                     }
                     $uniq = [];
                     $finalEps = [];
                     foreach ($selectedEps as $e) {
                         $k = ($e['name'] ?? '') . '|' . ($e['focal'] ?? '');
-                        if (! isset($uniq[$k])) {
+                        if (!isset($uniq[$k])) {
                             $uniq[$k] = true;
                             $finalEps[] = $e;
                         }
                     }
-                    if (empty($finalEps) && ! empty($eyepiecesForDisplay)) {
+                    if (empty($finalEps) && !empty($eyepiecesForDisplay)) {
                         $uniq = [];
                         $finalEps = [];
                         foreach ($eyepiecesForDisplay as $e) {
                             $k = ($e['name'] ?? '') . '|' . ($e['focal'] ?? '');
-                            if (! isset($uniq[$k])) {
+                            if (!isset($uniq[$k])) {
                                 $uniq[$k] = true;
                                 $finalEps[] = $e;
                             }
@@ -992,8 +1052,8 @@ class AladinPreviewInfo extends Component
                         $decDeg = null;
                     }
                     if ($raDeg === null || $decDeg === null) {
-                        $raDeg = is_numeric($obj->ra) ? (float)$obj->ra : null;
-                        $decDeg = is_numeric($obj->decl) ? (float)$obj->decl : null;
+                        $raDeg = is_numeric($obj->ra) ? (float) $obj->ra : null;
+                        $decDeg = is_numeric($obj->decl) ? (float) $obj->decl : null;
                     }
                     if ($raDeg !== null && $decDeg !== null) {
                         $geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
@@ -1085,8 +1145,10 @@ class AladinPreviewInfo extends Component
                                 }
                             } catch (\Throwable $_) {
                             }
-                            if (is_numeric($maxHeightAtNight)) $maxHeightAtNight = round($maxHeightAtNight, 1);
-                            if (is_numeric($maxHeight)) $maxHeight = round($maxHeight, 1);
+                            if (is_numeric($maxHeightAtNight))
+                                $maxHeightAtNight = round($maxHeightAtNight, 1);
+                            if (is_numeric($maxHeight))
+                                $maxHeight = round($maxHeight, 1);
                             $ephemerides = [
                                 'date' => $date->timezone($tz)->toDateString(),
                                 'rising' => $rising,
@@ -1159,7 +1221,8 @@ class AladinPreviewInfo extends Component
                         $totalElapsed = round((microtime(true) - $tStart) * 1000, 2);
                         Log::debug('AladinPreviewInfo: recalculate end', ['user_id' => Auth::id(), 'objectId' => $this->objectId, 'total_elapsed_ms' => $totalElapsed]);
                     }
-                } catch (\Throwable $_) {}
+                } catch (\Throwable $_) {
+                }
             } catch (\Throwable $_) {
             }
         } catch (\Throwable $e) {
@@ -1192,27 +1255,27 @@ class AladinPreviewInfo extends Component
     {
         try {
             try {
-                Log::info('AladinPreviewInfo: received objectEphemeridesUpdated', ['payload' => is_array($payload) ? $payload : (is_object($payload) ? (array)$payload : $payload), 'objectId' => $this->objectId, 'user_id' => Auth::id()]);
+                Log::info('AladinPreviewInfo: received objectEphemeridesUpdated', ['payload' => is_array($payload) ? $payload : (is_object($payload) ? (array) $payload : $payload), 'objectId' => $this->objectId, 'user_id' => Auth::id()]);
             } catch (\Throwable $_) {
                 // ignore logging errors
             }
-            $p = is_array($payload) ? $payload : (is_object($payload) ? (array)$payload : []);
-            if (! empty($p['diam1'])) {
+            $p = is_array($payload) ? $payload : (is_object($payload) ? (array) $payload : []);
+            if (!empty($p['diam1'])) {
                 $this->planet_diameter_primary = is_numeric($p['diam1']) ? round($p['diam1'], 1) : $p['diam1'];
             }
-            if (! empty($p['diam2'])) {
+            if (!empty($p['diam2'])) {
                 $this->planet_diameter_secondary = is_numeric($p['diam2']) ? round($p['diam2'], 1) : $p['diam2'];
             }
             // store server-provided RA/Dec and magnitude so the preview can
             // display them immediately and use them when building ephemerides
             if (isset($p['raDeg'])) {
-                $this->object_ra_deg = is_numeric($p['raDeg']) ? (float)$p['raDeg'] : null;
+                $this->object_ra_deg = is_numeric($p['raDeg']) ? (float) $p['raDeg'] : null;
             }
             if (isset($p['decDeg'])) {
-                $this->object_dec_deg = is_numeric($p['decDeg']) ? (float)$p['decDeg'] : null;
+                $this->object_dec_deg = is_numeric($p['decDeg']) ? (float) $p['decDeg'] : null;
             }
             if (array_key_exists('mag', $p)) {
-                $this->object_mag = is_numeric($p['mag']) ? (float)$p['mag'] : $p['mag'];
+                $this->object_mag = is_numeric($p['mag']) ? (float) $p['mag'] : $p['mag'];
             }
 
             // Trigger a recalc using the provided date/objectId so all dependent
@@ -1224,7 +1287,8 @@ class AladinPreviewInfo extends Component
             // numeric values emitted by ObjectEphemerides so recalculate() can
             // prefer them without needing a DB lookup / heavy recompute.
             $recalcPayload = $p;
-            if (empty($recalcPayload['objectId'])) $recalcPayload['objectId'] = $oid;
+            if (empty($recalcPayload['objectId']))
+                $recalcPayload['objectId'] = $oid;
             $this->recalculate($recalcPayload);
         } catch (\Throwable $_) {
             // non-fatal

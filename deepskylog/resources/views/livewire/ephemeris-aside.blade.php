@@ -2,6 +2,10 @@
     @if (empty($suppress))
         <div class="w-full lg:w-64 lg:flex-none lg:min-w-[16rem] self-stretch" data-dsl-ephemeris-aside>
             <div class="bg-gray-900 p-4 rounded shadow text-gray-100 flex flex-col flex-1 h-full">
+                {{-- Quick Search Livewire component (search across all object types) --}} 
+                <div class="mb-4">
+                    @livewire('quick-search')
+                </div>
             <h3 class="text-lg font-semibold mb-2 text-white">{{ __('Ephemerides') }}</h3>
 
             {{-- Use the WireUI datetime picker to match other forms (sketch/session) and bind to Livewire property --}}

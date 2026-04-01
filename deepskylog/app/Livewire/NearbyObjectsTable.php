@@ -3282,7 +3282,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 $cr = isset($r->contrast_reserve) && is_numeric($r->contrast_reserve) ? number_format(round(floatval($r->contrast_reserve), 2), 2) : ($r->contrast_reserve_category ?? '');
                 $best = $this->computeBestMagForExport($r);
 
-                // Determine object type id: planets=1, stars=2, deep-sky=4 (default)
+                // Determine object type id: planets=1, stars=2, deep-sky=4 (default).
                 $lowerName = strtolower($catalog);
                 $objectId = '4,-1,-1';
                 if (in_array($lowerName, $planetNames, true) || in_array(strtolower($common), $planetNames, true)) {
@@ -3290,7 +3290,8 @@ class NearbyObjectsTable extends PowerGridComponent
                 } else {
                     $rawType = strtoupper(trim((string) ($r->type ?? '')));
                     $typeName = strtoupper(trim((string) ($r->type_name ?? '')));
-                    if (str_contains($rawType, 'STAR') || str_contains($typeName, 'STAR')) {
+                    $starCodes = ['DS', 'AA1STAR', 'AA3STAR', 'AA4STAR', 'AA8STAR'];
+                    if ($rawType !== '' && (in_array($rawType, $starCodes, true) || str_contains($rawType, 'STAR') || str_contains($typeName, 'STAR'))) {
                         $objectId = '2,-1,-1';
                     }
                 }
@@ -3413,7 +3414,8 @@ class NearbyObjectsTable extends PowerGridComponent
                 } else {
                     $rawType = strtoupper(trim((string) ($r->type ?? '')));
                     $typeName = strtoupper(trim((string) ($r->type_name ?? '')));
-                    if (str_contains($rawType, 'STAR') || str_contains($typeName, 'STAR')) {
+                    $starCodes = ['DS', 'AA1STAR', 'AA3STAR', 'AA4STAR', 'AA8STAR'];
+                    if ($rawType !== '' && (in_array($rawType, $starCodes, true) || str_contains($rawType, 'STAR') || str_contains($typeName, 'STAR'))) {
                         $objectId = '2,-1,-1';
                     }
                 }
