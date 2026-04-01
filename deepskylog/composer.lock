@@ -2083,10 +2083,10 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/socialstream",
-                "reference": "ac56352d2db61b77b9f2ed057eca9302a35a904e"
+                "reference": "66d7f885d7980f7927ab553d4188ce3b3014a9d7"
             },
             "require": {
-                "illuminate/contracts": "^11.0|^12.0",
+                "illuminate/contracts": "^11.0|^12.0|13.0",
                 "laravel/socialite": "^5.18",
                 "php": "^8.2"
             },
