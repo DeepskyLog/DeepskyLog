@@ -4,7 +4,7 @@
 
 ## Next steps
 
-+ [ ] Update to laravel 13, vite 8.
++ [ ] Update to laravel 13.
 + [ ] Targets
   + [ ] Search targets
     + [ ] Main search page: first by name, then by type, constellation, ...

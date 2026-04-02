@@ -1,4 +1,17 @@
 <x-app-layout>
+    <style>
+        /* Prevent horizontal page scroll on the object detail page.
+           In flex-row (lg+): min-width:0 keeps the flex item within its
+           allocated space when child content is wide.
+           In flex-col (<lg): items-start means the item is not auto-stretched,
+           so max-width:100% is required to cap its width to the parent container.
+           overflow-x:hidden clips any residual overflow from within the item. */
+        [data-dsl-main-content] {
+            min-width: 0;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+    </style>
     <div>
         <!-- Use a wider container so the object details area can take more horizontal space.
            Switched from max-w-7xl to max-w-screen-xl which uses more of the viewport on large screens. -->
