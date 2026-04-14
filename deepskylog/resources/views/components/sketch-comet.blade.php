@@ -1,21 +1,19 @@
 {{-- Avoid inline `use` in Blade; use fully-qualified class names instead --}}
-@props(["observation_id" => null, "observer_name" => null, "observer_username" => null, "observation_date" => null])
+@props(["observation_id" => null, "observer_name" => null, "observer_username" => null, "observation_date" => null, "preloaded_comet" => null])
 <div>
     @php
-        $obs = \App\Models\CometObservationsOld::find($observation_id);
-        $comet = $obs && isset($obs->object) ? \App\Models\CometObject::where('id', $obs->object->id)->first() : null;
-        $cometName = $comet?->name ?? ($obs?->object->name ?? __('Unknown comet'));
+        $comet = $preloaded_comet ?? \App\Models\CometObject::where('id', function($q) use ($observation_id) {
+            $q->select('objectid')->from('cometobservations')->where('id', $observation_id)->limit(1);
+        })->first();
+        $cometName = $comet?->name ?? __('Unknown comet');
         $slug = $comet?->slug ?? \Illuminate\Support\Str::slug($cometName ?? '', '-');
         $objectUrl = route('object.show', $slug);
+        $objectName = $cometName;
     @endphp
     <a class="no-underline" href="{{ $objectUrl }}">
         <img width="400" src="/images/cometdrawings/{{ $observation_id }}.jpg"/>
 
         <div class="text-center">
-            @php
-                $obs = \App\Models\CometObservationsOld::find($observation_id);
-                $objectName = $obs && isset($obs->object) ? ($obs->object->name ?? __('Unknown')) : __('Unknown');
-            @endphp
             {{ $observer_name }} - {{ $objectName }}
             -
             {{ \Carbon\Carbon::create($observation_date)->translatedFormat("j M Y") }}
@@ -54,8 +52,6 @@
         </button>
 
             @php
-                $obs = \App\Models\CometObservationsOld::find($observation_id);
-                $objectName = $obs && isset($obs->object) ? ($obs->object->name ?? __('Unknown')) : __('Unknown');
                 $messageSubject = __('About your sketch of :object', ['object' => $objectName]);
             @endphp
 
