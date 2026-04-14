@@ -5,6 +5,7 @@
 ## Next steps
 
 + [ ] Update to laravel 13.
++ [ ] Comet unknown on the real server???
 + [ ] Targets
   + [ ] Search targets
     + [ ] Main search page: first by name, then by type, constellation, ...
