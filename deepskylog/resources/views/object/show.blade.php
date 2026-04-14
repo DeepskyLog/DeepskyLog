@@ -1062,76 +1062,50 @@ try {
 
                             {{-- Sketches that were DeepskyLog sketch(s) of the week for this object --}}
                             @php
-                                // The observations legacy table lives on the mysqlOld connection.
-                                // Build a list of observation ids from the legacy DB matching this object's name
 $objectSketches = collect();
 try {
-    $objName = $session->name ?? '';
-    if (!empty($objName)) {
-        $obsIds = \Illuminate\Support\Facades\DB::connection('mysqlOld')
-            ->table('observations')
-            ->where('objectname', $objName)
-            ->pluck('id')
-            ->toArray();
+    $isComet = strtolower(trim((string) ($session->source_type_raw ?? ''))) === 'comet';
 
-        if (!empty($obsIds)) {
-            $objectSketches = \App\Models\SketchOfTheWeek::whereIn('observation_id', $obsIds)
-                ->orderByDesc('date')
-                ->get();
-        } elseif (strtolower(trim((string) ($session->source_type_raw ?? ''))) === 'comet') {
-            // Fallback tokenized LIKE search is only for comets, whose names may differ
-            // slightly between tables. For regular deepsky objects with no recorded
-            // observations, leave $objectSketches empty rather than doing a broad LIKE
-            // match that would catch unrelated objects.
-            try {
-                $simple = preg_replace('/[^A-Za-z0-9 ]+/', ' ', $objName);
-                $tokens = array_filter(array_map('trim', preg_split('/\s+/', $simple)));
-                if (!empty($tokens)) {
-                    $q = \Illuminate\Support\Facades\DB::connection('mysqlOld')->table('observations');
-                    $first = array_shift($tokens);
-                    $q->where('objectname', 'like', '%' . $first . '%');
-                    foreach ($tokens as $t) {
-                        $q->orWhere('objectname', 'like', '%' . $t . '%');
-                    }
-                    $altIds = $q->pluck('id')->toArray();
-                    if (!empty($altIds)) {
-                        $objectSketches = \App\Models\SketchOfTheWeek::whereIn('observation_id', $altIds)
-                            ->orderByDesc('date')
-                            ->get();
-                    }
-                }
-            } catch (\Throwable $_) {
-                // ignore fallback failures
+    if ($isComet) {
+        // For comet pages, use the comet object ID directly to avoid cross-comet false matches.
+        // sketch_of_the_week stores comet observations as negative observation_id values
+        // (i.e. observation_id = -cometobservations.id).
+        $cometObjectId = $session->id ?? null;
+        if (!empty($cometObjectId)) {
+            $cometObsIds = \Illuminate\Support\Facades\DB::connection('mysqlOld')
+                ->table('cometobservations')
+                ->where('objectid', $cometObjectId)
+                ->pluck('id')
+                ->toArray();
+
+            if (!empty($cometObsIds)) {
+                $negativeCometObsIds = array_map(fn($id) => -$id, $cometObsIds);
+                $objectSketches = \App\Models\SketchOfTheWeek::whereIn('observation_id', $negativeCometObsIds)
+                    ->orderByDesc('date')
+                    ->get();
             }
-            // Also check sketch_of_the_week entries that reference cometobservations
-            try {
-                $tokensForLike = [];
-                if (!empty($tokens)) {
-                    foreach ($tokens as $t) {
-                        $tokensForLike[] = '%' . $t . '%';
-                    }
-                } else {
-                    $tokensForLike[] = '%' . $objName . '%';
-                }
-                // Build WHERE clause for tokenized matching on cometobjects.name
-                $likes = implode(' OR ', array_fill(0, count($tokensForLike), 'coo.name LIKE ?'));
-                $sql = 'SELECT s.* FROM sketch_of_the_week s JOIN deepskylog.cometobservations co ON co.id = -s.observation_id JOIN deepskylog.cometobjects coo ON coo.id = co.objectid WHERE ' . $likes . ' ORDER BY s.date DESC';
-                $cometRows = \Illuminate\Support\Facades\DB::select($sql, $tokensForLike);
-                if (!empty($cometRows)) {
-                    foreach ($cometRows as $r) {
-                        // convert stdClass row to Eloquent model for the view helper x-sketch
-                        $objectSketches->push(\App\Models\SketchOfTheWeek::find($r->id));
-                    }
-                }
-            } catch (\Throwable $_) {
-                // ignore
+        }
+    } else {
+        // For deepsky objects, match by exact object name in the legacy observations table.
+        $objName = $session->name ?? '';
+        if (!empty($objName)) {
+            $obsIds = \Illuminate\Support\Facades\DB::connection('mysqlOld')
+                ->table('observations')
+                ->where('objectname', $objName)
+                ->pluck('id')
+                ->toArray();
+
+            if (!empty($obsIds)) {
+                $objectSketches = \App\Models\SketchOfTheWeek::whereIn('observation_id', $obsIds)
+                    ->orderByDesc('date')
+                    ->get();
             }
         }
     }
 } catch (\Throwable $_) {
     // Fail silently: keep $objectSketches empty so the section simply doesn't render
-                                    $objectSketches = collect();
-                                }
+    $objectSketches = collect();
+}
                             @endphp
 
                             @if ($objectSketches->isNotEmpty())

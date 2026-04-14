@@ -272,6 +272,9 @@
 
                 $observerIds = $sketches->pluck('observerid')->unique()->values()->all();
                 $observerUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+
+                $sketchObjectIds = $sketches->pluck('objectid')->unique()->filter()->values()->all();
+                $preloadedSketchComets = \App\Models\CometObject::whereIn('id', $sketchObjectIds)->get()->keyBy('id');
             @endphp
 
             <div class="mt-2">
@@ -292,6 +295,7 @@
                                     :observer_name="$observer_name"
                                     :observer_username="$sketch->observerid"
                                     :observation_date="$observation_date"
+                                    :preloaded_comet="$preloadedSketchComets[$sketch->objectid] ?? null"
                                 />
                             </div>
                         @endforeach
