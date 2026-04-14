@@ -10,7 +10,7 @@
     "require": {
         "php": "^8.3",
         "barryvdh/laravel-dompdf": "^3.1",
-        "cjmellor/level-up": "^1.2",
+        "cjmellor/level-up": "^2.0",
         "cviebrock/eloquent-sluggable": "^12.0",
         "deepskylog/laravel-astronomy-library": ">=6",
         "ezyang/htmlpurifier": "^4.18",
