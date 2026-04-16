@@ -217,7 +217,7 @@ class ReindexSearch extends Command
 
         $this->info('Indexing asteroids...');
         $rows = [];
-        foreach (DB::table('asteroids')->select(['id', 'name', 'designation', 'ra', 'decl', 'body_type'])->cursor() as $a) {
+        foreach (DB::table('asteroids')->select(['id', 'name', 'designation', 'body_type'])->cursor() as $a) {
             $rows[] = [
                 'name' => $a->name,
                 'name_normalized' => mb_strtolower($a->name),
@@ -225,8 +225,6 @@ class ReindexSearch extends Command
                 'source_pk' => (string) $a->id,
                 'display_name' => $a->name,
                 'source_type' => $a->body_type ?? 'asteroid',
-                'ra' => $a->ra,
-                'decl' => $a->decl,
                 'created_at' => $now,
                 'updated_at' => $now,
             ];
