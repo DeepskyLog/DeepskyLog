@@ -47,10 +47,12 @@ class TntsearchIncrementalIndex extends Command
         $tnt->loadConfig(['driver' => 'sqlite', 'database' => $dbFile, 'storage' => $storage]);
         try {
             $tnt->selectIndex('search_index');
+            $tnt->engine->inMemory = false;
             $indexer = new TNTIndexer($tnt->engine);
             $indexer->loadConfig(['driver' => 'sqlite', 'database' => $dbFile, 'storage' => $storage]);
         } catch (IndexNotFoundException $e) {
             $this->info('Index not found, creating new index `search_index`.');
+            $tnt->engine->inMemory = false;
             $indexer = new TNTIndexer($tnt->engine);
             $indexer->loadConfig(['driver' => 'sqlite', 'database' => $dbFile, 'storage' => $storage]);
             $indexer->createIndex('search_index');
