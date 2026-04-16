@@ -2,9 +2,7 @@
 @props(["observation_id" => null, "observer_name" => null, "observer_username" => null, "observation_date" => null, "preloaded_comet" => null])
 <div>
     @php
-        $comet = $preloaded_comet ?? \App\Models\CometObject::where('id', function($q) use ($observation_id) {
-            $q->select('objectid')->from('cometobservations')->where('id', $observation_id)->limit(1);
-        })->first();
+        $comet = $preloaded_comet ?? \App\Models\CometObservationsOld::find($observation_id)?->object;
         $cometName = $comet?->name ?? __('Unknown comet');
         $slug = $comet?->slug ?? \Illuminate\Support\Str::slug($cometName ?? '', '-');
         $objectUrl = route('object.show', $slug);
