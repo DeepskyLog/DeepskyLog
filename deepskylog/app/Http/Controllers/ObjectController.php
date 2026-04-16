@@ -4034,6 +4034,38 @@ class ObjectController extends Controller
             }
         }
 
+        // Always ensure the object's own canonical name has an entry in objectnames.
+        // This row stores the catalog designation (e.g. catalog='M', catindex='65' for 'M 65')
+        // and may have been deleted above if the user did not include it in the form.
+        $canonicalSlug = \Illuminate\Support\Str::slug($object->name);
+        $canonicalExists = DB::table('objectnames')
+            ->where('objectname', $object->name)
+            ->where('altname', $object->name)
+            ->exists();
+        if (!$canonicalExists) {
+            $cat = '';
+            $catIdx = '';
+            if (preg_match('/^([A-Za-z]+)\s*(.+)$/', trim($object->name), $m)) {
+                $cat    = $m[1];
+                $catIdx = trim($m[2]);
+            }
+            // Only insert if the slug is not already claimed by a different object
+            $slugTaken = DB::table('objectnames')
+                ->where('slug', $canonicalSlug)
+                ->where('objectname', '!=', $object->name)
+                ->exists();
+            if (!$slugTaken) {
+                DB::table('objectnames')->insert([
+                    'objectname' => $object->name,
+                    'catalog'    => $cat,
+                    'catindex'   => $catIdx,
+                    'altname'    => $object->name,
+                    'slug'       => $canonicalSlug,
+                    'timestamp'  => now(),
+                ]);
+            }
+        }
+
         return redirect()->route('object.show', ['slug' => $object->slug ?? $object->name])
             ->with('success', __('Object updated successfully.'));
     }
