@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
 use TeamTNT\TNTSearch\TNTSearch;
 use Carbon\Carbon;
 
@@ -15,7 +16,8 @@ class TntsearchIncrementalIndex extends Command
     public function handle()
     {
         $storage = $this->option('storage') ?: storage_path('tnt');
-        if (!is_dir($storage)) mkdir($storage, 0775, true);
+        if (!is_dir($storage))
+            mkdir($storage, 0775, true);
 
         // simple checkpoint row name
         $name = 'search_index';
@@ -23,7 +25,7 @@ class TntsearchIncrementalIndex extends Command
         $checkpoint = DB::table('index_checkpoints')->where('name', $name)->first();
         $lastIndexedAt = $checkpoint ? Carbon::parse($checkpoint->last_indexed_at) : null;
 
-        $this->info('Starting incremental indexing. Last indexed at: ' . ($lastIndexedAt? $lastIndexedAt->toDateTimeString() : 'never'));
+        $this->info('Starting incremental indexing. Last indexed at: ' . ($lastIndexedAt ? $lastIndexedAt->toDateTimeString() : 'never'));
 
         $query = DB::table('search_index');
         if ($lastIndexedAt) {
@@ -38,11 +40,13 @@ class TntsearchIncrementalIndex extends Command
 
         $tnt = new TNTSearch();
         $dbFile = $storage . DIRECTORY_SEPARATOR . 'tnt.sqlite';
-        if (!file_exists($dbFile)) { touch($dbFile); }
+        if (!file_exists($dbFile)) {
+            touch($dbFile);
+        }
         $tnt->loadConfig(['driver' => 'sqlite', 'database' => $dbFile, 'storage' => $storage]);
-        $index = $tnt->selectIndex('search_index');
-        if (! $index) {
-            // If the index doesn't exist yet (first run), create it.
+        try {
+            $index = $tnt->selectIndex('search_index');
+        } catch (IndexNotFoundException $e) {
             $this->info('Index not found, creating new index `search_index`.');
             $index = $tnt->createIndex('search_index');
         }
