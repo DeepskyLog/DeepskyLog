@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use TeamTNT\TNTSearch\Exceptions\IndexNotFoundException;
+use TeamTNT\TNTSearch\Indexer\TNTIndexer;
 use TeamTNT\TNTSearch\TNTSearch;
 use Carbon\Carbon;
 
@@ -45,15 +46,19 @@ class TntsearchIncrementalIndex extends Command
         }
         $tnt->loadConfig(['driver' => 'sqlite', 'database' => $dbFile, 'storage' => $storage]);
         try {
-            $index = $tnt->selectIndex('search_index');
+            $tnt->selectIndex('search_index');
+            $indexer = new TNTIndexer($tnt->engine);
+            $indexer->loadConfig(['driver' => 'sqlite', 'database' => $dbFile, 'storage' => $storage]);
         } catch (IndexNotFoundException $e) {
             $this->info('Index not found, creating new index `search_index`.');
-            $index = $tnt->createIndex('search_index');
+            $indexer = new TNTIndexer($tnt->engine);
+            $indexer->loadConfig(['driver' => 'sqlite', 'database' => $dbFile, 'storage' => $storage]);
+            $indexer->createIndex('search_index');
         }
 
         foreach ($rows as $r) {
             // insert or update the document in the TNTSearch index
-            $index->insert(['id' => $r->id, 'name' => $r->name]);
+            $indexer->insert(['id' => $r->id, 'name' => $r->name]);
             $last = Carbon::parse($r->updated_at);
         }
 
