@@ -3942,8 +3942,7 @@ class ObjectController extends Controller
                 ]);
 
                 foreach ($altNames as $altName) {
-                    if (!empty($altName) && $altName !== $object->name) {
-                        // Skip if this is the same as the object name itself
+                    if (!empty($altName)) {
 
                         // Parse catalog and catindex from altname
                         // Expected formats: "NGC 3623", "M 65", "IC 1234", etc.
