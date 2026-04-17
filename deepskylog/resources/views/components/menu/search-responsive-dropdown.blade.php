@@ -11,7 +11,7 @@
         <div class="mt-3 space-y-1">
             <x-dropdown.item
                 icon="magnifying-glass"
-                href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&searchObjectQuickPickQuickPick"
+                href="{{ route('search.advanced') }}"
                 label="{{ __('Search object') }}"
             />
 

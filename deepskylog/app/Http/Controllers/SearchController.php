@@ -137,4 +137,23 @@ class SearchController extends Controller
         $q = trim($request->get('q', ''));
         return view('search.results', ['q' => $q]);
     }
+
+    /**
+     * Render the advanced object search filter builder page.
+     */
+    public function advanced(Request $request)
+    {
+        $filters = $request->except('_token', 'page');
+
+        return view('search.advanced', ['filters' => $filters]);
+    }
+
+    /**
+     * Render the advanced search results page.
+     */
+    public function advancedResults(Request $request)
+    {
+        $filters = $request->except('_token');
+        return view('search.advanced-results', ['filters' => $filters]);
+    }
 }

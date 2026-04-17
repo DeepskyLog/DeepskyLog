@@ -4046,7 +4046,7 @@ class ObjectController extends Controller
             $cat = '';
             $catIdx = '';
             if (preg_match('/^([A-Za-z]+)\s*(.+)$/', trim($object->name), $m)) {
-                $cat    = $m[1];
+                $cat = $m[1];
                 $catIdx = trim($m[2]);
             }
             // Only insert if the slug is not already claimed by a different object
@@ -4057,11 +4057,11 @@ class ObjectController extends Controller
             if (!$slugTaken) {
                 DB::table('objectnames')->insert([
                     'objectname' => $object->name,
-                    'catalog'    => $cat,
-                    'catindex'   => $catIdx,
-                    'altname'    => $object->name,
-                    'slug'       => $canonicalSlug,
-                    'timestamp'  => now(),
+                    'catalog' => $cat,
+                    'catindex' => $catIdx,
+                    'altname' => $object->name,
+                    'slug' => $canonicalSlug,
+                    'timestamp' => now(),
                 ]);
             }
         }

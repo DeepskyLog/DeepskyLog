@@ -5,18 +5,22 @@
 ## Next steps
 
 + [ ] Update to laravel 13.
-+ [ ] Comet unknown on the real server???
 + [ ] Targets
-  + [ ] Search targets
-    + [ ] Main search page: first by name, then by type, constellation, ...
-  + [ ] Install sqlite3 on the server to be able to use TNTSearch
+  + [ ] Speed
+    + [ ] Slow to search
+    + [ ] Detail of one object...
+  + [ ] Why is TNTSearch used? 
+    + [ ] Install sqlite3 on the server to be able to use TNTSearch
   + [ ] After installation, make sure to run the queue worker to compute the contrast reserve and optimum eyepieces for all users / instruments / locations.  See Tips.md for more information about the queue worker.
+  + [ ] Administrator -> Check Objects page
 + [ ] Release new version of pyDeepskyLog
   + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
 ### Distant future
 
 + [ ] Observing lists
+  + [ ] Description of observing lists
+  + [ ] Add extra description to target? (Automatically add the longest description from deepskylog, ...)
   + [ ] Comment on observing lists
   + [ ] Like observing lists
 + [ ] Observations
