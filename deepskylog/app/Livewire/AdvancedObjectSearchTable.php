@@ -143,6 +143,120 @@ class AdvancedObjectSearchTable extends PowerGridComponent
         // Determine which categories to include
         $categories = array_values(array_intersect($this->objectCategories, $allowedCategories));
 
+        // ── Pre-fetch observing list names (before building $sub) ─────────────
+        // Fetching names first and applying whereIn on $sub lets MySQL use the
+        // search_index_name_index, avoiding a full table scan of 83K rows.
+        // null = no filter; 'zero' = match nothing; [$mode, $names] = filter.
+        $preloadedListFilter = null;
+        if (!empty($this->observingLists)) {
+            $listPairs = [];
+            foreach ($this->observingLists as $entry) {
+                $entry = (string) $entry;
+                if ($entry === '' || !str_contains($entry, '::')) {
+                    continue;
+                }
+                [$observerId, $listName] = explode('::', $entry, 2);
+                $observerId = trim($observerId);
+                $listName = trim($listName);
+                if ($observerId !== '' && $listName !== '') {
+                    $listPairs[] = [$observerId, $listName];
+                }
+            }
+
+            if (empty($listPairs)) {
+                $preloadedListFilter = 'zero';
+            } else {
+                $oldDbName = (string) (config('database.connections.mysqlOld.database') ?? env('DB_DATABASE_OLD'));
+                if ($oldDbName === '') {
+                    $preloadedListFilter = 'zero';
+                } else {
+                    $listNames = DB::table(DB::raw('`' . $oldDbName . '`.`observerobjectlist` as ool'))
+                        ->select('ool.objectname')
+                        ->where(function ($or) use ($listPairs) {
+                            foreach ($listPairs as [$observerId, $listName]) {
+                                $or->orWhere(function ($pair) use ($observerId, $listName) {
+                                    $pair->where('ool.observerid', $observerId)
+                                        ->where('ool.listname', $listName);
+                                });
+                            }
+                        })
+                        ->distinct()
+                        ->pluck('objectname')
+                        ->toArray();
+                    $preloadedListFilter = [$this->observingListsMode, $listNames];
+                }
+            }
+        }
+
+        // ── Pre-fetch object slugs for objects-table filters ──────────────────
+        // Filters on objects columns (type, constellation, mag, subr, diam, ratio)
+        // are applied on the outer $query after a full-scan derived table. By pre-
+        // fetching matching slugs and adding whereIn('source_pk', $slugs) on $sub
+        // BEFORE the GROUP BY, MySQL can use search_index_source_pk_index instead
+        // of scanning all 83K rows.
+        $hasObjectsFilter = (
+            !empty($this->objectTypes) ||
+            !empty($this->constellations) ||
+            ($this->magMin !== '' && is_numeric($this->magMin)) ||
+            ($this->magMax !== '' && is_numeric($this->magMax)) ||
+            ($this->subrMin !== '' && is_numeric($this->subrMin)) ||
+            ($this->subrMax !== '' && is_numeric($this->subrMax)) ||
+            ($this->diam1Min !== '' && is_numeric($this->diam1Min)) ||
+            ($this->diam1Max !== '' && is_numeric($this->diam1Max)) ||
+            ($this->diam2Min !== '' && is_numeric($this->diam2Min)) ||
+            ($this->diam2Max !== '' && is_numeric($this->diam2Max)) ||
+            ($this->ratioMin !== '' && is_numeric($this->ratioMin)) ||
+            ($this->ratioMax !== '' && is_numeric($this->ratioMax))
+        );
+
+        $preloadedObjectSlugs = null; // null = no filter; [] = match nothing; array = restrict to these slugs
+        if ($hasObjectsFilter) {
+            $objQ = DB::table('objects');
+
+            if (!empty($this->objectTypes)) {
+                $objQ->whereIn('type', array_map('strval', $this->objectTypes));
+            }
+            if (!empty($this->constellations)) {
+                $objQ->whereIn('con', array_map('strval', $this->constellations));
+            }
+            if ($this->magMin !== '' && is_numeric($this->magMin)) {
+                $objQ->where('mag', '>=', floatval($this->magMin));
+            }
+            if ($this->magMax !== '' && is_numeric($this->magMax)) {
+                $objQ->where('mag', '<=', floatval($this->magMax));
+            }
+            if ($this->subrMin !== '' && is_numeric($this->subrMin)) {
+                $objQ->where('subr', '>=', floatval($this->subrMin));
+            }
+            if ($this->subrMax !== '' && is_numeric($this->subrMax)) {
+                $objQ->where('subr', '<=', floatval($this->subrMax));
+            }
+            if ($this->diam1Min !== '' && is_numeric($this->diam1Min)) {
+                $objQ->where('diam1', '>=', floatval($this->diam1Min));
+            }
+            if ($this->diam1Max !== '' && is_numeric($this->diam1Max)) {
+                $objQ->where('diam1', '<=', floatval($this->diam1Max));
+            }
+            if ($this->diam2Min !== '' && is_numeric($this->diam2Min)) {
+                $objQ->where('diam2', '>=', floatval($this->diam2Min));
+            }
+            if ($this->diam2Max !== '' && is_numeric($this->diam2Max)) {
+                $objQ->where('diam2', '<=', floatval($this->diam2Max));
+            }
+            if (($this->ratioMin !== '' && is_numeric($this->ratioMin)) || ($this->ratioMax !== '' && is_numeric($this->ratioMax))) {
+                $objQ->whereNotNull('diam1')->where('diam1', '>', 0)
+                    ->whereNotNull('diam2')->where('diam2', '>', 0);
+                if ($this->ratioMin !== '' && is_numeric($this->ratioMin)) {
+                    $objQ->whereRaw('(diam1 / diam2) >= ?', [floatval($this->ratioMin)]);
+                }
+                if ($this->ratioMax !== '' && is_numeric($this->ratioMax)) {
+                    $objQ->whereRaw('(diam1 / diam2) <= ?', [floatval($this->ratioMax)]);
+                }
+            }
+
+            $preloadedObjectSlugs = $objQ->pluck('slug')->toArray();
+        }
+
         // Build a subquery that groups search_index rows by canonical name.
         // When categories are specified we restrict to those source_tables;
         // otherwise we include all source_tables.
@@ -195,6 +309,46 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             });
         }
 
+        // ── Apply observing list pre-filter to $sub (before GROUP BY) ────────
+        // This lets MySQL use search_index_name_index instead of a full scan.
+        if ($preloadedListFilter !== null) {
+            // Observing lists only cover deep-sky objects in the legacy table.
+            $sub->where('source_table', 'objects');
+
+            if ($preloadedListFilter === 'zero') {
+                $sub->whereRaw('1 = 0');
+            } else {
+                [$listMode, $listNames] = $preloadedListFilter;
+                if ($listMode === 'not_in') {
+                    if (!empty($listNames)) {
+                        $sub->whereNotIn('name', $listNames);
+                    }
+                    // Empty list in not_in mode = no restriction (keep all objects).
+                } else {
+                    // 'in' mode
+                    if (empty($listNames)) {
+                        $sub->whereRaw('1 = 0');
+                    } else {
+                        $sub->whereIn('name', $listNames);
+                    }
+                }
+            }
+        }
+
+        // ── Apply objects-table pre-filter to $sub (before GROUP BY) ──────────
+        // Restricts $sub to matching source_pks so MySQL uses search_index_source_pk_index
+        // instead of scanning all 83K rows + filesort.
+        if ($preloadedObjectSlugs !== null) {
+            // These filters only apply to deep-sky objects.
+            $sub->where('source_table', 'objects');
+
+            if (empty($preloadedObjectSlugs)) {
+                $sub->whereRaw('1 = 0');
+            } else {
+                $sub->whereIn('source_pk', $preloadedObjectSlugs);
+            }
+        }
+
         $sub->groupBy(DB::raw("LOWER(COALESCE(name, display_name))"));
 
         $query = SearchIndex::query()->fromSub($sub, 'search_index')
@@ -243,54 +397,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             });
         }
 
-        // ── Observing lists filter (legacy observerobjectlist) ─────────────
-        if (!empty($this->observingLists)) {
-            $pairs = [];
-            foreach ($this->observingLists as $entry) {
-                $entry = (string) $entry;
-                if ($entry === '' || !str_contains($entry, '::')) {
-                    continue;
-                }
-                [$observerId, $listName] = explode('::', $entry, 2);
-                $observerId = trim($observerId);
-                $listName = trim($listName);
-                if ($observerId !== '' && $listName !== '') {
-                    $pairs[] = [$observerId, $listName];
-                }
-            }
-
-            if (empty($pairs)) {
-                $query->whereRaw('1 = 0');
-            } else {
-                $oldDbName = (string) (config('database.connections.mysqlOld.database') ?? env('DB_DATABASE_OLD'));
-                if ($oldDbName === '') {
-                    $query->whereRaw('1 = 0');
-                } else {
-                    // Membership is only meaningful for deep-sky objects in this legacy table.
-                    $query->where('search_index.source_table', 'objects');
-
-                    $column = DB::raw('LOWER(search_index.name)');
-                    $membershipSubquery = function ($sq) use ($pairs, $oldDbName) {
-                        $sq->from(DB::raw('`' . $oldDbName . '`.`observerobjectlist` as ool'))
-                            ->selectRaw('LOWER(ool.objectname)')
-                            ->where(function ($or) use ($pairs) {
-                                foreach ($pairs as [$observerId, $listName]) {
-                                    $or->orWhere(function ($pair) use ($observerId, $listName) {
-                                        $pair->where('ool.observerid', $observerId)
-                                            ->where('ool.listname', $listName);
-                                    });
-                                }
-                            });
-                    };
-
-                    if ($this->observingListsMode === 'not_in') {
-                        $query->whereNotIn($column, $membershipSubquery);
-                    } else {
-                        $query->whereIn($column, $membershipSubquery);
-                    }
-                }
-            }
-        }
+        // ── Observing lists filter is now handled in $sub above (pre-fetched) ─
 
         // ── Description text filter (deep-sky objects only) ──────────────────
         $descriptionNeedle = trim((string) $this->descriptionText);

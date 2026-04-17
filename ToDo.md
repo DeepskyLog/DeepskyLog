@@ -7,7 +7,6 @@
 + [ ] Update to laravel 13.
 + [ ] Targets
   + [ ] Speed
-    + [ ] Slow to search
     + [ ] Detail of one object...
   + [ ] Why is TNTSearch used? 
     + [ ] Install sqlite3 on the server to be able to use TNTSearch
