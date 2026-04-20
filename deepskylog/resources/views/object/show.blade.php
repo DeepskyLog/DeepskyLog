@@ -68,20 +68,22 @@
                             ? $totalObservations
                             : \App\Models\ObservationsOld::getObservationsCountForObject($objectName);
                     $drawingsCount =
-                        isset($drawings) && is_countable($drawings)
-                            ? count($drawings)
-                            : \App\Models\ObservationsOld::getDrawingsCountForObject($objectName);
+                        isset($drawings) && is_numeric($drawings)
+                            ? intval($drawings)
+                            : (isset($drawings) && is_countable($drawings)
+                                ? count($drawings)
+                                : \App\Models\ObservationsOld::getDrawingsCountForObject($objectName));
                     $yourObs = auth()->check()
-                        ? \App\Models\ObservationsOld::getObservationsCountForUser(auth()->user(), $objectName)
+                        ? ($yourObservations ?? \App\Models\ObservationsOld::getObservationsCountForUser(auth()->user(), $objectName))
                         : 0;
                     $yourDrawings = auth()->check()
-                        ? \App\Models\ObservationsOld::getDrawingsCountForUser(auth()->user(), $objectName)
+                        ? ($yourDrawings ?? \App\Models\ObservationsOld::getDrawingsCountForUser(auth()->user(), $objectName))
                         : 0;
                     $lastObs = auth()->check()
-                        ? \App\Models\ObservationsOld::getLastObservationDateForUser(auth()->user(), $objectName)
+                        ? ($lastObservationDate ?? \App\Models\ObservationsOld::getLastObservationDateForUser(auth()->user(), $objectName))
                         : null;
                     $lastDrawing = auth()->check()
-                        ? \App\Models\ObservationsOld::getLastDrawingDateForUser(auth()->user(), $objectName)
+                        ? ($lastDrawingDate ?? \App\Models\ObservationsOld::getLastDrawingDateForUser(auth()->user(), $objectName))
                         : null;
                 @endphp
 

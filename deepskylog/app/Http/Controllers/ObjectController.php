@@ -42,6 +42,8 @@ class ObjectController extends Controller
     {
         $record = null;
         $type = null;
+        $pk = $slug;
+        $resolutionCacheKey = null;
         $tStart = microtime(true);
         try {
             Log::debug('ObjectController: show start', ['slug' => $slug]);
@@ -76,6 +78,78 @@ class ObjectController extends Controller
 
             // unique candidates, keep order
             $candidates = array_values(array_unique(array_filter($candidates)));
+        }
+
+        // Fastest path: reuse a short-lived slug resolution cache to avoid repeating
+        // the expensive cross-table alias lookups for frequently viewed objects.
+        if (!empty($slug)) {
+            try {
+                $resolutionCacheKey = 'object:resolve:v1:' . sha1(mb_strtolower((string) $slug));
+                $cachedResolution = Cache::get($resolutionCacheKey);
+                if (is_array($cachedResolution) && !empty($cachedResolution['type']) && array_key_exists('pk', $cachedResolution)) {
+                    $type = $cachedResolution['type'];
+                    $pk = $cachedResolution['pk'];
+
+                    switch ($type) {
+                        case 'deepsky':
+                        case 'objects':
+                            if (is_numeric($pk)) {
+                                $record = DB::table('objects')->where('id', $pk)->first();
+                            } else {
+                                $record = DB::table('objects')->where('name', $pk)->first();
+                            }
+                            break;
+                        case 'comet':
+                        case 'cometobjects':
+                            if (is_numeric($pk)) {
+                                $record = DB::table('cometobjects')->where('id', $pk)->first();
+                            } else {
+                                $record = DB::table('cometobjects')->where('name', $pk)->first();
+                            }
+                            break;
+                        case 'planet':
+                        case 'planets':
+                            if (is_numeric($pk)) {
+                                $record = Planet::find($pk);
+                            } else {
+                                $record = Planet::where('name', $pk)->first();
+                            }
+                            break;
+                        case 'moon':
+                        case 'moons':
+                            if (is_numeric($pk)) {
+                                $record = Moon::find($pk);
+                            } else {
+                                $record = Moon::where('name', $pk)->first();
+                            }
+                            break;
+                        case 'lunar_feature':
+                        case 'lunar_features':
+                            if (is_numeric($pk)) {
+                                $record = LunarFeature::find($pk);
+                            } else {
+                                $record = LunarFeature::where('name', $pk)->first();
+                            }
+                            break;
+                        case 'asteroid':
+                        case 'asteroids':
+                            if (is_numeric($pk)) {
+                                $record = Asteroid::find($pk);
+                            } else {
+                                $record = Asteroid::where('name', $pk)->first();
+                            }
+                            break;
+                        default:
+                            $record = null;
+                    }
+                }
+            } catch (\Throwable $_) {
+                $record = null;
+            }
+        }
+
+        if ($record) {
+            goto render_object;
         }
 
         // Fast path: accept canonical slugs (preferred). Check objectnames.slug then objects.slug.
@@ -241,7 +315,7 @@ class ObjectController extends Controller
         }
 
         // Prepare primary key variable for further resolution attempts
-        $pk = $slug;
+        $pk = $pk ?? $slug;
 
         // If the slug fast-path didn't find a record, try the broader resolution logic.
         if (!$record) {
@@ -561,6 +635,19 @@ class ObjectController extends Controller
         }
 
         render_object:
+        // Cache successful slug resolution so subsequent requests can avoid
+        // the expensive alias/name probing path in this controller.
+        if (!empty($resolutionCacheKey) && $record && $type) {
+            try {
+                Cache::put($resolutionCacheKey, [
+                    'type' => $type,
+                    'pk' => $record->id ?? ($record->name ?? null),
+                ], now()->addHours(6));
+            } catch (\Throwable $_) {
+                // ignore cache store failures
+            }
+        }
+
         // Build a minimal $user-like object for links (use current authenticated user if available)
         $user = Auth::user() ?? (object) ['name' => $record->name ?? ($record->display_name ?? $slug), 'slug' => null, 'username' => null];
 
@@ -659,6 +746,10 @@ class ObjectController extends Controller
         $observerStats = [];
         $selectedObserverUsername = null;
         $selectedObserverName = null;
+        $yourObservations = null;
+        $yourDrawings = null;
+        $lastObservationDate = null;
+        $lastDrawingDate = null;
 
         // Enrich metadata for display if available
         if (isset($record->ra) && isset($record->decl)) {
@@ -1303,6 +1394,8 @@ class ObjectController extends Controller
         $drawings = $drawings ?? null;
         $yourObservations = $yourObservations ?? null;
         $yourDrawings = $yourDrawings ?? null;
+        $lastObservationDate = $lastObservationDate ?? null;
+        $lastDrawingDate = $lastDrawingDate ?? null;
 
         // Compute legacy observation/drawing counts when possible so the view shows accurate totals
         try {
@@ -1311,15 +1404,56 @@ class ObjectController extends Controller
                 // can be noisy. Only consult the legacy `observations` table for non-planet objects.
                 if ((($session->source_type_raw ?? '') !== 'planet') && class_exists(\App\Models\ObservationsOld::class)) {
                     try {
-                        $totalObservations = \App\Models\ObservationsOld::getObservationsCountForObject($session->name);
+                        // Collapse all object-level count work into one query.
+                        $objectStats = DB::connection('mysqlOld')
+                            ->table('observations')
+                            ->selectRaw('COUNT(*) as total_obs, SUM(CASE WHEN hasDrawing = 1 THEN 1 ELSE 0 END) as total_drawings')
+                            ->where('objectname', $session->name)
+                            ->first();
+
+                        $totalObservations = (int) ($objectStats->total_obs ?? 0);
+                        $drawings = (int) ($objectStats->total_drawings ?? 0);
                     } catch (\Throwable $_) {
                         $totalObservations = $totalObservations ?? null;
+                        $drawings = $drawings ?? null;
                     }
 
                     try {
-                        // Keep $drawings as null so the view calls the fallback helper which returns a count
-                        // If you prefer we can fetch and pass a collection here instead.
-                        // No-op here; let the view compute drawings count via ObservationsOld when $drawings is null.
+                        if (Auth::check()) {
+                            $legacyUsername = Auth::user()->username ?? null;
+                            if (!empty($legacyUsername)) {
+                                $userStats = DB::connection('mysqlOld')
+                                    ->table('observations')
+                                    ->selectRaw('COUNT(*) as your_obs')
+                                    ->selectRaw('SUM(CASE WHEN hasDrawing = 1 THEN 1 ELSE 0 END) as your_drawings')
+                                    ->selectRaw('MAX(date) as last_obs_date')
+                                    ->selectRaw('MAX(CASE WHEN hasDrawing = 1 THEN date ELSE NULL END) as last_drawing_date')
+                                    ->where('observerid', $legacyUsername)
+                                    ->where('objectname', $session->name)
+                                    ->first();
+
+                                $yourObservations = (int) ($userStats->your_obs ?? 0);
+                                $yourDrawings = (int) ($userStats->your_drawings ?? 0);
+
+                                $lastObsRaw = $userStats->last_obs_date ?? null;
+                                if (!empty($lastObsRaw)) {
+                                    try {
+                                        $lastObservationDate = \Carbon\Carbon::createFromFormat('Ymd', (string) $lastObsRaw);
+                                    } catch (\Throwable $_) {
+                                        $lastObservationDate = null;
+                                    }
+                                }
+
+                                $lastDrawingRaw = $userStats->last_drawing_date ?? null;
+                                if (!empty($lastDrawingRaw)) {
+                                    try {
+                                        $lastDrawingDate = \Carbon\Carbon::createFromFormat('Ymd', (string) $lastDrawingRaw);
+                                    } catch (\Throwable $_) {
+                                        $lastDrawingDate = null;
+                                    }
+                                }
+                            }
+                        }
                     } catch (\Throwable $_) {
                         // ignore
                     }
@@ -3406,10 +3540,10 @@ class ObjectController extends Controller
 
         // Use the moon-style page for lunar features so coordinates/constellation are hidden
         if ((($session->source_type_raw ?? '') === 'lunar_feature') || (($type ?? '') === 'lunar_feature')) {
-            return response()->view('object.moon-page', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId', 'ephemerides', 'yourObservations', 'yourDrawings', 'comet_magnitudes', 'comet_min_mag', 'comet_max_mag', 'cometMagnitudeChart'));
+            return response()->view('object.moon-page', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId', 'ephemerides', 'yourObservations', 'yourDrawings', 'lastObservationDate', 'lastDrawingDate', 'comet_magnitudes', 'comet_min_mag', 'comet_max_mag', 'cometMagnitudeChart'));
         }
 
-        $vars = compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId', 'ephemerides', 'yourObservations', 'yourDrawings', 'comet_magnitudes', 'comet_min_mag', 'comet_max_mag', 'cometMagnitudeChart');
+        $vars = compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId', 'ephemerides', 'yourObservations', 'yourDrawings', 'lastObservationDate', 'lastDrawingDate', 'comet_magnitudes', 'comet_min_mag', 'comet_max_mag', 'cometMagnitudeChart');
         try {
             if (($type === 'deepsky' || $type === 'objects')) {
                 $vars['dsl_deepsky_full_container'] = true;
@@ -4046,7 +4180,7 @@ class ObjectController extends Controller
             $cat = '';
             $catIdx = '';
             if (preg_match('/^([A-Za-z]+)\s*(.+)$/', trim($object->name), $m)) {
-                $cat    = $m[1];
+                $cat = $m[1];
                 $catIdx = trim($m[2]);
             }
             // Only insert if the slug is not already claimed by a different object
@@ -4057,11 +4191,11 @@ class ObjectController extends Controller
             if (!$slugTaken) {
                 DB::table('objectnames')->insert([
                     'objectname' => $object->name,
-                    'catalog'    => $cat,
-                    'catindex'   => $catIdx,
-                    'altname'    => $object->name,
-                    'slug'       => $canonicalSlug,
-                    'timestamp'  => now(),
+                    'catalog' => $cat,
+                    'catindex' => $catIdx,
+                    'altname' => $object->name,
+                    'slug' => $canonicalSlug,
+                    'timestamp' => now(),
                 ]);
             }
         }

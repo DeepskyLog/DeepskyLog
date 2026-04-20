@@ -9,7 +9,7 @@
             </x-slot>
 
             {{-- preserve original items as plain links (icons handled inside original x-dropdown.item) --}}
-            <x-menu.item icon="magnifying-glass" href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&searchObjectQuickPickQuickPick">{{ __('Search object') }}</x-menu.item>
+            <x-menu.item icon="magnifying-glass" href="{{ route('search.advanced') }}">{{ __('Search object') }}</x-menu.item>
 
             <x-menu.item icon="globe-europe-africa" href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&myLanguages=true&searchObservationsQuickPick">{{ __('Search Observations') }}</x-menu.item>
 

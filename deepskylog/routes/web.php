@@ -378,6 +378,12 @@ Route::get('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'sho
 Route::get('/search', [App\Http\Controllers\SearchController::class, 'results'])
     ->name('search.results')->middleware('doNotCacheResponse');
 
+// Advanced object search (filter builder form + results)
+Route::get('/search/advanced', [App\Http\Controllers\SearchController::class, 'advanced'])
+    ->name('search.advanced')->middleware('doNotCacheResponse');
+Route::get('/search/advanced/results', [App\Http\Controllers\SearchController::class, 'advancedResults'])
+    ->name('search.advanced.results')->middleware('doNotCacheResponse');
+
 // Search exports (PDF / plain text / APD)
 Route::get('/search/names.pdf', [App\Http\Controllers\SearchExportController::class, 'namesPdf'])
     ->name('search.names.pdf')->middleware('doNotCacheResponse');
