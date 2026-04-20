@@ -6,10 +6,6 @@
 
 + [ ] Update to laravel 13.
 + [ ] Targets
-  + [ ] Speed
-    + [ ] Detail of one object...
-  + [ ] Why is TNTSearch used? 
-    + [ ] Install sqlite3 on the server to be able to use TNTSearch
   + [ ] After installation, make sure to run the queue worker to compute the contrast reserve and optimum eyepieces for all users / instruments / locations.  See Tips.md for more information about the queue worker.
   + [ ] Administrator -> Check Objects page
 + [ ] Release new version of pyDeepskyLog
