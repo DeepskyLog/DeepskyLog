@@ -23,8 +23,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('sessions:backfill-slugs')->everyFiveMinutes();
 
         $schedule->command('astronomy:updateCometPhotometry')->weeklyOn(2, '4:30');
-        // Incremental TNTSearch index update
-        $schedule->command('tntsearch:incremental-index --storage=storage/tnt')->everyFiveMinutes();
         // Incremental search index reindex (one-run nightly; safe for production)
         $schedule->command('search:reindex --incremental')
             ->dailyAt('02:00')
