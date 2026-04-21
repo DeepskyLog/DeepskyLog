@@ -19,9 +19,7 @@
                     <x-menu.item icon="plus" href="/sketch-of-the-month/create">{{ __('Add sketch of the month') }}</x-menu.item>
 
                     @if (Auth::user()->isAdministrator())
-                        <x-menu.item separator icon="check-badge" href="{{ config('app.old_url') }}/index.php?indexAction=admin_check_objects">{{ __('Check Objects') }}</x-menu.item>
-                    @else
-                        <x-menu.item icon="check-badge" href="{{ config('app.old_url') }}/index.php?indexAction=admin_check_objects">{{ __('Check Objects') }}</x-menu.item>
+                        <x-menu.item separator icon="check-badge" href="{{ route('admin.objects.check') }}">{{ __('Check Objects') }}</x-menu.item>
                     @endif
 
                     @if (Auth::user()->isAdministrator())

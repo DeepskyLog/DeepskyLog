@@ -73,6 +73,27 @@ Route::get('/teams/{team}', 'App\Http\Controllers\DeepskyLogTeamController@show'
 
 // Observers
 Route::get('/observers/admin', 'App\Http\Controllers\ObserverController@admin')->name('observers.admin')->can('delete', User::class);
+Route::get('/admin/check-objects', [App\Http\Controllers\AdminObjectCheckController::class, 'index'])
+    ->middleware('auth')
+    ->name('admin.objects.check');
+Route::post('/admin/check-objects/orphan-objectnames', [App\Http\Controllers\AdminObjectCheckController::class, 'destroyOrphanObjectNames'])
+    ->middleware('auth')
+    ->name('admin.objects.check.cleanup');
+Route::post('/admin/check-objects/repair-constellations', [App\Http\Controllers\AdminObjectCheckController::class, 'repairConstellations'])
+    ->middleware('auth')
+    ->name('admin.objects.check.repair');
+Route::get('/admin/check-objects/export/constellation-mismatches', [App\Http\Controllers\AdminObjectCheckController::class, 'exportConstellationMismatches'])
+    ->middleware('auth')
+    ->name('admin.objects.check.export-constellations');
+Route::get('/admin/check-objects/export/orphan-objectnames', [App\Http\Controllers\AdminObjectCheckController::class, 'exportOrphanObjectNames'])
+    ->middleware('auth')
+    ->name('admin.objects.check.export-orphans');
+Route::get('/admin/check-objects/export/observation-alias-mappings', [App\Http\Controllers\AdminObjectCheckController::class, 'exportAliasFixableObservationMappings'])
+    ->middleware('auth')
+    ->name('admin.objects.check.export-observation-alias-mappings');
+Route::post('/admin/check-objects/repair-observation-objectnames', [App\Http\Controllers\AdminObjectCheckController::class, 'repairObservationObjectNames'])
+    ->middleware('auth')
+    ->name('admin.objects.check.repair-observation-objectnames');
 Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@show')->name('observer.show');
 
 // Drawings

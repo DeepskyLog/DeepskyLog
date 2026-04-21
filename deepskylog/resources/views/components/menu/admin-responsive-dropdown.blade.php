@@ -43,13 +43,7 @@
                         <x-dropdown.item
                             icon="check-badge"
                             separator
-                            href="{{ config('app.old_url') }}/index.php?indexAction=admin_check_objects"
-                            label="{{ __('Check Objects') }}"
-                        />
-                    @else
-                        <x-dropdown.item
-                            icon="check-badge"
-                            href="{{ config('app.old_url') }}/index.php?indexAction=admin_check_objects"
+                            href="{{ route('admin.objects.check') }}"
                             label="{{ __('Check Objects') }}"
                         />
                     @endif

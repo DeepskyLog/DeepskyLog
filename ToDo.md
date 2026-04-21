@@ -5,23 +5,21 @@
 ## Next steps
 
 + [ ] Update to laravel 13.
-+ [ ] Targets
-  + [ ] After installation, make sure to run the queue worker to compute the contrast reserve and optimum eyepieces for all users / instruments / locations.  See Tips.md for more information about the queue worker.
-  + [ ] Administrator -> Check Objects page
-+ [ ] Release new version of pyDeepskyLog
-  + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
-
-### Distant future
-
 + [ ] Observing lists
   + [ ] Description of observing lists
   + [ ] Add extra description to target? (Automatically add the longest description from deepskylog, ...)
   + [ ] Comment on observing lists
   + [ ] Like observing lists
+  + [ ] Use new tables in old version of DeepskyLog
++ [ ] Release new version of pyDeepskyLog
+  + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
+
+### Distant future
+
 + [ ] Observations
   + [ ] Comment on observations
 + [ ] All missing pages
-+ [ ] Friends? Add friends and see their observations / sessions / ... Different lists for Murzim, Capella, ...
+
 
 ### Done
 
@@ -61,6 +59,8 @@
 + [X] Add a page to add a new object, with the same user-friendly form and Simbad fetching.
 + [X] Add a page to show the catalog of objects, with filters and search.
 + [X] Quick search in the left aside.  Use '/' to jump to the search field.
++ [X] Detailed search on objects
++ [X] Check objects page for administrators, with a button to fetch data from Simbad.
 
 ## Small issues
 
