@@ -18,7 +18,7 @@
 
                     <x-menu.item icon="plus" href="/sketch-of-the-month/create">{{ __('Add sketch of the month') }}</x-menu.item>
 
-                    @if (Auth::user()->isAdministrator())
+                    @if (Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
                         <x-menu.item separator icon="check-badge" href="{{ route('admin.objects.check') }}">{{ __('Check Objects') }}</x-menu.item>
                     @endif
 

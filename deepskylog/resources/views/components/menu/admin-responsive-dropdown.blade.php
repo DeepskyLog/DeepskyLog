@@ -39,7 +39,7 @@
                         label="{{ __('Add sketch of the month') }}"
                     />
 
-                    @if (Auth::user()->isAdministrator())
+                    @if (Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
                         <x-dropdown.item
                             icon="check-badge"
                             separator

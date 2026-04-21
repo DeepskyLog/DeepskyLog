@@ -64,6 +64,15 @@ test('administrator can view the local check objects page', function () {
         ->assertSee('Objects and object names');
 });
 
+test('database expert can view the local check objects page', function () {
+    $user = $this->createUserAndAssignToTeam('Database Experts');
+
+    $this->actingAs($user)
+        ->get(route('admin.objects.check'))
+        ->assertOk()
+        ->assertSee('Check Objects');
+});
+
 test('administrator can delete orphan object names', function () {
     $user = $this->createUserAndAssignToTeam('Administrators');
 
@@ -136,6 +145,14 @@ test('administrator can delete orphan object names', function () {
 
 test('administrator can trigger observation object-name repair', function () {
     $user = $this->createUserAndAssignToTeam('Administrators');
+
+    $this->actingAs($user)
+        ->post(route('admin.objects.check.repair-observation-objectnames'))
+        ->assertRedirect(route('admin.objects.check'));
+});
+
+test('database expert can trigger observation object-name repair', function () {
+    $user = $this->createUserAndAssignToTeam('Database Experts');
 
     $this->actingAs($user)
         ->post(route('admin.objects.check.repair-observation-objectnames'))

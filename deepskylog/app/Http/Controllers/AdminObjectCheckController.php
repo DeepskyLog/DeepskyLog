@@ -90,6 +90,9 @@ class AdminObjectCheckController extends Controller
 
     private function ensureAdministrator(): void
     {
-        abort_unless(Auth::check() && Auth::user()->isAdministrator(), 403);
+        abort_unless(
+            Auth::check() && (Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert()),
+            403
+        );
     }
 }
