@@ -2,10 +2,12 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-200 leading-tight">{{ __('Discover observing lists') }}</h2>
-            <a href="{{ route('observing-lists.index') }}"
-               class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
-                {{ __('My lists') }}
-            </a>
+            @auth
+                <a href="{{ route('observing-lists.index') }}"
+                   class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
+                    {{ __('My lists') }}
+                </a>
+            @endauth
         </div>
     </x-slot>
 
@@ -75,23 +77,25 @@
                                        class="text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded">
                                         {{ __('View') }}
                                     </a>
-                                    @if ($subscribed)
-                                        <form method="POST" action="{{ route('observing-list.unsubscribe', $list) }}">
-                                            @csrf
-                                            <button type="submit"
-                                                class="text-xs px-2 py-1 bg-gray-700 hover:bg-red-800 text-gray-300 hover:text-white rounded">
-                                                {{ __('Unsubscribe') }}
-                                            </button>
-                                        </form>
-                                    @else
-                                        <form method="POST" action="{{ route('observing-list.subscribe', $list) }}">
-                                            @csrf
-                                            <button type="submit"
-                                                class="text-xs px-2 py-1 bg-green-700 hover:bg-green-600 text-white rounded">
-                                                {{ __('Subscribe') }}
-                                            </button>
-                                        </form>
-                                    @endif
+                                    @auth
+                                        @if ($subscribed)
+                                            <form method="POST" action="{{ route('observing-list.unsubscribe', $list) }}">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="text-xs px-2 py-1 bg-gray-700 hover:bg-red-800 text-gray-300 hover:text-white rounded">
+                                                    {{ __('Unsubscribe') }}
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form method="POST" action="{{ route('observing-list.subscribe', $list) }}">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="text-xs px-2 py-1 bg-green-700 hover:bg-green-600 text-white rounded">
+                                                    {{ __('Subscribe') }}
+                                                </button>
+                                            </form>
+                                        @endif
+                                    @endauth
                                 </div>
                             </div>
                         </article>

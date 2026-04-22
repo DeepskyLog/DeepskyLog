@@ -39,78 +39,80 @@
 
                     {{-- Action buttons --}}
                     <div class="flex flex-wrap items-center gap-2 flex-shrink-0">
-                        {{-- Active indicator / set active --}}
-                        @if ($isActive)
-                            <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-700 text-blue-100 rounded text-xs font-semibold">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                {{ __('Active list') }}
-                            </span>
-                        @else
-                            <form method="POST" action="{{ route('observing-list.set-active', $list) }}">
-                                @csrf
-                                <button type="submit"
-                                    class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded text-xs font-semibold">
-                                    {{ __('Set as active') }}
-                                </button>
-                            </form>
-                        @endif
-
-                        {{-- Subscribe / Unsubscribe (for non-owners) --}}
-                        @if (!$isOwner && $list->public)
-                            @if ($isSubscribed)
-                                <form method="POST" action="{{ route('observing-list.unsubscribe', $list) }}">
-                                    @csrf
-                                    <button type="submit"
-                                        class="inline-flex items-center px-3 py-1.5 bg-gray-700 hover:bg-red-800 text-gray-200 hover:text-white rounded text-xs font-semibold">
-                                        {{ __('Unsubscribe') }}
-                                    </button>
-                                </form>
+                        @auth
+                            {{-- Active indicator / set active --}}
+                            @if ($isActive)
+                                <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-700 text-blue-100 rounded text-xs font-semibold">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    {{ __('Active list') }}
+                                </span>
                             @else
-                                <form method="POST" action="{{ route('observing-list.subscribe', $list) }}">
+                                <form method="POST" action="{{ route('observing-list.set-active', $list) }}">
                                     @csrf
                                     <button type="submit"
-                                        class="inline-flex items-center px-3 py-1.5 bg-green-700 hover:bg-green-600 text-white rounded text-xs font-semibold">
-                                        {{ __('Subscribe') }}
+                                        class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded text-xs font-semibold">
+                                        {{ __('Set as active') }}
                                     </button>
                                 </form>
                             @endif
-                        @endif
 
-                        {{-- Edit / Delete (owner) --}}
-                        @if ($isOwner)
-                            <a href="{{ route('observing-list.edit', $list) }}"
-                               class="inline-flex items-center px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded text-xs font-semibold">
-                                {{ __('Edit') }}
-                            </a>
-                            @include('observing-lists.partials.import-modal')
-                            <form method="POST" action="{{ route('observing-list.items.autofill-notes', $list) }}"
-                                  onsubmit="return confirm('{{ __('Fill in the longest observation note for every object that has no note yet?') }}')">
-                                @csrf
-                                <button type="submit"
-                                    class="inline-flex items-center px-3 py-1.5 bg-indigo-700 hover:bg-indigo-600 text-white rounded text-xs font-semibold">
-                                    {{ __('Autofill notes') }}
-                                </button>
-                            </form>
-                            <form method="POST" action="{{ route('observing-list.empty', $list) }}"
-                                  onsubmit="return confirm('{{ __('Remove all items from this list?') }}')">
-                                @csrf
-                                <button type="submit"
-                                    class="inline-flex items-center px-3 py-1.5 bg-orange-700 hover:bg-orange-600 text-white rounded text-xs font-semibold">
-                                    {{ __('Empty list') }}
-                                </button>
-                            </form>
-                            <form method="POST" action="{{ route('observing-list.destroy', $list) }}"
-                                  onsubmit="return confirm('{{ __('Delete this list and all its items?') }}')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                    class="inline-flex items-center px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white rounded text-xs font-semibold">
-                                    {{ __('Delete list') }}
-                                </button>
-                            </form>
-                        @endif
+                            {{-- Subscribe / Unsubscribe (for non-owners) --}}
+                            @if (!$isOwner && $list->public)
+                                @if ($isSubscribed)
+                                    <form method="POST" action="{{ route('observing-list.unsubscribe', $list) }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="inline-flex items-center px-3 py-1.5 bg-gray-700 hover:bg-red-800 text-gray-200 hover:text-white rounded text-xs font-semibold">
+                                            {{ __('Unsubscribe') }}
+                                        </button>
+                                    </form>
+                                @else
+                                    <form method="POST" action="{{ route('observing-list.subscribe', $list) }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="inline-flex items-center px-3 py-1.5 bg-green-700 hover:bg-green-600 text-white rounded text-xs font-semibold">
+                                            {{ __('Subscribe') }}
+                                        </button>
+                                    </form>
+                                @endif
+                            @endif
+
+                            {{-- Edit / Delete (owner) --}}
+                            @if ($isOwner)
+                                <a href="{{ route('observing-list.edit', $list) }}"
+                                   class="inline-flex items-center px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded text-xs font-semibold">
+                                    {{ __('Edit') }}
+                                </a>
+                                @include('observing-lists.partials.import-modal')
+                                <form method="POST" action="{{ route('observing-list.items.autofill-notes', $list) }}"
+                                      onsubmit="return confirm('{{ __('Fill in the longest observation note for every object that has no note yet?') }}')">
+                                    @csrf
+                                    <button type="submit"
+                                        class="inline-flex items-center px-3 py-1.5 bg-indigo-700 hover:bg-indigo-600 text-white rounded text-xs font-semibold">
+                                        {{ __('Autofill notes') }}
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ route('observing-list.empty', $list) }}"
+                                      onsubmit="return confirm('{{ __('Remove all items from this list?') }}')">
+                                    @csrf
+                                    <button type="submit"
+                                        class="inline-flex items-center px-3 py-1.5 bg-orange-700 hover:bg-orange-600 text-white rounded text-xs font-semibold">
+                                        {{ __('Empty list') }}
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ route('observing-list.destroy', $list) }}"
+                                      onsubmit="return confirm('{{ __('Delete this list and all its items?') }}')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="inline-flex items-center px-3 py-1.5 bg-red-700 hover:bg-red-600 text-white rounded text-xs font-semibold">
+                                        {{ __('Delete list') }}
+                                    </button>
+                                </form>
+                            @endif
+                        @endauth
                     </div>
                 </div>
 
@@ -131,6 +133,7 @@
                 </div>
 
                 {{-- Like button (for non-owners on public lists) --}}
+                @auth
                 @if (!$isOwner && $list->public)
                     <div class="mt-3">
                         <button id="like-btn"
@@ -147,6 +150,7 @@
                         </button>
                     </div>
                 @endif
+                @endauth
             </header>
 
             <div class="grid grid-cols-1 gap-6">
@@ -273,16 +277,24 @@
                             </div>
                         </div>
 
-                        @livewire('observing-list-notes', ['listId' => $list->id, 'listSlug' => $list->slug, 'isOwner' => $isOwner], key('observing-list-notes-' . $list->id))
+                        @auth
+                            @livewire('observing-list-notes', ['listId' => $list->id, 'listSlug' => $list->slug, 'isOwner' => $isOwner], key('observing-list-notes-' . $list->id))
+                        @endauth
                     @endif
                 </section>
 
             </div>
 
             <div class="mt-6">
-                <a href="{{ route('observing-lists.index') }}" class="text-gray-400 hover:text-gray-200 text-sm">
-                    &larr; {{ __('Back to my lists') }}
-                </a>
+                @auth
+                    <a href="{{ route('observing-lists.index') }}" class="text-gray-400 hover:text-gray-200 text-sm">
+                        &larr; {{ __('Back to my lists') }}
+                    </a>
+                @else
+                    <a href="{{ route('observing-lists.discover') }}" class="text-gray-400 hover:text-gray-200 text-sm">
+                        &larr; {{ __('Back to public lists') }}
+                    </a>
+                @endauth
             </div>
 
         </div>

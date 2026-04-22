@@ -560,18 +560,18 @@ Route::post('/messages/{id}/delete-group', [App\Http\Controllers\MessagesControl
 
 // Sitemap (cached): generates a simple sitemap.xml with main pages and recent public sessions
 // Observing Lists
+// Public discover page (no auth required)
+Route::get('/observing-lists/discover', [App\Http\Controllers\ObservingListController::class, 'discover'])
+    ->name('observing-lists.discover');
+
+// Public list detail page (private lists still guarded in controller)
+Route::get('/observing-list/{list}', [App\Http\Controllers\ObservingListController::class, 'show'])
+    ->name('observing-list.show');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     // My observing lists (owned + subscribed)
     Route::get('/observing-lists', [App\Http\Controllers\ObservingListController::class, 'index'])
         ->name('observing-lists.index');
-
-    // Public observing lists discovery
-    Route::get('/observing-lists/discover', [App\Http\Controllers\ObservingListController::class, 'discover'])
-        ->name('observing-lists.discover');
-
-    // Show specific observing list
-    Route::get('/observing-list/{list}', [App\Http\Controllers\ObservingListController::class, 'show'])
-        ->name('observing-list.show');
 
     // Set as active observing list
     Route::post('/observing-list/{list}/set-active', [App\Http\Controllers\ObservingListController::class, 'setActive'])

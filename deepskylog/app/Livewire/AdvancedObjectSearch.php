@@ -69,7 +69,8 @@ class AdvancedObjectSearch extends Component
 
     // ── Observing status ───────────────────────────────────────────────────
     public string $observingStatus = 'all';
-    public array $observingStatusOptions = [
+    // All available observing status options (including user-specific ones)
+    private array $allObservingStatusOptions = [
         'all' => 'All objects, seen or not',
         'seen_any' => 'Only objects that have already been seen',
         'drawn_any' => 'Only objects that have been drawn',
@@ -154,7 +155,7 @@ class AdvancedObjectSearch extends Component
             ->mapWithKeys(fn($a) => [(string) $a->code => (string) $a->name])
             ->toArray();
 
-        // Observing lists: current user's owned lists + subscribed lists + all public lists.
+        // Observing lists: user's owned + subscribed (if logged in) + all public lists
         try {
             $authUser = Auth::user();
             $userId = $authUser?->id;
@@ -194,10 +195,11 @@ class AdvancedObjectSearch extends Component
                     ->toArray();
             }
 
-            // All public lists
+            // Public lists (always available)
             $publicLists = DB::table('observing_lists')
                 ->join('users', 'observing_lists.owner_user_id', '=', 'users.id')
                 ->where('observing_lists.public', 1)
+                // When logged in, exclude user's own lists to avoid duplicates
                 ->where(function ($q) use ($userId) {
                     if ($userId) {
                         $q->where('observing_lists.owner_user_id', '<>', $userId);
@@ -213,7 +215,7 @@ class AdvancedObjectSearch extends Component
                 })
                 ->toArray();
 
-            // Combine all lists
+            // Combine all lists (owned + subscribed + public)
             $this->allObservingLists = array_merge($ownedLists, $subscribedLists, $publicLists);
         } catch (\Throwable $_) {
             $this->allObservingLists = [];
@@ -259,7 +261,9 @@ class AdvancedObjectSearch extends Component
         $this->declMax = (string) ($filters['decl_max'] ?? '');
 
         $status = (string) ($filters['observing_status'] ?? 'all');
-        $this->observingStatus = array_key_exists($status, $this->observingStatusOptions) ? $status : 'all';
+        // Validate against available options (filtered based on authentication)
+        $availableOptions = $this->observingStatusOptions;
+        $this->observingStatus = array_key_exists($status, $availableOptions) ? $status : 'all';
 
         $this->observingLists = array_values(array_filter(array_map('strval', (array) ($filters['observing_lists'] ?? []))));
         $listMode = (string) ($filters['observing_lists_mode'] ?? 'in');
@@ -629,10 +633,31 @@ class AdvancedObjectSearch extends Component
             ->toArray();
     }
 
+    public function getObservingStatusOptionsProperty(): array
+    {
+        // When not logged in, only show options that don't require a user context
+        if (!Auth::check()) {
+            return array_filter(
+                $this->allObservingStatusOptions,
+                fn($key) => !in_array($key, [
+                    'seen_by_me',
+                    'drawn_by_me',
+                    'unseen_by_me',
+                    'undrawn_by_me',
+                    'seen_by_others_not_me',
+                    'drawn_by_others_not_me',
+                ]),
+                ARRAY_FILTER_USE_KEY
+            );
+        }
+        return $this->allObservingStatusOptions;
+    }
+
     public function render()
     {
         return view('livewire.advanced-object-search', [
             'savedSearches' => $this->savedSearches,
+            'observingStatusOptions' => $this->observingStatusOptions,
         ]);
     }
 }

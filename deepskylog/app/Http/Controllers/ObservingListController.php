@@ -27,22 +27,37 @@ class ObservingListController extends Controller
     /**
      * Show the user's observing lists (owned + subscribed).
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         $user = auth()->user();
+        $search = trim((string) $request->query('q', ''));
 
         // Get owned lists
-        $ownedLists = $user->observingLists()
+        $ownedListsQuery = $user->observingLists()
             ->withCount('items')
-            ->orderBy('created_at', 'desc')
-            ->paginate(15, ['*'], 'owned_page');
+            ->orderBy('created_at', 'desc');
+
+        if ($search !== '') {
+            $ownedListsQuery->where('name', 'like', '%' . $search . '%');
+        }
+
+        $ownedLists = $ownedListsQuery
+            ->paginate(15, ['*'], 'owned_page')
+            ->withQueryString();
 
         // Get subscribed lists
-        $subscribedLists = $user->subscribedObservingLists()
+        $subscribedListsQuery = $user->subscribedObservingLists()
             ->with('owner')
             ->withCount('items')
-            ->orderBy('observing_list_subscriptions.created_at', 'desc')
-            ->paginate(15, ['*'], 'subscribed_page');
+            ->orderBy('observing_list_subscriptions.created_at', 'desc');
+
+        if ($search !== '') {
+            $subscribedListsQuery->where('observing_lists.name', 'like', '%' . $search . '%');
+        }
+
+        $subscribedLists = $subscribedListsQuery
+            ->paginate(15, ['*'], 'subscribed_page')
+            ->withQueryString();
 
         // Get active list (with items count for the banner)
         $activeList = $this->activeListService->getActiveList($user);
@@ -51,6 +66,7 @@ class ObservingListController extends Controller
             'ownedLists' => $ownedLists,
             'subscribedLists' => $subscribedLists,
             'activeList' => $activeList,
+            'search' => $search,
         ]);
     }
 
@@ -64,8 +80,12 @@ class ObservingListController extends Controller
 
         $query = ObservingList::with('owner')
             ->withCount('items')
-            ->where('public', 1)
-            ->where('owner_user_id', '<>', $user->id);
+            ->where('public', 1);
+
+        // Exclude user's own lists if logged in
+        if ($user) {
+            $query->where('owner_user_id', '<>', $user->id);
+        }
 
         if ($sortBy === 'popular') {
             $query->orderBy('likes_count', 'desc');
@@ -75,11 +95,14 @@ class ObservingListController extends Controller
 
         $publicLists = $query->paginate(15);
 
-        // Mark which lists user is already subscribed to
-        $subscribedIds = $user->subscribedObservingLists()
-            ->pluck('observing_lists.id')
-            ->map(fn($id) => (int) $id)
-            ->toArray();
+        // Mark which lists user is already subscribed to (only if logged in)
+        $subscribedIds = [];
+        if ($user) {
+            $subscribedIds = $user->subscribedObservingLists()
+                ->pluck('observing_lists.id')
+                ->map(fn($id) => (int) $id)
+                ->toArray();
+        }
 
         return view('observing-lists.discover', [
             'publicLists' => $publicLists,
@@ -95,8 +118,13 @@ class ObservingListController extends Controller
     {
         $user = auth()->user();
 
-        // Check authorization
-        if (!$user->can('view', $list)) {
+        // Guests may only view public lists.
+        if (!$user && !$list->public) {
+            throw new AuthorizationException();
+        }
+
+        // Logged-in users follow policy rules (owner/subscriber/public).
+        if ($user && !$user->can('view', $list)) {
             throw new AuthorizationException();
         }
 
@@ -111,10 +139,10 @@ class ObservingListController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $isOwner = $user->id === $list->owner_user_id;
-        $isSubscribed = $list->isSubscribedBy($user);
-        $isLiked = $list->isLikedBy($user);
-        $isActive = $this->activeListService->isActive($user, $list);
+        $isOwner = $user ? ($user->id === $list->owner_user_id) : false;
+        $isSubscribed = $user ? $list->isSubscribedBy($user) : false;
+        $isLiked = $user ? $list->isLikedBy($user) : false;
+        $isActive = $user ? $this->activeListService->isActive($user, $list) : false;
 
         return view('observing-lists.show', [
             'list' => $list,
