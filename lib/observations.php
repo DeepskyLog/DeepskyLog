@@ -607,10 +607,7 @@ Correct observations which have been imported will not be registered for a secon
             \"$locationid\", \"$date\", \"$time\",
             \"$description\", $seeing, $limmag, $visibility, \"$language\", \"$timestamp\")"
         );
-        return $objDatabase->selectSingleValue(
-            "SELECT id FROM observations ORDER BY id DESC LIMIT 1",
-            'id'
-        );
+        return $objDatabase->insert_id();
     }
 
     /**
@@ -750,10 +747,7 @@ Correct observations which have been imported will not be registered for a secon
             );
         }
         // Return the obsid
-        return $objDatabase->selectSingleValue(
-            "SELECT id FROM observations ORDER BY id DESC LIMIT 1",
-            'id'
-        );
+        return $objDatabase->insert_id();
     }
 
     /**
