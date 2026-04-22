@@ -378,9 +378,6 @@ class AdvancedObjectSearchTable extends PowerGridComponent
         // ── Apply observing list pre-filter to $sub (before GROUP BY) ────────
         // This lets MySQL use search_index_name_index instead of a full scan.
         if ($preloadedListFilter !== null) {
-            // Observing lists only cover deep-sky objects in the legacy table.
-            $sub->where('source_table', 'objects');
-
             if ($preloadedListFilter === 'zero') {
                 $sub->whereRaw('1 = 0');
             } else {

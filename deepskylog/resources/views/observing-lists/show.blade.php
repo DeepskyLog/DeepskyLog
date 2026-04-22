@@ -1,6 +1,24 @@
 <x-app-layout>
     <div>
-        <div class="mx-auto max-w-5xl bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-screen-xl xl:max-w-full bg-gray-900 px-6 py-6 sm:px-6 lg:px-8">
+
+            @if (session('success'))
+                <div class="mb-4 rounded-md border border-green-700 bg-green-900/40 px-4 py-3 text-sm text-green-200">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('warning'))
+                <div class="mb-4 rounded-md border border-yellow-700 bg-yellow-900/30 px-4 py-3 text-sm text-yellow-200">
+                    {{ session('warning') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="mb-4 rounded-md border border-red-700 bg-red-900/40 px-4 py-3 text-sm text-red-200">
+                    {{ session('error') }}
+                </div>
+            @endif
 
             {{-- Header --}}
             <header class="mb-6">
@@ -66,6 +84,7 @@
                                class="inline-flex items-center px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded text-xs font-semibold">
                                 {{ __('Edit') }}
                             </a>
+                            @include('observing-lists.partials.import-modal')
                             <form method="POST" action="{{ route('observing-list.items.autofill-notes', $list) }}"
                                   onsubmit="return confirm('{{ __('Fill in the longest observation note for every object that has no note yet?') }}')">
                                 @csrf

@@ -621,6 +621,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/observing-list/{list}/empty', [App\Http\Controllers\ObservingListController::class, 'emptyList'])
         ->name('observing-list.empty');
 
+    // Import objects from a file
+    Route::post('/observing-list/{list}/import', [App\Http\Controllers\ObservingListController::class, 'importFromFile'])
+        ->name('observing-list.import');
+
     // Batch-add objects to the user's active observing list
     Route::post('/observing-lists/active/batch-add', [App\Http\Controllers\ObservingListController::class, 'batchAddToActiveList'])
         ->name('observing-list.active.batch-add');

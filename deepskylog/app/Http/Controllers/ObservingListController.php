@@ -7,10 +7,12 @@ use App\Models\ObservingListComment;
 use App\Models\ObservingListItem;
 use App\Models\ObservationsOld;
 use App\Services\ActiveObservingListService;
+use App\Services\ObservingListFileImportService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
 class ObservingListController extends Controller
@@ -570,6 +572,59 @@ class ObservingListController extends Controller
             'count' => $added,
             'list' => $activeList->name,
         ]));
+    }
+
+    /**
+     * Import objects from a file into an observing list.
+     */
+    public function importFromFile(Request $request, ObservingList $list): RedirectResponse
+    {
+        $user = auth()->user();
+
+        if (!$user->can('addItem', $list)) {
+            throw new AuthorizationException();
+        }
+
+        $validator = Validator::make($request->all(), [
+            'file' => [
+                'required',
+                'file',
+                // AstroPlanner APD files are SQLite DBs and often fail MIME sniffing; validate by extension.
+                'extensions:txt,argo,skylist,apd,csv',
+                'max:5120', // 5MB max
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->with('error', __('Import failed. Please select a supported file (.argo, .skylist, .txt, .apd, .csv).'));
+        }
+
+        $file = $request->file('file');
+
+        // Use the import service
+        $importService = new ObservingListFileImportService();
+        $result = $importService->importFromFile($list, $file, $user);
+
+        if (!$result['success']) {
+            $errorMessage = __('Import failed');
+            if (!empty($result['errors'])) {
+                $errorMessage .= ': ' . implode('; ', $result['errors']);
+            }
+            return redirect()->back()->with('error', $errorMessage);
+        }
+
+        $message = __(':count object(s) imported, :skipped skipped.', [
+            'count' => $result['imported'],
+            'skipped' => $result['skipped'],
+        ]);
+
+        if (!empty($result['errors'])) {
+            return redirect()->back()->with('warning', $message . ' ' . implode('; ', $result['errors']));
+        }
+
+        return redirect()->back()->with('success', $message);
     }
 
     /**
