@@ -6,10 +6,12 @@
 
 + [ ] Update to laravel 13.
 + [ ] Observing lists
-  + [ ] Description of observing lists
-  + [ ] Add extra description to target? (Automatically add the longest description from deepskylog, ...)
-  + [ ] Comment on observing lists
-  + [ ] Like observing lists
+  + [ ] Export lists to all formats like we have in the search objects or nearby objects page.  Maybe use a similar table?
+  + [X] Description of observing lists
+  + [X] Add extra description to target? (Automatically add the longest description from deepskylog, ...)
+  + [X] Comment on observing lists
+  + [X] Like observing lists
+  + [ ] What happens when not logged in?
   + [ ] Use new tables in old version of DeepskyLog
 + [ ] Release new version of pyDeepskyLog
   + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
@@ -18,6 +20,9 @@
 
 + [ ] Observations
   + [ ] Comment on observations
+  + [ ] Like observations
+  + [ ] Add observations of other objects: planets, comets, lunar features, ...
+  + [ ] Show detailed observation page, with all details, comments, ...
 + [ ] All missing pages
 
 
@@ -61,6 +66,7 @@
 + [X] Quick search in the left aside.  Use '/' to jump to the search field.
 + [X] Detailed search on objects
 + [X] Check objects page for administrators, with a button to fetch data from Simbad.
++ [X] Reworked observing lists.  Users can comment on them, like them, subscribe to them, ...
 
 ## Small issues
 

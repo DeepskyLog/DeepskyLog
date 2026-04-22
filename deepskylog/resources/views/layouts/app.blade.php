@@ -290,6 +290,22 @@
                             </div>
                         @endisset
 
+                        {{-- Global flash messages --}}
+                        @if (session('success'))
+                            <div class="px-4 sm:px-6 lg:px-8 pt-4">
+                                <div class="p-4 bg-green-800 border border-green-600 rounded-md text-green-100 text-sm">
+                                    {{ session('success') }}
+                                </div>
+                            </div>
+                        @endif
+                        @if (session('error'))
+                            <div class="px-4 sm:px-6 lg:px-8 pt-4">
+                                <div class="p-4 bg-red-800 border border-red-600 rounded-md text-red-100 text-sm">
+                                    {{ session('error') }}
+                                </div>
+                            </div>
+                        @endif
+
                         @if (isset($slot))
                             {{ $slot }}
                         @else

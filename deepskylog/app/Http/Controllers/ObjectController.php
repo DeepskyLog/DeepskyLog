@@ -5187,16 +5187,14 @@ class ObjectController extends Controller
                 ->where('objectname', $objectName)
                 ->update(['objectname' => $targetName]);
 
-            // Move observing list entries in the legacy database
-            DB::connection('mysqlOld')
-                ->table('observerobjectlist')
-                ->where('objectname', $objectName)
-                ->update(['objectname' => $targetName]);
+            // Move observing list entries in the new observing_list_items table
+            DB::table('observing_list_items')
+                ->where('object_name', $objectName)
+                ->update(['object_name' => $targetName]);
         } else {
             // No move target — remove any observing list entries for this object
-            DB::connection('mysqlOld')
-                ->table('observerobjectlist')
-                ->where('objectname', $objectName)
+            DB::table('observing_list_items')
+                ->where('object_name', $objectName)
                 ->delete();
         }
 

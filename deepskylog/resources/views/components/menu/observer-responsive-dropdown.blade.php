@@ -62,7 +62,7 @@
                 <x-dropdown.item
                     separator
                     icon="bars-3-center-left"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=view_lists"
+                        href="{{ route('observing-lists.index') }}"
                     label="{!! __('My observing lists') !!}"
                 />
 

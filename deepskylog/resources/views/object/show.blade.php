@@ -18,6 +18,7 @@
         <!-- wider container: default to screen-xl, but use an even wider max at xl and above -->
         <!-- Allow full width at xl so the main area can expand; keep comfortable padding -->
         <div class="mx-auto max-w-screen-xl xl:max-w-full bg-gray-900 px-6 py-6 sm:px-6 lg:px-8">
+
             <header class="mb-6">
                 @php
                     $objSlugTop =
@@ -243,6 +244,16 @@
                                             <td>{!! nl2br(e($session->comments ?? '')) !!}</td>
                                         </tr>
                                     @endif
+                                    @auth
+                                        @if (!empty($session->name))
+                                            <tr>
+                                                <td class="pr-4 font-medium">{{ __('List note') }}</td>
+                                                <td>
+                                                    @livewire('observing-list-toggle', ['objectName' => $session->name, 'showToggle' => false, 'showNote' => true], key('ol-note-main-' . $session->name))
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endauth
                                     @if (!empty($session->mag))
                                         <tr>
                                             <td class="pr-4 font-medium">{{ __('Magnitude') }}</td>
@@ -710,6 +721,45 @@ try {
                                             } catch (\Throwable $_) {
                                                 // fallback to defaults
                                             }
+
+                                            // Provide RA/Dec to nearby controls and Livewire nearby component.
+                                            // NearbyObjectsTable expects RA in hours (0-24) and converts internally.
+                                            $nearbyRaDeg = null;
+                                            $nearbyDecDeg = null;
+                                            try {
+                                                if (!empty($aladinDefaults['ra_raw'])) {
+                                                    $r = trim((string) $aladinDefaults['ra_raw']);
+                                                    if (is_numeric($r)) {
+                                                        $nearbyRaDeg = (float) $r;
+                                                    } elseif (preg_match('/^(\d{1,2})[:h\s](\d{1,2})[:m\s](\d+(?:\.\d+)?)/', $r, $m)) {
+                                                        $h = floatval($m[1]);
+                                                        $min = floatval($m[2]);
+                                                        $sec = floatval($m[3]);
+                                                        $nearbyRaDeg = $h + $min / 60.0 + $sec / 3600.0;
+                                                    }
+                                                } elseif (!empty($aladinDefaults['ra_deg'])) {
+                                                    $raDegVal = (float) $aladinDefaults['ra_deg'];
+                                                    $nearbyRaDeg = $raDegVal > 24.0 ? $raDegVal : $raDegVal / 15.0;
+                                                }
+
+                                                if (!empty($aladinDefaults['dec_deg'])) {
+                                                    $nearbyDecDeg = (float) $aladinDefaults['dec_deg'];
+                                                } elseif (!empty($aladinDefaults['dec_raw'])) {
+                                                    $d = trim((string) $aladinDefaults['dec_raw']);
+                                                    if (is_numeric($d)) {
+                                                        $nearbyDecDeg = (float) $d;
+                                                    } elseif (preg_match('/^([\+\-]?\d{1,3})[^\d\-\+]*(\d{1,2})[^\d\-\+]*(\d+(?:\.\d+)?)/', $d, $n)) {
+                                                        $sign = strpos($d, '-') !== false ? -1 : 1;
+                                                        $deg = floatval($n[1]);
+                                                        $min = floatval($n[2]);
+                                                        $sec = floatval($n[3]);
+                                                        $nearbyDecDeg = $sign * ($deg + $min / 60.0 + $sec / 3600.0);
+                                                    }
+                                                }
+                                            } catch (\Throwable $_) {
+                                                $nearbyRaDeg = null;
+                                                $nearbyDecDeg = null;
+                                            }
                                         @endphp
                                         <div class="flex items-center gap-3 mb-3">
                                             <label class="text-sm text-gray-300">{{ __('Radius:') }}</label>
@@ -733,7 +783,27 @@ try {
                                             <div class="text-xs text-gray-400 ml-2">
                                                 {{ __('Choose radius to search nearby objects.') }}</div>
                                             <!-- Export names (PDF) button: dispatches to the nearby-objects-table Livewire component -->
-                                            <div class="ml-auto" x-data="{ open: false }" x-cloak>
+                                            <div class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
+                                                @auth
+                                                    <form method="POST" action="{{ route('observing-list.active.batch-add-nearby') }}">
+                                                        @csrf
+                                                        <input type="hidden" name="ra" value="{{ $nearbyRaDeg ?? '' }}">
+                                                        <input type="hidden" name="decl" value="{{ $nearbyDecDeg ?? '' }}">
+                                                        <input type="hidden" name="radius_arc_min" value="{{ $nearbyRadiusSelected ?? 30 }}">
+                                                        @if(!empty($session->name))
+                                                            <input type="hidden" name="exclude_name" value="{{ $session->name }}">
+                                                        @endif
+                                                        <button type="submit"
+                                                            class="inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-md bg-green-700 text-white hover:bg-green-600 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                                                            title="{{ __('Add all nearby objects to your active observing list') }}">
+                                                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                                <path d="M4 6h16M4 10h16M4 14h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                                <path d="M16 18h4M18 16v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                                            </svg>
+                                                            {{ __('Add all to active list') }}
+                                                        </button>
+                                                    </form>
+                                                @endauth
                                                 @php
                                                     // Build safe base URLs for exports using server-known coordinates
                                                     $exportNamesBase =
@@ -860,69 +930,6 @@ try {
 
                                         {{-- Server-side nearby debug output removed — use Livewire/PowerGrid output below. --}}
 
-                                        @php
-                                            // Provide RA/Dec to the Livewire nearby component.
-                                            // IMPORTANT: NearbyObjectsTable expects RA in *hours* (0-24) and applies
-                                            // its own ≤24 → ×15 conversion internally. So we must pass hours, NOT
-                                            // the pre-converted degrees from ra_deg (which would get doubled).
-                                            $nearbyRaDeg = null;
-                                            $nearbyDecDeg = null;
-                                            try {
-                                                // Prefer ra_raw (hours as stored in DB) so the component can convert
-                                                if (!empty($aladinDefaults['ra_raw'])) {
-                                                    $r = trim((string) $aladinDefaults['ra_raw']);
-                                                    if (is_numeric($r)) {
-                                                        $nearbyRaDeg = (float) $r; // hours; component will ×15
-                                                    } else {
-                                                        // parse h m s (accept h/m/s or space-separated)
-                                                        if (
-                                                            preg_match(
-                                                                '/^(\d{1,2})[:h\s](\d{1,2})[:m\s](\d+(?:\.\d+)?)/',
-                                                                $r,
-                                                                $m,
-                                                            )
-                                                        ) {
-                                                            $h = floatval($m[1]);
-                                                            $min = floatval($m[2]);
-                                                            $sec = floatval($m[3]);
-                                                            $nearbyRaDeg = $h + $min / 60.0 + $sec / 3600.0; // hours
-                                                        }
-                                                    }
-                                                } elseif (!empty($aladinDefaults['ra_deg'])) {
-                                                    // Fallback: ra_deg is in degrees — only safe to pass directly if > 24
-                                                    $raDegVal = (float) $aladinDefaults['ra_deg'];
-                                                    $nearbyRaDeg = $raDegVal > 24.0 ? $raDegVal : $raDegVal / 15.0;
-                                                }
-
-                                                if (!empty($aladinDefaults['dec_deg'])) {
-                                                    $nearbyDecDeg = (float) $aladinDefaults['dec_deg'];
-                                                } elseif (!empty($aladinDefaults['dec_raw'])) {
-                                                    $d = trim($aladinDefaults['dec_raw']);
-                                                    if (is_numeric($d)) {
-                                                        $nearbyDecDeg = (float) $d;
-                                                    } else {
-                                                        // parse deg min sec like 41°16'06.0" or 41 16 06
-            if (
-                preg_match(
-                    '/^([\+\-]?\d{1,3})[^\d\-\+]*(\d{1,2})[^\d\-\+]*(\d+(?:\.\d+)?)/',
-                    $d,
-                    $n,
-                )
-            ) {
-                $sign = strpos($d, '-') !== false ? -1 : 1;
-                                                            $deg = floatval($n[1]);
-                                                            $min = floatval($n[2]);
-                                                            $sec = floatval($n[3]);
-                                                            $nearbyDecDeg =
-                                                                $sign * ($deg + $min / 60.0 + $sec / 3600.0);
-                                                        }
-                                                    }
-                                                }
-                                            } catch (\Throwable $_) {
-                                                $nearbyRaDeg = null;
-                                                $nearbyDecDeg = null;
-                                            }
-                                        @endphp
 
                                         @livewire('nearby-objects-table', [
                                             'objectId' => (int) ($session->id ?? 0),
@@ -1163,6 +1170,11 @@ try {
                                             </li>
                                             <li><a href="{{ route('drawings.show', ['observer' => auth()->user()->slug]) }}"
                                                     class="text-gray-300 hover:underline">{{ __('My drawings') }}</a></li>
+                                        @endif
+
+                                        {{-- Active observing list toggle (add/remove current object) --}}
+                                        @if (!empty($session->name))
+                                            @livewire('observing-list-toggle', ['objectName' => $session->name], key('ol-toggle-main-' . $session->name))
                                         @endif
                                     @endauth
                                     @php

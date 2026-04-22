@@ -154,44 +154,67 @@ class AdvancedObjectSearch extends Component
             ->mapWithKeys(fn($a) => [(string) $a->code => (string) $a->name])
             ->toArray();
 
-        // Observing lists from legacy DB: current user's lists + all public lists.
+        // Observing lists: current user's owned lists + subscribed lists + all public lists.
         try {
             $authUser = Auth::user();
-            $legacyUser = (string) ($authUser?->username ?? '');
-            $listRows = DB::connection('mysqlOld')
-                ->table('observerobjectlist')
-                ->select('observerid', 'listname', 'public')
-                ->where('listname', '<>', '')
-                ->where(function ($q) use ($legacyUser) {
-                    if ($legacyUser !== '') {
-                        $q->where('observerid', $legacyUser);
+            $userId = $authUser?->id;
+
+            // Get all accessible lists: owned, subscribed, and public
+            $ownedLists = [];
+            $subscribedLists = [];
+            $publicLists = [];
+
+            if ($userId) {
+                // User's owned lists
+                $ownedLists = DB::table('observing_lists')
+                    ->where('owner_user_id', $userId)
+                    ->orderBy('name')
+                    ->get(['id', 'name', 'public', 'owner_user_id'])
+                    ->mapWithKeys(function ($list) use ($authUser) {
+                        $displayName = html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                        $label = $displayName . ' (' . $authUser->username . ')';
+                        $key = $list->id;
+                        return [$key => $label];
+                    })
+                    ->toArray();
+
+                // User's subscribed lists
+                $subscribedLists = DB::table('observing_list_subscriptions')
+                    ->join('observing_lists', 'observing_list_subscriptions.observing_list_id', '=', 'observing_lists.id')
+                    ->join('users', 'observing_lists.owner_user_id', '=', 'users.id')
+                    ->where('observing_list_subscriptions.user_id', $userId)
+                    ->orderBy('observing_lists.name')
+                    ->get(['observing_lists.id', 'observing_lists.name', 'users.username'])
+                    ->mapWithKeys(function ($list) {
+                        $displayName = html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                        $label = $displayName . ' (' . $list->username . ')';
+                        $key = $list->id;
+                        return [$key => $label];
+                    })
+                    ->toArray();
+            }
+
+            // All public lists
+            $publicLists = DB::table('observing_lists')
+                ->join('users', 'observing_lists.owner_user_id', '=', 'users.id')
+                ->where('observing_lists.public', 1)
+                ->where(function ($q) use ($userId) {
+                    if ($userId) {
+                        $q->where('observing_lists.owner_user_id', '<>', $userId);
                     }
-                    $q->orWhere('public', 1);
                 })
-                ->distinct()
-                ->orderBy('listname')
-                ->orderBy('observerid')
-                ->get();
-
-            $this->allObservingLists = $listRows
-                ->mapWithKeys(function ($row) use ($legacyUser) {
-                    $owner = (string) $row->observerid;
-                    $name = (string) $row->listname;
-                    $displayName = html_entity_decode($name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                    $isPublic = intval($row->public) === 1;
-                    $key = $owner . '::' . $name;
-
-                    $label = $displayName;
-                    if ($owner !== '') {
-                        $label .= ' (' . $owner . ')';
-                    }
-                    if ($isPublic && $owner !== $legacyUser) {
-                        $label .= ' - ' . __('public');
-                    }
-
+                ->orderBy('observing_lists.name')
+                ->get(['observing_lists.id', 'observing_lists.name', 'users.username'])
+                ->mapWithKeys(function ($list) {
+                    $displayName = html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                    $label = $displayName . ' (' . $list->username . ') - ' . __('public');
+                    $key = $list->id;
                     return [$key => $label];
                 })
                 ->toArray();
+
+            // Combine all lists
+            $this->allObservingLists = array_merge($ownedLists, $subscribedLists, $publicLists);
         } catch (\Throwable $_) {
             $this->allObservingLists = [];
         }

@@ -14,6 +14,18 @@
                     </svg>
                     {{ __('Refine search') }}
                 </a>
+                @auth
+                    <button type="button"
+                        onclick="if(window.Livewire && typeof Livewire.dispatchTo==='function'){ Livewire.dispatchTo('advanced-object-search-table', 'advanced-add-all-to-active-list'); }"
+                        class="ml-auto inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-md bg-green-700 text-white hover:bg-green-600 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                        title="{{ __('Add all visible search results to your active observing list') }}">
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M4 6h16M4 10h16M4 14h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M16 18h4M18 16v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        {{ __('Add all to active list') }}
+                    </button>
+                @endauth
             </div>
 
             <div class="w-full">

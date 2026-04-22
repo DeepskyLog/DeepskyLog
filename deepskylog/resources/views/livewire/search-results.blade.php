@@ -2,7 +2,22 @@
     <div class="mb-3 flex items-center gap-3">
         <h2 class="text-lg font-semibold text-gray-200">Search results for "{{ $q }}"</h2>
 
-        <div class="ml-auto" x-data="{ open: false }" x-cloak>
+        <div class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
+            @auth
+                <form method="POST" action="{{ route('observing-list.active.batch-add') }}">
+                    @csrf
+                    <input type="hidden" name="search_query" value="{{ $q }}">
+                    <button type="submit"
+                        class="inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-md bg-green-700 text-white hover:bg-green-600 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+                        title="{{ __('Add all search results to your active observing list') }}">
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M4 6h16M4 10h16M4 14h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M16 18h4M18 16v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <span>{{ __('Add all to active list') }}</span>
+                    </button>
+                </form>
+            @endauth
             @php
                 $exportNamesBase = route('search.names.pdf') . '?q=' . rawurlencode($q ?? '');
                 $exportTableBase = route('search.table.pdf') . '?q=' . rawurlencode($q ?? '');
