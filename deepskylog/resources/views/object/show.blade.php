@@ -784,7 +784,19 @@ try {
                                                 {{ __('Choose radius to search nearby objects.') }}</div>
                                             <!-- Export names (PDF) button: dispatches to the nearby-objects-table Livewire component -->
                                             <div class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
+                                                @php
+                                                    $canModifyActiveList = false;
+                                                    if (auth()->check()) {
+                                                        try {
+                                                            $activeList = app(\App\Services\ActiveObservingListService::class)->getActiveList(auth()->user());
+                                                            $canModifyActiveList = !$activeList || auth()->user()->can('addItem', $activeList);
+                                                        } catch (\Throwable $_) {
+                                                            $canModifyActiveList = false;
+                                                        }
+                                                    }
+                                                @endphp
                                                 @auth
+                                                    @if ($canModifyActiveList)
                                                     <form method="POST" action="{{ route('observing-list.active.batch-add-nearby') }}">
                                                         @csrf
                                                         <input type="hidden" name="ra" value="{{ $nearbyRaDeg ?? '' }}">
@@ -803,6 +815,7 @@ try {
                                                             {{ __('Add all to active list') }}
                                                         </button>
                                                     </form>
+                                                    @endif
                                                 @endauth
                                                 @php
                                                     // Build safe base URLs for exports using server-known coordinates

@@ -419,6 +419,19 @@ Route::get('/search/stxt.txt', [App\Http\Controllers\SearchExportController::cla
 Route::get('/search/apd.apd', [App\Http\Controllers\SearchExportController::class, 'apd'])
     ->name('search.apd')->middleware('doNotCacheResponse');
 
+Route::get('/observing-list/{list}/export/names.pdf', [App\Http\Controllers\ObservingListExportController::class, 'namesPdf'])
+    ->name('observing-list.export.names.pdf')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::get('/observing-list/{list}/export/table.pdf', [App\Http\Controllers\ObservingListExportController::class, 'tablePdf'])
+    ->name('observing-list.export.table.pdf')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::get('/observing-list/{list}/export/argo.txt', [App\Http\Controllers\ObservingListExportController::class, 'argoNavis'])
+    ->name('observing-list.export.argo')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::get('/observing-list/{list}/export/skylist.skylist', [App\Http\Controllers\ObservingListExportController::class, 'skylist'])
+    ->name('observing-list.export.skylist')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::get('/observing-list/{list}/export/stxt.txt', [App\Http\Controllers\ObservingListExportController::class, 'stxt'])
+    ->name('observing-list.export.stxt')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::get('/observing-list/{list}/export/apd.apd', [App\Http\Controllers\ObservingListExportController::class, 'apd'])
+    ->name('observing-list.export.apd')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+
 // Catalogs overview page
 Route::get('/catalogs', [App\Http\Controllers\CatalogController::class, 'index'])
     ->name('catalogs.index');
@@ -603,6 +616,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Autofill notes for all un-noted items in a list from legacy observations
     Route::post('/observing-list/{list}/items/autofill-notes', [App\Http\Controllers\ObservingListController::class, 'batchAutofillNotes'])
         ->name('observing-list.items.autofill-notes');
+
+    // Empty all items from a list (but keep the list itself)
+    Route::post('/observing-list/{list}/empty', [App\Http\Controllers\ObservingListController::class, 'emptyList'])
+        ->name('observing-list.empty');
 
     // Batch-add objects to the user's active observing list
     Route::post('/observing-lists/active/batch-add', [App\Http\Controllers\ObservingListController::class, 'batchAddToActiveList'])

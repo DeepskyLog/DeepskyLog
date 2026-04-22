@@ -74,6 +74,14 @@
                                     {{ __('Autofill notes') }}
                                 </button>
                             </form>
+                            <form method="POST" action="{{ route('observing-list.empty', $list) }}"
+                                  onsubmit="return confirm('{{ __('Remove all items from this list?') }}')">
+                                @csrf
+                                <button type="submit"
+                                    class="inline-flex items-center px-3 py-1.5 bg-orange-700 hover:bg-orange-600 text-white rounded text-xs font-semibold">
+                                    {{ __('Empty list') }}
+                                </button>
+                            </form>
                             <form method="POST" action="{{ route('observing-list.destroy', $list) }}"
                                   onsubmit="return confirm('{{ __('Delete this list and all its items?') }}')">
                                 @csrf
@@ -122,78 +130,10 @@
                 @endif
             </header>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 gap-6">
 
-                {{-- Items list --}}
-                <section class="lg:col-span-2">
-                    <div class="flex items-center justify-between mb-3">
-                        <h2 class="text-lg font-semibold text-white">{{ __('Objects') }}</h2>
-                    </div>
-
-                    @if ($items->isEmpty())
-                        <p class="text-gray-400 text-sm">{{ __('This list has no objects yet.') }}</p>
-                    @else
-                        <div class="bg-gray-800 rounded-lg overflow-hidden">
-                            <table class="w-full text-sm">
-                                <thead>
-                                    <tr class="border-b border-gray-700">
-                                        <th class="text-left px-4 py-2 text-gray-400 font-medium">{{ __('Object') }}</th>
-                                        <th class="text-left px-4 py-2 text-gray-400 font-medium hidden md:table-cell">{{ __('Note') }}</th>
-                                        @if ($isOwner)
-                                            <th class="px-4 py-2 w-16"></th>
-                                        @endif
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($items as $item)
-                                        <tr class="border-b border-gray-700 hover:bg-gray-750 last:border-0">
-                                            <td class="px-4 py-2 text-white">
-                                                @if ($item->object_name)
-                                                    <a href="{{ route('object.show', ['slug' => \Illuminate\Support\Str::slug($item->object_name)]) }}"
-                                                       class="hover:underline font-medium">{{ $item->object_name }}</a>
-                                                @else
-                                                    <span class="font-medium text-gray-400">{{ __('Unknown') }}</span>
-                                                @endif
-                                            </td>
-                                            <td class="px-4 py-2 text-gray-400 hidden md:table-cell">
-                                                {{ $item->item_description ? Str::limit($item->item_description, 80) : '' }}
-                                            </td>
-                                            @if ($isOwner)
-                                                <td class="px-4 py-2 text-right">
-                                                    <div class="flex items-center justify-end gap-2">
-                                                        <a href="{{ route('observing-list.items.edit', [$list, $item->id]) }}"
-                                                           class="text-gray-500 hover:text-blue-400"
-                                                           title="{{ __('Edit note') }}">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                                            </svg>
-                                                        </a>
-                                                        <form method="POST"
-                                                              action="{{ route('observing-list.items.destroy', [$list, $item->id]) }}">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit"
-                                                                class="text-gray-500 hover:text-red-400"
-                                                                title="{{ __('Remove') }}">
-                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                                                </svg>
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                            @endif
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="mt-4">{{ $items->links() }}</div>
-                    @endif
-                </section>
-
-                {{-- Comments sidebar --}}
-                <section class="lg:col-span-1">
+                {{-- Comments section --}}
+                <section>
                     <h2 class="text-lg font-semibold text-white mb-3">{{ __('Comments') }}</h2>
 
                     @if ($comments->isEmpty())
@@ -249,6 +189,73 @@
                             </form>
                         @endif
                     @endauth
+                </section>
+
+                {{-- Items list --}}
+                <section>
+                    @php
+                        $tableFilters = [
+                            'observing_lists' => [(string) $list->id],
+                            'observing_lists_mode' => 'in',
+                        ];
+                        $showAddColumn = !($list->public && !$isOwner);
+                        $exportNamesBase = route('observing-list.export.names.pdf', $list);
+                        $exportTableBase = route('observing-list.export.table.pdf', $list);
+                        $exportArgoBase = route('observing-list.export.argo', $list);
+                        $exportSkylistBase = route('observing-list.export.skylist', $list);
+                        $exportStxtBase = route('observing-list.export.stxt', $list);
+                        $exportApdBase = route('observing-list.export.apd', $list);
+                    @endphp
+
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="text-lg font-semibold text-white">{{ __('Objects') }}</h2>
+                    </div>
+
+                    @if ($items->isEmpty())
+                        <p class="text-gray-400 text-sm">{{ __('This list has no objects yet.') }}</p>
+                    @else
+                        <div class="bg-gray-800 rounded-lg p-4 dsl-search-card">
+                            <div class="mb-3 flex items-center gap-3 flex-wrap">
+                                <div class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
+                                    <div class="relative inline-block text-left">
+                                        <button type="button" @click="open = !open" @keydown.escape="open = false"
+                                            class="inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                                            aria-haspopup="true" :aria-expanded="open.toString()">
+                                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                            <span>{{ __('More exports') }}</span>
+                                        </button>
+
+                                        <div x-show="open" x-transition @click.outside="open = false"
+                                            class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+                                            style="display:none;">
+                                            <div class="py-1 text-sm text-gray-100" role="menu" aria-orientation="vertical">
+                                                <a href="{{ $exportNamesBase }}" target="_blank" rel="noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export names (PDF)') }}</a>
+                                                <a href="{{ $exportTableBase }}" target="_blank" rel="noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export table (PDF)') }}</a>
+                                                <a href="{{ $exportArgoBase }}" target="_blank" rel="noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export Argo Navis') }}</a>
+                                                <a href="{{ $exportSkylistBase }}" target="_blank" rel="noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export SkySafari (.skylist)') }}</a>
+                                                <a href="{{ $exportStxtBase }}" target="_blank" rel="noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export SkyTools (.txt)') }}</a>
+                                                <a href="{{ $exportApdBase }}" target="_blank" rel="noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export AstroPlanner (.apd)') }}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="w-full">
+                                @livewire('advanced-object-search-table', ['filters' => $tableFilters, 'showAddColumn' => $showAddColumn], key('observing-list-table-' . $list->id))
+                            </div>
+                        </div>
+
+                        @livewire('observing-list-notes', ['listId' => $list->id, 'listSlug' => $list->slug, 'isOwner' => $isOwner], key('observing-list-notes-' . $list->id))
+                    @endif
                 </section>
 
             </div>

@@ -193,6 +193,20 @@ class ObservingListController extends Controller
     /**
      * Delete an observing list.
      */
+    /**
+     * Empty all items from an observing list (but keep the list itself).
+     */
+    public function emptyList(ObservingList $list): RedirectResponse
+    {
+        $this->authorize('delete', $list);
+
+        $itemCount = $list->items()->count();
+        $list->items()->delete();
+
+        return redirect()->route('observing-list.show', $list)
+            ->with('success', __(':count items removed from the list.', ['count' => $itemCount]));
+    }
+
     public function destroy(ObservingList $list): RedirectResponse
     {
         $this->authorize('delete', $list);
@@ -561,7 +575,7 @@ class ObservingListController extends Controller
     /**
      * Toggle one object in the current user's active observing list.
      */
-    public function toggleActiveListItem(Request $request): RedirectResponse
+    public function toggleActiveListItem(Request $request)
     {
         $user = auth()->user();
 
@@ -570,7 +584,11 @@ class ObservingListController extends Controller
         $activeList = $svc->getActiveList($user);
 
         if (!$activeList) {
-            return redirect()->back()->with('error', __('No active observing list set. Please set one first.'));
+            $message = __('No active observing list set. Please set one first.');
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => $message], 400);
+            }
+            return redirect()->back()->with('error', $message);
         }
 
         $validated = $request->validate([
@@ -579,6 +597,9 @@ class ObservingListController extends Controller
 
         $objectName = trim((string) $validated['object_name']);
         if ($objectName === '') {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => __('Invalid object name')], 400);
+            }
             return redirect()->back();
         }
 
@@ -590,11 +611,15 @@ class ObservingListController extends Controller
             }
 
             $activeList->items()->where('object_name', $objectName)->delete();
-
-            return redirect()->back()->with('success', __(':object removed from :list.', [
+            $message = __(':object removed from :list.', [
                 'object' => $objectName,
                 'list' => $activeList->name,
-            ]));
+            ]);
+
+            if ($request->expectsJson()) {
+                return response()->json(['success' => true, 'message' => $message, 'action' => 'removed']);
+            }
+            return redirect()->back()->with('success', $message);
         }
 
         if (!$user->can('addItem', $activeList)) {
@@ -609,10 +634,15 @@ class ObservingListController extends Controller
             ]
         );
 
-        return redirect()->back()->with('success', __(':object added to :list.', [
+        $message = __(':object added to :list.', [
             'object' => $objectName,
             'list' => $activeList->name,
-        ]));
+        ]);
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => $message, 'action' => 'added']);
+        }
+        return redirect()->back()->with('success', $message);
     }
 
     /**

@@ -103,6 +103,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
     /** @var \App\Models\Eyepiece|null */
     private ?\App\Models\Eyepiece $previewEyepieceModel = null;
+    private ?bool $canModifyActiveListCached = null;
 
     /**
      * Derived aggregation SQL for legacy observations (populated when legacy DB exists).
@@ -983,7 +984,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 return html_entity_decode((string) ($row->name ?? ''));
             })
             ->add('add_to_list_action', function ($row) {
-                if (!Auth::check()) {
+                if (!Auth::check() || !$this->canModifyActiveList()) {
                     return '';
                 }
 
@@ -1000,11 +1001,13 @@ class NearbyObjectsTable extends PowerGridComponent
                 $iconPath = $inList
                     ? '<path d="M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
                     : '<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+                $addedTitle = e(__('Add to active observing list'));
+                $removedTitle = e(__('Remove from active observing list'));
 
-                return '<form method="POST" action="' . e($action) . '" class="inline-flex">'
+                return '<form method="POST" action="' . e($action) . '" class="inline-flex toggle-list-form">'
                     . '<input type="hidden" name="_token" value="' . e($token) . '">'
                     . '<input type="hidden" name="object_name" value="' . e($name) . '">'
-                    . '<button type="submit" class="' . $colorClass . '" title="' . $title . '">'
+                    . '<button type="submit" class="' . $colorClass . '" title="' . $title . '" data-added-title="' . $addedTitle . '" data-removed-title="' . $removedTitle . '">'
                     . '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
                     . $iconPath
                     . '</svg>'
@@ -2615,7 +2618,7 @@ class NearbyObjectsTable extends PowerGridComponent
             // when $authUser is available.
         ];
 
-        if ($authUser) {
+        if ($authUser && $this->canModifyActiveList()) {
             $cols[] = Column::make(__('Add'), 'add_to_list_action')->bodyAttribute('class', 'text-center')->headerAttribute('class', 'text-center');
         }
 
@@ -4375,7 +4378,7 @@ class NearbyObjectsTable extends PowerGridComponent
             return;
         }
 
-        if (!$user->can('addItem', $activeList)) {
+        if (!$this->canModifyActiveList()) {
             session()->flash('error', __('You cannot modify this list.'));
             return;
         }
@@ -4408,5 +4411,30 @@ class NearbyObjectsTable extends PowerGridComponent
             'count' => $added,
             'list' => $activeList->name,
         ]));
+    }
+
+    private function canModifyActiveList(): bool
+    {
+        if ($this->canModifyActiveListCached !== null) {
+            return $this->canModifyActiveListCached;
+        }
+
+        $user = Auth::user();
+        if (!$user) {
+            $this->canModifyActiveListCached = false;
+            return false;
+        }
+
+        /** @var ActiveObservingListService $svc */
+        $svc = app(ActiveObservingListService::class);
+        $activeList = $svc->getActiveList($user);
+
+        if (!$activeList) {
+            $this->canModifyActiveListCached = true;
+            return true;
+        }
+
+        $this->canModifyActiveListCached = $user->can('addItem', $activeList);
+        return $this->canModifyActiveListCached;
     }
 }

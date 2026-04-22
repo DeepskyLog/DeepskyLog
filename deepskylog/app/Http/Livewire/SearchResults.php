@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use App\Services\ActiveObservingListService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
@@ -10,11 +11,31 @@ class SearchResults extends Component
 {
     public $q;
     public $results = [];
+    public bool $canModifyActiveList = false;
 
     public function mount($q = '')
     {
         $this->q = $q;
         $this->performSearch();
+        $this->resolveCanModifyActiveList();
+    }
+
+    private function resolveCanModifyActiveList(): void
+    {
+        try {
+            $user = auth()->user();
+            if (!$user) {
+                $this->canModifyActiveList = false;
+                return;
+            }
+
+            /** @var ActiveObservingListService $svc */
+            $svc = app(ActiveObservingListService::class);
+            $activeList = $svc->getActiveList($user);
+            $this->canModifyActiveList = !$activeList || $user->can('addItem', $activeList);
+        } catch (\Throwable $_) {
+            $this->canModifyActiveList = false;
+        }
     }
 
     protected function performSearch()

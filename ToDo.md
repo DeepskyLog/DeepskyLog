@@ -6,13 +6,10 @@
 
 + [ ] Update to laravel 13.
 + [ ] Observing lists
-  + [ ] Export lists to all formats like we have in the search objects or nearby objects page.  Maybe use a similar table?
-  + [X] Description of observing lists
-  + [X] Add extra description to target? (Automatically add the longest description from deepskylog, ...)
-  + [X] Comment on observing lists
-  + [X] Like observing lists
+  + [ ] Import observing lists -> from CSV, skysafari, ...?
   + [ ] What happens when not logged in?
   + [ ] Use new tables in old version of DeepskyLog
+  + [ ] Translations
 + [ ] Release new version of pyDeepskyLog
   + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 

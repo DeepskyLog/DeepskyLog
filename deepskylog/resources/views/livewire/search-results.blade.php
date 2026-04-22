@@ -4,6 +4,7 @@
 
         <div class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
             @auth
+                @if ($canModifyActiveList)
                 <form method="POST" action="{{ route('observing-list.active.batch-add') }}">
                     @csrf
                     <input type="hidden" name="search_query" value="{{ $q }}">
@@ -17,6 +18,7 @@
                         <span>{{ __('Add all to active list') }}</span>
                     </button>
                 </form>
+                @endif
             @endauth
             @php
                 $exportNamesBase = route('search.names.pdf') . '?q=' . rawurlencode($q ?? '');

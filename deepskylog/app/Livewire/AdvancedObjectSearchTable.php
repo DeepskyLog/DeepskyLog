@@ -5,7 +5,10 @@ namespace App\Livewire;
 use App\Models\SearchIndex;
 use App\Models\Atlas;
 use App\Services\ActiveObservingListService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -28,6 +31,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
     public string $tableName = 'advanced-search-results-table';
     public string $primaryKey = 'search_index_id';
     public string $sortField = 'display_name';
+    public bool $showAddColumn = true;
 
     // ── Filter parameters passed from the results page ────────────────────
     public array $constellations = [];
@@ -68,6 +72,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
     public bool $bestMagUpsertedThisLoad = false;
     public bool $crUpsertedThisLoad = false;
     public bool $hasPendingCalculations = false;
+    private ?bool $canModifyActiveListCached = null;
 
     private ?array $cachedEyepieces = null;
     public int $refreshTick = 0;
@@ -77,9 +82,13 @@ class AdvancedObjectSearchTable extends PowerGridComponent
         config(['livewire-powergrid.filter' => 'outside']);
     }
 
-    public function mount(array $filters = []): void
+    public function mount(array $filters = [], ?bool $showAddColumn = null): void
     {
         parent::mount();
+
+        if ($showAddColumn !== null) {
+            $this->showAddColumn = $showAddColumn;
+        }
 
         $this->constellations = array_map('strval', (array) ($filters['constellations'] ?? []));
         $this->objectTypes = array_map('strval', (array) ($filters['object_types'] ?? []));
@@ -139,6 +148,10 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             return redirect()->back()->with('error', __('No active observing list set. Please set one first.'));
         }
 
+        if (!$user->can('addItem', $activeList)) {
+            return redirect()->back()->with('error', __('You cannot modify this list.'));
+        }
+
         $rows = $this->datasource()?->get() ?? collect();
         $objectNames = $rows
             ->map(function ($row) {
@@ -189,6 +202,20 @@ class AdvancedObjectSearchTable extends PowerGridComponent
                 ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
         ];
+    }
+
+    public function rendered(): void
+    {
+        $listId = $this->currentObservingListId();
+        if ($listId === null) {
+            return;
+        }
+
+        $this->dispatch(
+            'observing-list-table-visible-objects-updated',
+            listId: $listId,
+            objectNames: $this->currentVisibleObjectNames()
+        );
     }
 
     public function datasource(): ?Builder
@@ -841,7 +868,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             })
             ->add('constellation')
             ->add('add_to_list_action', function ($row) {
-                if (!Auth::check()) {
+                if (!$this->showAddColumn || !Auth::check() || !$this->canModifyActiveList()) {
                     return '';
                 }
 
@@ -858,11 +885,13 @@ class AdvancedObjectSearchTable extends PowerGridComponent
                 $iconPath = $inList
                     ? '<path d="M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
                     : '<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+                $addedTitle = e(__('Add to active observing list'));
+                $removedTitle = e(__('Remove from active observing list'));
 
-                return '<form method="POST" action="' . e($action) . '" class="inline-flex">'
+                return '<form method="POST" action="' . e($action) . '" class="inline-flex toggle-list-form">'
                     . '<input type="hidden" name="_token" value="' . e($token) . '">'
                     . '<input type="hidden" name="object_name" value="' . e($name) . '">'
-                    . '<button type="submit" class="' . $colorClass . '" title="' . $title . '">'
+                    . '<button type="submit" class="' . $colorClass . '" title="' . $title . '" data-added-title="' . $addedTitle . '" data-removed-title="' . $removedTitle . '">'
                     . '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
                     . $iconPath
                     . '</svg>'
@@ -1053,7 +1082,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
 
         $cols[] = Column::make(__('Size'), 'size')->sortable()->bodyAttribute('class', 'text-center');
 
-        if ($authUser) {
+        if ($authUser && $this->showAddColumn && $this->canModifyActiveList()) {
             $cols[] = Column::make(__('Add'), 'add_to_list_action')
                 ->bodyAttribute('class', 'text-center')
                 ->headerAttribute('class', 'text-center');
@@ -1107,6 +1136,66 @@ class AdvancedObjectSearchTable extends PowerGridComponent
 
         $pages = array_values(array_unique($pages));
         return ['pages' => $pages, 'ranges' => $ranges];
+    }
+
+    private function currentObservingListId(): ?int
+    {
+        if (empty($this->observingLists)) {
+            return null;
+        }
+
+        $firstListId = (int) ($this->observingLists[0] ?? 0);
+        return $firstListId > 0 ? $firstListId : null;
+    }
+
+    private function currentVisibleObjectNames(): array
+    {
+        try {
+            $records = $this->records;
+        } catch (\Throwable $_) {
+            return [];
+        }
+
+        if ($records instanceof LengthAwarePaginator || $records instanceof Paginator) {
+            $rows = collect($records->items());
+        } elseif ($records instanceof Collection) {
+            $rows = $records;
+        } else {
+            $rows = collect();
+        }
+
+        return $rows
+            ->map(function ($row) {
+                return trim((string) ($row->obj_name ?? $row->name ?? $row->display_name ?? ''));
+            })
+            ->filter(fn($name) => $name !== '')
+            ->values()
+            ->all();
+    }
+
+    private function canModifyActiveList(): bool
+    {
+        if ($this->canModifyActiveListCached !== null) {
+            return $this->canModifyActiveListCached;
+        }
+
+        $user = Auth::user();
+        if (!$user) {
+            $this->canModifyActiveListCached = false;
+            return false;
+        }
+
+        /** @var ActiveObservingListService $svc */
+        $svc = app(ActiveObservingListService::class);
+        $activeList = $svc->getActiveList($user);
+
+        if (!$activeList) {
+            $this->canModifyActiveListCached = true;
+            return true;
+        }
+
+        $this->canModifyActiveListCached = $user->can('addItem', $activeList);
+        return $this->canModifyActiveListCached;
     }
 
     public function actionRules(mixed $row): array
