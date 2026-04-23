@@ -1237,8 +1237,7 @@ class Objects
             $objDatabase->execSQL("UPDATE objectnames SET objectname=\"$newname\" WHERE objectname = \"$name\"");
         }
 
-        $objDatabase->execSQL("UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname = \"$name\"");
-        $objDatabase->execSQL("UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname = \"$name\"");
+        $objDatabase->execSQL("UPDATE observing_list_items SET object_name=\"$newname\" WHERE object_name = \"$name\"");
         $objDatabase->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname = \"$name\"");
         $objDatabase->execSQL("UPDATE objectpartof SET objectname=\"$newname\" WHERE objectname = \"$name\"");
         $objDatabase->execSQL("UPDATE objectpartof SET partofname=\"$newname\" WHERE partofname = \"$name\"");
@@ -1631,8 +1630,7 @@ class Objects
         $newcatindex = ucwords(trim($catindex));
         global $objDatabase;
         $objDatabase->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname=\"$name\"");
-        $objDatabase->execSQL("UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname=\"$name\"");
-        $objDatabase->execSQL("UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname=\"$name\"");
+        $objDatabase->execSQL("UPDATE observing_list_items SET object_name=\"$newname\" WHERE object_name=\"$name\"");
         $objDatabase->execSQL("DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\"");
         $objDatabase->execSQL("DELETE objectpartof.* FROM objectpartof WHERE objectname=\"$name\" OR partofname = \"$name\"");
         $objDatabase->execSQL("DELETE objects.* FROM objects WHERE name = \"$name\"");
@@ -1642,7 +1640,7 @@ class Objects
     {
         global $objDatabase;
         $objDatabase->execSQL("DELETE FROM observations WHERE objectname=\"$name\"");
-        $objDatabase->execSQL("DELETE FROM observerobjectlist WHERE objectname=\"$name\"");
+        $objDatabase->execSQL("DELETE FROM observing_list_items WHERE object_name=\"$name\"");
         $objDatabase->execSQL("DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\"");
         $objDatabase->execSQL("DELETE objectpartof.* FROM objectpartof WHERE objectname=\"$name\" OR partofname = \"$name\"");
         $objDatabase->execSQL("DELETE objects.* FROM objects WHERE name = \"$name\"");

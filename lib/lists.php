@@ -8,6 +8,27 @@ if ((!isset($inIndex)) || (!$inIndex)) {
 }
 class Lists
 {
+    // Returns the observing_lists.id for the given list name and observer username.
+    private function getListId($listName, $observerId)
+    {
+        global $objDatabase;
+        return (int)$objDatabase->selectSingleValue(
+            "SELECT ol.id FROM observing_lists ol JOIN users u ON u.id = ol.owner_user_id "
+            . "WHERE ol.name = \"" . $listName . "\" AND u.username = \"" . $observerId . "\"",
+            'id', 0
+        );
+    }
+
+    // Returns the users.id for the given username.
+    private function getOwnerUserId($username)
+    {
+        global $objDatabase;
+        return (int)$objDatabase->selectSingleValue(
+            "SELECT id FROM users WHERE username = \"" . $username . "\"",
+            'id', 0
+        );
+    }
+
     public function addObservations($thetype)
     {
         global $entryMessage, $myList, $objObject, $objDatabase, $loggedUser, $listname, $objPresentations;
@@ -37,7 +58,9 @@ class Lists
                     $description .= ') ' . $objPresentations->br2nl(htmlspecialchars($temp['description'], ENT_HTML5 | ENT_QUOTES));
                     $get3 = $objDatabase->selectRecordArray("SELECT description FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $listname . "\" AND objectname=\"" . $theobject . "\"");
                     if (strpos($get3 ['description'], $description) === false) {
-                        $objDatabase->execSQL("UPDATE observerobjectlist SET description = \"" . substr((($get3 ['description']) ? ($get3 ['description'] . " ") : '') . $description, 0, 4096) . "\" WHERE observerid = \"" . $loggedUser . "\" AND listname=\"" . $listname . "\" AND objectname=\"" . $theobject . "\"");
+                        $listIdAddObs = $this->getListId($listname, $loggedUser);
+                        $newDescAddObs = substr((($get3 ['description']) ? ($get3 ['description'] . " ") : '') . $description, 0, 4096);
+                        $objDatabase->execSQL("UPDATE observing_list_items SET item_description = \"" . addslashes($newDescAddObs) . "\" WHERE observing_list_id = " . $listIdAddObs . " AND object_name = \"" . $theobject . "\"");
                     }
                 }
             }
@@ -51,7 +74,8 @@ class Lists
             return;
         }
         if ($thetype == "all") {
-            $sql = "UPDATE observerobjectlist " . "SET description = (SELECT objects.description FROM objects WHERE objects.name=observerobjectlist.objectname) " . "WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $listname . "\" AND objectname <>\"\"";
+            $listIdRemObs = $this->getListId($listname, $loggedUser);
+            $sql = "UPDATE observing_list_items SET item_description = (SELECT description FROM objects WHERE objects.name = observing_list_items.object_name) WHERE observing_list_id = " . $listIdRemObs;
             $run = $objDatabase->execSQL($sql);
             $entryMessage .= _("Observations removed");
         }
@@ -76,7 +100,8 @@ class Lists
             } else {
                 $public = 0;
             }
-            $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, public, timestamp) VALUES (\"" . $loggedUser . "\", \"\", \"" . $name . "\", '0', \"\", \"" . $public . "\", DATE_FORMAT(NOW(), '%Y%m%d%H%i%S'))");
+            $slugAddList = strtolower(preg_replace('/[^a-z0-9]+/', '-', $name)) . '-' . strtolower($loggedUser);
+            $objDatabase->execSQL("INSERT INTO observing_lists (owner_user_id, name, slug, description, public, created_at, updated_at) SELECT id, \"" . $name . "\", \"" . $slugAddList . "\", '', " . $public . ", NOW(), NOW() FROM users WHERE username = \"" . $loggedUser . "\"");
             if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
                 unset($_SESSION ['QobjParams']);
             }
@@ -91,13 +116,12 @@ class Lists
         if (!$showname) {
             $showname = $name;
         }
-        if (!($objDatabase->selectSingleValue("SELECT objectplace FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $listname . "\" AND objectname=\"" . $name . "\"", 'objectplace', 0))) {
-            if ($this->isPublic($listname, $loggedUser)) {
-                $public = 1;
-            } else {
-                $public = 0;
-            }
-            $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, description, public, timestamp) VALUES (\"" . $loggedUser . "\", \"$name\", \"$listname\", \"" . (($objDatabase->selectSingleValue("SELECT MAX(objectplace) AS ObjPlace FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"$listname\"", 'ObjPlace', 0)) + 1) . "\", \"$showname\", \"" . $objDatabase->selectSingleValue("SELECT description FROM objects WHERE name=\"" . $name . "\"", 'description') . "\", \"" . $public . "\", DATE_FORMAT(NOW(), '%Y%m%d%H%i%S'))");
+        $listIdAddObj = $this->getListId($listname, $loggedUser);
+        if ($listIdAddObj && !$objDatabase->selectSingleValue("SELECT id FROM observing_list_items WHERE observing_list_id = " . $listIdAddObj . " AND object_name = \"" . $name . "\"", 'id', 0)) {
+            $nextPlaceAddObj = (int)$objDatabase->selectSingleValue("SELECT COALESCE(MAX(sort_order), 0) + 1 AS np FROM observing_list_items WHERE observing_list_id = " . $listIdAddObj, 'np', 1);
+            $descAddObj = addslashes((string)$objDatabase->selectSingleValue("SELECT description FROM objects WHERE name = \"" . $name . "\"", 'description', ''));
+            $userIdAddObj = $this->getOwnerUserId($loggedUser);
+            $objDatabase->execSQL("INSERT INTO observing_list_items (observing_list_id, object_name, item_description, sort_order, added_by_user_id, created_at, updated_at) VALUES (" . $listIdAddObj . ", \"" . $name . "\", \"" . $descAddObj . "\", " . $nextPlaceAddObj . ", " . $userIdAddObj . ", NOW(), NOW())");
         }
         if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
             unset($_SESSION ['QobjParams']);
@@ -114,11 +138,19 @@ class Lists
             $description .= '/' . $get ['instrument'];
             $description .= '/' . $get ['location'];
             $description .= ') ' . $objPresentations->br2nl($get ['description']);
-            $get = $objDatabase->selectRecordArray("SELECT objectplace AS ObjPl, description FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $listname . "\" AND objectname=\"" . $name . "\"");
+            $listIdAddObsToList = $this->getListId($listname, $loggedUser);
+            $get = $listIdAddObsToList ? $objDatabase->selectRecordArray("SELECT sort_order AS ObjPl, item_description AS description FROM observing_list_items WHERE observing_list_id = " . $listIdAddObsToList . " AND object_name = \"" . $name . "\"") : null;
             if (!$get) {
-                $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, description, timestamp) " . "VALUES (\"" . $loggedUser . "\", \"" . $name . "\", \"" . $listname . "\"," . " \"" . (($objDatabase->selectSingleValue("SELECT MAX(objectplace) AS ObjPl FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $listname . "\"", 'ObjPl', 0)) + 1) . "\", " . "\"" . $name . "\", \"" . substr((($tempDescription = $objDatabase->selectSingleValue("SELECT description FROM objects WHERE name=\"" . $name . "\"", 'description')) ? ($tempDescription . ' \n') : '') . $description, 0, 1024) . "\", DATE_FORMAT(NOW(), '%Y%m%d%H%i%S'))");
+                if ($listIdAddObsToList) {
+                    $nextPlaceAddObsToList = (int)$objDatabase->selectSingleValue("SELECT COALESCE(MAX(sort_order), 0) + 1 AS np FROM observing_list_items WHERE observing_list_id = " . $listIdAddObsToList, 'np', 1);
+                    $tempDescAddObsToList = (string)$objDatabase->selectSingleValue("SELECT description FROM objects WHERE name = \"" . $name . "\"", 'description', '');
+                    $fullDescAddObsToList = addslashes(substr(($tempDescAddObsToList ? ($tempDescAddObsToList . ' \n') : '') . $description, 0, 1024));
+                    $userIdAddObsToList = $this->getOwnerUserId($loggedUser);
+                    $objDatabase->execSQL("INSERT INTO observing_list_items (observing_list_id, object_name, item_description, sort_order, added_by_user_id, created_at, updated_at) VALUES (" . $listIdAddObsToList . ", \"" . $name . "\", \"" . $fullDescAddObsToList . "\", " . $nextPlaceAddObsToList . ", " . $userIdAddObsToList . ", NOW(), NOW())");
+                }
             } else {
-                $objDatabase->execSQL("UPDATE observerobjectlist SET description = \"" . substr((($get ['description']) ? ($get ['description'] . " ") : '') . $description, 0, 1024) . "\" WHERE observerid = \"" . $loggedUser . "\" AND listname=\"" . $listname . "\" AND objectname=\"" . $name . "\"");
+                $newDescAddObsToList = addslashes(substr((($get ['description']) ? ($get ['description'] . " ") : '') . $description, 0, 1024));
+                $objDatabase->execSQL("UPDATE observing_list_items SET item_description = \"" . $newDescAddObsToList . "\" WHERE observing_list_id = " . $listIdAddObsToList . " AND object_name = \"" . $name . "\"");
             }
         }
         if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
@@ -159,7 +191,10 @@ class Lists
     {
         global $objDatabase, $loggedUser, $myList;
         if ($loggedUser && $myList) {
-            $objDatabase->execSQL("DELETE FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $listname . "\" AND objectplace<>0");
+            $listIdEmptyList = $this->getListId($listname, $loggedUser);
+            if ($listIdEmptyList) {
+                $objDatabase->execSQL("DELETE FROM observing_list_items WHERE observing_list_id = " . $listIdEmptyList);
+            }
             if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
                 unset($_SESSION ['QobjParams']);
             }
@@ -397,16 +432,16 @@ class Lists
 
         $public = $this->isPublic($listName, $loggedUser);
         if ($public) {
-            $objDatabase->execSQL("UPDATE observerobjectlist set public=\"0\" where listname=\"" . $listName . "\" AND observerid = \"" . $loggedUser . "\"");
+            $objDatabase->execSQL("UPDATE observing_lists ol JOIN users u ON u.id = ol.owner_user_id SET ol.public = 0 WHERE ol.name = \"" . $listName . "\" AND u.username = \"" . $loggedUser . "\"");
         } else {
             // We first check if a public list with the same name already exists.
-            $run = $objDatabase->selectRecordset("SELECT listname FROM observerobjectlist WHERE listname=\"" . $listName . "\" AND public=\"1\"");
+            $run = $objDatabase->selectRecordset("SELECT name AS listname FROM observing_lists WHERE name = \"" . $listName . "\" AND public = 1");
             $get = $run->fetch(PDO::FETCH_OBJ);
             if (!empty($get)) {
                 $entryMessage = sprintf(_("A public list with the same name (%s) as your list already exists. Please rename your list before making the list public."), "<strong>" . $listName . "</strong>");
                 return;
             }
-            $objDatabase->execSQL("UPDATE observerobjectlist set public=\"1\" where listname=\"" . $listName . "\" AND observerid = \"" . $loggedUser . "\"");
+            $objDatabase->execSQL("UPDATE observing_lists ol JOIN users u ON u.id = ol.owner_user_id SET ol.public = 1 WHERE ol.name = \"" . $listName . "\" AND u.username = \"" . $loggedUser . "\"");
 
             $username = $objObserver->getObserverProperty($loggedUser, "firstname") . " " . $objObserver->getObserverProperty($loggedUser, "name");
             $subject = sprintf(
@@ -449,9 +484,12 @@ class Lists
             return;
         }
         if ($place && ($place > 1)) {
-            $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=-1 WHERE observerid = \"" . $loggedUser . "\" AND listname =\"" . $listname . "\" AND objectplace=" . $place);
-            $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=objectplace+1 WHERE observerid=\"" . $loggedUser . "\" AND listname=\"" . $listname . "\" AND objectplace=" . ($place - 1));
-            $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=" . ($place - 1) . " WHERE observerid=\"" . $loggedUser . "\" AND listname =\"" . $listname . "\" AND objectplace=-1");
+            $listIdObjDown = $this->getListId($listname, $loggedUser);
+            if ($listIdObjDown) {
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = -1 WHERE observing_list_id = " . $listIdObjDown . " AND sort_order = " . $place);
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . $place . " WHERE observing_list_id = " . $listIdObjDown . " AND sort_order = " . ($place - 1));
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . ($place - 1) . " WHERE observing_list_id = " . $listIdObjDown . " AND sort_order = -1");
+            }
         }
         if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
             unset($_SESSION ['QobjParams']);
@@ -463,16 +501,17 @@ class Lists
         if (!($myList)) {
             return '';
         }
-        $max = $objDatabase->selectSingleValue("SELECT MAX(objectplace) AS ObjPl FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $listname . "\"", 'ObjPl');
-        if (($from > 0) && ($from <= $max) && ($to > 0) && ($to <= $max) && ($from != $to)) {
+        $listIdFromTo = $this->getListId($listname, $loggedUser);
+        $max = $listIdFromTo ? (int)$objDatabase->selectSingleValue("SELECT MAX(sort_order) AS ObjPl FROM observing_list_items WHERE observing_list_id = " . $listIdFromTo, 'ObjPl', 0) : 0;
+        if ($listIdFromTo && ($from > 0) && ($from <= $max) && ($to > 0) && ($to <= $max) && ($from != $to)) {
             if ($from < $to) {
-                $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=-1 WHERE ((observerid=\"" . $loggedUser . "\") AND (listname=\"" . $listname . "\") AND (objectplace=" . $from . "))");
-                $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=objectplace-1 WHERE ((observerid=\"" . $loggedUser . "\") AND (listname=\"" . $listname . "\") AND (objectplace>" . $from . ") AND (objectplace<=" . $to . "))");
-                $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=" . $to . " WHERE ((observerid=\"" . $loggedUser . "\") AND (listname=\"" . $listname . "\") AND (objectplace=-1))");
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = -1 WHERE observing_list_id = " . $listIdFromTo . " AND sort_order = " . $from);
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = sort_order - 1 WHERE observing_list_id = " . $listIdFromTo . " AND sort_order > " . $from . " AND sort_order <= " . $to);
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . $to . " WHERE observing_list_id = " . $listIdFromTo . " AND sort_order = -1");
             } else {
-                $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=-1 WHERE ((observerid=\"" . $loggedUser . "\") AND (listname=\"" . $listname . "\") AND (objectplace=" . $from . "))");
-                $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=objectplace+1 WHERE ((observerid=\"" . $loggedUser . "\") AND (listname=\"" . $listname . "\") AND (objectplace>=" . $to . ") AND (objectplace<" . $from . "))");
-                $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=" . $to . " WHERE ((observerid=\"" . $loggedUser . "\") AND (listname=\"" . $listname . "\") AND (objectplace=-1))");
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = -1 WHERE observing_list_id = " . $listIdFromTo . " AND sort_order = " . $from);
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = sort_order + 1 WHERE observing_list_id = " . $listIdFromTo . " AND sort_order >= " . $to . " AND sort_order < " . $from);
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . $to . " WHERE observing_list_id = " . $listIdFromTo . " AND sort_order = -1");
             }
             if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
                 unset($_SESSION ['QobjParams']);
@@ -488,10 +527,11 @@ class Lists
         if (!$myList) {
             return;
         }
-        if ($place < $objDatabase->selectSingleValue("SELECT MAX(objectplace) AS ObjPl FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname=\"" . $listname . "\"", 'ObjPl')) {
-            $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=-1 WHERE observerid=\"" . $loggedUser . "\" AND listname=\"" . $listname . "\" AND objectplace=" . $place);
-            $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=objectplace-1 WHERE observerid=\"" . $loggedUser . "\" AND listname=\"" . $listname . "\" AND objectplace=" . ($place + 1));
-            $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=" . ($place + 1) . " WHERE observerid=\"" . $loggedUser . "\" AND listname=\"" . $listname . "\" AND objectplace=-1");
+        $listIdObjUp = $this->getListId($listname, $loggedUser);
+        if ($listIdObjUp && $place < (int)$objDatabase->selectSingleValue("SELECT MAX(sort_order) AS ObjPl FROM observing_list_items WHERE observing_list_id = " . $listIdObjUp, 'ObjPl', 0)) {
+            $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = -1 WHERE observing_list_id = " . $listIdObjUp . " AND sort_order = " . $place);
+            $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . $place . " WHERE observing_list_id = " . $listIdObjUp . " AND sort_order = " . ($place + 1));
+            $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . ($place + 1) . " WHERE observing_list_id = " . $listIdObjUp . " AND sort_order = -1");
         }
         if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
             unset($_SESSION ['QobjParams']);
@@ -501,7 +541,7 @@ class Lists
     {
         global $objDatabase, $loggedUser, $myList;
         if ($loggedUser) {
-            $objDatabase->execSQL("DELETE FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $name . "\"");
+            $objDatabase->execSQL("DELETE ol FROM observing_lists ol JOIN users u ON u.id = ol.owner_user_id WHERE ol.name = \"" . $name . "\" AND u.username = \"" . $loggedUser . "\"");
             if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
                 unset($_SESSION ['QobjParams']);
             }
@@ -513,9 +553,10 @@ class Lists
         if (!$myList) {
             return;
         }
-        if ($place = $objDatabase->selectSingleValue("SELECT objectplace AS ObjPl FROM observerobjectlist WHERE observerid=\"" . $loggedUser . "\" AND listname = \"" . $listname . "\" AND objectname=\"" . $name . "\"", 'ObjPl')) {
-            $objDatabase->execSQL("DELETE FROM observerobjectlist WHERE observerid=\"" . $loggedUser . "\" AND listname=\"" . $listname . "\" AND objectname=\"" . $name . "\"");
-            $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=objectplace-1 WHERE observerid = \"" . $loggedUser . "\" AND listname=\"" . $listname . "\" AND objectplace>" . $place);
+        $listIdRemObj = $this->getListId($listname, $loggedUser);
+        if ($listIdRemObj && ($place = (int)$objDatabase->selectSingleValue("SELECT sort_order FROM observing_list_items WHERE observing_list_id = " . $listIdRemObj . " AND object_name = \"" . $name . "\"", 'sort_order', 0))) {
+            $objDatabase->execSQL("DELETE FROM observing_list_items WHERE observing_list_id = " . $listIdRemObj . " AND object_name = \"" . $name . "\"");
+            $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = sort_order - 1 WHERE observing_list_id = " . $listIdRemObj . " AND sort_order > " . $place);
         }
         if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
             unset($_SESSION ['QobjParams']);
@@ -554,14 +595,13 @@ class Lists
                     $objMessages->sendMessage("DeepskyLog", "all", $subject, $message);
                 }
             }
-            $objDatabase->execSQL("UPDATE observerobjectlist SET listname=\"" . $nameTo . "\" WHERE observerid=\"" . $loggedUser . "\" AND listname=\"" . $nameFrom . "\"");
-
+            $newSlugRename = strtolower(preg_replace('/[^a-z0-9]+/', '-', $nameTo)) . '-' . strtolower($loggedUser);
             if ($newPublic) {
                 $public = 1;
             } else {
                 $public = 0;
             }
-            $objDatabase->execSQL("UPDATE observerobjectlist SET public=\"" . $public . "\" WHERE observerid=\"" . $loggedUser . "\" AND listname=\"" . $nameFrom . "\"");
+            $objDatabase->execSQL("UPDATE observing_lists ol JOIN users u ON u.id = ol.owner_user_id SET ol.name = \"" . $nameTo . "\", ol.slug = \"" . $newSlugRename . "\", ol.public = " . $public . " WHERE ol.name = \"" . $nameFrom . "\" AND u.username = \"" . $loggedUser . "\"");
             if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
                 unset($_SESSION ['QobjParams']);
             }
@@ -573,7 +613,10 @@ class Lists
         if (!($myList)) {
             return;
         }
-        $objDatabase->execSQL("UPDATE observerobjectlist SET description=\"" . $description . "\" WHERE observerid=\"" . $loggedUser . "\" AND objectname=\"" . $object . "\" AND listname=\"" . $listname . "\"");
+        $listIdSetDesc = $this->getListId($listname, $loggedUser);
+        if ($listIdSetDesc) {
+            $objDatabase->execSQL("UPDATE observing_list_items SET item_description = \"" . addslashes($description) . "\" WHERE observing_list_id = " . $listIdSetDesc . " AND object_name = \"" . $object . "\"");
+        }
         if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
             unset($_SESSION ['QobjParams']);
         }

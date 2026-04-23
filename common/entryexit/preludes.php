@@ -43,10 +43,10 @@ function preludesA()
     include_once "lib/databaseNew.php";
     $objDatabase_new = new database_new();
     include_once "lib/databaseMux.php";
-    // Route queries touching `objects` and `cometobjects` to the new DB.
+    // Route queries touching migrated tables to the new DB.
     // This keeps legacy code unchanged while ensuring those tables are
     // read/written against the migrated schema in `$dbnameNew`.
-    $objDatabase = new DatabaseMux($objDatabase, $objDatabase_new, ['objects', 'cometobjects']);
+    $objDatabase = new DatabaseMux($objDatabase, $objDatabase_new, ['objects', 'cometobjects', 'observerobjectlist']);
     include_once "lib/util.php";
     $objUtil = new Utils();
     include_once "lib/setup/language.php";

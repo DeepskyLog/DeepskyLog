@@ -11,13 +11,15 @@ class DatabaseMux
     private $newDb;
     private $routeTables;
     private $lastUsedDb;
+    private $debug;
 
     public function __construct($oldDb, $newDb, $routeTables = [], $debug = false)
     {
         $this->oldDb = $oldDb;
         $this->newDb = $newDb;
         // default tables to route to the new DB
-        $defaults = ['objects', 'cometobjects', 'objectnames'];
+        $defaults = ['objects', 'cometobjects', 'objectnames', 'observerobjectlist',
+                     'observing_lists', 'observing_list_items', 'users'];
         $this->routeTables = array_map('strtolower', array_unique(array_merge($defaults, $routeTables)));
         $this->lastUsedDb = $oldDb;
         $this->debug = (bool)$debug;
@@ -70,7 +72,11 @@ class DatabaseMux
         // Force legacy-only tables to always be served from the old DB.
         // This ensures `observations` (and cometobservations) are not
         // accidentally routed to the new DB which may not contain them.
-        if (preg_match('/\bobservations\b/i', $sql) || preg_match('/\bcometobservations\b/i', $sql)) {
+        // IMPORTANT: match only structural SQL references (FROM/JOIN/column prefix),
+        // NOT the word inside string literal values (e.g. a list named
+        // "My observations" must not trigger this branch).
+        if (preg_match('/\b(?:FROM|JOIN)\s+observations\b|\bobservations\./i', $sql) ||
+            preg_match('/\b(?:FROM|JOIN)\s+cometobservations\b|\bcometobservations\./i', $sql)) {
             $this->lastUsedDb = $this->oldDb;
             return $this->oldDb;
         }
@@ -121,7 +127,8 @@ class DatabaseMux
             $this->lastUsedDb = $this->oldDb;
             return $this->oldDb;
         }
-        $hasCometObservations = (strpos($low, 'cometobservations') !== false || strpos($low, ' cometobservations') !== false || strpos($low, 'cometobservations.') !== false || strpos($low, 'join cometobservations') !== false);
+        $hasCometObservations = (strpos($low, 'cometobservations.') !== false ||
+            preg_match('/\b(?:FROM|JOIN)\s+cometobservations\b/i', $sql));
 
         $foundRouteTables = array();
         // Use word-boundary regex matching to avoid false positives where
@@ -139,9 +146,13 @@ class DatabaseMux
         // NOTE: `objectnames` is intentionally omitted here so that queries joining
         // `objects` + `objectnames` (common catalog lookups) can be routed to the
         // new database where `objects` live after migration.
-        $legacyJoinRiskTables = ['observations', 'cometobservations', 'observerobjectlist'];
+        // Use structural patterns (FROM/JOIN/column prefix) to avoid false matches
+        // when the table name appears inside a string literal value.
+        $legacyJoinRiskTables = ['observations', 'cometobservations'];
         foreach ($legacyJoinRiskTables as $legacyTable) {
-            if (in_array('objects', $foundRouteTables) && (strpos($low, ' ' . $legacyTable) !== false || strpos($low, $legacyTable . '.') !== false || strpos($low, 'join ' . $legacyTable) !== false)) {
+            if (in_array('objects', $foundRouteTables) &&
+                (preg_match('/\b(?:FROM|JOIN)\s+' . preg_quote($legacyTable, '/') . '\b/i', $sql) ||
+                 strpos($low, $legacyTable . '.') !== false)) {
                 $this->lastUsedDb = $this->oldDb;
                 return $this->oldDb;
             }
@@ -526,6 +537,134 @@ class DatabaseMux
         return ['db' => 'old', 'sql' => $newSql];
     }
 
+    /**
+     * Rewrites SQL that mixes `observations` with `observerobjectlist`.
+     *
+     * `observations` remains on the old DB while `observerobjectlist`
+     * is served from the new DB. We resolve matching list object names
+     * from the new DB first, then run an observations-only query on the
+     * old DB constrained with an IN(...) clause.
+     */
+    private function rewriteObservationObserverObjectListJoin($sql)
+    {
+        $low = strtolower($sql);
+        if (strpos($low, 'observations') === false || strpos($low, 'observerobjectlist') === false) {
+            return null;
+        }
+
+        if (!preg_match('/observerobjectlist\.listname\s*=\s*(?:"|\')([^"\']+)(?:"|\')/i', $sql, $m)) {
+            return null;
+        }
+
+        $listname = $m[1];
+        $lookupSql = 'SELECT DISTINCT objectname FROM observerobjectlist WHERE listname = "' . str_replace('"', '""', $listname) . '" AND objectname <> ""';
+
+        if (preg_match('/observerobjectlist\.observerid\s*=\s*(?:"|\')([^"\']+)(?:"|\')/i', $sql, $obsM)) {
+            $lookupSql .= ' AND observerid = "' . str_replace('"', '""', $obsM[1]) . '"';
+        }
+        if (preg_match('/observerobjectlist\.public\s*=\s*(?:"|\')([^"\']+)(?:"|\')/i', $sql, $pubM)) {
+            $lookupSql .= ' AND public = "' . str_replace('"', '""', $pubM[1]) . '"';
+        }
+
+        try {
+            $rows = $this->newDb->selectRecordsetArray($lookupSql);
+        } catch (Exception $e) {
+            error_log('DatabaseMux: observerobjectlist lookup failed: ' . $e->getMessage());
+            return null;
+        }
+
+        if (!is_array($rows) || count($rows) === 0) {
+            return ['db' => 'old', 'sql' => 'SELECT * FROM observations WHERE 1=0'];
+        }
+
+        $escaped = [];
+        foreach ($rows as $r) {
+            $name = (is_array($r) ? reset($r) : $r->objectname);
+            $escaped[] = "'" . str_replace("'", "''", $name) . "'";
+        }
+        $inClause = '(' . implode(',', $escaped) . ')';
+
+        $newSql = $sql;
+
+        // Query shape 1: FROM observations JOIN observerobjectlist ...
+        if (preg_match('/\bFROM\s+observations\b/i', $newSql)) {
+            $newSql = preg_replace(
+                '/\b(?:INNER\s+JOIN|JOIN)\s+observerobjectlist\b\s+ON\s+(.+?)(?=\bWHERE\b|\bJOIN\b|\bLEFT\b|\bRIGHT\b|\bINNER\b|\bORDER\b|\bGROUP\b|\bLIMIT\b|\bUNION\b|;|$)/is',
+                ' ',
+                $newSql
+            );
+        }
+
+        // Query shape 2: FROM observerobjectlist JOIN observations ...
+        if (preg_match('/\bFROM\s+observerobjectlist\b/i', $newSql)) {
+            $newSql = preg_replace('/\bFROM\s+observerobjectlist\b/i', 'FROM observations', $newSql, 1);
+            $newSql = preg_replace(
+                '/\b(?:INNER\s+JOIN|JOIN)\s+observations\b\s+ON\s+(.+?)(?=\bWHERE\b|\bJOIN\b|\bLEFT\b|\bRIGHT\b|\bINNER\b|\bORDER\b|\bGROUP\b|\bLIMIT\b|\bUNION\b|;|$)/is',
+                ' ',
+                $newSql,
+                1
+            );
+        }
+
+        $newSql = str_ireplace('observerobjectlist.objectname', 'observations.objectname', $newSql);
+
+        // If the original query was a part-of list query, keep semantics by
+        // selecting the parent name while filtering observations by child name.
+        if (preg_match('/objectpartof\.partofname\s*=\s*observations\.objectname/i', $newSql)) {
+            $newSql = preg_replace('/objectpartof\.partofname\s*=\s*observations\.objectname/i', 'objectpartof.objectname = observations.objectname', $newSql);
+            $newSql = preg_replace('/SELECT\s+DISTINCT\s+observations\.objectname/i', 'SELECT DISTINCT objectpartof.partofname AS objectname', $newSql, 1);
+        }
+
+        // Remove predicates that reference observerobjectlist; they are
+        // replaced by the IN(...) predicate below. Use neutral 1=1 so nested
+        // boolean groups like "WHERE ((observerobjectlist.listname=...) AND ...)"
+        // stay syntactically valid.
+        $newSql = preg_replace('/observerobjectlist\.(?:listname|observerid|public)\s*(?:=|!=|<>)\s*(?:"|\')[^"\']*(?:"|\')/i', '1=1', $newSql);
+        $newSql = preg_replace('/observerobjectlist\.objectname\s*<>\s*(?:"|\')\s*(?:"|\')/i', '1=1', $newSql);
+        // Cleanup common "(1=1)" noise created by replacement.
+        $newSql = preg_replace('/\(\s*1\s*=\s*1\s*\)/i', '1=1', $newSql);
+
+        // Inject IN(...) before ORDER/GROUP/LIMIT/HAVING/UNION when present.
+        if (preg_match('/\b(ORDER\s+BY|GROUP\s+BY|LIMIT\b|HAVING\b|FOR\s+UPDATE\b|UNION\b|;)/i', $newSql, $mm, PREG_OFFSET_CAPTURE)) {
+            $pos = $mm[0][1];
+            $prefix = rtrim(substr($newSql, 0, $pos));
+            $suffix = ltrim(substr($newSql, $pos));
+            if (preg_match('/\bWHERE\b/i', $prefix)) {
+                $prefix .= ' AND observations.objectname IN ' . $inClause . ' ';
+            } else {
+                $prefix .= ' WHERE observations.objectname IN ' . $inClause . ' ';
+            }
+            $newSql = $prefix . $suffix;
+        } else {
+            if (preg_match('/\bWHERE\b/i', $newSql)) {
+                $newSql .= ' AND observations.objectname IN ' . $inClause;
+            } else {
+                $newSql .= ' WHERE observations.objectname IN ' . $inClause;
+            }
+        }
+
+        // Basic cleanup for leftovers from predicate removal.
+        $newSql = preg_replace('/\bWHERE\s+AND\b/i', 'WHERE', $newSql);
+        $newSql = preg_replace('/\(\s*\)/', '', $newSql);
+        $newSql = preg_replace('/\s+/', ' ', trim($newSql));
+
+        if ($this->debug) {
+            error_log('DatabaseMux: observerobjectlist original SQL: ' . substr($sql, 0, 1000));
+            error_log('DatabaseMux: observerobjectlist rewritten SQL: ' . substr($newSql, 0, 1000));
+        }
+
+        return ['db' => 'old', 'sql' => $newSql];
+    }
+
+    private function getRewriteForObservationQuery($sql)
+    {
+        $rewritten = $this->rewriteObservationObserverObjectListJoin($sql);
+        if ($rewritten !== null) {
+            return $rewritten;
+        }
+        return $this->rewriteObservationObjectnamesJoin($sql);
+    }
+
     public function execSQL($sql)
     {
         $db = $this->chooseDB($sql);
@@ -535,7 +674,7 @@ class DatabaseMux
     public function selectRecordset($sql)
     {
         // special-case queries that JOIN observations with objectnames
-        $rewritten = $this->rewriteObservationObjectnamesJoin($sql);
+        $rewritten = $this->getRewriteForObservationQuery($sql);
         if ($rewritten !== null) {
             if (is_array($rewritten) && isset($rewritten['db']) && isset($rewritten['sql'])) {
                 if ($rewritten['db'] === 'old') {
@@ -597,7 +736,7 @@ class DatabaseMux
 
     public function selectSingleArray($sql, $name)
     {
-        $rewritten = $this->rewriteObservationObjectnamesJoin($sql);
+        $rewritten = $this->getRewriteForObservationQuery($sql);
         if ($rewritten !== null) {
             if (is_array($rewritten) && isset($rewritten['db']) && isset($rewritten['sql'])) {
                 if ($rewritten['db'] === 'old') {
@@ -631,7 +770,7 @@ class DatabaseMux
 
     public function selectSingleValue($sql, $name, $nullvalue = '')
     {
-        $rewritten = $this->rewriteObservationObjectnamesJoin($sql);
+        $rewritten = $this->getRewriteForObservationQuery($sql);
         if ($rewritten !== null) {
             if (is_array($rewritten) && isset($rewritten['db']) && isset($rewritten['sql'])) {
                 if ($rewritten['db'] === 'old') {
@@ -665,7 +804,7 @@ class DatabaseMux
 
     public function selectRecordsetArray($sql)
     {
-        $rewritten = $this->rewriteObservationObjectnamesJoin($sql);
+        $rewritten = $this->getRewriteForObservationQuery($sql);
         if ($rewritten !== null) {
             if (is_array($rewritten) && isset($rewritten['db']) && isset($rewritten['sql'])) {
                 if ($rewritten['db'] === 'old') {
@@ -699,7 +838,7 @@ class DatabaseMux
 
     public function selectRecordArray($sql)
     {
-        $rewritten = $this->rewriteObservationObjectnamesJoin($sql);
+        $rewritten = $this->getRewriteForObservationQuery($sql);
         if ($rewritten !== null) {
             if (is_array($rewritten) && isset($rewritten['db']) && isset($rewritten['sql'])) {
                 if ($rewritten['db'] === 'old') {
@@ -733,7 +872,7 @@ class DatabaseMux
 
     public function selectKeyValueArray($sql, $key, $value)
     {
-        $rewritten = $this->rewriteObservationObjectnamesJoin($sql);
+        $rewritten = $this->getRewriteForObservationQuery($sql);
         if ($rewritten !== null) {
             if (is_array($rewritten) && isset($rewritten['db']) && isset($rewritten['sql'])) {
                 if ($rewritten['db'] === 'old') {
