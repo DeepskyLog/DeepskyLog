@@ -48,7 +48,7 @@
             </div>
         @endif
 
-        <div class="mt-5 flex gap-3">
+        <div class="mt-5 flex gap-3 flex-wrap">
             <a href="{{ route('object.details', ['name' => $name, 'ra' => $raInput, 'decl' => $decInput]) }}"
                class="bg-green-700 text-white px-5 py-2 rounded hover:bg-green-600 font-medium">
                 {{ __('None of these — continue to details') }}
@@ -57,6 +57,26 @@
                class="bg-gray-600 text-white px-5 py-2 rounded hover:bg-gray-500 font-medium">
                 {{ __('Back') }}
             </a>
+            @auth
+                @if(!$nearby->isEmpty())
+                    <form method="POST" action="{{ route('observing-list.active.batch-add') }}">
+                        @csrf
+                        @foreach($nearby as $n)
+                            @if(!empty($n->name))
+                                <input type="hidden" name="object_names[]" value="{{ $n->name }}">
+                            @endif
+                        @endforeach
+                        <button type="submit"
+                            class="inline-flex items-center gap-2 bg-indigo-700 text-white px-5 py-2 rounded hover:bg-indigo-600 font-medium">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M4 6h16M4 10h16M4 14h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M16 18h4M18 16v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            {{ __('Add all to active list') }}
+                        </button>
+                    </form>
+                @endif
+            @endauth
         </div>
     </div>
 </div>

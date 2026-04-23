@@ -44,7 +44,9 @@
 
             <x-menu.item icon="chart-bar-square" href="{{ config('app.old_url') }}/index.php?indexAction=statistics">{{ __('Statistics') }}</x-menu.item>
 
-            <x-menu.item separator icon="pencil-square" href="{{ url('/catalogs') }}" data-last>{{ __('Catalogs') }}</x-menu.item>
+            <x-menu.item separator icon="list-bullet" href="{{ route('observing-lists.discover') }}">{{ __('Observing lists') }}</x-menu.item>
+
+            <x-menu.item icon="pencil-square" href="{{ url('/catalogs') }}" data-last>{{ __('Catalogs') }}</x-menu.item>
 
         </x-menu.dropdown>
     </div>

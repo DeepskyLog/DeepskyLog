@@ -56,7 +56,7 @@
                     {{ __('My sessions') }}
                 </x-menu.item>
 
-                <x-menu.item separator icon="bars-3-center-left" href="{{ config('app.old_url') }}/index.php?indexAction=view_lists">{!! __('My observing lists') !!}</x-menu.item>
+                <x-menu.item separator icon="bars-3-center-left" href="{{ route('observing-lists.index') }}">{!! __('My observing lists') !!}</x-menu.item>
 
                 <x-menu.item separator href="/instrument">
                     <x-outline.telescope-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />

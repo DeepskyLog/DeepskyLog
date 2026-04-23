@@ -6,10 +6,6 @@
 
 + [ ] Update to laravel 13.
 + [ ] Observing lists
-  + [ ] Description of observing lists
-  + [ ] Add extra description to target? (Automatically add the longest description from deepskylog, ...)
-  + [ ] Comment on observing lists
-  + [ ] Like observing lists
   + [ ] Use new tables in old version of DeepskyLog
 + [ ] Release new version of pyDeepskyLog
   + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
@@ -18,6 +14,10 @@
 
 + [ ] Observations
   + [ ] Comment on observations
+  + [ ] Like observations
+  + [ ] Add observations of other objects: planets, comets, lunar features, ...
+  + [ ] Show detailed observation page, with all details, comments, ...
+  + [ ] Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
 + [ ] All missing pages
 
 
@@ -61,16 +61,9 @@
 + [X] Quick search in the left aside.  Use '/' to jump to the search field.
 + [X] Detailed search on objects
 + [X] Check objects page for administrators, with a button to fetch data from Simbad.
++ [X] Reworked observing lists.  Users can comment on them, like them, subscribe to them, ...
++ [X] Objects can be imported in an observing list from a file.  The file can be a simple text file, argo navis file, AstroPlanner file, CSV file, or SkySafari file.
 
 ## Small issues
 
 + [ ] In Team Settings page: Automatically update table if new user is added (only works when next user is added)
-
-## Interesting websites
-
-+ [ ] Timezones with php: Carbon: <https://carbon.nesbot.com/docs/#api-timezone>
-+ [ ] <https://jamesmills.co.uk/2019/02/28/laravel-timezone/> for timezones / date
-+ [ ] Difficult queries: <https://laravel-news.com/laravel-query-builder>
-  + [ ] See <https://laraveldaily.teachable.com/courses/393790/lectures/6329089>
-+ [ ] Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
-+ [ ] Check <https://laravel-comments.com/> for commenting on observations, observing lists, ...

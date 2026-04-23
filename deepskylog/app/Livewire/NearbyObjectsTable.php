@@ -16,6 +16,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\UserObjectMetric;
 use Illuminate\Support\Facades\Cache;
 use App\Jobs\ComputeContrastReserveForObject;
+use App\Services\ActiveObservingListService;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
@@ -102,6 +103,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
     /** @var \App\Models\Eyepiece|null */
     private ?\App\Models\Eyepiece $previewEyepieceModel = null;
+    private ?bool $canModifyActiveListCached = null;
 
     /**
      * Derived aggregation SQL for legacy observations (populated when legacy DB exists).
@@ -498,6 +500,24 @@ class NearbyObjectsTable extends PowerGridComponent
         // Don't include placeholder columns in the inner query to avoid duplicate column names
         // when the outer query uses addSelect() to add the actual computed values.
         $selectRaw = "objects.* , constellations.name as constellation, deepskytypes.name as type_name, GREATEST(COALESCE(objects.diam1,0), COALESCE(objects.diam2,0)) as size, {$expr} as distance_deg, objects.name as id" . $atlasSelect;
+
+        $inActiveListSelect = ', 0 as in_active_list';
+        try {
+            $authUser = Auth::user();
+            if ($authUser) {
+                /** @var ActiveObservingListService $svc */
+                $svc = app(ActiveObservingListService::class);
+                $activeList = $svc->getActiveList($authUser);
+                if ($activeList) {
+                    $activeListId = (int) $activeList->id;
+                    $inActiveListSelect = ", EXISTS(SELECT 1 FROM observing_list_items oli WHERE oli.observing_list_id = {$activeListId} AND oli.object_name = objects.name) as in_active_list";
+                }
+            }
+        } catch (\Throwable $_) {
+            $inActiveListSelect = ', 0 as in_active_list';
+        }
+
+        $selectRaw .= $inActiveListSelect;
 
         // Bindings for the distance expression (used in both the SELECT and WHERE).
         $exprBindings = [$this->decl, $this->decl, $centerRaDeg];
@@ -962,6 +982,37 @@ class NearbyObjectsTable extends PowerGridComponent
             // Plain text name for CSV/XLSX exports (no HTML)
             ->add('name_plain', function ($row) {
                 return html_entity_decode((string) ($row->name ?? ''));
+            })
+            ->add('add_to_list_action', function ($row) {
+                if (!Auth::check() || !$this->canModifyActiveList()) {
+                    return '';
+                }
+
+                $name = trim((string) ($row->name ?? ''));
+                if ($name === '') {
+                    return '';
+                }
+
+                $inList = intval($row->in_active_list ?? 0) === 1;
+                $token = csrf_token();
+                $action = route('observing-list.active.toggle-item');
+                $title = $inList ? e(__('Remove from active observing list')) : e(__('Add to active observing list'));
+                $colorClass = $inList ? 'text-red-400 hover:text-red-300' : 'text-green-400 hover:text-green-300';
+                $iconPath = $inList
+                    ? '<path d="M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+                    : '<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+                $addedTitle = e(__('Add to active observing list'));
+                $removedTitle = e(__('Remove from active observing list'));
+
+                return '<form method="POST" action="' . e($action) . '" class="inline-flex toggle-list-form">'
+                    . '<input type="hidden" name="_token" value="' . e($token) . '">'
+                    . '<input type="hidden" name="object_name" value="' . e($name) . '">'
+                    . '<button type="submit" class="' . $colorClass . '" title="' . $title . '" data-added-title="' . $addedTitle . '" data-removed-title="' . $removedTitle . '">'
+                    . '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+                    . $iconPath
+                    . '</svg>'
+                    . '</button>'
+                    . '</form>';
             })
             ->add('type_name', function ($row) {
                 $typeName = $row->type_name ?? $row->type ?? '';
@@ -2566,6 +2617,10 @@ class NearbyObjectsTable extends PowerGridComponent
             // and are shown only when an authenticated user is present. See below where we append them
             // when $authUser is available.
         ];
+
+        if ($authUser && $this->canModifyActiveList()) {
+            $cols[] = Column::make(__('Add'), 'add_to_list_action')->bodyAttribute('class', 'text-center')->headerAttribute('class', 'text-center');
+        }
 
         // If a user is logged in, add per-user and ephemerides columns
         if ($authUser) {
@@ -4302,4 +4357,84 @@ class NearbyObjectsTable extends PowerGridComponent
     // #[On('pg:toggleColumn-{tableName}')] listener. We intentionally do not
     // override it here so the vendor-provided handler toggles the column and
     // persists state consistently.
+
+    /**
+     * Add all objects currently visible in the nearby table to the user's active observing list.
+     */
+    public function addAllToActiveList(): void
+    {
+        $user = auth()->user();
+        if (!$user) {
+            session()->flash('error', __('You must be logged in.'));
+            return;
+        }
+
+        /** @var \App\Services\ActiveObservingListService $svc */
+        $svc = app(\App\Services\ActiveObservingListService::class);
+        $activeList = $svc->getActiveList($user);
+
+        if (!$activeList) {
+            session()->flash('error', __('No active observing list set. Please set one first.'));
+            return;
+        }
+
+        if (!$this->canModifyActiveList()) {
+            session()->flash('error', __('You cannot modify this list.'));
+            return;
+        }
+
+        try {
+            $names = $this->datasource()?->pluck('name')->filter()->unique()->values()->toArray() ?? [];
+        } catch (\Throwable $_) {
+            $names = [];
+        }
+
+        $added = 0;
+        foreach ($names as $name) {
+            $name = trim((string) $name);
+            if ($name === '') {
+                continue;
+            }
+            $item = $activeList->items()->firstOrCreate(
+                ['object_name' => $name],
+                [
+                    'source_mode' => 'manual',
+                    'added_by_user_id' => $user->id,
+                ]
+            );
+            if ($item->wasRecentlyCreated) {
+                $added++;
+            }
+        }
+
+        session()->flash('success', __(':count object(s) added to :list.', [
+            'count' => $added,
+            'list' => $activeList->name,
+        ]));
+    }
+
+    private function canModifyActiveList(): bool
+    {
+        if ($this->canModifyActiveListCached !== null) {
+            return $this->canModifyActiveListCached;
+        }
+
+        $user = Auth::user();
+        if (!$user) {
+            $this->canModifyActiveListCached = false;
+            return false;
+        }
+
+        /** @var ActiveObservingListService $svc */
+        $svc = app(ActiveObservingListService::class);
+        $activeList = $svc->getActiveList($user);
+
+        if (!$activeList) {
+            $this->canModifyActiveListCached = true;
+            return true;
+        }
+
+        $this->canModifyActiveListCached = $user->can('addItem', $activeList);
+        return $this->canModifyActiveListCached;
+    }
 }

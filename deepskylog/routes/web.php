@@ -419,6 +419,19 @@ Route::get('/search/stxt.txt', [App\Http\Controllers\SearchExportController::cla
 Route::get('/search/apd.apd', [App\Http\Controllers\SearchExportController::class, 'apd'])
     ->name('search.apd')->middleware('doNotCacheResponse');
 
+Route::get('/observing-list/{list}/export/names.pdf', [App\Http\Controllers\ObservingListExportController::class, 'namesPdf'])
+    ->name('observing-list.export.names.pdf')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::get('/observing-list/{list}/export/table.pdf', [App\Http\Controllers\ObservingListExportController::class, 'tablePdf'])
+    ->name('observing-list.export.table.pdf')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::get('/observing-list/{list}/export/argo.txt', [App\Http\Controllers\ObservingListExportController::class, 'argoNavis'])
+    ->name('observing-list.export.argo')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::get('/observing-list/{list}/export/skylist.skylist', [App\Http\Controllers\ObservingListExportController::class, 'skylist'])
+    ->name('observing-list.export.skylist')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::get('/observing-list/{list}/export/stxt.txt', [App\Http\Controllers\ObservingListExportController::class, 'stxt'])
+    ->name('observing-list.export.stxt')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::get('/observing-list/{list}/export/apd.apd', [App\Http\Controllers\ObservingListExportController::class, 'apd'])
+    ->name('observing-list.export.apd')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+
 // Catalogs overview page
 Route::get('/catalogs', [App\Http\Controllers\CatalogController::class, 'index'])
     ->name('catalogs.index');
@@ -546,6 +559,91 @@ Route::post('/messages/{id}/delete-group', [App\Http\Controllers\MessagesControl
     ->middleware(['auth', 'doNotCacheResponse']);
 
 // Sitemap (cached): generates a simple sitemap.xml with main pages and recent public sessions
+// Observing Lists
+// Public discover page (no auth required)
+Route::get('/observing-lists/discover', [App\Http\Controllers\ObservingListController::class, 'discover'])
+    ->name('observing-lists.discover');
+
+// Public list detail page (private lists still guarded in controller)
+Route::get('/observing-list/{list}', [App\Http\Controllers\ObservingListController::class, 'show'])
+    ->name('observing-list.show');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    // My observing lists (owned + subscribed)
+    Route::get('/observing-lists', [App\Http\Controllers\ObservingListController::class, 'index'])
+        ->name('observing-lists.index');
+
+    // Set as active observing list
+    Route::post('/observing-list/{list}/set-active', [App\Http\Controllers\ObservingListController::class, 'setActive'])
+        ->name('observing-list.set-active');
+
+    // Subscribe to public list
+    Route::post('/observing-list/{list}/subscribe', [App\Http\Controllers\ObservingListController::class, 'subscribe'])
+        ->name('observing-list.subscribe');
+
+    // Unsubscribe from list
+    Route::post('/observing-list/{list}/unsubscribe', [App\Http\Controllers\ObservingListController::class, 'unsubscribe'])
+        ->name('observing-list.unsubscribe');
+
+    // Toggle like on observing list (AJAX)
+    Route::post('/observing-list/{list}/toggle-like', [App\Http\Controllers\ObservingListController::class, 'toggleLike'])
+        ->name('observing-list.toggle-like');
+
+    // Create new observing list
+    Route::get('/observing-lists/create', [App\Http\Controllers\ObservingListController::class, 'create'])
+        ->name('observing-list.create');
+    Route::post('/observing-lists', [App\Http\Controllers\ObservingListController::class, 'store'])
+        ->name('observing-list.store');
+
+    // Edit / update / delete an observing list
+    Route::get('/observing-list/{list}/edit', [App\Http\Controllers\ObservingListController::class, 'edit'])
+        ->name('observing-list.edit');
+    Route::put('/observing-list/{list}', [App\Http\Controllers\ObservingListController::class, 'update'])
+        ->name('observing-list.update');
+    Route::delete('/observing-list/{list}', [App\Http\Controllers\ObservingListController::class, 'destroy'])
+        ->name('observing-list.destroy');
+
+    // Items: add (from object page, quick-add via Livewire component) and remove
+    Route::post('/observing-list/{list}/items', [App\Http\Controllers\ObservingListController::class, 'addItem'])
+        ->name('observing-list.items.store');
+    Route::get('/observing-list/{list}/items/{item}/edit', [App\Http\Controllers\ObservingListController::class, 'editItem'])
+        ->name('observing-list.items.edit');
+    Route::patch('/observing-list/{list}/items/{item}', [App\Http\Controllers\ObservingListController::class, 'updateItem'])
+        ->name('observing-list.items.update');
+    Route::delete('/observing-list/{list}/items/{item}', [App\Http\Controllers\ObservingListController::class, 'removeItem'])
+        ->name('observing-list.items.destroy');
+
+    // Autofill notes for all un-noted items in a list from legacy observations
+    Route::post('/observing-list/{list}/items/autofill-notes', [App\Http\Controllers\ObservingListController::class, 'batchAutofillNotes'])
+        ->name('observing-list.items.autofill-notes');
+
+    // Empty all items from a list (but keep the list itself)
+    Route::post('/observing-list/{list}/empty', [App\Http\Controllers\ObservingListController::class, 'emptyList'])
+        ->name('observing-list.empty');
+
+    // Import objects from a file
+    Route::post('/observing-list/{list}/import', [App\Http\Controllers\ObservingListController::class, 'importFromFile'])
+        ->name('observing-list.import');
+
+    // Batch-add objects to the user's active observing list
+    Route::post('/observing-lists/active/batch-add', [App\Http\Controllers\ObservingListController::class, 'batchAddToActiveList'])
+        ->name('observing-list.active.batch-add');
+
+    // Toggle one object in the user's active observing list
+    Route::post('/observing-lists/active/toggle-item', [App\Http\Controllers\ObservingListController::class, 'toggleActiveListItem'])
+        ->name('observing-list.active.toggle-item');
+
+    // Batch-add nearby objects (by coordinates) to the user's active observing list
+    Route::post('/observing-lists/active/batch-add-nearby', [App\Http\Controllers\ObservingListController::class, 'batchAddNearbyToActiveList'])
+        ->name('observing-list.active.batch-add-nearby');
+
+    // Comments: add and delete
+    Route::post('/observing-list/{list}/comments', [App\Http\Controllers\ObservingListController::class, 'storeComment'])
+        ->name('observing-list.comments.store');
+    Route::delete('/observing-list/{list}/comments/{comment}', [App\Http\Controllers\ObservingListController::class, 'destroyComment'])
+        ->name('observing-list.comments.destroy');
+});
+
 Route::get('/sitemap.xml', function () {
     $xml = Cache::remember('sitemap_xml_v1', 60 * 60 * 12, function () {
         $base = rtrim(config('app.url') ?: url('/'), '/');

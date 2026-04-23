@@ -7,6 +7,7 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -646,26 +647,23 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Retrieves the list names of the user's observing lists.
+     * Retrieves the owned observing lists of this user.
      *
-     * @return Collection The collection of distinct list names.
+     * @return Collection The collection of observing lists owned by this user.
      */
     public function getObservingLists(): Collection
     {
-        // TODO: Need a pivot table here
-        // Get the distinct list names of the user's observing lists
-        return ObserverListOld::where('observerid', $this->username)->distinct('listname')->get('listname');
+        return $this->observingLists()->get();
     }
 
     /**
-     * Retrieves the list names of the user's public observing lists.
+     * Retrieves the public observing lists owned by this user.
      *
-     * @return Collection The collection of distinct list names.
+     * @return Collection The collection of public observing lists owned by this user.
      */
     public function getPublicObservingLists(): Collection
     {
-        // Get the distinct list names of the user's observing lists
-        return ObserverListOld::where('observerid', $this->username)->where('public', 1)->distinct('listname')->get('listname');
+        return $this->observingLists()->where('public', 1)->get();
     }
 
     /**
@@ -917,6 +915,45 @@ class User extends Authenticatable implements MustVerifyEmail
     public function instrumentSets(): HasMany
     {
         return $this->hasMany(related: InstrumentSet::class);
+    }
+
+    /**
+     * Get the observing lists owned by this user.
+     */
+    public function observingLists(): HasMany
+    {
+        return $this->hasMany(related: ObservingList::class, foreignKey: 'owner_user_id', localKey: 'id');
+    }
+
+    /**
+     * Get the active observing list for this user.
+     */
+    public function activeObservingList(): HasOne
+    {
+        return $this->hasOne(related: ObservingList::class, foreignKey: 'id', localKey: 'active_observing_list_id');
+    }
+
+    /**
+     * Get the observing lists subscribed to by this user.
+     */
+    public function subscribedObservingLists()
+    {
+        return $this->belongsToMany(
+            ObservingList::class,
+            'observing_list_subscriptions',
+            'user_id',
+            'observing_list_id'
+        )->withTimestamps();
+    }
+
+    /**
+     * Get all observing lists accessible to this user (owned + subscribed).
+     */
+    public function getAccessibleObservingLists()
+    {
+        return $this->observingLists()->union(
+            $this->subscribedObservingLists()
+        )->orderBy('created_at', 'desc');
     }
 
     /**

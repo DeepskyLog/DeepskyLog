@@ -61,6 +61,11 @@
                             class="text-gray-300 hover:underline">{{ __('My drawings') }}</a></li>
                 @endif
             @endif
+
+            {{-- Active observing list toggle --}}
+            @if (!empty($session->name))
+                @livewire('observing-list-toggle', ['objectName' => $session->name], key('ol-toggle-' . $session->name))
+            @endif
         @endauth
 
         @php

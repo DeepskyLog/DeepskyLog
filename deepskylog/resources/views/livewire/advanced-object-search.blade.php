@@ -191,7 +191,11 @@
                                 />
                             </div>
                         </div>
-                        <p class="mt-1 text-xs text-gray-500">{{ __('Includes your own lists and all public lists.') }}</p>
+                        @auth
+                            <p class="mt-1 text-xs text-gray-500">{{ __('Includes your own lists, subscribed lists, and all public lists.') }}</p>
+                        @else
+                            <p class="mt-1 text-xs text-gray-500">{{ __('Shows all public observing lists.') }}</p>
+                        @endauth
 
                                         @elseif($filterType === 'nameSearch')
                                             <label class="block text-xs text-gray-400 mb-1">{{ __('Object name (catalog + number)') }}</label>

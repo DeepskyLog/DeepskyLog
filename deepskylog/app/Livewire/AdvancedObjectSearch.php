@@ -69,7 +69,8 @@ class AdvancedObjectSearch extends Component
 
     // ── Observing status ───────────────────────────────────────────────────
     public string $observingStatus = 'all';
-    public array $observingStatusOptions = [
+    // All available observing status options (including user-specific ones)
+    private array $allObservingStatusOptions = [
         'all' => 'All objects, seen or not',
         'seen_any' => 'Only objects that have already been seen',
         'drawn_any' => 'Only objects that have been drawn',
@@ -154,44 +155,68 @@ class AdvancedObjectSearch extends Component
             ->mapWithKeys(fn($a) => [(string) $a->code => (string) $a->name])
             ->toArray();
 
-        // Observing lists from legacy DB: current user's lists + all public lists.
+        // Observing lists: user's owned + subscribed (if logged in) + all public lists
         try {
             $authUser = Auth::user();
-            $legacyUser = (string) ($authUser?->username ?? '');
-            $listRows = DB::connection('mysqlOld')
-                ->table('observerobjectlist')
-                ->select('observerid', 'listname', 'public')
-                ->where('listname', '<>', '')
-                ->where(function ($q) use ($legacyUser) {
-                    if ($legacyUser !== '') {
-                        $q->where('observerid', $legacyUser);
+            $userId = $authUser?->id;
+
+            // Get all accessible lists: owned, subscribed, and public
+            $ownedLists = [];
+            $subscribedLists = [];
+            $publicLists = [];
+
+            if ($userId) {
+                // User's owned lists
+                $ownedLists = DB::table('observing_lists')
+                    ->where('owner_user_id', $userId)
+                    ->orderBy('name')
+                    ->get(['id', 'name', 'public', 'owner_user_id'])
+                    ->mapWithKeys(function ($list) use ($authUser) {
+                        $displayName = html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                        $label = $displayName . ' (' . $authUser->username . ')';
+                        $key = $list->id;
+                        return [$key => $label];
+                    })
+                    ->toArray();
+
+                // User's subscribed lists
+                $subscribedLists = DB::table('observing_list_subscriptions')
+                    ->join('observing_lists', 'observing_list_subscriptions.observing_list_id', '=', 'observing_lists.id')
+                    ->join('users', 'observing_lists.owner_user_id', '=', 'users.id')
+                    ->where('observing_list_subscriptions.user_id', $userId)
+                    ->orderBy('observing_lists.name')
+                    ->get(['observing_lists.id', 'observing_lists.name', 'users.username'])
+                    ->mapWithKeys(function ($list) {
+                        $displayName = html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                        $label = $displayName . ' (' . $list->username . ')';
+                        $key = $list->id;
+                        return [$key => $label];
+                    })
+                    ->toArray();
+            }
+
+            // Public lists (always available)
+            $publicLists = DB::table('observing_lists')
+                ->join('users', 'observing_lists.owner_user_id', '=', 'users.id')
+                ->where('observing_lists.public', 1)
+                // When logged in, exclude user's own lists to avoid duplicates
+                ->where(function ($q) use ($userId) {
+                    if ($userId) {
+                        $q->where('observing_lists.owner_user_id', '<>', $userId);
                     }
-                    $q->orWhere('public', 1);
                 })
-                ->distinct()
-                ->orderBy('listname')
-                ->orderBy('observerid')
-                ->get();
-
-            $this->allObservingLists = $listRows
-                ->mapWithKeys(function ($row) use ($legacyUser) {
-                    $owner = (string) $row->observerid;
-                    $name = (string) $row->listname;
-                    $displayName = html_entity_decode($name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                    $isPublic = intval($row->public) === 1;
-                    $key = $owner . '::' . $name;
-
-                    $label = $displayName;
-                    if ($owner !== '') {
-                        $label .= ' (' . $owner . ')';
-                    }
-                    if ($isPublic && $owner !== $legacyUser) {
-                        $label .= ' - ' . __('public');
-                    }
-
+                ->orderBy('observing_lists.name')
+                ->get(['observing_lists.id', 'observing_lists.name', 'users.username'])
+                ->mapWithKeys(function ($list) {
+                    $displayName = html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                    $label = $displayName . ' (' . $list->username . ') - ' . __('public');
+                    $key = $list->id;
                     return [$key => $label];
                 })
                 ->toArray();
+
+            // Combine all lists (owned + subscribed + public)
+            $this->allObservingLists = array_merge($ownedLists, $subscribedLists, $publicLists);
         } catch (\Throwable $_) {
             $this->allObservingLists = [];
         }
@@ -236,7 +261,9 @@ class AdvancedObjectSearch extends Component
         $this->declMax = (string) ($filters['decl_max'] ?? '');
 
         $status = (string) ($filters['observing_status'] ?? 'all');
-        $this->observingStatus = array_key_exists($status, $this->observingStatusOptions) ? $status : 'all';
+        // Validate against available options (filtered based on authentication)
+        $availableOptions = $this->observingStatusOptions;
+        $this->observingStatus = array_key_exists($status, $availableOptions) ? $status : 'all';
 
         $this->observingLists = array_values(array_filter(array_map('strval', (array) ($filters['observing_lists'] ?? []))));
         $listMode = (string) ($filters['observing_lists_mode'] ?? 'in');
@@ -606,10 +633,31 @@ class AdvancedObjectSearch extends Component
             ->toArray();
     }
 
+    public function getObservingStatusOptionsProperty(): array
+    {
+        // When not logged in, only show options that don't require a user context
+        if (!Auth::check()) {
+            return array_filter(
+                $this->allObservingStatusOptions,
+                fn($key) => !in_array($key, [
+                    'seen_by_me',
+                    'drawn_by_me',
+                    'unseen_by_me',
+                    'undrawn_by_me',
+                    'seen_by_others_not_me',
+                    'drawn_by_others_not_me',
+                ]),
+                ARRAY_FILTER_USE_KEY
+            );
+        }
+        return $this->allObservingStatusOptions;
+    }
+
     public function render()
     {
         return view('livewire.advanced-object-search', [
             'savedSearches' => $this->savedSearches,
+            'observingStatusOptions' => $this->observingStatusOptions,
         ]);
     }
 }

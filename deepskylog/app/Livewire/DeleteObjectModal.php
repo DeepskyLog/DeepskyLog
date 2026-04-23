@@ -28,9 +28,8 @@ class DeleteObjectModal extends Component
     public function openModal(): void
     {
         $this->observationsCount = ObservationsOld::getObservationsCountForObject($this->objectName);
-        $this->observingListCount = DB::connection('mysqlOld')
-            ->table('observerobjectlist')
-            ->where('objectname', $this->objectName)
+        $this->observingListCount = DB::table('observing_list_items')
+            ->where('object_name', $this->objectName)
             ->count();
         $this->moveToSearch = '';
         $this->moveToSlug = '';
