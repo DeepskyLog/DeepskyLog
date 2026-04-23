@@ -5,19 +5,18 @@
 ## Next steps
 
 + [ ] Update to laravel 13.
-+ [ ] Observing lists
-  + [ ] Use new tables in old version of DeepskyLog
-+ [ ] Release new version of pyDeepskyLog
-  + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
-
-### Distant future
-
 + [ ] Observations
   + [ ] Comment on observations
   + [ ] Like observations
   + [ ] Add observations of other objects: planets, comets, lunar features, ...
   + [ ] Show detailed observation page, with all details, comments, ...
+  + [ ] Import / export observations in a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, ...
   + [ ] Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
++ [ ] Release new version of pyDeepskyLog
+  + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
+
+### Distant future
+
 + [ ] All missing pages
 
 
