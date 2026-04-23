@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ObservingList;
 use App\Models\ObservingListComment;
 use App\Models\ObservingListItem;
+use App\Models\Message;
 use App\Models\ObservationsOld;
 use App\Models\ObjectsOld;
 use App\Models\User;
@@ -16,8 +17,9 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class ObservingListController extends Controller
 {
@@ -899,6 +901,51 @@ class ObservingListController extends Controller
         ]);
 
         $list->addComment($user, $validated['body']);
+
+        // Notify the list owner via internal DeepskyLog message (skip self-comments).
+        if ((int) $list->owner_user_id !== (int) $user->id) {
+            try {
+                $list->loadMissing('owner');
+
+                $ownerUsername = $list->owner?->username;
+                if (!empty($ownerUsername)) {
+                    $subject = __('New comment on your observing list: :list', [
+                        'list' => html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                    ]);
+
+                    $commentPreview = trim(strip_tags($validated['body']));
+                    if (mb_strlen($commentPreview) > 300) {
+                        $commentPreview = mb_substr($commentPreview, 0, 300) . '...';
+                    }
+
+                    $listUrl = route('observing-list.show', ['list' => $list]);
+                    $messageHtml = '<p>' . e(__('User :user commented on your observing list ":list".', [
+                        'user' => $user->username,
+                        'list' => html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                    ])) . '</p>';
+
+                    if ($commentPreview !== '') {
+                        $messageHtml .= '<p><strong>' . e(__('Comment')) . ':</strong> ' . e($commentPreview) . '</p>';
+                    }
+
+                    $messageHtml .= '<p><a href="' . e($listUrl) . '">' . e(__('Open observing list')) . '</a></p>';
+
+                    Message::create([
+                        'sender' => $user->username ?: 'deepskylog',
+                        'receiver' => $ownerUsername,
+                        'subject' => Message::sanitizeHtml($subject),
+                        'message' => Message::sanitizeHtml($messageHtml),
+                        'date' => now(),
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                Log::warning('Failed to send observing list comment notification', [
+                    'list_id' => $list->id,
+                    'commenter_id' => $user->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
 
         return redirect()->back()->with('success', __('Comment added.'));
     }

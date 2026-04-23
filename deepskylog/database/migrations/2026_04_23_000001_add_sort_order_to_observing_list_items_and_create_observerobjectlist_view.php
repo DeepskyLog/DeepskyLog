@@ -18,53 +18,108 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        $driver = DB::getDriverName();
+
         // 1. Add sort_order column
-        Schema::table('observing_list_items', function (Blueprint $table) {
-            $table->unsignedInteger('sort_order')->default(0)->after('item_description');
-            $table->index(['observing_list_id', 'sort_order'], 'idx_list_sort');
-        });
+        if ($driver === 'sqlite') {
+            Schema::table('observing_list_items', function (Blueprint $table) {
+                $table->unsignedInteger('sort_order')->default(0);
+                $table->index(['observing_list_id', 'sort_order'], 'idx_list_sort');
+            });
+        } else {
+            Schema::table('observing_list_items', function (Blueprint $table) {
+                $table->unsignedInteger('sort_order')->default(0)->after('item_description');
+                $table->index(['observing_list_id', 'sort_order'], 'idx_list_sort');
+            });
+        }
 
         // 2. Populate sort_order based on insertion order within each list
-        DB::statement('
-            UPDATE observing_list_items oli
-            JOIN (
-                SELECT id,
-                       ROW_NUMBER() OVER (PARTITION BY observing_list_id ORDER BY id) AS rn
-                FROM observing_list_items
-            ) ranked ON oli.id = ranked.id
-            SET oli.sort_order = ranked.rn
-        ');
+        if ($driver === 'sqlite') {
+            DB::statement('
+                UPDATE observing_list_items
+                SET sort_order = (
+                    SELECT COUNT(*)
+                    FROM observing_list_items i2
+                    WHERE i2.observing_list_id = observing_list_items.observing_list_id
+                      AND i2.id <= observing_list_items.id
+                )
+            ');
+        } else {
+            DB::statement('
+                UPDATE observing_list_items oli
+                JOIN (
+                    SELECT id,
+                           ROW_NUMBER() OVER (PARTITION BY observing_list_id ORDER BY id) AS rn
+                    FROM observing_list_items
+                ) ranked ON oli.id = ranked.id
+                SET oli.sort_order = ranked.rn
+            ');
+        }
 
         // 3. Create compatibility VIEW for the legacy PHP app
-        DB::statement('
-            CREATE OR REPLACE VIEW observerobjectlist AS
-            -- List "header" rows: objectplace=0, objectname=\'\'
-            SELECT
-                u.username      AS observerid,
-                \'\'            AS objectname,
-                ol.name         AS listname,
-                0               AS objectplace,
-                \'\'            AS objectshowname,
-                COALESCE(ol.description, \'\') AS description,
-                COALESCE(DATE_FORMAT(ol.created_at, \'%Y%m%d%H%i%S\'), \'\') AS timestamp,
-                ol.public       AS public
-            FROM observing_lists ol
-            JOIN users u ON u.id = ol.owner_user_id
-            UNION ALL
-            -- Item rows: objectplace = sort_order
-            SELECT
-                u.username      AS observerid,
-                oli.object_name AS objectname,
-                ol.name         AS listname,
-                oli.sort_order  AS objectplace,
-                oli.object_name AS objectshowname,
-                COALESCE(oli.item_description, \'\') AS description,
-                COALESCE(DATE_FORMAT(oli.created_at, \'%Y%m%d%H%i%S\'), \'\') AS timestamp,
-                ol.public       AS public
-            FROM observing_list_items oli
-            JOIN observing_lists ol ON ol.id = oli.observing_list_id
-            JOIN users u ON u.id = ol.owner_user_id
-        ');
+        DB::statement('DROP VIEW IF EXISTS observerobjectlist');
+
+        if ($driver === 'sqlite') {
+            DB::statement('
+                CREATE VIEW observerobjectlist AS
+                -- List "header" rows: objectplace=0, objectname=\'\'
+                SELECT
+                    u.username      AS observerid,
+                    \'\'            AS objectname,
+                    ol.name         AS listname,
+                    0               AS objectplace,
+                    \'\'            AS objectshowname,
+                    COALESCE(ol.description, \'\') AS description,
+                    COALESCE(strftime(\'%Y%m%d%H%M%S\', ol.created_at), \'\') AS timestamp,
+                    ol.public       AS public
+                FROM observing_lists ol
+                JOIN users u ON u.id = ol.owner_user_id
+                UNION ALL
+                -- Item rows: objectplace = sort_order
+                SELECT
+                    u.username      AS observerid,
+                    oli.object_name AS objectname,
+                    ol.name         AS listname,
+                    oli.sort_order  AS objectplace,
+                    oli.object_name AS objectshowname,
+                    COALESCE(oli.item_description, \'\') AS description,
+                    COALESCE(strftime(\'%Y%m%d%H%M%S\', oli.created_at), \'\') AS timestamp,
+                    ol.public       AS public
+                FROM observing_list_items oli
+                JOIN observing_lists ol ON ol.id = oli.observing_list_id
+                JOIN users u ON u.id = ol.owner_user_id
+            ');
+        } else {
+            DB::statement('
+                CREATE OR REPLACE VIEW observerobjectlist AS
+                -- List "header" rows: objectplace=0, objectname=\'\'
+                SELECT
+                    u.username      AS observerid,
+                    \'\'            AS objectname,
+                    ol.name         AS listname,
+                    0               AS objectplace,
+                    \'\'            AS objectshowname,
+                    COALESCE(ol.description, \'\') AS description,
+                    COALESCE(DATE_FORMAT(ol.created_at, \'%Y%m%d%H%i%S\'), \'\') AS timestamp,
+                    ol.public       AS public
+                FROM observing_lists ol
+                JOIN users u ON u.id = ol.owner_user_id
+                UNION ALL
+                -- Item rows: objectplace = sort_order
+                SELECT
+                    u.username      AS observerid,
+                    oli.object_name AS objectname,
+                    ol.name         AS listname,
+                    oli.sort_order  AS objectplace,
+                    oli.object_name AS objectshowname,
+                    COALESCE(oli.item_description, \'\') AS description,
+                    COALESCE(DATE_FORMAT(oli.created_at, \'%Y%m%d%H%i%S\'), \'\') AS timestamp,
+                    ol.public       AS public
+                FROM observing_list_items oli
+                JOIN observing_lists ol ON ol.id = oli.observing_list_id
+                JOIN users u ON u.id = ol.owner_user_id
+            ');
+        }
     }
 
     /**
