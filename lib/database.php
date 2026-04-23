@@ -192,11 +192,13 @@ class Database
         global $dbname, $host, $user, $pass;
         if (!$this->databaseId) {
             $this->databaseId = new PDO(
-                'mysql:host=' . $host . ';dbname=' . $dbname . ';charset=utf8',
+                'mysql:host=' . $host . ';dbname=' . $dbname . ';charset=utf8mb4',
                 $user,
                 $pass,
                 array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
             );
+            // Ensure connection uses utf8mb4 for full Unicode (including emoji)
+            $this->databaseId->exec("SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'");
         }
         return $this->databaseId;
     }
