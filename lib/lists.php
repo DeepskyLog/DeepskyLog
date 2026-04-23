@@ -55,7 +55,7 @@ class Lists
                     $description = '(' . $temp ['firstname'] . ' ' . $temp ['name'];
                     $description .= '/' . $temp ['instrument'];
                     $description .= '/' . $temp ['location'];
-                    $description .= ') ' . $objPresentations->br2nl(htmlspecialchars($temp['description'], ENT_HTML5 | ENT_QUOTES));
+                    $description .= ') ' . $objPresentations->br2nl($temp['description']);
                     $get3 = $objDatabase->selectRecordArray("SELECT description FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $listname . "\" AND objectname=\"" . $theobject . "\"");
                     if (strpos($get3 ['description'], $description) === false) {
                         $listIdAddObs = $this->getListId($listname, $loggedUser);
