@@ -75,6 +75,11 @@ class ObservingListImportService
      */
     protected function importObservingList($legacyList, bool $dryRun): void
     {
+        // Skip lists with empty list names (they cannot generate a valid slug)
+        if (empty(trim($legacyList->listname ?? ''))) {
+            return;
+        }
+
         // Map username to user_id
         $user = User::where('username', $legacyList->observerid)->first();
 
