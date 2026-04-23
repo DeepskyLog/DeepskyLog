@@ -6,8 +6,6 @@
 
 + [ ] Update to laravel 13.
 + [ ] Observing lists
-  + [ ] What happens when not logged in?
-  + [ ] Translations
   + [ ] Use new tables in old version of DeepskyLog
 + [ ] Release new version of pyDeepskyLog
   + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
