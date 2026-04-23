@@ -32,7 +32,7 @@
                                   placeholder="{{ __('Personal note about this object on the list…') }}"
                                   class="w-full bg-gray-800 border border-gray-600 rounded-md text-gray-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y @error('item_description') border-red-500 @enderror">{{ old('item_description', $item->item_description) }}</textarea>
                         @if (!empty($longestObservationNote))
-                            <p class="text-xs text-gray-500 mt-1">{{ __('Autofill inserts the longest existing observation description for this object.') }}</p>
+                            <p class="text-xs text-gray-500 mt-1">{{ __('Autofill inserts the object description, then observer/instrument/location context, and then the longest existing observation note for this object.') }}</p>
                         @else
                             <p class="text-xs text-gray-500 mt-1">{{ __('No observation notes found for this object.') }}</p>
                         @endif

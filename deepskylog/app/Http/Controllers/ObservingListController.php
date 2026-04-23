@@ -6,6 +6,10 @@ use App\Models\ObservingList;
 use App\Models\ObservingListComment;
 use App\Models\ObservingListItem;
 use App\Models\ObservationsOld;
+use App\Models\ObjectsOld;
+use App\Models\User;
+use App\Models\Instrument;
+use App\Models\Location;
 use App\Services\ActiveObservingListService;
 use App\Services\ObservingListFileImportService;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -344,19 +348,7 @@ class ObservingListController extends Controller
             abort(404);
         }
 
-        $longestObservationNote = ObservationsOld::query()
-            ->where('objectname', $item->object_name)
-            ->whereNotNull('description')
-            ->whereRaw('TRIM(description) <> ""')
-            ->orderByRaw('CHAR_LENGTH(description) DESC')
-            ->value('description');
-
-        if ($longestObservationNote !== null) {
-            $longestObservationNote = preg_replace('/<br\s*\/?>/i', "\n", $longestObservationNote) ?? $longestObservationNote;
-            $longestObservationNote = strip_tags($longestObservationNote);
-            $longestObservationNote = html_entity_decode($longestObservationNote, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            $longestObservationNote = trim($longestObservationNote);
-        }
+        $longestObservationNote = $this->buildLongestObservationAutofillNote($item->object_name);
 
         return view('observing-lists.edit-item', [
             'list' => $list,
@@ -413,23 +405,8 @@ class ObservingListController extends Controller
 
         $filled = 0;
         foreach ($items as $item) {
-            $note = ObservationsOld::query()
-                ->where('objectname', $item->object_name)
-                ->whereNotNull('description')
-                ->whereRaw('TRIM(description) <> ""')
-                ->orderByRaw('CHAR_LENGTH(description) DESC')
-                ->value('description');
-
-            if ($note === null) {
-                continue;
-            }
-
-            $note = preg_replace('/<br\s*\/?>/i', "\n", $note) ?? $note;
-            $note = strip_tags($note);
-            $note = html_entity_decode($note, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            $note = trim($note);
-
-            if ($note === '') {
+            $note = $this->buildLongestObservationAutofillNote($item->object_name);
+            if ($note === null || $note === '') {
                 continue;
             }
 
@@ -439,6 +416,118 @@ class ObservingListController extends Controller
 
         return redirect()->route('observing-list.show', $list)
             ->with('success', __(':count note(s) filled in automatically.', ['count' => $filled]));
+    }
+
+    /**
+     * Build the autofill note from the object's description and the longest observation.
+     * Format:
+     *   [Object description]
+     *
+     *   [Observer: X | Instrument: Y | Location: Z]
+     *
+     *   [Observation note]
+     */
+    private function buildLongestObservationAutofillNote(string $objectName): ?string
+    {
+        $observation = ObservationsOld::query()
+            ->where('objectname', $objectName)
+            ->whereNotNull('description')
+            ->whereRaw('TRIM(description) <> ""')
+            ->orderByRaw('CHAR_LENGTH(description) DESC')
+            ->first(['description', 'observerid', 'instrumentid', 'locationid']);
+
+        if (!$observation) {
+            return null;
+        }
+
+        $observationNote = $this->normalizePlainText((string) $observation->description);
+        if ($observationNote === '') {
+            return null;
+        }
+
+        $objectDescription = $this->normalizePlainText(
+            (string) (ObjectsOld::query()->where('name', $objectName)->value('description') ?? '')
+        );
+
+        $observerName = $this->resolveObserverName($observation->observerid ?? null);
+        $instrumentName = $this->resolveInstrumentName($observation->instrumentid ?? null);
+        $locationName = $this->resolveLocationName($observation->locationid ?? null);
+
+        $contextLine = sprintf(
+            '[%s: %s | %s: %s | %s: %s]',
+            __('Observer'),
+            $observerName,
+            __('Instrument'),
+            $instrumentName,
+            __('Location'),
+            $locationName
+        );
+
+        $parts = [];
+        if ($objectDescription !== '') {
+            $parts[] = $objectDescription;
+        }
+        $parts[] = $contextLine;
+        $parts[] = $observationNote;
+
+        return trim(implode("\n\n", $parts));
+    }
+
+    private function normalizePlainText(string $text): string
+    {
+        $text = preg_replace('/<br\s*\/?>/i', "\n", $text) ?? $text;
+        $text = strip_tags($text);
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        return trim($text);
+    }
+
+    private function resolveObserverName(?string $observerId): string
+    {
+        $observerId = trim((string) $observerId);
+        if ($observerId === '') {
+            return __('Unknown observer');
+        }
+
+        $user = User::query()->where('username', $observerId)->first(['name']);
+
+        return $this->normalizePlainText((string) ($user?->name ?: $observerId));
+    }
+
+    private function resolveInstrumentName($instrumentId): string
+    {
+        if (empty($instrumentId)) {
+            return __('Unknown instrument');
+        }
+
+        $instrument = Instrument::query()->find($instrumentId);
+        if (!$instrument) {
+            return __('Unknown instrument');
+        }
+
+        $name = method_exists($instrument, 'fullName')
+            ? (string) $instrument->fullName()
+            : (string) ($instrument->name ?? '');
+
+        $name = $this->normalizePlainText($name);
+
+        return $name !== '' ? $name : __('Unknown instrument');
+    }
+
+    private function resolveLocationName($locationId): string
+    {
+        if (empty($locationId)) {
+            return __('Unknown location');
+        }
+
+        $location = Location::query()->find($locationId);
+        if (!$location) {
+            return __('Unknown location');
+        }
+
+        $name = $this->normalizePlainText((string) ($location->name ?? ''));
+
+        return $name !== '' ? $name : __('Unknown location');
     }
 
     /**

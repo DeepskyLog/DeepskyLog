@@ -2,24 +2,6 @@
     <div>
         <div class="mx-auto max-w-screen-xl xl:max-w-full bg-gray-900 px-6 py-6 sm:px-6 lg:px-8">
 
-            @if (session('success'))
-                <div class="mb-4 rounded-md border border-green-700 bg-green-900/40 px-4 py-3 text-sm text-green-200">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('warning'))
-                <div class="mb-4 rounded-md border border-yellow-700 bg-yellow-900/30 px-4 py-3 text-sm text-yellow-200">
-                    {{ session('warning') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="mb-4 rounded-md border border-red-700 bg-red-900/40 px-4 py-3 text-sm text-red-200">
-                    {{ session('error') }}
-                </div>
-            @endif
-
             {{-- Header --}}
             <header class="mb-6">
                 <div class="flex flex-wrap items-start gap-3">
