@@ -2886,8 +2886,16 @@ Correct observations which have been imported will not be registered for a secon
 
         echo "</tbody>";
         echo "</table>";
-
-        $objUtil->addPager("Object", $count, false);
+        $hasServerPagination = (
+            array_key_exists('QobsParams', $_SESSION)
+            && is_array($_SESSION['QobsParams'])
+            && array_key_exists('limit', $_SESSION['QobsParams'])
+            && is_numeric($_SESSION['QobsParams']['limit'])
+            && ((int)$_SESSION['QobsParams']['limit'] > 0)
+        );
+        if (!$hasServerPagination) {
+            $objUtil->addPager("Object", $count, false);
+        }
     }
 
     /**
