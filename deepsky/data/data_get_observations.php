@@ -62,6 +62,7 @@ function data_get_observations()
                    "catalog"          => $objUtil->checkGetKey('catalog'),
                    "number"           => $objUtil->checkGetKey('number'),
                    "observer"         => $objUtil->checkGetKey('observer'),
+                   "lightweight"      => 1,
                    "instrument"       => $objUtil->checkGetKey('instrument'),
                    "location"         => $objUtil->checkGetKey('site'),
                    "mindate"          => $objUtil->checkGetDate('minyear', 'minmonth', 'minday'),

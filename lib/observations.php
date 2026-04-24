@@ -1294,6 +1294,11 @@ Correct observations which have been imported will not be registered for a secon
         $object = "";
         $sqland = "";
         $alternative = "";
+        $lightweightResult = (
+            array_key_exists('lightweight', $queries)
+            && $queries['lightweight']
+            && (!array_key_exists('countquery', $queries))
+        );
         $needsObjectnamesJoin = (
             (array_key_exists('object', $queries) && ($queries['object'] != ''))
             || (
@@ -1312,7 +1317,12 @@ Correct observations which have been imported will not be registered for a secon
             // queries later (reduces N+1 DB queries when rendering lists).
             $sql1 = "SELECT "
                 . ($needsObjectnamesJoin ? "DISTINCT " : "")
-                . "observations.*, observations.id as observationid,
+                . ($lightweightResult
+                    ? "observations.id, observations.objectname,
+                    observations.date, observations.description,
+                    observations.hasDrawing, observations.language, "
+                    : "observations.*, ")
+                . "observations.id as observationid,
                     observations.objectname as objectname,
                     observations.date as observationdate,
                     observations.description as observationdescription,
@@ -2216,6 +2226,7 @@ Correct observations which have been imported will not be registered for a secon
             $queries = array(
                 "object" => $query['object']
             );
+            $queries['lightweight'] = 1;
             if (array_key_exists('catalog', $query) && ($query['catalog'] != '')) {
                 $queries['catalog'] = $query['catalog'];
             }
