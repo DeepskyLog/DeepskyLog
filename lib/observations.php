@@ -1404,10 +1404,18 @@ Correct observations which have been imported will not be registered for a secon
         } elseif (array_key_exists('catalog', $queries)
             && $queries["catalog"] && $queries['catalog'] != '%'
         ) {
-            $sqland .= "AND (objectnames.altname like \""
-                . trim(
-                    $queries["catalog"] . ' ' . $queries['number'] . '%'
-                ) . "\") ";
+            if (array_key_exists('number', $queries) && $queries['number'] !== '' && $queries['number'] !== null) {
+                // Exact match when both catalog and number are given (e.g. M 11)
+                // to avoid LIKE "M 11%" also matching M 110, M 111, etc.
+                $sqland .= "AND (objectnames.altname = \""
+                    . trim($queries["catalog"] . ' ' . $queries['number'])
+                    . "\") ";
+            } else {
+                // Only catalog given — use prefix match to allow wildcard browsing
+                $sqland .= "AND (objectnames.altname like \""
+                    . trim($queries["catalog"] . ' ' . $queries['number'] . '%')
+                    . "\") ";
+            }
         } elseif (array_key_exists('number', $queries) && $queries['number']) {
             $sqland .= "AND (objectnames.altname like \""
                 . trim($queries["number"]) . "\") ";

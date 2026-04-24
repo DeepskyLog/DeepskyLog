@@ -192,8 +192,12 @@ foreach ($result as $key=>$value) {
 
 $dataTablesObject->data = $result;
 
-
+// Store results for exports (CSV/PDF/XML/skylist).
+// Unset the view_object observation cache key so that the next visit to a
+// detail_object page always re-fetches fresh observations instead of
+// displaying these AJAX results in the session-based renderer.
 $_SESSION['Qobs'] = $result;
+unset($_SESSION['viewObjectObservations']);
 
 
 
