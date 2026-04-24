@@ -1308,11 +1308,39 @@ Correct observations which have been imported will not be registered for a secon
             )
             || (array_key_exists('number', $queries) && $queries['number'])
         );
+        $isCountQuery = array_key_exists('countquery', $queries);
         $needsLocationsJoin = (
             (isset($queries['minLat']) && (strcmp($queries['minLat'], '') != 0))
             || (isset($queries['maxLat']) && (strcmp($queries['maxLat'], '') != 0))
         );
-        if (!array_key_exists('countquery', $queries)) {
+        $needsInstrumentsJoin = (
+            !$isCountQuery
+            || (isset($queries["mindiameter"]) && $queries["mindiameter"])
+            || (isset($queries["maxdiameter"]) && $queries["maxdiameter"])
+        );
+        $needsObjectsJoin = (
+            !$isCountQuery
+            || (isset($queries["type"]) && $queries["type"])
+            || (isset($queries["con"]) && $queries["con"])
+            || (isset($queries["minmag"]) && (strcmp($queries["minmag"], "") != 0))
+            || (isset($queries["maxmag"]) && (strcmp($queries["maxmag"], "") != 0))
+            || (isset($queries["minsb"]) && (strcmp($queries["minsb"], "") != 0))
+            || (isset($queries["maxsb"]) && (strcmp($queries["maxsb"], "") != 0))
+            || (isset($queries["minra"]) && (strcmp($queries["minra"], "") != 0))
+            || (isset($queries["maxra"]) && (strcmp($queries["maxra"], "") != 0))
+            || (isset($queries["mindecl"]) && (strcmp($queries["mindecl"], "") != 0))
+            || (isset($queries["maxdecl"]) && (strcmp($queries["maxdecl"], "") != 0))
+            || (isset($queries["mindiam1"]) && (strcmp($queries["mindiam1"], "") != 0))
+            || (isset($queries["maxdiam1"]) && (strcmp($queries["maxdiam1"], "") != 0))
+            || (isset($queries["mindiam2"]) && (strcmp($queries["mindiam2"], "") != 0))
+            || (isset($queries["maxdiam2"]) && (strcmp($queries["maxdiam2"], "") != 0))
+            || (
+                isset($queries["atlas"]) && $queries["atlas"]
+                && isset($queries["atlasPageNumber"]) && $queries["atlasPageNumber"]
+            )
+        );
+        $needsObserversJoin = !$isCountQuery;
+        if (!$isCountQuery) {
             // Select the full observations row to avoid many single-column
             // queries later (reduces N+1 DB queries when rendering lists).
             $sql1 = "SELECT "
@@ -1346,16 +1374,22 @@ Correct observations which have been imported will not be registered for a secon
                 . "observations.id) as ObsCnt ";
         }
         $sql2 = $sql1;
-        $sql1 .= "FROM observations JOIN instruments on "
-            . "observations.instrumentid=instruments.id "
-            . "JOIN objects on observations.objectname=objects.name "
+        $sql1 .= "FROM observations "
+            . ($needsInstrumentsJoin
+                ? "JOIN instruments on observations.instrumentid=instruments.id "
+                : "")
+            . ($needsObjectsJoin
+                ? "JOIN objects on observations.objectname=objects.name "
+                : "")
             . ($needsLocationsJoin
                 ? "JOIN locations on observations.locationid=locations.id "
                 : "")
             . ($needsObjectnamesJoin
                 ? "JOIN objectnames on observations.objectname=objectnames.objectname "
                 : "")
-            . "JOIN observers on observations.observerid=observers.id ";
+            . ($needsObserversJoin
+                ? "JOIN observers on observations.observerid=observers.id "
+                : "");
         $sql2 .= "FROM observations "
             . "JOIN objectpartof on objectpartof.objectname=observations.objectname "
             . "JOIN instruments on observations.instrumentid=instruments.id "

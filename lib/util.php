@@ -4916,12 +4916,19 @@ class Utils
         $_GET['minmonth'] = substr($theDate, 4, 2);
         $_GET['minday'] = substr($theDate, 6, 2);
 
-        $query = array(
+        $deepskyQuery = array(
             "catalog" => '%',
-            "mindate" => $objUtil->checkGetDate('minyear', 'minmonth', 'minday')
+            "mindate" => $objUtil->checkGetDate('minyear', 'minmonth', 'minday'),
+            // RSS should only load the most recent observations.
+            "lightweight" => 1,
+            "sort" => "observationid",
+            "sortdirection" => "desc",
+            "sqlSorted" => 1,
+            "offset" => 0,
+            "limit" => 200
         );
 
-        $result = $objObservation->getObservationFromQuery($query, 'A');
+        $result = $objObservation->getObservationFromQuery($deepskyQuery, 'A');
 
         foreach ($result as $key => $value) {
             // add root - <channel> - <item>
@@ -5026,7 +5033,10 @@ class Utils
         $ICQMETHODS = new ICQMETHOD();
         $ICQREFERENCEKEYS = new ICQREFERENCEKEY();
 
-        $cometsResult = $observation->getObservationFromQuery($query);
+        $cometQuery = array(
+            "mindate" => $objUtil->checkGetDate('minyear', 'minmonth', 'minday')
+        );
+        $cometsResult = $observation->getObservationFromQuery($cometQuery);
 
         foreach ($cometsResult as $key => $value) {
             $objectname = $objCometObject->getName(
