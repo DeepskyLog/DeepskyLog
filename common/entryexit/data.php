@@ -6,8 +6,8 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else get_data();
 
 function get_data()
-{ global $includeFile,$entryMessage, 
-         $objObject,$objUtil;
+{ global $includeFile,$entryMessage,$min,
+		 $objObject,$objUtil;
   if($includeFile=='deepsky/content/top_objects.php')
 	{ $_GET['source']='top_objects';
 	  require_once 'deepsky/data/data_get_objects.php';
@@ -71,11 +71,17 @@ function get_data()
       $_SESSION['minViewObjectObjectsNearby']=0;
       $_SESSION['viewObjectObjectsNearby']=$_GET['object'];
     }
-    if((!(array_key_exists('viewObjectObservations',$_SESSION)))||($_GET['object']!=$_SESSION['viewObjectObservations']))
-    { require_once "deepsky/data/data_get_observations.php";	
-      $_SESSION['minViewObjectObservations']=0;
-      $_SESSION['viewObjectObservations']=$_GET['object'];
-    }
+		$currentObservationOffset = (isset($min) && ((int)$min > 0)) ? (int)$min : 0;
+		$cachedObservationOffset = array_key_exists('minViewObjectObservations', $_SESSION)
+				? (int)$_SESSION['minViewObjectObservations']
+				: -1;
+		if((!(array_key_exists('viewObjectObservations',$_SESSION)))
+			 ||($_GET['object']!=$_SESSION['viewObjectObservations'])
+			 ||($currentObservationOffset != $cachedObservationOffset))
+		{ require_once "deepsky/data/data_get_observations.php";	
+			$_SESSION['minViewObjectObservations']=$currentObservationOffset;
+			$_SESSION['viewObjectObservations']=$_GET['object'];
+		}
 	}
 	elseif(($includeFile=='deepsky/content/new_object.php')&&($objUtil->checkRequestKey('phase10')))
 	{ $_GET['source']="add_object10";

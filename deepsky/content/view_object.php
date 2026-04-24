@@ -445,11 +445,6 @@ function showObjectObservations()
     $link2 = $link;
     $link3 = $link;
     $content3 = '<h4>';
-    $min = 0;
-    $max = 0;
-    $pageleft = '';
-    $pageright = '';
-    $pagemax = '';
     if (count($_SESSION['Qobs']) == 0) {
         echo '<h4>'._('Sorry, no observations found!').(($objUtil->checkGetKey('myLanguages')) ? (' ('._('selected languages').')') : (' ('._('all languages').')')).'</h4>';
         if ($objUtil->checkGetKey('myLanguages')) {
@@ -513,6 +508,23 @@ function showObjectObservations()
     }
     echo $content5;
     echo $content6;
+
+    $totalObs = (int)(array_key_exists('QobsTotal', $_SESSION) ? $_SESSION['QobsTotal'] : count($_SESSION['Qobs']));
+    $pageSize = (isset($step) && ((int)$step > 0)) ? (int)$step : 25;
+    $currentOffset = (isset($min) && ((int)$min > 0)) ? (int)$min : 0;
+    $currentPage = (int)floor($currentOffset / $pageSize) + 1;
+    $totalPages = max(1, (int)ceil($totalObs / $pageSize));
+    $basePageLink = preg_replace('/&amp;multiplepagenr=[0-9]+/', '', $link2);
+    $basePageLink = preg_replace('/&amp;min=[0-9]+/', '', $basePageLink);
+    $basePageLink = preg_replace('/&amp;viewobjectobservations=[^&]+/', '', $basePageLink);
+    $basePageLink .= '&amp;viewobjectobservations=show';
+    if ($currentPage > 1) {
+        echo '&nbsp;<a class="btn btn-default" href="' . $basePageLink . '&amp;multiplepagenr=' . ($currentPage - 1) . '">' . _('Previous') . '</a>';
+    }
+    echo '&nbsp;<span class="btn btn-default disabled">' . sprintf(_('Page %d of %d (%d observations)'), $currentPage, $totalPages, $totalObs) . '</span>';
+    if ($currentPage < $totalPages) {
+        echo '&nbsp;<a class="btn btn-default" href="' . $basePageLink . '&amp;multiplepagenr=' . ($currentPage + 1) . '">' . _('Next') . '</a>';
+    }
     echo '<hr />';
 
     $objObservation->showListObservation($link, $_SESSION['lco']);
