@@ -9,7 +9,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
 }
 function instructions()
 {
-    global $baseURL, $loggedUser, $myList, $lastReadObservation, $theDate, $modules, $menuView, $menuAddChange, $menuAdmin, $menuLogin, $menuSearch, $menuDownloads, $menuMoon, $listname_ss, $listname, $entryMessage, $toastMessage, $step, $objSession, $objAccomplishments, $objEyepiece, $objFilter, $objLens, $objInstrument, $objLocation, $objMessages, $objObject, $objObserver, $objObservation, $objFormLayout, $objUtil, $objList, $instDir;
+    global $baseURL, $loggedUser, $myList, $lastReadObservation, $theDate, $modules, $menuView, $menuAddChange, $menuAdmin, $menuLogin, $menuSearch, $menuDownloads, $menuMoon, $listname_ss, $listname, $entryMessage, $toastMessage, $step, $min, $objSession, $objAccomplishments, $objEyepiece, $objFilter, $objLens, $objInstrument, $objLocation, $objMessages, $objObject, $objObserver, $objObservation, $objFormLayout, $objUtil, $objList, $instDir;
     if ($objUtil->checkGetKey('saveLayout')) {
         $objFormLayout->saveLayout($objUtil->checkGetKey('formName', 'NoFormName'), $objUtil->checkGetKey('layoutName', 'layoutName'), $objUtil->checkGetKey('restoreColumns', ''), $objUtil->checkGetKey('orderColumns', ''));
     }
