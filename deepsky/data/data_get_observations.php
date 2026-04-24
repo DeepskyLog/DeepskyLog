@@ -13,6 +13,7 @@ if((!isset($inIndex)) || (!$inIndex)) {
 
 function data_get_observations()
 {
+    global $step, $min;
     global $allLanguages,$usedLanguages,$sort,$loggedUser,$includeFile,
     $objObject,$objObserver,$objObservation,$objUtil;
     $object = '';
@@ -58,11 +59,24 @@ function data_get_observations()
         }
     }
 
+    $sortField = $objUtil->checkGetKey('sort', (array_key_exists('QobsSort', $_SESSION) ? $_SESSION['QobsSort'] : 'observationid'));
+    $sortDirection = strtolower($objUtil->checkGetKey('sortdirection', (array_key_exists('QobsSortDirection', $_SESSION) ? $_SESSION['QobsSortDirection'] : 'desc')));
+    if (($sortDirection != 'asc') && ($sortDirection != 'desc')) {
+        $sortDirection = 'desc';
+    }
+    $pageSize = (isset($step) && ((int)$step > 0)) ? (int)$step : 25;
+    $offset = (isset($min) && ((int)$min > 0)) ? (int)$min : 0;
+
     $query = array("object"           => $object,
                    "catalog"          => $objUtil->checkGetKey('catalog'),
                    "number"           => $objUtil->checkGetKey('number'),
                    "observer"         => $objUtil->checkGetKey('observer'),
                    "lightweight"      => 1,
+                   "sqlSorted"        => 1,
+                   "sort"             => $sortField,
+                   "sortdirection"    => $sortDirection,
+                   "offset"           => $offset,
+                   "limit"            => $pageSize,
                    "instrument"       => $objUtil->checkGetKey('instrument'),
                    "location"         => $objUtil->checkGetKey('site'),
                    "mindate"          => $objUtil->checkGetDate('minyear', 'minmonth', 'minday'),
@@ -146,14 +160,14 @@ function data_get_observations()
         }
     }
     if(!$validQobs) {
-        $_SESSION['Qobs'] = $objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen', 'A'), $objUtil->checkGetKey('exactinstrumentlocation', 0));
+        $exactInstrumentLocation = (bool)$objUtil->checkGetKey('exactinstrumentlocation', 0);
+        $_SESSION['Qobs'] = $objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen', 'A'), $exactInstrumentLocation);
         $_SESSION['QobsParams'] = $query;
         $_SESSION['QobsSort'] = 'observationid';
         $_SESSION['QobsSortDirection'] = 'desc';
         $query['countquery'] = 'true';
-        $_SESSION['QobsTotal'] = $objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen'), $objUtil->checkGetKey('exactinstrumentlocation', 0));
+        $_SESSION['QobsTotal'] = $objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen'), $exactInstrumentLocation);
         $_SESSION['QobsMaxCnt'] = $MaxCnt;
-        $min = 0;
         if($loggedUser && (!($objObserver->getObserverProperty($loggedUser, 'UT')))) {
             if(($mindate != "") || ($maxdate != "")) {
                 if($mindate != "") {
@@ -194,60 +208,6 @@ function data_get_observations()
         }
     }
     $_SESSION['Qobs'] = $nonempty;
-    //=========================================== CHECK TO SEE IF SORTING IS NECESSARY ===========================================
-    if(!array_key_exists('sort', $_GET)) {
-        $_GET['sort'] = $_SESSION['QobsSort'];
-        $_GET['sortdirection'] = $_SESSION['QobsSortDirection'];
-    }
-    if(!array_key_exists('sortdirection', $_GET)) {
-        $_GET['sortdirection'] = $_SESSION['QobsSortDirection'];
-    }
-    if($_SESSION['QobsSort'] != $_GET['sort']) {
-        if($_GET['sortdirection'] == 'desc') {
-            if(count($_SESSION['Qobs']) > 1) {
-                foreach ($_SESSION['Qobs'] as $key => $value) {
-                    if($_GET['sort'] == 'observationdescription') {
-                        $sortarray[strlen($value['observationdescription'])] = $value;
-                    } else {
-                        $sortarray[$value[$_GET['sort']].'_'.(99999999 - $value['observationid'])] = $value;
-                    }
-                }
-                if($_GET['sort'] == 'observationdescription') {
-                    ksort($sortarray, SORT_NUMERIC);
-                } else {
-                    uksort($sortarray, "strnatcasecmp");
-                }
-                $_SESSION['Qobs'] = array_values(array_reverse($sortarray, true));
-            }
-            $_SESSION['QobsSort'] = $_GET['sort'];
-            $_SESSION['QobsSortDirection'] = 'desc';
-            $min = 0;
-        } else {
-            if(count($_SESSION['Qobs']) > 1) {
-                foreach ($_SESSION['Qobs'] as $key => $value) {
-                    if($_GET['sort'] == 'observationdescription') {
-                        $sortarray[strlen($value['observationdescription'])] = $value;
-                    } else {
-                        $sortarray[(array_key_exists($_GET['sort'], $value) ? $value[$_GET['sort']] : '').'_'.(99999999 - $value['observationid'])] = $value;
-                    }
-                }
-                if($_GET['sort'] == 'observationdescription') {
-                    ksort($sortarray, SORT_NUMERIC);
-                } else {
-                    uksort($sortarray, "strnatcasecmp");
-                }
-                $_SESSION['Qobs'] = array_values($sortarray);
-            }
-            $_SESSION['QobsSort'] = $_GET['sort'];
-            $_SESSION['QobsSortDirection'] = 'asc';
-            $min = 0;
-        }
-    }
-    if($_SESSION['QobsSortDirection'] != $_GET['sortdirection']) {
-        if(count($_SESSION['Qobs']) > 1) {
-            $_SESSION['Qobs'] = array_reverse($_SESSION['Qobs'], true);
-        }
-        $_SESSION['QobsSortDirection'] = $_GET['sortdirection'];
-        $min = 0;
-    }
+    $_SESSION['QobsSort'] = $sortField;
+    $_SESSION['QobsSortDirection'] = $sortDirection;
 }

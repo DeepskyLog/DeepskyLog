@@ -9,7 +9,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
 }
 function selected_observations()
 {
-    global $baseURL, $FF, $loggedUser, $object, $myList, $step, $objObject, $objObservation, $objSession, $objPresentations, $objUtil;
+    global $baseURL, $FF, $loggedUser, $object, $myList, $step, $min, $objObject, $objObservation, $objSession, $objPresentations, $objUtil;
     echo '<script type="text/javascript" src="'.$baseURL.'lib/javascript/presentation.js"></script>';
     $link2 = $baseURL.'index.php?indexAction=result_selected_observations&amp;lco='.urlencode($_SESSION['lco']);
     reset($_GET);
@@ -21,8 +21,21 @@ function selected_observations()
     // for that observer. If an object/catalog+number is provided as well,
     // include those filters so both observer and object selection are applied.
     if (array_key_exists('observer', $_GET) && ($_GET['observer'] != '')) {
+        $sortField = $objUtil->checkGetKey('sort', (array_key_exists('QobsSort', $_SESSION) ? $_SESSION['QobsSort'] : 'observationid'));
+        $sortDirection = strtolower($objUtil->checkGetKey('sortdirection', (array_key_exists('QobsSortDirection', $_SESSION) ? $_SESSION['QobsSortDirection'] : 'desc')));
+        if (($sortDirection != 'asc') && ($sortDirection != 'desc')) {
+            $sortDirection = 'desc';
+        }
+        $pageSize = (isset($step) && ((int)$step > 0)) ? (int)$step : 25;
+        $offset = (isset($min) && ((int)$min > 0)) ? (int)$min : 0;
         $queries = array(
             'observer' => $objUtil->checkGetKey('observer'),
+            'lightweight' => 1,
+            'sqlSorted' => 1,
+            'sort' => $sortField,
+            'sortdirection' => $sortDirection,
+            'offset' => $offset,
+            'limit' => $pageSize,
             'hasDrawing' => $objUtil->checkGetKey('drawings', 'off'),
             'hasNoDrawing' => $objUtil->checkGetKey('nodrawings', 'off')
         );
@@ -49,39 +62,23 @@ function selected_observations()
         $_SESSION['Qobs'] = $objObservation->getObservationFromQuery(
             $queries,
             $objUtil->checkGetKey('seen', 'A'),
-            $objUtil->checkGetKey('exactinstrumentlocation', 0)
+            (bool)$objUtil->checkGetKey('exactinstrumentlocation', 0)
         );
-        // If drawings filter requested, ensure only observations with a drawing remain
-        if ($objUtil->checkGetKey('drawings', 'off') == 'on') {
-            $filtered = array();
-            foreach ((array) $_SESSION['Qobs'] as $qo) {
-                $has = (isset($qo['hasDrawing']) ? $qo['hasDrawing'] : $objObservation->getDsObservationProperty($qo['observationid'], 'hasDrawing'));
-                if ($has) {
-                    $filtered[] = $qo;
-                }
-            }
-            $_SESSION['Qobs'] = $filtered;
-            // adjust total count as well
-            $_SESSION['QobsTotal'] = count($_SESSION['Qobs']);
-        }
+        $_SESSION['QobsSort'] = $sortField;
+        $_SESSION['QobsSortDirection'] = $sortDirection;
+        $countQueries = $queries;
+        $countQueries['countquery'] = 'true';
+        $_SESSION['QobsTotal'] = $objObservation->getObservationFromQuery(
+            $countQueries,
+            $objUtil->checkGetKey('seen', 'A'),
+            (bool)$objUtil->checkGetKey('exactinstrumentlocation', 0)
+        );
         
     }
     // If a full query was submitted (from object links), run the query builder
     // to populate $_SESSION['Qobs'] (this honors the drawings filter).
     if (array_key_exists('query', $_GET) && ($_GET['query'] != '')) {
         include_once __DIR__ . '/../data/data_get_observations.php';
-        // If drawings filter requested for a full query, ensure only observations with drawings remain
-        if ($objUtil->checkGetKey('drawings', 'off') == 'on' && array_key_exists('Qobs', $_SESSION)) {
-            $filtered = array();
-            foreach ((array) $_SESSION['Qobs'] as $qo) {
-                $has = (isset($qo['hasDrawing']) ? $qo['hasDrawing'] : $objObservation->getDsObservationProperty($qo['observationid'], 'hasDrawing'));
-                if ($has) {
-                    $filtered[] = $qo;
-                }
-            }
-            $_SESSION['Qobs'] = $filtered;
-            $_SESSION['QobsTotal'] = count($_SESSION['Qobs']);
-        }
     }
     foreach ($_GET as $key => $value) {
         if (!in_array($key, [
@@ -205,6 +202,20 @@ function selected_observations()
         }
         echo $content5;
         echo $content6;
+
+        $totalObs = (int)(array_key_exists('QobsTotal', $_SESSION) ? $_SESSION['QobsTotal'] : count($_SESSION['Qobs']));
+        $pageSize = (isset($step) && ((int)$step > 0)) ? (int)$step : 25;
+        $currentPage = (int)floor(((isset($min) ? (int)$min : 0) / $pageSize)) + 1;
+        $totalPages = max(1, (int)ceil($totalObs / $pageSize));
+        $basePageLink = preg_replace('/&amp;multiplepagenr=[0-9]+/', '', $link2);
+        $basePageLink = preg_replace('/&amp;min=[0-9]+/', '', $basePageLink);
+        if ($currentPage > 1) {
+            echo '&nbsp;<a class="btn btn-default" href="' . $basePageLink . '&amp;multiplepagenr=' . ($currentPage - 1) . '">' . _('Previous') . '</a>';
+        }
+        echo '&nbsp;<span class="btn btn-default disabled">' . sprintf(_('Page %d of %d (%d observations)'), $currentPage, $totalPages, $totalObs) . '</span>';
+        if ($currentPage < $totalPages) {
+            echo '&nbsp;<a class="btn btn-default" href="' . $basePageLink . '&amp;multiplepagenr=' . ($currentPage + 1) . '">' . _('Next') . '</a>';
+        }
         echo '<hr />';
 
         $objObservation->showListObservation($link, $_SESSION['lco']);

@@ -1658,7 +1658,40 @@ Correct observations which have been imported will not be registered for a secon
         }
         $sql .= ")";
         if (!array_key_exists('countquery', $queries)) {
-            $sql .= " ORDER BY observationid DESC";
+            $sortMap = array(
+                'observationid' => 'observationid',
+                'observationdate' => 'observationdate',
+                'objectname' => 'objectname',
+                'observername' => 'observername',
+                'instrumentname' => 'instrumentname',
+                'observationdescription' => 'observationdescription'
+            );
+            $sortField = 'observationid';
+            if (array_key_exists('sort', $queries)
+                && array_key_exists($queries['sort'], $sortMap)
+            ) {
+                $sortField = $sortMap[$queries['sort']];
+            }
+            $sortDirection = 'DESC';
+            if (array_key_exists('sortdirection', $queries)
+                && (strtolower($queries['sortdirection']) == 'asc')
+            ) {
+                $sortDirection = 'ASC';
+            }
+            $sql .= " ORDER BY " . $sortField . " " . $sortDirection;
+            if (array_key_exists('limit', $queries)
+                && is_numeric($queries['limit'])
+                && ((int)$queries['limit'] > 0)
+            ) {
+                $offset = 0;
+                if (array_key_exists('offset', $queries)
+                    && is_numeric($queries['offset'])
+                    && ((int)$queries['offset'] > 0)
+                ) {
+                    $offset = (int)$queries['offset'];
+                }
+                $sql .= " LIMIT " . $offset . ", " . (int)$queries['limit'];
+            }
         }
         $sql = $sql . ";";
         
