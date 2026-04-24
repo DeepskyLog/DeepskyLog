@@ -250,16 +250,60 @@ class DatabaseMux
             return ['db' => 'old', 'sql' => $cntSql];
         }
 
+        // Extract LIMIT and ORDER BY from original SQL to preserve pagination
+        $orderByMatch = null;
+        $limitMatch = null;
+        preg_match('/ORDER\s+BY\s+([^;\n]+?)(?:\s+LIMIT\s+|$)/i', $sql, $orderByMatch);
+        preg_match('/LIMIT\s+([^;\n]+?)(?:;|$)/i', $sql, $limitMatch);
+        
+        $orderByClause = '';
+        if (!empty($orderByMatch[1])) {
+            // Ensure ORDER BY references are simple (observationid, observationdate, etc.)
+            // to avoid joining unmigrated objects table
+            $orderBy = trim($orderByMatch[1]);
+            // Whitelist safe ORDER BY fields that exist in observations table
+            if (preg_match('/^(observationid|observations\.id|observationdate|observations\.date|objectname|observations\.objectname)\s*(ASC|DESC)?$/i', $orderBy)) {
+                // Normalize field references
+                $orderBy = preg_replace('/observations\./', '', $orderBy);
+                $orderByClause = ' ORDER BY ' . $orderBy;
+            } else {
+                // Default to observationid DESC if original ORDER BY references migrated columns
+                $orderByClause = ' ORDER BY observationid DESC';
+            }
+        } else {
+            $orderByClause = ' ORDER BY observationid DESC';
+        }
+        
+        $limitClause = '';
+        if (!empty($limitMatch[1])) {
+            $limitClause = ' LIMIT ' . trim($limitMatch[1]);
+        }
+
         // Build a minimal, safe SELECT that legacy pages expect. Rather than
         // surgically editing complex UNIONed/parenthesized SQL, return a
         // compact query selecting the known columns (with NULLs where the
         // migrated `objects` columns would have appeared) and filter by the
         // resolved base names. This is robust and avoids producing malformed
         // SQL for many legacy query shapes.
+        
+        // OPTIMIZATION: Apply LIMIT in a subquery BEFORE expensive JOINs
+        // to reduce the intermediate result set size
         $selectSql = <<<'SQL'
     SELECT DISTINCT observations.id as observationid, observations.objectname as objectname, observations.date as observationdate, observations.description as observationdescription, observers.id as observerid, CONCAT(observers.firstname , ' ' , observers.name) as observername, CONCAT(observers.name , ' ' , observers.firstname) as observersortname, NULL as objectconstellation, NULL as objecttype, NULL as objectmagnitude, NULL as objectsurfacebrigthness, instruments.id as instrumentid, instruments.name as instrumentname, instruments.diameter as instrumentdiameter, CONCAT(10000+instruments.diameter,' mm ',instruments.name) as instrumentsort FROM observations JOIN instruments on observations.instrumentid=instruments.id JOIN locations on observations.locationid=locations.id JOIN observers on observations.observerid=observers.id WHERE observations.id> 0 AND observations.objectname IN
     SQL;
-        $selectSql .= ' ' . $inClause . ' ORDER BY observationid DESC';
+        
+        if ($limitClause) {
+            // TWO-STAGE OPTIMIZATION: Get limited IDs first, then JOIN full data
+            $idSubquery = "SELECT observations.id FROM observations WHERE observations.id> 0 AND observations.objectname IN " . $inClause . $orderByClause . $limitClause;
+            $selectSql = <<<'SQL'
+    SELECT DISTINCT observations.id as observationid, observations.objectname as objectname, observations.date as observationdate, observations.description as observationdescription, observers.id as observerid, CONCAT(observers.firstname , ' ' , observers.name) as observername, CONCAT(observers.name , ' ' , observers.firstname) as observersortname, NULL as objectconstellation, NULL as objecttype, NULL as objectmagnitude, NULL as objectsurfacebrigthness, instruments.id as instrumentid, instruments.name as instrumentname, instruments.diameter as instrumentdiameter, CONCAT(10000+instruments.diameter,' mm ',instruments.name) as instrumentsort FROM observations INNER JOIN (%s) as limited_obs ON observations.id = limited_obs.id JOIN instruments on observations.instrumentid=instruments.id JOIN locations on observations.locationid=locations.id JOIN observers on observations.observerid=observers.id
+    SQL;
+            $selectSql = sprintf($selectSql, $idSubquery);
+        } else {
+            // Single-pass query without pagination
+            $selectSql .= ' ' . $inClause . $orderByClause;
+        }
+        
         return ['db' => 'old', 'sql' => $selectSql];
 
         // remove JOIN objectnames and JOIN objects occurrences (stop before WHERE/JOIN/ORDER/GROUP/LIMIT/UNION)
