@@ -1294,10 +1294,25 @@ Correct observations which have been imported will not be registered for a secon
         $object = "";
         $sqland = "";
         $alternative = "";
+        $needsObjectnamesJoin = (
+            (array_key_exists('object', $queries) && ($queries['object'] != ''))
+            || (
+                array_key_exists('catalog', $queries)
+                && $queries['catalog']
+                && $queries['catalog'] != '%'
+            )
+            || (array_key_exists('number', $queries) && $queries['number'])
+        );
+        $needsLocationsJoin = (
+            (isset($queries['minLat']) && (strcmp($queries['minLat'], '') != 0))
+            || (isset($queries['maxLat']) && (strcmp($queries['maxLat'], '') != 0))
+        );
         if (!array_key_exists('countquery', $queries)) {
             // Select the full observations row to avoid many single-column
             // queries later (reduces N+1 DB queries when rendering lists).
-            $sql1 = "SELECT DISTINCT observations.*, observations.id as observationid,
+            $sql1 = "SELECT "
+                . ($needsObjectnamesJoin ? "DISTINCT " : "")
+                . "observations.*, observations.id as observationid,
                     observations.objectname as objectname,
                     observations.date as observationdate,
                     observations.description as observationdescription,
@@ -1316,14 +1331,20 @@ Correct observations which have been imported will not be registered for a secon
                 CONCAT(10000+instruments.diameter,' mm ',instruments.name)
                     as instrumentsort ";
         } else {
-            $sql1 = "SELECT count(DISTINCT observations.id) as ObsCnt ";
+            $sql1 = "SELECT count("
+                . ($needsObjectnamesJoin ? "DISTINCT " : "")
+                . "observations.id) as ObsCnt ";
         }
         $sql2 = $sql1;
         $sql1 .= "FROM observations JOIN instruments on "
             . "observations.instrumentid=instruments.id "
             . "JOIN objects on observations.objectname=objects.name "
-            . "JOIN locations on observations.locationid=locations.id "
-            . "JOIN objectnames on observations.objectname=objectnames.objectname "
+            . ($needsLocationsJoin
+                ? "JOIN locations on observations.locationid=locations.id "
+                : "")
+            . ($needsObjectnamesJoin
+                ? "JOIN objectnames on observations.objectname=objectnames.objectname "
+                : "")
             . "JOIN observers on observations.observerid=observers.id ";
         $sql2 .= "FROM observations "
             . "JOIN objectpartof on objectpartof.objectname=observations.objectname "
