@@ -5165,10 +5165,17 @@ class Utils
                         return 'deepsky/content/view_object.php';
                     }
                 } else {
-                    $_GET ['object'] = ucwords(trim($_GET['object']));
                     if (array_key_exists('searchObservationsQuickPick', $_GET)) {
-                        return 'deepsky/content/selected_observations.php';
-                    } elseif (array_key_exists('newObservationQuickPick', $_GET)) {
+                        // Object is not registered in the DSO catalog but may
+                        // have observations stored by raw name (e.g. a newly
+                        // discovered supernova). Route to the DataTables view
+                        // which queries observations.objectname directly,
+                        // without requiring an objectnames JOIN.
+                        // Preserve original case so the SQL match succeeds.
+                        return 'lib/observations_new.php';
+                    }
+                    $_GET ['object'] = ucwords(trim($_GET['object']));
+                    if (array_key_exists('newObservationQuickPick', $_GET)) {
                         return 'deepsky/content/setup_objects_query.php';
                     } else {
                         return 'deepsky/content/setup_objects_query.php';
