@@ -2370,33 +2370,9 @@ Correct observations which have been imported will not be registered for a secon
             . "element.js?cb=googleSectionalElementInit&ug=section&hl="
             . $usedLang . "\"></script>";
 
-        $parsed = parse_url(htmlspecialchars_decode($link), PHP_URL_QUERY);
-        parse_str($parsed, $query);
-
-        if (array_key_exists('object', $query)) {
-            // Build query preserving object and optional related filters.
-            // Prefer the current request's observer (from $_GET) to avoid losing
-            // the observer filter when links include only the object.
-            $queries = array(
-                "object" => $query['object']
-            );
-            $queries['lightweight'] = 1;
-            if (array_key_exists('catalog', $query) && ($query['catalog'] != '')) {
-                $queries['catalog'] = $query['catalog'];
-            }
-            if (array_key_exists('number', $query) && ($query['number'] != '')) {
-                $queries['number'] = $query['number'];
-            }
-            // prefer explicit current GET observer, fallback to parsed query observer
-            if (array_key_exists('observer', $_GET) && ($_GET['observer'] != '')) {
-                $queries['observer'] = $objUtil->checkGetKey('observer');
-            } elseif (array_key_exists('observer', $query) && ($query['observer'] != '')) {
-                $queries['observer'] = $query['observer'];
-            }
-            $seenpar = (array_key_exists('seen', $_GET) && ($_GET['seen'] != '')) ? $_GET['seen'] : ((array_key_exists('seen', $query) && ($query['seen'] != '')) ? $query['seen'] : 'A');
-            $exact = (array_key_exists('exactinstrumentlocation', $_GET) && ($_GET['exactinstrumentlocation'] != '')) ? $_GET['exactinstrumentlocation'] : ((array_key_exists('exactinstrumentlocation', $query) && ($query['exactinstrumentlocation'] != '')) ? $query['exactinstrumentlocation'] : 0);
-            $_SESSION['Qobs'] = $objObservation->getObservationFromQuery($queries, $seenpar, $exact);
-        }
+        // Rendering should not mutate query results prepared by the data layer.
+        // Re-querying here can desync visible rows from QobsTotal and cause
+        // empty tables while the page header still shows matching counts.
         echo "<table class=\"table sort-tableObject tablesorter custom-popup\">";
         echo "<thead>";
         echo "<tr>";

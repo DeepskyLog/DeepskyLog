@@ -198,16 +198,9 @@ function data_get_observations()
             }
         }
     }
-    //=========================================== REMOVE EMPTY OBSERVATIONS OF OTHER USERS =======================================
-    $nonempty = array();
-    if(count($_SESSION['Qobs']) > 0) {
-        foreach ($_SESSION['Qobs'] as $key => $value) {
-            if((strlen(trim($value['observationdescription'])) > 0) || ($loggedUser && ($value['observerid'] == $loggedUser))) {
-                $nonempty[] = $value;
-            }
-        }
-    }
-    $_SESSION['Qobs'] = $nonempty;
+    // Keep the fetched rows aligned with the SQL count query.
+    // Filtering empty descriptions here caused "Page x of y (n observations)"
+    // to disagree with the visible table rows for object links.
     $_SESSION['QobsSort'] = $sortField;
     $_SESSION['QobsSortDirection'] = $sortDirection;
 }
