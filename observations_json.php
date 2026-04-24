@@ -115,7 +115,7 @@ $query = "SELECT
                 ELSE ' ' END AS constellation
             FROM observations
             JOIN observers ON observations.observerid = observers.id
-            JOIN objects ON observations.objectname = objects.name
+            LEFT JOIN objects ON observations.objectname = objects.name
             JOIN instruments ON observations.instrumentid = instruments.id
             JOIN locations ON observations.locationid = locations.id
             JOIN lenses ON observations.lensid = lenses.id

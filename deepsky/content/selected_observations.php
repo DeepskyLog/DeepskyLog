@@ -64,6 +64,7 @@ function selected_observations()
             $objUtil->checkGetKey('seen', 'A'),
             (bool)$objUtil->checkGetKey('exactinstrumentlocation', 0)
         );
+        $_SESSION['QobsParams'] = $queries;
         $_SESSION['QobsSort'] = $sortField;
         $_SESSION['QobsSortDirection'] = $sortDirection;
         $countQueries = $queries;
