@@ -159,14 +159,12 @@ function data_get_observations()
             }
         }
     }
+    $exactInstrumentLocation = (bool)$objUtil->checkGetKey('exactinstrumentlocation', 0);
     if(!$validQobs) {
-        $exactInstrumentLocation = (bool)$objUtil->checkGetKey('exactinstrumentlocation', 0);
         $_SESSION['Qobs'] = $objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen', 'A'), $exactInstrumentLocation);
         $_SESSION['QobsParams'] = $query;
         $_SESSION['QobsSort'] = 'observationid';
         $_SESSION['QobsSortDirection'] = 'desc';
-        $query['countquery'] = 'true';
-        $_SESSION['QobsTotal'] = $objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen'), $exactInstrumentLocation);
         $_SESSION['QobsMaxCnt'] = $MaxCnt;
         if($loggedUser && (!($objObserver->getObserverProperty($loggedUser, 'UT')))) {
             if(($mindate != "") || ($maxdate != "")) {
@@ -198,6 +196,15 @@ function data_get_observations()
             }
         }
     }
+    // Always recalculate total count for the current query to avoid stale
+    // count/list mismatches when cached rows are reused.
+    $countQuery = $query;
+    $countQuery['countquery'] = 'true';
+    $_SESSION['QobsTotal'] = $objObservation->getObservationFromQuery(
+        $countQuery,
+        $objUtil->checkGetKey('seen', 'A'),
+        $exactInstrumentLocation
+    );
     // Keep the fetched rows aligned with the SQL count query.
     // Filtering empty descriptions here caused "Page x of y (n observations)"
     // to disagree with the visible table rows for object links.

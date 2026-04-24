@@ -1665,9 +1665,7 @@ Correct observations which have been imported will not be registered for a secon
         ) {
             $sqland .= "AND observations.id> " . $queries["minobservation"] . " ";
         }
-        if ((!array_key_exists('countquery', $queries))
-            && (isset($queries["languages"]))
-        ) {
+        if (isset($queries["languages"])) {
             $extra2 = "";
             for ($i = 0; $i < count($queries["languages"]); $i++) {
                 $extra2 .= "OR observations.language=\""
