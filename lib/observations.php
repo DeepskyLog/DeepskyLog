@@ -1678,11 +1678,21 @@ Correct observations which have been imported will not be registered for a secon
             ) {
                 $sortDirection = 'ASC';
             }
-            $sql .= " ORDER BY " . $sortField . " " . $sortDirection;
-            if (array_key_exists('limit', $queries)
+            
+            // Check if we can use two-stage query optimization
+            // (apply LIMIT before expensive JOINs by using a subquery)
+            $canUseTwoStageQuery = array_key_exists('limit', $queries)
                 && is_numeric($queries['limit'])
                 && ((int)$queries['limit'] > 0)
-            ) {
+                && (
+                    $sortField === 'observationid'
+                    || $sortField === 'observationdate'
+                    || $sortField === 'objectname'
+                );
+            
+            if ($canUseTwoStageQuery) {
+                // TWO-STAGE QUERY: Get limited observation IDs first, then JOIN full data
+                // This prevents MySQL from assembling all JOINs before applying LIMIT
                 $offset = 0;
                 if (array_key_exists('offset', $queries)
                     && is_numeric($queries['offset'])
@@ -1690,7 +1700,75 @@ Correct observations which have been imported will not be registered for a secon
                 ) {
                     $offset = (int)$queries['offset'];
                 }
-                $sql .= " LIMIT " . $offset . ", " . (int)$queries['limit'];
+                $limit = (int)$queries['limit'];
+                
+                // STAGE 1: Get IDs with pagination applied
+                $idSubquery = "SELECT observations.id FROM observations";
+                if ($needsObjectnamesJoin) {
+                    $idSubquery .= " JOIN objectnames on "
+                        . "observations.objectname=objectnames.objectname ";
+                }
+                $idSubquery .= " WHERE 1=1 ";
+                if ($sqland) {
+                    $idSubquery .= substr($sqland, 3); // Remove leading "AND"
+                }
+                $idSubquery .= " ORDER BY observations." . $sortField . " " . $sortDirection;
+                $idSubquery .= " LIMIT " . $offset . ", " . $limit;
+                
+                // STAGE 2: Get full display data for those IDs, with additional filtering
+                // Build the full query but join against the subquery instead
+                $sql = "SELECT "
+                    . ($lightweightResult
+                        ? "observations.id, observations.objectname,
+                        observations.date, observations.description,
+                        observations.hasDrawing, observations.language, "
+                        : "observations.*, ")
+                    . "observations.id as observationid,
+                        observations.objectname as objectname,
+                        observations.date as observationdate,
+                        observations.description as observationdescription,
+                        observers.id as observerid,
+                        CONCAT(observers.firstname , ' ' , observers.name)
+                        as observername,
+                        CONCAT(observers.name , ' ' , observers.firstname)
+                        as observersortname,
+                        objects.con as objectconstellation,
+                        objects.type as objecttype,
+                        objects.mag as objectmagnitude,
+                        objects.subr as objectsurfacebrigthness,
+                        instruments.id as instrumentid,
+                        instruments.name as instrumentname,
+                        instruments.diameter as instrumentdiameter,
+                    CONCAT(10000+instruments.diameter,' mm ',instruments.name)
+                        as instrumentsort "
+                    . "FROM observations "
+                    . "INNER JOIN (" . $idSubquery . ") as limited_obs "
+                    . "ON observations.id = limited_obs.id "
+                    . "JOIN instruments on observations.instrumentid=instruments.id "
+                    . "JOIN objects on observations.objectname=objects.name "
+                    . ($needsLocationsJoin
+                        ? "JOIN locations on observations.locationid=locations.id "
+                        : "")
+                    . "JOIN observers on observations.observerid=observers.id ";
+                
+                // No ORDER BY or LIMIT here - already applied in subquery
+            } else {
+                // SINGLE-PASS QUERY (original behavior for complex sort fields)
+                // Used when sorting by joined table columns or when no LIMIT
+                $sql .= " ORDER BY " . $sortField . " " . $sortDirection;
+                if (array_key_exists('limit', $queries)
+                    && is_numeric($queries['limit'])
+                    && ((int)$queries['limit'] > 0)
+                ) {
+                    $offset = 0;
+                    if (array_key_exists('offset', $queries)
+                        && is_numeric($queries['offset'])
+                        && ((int)$queries['offset'] > 0)
+                    ) {
+                        $offset = (int)$queries['offset'];
+                    }
+                    $sql .= " LIMIT " . $offset . ", " . (int)$queries['limit'];
+                }
             }
         }
         $sql = $sql . ";";
