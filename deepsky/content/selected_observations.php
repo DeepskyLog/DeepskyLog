@@ -132,19 +132,6 @@ function selected_observations()
         }
         echo '<p>'.'<a href="'.$baseURL.'index.php?indexAction=query_observations">'._('Set up a detailed search.').'</a>'.'</p>';
     } else { // =============================================================================================== START OBSERVATION PAGE OUTPUT =====================================================================================
-        // If an observer GET parameter was provided, filter the fetched
-        // observations to only include that observer (by id or name).
-        if (array_key_exists('observer', $_GET) && ($_GET['observer'] != '') && array_key_exists('Qobs', $_SESSION) && count($_SESSION['Qobs']) > 0) {
-            $requestedObserver = $objUtil->checkGetKey('observer');
-            $filtered = array();
-            foreach ($_SESSION['Qobs'] as $qo) {
-                if ((isset($qo['observerid']) && ($qo['observerid'] == $requestedObserver))
-                    || (isset($qo['observername']) && (stripos($qo['observername'], $requestedObserver) !== false))) {
-                    $filtered[] = $qo;
-                }
-            }
-            $_SESSION['Qobs'] = $filtered;
-        }
         echo '<div id="main">';
         $theDate = date('Ymd', strtotime('-1 year'));
         $content1 = '<h4>';

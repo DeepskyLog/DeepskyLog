@@ -1735,6 +1735,14 @@ Correct observations which have been imported will not be registered for a secon
                     $offset = (int)$queries['offset'];
                 }
                 $limit = (int)$queries['limit'];
+                $subquerySortMap = array(
+                    'observationid' => 'id',
+                    'observationdate' => 'date',
+                    'objectname' => 'objectname'
+                );
+                $subquerySortField = array_key_exists($sortField, $subquerySortMap)
+                    ? $subquerySortMap[$sortField]
+                    : 'id';
                 
                 // STAGE 1: Get IDs with pagination applied
                 $idSubquery = "SELECT observations.id FROM observations";
@@ -1746,7 +1754,7 @@ Correct observations which have been imported will not be registered for a secon
                 if ($sqland) {
                     $idSubquery .= substr($sqland, 3); // Remove leading "AND"
                 }
-                $idSubquery .= " ORDER BY observations." . $sortField . " " . $sortDirection;
+                $idSubquery .= " ORDER BY observations." . $subquerySortField . " " . $sortDirection;
                 $idSubquery .= " LIMIT " . $offset . ", " . $limit;
                 
                 // STAGE 2: Get full display data for those IDs, with additional filtering
