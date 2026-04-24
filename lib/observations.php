@@ -1718,6 +1718,7 @@ Correct observations which have been imported will not be registered for a secon
             $canUseTwoStageQuery = array_key_exists('limit', $queries)
                 && is_numeric($queries['limit'])
                 && ((int)$queries['limit'] > 0)
+                && !$needsObjectnamesJoin
                 && (
                     $sortField === 'observationid'
                     || $sortField === 'observationdate'

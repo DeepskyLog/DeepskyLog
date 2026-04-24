@@ -265,13 +265,16 @@ class DatabaseMux
             if (preg_match('/^(observationid|observations\.id|observationdate|observations\.date|objectname|observations\.objectname)\s*(ASC|DESC)?$/i', $orderBy)) {
                 // Normalize field references
                 $orderBy = preg_replace('/observations\./', '', $orderBy);
+                // Map presentation aliases to physical observations columns.
+                $orderBy = preg_replace('/^observationid\b/i', 'id', $orderBy);
+                $orderBy = preg_replace('/^observationdate\b/i', 'date', $orderBy);
                 $orderByClause = ' ORDER BY ' . $orderBy;
             } else {
                 // Default to observationid DESC if original ORDER BY references migrated columns
-                $orderByClause = ' ORDER BY observationid DESC';
+                $orderByClause = ' ORDER BY id DESC';
             }
         } else {
-            $orderByClause = ' ORDER BY observationid DESC';
+            $orderByClause = ' ORDER BY id DESC';
         }
         
         $limitClause = '';
