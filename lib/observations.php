@@ -1752,7 +1752,7 @@ Correct observations which have been imported will not be registered for a secon
                 }
                 $idSubquery .= " WHERE 1=1 ";
                 if ($sqland) {
-                    $idSubquery .= substr($sqland, 3); // Remove leading "AND"
+                    $idSubquery .= $sqland;
                 }
                 $idSubquery .= " ORDER BY observations." . $subquerySortField . " " . $sortDirection;
                 $idSubquery .= " LIMIT " . $offset . ", " . $limit;
