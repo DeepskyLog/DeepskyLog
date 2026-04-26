@@ -1853,6 +1853,48 @@ Correct observations which have been imported will not be registered for a secon
                     $j++;
                 }
             }
+            // For observations whose object is only in the new DB (LEFT JOIN
+            // produced NULL for objects.* columns), do a batch lookup on the
+            // new DB to fill in constellation, type, magnitude, and surface
+            // brightness so they are displayed correctly.
+            $nullObjectRows = array();
+            foreach ($result as $idx => $row) {
+                if ((!isset($row['objectconstellation']) || $row['objectconstellation'] === null)
+                    && isset($row['objectname']) && $row['objectname'] !== ''
+                ) {
+                    $nullObjectRows[$idx] = $row['objectname'];
+                }
+            }
+            if (!empty($nullObjectRows)) {
+                global $objDatabase_new;
+                $uniqueNames = array_unique(array_values($nullObjectRows));
+                $escapedNames = array_map(function($n) {
+                    return "'" . str_replace("'", "''", $n) . "'";
+                }, $uniqueNames);
+                $inClause = '(' . implode(',', $escapedNames) . ')';
+                try {
+                    $objRows = $objDatabase_new->selectRecordsetArray(
+                        'SELECT name, con, type, mag, subr FROM objects WHERE name IN ' . $inClause
+                    );
+                    $objMap = array();
+                    foreach ($objRows as $objRow) {
+                        $n = is_array($objRow) ? $objRow['name'] : $objRow->name;
+                        $objMap[$n] = $objRow;
+                    }
+                    foreach ($nullObjectRows as $idx => $objectname) {
+                        if (isset($objMap[$objectname])) {
+                            $o = $objMap[$objectname];
+                            $result[$idx]['objectconstellation'] = is_array($o) ? $o['con'] : $o->con;
+                            $result[$idx]['objecttype']          = is_array($o) ? $o['type'] : $o->type;
+                            $result[$idx]['objectmagnitude']     = is_array($o) ? $o['mag'] : $o->mag;
+                            $result[$idx]['objectsurfacebrigthness'] = is_array($o) ? $o['subr'] : $o->subr;
+                        }
+                    }
+                } catch (Exception $e) {
+                    // non-fatal: constellation stays NULL for these objects
+                    error_log('observations.php: new-DB object lookup failed: ' . $e->getMessage());
+                }
+            }
             return $result;
         } else {
             $get = $run->fetch(PDO::FETCH_OBJ);
