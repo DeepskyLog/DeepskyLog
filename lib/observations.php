@@ -1379,7 +1379,7 @@ Correct observations which have been imported will not be registered for a secon
                 ? "JOIN instruments on observations.instrumentid=instruments.id "
                 : "")
             . ($needsObjectsJoin
-                ? "JOIN objects on observations.objectname=objects.name "
+                ? "LEFT JOIN objects on observations.objectname=objects.name "
                 : "")
             . ($needsLocationsJoin
                 ? "JOIN locations on observations.locationid=locations.id "
@@ -1794,7 +1794,7 @@ Correct observations which have been imported will not be registered for a secon
                     . "INNER JOIN (" . $idSubquery . ") as limited_obs "
                     . "ON observations.id = limited_obs.id "
                     . "JOIN instruments on observations.instrumentid=instruments.id "
-                    . "JOIN objects on observations.objectname=objects.name "
+                    . "LEFT JOIN objects on observations.objectname=objects.name "
                     . ($needsLocationsJoin
                         ? "JOIN locations on observations.locationid=locations.id "
                         : "")
