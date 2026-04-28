@@ -15,16 +15,11 @@ class SketchOfTheWeek extends Model
     protected $table = 'sketch_of_the_week';
 
     /**
-     * Establishes a relationship between the SketchOfTheWeek model and the ObservationsOld model.
-     *
-     * This method defines a one-to-one relationship between the SketchOfTheWeek model and the ObservationsOld model.
-     * The relationship is established based on the 'observation_id' attribute of the SketchOfTheWeek model and the 'id' attribute of the ObservationsOld model.
-     *
-     * @return HasOne The relationship between the SketchOfTheWeek model and the ObservationsOld model.
+     * Sketch links to the unified observations table using observations.id.
      */
     public function observation(): HasOne
     {
-        return $this->hasOne(related: ObservationsOld::class, foreignKey: 'id', localKey: 'observation_id');
+        return $this->hasOne(related: Observation::class, foreignKey: 'id', localKey: 'observation_id');
     }
 
     /**

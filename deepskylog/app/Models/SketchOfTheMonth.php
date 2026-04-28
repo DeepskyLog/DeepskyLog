@@ -15,20 +15,11 @@ class SketchOfTheMonth extends Model
     protected $table = 'sketch_of_the_month';
 
     /**
-     * Establishes a relationship between the SketchOfTheMonth model and the ObservationsOld model.
-     *
-     * This method defines a one-to-one relationship between the SketchOfTheMonth model and the ObservationsOld model.
-     * The relationship is established based on the 'observation_id' attribute of the SketchOfTheMonth model and the 'id' attribute of the ObservationsOld model.
-     *
-     * @return HasOne The relationship between the SketchOfTheMonth model and the ObservationsOld model.
+     * Sketch links to the unified observations table using observations.id.
      */
     public function observation(): HasOne
     {
-        if ($this->observation_id < 0) {
-            return $this->hasOne(related: CometObservationsOld::class, foreignKey: 'id', localKey: 'observation_id');
-        }
-
-        return $this->hasOne(related: ObservationsOld::class, foreignKey: 'id', localKey: 'observation_id');
+        return $this->hasOne(related: Observation::class, foreignKey: 'id', localKey: 'observation_id');
     }
 
     /**

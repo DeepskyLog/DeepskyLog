@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\CometObservationsOld;
+use App\Models\Observation;
 use App\Models\ObservationsOld;
 use App\Models\SketchOfTheMonth;
 use App\Models\SketchOfTheWeek;
@@ -58,15 +59,11 @@ class updateAchievementsCommand extends Command
         // Get all DeepskyLog sketches of the week
         $sketches = SketchOfTheWeek::all();
 
-        // Preload observations and users for sketches to avoid N+1 queries
-        $sketchObsIds = $sketches->pluck('observation_id')->filter(fn($id) => $id > 0)->all();
-        $sketchCometObsIds = $sketches->pluck('observation_id')->filter(fn($id) => $id < 0)->map(fn($id) => -$id)->all();
-        
-        $sketchObservations = ObservationsOld::whereIn('id', $sketchObsIds)->get()->keyBy('id');
-        $sketchCometObservations = CometObservationsOld::whereIn('id', $sketchCometObsIds)->get()->keyBy('id');
-        
-        $observerIds = $sketchObservations->pluck('observerid')
-            ->merge($sketchCometObservations->pluck('observerid'))
+        // Preload unified observations and users for sketches to avoid N+1 queries
+        $sketchObsIds = $sketches->pluck('observation_id')->all();
+        $sketchObservations = Observation::whereIn('id', $sketchObsIds)->get()->keyBy('id');
+
+        $observerIds = $sketchObservations->pluck('observer_username')
             ->map(fn($id) => html_entity_decode($id))
             ->unique()
             ->all();
@@ -75,7 +72,7 @@ class updateAchievementsCommand extends Command
         // Loop over all sketches
         foreach ($sketches as $sketch) {
             try {
-                $user = $this->getSketchDataFromCache($sketch, $sketchObservations, $sketchCometObservations, $sketchUsers);
+                $user = $this->getSketchDataFromCache($sketch, $sketchObservations, $sketchUsers);
 
                 // Get the SketchOfTheWeek achievement
                 $achievement = $this->getAchievement('DeepskyLog sketch of the week');
@@ -90,15 +87,11 @@ class updateAchievementsCommand extends Command
         // Get all DeepskyLog sketches of the month
         $sketches = SketchOfTheMonth::all();
 
-        // Preload observations and users for sketches to avoid N+1 queries
-        $sketchObsIds = $sketches->pluck('observation_id')->filter(fn($id) => $id > 0)->all();
-        $sketchCometObsIds = $sketches->pluck('observation_id')->filter(fn($id) => $id < 0)->map(fn($id) => -$id)->all();
-        
-        $sketchObservations = ObservationsOld::whereIn('id', $sketchObsIds)->get()->keyBy('id');
-        $sketchCometObservations = CometObservationsOld::whereIn('id', $sketchCometObsIds)->get()->keyBy('id');
-        
-        $observerIds = $sketchObservations->pluck('observerid')
-            ->merge($sketchCometObservations->pluck('observerid'))
+        // Preload unified observations and users for sketches to avoid N+1 queries
+        $sketchObsIds = $sketches->pluck('observation_id')->all();
+        $sketchObservations = Observation::whereIn('id', $sketchObsIds)->get()->keyBy('id');
+
+        $observerIds = $sketchObservations->pluck('observer_username')
             ->map(fn($id) => html_entity_decode($id))
             ->unique()
             ->all();
@@ -107,7 +100,7 @@ class updateAchievementsCommand extends Command
         // Loop over all sketches
         foreach ($sketches as $sketch) {
             try {
-                $user = $this->getSketchDataFromCache($sketch, $sketchObservations, $sketchCometObservations, $sketchUsers);
+                $user = $this->getSketchDataFromCache($sketch, $sketchObservations, $sketchUsers);
 
                 // Get the SketchOfTheWeek achievement
                 $achievement = $this->getAchievement('DeepskyLog sketch of the month');
@@ -115,7 +108,7 @@ class updateAchievementsCommand extends Command
                 // Add achievement to user
                 $this->addAchievementToUser($user, $achievement);
             } catch (Exception $e) {
-                dump('Unable to add achievement: '.$e->getMessage());
+                dump('Unable to add achievement: ' . $e->getMessage());
             }
         }
 
@@ -129,7 +122,7 @@ class updateAchievementsCommand extends Command
             ->orderBy('count', 'desc')
             ->limit(10)
             ->pluck('observerid'))
-            ->map(fn ($v) => (string) $v)
+            ->map(fn($v) => (string) $v)
             ->toArray();
 
         // Build maps for catalog-level observed/drawing counts
@@ -141,7 +134,7 @@ class updateAchievementsCommand extends Command
             ->get();
 
         foreach ($catalogRows as $r) {
-            $this->catalogObservedMap[$r->observerid][(string)$r->catalog] = (int)$r->cnt;
+            $this->catalogObservedMap[$r->observerid][(string) $r->catalog] = (int) $r->cnt;
         }
 
         $catalogDrawingRows = DB::connection('mysqlOld')->table('objectnames')
@@ -153,7 +146,7 @@ class updateAchievementsCommand extends Command
             ->get();
 
         foreach ($catalogDrawingRows as $r) {
-            $this->catalogDrawingsMap[$r->observerid][(string)$r->catalog] = (int)$r->cnt;
+            $this->catalogDrawingsMap[$r->observerid][(string) $r->catalog] = (int) $r->cnt;
         }
 
         // Build maps for object type counts (distinct object names)
@@ -164,7 +157,7 @@ class updateAchievementsCommand extends Command
             ->get();
 
         foreach ($typeRows as $r) {
-            $this->typeObservedMap[$r->observerid][(string)$r->type] = (int)$r->cnt;
+            $this->typeObservedMap[$r->observerid][(string) $r->type] = (int) $r->cnt;
         }
 
         $typeDrawingRows = DB::connection('mysqlOld')->table('objects')
@@ -175,7 +168,7 @@ class updateAchievementsCommand extends Command
             ->get();
 
         foreach ($typeDrawingRows as $r) {
-            $this->typeDrawingsMap[$r->observerid][(string)$r->type] = (int)$r->cnt;
+            $this->typeDrawingsMap[$r->observerid][(string) $r->type] = (int) $r->cnt;
         }
 
         // Total drawings per user
@@ -185,7 +178,7 @@ class updateAchievementsCommand extends Command
             ->groupBy('observerid')
             ->get();
         foreach ($td as $r) {
-            $this->totalDrawingsMap[$r->observerid] = (int)$r->cnt;
+            $this->totalDrawingsMap[$r->observerid] = (int) $r->cnt;
         }
 
         // Unique objects observed/drawn per user
@@ -194,7 +187,7 @@ class updateAchievementsCommand extends Command
             ->groupBy('observerid')
             ->get();
         foreach ($uo as $r) {
-            $this->uniqueObjectsMap[$r->observerid] = (int)$r->cnt;
+            $this->uniqueObjectsMap[$r->observerid] = (int) $r->cnt;
         }
 
         $uod = DB::connection('mysqlOld')->table('observations')
@@ -203,7 +196,7 @@ class updateAchievementsCommand extends Command
             ->groupBy('observerid')
             ->get();
         foreach ($uod as $r) {
-            $this->uniqueObjectsDrawingsMap[$r->observerid] = (int)$r->cnt;
+            $this->uniqueObjectsDrawingsMap[$r->observerid] = (int) $r->cnt;
         }
 
         // Comet counts
@@ -212,7 +205,7 @@ class updateAchievementsCommand extends Command
             ->groupBy('observerid')
             ->get();
         foreach ($cometObs as $r) {
-            $this->cometObservationsMap[$r->observerid] = (int)$r->cnt;
+            $this->cometObservationsMap[$r->observerid] = (int) $r->cnt;
         }
 
         $cometDraw = DB::connection('mysqlOld')->table('cometobservations')
@@ -221,7 +214,7 @@ class updateAchievementsCommand extends Command
             ->groupBy('observerid')
             ->get();
         foreach ($cometDraw as $r) {
-            $this->cometDrawingsMap[$r->observerid] = (int)$r->cnt;
+            $this->cometDrawingsMap[$r->observerid] = (int) $r->cnt;
         }
 
         $uniqueComet = DB::connection('mysqlOld')->table('cometobservations')
@@ -229,7 +222,7 @@ class updateAchievementsCommand extends Command
             ->groupBy('observerid')
             ->get();
         foreach ($uniqueComet as $r) {
-            $this->uniqueCometMap[$r->observerid] = (int)$r->cnt;
+            $this->uniqueCometMap[$r->observerid] = (int) $r->cnt;
         }
 
         // Loop over all users
@@ -738,7 +731,7 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of nebulae seen
-                $nebulaTypes = ['EMINB','ENRNN','ENSTR','REFNB','RNHII','HII','SNREM','WRNEB'];
+                $nebulaTypes = ['EMINB', 'ENRNN', 'ENSTR', 'REFNB', 'RNHII', 'HII', 'SNREM', 'WRNEB'];
                 $total = 0;
                 foreach ($nebulaTypes as $t) {
                     $total += $this->getTypeObserved($user->username, $t) ?? 0;
@@ -781,7 +774,7 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of nebulae drawn
-                $nebulaTypes = ['EMINB','ENRNN','ENSTR','REFNB','RNHII','HII','SNREM','WRNEB'];
+                $nebulaTypes = ['EMINB', 'ENRNN', 'ENSTR', 'REFNB', 'RNHII', 'HII', 'SNREM', 'WRNEB'];
                 $total = 0;
                 foreach ($nebulaTypes as $t) {
                     $total += $this->getTypeDrawings($user->username, $t) ?? 0;
@@ -1035,17 +1028,16 @@ class updateAchievementsCommand extends Command
      */
     public function getSketchData(mixed $sketch): User
     {
-        if ($sketch->observation_id < 0) {
-            $observation = CometObservationsOld::where('id', -$sketch->observation_id)->first();
-        } else {
-            // Get the observation from the observation_id column
-            $observation = ObservationsOld::where('id', $sketch->observation_id)->first();
+        $observation = Observation::where('id', $sketch->observation_id)->first();
+        if (!$observation) {
+            throw new Exception('Observation not found for sketch: ' . $sketch->observation_id);
         }
+
         // Get observerid from the observation
-        $observerid = html_entity_decode($observation->observerid);
+        $observerid = html_entity_decode((string) $observation->observer_username);
 
         // Get user from the observerid
-        return User::where('username', $observerid)->first();
+        return User::where('username', $observerid)->firstOrFail();
     }
 
     /**
@@ -1053,31 +1045,26 @@ class updateAchievementsCommand extends Command
      *
      * @param  mixed  $sketch  The sketch object.
      * @param  \Illuminate\Support\Collection  $observations  Preloaded observations.
-     * @param  \Illuminate\Support\Collection  $cometObservations  Preloaded comet observations.
      * @param  \Illuminate\Support\Collection  $users  Preloaded users.
      * @return User The user object associated with the sketch.
      *
      * @throws Exception If the sketch observation ID is invalid or if there is an error retrieving the observation or user.
      */
-    public function getSketchDataFromCache(mixed $sketch, $observations, $cometObservations, $users): User
+    public function getSketchDataFromCache(mixed $sketch, $observations, $users): User
     {
-        if ($sketch->observation_id < 0) {
-            $observation = $cometObservations->get(-$sketch->observation_id);
-        } else {
-            $observation = $observations->get($sketch->observation_id);
-        }
-        
+        $observation = $observations->get($sketch->observation_id);
+
         if (!$observation) {
             throw new Exception('Observation not found for sketch: ' . $sketch->observation_id);
         }
-        
-        $observerid = html_entity_decode($observation->observerid);
-        
+
+        $observerid = html_entity_decode((string) $observation->observer_username);
+
         $user = $users->get($observerid);
         if (!$user) {
             throw new Exception('User not found: ' . $observerid);
         }
-        
+
         return $user;
     }
 
@@ -1140,7 +1127,7 @@ class updateAchievementsCommand extends Command
                 $achievementIds[] = $achievement->id;
             }
         }
-        
+
         if (!empty($achievementIds)) {
             try {
                 AchievementUser::where('user_id', $user->id)->whereIn('achievement_id', $achievementIds)->delete();
@@ -1549,7 +1536,7 @@ class updateAchievementsCommand extends Command
         $achievement = $this->achievementMap->get($name);
 
         if ($achievement === null) {
-            throw new Exception('Achievement not found: '.$name);
+            throw new Exception('Achievement not found: ' . $name);
         }
 
         return $achievement;

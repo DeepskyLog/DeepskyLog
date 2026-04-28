@@ -16,8 +16,10 @@
   - [ ] Overview page, when clicking on 'More details' on the home page, use a link to the new observation page, with all details, comments, ...
   - [ ] Add observations
     - [ ] other objects: planets, comets, lunar features, ...
+      - [ ] Need to work on the database tables for these observations.
     - [ ] Quick add from the left aside
     - [ ] Import / export observations in a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, ...
+  - [ ] Check code for ObservationOld and remove it, as all observations are now in the same table.
   - [ ] Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
   - [ ] Search for observations
     - [ ] Quick search in the left aside

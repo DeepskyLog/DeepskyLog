@@ -4,12 +4,20 @@
             class="max-w-screen mx-auto bg-gray-900 px-2 py-10 sm:px-6 lg:px-8"
         >
             <h2 class="text-xl font-semibold leading-tight">
-                {{ __("Add DeepskyLog Sketch of the month") }}
+                {{
+                    __(
+                        "Add DeepskyLog Sketch of the month",
+                    )
+                }}
             </h2>
             <div class="mt-2">
                 <x-card>
                     <div class="mb-4 flex flex-wrap">
-                        {!! __("At this moment, this form is very basic.  If a comet sketch is the sketch of the month, enter the negative ID.  In the future, the option to add a DeepskyLog sketch of the month will be included in the details of an observation.") !!}
+                        {!!
+                            __(
+                                "Enter the observation ID from the unified observations table for both deep-sky and comet sketches. It is also possible to add a DeepskyLog sketch of the month from the details of an observation.",
+                            )
+                        !!}
                     </div>
                     <form
                         role="form"
@@ -27,7 +35,7 @@
                                 value="{{ old('observation_id') }}"
                             />
                             <x-input-error for="error" />
-                            @error("error")
+                            @error ("error")
                                 <p class="mt-1 text-xs text-red-500">
                                     {{ $message }}
                                 </p>
