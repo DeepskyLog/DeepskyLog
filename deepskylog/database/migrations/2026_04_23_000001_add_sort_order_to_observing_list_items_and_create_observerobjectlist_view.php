@@ -20,17 +20,19 @@ return new class extends Migration {
     {
         $driver = DB::getDriverName();
 
-        // 1. Add sort_order column
-        if ($driver === 'sqlite') {
-            Schema::table('observing_list_items', function (Blueprint $table) {
-                $table->unsignedInteger('sort_order')->default(0);
-                $table->index(['observing_list_id', 'sort_order'], 'idx_list_sort');
-            });
-        } else {
-            Schema::table('observing_list_items', function (Blueprint $table) {
-                $table->unsignedInteger('sort_order')->default(0)->after('item_description');
-                $table->index(['observing_list_id', 'sort_order'], 'idx_list_sort');
-            });
+        // 1. Add sort_order column (guard against re-running on a DB that already has it)
+        if (!Schema::hasColumn('observing_list_items', 'sort_order')) {
+            if ($driver === 'sqlite') {
+                Schema::table('observing_list_items', function (Blueprint $table) {
+                    $table->unsignedInteger('sort_order')->default(0);
+                    $table->index(['observing_list_id', 'sort_order'], 'idx_list_sort');
+                });
+            } else {
+                Schema::table('observing_list_items', function (Blueprint $table) {
+                    $table->unsignedInteger('sort_order')->default(0)->after('item_description');
+                    $table->index(['observing_list_id', 'sort_order'], 'idx_list_sort');
+                });
+            }
         }
 
         // 2. Populate sort_order based on insertion order within each list

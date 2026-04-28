@@ -6,19 +6,22 @@
 
 + [ ] Update to laravel 13.
 + [ ] Observations
+  + [ ] Make migrations and seeder
+  + [ ] Overview page, when clicking on 'More details' on the home page, use a link to the new observation page, with all details, comments, ...
+  + [ ] Show detailed observation page, with all details, comments, ...
+  + [ ] Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
+  + [ ] Add observations
+    + [ ] other objects: planets, comets, lunar features, ...
+    + [ ] Quick add from the left aside
+    + [ ] Import / export observations in a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, ...
   + [ ] Comment on observations
   + [ ] Like observations
-  + [ ] Add observations of other objects: planets, comets, lunar features, ...
-  + [ ] Show detailed observation page, with all details, comments, ...
-  + [ ] Import / export observations in a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, ...
-  + [ ] Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
+  + [ ] Search for observations
+    + [ ] Quick search in the left aside
+    + [ ] Detailed search page
++ [ ] All missing pages
 + [ ] Release new version of pyDeepskyLog
   + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
-
-### Distant future
-
-+ [ ] All missing pages
-
 
 ### Done
 
