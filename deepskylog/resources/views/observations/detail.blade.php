@@ -70,6 +70,13 @@
             $observationType === "comet"
                 ? "/images/cometdrawings/{$obs->id}.jpg"
                 : "/images/drawings/{$obs->id}.jpg";
+
+        $socialType = $observationType === "comet" ? "comet" : "deepsky";
+        $socialId = (int) $obs->id;
+        $likesCount = $likesCount ?? 0;
+        $liked = $liked ?? false;
+        $comments = $comments ?? collect();
+        $commentsCount = $commentsCount ?? $comments->count();
     @endphp
 
     <div class="max-w-4xl mx-auto px-4 py-10 sm:px-6 lg:px-8">
@@ -220,6 +227,142 @@
                     @endif
                 </div>
             </div>
+        </div>
+
+        {{-- Engagement: likes and comments --}}
+        <div class="rounded-xl bg-gray-800 p-6 mb-6">
+            <div class="flex flex-wrap items-center gap-3 mb-4">
+                <button
+                    data-observation-type="{{ $socialType }}"
+                    data-observation-id="{{ $socialId }}"
+                    class="like-button px-3 py-1.5 rounded bg-gray-700 hover:bg-gray-600 text-white inline-flex items-center gap-2"
+                >
+                    <span class="like-icon">{!!
+                        $liked
+                            ? "❤️"
+                            : "👍"
+                    !!}</span>
+                    <span>{{ __("Like") }}</span>
+                    <span class="like-count">{{ $likesCount }}</span>
+                </button>
+                <span class="text-sm text-gray-400">
+                    {{ $commentsCount }} {{
+                        \Illuminate\Support\Str::plural(
+                            __("comment"),
+                            $commentsCount,
+                        )
+                    }}
+                </span>
+            </div>
+
+            <section>
+                <h2 class="text-lg font-semibold text-white mb-3">
+                    {{ __("Comments") }}
+                </h2>
+
+                @if ($comments->isEmpty())
+                    <p class="text-gray-400 text-sm mb-4">{{
+                        __(
+                            "No comments yet.",
+                        )
+                    }}</p>
+                @else
+                    <div class="space-y-3 mb-4">
+                        @foreach ($comments as $comment)
+                            <div
+                                class="bg-gray-700/60 p-3 rounded-lg border border-gray-600/60"
+                            >
+                                <div
+                                    class="flex items-center justify-between mb-1"
+                                >
+                                    <span
+                                        class="text-xs font-medium text-gray-300"
+                                    >
+                                        {{
+                                            $comment->user->name ??
+                                                ($comment->user->username ?? __("Unknown user"))
+                                        }}
+                                    </span>
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="text-xs text-gray-400"
+                                            >{{ $comment->created_at?->diffForHumans() }}</span
+                                        >
+                                        @auth
+                                            @if ($comment->canBeDeletedBy(auth()->user(), $user))
+                                                <form
+                                                    method="POST"
+                                                    action="{{ route('observation.comments.destroy', $comment) }}"
+                                                >
+                                                    @csrf
+                                                    @method ("DELETE")
+                                                    <button
+                                                        type="submit"
+                                                        class="text-gray-500 hover:text-red-400"
+                                                        title="{{ __('Delete') }}"
+                                                    >
+                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        @endauth
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-200 whitespace-pre-line">{{ $comment->body }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+
+                @auth
+                    <form
+                        method="POST"
+                        action="{{ route('observation.comments.store') }}"
+                    >
+                        @csrf
+                        <input
+                            type="hidden"
+                            name="observation_type"
+                            value="{{ $socialType }}"
+                        />
+                        <input
+                            type="hidden"
+                            name="observation_id"
+                            value="{{ $socialId }}"
+                        />
+                        <textarea
+                            name="body"
+                            rows="3"
+                            required
+                            maxlength="2000"
+                            placeholder="{{ __('Add a comment…') }}"
+                            class="w-full bg-gray-700 border border-gray-600 rounded-md text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                            >{{ old("body") }}</textarea
+                        >
+                        @error ("body")
+                            <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                        <button
+                            type="submit"
+                            class="mt-2 text-xs px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded font-semibold"
+                        >
+                            {{
+                                __(
+                                    "Post comment",
+                                )
+                            }}
+                        </button>
+                    </form>
+                @else
+                    <p class="text-sm text-gray-400">{{
+                        __(
+                            "Log in to add a comment.",
+                        )
+                    }}</p>
+                @endauth
+            </section>
         </div>
 
         {{-- Main details card --}}

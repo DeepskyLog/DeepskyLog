@@ -513,6 +513,14 @@ Route::get('/admin/instrumentset', 'App\Http\Controllers\InstrumentSetController
 // Likes for observations (deepsky / comet)
 Route::post('/observation/like', [App\Http\Controllers\ObservationLikeController::class, 'toggle'])->name('observation.like')->middleware('auth');
 
+// Comments for observations (deepsky / comet)
+Route::post('/observation/comments', [App\Http\Controllers\ObservationCommentController::class, 'store'])
+    ->name('observation.comments.store')
+    ->middleware(['auth', 'verified']);
+Route::delete('/observation/comments/{comment}', [App\Http\Controllers\ObservationCommentController::class, 'destroy'])
+    ->name('observation.comments.destroy')
+    ->middleware(['auth', 'verified']);
+
 // Popular observations
 Route::get('/popular-observations', [App\Http\Controllers\PopularObservationController::class, 'index'])->name('observations.popular');
 

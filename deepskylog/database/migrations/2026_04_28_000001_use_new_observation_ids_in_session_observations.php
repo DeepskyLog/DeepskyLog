@@ -19,6 +19,15 @@ return new class extends Migration {
 
         DB::statement('ALTER TABLE `sessionObservations` MODIFY COLUMN `observationid` BIGINT UNSIGNED NOT NULL');
 
+        // Remove dangling rows that point to observations no longer present.
+        // Without this cleanup, adding the FK constraint fails.
+        DB::statement(
+            'DELETE so
+             FROM `sessionObservations` so
+             LEFT JOIN `observations` o ON o.id = so.observationid
+             WHERE o.id IS NULL'
+        );
+
         DB::statement('ALTER TABLE `sessionObservations` ADD PRIMARY KEY (`sessionid`, `observationid`)');
 
         DB::statement(

@@ -15,6 +15,8 @@ use App\Models\Lens;
 use App\Models\Constellation;
 use App\Models\SketchOfTheWeek;
 use App\Models\SketchOfTheMonth;
+use App\Models\ObservationLike;
+use App\Models\ObservationComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -68,6 +70,8 @@ class ObservationsController extends Controller
                 abort(404);
             }
 
+            $socialData = $this->buildSocialData('deepsky', (int) $selected->id);
+
             $preloadedData = $this->preloadDeepskyData(collect([$selected]));
 
             $lens = null;
@@ -82,7 +86,7 @@ class ObservationsController extends Controller
                 'lens' => $lens,
                 'sketchOfTheWeek' => $sketchOfTheWeek,
                 'sketchOfTheMonth' => $sketchOfTheMonth,
-            ], $preloadedData));
+            ], $preloadedData, $socialData));
         }
 
         if ($selectedUnified->legacy_source === 'comet') {
@@ -90,6 +94,8 @@ class ObservationsController extends Controller
             if (!$selected) {
                 abort(404);
             }
+
+            $socialData = $this->buildSocialData('comet', (int) $selected->id);
 
             // Keep this field for existing comet detail rendering expectations.
             $selected->resolved_comet_name = (string) ($selectedUnified->target_name ?? '');
@@ -103,7 +109,7 @@ class ObservationsController extends Controller
                 'lens' => null,
                 'sketchOfTheWeek' => $sketchOfTheWeek,
                 'sketchOfTheMonth' => $sketchOfTheMonth,
-            ], $preloadedData));
+            ], $preloadedData, $socialData));
         }
 
         abort(404);
@@ -820,5 +826,38 @@ class ObservationsController extends Controller
         }
 
         return route('observations.detail', $params);
+    }
+
+    /**
+     * Load likes/comments for a detail page in one place.
+     *
+     * @return array<string, mixed>
+     */
+    private function buildSocialData(string $observationType, int $observationId): array
+    {
+        $likesCount = ObservationLike::query()
+            ->where('observation_type', $observationType)
+            ->where('observation_id', $observationId)
+            ->count();
+
+        $liked = auth()->check() && ObservationLike::query()
+            ->where('observation_type', $observationType)
+            ->where('observation_id', $observationId)
+            ->where('user_id', auth()->id())
+            ->exists();
+
+        $comments = ObservationComment::query()
+            ->with('user')
+            ->where('observation_type', $observationType)
+            ->where('observation_id', $observationId)
+            ->latest()
+            ->get();
+
+        return [
+            'likesCount' => $likesCount,
+            'liked' => $liked,
+            'comments' => $comments,
+            'commentsCount' => $comments->count(),
+        ];
     }
 }
