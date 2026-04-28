@@ -1,71 +1,77 @@
 # ToDos
 
-+ [ ] See GitHub: <https://github.com/DeepskyLog/DeepskyLog/issues>
+- [ ] See GitHub: <https://github.com/DeepskyLog/DeepskyLog/issues>
 
 ## Next steps
 
-+ [ ] Update to laravel 13.
-+ [ ] Observations
-  + [ ] Make migrations and seeder
-  + [ ] Overview page, when clicking on 'More details' on the home page, use a link to the new observation page, with all details, comments, ...
-  + [ ] Show detailed observation page, with all details, comments, ...
-  + [ ] Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
-  + [ ] Add observations
-    + [ ] other objects: planets, comets, lunar features, ...
-    + [ ] Quick add from the left aside
-    + [ ] Import / export observations in a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, ...
-  + [ ] Comment on observations
-  + [ ] Like observations
-  + [ ] Search for observations
-    + [ ] Quick search in the left aside
-    + [ ] Detailed search page
-+ [ ] All missing pages
-+ [ ] Release new version of pyDeepskyLog
-  + [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
+- [ ] Update to laravel 13.
+- [ ] Observations
+  - [x] Make migrations and seeder
+    - [x] The sessions can now also have comet observations. Loop over the session (once) and check if comets should be added.
+    - [ ] The sketches of the week / month have negative ids for comets. This is the negative id of the old cometobservations table. As all observations (also from comets) are now in the same table, we can just remove the negative id and use the normal id of the observation. The ids should be adapted. In the add sketch of the week / add sketch of the month page, we can just use the normal id of the observation, and not the negative id. This should be adapted.
+  - [ ] Show detailed observation page, with all details, comments, ...
+    - [ ] If the user is an administrator of database expert, it should also be possible to add a sketch of the week / month for a comet observation directly from the observation detail page
+    - [ ] Comment on observations
+    - [ ] Like observations -> already ok?
+  - [ ] Overview page, when clicking on 'More details' on the home page, use a link to the new observation page, with all details, comments, ...
+  - [ ] Add observations
+    - [ ] other objects: planets, comets, lunar features, ...
+    - [ ] Quick add from the left aside
+    - [ ] Import / export observations in a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, ...
+  - [ ] Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
+  - [ ] Search for observations
+    - [ ] Quick search in the left aside
+    - [ ] Detailed search page
+  - [ ] On real server:
+    - [ ] php artisan db:seed --class=BackfillSessionObservationIdsSeeder
+    - [ ] php artisan migrate
+- [ ] All missing pages
+- [ ] Release new version of pyDeepskyLog
+  - [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
 ### Done
 
-+ [X] Add privacy policy
-+ [X] Use DeepskyLog logo in mails
-+ [X] Send mail to verify mail account directly after registration
-+ [X] Show message when logged in and the country (or the about) is not set.
-+ [X] Make new observer page
-+ [X] Add sponsors page
-+ [X] Create the all users administrator page
-+ [X] Add team member should show a list of observers, not just an option to add a person using an email address.
-+ [X] Move to slugs for the username and the team names
-+ [X] Refactor the accomplishment methods to make them more general.
-+ [X] Create menu for the new version, also for small screens
-+ [X] Add 'My Drawings' page
-+ [X] Add all drawings page
-+ [X] Add Sketch of the week and the month page
-+ [X] User administration page
-+ [X] Add share buttons for Facebook, X, link, mail, WhatsApp
-+ [X] Add administrator / database administrator function to add a sketch of the week and the month
-+ [X] Add translations for the new version
-+ [X] Add new index page, with latest sketch of the week and the month, 10 latest drawings, 10 latest observers, 10
-  latest observations
-+ [X] Add object type and constellation to the list of 10 newest observations
-+ [X] Automatically translate the descriptions of observations on the home page.
-+ [X] Add locations, instruments, eyepieces, lenses and filters to the new version of DeepskyLog.
-  + [X] Use /instrument/user-slug/instrument-slug as url
-+ [X] Add description and picture to locations, instruments, eyepieces, lenses and filters.
-+ [X] Add a plot with the length of the night for a whole year when showing a location.
-+ [X] Add instrument sets.
-+ [X] Like observations and sketches
-+ [X] Rework message system
-+ [X] Totally reworked the sessions.  They are now more blog-like
-+ [X] New objects detail page
-+ [X] Added planets, lunar features, ...
-+ [X] Add a page to edit objects.  More user-friendly than before, with a button to fetch data from Simbad.
-+ [X] Add a page to add a new object, with the same user-friendly form and Simbad fetching.
-+ [X] Add a page to show the catalog of objects, with filters and search.
-+ [X] Quick search in the left aside.  Use '/' to jump to the search field.
-+ [X] Detailed search on objects
-+ [X] Check objects page for administrators, with a button to fetch data from Simbad.
-+ [X] Reworked observing lists.  Users can comment on them, like them, subscribe to them, ...
-+ [X] Objects can be imported in an observing list from a file.  The file can be a simple text file, argo navis file, AstroPlanner file, CSV file, or SkySafari file.
+- [x] Add privacy policy
+- [x] Use DeepskyLog logo in mails
+- [x] Send mail to verify mail account directly after registration
+- [x] Show message when logged in and the country (or the about) is not set.
+- [x] Make new observer page
+- [x] Add sponsors page
+- [x] Create the all users administrator page
+- [x] Add team member should show a list of observers, not just an option to add a person using an email address.
+- [x] Move to slugs for the username and the team names
+- [x] Refactor the accomplishment methods to make them more general.
+- [x] Create menu for the new version, also for small screens
+- [x] Add 'My Drawings' page
+- [x] Add all drawings page
+- [x] Add Sketch of the week and the month page
+- [x] User administration page
+- [x] Add share buttons for Facebook, X, link, mail, WhatsApp
+- [x] Add administrator / database administrator function to add a sketch of the week and the month
+- [x] Add translations for the new version
+- [x] Add new index page, with latest sketch of the week and the month, 10 latest drawings, 10 latest observers, 10
+      latest observations
+- [x] Add object type and constellation to the list of 10 newest observations
+- [x] Automatically translate the descriptions of observations on the home page.
+- [x] Add locations, instruments, eyepieces, lenses and filters to the new version of DeepskyLog.
+  - [x] Use /instrument/user-slug/instrument-slug as url
+- [x] Add description and picture to locations, instruments, eyepieces, lenses and filters.
+- [x] Add a plot with the length of the night for a whole year when showing a location.
+- [x] Add instrument sets.
+- [x] Like observations and sketches
+- [x] Rework message system
+- [x] Totally reworked the sessions. They are now more blog-like
+- [x] New objects detail page
+- [x] Added planets, lunar features, ...
+- [x] Add a page to edit objects. More user-friendly than before, with a button to fetch data from Simbad.
+- [x] Add a page to add a new object, with the same user-friendly form and Simbad fetching.
+- [x] Add a page to show the catalog of objects, with filters and search.
+- [x] Quick search in the left aside. Use '/' to jump to the search field.
+- [x] Detailed search on objects
+- [x] Check objects page for administrators, with a button to fetch data from Simbad.
+- [x] Reworked observing lists. Users can comment on them, like them, subscribe to them, ...
+- [x] Objects can be imported in an observing list from a file. The file can be a simple text file, argo navis file, AstroPlanner file, CSV file, or SkySafari file.
 
 ## Small issues
 
-+ [ ] In Team Settings page: Automatically update table if new user is added (only works when next user is added)
+- [ ] In Team Settings page: Automatically update table if new user is added (only works when next user is added)

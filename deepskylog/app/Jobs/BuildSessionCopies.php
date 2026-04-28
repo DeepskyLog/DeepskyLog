@@ -2,9 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\CometObservationsOld;
 use App\Models\ObservationSession;
-use App\Models\ObservationsOld;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -37,43 +35,38 @@ class BuildSessionCopies implements ShouldQueue
     {
         try {
             $session = ObservationSession::find($this->sessionId);
-            if (! $session) {
+            if (!$session) {
                 return;
             }
 
-            // Determine date range in legacy YYYYMMDD format (observations use yyyymmdd integers)
-            $startYmd = null;
-            $endYmd = null;
+            // Determine date range as SQL dates for the new observations table.
+            $startDate = null;
+            $endDate = null;
             try {
-                if (! empty($session->begindate)) {
-                    $startYmd = Carbon::parse($session->begindate)->format('Ymd');
+                if (!empty($session->begindate)) {
+                    $startDate = Carbon::parse($session->begindate)->format('Y-m-d');
                 }
             } catch (\Throwable $e) {
-                $startYmd = null;
+                $startDate = null;
             }
             try {
-                if (! empty($session->enddate)) {
-                    $endYmd = Carbon::parse($session->enddate)->format('Ymd');
+                if (!empty($session->enddate)) {
+                    $endDate = Carbon::parse($session->enddate)->format('Y-m-d');
                 }
             } catch (\Throwable $e) {
-                $endYmd = null;
+                $endDate = null;
             }
 
-            // collect observation ids for participants, filtered by session date range when provided
-            $obsDeepQuery = ObservationsOld::whereIn('observerid', $this->participants);
-            $obsCometQuery = CometObservationsOld::whereIn('observerid', $this->participants);
-            if ($startYmd) {
-                $obsDeepQuery->where('date', '>=', $startYmd);
-                $obsCometQuery->where('date', '>=', $startYmd);
+            // Collect new observations.id values for all participants filtered by date range.
+            $obsQuery = DB::table('observations')
+                ->whereIn('observer_username', $this->participants);
+            if ($startDate) {
+                $obsQuery->where('observed_on', '>=', $startDate);
             }
-            if ($endYmd) {
-                $obsDeepQuery->where('date', '<=', $endYmd);
-                $obsCometQuery->where('date', '<=', $endYmd);
+            if ($endDate) {
+                $obsQuery->where('observed_on', '<=', $endDate);
             }
-
-            $obsDeep = $obsDeepQuery->pluck('id')->toArray();
-            $obsComet = $obsCometQuery->pluck('id')->toArray();
-            $allObsIds = array_values(array_unique(array_merge($obsDeep, $obsComet)));
+            $allObsIds = $obsQuery->pluck('id')->map(fn($v) => (string) $v)->toArray();
 
             // Helper: write sessionObservations
             $writeSessionObservations = function ($sid, $ids) {
@@ -82,7 +75,7 @@ class BuildSessionCopies implements ShouldQueue
                 foreach ($ids as $oid) {
                     $rows[] = ['sessionid' => $sid, 'observationid' => $oid];
                 }
-                if (! empty($rows)) {
+                if (!empty($rows)) {
                     DB::table('sessionObservations')->insert($rows);
                 }
             };
@@ -96,12 +89,12 @@ class BuildSessionCopies implements ShouldQueue
                 }
                 $rows[] = ['sessionid' => $session->id, 'observer' => $uname];
             }
-            if (! empty($rows)) {
+            if (!empty($rows)) {
                 DB::table('sessionObservers')->insert($rows);
             }
 
             // Write observations for primary
-            if (! empty($allObsIds)) {
+            if (!empty($allObsIds)) {
                 $writeSessionObservations($session->id, $allObsIds);
             }
 
@@ -141,27 +134,24 @@ class BuildSessionCopies implements ShouldQueue
                     }
                     $copyRows[] = ['sessionid' => $copy->id, 'observer' => $uname];
                 }
-                if (! empty($copyRows)) {
+                if (!empty($copyRows)) {
                     DB::table('sessionObservers')->where('sessionid', $copy->id)->delete();
                     DB::table('sessionObservers')->insert($copyRows);
                 }
 
                 // observations for copy: only this participant's observations within the session date range
-                $pObsDeepQuery = ObservationsOld::where('observerid', $p);
-                $pObsCometQuery = CometObservationsOld::where('observerid', $p);
-                if ($startYmd) {
-                    $pObsDeepQuery->where('date', '>=', $startYmd);
-                    $pObsCometQuery->where('date', '>=', $startYmd);
+                // Collect new observations.id values for this specific participant.
+                $pObsQuery = DB::table('observations')
+                    ->where('observer_username', $p);
+                if ($startDate) {
+                    $pObsQuery->where('observed_on', '>=', $startDate);
                 }
-                if ($endYmd) {
-                    $pObsDeepQuery->where('date', '<=', $endYmd);
-                    $pObsCometQuery->where('date', '<=', $endYmd);
+                if ($endDate) {
+                    $pObsQuery->where('observed_on', '<=', $endDate);
                 }
-                $pObsDeep = $pObsDeepQuery->pluck('id')->toArray();
-                $pObsComet = $pObsCometQuery->pluck('id')->toArray();
-                $pObsIds = array_values(array_unique(array_merge($pObsDeep, $pObsComet)));
+                $pObsIds = $pObsQuery->pluck('id')->map(fn($v) => (string) $v)->toArray();
 
-                if (! empty($pObsIds)) {
+                if (!empty($pObsIds)) {
                     $writeSessionObservations($copy->id, $pObsIds);
                 }
             }
