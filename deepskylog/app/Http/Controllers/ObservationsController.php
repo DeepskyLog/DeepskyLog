@@ -4,19 +4,111 @@ namespace App\Http\Controllers;
 
 use App\Models\ObservationsOld;
 use App\Models\CometObservationsOld;
+use App\Models\Observation;
 use App\Models\User;
 use App\Models\ObjectsOld;
 use App\Models\Location;
 use App\Models\Instrument;
 use App\Models\Eyepiece;
 use App\Models\Filter;
+use App\Models\Lens;
 use App\Models\Constellation;
+use App\Models\SketchOfTheWeek;
+use App\Models\SketchOfTheMonth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ObservationsController extends Controller
 {
+    /**
+     * Show a single observation detail page for deepsky or comet observations.
+     * URL: /observation/{observer}/{date}/{object}/{index?}
+     */
+    public function detail(string $observer, string $date, string $object, ?int $index = null)
+    {
+        $wantedIndex = max(1, (int) ($index ?? 1));
+        $observerUser = User::where('slug', $observer)->orWhere('username', $observer)->firstOrFail();
+
+        // Resolve candidates from the unified observations table first.
+        $unifiedMatches = Observation::where('observer_username', $observerUser->username)
+            ->whereDate('observed_on', $date)
+            ->orderBy('observed_time')
+            ->orderBy('id')
+            ->get()
+            ->filter(fn($candidate) => $this->slugMatches($object, (string) ($candidate->target_name ?? '')))
+            ->values();
+
+        if ($unifiedMatches->isEmpty()) {
+            abort(404);
+        }
+
+        $selectedUnified = $unifiedMatches->get($wantedIndex - 1);
+        if (!$selectedUnified) {
+            abort(404);
+        }
+
+        $canonicalUrl = $this->buildObservationDetailUrl(
+            $observerUser->slug ?: $observerUser->username,
+            $selectedUnified->observed_on?->format('Y-m-d') ?? $date,
+            Str::slug((string) ($selectedUnified->target_name ?? ''), '-'),
+            $wantedIndex
+        );
+
+        if (request()->url() !== $canonicalUrl) {
+            return redirect($canonicalUrl);
+        }
+
+        $sketchOfTheWeek = SketchOfTheWeek::where('observation_id', $selectedUnified->id)->first();
+        $sketchOfTheMonth = SketchOfTheMonth::where('observation_id', $selectedUnified->id)->first();
+
+        if ($selectedUnified->legacy_source === 'deepsky') {
+            $selected = ObservationsOld::find($selectedUnified->legacy_id);
+            if (!$selected) {
+                abort(404);
+            }
+
+            $preloadedData = $this->preloadDeepskyData(collect([$selected]));
+
+            $lens = null;
+            if (!empty($selected->lensid) && $selected->lensid > 0) {
+                $lens = Lens::find($selected->lensid);
+            }
+
+            return view('observations.detail', array_merge([
+                'observationType' => 'deepsky',
+                'observation' => $selected,
+                'detail_url' => $canonicalUrl,
+                'lens' => $lens,
+                'sketchOfTheWeek' => $sketchOfTheWeek,
+                'sketchOfTheMonth' => $sketchOfTheMonth,
+            ], $preloadedData));
+        }
+
+        if ($selectedUnified->legacy_source === 'comet') {
+            $selected = CometObservationsOld::find($selectedUnified->legacy_id);
+            if (!$selected) {
+                abort(404);
+            }
+
+            // Keep this field for existing comet detail rendering expectations.
+            $selected->resolved_comet_name = (string) ($selectedUnified->target_name ?? '');
+
+            $preloadedData = $this->preloadCometData(collect([$selected]));
+
+            return view('observations.detail', array_merge([
+                'observationType' => 'comet',
+                'observation' => $selected,
+                'detail_url' => $canonicalUrl,
+                'lens' => null,
+                'sketchOfTheWeek' => $sketchOfTheWeek,
+                'sketchOfTheMonth' => $sketchOfTheMonth,
+            ], $preloadedData));
+        }
+
+        abort(404);
+    }
+
     /**
      * Show global list of observations (both deepsky and comet) paginated.
      */
@@ -89,7 +181,7 @@ class ObservationsController extends Controller
         }
 
         // Fallback: try case-insensitive name/altname matches
-        if (! $objectName) {
+        if (!$objectName) {
             foreach ($candidates as $cand) {
                 $on = DB::table('objectnames')
                     ->whereRaw('LOWER(objectname) = ?', [$cand])
@@ -160,9 +252,11 @@ class ObservationsController extends Controller
         $lower = mb_strtolower($raw);
         $candidates = [$lower];
         $slugified = Str::slug($raw, '-');
-        if ($slugified && $slugified !== $lower) $candidates[] = $slugified;
+        if ($slugified && $slugified !== $lower)
+            $candidates[] = $slugified;
         $nospace = str_replace(' ', '', $lower);
-        if ($nospace !== $lower) $candidates[] = $nospace;
+        if ($nospace !== $lower)
+            $candidates[] = $nospace;
         $candidates[] = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower);
         $candidates[] = str_replace('-', '', $lower);
         $candidates = array_values(array_unique(array_filter($candidates)));
@@ -184,7 +278,7 @@ class ObservationsController extends Controller
         }
 
         // Try legacy cometobjects on mysqlOld
-        if (! $objectId) {
+        if (!$objectId) {
             try {
                 foreach ($candidates as $cand) {
                     $row = DB::connection('mysqlOld')->table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
@@ -201,13 +295,13 @@ class ObservationsController extends Controller
         // If slug resolves to a user instead, forward to cometShow (observer view)
         try {
             $maybeUser = User::where('slug', $slug)->first();
-            if ($maybeUser && ! $objectId) {
+            if ($maybeUser && !$objectId) {
                 return $this->cometShow($slug);
             }
         } catch (\Throwable $_) {
         }
 
-        if (! $objectId) {
+        if (!$objectId) {
             abort(404);
         }
 
@@ -241,9 +335,11 @@ class ObservationsController extends Controller
         $lower = mb_strtolower($raw);
         $candidates = [$lower];
         $slugified = Str::slug($raw, '-');
-        if ($slugified && $slugified !== $lower) $candidates[] = $slugified;
+        if ($slugified && $slugified !== $lower)
+            $candidates[] = $slugified;
         $nospace = str_replace(' ', '', $lower);
-        if ($nospace !== $lower) $candidates[] = $nospace;
+        if ($nospace !== $lower)
+            $candidates[] = $nospace;
         $candidates[] = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower);
         $candidates[] = str_replace('-', '', $lower);
         $candidates = array_values(array_unique(array_filter($candidates)));
@@ -261,7 +357,7 @@ class ObservationsController extends Controller
             }
         } catch (\Throwable $_) {
         }
-        if (! $objectId) {
+        if (!$objectId) {
             try {
                 foreach ($candidates as $cand) {
                     $row = DB::connection('mysqlOld')->table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
@@ -369,7 +465,7 @@ class ObservationsController extends Controller
             }
         }
 
-        if (! $objectName) {
+        if (!$objectName) {
             foreach ($candidates as $cand) {
                 $on = DB::table('objectnames')
                     ->whereRaw('LOWER(objectname) = ?', [$cand])
@@ -419,7 +515,7 @@ class ObservationsController extends Controller
         } catch (\Throwable $_) {
         }
 
-        if (! $objectId) {
+        if (!$objectId) {
             try {
                 foreach ($candidates as $cand) {
                     $row = DB::connection('mysqlOld')->table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
@@ -476,7 +572,7 @@ class ObservationsController extends Controller
                 break;
             }
         }
-        if (! $objectName) {
+        if (!$objectName) {
             foreach ($candidates as $cand) {
                 $on = DB::table('objectnames')
                     ->whereRaw('LOWER(objectname) = ?', [$cand])
@@ -552,7 +648,7 @@ class ObservationsController extends Controller
                 break;
             }
         }
-        if (! $objectName) {
+        if (!$objectName) {
             foreach ($candidates as $cand) {
                 $on = DB::table('objectnames')
                     ->whereRaw('LOWER(objectname) = ?', [$cand])
@@ -614,7 +710,7 @@ class ObservationsController extends Controller
         $instruments = Instrument::whereIn('id', $instrumentIds)->get()->keyBy('id');
         $eyepieces = $eyepieceIds->isNotEmpty() ? Eyepiece::whereIn('id', $eyepieceIds)->get()->keyBy('id') : collect();
         $filters = $filterIds->isNotEmpty() ? Filter::whereIn('id', $filterIds)->get()->keyBy('id') : collect();
-        
+
         // Load constellations for all objects
         $constellationIds = $objects->pluck('con')->unique()->filter();
         $constellations = Constellation::whereIn('id', $constellationIds)->get()->keyBy('id');
@@ -649,7 +745,7 @@ class ObservationsController extends Controller
         $users = User::whereIn('username', $usernames)->get()->keyBy('username');
         $locations = Location::whereIn('id', $locationIds)->get()->keyBy('id');
         $instruments = Instrument::whereIn('id', $instrumentIds)->get()->keyBy('id');
-        
+
         // Load comet objects from modern table
         $comets = collect();
         try {
@@ -661,7 +757,8 @@ class ObservationsController extends Controller
                     ->whereIn('id', $objectIds)
                     ->get();
                 $comets = collect($legacyComets)->keyBy('id');
-            } catch (\Throwable $_) {}
+            } catch (\Throwable $_) {
+            }
         }
 
         return [
@@ -670,5 +767,58 @@ class ObservationsController extends Controller
             'preloaded_locations' => $locations,
             'preloaded_instruments' => $instruments,
         ];
+    }
+
+    /**
+     * Compare object identifiers by normalizing to common slug variants.
+     */
+    private function slugMatches(string $routeValue, string $name): bool
+    {
+        if ($name === '') {
+            return false;
+        }
+
+        $routeCandidates = $this->buildSlugCandidates($routeValue);
+        $nameCandidates = $this->buildSlugCandidates($name);
+
+        return count(array_intersect($routeCandidates, $nameCandidates)) > 0;
+    }
+
+    /**
+     * Build candidate variants used for tolerant slug matching.
+     */
+    private function buildSlugCandidates(string $value): array
+    {
+        $lower = mb_strtolower(trim($value));
+        $slug = Str::slug($value, '-');
+        $compact = str_replace([' ', '-'], '', $lower);
+        $noLeadingZeros = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower) ?? $lower;
+
+        return array_values(array_unique(array_filter([
+            $lower,
+            $slug,
+            $compact,
+            $noLeadingZeros,
+            str_replace('-', '', $slug),
+        ])));
+    }
+
+    /**
+     * Build canonical observation detail URL.
+     * Index is omitted for the first observation.
+     */
+    private function buildObservationDetailUrl(string $observer, string $date, string $object, int $index): string
+    {
+        $params = [
+            'observer' => $observer,
+            'date' => $date,
+            'object' => $object,
+        ];
+
+        if ($index > 1) {
+            $params['index'] = $index;
+        }
+
+        return route('observations.detail', $params);
     }
 }

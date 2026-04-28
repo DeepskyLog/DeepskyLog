@@ -1,29 +1,171 @@
 {{-- Avoid inline `use` in Blade; use fully-qualified class names instead --}}
-@props(["observation_id" => null, "observer_name" => null, "observer_username" => null, "observation_date" => null, "preloaded_comet" => null])
+@props ([
+    "observation_id" => null,
+    "drawing_id" => null,
+    "unified_observation" => null,
+    "observer_name" => null,
+    "observer_username" => null,
+    "observer_slug" => null,
+    "observation_date" => null,
+    "preloaded_comet" => null
+])
 <div>
     @php
-        $comet = $preloaded_comet ?? \App\Models\CometObservationsOld::find($observation_id)?->object;
-        $cometName = $comet?->name ?? __('Unknown comet');
-        $slug = $comet?->slug ?? \Illuminate\Support\Str::slug($cometName ?? '', '-');
-        $objectUrl = route('object.show', $slug);
+        $obsUnified = $unified_observation;
+        $obsLegacy = \App\Models\CometObservationsOld::find($observation_id);
+        $comet = $preloaded_comet ?? $obsLegacy?->object;
+        $cometName =
+            $obsUnified?->target_name ?? ($comet?->name ?? __("Unknown comet"));
+        $slug = $comet?->slug ?? \Illuminate\Support\Str::slug($cometName ?? "", "-");
+        $objectUrl = route("object.show", $slug);
         $objectName = $cometName;
+
+        $resolvedObserverUsername =
+            $obsUnified?->observer_username ?:
+            ($observer_username ?:
+            $obsLegacy?->observerid ?? "");
+        $resolvedObserverSlug = $observer_slug;
+        if (!$resolvedObserverSlug && $resolvedObserverUsername) {
+            $resolvedObserver = \App\Models\User::whereRaw("LOWER(username) = ?", [
+                mb_strtolower((string) $resolvedObserverUsername),
+            ])->first();
+            $resolvedObserverSlug = $resolvedObserver?->slug;
+        }
+        $observerUrl = route(
+            "observer.show",
+            $resolvedObserverSlug ?: $resolvedObserverUsername,
+        );
+
+        $detailUrl = null;
+        $detailDate = $observation_date;
+        $displayDate = !empty($detailDate)
+            ? \Carbon\Carbon::parse($detailDate)->translatedFormat("j M Y")
+            : "";
+        if ($obsUnified) {
+            $detailDate =
+                $obsUnified->observed_on instanceof \Carbon\Carbon
+                    ? $obsUnified->observed_on->format("Y-m-d")
+                    : (string) $obsUnified->observed_on;
+            $displayDate = !empty($detailDate)
+                ? \Carbon\Carbon::parse($detailDate)->translatedFormat("j M Y")
+                : $displayDate;
+
+            $observerSegment =
+                $resolvedObserverSlug ?: ((string) $obsUnified->observer_username);
+            $objectSegment =
+                $comet?->slug ??
+                \Illuminate\Support\Str::slug(
+                    (string) ($obsUnified->target_name ?? $cometName),
+                    "-",
+                );
+
+            $matchingIds = \App\Models\Observation::where(
+                "observer_username",
+                $obsUnified->observer_username,
+            )
+                ->whereDate("observed_on", $detailDate)
+                ->where("target_name", $obsUnified->target_name)
+                ->orderBy("observed_time")
+                ->orderBy("id")
+                ->pluck("id")
+                ->map(fn($id) => (int) $id)
+                ->values();
+
+            $position = $matchingIds->search((int) $obsUnified->id);
+            $occurrenceIndex = $position === false ? 1 : (int) $position + 1;
+
+            $detailRouteParams = [
+                "observer" => $observerSegment,
+                "date" => $detailDate,
+                "object" => $objectSegment,
+            ];
+            if ($occurrenceIndex > 1) {
+                $detailRouteParams["index"] = $occurrenceIndex;
+            }
+
+            $detailUrl = route("observations.detail", $detailRouteParams);
+        } elseif ($obsLegacy) {
+            $detailDate =
+                substr((string) $obsLegacy->date, 0, 4) .
+                "-" .
+                substr((string) $obsLegacy->date, 4, 2) .
+                "-" .
+                substr((string) $obsLegacy->date, 6, 2);
+            $displayDate = \Carbon\Carbon::create($detailDate)->translatedFormat(
+                "j M Y",
+            );
+            $observerSegment =
+                $resolvedObserverSlug ?: ((string) $obsLegacy->observerid);
+            $objectSegment =
+                $comet?->slug ??
+                \Illuminate\Support\Str::slug((string) $cometName, "-");
+
+            $matchingIds = \App\Models\CometObservationsOld::where(
+                "observerid",
+                $obsLegacy->observerid,
+            )
+                ->where("date", $obsLegacy->date)
+                ->where("objectid", $obsLegacy->objectid)
+                ->orderBy("time")
+                ->orderBy("id")
+                ->pluck("id")
+                ->map(fn($id) => (int) $id)
+                ->values();
+
+            $position = $matchingIds->search((int) $obsLegacy->id);
+            $occurrenceIndex = $position === false ? 1 : (int) $position + 1;
+
+            $detailRouteParams = [
+                "observer" => $observerSegment,
+                "date" => $detailDate,
+                "object" => $objectSegment,
+            ];
+            if ($occurrenceIndex > 1) {
+                $detailRouteParams["index"] = $occurrenceIndex;
+            }
+
+            $detailUrl = route("observations.detail", $detailRouteParams);
+        }
     @endphp
     <a class="no-underline" href="{{ $objectUrl }}">
-        <img width="400" src="/images/cometdrawings/{{ $observation_id }}.jpg"/>
-
-        <div class="text-center">
-            {{ $observer_name }} - {{ $objectName }}
-            -
-            {{ \Carbon\Carbon::create($observation_date)->translatedFormat("j M Y") }}
-        </div>
+        <img
+            width="400"
+            src="/images/cometdrawings/{{ $drawing_id ?: $observation_id }}.jpg"
+        />
     </a>
+
+    <div class="text-center mt-1">
+        <a
+            class="font-semibold hover:underline"
+            href="{{ $observerUrl }}"
+            >{{ $observer_name }}</a
+        >
+        -
+        <a
+            class="font-semibold hover:underline"
+            href="{{ $objectUrl }}"
+            >{{ $objectName }}</a
+        >
+        -
+        @if ($detailUrl)
+            <a class="font-semibold hover:underline" href="{{ $detailUrl }}">
+                {{ $displayDate }}
+            </a>
+        @else
+            {{ $displayDate }}
+        @endif
+    </div>
 
     <div class="text-center mt-2 mb-3 flex items-center justify-center gap-3">
         <div>
             {!!
                 ShareButtons::page(
                     $objectUrl,
-                    __("Look at this sketch of ") . ($cometName ?? __('Unknown comet')) . __(" by ") . $observer_name . __(" on #deepskylog"),
+                    __("Look at this sketch of ") .
+                        ($cometName ?? __("Unknown comet")) .
+                        __(" by ") .
+                        $observer_name .
+                        __(" on #deepskylog"),
                     [
                         "title" => __("Share this sketch"),
                         "class" => "text-gray-500 hover:text-gray-700",
@@ -39,27 +181,46 @@
             !!}
         </div>
 
-            @php
-                $likesCount = \App\Models\ObservationLike::where('observation_type', 'comet')->where('observation_id', $observation_id)->count();
-                $liked = auth()->check() && \App\Models\ObservationLike::where('observation_type', 'comet')->where('observation_id', $observation_id)->where('user_id', auth()->id())->exists();
-            @endphp
+        @php
+            $likesCount = \App\Models\ObservationLike::where("observation_type", "comet")
+                ->where("observation_id", $observation_id)
+                ->count();
+            $liked =
+                auth()->check() &&
+                \App\Models\ObservationLike::where("observation_type", "comet")
+                    ->where("observation_id", $observation_id)
+                    ->where("user_id", auth()->id())
+                    ->exists();
+        @endphp
 
-        <button data-observation-type="comet" data-observation-id="{{ $observation_id }}" class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white">
-            <span class="like-icon">{!! $liked ? '❤️' : '👍' !!}</span>
+        <button
+            data-observation-type="comet"
+            data-observation-id="{{ $observation_id }}"
+            class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white"
+        >
+            <span class="like-icon">{!!
+                $liked
+                    ? "❤️"
+                    : "👍"
+            !!}</span>
             <span class="like-count">{{ $likesCount }}</span>
         </button>
 
-            @php
-                $messageSubject = __('About your sketch of :object', ['object' => $objectName]);
-            @endphp
+        @php
+            $messageSubject = __("About your sketch of :object", ["object" => $objectName]);
+        @endphp
 
-    @auth
-    <a href="{{ route('messages.create', ['to' => $observer_username ?? $observer_name, 'subject' => $messageSubject]) }}" class="inline-flex items-center p-2 rounded bg-blue-600 hover:bg-blue-700 text-white" aria-label="{{ __('Send message about this sketch') }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path d="M2.94 6.94A2 2 0 014.828 6h10.344a2 2 0 011.888.94L10 11.586 2.94 6.94z" />
-                <path d="M18 8.118V13a2 2 0 01-2 2H4a2 2 0 01-2-2V8.118l7.293 4.377a1 1 0 001.414 0L18 8.118z" />
-            </svg>
-        </a>
-    @endauth
+        @auth
+            <a
+                href="{{ route('messages.create', ['to' => $observer_username ?? $observer_name, 'subject' => $messageSubject]) }}"
+                class="inline-flex items-center p-2 rounded bg-blue-600 hover:bg-blue-700 text-white"
+                aria-label="{{ __('Send message about this sketch') }}"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M2.94 6.94A2 2 0 014.828 6h10.344a2 2 0 011.888.94L10 11.586 2.94 6.94z" />
+                    <path d="M18 8.118V13a2 2 0 01-2 2H4a2 2 0 01-2-2V8.118l7.293 4.377a1 1 0 001.414 0L18 8.118z" />
+                </svg>
+            </a>
+        @endauth
     </div>
 </div>

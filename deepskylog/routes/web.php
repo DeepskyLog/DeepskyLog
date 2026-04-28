@@ -106,6 +106,10 @@ Route::get('/cometdrawings/{observer}/{object}', 'App\Http\Controllers\CometDraw
 Route::get('/cometdrawings/{observer}', 'App\Http\Controllers\CometDrawingController@show')->name('cometdrawings.show');
 // Observations (deepsky + comet)
 Route::get('/observations', 'App\Http\Controllers\ObservationsController@index')->name('observations.index');
+Route::get('/observation/{observer}/{date}/{object}/{index?}', [App\Http\Controllers\ObservationsController::class, 'detail'])
+    ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+    ->where('index', '[0-9]+')
+    ->name('observations.detail');
 // Object-scoped drawings listing (e.g. /observations/drawings/m-31)
 Route::get('/observations/drawings/{slug}', [App\Http\Controllers\ObservationsController::class, 'showObjectDrawings'])->name('observations.drawings.show');
 // Observations for a specific observer filtered by object (e.g. /observations/wim-de-meester/m-31)

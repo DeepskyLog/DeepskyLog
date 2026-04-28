@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\ClearsResponseCache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 
 class CometObservationsOld extends Model
 {
@@ -101,5 +102,28 @@ class CometObservationsOld extends Model
         $related->setConnection(config('database.default'));
 
         return $relation;
+    }
+    public function sketchOfTheWeek(): ?SketchOfTheWeek
+    {
+        $newObs = DB::table('observations')
+            ->where('legacy_source', 'comet')
+            ->where('legacy_id', $this->id)
+            ->first();
+        if (!$newObs) {
+            return null;
+        }
+        return SketchOfTheWeek::where('observation_id', $newObs->id)->first();
+    }
+
+    public function sketchOfTheMonth(): ?SketchOfTheMonth
+    {
+        $newObs = DB::table('observations')
+            ->where('legacy_source', 'comet')
+            ->where('legacy_id', $this->id)
+            ->first();
+        if (!$newObs) {
+            return null;
+        }
+        return SketchOfTheMonth::where('observation_id', $newObs->id)->first();
     }
 }

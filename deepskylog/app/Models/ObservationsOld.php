@@ -9,6 +9,7 @@ namespace App\Models;
 use App\Traits\ClearsResponseCache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -99,9 +100,16 @@ class ObservationsOld extends Model
      *
      * @return BelongsTo The relationship between the ObservationsOld model and the SketchOfTheWeek model.
      */
-    public function sketchOfTheWeek(): BelongsTo
+    public function sketchOfTheWeek(): ?SketchOfTheWeek
     {
-        return $this->setConnection('mysql')->belongsTo(SketchOfTheWeek::class, 'id', 'observation_id');
+        $newObs = DB::table('observations')
+            ->where('legacy_source', 'deepsky')
+            ->where('legacy_id', $this->id)
+            ->first();
+        if (!$newObs) {
+            return null;
+        }
+        return SketchOfTheWeek::where('observation_id', $newObs->id)->first();
     }
 
     /**
@@ -112,9 +120,16 @@ class ObservationsOld extends Model
      *
      * @return BelongsTo The relationship between the ObservationsOld model and the SketchOfTheMonth model.
      */
-    public function sketchOfTheMonth(): BelongsTo
+    public function sketchOfTheMonth(): ?SketchOfTheMonth
     {
-        return $this->setConnection('mysql')->belongsTo(SketchOfTheMonth::class, 'id', 'observation_id');
+        $newObs = DB::table('observations')
+            ->where('legacy_source', 'deepsky')
+            ->where('legacy_id', $this->id)
+            ->first();
+        if (!$newObs) {
+            return null;
+        }
+        return SketchOfTheMonth::where('observation_id', $newObs->id)->first();
     }
 
     /**
@@ -176,7 +191,7 @@ class ObservationsOld extends Model
     {
         $user = $user ?? Auth::user();
 
-        if (! $user || empty($user->username)) {
+        if (!$user || empty($user->username)) {
             return 0;
         }
 
@@ -201,7 +216,7 @@ class ObservationsOld extends Model
     {
         $user = $user ?? Auth::user();
 
-        if (! $user || empty($user->username)) {
+        if (!$user || empty($user->username)) {
             return 0;
         }
 
@@ -229,7 +244,7 @@ class ObservationsOld extends Model
     {
         $user = $user ?? Auth::user();
 
-        if (! $user || empty($user->username)) {
+        if (!$user || empty($user->username)) {
             return null;
         }
 
@@ -240,7 +255,7 @@ class ObservationsOld extends Model
 
         $lastDate = $query->orderByDesc('date')->value('date');
 
-        if (! $lastDate) {
+        if (!$lastDate) {
             return null;
         }
 
@@ -265,7 +280,7 @@ class ObservationsOld extends Model
     {
         $user = $user ?? Auth::user();
 
-        if (! $user || empty($user->username)) {
+        if (!$user || empty($user->username)) {
             return null;
         }
 
@@ -276,7 +291,7 @@ class ObservationsOld extends Model
 
         $lastDate = $query->orderByDesc('date')->value('date');
 
-        if (! $lastDate) {
+        if (!$lastDate) {
             return null;
         }
 
@@ -297,7 +312,8 @@ class ObservationsOld extends Model
      */
     protected static function safeParseDate($date): ?Carbon
     {
-        if (! $date) return null;
+        if (!$date)
+            return null;
         $s = (string) $date;
         try {
             return Carbon::createFromFormat('Ymd', $s);
@@ -313,7 +329,8 @@ class ObservationsOld extends Model
      */
     public static function getInstrumentsForEyepieceIds(array $eyepieceIds): array
     {
-        if (empty($eyepieceIds)) return [];
+        if (empty($eyepieceIds))
+            return [];
         $rows = \DB::connection('mysqlOld')->table((new self())->getTable())
             ->select('eyepieceid', 'instrumentid')
             ->whereIn('eyepieceid', $eyepieceIds)
@@ -325,7 +342,8 @@ class ObservationsOld extends Model
         foreach ($rows as $r) {
             $eid = (int) $r->eyepieceid;
             $iid = (int) $r->instrumentid;
-            if (! isset($map[$eid])) $map[$eid] = [];
+            if (!isset($map[$eid]))
+                $map[$eid] = [];
             $map[$eid][] = $iid;
         }
         return $map;
@@ -341,7 +359,8 @@ class ObservationsOld extends Model
      */
     public static function getFirstObservationDateAndIdForEyepieceIds(array $eyepieceIds): array
     {
-        if (empty($eyepieceIds)) return [];
+        if (empty($eyepieceIds))
+            return [];
 
         $rows = \DB::connection('mysqlOld')->table((new self())->getTable())
             ->select('eyepieceid', 'date', 'id')
@@ -353,7 +372,7 @@ class ObservationsOld extends Model
         $map = [];
         foreach ($rows as $r) {
             $eid = (int) $r->eyepieceid;
-            if (! isset($map[$eid])) {
+            if (!isset($map[$eid])) {
                 $map[$eid] = ['date' => (int) $r->date, 'id' => (int) $r->id];
             }
         }
@@ -370,7 +389,8 @@ class ObservationsOld extends Model
      */
     public static function getLastObservationDateAndIdForEyepieceIds(array $eyepieceIds): array
     {
-        if (empty($eyepieceIds)) return [];
+        if (empty($eyepieceIds))
+            return [];
 
         $rows = \DB::connection('mysqlOld')->table((new self())->getTable())
             ->select('eyepieceid', 'date', 'id')
@@ -382,7 +402,7 @@ class ObservationsOld extends Model
         $map = [];
         foreach ($rows as $r) {
             $eid = (int) $r->eyepieceid;
-            if (! isset($map[$eid])) {
+            if (!isset($map[$eid])) {
                 $map[$eid] = ['date' => (int) $r->date, 'id' => (int) $r->id];
             }
         }
