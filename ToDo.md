@@ -16,7 +16,7 @@
     - [x] Remove the two lists at the index page. No more deep-sky and comets observations and drawings, show then all (20 latest). Maybe an option to only show deep-sky / moon / comets / ?
     - [x] Comment on observations
     - [x] All Observations(AO), My observations(MO), my Last observations(LO) of this object
-    - [ ] Notes -> Add this object and note to the current observing list
+    - [x] Notes -> Add this object and note to the current observing list
     - [ ] Moon phase during observation
     - [ ] Like observations -> already ok?
   - [ ] Overview page, when clicking on 'More details' on the home page, use a link to the new observation page, with all details, comments, ...

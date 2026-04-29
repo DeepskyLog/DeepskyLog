@@ -12,16 +12,27 @@ class ObservingListToggle extends Component
     public string $objectName;
     public bool $showToggle = true;
     public bool $showNote = false;
+    public ?string $observationDescription = null;
+    public ?int $observationId = null;
     public ?ObservingList $activeList = null;
+    public bool $ownsActiveList = false;
     public bool $inList = false;
     public ?int $itemId = null;
     public ?string $itemDescription = null;
+    public bool $noteReplaced = false;
 
-    public function mount(string $objectName, bool $showToggle = true, bool $showNote = false): void
-    {
+    public function mount(
+        string $objectName,
+        bool $showToggle = true,
+        bool $showNote = false,
+        ?string $observationDescription = null,
+        ?int $observationId = null,
+    ): void {
         $this->objectName = $objectName;
         $this->showToggle = $showToggle;
         $this->showNote = $showNote;
+        $this->observationDescription = $observationDescription;
+        $this->observationId = $observationId;
         $this->refresh();
     }
 
@@ -38,8 +49,9 @@ class ObservingListToggle extends Component
         /** @var ActiveObservingListService $svc */
         $svc = app(ActiveObservingListService::class);
         $this->activeList = $svc->getActiveList($user);
+        $this->ownsActiveList = (bool) ($this->activeList && (int) $this->activeList->owner_user_id === (int) $user->id);
 
-        if ($this->activeList) {
+        if ($this->activeList && $this->ownsActiveList) {
             $item = ObservingListItem::where('observing_list_id', $this->activeList->id)
                 ->where('object_name', $this->objectName)
                 ->first();
@@ -70,12 +82,30 @@ class ObservingListToggle extends Component
     }
 
     /**
+     * Build a plain-text note from the observation description.
+     */
+    protected function getSanitizedObservationNote(): ?string
+    {
+        if (empty($this->observationDescription)) {
+            return null;
+        }
+
+        $text = html_entity_decode($this->observationDescription, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = preg_replace('/<br\s*\/?>/i', "\n", $text) ?? $text;
+        $text = strip_tags($text);
+        $text = preg_replace("/\r\n?|\n/", "\n", $text) ?? $text;
+        $text = trim($text);
+
+        return $text !== '' ? $text : null;
+    }
+
+    /**
      * Toggle the object in/out of the active observing list.
      */
     public function toggle(): void
     {
         $user = auth()->user();
-        if (!$user || !$this->activeList) {
+        if (!$user || !$this->activeList || !$this->ownsActiveList) {
             return;
         }
 
@@ -90,18 +120,51 @@ class ObservingListToggle extends Component
                 ->where('observing_list_id', $this->activeList->id)
                 ->delete();
         } else {
+            $sanitizedNote = $this->getSanitizedObservationNote();
+
             ObservingListItem::firstOrCreate(
                 [
                     'observing_list_id' => $this->activeList->id,
                     'object_name' => $this->objectName,
                 ],
                 [
-                    'source_mode' => 'manual',
+                    'item_description' => $sanitizedNote,
+                    'source_mode' => $this->observationId ? 'from_observation' : 'manual',
+                    'source_observation_id' => $this->observationId,
                     'added_by_user_id' => $user->id,
                 ]
             );
         }
 
+        $this->noteReplaced = false;
+        $this->refresh();
+    }
+
+    /**
+     * Replace the current list note for this object with the observation description.
+     */
+    public function replaceNote(): void
+    {
+        $user = auth()->user();
+        if (!$user || !$this->activeList || !$this->ownsActiveList || !$this->inList || !$this->itemId) {
+            return;
+        }
+
+        if (!$user->can('addItem', $this->activeList)) {
+            return;
+        }
+
+        $sanitizedNote = $this->getSanitizedObservationNote();
+
+        ObservingListItem::where('id', $this->itemId)
+            ->where('observing_list_id', $this->activeList->id)
+            ->update([
+                'item_description' => $sanitizedNote,
+                'source_mode' => 'from_observation',
+                'source_observation_id' => $this->observationId,
+            ]);
+
+        $this->noteReplaced = true;
         $this->refresh();
     }
 

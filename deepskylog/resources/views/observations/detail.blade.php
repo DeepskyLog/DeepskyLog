@@ -1196,6 +1196,23 @@
 
                         {{-- object name moved above quick links; duplicate removed --}}
 
+                        {{-- Observing list actions --}}
+                        @auth
+                            <ul class="mt-4 pt-3 border-t border-gray-700 space-y-2 text-sm">
+                                @livewire(
+                                    'observing-list-toggle',
+                                    [
+                                        'objectName'             => $objectDisplayName,
+                                        'observationDescription' => $obs->description ?? null,
+                                        'observationId'          => (int) $obs->id,
+                                        'showToggle'             => true,
+                                        'showNote'               => false,
+                                    ],
+                                    key('ol-toggle-obs-' . $obs->id)
+                                )
+                            </ul>
+                        @endauth
+
                         {{-- Admin actions: allow adding comet observation as sketch of week/month --}}
                         @if (
                             $observationType === 'comet' &&
