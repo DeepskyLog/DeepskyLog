@@ -1,4 +1,4 @@
-@props (["sketch" => null])
+@props (["sketch" => null, "use_selection_date" => false])
 <div>
     <div class="mt-3 max-w-xl pr-3">
         @php
@@ -9,17 +9,21 @@
                 $sketch?->user?->username ?? $observation?->observer_username;
             $observerSlug = $sketch?->user?->slug;
 
+            // Dates: selection date (sketch->date) and original observation date
+            $sketch_date = null;
+            if (!empty($sketch?->date)) {
+                $sketch_date =
+                    $sketch->date instanceof \Carbon\Carbon
+                        ? $sketch->date->format("Y-m-d")
+                        : (string) $sketch->date;
+            }
+
             $observationDate = null;
             if (!empty($observation?->observed_on)) {
                 $observationDate =
                     $observation->observed_on instanceof \Carbon\Carbon
                         ? $observation->observed_on->format("Y-m-d")
                         : (string) $observation->observed_on;
-            } elseif (!empty($sketch?->date)) {
-                $observationDate =
-                    $sketch->date instanceof \Carbon\Carbon
-                        ? $sketch->date->format("Y-m-d")
-                        : (string) $sketch->date;
             }
 
             $isComet =
@@ -38,6 +42,8 @@
                 :observer_username="$observerUsername"
                 :observer_slug="$observerSlug"
                 :observation_date="$observationDate"
+                :sketch_date="$sketch_date"
+                :use_sketch_date="$use_selection_date"
             />
         @elseif ($legacyObservationId)
             <x-sketch-deepsky
@@ -48,6 +54,8 @@
                 :observer_username="$observerUsername"
                 :observer_slug="$observerSlug"
                 :observation_date="$observationDate"
+                :sketch_date="$sketch_date"
+                :use_sketch_date="$use_selection_date"
             />
         @else
             <div class="text-gray-400">

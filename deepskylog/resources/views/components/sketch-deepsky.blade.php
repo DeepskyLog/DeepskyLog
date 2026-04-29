@@ -7,6 +7,8 @@
     "observer_username" => null,
     "observer_slug" => null,
     "observation_date" => null,
+    "sketch_date" => null,
+    "use_sketch_date" => false,
     "observation" => null,
     "object" => null,
     "likes_count" => null,
@@ -47,18 +49,32 @@
         );
 
         $detailUrl = null;
+        // Base detailDate used for routing (defaults to supplied observation_date)
         $detailDate = $observation_date;
+        // displayDate is shown to the user; may be overridden with sketch selection date
         $displayDate = !empty($detailDate)
             ? \Carbon\Carbon::parse($detailDate)->translatedFormat("j M Y")
             : "";
+
+        if (!empty($use_sketch_date) && !empty($sketch_date)) {
+            try {
+                $displayDate = \Carbon\Carbon::parse($sketch_date)->translatedFormat("j M Y");
+            } catch (\Throwable $_) {
+            }
+        }
+
         if ($obsUnified) {
+            // For routing we still need the observation's actual observed_on date
             $detailDate =
                 $obsUnified->observed_on instanceof \Carbon\Carbon
                     ? $obsUnified->observed_on->format("Y-m-d")
                     : (string) $obsUnified->observed_on;
-            $displayDate = !empty($detailDate)
-                ? \Carbon\Carbon::parse($detailDate)->translatedFormat("j M Y")
-                : $displayDate;
+            // Only update displayDate with the observation date when not explicitly showing sketch selection date
+            if (empty($use_sketch_date) || empty($sketch_date)) {
+                $displayDate = !empty($detailDate)
+                    ? \Carbon\Carbon::parse($detailDate)->translatedFormat("j M Y")
+                    : $displayDate;
+            }
 
             $observerSegment =
                 $resolvedObserverSlug ?: ((string) $obsUnified->observer_username);

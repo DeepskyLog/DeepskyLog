@@ -14,7 +14,7 @@
                 <x-card>
                     <div class="flex flex-wrap px-5">
                         @foreach ($sketches as $sketch)
-                            <x-sketch :sketch="$sketch" />
+                            <x-sketch :sketch="$sketch" :use_selection_date="true" />
                         @endforeach
                     </div>
                     {{ $sketches->links() }}
