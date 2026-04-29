@@ -1,6 +1,7 @@
 {{-- Avoid inline `use` in Blade; use fully-qualified class names within PHP blocks --}}
 @props ([
     "observation",
+    "unified_observation" => null,
     "preloaded_user" => null,
     "preloaded_comet" => null,
     "preloaded_location" => null,
@@ -40,6 +41,23 @@
             );
         }
     @endphp
+
+    @if ($unified_observation)
+        @php $obsType = $unified_observation->target_type ?? null; @endphp
+        <div class="mr-3 mt-6 flex-shrink-0">
+            <span role="img" aria-label="{{ ucfirst($obsType ?? 'object') }}" title="{{ ucfirst($obsType ?? '') }}" class="text-2xl">
+                @if ($obsType === 'deepsky')
+                    ✨
+                @elseif ($obsType === 'comet')
+                    ☄️
+                @elseif ($obsType === 'solarsystem')
+                    🪐
+                @else
+                    🔭
+                @endif
+            </span>
+        </div>
+    @endif
 
     <div class="mr-4">
         <img

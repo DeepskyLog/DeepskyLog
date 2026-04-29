@@ -15,63 +15,29 @@
             </div>
             @guest
                 <div>
-                    {{
-                        __(
-                            "Welcome to DeepskyLog!",
-                        )
-                    }} {!!
-                        __(
-                            "DeepskyLog is an extended, comprehensive and free database for deepsky objects and has been developed by the Deepsky section of the Astronomical Society of Belgium (:linkVereniging Voor Sterrenkunde (VVS):close_link).",
-                            ["link" => "<a href='https://www.vvs.be'>", "close_link" => "</a>"],
-                        )
-                    !!} {{
-                        __(
-                            "The database is open for consultation and already contains tens of thousands observations and thousands of sketches and drawings made by amateur astronomers around the world.",
-                        )
-                    }}
+                    {{ __("Welcome to DeepskyLog!") }}
+                    {!! __(
+                        "DeepskyLog is an extended, comprehensive and free database for deepsky objects and has been developed by the Deepsky section of the Astronomical Society of Belgium (:linkVereniging Voor Sterrenkunde (VVS):close_link).",
+                        ["link" => "<a href='https://www.vvs.be'>", "close_link" => "</a>"]
+                    ) !!}
+                    {{ __("The database is open for consultation and already contains tens of thousands observations and thousands of sketches and drawings made by amateur astronomers around the world.") }}
                     <br />
-                    {!!
-                        __(
-                            "To start recording your observations and share your observations with other observers, you are kindly requested to :linkregister:close_link to DeepskyLog.",
-                            ["link" => '<a href="/register">', "close_link" => "</a>"],
-                        )
-                    !!} {!!
-                        __(
-                            "Your personal data will be handled in accordance with our :linkprivacy policy:close_link.",
-                            [
-                                "link" => '<a href="/privacy">',
-                                "close_link" => "</a>",
-                            ],
-                        )
-                    !!} {{
-                        __(
-                            "This registration allows access to a variety of useful tools, including information on the objects observed and sketches made.",
-                        )
-                    }}
+                    {!! __(
+                        "To start recording your observations and share your observations with other observers, you are kindly requested to :linkregister:close_link to DeepskyLog. Your personal data will be handled in accordance with our :linkprivacy policy:close_link.",
+                        [
+                            "link" => "<a href='/register'>",
+                            "close_link" => "</a>",
+                            "linkprivacy policy" => "<a href='/privacy'>",
+                            "close_link2" => "</a>",
+                        ]
+                    ) !!}
                     <br />
-                    {{
-                        __(
-                            "You can consult and create observing lists with different deepsky objects and see suggestions for objects visible in your instrument and from your observation sites. ",
-                        )
-                    }} {{
-                        __(
-                            "You can create your own file with maps and DSS images of the objects and have access to an interactive and detailed free star atlas. ",
-                        )
-                    }} {{
-                        __(
-                            "You can also consult the observations and sketches of other observers and share your own observations and sketches with the community.",
-                        )
-                    }}
+                    {{ __("You can consult and create observing lists with different deepsky objects and see suggestions for objects visible in your instrument and from your observation sites. You can create your own file with maps and DSS images of the objects and have access to an interactive and detailed free star atlas. You can also consult the observations and sketches of other observers and share your own observations and sketches with the community.") }}
                     <br />
-                    {!!
-                        __(
-                            "Please contact the :linkDeepskyLog developers:close_link if you encounter problems or have questions.",
-                            [
-                                "link" => '<a href="mailto:deepskylog@groups.io">',
-                                "close_link" => "</a>",
-                            ],
-                        )
-                    !!}
+                    {!! __(
+                        "Please contact the :linkDeepskyLog developers:close_link if you encounter problems or have questions.",
+                        ["link" => '<a href="mailto:deepskylog@groups.io">', "close_link" => "</a>"]
+                    ) !!}
                 </div>
             @endguest
         </x-card>
@@ -318,315 +284,114 @@
             </div>
         @endisset
 
-        {{-- Ten latest sketches --}}
+        {{-- Latest sketches from the unified observations table --}}
         <div class="pt-4">
             <h2 class="ml-3 mt-3 text-xl font-semibold leading-tight">
-                {{
-                    __(
-                        "10 newest deep-sky Sketches",
-                    )
-                }}
+                {{ __("20 newest sketches") }}
             </h2>
             @php
+                $sketchType = request()->get("sketch_type", "all");
+                $allowedSketchTypes = ["all", "deepsky", "comet", "solarsystem"];
+                if (!in_array($sketchType, $allowedSketchTypes)) {
+                    $sketchType = "all";
+                }
+            @endphp
+            <div class="ml-3 mt-2 flex gap-3">
+                @foreach (["all" => __("All"), "deepsky" => __("Deep-sky"), "comet" => __("Comets"), "solarsystem" => __("Solar system")] as $typeKey => $typeLabel)
+                    @php
+                        $params = array_merge(request()->except(["sketch_type", "sketches"]), $typeKey !== "all" ? ["sketch_type" => $typeKey] : []);
+                        $url = url("/") . ($params ? "?" . http_build_query($params) : "");
+                        $isActive = $sketchType === $typeKey;
+                    @endphp
+                    <a href="{{ $url }}"
+                       class="rounded px-3 py-1 text-sm font-medium {{ $isActive ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200 hover:bg-gray-600' }}"
+                    >{{ $typeLabel }}</a>
+                @endforeach
+            </div>
+            @php
                 $page = request()->get("sketches", 1);
-                $cacheKey = "welcome_sketches_page_" . $page;
-                $sketches = Cache::remember($cacheKey, 300, function () use ($page) {
-                    return ObservationsOld::where("hasDrawing", "1")
-                        ->orderBy("id", "desc")
-                        ->paginate(10, $columns = ["*"], $pageName = "sketches", page: $page)
+                $cacheKey = "welcome_sketches_page_" . $sketchType . "_" . $page;
+                $sketches = Cache::remember($cacheKey, 300, function () use ($page, $sketchType) {
+                    $query = \App\Models\Observation::query()
+                        ->where("has_drawing", true)
+                        ->whereIn("legacy_source", ["deepsky", "comet"]);
+                    if ($sketchType === "all") {
+                        $query->whereIn("target_type", ["deepsky", "comet", "solarsystem"]);
+                    } else {
+                        $query->where("target_type", $sketchType);
+                    }
+                    return $query
+                        ->orderByDesc("observed_on")
+                        ->orderByDesc("id")
+                        ->paginate(20, ["*"], "sketches", $page)
                         ->appends(request()->except("sketches"));
                 });
 
-                $observerIds = $sketches->pluck("observerid")->unique()->values()->all();
-                $observerUsers = User::whereIn("username", $observerIds)
-                    ->get()
-                    ->keyBy("username");
-
-                // Preload objects to avoid N+1 in sketch-deepsky component
-                $objectNames = $sketches->pluck("objectname")->unique()->values()->all();
-                $objects = \App\Models\ObjectsOld::whereIn("name", $objectNames)
-                    ->get()
-                    ->keyBy("name");
-
-                // Preload likes data in batch
-                $sketchIds = $sketches->pluck("id")->all();
-                $likesCounts = \App\Models\ObservationLike::where("observation_type", "deepsky")
-                    ->whereIn("observation_id", $sketchIds)
-                    ->select("observation_id", \DB::raw("count(*) as count"))
-                    ->groupBy("observation_id")
-                    ->pluck("count", "observation_id");
-
-                $userLikes = auth()->check()
-                    ? \App\Models\ObservationLike::where("observation_type", "deepsky")
-                        ->whereIn("observation_id", $sketchIds)
-                        ->where("user_id", auth()->id())
-                        ->pluck("observation_id")
-                        ->flip()
-                    : collect();
-            @endphp
-
-            <div class="mt-2">
-                <x-card>
-                    <div class="flex flex-wrap px-5">
-                        @foreach ($sketches as $sketch)
-                            @php
-                                $observation_id = $sketch->id;
-                                $observerUser = $observerUsers[$sketch->observerid] ?? null;
-                                $observer_name = $observerUser ? $observerUser->name : $sketch->observerid;
-                                $date = $sketch->date;
-                                $observation_date =
-                                    substr($date, 0, 4) . "-" . substr($date, 4, 2) . "-" . substr($date, 6, 2);
-                                $object = $objects[$sketch->objectname] ?? null;
-                                $likesCount = $likesCounts[$observation_id] ?? 0;
-                                $liked = $userLikes->has($observation_id);
-                            @endphp
-                            <div class="flex flex-col pr-4">
-                                <x-sketch-deepsky
-                                    :observation_id="$observation_id"
-                                    :observer_name="$observer_name"
-                                    :observer_username="$sketch->observerid"
-                                    :observer_slug="$observerUser?->slug"
-                                    :observation_date="$observation_date"
-                                    :observation="$sketch"
-                                    :object="$object"
-                                    :likes_count="$likesCount"
-                                    :liked="$liked"
-                                />
-                            </div>
-                        @endforeach
-                    </div>
-                    {{ $sketches->links() }}
-                </x-card>
-            </div>
-        </div>
-
-        {{-- Ten latest sketches --}}
-        <div class="pt-4">
-            <h2 class="ml-3 mt-3 text-xl font-semibold leading-tight">
-                {{
-                    __(
-                        "10 newest comet Sketches",
-                    )
-                }}
-            </h2>
-            @php
-                $page = request()->get("cometsketches", 1);
-                $cacheKey = "welcome_comet_sketches_page_" . $page;
-                $sketches = Cache::remember($cacheKey, 300, function () use ($page) {
-                    return CometObservationsOld::where("hasDrawing", "1")
-                        ->orderBy("id", "desc")
-                        ->paginate(
-                            10,
-                            $columns = ["*"],
-                            $pageName = "cometsketches",
-                            page: $page,
-                        )
-                        ->appends(request()->except("cometsketches"));
-                });
-
-                $observerIds = $sketches->pluck("observerid")->unique()->values()->all();
-                $observerUsers = User::whereIn("username", $observerIds)
-                    ->get()
-                    ->keyBy("username");
-
-                $sketchObjectIds = $sketches
-                    ->pluck("objectid")
-                    ->unique()
+                $observerIds = $sketches->pluck("observer_username")
                     ->filter()
+                    ->unique()
                     ->values()
                     ->all();
-                $preloadedSketchComets = \App\Models\CometObject::whereIn(
-                    "id",
-                    $sketchObjectIds,
-                )
-                    ->get()
-                    ->keyBy("id");
-            @endphp
-
-            <div class="mt-2">
-                <x-card>
-                    <div class="flex flex-wrap px-5">
-                        @foreach ($sketches as $sketch)
-                            @php
-                                $observation_id = $sketch->id;
-                                $observerUser = $observerUsers[$sketch->observerid] ?? null;
-                                $observer_name = $observerUser ? $observerUser->name : $sketch->observerid;
-                                $date = $sketch->date;
-                                $observation_date =
-                                    substr($date, 0, 4) . "-" . substr($date, 4, 2) . "-" . substr($date, 6, 2);
-                            @endphp
-                            <div class="flex flex-col pr-4">
-                                <x-sketch-comet
-                                    :observation_id="$observation_id"
-                                    :observer_name="$observer_name"
-                                    :observer_username="$sketch->observerid"
-                                    :observer_slug="$observerUser?->slug"
-                                    :observation_date="$observation_date"
-                                    :preloaded_comet="$preloadedSketchComets[$sketch->objectid] ?? null"
-                                />
-                            </div>
-                        @endforeach
-                    </div>
-                    {{ $sketches->links() }}
-                </x-card>
-            </div>
-        </div>
-
-        {{-- Ten latest observations --}}
-        <div class="pt-4">
-            <h2 class="ml-3 mt-3 text-xl font-semibold leading-tight">
-                {{
-                    __(
-                        "10 newest deep-sky observations",
-                    )
-                }}
-            </h2>
-            @php
-                $page = request()->get("deepsky", 1);
-                $cacheKey = "welcome_deepsky_page_" . $page;
-                $observations = Cache::remember($cacheKey, 300, function () use ($page) {
-                    return ObservationsOld::orderBy("id", "desc")
-                        ->paginate(10, $columns = ["*"], pageName: "deepsky", page: $page)
-                        ->appends(request()->except("deepsky"));
-                });
-
-                // Preload all related data to avoid N+1 queries in observation-deepsky component
-                $observerIds = $observations->pluck("observerid")->unique()->filter()->all();
-                $preloadedUsers = \App\Models\User::whereIn("username", $observerIds)
+                $observerUsers = User::whereIn("username", $observerIds)
                     ->get()
                     ->keyBy("username");
 
-                $objectNames = $observations->pluck("objectname")->unique()->filter()->all();
-                $preloadedObjects = \App\Models\ObjectsOld::whereIn("name", $objectNames)
-                    ->get()
-                    ->keyBy("name");
-
-                $locationIds = $observations->pluck("locationid")->unique()->filter()->all();
-                $preloadedLocations = \App\Models\Location::whereIn("id", $locationIds)
-                    ->get()
-                    ->keyBy("id");
-
-                $instrumentIds = $observations
-                    ->pluck("instrumentid")
-                    ->unique()
+                $deepSkySketchIds = $sketches->where("legacy_source", "deepsky")
+                    ->pluck("legacy_id")
                     ->filter()
+                    ->map(fn($id) => (int) $id)
+                    ->values()
                     ->all();
-                $preloadedInstruments = \App\Models\Instrument::whereIn("id", $instrumentIds)
-                    ->get()
-                    ->keyBy("id");
+                $deepSkySketches = empty($deepSkySketchIds)
+                    ? collect()
+                    : ObservationsOld::whereIn("id", $deepSkySketchIds)
+                        ->get()
+                        ->keyBy("id");
 
-                $eyepieceIds = $observations
-                    ->pluck("eyepieceid")
-                    ->filter(fn($id) => $id > 0)
+                $cometSketchIds = $sketches->where("legacy_source", "comet")
+                    ->pluck("legacy_id")
+                    ->filter()
+                    ->map(fn($id) => (int) $id)
+                    ->values()
+                    ->all();
+                $cometSketches = empty($cometSketchIds)
+                    ? collect()
+                    : CometObservationsOld::whereIn("id", $cometSketchIds)
+                        ->get()
+                        ->keyBy("id");
+
+                $deepSkyObjectNames = $deepSkySketches->pluck("objectname")
+                    ->filter()
                     ->unique()
+                    ->values()
                     ->all();
-                $preloadedEyepieces = \App\Models\Eyepiece::whereIn("id", $eyepieceIds)
-                    ->get()
-                    ->keyBy("id");
+                $objects = empty($deepSkyObjectNames)
+                    ? collect()
+                    : \App\Models\ObjectsOld::whereIn("name", $deepSkyObjectNames)
+                        ->get()
+                        ->keyBy("name");
 
-                $filterIds = $observations
-                    ->pluck("filterid")
-                    ->filter(fn($id) => $id > 0)
+                $cometObjectIds = $cometSketches->pluck("objectid")
+                    ->filter()
                     ->unique()
+                    ->values()
                     ->all();
-                $preloadedFilters = \App\Models\Filter::whereIn("id", $filterIds)
-                    ->get()
-                    ->keyBy("id");
+                $preloadedSketchComets = empty($cometObjectIds)
+                    ? collect()
+                    : \App\Models\CometObject::whereIn("id", $cometObjectIds)
+                        ->get()
+                        ->keyBy("id");
 
-                $conIds = $preloadedObjects->pluck("con")->unique()->filter()->all();
-                $preloadedConstellations = \App\Models\Constellation::whereIn("id", $conIds)
-                    ->get()
-                    ->keyBy("id");
-            @endphp
-
-            <div class="mt-2">
-                <x-card>
-                    <div class="grid-cols-1 px-5">
-                        @php
-                            $tr = null;
-                            if (auth()->check() && auth()->user()->translate) {
-                                $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(
-                                    auth()->user()->language,
-                                );
-                            }
-                        @endphp
-                        @foreach ($observations as $observation)
-                            <x-observation-deepsky
-                                :observation="$observation"
-                                :translator="$tr"
-                                :preloaded_user="$preloadedUsers[$observation->observerid] ?? null"
-                                :preloaded_object="$preloadedObjects[$observation->objectname] ?? null"
-                                :preloaded_location="$preloadedLocations[$observation->locationid] ?? null"
-                                :preloaded_instrument="$preloadedInstruments[$observation->instrumentid] ?? null"
-                                :preloaded_eyepiece="$preloadedEyepieces[$observation->eyepieceid] ?? null"
-                                :preloaded_filter="$preloadedFilters[$observation->filterid] ?? null"
-                                :preloaded_constellations="$preloadedConstellations"
-                            />
-                        @endforeach
-                    </div>
-                    {{ $observations->links() }}
-                </x-card>
-            </div>
-        </div>
-
-        {{-- Ten latest comet observations --}}
-        <div class="pt-4">
-            <h2 class="ml-3 mt-3 text-xl font-semibold leading-tight">
-                {{
-                    __(
-                        "10 newest comet observations",
-                    )
-                }}
-            </h2>
-            @php
-                $page = request()->get("comets", 1);
-                $cacheKey = "welcome_comets_page_" . $page;
-                $observations = Cache::remember($cacheKey, 300, function () use ($page) {
-                    return CometObservationsOld::orderBy("id", "desc")
-                        ->paginate(10, $columns = ["*"], pageName: "comets", page: $page)
-                        ->appends(request()->except("comets"));
-                });
-
-                // Preload all related data to avoid N+1 queries in observation-comet component
-                $observerIds = $observations->pluck("observerid")->unique()->filter()->all();
-                $preloadedUsers = \App\Models\User::whereIn("username", $observerIds)
-                    ->get()
-                    ->keyBy("username");
-
-                $objectIds = $observations->pluck("objectid")->unique()->filter()->all();
-                $preloadedComets = \App\Models\CometObject::whereIn("id", $objectIds)
-                    ->get()
-                    ->keyBy("id");
-
-                $locationIds = $observations
-                    ->pluck("locationid")
-                    ->filter(fn($id) => $id > 0)
-                    ->unique()
-                    ->all();
-                $preloadedLocations = \App\Models\Location::whereIn("id", $locationIds)
-                    ->get()
-                    ->keyBy("id");
-
-                $instrumentIds = $observations
-                    ->pluck("instrumentid")
-                    ->filter(fn($id) => $id > 0)
-                    ->unique()
-                    ->all();
-                $preloadedInstruments = \App\Models\Instrument::whereIn("id", $instrumentIds)
-                    ->get()
-                    ->keyBy("id");
-
-                // Preload likes data in batch
-                $observationIds = $observations->pluck("id")->all();
-                $likesCounts = \App\Models\ObservationLike::where("observation_type", "comet")
-                    ->whereIn("observation_id", $observationIds)
-                    ->select("observation_id", \DB::raw("count(*) as count"))
-                    ->groupBy("observation_id")
-                    ->pluck("count", "observation_id");
-
-                $userLikes = auth()->check()
-                    ? \App\Models\ObservationLike::where("observation_type", "comet")
-                        ->whereIn("observation_id", $observationIds)
+                $deepSkyLikesCounts = empty($deepSkySketchIds)
+                    ? collect()
+                    : \App\Models\ObservationLike::where("observation_type", "deepsky")
+                        ->whereIn("observation_id", $deepSkySketchIds)
+                        ->select("observation_id", \DB::raw("count(*) as count"))
+                        ->groupBy("observation_id")
+                        ->pluck("count", "observation_id");
+                $deepSkyUserLikes = auth()->check() && !empty($deepSkySketchIds)
+                    ? \App\Models\ObservationLike::where("observation_type", "deepsky")
+                        ->whereIn("observation_id", $deepSkySketchIds)
                         ->where("user_id", auth()->id())
                         ->pluck("observation_id")
                         ->flip()
@@ -635,17 +400,274 @@
 
             <div class="mt-2">
                 <x-card>
+                    <div class="flex flex-wrap px-5">
+                        @foreach ($sketches as $sketch)
+                            @php
+                                $observerUser = $observerUsers[$sketch->observer_username] ?? null;
+                                $observer_name = $observerUser?->name ?? $sketch->observer_username;
+                                $observation_date = optional($sketch->observed_on)?->format("Y-m-d");
+                            @endphp
+                            @if ($sketch->legacy_source === "comet")
+                                @php
+                                    $legacySketch = $cometSketches[$sketch->legacy_id] ?? null;
+                                @endphp
+                                @if ($legacySketch)
+                                    <div class="flex flex-col pr-4">
+                                        <x-sketch-comet
+                                            :observation_id="$legacySketch->id"
+                                            :unified_observation="$sketch"
+                                            :observer_name="$observer_name"
+                                            :observer_username="$sketch->observer_username"
+                                            :observer_slug="$observerUser?->slug"
+                                            :observation_date="$observation_date"
+                                            :preloaded_comet="$preloadedSketchComets[$legacySketch->objectid] ?? null"
+                                        />
+                                    </div>
+                                @endif
+                            @else
+                                @php
+                                    $legacySketch = $deepSkySketches[$sketch->legacy_id] ?? null;
+                                @endphp
+                                @if ($legacySketch)
+                                    <div class="flex flex-col pr-4">
+                                        <x-sketch-deepsky
+                                            :observation_id="$legacySketch->id"
+                                            :unified_observation="$sketch"
+                                            :observer_name="$observer_name"
+                                            :observer_username="$sketch->observer_username"
+                                            :observer_slug="$observerUser?->slug"
+                                            :observation_date="$observation_date"
+                                            :observation="$legacySketch"
+                                            :object="$objects[$legacySketch->objectname] ?? null"
+                                            :likes_count="$deepSkyLikesCounts[$legacySketch->id] ?? 0"
+                                            :liked="$deepSkyUserLikes->has($legacySketch->id)"
+                                        />
+                                    </div>
+                                @endif
+                            @endif
+                        @endforeach
+                    </div>
+                    {{ $sketches->links() }}
+                </x-card>
+            </div>
+        </div>
+
+        {{-- Latest observations from the unified observations table --}}
+        <div class="pt-4">
+            <h2 class="ml-3 mt-3 text-xl font-semibold leading-tight">
+                {{ __("20 newest observations") }}
+            </h2>
+            @php
+                $obsType = request()->get("obs_type", "all");
+                $allowedObsTypes = ["all", "deepsky", "comet", "solarsystem"];
+                if (!in_array($obsType, $allowedObsTypes)) {
+                    $obsType = "all";
+                }
+            @endphp
+            <div class="ml-3 mt-2 flex gap-3">
+                @foreach (["all" => __("All"), "deepsky" => __("Deep-sky"), "comet" => __("Comets"), "solarsystem" => __("Solar system")] as $typeKey => $typeLabel)
+                    @php
+                        $params = array_merge(request()->except(["obs_type", "observations"]), $typeKey !== "all" ? ["obs_type" => $typeKey] : []);
+                        $url = url("/") . ($params ? "?" . http_build_query($params) : "");
+                        $isActive = $obsType === $typeKey;
+                    @endphp
+                    <a href="{{ $url }}"
+                       class="rounded px-3 py-1 text-sm font-medium {{ $isActive ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200 hover:bg-gray-600' }}"
+                    >{{ $typeLabel }}</a>
+                @endforeach
+            </div>
+            @php
+                $page = request()->get("observations", 1);
+                $cacheKey = "welcome_observations_page_" . $obsType . "_" . $page;
+                $observations = Cache::remember($cacheKey, 300, function () use ($page, $obsType) {
+                    $query = \App\Models\Observation::query()
+                        ->whereIn("legacy_source", ["deepsky", "comet"]);
+                    if ($obsType === "all") {
+                        $query->whereIn("target_type", ["deepsky", "comet", "solarsystem"]);
+                    } else {
+                        $query->where("target_type", $obsType);
+                    }
+                    return $query
+                        ->orderByDesc("observed_on")
+                        ->orderByDesc("id")
+                        ->paginate(20, ["*"], "observations", $page)
+                        ->appends(request()->except("observations"));
+                });
+
+                $observerIds = $observations->pluck("observer_username")
+                    ->filter()
+                    ->unique()
+                    ->values()
+                    ->all();
+                $preloadedUsers = \App\Models\User::whereIn("username", $observerIds)
+                    ->get()
+                    ->keyBy("username");
+
+                $deepSkyObservationIds = $observations->where("legacy_source", "deepsky")
+                    ->pluck("legacy_id")
+                    ->filter()
+                    ->map(fn($id) => (int) $id)
+                    ->values()
+                    ->all();
+                $deepSkyObservations = empty($deepSkyObservationIds)
+                    ? collect()
+                    : ObservationsOld::whereIn("id", $deepSkyObservationIds)
+                        ->get()
+                        ->keyBy("id");
+
+                $cometObservationIds = $observations->where("legacy_source", "comet")
+                    ->pluck("legacy_id")
+                    ->filter()
+                    ->map(fn($id) => (int) $id)
+                    ->values()
+                    ->all();
+                $cometObservations = empty($cometObservationIds)
+                    ? collect()
+                    : CometObservationsOld::whereIn("id", $cometObservationIds)
+                        ->get()
+                        ->keyBy("id");
+
+                $deepSkyObjectNames = $deepSkyObservations->pluck("objectname")
+                    ->filter()
+                    ->unique()
+                    ->values()
+                    ->all();
+                $preloadedObjects = empty($deepSkyObjectNames)
+                    ? collect()
+                    : \App\Models\ObjectsOld::whereIn("name", $deepSkyObjectNames)
+                        ->get()
+                        ->keyBy("name");
+
+                $allLocationIds = $deepSkyObservations->pluck("locationid")
+                    ->merge($cometObservations->pluck("locationid"))
+                    ->filter(fn($id) => (int) $id > 0)
+                    ->unique()
+                    ->values()
+                    ->all();
+                $preloadedLocations = empty($allLocationIds)
+                    ? collect()
+                    : \App\Models\Location::whereIn("id", $allLocationIds)
+                        ->get()
+                        ->keyBy("id");
+
+                $allInstrumentIds = $deepSkyObservations->pluck("instrumentid")
+                    ->merge($cometObservations->pluck("instrumentid"))
+                    ->filter(fn($id) => (int) $id > 0)
+                    ->unique()
+                    ->values()
+                    ->all();
+                $preloadedInstruments = empty($allInstrumentIds)
+                    ? collect()
+                    : \App\Models\Instrument::whereIn("id", $allInstrumentIds)
+                        ->get()
+                        ->keyBy("id");
+
+                $eyepieceIds = $deepSkyObservations->pluck("eyepieceid")
+                    ->filter(fn($id) => (int) $id > 0)
+                    ->unique()
+                    ->values()
+                    ->all();
+                $preloadedEyepieces = empty($eyepieceIds)
+                    ? collect()
+                    : \App\Models\Eyepiece::whereIn("id", $eyepieceIds)
+                        ->get()
+                        ->keyBy("id");
+
+                $filterIds = $deepSkyObservations->pluck("filterid")
+                    ->filter(fn($id) => (int) $id > 0)
+                    ->unique()
+                    ->values()
+                    ->all();
+                $preloadedFilters = empty($filterIds)
+                    ? collect()
+                    : \App\Models\Filter::whereIn("id", $filterIds)
+                        ->get()
+                        ->keyBy("id");
+
+                $conIds = $preloadedObjects->pluck("con")
+                    ->filter()
+                    ->unique()
+                    ->values()
+                    ->all();
+                $preloadedConstellations = empty($conIds)
+                    ? collect()
+                    : \App\Models\Constellation::whereIn("id", $conIds)
+                        ->get()
+                        ->keyBy("id");
+
+                $cometObjectIds = $cometObservations->pluck("objectid")
+                    ->filter()
+                    ->unique()
+                    ->values()
+                    ->all();
+                $preloadedComets = empty($cometObjectIds)
+                    ? collect()
+                    : \App\Models\CometObject::whereIn("id", $cometObjectIds)
+                        ->get()
+                        ->keyBy("id");
+
+                $cometLikesCounts = empty($cometObservationIds)
+                    ? collect()
+                    : \App\Models\ObservationLike::where("observation_type", "comet")
+                        ->whereIn("observation_id", $cometObservationIds)
+                        ->select("observation_id", \DB::raw("count(*) as count"))
+                        ->groupBy("observation_id")
+                        ->pluck("count", "observation_id");
+                $cometUserLikes = auth()->check() && !empty($cometObservationIds)
+                    ? \App\Models\ObservationLike::where("observation_type", "comet")
+                        ->whereIn("observation_id", $cometObservationIds)
+                        ->where("user_id", auth()->id())
+                        ->pluck("observation_id")
+                        ->flip()
+                    : collect();
+
+                $tr = null;
+                if (auth()->check() && auth()->user()->translate) {
+                    $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(
+                        auth()->user()->language,
+                    );
+                }
+            @endphp
+
+            <div class="mt-2">
+                <x-card>
                     <div class="grid-cols-1 px-5">
                         @foreach ($observations as $observation)
-                            <x-observation-comet
-                                :observation="$observation"
-                                :preloaded_user="$preloadedUsers[$observation->observerid] ?? null"
-                                :preloaded_comet="$preloadedComets[$observation->objectid] ?? null"
-                                :preloaded_location="$preloadedLocations[$observation->locationid] ?? null"
-                                :preloaded_instrument="$preloadedInstruments[$observation->instrumentid] ?? null"
-                                :likes_count="$likesCounts[$observation->id] ?? 0"
-                                :liked="$userLikes->has($observation->id)"
-                            />
+                            @if ($observation->legacy_source === "comet")
+                                @php
+                                    $legacyObservation = $cometObservations[$observation->legacy_id] ?? null;
+                                @endphp
+                                @if ($legacyObservation)
+                                    <x-observation-comet
+                                        :observation="$legacyObservation"
+                                        :unified_observation="$observation"
+                                        :preloaded_user="$preloadedUsers[$legacyObservation->observerid] ?? null"
+                                        :preloaded_comet="$preloadedComets[$legacyObservation->objectid] ?? null"
+                                        :preloaded_location="$preloadedLocations[$legacyObservation->locationid] ?? null"
+                                        :preloaded_instrument="$preloadedInstruments[$legacyObservation->instrumentid] ?? null"
+                                        :likes_count="$cometLikesCounts[$legacyObservation->id] ?? 0"
+                                        :liked="$cometUserLikes->has($legacyObservation->id)"
+                                    />
+                                @endif
+                            @else
+                                @php
+                                    $legacyObservation = $deepSkyObservations[$observation->legacy_id] ?? null;
+                                @endphp
+                                @if ($legacyObservation)
+                                    <x-observation-deepsky
+                                        :observation="$legacyObservation"
+                                        :unified_observation="$observation"
+                                        :translator="$tr"
+                                        :preloaded_user="$preloadedUsers[$legacyObservation->observerid] ?? null"
+                                        :preloaded_object="$preloadedObjects[$legacyObservation->objectname] ?? null"
+                                        :preloaded_location="$preloadedLocations[$legacyObservation->locationid] ?? null"
+                                        :preloaded_instrument="$preloadedInstruments[$legacyObservation->instrumentid] ?? null"
+                                        :preloaded_eyepiece="$preloadedEyepieces[$legacyObservation->eyepieceid] ?? null"
+                                        :preloaded_filter="$preloadedFilters[$legacyObservation->filterid] ?? null"
+                                        :preloaded_constellations="$preloadedConstellations"
+                                    />
+                                @endif
+                            @endif
                         @endforeach
                     </div>
                     {{ $observations->links() }}
