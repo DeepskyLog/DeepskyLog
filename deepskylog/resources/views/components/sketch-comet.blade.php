@@ -146,7 +146,7 @@
     <a class="no-underline" href="{{ $objectUrl }}">
         <img
             width="400"
-            src="/images/cometdrawings/{{ $drawing_id ?: $observation_id }}.jpg"
+            src="/images/{{ $drawing_id ?: ('cometdrawings/' . $observation_id . '.jpg') }}"
         />
     </a>
 

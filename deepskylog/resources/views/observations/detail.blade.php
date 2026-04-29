@@ -66,10 +66,10 @@
                 \Illuminate\Support\Str::slug((string) $cometName, "-");
         }
 
-        $drawingPath =
-            $observationType === "comet"
-                ? "/images/cometdrawings/{$obs->id}.jpg"
-                : "/images/drawings/{$obs->id}.jpg";
+        $drawingPath = "/images/" . (
+            $drawing_filename
+            ?? ($observationType === "comet" ? "cometdrawings/" : "drawings/") . $obs->id . '.jpg'
+        );
 
         $socialType = $observationType === "comet" ? "comet" : "deepsky";
         $socialId = (int) $obs->id;

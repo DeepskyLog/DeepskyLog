@@ -175,7 +175,7 @@
     <a href="{{ $objectUrl }}">
         <img
             width="400"
-            src="/images/drawings/{{ $drawing_id ?: $observation_id }}.jpg"
+            src="/images/{{ $drawing_id ?: ('drawings/' . $observation_id . '.jpg') }}"
         />
     </a>
 

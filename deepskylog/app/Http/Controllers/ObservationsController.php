@@ -88,6 +88,7 @@ class ObservationsController extends Controller
                 'sketchOfTheMonth' => $sketchOfTheMonth,
                 // Unified observation id from the unified `observations` table
                 'unified_observation_id' => $selectedUnified->id,
+                'drawing_filename' => $selectedUnified->drawing_filename,
             ], $preloadedData, $socialData));
         }
 
@@ -113,6 +114,7 @@ class ObservationsController extends Controller
                 'sketchOfTheMonth' => $sketchOfTheMonth,
                 // Unified observation id from the unified `observations` table
                 'unified_observation_id' => $selectedUnified->id,
+                'drawing_filename' => $selectedUnified->drawing_filename,
             ], $preloadedData, $socialData));
         }
 

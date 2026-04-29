@@ -13,7 +13,7 @@
     - [x] If the user is an administrator of database expert, it should also be possible to add a sketch of the week / month for a comet observation directly from the observation detail page
     - [x] Difference between short observation and detailed page.
     - [ ] Name of the drawing should be in the table
-    - [ ] Remove the two lists at the index. No more deep-sky and comets observations and drawings, show then all (20 latest). Maybe an option to only show deep-sky / moon / comets / ?
+    - [ ] Remove the two lists at the index page. No more deep-sky and comets observations and drawings, show then all (20 latest). Maybe an option to only show deep-sky / moon / comets / ?
     - [x] Comment on observations
     - [ ] All Observations(AO), My observations(MO), my Last observations(LO) of this object
     - [ ] Notes -> Add this object and note to the current observing list

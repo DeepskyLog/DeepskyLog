@@ -26,6 +26,7 @@ class Observation extends Model
         'description',
         'language',
         'has_drawing',
+        'drawing_filename',
         'target_type',
         'target_table',
         'target_key',

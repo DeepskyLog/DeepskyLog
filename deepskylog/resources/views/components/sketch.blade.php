@@ -30,10 +30,13 @@
                 $observation?->target_type === "comet" ||
                 $observation?->legacy_source === "comet";
             $legacyObservationId = $observation?->legacy_id;
-            $drawingId = $observation?->legacy_id;
+            $drawingId = $observation?->drawing_filename
+                ?? ($observation?->legacy_id
+                    ? ($isComet ? 'cometdrawings/' : 'drawings/') . $observation->legacy_id . '.jpg'
+                    : null);
         @endphp
 
-        @if ($isComet && $legacyObservationId)
+        @if ($isComet && ($legacyObservationId || $observation))
             <x-sketch-comet
                 :observation_id="$legacyObservationId"
                 :drawing_id="$drawingId"
@@ -45,7 +48,7 @@
                 :sketch_date="$sketch_date"
                 :use_sketch_date="$use_selection_date"
             />
-        @elseif ($legacyObservationId)
+        @elseif ($legacyObservationId || $observation)
             <x-sketch-deepsky
                 :observation_id="$legacyObservationId"
                 :drawing_id="$drawingId"
