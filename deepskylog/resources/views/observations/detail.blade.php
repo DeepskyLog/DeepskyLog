@@ -1127,6 +1127,9 @@
 
                 <aside class="mt-8 lg:mt-0">
                     <div class="rounded-xl bg-gray-800 p-4 lg:sticky lg:top-6">
+                        <div class="mt-2 mb-3">
+                            <div class="text-sm font-medium text-gray-300">{{ $objectDisplayName }}</div>
+                        </div>
                         <h2
                             class="text-sm font-semibold uppercase tracking-wide text-gray-300 mb-3"
                         >
@@ -1191,11 +1194,7 @@
                             @endif
                         </ul>
 
-                        <div
-                            class="mt-4 border-t border-gray-700 pt-3 text-xs text-gray-400"
-                        >
-                            {{ $objectDisplayName }}
-                        </div>
+                        {{-- object name moved above quick links; duplicate removed --}}
 
                         {{-- Admin actions: allow adding comet observation as sketch of week/month --}}
                         @if (
