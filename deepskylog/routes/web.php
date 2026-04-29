@@ -110,6 +110,11 @@ Route::get('/observation/{observer}/{date}/{object}/{index?}', [App\Http\Control
     ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
     ->where('index', '[0-9]+')
     ->name('observations.detail');
+Route::get('/observation/{observer}/{date}/{object}/{index?}/compare-my-last', [App\Http\Controllers\ObservationsController::class, 'compareWithMyLast'])
+    ->middleware('auth')
+    ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+    ->where('index', '[0-9]+')
+    ->name('observations.compare.my-last');
 // Object-scoped drawings listing (e.g. /observations/drawings/m-31)
 Route::get('/observations/drawings/{slug}', [App\Http\Controllers\ObservationsController::class, 'showObjectDrawings'])->name('observations.drawings.show');
 // Observations for a specific observer filtered by object (e.g. /observations/wim-de-meester/m-31)

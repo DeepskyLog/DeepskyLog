@@ -52,7 +52,7 @@ class ObservationsController extends Controller
 
         $canonicalUrl = $this->buildObservationDetailUrl(
             $observerUser->slug ?: $observerUser->username,
-            $selectedUnified->observed_on?->format('Y-m-d') ?? $date,
+            $this->normalizeObservedOnDate($selectedUnified->observed_on, $date),
             Str::slug((string) ($selectedUnified->target_name ?? ''), '-'),
             $wantedIndex
         );
@@ -110,6 +110,133 @@ class ObservationsController extends Controller
                 'sketchOfTheWeek' => $sketchOfTheWeek,
                 'sketchOfTheMonth' => $sketchOfTheMonth,
             ], $preloadedData, $socialData));
+        }
+
+        abort(404);
+    }
+
+    /**
+     * Compare the current observation with the logged in user's latest
+     * observation of the same object.
+     */
+    public function compareWithMyLast(string $observer, string $date, string $object, ?int $index = null)
+    {
+        $viewer = auth()->user();
+        if (!$viewer) {
+            abort(403);
+        }
+
+        $wantedIndex = max(1, (int) ($index ?? 1));
+        $observerUser = User::where('slug', $observer)->orWhere('username', $observer)->firstOrFail();
+
+        $unifiedMatches = Observation::where('observer_username', $observerUser->username)
+            ->whereDate('observed_on', $date)
+            ->orderBy('observed_time')
+            ->orderBy('id')
+            ->get()
+            ->filter(fn($candidate) => $this->slugMatches($object, (string) ($candidate->target_name ?? '')))
+            ->values();
+
+        if ($unifiedMatches->isEmpty()) {
+            abort(404);
+        }
+
+        $selectedUnified = $unifiedMatches->get($wantedIndex - 1);
+        if (!$selectedUnified) {
+            abort(404);
+        }
+
+        $canonicalCompareUrl = $this->buildObservationCompareUrl(
+            $observerUser->slug ?: $observerUser->username,
+            $this->normalizeObservedOnDate($selectedUnified->observed_on, $date),
+            Str::slug((string) ($selectedUnified->target_name ?? ''), '-'),
+            $wantedIndex
+        );
+
+        if (request()->url() !== $canonicalCompareUrl) {
+            return redirect($canonicalCompareUrl);
+        }
+
+        if ($selectedUnified->legacy_source === 'deepsky') {
+            $currentObservation = ObservationsOld::find($selectedUnified->legacy_id);
+            if (!$currentObservation) {
+                abort(404);
+            }
+
+            $myLastObservation = ObservationsOld::query()
+                ->where('observerid', $viewer->username)
+                ->where('objectname', $currentObservation->objectname)
+                ->where('id', '!=', $currentObservation->id)
+                ->orderByDesc('date')
+                ->orderByDesc('time')
+                ->orderByDesc('id')
+                ->first();
+
+            $observations = collect([$currentObservation]);
+            if ($myLastObservation) {
+                $observations->push($myLastObservation);
+            }
+
+            return view('observations.compare-my-last', array_merge([
+                'observationType' => 'deepsky',
+                'currentObservation' => $currentObservation,
+                'myLastObservation' => $myLastObservation,
+                'objectName' => (string) ($currentObservation->objectname ?? ''),
+                'objectSlug' => Str::slug((string) ($currentObservation->objectname ?? ''), '-'),
+                'currentObserver' => $observerUser,
+                'currentDetailUrl' => $this->buildObservationDetailUrl(
+                    $observerUser->slug ?: $observerUser->username,
+                    $this->normalizeObservedOnDate($selectedUnified->observed_on, $date),
+                    Str::slug((string) ($selectedUnified->target_name ?? ''), '-'),
+                    $wantedIndex
+                ),
+                'myLastDetailUrl' => $myLastObservation
+                    ? $this->buildObservationDetailUrlForLegacy('deepsky', (int) $myLastObservation->id)
+                    : null,
+            ], $this->preloadDeepskyData($observations)));
+        }
+
+        if ($selectedUnified->legacy_source === 'comet') {
+            $currentObservation = CometObservationsOld::find($selectedUnified->legacy_id);
+            if (!$currentObservation) {
+                abort(404);
+            }
+
+            $myLastObservation = CometObservationsOld::query()
+                ->where('observerid', $viewer->username)
+                ->where('objectid', $currentObservation->objectid)
+                ->where('id', '!=', $currentObservation->id)
+                ->orderByDesc('date')
+                ->orderByDesc('time')
+                ->orderByDesc('id')
+                ->first();
+
+            $observations = collect([$currentObservation]);
+            if ($myLastObservation) {
+                $observations->push($myLastObservation);
+            }
+
+            $preloadedData = $this->preloadCometData($observations);
+            $comet = ($preloadedData['preloaded_comets'] ?? collect())->get($currentObservation->objectid);
+            $objectName = (string) ($comet->name ?? $selectedUnified->target_name ?? __('Unknown comet'));
+
+            return view('observations.compare-my-last', array_merge([
+                'observationType' => 'comet',
+                'currentObservation' => $currentObservation,
+                'myLastObservation' => $myLastObservation,
+                'objectName' => $objectName,
+                'objectSlug' => Str::slug($objectName, '-'),
+                'currentObserver' => $observerUser,
+                'currentDetailUrl' => $this->buildObservationDetailUrl(
+                    $observerUser->slug ?: $observerUser->username,
+                    $this->normalizeObservedOnDate($selectedUnified->observed_on, $date),
+                    Str::slug((string) ($selectedUnified->target_name ?? ''), '-'),
+                    $wantedIndex
+                ),
+                'myLastDetailUrl' => $myLastObservation
+                    ? $this->buildObservationDetailUrlForLegacy('comet', (int) $myLastObservation->id)
+                    : null,
+            ], $preloadedData));
         }
 
         abort(404);
@@ -829,6 +956,67 @@ class ObservationsController extends Controller
     }
 
     /**
+     * Build canonical compare URL.
+     * Index is omitted for the first observation.
+     */
+    private function buildObservationCompareUrl(string $observer, string $date, string $object, int $index): string
+    {
+        $params = [
+            'observer' => $observer,
+            'date' => $date,
+            'object' => $object,
+        ];
+
+        if ($index > 1) {
+            $params['index'] = $index;
+        }
+
+        return route('observations.compare.my-last', $params);
+    }
+
+    /**
+     * Build detail URL for a legacy observation record by resolving it in the
+     * unified observations table and deriving its index for that day/object.
+     */
+    private function buildObservationDetailUrlForLegacy(string $legacySource, int $legacyId): ?string
+    {
+        $unified = Observation::query()
+            ->where('legacy_source', $legacySource)
+            ->where('legacy_id', $legacyId)
+            ->first();
+
+        if (!$unified || !$unified->observed_on) {
+            return null;
+        }
+
+        $observerUser = User::where('username', $unified->observer_username)->first();
+        $observerParam = $observerUser?->slug ?: $unified->observer_username;
+        $objectSlug = Str::slug((string) ($unified->target_name ?? ''), '-');
+        $date = $this->normalizeObservedOnDate($unified->observed_on, '');
+        if ($date === '') {
+            return null;
+        }
+
+        $matches = Observation::where('observer_username', $unified->observer_username)
+            ->whereDate('observed_on', $date)
+            ->orderBy('observed_time')
+            ->orderBy('id')
+            ->get()
+            ->filter(fn($candidate) => $this->slugMatches($objectSlug, (string) ($candidate->target_name ?? '')))
+            ->values();
+
+        $index = 1;
+        foreach ($matches as $position => $candidate) {
+            if ((int) $candidate->id === (int) $unified->id) {
+                $index = $position + 1;
+                break;
+            }
+        }
+
+        return $this->buildObservationDetailUrl($observerParam, $date, $objectSlug, $index);
+    }
+
+    /**
      * Load likes/comments for a detail page in one place.
      *
      * @return array<string, mixed>
@@ -859,5 +1047,21 @@ class ObservationsController extends Controller
             'comments' => $comments,
             'commentsCount' => $comments->count(),
         ];
+    }
+
+    /**
+     * Normalize observed_on values from the unified table to Y-m-d.
+     */
+    private function normalizeObservedOnDate(mixed $observedOn, string $fallback): string
+    {
+        if (empty($observedOn)) {
+            return $fallback;
+        }
+
+        try {
+            return \Carbon\Carbon::parse($observedOn)->format('Y-m-d');
+        } catch (\Throwable $_) {
+            return $fallback;
+        }
     }
 }
