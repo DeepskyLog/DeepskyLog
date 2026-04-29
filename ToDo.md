@@ -10,7 +10,7 @@
     - [x] The sessions can now also have comet observations. Loop over the session (once) and check if comets should be added.
     - [x] The sketches of the week / month have negative ids for comets. This is the negative id of the old cometobservations table. As all observations (also from comets) are now in the same table, we can just remove the negative id and use the normal id of the observation. The ids should be adapted. In the add sketch of the week / add sketch of the month page, we can just use the normal id of the observation, and not the negative id. This should be adapted.
   - [ ] Show detailed observation page, with all details, comments, ...
-    - [ ] If the user is an administrator of database expert, it should also be possible to add a sketch of the week / month for a comet observation directly from the observation detail page
+    - [x] If the user is an administrator of database expert, it should also be possible to add a sketch of the week / month for a comet observation directly from the observation detail page
     - [x] Difference between short observation and detailed page.
     - [ ] Name of the drawing should be in the table
     - [ ] Remove the two lists at the index. No more deep-sky and comets observations and drawings, show then all (20 latest). Maybe an option to only show deep-sky / moon / comets / ?

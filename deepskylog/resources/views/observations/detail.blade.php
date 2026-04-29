@@ -536,11 +536,16 @@
                                             {{ __("Eyepiece") }}
                                         </dt>
                                         <dd class="mt-1 font-semibold">
-                                            {{
-                                                html_entity_decode(
-                                                    $eyepiece->fullName(),
-                                                )
-                                            }}
+                                            <a
+                                                href="/eyepiece/{{ $user?->slug ?? 'unknown' }}/{{ $eyepiece->slug }}"
+                                                class="hover:underline"
+                                            >
+                                                {{
+                                                    html_entity_decode(
+                                                        $eyepiece->fullName(),
+                                                    )
+                                                }}
+                                            </a>
                                         </dd>
                                     </div>
                                 @endif
@@ -554,11 +559,16 @@
                                             {{ __("Filter") }}
                                         </dt>
                                         <dd class="mt-1 font-semibold">
-                                            {{
-                                                html_entity_decode(
-                                                    $filterObj->fullName(),
-                                                )
-                                            }}
+                                            <a
+                                                href="/filter/{{ $user?->slug ?? 'unknown' }}/{{ $filterObj->slug }}"
+                                                class="hover:underline"
+                                            >
+                                                {{
+                                                    html_entity_decode(
+                                                        $filterObj->fullName(),
+                                                    )
+                                                }}
+                                            </a>
                                         </dd>
                                     </div>
                                 @endif
@@ -572,11 +582,16 @@
                                             {{ __("Lens") }}
                                         </dt>
                                         <dd class="mt-1 font-semibold">
-                                            {{
-                                                html_entity_decode(
-                                                    $lens->fullName(),
-                                                )
-                                            }}
+                                            <a
+                                                href="/lens/{{ $user?->slug ?? 'unknown' }}/{{ $lens->slug }}"
+                                                class="hover:underline"
+                                            >
+                                                {{
+                                                    html_entity_decode(
+                                                        $lens->fullName(),
+                                                    )
+                                                }}
+                                            </a>
                                         </dd>
                                     </div>
                                 @endif
@@ -1181,6 +1196,43 @@
                         >
                             {{ $objectDisplayName }}
                         </div>
+
+                        {{-- Admin actions: allow adding comet observation as sketch of week/month --}}
+                        @if (
+                            $observationType === 'comet' &&
+                            auth()->check() &&
+                            (
+                                auth()->user()->isAdministrator() ||
+                                auth()->user()->isDatabaseExpert()
+                            )
+                        )
+                            <div class="mt-4 border-t border-gray-700 pt-3">
+                                <h3 class="text-sm font-semibold text-gray-300 mb-2">{{ __('Admin actions') }}</h3>
+                                @php
+                                    $unifiedId = $unified_observation_id ?? null;
+                                @endphp
+
+                                @if ($unifiedId && ($obs->hasDrawing ?? $obs->has_drawing ?? false))
+                                    @if (empty($sketchOfTheWeek))
+                                        <form method="POST" action="{{ route('sketch-of-the-week.store') }}" class="mb-2">
+                                            @csrf
+                                            <input type="hidden" name="observation_id" value="{{ $unifiedId }}" />
+                                            <input type="hidden" name="date" value="{{ \Carbon\Carbon::now()->toDateString() }}" />
+                                            <button type="submit" class="w-full text-left px-3 py-2 bg-yellow-600 hover:bg-yellow-500 text-white rounded text-sm">{{ __('Add as sketch of the week') }}</button>
+                                        </form>
+                                    @endif
+
+                                    @if (empty($sketchOfTheMonth))
+                                        <form method="POST" action="{{ route('sketch-of-the-month.store') }}">
+                                            @csrf
+                                            <input type="hidden" name="observation_id" value="{{ $unifiedId }}" />
+                                            <input type="hidden" name="date" value="{{ \Carbon\Carbon::now()->toDateString() }}" />
+                                            <button type="submit" class="w-full text-left px-3 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-sm">{{ __('Add as sketch of the month') }}</button>
+                                        </form>
+                                    @endif
+                                @endif
+                            </div>
+                        @endif
                     </div>
                 </aside>
             </div>

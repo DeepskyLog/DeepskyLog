@@ -86,6 +86,8 @@ class ObservationsController extends Controller
                 'lens' => $lens,
                 'sketchOfTheWeek' => $sketchOfTheWeek,
                 'sketchOfTheMonth' => $sketchOfTheMonth,
+                // Unified observation id from the unified `observations` table
+                'unified_observation_id' => $selectedUnified->id,
             ], $preloadedData, $socialData));
         }
 
@@ -109,6 +111,8 @@ class ObservationsController extends Controller
                 'lens' => null,
                 'sketchOfTheWeek' => $sketchOfTheWeek,
                 'sketchOfTheMonth' => $sketchOfTheMonth,
+                // Unified observation id from the unified `observations` table
+                'unified_observation_id' => $selectedUnified->id,
             ], $preloadedData, $socialData));
         }
 
