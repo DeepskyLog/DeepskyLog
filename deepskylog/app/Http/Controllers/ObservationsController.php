@@ -17,6 +17,10 @@ use App\Models\SketchOfTheWeek;
 use App\Models\SketchOfTheMonth;
 use App\Models\ObservationLike;
 use App\Models\ObservationComment;
+use Carbon\Carbon;
+use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
+use deepskylog\AstronomyLibrary\Targets\Moon as AstroMoon;
+use deepskylog\AstronomyLibrary\Time;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -73,6 +77,10 @@ class ObservationsController extends Controller
             $socialData = $this->buildSocialData('deepsky', (int) $selected->id);
 
             $preloadedData = $this->preloadDeepskyData(collect([$selected]));
+            $moonContext = $this->buildMoonContext(
+                $selected,
+                $preloadedData['preloaded_locations']->get($selected->locationid) ?? null
+            );
 
             $lens = null;
             if (!empty($selected->lensid) && $selected->lensid > 0) {
@@ -89,6 +97,7 @@ class ObservationsController extends Controller
                 // Unified observation id from the unified `observations` table
                 'unified_observation_id' => $selectedUnified->id,
                 'drawing_filename' => $selectedUnified->drawing_filename,
+                'moonContext' => $moonContext,
             ], $preloadedData, $socialData));
         }
 
@@ -104,6 +113,10 @@ class ObservationsController extends Controller
             $selected->resolved_comet_name = (string) ($selectedUnified->target_name ?? '');
 
             $preloadedData = $this->preloadCometData(collect([$selected]));
+            $moonContext = $this->buildMoonContext(
+                $selected,
+                $preloadedData['preloaded_locations']->get($selected->locationid) ?? null
+            );
 
             return view('observations.detail', array_merge([
                 'observationType' => 'comet',
@@ -115,6 +128,7 @@ class ObservationsController extends Controller
                 // Unified observation id from the unified `observations` table
                 'unified_observation_id' => $selectedUnified->id,
                 'drawing_filename' => $selectedUnified->drawing_filename,
+                'moonContext' => $moonContext,
             ], $preloadedData, $socialData));
         }
 
@@ -1053,6 +1067,179 @@ class ObservationsController extends Controller
             'comments' => $comments,
             'commentsCount' => $comments->count(),
         ];
+    }
+
+    /**
+     * Build moon phase and horizon context for a specific observation.
+     *
+     * @param  object  $observation
+     * @return array<string, mixed>|null
+     */
+    private function buildMoonContext(object $observation, ?Location $location): ?array
+    {
+        $observedAt = $this->resolveObservationDateTime($observation, $location);
+        if (!$observedAt) {
+            return null;
+        }
+
+        $timezone = $location?->timezone ?? config('app.timezone');
+        $moon = new AstroMoon();
+
+        try {
+            $illuminatedFraction = $moon->illuminatedFraction($observedAt->copy());
+        } catch (\Throwable $_) {
+            $illuminatedFraction = null;
+        }
+
+        try {
+            $phaseRatio = $moon->getPhaseRatio($observedAt->copy());
+        } catch (\Throwable $_) {
+            $phaseRatio = null;
+        }
+
+        $frameIndex = $this->determineMoonFrameIndex($phaseRatio, $illuminatedFraction);
+
+        $context = [
+            'observed_at' => $observedAt,
+            'timezone' => $timezone,
+            'has_specific_time' => $this->hasObservationTime($observation),
+            'phase_ratio' => $phaseRatio,
+            'illuminated_fraction' => $illuminatedFraction,
+            'illumination_percent' => is_null($illuminatedFraction)
+                ? null
+                : (int) round(max(0.0, min(1.0, (float) $illuminatedFraction)) * 100),
+            'frame_index' => $frameIndex,
+            'frame_path' => $frameIndex !== null ? asset("images/moon/m{$frameIndex}.gif") : null,
+            'phase_name' => $this->determineMoonPhaseName($phaseRatio, $illuminatedFraction),
+            'horizon_status' => 'unknown',
+            'altitude_degrees' => null,
+        ];
+
+        if (!$context['has_specific_time'] || !$location || !is_numeric($location->latitude) || !is_numeric($location->longitude)) {
+            return $context;
+        }
+
+        try {
+            $coords = new GeographicalCoordinates((float) $location->longitude, (float) $location->latitude);
+            $siderealTime = Time::apparentSiderialTime($observedAt->copy(), $coords);
+
+            $moon->calculateEquatorialCoordinates($observedAt->copy(), $coords, (float) ($location->elevation ?? 0.0));
+            $horizontal = $moon
+                ->getEquatorialCoordinatesToday()
+                ->convertToHorizontal($coords, $siderealTime);
+
+            $altitude = (float) $horizontal->getAltitude()->getCoordinate();
+
+            $context['altitude_degrees'] = round($altitude, 1);
+            $context['horizon_status'] = $altitude >= 0 ? 'above' : 'below';
+        } catch (\Throwable $_) {
+            $context['horizon_status'] = 'unknown';
+            $context['altitude_degrees'] = null;
+        }
+
+        return $context;
+    }
+
+    /**
+     * Resolve an observation's local datetime, falling back to noon for date-only observations.
+     */
+    private function resolveObservationDateTime(object $observation, ?Location $location): ?Carbon
+    {
+        $dateValue = trim((string) ($observation->date ?? ''));
+        if ($dateValue === '') {
+            return null;
+        }
+
+        $formattedDate = strlen($dateValue) === 8
+            ? substr($dateValue, 0, 4) . '-' . substr($dateValue, 4, 2) . '-' . substr($dateValue, 6, 2)
+            : $dateValue;
+
+        $timezone = $location?->timezone ?? config('app.timezone');
+
+        try {
+            if ($this->hasObservationTime($observation)) {
+                $timeValue = (int) $observation->time;
+                $hours = intdiv($timeValue, 100);
+                $minutes = $timeValue % 100;
+
+                return Carbon::createFromFormat(
+                    'Y-m-d H:i',
+                    sprintf('%s %02d:%02d', $formattedDate, $hours, $minutes),
+                    $timezone,
+                );
+            }
+
+            return Carbon::createFromFormat('Y-m-d H:i', $formattedDate . ' 12:00', $timezone);
+        } catch (\Throwable $_) {
+            return null;
+        }
+    }
+
+    /**
+     * Determine whether a legacy observation has a meaningful time value.
+     */
+    private function hasObservationTime(object $observation): bool
+    {
+        if (!isset($observation->time) || $observation->time === null || $observation->time === '') {
+            return false;
+        }
+
+        $timeValue = (int) $observation->time;
+
+        return $timeValue > 0 && $timeValue <= 2359 && ($timeValue % 100) < 60;
+    }
+
+    /**
+     * Map moon phase values to the pre-rendered moon frame set.
+     */
+    private function determineMoonFrameIndex(mixed $phaseRatio, mixed $illuminatedFraction): ?int
+    {
+        if (is_null($phaseRatio) && is_null($illuminatedFraction)) {
+            return null;
+        }
+
+        $phase = is_null($phaseRatio) ? 0.0 : max(0.0, min(1.0, (float) $phaseRatio));
+        $illum = is_null($illuminatedFraction) ? 0.0 : max(0.0, min(1.0, (float) $illuminatedFraction));
+        $idxHalf = max(0, min(20, (int) round($illum * 20)));
+
+        return $phase <= 0.5 ? $idxHalf : 40 - $idxHalf;
+    }
+
+    /**
+     * Build a simple human-readable moon phase label.
+     */
+    private function determineMoonPhaseName(mixed $phaseRatio, mixed $illuminatedFraction): string
+    {
+        $phase = is_null($phaseRatio) ? null : max(0.0, min(1.0, (float) $phaseRatio));
+        $illum = is_null($illuminatedFraction) ? null : max(0.0, min(1.0, (float) $illuminatedFraction));
+
+        if (!is_null($illum)) {
+            if ($illum <= 0.02) {
+                return __('New moon');
+            }
+
+            if ($illum >= 0.98) {
+                return __('Full moon');
+            }
+        }
+
+        if (is_null($phase)) {
+            return __('Moon phase');
+        }
+
+        if ($phase < 0.25) {
+            return __('Waxing moon');
+        }
+
+        if ($phase < 0.5) {
+            return __('Waxing gibbous');
+        }
+
+        if ($phase < 0.75) {
+            return __('Waning moon');
+        }
+
+        return __('Waning crescent');
     }
 
     /**

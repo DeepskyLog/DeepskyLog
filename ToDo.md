@@ -17,7 +17,8 @@
     - [x] Comment on observations
     - [x] All Observations(AO), My observations(MO), my Last observations(LO) of this object
     - [x] Notes -> Add this object and note to the current observing list
-    - [ ] Moon phase during observation
+    - [x] Moon phase during observation
+    - [ ] Object visibility
     - [ ] Like observations -> already ok?
   - [ ] Overview page, when clicking on 'More details' on the home page, use a link to the new observation page, with all details, comments, ...
   - [ ] Add observations
@@ -31,6 +32,7 @@
   - [ ] Search for observations
     - [ ] Quick search in the left aside
     - [ ] Detailed search page
+  - [ ] Translations
   - [ ] On real server:
     - [ ] php artisan db:seed --class=BackfillSessionObservationIdsSeeder
     - [ ] php artisan db:seed --class=BackfillSketchObservationIdsSeeder

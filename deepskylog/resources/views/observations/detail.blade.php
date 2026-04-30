@@ -11,13 +11,20 @@
                     "-" .
                     substr($dateInt, 6, 2)
                 : $dateInt;
-        $obsTime = !empty($obs->time)
-            ? sprintf(
-                "%02d:%02d",
-                intdiv((int) $obs->time, 100),
-                (int) $obs->time % 100,
-            )
-            : null;
+        $obsTimeInt = (int) $obs->time;
+        $obsTime =
+            isset($obs->time) &&
+            $obs->time !== null &&
+            $obs->time !== "" &&
+            $obsTimeInt > 0 &&
+            $obsTimeInt <= 2359 &&
+            $obsTimeInt % 100 < 60
+                ? sprintf(
+                    "%02d:%02d",
+                    intdiv($obsTimeInt, 100),
+                    $obsTimeInt % 100,
+                )
+                : null;
 
         $backUrl =
             $observationType === "comet"
@@ -119,6 +126,8 @@
 
             $compareMyLastUrl = route("observations.compare.my-last", $compareParams);
         }
+
+        $moon = $moonContext ?? null;
     @endphp
 
     <div class="bg-gray-900">
@@ -1047,6 +1056,68 @@
                             </div>
                         @endif
 
+                        {{-- Moon during observation (shared: deepsky + comet) --}}
+                        @if ($moon)
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 border-t border-gray-700 pt-5">
+                                <div>
+                                    <dt
+                                        class="text-xs uppercase tracking-wide text-gray-400"
+                                    >
+                                        {{ __('Moon during observation') }}
+                                    </dt>
+                                    <dd class="mt-1">
+                                        <div class="flex items-start gap-3">
+                                            @if (!empty($moon['frame_path']) && !is_null($moon['frame_index'] ?? null) && file_exists(public_path('images/moon/m' . $moon['frame_index'] . '.gif')))
+                                                <img
+                                                    src="{{ $moon['frame_path'] }}"
+                                                    alt="{{ __('Moon phase') }}"
+                                                    class="h-14 w-14 flex-shrink-0 object-contain"
+                                                    loading="lazy"
+                                                />
+                                            @endif
+
+                                            <div class="min-w-0 text-sm">
+                                                <div class="font-semibold text-gray-100">
+                                                    {{ $moon['phase_name'] ?? __('Moon phase') }}
+                                                </div>
+                                                <div class="text-gray-300">
+                                                    @if (!is_null($moon['illumination_percent'] ?? null))
+                                                        {{ $moon['illumination_percent'] }}% {{ __('illuminated') }}
+                                                    @else
+                                                        {{ __('Illumination unavailable') }}
+                                                    @endif
+                                                </div>
+
+                                                @if (($moon['has_specific_time'] ?? false) && ($moon['horizon_status'] ?? 'unknown') === 'above')
+                                                    <div class="mt-1 text-emerald-300">
+                                                        {{ __('Above the horizon') }}
+                                                        @if (!is_null($moon['altitude_degrees'] ?? null))
+                                                            ({{ number_format($moon['altitude_degrees'], 1) }}&deg;)
+                                                        @endif
+                                                    </div>
+                                                @elseif (($moon['has_specific_time'] ?? false) && ($moon['horizon_status'] ?? 'unknown') === 'below')
+                                                    <div class="mt-1 text-amber-300">
+                                                        {{ __('Not above the horizon') }}
+                                                        @if (!is_null($moon['altitude_degrees'] ?? null))
+                                                            ({{ number_format($moon['altitude_degrees'], 1) }}&deg;)
+                                                        @endif
+                                                    </div>
+                                                @elseif ($moon['has_specific_time'] ?? false)
+                                                    <div class="mt-1 text-gray-400">
+                                                        {{ __('Moon altitude unavailable') }}
+                                                    </div>
+                                                @else
+                                                    <div class="mt-1 text-gray-400">
+                                                        {{ __('No observation time recorded') }}
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </dd>
+                                </div>
+                            </div>
+                        @endif
+
                         {{-- Description / notes --}}
                         @if (!empty($obs->description) && $obs->description !== "")
                             <div class="border-t border-gray-700 pt-5">
@@ -1130,6 +1201,7 @@
                         <div class="mt-2 mb-3">
                             <div class="text-sm font-medium text-gray-300">{{ $objectDisplayName }}</div>
                         </div>
+
                         <h2
                             class="text-sm font-semibold uppercase tracking-wide text-gray-300 mb-3"
                         >
