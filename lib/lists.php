@@ -8,6 +8,34 @@ if ((!isset($inIndex)) || (!$inIndex)) {
 }
 class Lists
 {
+    // Returns normalized variants (raw, decoded, encoded) for legacy observer ids.
+    private function getObserverIdVariants($observerId)
+    {
+        $variants = array();
+        $variants[] = (string)$observerId;
+        $decoded = html_entity_decode((string)$observerId, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $variants[] = $decoded;
+        $encoded = htmlentities((string)$observerId, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $variants[] = $encoded;
+
+        $result = array();
+        foreach ($variants as $variant) {
+            if (($variant !== '') && !in_array($variant, $result, true)) {
+                $result[] = $variant;
+            }
+        }
+        return $result;
+    }
+
+    private function getObserverIdWhereClause($column, $observerId)
+    {
+        $parts = array();
+        foreach ($this->getObserverIdVariants($observerId) as $variant) {
+            $parts[] = $column . ' = "' . addslashes($variant) . '"';
+        }
+        return '(' . implode(' OR ', $parts) . ')';
+    }
+
     // Returns the observing_lists.id for the given list name and observer username.
     private function getListId($listName, $observerId)
     {
@@ -169,7 +197,7 @@ class Lists
             }
         }
         if ($loggedUser) {
-            $sql = "SELECT listname FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $name . "\"";
+            $sql = "SELECT listname FROM observerobjectlist WHERE " . $this->getObserverIdWhereClause('observerid', $loggedUser) . " AND listname = \"" . $name . "\"";
             $run = $objDatabase->selectRecordset($sql);
             if ($get = $run->fetch(PDO::FETCH_OBJ)) {
                 $retval = 2;
@@ -273,16 +301,7 @@ class Lists
     public function getMyLists()
     {
         global $loggedUser, $objDatabase;
-        // Some legacy entries use HTML-entity encoded observer ids (e.g. "Torbj&ouml;rn...")
-        // while the new DB/users use UTF-8 (e.g. "Torbjörn..."). To be tolerant
-        // of either form we query for both the raw session value and the
-        // HTML-decoded variant when they differ.
-        $decoded = html_entity_decode($loggedUser, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        if ($decoded !== $loggedUser) {
-            $sql = "SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" OR observerid = \"" . $decoded . "\"";
-        } else {
-            $sql = "SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\"";
-        }
+        $sql = "SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE " . $this->getObserverIdWhereClause('observerid', $loggedUser);
         return $objDatabase->selectSingleArray($sql, 'listname');
     }
     public function showLists($public = false)
@@ -473,7 +492,7 @@ class Lists
         if ($pub == 1) {
             $sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " . "JOIN objects ON observerobjectlist.objectname = objects.name " . "WHERE listname = \"" . $theListname . "\" AND objectname <>\"\" AND public=\"1\"";
         } else {
-            $sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " . "JOIN objects ON observerobjectlist.objectname = objects.name " . "WHERE listname = \"" . $theListname . "\" AND objectname <>\"\" AND observerobjectlist.observerid=\"" . $loggedUser . "\"";
+            $sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " . "JOIN objects ON observerobjectlist.objectname = objects.name " . "WHERE listname = \"" . $theListname . "\" AND objectname <>\"\" AND " . $this->getObserverIdWhereClause('observerobjectlist.observerid', $loggedUser);
         }
         $run = $objDatabase->selectRecordset($sql);
         while ($get = $run->fetch(PDO::FETCH_OBJ)) {
@@ -575,14 +594,7 @@ class Lists
     public function isPublic($listName, $user)
     {
         global $objDatabase;
-        // Accept both HTML-entity encoded and decoded variants of the
-        // observer id to handle legacy encoded usernames in the old DB.
-        $decoded = html_entity_decode($user, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        if ($decoded !== $user) {
-            $sql = "SELECT public FROM observerobjectlist WHERE listname=\"" . $listName . "\" AND public=\"1\" AND (observerid=\"" . $user . "\" OR observerid=\"" . $decoded . "\");";
-        } else {
-            $sql = "SELECT public FROM observerobjectlist WHERE listname=\"" . $listName . "\" AND public=\"1\" AND observerid=\"" . $user . "\";";
-        }
+        $sql = "SELECT public FROM observerobjectlist WHERE listname=\"" . $listName . "\" AND public=\"1\" AND " . $this->getObserverIdWhereClause('observerid', $user) . ";";
         return $objDatabase->selectSingleValue($sql, "public", 0);
     }
     public function renameList($nameFrom, $nameTo, $newPublic)
