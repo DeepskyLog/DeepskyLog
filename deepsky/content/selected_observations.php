@@ -21,10 +21,23 @@ function selected_observations()
     // for that observer. If an object/catalog+number is provided as well,
     // include those filters so both observer and object selection are applied.
     if (array_key_exists('observer', $_GET) && ($_GET['observer'] != '')) {
-        $sortField = $objUtil->checkGetKey('sort', (array_key_exists('QobsSort', $_SESSION) ? $_SESSION['QobsSort'] : 'observationid'));
+        $sortField = $objUtil->checkGetKey('sort', (array_key_exists('QobsSort', $_SESSION) ? $_SESSION['QobsSort'] : 'observationdate'));
         $sortDirection = strtolower($objUtil->checkGetKey('sortdirection', (array_key_exists('QobsSortDirection', $_SESSION) ? $_SESSION['QobsSortDirection'] : 'desc')));
         if (($sortDirection != 'asc') && ($sortDirection != 'desc')) {
             $sortDirection = 'desc';
+        }
+        // If the user didn't explicitly request a sort via GET, prefer
+        // sorting by observation date (most-recent first) and clear any
+        // stale session sort values so cached preferences don't override.
+        if (!array_key_exists('sort', $_GET)) {
+            $sortField = 'observationdate';
+            $sortDirection = 'desc';
+            if (isset($_SESSION['QobsSort'])) {
+                unset($_SESSION['QobsSort']);
+            }
+            if (isset($_SESSION['QobsSortDirection'])) {
+                unset($_SESSION['QobsSortDirection']);
+            }
         }
         $pageSize = (isset($step) && ((int)$step > 0)) ? (int)$step : 25;
         $offset = (isset($min) && ((int)$min > 0)) ? (int)$min : 0;
@@ -64,6 +77,23 @@ function selected_observations()
             $objUtil->checkGetKey('seen', 'A'),
             (bool)$objUtil->checkGetKey('exactinstrumentlocation', 0)
         );
+        // If sorting by observation date is requested (or defaulted), ensure
+        // the result array is ordered server-side as a fallback in case the
+        // client-side tablesorter overrides or session state interferes.
+        if ($sortField === 'observationdate' && isset($_SESSION['Qobs']) && is_array($_SESSION['Qobs'])) {
+            $sd = strtolower($sortDirection);
+            usort($_SESSION['Qobs'], function($a, $b) use ($sd) {
+                $da = isset($a['observationdate']) ? $a['observationdate'] : '';
+                $db = isset($b['observationdate']) ? $b['observationdate'] : '';
+                if ($da === $db) {
+                    return 0;
+                }
+                if ($sd === 'asc') {
+                    return ($da < $db) ? -1 : 1;
+                }
+                return ($da > $db) ? -1 : 1;
+            });
+        }
         $_SESSION['QobsParams'] = $queries;
         $_SESSION['QobsSort'] = $sortField;
         $_SESSION['QobsSortDirection'] = $sortDirection;
