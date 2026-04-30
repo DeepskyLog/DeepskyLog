@@ -273,7 +273,17 @@ class Lists
     public function getMyLists()
     {
         global $loggedUser, $objDatabase;
-        return $objDatabase->selectSingleArray("SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\"", 'listname');
+        // Some legacy entries use HTML-entity encoded observer ids (e.g. "Torbj&ouml;rn...")
+        // while the new DB/users use UTF-8 (e.g. "Torbjörn..."). To be tolerant
+        // of either form we query for both the raw session value and the
+        // HTML-decoded variant when they differ.
+        $decoded = html_entity_decode($loggedUser, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        if ($decoded !== $loggedUser) {
+            $sql = "SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" OR observerid = \"" . $decoded . "\"";
+        } else {
+            $sql = "SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\"";
+        }
+        return $objDatabase->selectSingleArray($sql, 'listname');
     }
     public function showLists($public = false)
     {
@@ -565,7 +575,14 @@ class Lists
     public function isPublic($listName, $user)
     {
         global $objDatabase;
-        $sql = "SELECT public from observerobjectlist where listname=\"" . $listName . "\" AND public=\"1\" AND observerid=\"" . $user . "\";";
+        // Accept both HTML-entity encoded and decoded variants of the
+        // observer id to handle legacy encoded usernames in the old DB.
+        $decoded = html_entity_decode($user, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        if ($decoded !== $user) {
+            $sql = "SELECT public FROM observerobjectlist WHERE listname=\"" . $listName . "\" AND public=\"1\" AND (observerid=\"" . $user . "\" OR observerid=\"" . $decoded . "\");";
+        } else {
+            $sql = "SELECT public FROM observerobjectlist WHERE listname=\"" . $listName . "\" AND public=\"1\" AND observerid=\"" . $user . "\";";
+        }
         return $objDatabase->selectSingleValue($sql, "public", 0);
     }
     public function renameList($nameFrom, $nameTo, $newPublic)
