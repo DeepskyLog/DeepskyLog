@@ -136,18 +136,29 @@
         >
             <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-8">
                 <div class="min-w-0">
-                    {{-- Back button --}}
-                    <div class="mb-6">
-                        <x-button gray icon="arrow-left" href="{{ $backUrl }}">
-                            {{
-                                __(
-                                    "Back to observations",
-                                )
-                            }}
-                        </x-button>
-                    </div>
+                                {{-- Visibility --}}
+                                @if (!empty($obs->visibility) && $obs->visibility > 0)
+                                    <div>
+                                        <dt
+                                            class="text-xs uppercase tracking-wide text-gray-400"
+                                        >
+                                            {{ __("Object visibility") }}
+                                        </dt>
+                                        <dd class="mt-1 font-semibold">
+                                            @php
+                                                $visKey = (string) ($obs->visibility ?? '');
+                                                // Default visibility mapping
+                                                $vis = __("observations.visibility.$visKey");
+                                            @endphp
+                                            @if ($vis === "observations.visibility.$visKey")
+                                                {{ $obs->visibility }}
+                                            @else
+                                                {{ $vis }}
+                                            @endif
+                                        </dd>
+                                    </div>
+                                @endif
 
-                    {{-- Sketch-of-the-week / month honour banners --}}
                     @if (!empty($sketchOfTheWeek))
                         <div
                             class="mb-4 flex items-center gap-3 rounded-lg border border-yellow-400 bg-yellow-900/30 px-5 py-3"
@@ -158,18 +169,10 @@
                             <div>
                                 <span
                                     class="font-bold text-yellow-300 text-lg"
-                                    >{{
-                                        __(
-                                            "DeepskyLog Sketch of the Week",
-                                        )
-                                    }}</span
+                                    >{{ __("DeepskyLog Sketch of the Week") }}</span
                                 >
                                 <span class="ml-2 text-yellow-200 text-sm"
-                                    >&mdash; {{
-                                        \Carbon\Carbon::parse(
-                                            $sketchOfTheWeek->date,
-                                        )->translatedFormat("j M Y")
-                                    }}</span
+                                    >&mdash; {{ \Carbon\Carbon::parse($sketchOfTheWeek->date)->translatedFormat("j M Y") }}</span
                                 >
                             </div>
                         </div>
@@ -705,39 +708,17 @@
                                         <dt
                                             class="text-xs uppercase tracking-wide text-gray-400"
                                         >
-                                            {{
-                                                __(
-                                                    "Object visibility",
-                                                )
-                                            }}
+                                            {{ __("Object visibility") }}
                                         </dt>
                                         <dd class="mt-1 font-semibold">
-                                            @if ($obs->visibility == 1)
-                                                {{ __("Obvious") }}
-                                            @elseif ($obs->visibility == 2)
-                                                {{ __("Easy") }}
-                                            @elseif ($obs->visibility == 3)
-                                                {{
-                                                    __(
-                                                        "Somewhat easy",
-                                                    )
-                                                }}
-                                            @elseif ($obs->visibility == 4)
-                                                {{
-                                                    __(
-                                                        "Difficult",
-                                                    )
-                                                }}
-                                            @elseif ($obs->visibility == 5)
-                                                {{
-                                                    __(
-                                                        "Very difficult",
-                                                    )
-                                                }}
-                                            @elseif ($obs->visibility == 6)
-                                                {{ __("Not seen") }}
-                                            @else
+                                            @php
+                                                $visKey = (string) ($obs->visibility ?? '');
+                                                $vis = __("observations.visibility.$visKey");
+                                            @endphp
+                                            @if ($vis === "observations.visibility.$visKey")
                                                 {{ $obs->visibility }}
+                                            @else
+                                                {{ $vis }}
                                             @endif
                                         </dd>
                                     </div>

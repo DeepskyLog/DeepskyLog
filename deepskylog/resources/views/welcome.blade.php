@@ -301,7 +301,7 @@
                     @php
                         $params = array_merge(request()->except(["sketch_type", "sketches"]), $typeKey !== "all" ? ["sketch_type" => $typeKey] : []);
                         $url = url("/") . ($params ? "?" . http_build_query($params) : "");
-                        $isActive = $sketchType === $typeKey;
+                        $isActive = $ype === $typeKey;
                     @endphp
                     <a href="{{ $url }}"
                        class="rounded px-3 py-1 text-sm font-medium {{ $isActive ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200 hover:bg-gray-600' }}"
