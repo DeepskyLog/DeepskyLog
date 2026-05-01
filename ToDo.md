@@ -8,7 +8,7 @@
 - [ ] Observations
   - [x] Make migrations and seeder
   - [x] Show detailed observation page, with all details, comments, ...
-  - [ ] Add observations
+  - [ ] Add observations by changing the Add -> Observation menu item, both in add-dropdown.blade.php as in the add-responsive-dropdown.blade.php files. First, there should be an option to select the object.  If the object is found, the correct add page should be shown.  The add pages should be different for deep-sky objects, planets, lunar features, ...  Just look into the database tables to see which fields are needed for each type of object.  If the object is not found, the user should be redirected to the add new object page, with the name of the object already filled in.
     - [ ] other objects: planets, comets, lunar features, ...
       - [ ] Need to work on the database tables for these observations.
     - [ ] Quick add from the left aside

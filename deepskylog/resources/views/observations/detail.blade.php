@@ -136,28 +136,6 @@
         >
             <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-8">
                 <div class="min-w-0">
-                                {{-- Visibility --}}
-                                @if (!empty($obs->visibility) && $obs->visibility > 0)
-                                    <div>
-                                        <dt
-                                            class="text-xs uppercase tracking-wide text-gray-400"
-                                        >
-                                            {{ __("Object visibility") }}
-                                        </dt>
-                                        <dd class="mt-1 font-semibold">
-                                            @php
-                                                $visKey = (string) ($obs->visibility ?? '');
-                                                // Default visibility mapping
-                                                $vis = __("observations.visibility.$visKey");
-                                            @endphp
-                                            @if ($vis === "observations.visibility.$visKey")
-                                                {{ $obs->visibility }}
-                                            @else
-                                                {{ $vis }}
-                                            @endif
-                                        </dd>
-                                    </div>
-                                @endif
 
                     @if (!empty($sketchOfTheWeek))
                         <div
