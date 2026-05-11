@@ -4,7 +4,14 @@
             <div class="bg-gray-900 p-4 rounded shadow text-gray-100 flex flex-col flex-1 h-full">
                 {{-- Quick Search Livewire component (search across all object types) --}} 
                 <div class="mb-4">
-                    @livewire('quick-search')
+                    @livewire('quick-search', ['redirectToAdvancedWhenEmpty' => true])
+                    <div class="mt-2">
+                        <a href="{{ route('observation.add.select') }}"
+                           onclick="(function(e){e.preventDefault();var baseEmpty='{{ route('observation.add.select') }}';var baseFilled='{{ route('observation.create') }}';var root=(e.currentTarget&&e.currentTarget.closest)?e.currentTarget.closest('[data-dsl-ephemeris-aside]'):document;var inpt=root?root.querySelector('input[placeholder=\'Enter object name\']'):document.querySelector('input[placeholder=\'Enter object name\']');var q=inpt?inpt.value.trim():'';if(q){window.location.href=baseFilled + '?slug=' + encodeURIComponent(q);}else{window.location.href=baseEmpty;} })(event)"
+                           class="block w-full text-center bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded text-sm">
+                            {{ __('New observation') }}
+                        </a>
+                    </div>
                 </div>
             <h3 class="text-lg font-semibold mb-2 text-white">{{ __('Ephemerides') }}</h3>
 

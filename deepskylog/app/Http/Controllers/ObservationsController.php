@@ -227,6 +227,41 @@ class ObservationsController extends Controller
                 // best-effort population; continue even when some fields fail
             }
 
+            // Load modern deepsky detail row (if present) and attach expected legacy-shaped properties
+            try {
+                $details = \Illuminate\Support\Facades\DB::table('deepsky_observation_details')->where('observation_id', $selectedUnified->id)->first();
+                if ($details) {
+                    $selected->visibility = $details->visibility ?? null;
+                    $selected->smallDiameter = $details->small_diameter ?? null;
+                    $selected->largeDiameter = $details->large_diameter ?? null;
+                    $selected->small_diameter = $details->small_diameter ?? null;
+                    $selected->large_diameter = $details->large_diameter ?? null;
+
+                    $selected->clusterType = $details->cluster_type ?? null;
+                    $selected->cluster_type = $details->cluster_type ?? null;
+
+                    $selected->stellar = isset($details->stellar) ? (int) $details->stellar : 0;
+                    $selected->extended = isset($details->extended) ? (int) $details->extended : 0;
+                    $selected->resolved = isset($details->resolved) ? (int) $details->resolved : 0;
+                    $selected->mottled = isset($details->mottled) ? (int) $details->mottled : 0;
+                    $selected->unusualShape = $details->unusual_shape ?? null;
+                    $selected->unusual_shape = $details->unusual_shape ?? null;
+                    $selected->partlyUnresolved = $details->partly_unresolved ?? null;
+                    $selected->partly_unresolved = $details->partly_unresolved ?? null;
+                    $selected->colorContrasts = $details->color_contrasts ?? null;
+                    $selected->color_contrasts = $details->color_contrasts ?? null;
+                    $selected->equalBrightness = $details->equal_brightness ?? null;
+                    $selected->equal_brightness = $details->equal_brightness ?? null;
+                    $selected->niceField = $details->nice_field ?? null;
+                    $selected->nice_field = $details->nice_field ?? null;
+
+                    $selected->component1 = $details->component1 ?? null;
+                    $selected->component2 = $details->component2 ?? null;
+                }
+            } catch (\Throwable $_) {
+                // ignore
+            }
+
             $socialData = $this->buildSocialData($obsType, (int) $selectedUnified->id);
             $preloadedData = $this->preloadDeepskyData(collect([$selected]));
             $moonContext = $this->buildMoonContext($selected, $preloadedData['preloaded_locations']->get($selected->locationid) ?? null);
@@ -1833,7 +1868,9 @@ class ObservationsController extends Controller
      */
     public function select(Request $request)
     {
-        return redirect()->route('observation.create');
+        // Render the selection/search page directly so users can enter an
+        // object name before opening the full observation form.
+        return view('observations.add_select');
     }
 
     /**
@@ -1845,6 +1882,14 @@ class ObservationsController extends Controller
     {
         $user = $request->user();
         $slug = (string) $request->query('slug', '');
+
+        // If no slug was provided, show the selection/search page so the
+        // user can type or pick an object before opening the detailed
+        // observation form. This avoids showing a "No object found for ''"
+        // message when visiting /observation/add directly.
+        if (empty($slug)) {
+            return view('observations.add_select');
+        }
 
         $resolved = ['type' => '', 'table' => '', 'record' => null];
         $objectSummary = null;
@@ -2114,6 +2159,22 @@ class ObservationsController extends Controller
             'transparency' => 'nullable|integer|between:1,5',
             // Keep a reasonable validator cap (in kilobytes). Note: PHP limits may be lower than this.
             'sketch' => 'nullable|file|image|max:5120',
+            // Deepsky-specific detail fields (optional)
+            'visibility' => 'nullable|integer|min:0|max:7',
+            'small_diameter' => 'nullable|numeric',
+            'large_diameter' => 'nullable|numeric',
+            'cluster_type' => 'nullable|string|max:1',
+            'stellar' => 'nullable|integer',
+            'extended' => 'nullable|integer',
+            'resolved' => 'nullable|integer',
+            'mottled' => 'nullable|integer',
+            'unusual_shape' => 'nullable|integer',
+            'partly_unresolved' => 'nullable|integer',
+            'color_contrasts' => 'nullable|integer',
+            'equal_brightness' => 'nullable|integer',
+            'nice_field' => 'nullable|integer',
+            'component1' => 'nullable|integer',
+            'component2' => 'nullable|integer',
         ]);
 
         // Support updating an existing unified observation when `edit_unified_id` is provided.
@@ -2245,6 +2306,41 @@ class ObservationsController extends Controller
 
         $obs->save();
 
+        // Persist deepsky-specific detail row when the observation targets a deepsky object
+        try {
+            $isDeepsky = in_array($obs->target_table, ['objects', 'objectnames']);
+            if ($isDeepsky) {
+                $detailValues = [
+                    'visibility' => array_key_exists('visibility', $validated) ? ($validated['visibility'] !== '' ? (int) $validated['visibility'] : null) : null,
+                    'small_diameter' => array_key_exists('small_diameter', $validated) && $validated['small_diameter'] !== '' ? (float) $validated['small_diameter'] : null,
+                    'large_diameter' => array_key_exists('large_diameter', $validated) && $validated['large_diameter'] !== '' ? (float) $validated['large_diameter'] : null,
+                    'stellar' => !empty($validated['stellar']) ? 1 : 0,
+                    'extended' => !empty($validated['extended']) ? 1 : 0,
+                    'resolved' => !empty($validated['resolved']) ? 1 : 0,
+                    'mottled' => !empty($validated['mottled']) ? 1 : 0,
+                    'cluster_type' => $validated['cluster_type'] ?? null,
+                    'unusual_shape' => !empty($validated['unusual_shape']) ? 1 : 0,
+                    'partly_unresolved' => !empty($validated['partly_unresolved']) ? 1 : 0,
+                    'color_contrasts' => !empty($validated['color_contrasts']) ? 1 : 0,
+                    'equal_brightness' => !empty($validated['equal_brightness']) ? 1 : 0,
+                    'nice_field' => !empty($validated['nice_field']) ? 1 : 0,
+                    'component1' => array_key_exists('component1', $validated) && $validated['component1'] !== '' ? (int) $validated['component1'] : null,
+                    'component2' => array_key_exists('component2', $validated) && $validated['component2'] !== '' ? (int) $validated['component2'] : null,
+                ];
+
+                // Use updateOrInsert to create or update the details row keyed by observation_id
+                \Illuminate\Support\Facades\DB::table('deepsky_observation_details')->updateOrInsert(
+                    ['observation_id' => $obs->id],
+                    $detailValues
+                );
+            }
+        } catch (\Throwable $e) {
+            try {
+                \Log::warning('Failed to persist deepsky observation details', ['id' => $obs->id, 'error' => $e->getMessage()]);
+            } catch (\Throwable $_) {
+            }
+        }
+
         // Prefer redirecting to the canonical detail page for the newly-created unified observation
         try {
             $detailUrl = $this->buildObservationDetailUrlForUnified((int) $obs->id);
@@ -2291,7 +2387,7 @@ class ObservationsController extends Controller
 
         $owns = ($viewer->id && $selectedUnified->observer_user_id && $viewer->id == $selectedUnified->observer_user_id) || ($viewer->username && $selectedUnified->observer_username && $viewer->username == $selectedUnified->observer_username);
         $isAdmin = (method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges()) || $viewer->isAdministrator();
-        if (! $owns && ! $isAdmin) {
+        if (!$owns && !$isAdmin) {
             abort(403);
         }
 
@@ -2320,6 +2416,44 @@ class ObservationsController extends Controller
 
         // Determine a slug param for the create form (prefer the unified target_key)
         $slug = $selectedUnified->target_key ?? $selectedUnified->target_name ?? null;
+
+        // If this unified observation targets a deepsky object, preload detail fields
+        try {
+            if (in_array($selectedUnified->target_table, ['objects', 'objectnames'])) {
+                $details = \Illuminate\Support\Facades\DB::table('deepsky_observation_details')->where('observation_id', $selectedUnified->id)->first();
+                if ($details) {
+                    $prefill['visibility'] = $details->visibility ?? null;
+                    $prefill['small_diameter'] = $details->small_diameter ?? null;
+                    $prefill['large_diameter'] = $details->large_diameter ?? null;
+                    if (!empty($details->cluster_type))
+                        $prefill['cluster_type'] = $details->cluster_type;
+                    if ((int) ($details->stellar ?? 0) === 1)
+                        $prefill['stellar'] = 1;
+                    if ((int) ($details->extended ?? 0) === 1)
+                        $prefill['extended'] = 1;
+                    if ((int) ($details->resolved ?? 0) === 1)
+                        $prefill['resolved'] = 1;
+                    if ((int) ($details->mottled ?? 0) === 1)
+                        $prefill['mottled'] = 1;
+                    if ((int) ($details->unusual_shape ?? 0) === 1)
+                        $prefill['unusual_shape'] = 1;
+                    if ((int) ($details->partly_unresolved ?? 0) === 1)
+                        $prefill['partly_unresolved'] = 1;
+                    if ((int) ($details->color_contrasts ?? 0) === 1)
+                        $prefill['color_contrasts'] = 1;
+                    if ((int) ($details->equal_brightness ?? 0) === 1)
+                        $prefill['equal_brightness'] = 1;
+                    if ((int) ($details->nice_field ?? 0) === 1)
+                        $prefill['nice_field'] = 1;
+                    if (!empty($details->component1))
+                        $prefill['component1'] = (int) $details->component1;
+                    if (!empty($details->component2))
+                        $prefill['component2'] = (int) $details->component2;
+                }
+            }
+        } catch (\Throwable $_) {
+            // ignore prefill failures
+        }
 
         session()->flashInput($prefill);
 
@@ -2358,7 +2492,7 @@ class ObservationsController extends Controller
 
         $owns = ($viewer->id && $selectedUnified->observer_user_id && $viewer->id == $selectedUnified->observer_user_id) || ($viewer->username && $selectedUnified->observer_username && $viewer->username == $selectedUnified->observer_username);
         $isAdmin = (method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges()) || $viewer->isAdministrator();
-        if (! $owns && ! $isAdmin) {
+        if (!$owns && !$isAdmin) {
             abort(403);
         }
 
@@ -2391,7 +2525,10 @@ class ObservationsController extends Controller
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
-            try { \Log::error('Failed to delete observation', ['id' => $selectedUnified->id, 'error' => (string) $e]); } catch (\Throwable $_) {}
+            try {
+                \Log::error('Failed to delete observation', ['id' => $selectedUnified->id, 'error' => (string) $e]);
+            } catch (\Throwable $_) {
+            }
             return redirect()->back()->with('error', __('Failed to delete observation'));
         }
 

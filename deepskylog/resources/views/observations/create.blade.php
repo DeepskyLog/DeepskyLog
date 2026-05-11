@@ -5,7 +5,7 @@
         <div class="bg-gray-900 p-4 rounded shadow text-gray-100">
             @if (empty($resolved['type']))
                 <div class="text-yellow-200 mb-4">{{ __('No object found for') }} '{{ $slug }}'.</div>
-                <a href="{{ route('observation.add.select') }}" class="bg-gray-700 px-3 py-2 rounded">{{ __('Back to selection') }}</a>
+                <a href="{{ route('observation.add.select') }}" class="bg-gray-700 px-3 py-2 rounded">{{ __('New observation') }}</a>
             @else
                 <div class="mb-4">
                     <strong>{{ __('Object') }}:</strong> {{ $resolved['record']->name ?? $slug }}

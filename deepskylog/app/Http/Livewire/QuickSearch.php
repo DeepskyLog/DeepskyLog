@@ -14,6 +14,10 @@ class QuickSearch extends Component
     // Index of the currently highlighted suggestion (-1 = none)
     public $selectedIndex = -1;
     public $mode = null;
+    // When true, clicking the "Search Object" button with an empty query
+    // should redirect to the advanced search form instead of running a normal
+    // submit. This is used by the left aside ephemeris/quick-search include.
+    public $redirectToAdvancedWhenEmpty = false;
     // Cache resolved type names for short codes (avoid repeated DB lookups)
     protected $cachedTypeNames = [];
 

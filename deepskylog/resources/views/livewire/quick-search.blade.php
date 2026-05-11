@@ -25,6 +25,11 @@
         <div class="sr-only">{{ $query }}</div>
     </div>
     <div class="mt-2">
-        <button wire:click="submit" class="w-full bg-gray-700 text-gray-100 py-2 rounded">Search Object</button>
+        @php $btnLabel = ($mode === 'add_observation') ? __('Add observation') : __('Search Object'); @endphp
+        @if(!empty($redirectToAdvancedWhenEmpty))
+            <button type="button" class="w-full bg-gray-700 text-gray-100 py-2 rounded" x-on:click="if (!$refs.quicksearch || ($refs.quicksearch && $refs.quicksearch.value.trim() === '')) { window.location.href='{{ route('search.advanced') }}'; } else { $wire.call('submit'); }">{{ $btnLabel }}</button>
+        @else
+            <button wire:click="submit" class="w-full bg-gray-700 text-gray-100 py-2 rounded">{{ $btnLabel }}</button>
+        @endif
     </div>
 </div>
