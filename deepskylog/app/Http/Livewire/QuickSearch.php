@@ -13,6 +13,7 @@ class QuickSearch extends Component
     public $showSuggestions = false;
     // Index of the currently highlighted suggestion (-1 = none)
     public $selectedIndex = -1;
+    public $mode = null;
     // Cache resolved type names for short codes (avoid repeated DB lookups)
     protected $cachedTypeNames = [];
 
@@ -447,7 +448,8 @@ class QuickSearch extends Component
 
         // Prepare logging arrays if debug enabled
         $titlesBefore = array_map(function ($r) {
-            return (string) ($r->display_name ?? ($r->name ?? ($r->title ?? ''))); }, $results);
+            return (string) ($r->display_name ?? ($r->name ?? ($r->title ?? '')));
+        }, $results);
 
         // Tokenize helper: split into sequence of numeric and non-numeric tokens
         $tokenize = function ($s) {
@@ -515,7 +517,8 @@ class QuickSearch extends Component
         });
 
         $titlesAfter = array_map(function ($r) {
-            return (string) ($r->display_name ?? ($r->name ?? ($r->title ?? ''))); }, $results);
+            return (string) ($r->display_name ?? ($r->name ?? ($r->title ?? '')));
+        }, $results);
 
         // Debug logging removed for QuickSearch suggestions before/after
 
@@ -767,6 +770,9 @@ class QuickSearch extends Component
         if (($this->selectedIndex ?? -1) >= 0 && isset($this->suggestions[$this->selectedIndex])) {
             $slug = $this->suggestions[$this->selectedIndex]['slug'] ?? null;
             if ($slug) {
+                if ($this->mode === 'add_observation') {
+                    return redirect()->route('observation.create', ['slug' => $slug]);
+                }
                 return redirect()->route('object.show', ['slug' => $slug]);
             }
         }
@@ -776,6 +782,9 @@ class QuickSearch extends Component
 
     public function selectSuggestion($slug)
     {
+        if ($this->mode === 'add_observation') {
+            return redirect()->route('observation.create', ['slug' => $slug]);
+        }
         return redirect()->route('object.show', ['slug' => $slug]);
     }
 
@@ -815,6 +824,9 @@ class QuickSearch extends Component
 
         if (!empty($obj)) {
             $slug = $obj->slug ?? $obj->name;
+            if ($this->mode === 'add_observation') {
+                return redirect()->route('observation.create', ['slug' => $slug]);
+            }
             return redirect()->route('object.show', ['slug' => $slug]);
         }
 
@@ -822,7 +834,11 @@ class QuickSearch extends Component
         $this->fetchSuggestions();
         $count = count($this->suggestions);
         if ($count === 1) {
-            return redirect()->route('object.show', ['slug' => $this->suggestions[0]['slug']]);
+            $suggSlug = $this->suggestions[0]['slug'];
+            if ($this->mode === 'add_observation') {
+                return redirect()->route('observation.create', ['slug' => $suggSlug]);
+            }
+            return redirect()->route('object.show', ['slug' => $suggSlug]);
         }
 
         return redirect()->route('search.results', ['q' => $this->query]);

@@ -13,7 +13,7 @@
                 @unless(Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
                 <x-dropdown.item
                     icon="user-plus"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming"
+                    href="{{ route('observation.add.select') }}"
                     label="{{ __('Observation') }}"
                 />
 

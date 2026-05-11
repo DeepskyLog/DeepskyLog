@@ -104,12 +104,28 @@ Route::get('/drawings/{observer}', 'App\Http\Controllers\DrawingController@show'
 Route::get('/cometdrawings/{observer}/{object}', 'App\Http\Controllers\CometDrawingController@showObserverObject')->name('cometdrawings.user.object');
 // Per-observer comet drawings (keep after the observer+object route to avoid capture)
 Route::get('/cometdrawings/{observer}', 'App\Http\Controllers\CometDrawingController@show')->name('cometdrawings.show');
+// Add observation selection and create pages
+Route::get('/observation/add/select', [App\Http\Controllers\ObservationsController::class, 'select'])->name('observation.add.select')->middleware('auth');
+Route::get('/observation/add', [App\Http\Controllers\ObservationsController::class, 'create'])->name('observation.create')->middleware('auth');
+Route::post('/observation', [App\Http\Controllers\ObservationsController::class, 'store'])->name('observation.store')->middleware('auth');
 // Observations (deepsky + comet)
 Route::get('/observations', 'App\Http\Controllers\ObservationsController@index')->name('observations.index');
 Route::get('/observation/{observer}/{date}/{object}/{index?}', [App\Http\Controllers\ObservationsController::class, 'detail'])
     ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
     ->where('index', '[0-9]+')
     ->name('observations.detail');
+// Edit and delete a single observation (owner or admin only)
+Route::get('/observation/{observer}/{date}/{object}/{index?}/edit', [App\Http\Controllers\ObservationsController::class, 'edit'])
+    ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+    ->where('index', '[0-9]+')
+    ->name('observations.edit')
+    ->middleware(['auth', 'verified']);
+
+Route::delete('/observation/{observer}/{date}/{object}/{index?}', [App\Http\Controllers\ObservationsController::class, 'destroy'])
+    ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+    ->where('index', '[0-9]+')
+    ->name('observations.destroy')
+    ->middleware(['auth', 'verified']);
 Route::get('/observation/{observer}/{date}/{object}/{index?}/compare-my-last', [App\Http\Controllers\ObservationsController::class, 'compareWithMyLast'])
     ->middleware('auth')
     ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
@@ -117,6 +133,8 @@ Route::get('/observation/{observer}/{date}/{object}/{index?}/compare-my-last', [
     ->name('observations.compare.my-last');
 // Object-scoped drawings listing (e.g. /observations/drawings/m-31)
 Route::get('/observations/drawings/{slug}', [App\Http\Controllers\ObservationsController::class, 'showObjectDrawings'])->name('observations.drawings.show');
+// Object-scoped observations listing (e.g. /observations/object/m-31)
+Route::get('/observations/object/{slug}', [App\Http\Controllers\ObservationsController::class, 'showObject'])->name('observations.object');
 // Observations for a specific observer filtered by object (e.g. /observations/wim-de-meester/m-31)
 Route::get('/observations/{observer}/{object}', [App\Http\Controllers\ObservationsController::class, 'showObserverObject'])->name('observations.user.object');
 // Drawings for a specific observer filtered by object (e.g. /observations/drawings/wim-de-meester/m-31)
@@ -373,7 +391,98 @@ Route::get('/object/sun', function () {
         'slug' => 'sun',
     ];
 
-    return view('object.sun-page', ['session' => $session, 'ephemerides' => $payload]);
+    // Compute unified modern observation counts (observations table, not legacy)
+    $totalObservations = null;
+    $drawings = null;
+    $yourObservations = null;
+    $yourDrawings = null;
+    try {
+        if (class_exists(\App\Models\Observation::class)) {
+            $possibleKeys = [];
+            if (!empty($session->slug))
+                $possibleKeys[] = (string) $session->slug;
+            if (!empty($session->name))
+                $possibleKeys[] = (string) $session->name;
+            if (!empty($session->id))
+                $possibleKeys[] = (string) $session->id;
+            $possibleKeys = array_values(array_unique(array_filter($possibleKeys)));
+
+            if (!empty($possibleKeys)) {
+                $lowerKeys = array_map(fn($k) => mb_strtolower((string) $k), $possibleKeys);
+                $possibleKeys = array_values(array_unique(array_merge($possibleKeys, $lowerKeys)));
+
+                // objects
+                $unifiedObjectsCount = \App\Models\Observation::where('target_table', 'objects')
+                    ->whereIn('target_key', $possibleKeys)
+                    ->whereNull('legacy_source')
+                    ->count();
+
+                $unifiedObjectsDrawings = \App\Models\Observation::where('target_table', 'objects')
+                    ->whereIn('target_key', $possibleKeys)
+                    ->whereNull('legacy_source')
+                    ->where('has_drawing', 1)
+                    ->count();
+
+                $totalObservations = (int) ($totalObservations ?? 0) + (int) $unifiedObjectsCount;
+                $drawings = (int) ($drawings ?? 0) + (int) $unifiedObjectsDrawings;
+
+                if (\Illuminate\Support\Facades\Auth::check()) {
+                    $yourUnifiedObs = \App\Models\Observation::where('target_table', 'objects')
+                        ->whereIn('target_key', $possibleKeys)
+                        ->whereNull('legacy_source')
+                        ->where('observer_user_id', \Illuminate\Support\Facades\Auth::user()->id)
+                        ->count();
+
+                    $yourUnifiedDraws = \App\Models\Observation::where('target_table', 'objects')
+                        ->whereIn('target_key', $possibleKeys)
+                        ->whereNull('legacy_source')
+                        ->where('observer_user_id', \Illuminate\Support\Facades\Auth::user()->id)
+                        ->where('has_drawing', 1)
+                        ->count();
+
+                    $yourObservations = (int) ($yourObservations ?? 0) + (int) $yourUnifiedObs;
+                    $yourDrawings = (int) ($yourDrawings ?? 0) + (int) $yourUnifiedDraws;
+                }
+
+                // planets (Sun)
+                $unifiedPlanetCount = \App\Models\Observation::where('target_table', 'planets')
+                    ->whereIn('target_key', $possibleKeys)
+                    ->whereNull('legacy_source')
+                    ->count();
+
+                $unifiedPlanetDrawings = \App\Models\Observation::where('target_table', 'planets')
+                    ->whereIn('target_key', $possibleKeys)
+                    ->whereNull('legacy_source')
+                    ->where('has_drawing', 1)
+                    ->count();
+
+                $totalObservations = (int) ($totalObservations ?? 0) + (int) $unifiedPlanetCount;
+                $drawings = (int) ($drawings ?? 0) + (int) $unifiedPlanetDrawings;
+
+                if (\Illuminate\Support\Facades\Auth::check()) {
+                    $yourUnifiedPlanetObs = \App\Models\Observation::where('target_table', 'planets')
+                        ->whereIn('target_key', $possibleKeys)
+                        ->whereNull('legacy_source')
+                        ->where('observer_user_id', \Illuminate\Support\Facades\Auth::user()->id)
+                        ->count();
+
+                    $yourUnifiedPlanetDraws = \App\Models\Observation::where('target_table', 'planets')
+                        ->whereIn('target_key', $possibleKeys)
+                        ->whereNull('legacy_source')
+                        ->where('observer_user_id', \Illuminate\Support\Facades\Auth::user()->id)
+                        ->where('has_drawing', 1)
+                        ->count();
+
+                    $yourObservations = (int) ($yourObservations ?? 0) + (int) $yourUnifiedPlanetObs;
+                    $yourDrawings = (int) ($yourDrawings ?? 0) + (int) $yourUnifiedPlanetDraws;
+                }
+            }
+        }
+    } catch (\Throwable $_) {
+        // ignore
+    }
+
+    return view('object.sun-page', ['session' => $session, 'ephemerides' => $payload, 'totalObservations' => $totalObservations, 'drawings' => $drawings, 'yourObservations' => $yourObservations, 'yourDrawings' => $yourDrawings]);
 })->name('object.show.sun')->middleware('doNotCacheResponse');
 
 // Create object multi-step wizard (must be before /object/{slug} so 'create' isn't captured as a slug)

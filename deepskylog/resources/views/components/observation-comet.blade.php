@@ -1,7 +1,7 @@
 {{-- Avoid inline `use` in Blade; use fully-qualified class names within PHP blocks --}}
 @props ([
     "observation",
-    "unified_observation" => null,
+    "unified_observation" => null,  // deprecated alias, kept for backward compat
     "preloaded_user" => null,
     "preloaded_comet" => null,
     "preloaded_location" => null,
@@ -11,20 +11,39 @@
 ])
 <div class="justify-left mt-5 flex">
     @php
-        use App\Models\CometObservationsOld;
+        // Accept either a unified App\Models\Observation or a legacy CometObservationsOld.
+        $isUnified = $observation instanceof \App\Models\Observation;
+        $obsUnified = $isUnified ? $observation : $unified_observation;
+        $obs_type   = $obsUnified?->target_type ?? 'comet';
 
-        $date = $observation->date;
-        $observation_date =
-            substr($date, 0, 4) . "-" . substr($date, 4, 2) . "-" . substr($date, 6, 2);
+        if ($isUnified) {
+            $observation_date = $observation->observed_on->format('Y-m-d');
+            $observerid       = $observation->observer_username;
+            $objectid         = is_numeric($observation->target_key) ? (int) $observation->target_key : null;
+            $locationid       = $observation->location_id;
+            $instrumentid     = $observation->instrument_id;
+            $description      = $observation->description;
+            $hasDrawing       = $observation->has_drawing;
+            $obs_id           = $observation->id;
+            $obs_mag          = null; // unified model doesn't have comet-specific mag
+        } else {
+            $date_raw         = $observation->date;
+            $observation_date = substr($date_raw, 0, 4) . '-' . substr($date_raw, 4, 2) . '-' . substr($date_raw, 6, 2);
+            $observerid       = $observation->observerid;
+            $objectid         = $observation->objectid;
+            $locationid       = $observation->locationid;
+            $instrumentid     = $observation->instrumentid;
+            $description      = $observation->description;
+            $hasDrawing       = $observation->hasDrawing;
+            $obs_id           = $observation->id;
+            $obs_mag          = $observation->mag ?? null;
+        }
 
         // Use preloaded data when available, otherwise fall back to queries
         $user =
             $preloaded_user ??
-            \App\Models\User::where(
-                "username",
-                html_entity_decode($observation->observerid),
-            )->first();
-        // Fallbacks when user cannot be found
+            \App\Models\User::where("username", html_entity_decode($observerid))->first();
+        // Fallback when user cannot be found
         if (!$user) {
             $user = (object) [
                 "profile_photo_url" => asset("images/placeholder-avatar.png"),
@@ -33,28 +52,66 @@
                 "slug" => "",
             ];
         }
-        // Stichoza\GoogleTranslate\GoogleTranslate used conditionally
+
         $tr = null;
         if (auth()->check() && auth()->user()->translate) {
-            $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(
-                auth()->user()->language,
-            );
+            $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(auth()->user()->language);
+        }
+
+        // Resolve drawing filename and public URL for unified and legacy comet observations
+        $resolvedDrawing = null;
+        if ($isUnified) {
+            $resolvedDrawing = $obsUnified?->drawing_filename ?? null;
+        } else {
+            $resolvedDrawing = $observation->drawing_filename ?? null;
+        }
+        $drawingSrc = null;
+        if (!empty($resolvedDrawing)) {
+            try {
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($resolvedDrawing)) {
+                    $drawingSrc = \Illuminate\Support\Facades\Storage::disk('public')->url($resolvedDrawing);
+                    
+                } else {
+                    $drawingSrc = '/images/' . ltrim($resolvedDrawing, '/');
+                }
+            } catch (\Throwable $_) {
+                $drawingSrc = '/images/' . ltrim($resolvedDrawing, '/');
+            }
+        }
+        if (empty($drawingSrc) && $hasDrawing) {
+            $drawingSrc = '/images/cometdrawings/' . $obs_id . '.jpg';
+        }
+        // Determine icon: check target name for Sun/Moon when available
+        $targetName = $obsUnified?->target_name ?? null;
+        $isSun = false;
+        $isMoon = false;
+        try {
+            $isSun = $targetName ? (bool) preg_match('/\bsun\b/i', (string) $targetName) : false;
+            $isMoon = $targetName ? (bool) preg_match('/\b(moon|luna|lunar|lune|mond)\b/i', (string) $targetName) : false;
+        } catch (\Throwable $_) {
+        }
+
+        if ($isSun) {
+            $iconEmoji = '🌞';
+        } elseif ($isMoon) {
+            $iconEmoji = '🌕';
+        } else {
+            if ($obs_type === 'deepsky') {
+                $iconEmoji = '✨';
+            } elseif ($obs_type === 'comet') {
+                $iconEmoji = '☄️';
+            } elseif (in_array($obs_type, ['planet', 'solarsystem'])) {
+                $iconEmoji = '🪐';
+            } else {
+                $iconEmoji = '🔭';
+            }
         }
     @endphp
 
-    @if ($unified_observation)
-        @php $obsType = $unified_observation->target_type ?? null; @endphp
+    @if ($obsUnified)
         <div class="mr-3 mt-6 flex-shrink-0">
-            <span role="img" aria-label="{{ ucfirst($obsType ?? 'object') }}" title="{{ ucfirst($obsType ?? '') }}" class="text-2xl">
-                @if ($obsType === 'deepsky')
-                    ✨
-                @elseif ($obsType === 'comet')
-                    ☄️
-                @elseif ($obsType === 'solarsystem')
-                    🪐
-                @else
-                    🔭
-                @endif
+            <span role="img" aria-label="{{ ucfirst($obs_type) }}" title="{{ ucfirst($obs_type) }}" class="text-2xl">
+                {{ $iconEmoji }}
             </span>
         </div>
     @endif
@@ -82,8 +139,8 @@
             // Use preloaded comet when available
             $cometOld =
                 $preloaded_comet ??
-                \App\Models\CometObject::where("id", $observation->objectid)->first();
-            $cometName = $cometOld ? $cometOld->name : __("Unknown comet");
+                ($objectid ? \App\Models\CometObject::where("id", $objectid)->first() : null);
+            $cometName = $cometOld ? $cometOld->name : ($isUnified ? ($observation->target_name ?? __("Unknown comet")) : __("Unknown comet"));
             $slug =
                 $cometOld?->slug ?? \Illuminate\Support\Str::slug($cometName ?? "", "-");
             $link = route("object.show", $slug);
@@ -99,15 +156,8 @@
                     "</a>",
             ])
         !!}
-        @if (!empty($observation->mag) && $observation->mag > -90)
-            <span class="text-gray-400"
-                >&nbsp;({{ __("mag") }} {{
-                    number_format(
-                        $observation->mag,
-                        1,
-                    )
-                }})</span
-            >
+        @if (!empty($obs_mag) && $obs_mag > -90)
+            <span class="text-gray-400">&nbsp;({{ __("mag") }} {{ number_format($obs_mag, 1) }})</span>
         @endif
 
         {{ __(" on ") }} {{
@@ -115,13 +165,12 @@
                 $observation_date,
             )->translatedFormat("j M Y")
         }}
-        @if ($observation->locationid > 0)
+        @if ($locationid > 0)
             {{ __(" from ") }}
             @php
-                // Use preloaded location when available
                 $location =
                     $preloaded_location ??
-                    \App\Models\Location::where("id", $observation->locationid)->first();
+                    \App\Models\Location::where("id", $locationid)->first();
                 $locationSlug = $location ? $location->slug : "";
                 $locationName = $location ? $location->name : __("Unknown location");
             @endphp
@@ -137,16 +186,13 @@
             </a>
         @endif
         <br />
-        @if ($observation->instrumentid > 0)
+        @if ($instrumentid > 0)
             @php
-                // Use preloaded instrument when available
                 $instrument =
                     $preloaded_instrument ??
-                    \App\Models\Instrument::where("id", $observation->instrumentid)->first();
+                    \App\Models\Instrument::where("id", $instrumentid)->first();
                 $instrumentSlug = $instrument ? $instrument->slug : "";
-                $instrumentName = $instrument
-                    ? $instrument->fullName()
-                    : __("Unknown instrument");
+                $instrumentName = $instrument ? $instrument->fullName() : __("Unknown instrument");
             @endphp
             {{
                 __(
@@ -165,7 +211,7 @@
             </a>
         @endif
 
-        @if ($observation->description != "")
+        @if ($description != "")
             <br />
             {{
                 __(
@@ -175,15 +221,15 @@
             <br />
             <div class="my-2 rounded-sm bg-gray-900 px-4 py-4">
                 <div class="flex items-start space-x-4">
-                    @if ($observation->hasDrawing)
+                    @if ($hasDrawing && $drawingSrc)
                         <button
                             type="button"
-                            onclick="window.dispatchEvent(new CustomEvent('open-comet-lightbox-{{ $observation->id }}'))"
+                            onclick="window.dispatchEvent(new CustomEvent('open-comet-lightbox-{{ $obs_id }}'))"
                             class="flex-shrink-0 focus:outline-none"
                         >
                             <img
-                                src="/images/cometdrawings/{{ $observation->id }}.jpg"
-                                alt="comet-drawing-{{ $observation->id }}"
+                                src="{{ $drawingSrc }}"
+                                alt="comet-drawing-{{ $obs_id }}"
                                 class="w-28 rounded"
                             />
                         </button>
@@ -225,10 +271,9 @@
                     </div>
                 </div>
 
-                <!-- Modal / Lightbox (listens for custom event to open) -->
                 <div
                     x-data="{ open: false }"
-                    x-on:open-comet-lightbox-{{ $observation->id }}.window="open = true"
+                    x-on:open-comet-lightbox-{{ $obs_id }}.window="open = true"
                 >
                     <div
                         x-cloak
@@ -247,8 +292,8 @@
                                 &times;
                             </button>
                             <img
-                                src="/images/cometdrawings/{{ $observation->id }}.jpg"
-                                alt="comet-drawing-large-{{ $observation->id }}"
+                                src="{{ $drawingSrc }}"
+                                alt="comet-drawing-large-{{ $obs_id }}"
                                 class="max-w-full max-h-[85vh] rounded shadow-lg"
                             />
                         </div>
@@ -259,98 +304,95 @@
 
         <div class="flex items-center space-x-3 mt-2 mb-2">
             @php
-                $observerSegment = $user?->slug ?: (string) $observation->observerid;
-                $dateSegment = $observation_date;
-                $objectSegment =
-                    $cometOld?->slug ?: \Illuminate\Support\Str::slug((string) $cometName, "-");
+                $observerSegment = $user?->slug ?: $observerid;
+                $objectSegment   = $cometOld?->slug ?: \Illuminate\Support\Str::slug((string) $cometName, "-");
 
-                $matchingIds = CometObservationsOld::where(
-                    "observerid",
-                    $observation->observerid,
-                )
-                    ->where("date", $observation->date)
-                    ->where("objectid", $observation->objectid)
-                    ->orderBy("time")
-                    ->orderBy("id")
-                    ->pluck("id")
-                    ->map(fn($id) => (int) $id)
-                    ->values();
+                if ($isUnified) {
+                    $matchingIds = \App\Models\Observation::where("observer_username", $observerid)
+                        ->whereDate("observed_on", $observation_date)
+                        ->where("target_name", $cometName)
+                        ->orderBy("observed_time")
+                        ->orderBy("id")
+                        ->pluck("id")
+                        ->map(fn($id) => (int) $id)
+                        ->values();
+                } else {
+                    $matchingIds = \App\Models\CometObservationsOld::where("observerid", $observerid)
+                        ->where("date", $observation->date)
+                        ->where("objectid", $objectid)
+                        ->orderBy("time")
+                        ->orderBy("id")
+                        ->pluck("id")
+                        ->map(fn($id) => (int) $id)
+                        ->values();
+                }
 
-                $position = $matchingIds->search((int) $observation->id);
+                $position = $matchingIds->search((int) $obs_id);
                 $occurrenceIndex = $position === false ? 1 : (int) $position + 1;
 
                 $detailRouteParams = [
                     "observer" => $observerSegment,
-                    "date" => $dateSegment,
-                    "object" => $objectSegment,
+                    "date"     => $observation_date,
+                    "object"   => $objectSegment,
                 ];
                 if ($occurrenceIndex > 1) {
                     $detailRouteParams["index"] = $occurrenceIndex;
                 }
-            @endphp
-            <a
-                href="{{ route('observations.detail', $detailRouteParams) }}"
-                class="inline-flex items-center px-4 py-2 rounded bg-gray-700 hover:bg-gray-600 text-white align-middle"
-            >
-                {{
-                    __(
-                        "More details",
-                    )
-                }}
-            </a>
 
-            {{-- DSL message button: opens internal composer with to=username and a prefilled subject --}}
-            @php if (auth()->check()) { @endphp
-            <a
-                href="{{ route('messages.create', ['to' => $user->username, 'subject' => 'About your observation of ' . $cometName]) }}"
-                class="inline-flex items-center px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white align-middle"
-                aria-label="{{ __('Send message about this sketch') }}"
-            >
-                {{-- envelope icon --}}
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 mr-2"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                >
-                    <path d="M2.94 6.94A2 2 0 014.828 6h10.344a2 2 0 011.888.94L10 11.586 2.94 6.94z" />
-                    <path d="M18 8.118V13a2 2 0 01-2 2H4a2 2 0 01-2-2V8.118l7.293 4.377a1 1 0 001.414 0L18 8.118z" />
-                </svg>
-            </a>
-            @php } @endphp
+                // Likes: use target_type as type key for unified, 'comet' for legacy
+                $likeType = $isUnified ? ($obs_type ?: 'comet') : 'comet';
+                $likeId   = $obs_id;
 
-            @php
-                // Use preloaded likes data when available
                 if ($likes_count !== null && $liked !== null) {
                     $likesCount = $likes_count;
-                    $isLiked = $liked;
+                    $isLiked    = $liked;
                 } else {
-                    $likesCount = \App\Models\ObservationLike::where(
-                        "observation_type",
-                        "comet",
-                    )
-                        ->where("observation_id", $observation->id)
-                        ->count();
-                    $isLiked =
-                        auth()->check() &&
-                        \App\Models\ObservationLike::where("observation_type", "comet")
-                            ->where("observation_id", $observation->id)
-                            ->where("user_id", auth()->id())
-                            ->exists();
+                    $likesCount = \App\Models\ObservationLike::where("observation_type", $likeType)
+                        ->where("observation_id", $likeId)->count();
+                    $isLiked = auth()->check() && \App\Models\ObservationLike::where("observation_type", $likeType)
+                        ->where("observation_id", $likeId)
+                        ->where("user_id", auth()->id())
+                        ->exists();
                 }
             @endphp
+            @php
+                $detailHref = null;
+                $canBuildDetail = !empty($detailRouteParams['observer']) && !empty($detailRouteParams['date']) && !empty($detailRouteParams['object']);
+                if ($canBuildDetail) {
+                    try {
+                        $detailHref = route('observations.detail', $detailRouteParams);
+                    } catch (\Throwable $_) {
+                        $detailHref = null;
+                    }
+                }
+            @endphp
+            <a
+                href="{{ $detailHref ?? '#' }}"
+                class="inline-flex items-center px-4 py-2 rounded bg-gray-700 hover:bg-gray-600 text-white align-middle"
+                @if(!$detailHref) aria-disabled="true" @endif
+            >
+                {{ __("More details") }}
+            </a>
+
+            @auth
+                <a
+                    href="{{ route('messages.create', ['to' => $user->username ?? '', 'subject' => 'About your observation of ' . $cometName]) }}"
+                    class="inline-flex items-center px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white align-middle"
+                    aria-label="{{ __('Send message about this sketch') }}"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path d="M2.94 6.94A2 2 0 014.828 6h10.344a2 2 0 011.888.94L10 11.586 2.94 6.94z" />
+                        <path d="M18 8.118V13a2 2 0 01-2 2H4a2 2 0 01-2-2V8.118l7.293 4.377a1 1 0 001.414 0L18 8.118z" />
+                    </svg>
+                </a>
+            @endauth
 
             <button
-                data-observation-type="comet"
-                data-observation-id="{{ $observation->id }}"
+                data-observation-type="{{ $likeType }}"
+                data-observation-id="{{ $likeId }}"
                 class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white align-middle"
             >
-                <span class="like-icon">{!!
-                    $isLiked
-                        ? "❤️"
-                        : "👍"
-                !!}</span>
+                <span class="like-icon">{!! $isLiked ? "❤️" : "👍" !!}</span>
                 <span class="like-count">{{ $likesCount }}</span>
             </button>
         </div>

@@ -1532,6 +1532,106 @@ class ObjectController extends Controller
             // defensive: ignore count errors and leave variables as-is
         }
 
+        // Include any unified (modern) observations stored in the `observations` table
+        // that were not migrated from the legacy DB (legacy_source IS NULL). This covers
+        // modern rows that target `objects` and `planets` (e.g. Sun).
+        try {
+            if (class_exists(\App\Models\Observation::class)) {
+                $possibleKeys = [];
+                if (!empty($record->slug)) {
+                    $possibleKeys[] = (string) $record->slug;
+                }
+                if (!empty($record->name)) {
+                    $possibleKeys[] = (string) $record->name;
+                }
+                if (!empty($slug)) {
+                    $possibleKeys[] = (string) $slug;
+                }
+                if (!empty($record->id) && is_numeric($record->id)) {
+                    $possibleKeys[] = (string) $record->id;
+                }
+                $possibleKeys = array_values(array_unique(array_filter($possibleKeys)));
+
+                if (!empty($possibleKeys)) {
+                    // Add lowercase variants so case differences in stored target_key don't prevent matches
+                    $lowerKeys = array_map(fn($k) => mb_strtolower((string) $k), $possibleKeys);
+                    $possibleKeys = array_values(array_unique(array_merge($possibleKeys, $lowerKeys)));
+
+                    // Objects (deep-sky) rows
+                    $unifiedObjectsCount = \App\Models\Observation::where('target_table', 'objects')
+                        ->whereIn('target_key', $possibleKeys)
+                        ->whereNull('legacy_source')
+                        ->count();
+
+                    $unifiedObjectsDrawings = \App\Models\Observation::where('target_table', 'objects')
+                        ->whereIn('target_key', $possibleKeys)
+                        ->whereNull('legacy_source')
+                        ->where('has_drawing', 1)
+                        ->count();
+
+                    $totalObservations = (int) ($totalObservations ?? 0) + (int) $unifiedObjectsCount;
+                    $drawings = (int) ($drawings ?? 0) + (int) $unifiedObjectsDrawings;
+
+                    if (Auth::check()) {
+                        $yourUnifiedObs = \App\Models\Observation::where('target_table', 'objects')
+                            ->whereIn('target_key', $possibleKeys)
+                            ->whereNull('legacy_source')
+                            ->where('observer_user_id', Auth::user()->id)
+                            ->count();
+
+                        $yourUnifiedDraws = \App\Models\Observation::where('target_table', 'objects')
+                            ->whereIn('target_key', $possibleKeys)
+                            ->whereNull('legacy_source')
+                            ->where('observer_user_id', Auth::user()->id)
+                            ->where('has_drawing', 1)
+                            ->count();
+
+                        $yourObservations = (int) ($yourObservations ?? 0) + (int) $yourUnifiedObs;
+                        $yourDrawings = (int) ($yourDrawings ?? 0) + (int) $yourUnifiedDraws;
+                    }
+
+                    // Planet-targeted rows (covers Sun and other planet observations stored in modern table)
+                    try {
+                        $unifiedPlanetCount = \App\Models\Observation::where('target_table', 'planets')
+                            ->whereIn('target_key', $possibleKeys)
+                            ->whereNull('legacy_source')
+                            ->count();
+
+                        $unifiedPlanetDrawings = \App\Models\Observation::where('target_table', 'planets')
+                            ->whereIn('target_key', $possibleKeys)
+                            ->whereNull('legacy_source')
+                            ->where('has_drawing', 1)
+                            ->count();
+
+                        $totalObservations = (int) ($totalObservations ?? 0) + (int) $unifiedPlanetCount;
+                        $drawings = (int) ($drawings ?? 0) + (int) $unifiedPlanetDrawings;
+
+                        if (Auth::check()) {
+                            $yourUnifiedPlanetObs = \App\Models\Observation::where('target_table', 'planets')
+                                ->whereIn('target_key', $possibleKeys)
+                                ->whereNull('legacy_source')
+                                ->where('observer_user_id', Auth::user()->id)
+                                ->count();
+
+                            $yourUnifiedPlanetDraws = \App\Models\Observation::where('target_table', 'planets')
+                                ->whereIn('target_key', $possibleKeys)
+                                ->whereNull('legacy_source')
+                                ->where('observer_user_id', Auth::user()->id)
+                                ->where('has_drawing', 1)
+                                ->count();
+
+                            $yourObservations = (int) ($yourObservations ?? 0) + (int) $yourUnifiedPlanetObs;
+                            $yourDrawings = (int) ($yourDrawings ?? 0) + (int) $yourUnifiedPlanetDraws;
+                        }
+                    } catch (\Throwable $_) {
+                        // ignore unified planet counting errors
+                    }
+                }
+            }
+        } catch (\Throwable $_) {
+            // ignore unified counting errors
+        }
+
         // Defensive override: ensure planets never show legacy observation counts.
         // There are currently no planet observations in the database; force zeros
         // to avoid misleading totals derived from legacy name-based rows.
@@ -3550,6 +3650,20 @@ class ObjectController extends Controller
             }
         } catch (\Throwable $_) {
             // ignore
+        }
+
+        try {
+            Log::info('ObjectController: counts', [
+                'slug' => $slug,
+                'name' => $session->name ?? null,
+                'type' => $session->source_type_raw ?? $type ?? null,
+                'possibleKeys' => $possibleKeys ?? null,
+                'totalObservations' => $totalObservations ?? null,
+                'drawings' => $drawings ?? null,
+                'yourObservations' => $yourObservations ?? null,
+                'yourDrawings' => $yourDrawings ?? null,
+            ]);
+        } catch (\Throwable $_) {
         }
 
         return response()->view('object.show', $vars);

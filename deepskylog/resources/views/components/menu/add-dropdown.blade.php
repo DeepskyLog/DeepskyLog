@@ -10,7 +10,7 @@
                 </x-slot>
 
                 @unless(Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
-                <x-menu.item icon="user-plus" href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming">{{ __('Observation') }}</x-menu.item>
+                <x-menu.item icon="user-plus" href="{{ route('observation.add.select') }}">{{ __('Observation') }}</x-menu.item>
 
                 {{-- observing list placeholder (kept commented) --}}
 

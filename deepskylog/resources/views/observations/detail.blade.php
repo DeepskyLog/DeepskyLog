@@ -47,6 +47,8 @@
 
         if ($observationType === "deepsky") {
             $object = ($preloaded_objects ?? collect())->get($obs->objectname);
+            $objectTypeRaw = strtoupper(trim((string) ($object?->type ?? '')));
+            $isOpenCluster = in_array($objectTypeRaw, ['OPNCL', 'LMCOC', 'SMCOC']);
             $location = ($preloaded_locations ?? collect())->get($obs->locationid);
             $instrument = ($preloaded_instruments ?? collect())->get(
                 $obs->instrumentid,
@@ -73,10 +75,21 @@
                 \Illuminate\Support\Str::slug((string) $cometName, "-");
         }
 
-        $drawingPath = "/images/" . (
-            $drawing_filename
-            ?? ($observationType === "comet" ? "cometdrawings/" : "drawings/") . $obs->id . '.jpg'
-        );
+        // Prefer storage-backed drawing when present in unified observation (new uploads stored in storage/app/public/sketches)
+        $drawingPath = null;
+        if (!empty($drawing_filename)) {
+            try {
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($drawing_filename)) {
+                    $drawingPath = \Illuminate\Support\Facades\Storage::disk('public')->url($drawing_filename);
+                } else {
+                    $drawingPath = "/images/" . $drawing_filename;
+                }
+            } catch (\Throwable $_) {
+                $drawingPath = "/images/" . $drawing_filename;
+            }
+        } else {
+            $drawingPath = "/images/" . (($observationType === "comet") ? "cometdrawings/" : "drawings/") . $obs->id . '.jpg';
+        }
 
         $socialType = $observationType === "comet" ? "comet" : "deepsky";
         $socialId = (int) $obs->id;
@@ -128,15 +141,7 @@
         }
 
         $moon = $moonContext ?? null;
-    @endphp
-
-    <div class="bg-gray-900">
-        <div
-            class="mx-auto max-w-screen-xl xl:max-w-full px-6 py-6 sm:px-6 lg:px-8"
-        >
-            <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-8">
-                <div class="min-w-0">
-
+                    @endphp
                     @if (!empty($sketchOfTheWeek))
                         <div
                             class="mb-4 flex items-center gap-3 rounded-lg border border-yellow-400 bg-yellow-900/30 px-5 py-3"
@@ -153,6 +158,23 @@
                                     >&mdash; {{ \Carbon\Carbon::parse($sketchOfTheWeek->date)->translatedFormat("j M Y") }}</span
                                 >
                             </div>
+
+                            @if(!empty($isOpenCluster) && (!empty($obs->clusterType) || !empty($obs->cluster_type)))
+                                <div>
+                                    <dt class="text-xs uppercase text-gray-400">{{ __('Cluster type') }}</dt>
+                                    <dd class="mt-1 font-semibold text-gray-100">
+                                        @php
+                                            $ct = strtoupper(trim((string) ($obs->clusterType ?? $obs->cluster_type ?? '')));
+                                            $ctLabel = __("observations.cluster_types.$ct");
+                                        @endphp
+                                        @if($ctLabel === "observations.cluster_types.$ct")
+                                            {{ $ct }}
+                                        @else
+                                            {{ $ctLabel }}
+                                        @endif
+                                    </dd>
+                                </div>
+                            @endif
                         </div>
                     @endif
 
@@ -223,7 +245,7 @@
                     @endif
 
                     {{-- Header: observer + object --}}
-                    <div class="flex items-start gap-5 mb-6">
+                    <div class="flex items-start gap-5 mb-6 mt-4">
                         <img
                             src="{{ $user?->profile_photo_url ?? asset('images/placeholder-avatar.png') }}"
                             alt="{{ $user?->name ?? __('Unknown observer') }}"
@@ -272,7 +294,25 @@
                         </div>
                     </div>
 
-                    {{-- Engagement: likes and comments --}}
+                        @auth
+                            @php
+                                $viewer = auth()->user();
+                                $viewerIsOwner = ($viewer->username ?? '') === ($obs->observerid ?? $obs->observer_username ?? '');
+                                $viewerIsAdmin = $viewer?->isAdministrator() || (method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges());
+                            @endphp
+                            @if ($viewerIsOwner || $viewerIsAdmin)
+                                <div class="flex items-center gap-2 mb-6">
+                                    <a href="{{ route('observations.edit', ['observer' => request()->route('observer') ?: ($user?->slug ?? ''), 'date' => request()->route('date') ?: $obsDate, 'object' => request()->route('object') ?: ($objectLinkSlug ?? ''), 'index' => request()->route('index') ?? 1]) }}" class="px-3 py-1.5 rounded bg-blue-600 hover:bg-blue-500 text-white text-sm">{{ __('Update') }}</a>
+                                    <form method="POST" action="{{ route('observations.destroy', ['observer' => request()->route('observer') ?: ($user?->slug ?? ''), 'date' => request()->route('date') ?: $obsDate, 'object' => request()->route('object') ?: ($objectLinkSlug ?? ''), 'index' => request()->route('index') ?? 1]) }}" onsubmit="return confirm('{{ __('Are you sure you want to delete this observation?') }}');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="px-3 py-1.5 rounded bg-red-600 hover:bg-red-500 text-white text-sm">{{ __('Delete') }}</button>
+                                    </form>
+                                </div>
+                            @endif
+                        @endauth
+
+                        {{-- Engagement: likes and comments --}}
                     <div class="rounded-xl bg-gray-800 p-6 mb-6">
                         <div class="flex flex-wrap items-center gap-3 mb-4">
                             <button
@@ -661,22 +701,16 @@
                                             {{ __("Seeing") }}
                                         </dt>
                                         <dd class="mt-1 font-semibold">
-                                            @if ($obs->seeing == 1)
-                                                {{
-                                                    __(
-                                                        "Excellent",
-                                                    )
-                                                }}
-                                            @elseif ($obs->seeing == 2)
-                                                {{ __("Good") }}
-                                            @elseif ($obs->seeing == 3)
-                                                {{ __("Moderate") }}
-                                            @elseif ($obs->seeing == 4)
-                                                {{ __("Poor") }}
-                                            @elseif ($obs->seeing == 5)
-                                                {{ __("Bad") }}
-                                            @endif
+                                            {{ __('observations.seeing.' . $obs->seeing) }}
                                         </dd>
+                                    </div>
+                                @endif
+
+                                {{-- Transparency --}}
+                                @if (!empty($obs->transparency) && $obs->transparency > 0)
+                                    <div>
+                                        <dt class="text-xs uppercase tracking-wide text-gray-400">{{ __("Transparency") }}</dt>
+                                        <dd class="mt-1 font-semibold">{{ __('observations.transparency.' . $obs->transparency) }}</dd>
                                     </div>
                                 @endif
 
@@ -771,11 +805,13 @@
                                 if ((int) ($obs->niceField ?? -1) === 1) {
                                     $chars[] = __("Nice field");
                                 }
-                                if ((int) ($obs->component1 ?? -1) === 1) {
-                                    $chars[] = __("Component 1");
+                                if ((int) ($obs->component1 ?? -1) > 0) {
+                                    $c1 = __('observations.component_colors.' . (int) $obs->component1);
+                                    $chars[] = __("Component 1") . ($c1 ? ': ' . $c1 : '');
                                 }
-                                if ((int) ($obs->component2 ?? -1) === 1) {
-                                    $chars[] = __("Component 2");
+                                if ((int) ($obs->component2 ?? -1) > 0) {
+                                    $c2 = __('observations.component_colors.' . (int) $obs->component2);
+                                    $chars[] = __("Component 2") . ($c2 ? ': ' . $c2 : '');
                                 }
                             @endphp
                             @if (!empty($chars))

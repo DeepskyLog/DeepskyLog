@@ -857,7 +857,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function eyepieces(): HasMany
     {
-        return $this->hasMany(related: Eyepiece::class);
+        return $this->hasMany(related: Eyepiece::class)->orderBy('focal_length_mm', 'desc')->orderBy('name');
     }
 
     /**

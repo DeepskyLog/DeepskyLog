@@ -105,7 +105,7 @@
 
                             <div class="flex items-center justify-start gap-0">
                                 <span class="text-gray-400">{{ __('Observations') }}</span>
-                                <a href="{{ url('/observations/' . $objSlug) }}"
+                                <a href="{{ url('/observations/object/' . $objSlug) }}"
                                     class="text-white font-medium ml-2 hover:underline">{{ $totalObs ?? 0 }}</a>
                             </div>
 
@@ -1152,15 +1152,24 @@ try {
                             <div class="bg-gray-800 p-3 rounded shadow text-gray-100">
                                 <h4 class="font-semibold mb-2 text-white">{{ __('Quick links') }}</h4>
                                 <ul class="space-y-2 text-sm">
-                                    <li>
-                                        @if (!empty($canonicalSlug))
-                                            <a href="{{ url('/observations/' . $canonicalSlug) }}"
-                                                class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
-                                        @else
-                                            <a href="{{ route('observations.index') }}"
-                                                class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
-                                        @endif
-                                    </li>
+                                        <li>
+                                            @if (!empty($canonicalSlug))
+                                                <a href="{{ route('observation.create', ['slug' => $canonicalSlug]) }}"
+                                                    class="text-gray-300 hover:underline">{{ __('Create observation') }}</a>
+                                            @else
+                                                <a href="{{ route('observation.create') }}"
+                                                    class="text-gray-300 hover:underline">{{ __('Create observation') }}</a>
+                                            @endif
+                                        </li>
+                                        <li>
+                                            @if (!empty($canonicalSlug))
+                                                <a href="{{ url('/observations/' . $canonicalSlug) }}"
+                                                    class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
+                                            @else
+                                                <a href="{{ route('observations.index') }}"
+                                                    class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
+                                            @endif
+                                        </li>
                                     <li>
                                         @if (!empty($canonicalSlug))
                                             <a href="{{ route('observations.drawings.show', ['slug' => $canonicalSlug]) }}"

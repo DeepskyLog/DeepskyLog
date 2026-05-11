@@ -43,18 +43,30 @@
             ])->first();
             $resolvedObserverSlug = $resolvedObserver?->slug;
         }
-        $observerUrl = route(
-            "observer.show",
-            $resolvedObserverSlug ?: $resolvedObserverUsername,
-        );
+
+        // Only build observer URL when we have a usable route parameter; otherwise leave null
+        $observerUrl = null;
+        try {
+            $observerParam = $resolvedObserverSlug ?: $resolvedObserverUsername;
+            if (!empty($observerParam)) {
+                $observerUrl = route("observer.show", $observerParam);
+            }
+        } catch (\Throwable $_) {
+            $observerUrl = null;
+        }
 
         $detailUrl = null;
         // Base detailDate used for routing (defaults to supplied observation_date)
         $detailDate = $observation_date;
         // displayDate is shown to the user; may be overridden with sketch selection date
-        $displayDate = !empty($detailDate)
-            ? \Carbon\Carbon::parse($detailDate)->translatedFormat("j M Y")
-            : "";
+        $displayDate = "";
+        if (!empty($detailDate)) {
+            try {
+                $displayDate = \Carbon\Carbon::parse($detailDate)->translatedFormat("j M Y");
+            } catch (\Throwable $_) {
+                $displayDate = "";
+            }
+        }
 
         if (!empty($use_sketch_date) && !empty($sketch_date)) {
             try {
@@ -71,9 +83,13 @@
                     : (string) $obsUnified->observed_on;
             // Only update displayDate with the observation date when not explicitly showing sketch selection date
             if (empty($use_sketch_date) || empty($sketch_date)) {
-                $displayDate = !empty($detailDate)
-                    ? \Carbon\Carbon::parse($detailDate)->translatedFormat("j M Y")
-                    : $displayDate;
+                if (!empty($detailDate)) {
+                    try {
+                        $displayDate = \Carbon\Carbon::parse($detailDate)->translatedFormat("j M Y");
+                    } catch (\Throwable $_) {
+                        // leave displayDate as-is on parse failure
+                    }
+                }
             }
 
             $observerSegment =
@@ -109,7 +125,16 @@
                 $detailRouteParams["index"] = $occurrenceIndex;
             }
 
-            $detailUrl = route("observations.detail", $detailRouteParams);
+            // Only attempt to build the route when required params are available
+            $detailUrl = null;
+            $canBuildDetail = !empty($detailRouteParams['observer']) && !empty($detailRouteParams['date']) && !empty($detailRouteParams['object']);
+            if ($canBuildDetail) {
+                try {
+                    $detailUrl = route("observations.detail", $detailRouteParams);
+                } catch (\Throwable $_) {
+                    $detailUrl = null;
+                }
+            }
         } elseif ($obsLegacy) {
             $detailDate =
                 substr((string) $obsLegacy->date, 0, 4) .
@@ -117,9 +142,11 @@
                 substr((string) $obsLegacy->date, 4, 2) .
                 "-" .
                 substr((string) $obsLegacy->date, 6, 2);
-            $displayDate = \Carbon\Carbon::create($detailDate)->translatedFormat(
-                "j M Y",
-            );
+            try {
+                $displayDate = \Carbon\Carbon::parse($detailDate)->translatedFormat("j M Y");
+            } catch (\Throwable $_) {
+                $displayDate = "";
+            }
             $observerSegment =
                 $resolvedObserverSlug ?: ((string) $obsLegacy->observerid);
             $objectSegment =
@@ -150,7 +177,15 @@
                 $detailRouteParams["index"] = $occurrenceIndex;
             }
 
-            $detailUrl = route("observations.detail", $detailRouteParams);
+            $detailUrl = null;
+            $canBuildDetail = !empty($detailRouteParams['observer']) && !empty($detailRouteParams['date']) && !empty($detailRouteParams['object']);
+            if ($canBuildDetail) {
+                try {
+                    $detailUrl = route("observations.detail", $detailRouteParams);
+                } catch (\Throwable $_) {
+                    $detailUrl = null;
+                }
+            }
         }
 
         // Use preloaded likes data if available, otherwise query (fallback)
@@ -172,19 +207,45 @@
                     ->exists();
         }
     @endphp
+    @php
+        $imgSrc = null;
+        $resolvedDrawing = $drawing_id ?: ($obsUnified?->drawing_filename ?? null);
+        if (!empty($resolvedDrawing)) {
+            $candidates = [
+                $resolvedDrawing,
+                'observations/' . ltrim($resolvedDrawing, '/'),
+                'sketches/' . ltrim($resolvedDrawing, '/'),
+                'drawings/' . ltrim($resolvedDrawing, '/'),
+            ];
+            try {
+                foreach ($candidates as $cand) {
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($cand)) {
+                        $imgSrc = \Illuminate\Support\Facades\Storage::disk('public')->url($cand);
+                        break;
+                    }
+                }
+            } catch (\Throwable $_) {
+                // continue to fallback
+            }
+
+            if (empty($imgSrc)) {
+                // Fallback to the legacy /images/ path
+                $imgSrc = '/images/' . ltrim($resolvedDrawing, '/');
+            }
+        } else {
+            $imgSrc = '/images/' . ('drawings/' . $observation_id . '.jpg');
+        }
+    @endphp
     <a href="{{ $objectUrl }}">
-        <img
-            width="400"
-            src="/images/{{ $drawing_id ?: ('drawings/' . $observation_id . '.jpg') }}"
-        />
+        <img width="400" src="{{ $imgSrc }}" />
     </a>
 
     <div class="text-center mt-1">
-        <a
-            class="font-semibold hover:underline"
-            href="{{ $observerUrl }}"
-            >{{ $observer_name }}</a
-        >
+        @if (!empty($observerUrl))
+            <a class="font-semibold hover:underline" href="{{ $observerUrl }}">{{ $observer_name }}</a>
+        @else
+            <span class="font-semibold">{{ $observer_name }}</span>
+        @endif
         -
         <a
             class="font-semibold hover:underline"

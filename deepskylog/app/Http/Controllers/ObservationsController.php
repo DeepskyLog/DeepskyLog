@@ -24,6 +24,8 @@ use deepskylog\AstronomyLibrary\Time;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Storage;
 
 class ObservationsController extends Controller
 {
@@ -36,6 +38,18 @@ class ObservationsController extends Controller
         $wantedIndex = max(1, (int) ($index ?? 1));
         $observerUser = User::where('slug', $observer)->orWhere('username', $observer)->firstOrFail();
 
+        try {
+            \Log::debug('ObservationsController::detail: entry', [
+                'observer_param' => $observer,
+                'date_param' => $date,
+                'object_param' => $object,
+                'resolved_username' => $observerUser?->username,
+                'resolved_slug' => $observerUser?->slug,
+                'resolved_id' => $observerUser?->id,
+            ]);
+        } catch (\Throwable $_) {
+        }
+
         // Resolve candidates from the unified observations table first.
         $unifiedMatches = Observation::where('observer_username', $observerUser->username)
             ->whereDate('observed_on', $date)
@@ -44,6 +58,15 @@ class ObservationsController extends Controller
             ->get()
             ->filter(fn($candidate) => $this->slugMatches($object, (string) ($candidate->target_name ?? '')))
             ->values();
+
+        try {
+            \Log::debug('ObservationsController::detail: unifiedMatches', [
+                'count' => $unifiedMatches->count(),
+                'ids' => $unifiedMatches->pluck('id')->values()->all(),
+                'target_names' => $unifiedMatches->pluck('target_name')->values()->all(),
+            ]);
+        } catch (\Throwable $_) {
+        }
 
         if ($unifiedMatches->isEmpty()) {
             abort(404);
@@ -120,6 +143,96 @@ class ObservationsController extends Controller
 
             return view('observations.detail', array_merge([
                 'observationType' => 'comet',
+                'observation' => $selected,
+                'detail_url' => $canonicalUrl,
+                'lens' => null,
+                'sketchOfTheWeek' => $sketchOfTheWeek,
+                'sketchOfTheMonth' => $sketchOfTheMonth,
+                // Unified observation id from the unified `observations` table
+                'unified_observation_id' => $selectedUnified->id,
+                'drawing_filename' => $selectedUnified->drawing_filename,
+                'moonContext' => $moonContext,
+            ], $preloadedData, $socialData));
+        }
+
+        // Native unified observation (no legacy_source): synthesize a legacy-shaped
+        // record so the existing legacy detail view can render it.
+        if ($selectedUnified->legacy_source === null) {
+            $obsType = in_array($selectedUnified->target_type, ['comet']) ? 'comet' : 'deepsky';
+
+            $selected = new ObservationsOld();
+            try {
+                $normalized = $this->normalizeObservedOnDate($selectedUnified->observed_on, $date);
+                $legacyDate = '';
+                try {
+                    $legacyDate = Carbon::parse($normalized)->format('Ymd');
+                } catch (\Throwable $_) {
+                    $legacyDate = $normalized;
+                }
+
+                $timeInt = null;
+                if (!empty($selectedUnified->observed_time)) {
+                    $t = $selectedUnified->observed_time;
+                    if (is_string($t) && str_contains($t, ':')) {
+                        $parts = explode(':', $t);
+                        $h = (int) ($parts[0] ?? 0);
+                        $m = (int) ($parts[1] ?? 0);
+                        $timeInt = $h * 100 + $m;
+                    } elseif (is_numeric($t)) {
+                        $s = (string) $t;
+                        // If the value looks like HHMMSS, take the first four digits as HHMM
+                        if (strlen($s) >= 4) {
+                            $timeInt = (int) substr($s, 0, 4);
+                        } else {
+                            $timeInt = (int) $s;
+                        }
+                    }
+                }
+
+                $selected->id = (int) $selectedUnified->id;
+                $selected->date = $legacyDate;
+                $selected->time = $timeInt;
+                $selected->observerid = (string) ($selectedUnified->observer_username ?? '');
+                $selected->objectname = (string) ($selectedUnified->target_name ?? '');
+                $selected->locationid = $selectedUnified->location_id ?? null;
+                $selected->instrumentid = $selectedUnified->instrument_id ?? null;
+                $selected->eyepieceid = $selectedUnified->eyepiece_id ?? null;
+                $selected->filterid = $selectedUnified->filter_id ?? null;
+                // Compute magnification for unified observations from the
+                // stored instrument/eyepiece/lens IDs instead of reading a
+                // non-existent `magnification` column.
+                try {
+                    $computedMag = null;
+                    if (!empty($selectedUnified->instrument_id) && !empty($selectedUnified->eyepiece_id)) {
+                        $inst = Instrument::find($selectedUnified->instrument_id);
+                        $ep = Eyepiece::find($selectedUnified->eyepiece_id);
+                        $ln = !empty($selectedUnified->lens_id) ? Lens::find($selectedUnified->lens_id) : null;
+                        if ($inst && $ep) {
+                            $val = $inst->magnification($ep, $ln);
+                            $num = preg_replace('/[^0-9\.]/', '', (string) $val);
+                            $computedMag = $num !== '' ? (int) round((float) $num) : null;
+                        }
+                    }
+                    $selected->magnification = $computedMag ?? null;
+                } catch (\Throwable $_) {
+                    $selected->magnification = null;
+                }
+                $selected->description = $selectedUnified->description ?? '';
+                $selected->hasDrawing = $selectedUnified->has_drawing ? 1 : 0;
+                $selected->SQM = $selectedUnified->sqm ?? 0;
+                $selected->seeing = $selectedUnified->seeing ?? 0;
+                $selected->transparency = $selectedUnified->transparency ?? 0;
+                $selected->limmag = $selectedUnified->limiting_magnitude ?? null;
+            } catch (\Throwable $_) {
+                // best-effort population; continue even when some fields fail
+            }
+
+            $socialData = $this->buildSocialData($obsType, (int) $selectedUnified->id);
+            $preloadedData = $this->preloadDeepskyData(collect([$selected]));
+            $moonContext = $this->buildMoonContext($selected, $preloadedData['preloaded_locations']->get($selected->locationid) ?? null);
+
+            return view('observations.detail', array_merge([
+                'observationType' => $obsType,
                 'observation' => $selected,
                 'detail_url' => $canonicalUrl,
                 'lens' => null,
@@ -289,16 +402,55 @@ class ObservationsController extends Controller
         // Try to resolve the slug as a user first (existing behaviour)
         $user = User::where('slug', $slug)->first();
         if ($user) {
-            $deepsky = ObservationsOld::where('observerid', $user->username)->orderBy('date', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+            // Show only unified observations for this observer (no legacy rows)
+            $sort = request()->query('sort', 'observed');
+
+            if ($sort === 'id') {
+                $query = Observation::where('observer_username', $user->username)->orderByDesc('id');
+            } else {
+                $query = Observation::where('observer_username', $user->username)
+                    ->orderByDesc('observed_on')
+                    ->orderByDesc('observed_time')
+                    ->orderByDesc('id');
+            }
+
+            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
             // Preload related data to avoid N+1 queries
-            $preloadedData = $this->preloadDeepskyData($deepsky);
+            $items = $deepsky->getCollection();
+            $usernames = collect([$user->username]);
+            $objectNames = collect($items->pluck('target_name')->filter()->unique()->values());
+            $locationIds = collect($items->pluck('location_id')->filter()->unique()->values());
+            $instrumentIds = collect($items->pluck('instrument_id')->filter()->unique()->values());
+            $eyepieceIds = collect($items->pluck('eyepiece_id')->filter()->unique()->reject(fn($id) => $id <= 0)->values());
+            $filterIds = collect($items->pluck('filter_id')->filter()->unique()->reject(fn($id) => $id <= 0)->values());
+
+            $users = $usernames->isNotEmpty() ? User::whereIn('username', $usernames)->get()->keyBy('username') : collect();
+            $objects = $objectNames->isNotEmpty() ? ObjectsOld::whereIn('name', $objectNames)->get()->keyBy('name') : collect();
+            $locations = $locationIds->isNotEmpty() ? Location::whereIn('id', $locationIds)->get()->keyBy('id') : collect();
+            $instruments = $instrumentIds->isNotEmpty() ? Instrument::whereIn('id', $instrumentIds)->get()->keyBy('id') : collect();
+            $eyepieces = $eyepieceIds->isNotEmpty() ? Eyepiece::whereIn('id', $eyepieceIds)->get()->keyBy('id') : collect();
+            $filters = $filterIds->isNotEmpty() ? Filter::whereIn('id', $filterIds)->get()->keyBy('id') : collect();
+
+            $constellationIds = $objects->pluck('con')->unique()->filter();
+            $constellations = $constellationIds->isNotEmpty() ? Constellation::whereIn('id', $constellationIds)->get()->keyBy('id') : collect();
+
+            $preloadedData = [
+                'preloaded_users' => $users,
+                'preloaded_objects' => $objects,
+                'preloaded_locations' => $locations,
+                'preloaded_instruments' => $instruments,
+                'preloaded_eyepieces' => $eyepieces,
+                'preloaded_filters' => $filters,
+                'preloaded_constellations' => $constellations,
+            ];
 
             return view('observations.show', array_merge([
                 'user' => $user,
                 'deepsky' => $deepsky,
                 'comet' => collect(),
                 'mode' => 'deepsky',
+                'sort' => $sort,
             ], $preloadedData));
         }
 
@@ -653,6 +805,77 @@ class ObservationsController extends Controller
             ], $preloadedData));
         }
 
+        // Not a legacy deepsky object — try planets (Sun and other solar-system targets)
+        $planet = null;
+        foreach ($candidates as $cand) {
+            try {
+                $planet = DB::table('planets')->where('slug', $cand)->first();
+            } catch (\Throwable $_) {
+                $planet = null;
+            }
+            if ($planet)
+                break;
+        }
+
+        if (!$planet) {
+            foreach ($candidates as $cand) {
+                try {
+                    $planet = DB::table('planets')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                } catch (\Throwable $_) {
+                    $planet = null;
+                }
+                if ($planet)
+                    break;
+            }
+        }
+
+        if ($planet) {
+            // Build possible keys (slug, name, id, plus lower variants)
+            $possibleKeys = [];
+            if (!empty($planet->slug))
+                $possibleKeys[] = (string) $planet->slug;
+            if (!empty($planet->name))
+                $possibleKeys[] = (string) $planet->name;
+            if (!empty($planet->id))
+                $possibleKeys[] = (string) $planet->id;
+            $possibleKeys = array_values(array_unique(array_filter(array_merge($possibleKeys, $candidates))));
+
+            // Query unified observations for planet-targeted rows that have drawings
+            $query = Observation::where('target_table', 'planets')
+                ->whereIn('target_key', $possibleKeys)
+                ->whereNull('legacy_source')
+                ->where('has_drawing', 1)
+                ->orderBy('observed_on', 'desc');
+
+            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+
+            $fakeUser = (object) ['name' => $planet->name ?? $slug, 'slug' => $slug, 'username' => null];
+
+            // Preload users for unified observations
+            $usernames = $deepsky->pluck('observer_username')->unique()->filter();
+            $users = $usernames->isNotEmpty() ? User::whereIn('username', $usernames)->get()->keyBy('username') : collect();
+
+            $preloadedData = [
+                'preloaded_users' => $users,
+                'preloaded_objects' => collect(),
+                'preloaded_locations' => collect(),
+                'preloaded_instruments' => collect(),
+                'preloaded_eyepieces' => collect(),
+                'preloaded_filters' => collect(),
+                'preloaded_constellations' => collect(),
+            ];
+
+            return view('observations.show', array_merge([
+                'user' => $fakeUser,
+                'deepsky' => $deepsky,
+                'comet' => collect(),
+                'mode' => 'deepsky',
+                'objectFilter' => true,
+                'objectName' => $planet->name ?? $slug,
+                'drawingsOnly' => true,
+            ], $preloadedData));
+        }
+
         // Not a deepsky object — maybe this slug refers to a comet object (modern or legacy).
         // If so, redirect to the comet drawings handler so comet drawings are displayed.
         $objectSlug = $slug;
@@ -744,14 +967,97 @@ class ObservationsController extends Controller
             }
         }
 
-        $query = ObservationsOld::where('observerid', $user->username)->orderBy('date', 'desc');
+        // Default legacy query: observations by this observer
+        $legacyQuery = ObservationsOld::where('observerid', $user->username)->orderBy('date', 'desc');
+
         if ($objectName) {
-            $query->where('objectname', $objectName);
+            // Legacy object resolved: filter legacy observations by objectname
+            $legacyQuery->where('objectname', $objectName);
+
+            $deepsky = $legacyQuery->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+
+            // Preload related data to avoid N+1 queries
+            $preloadedData = $this->preloadDeepskyData($deepsky);
+
+            return view('observations.show', array_merge([
+                'user' => $user,
+                'deepsky' => $deepsky,
+                'comet' => collect(),
+                'mode' => 'deepsky',
+                'objectFilter' => true,
+                'objectName' => $objectName,
+            ], $preloadedData));
         }
 
-        $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+        // Not a legacy deepsky object — try planets (Sun and other solar system bodies)
+        $planet = null;
+        foreach ($candidates as $cand) {
+            try {
+                $planet = DB::table('planets')->where('slug', $cand)->first();
+            } catch (\Throwable $_) {
+                $planet = null;
+            }
+            if ($planet)
+                break;
+        }
 
-        // Preload related data to avoid N+1 queries
+        if (!$planet) {
+            foreach ($candidates as $cand) {
+                try {
+                    $planet = DB::table('planets')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                } catch (\Throwable $_) {
+                    $planet = null;
+                }
+                if ($planet)
+                    break;
+            }
+        }
+
+        if ($planet) {
+            // Build possible keys for matching target_key in unified observations
+            $possibleKeys = [];
+            if (!empty($planet->slug))
+                $possibleKeys[] = (string) $planet->slug;
+            if (!empty($planet->name))
+                $possibleKeys[] = (string) $planet->name;
+            if (!empty($planet->id))
+                $possibleKeys[] = (string) $planet->id;
+            $possibleKeys = array_values(array_unique(array_filter(array_merge($possibleKeys, $candidates))));
+
+            $query = Observation::where('target_table', 'planets')
+                ->whereIn('target_key', $possibleKeys)
+                ->whereNull('legacy_source')
+                ->where('observer_username', $user->username)
+                ->orderBy('observed_on', 'desc');
+
+            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+
+            // Preload users for unified observations
+            $usernames = $deepsky->pluck('observer_username')->unique()->filter();
+            $users = $usernames->isNotEmpty() ? User::whereIn('username', $usernames)->get()->keyBy('username') : collect();
+
+            $preloadedData = [
+                'preloaded_users' => $users,
+                'preloaded_objects' => collect(),
+                'preloaded_locations' => collect(),
+                'preloaded_instruments' => collect(),
+                'preloaded_eyepieces' => collect(),
+                'preloaded_filters' => collect(),
+                'preloaded_constellations' => collect(),
+            ];
+
+            return view('observations.show', array_merge([
+                'user' => $user,
+                'deepsky' => $deepsky,
+                'comet' => collect(),
+                'mode' => 'deepsky',
+                'objectFilter' => true,
+                'objectName' => $planet->name ?? $objectSlug,
+            ], $preloadedData));
+        }
+
+        // Fallback: show all legacy observations for this observer
+        $deepsky = $legacyQuery->paginate(20, ['*'], 'deepsky')->appends(request()->query());
         $preloadedData = $this->preloadDeepskyData($deepsky);
 
         return view('observations.show', array_merge([
@@ -759,8 +1065,8 @@ class ObservationsController extends Controller
             'deepsky' => $deepsky,
             'comet' => collect(),
             'mode' => 'deepsky',
-            'objectFilter' => true,
-            'objectName' => $objectName,
+            'objectFilter' => false,
+            'objectName' => null,
         ], $preloadedData));
     }
 
@@ -820,14 +1126,97 @@ class ObservationsController extends Controller
             }
         }
 
-        $query = ObservationsOld::where('observerid', $user->username)->where('hasDrawing', 1)->orderBy('date', 'desc');
+        // Legacy query for drawings by this observer
+        $legacyQuery = ObservationsOld::where('observerid', $user->username)->where('hasDrawing', 1)->orderBy('date', 'desc');
+
         if ($objectName) {
-            $query->where('objectname', $objectName);
+            // Legacy object resolved: filter legacy observations by objectname
+            $legacyQuery->where('objectname', $objectName);
+
+            $deepsky = $legacyQuery->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+
+            // Preload related data to avoid N+1 queries
+            $preloadedData = $this->preloadDeepskyData($deepsky);
+
+            return view('observations.show', array_merge([
+                'user' => $user,
+                'deepsky' => $deepsky,
+                'comet' => collect(),
+                'mode' => 'deepsky',
+                'objectFilter' => true,
+            ], $preloadedData));
         }
 
-        $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+        // Not a legacy deepsky object — try planets (Sun and other solar system bodies)
+        $planet = null;
+        foreach ($candidates as $cand) {
+            try {
+                $planet = DB::table('planets')->where('slug', $cand)->first();
+            } catch (\Throwable $_) {
+                $planet = null;
+            }
+            if ($planet)
+                break;
+        }
 
-        // Preload related data to avoid N+1 queries
+        if (!$planet) {
+            foreach ($candidates as $cand) {
+                try {
+                    $planet = DB::table('planets')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                } catch (\Throwable $_) {
+                    $planet = null;
+                }
+                if ($planet)
+                    break;
+            }
+        }
+
+        if ($planet) {
+            // Build possible keys for matching target_key in unified observations
+            $possibleKeys = [];
+            if (!empty($planet->slug))
+                $possibleKeys[] = (string) $planet->slug;
+            if (!empty($planet->name))
+                $possibleKeys[] = (string) $planet->name;
+            if (!empty($planet->id))
+                $possibleKeys[] = (string) $planet->id;
+            $possibleKeys = array_values(array_unique(array_filter(array_merge($possibleKeys, $candidates))));
+
+            $query = Observation::where('target_table', 'planets')
+                ->whereIn('target_key', $possibleKeys)
+                ->whereNull('legacy_source')
+                ->where('has_drawing', 1)
+                ->where('observer_username', $user->username)
+                ->orderBy('observed_on', 'desc');
+
+            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+
+            // Preload users for unified observations
+            $usernames = $deepsky->pluck('observer_username')->unique()->filter();
+            $users = $usernames->isNotEmpty() ? User::whereIn('username', $usernames)->get()->keyBy('username') : collect();
+
+            $preloadedData = [
+                'preloaded_users' => $users,
+                'preloaded_objects' => collect(),
+                'preloaded_locations' => collect(),
+                'preloaded_instruments' => collect(),
+                'preloaded_eyepieces' => collect(),
+                'preloaded_filters' => collect(),
+                'preloaded_constellations' => collect(),
+            ];
+
+            return view('observations.show', array_merge([
+                'user' => $user,
+                'deepsky' => $deepsky,
+                'comet' => collect(),
+                'mode' => 'deepsky',
+                'objectFilter' => true,
+                'objectName' => $planet->name ?? $objectSlug,
+            ], $preloadedData));
+        }
+
+        // Fallback: show all legacy drawings for this observer
+        $deepsky = $legacyQuery->paginate(20, ['*'], 'deepsky')->appends(request()->query());
         $preloadedData = $this->preloadDeepskyData($deepsky);
 
         return view('observations.show', array_merge([
@@ -835,8 +1224,152 @@ class ObservationsController extends Controller
             'deepsky' => $deepsky,
             'comet' => collect(),
             'mode' => 'deepsky',
-            'objectFilter' => true,
+            'objectFilter' => false,
         ], $preloadedData));
+    }
+
+    /**
+     * Show a global object-scoped observations listing (legacy only).
+     * URL: /observations/object/{slug}
+     */
+    public function showObject(string $slug)
+    {
+        $raw = (string) $slug;
+        $lower = mb_strtolower($raw);
+        $candidates = [$lower];
+        $slugified = Str::slug($raw, '-');
+        if ($slugified && $slugified !== $lower) {
+            $candidates[] = $slugified;
+        }
+        $nospace = str_replace(' ', '', $lower);
+        if ($nospace !== $lower) {
+            $candidates[] = $nospace;
+        }
+        $candidates[] = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower);
+        $candidates[] = str_replace('-', '', $lower);
+        $candidates = array_values(array_unique(array_filter($candidates)));
+
+        $objectName = null;
+        foreach ($candidates as $cand) {
+            $on = DB::table('objectnames')->where('slug', $cand)->first();
+            if ($on) {
+                $objectName = $on->objectname;
+                break;
+            }
+            $o = DB::table('objects')->where('slug', $cand)->first();
+            if ($o) {
+                $objectName = $o->name;
+                break;
+            }
+        }
+
+        if (!$objectName) {
+            foreach ($candidates as $cand) {
+                $on = DB::table('objectnames')
+                    ->whereRaw('LOWER(objectname) = ?', [$cand])
+                    ->orWhereRaw('LOWER(altname) = ?', [$cand])
+                    ->first();
+                if ($on) {
+                    $objectName = $on->objectname;
+                    break;
+                }
+
+                $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                if ($o) {
+                    $objectName = $o->name;
+                    break;
+                }
+            }
+        }
+
+        if ($objectName) {
+            $deepsky = ObservationsOld::where('objectname', $objectName)->orderBy('date', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+
+            $fakeUser = (object) ['name' => $objectName, 'slug' => $slug, 'username' => null];
+
+            // Preload related data to avoid N+1 queries
+            $preloadedData = $this->preloadDeepskyData($deepsky);
+
+            return view('observations.show', array_merge([
+                'user' => $fakeUser,
+                'deepsky' => $deepsky,
+                'comet' => collect(),
+                'mode' => 'deepsky',
+                'objectFilter' => true,
+                'objectName' => $objectName,
+            ], $preloadedData));
+        }
+
+        // Not found in legacy object names — try planets (Sun and other solar system bodies)
+        $planet = null;
+        foreach ($candidates as $cand) {
+            try {
+                $planet = DB::table('planets')->where('slug', $cand)->first();
+            } catch (\Throwable $_) {
+                $planet = null;
+            }
+            if ($planet)
+                break;
+        }
+
+        if (!$planet) {
+            foreach ($candidates as $cand) {
+                try {
+                    $planet = DB::table('planets')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                } catch (\Throwable $_) {
+                    $planet = null;
+                }
+                if ($planet)
+                    break;
+            }
+        }
+
+        if ($planet) {
+            // Build candidate keys for matching target_key in unified observations
+            $possibleKeys = [];
+            if (!empty($planet->slug))
+                $possibleKeys[] = (string) $planet->slug;
+            if (!empty($planet->name))
+                $possibleKeys[] = mb_strtolower((string) $planet->name);
+            if (!empty($planet->id))
+                $possibleKeys[] = (string) $planet->id;
+            $possibleKeys = array_values(array_unique(array_filter(array_merge($possibleKeys, $candidates))));
+
+            // Query unified observations table for planet-targeted rows
+            $query = Observation::where('target_table', 'planets')
+                ->whereIn('target_key', $possibleKeys)
+                ->whereNull('legacy_source')
+                ->orderBy('observed_on', 'desc');
+
+            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+
+            $fakeUser = (object) ['name' => $planet->name ?? $slug, 'slug' => $slug, 'username' => null];
+
+            // Preload users for unified observations to improve rendering
+            $usernames = $deepsky->pluck('observer_username')->unique()->filter();
+            $users = $usernames->isNotEmpty() ? User::whereIn('username', $usernames)->get()->keyBy('username') : collect();
+
+            $preloadedData = [
+                'preloaded_users' => $users,
+                'preloaded_objects' => collect(),
+                'preloaded_locations' => collect(),
+                'preloaded_instruments' => collect(),
+                'preloaded_eyepieces' => collect(),
+                'preloaded_filters' => collect(),
+                'preloaded_constellations' => collect(),
+            ];
+
+            return view('observations.show', array_merge([
+                'user' => $fakeUser,
+                'deepsky' => $deepsky,
+                'comet' => collect(),
+                'mode' => 'deepsky',
+                'objectFilter' => true,
+                'objectName' => $planet->name ?? $slug,
+            ], $preloadedData));
+        }
+
+        abort(404);
     }
 
     /**
@@ -1005,6 +1538,43 @@ class ObservationsController extends Controller
             ->where('legacy_id', $legacyId)
             ->first();
 
+        if (!$unified || !$unified->observed_on) {
+            return null;
+        }
+
+        $observerUser = User::where('username', $unified->observer_username)->first();
+        $observerParam = $observerUser?->slug ?: $unified->observer_username;
+        $objectSlug = Str::slug((string) ($unified->target_name ?? ''), '-');
+        $date = $this->normalizeObservedOnDate($unified->observed_on, '');
+        if ($date === '') {
+            return null;
+        }
+
+        $matches = Observation::where('observer_username', $unified->observer_username)
+            ->whereDate('observed_on', $date)
+            ->orderBy('observed_time')
+            ->orderBy('id')
+            ->get()
+            ->filter(fn($candidate) => $this->slugMatches($objectSlug, (string) ($candidate->target_name ?? '')))
+            ->values();
+
+        $index = 1;
+        foreach ($matches as $position => $candidate) {
+            if ((int) $candidate->id === (int) $unified->id) {
+                $index = $position + 1;
+                break;
+            }
+        }
+
+        return $this->buildObservationDetailUrl($observerParam, $date, $objectSlug, $index);
+    }
+
+    /**
+     * Build canonical detail URL for a unified observation id.
+     */
+    private function buildObservationDetailUrlForUnified(int $unifiedId): ?string
+    {
+        $unified = Observation::query()->where('id', $unifiedId)->first();
         if (!$unified || !$unified->observed_on) {
             return null;
         }
@@ -1256,5 +1826,602 @@ class ObservationsController extends Controller
         } catch (\Throwable $_) {
             return $fallback;
         }
+    }
+
+    /**
+     * Simple redirector for the old selection page.
+     */
+    public function select(Request $request)
+    {
+        return redirect()->route('observation.create');
+    }
+
+    /**
+     * Show the observation creation form. Accepts an optional `slug` query
+     * parameter to pre-resolve a target (object / planet / comet) and supply
+     * lightweight summary counts used by the view.
+     */
+    public function create(Request $request)
+    {
+        $user = $request->user();
+        $slug = (string) $request->query('slug', '');
+
+        $resolved = ['type' => '', 'table' => '', 'record' => null];
+        $objectSummary = null;
+
+        // Instrument sets and locations for the current user (used by the form)
+        $instrumentSets = collect();
+        $instrumentSet = null;
+        $locations = collect();
+
+        try {
+            if ($user) {
+                $instrumentSets = \App\Models\InstrumentSet::where('user_id', $user->id)->where('active', 1)->get();
+                if ($request->query('instrument_set')) {
+                    $instrumentSet = $instrumentSets->firstWhere('id', $request->query('instrument_set'));
+                }
+
+                $locations = Location::where('user_id', $user->id)->where('active', 1)->get();
+            }
+        } catch (\Throwable $_) {
+            $instrumentSets = collect();
+            $locations = collect();
+        }
+
+        if (!empty($slug)) {
+            $raw = (string) $slug;
+            $candidates = $this->buildSlugCandidates($raw);
+
+            // Try legacy deepsky object names / objects first
+            $objectName = null;
+            foreach ($candidates as $cand) {
+                $on = DB::table('objectnames')->where('slug', $cand)->first();
+                if ($on) {
+                    $objectName = $on->objectname;
+                    $resolved['type'] = 'deepsky';
+                    $resolved['table'] = 'objectnames';
+                    $resolved['record'] = $on;
+                    break;
+                }
+                $o = DB::table('objects')->where('slug', $cand)->first();
+                if ($o) {
+                    $objectName = $o->name;
+                    $resolved['type'] = 'deepsky';
+                    $resolved['table'] = 'objects';
+                    $resolved['record'] = $o;
+                    break;
+                }
+            }
+
+            if (!$objectName) {
+                foreach ($candidates as $cand) {
+                    $on = DB::table('objectnames')
+                        ->whereRaw('LOWER(objectname) = ?', [$cand])
+                        ->orWhereRaw('LOWER(altname) = ?', [$cand])
+                        ->first();
+                    if ($on) {
+                        $objectName = $on->objectname;
+                        $resolved['type'] = 'deepsky';
+                        $resolved['table'] = 'objectnames';
+                        $resolved['record'] = $on;
+                        break;
+                    }
+
+                    $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                    if ($o) {
+                        $objectName = $o->name;
+                        $resolved['type'] = 'deepsky';
+                        $resolved['table'] = 'objects';
+                        $resolved['record'] = $o;
+                        break;
+                    }
+                }
+            }
+
+            if ($objectName) {
+                // Build a lightweight summary including legacy + unified counts
+                $possibleKeys = $candidates;
+                $possibleKeys[] = $objectName;
+                $possibleKeys = array_values(array_unique(array_filter($possibleKeys)));
+
+                $legacyTotal = ObservationsOld::where('objectname', $objectName)->count();
+                $legacyYour = $user ? ObservationsOld::where('objectname', $objectName)->where('observerid', $user->username)->count() : 0;
+                $legacyDrawings = ObservationsOld::where('objectname', $objectName)->where('hasDrawing', 1)->count();
+                $legacyYourDrawings = $user ? ObservationsOld::where('objectname', $objectName)->where('observerid', $user->username)->where('hasDrawing', 1)->count() : 0;
+
+                $unifiedTotal = Observation::where('target_table', 'objects')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->count();
+                $unifiedYour = $user ? Observation::where('target_table', 'objects')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->where('observer_username', $user->username)->count() : 0;
+                $unifiedDrawings = Observation::where('target_table', 'objects')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->where('has_drawing', 1)->count();
+                $unifiedYourDrawings = $user ? Observation::where('target_table', 'objects')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->where('observer_username', $user->username)->where('has_drawing', 1)->count() : 0;
+
+                $objectSummary = [
+                    'object_slug' => Str::slug($objectName, '-'),
+                    'total_observations' => $legacyTotal + $unifiedTotal,
+                    'your_observations' => $legacyYour + $unifiedYour,
+                    'total_drawings' => $legacyDrawings + $unifiedDrawings,
+                    'your_drawings' => $legacyYourDrawings + $unifiedYourDrawings,
+                    'type_raw' => null,
+                    'type_label' => null,
+                    'constellation' => null,
+                ];
+            } else {
+                // Try planets (Sun / Moon / planets)
+                $planet = null;
+                foreach ($candidates as $cand) {
+                    try {
+                        $planet = DB::table('planets')->where('slug', $cand)->first();
+                    } catch (\Throwable $_) {
+                        $planet = null;
+                    }
+                    if ($planet)
+                        break;
+                }
+
+                if (!$planet) {
+                    foreach ($candidates as $cand) {
+                        try {
+                            $planet = DB::table('planets')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                        } catch (\Throwable $_) {
+                            $planet = null;
+                        }
+                        if ($planet)
+                            break;
+                    }
+                }
+
+                if ($planet) {
+                    $resolved['type'] = 'planet';
+                    $resolved['table'] = 'planets';
+                    $resolved['record'] = $planet;
+
+                    $possibleKeys = [];
+                    if (!empty($planet->slug))
+                        $possibleKeys[] = (string) $planet->slug;
+                    if (!empty($planet->name))
+                        $possibleKeys[] = (string) $planet->name;
+                    if (!empty($planet->id))
+                        $possibleKeys[] = (string) $planet->id;
+                    $possibleKeys = array_values(array_unique(array_filter(array_merge($possibleKeys, $candidates))));
+
+                    $unifiedTotal = Observation::where('target_table', 'planets')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->count();
+                    $unifiedYour = $user ? Observation::where('target_table', 'planets')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->where('observer_username', $user->username)->count() : 0;
+                    $unifiedDrawings = Observation::where('target_table', 'planets')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->where('has_drawing', 1)->count();
+                    $unifiedYourDrawings = $user ? Observation::where('target_table', 'planets')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->where('observer_username', $user->username)->where('has_drawing', 1)->count() : 0;
+
+                    $objectSummary = [
+                        'object_slug' => $planet->slug ?? $slug,
+                        'total_observations' => $unifiedTotal,
+                        'your_observations' => $unifiedYour,
+                        'total_drawings' => $unifiedDrawings,
+                        'your_drawings' => $unifiedYourDrawings,
+                        'type_raw' => null,
+                        'type_label' => null,
+                        'constellation' => null,
+                    ];
+                }
+            }
+        }
+
+        return view('observations.create', [
+            'resolved' => $resolved,
+            'slug' => $slug,
+            'objectSummary' => $objectSummary,
+            'instrumentSets' => $instrumentSets,
+            'instrumentSet' => $instrumentSet,
+            'locations' => $locations,
+            // Provide server upload limits to the form so the UI can show helpful guidance
+            'php_upload_max_filesize' => ini_get('upload_max_filesize'),
+            'php_post_max_size' => ini_get('post_max_size'),
+            'php_upload_max_bytes' => $this->phpSizeToBytes(ini_get('upload_max_filesize')),
+            'php_post_max_bytes' => $this->phpSizeToBytes(ini_get('post_max_size')),
+        ]);
+    }
+
+    /**
+     * Store a new unified observation (basic implementation).
+     */
+    public function store(Request $request)
+    {
+        $user = $request->user();
+        if (!$user) {
+            abort(403);
+        }
+
+        // Debug logging to aid diagnosing upload issues
+        try {
+            \Log::debug('ObservationsController::store: incoming', [
+                'user_id' => $user->id,
+                'target_table' => $request->input('target_table'),
+                'target_slug' => $request->input('target_slug'),
+                'language_raw' => $request->input('language'),
+                'has_sketch' => $request->hasFile('sketch'),
+                'php_upload_max_filesize' => ini_get('upload_max_filesize'),
+                'php_post_max_size' => ini_get('post_max_size'),
+                'storage_public_exists' => is_dir(storage_path('app/public')),
+                'public_storage_link' => is_link(public_path('storage')),
+                'storage_writable' => is_writable(storage_path('app/public')),
+            ]);
+
+            if ($request->hasFile('sketch')) {
+                $file = $request->file('sketch');
+                \Log::debug('ObservationsController::store: sketch file info', [
+                    'client_name' => $file->getClientOriginalName(),
+                    'client_size' => $file->getSize(),
+                    'client_mime' => $file->getMimeType(),
+                    'error' => $file->getError(),
+                ]);
+            }
+        } catch (\Throwable $_) {
+            // ensure logging never breaks the request
+        }
+
+        // Pre-flight checks for uploads: detect oversized POSTs or PHP upload errors
+        $uploadMaxBytes = $this->phpSizeToBytes(ini_get('upload_max_filesize') ?: '0');
+        $postMaxBytes = $this->phpSizeToBytes(ini_get('post_max_size') ?: '0');
+
+        // If the Content-Length exceeds PHP's post_max_size, PHP may drop the POST/FILES entirely.
+        $contentLength = isset($_SERVER['CONTENT_LENGTH']) ? (int) $_SERVER['CONTENT_LENGTH'] : null;
+        if ($contentLength && $postMaxBytes > 0 && $contentLength > $postMaxBytes) {
+            return redirect()->back()->withInput()->withErrors([
+                'sketch' => __('The uploaded sketch appears larger than the server maximum POST size (:size). Please reduce the file size or update your PHP settings.', ['size' => ini_get('post_max_size')])
+            ]);
+        }
+
+        // If a file was provided but PHP reported an upload error, map it to a friendly message
+        if ($request->hasFile('sketch')) {
+            $file = $request->file('sketch');
+            if (!$file->isValid()) {
+                $err = $file->getError();
+                $msg = __('The sketch failed to upload.');
+                if ($err === UPLOAD_ERR_INI_SIZE) {
+                    $msg = __('The uploaded sketch exceeds the server upload_max_filesize (:size). Reduce the file or update PHP settings.', ['size' => ini_get('upload_max_filesize')]);
+                } elseif ($err === UPLOAD_ERR_FORM_SIZE) {
+                    $msg = __('The uploaded sketch exceeds the maximum size allowed by the form.');
+                } elseif ($err === UPLOAD_ERR_PARTIAL) {
+                    $msg = __('The uploaded sketch was only partially uploaded. Please try again.');
+                } elseif ($err === UPLOAD_ERR_NO_TMP_DIR) {
+                    $msg = __('Missing a temporary folder on the server. Contact your administrator.');
+                } elseif ($err === UPLOAD_ERR_CANT_WRITE) {
+                    $msg = __('Failed to write uploaded file to disk. Check server permissions.');
+                }
+
+                return redirect()->back()->withInput()->withErrors(['sketch' => $msg]);
+            }
+
+            // Additional safety: ensure the file size does not exceed PHP reported upload_max_filesize
+            $fileSize = $file->getSize() ?? 0;
+            if ($uploadMaxBytes > 0 && $fileSize > $uploadMaxBytes) {
+                return redirect()->back()->withInput()->withErrors([
+                    'sketch' => __('The uploaded sketch is larger than the server maximum upload size (:size).', ['size' => ini_get('upload_max_filesize')])
+                ]);
+            }
+        }
+
+        $validated = $request->validate([
+            'target_table' => 'required|string',
+            'target_slug' => 'required|string',
+            'observed_on' => 'required|date',
+            'observed_time' => 'nullable|string',
+            'description' => 'nullable|string',
+            'language' => 'nullable|string',
+            'instrument_id' => 'nullable|integer',
+            'eyepiece_id' => 'nullable|integer',
+            'lens_id' => 'nullable|integer',
+            'filter_id' => 'nullable|integer',
+            'location_id' => 'nullable|integer',
+            'magnification' => 'nullable|string|max:32',
+            'seeing' => 'nullable|integer|between:1,5',
+            'transparency' => 'nullable|integer|between:1,5',
+            // Keep a reasonable validator cap (in kilobytes). Note: PHP limits may be lower than this.
+            'sketch' => 'nullable|file|image|max:5120',
+        ]);
+
+        // Support updating an existing unified observation when `edit_unified_id` is provided.
+        $editId = $request->input('edit_unified_id');
+        if (!empty($editId)) {
+            $obs = Observation::find($editId);
+            if (!$obs) {
+                return redirect()->back()->withInput()->withErrors(['edit_unified_id' => __('Observation not found for editing')]);
+            }
+
+            // Authorization: only the owner or an administrator may update
+            $viewer = $request->user();
+            $owns = ($viewer && ($viewer->id && $obs->observer_user_id == $viewer->id || $viewer->username && $obs->observer_username == $viewer->username));
+            $isAdmin = $viewer && (method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges() || $viewer->isAdministrator());
+            if (!$owns && !$isAdmin) {
+                abort(403);
+            }
+        } else {
+            $obs = new Observation();
+            $obs->observer_username = $user->username;
+            $obs->observer_user_id = $user->id;
+        }
+        $obs->target_table = $validated['target_table'];
+        $obs->target_key = $validated['target_slug'];
+
+        // Try to resolve a human readable name for the target
+        $targetName = null;
+        try {
+            if ($obs->target_table === 'planets') {
+                $row = DB::table('planets')->where('slug', $obs->target_key)->orWhere('id', $obs->target_key)->first();
+                $targetName = $row?->name ?? $obs->target_key;
+            } elseif ($obs->target_table === 'objects') {
+                $row = DB::table('objects')->where('slug', $obs->target_key)->first();
+                $targetName = $row?->name ?? $obs->target_key;
+            } else {
+                $targetName = $obs->target_key;
+            }
+        } catch (\Throwable $_) {
+            $targetName = $obs->target_key;
+        }
+
+        $obs->target_name = $targetName;
+        // Derive a normalized `target_type` for unified observations so
+        // listings (homepage, sketches) can filter by type. This mirrors
+        // the resolution logic used in the create form and other views.
+        try {
+            $table = $obs->target_table ?? '';
+            if ($table === 'objects' || $table === 'objectnames') {
+                $obs->target_type = 'deepsky';
+            } elseif ($table === 'planets') {
+                // planets table stores Sun/Moon/planets; treat as 'planet'
+                $obs->target_type = 'planet';
+            } elseif ($table === 'cometobjects' || $table === 'comets') {
+                $obs->target_type = 'comet';
+            } else {
+                // Fallback to deepsky to include observations in generic lists
+                $obs->target_type = 'deepsky';
+            }
+        } catch (\Throwable $_) {
+            $obs->target_type = 'deepsky';
+        }
+        $obs->observed_on = $validated['observed_on'];
+        $obs->observed_time = $validated['observed_time'] ?? null;
+        $obs->description = $validated['description'] ?? null;
+        // Accept either a plain language id or an object-like string (e.g. "{label:'English',value:'en',}")
+        $langInput = $validated['language'] ?? null;
+        $langValue = null;
+        if (!empty($langInput)) {
+            if (is_string($langInput)) {
+                $trim = trim($langInput);
+                // Quick JSON-ish detection: try JSON decode after normalizing single quotes
+                if ((str_starts_with($trim, '{') && str_ends_with($trim, '}')) || str_contains($trim, 'label:')) {
+                    $json = preg_replace('/([a-zA-Z0-9_]+)\s*:/', '"$1":', $trim);
+                    $json = str_replace("'", '"', $json);
+                    $json = preg_replace('/,\s*}/', '}', $json);
+                    $data = json_decode($json, true);
+                    if (json_last_error() === JSON_ERROR_NONE && is_array($data)) {
+                        if (!empty($data['value'])) {
+                            $langValue = $data['value'];
+                        } elseif (!empty($data['id'])) {
+                            $langValue = $data['id'];
+                        }
+                    }
+
+                    if ($langValue === null) {
+                        if (preg_match('/value\s*[:=]\s*(?:"|\')?([a-zA-Z\-]+)(?:"|\')?/', $trim, $m)) {
+                            $langValue = $m[1];
+                        }
+                    }
+                }
+
+                // If still null, assume the input itself is the language id
+                if ($langValue === null) {
+                    $langValue = $langInput;
+                }
+            } else {
+                $langValue = $langInput;
+            }
+        }
+
+        $obs->language = $langValue;
+
+        // Persist instrument/location and related IDs when present
+        $obs->instrument_id = $validated['instrument_id'] ?? null;
+        $obs->eyepiece_id = $validated['eyepiece_id'] ?? null;
+        $obs->lens_id = $validated['lens_id'] ?? null;
+        $obs->filter_id = $validated['filter_id'] ?? null;
+        $obs->location_id = $validated['location_id'] ?? null;
+        // Persist seeing and transparency when provided. Magnification is
+        // computed from instrument/eyepiece/lens and must not be stored.
+        $obs->seeing = $validated['seeing'] ?? null;
+        $obs->transparency = $validated['transparency'] ?? null;
+
+        // Handle optional sketch upload
+        if ($request->hasFile('sketch') && $request->file('sketch')->isValid()) {
+            try {
+                $path = $request->file('sketch')->store('observations', 'public');
+                if ($path) {
+                    // store the relative path so Storage::disk('public')->exists() can find it
+                    $obs->drawing_filename = $path;
+                    $obs->has_drawing = 1;
+                } else {
+                    return redirect()->back()->withInput()->withErrors(['sketch' => 'The sketch failed to upload.']);
+                }
+            } catch (\Throwable $_) {
+                return redirect()->back()->withInput()->withErrors(['sketch' => 'The sketch failed to upload.']);
+            }
+        }
+
+        $obs->save();
+
+        // Prefer redirecting to the canonical detail page for the newly-created unified observation
+        try {
+            $detailUrl = $this->buildObservationDetailUrlForUnified((int) $obs->id);
+            if ($detailUrl) {
+                return redirect($detailUrl)->with('success', __('Observation saved'));
+            }
+        } catch (\Throwable $_) {
+            // fallback below
+        }
+
+        return redirect()->route('observations.show', ['observer' => $user->slug])->with('success', __('Observation saved'));
+    }
+
+    /**
+     * Show the edit form by flashing the current observation values into old() and
+     * redirecting to the create page. Only owner or admin may edit.
+     */
+    public function edit(Request $request, string $observer, string $date, string $object, ?int $index = null)
+    {
+        $wantedIndex = max(1, (int) ($index ?? 1));
+        $observerUser = User::where('slug', $observer)->orWhere('username', $observer)->firstOrFail();
+
+        $unifiedMatches = Observation::where('observer_username', $observerUser->username)
+            ->whereDate('observed_on', $date)
+            ->orderBy('observed_time')
+            ->orderBy('id')
+            ->get()
+            ->filter(fn($candidate) => $this->slugMatches($object, (string) ($candidate->target_name ?? '')))
+            ->values();
+
+        if ($unifiedMatches->isEmpty()) {
+            abort(404);
+        }
+
+        $selectedUnified = $unifiedMatches->get($wantedIndex - 1);
+        if (!$selectedUnified) {
+            abort(404);
+        }
+
+        $viewer = $request->user();
+        if (!$viewer) {
+            abort(403);
+        }
+
+        $owns = ($viewer->id && $selectedUnified->observer_user_id && $viewer->id == $selectedUnified->observer_user_id) || ($viewer->username && $selectedUnified->observer_username && $viewer->username == $selectedUnified->observer_username);
+        $isAdmin = (method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges()) || $viewer->isAdministrator();
+        if (! $owns && ! $isAdmin) {
+            abort(403);
+        }
+
+        // Prepare flashed input so create view is prefilled
+        $prefill = [];
+        try {
+            if (!empty($selectedUnified->observed_on)) {
+                $prefill['observed_on'] = is_object($selectedUnified->observed_on) ? $selectedUnified->observed_on->format('Y-m-d') : (string) $selectedUnified->observed_on;
+            }
+        } catch (\Throwable $_) {
+        }
+        if (!empty($selectedUnified->observed_time)) {
+            $prefill['observed_time'] = (string) $selectedUnified->observed_time;
+        }
+        $prefill['description'] = $selectedUnified->description ?? null;
+        $prefill['language'] = $selectedUnified->language ?? null;
+        $prefill['instrument_id'] = $selectedUnified->instrument_id ?? null;
+        $prefill['eyepiece_id'] = $selectedUnified->eyepiece_id ?? null;
+        $prefill['filter_id'] = $selectedUnified->filter_id ?? null;
+        $prefill['lens_id'] = $selectedUnified->lens_id ?? null;
+        $prefill['location_id'] = $selectedUnified->location_id ?? null;
+        $prefill['magnification'] = $selectedUnified->magnification ?? null;
+        $prefill['seeing'] = $selectedUnified->seeing ?? null;
+        $prefill['transparency'] = $selectedUnified->transparency ?? null;
+        $prefill['edit_unified_id'] = $selectedUnified->id;
+
+        // Determine a slug param for the create form (prefer the unified target_key)
+        $slug = $selectedUnified->target_key ?? $selectedUnified->target_name ?? null;
+
+        session()->flashInput($prefill);
+
+        return redirect()->route('observation.create', ['slug' => $slug]);
+    }
+
+    /**
+     * Delete an observation (owner or admin only).
+     */
+    public function destroy(Request $request, string $observer, string $date, string $object, ?int $index = null)
+    {
+        $wantedIndex = max(1, (int) ($index ?? 1));
+        $observerUser = User::where('slug', $observer)->orWhere('username', $observer)->firstOrFail();
+
+        $unifiedMatches = Observation::where('observer_username', $observerUser->username)
+            ->whereDate('observed_on', $date)
+            ->orderBy('observed_time')
+            ->orderBy('id')
+            ->get()
+            ->filter(fn($candidate) => $this->slugMatches($object, (string) ($candidate->target_name ?? '')))
+            ->values();
+
+        if ($unifiedMatches->isEmpty()) {
+            abort(404);
+        }
+
+        $selectedUnified = $unifiedMatches->get($wantedIndex - 1);
+        if (!$selectedUnified) {
+            abort(404);
+        }
+
+        $viewer = $request->user();
+        if (!$viewer) {
+            abort(403);
+        }
+
+        $owns = ($viewer->id && $selectedUnified->observer_user_id && $viewer->id == $selectedUnified->observer_user_id) || ($viewer->username && $selectedUnified->observer_username && $viewer->username == $selectedUnified->observer_username);
+        $isAdmin = (method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges()) || $viewer->isAdministrator();
+        if (! $owns && ! $isAdmin) {
+            abort(403);
+        }
+
+        $observationType = in_array($selectedUnified->target_type, ['comet']) ? 'comet' : 'deepsky';
+
+        try {
+            DB::beginTransaction();
+
+            // Remove likes and comments
+            ObservationLike::where('observation_type', $observationType)->where('observation_id', $selectedUnified->id)->delete();
+            ObservationComment::where('observation_type', $observationType)->where('observation_id', $selectedUnified->id)->delete();
+
+            // Remove sketch associations
+            SketchOfTheWeek::where('observation_id', $selectedUnified->id)->delete();
+            SketchOfTheMonth::where('observation_id', $selectedUnified->id)->delete();
+
+            // Remove stored drawing file when present
+            if (!empty($selectedUnified->drawing_filename)) {
+                try {
+                    if (Storage::disk('public')->exists($selectedUnified->drawing_filename)) {
+                        Storage::disk('public')->delete($selectedUnified->drawing_filename);
+                    }
+                } catch (\Throwable $_) {
+                }
+            }
+
+            // Delete the unified observation row
+            Observation::where('id', $selectedUnified->id)->delete();
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            try { \Log::error('Failed to delete observation', ['id' => $selectedUnified->id, 'error' => (string) $e]); } catch (\Throwable $_) {}
+            return redirect()->back()->with('error', __('Failed to delete observation'));
+        }
+
+        return redirect()->route('observations.show', ['observer' => $observerUser->slug])->with('success', __('Observation deleted'));
+    }
+
+    /**
+     * Convert a PHP ini size string (e.g. "2M", "8M") into bytes.
+     */
+    private function phpSizeToBytes(?string $size): int
+    {
+        if (empty($size)) {
+            return 0;
+        }
+
+        $s = trim($size);
+        $last = strtolower($s[strlen($s) - 1]);
+
+        if (in_array($last, ['g', 'm', 'k'])) {
+            $num = (float) substr($s, 0, -1);
+            switch ($last) {
+                case 'g':
+                    return (int) round($num * 1024 * 1024 * 1024);
+                case 'm':
+                    return (int) round($num * 1024 * 1024);
+                case 'k':
+                    return (int) round($num * 1024);
+            }
+        }
+
+        return (int) $s;
     }
 }

@@ -434,6 +434,69 @@ class SessionController extends Controller
                 ->groupBy('sessionid')
                 ->pluck('cnt', 'sessionid')
                 ->toArray();
+
+            // Also include any new unified observations from the `observations` table
+            // that match the session participants and date range but are not yet
+            // present in the `sessionObservations` pivot. This ensures newly
+            // created observations appear on the homepage without waiting for
+            // background backfills/jobs.
+            try {
+                foreach ($collection as $session) {
+                    $sid = $session->id;
+
+                    // Prepare participants: primary observer + any other observers
+                    $participants = [];
+                    try {
+                        $participants = is_array($session->otherObservers()) ? $session->otherObservers() : [];
+                    } catch (\Throwable $_) {
+                        $participants = [];
+                    }
+                    if (!in_array($session->observerid, $participants, true)) {
+                        $participants[] = $session->observerid;
+                    }
+
+                    if (empty($participants)) {
+                        continue;
+                    }
+
+                    // Date range
+                    $startDate = null;
+                    $endDate = null;
+                    try {
+                        if (!empty($session->begindate)) {
+                            $startDate = \Carbon\Carbon::parse($session->begindate)->format('Y-m-d');
+                        }
+                    } catch (\Throwable $_) {
+                        $startDate = null;
+                    }
+                    try {
+                        if (!empty($session->enddate)) {
+                            $endDate = \Carbon\Carbon::parse($session->enddate)->format('Y-m-d');
+                        }
+                    } catch (\Throwable $_) {
+                        $endDate = null;
+                    }
+
+                    // Determine existing pivot observation ids for this session to avoid double-counting
+                    $existingIds = DBFacade::table('sessionObservations')->where('sessionid', $sid)->pluck('observationid')->map(fn($v) => (int) $v)->toArray();
+
+                    $q = DBFacade::table('observations')->whereIn('observer_username', $participants)->whereNull('legacy_source');
+                    if ($startDate) {
+                        $q->where('observed_on', '>=', $startDate);
+                    }
+                    if ($endDate) {
+                        $q->where('observed_on', '<=', $endDate);
+                    }
+                    if (!empty($existingIds)) {
+                        $q->whereNotIn('id', $existingIds);
+                    }
+
+                    $additional = (int) $q->count();
+                    $obsCounts[$sid] = (int) ($obsCounts[$sid] ?? 0) + $additional;
+                }
+            } catch (\Throwable $_) {
+                // If anything fails here, fall back to the original counts silently.
+            }
         }
 
         // Allow forcing translation via query string for testing: ?force_translate=1

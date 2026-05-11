@@ -202,7 +202,7 @@
                                     </thead>
 
                                     <tbody>
-                                    @foreach(Eyepiece::where('user_id', Auth::user()->id)->where('active', 1)->get()->sortBy('focal_length_mm', SORT_NATURAL, true) as $eyepiece)
+                                    @foreach(Eyepiece::where('user_id', Auth::user()->id)->where('active', 1)->orderByFocalLength('desc')->get() as $eyepiece)
                                         <tr>
                                             <td>
                                                 <a href="/eyepiece/{{ Auth::user()->slug }}/{{ $eyepiece->slug }}">{{ $eyepiece->name }}</a>
@@ -235,7 +235,7 @@
                                         </thead>
 
                                         <tbody>
-                                        @foreach(Eyepiece::where('user_id', Auth::user()->id)->where('active', 1)->get()->sortBy('focal_length_mm', SORT_NATURAL, true) as $eyepiece)
+                                        @foreach(Eyepiece::where('user_id', Auth::user()->id)->where('active', 1)->orderByFocalLength('desc')->get() as $eyepiece)
                                             <tr>
                                                 <td>
                                                     <a href="/eyepiece/{{ Auth::user()->slug }}/{{ $eyepiece->slug }}">{{ $eyepiece->name }}</a>

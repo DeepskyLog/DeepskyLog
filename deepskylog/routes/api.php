@@ -594,12 +594,18 @@ Route::get('ui_languages.index', function (Request $request) {
 // Make a list of all possible languages for the observations in DeepskyLog.
 Route::get('observation_languages.index', function (Request $request) {
     $allLanguages = [];
-    // Show the selected option
+    // Show the selected option (use provided value, fallback to auth user)
     if ($request->exists('selected')) {
-        $allLanguages[] = [
-            'id' => auth()->user()->observationlanguage,
-            'name' => Languages::lookup([auth()->user()->observationlanguage], 'mixed')->values()[0],
-        ];
+        $sel = $request->selected;
+        if (empty($sel) && auth()->check()) {
+            $sel = auth()->user()->observationlanguage;
+        }
+        if (!empty($sel)) {
+            $allLanguages[] = [
+                'id' => $sel,
+                'name' => Languages::lookup([$sel], 'mixed')->values()[0],
+            ];
+        }
     }
 
     // Get the languages
@@ -1320,3 +1326,27 @@ Route::middleware('auth:sanctum')->post('user/aladin-defaults', function (Reques
         return response()->json(['error' => 'Save failed', 'message' => $ex->getMessage()], 500);
     }
 })->name('user.aladin-defaults.save');
+
+// Compute magnification client-side without a Livewire round-trip
+Route::get('magnification', function (Request $request) {
+    $instrumentId = $request->query('instrument_id');
+    $eyepieceId   = $request->query('eyepiece_id');
+    $lensId       = $request->query('lens_id');
+
+    if (! $instrumentId || ! $eyepieceId) {
+        return response()->json(['magnification' => null]);
+    }
+
+    $instrument = \App\Models\Instrument::find($instrumentId);
+    $eyepiece   = \App\Models\Eyepiece::find($eyepieceId);
+
+    if (! $instrument || ! $eyepiece) {
+        return response()->json(['magnification' => null]);
+    }
+
+    $lens = $lensId ? \App\Models\Lens::find($lensId) : null;
+    $mag  = $instrument->magnification($eyepiece, $lens);
+    $num  = preg_replace('/[^0-9.]/', '', (string) $mag);
+
+    return response()->json(['magnification' => $num !== '' ? (float) $num : null]);
+})->name('magnification.compute');

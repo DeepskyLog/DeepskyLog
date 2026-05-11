@@ -4,6 +4,15 @@
     <ul class="space-y-2 text-sm">
         <li>
             @if (!empty($canonicalSlug))
+                <a href="{{ route('observation.create', ['slug' => $canonicalSlug]) }}"
+                    class="text-gray-300 hover:underline">{{ __('Create observation') }}</a>
+            @else
+                <a href="{{ route('observation.create') }}"
+                    class="text-gray-300 hover:underline">{{ __('Create observation') }}</a>
+            @endif
+        </li>
+        <li>
+            @if (!empty($canonicalSlug))
                 @if ($isCometLocal)
                     <a href="{{ url('/cometobservations/' . $canonicalSlug) }}"
                         class="text-gray-300 hover:underline">{{ __('All observations') }}</a>

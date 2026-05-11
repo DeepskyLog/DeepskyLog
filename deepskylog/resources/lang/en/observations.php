@@ -1,15 +1,15 @@
 <?php
 return [
     'cluster_types' => [
-        'A' => 'Rich, poorly conc., diff. magnit., loose',
-        'B' => 'Poorly conc., diff. magnit., loose',
-        'C' => 'Poor, poorly conc., diff. magnit., loose',
+        'A' => 'Rich, poorly concentrated, different magnitudes, loose',
+        'B' => 'Poorly concentrated, different magnitudes, loose',
+        'C' => 'Poor, poorly concentrated, different magnitudes, loose',
         'D' => 'Rich, concentrated, loose',
-        'E' => 'Rich, poorly conc., same magnit., loose',
-        'F' => 'Only same color or magnit., not loose',
-        'G' => 'High magnif. compact cl., rich, weak',
+        'E' => 'Rich, poorly concentrated, same magnitudes, loose',
+        'F' => 'Only same color or magnitudes, not loose',
+        'G' => 'High magnification compact cluster, rich, weak',
         'H' => 'Very poor, not loose at all',
-        'I' => 'High magnif. compact cl., poor, weak',
+        'I' => 'High magnification compact cluster, poor, weak',
         'X' => 'No classification possible',
     ],
 
@@ -39,6 +39,15 @@ return [
         '3' => 'Binary cannot be resolved',
     ],
 
+    'component_colors' => [
+        '1' => 'white',
+        '2' => 'red',
+        '3' => 'orange',
+        '4' => 'yellow',
+        '5' => 'green',
+        '6' => 'blue',
+    ],
+
     'seeing' => [
         '0' => '-----',
         '1' => 'Excellent',
@@ -46,5 +55,13 @@ return [
         '3' => 'Moderate',
         '4' => 'Poor',
         '5' => 'Bad',
+    ],
+    'transparency' => [
+        '0' => '-----',
+        '1' => 'Prime',
+        '2' => 'Good',
+        '3' => 'Typical',
+        '4' => 'Poor',
+        '5' => 'Awful',
     ],
 ];

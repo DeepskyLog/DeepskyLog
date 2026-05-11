@@ -73,12 +73,12 @@
             <div class="flex items-center justify-start gap-0">
                 <span class="text-gray-400">{{ __('Observations') }}</span>
                 @if ($isCometLocal)
-                    <a href="{{ url('/cometobservations/' . $objSlug) }}"
-                        class="text-white font-medium ml-2 hover:underline">{{ $totalObs ?? 0 }}</a>
-                @else
-                    <a href="{{ url('/observations/' . $objSlug) }}"
-                        class="text-white font-medium ml-2 hover:underline">{{ $totalObs ?? 0 }}</a>
-                @endif
+                        <a href="{{ url('/cometobservations/' . $objSlug) }}"
+                            class="text-white font-medium ml-2 hover:underline">{{ $totalObs ?? 0 }}</a>
+                    @else
+                        <a href="{{ url('/observations/object/' . $objSlug) }}"
+                            class="text-white font-medium ml-2 hover:underline">{{ $totalObs ?? 0 }}</a>
+                    @endif
             </div>
 
             @auth

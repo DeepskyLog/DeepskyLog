@@ -8,17 +8,30 @@
 - [ ] Observations
   - [x] Make migrations and seeder
   - [x] Show detailed observation page, with all details, comments, ...
-  - [ ] Add observations by changing the Add -> Observation menu item, both in add-dropdown.blade.php as in the add-responsive-dropdown.blade.php files. First, there should be an option to select the object.  If the object is found, the correct add page should be shown.  The add pages should be different for deep-sky objects, planets, lunar features, ...  Just look into the database tables to see which fields are needed for each type of object.  If the object is not found, the user should be redirected to the add new object page, with the name of the object already filled in.
+  - [ ] Add observations page
+    - [ ] Try to add an observation for all types of objects, to see if all fields are working correctly.
+      - [ ] Sun
+      - [ ] Planet
+      - [ ] Open cluster
+      - [ ] Binary star
+      - [ ] Lunar feature
+      - [ ] Galaxy
+      - [ ] Comet
+    - [ ] If an observation was already entered, fill the date with the latest date that was entered in the field (when the user adds more than one observation in a row).
+    - [ ] Fill the location with the latest location that was entered in the field. Do the same for the instrument, eyepiece, lens and filter fields.  If this was not the case, use the standard / default location, instrument, eyepiece, and lens.
     - [ ] other objects: planets, comets, lunar features, ...
       - [ ] Need to work on the database tables for these observations.
+    - [ ] X, facebook, ... links for the sketch of the week and the month should be adapted, as well as the share buttons for the observations.
+    - [ ] Share from the observation detail page.  Also share observing lists?
     - [ ] Quick add from the left aside
-    - [ ] Import / export observations in a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, ...
     - [ ] RSS Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
+    - [ ] Import observations from a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, ...
   - [ ] Check code for ObservationOld and remove it, as all observations are now in the same table.
   - [ ] Check if any of the old models is still used. Maybe remove all the old models.
   - [ ] Search for observations
     - [ ] Quick search in the left aside
     - [ ] Detailed search page
+    - [ ] Export search results in a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, pdf, csv, ...
   - [ ] Translations
   - [ ] On real server:
     - [ ] php artisan db:seed --class=BackfillSessionObservationIdsSeeder

@@ -75,11 +75,28 @@
                         $mode !== 'comet' &&
                             empty($objectFilter) &&
                             empty($drawingsOnly) &&
-                            ($user == '' || ($user->username ?? null) !== null))
+                            // Only show comet toggle on the global listing (no specific user).
+                            $user == ''
+                    )
                         <x-button gray icon="sparkles" class="mb-2" href="{{ $cometUrl }}">
                             {{ __('Show comet observations') }}
                         </x-button>
                     @endif
+                </div>
+                @php
+                    $currentSort = request()->query('sort', 'observed');
+                    $sortObservedUrl = request()->fullUrlWithQuery(['sort' => 'observed']);
+                    $sortIdUrl = request()->fullUrlWithQuery(['sort' => 'id']);
+                @endphp
+                <div class="flex items-center ml-2 space-x-2">
+                    <a href="{{ $sortObservedUrl }}"
+                        class="inline-flex items-center px-3 py-2 rounded {{ $currentSort === 'observed' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600' }}">
+                        {{ __('Sort: Observed') }}
+                    </a>
+                    <a href="{{ $sortIdUrl }}"
+                        class="inline-flex items-center px-3 py-2 rounded {{ $currentSort === 'id' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600' }}">
+                        {{ __('Sort: ID') }}
+                    </a>
                 </div>
                 {{-- Images-only toggle (only for drawings listing paths) --}}
                 @if ($isDrawingsPath)
@@ -117,24 +134,67 @@
                             @foreach ($deepsky as $observation)
                                 <div class="mt-3 max-w-xl pr-3">
                                     @php
-                                        $observer_name =
-                                            ($preloaded_users ?? collect())->get($observation->observerid)?->name ?? 
-                                            \App\Models\User::where('username', $observation->observerid)->first()
-                                                ?->name ?? $observation->observerid;
-                                        $observation_date =
-                                            substr($observation->date, 0, 4) .
-                                            '-' .
-                                            substr($observation->date, 4, 2) .
-                                            '-' .
-                                            substr($observation->date, 6, 2);
+                                        // Support both legacy ObservationsOld and modern Observation models
+                                        $observer_key = $observation->observerid ?? $observation->observer_username ?? null;
+                                        $observer_name = ($preloaded_users ?? collect())->get($observer_key)?->name ?? $observer_key ?? __('Unknown');
+
+                                        if (!empty($observation->date)) {
+                                            $observation_date =
+                                                substr((string) $observation->date, 0, 4) .
+                                                '-' .
+                                                substr((string) $observation->date, 4, 2) .
+                                                '-' .
+                                                substr((string) $observation->date, 6, 2);
+                                        } elseif (!empty($observation->observed_on)) {
+                                            $observation_date = (string) $observation->observed_on;
+                                        } else {
+                                            $observation_date = null;
+                                        }
                                     @endphp
 
-                                    <x-sketch-deepsky :observation_id="$observation->id" :observer_name="$observer_name" :observer_username="$observation->observerid"
+                                    <x-sketch-deepsky :observation_id="$observation->id" :observer_name="$observer_name" :observer_username="$observer_key"
+                                        :observation="$observation" :unified_observation="$observation instanceof \App\Models\Observation ? $observation : ($observation->unified ?? null)" :drawing_id="$observation->drawing_filename ?? $observation->drawing_filename ?? null"
                                         :observation_date="$observation_date" />
                                 </div>
                             @endforeach
                         </div>
                         <div class="mt-4">{{ $deepsky->links() }}</div>
+                    </x-card>
+                @elseif (!empty($drawingsOnly) && $drawingsOnly)
+                    <x-card>
+                        @if ($deepsky->isEmpty())
+                            <div class="text-center text-gray-300">{{ __('No drawings yet...') }}</div>
+                        @else
+                            <h3 class="mb-3 text-lg font-semibold text-gray-200">{{ __('All drawings') }}</h3>
+                            <div class="grid grid-cols-1 gap-4 px-5">
+                                @foreach ($deepsky as $observation)
+                                    @php
+                                        // Support both legacy and unified observation records
+                                        $observer_key = $observation->observerid ?? $observation->observer_username ?? null;
+                                        $preloaded_user = ($preloaded_users ?? collect())->get($observer_key);
+
+                                        $preloaded_object = ($preloaded_objects ?? collect())->get($observation->objectname ?? ($observation->target_name ?? null));
+                                        $preloaded_location = ($preloaded_locations ?? collect())->get($observation->locationid ?? $observation->location_id ?? null);
+                                        $preloaded_instrument = ($preloaded_instruments ?? collect())->get($observation->instrumentid ?? $observation->instrument_id ?? null);
+                                        $preloaded_eyepiece = ($preloaded_eyepieces ?? collect())->get($observation->eyepieceid ?? $observation->eyepiece_id ?? null);
+                                        $preloaded_filter = ($preloaded_filters ?? collect())->get($observation->filterid ?? $observation->filter_id ?? null);
+                                    @endphp
+
+                                    <x-observation-deepsky
+                                        :observation="$observation"
+                                        :translator="$tr"
+                                        :preloaded_user="$preloaded_user"
+                                        :preloaded_object="$preloaded_object"
+                                        :preloaded_location="$preloaded_location"
+                                        :preloaded_instrument="$preloaded_instrument"
+                                        :preloaded_eyepiece="$preloaded_eyepiece"
+                                        :preloaded_filter="$preloaded_filter"
+                                        :preloaded_constellations="$preloaded_constellations ?? collect()"
+                                    />
+                                @endforeach
+                            </div>
+                            <div class="mt-4">{{ $deepsky->links() }}</div>
+                        @endif
                     </x-card>
                 @elseif ($mode === 'comet')
                     <x-card>
@@ -167,20 +227,22 @@
                 @else
                     <x-card>
                         @if ($deepsky->isEmpty())
-                            <div class="text-center text-gray-300">{{ __('No deepsky observations yet...') }}</div>
+                            <div class="text-center text-gray-300">{{ __('No observations yet.') }}</div>
                         @else
-                            <h3 class="mb-3 text-lg font-semibold text-gray-200">{{ __('All deepsky observations') }}
+                            <h3 class="mb-3 text-lg font-semibold text-gray-200">{{ __('All observations') }}
                             </h3>
                             <div class="grid grid-cols-1 gap-4 px-5">
                                 @foreach ($deepsky as $observation)
                                     @php
-                                        // Pass preloaded data to deepsky observation component
-                                        $preloaded_user = ($preloaded_users ?? collect())->get($observation->observerid);
-                                        $preloaded_object = ($preloaded_objects ?? collect())->get($observation->objectname);
-                                        $preloaded_location = ($preloaded_locations ?? collect())->get($observation->locationid);
-                                        $preloaded_instrument = ($preloaded_instruments ?? collect())->get($observation->instrumentid);
-                                        $preloaded_eyepiece = ($preloaded_eyepieces ?? collect())->get($observation->eyepieceid);
-                                        $preloaded_filter = ($preloaded_filters ?? collect())->get($observation->filterid);
+                                        // Support legacy and unified observation shapes when preloading
+                                        $observer_key = $observation->observerid ?? $observation->observer_username ?? null;
+                                        $preloaded_user = ($preloaded_users ?? collect())->get($observer_key);
+
+                                        $preloaded_object = ($preloaded_objects ?? collect())->get($observation->objectname ?? null);
+                                        $preloaded_location = ($preloaded_locations ?? collect())->get($observation->locationid ?? null);
+                                        $preloaded_instrument = ($preloaded_instruments ?? collect())->get($observation->instrumentid ?? null);
+                                        $preloaded_eyepiece = ($preloaded_eyepieces ?? collect())->get($observation->eyepieceid ?? null);
+                                        $preloaded_filter = ($preloaded_filters ?? collect())->get($observation->filterid ?? null);
                                     @endphp
                                     <x-observation-deepsky 
                                         :observation="$observation" 

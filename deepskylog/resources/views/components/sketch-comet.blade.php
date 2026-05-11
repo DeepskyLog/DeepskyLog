@@ -99,7 +99,15 @@
                 $detailRouteParams["index"] = $occurrenceIndex;
             }
 
-            $detailUrl = route("observations.detail", $detailRouteParams);
+            $detailUrl = null;
+            $canBuildDetail = !empty($detailRouteParams['observer']) && !empty($detailRouteParams['date']) && !empty($detailRouteParams['object']);
+            if ($canBuildDetail) {
+                try {
+                    $detailUrl = route("observations.detail", $detailRouteParams);
+                } catch (\Throwable $_) {
+                    $detailUrl = null;
+                }
+            }
         } elseif ($obsLegacy) {
             $detailDate =
                 substr((string) $obsLegacy->date, 0, 4) .
@@ -140,14 +148,48 @@
                 $detailRouteParams["index"] = $occurrenceIndex;
             }
 
-            $detailUrl = route("observations.detail", $detailRouteParams);
+            $detailUrl = null;
+            $canBuildDetail = !empty($detailRouteParams['observer']) && !empty($detailRouteParams['date']) && !empty($detailRouteParams['object']);
+            if ($canBuildDetail) {
+                try {
+                    $detailUrl = route("observations.detail", $detailRouteParams);
+                } catch (\Throwable $_) {
+                    $detailUrl = null;
+                }
+            }
+        }
+    @endphp
+    @php
+        $imgSrc = null;
+        $resolvedDrawing = $drawing_id ?: ($obsUnified?->drawing_filename ?? null);
+        if (!empty($resolvedDrawing)) {
+            $candidates = [
+                $resolvedDrawing,
+                'observations/' . ltrim($resolvedDrawing, '/'),
+                'sketches/' . ltrim($resolvedDrawing, '/'),
+                'drawings/' . ltrim($resolvedDrawing, '/'),
+                'cometdrawings/' . ltrim($resolvedDrawing, '/'),
+            ];
+            try {
+                foreach ($candidates as $cand) {
+                    if (\Illuminate\Support\Facades\Storage::disk('public')->exists($cand)) {
+                        $imgSrc = \Illuminate\Support\Facades\Storage::disk('public')->url($cand);
+                        break;
+                    }
+                }
+            } catch (\Throwable $_) {
+                // continue to fallback
+            }
+
+            if (empty($imgSrc)) {
+                $imgSrc = '/images/' . ltrim($resolvedDrawing, '/');
+            }
+        } else {
+            $imgSrc = '/images/' . ('cometdrawings/' . $observation_id . '.jpg');
         }
     @endphp
     <a class="no-underline" href="{{ $objectUrl }}">
-        <img
-            width="400"
-            src="/images/{{ $drawing_id ?: ('cometdrawings/' . $observation_id . '.jpg') }}"
-        />
+        <img width="400" src="{{ $imgSrc }}" />
     </a>
 
     <div class="text-center mt-1">

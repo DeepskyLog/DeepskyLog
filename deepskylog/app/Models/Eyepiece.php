@@ -15,8 +15,18 @@ class Eyepiece extends Model
     use Sluggable;
 
     protected $fillable = [
-        'user_id', 'name', 'make_id', 'type_id', 'focal_length_mm', 'apparentFOV',
-        'active', 'observer', 'max_focal_length_mm', 'maxFocalLength', 'field_stop_mm', 'picture',
+        'user_id',
+        'name',
+        'make_id',
+        'type_id',
+        'focal_length_mm',
+        'apparentFOV',
+        'active',
+        'observer',
+        'max_focal_length_mm',
+        'maxFocalLength',
+        'field_stop_mm',
+        'picture',
         'description',
     ];
 
@@ -73,7 +83,8 @@ class Eyepiece extends Model
         // Prefer a request-scoped bulk map when available to avoid per-eyepiece queries
         if (isset(self::$bulkFirstObservationMap) && array_key_exists($this->id, self::$bulkFirstObservationMap)) {
             $entry = self::$bulkFirstObservationMap[$this->id];
-            if (! $entry) return [null, null];
+            if (!$entry)
+                return [null, null];
             $firstObservation = $entry['date'];
             $id = $entry['id'];
             $date = Carbon::createFromFormat('Ymd', (string) $firstObservation)->locale($language)->isoFormat('LL');
@@ -112,7 +123,8 @@ class Eyepiece extends Model
         // Prefer a request-scoped bulk map when available to avoid per-eyepiece queries
         if (isset(self::$bulkLastObservationMap) && array_key_exists($this->id, self::$bulkLastObservationMap)) {
             $entry = self::$bulkLastObservationMap[$this->id];
-            if (! $entry) return [null, null];
+            if (!$entry)
+                return [null, null];
             $lastObservation = $entry['date'];
             $id = $entry['id'];
             $date = Carbon::createFromFormat('Ymd', (string) $lastObservation)->locale($language)->isoFormat('LL');
@@ -145,8 +157,8 @@ class Eyepiece extends Model
             $inst = Instrument::where('id', $instrument)->first();
             $user_slug = User::where('id', $inst->user_id)->pluck('slug')[0];
 
-            $to_return .= "<a href='/instrument/".$user_slug.'/'.$inst->slug."'>".
-                $inst->fullName().'</a>'.', ';
+            $to_return .= "<a href='/instrument/" . $user_slug . '/' . $inst->slug . "'>" .
+                $inst->fullName() . '</a>' . ', ';
         }
 
         // Remove the trailing comma and space
@@ -168,7 +180,7 @@ class Eyepiece extends Model
         // calculations only for their default instrument.
         try {
             $authUser = auth()->user();
-            if ($authUser && ! empty($authUser->standardInstrument)) {
+            if ($authUser && !empty($authUser->standardInstrument)) {
                 $inst = $authUser->standardInstrument;
                 if ($inst && isset($inst->id)) {
                     return collect([$inst->id]);
@@ -211,6 +223,16 @@ class Eyepiece extends Model
     public function fullName(): string
     {
         return trim($this->name);
+    }
+
+    /**
+     * Scope a query to order eyepieces by focal length (then name).
+     */
+    public function scopeOrderByFocalLength($query, string $direction = 'desc')
+    {
+        $dir = strtolower($direction) === 'asc' ? 'asc' : 'desc';
+
+        return $query->orderByRaw("COALESCE(focal_length_mm, 0) $dir")->orderBy('name');
     }
 
     /**
