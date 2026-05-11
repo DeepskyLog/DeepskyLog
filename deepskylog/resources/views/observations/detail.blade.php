@@ -47,6 +47,18 @@
 
         if ($observationType === "deepsky") {
             $object = ($preloaded_objects ?? collect())->get($obs->objectname);
+            // If not found by name, try by slug (handles slug-stored target_name)
+            if (!$object) {
+                $object = ($preloaded_objects ?? collect())->get(
+                    \Illuminate\Support\Str::slug((string) ($obs->objectname ?? ""), "-")
+                );
+            }
+            // Last-resort: live lookup by slug or name
+            if (!$object) {
+                $object = \App\Models\ObjectsOld::where('slug', \Illuminate\Support\Str::slug((string) ($obs->objectname ?? ""), "-"))
+                    ->orWhere('name', $obs->objectname)
+                    ->first();
+            }
             $objectTypeRaw = strtoupper(trim((string) ($object?->type ?? '')));
             $isOpenCluster = in_array($objectTypeRaw, ['OPNCL', 'LMCOC', 'SMCOC']);
             $location = ($preloaded_locations ?? collect())->get($obs->locationid);
@@ -101,7 +113,7 @@
         $objectDisplayName =
             $observationType === "comet"
                 ? $cometName
-                : (string) ($obs->objectname ?? "");
+                : (string) ($object?->name ?? $obs->objectname ?? "");
         $objectLinkSlug = $observationType === "comet" ? $cometSlug : $objectSlug;
         $objectUrl = route("object.show", $objectLinkSlug);
         $allObservationsUrl =
@@ -253,11 +265,7 @@
                         />
                         <div>
                             <div class="text-2xl font-bold">
-                                @if ($observationType === "deepsky")
-                                    {{ $obs->objectname }}
-                                @else
-                                    {{ $cometName }}
-                                @endif
+                                    {{ $objectDisplayName }}
                             </div>
                             <div class="text-gray-400 text-sm mt-1">
                                 {{
@@ -470,7 +478,7 @@
                                             href="{{ route('object.show', $objectSlug) }}"
                                             class="hover:underline text-blue-300"
                                         >
-                                            {{ $obs->objectname }}
+                                            {{ $objectDisplayName }}
                                         </a>
                                         @if ($object)
                                             <span

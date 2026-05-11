@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\TranslateObservationDescriptions;
-use App\Models\CometObservationsOld;
 use App\Models\Location;
+use App\Models\Observation;
 use App\Models\ObservationSession;
-use App\Models\ObservationsOld;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -108,16 +107,16 @@ class SessionController extends Controller
 
         // Fetch observations and drawings
         if (!empty($obsIds)) {
-            // Fetch observations for the session regardless of which observer recorded them.
-            // Previously this filtered by the session owner, preventing other viewers from seeing observations.
-            // Show observations recorded by the requested observer (defaults to session owner)
-            $deepObservations = ObservationsOld::whereIn('id', $deepLegacyIds)
-                ->where('observerid', $targetObserver)
+            // Fetch observations for the session recorded by the requested observer
+            $deepObservations = Observation::whereIn('legacy_id', $deepLegacyIds)
+                ->where('legacy_source', 'deepsky')
+                ->where('observer_username', $targetObserver)
                 ->orderBy('id', 'desc')
                 ->get();
 
-            $cometObservations = CometObservationsOld::whereIn('id', $cometLegacyIds)
-                ->where('observerid', $targetObserver)
+            $cometObservations = Observation::whereIn('legacy_id', $cometLegacyIds)
+                ->where('legacy_source', 'comet')
+                ->where('observer_username', $targetObserver)
                 ->orderBy('id', 'desc')
                 ->get();
 
@@ -141,10 +140,9 @@ class SessionController extends Controller
                 ]
             );
 
-            // Drawings should also be visible to viewers of the session regardless of who made them.
             // Drawings for the requested observer
-            $drawingDeep = ObservationsOld::whereIn('id', $deepLegacyIds)->where('observerid', $targetObserver)->where('hasDrawing', 1)->orderBy('id', 'desc')->get();
-            $drawingComet = CometObservationsOld::whereIn('id', $cometLegacyIds)->where('observerid', $targetObserver)->where('hasDrawing', 1)->orderBy('id', 'desc')->get();
+            $drawingDeep = Observation::whereIn('legacy_id', $deepLegacyIds)->where('legacy_source', 'deepsky')->where('observer_username', $targetObserver)->where('has_drawing', 1)->orderBy('id', 'desc')->get();
+            $drawingComet = Observation::whereIn('legacy_id', $cometLegacyIds)->where('legacy_source', 'comet')->where('observer_username', $targetObserver)->where('has_drawing', 1)->orderBy('id', 'desc')->get();
             $allDrawings = $drawingDeep->merge($drawingComet)->sortByDesc('id')->values();
 
             // Paginate drawings separately from observations. Use a distinct page name to avoid conflicts.
@@ -166,8 +164,8 @@ class SessionController extends Controller
                 ]
             );
 
-            $objectsDeepSky = $deepObservations->pluck('objectname')->unique()->values()->toArray();
-            $objectsComet = $cometObservations->pluck('objectname')->unique()->values()->toArray();
+            $objectsDeepSky = $deepObservations->pluck('target_name')->unique()->values()->toArray();
+            $objectsComet = $cometObservations->pluck('target_name')->unique()->values()->toArray();
         } else {
             $observations = collect([]);
             $drawings = collect([]);
@@ -179,30 +177,18 @@ class SessionController extends Controller
         sort($allObjects, SORT_STRING | SORT_FLAG_CASE);
 
         // Compute number of observations each observer did during this session.
-        // Counts are calculated only when there are session observation ids available.
         $observerStats = [];
 
         $counts = [];
         if (!empty($obsIds)) {
-            // Count per observer in deep observations
-            $deepCounts = ObservationsOld::whereIn('id', $deepLegacyIds)
-                ->select('observerid', DBFacade::raw('count(*) as cnt'))
-                ->groupBy('observerid')
-                ->pluck('cnt', 'observerid')
+            // Count per observer across deepsky and comet
+            $allCounts = Observation::whereIn('id', $newObsIds)
+                ->select('observer_username', DBFacade::raw('count(*) as cnt'))
+                ->groupBy('observer_username')
+                ->pluck('cnt', 'observer_username')
                 ->toArray();
 
-            // Count per observer in comet observations
-            $cometCounts = CometObservationsOld::whereIn('id', $cometLegacyIds)
-                ->select('observerid', DBFacade::raw('count(*) as cnt'))
-                ->groupBy('observerid')
-                ->pluck('cnt', 'observerid')
-                ->toArray();
-
-            // Merge counts
-            foreach ($deepCounts as $who => $c) {
-                $counts[$who] = ($counts[$who] ?? 0) + (int) $c;
-            }
-            foreach ($cometCounts as $who => $c) {
+            foreach ($allCounts as $who => $c) {
                 $counts[$who] = ($counts[$who] ?? 0) + (int) $c;
             }
         }
@@ -211,10 +197,7 @@ class SessionController extends Controller
         $primaryCount = isset($counts[$session->observerid]) ? (int) $counts[$session->observerid] : 0;
         // Fallback: if primaryCount is zero but there are totalObservations, try direct count
         if ($primaryCount === 0 && $totalObservations > 0 && !empty($obsIds)) {
-            $primaryCount = (int) (
-                (int) (ObservationsOld::whereIn('id', $deepLegacyIds)->where('observerid', $session->observerid)->count()) +
-                (int) (CometObservationsOld::whereIn('id', $cometLegacyIds)->where('observerid', $session->observerid)->count())
-            );
+            $primaryCount = (int) Observation::whereIn('id', $newObsIds)->where('observer_username', $session->observerid)->count();
         }
 
         // Always include the primary observer (even when there are no observations)

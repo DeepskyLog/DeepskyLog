@@ -6,7 +6,7 @@ use App\Models\ObservingList;
 use App\Models\ObservingListComment;
 use App\Models\ObservingListItem;
 use App\Models\Message;
-use App\Models\ObservationsOld;
+use App\Models\Observation;
 use App\Models\ObjectsOld;
 use App\Models\User;
 use App\Models\Instrument;
@@ -431,12 +431,12 @@ class ObservingListController extends Controller
      */
     private function buildLongestObservationAutofillNote(string $objectName): ?string
     {
-        $observation = ObservationsOld::query()
-            ->where('objectname', $objectName)
+        $observation = Observation::query()
+            ->where('target_name', $objectName)
             ->whereNotNull('description')
             ->whereRaw('TRIM(description) <> ""')
             ->orderByRaw('CHAR_LENGTH(description) DESC')
-            ->first(['description', 'observerid', 'instrumentid', 'locationid']);
+            ->first(['description', 'observer_username', 'instrument_id', 'location_id']);
 
         if (!$observation) {
             return null;
@@ -451,9 +451,9 @@ class ObservingListController extends Controller
             (string) (ObjectsOld::query()->where('name', $objectName)->value('description') ?? '')
         );
 
-        $observerName = $this->resolveObserverName($observation->observerid ?? null);
-        $instrumentName = $this->resolveInstrumentName($observation->instrumentid ?? null);
-        $locationName = $this->resolveLocationName($observation->locationid ?? null);
+        $observerName = $this->resolveObserverName($observation->observer_username ?? null);
+        $instrumentName = $this->resolveInstrumentName($observation->instrument_id ?? null);
+        $locationName = $this->resolveLocationName($observation->location_id ?? null);
 
         $contextLine = sprintf(
             '[%s: %s | %s: %s | %s: %s]',

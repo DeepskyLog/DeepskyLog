@@ -429,10 +429,10 @@
                         ->map(fn($id) => (int) $id)
                         ->values();
                 } else {
-                    $matchingIds = \App\Models\ObservationsOld::where("observerid", $observerid)
-                        ->where("date", $observation->date)
-                        ->where("objectname", $objectname)
-                        ->orderBy("time")
+                    $matchingIds = \App\Models\Observation::where("observer_username", $observerid)
+                        ->where("legacy_source", "deepsky")
+                        ->where("legacy_date_int", $observation->legacy_date_int ?? $observation->date)
+                        ->where("target_name", $objectname)
                         ->orderBy("id")
                         ->pluck("id")
                         ->map(fn($id) => (int) $id)

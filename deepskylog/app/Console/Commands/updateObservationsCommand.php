@@ -2,16 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\Models\CometObservationsOld;
 use App\Models\Eyepiece;
 use App\Models\Filter;
 use App\Models\Instrument;
 use App\Models\Lens;
 use App\Models\Location;
-use App\Models\ObservationsOld;
+use App\Models\Observation;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class updateObservationsCommand extends Command
 {
@@ -26,22 +24,15 @@ class updateObservationsCommand extends Command
         // Get all instruments
         $instruments = Instrument::all();
 
-        // Precompute counts grouped by instrument in the old DB to avoid per-instrument queries
-        $instrumentObsCounts = DB::connection('mysqlOld')->table('observations')
-            ->select('instrumentid', DB::raw('COUNT(*) as cnt'))
-            ->groupBy('instrumentid')
-            ->pluck('cnt', 'instrumentid')
-            ->toArray();
-
-        $instrumentCometCounts = DB::connection('mysqlOld')->table('cometobservations')
-            ->select('instrumentid', DB::raw('COUNT(*) as cnt'))
-            ->groupBy('instrumentid')
-            ->pluck('cnt', 'instrumentid')
+        // Precompute counts grouped by instrument from the unified observations table
+        $instrumentObsCounts = Observation::selectRaw('instrument_id, COUNT(*) as cnt')
+            ->whereNotNull('instrument_id')
+            ->groupBy('instrument_id')
+            ->pluck('cnt', 'instrument_id')
             ->toArray();
 
         foreach ($instruments as $instrument) {
-            $observations = ($instrumentObsCounts[$instrument->id] ?? 0) + ($instrumentCometCounts[$instrument->id] ?? 0);
-            $instrument->observations = $observations;
+            $instrument->observations = $instrumentObsCounts[$instrument->id] ?? 0;
             $instrument->save();
         }
 
@@ -50,11 +41,11 @@ class updateObservationsCommand extends Command
         // Get all eyepieces
         $eyepieces = Eyepiece::all();
 
-        // Precompute counts grouped by eyepiece in the old DB to avoid per-eyepiece queries
-        $eyepieceObsCounts = DB::connection('mysqlOld')->table('observations')
-            ->select('eyepieceid', DB::raw('COUNT(*) as cnt'))
-            ->groupBy('eyepieceid')
-            ->pluck('cnt', 'eyepieceid')
+        // Precompute counts grouped by eyepiece from the unified observations table
+        $eyepieceObsCounts = Observation::selectRaw('eyepiece_id, COUNT(*) as cnt')
+            ->whereNotNull('eyepiece_id')
+            ->groupBy('eyepiece_id')
+            ->pluck('cnt', 'eyepiece_id')
             ->toArray();
 
         foreach ($eyepieces as $eyepiece) {
@@ -67,11 +58,11 @@ class updateObservationsCommand extends Command
         // Get all lenses
         $lenses = Lens::all();
 
-        // Precompute counts grouped by lens in the old DB to avoid per-lens queries
-        $lensObsCounts = DB::connection('mysqlOld')->table('observations')
-            ->select('lensid', DB::raw('COUNT(*) as cnt'))
-            ->groupBy('lensid')
-            ->pluck('cnt', 'lensid')
+        // Precompute counts grouped by lens from the unified observations table
+        $lensObsCounts = Observation::selectRaw('lens_id, COUNT(*) as cnt')
+            ->whereNotNull('lens_id')
+            ->groupBy('lens_id')
+            ->pluck('cnt', 'lens_id')
             ->toArray();
 
         foreach ($lenses as $lens) {
@@ -84,11 +75,11 @@ class updateObservationsCommand extends Command
         // Get all filters
         $filters = Filter::all();
 
-        // Precompute counts grouped by filter in the old DB to avoid per-filter queries
-        $filterObsCounts = DB::connection('mysqlOld')->table('observations')
-            ->select('filterid', DB::raw('COUNT(*) as cnt'))
-            ->groupBy('filterid')
-            ->pluck('cnt', 'filterid')
+        // Precompute counts grouped by filter from the unified observations table
+        $filterObsCounts = Observation::selectRaw('filter_id, COUNT(*) as cnt')
+            ->whereNotNull('filter_id')
+            ->groupBy('filter_id')
+            ->pluck('cnt', 'filter_id')
             ->toArray();
 
         foreach ($filters as $filter) {
@@ -101,22 +92,15 @@ class updateObservationsCommand extends Command
         // Get all locations
         $locations = Location::all();
 
-        // Precompute counts grouped by location in the old DB to avoid per-location queries
-        $locationObsCounts = DB::connection('mysqlOld')->table('observations')
-            ->select('locationid', DB::raw('COUNT(*) as cnt'))
-            ->groupBy('locationid')
-            ->pluck('cnt', 'locationid')
-            ->toArray();
-
-        $locationCometCounts = DB::connection('mysqlOld')->table('cometobservations')
-            ->select('locationid', DB::raw('COUNT(*) as cnt'))
-            ->groupBy('locationid')
-            ->pluck('cnt', 'locationid')
+        // Precompute counts grouped by location from the unified observations table
+        $locationObsCounts = Observation::selectRaw('location_id, COUNT(*) as cnt')
+            ->whereNotNull('location_id')
+            ->groupBy('location_id')
+            ->pluck('cnt', 'location_id')
             ->toArray();
 
         foreach ($locations as $location) {
-            $observations = ($locationObsCounts[$location->id] ?? 0) + ($locationCometCounts[$location->id] ?? 0);
-            $location->observations = $observations;
+            $location->observations = $locationObsCounts[$location->id] ?? 0;
             $location->save();
         }
 

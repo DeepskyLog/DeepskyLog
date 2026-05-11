@@ -11,7 +11,7 @@
 ])
 <div class="justify-left mt-5 flex">
     @php
-        // Accept either a unified App\Models\Observation or a legacy CometObservationsOld.
+        // Accept either a unified App\Models\Observation or a legacy observation.
         $isUnified = $observation instanceof \App\Models\Observation;
         $obsUnified = $isUnified ? $observation : $unified_observation;
         $obs_type   = $obsUnified?->target_type ?? 'comet';
@@ -317,10 +317,10 @@
                         ->map(fn($id) => (int) $id)
                         ->values();
                 } else {
-                    $matchingIds = \App\Models\CometObservationsOld::where("observerid", $observerid)
-                        ->where("date", $observation->date)
-                        ->where("objectid", $objectid)
-                        ->orderBy("time")
+                    $matchingIds = \App\Models\Observation::where("observer_username", $observerid)
+                        ->where("legacy_source", "comet")
+                        ->where("legacy_date_int", $observation->date)
+                        ->where("target_key", (string) $objectid)
                         ->orderBy("id")
                         ->pluck("id")
                         ->map(fn($id) => (int) $id)

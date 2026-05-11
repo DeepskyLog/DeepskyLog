@@ -9,25 +9,25 @@ class AddSlugsToPlanetsMoonsLunarAsteroids extends Migration
     public function up()
     {
         Schema::table('planets', function (Blueprint $table) {
-            if (! Schema::hasColumn('planets', 'slug')) {
+            if (!Schema::hasColumn('planets', 'slug')) {
                 $table->string('slug', 191)->nullable()->unique()->after('name');
             }
         });
 
         Schema::table('moons', function (Blueprint $table) {
-            if (! Schema::hasColumn('moons', 'slug')) {
+            if (!Schema::hasColumn('moons', 'slug')) {
                 $table->string('slug', 191)->nullable()->unique()->after('name');
             }
         });
 
         Schema::table('lunar_features', function (Blueprint $table) {
-            if (! Schema::hasColumn('lunar_features', 'slug')) {
+            if (!Schema::hasColumn('lunar_features', 'slug')) {
                 $table->string('slug', 191)->nullable()->unique()->after('name');
             }
         });
 
         Schema::table('asteroids', function (Blueprint $table) {
-            if (! Schema::hasColumn('asteroids', 'slug')) {
+            if (!Schema::hasColumn('asteroids', 'slug')) {
                 $table->string('slug', 191)->nullable()->unique()->after('name');
             }
         });
@@ -37,24 +37,28 @@ class AddSlugsToPlanetsMoonsLunarAsteroids extends Migration
     {
         Schema::table('planets', function (Blueprint $table) {
             if (Schema::hasColumn('planets', 'slug')) {
+                $table->dropUnique('planets_slug_unique');
                 $table->dropColumn('slug');
             }
         });
 
         Schema::table('moons', function (Blueprint $table) {
             if (Schema::hasColumn('moons', 'slug')) {
+                $table->dropUnique('moons_slug_unique');
                 $table->dropColumn('slug');
             }
         });
 
         Schema::table('lunar_features', function (Blueprint $table) {
             if (Schema::hasColumn('lunar_features', 'slug')) {
+                $table->dropUnique('lunar_features_slug_unique');
                 $table->dropColumn('slug');
             }
         });
 
         Schema::table('asteroids', function (Blueprint $table) {
             if (Schema::hasColumn('asteroids', 'slug')) {
+                $table->dropUnique('asteroids_slug_unique');
                 $table->dropColumn('slug');
             }
         });

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasObservationsDates;
 use App\Traits\ClearsResponseCache;
-use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,10 +11,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Filter extends Model
 {
     use ClearsResponseCache;
+    use HasObservationsDates;
     use Sluggable;
 
     protected $fillable = [
-        'user_id', 'name', 'make_id', 'type_id', 'color_id', 'wratten', 'schott', 'active', 'observer', 'picture', 'description',
+        'user_id',
+        'name',
+        'make_id',
+        'type_id',
+        'color_id',
+        'wratten',
+        'schott',
+        'active',
+        'observer',
+        'picture',
+        'description',
     ];
 
     protected $with = ['filter_make', 'filter_color', 'filter_type'];
@@ -68,19 +79,7 @@ class Filter extends Model
      */
     public function first_observation_date(): array
     {
-        $language = app()->getLocale();
-
-        $firstObservation = ObservationsOld::where('filterid', $this->id)->min('date');
-
-        if ($firstObservation == null) {
-            return [null, null];
-        }
-
-        $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
-
-        $id = ObservationsOld::where('filterid', $this->id)->where('date', $firstObservation)->first()['id'];
-
-        return [$date, $id];
+        return $this->first_observation_date_generic('filterid');
     }
 
     /**
@@ -97,18 +96,7 @@ class Filter extends Model
      */
     public function last_observation_date(): array
     {
-        $language = app()->getLocale();
-
-        $lastObservation = ObservationsOld::where('filterid', $this->id)->max('date');
-
-        if ($lastObservation == null) {
-            return [null, null];
-        }
-
-        $date = Carbon::createFromFormat('Ymd', $lastObservation)->locale($language)->isoFormat('LL');
-        $id = ObservationsOld::where('filterid', $this->id)->where('date', $lastObservation)->first()['id'];
-
-        return [$date, $id];
+        return $this->last_observation_date_generic('filterid');
     }
 
     /**
@@ -121,6 +109,6 @@ class Filter extends Model
 
     public function fullName(): string
     {
-        return ltrim($this->filter_make->name.' '.$this->name);
+        return ltrim($this->filter_make->name . ' ' . $this->name);
     }
 }

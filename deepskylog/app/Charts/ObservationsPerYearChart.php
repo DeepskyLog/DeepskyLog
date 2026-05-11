@@ -2,8 +2,7 @@
 
 namespace App\Charts;
 
-use App\Models\CometObservationsOld;
-use App\Models\ObservationsOld;
+use App\Models\Observation;
 use App\Models\User;
 use marineusde\LarapexCharts\Charts\LineChart as OriginalLineChart;
 use marineusde\LarapexCharts\Options\XAxisOption;
@@ -29,11 +28,13 @@ class ObservationsPerYearChart
     public function build(User $user): OriginalLineChart
     {
         // Get the first observation of user.
-        $query = ObservationsOld::where('observerid', $user->username)
-            ->orderBy('date', 'asc');
+        $query = Observation::where('observer_username', $user->username)
+            ->where('legacy_source', 'deepsky')
+            ->orderBy('observed_on', 'asc');
 
-        $cometQuery = CometObservationsOld::where('observerid', $user->username)
-            ->orderBy('date', 'asc');
+        $cometQuery = Observation::where('observer_username', $user->username)
+            ->where('legacy_source', 'comet')
+            ->orderBy('observed_on', 'asc');
 
         if ($query->count() == 0 && $cometQuery->count() == 0) {
             $deepsky_observations = [];
@@ -42,15 +43,15 @@ class ObservationsPerYearChart
             $x_axis = [];
         } else {
             if ($query->count() == 0) {
-                $firstObservation = $cometQuery->first()->date;
+                $firstObservation = (int) substr((string) $cometQuery->first()->legacy_date_int, 0, 4);
             } elseif ($cometQuery->count() == 0) {
-                $firstObservation = $query->first()->date;
+                $firstObservation = (int) substr((string) $query->first()->legacy_date_int, 0, 4);
             } else {
-                $firstObservation = min($query->first()->date, $cometQuery->first()->date);
+                $firstObservation = min(
+                    (int) substr((string) $query->first()->legacy_date_int, 0, 4),
+                    (int) substr((string) $cometQuery->first()->legacy_date_int, 0, 4)
+                );
             }
-
-            // Drop last 4 characters of the integer to get the year.
-            $firstObservation = intval(substr($firstObservation, 0, -4));
 
             $deepsky_observations = [];
             $comet_observations = [];
@@ -59,13 +60,13 @@ class ObservationsPerYearChart
 
             // Get the count of observations of the user for each year
             for ($year = $firstObservation; $year <= intval(date('Y')); $year++) {
-                $deepsky = ObservationsOld::where('observerid', $user->username)
-                    ->where('date', '>=', $year.'0101')
-                    ->where('date', '<=', $year.'1231')
+                $deepsky = Observation::where('observer_username', $user->username)
+                    ->where('legacy_source', 'deepsky')
+                    ->whereYear('observed_on', $year)
                     ->count();
-                $comets = CometObservationsOld::where('observerid', $user->username)
-                    ->where('date', '>=', $year.'0101')
-                    ->where('date', '<=', $year.'1231')
+                $comets = Observation::where('observer_username', $user->username)
+                    ->where('legacy_source', 'comet')
+                    ->whereYear('observed_on', $year)
                     ->count();
                 $deepsky_observations[] = $deepsky;
                 $comet_observations[] = $comets;
@@ -75,8 +76,8 @@ class ObservationsPerYearChart
         }
 
         return (new OriginalLineChart)
-            ->setTitle(__('Number of observations per year: ').$user->name)
-            ->setSubtitle(__('Source: ').config('app.old_url'))
+            ->setTitle(__('Number of observations per year: ') . $user->name)
+            ->setSubtitle(__('Source: ') . config('app.old_url'))
             ->addData(__('Total'), $observations)
             ->addData(__('Deepsky'), $deepsky_observations)
             ->addData(__('Comets'), $comet_observations)

@@ -223,20 +223,19 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $language = app()->getLocale();
 
-        $firstDeepskyObservation = ObservationsOld::where('observerid', $this->username)->min('date');
-        $firstCometObservation = CometObservationsOld::where('observerid', $this->username)->min('date');
+        $first = Observation::where('observer_user_id', $this->id)->min('observed_on');
 
-        $firstObservation = min($firstDeepskyObservation, $firstCometObservation);
-
-        if ($firstObservation == null) {
+        if ($first === null) {
             return [null, null];
         }
-        $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
-        if ($firstObservation == $firstDeepskyObservation) {
-            $id = ObservationsOld::where('observerid', $this->username)->where('date', $firstObservation)->first()['id'];
-        } else {
-            $id = -CometObservationsOld::where('observerid', $this->username)->where('date', $firstObservation)->first()['id'];
-        }
+
+        $date = Carbon::parse($first)->locale($language)->isoFormat('LL');
+        $row = Observation::where('observer_user_id', $this->id)
+            ->where('observed_on', $first)
+            ->orderBy('id')
+            ->first(['legacy_id', 'legacy_source']);
+
+        $id = $row ? (($row->legacy_source === 'comet') ? -(int) $row->legacy_id : (int) $row->legacy_id) : null;
 
         return [$date, $id];
     }
@@ -250,20 +249,19 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $language = app()->getLocale();
 
-        $lastDeepskyObservation = ObservationsOld::where('observerid', $this->username)->max('date');
-        $lastCometObservation = CometObservationsOld::where('observerid', $this->username)->min('date');
+        $last = Observation::where('observer_user_id', $this->id)->max('observed_on');
 
-        $lastObservation = max($lastDeepskyObservation, $lastCometObservation);
-
-        if ($lastObservation == null) {
+        if ($last === null) {
             return [null, null];
         }
-        $date = Carbon::createFromFormat('Ymd', $lastObservation)->locale($language)->isoFormat('LL');
-        if ($lastObservation == $lastDeepskyObservation) {
-            $id = ObservationsOld::where('observerid', $this->username)->where('date', $lastObservation)->first()['id'];
-        } else {
-            $id = -CometObservationsOld::where('observerid', $this->username)->where('date', $lastObservation)->first()['id'];
-        }
+
+        $date = Carbon::parse($last)->locale($language)->isoFormat('LL');
+        $row = Observation::where('observer_user_id', $this->id)
+            ->where('observed_on', $last)
+            ->orderByDesc('id')
+            ->first(['legacy_id', 'legacy_source']);
+
+        $id = $row ? (($row->legacy_source === 'comet') ? -(int) $row->legacy_id : (int) $row->legacy_id) : null;
 
         return [$date, $id];
     }
@@ -680,30 +678,12 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDeepskyObservationsLastYear(): int
     {
-        // Get the observations from the last year
-        $lastYear = date('Ymd') - 10000;
-
-        return ObservationsOld::where('date', '>=', $lastYear)->where('observerid', $this->username)->count();
+        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('legacy_source', 'deepsky')->count();
     }
 
-    /**
-     * Retrieves the count of comet observations made by the user in the last year.
-     *
-     * This method calculates the total number of comet observations made by the user in the last year.
-     * It first retrieves the current year and subtracts one to get the previous year.
-     * It then queries the 'cometobservations' table for entries where the 'date' column's year is greater than or equal to the last year
-     * and the 'observerid' matches the current user's username.
-     *
-     * The count of these entries is returned, representing the total number of comet observations made by the user in the last year.
-     *
-     * @return int The total number of comet observations made by the user in the last year.
-     */
     public function getCometObservationsLastYear(): int
     {
-        // Get the observations from the last year
-        $lastYear = date('Ymd') - 10000;
-
-        return CometObservationsOld::where('date', '>=', $lastYear)->where('observerid', $this->username)->count();
+        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('legacy_source', 'comet')->count();
     }
 
     /**
@@ -720,30 +700,12 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDeepskyDrawingsLastYear(): int
     {
-        // Get the observations from the last year
-        $lastYear = date('Ymd') - 10000;
-
-        return ObservationsOld::where('date', '>=', $lastYear)->where('observerid', $this->username)->where('hasDrawing', 1)->count();
+        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('legacy_source', 'deepsky')->where('has_drawing', 1)->count();
     }
 
-    /**
-     * Retrieves the count of comet drawings made by the user in the last year.
-     *
-     * This method calculates the total number of comet drawings made by the user in the last year.
-     * It first retrieves the current year and subtracts one to get the previous year.
-     * It then queries the 'cometobservations' table for entries where the 'date' column's year is greater than or equal to the last year,
-     * the 'observerid' matches the current user's username, and the 'hasDrawing' column is set to 1 (indicating that the observation has a drawing).
-     *
-     * The count of these entries is returned, representing the total number of comet drawings made by the user in the last year.
-     *
-     * @return int The total number of comet drawings made by the user in the last year.
-     */
     public function getCometDrawingsLastYear(): int
     {
-        // Get the observations from the last year
-        $lastYear = date('Ymd') - 10000;
-
-        return CometObservationsOld::where('date', '>=', $lastYear)->where('observerid', $this->username)->where('hasDrawing', 1)->count();
+        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('legacy_source', 'comet')->where('has_drawing', 1)->count();
     }
 
     /**
@@ -762,16 +724,14 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getRank(): int
     {
-        // Get all the count of all observations combined per user
-        $allObservations = DB::connection('mysqlOld')->table('observations')
-            ->select(DB::raw('count(*) as count, observerid'))
-            ->groupBy('observerid')
-            ->orderBy('count', 'desc')
+        $allObservations = Observation::selectRaw('count(*) as count, observer_user_id')
+            ->groupBy('observer_user_id')
+            ->orderByDesc('count')
             ->get();
 
         $userIndex = 0;
         foreach ($allObservations as $user) {
-            if ($user->observerid == $this->username) {
+            if ($user->observer_user_id == $this->id) {
                 break;
             }
             $userIndex++;
@@ -813,12 +773,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function observationsCount(): float
     {
-        return \App\Models\ObservationsOld::getObservationsCountForUser($this);
+        return Observation::getObservationsCountForUserByName($this);
     }
 
     public function observations(): HasMany
     {
-        return $this->hasMany(related: ObservationsOld::class, foreignKey: 'observerid', localKey: 'username');
+        return $this->hasMany(related: Observation::class, foreignKey: 'observer_username', localKey: 'username');
     }
 
     /**

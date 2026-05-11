@@ -877,15 +877,15 @@ class AladinPreviewInfo extends Component
                             }
                             $eyepieceIds = array_values(array_unique($eyepieceIds));
                             if (!empty($eyepieceIds)) {
-                                $map = \App\Models\ObservationsOld::getInstrumentsForEyepieceIds($eyepieceIds);
+                                $map = \App\Models\Observation::getInstrumentsForEyepieceIds($eyepieceIds);
                                 \App\Models\Eyepiece::setBulkUsedInstrumentsMap($map);
                                 try {
-                                    $firstMap = \App\Models\ObservationsOld::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                    $firstMap = \App\Models\Observation::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
                                     \App\Models\Eyepiece::setBulkFirstObservationMap($firstMap);
                                 } catch (\Throwable $_) {
                                 }
                                 try {
-                                    $lastMap = \App\Models\ObservationsOld::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                    $lastMap = \App\Models\Observation::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
                                     \App\Models\Eyepiece::setBulkLastObservationMap($lastMap);
                                 } catch (\Throwable $_) {
                                 }

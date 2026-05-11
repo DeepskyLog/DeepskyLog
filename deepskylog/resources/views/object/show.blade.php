@@ -67,24 +67,24 @@
                     $totalObs =
                         isset($totalObservations) && $totalObservations !== null
                             ? $totalObservations
-                            : \App\Models\ObservationsOld::getObservationsCountForObject($objectName);
+                            : \App\Models\Observation::getObservationsCountForObject($objectName);
                     $drawingsCount =
                         isset($drawings) && is_numeric($drawings)
                             ? intval($drawings)
                             : (isset($drawings) && is_countable($drawings)
                                 ? count($drawings)
-                                : \App\Models\ObservationsOld::getDrawingsCountForObject($objectName));
+                                : \App\Models\Observation::getDrawingsCountForObject($objectName));
                     $yourObs = auth()->check()
-                        ? ($yourObservations ?? \App\Models\ObservationsOld::getObservationsCountForUser(auth()->user(), $objectName))
+                        ? ($yourObservations ?? \App\Models\Observation::getObservationsCountForUser(auth()->user(), $objectName))
                         : 0;
                     $yourDrawings = auth()->check()
-                        ? ($yourDrawings ?? \App\Models\ObservationsOld::getDrawingsCountForUser(auth()->user(), $objectName))
+                        ? ($yourDrawings ?? \App\Models\Observation::getDrawingsCountForUser(auth()->user(), $objectName))
                         : 0;
                     $lastObs = auth()->check()
-                        ? ($lastObservationDate ?? \App\Models\ObservationsOld::getLastObservationDateForUser(auth()->user(), $objectName))
+                        ? ($lastObservationDate ?? \App\Models\Observation::getLastObservationDateForUser(auth()->user(), $objectName))
                         : null;
                     $lastDrawing = auth()->check()
-                        ? ($lastDrawingDate ?? \App\Models\ObservationsOld::getLastDrawingDateForUser(auth()->user(), $objectName))
+                        ? ($lastDrawingDate ?? \App\Models\Observation::getLastDrawingDateForUser(auth()->user(), $objectName))
                         : null;
                 @endphp
 

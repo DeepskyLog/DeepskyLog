@@ -14,8 +14,8 @@
 <div>
     @php
         $obsUnified = $unified_observation;
-        $obsLegacy = \App\Models\CometObservationsOld::find($observation_id);
-        $comet = $preloaded_comet ?? $obsLegacy?->object;
+        $obsLegacy = $observation_id ? \App\Models\Observation::where('legacy_source', 'comet')->where('legacy_id', $observation_id)->first() : null;
+        $comet = $preloaded_comet;
         $cometName =
             $obsUnified?->target_name ?? ($comet?->name ?? __("Unknown comet"));
         $slug = $comet?->slug ?? \Illuminate\Support\Str::slug($cometName ?? "", "-");
@@ -124,13 +124,13 @@
                 $comet?->slug ??
                 \Illuminate\Support\Str::slug((string) $cometName, "-");
 
-            $matchingIds = \App\Models\CometObservationsOld::where(
-                "observerid",
-                $obsLegacy->observerid,
+            $matchingIds = \App\Models\Observation::where(
+                "observer_username",
+                $obsLegacy->observer_username,
             )
-                ->where("date", $obsLegacy->date)
-                ->where("objectid", $obsLegacy->objectid)
-                ->orderBy("time")
+                ->where("legacy_source", "comet")
+                ->where("legacy_date_int", $obsLegacy->legacy_date_int)
+                ->where("target_key", $obsLegacy->target_key)
                 ->orderBy("id")
                 ->pluck("id")
                 ->map(fn($id) => (int) $id)

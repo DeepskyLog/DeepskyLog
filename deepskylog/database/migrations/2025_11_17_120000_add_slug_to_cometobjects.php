@@ -6,8 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      * Adds a nullable unique `slug` column to `cometobjects` and
@@ -19,7 +18,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (! Schema::hasTable('cometobjects')) {
+        if (!Schema::hasTable('cometobjects')) {
             return;
         }
 
@@ -34,7 +33,8 @@ return new class extends Migration
             foreach ($rows as $r) {
                 $base = Str::slug($r->name ?? '', '-');
                 $slug = $base ?: 'comet-' . $r->id;
-                if (empty($slug)) $slug = 'comet-' . $r->id;
+                if (empty($slug))
+                    $slug = 'comet-' . $r->id;
 
                 // ensure uniqueness
                 if (isset($seen[$slug])) {
@@ -60,12 +60,13 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (! Schema::hasTable('cometobjects')) {
+        if (!Schema::hasTable('cometobjects')) {
             return;
         }
 
         Schema::table('cometobjects', function (Blueprint $table) {
             if (Schema::hasColumn('cometobjects', 'slug')) {
+                $table->dropUnique('cometobjects_slug_unique');
                 $table->dropColumn('slug');
             }
         });

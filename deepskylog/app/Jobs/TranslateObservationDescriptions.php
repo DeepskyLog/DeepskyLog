@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\ObservationsOld;
+use App\Models\Observation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -24,7 +24,8 @@ class TranslateObservationDescriptions implements ShouldQueue
     public function __construct(
         public readonly array $observationIds,
         public readonly string $language,
-    ) {}
+    ) {
+    }
 
     public function handle(): void
     {
@@ -41,8 +42,9 @@ class TranslateObservationDescriptions implements ShouldQueue
                 continue; // Already translated
             }
 
-            $observation = ObservationsOld::find($id);
-            if (! $observation || empty($observation->description)) {
+            $observation = Observation::where('legacy_id', $id)->where('legacy_source', 'deepsky')->first()
+                ?? Observation::find($id);
+            if (!$observation || empty($observation->description)) {
                 continue;
             }
 

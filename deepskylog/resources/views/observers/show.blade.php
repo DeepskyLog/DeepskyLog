@@ -1,5 +1,4 @@
-@php use App\Models\ObservationsOld; @endphp
-@php use App\Models\CometObservationsOld; @endphp
+@php use App\Models\Observation; @endphp
 @php use App\Models\User; @endphp
 
 @extends('layouts.app')
@@ -292,11 +291,11 @@
 
                         <tr>
                             <td class="pr-8">{{ __('Number of drawings') }}</td>
-                            <td class="px-4">{{ $observations->where('hasDrawing', 1)->count() + $cometDrawings }}
+                            <td class="px-4">{{ $observations->where('has_drawing', 1)->count() + $cometDrawings }}
                                 /
                                 {{ $totalNumberOfDrawings + $totalCometDrawings }}
                             </td>
-                            <td class="px-4">{{ $observations->where('hasDrawing', 1)->count() }}
+                            <td class="px-4">{{ $observations->where('has_drawing', 1)->count() }}
                                 /
                                 {{ $totalNumberOfDrawings }}
                             </td>
@@ -309,27 +308,27 @@
                         <tr>
                             <td class="pr-8">{!! __('Drawings last year') !!}</td>
                             @php
-                                $totalDrawings = ObservationsOld::getTotalDrawingsLastYear();
+                                $totalDrawings = Observation::getTotalDrawingsLastYear('deepsky');
                             @endphp
                             <td class="px-4">{{ $user->getDeepskyDrawingsLastYear() + $user->getCometDrawingsLastYear() }} /
-                                {{ $totalDrawings + CometObservationsOld::getTotalDrawingsLastYear() }}
+                                {{ $totalDrawings + Observation::getTotalDrawingsLastYear('comet') }}
                             </td>
                             <td class="px-4">{{ $user->getDeepskyDrawingsLastYear() }}
                                 / {{ $totalDrawings }}
                             </td>
                             <td class="px-4">{{ $user->getCometDrawingsLastYear() }}
-                                / {{ CometObservationsOld::getTotalDrawingsLastYear() }}
+                                / {{ Observation::getTotalDrawingsLastYear('comet') }}
                             </td>
                         </tr>
 
                         <tr>
                             <td class="pr-8">{{ __('Different objects') }}</td>
                             <td class="px-4">{{ $user->getUniqueObjectsObservations() + $user->getUniqueCometObservations() }} /
-                                {{ $totalUniqueObjects + CometObservationsOld::getUniqueObjectsObserved() }}</td>
+                                {{ $totalUniqueObjects + Observation::getUniqueObjectsObserved('comet') }}</td>
                             <td class="px-4">{{ $user->getUniqueObjectsObservations() }}
                                 / {{ $totalUniqueObjects }}</td>
                             <td class="px-4">{{ $user->getUniqueCometObservations() }} /
-                                {{ CometObservationsOld::getUniqueObjectsObserved() }}</td>
+                                {{ Observation::getUniqueObjectsObserved('comet') }}</td>
                         </tr>
 
                         <tr>

@@ -119,7 +119,7 @@ class Location extends Model
 
     public function get_used_instruments()
     {
-        return ObservationsOld::where('locationid', $this->id)->groupby('instrumentid')->distinct()->pluck('instrumentid');
+        return Observation::where('location_id', $this->id)->groupby('instrument_id')->distinct()->pluck('instrument_id');
     }
 
     public function last_observation_date(): array

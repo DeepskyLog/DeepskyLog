@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Magnitude;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Observation extends Model
 {
@@ -49,7 +51,74 @@ class Observation extends Model
         ];
     }
 
-    public static function getObservationsCountForObject(string $targetTable, string $targetKey): int
+    // ─── Legacy field aliases (backward compatibility) ─────────────────────────
+
+    public function getObserveridAttribute(): ?string
+    {
+        return $this->observer_username;
+    }
+
+    public function getObjectnameAttribute(): ?string
+    {
+        return $this->target_name;
+    }
+
+    public function getDateAttribute(): ?string
+    {
+        // Return the legacy YYYYMMDD integer format as a string for backward compat
+        if ($this->legacy_date_int !== null) {
+            return (string) $this->legacy_date_int;
+        }
+        if ($this->observed_on !== null) {
+            return Carbon::parse($this->observed_on)->format('Ymd');
+        }
+
+        return null;
+    }
+
+    public function getHasDrawingAttribute(): bool
+    {
+        return (bool) $this->attributes['has_drawing'] ?? false;
+    }
+
+    public function getInstrumentidAttribute(): ?int
+    {
+        $v = $this->attributes['instrument_id'] ?? null;
+        return $v !== null ? (int) $v : null;
+    }
+
+    public function getLocationidAttribute(): ?int
+    {
+        $v = $this->attributes['location_id'] ?? null;
+        return $v !== null ? (int) $v : null;
+    }
+
+    public function getEyepieceidAttribute(): ?int
+    {
+        $v = $this->attributes['eyepiece_id'] ?? null;
+        return $v !== null ? (int) $v : null;
+    }
+
+    public function getFilteridAttribute(): ?int
+    {
+        $v = $this->attributes['filter_id'] ?? null;
+        return $v !== null ? (int) $v : null;
+    }
+
+    public function getLensidAttribute(): ?int
+    {
+        $v = $this->attributes['lens_id'] ?? null;
+        return $v !== null ? (int) $v : null;
+    }
+
+    public function getObjectidAttribute(): ?string
+    {
+        return $this->attributes['target_key'] ?? null;
+    }
+
+    // ────────────────────────────────────────────────────────────────────────────
+
+    public static function getObservationsCountByTargetTableKey(string $targetTable, string $targetKey): int
     {
         if (empty($targetTable) || empty($targetKey)) {
             return 0;
@@ -60,7 +129,7 @@ class Observation extends Model
             ->count();
     }
 
-    public static function getDrawingsCountForObject(string $targetTable, string $targetKey): int
+    public static function getDrawingsCountByTargetTableKey(string $targetTable, string $targetKey): int
     {
         if (empty($targetTable) || empty($targetKey)) {
             return 0;
@@ -72,7 +141,7 @@ class Observation extends Model
             ->count();
     }
 
-    public static function getObservationsCountForUser(?\App\Models\User $user = null, ?string $targetTable = null, ?string $targetKey = null): int
+    public static function getObservationsCountForUserByTargetKey(?\App\Models\User $user = null, ?string $targetTable = null, ?string $targetKey = null): int
     {
         $user = $user ?? auth()->user();
         if (!$user) {
@@ -90,7 +159,7 @@ class Observation extends Model
         return $query->count();
     }
 
-    public static function getDrawingsCountForUser(?\App\Models\User $user = null, ?string $targetTable = null, ?string $targetKey = null): int
+    public static function getDrawingsCountForUserByTargetKey(?\App\Models\User $user = null, ?string $targetTable = null, ?string $targetKey = null): int
     {
         $user = $user ?? auth()->user();
         if (!$user) {
@@ -172,5 +241,270 @@ class Observation extends Model
         }
 
         return null;
+    }
+
+    // ---------------------------------------------------------------------------
+    // Backward-compatible static helpers replacing ObservationsOld / CometObservationsOld
+    // ---------------------------------------------------------------------------
+
+    // Aliases used by views (matching ObservationsOld method signatures exactly)
+    public static function getObservationsCountForObject(string $objectName): int
+    {
+        return static::getObservationsCountForTargetName($objectName);
+    }
+
+    public static function getDrawingsCountForObject(string $objectName): int
+    {
+        return static::getDrawingsCountForTargetName($objectName);
+    }
+
+    public static function getObservationsCountForUser(?\App\Models\User $user = null, ?string $objectName = null): int
+    {
+        return static::getObservationsCountForUserByName($user, $objectName);
+    }
+
+    public static function getDrawingsCountForUser(?\App\Models\User $user = null, ?string $objectName = null): int
+    {
+        return static::getDrawingsCountForUserByName($user, $objectName);
+    }
+
+    public static function getTotalObservations(?string $source = null): int
+    {
+        $q = static::query();
+        if ($source !== null) {
+            $q->where('legacy_source', $source);
+        }
+
+        return $q->count();
+    }
+
+    public static function getTotalObservationsLastYear(?string $source = null): int
+    {
+        $lastYear = now()->subYear();
+        $q = static::where('observed_on', '>=', $lastYear->format('Y-m-d'));
+        if ($source !== null) {
+            $q->where('legacy_source', $source);
+        }
+
+        return $q->count();
+    }
+
+    public static function getTotalDrawingsLastYear(?string $source = null): int
+    {
+        $lastYear = now()->subYear();
+        $q = static::where('observed_on', '>=', $lastYear->format('Y-m-d'))->where('has_drawing', 1);
+        if ($source !== null) {
+            $q->where('legacy_source', $source);
+        }
+
+        return $q->count();
+    }
+
+    public static function getUniqueObjectsObserved(?string $source = null): int
+    {
+        $q = static::query();
+        if ($source !== null) {
+            $q->where('legacy_source', $source);
+        }
+
+        return $q->distinct('target_name')->count('target_name');
+    }
+
+    /**
+     * Count observations for an object identified by target_name (legacy usage).
+     */
+    public static function getObservationsCountForTargetName(string $targetName, ?string $source = null): int
+    {
+        if ($targetName === '') {
+            return 0;
+        }
+        $q = static::where('target_name', $targetName);
+        if ($source !== null) {
+            $q->where('legacy_source', $source);
+        }
+
+        return $q->count();
+    }
+
+    /**
+     * Count drawings for an object identified by target_name (legacy usage).
+     */
+    public static function getDrawingsCountForTargetName(string $targetName, ?string $source = null): int
+    {
+        if ($targetName === '') {
+            return 0;
+        }
+        $q = static::where('target_name', $targetName)->where('has_drawing', 1);
+        if ($source !== null) {
+            $q->where('legacy_source', $source);
+        }
+
+        return $q->count();
+    }
+
+    /**
+     * Count observations for a user, optionally filtered by target_name (legacy usage).
+     */
+    public static function getObservationsCountForUserByName(?\App\Models\User $user = null, ?string $targetName = null, ?string $source = null): int
+    {
+        $user = $user ?? Auth::user();
+        if (!$user) {
+            return 0;
+        }
+        $q = static::where('observer_user_id', $user->id);
+        if ($targetName !== null && $targetName !== '') {
+            $q->where('target_name', $targetName);
+        }
+        if ($source !== null) {
+            $q->where('legacy_source', $source);
+        }
+
+        return $q->count();
+    }
+
+    /**
+     * Count drawings for a user, optionally filtered by target_name (legacy usage).
+     */
+    public static function getDrawingsCountForUserByName(?\App\Models\User $user = null, ?string $targetName = null, ?string $source = null): int
+    {
+        $user = $user ?? Auth::user();
+        if (!$user) {
+            return 0;
+        }
+        $q = static::where('observer_user_id', $user->id)->where('has_drawing', 1);
+        if ($targetName !== null && $targetName !== '') {
+            $q->where('target_name', $targetName);
+        }
+        if ($source !== null) {
+            $q->where('legacy_source', $source);
+        }
+
+        return $q->count();
+    }
+
+    /**
+     * Get the date of the last observation for a user, optionally filtered by target_name.
+     */
+    public static function getLastObservationDateForUser(?\App\Models\User $user = null, ?string $targetName = null): ?Carbon
+    {
+        $user = $user ?? Auth::user();
+        if (!$user) {
+            return null;
+        }
+        $q = static::where('observer_user_id', $user->id);
+        if ($targetName !== null && $targetName !== '') {
+            $q->where('target_name', $targetName);
+        }
+        $date = $q->orderByDesc('observed_on')->value('observed_on');
+
+        return $date ? Carbon::parse($date) : null;
+    }
+
+    /**
+     * Get the date of the last drawing for a user, optionally filtered by target_name.
+     */
+    public static function getLastDrawingDateForUser(?\App\Models\User $user = null, ?string $targetName = null): ?Carbon
+    {
+        $user = $user ?? Auth::user();
+        if (!$user) {
+            return null;
+        }
+        $q = static::where('observer_user_id', $user->id)->where('has_drawing', 1);
+        if ($targetName !== null && $targetName !== '') {
+            $q->where('target_name', $targetName);
+        }
+        $date = $q->orderByDesc('observed_on')->value('observed_on');
+
+        return $date ? Carbon::parse($date) : null;
+    }
+
+    /**
+     * Return a mapping eyepiece_id => array of instrument_ids for the given eyepiece IDs.
+     *
+     * @param  int[]  $eyepieceIds
+     */
+    public static function getInstrumentsForEyepieceIds(array $eyepieceIds): array
+    {
+        if (empty($eyepieceIds)) {
+            return [];
+        }
+        $rows = static::whereIn('eyepiece_id', $eyepieceIds)
+            ->whereNotNull('instrument_id')
+            ->groupBy('eyepiece_id', 'instrument_id')
+            ->get(['eyepiece_id', 'instrument_id']);
+
+        $map = [];
+        foreach ($rows as $r) {
+            $eid = (int) $r->eyepiece_id;
+            $iid = (int) $r->instrument_id;
+            if (!isset($map[$eid])) {
+                $map[$eid] = [];
+            }
+            $map[$eid][] = $iid;
+        }
+
+        return $map;
+    }
+
+    /**
+     * Return a mapping eyepiece_id => ['date' => <formatted string>, 'id' => <signed int>]
+     * for the first (earliest) observation for each eyepiece id.
+     *
+     * @param  int[]  $eyepieceIds
+     */
+    public static function getFirstObservationDateAndIdForEyepieceIds(array $eyepieceIds): array
+    {
+        if (empty($eyepieceIds)) {
+            return [];
+        }
+        $rows = static::whereIn('eyepiece_id', $eyepieceIds)
+            ->orderBy('eyepiece_id')
+            ->orderBy('observed_on')
+            ->get(['eyepiece_id', 'observed_on', 'legacy_id', 'legacy_source']);
+
+        $language = app()->getLocale();
+        $map = [];
+        foreach ($rows as $r) {
+            $eid = (int) $r->eyepiece_id;
+            if (isset($map[$eid])) {
+                continue;
+            }
+            $formatted = Carbon::parse($r->observed_on)->locale($language)->isoFormat('LL');
+            $id = ($r->legacy_source === 'comet') ? -(int) $r->legacy_id : (int) $r->legacy_id;
+            $map[$eid] = ['date' => $formatted, 'id' => $id];
+        }
+
+        return $map;
+    }
+
+    /**
+     * Return a mapping eyepiece_id => ['date' => <formatted string>, 'id' => <signed int>]
+     * for the last (latest) observation for each eyepiece id.
+     *
+     * @param  int[]  $eyepieceIds
+     */
+    public static function getLastObservationDateAndIdForEyepieceIds(array $eyepieceIds): array
+    {
+        if (empty($eyepieceIds)) {
+            return [];
+        }
+        $rows = static::whereIn('eyepiece_id', $eyepieceIds)
+            ->orderBy('eyepiece_id')
+            ->orderByDesc('observed_on')
+            ->get(['eyepiece_id', 'observed_on', 'legacy_id', 'legacy_source']);
+
+        $language = app()->getLocale();
+        $map = [];
+        foreach ($rows as $r) {
+            $eid = (int) $r->eyepiece_id;
+            if (isset($map[$eid])) {
+                continue;
+            }
+            $formatted = Carbon::parse($r->observed_on)->locale($language)->isoFormat('LL');
+            $id = ($r->legacy_source === 'comet') ? -(int) $r->legacy_id : (int) $r->legacy_id;
+            $map[$eid] = ['date' => $formatted, 'id' => $id];
+        }
+
+        return $map;
     }
 }

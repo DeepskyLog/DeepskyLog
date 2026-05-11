@@ -1000,15 +1000,15 @@ class ObjectController extends Controller
                                         }
                                         $eyepieceIds = array_values(array_unique($eyepieceIds));
                                         if (!empty($eyepieceIds)) {
-                                            $map = \App\Models\ObservationsOld::getInstrumentsForEyepieceIds($eyepieceIds);
+                                            $map = \App\Models\Observation::getInstrumentsForEyepieceIds($eyepieceIds);
                                             \App\Models\Eyepiece::setBulkUsedInstrumentsMap($map);
                                             try {
-                                                $firstMap = \App\Models\ObservationsOld::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                                $firstMap = \App\Models\Observation::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
                                                 \App\Models\Eyepiece::setBulkFirstObservationMap($firstMap);
                                             } catch (\Throwable $_) {
                                             }
                                             try {
-                                                $lastMap = \App\Models\ObservationsOld::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                                $lastMap = \App\Models\Observation::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
                                                 \App\Models\Eyepiece::setBulkLastObservationMap($lastMap);
                                             } catch (\Throwable $_) {
                                             }
@@ -1402,17 +1402,11 @@ class ObjectController extends Controller
             if (!empty($session->name)) {
                 // Skip legacy name-based counts for planets — legacy table rows for planet names
                 // can be noisy. Only consult the legacy `observations` table for non-planet objects.
-                if ((($session->source_type_raw ?? '') !== 'planet') && class_exists(\App\Models\ObservationsOld::class)) {
+                if ((($session->source_type_raw ?? '') !== 'planet') && true) {
                     try {
                         // Collapse all object-level count work into one query.
-                        $objectStats = DB::connection('mysqlOld')
-                            ->table('observations')
-                            ->selectRaw('COUNT(*) as total_obs, SUM(CASE WHEN hasDrawing = 1 THEN 1 ELSE 0 END) as total_drawings')
-                            ->where('objectname', $session->name)
-                            ->first();
-
-                        $totalObservations = (int) ($objectStats->total_obs ?? 0);
-                        $drawings = (int) ($objectStats->total_drawings ?? 0);
+                        $totalObservations = \App\Models\Observation::where('target_name', $session->name)->where('legacy_source', 'deepsky')->count();
+                        $drawings = \App\Models\Observation::where('target_name', $session->name)->where('legacy_source', 'deepsky')->where('has_drawing', 1)->count();
                     } catch (\Throwable $_) {
                         $totalObservations = $totalObservations ?? null;
                         $drawings = $drawings ?? null;
@@ -1420,107 +1414,58 @@ class ObjectController extends Controller
 
                     try {
                         if (Auth::check()) {
-                            $legacyUsername = Auth::user()->username ?? null;
-                            if (!empty($legacyUsername)) {
-                                $userStats = DB::connection('mysqlOld')
-                                    ->table('observations')
-                                    ->selectRaw('COUNT(*) as your_obs')
-                                    ->selectRaw('SUM(CASE WHEN hasDrawing = 1 THEN 1 ELSE 0 END) as your_drawings')
-                                    ->selectRaw('MAX(date) as last_obs_date')
-                                    ->selectRaw('MAX(CASE WHEN hasDrawing = 1 THEN date ELSE NULL END) as last_drawing_date')
-                                    ->where('observerid', $legacyUsername)
-                                    ->where('objectname', $session->name)
-                                    ->first();
+                            $authUser = Auth::user();
+                            if ($authUser) {
+                                $yourObservations = \App\Models\Observation::where('observer_user_id', $authUser->id)->where('target_name', $session->name)->where('legacy_source', 'deepsky')->count();
+                                $yourDrawings = \App\Models\Observation::where('observer_user_id', $authUser->id)->where('target_name', $session->name)->where('legacy_source', 'deepsky')->where('has_drawing', 1)->count();
 
-                                $yourObservations = (int) ($userStats->your_obs ?? 0);
-                                $yourDrawings = (int) ($userStats->your_drawings ?? 0);
+                                $lastObsRaw = \App\Models\Observation::where('observer_user_id', $authUser->id)->where('target_name', $session->name)->where('legacy_source', 'deepsky')->max('observed_on');
+                                $lastObservationDate = $lastObsRaw ? \Carbon\Carbon::parse($lastObsRaw) : null;
 
-                                $lastObsRaw = $userStats->last_obs_date ?? null;
-                                if (!empty($lastObsRaw)) {
-                                    try {
-                                        $lastObservationDate = \Carbon\Carbon::createFromFormat('Ymd', (string) $lastObsRaw);
-                                    } catch (\Throwable $_) {
-                                        $lastObservationDate = null;
-                                    }
-                                }
-
-                                $lastDrawingRaw = $userStats->last_drawing_date ?? null;
-                                if (!empty($lastDrawingRaw)) {
-                                    try {
-                                        $lastDrawingDate = \Carbon\Carbon::createFromFormat('Ymd', (string) $lastDrawingRaw);
-                                    } catch (\Throwable $_) {
-                                        $lastDrawingDate = null;
-                                    }
-                                }
+                                $lastDrawingRaw = \App\Models\Observation::where('observer_user_id', $authUser->id)->where('target_name', $session->name)->where('legacy_source', 'deepsky')->where('has_drawing', 1)->max('observed_on');
+                                $lastDrawingDate = $lastDrawingRaw ? \Carbon\Carbon::parse($lastDrawingRaw) : null;
                             }
                         }
                     } catch (\Throwable $_) {
                         // ignore
                     }
                 }
-                // If this object is a comet, also attempt to read legacy comet observations
+                // If this object is a comet, also attempt to read comet observations
                 if ((($session->source_type_raw ?? '') === 'comet') || (($type ?? '') === 'comet')) {
                     try {
-                        if (class_exists(\App\Models\CometObservationsOld::class)) {
-                            $hasCometObsTable = false;
+                        $coObjId = null;
+                        if (isset($session->id) && is_numeric($session->id)) {
+                            $coObjId = (int) $session->id;
+                        } else {
                             try {
-                                $hasCometObsTable = DB::connection('mysqlOld')->getSchemaBuilder()->hasTable('cometobservations');
+                                $coModel = \App\Models\CometObject::where('name', $session->name ?? '')->first();
+                                if ($coModel)
+                                    $coObjId = $coModel->id ?? null;
                             } catch (\Throwable $_) {
-                                $hasCometObsTable = false;
+                            }
+                        }
+
+                        if (!empty($coObjId)) {
+                            try {
+                                $totalObservations = \App\Models\Observation::where('legacy_source', 'comet')->where('target_key', $coObjId)->count();
+                            } catch (\Throwable $_) {
                             }
 
-                            if ($hasCometObsTable) {
-                                $coObjId = null;
-                                // Prefer numeric session id when available (legacy cometobservations.objectid stores numeric comet id)
-                                if (isset($session->id) && is_numeric($session->id)) {
-                                    $coObjId = (int) $session->id;
-                                } else {
-                                    // Try resolving by modern CometObject (legacy table fallback removed)
-                                    try {
-                                        $coModel = \App\Models\CometObject::where('name', $session->name ?? '')->first();
-                                        if ($coModel)
-                                            $coObjId = $coModel->id ?? null;
-                                    } catch (\Throwable $_) {
-                                    }
-                                    if (empty($coObjId)) {
-                                        try {
-                                            if (class_exists(\App\Models\CometObject::class)) {
-                                                $coOld = \App\Models\CometObject::where('name', $session->name ?? '')->first();
-                                                if ($coOld)
-                                                    $coObjId = $coOld->id ?? null;
-                                            }
-                                        } catch (\Throwable $_) {
-                                        }
+                            try {
+                                $drawings = \App\Models\Observation::where('legacy_source', 'comet')->where('target_key', $coObjId)->where('has_drawing', 1)->count();
+                            } catch (\Throwable $_) {
+                                $drawings = $drawings ?? null;
+                            }
+
+                            try {
+                                if (Auth::check()) {
+                                    $authUser = Auth::user();
+                                    if ($authUser) {
+                                        $yourObservations = \App\Models\Observation::where('legacy_source', 'comet')->where('target_key', $coObjId)->where('observer_user_id', $authUser->id)->count();
+                                        $yourDrawings = \App\Models\Observation::where('legacy_source', 'comet')->where('target_key', $coObjId)->where('observer_user_id', $authUser->id)->where('has_drawing', 1)->count();
                                     }
                                 }
-
-                                if (!empty($coObjId)) {
-                                    try {
-                                        $totalObservations = \App\Models\CometObservationsOld::where('objectid', $coObjId)->count();
-                                    } catch (\Throwable $_) {
-                                        // ignore and leave existing totalObservations
-                                    }
-
-                                    try {
-                                        // Provide drawings as a numeric count; view will handle numeric values
-                                        $drawings = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('hasDrawing', 1)->count();
-                                    } catch (\Throwable $_) {
-                                        $drawings = $drawings ?? null;
-                                    }
-
-                                    // Provide per-user counts when user is authenticated
-                                    try {
-                                        if (Auth::check()) {
-                                            $uname = Auth::user()->username ?? Auth::user()->slug ?? null;
-                                            if (!empty($uname)) {
-                                                $yourObservations = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('observerid', $uname)->count();
-                                                $yourDrawings = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('observerid', $uname)->where('hasDrawing', 1)->count();
-                                            }
-                                        }
-                                    } catch (\Throwable $_) {
-                                        // ignore per-user errors
-                                    }
-                                }
+                            } catch (\Throwable $_) {
                             }
                         }
                     } catch (\Throwable $_) {
@@ -2492,15 +2437,15 @@ class ObjectController extends Controller
                                                                     }
                                                                     $eyepieceIds = array_values(array_unique($eyepieceIds));
                                                                     if (!empty($eyepieceIds)) {
-                                                                        $map = \App\Models\ObservationsOld::getInstrumentsForEyepieceIds($eyepieceIds);
+                                                                        $map = \App\Models\Observation::getInstrumentsForEyepieceIds($eyepieceIds);
                                                                         \App\Models\Eyepiece::setBulkUsedInstrumentsMap($map);
                                                                         try {
-                                                                            $firstMap = \App\Models\ObservationsOld::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                                                            $firstMap = \App\Models\Observation::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
                                                                             \App\Models\Eyepiece::setBulkFirstObservationMap($firstMap);
                                                                         } catch (\Throwable $_) {
                                                                         }
                                                                         try {
-                                                                            $lastMap = \App\Models\ObservationsOld::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                                                            $lastMap = \App\Models\Observation::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
                                                                             \App\Models\Eyepiece::setBulkLastObservationMap($lastMap);
                                                                         } catch (\Throwable $_) {
                                                                         }
@@ -3502,72 +3447,52 @@ class ObjectController extends Controller
         $comet_max_mag = null;
         $cometMagnitudeChart = null;
         try {
-            if (class_exists(\App\Models\CometObservationsOld::class)) {
-                $hasCometObsTable = false;
+            $coObjId = null;
+            if (isset($session->id) && is_numeric($session->id)) {
+                $coObjId = (int) $session->id;
+            } else {
                 try {
-                    $hasCometObsTable = DB::connection('mysqlOld')->getSchemaBuilder()->hasTable('cometobservations');
+                    $coModel = \App\Models\CometObject::where('name', $session->name ?? '')->first();
+                    if ($coModel)
+                        $coObjId = $coModel->id ?? null;
                 } catch (\Throwable $_) {
-                    $hasCometObsTable = false;
                 }
+            }
 
-                if ($hasCometObsTable) {
-                    $coObjId = null;
-                    if (isset($session->id) && is_numeric($session->id)) {
-                        $coObjId = (int) $session->id;
-                    } else {
+            if (!empty($coObjId)) {
+                try {
+                    // Magnitude is stored in comet_observation_details, not in observations itself
+                    $rows = DB::table('observations')
+                        ->join('comet_observation_details', 'comet_observation_details.observation_id', '=', 'observations.id')
+                        ->where('observations.legacy_source', 'comet')
+                        ->where('observations.target_key', (string) $coObjId)
+                        ->whereNotNull('comet_observation_details.magnitude')
+                        ->orderBy('observations.observed_on')
+                        ->select('observations.observed_on', 'comet_observation_details.magnitude')
+                        ->get();
+                    foreach ($rows as $r) {
                         try {
-                            $coModel = \App\Models\CometObject::where('name', $session->name ?? '')->first();
-                            if ($coModel)
-                                $coObjId = $coModel->id ?? null;
-                        } catch (\Throwable $_) {
-                        }
-                    }
+                            $mag = $r->magnitude !== null ? floatval($r->magnitude) : null;
+                            if ($mag === null)
+                                continue;
 
-                    if (!empty($coObjId)) {
-                        try {
-                            $rows = \App\Models\CometObservationsOld::where('objectid', $coObjId)->orderBy('date')->get();
-                            foreach ($rows as $r) {
-                                try {
-                                    $attrs = $r->getAttributes();
-                                    $mag = null;
-                                    foreach (['mag', 'mag_v', 'magnitude', 'estmag', 'mag_v_est', 'vmag', 'magv', 'm'] as $k) {
-                                        if (array_key_exists($k, $attrs) && $attrs[$k] !== null && $attrs[$k] !== '') {
-                                            $mag = floatval($attrs[$k]);
-                                            break;
-                                        }
-                                    }
-                                    if ($mag === null)
-                                        continue;
+                            $formatted = \Carbon\Carbon::parse($r->observed_on)->toDateString();
 
-                                    $dateStr = (string) ($r->date ?? '');
-                                    $formatted = null;
-                                    if (preg_match('/^\d{8}$/', $dateStr)) {
-                                        $formatted = substr($dateStr, 0, 4) . '-' . substr($dateStr, 4, 2) . '-' . substr($dateStr, 6, 2);
-                                    } else {
-                                        try {
-                                            $formatted = \Carbon\Carbon::parse($r->date)->toDateString();
-                                        } catch (\Throwable $_) {
-                                            $formatted = null;
-                                        }
-                                    }
-
-                                    if ($formatted) {
-                                        $comet_magnitudes[] = ['date' => $formatted, 'mag' => $mag];
-                                        if (!is_null($mag)) {
-                                            if (is_null($comet_min_mag) || $mag < $comet_min_mag)
-                                                $comet_min_mag = $mag;
-                                            if (is_null($comet_max_mag) || $mag > $comet_max_mag)
-                                                $comet_max_mag = $mag;
-                                        }
-                                    }
-                                } catch (\Throwable $_) {
-                                    // ignore individual row errors
+                            if ($formatted) {
+                                $comet_magnitudes[] = ['date' => $formatted, 'mag' => $mag];
+                                if (!is_null($mag)) {
+                                    if (is_null($comet_min_mag) || $mag < $comet_min_mag)
+                                        $comet_min_mag = $mag;
+                                    if (is_null($comet_max_mag) || $mag > $comet_max_mag)
+                                        $comet_max_mag = $mag;
                                 }
                             }
                         } catch (\Throwable $_) {
-                            // ignore fetch errors
+                            // ignore individual row errors
                         }
                     }
+                } catch (\Throwable $_) {
+                    // ignore fetch errors
                 }
             }
         } catch (\Throwable $_) {

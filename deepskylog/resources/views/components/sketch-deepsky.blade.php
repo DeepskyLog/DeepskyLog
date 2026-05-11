@@ -18,7 +18,7 @@
     @php
         // Use preloaded data if available, otherwise fetch from DB (fallback for backward compatibility)
         $obsUnified = $unified_observation;
-        $obsLegacy = $observation ?? \App\Models\ObservationsOld::find($observation_id);
+        $obsLegacy = $observation ?? ($observation_id ? \App\Models\Observation::find($observation_id) : null);
 
         $objectName =
             $obsUnified?->target_name ?? ($obsLegacy?->objectname ?? __("Unknown"));
@@ -153,13 +153,13 @@
                 $objectModel?->slug ??
                 \Illuminate\Support\Str::slug((string) $obsLegacy->objectname, "-");
 
-            $matchingIds = \App\Models\ObservationsOld::where(
-                "observerid",
-                $obsLegacy->observerid,
+            $matchingIds = \App\Models\Observation::where(
+                "observer_username",
+                $obsLegacy->observer_username ?? $obsLegacy->observerid,
             )
-                ->where("date", $obsLegacy->date)
-                ->where("objectname", $obsLegacy->objectname)
-                ->orderBy("time")
+                ->where("legacy_source", "deepsky")
+                ->where("legacy_date_int", $obsLegacy->legacy_date_int ?? $obsLegacy->date)
+                ->where("target_name", $obsLegacy->target_name ?? $obsLegacy->objectname)
                 ->orderBy("id")
                 ->pluck("id")
                 ->map(fn($id) => (int) $id)

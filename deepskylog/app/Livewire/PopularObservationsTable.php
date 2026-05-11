@@ -2,12 +2,10 @@
 
 namespace App\Livewire;
 
-use App\Models\CometObservationsOld;
+use App\Models\Observation;
 use App\Models\ObservationLike;
-use App\Models\ObservationsOld;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
@@ -56,47 +54,25 @@ final class PopularObservationsTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        // Use Eloquent aggregation on ObservationLike to return an Eloquent Builder.
-        // Preload the observer usernames and corresponding User records from the default DB
-        // to avoid nested eager-loading that runs against the legacy mysqlOld connection.
-
-        // Include obs_date via subselects so we can sort on it.
-        // Qualify the legacy table names with the mysqlOld database name if available so
-        // the subqueries run against the correct database instead of the default connection.
-        $oldDbName = config('database.connections.mysqlOld.database') ?? env('DB_DATABASE_OLD');
-
-        if ($oldDbName) {
-            $obsTable = "`{$oldDbName}`.`observations`";
-            $cometTable = "`{$oldDbName}`.`cometobservations`";
-            $cometObjectTable = "`{$oldDbName}`.`cometobjects`";
-        } else {
-            $obsTable = '`observations`';
-            $cometTable = '`cometobservations`';
-            $cometObjectTable = '`cometobjects`';
-        }
-
+        // Use unified observations table for subqueries
         $aggQuery = ObservationLike::selectRaw(
             'observation_type, observation_id, COUNT(*) as likes, MIN(id) as id, '
-            ."(CASE WHEN observation_type = 'deepsky' "
-            ."THEN CAST((SELECT o.date FROM {$obsTable} o WHERE o.id = observation_id LIMIT 1) AS UNSIGNED) "
-            ."WHEN observation_type = 'comet' "
-            ."THEN CAST((SELECT c.date FROM {$cometTable} c WHERE c.id = observation_id LIMIT 1) AS UNSIGNED) "
-            .'ELSE NULL END) as obs_date'
-            .", (CASE WHEN observation_type = 'deepsky' "
-            ."THEN (SELECT o.observerid FROM {$obsTable} o WHERE o.id = observation_id LIMIT 1) "
-            ."WHEN observation_type = 'comet' "
-            ."THEN (SELECT c.observerid FROM {$cometTable} c WHERE c.id = observation_id LIMIT 1) "
-            .'ELSE NULL END) as observerid'
-            .", (CASE WHEN observation_type = 'deepsky' "
-            ."THEN (SELECT COALESCE((SELECT u.name FROM users u WHERE u.username = o.observerid LIMIT 1), o.observerid) FROM {$obsTable} o WHERE o.id = observation_id LIMIT 1) "
-            ."WHEN observation_type = 'comet' "
-            ."THEN (SELECT COALESCE((SELECT u.name FROM users u WHERE u.username = c.observerid LIMIT 1), c.observerid) FROM {$cometTable} c WHERE c.id = observation_id LIMIT 1) "
-            .'ELSE NULL END) as observer_display'
-            .", (CASE WHEN observation_type = 'deepsky' "
-            ."THEN (SELECT o.objectname FROM {$obsTable} o WHERE o.id = observation_id LIMIT 1) "
-            ."WHEN observation_type = 'comet' "
-            ."THEN (SELECT co.name FROM {$cometObjectTable} co JOIN {$cometTable} c ON co.id = c.objectid WHERE c.id = observation_id LIMIT 1) "
-            .'ELSE NULL END) as objectname_sort'
+            . "(SELECT o.legacy_date_int FROM observations o WHERE "
+            . "(observation_type = 'deepsky' AND o.legacy_source = 'deepsky' AND o.legacy_id = observation_id) "
+            . "OR (observation_type = 'comet' AND o.legacy_source = 'comet' AND o.legacy_id = observation_id) "
+            . 'LIMIT 1) as obs_date'
+            . ', (SELECT o.observer_username FROM observations o WHERE '
+            . "(observation_type = 'deepsky' AND o.legacy_source = 'deepsky' AND o.legacy_id = observation_id) "
+            . "OR (observation_type = 'comet' AND o.legacy_source = 'comet' AND o.legacy_id = observation_id) "
+            . 'LIMIT 1) as observerid'
+            . ', (SELECT COALESCE((SELECT u.name FROM users u WHERE u.username = o.observer_username LIMIT 1), o.observer_username) FROM observations o WHERE '
+            . "(observation_type = 'deepsky' AND o.legacy_source = 'deepsky' AND o.legacy_id = observation_id) "
+            . "OR (observation_type = 'comet' AND o.legacy_source = 'comet' AND o.legacy_id = observation_id) "
+            . 'LIMIT 1) as observer_display'
+            . ', (SELECT o.target_name FROM observations o WHERE '
+            . "(observation_type = 'deepsky' AND o.legacy_source = 'deepsky' AND o.legacy_id = observation_id) "
+            . "OR (observation_type = 'comet' AND o.legacy_source = 'comet' AND o.legacy_id = observation_id) "
+            . 'LIMIT 1) as objectname_sort'
         )
             ->whereIn('observation_type', ['deepsky', 'comet'])
             ->groupBy('observation_type', 'observation_id')
@@ -105,44 +81,28 @@ final class PopularObservationsTable extends PowerGridComponent
         // Prefetch a reasonable window of rows (first 200) to build the username -> User map.
         $sample = (clone $aggQuery)->limit(200)->get();
 
-        $deepskyIds = $sample->filter(fn ($r) => $r->observation_type === 'deepsky')->pluck('observation_id')->unique()->toArray();
-        $cometIds = $sample->filter(fn ($r) => $r->observation_type === 'comet')->pluck('observation_id')->unique()->toArray();
-
-        $usernames = [];
-        if (! empty($deepskyIds)) {
-            $obs = ObservationsOld::whereIn('id', $deepskyIds)->get(['id', 'observerid']);
-            $usernames = array_merge($usernames, $obs->pluck('observerid')->toArray());
-        }
-        if (! empty($cometIds)) {
-            $cobs = CometObservationsOld::whereIn('id', $cometIds)->get(['id', 'observerid']);
-            $usernames = array_merge($usernames, $cobs->pluck('observerid')->toArray());
-        }
-
-        $usernames = array_values(array_filter(array_unique(array_map(fn ($v) => html_entity_decode((string) $v), $usernames))));
+        $usernames = $sample->pluck('observerid')
+            ->filter()
+            ->map(fn($v) => html_entity_decode((string) $v))
+            ->unique()
+            ->values()
+            ->toArray();
 
         $this->userMap = [];
-        if (! empty($usernames)) {
+        if (!empty($usernames)) {
             $users = \App\Models\User::whereIn('username', $usernames)->get()->keyBy('username');
             foreach ($users as $username => $user) {
                 $this->userMap[$username] = $user;
             }
         }
 
-        // Convert the grouped aggregation into a derived table so outer queries (like export)
-        // can ORDER BY the selected aliases without tripping ONLY_FULL_GROUP_BY.
         $sub = $aggQuery->toBase();
 
-        // Build an Eloquent builder that selects from the aggregation subquery so we
-        // return the expected Illuminate\Database\Eloquent\Builder instance.
-        // Use the model table name as the derived-table alias so any ORDER BY that
-        // qualifies with the model table (e.g. observation_likes.obs_date) still works.
         $outer = ObservationLike::query();
         $tableAlias = (new ObservationLike)->getTable();
         $outer->getQuery()->fromSub($sub, $tableAlias);
-        $outer->getQuery()->select($tableAlias.'.*');
-
-        // Ensure the table is initially sorted by number of likes (descending).
-        $outer->orderByDesc($tableAlias.'.likes');
+        $outer->getQuery()->select($tableAlias . '.*');
+        $outer->orderByDesc($tableAlias . '.likes');
 
         return $outer;
     }
@@ -156,157 +116,82 @@ final class PopularObservationsTable extends PowerGridComponent
             ->add('observer_display')
             ->add('objectname_sort')
             ->add('objectname', function ($row) {
-                // $row is the aggregated ObservationLike model instance
-                $objectName = null;
-
+                $obs = null;
                 if ($row->observation_type === 'deepsky') {
-                    // use eager-loaded relation if present (use relationLoaded to avoid lazy loading)
-                    if ($row->relationLoaded('deepsky') && $row->deepsky) {
-                        $objectName = $row->deepsky->objectname;
-                    } else {
-                        // fallback: try to load single model
-                        $obs = ObservationsOld::find($row->observation_id);
-                        $objectName = $obs ? $obs->objectname : null;
-                    }
+                    $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'deepsky')->first();
                 } elseif ($row->observation_type === 'comet') {
-                    if ($row->relationLoaded('comet') && $row->comet) {
-                        $objectName = $row->comet->object ? $row->comet->object->name : null;
-                    } else {
-                        $obs = CometObservationsOld::find($row->observation_id);
-                        $objectName = $obs && $obs->object ? $obs->object->name : null;
-                    }
+                    $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'comet')->first();
                 }
 
-                if (! $objectName) {
+                $objectName = $obs ? $obs->target_name : null;
+
+                if (!$objectName) {
                     return null;
                 }
 
                 // Link to the external (legacy) deepskylog observation detail page for this observation
                 if ($row->observation_type === 'deepsky') {
-                    $link = config('app.old_url').'/index.php?indexAction=detail_observation&observation='.$row->observation_id;
+                    $link = config('app.old_url') . '/index.php?indexAction=detail_observation&observation=' . $row->observation_id;
                 } else {
-                    $link = config('app.old_url').'/index.php?indexAction=comets_detail_observation&observation='.$row->observation_id;
+                    $link = config('app.old_url') . '/index.php?indexAction=comets_detail_observation&observation=' . $row->observation_id;
                 }
 
                 return sprintf('<a href="%s" class="font-bold hover:underline" target="_blank" rel="noopener noreferrer">%s</a>', $link, e($objectName));
             })
             ->add('observer_name', function ($row) {
-                if ($row->observation_type === 'deepsky') {
-                    if ($row->relationLoaded('deepsky') && $row->deepsky) {
-                        $username = html_entity_decode($row->deepsky->observerid);
-
-                        if (isset($this->userMap[$username])) {
-                            $user = $this->userMap[$username];
-
-                            return sprintf('<a href="%s">%s</a>', route('observer.show', $user->slug), e($user->name ?? $user->username));
-                        }
-
-                        return e($row->deepsky->observerid);
-                    }
-
-                    $obs = ObservationsOld::find($row->observation_id);
-                    if ($obs) {
-                        $username = html_entity_decode($obs->observerid);
-                        if (isset($this->userMap[$username])) {
-                            $user = $this->userMap[$username];
-
-                            return sprintf('<a href="%s">%s</a>', route('observer.show', $user->slug), e($user->name ?? $user->username));
-                        }
-
-                        return e($obs->observerid);
-                    }
-
-                    return null;
-                }
-
-                if ($row->observation_type === 'comet') {
-                    if ($row->relationLoaded('comet') && $row->comet) {
-                        $username = html_entity_decode($row->comet->observerid);
-
-                        if (isset($this->userMap[$username])) {
-                            $user = $this->userMap[$username];
-
-                            return sprintf('<a href="%s">%s</a>', route('observer.show', $user->slug), e($user->name ?? $user->username));
-                        }
-
-                        return e($row->comet->observerid);
-                    }
-
-                    $obs = CometObservationsOld::find($row->observation_id);
-                    if ($obs) {
-                        $username = html_entity_decode($obs->observerid);
-                        if (isset($this->userMap[$username])) {
-                            $user = $this->userMap[$username];
-
-                            return sprintf('<a href="%s">%s</a>', route('observer.show', $user->slug), e($user->name ?? $user->username));
-                        }
-
-                        return e($obs->observerid);
-                    }
-
-                    return null;
-                }
-
-                return null;
-            })
-            ->add('observer_name_plain', function ($row) {
-                // Same logic as observer_name but return plain text (no anchor) for exports.
-                $username = null;
-
-                if ($row->relationLoaded('deepsky') && $row->deepsky) {
-                    $username = html_entity_decode($row->deepsky->observerid);
-                } elseif ($row->relationLoaded('comet') && $row->comet) {
-                    $username = html_entity_decode($row->comet->observerid);
-                } else {
-                    // Fallback to looking up the observation record
+                $username = $row->observerid ? html_entity_decode((string) $row->observerid) : null;
+                if (!$username) {
+                    $obs = null;
                     if ($row->observation_type === 'deepsky') {
-                        $obs = ObservationsOld::find($row->observation_id);
-                        $username = $obs ? html_entity_decode($obs->observerid) : null;
+                        $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'deepsky')->first();
                     } elseif ($row->observation_type === 'comet') {
-                        $obs = CometObservationsOld::find($row->observation_id);
-                        $username = $obs ? html_entity_decode($obs->observerid) : null;
+                        $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'comet')->first();
                     }
+                    $username = $obs ? html_entity_decode((string) $obs->observer_username) : null;
                 }
-
-                if (! $username) {
+                if (!$username) {
                     return null;
                 }
-
                 if (isset($this->userMap[$username])) {
                     $user = $this->userMap[$username];
-
+                    return sprintf('<a href="%s">%s</a>', route('observer.show', $user->slug), e($user->name ?? $user->username));
+                }
+                return e($username);
+            })
+            ->add('observer_name_plain', function ($row) {
+                $username = $row->observerid ? html_entity_decode((string) $row->observerid) : null;
+                if (!$username) {
+                    $obs = null;
+                    if ($row->observation_type === 'deepsky') {
+                        $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'deepsky')->first();
+                    } elseif ($row->observation_type === 'comet') {
+                        $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'comet')->first();
+                    }
+                    $username = $obs ? html_entity_decode((string) $obs->observer_username) : null;
+                }
+                if (!$username) {
+                    return null;
+                }
+                if (isset($this->userMap[$username])) {
+                    $user = $this->userMap[$username];
                     return $user->name ?? $user->username;
                 }
-
                 return $username;
             })
             ->add('objectname_plain', function ($row) {
-                // Plain text version of the object name for exports
-                $objectName = null;
-
+                $obs = null;
                 if ($row->observation_type === 'deepsky') {
-                    if ($row->relationLoaded('deepsky') && $row->deepsky) {
-                        $objectName = html_entity_decode((string) $row->deepsky->objectname);
-                    } else {
-                        $obs = ObservationsOld::find($row->observation_id);
-                        $objectName = $obs ? html_entity_decode((string) $obs->objectname) : null;
-                    }
+                    $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'deepsky')->first();
                 } elseif ($row->observation_type === 'comet') {
-                    if ($row->relationLoaded('comet') && $row->comet) {
-                        $objectName = $row->comet->object ? html_entity_decode((string) $row->comet->object->name) : null;
-                    } else {
-                        $obs = CometObservationsOld::find($row->observation_id);
-                        $objectName = $obs && $obs->object ? html_entity_decode((string) $obs->object->name) : null;
-                    }
+                    $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'comet')->first();
                 }
-
-                return $objectName;
+                return $obs ? html_entity_decode((string) $obs->target_name) : null;
             })
             ->add('obs_date')
             ->add('date', function ($row) {
                 $value = $row->obs_date ?? null;
 
-                if (! $value) {
+                if (!$value) {
                     return null;
                 }
 

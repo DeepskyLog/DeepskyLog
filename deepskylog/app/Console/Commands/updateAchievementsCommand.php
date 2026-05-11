@@ -2,9 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\CometObservationsOld;
 use App\Models\Observation;
-use App\Models\ObservationsOld;
 use App\Models\SketchOfTheMonth;
 use App\Models\SketchOfTheWeek;
 use App\Models\User;

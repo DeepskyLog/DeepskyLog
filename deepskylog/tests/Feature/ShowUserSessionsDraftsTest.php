@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\ObservationSession;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -13,6 +14,10 @@ class ShowUserSessionsDraftsTest extends TestCase
 
     public function test_user_sessions_page_shows_draft_sessions()
     {
+        // Create the Observers team required by isObserver()
+        $admin = User::factory()->create();
+        Team::forceCreate(['user_id' => $admin->id, 'name' => 'Observers', 'personal_team' => 0]);
+
         // Create a user
         $user = User::factory()->create(['username' => 'tester']);
 
@@ -21,12 +26,18 @@ class ShowUserSessionsDraftsTest extends TestCase
             'observerid' => $user->username,
             'name' => 'Active Session',
             'active' => 1,
+            'begindate' => now()->toDateTimeString(),
+            'enddate' => now()->toDateTimeString(),
+            'locationid' => 0,
         ]);
 
         $draft = ObservationSession::create([
             'observerid' => $user->username,
             'name' => 'Draft Session Alpha',
             'active' => 0,
+            'begindate' => now()->toDateTimeString(),
+            'enddate' => now()->toDateTimeString(),
+            'locationid' => 0,
         ]);
 
         // Act as the user and request the sessions page for that user

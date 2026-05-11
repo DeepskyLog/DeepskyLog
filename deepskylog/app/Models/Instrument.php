@@ -16,9 +16,22 @@ class Instrument extends Model
     use Sluggable;
 
     protected $fillable = [
-        'user_id', 'name', 'aperture_mm', 'type', 'instrument_type_id', 'make_id', 'mount_type_id',
-        'focal_length_mm', 'fixedMagnification', 'active', 'observer', 'flip_image', 'flop_image',
-        'obstruction_perc', 'picture', 'description',
+        'user_id',
+        'name',
+        'aperture_mm',
+        'type',
+        'instrument_type_id',
+        'make_id',
+        'mount_type_id',
+        'focal_length_mm',
+        'fixedMagnification',
+        'active',
+        'observer',
+        'flip_image',
+        'flop_image',
+        'obstruction_perc',
+        'picture',
+        'description',
     ];
 
     protected $with = ['instrument_make', 'mount_type', 'instrument_type'];
@@ -84,8 +97,8 @@ class Instrument extends Model
             if (!$ep || !$ep->user) {
                 continue;
             }
-            $to_return .= "<a href='/eyepiece/".$ep->user->slug.'/'.$ep->slug."'>".
-                $ep->fullName().'</a>'.', ';
+            $to_return .= "<a href='/eyepiece/" . $ep->user->slug . '/' . $ep->slug . "'>" .
+                $ep->fullName() . '</a>' . ', ';
         }
 
         // Remove the trailing comma and space (if any)
@@ -98,7 +111,7 @@ class Instrument extends Model
 
     public function get_used_eyepieces(): Collection
     {
-        return ObservationsOld::where('instrumentid', $this->id)->groupby('eyepieceid')->distinct()->pluck('eyepieceid');
+        return Observation::where('instrument_id', $this->id)->groupby('eyepiece_id')->distinct()->pluck('eyepiece_id');
     }
 
     /**
@@ -108,7 +121,7 @@ class Instrument extends Model
      */
     public function fullName(): string
     {
-        return ltrim($this->instrument_make->name.' '.$this->name);
+        return ltrim($this->instrument_make->name . ' ' . $this->name);
     }
 
     public function get_used_filters_as_string(): string
@@ -125,8 +138,8 @@ class Instrument extends Model
             if (!$filt || !$filt->user) {
                 continue;
             }
-            $to_return .= "<a href='/filter/".$filt->user->slug.'/'.$filt->slug."'>".
-                $filt->name.'</a>'.', ';
+            $to_return .= "<a href='/filter/" . $filt->user->slug . '/' . $filt->slug . "'>" .
+                $filt->name . '</a>' . ', ';
         }
 
         // Remove the trailing comma and space (if any)
@@ -139,7 +152,7 @@ class Instrument extends Model
 
     public function get_used_filters(): Collection
     {
-        return ObservationsOld::where('instrumentid', $this->id)->groupby('filterid')->distinct()->pluck('filterid');
+        return Observation::where('instrument_id', $this->id)->groupby('filter_id')->distinct()->pluck('filter_id');
     }
 
     public function get_used_lenses_as_string(): string
@@ -156,8 +169,8 @@ class Instrument extends Model
             if (!$lns || !$lns->user) {
                 continue;
             }
-            $to_return .= "<a href='/lens/".$lns->user->slug.'/'.$lns->slug."'>".
-                $lns->name.'</a>'.', ';
+            $to_return .= "<a href='/lens/" . $lns->user->slug . '/' . $lns->slug . "'>" .
+                $lns->name . '</a>' . ', ';
         }
 
         // Remove the trailing comma and space (if any)
@@ -170,7 +183,7 @@ class Instrument extends Model
 
     public function get_used_lenses(): Collection
     {
-        return ObservationsOld::where('instrumentid', $this->id)->groupby('lensid')->distinct()->pluck('lensid');
+        return Observation::where('instrument_id', $this->id)->groupby('lens_id')->distinct()->pluck('lens_id');
     }
 
     public function get_used_locations_as_string(): string
@@ -187,8 +200,8 @@ class Instrument extends Model
             if (!$loc || !$loc->user) {
                 continue;
             }
-            $to_return .= "<a href='/location/".$loc->user->slug.'/'.$loc->slug."'>".
-                $loc->name.'</a>'.', ';
+            $to_return .= "<a href='/location/" . $loc->user->slug . '/' . $loc->slug . "'>" .
+                $loc->name . '</a>' . ', ';
         }
 
         // Remove the trailing comma and space (if any)
@@ -201,16 +214,16 @@ class Instrument extends Model
 
     public function get_used_locations(): Collection
     {
-        return ObservationsOld::where('instrumentid', $this->id)->groupby('locationid')->distinct()->pluck('locationid');
+        return Observation::where('instrument_id', $this->id)->groupby('location_id')->distinct()->pluck('location_id');
     }
 
     public function magnification(Eyepiece $eyepiece, ?Lens $lens = null): string
     {
         if ($lens) {
-            return round($this->focal_length_mm * $lens->factor / ($eyepiece->focal_length_mm)).'x';
+            return round($this->focal_length_mm * $lens->factor / ($eyepiece->focal_length_mm)) . 'x';
         }
 
-        return round($this->focal_length_mm / $eyepiece->focal_length_mm).'x';
+        return round($this->focal_length_mm / $eyepiece->focal_length_mm) . 'x';
     }
 
     public function field_of_view(Eyepiece $eyepiece, ?Lens $lens = null): string
@@ -225,9 +238,9 @@ class Instrument extends Model
             $degrees = floor($tfov);
             $minutes = round(($tfov - $degrees) * 60);
             if ($minutes < 10) {
-                $minutes = '0'.$minutes;
+                $minutes = '0' . $minutes;
             }
-            $tfov = $degrees.'° '.$minutes."'";
+            $tfov = $degrees . '° ' . $minutes . "'";
         } elseif ($eyepiece->apparentFOV > 10) {
             // Calculate the true field of view
             $tfov = $eyepiece->apparentFOV / ($focal_length / $eyepiece->focal_length_mm);
@@ -236,9 +249,9 @@ class Instrument extends Model
             $minutes = round(($tfov - $degrees) * 60);
             // Add a 0 to the minutes if it is less than 10
             if ($minutes < 10) {
-                $minutes = '0'.$minutes;
+                $minutes = '0' . $minutes;
             }
-            $tfov = $degrees.'° '.$minutes."'";
+            $tfov = $degrees . '° ' . $minutes . "'";
         } else {
             $tfov = __('Unknown');
         }
@@ -249,10 +262,10 @@ class Instrument extends Model
     public function exit_pupil(Eyepiece $eyepiece, ?Lens $lens = null): string
     {
         if ($lens) {
-            return round($this->aperture_mm / ($this->focal_length_mm * $lens->factor / $eyepiece->focal_length_mm), 1).'mm';
+            return round($this->aperture_mm / ($this->focal_length_mm * $lens->factor / $eyepiece->focal_length_mm), 1) . 'mm';
         }
 
-        return round($this->aperture_mm / ($this->focal_length_mm / $eyepiece->focal_length_mm), 1).'mm';
+        return round($this->aperture_mm / ($this->focal_length_mm / $eyepiece->focal_length_mm), 1) . 'mm';
     }
 
     /**

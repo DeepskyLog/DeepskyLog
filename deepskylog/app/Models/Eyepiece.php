@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasObservationsDates;
 use App\Traits\ClearsResponseCache;
-use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 class Eyepiece extends Model
 {
     use ClearsResponseCache;
+    use HasObservationsDates;
     use Sluggable;
 
     protected $fillable = [
@@ -78,30 +79,16 @@ class Eyepiece extends Model
      */
     public function first_observation_date(): array
     {
-        $language = app()->getLocale();
-
         // Prefer a request-scoped bulk map when available to avoid per-eyepiece queries
         if (isset(self::$bulkFirstObservationMap) && array_key_exists($this->id, self::$bulkFirstObservationMap)) {
             $entry = self::$bulkFirstObservationMap[$this->id];
             if (!$entry)
                 return [null, null];
-            $firstObservation = $entry['date'];
-            $id = $entry['id'];
-            $date = Carbon::createFromFormat('Ymd', (string) $firstObservation)->locale($language)->isoFormat('LL');
-            return [$date, $id];
+            [$formatted, $id] = [$entry['date'], $entry['id']];
+            return [$formatted, $id];
         }
 
-        $firstDeepskyObservation = ObservationsOld::where('eyepieceid', $this->id)->min('date');
-
-        if ($firstDeepskyObservation == null) {
-            return [null, null];
-        }
-
-        $firstObservation = $firstDeepskyObservation;
-        $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
-        $id = ObservationsOld::where('eyepieceid', $this->id)->where('date', $firstObservation)->first()['id'];
-
-        return [$date, $id];
+        return $this->first_observation_date_generic('eyepieceid');
     }
 
     /**
@@ -118,29 +105,16 @@ class Eyepiece extends Model
      */
     public function last_observation_date(): array
     {
-        $language = app()->getLocale();
-
         // Prefer a request-scoped bulk map when available to avoid per-eyepiece queries
         if (isset(self::$bulkLastObservationMap) && array_key_exists($this->id, self::$bulkLastObservationMap)) {
             $entry = self::$bulkLastObservationMap[$this->id];
             if (!$entry)
                 return [null, null];
-            $lastObservation = $entry['date'];
-            $id = $entry['id'];
-            $date = Carbon::createFromFormat('Ymd', (string) $lastObservation)->locale($language)->isoFormat('LL');
-            return [$date, $id];
+            [$formatted, $id] = [$entry['date'], $entry['id']];
+            return [$formatted, $id];
         }
 
-        $lastDeepskyObservation = ObservationsOld::where('eyepieceid', $this->id)->max('date');
-
-        if ($lastDeepskyObservation == null) {
-            return [null, null];
-        }
-
-        $date = Carbon::createFromFormat('Ymd', $lastDeepskyObservation)->locale($language)->isoFormat('LL');
-        $id = ObservationsOld::where('eyepieceid', $this->id)->where('date', $lastDeepskyObservation)->first()['id'];
-
-        return [$date, $id];
+        return $this->last_observation_date_generic('eyepieceid');
     }
 
     public function get_used_instruments_as_string(): string
@@ -190,7 +164,7 @@ class Eyepiece extends Model
             // ignore and fall back to legacy behaviour
         }
 
-        return ObservationsOld::where('eyepieceid', $this->id)->groupby('instrumentid')->distinct()->pluck('instrumentid');
+        return Observation::where('eyepiece_id', $this->id)->groupby('instrument_id')->distinct()->pluck('instrument_id');
     }
 
     // Request-scoped bulk map of eyepiece_id => array of instrument ids.

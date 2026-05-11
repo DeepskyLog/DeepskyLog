@@ -9,10 +9,13 @@
   - [x] Make migrations and seeder
   - [x] Show detailed observation page, with all details, comments, ...
   - [ ] Add observations page
+    - [ ] Remove all the other Old classes.
+    - [ ] Add sun, lunar feature, planets, double stars to the table and graphs: http://localhost/observers/wim-de-meester
+    - [ ] Add Trophies for planets, sun, moon, double stars, ...
     - [ ] Try to add an observation for all types of objects, to see if all fields are working correctly.
-      - [ ] Sun
-      - [ ] Planet
-      - [ ] Open cluster
+      - [X] Sun
+      - [X] Planet
+      - [X] Open cluster
       - [ ] Binary star
       - [ ] Lunar feature
       - [ ] Galaxy
@@ -23,7 +26,6 @@
       - [ ] Need to work on the database tables for these observations.
     - [ ] X, facebook, ... links for the sketch of the week and the month should be adapted, as well as the share buttons for the observations.
     - [ ] Share from the observation detail page.  Also share observing lists?
-    - [ ] Quick add from the left aside
     - [ ] RSS Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
     - [ ] Import observations from a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, ...
   - [ ] Check code for ObservationOld and remove it, as all observations are now in the same table.

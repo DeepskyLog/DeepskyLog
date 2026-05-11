@@ -41,6 +41,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('observing_lists', function (Blueprint $table) {
+            $table->dropUnique('observing_lists_slug_unique');
             $table->dropColumn('slug');
         });
     }

@@ -6,8 +6,7 @@ use App\Charts\CountriesChart;
 use App\Charts\ObjectTypesChart;
 use App\Charts\ObservationsPerMonthChart;
 use App\Charts\ObservationsPerYearChart;
-use App\Models\ObservationsOld;
-use App\Models\CometObservationsOld;
+use App\Models\Observation;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -32,48 +31,49 @@ class ObserverController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $slug, ObservationsPerYearChart $chart, ObservationsPerMonthChart $chart2,
-        ObjectTypesChart $chart3, CountriesChart $chart4)
-    {
+    public function show(
+        string $slug,
+        ObservationsPerYearChart $chart,
+        ObservationsPerMonthChart $chart2,
+        ObjectTypesChart $chart3,
+        CountriesChart $chart4
+    ) {
         $user = User::where('slug', $slug)->firstOrFail();
 
         $observationsOld = $user->observations();
-        $totalObservations = ObservationsOld::getTotalObservations();
+        $totalObservations = Observation::getTotalObservations('deepsky');
 
-        // Get the observations from the last year
-        $lastYear = date('Ymd') - 10000;
+        $observationsLastYear = Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $user->id)->where('legacy_source', 'deepsky')->count();
+        $totalObservationsLastYear = Observation::where('observed_on', '>=', now()->subYear())->where('legacy_source', 'deepsky')->count();
 
-        $observationsLastYear = ObservationsOld::where('date', '>=', $lastYear)->where('observerid', $user->username)->count();
-        $totalObservationsLastYear = ObservationsOld::where('date', '>=', $lastYear)->count();
-
-        $totalNumberOfDrawings = ObservationsOld::where('hasDrawing', 1)->count();
-        $totalUniqueObjects = ObservationsOld::getUniqueObjectsObserved();
+        $totalNumberOfDrawings = Observation::where('legacy_source', 'deepsky')->where('has_drawing', 1)->count();
+        $totalUniqueObjects = Observation::getUniqueObjectsObserved('deepsky');
 
         // Calculate comet statistics once to avoid repeated queries in the view
-        $cometObservations = CometObservationsOld::where('observerid', $user->username)->count();
-        $totalCometObservations = CometObservationsOld::getTotalObservations();
+        $cometObservations = Observation::where('legacy_source', 'comet')->where('observer_user_id', $user->id)->count();
+        $totalCometObservations = Observation::getTotalObservations('comet');
         $cometObservationsLastYear = $user->getCometObservationsLastYear();
-        $totalCometObservationsLastYear = CometObservationsOld::getTotalObservationsLastYear();
-        $cometDrawings = CometObservationsOld::where('observerid', $user->username)->where('hasDrawing', 1)->count();
-        $totalCometDrawings = CometObservationsOld::where('hasDrawing', 1)->count();
+        $totalCometObservationsLastYear = Observation::getTotalObservationsLastYear('comet');
+        $cometDrawings = Observation::where('legacy_source', 'comet')->where('observer_user_id', $user->id)->where('has_drawing', 1)->count();
+        $totalCometDrawings = Observation::where('legacy_source', 'comet')->where('has_drawing', 1)->count();
 
         // Determine if this user has any observations with likes (deepsky or comet)
         $hasPopularObservations = false;
         $username = $user->username;
 
-        $deepskyIds = ObservationsOld::where('observerid', $username)->pluck('id')->toArray();
-        $cometIds = \App\Models\CometObservationsOld::where('observerid', $username)->pluck('id')->toArray();
+        $deepskyIds = Observation::where('legacy_source', 'deepsky')->where('observer_user_id', $user->id)->pluck('id')->toArray();
+        $cometIds = Observation::where('legacy_source', 'comet')->where('observer_user_id', $user->id)->pluck('id')->toArray();
 
-        if (! empty($deepskyIds) || ! empty($cometIds)) {
+        if (!empty($deepskyIds) || !empty($cometIds)) {
             $query = \App\Models\ObservationLike::query();
             $query->where(function ($q) use ($deepskyIds, $cometIds) {
-                if (! empty($deepskyIds)) {
+                if (!empty($deepskyIds)) {
                     $q->orWhere(function ($q2) use ($deepskyIds) {
                         $q2->where('observation_type', 'deepsky')->whereIn('observation_id', $deepskyIds);
                     });
                 }
 
-                if (! empty($cometIds)) {
+                if (!empty($cometIds)) {
                     $q->orWhere(function ($q2) use ($cometIds) {
                         $q2->where('observation_type', 'comet')->whereIn('observation_id', $cometIds);
                     });
@@ -96,14 +96,14 @@ class ObserverController extends Controller
         // Prefetch related locations to avoid N+1
         $locationIds = $sessions->pluck('locationid')->filter()->unique()->values()->all();
         $locations = [];
-        if (! empty($locationIds)) {
+        if (!empty($locationIds)) {
             $locations = \App\Models\Location::whereIn('id', $locationIds)->get()->keyBy('id');
         }
 
         // Precompute observation counts for these sessions
         $sessionIds = $sessions->pluck('id')->filter()->unique()->values()->all();
         $obsCounts = [];
-        if (! empty($sessionIds)) {
+        if (!empty($sessionIds)) {
             $obsCounts = \Illuminate\Support\Facades\DB::table('sessionObservations')
                 ->whereIn('sessionid', $sessionIds)
                 ->select('sessionid', \Illuminate\Support\Facades\DB::raw('count(*) as cnt'))
@@ -121,31 +121,31 @@ class ObserverController extends Controller
             // Prefer storage/photos/sessions
             $storageSessionDir = storage_path('app/public/photos/sessions');
             if (is_dir($storageSessionDir)) {
-                $glob = glob($storageSessionDir.'/'.$session->id.'.*');
-                if (! empty($glob)) {
-                    $image = asset('storage/photos/sessions/'.basename($glob[0]));
+                $glob = glob($storageSessionDir . '/' . $session->id . '.*');
+                if (!empty($glob)) {
+                    $image = asset('storage/photos/sessions/' . basename($glob[0]));
                 }
             }
 
             // public/images/sessions
             if (empty($image)) {
                 if (is_dir($sessionImageDir)) {
-                    $glob = glob($sessionImageDir.'/'.$session->id.'.*');
-                    if (! empty($glob)) {
-                        $image = '/images/sessions/'.basename($glob[0]);
+                    $glob = glob($sessionImageDir . '/' . $session->id . '.*');
+                    if (!empty($glob)) {
+                        $image = '/images/sessions/' . basename($glob[0]);
                     }
                 }
             }
 
             // legacy session->picture
-            if (empty($image) && ! empty($session->picture)) {
-                $image = asset('storage/'.$session->picture);
+            if (empty($image) && !empty($session->picture)) {
+                $image = asset('storage/' . $session->picture);
             }
 
             // location picture fallback
             $loc = isset($locations[$session->locationid]) ? $locations[$session->locationid] : null;
-            if (empty($image) && $loc && ! empty($loc->picture)) {
-                $image = asset('storage/'.$loc->picture);
+            if (empty($image) && $loc && !empty($loc->picture)) {
+                $image = asset('storage/' . $loc->picture);
             }
 
             $session->preview = $image;

@@ -2,9 +2,8 @@
 
 namespace App\Charts;
 
-use App\Models\CometObservationsOld;
+use App\Models\Observation;
 use App\Models\Country;
-use App\Models\ObservationsOld;
 use App\Models\User;
 use Countries;
 use Illuminate\Support\Facades\DB;
@@ -37,9 +36,9 @@ class CountriesChart
      */
     public function build(User $user): OriginalPieChart
     {
-        $deepsky = ObservationsOld::where('observerid', $user->username)->join('locations', 'observations.locationid', '=', 'locations.id')->select('locations.country', DB::raw('count(*) as count'))->groupBy('locations.country')->get();
+        $deepsky = Observation::where('observer_username', $user->username)->join('locations', 'observations.location_id', '=', 'locations.id')->select('locations.country', DB::raw('count(*) as count'))->groupBy('locations.country')->get();
 
-        $comets = CometObservationsOld::where('observerid', $user->username)->join('locations', 'cometobservations.locationid', '=', 'locations.id')->select('locations.country', DB::raw('count(*) as count'))->groupBy('locations.country')->get();
+        $comets = collect(); // comet observations are now unified with deepsky in the same table
 
         $countries = [];
         $values = [];
@@ -94,8 +93,8 @@ class CountriesChart
         }
 
         return (new OriginalPieChart)
-            ->setTitle(__('Observations per country: ').$user->name)
-            ->setSubtitle(__('Source: ').config('app.old_url'))
+            ->setTitle(__('Observations per country: ') . $user->name)
+            ->setSubtitle(__('Source: ') . config('app.old_url'))
             ->addData($values)
             ->setLabels($countries)
             ->setTheme('dark')

@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\DeepskyObject;
-use App\Models\ObservationsOld;
+use App\Models\Observation;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -27,7 +27,7 @@ class DeleteObjectModal extends Component
 
     public function openModal(): void
     {
-        $this->observationsCount = ObservationsOld::getObservationsCountForObject($this->objectName);
+        $this->observationsCount = Observation::where('target_name', $this->objectName)->count();
         $this->observingListCount = DB::table('observing_list_items')
             ->where('object_name', $this->objectName)
             ->count();

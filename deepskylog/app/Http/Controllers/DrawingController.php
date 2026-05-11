@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ObservationsOld;
+use App\Models\Observation;
 use App\Models\User;
 
 class DrawingController extends Controller
@@ -18,10 +18,10 @@ class DrawingController extends Controller
      */
     public function index()
     {
-        $sketches = ObservationsOld::where('hasDrawing', 1)->orderBy('id', 'desc')->paginate(20);
+        $sketches = Observation::where('has_drawing', 1)->orderBy('id', 'desc')->paginate(20);
 
         // Preload users to avoid N+1 queries in the view
-        $observerIds = $sketches->pluck('observerid')->unique()->all();
+        $observerIds = $sketches->pluck('observer_username')->unique()->all();
         $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
 
         return view('drawings.show', ['user' => '', 'sketches' => $sketches, 'sketchUsers' => $sketchUsers]);
@@ -42,11 +42,11 @@ class DrawingController extends Controller
     public function show(string $slug)
     {
         $user = User::where('slug', $slug)->firstOrFail();
-        $sketches = ObservationsOld::where('observerid', $user->username)
-            ->where('hasDrawing', 1)->orderBy('date', 'desc')->paginate(20);
+        $sketches = Observation::where('observer_username', $user->username)
+            ->where('has_drawing', 1)->orderBy('observed_on', 'desc')->paginate(20);
 
         // Preload users to avoid N+1 queries in the view
-        $observerIds = $sketches->pluck('observerid')->unique()->all();
+        $observerIds = $sketches->pluck('observer_username')->unique()->all();
         $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
 
         return view('drawings.show', ['user' => $user, 'sketches' => $sketches, 'sketchUsers' => $sketchUsers]);

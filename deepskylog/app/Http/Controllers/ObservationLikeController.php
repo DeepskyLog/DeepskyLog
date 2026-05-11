@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CometObservationsOld;
+use App\Models\Observation;
 use App\Models\ObservationLike;
-use App\Models\ObservationsOld;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +17,7 @@ class ObservationLikeController extends Controller
             'observation_id' => 'required|integer',
         ]);
 
-        if (! Auth::check()) {
+        if (!Auth::check()) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
@@ -35,14 +34,16 @@ class ObservationLikeController extends Controller
         // Determine owner of observation/session
         $owner = null;
         if ($type === 'deepsky') {
-            $obs = ObservationsOld::find($id);
+            $obs = Observation::where('legacy_id', $id)->where('legacy_source', 'deepsky')->first()
+                ?? Observation::find($id);
             if ($obs) {
-                $owner = User::where('username', html_entity_decode($obs->observerid))->first();
+                $owner = User::where('username', html_entity_decode($obs->observer_username))->first();
             }
         } elseif ($type === 'comet') {
-            $obs = CometObservationsOld::find($id);
+            $obs = Observation::where('legacy_id', $id)->where('legacy_source', 'comet')->first()
+                ?? Observation::find($id);
             if ($obs) {
-                $owner = User::where('username', html_entity_decode($obs->observerid))->first();
+                $owner = User::where('username', html_entity_decode($obs->observer_username))->first();
             }
         } elseif ($type === 'session') {
             // For sessions, owner is the observer (observerid) on the session record
@@ -52,7 +53,7 @@ class ObservationLikeController extends Controller
             }
         }
 
-        if (! $owner) {
+        if (!$owner) {
             return response()->json(['message' => 'Observation not found'], 404);
         }
 

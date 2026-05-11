@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CometObservationsOld;
+use App\Models\Observation;
 use App\Models\ObservationComment;
-use App\Models\ObservationsOld;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -53,24 +52,11 @@ class ObservationCommentController extends Controller
 
     private function resolveObservationOwner(string $type, int $observationId): ?User
     {
-        if ($type === 'deepsky') {
-            $obs = ObservationsOld::find($observationId);
-            if (!$obs) {
-                return null;
-            }
-
-            return User::where('username', html_entity_decode((string) $obs->observerid))->first();
+        $obs = Observation::find($observationId);
+        if (!$obs) {
+            return null;
         }
 
-        if ($type === 'comet') {
-            $obs = CometObservationsOld::find($observationId);
-            if (!$obs) {
-                return null;
-            }
-
-            return User::where('username', html_entity_decode((string) $obs->observerid))->first();
-        }
-
-        return null;
+        return User::find($obs->observer_user_id);
     }
 }

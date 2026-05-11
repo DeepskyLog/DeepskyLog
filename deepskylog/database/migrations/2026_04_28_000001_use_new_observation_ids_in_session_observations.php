@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         // MySQL requires dropping the composite PK before modifying a PK column.
         DB::statement('ALTER TABLE `sessionObservations` DROP PRIMARY KEY');
 
@@ -39,6 +43,10 @@ return new class extends Migration {
 
     public function down(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         DB::statement(
             'ALTER TABLE `sessionObservations`
              DROP FOREIGN KEY `fk_session_observations_observation_id`'

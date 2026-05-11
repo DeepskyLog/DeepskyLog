@@ -2,8 +2,7 @@
 
 namespace App\Charts;
 
-use App\Models\CometObservationsOld;
-use App\Models\ObservationsOld;
+use App\Models\Observation;
 use App\Models\TargetType;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -49,11 +48,11 @@ class ObjectTypesChart
      */
     public function build(User $user): OriginalPieChart
     {
-        $observations[0] = CometObservationsOld::where('observerid', $user->username)->count();
+        $observations[0] = Observation::where('observer_username', $user->username)->where('legacy_source', 'comet')->count();
         $names[0] = __('Comets');
 
-        $deepskyobservations = ObservationsOld::where('observerid', $user->username)
-            ->join('objects', 'observations.objectname', '=', 'objects.name')
+        $deepskyobservations = Observation::where('observer_username', $user->username)
+            ->join('objects', 'observations.target_name', '=', 'objects.name')
             ->select('objects.type', DB::raw('count(*) as count'))
             ->groupBy('objects.type')
             ->get();
@@ -61,7 +60,7 @@ class ObjectTypesChart
         // Loop through the deep sky observations and add the count and type to the respective arrays
         foreach ($deepskyobservations as $key => $value) {
             $observations[$key + 1] = $value->count;
-            $value->type = __(''.TargetType::where('id', $value->type)->first()->type.'');
+            $value->type = __('' . TargetType::where('id', $value->type)->first()->type . '');
             $names[$key + 1] = $value->type;
         }
 
@@ -75,7 +74,7 @@ class ObjectTypesChart
         }
 
         // Calculate the total number of observations
-        $total = ObservationsOld::where('observerid', $user->username)->count() + CometObservationsOld::where('observerid', $user->username)->count();
+        $total = Observation::where('observer_username', $user->username)->count();
 
         // If the count of observations for a type is less than 1% of the total, group it under 'Rest'
         for ($i = 0; $i < count($observations); $i++) {
@@ -87,8 +86,8 @@ class ObjectTypesChart
 
         // Create the pie chart and return it
         return (new OriginalPieChart)
-            ->setTitle(__('Object types seen: ').$user->name)
-            ->setSubtitle(__('Source: ').config('app.old_url'))
+            ->setTitle(__('Object types seen: ') . $user->name)
+            ->setSubtitle(__('Source: ') . config('app.old_url'))
             ->addData($observations)
             ->setTheme('dark')
             ->setFontColor('#bbbbbb')

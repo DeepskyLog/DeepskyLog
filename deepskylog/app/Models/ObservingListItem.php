@@ -39,11 +39,8 @@ class ObservingListItem extends Model
         return $this->belongsTo(User::class, 'added_by_user_id');
     }
 
-    /**
-     * Get the source observation if autofilled.
-     */
-    public function sourceObservation()
+    public function sourceObservation(): BelongsTo
     {
-        return $this->belongsTo(ObservationsOld::class, 'source_observation_id');
+        return $this->belongsTo(Observation::class, 'source_observation_id');
     }
 }
