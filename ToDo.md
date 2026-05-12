@@ -9,7 +9,6 @@
   - [x] Make migrations and seeder
   - [x] Show detailed observation page, with all details, comments, ...
   - [ ] Add observations page
-    - [ ] Add Trophies for planets, sun, moon, double stars, ...
     - [ ] Remove all the other Old classes.
     - [ ] Try to add an observation for all types of objects, to see if all fields are working correctly.
       - [X] Sun
@@ -37,6 +36,7 @@
   - [ ] On real server:
     - [ ] php artisan db:seed --class=BackfillSessionObservationIdsSeeder
     - [ ] php artisan db:seed --class=BackfillSketchObservationIdsSeeder
+    - [ ] php artisan db:seed --class=addAchievementsSeeder
     - [ ] php artisan migrate
 - [ ] All missing pages
 - [ ] Release new version of pyDeepskyLog

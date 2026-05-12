@@ -36,6 +36,16 @@ class updateAchievementsCommand extends Command
     private $cometObservationsMap = [];
     private $cometDrawingsMap = [];
     private $uniqueCometMap = [];
+    private $planetObservedMap = [];
+    private $moonObservedMap = [];
+    private $lunarFeatureObservedMap = [];
+    private $sunObservedMap = [];
+    private $doubleObservedMap = [];
+    private $planetDrawingsMap = [];
+    private $moonDrawingsMap = [];
+    private $lunarFeatureDrawingsMap = [];
+    private $sunDrawingsMap = [];
+    private $doubleDrawingsMap = [];
     private $userAchievementsMap = [];
 
     public function handle(): void
@@ -223,6 +233,111 @@ class updateAchievementsCommand extends Command
             $this->uniqueCometMap[$r->observerid] = (int) $r->cnt;
         }
 
+        // Unified observations (current observations table): planets, moons, lunar features, sun and double-stars
+        $planetRowsUnified = Observation::whereNull('legacy_source')
+            ->where('target_table', 'planets')
+            ->select('observer_username', DB::raw('COUNT(DISTINCT target_key) as cnt'))
+            ->groupBy('observer_username')
+            ->get();
+        foreach ($planetRowsUnified as $r) {
+            $this->planetObservedMap[$r->observer_username] = (int) $r->cnt;
+        }
+
+        $moonRowsUnified = Observation::whereNull('legacy_source')
+            ->where('target_table', 'moons')
+            ->select('observer_username', DB::raw('COUNT(DISTINCT target_key) as cnt'))
+            ->groupBy('observer_username')
+            ->get();
+        foreach ($moonRowsUnified as $r) {
+            $this->moonObservedMap[$r->observer_username] = (int) $r->cnt;
+        }
+
+        $lunarRowsUnified = Observation::whereNull('legacy_source')
+            ->where('target_table', 'lunar_features')
+            ->select('observer_username', DB::raw('COUNT(DISTINCT target_key) as cnt'))
+            ->groupBy('observer_username')
+            ->get();
+        foreach ($lunarRowsUnified as $r) {
+            $this->lunarFeatureObservedMap[$r->observer_username] = (int) $r->cnt;
+        }
+
+        // Sun observations (planets table rows named 'Sun' - case-insensitive)
+        $sunRowsUnified = Observation::whereNull('legacy_source')
+            ->where('target_table', 'planets')
+            ->whereRaw('LOWER(target_name) = ?', ['sun'])
+            ->select('observer_username', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('observer_username')
+            ->get();
+        foreach ($sunRowsUnified as $r) {
+            $this->sunObservedMap[$r->observer_username] = (int) $r->cnt;
+        }
+
+        // Unified double-star counts (join current objects table to observations)
+        $doubleRowsUnified = DB::table('objects')
+            ->join('observations', 'objects.name', '=', 'observations.target_name')
+            ->whereNull('observations.legacy_source')
+            ->where('objects.type', 'DS')
+            ->select('observations.observer_username as observer_username', DB::raw('COUNT(DISTINCT objects.name) as cnt'))
+            ->groupBy('observations.observer_username')
+            ->get();
+        foreach ($doubleRowsUnified as $r) {
+            $this->doubleObservedMap[$r->observer_username] = (int) $r->cnt;
+        }
+
+        // Unified drawings (current observations table): planets, moons, lunar features, sun and double-stars
+        $planetDrawingsUnified = Observation::whereNull('legacy_source')
+            ->where('target_table', 'planets')
+            ->where('has_drawing', 1)
+            ->select('observer_username', DB::raw('COUNT(DISTINCT target_key) as cnt'))
+            ->groupBy('observer_username')
+            ->get();
+        foreach ($planetDrawingsUnified as $r) {
+            $this->planetDrawingsMap[$r->observer_username] = (int) $r->cnt;
+        }
+
+        $moonDrawingsUnified = Observation::whereNull('legacy_source')
+            ->where('target_table', 'moons')
+            ->where('has_drawing', 1)
+            ->select('observer_username', DB::raw('COUNT(DISTINCT target_key) as cnt'))
+            ->groupBy('observer_username')
+            ->get();
+        foreach ($moonDrawingsUnified as $r) {
+            $this->moonDrawingsMap[$r->observer_username] = (int) $r->cnt;
+        }
+
+        $lunarDrawingsUnified = Observation::whereNull('legacy_source')
+            ->where('target_table', 'lunar_features')
+            ->where('has_drawing', 1)
+            ->select('observer_username', DB::raw('COUNT(DISTINCT target_key) as cnt'))
+            ->groupBy('observer_username')
+            ->get();
+        foreach ($lunarDrawingsUnified as $r) {
+            $this->lunarFeatureDrawingsMap[$r->observer_username] = (int) $r->cnt;
+        }
+
+        $sunDrawingsUnified = Observation::whereNull('legacy_source')
+            ->where('target_table', 'planets')
+            ->whereRaw('LOWER(target_name) = ?', ['sun'])
+            ->where('has_drawing', 1)
+            ->select('observer_username', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('observer_username')
+            ->get();
+        foreach ($sunDrawingsUnified as $r) {
+            $this->sunDrawingsMap[$r->observer_username] = (int) $r->cnt;
+        }
+
+        $doubleDrawRowsUnified = DB::table('objects')
+            ->join('observations', 'objects.name', '=', 'observations.target_name')
+            ->whereNull('observations.legacy_source')
+            ->where('objects.type', 'DS')
+            ->where('observations.has_drawing', 1)
+            ->select('observations.observer_username as observer_username', DB::raw('COUNT(DISTINCT objects.name) as cnt'))
+            ->groupBy('observations.observer_username')
+            ->get();
+        foreach ($doubleDrawRowsUnified as $r) {
+            $this->doubleDrawingsMap[$r->observer_username] = (int) $r->cnt;
+        }
+
         // Loop over all users
         foreach ($users as $user) {
             // Get the Accomplishments for the selected user
@@ -390,6 +505,310 @@ class updateAchievementsCommand extends Command
                 $achievement3 = $this->getAchievement('Drawings 1000');
                 $achievement2 = $this->getAchievement('Drawings 2500');
                 $achievement1 = $this->getAchievement('Drawings 5000');
+
+                $this->setAchievement10(
+                    $user,
+                    $achievement1,
+                    $achievement2,
+                    $achievement3,
+                    $achievement4,
+                    $achievement5,
+                    $achievement6,
+                    $achievement7,
+                    $achievement8,
+                    $achievement9,
+                    $achievement10,
+                    $total,
+                    5000,
+                    2500,
+                    1000,
+                    500,
+                    250,
+                    100,
+                    50,
+                    25,
+                    10,
+                    1
+                );
+
+                // Planets drawings achievements
+                $total = $this->getPlanetDrawingsForUser($user->username);
+                $achievement1 = $this->getAchievement('Planets 5000 Drawings');
+                $achievement2 = $this->getAchievement('Planets 2500 Drawings');
+                $achievement3 = $this->getAchievement('Planets 1000 Drawings');
+                $achievement4 = $this->getAchievement('Planets 500 Drawings');
+                $achievement5 = $this->getAchievement('Planets 250 Drawings');
+                $achievement6 = $this->getAchievement('Planets 100 Drawings');
+                $achievement7 = $this->getAchievement('Planets 50 Drawings');
+                $achievement8 = $this->getAchievement('Planets 25 Drawings');
+                $achievement9 = $this->getAchievement('Planets 10 Drawings');
+                $achievement10 = $this->getAchievement('Planet 1 Drawing');
+
+                $this->setAchievement10(
+                    $user,
+                    $achievement1,
+                    $achievement2,
+                    $achievement3,
+                    $achievement4,
+                    $achievement5,
+                    $achievement6,
+                    $achievement7,
+                    $achievement8,
+                    $achievement9,
+                    $achievement10,
+                    $total,
+                    5000,
+                    2500,
+                    1000,
+                    500,
+                    250,
+                    100,
+                    50,
+                    25,
+                    10,
+                    1
+                );
+
+                // Moon + lunar feature drawings achievements
+                $total = $this->getMoonLunarDrawingsForUser($user->username);
+                $achievement1 = $this->getAchievement('Moons 5000 Drawings');
+                $achievement2 = $this->getAchievement('Moons 2500 Drawings');
+                $achievement3 = $this->getAchievement('Moons 1000 Drawings');
+                $achievement4 = $this->getAchievement('Moons 500 Drawings');
+                $achievement5 = $this->getAchievement('Moons 250 Drawings');
+                $achievement6 = $this->getAchievement('Moons 100 Drawings');
+                $achievement7 = $this->getAchievement('Moons 50 Drawings');
+                $achievement8 = $this->getAchievement('Moons 25 Drawings');
+                $achievement9 = $this->getAchievement('Moons 10 Drawings');
+                $achievement10 = $this->getAchievement('Moon 1 Drawing');
+
+                $this->setAchievement10(
+                    $user,
+                    $achievement1,
+                    $achievement2,
+                    $achievement3,
+                    $achievement4,
+                    $achievement5,
+                    $achievement6,
+                    $achievement7,
+                    $achievement8,
+                    $achievement9,
+                    $achievement10,
+                    $total,
+                    5000,
+                    2500,
+                    1000,
+                    500,
+                    250,
+                    100,
+                    50,
+                    25,
+                    10,
+                    1
+                );
+
+                // Sun drawings achievements
+                $total = $this->getSunDrawingsForUser($user->username);
+                $achievement1 = $this->getAchievement('Sun 5000 Drawings');
+                $achievement2 = $this->getAchievement('Sun 2500 Drawings');
+                $achievement3 = $this->getAchievement('Sun 1000 Drawings');
+                $achievement4 = $this->getAchievement('Sun 500 Drawings');
+                $achievement5 = $this->getAchievement('Sun 250 Drawings');
+                $achievement6 = $this->getAchievement('Sun 100 Drawings');
+                $achievement7 = $this->getAchievement('Sun 50 Drawings');
+                $achievement8 = $this->getAchievement('Sun 25 Drawings');
+                $achievement9 = $this->getAchievement('Sun 10 Drawings');
+                $achievement10 = $this->getAchievement('Sun 1 Drawing');
+
+                $this->setAchievement10(
+                    $user,
+                    $achievement1,
+                    $achievement2,
+                    $achievement3,
+                    $achievement4,
+                    $achievement5,
+                    $achievement6,
+                    $achievement7,
+                    $achievement8,
+                    $achievement9,
+                    $achievement10,
+                    $total,
+                    5000,
+                    2500,
+                    1000,
+                    500,
+                    250,
+                    100,
+                    50,
+                    25,
+                    10,
+                    1
+                );
+
+                // Double-star drawings achievements
+                $total = $this->getDoubleStarDrawingsForUser($user->username);
+                $achievement1 = $this->getAchievement('Double Stars 5000 Drawings');
+                $achievement2 = $this->getAchievement('Double Stars 2500 Drawings');
+                $achievement3 = $this->getAchievement('Double Stars 1000 Drawings');
+                $achievement4 = $this->getAchievement('Double Stars 500 Drawings');
+                $achievement5 = $this->getAchievement('Double Stars 250 Drawings');
+                $achievement6 = $this->getAchievement('Double Stars 100 Drawings');
+                $achievement7 = $this->getAchievement('Double Stars 50 Drawings');
+                $achievement8 = $this->getAchievement('Double Stars 25 Drawings');
+                $achievement9 = $this->getAchievement('Double Stars 10 Drawings');
+                $achievement10 = $this->getAchievement('Double Star 1 Drawing');
+
+                $this->setAchievement10(
+                    $user,
+                    $achievement1,
+                    $achievement2,
+                    $achievement3,
+                    $achievement4,
+                    $achievement5,
+                    $achievement6,
+                    $achievement7,
+                    $achievement8,
+                    $achievement9,
+                    $achievement10,
+                    $total,
+                    5000,
+                    2500,
+                    1000,
+                    500,
+                    250,
+                    100,
+                    50,
+                    25,
+                    10,
+                    1
+                );
+
+                // Planets achievements (unified observations)
+                $total = $this->getPlanetObservationsForUser($user->username);
+                $achievement1 = $this->getAchievement('Planets 5000');
+                $achievement2 = $this->getAchievement('Planets 2500');
+                $achievement3 = $this->getAchievement('Planets 1000');
+                $achievement4 = $this->getAchievement('Planets 500');
+                $achievement5 = $this->getAchievement('Planets 250');
+                $achievement6 = $this->getAchievement('Planets 100');
+                $achievement7 = $this->getAchievement('Planets 50');
+                $achievement8 = $this->getAchievement('Planets 25');
+                $achievement9 = $this->getAchievement('Planets 10');
+                $achievement10 = $this->getAchievement('Planet 1');
+
+                $this->setAchievement10(
+                    $user,
+                    $achievement1,
+                    $achievement2,
+                    $achievement3,
+                    $achievement4,
+                    $achievement5,
+                    $achievement6,
+                    $achievement7,
+                    $achievement8,
+                    $achievement9,
+                    $achievement10,
+                    $total,
+                    5000,
+                    2500,
+                    1000,
+                    500,
+                    250,
+                    100,
+                    50,
+                    25,
+                    10,
+                    1
+                );
+
+                // Moon + lunar features achievements
+                $total = $this->getMoonLunarObservationsForUser($user->username);
+                $achievement1 = $this->getAchievement('Moons 5000');
+                $achievement2 = $this->getAchievement('Moons 2500');
+                $achievement3 = $this->getAchievement('Moons 1000');
+                $achievement4 = $this->getAchievement('Moons 500');
+                $achievement5 = $this->getAchievement('Moons 250');
+                $achievement6 = $this->getAchievement('Moons 100');
+                $achievement7 = $this->getAchievement('Moons 50');
+                $achievement8 = $this->getAchievement('Moons 25');
+                $achievement9 = $this->getAchievement('Moons 10');
+                $achievement10 = $this->getAchievement('Moon 1');
+
+                $this->setAchievement10(
+                    $user,
+                    $achievement1,
+                    $achievement2,
+                    $achievement3,
+                    $achievement4,
+                    $achievement5,
+                    $achievement6,
+                    $achievement7,
+                    $achievement8,
+                    $achievement9,
+                    $achievement10,
+                    $total,
+                    5000,
+                    2500,
+                    1000,
+                    500,
+                    250,
+                    100,
+                    50,
+                    25,
+                    10,
+                    1
+                );
+
+                // Sun achievements
+                $total = $this->getSunObservationsForUser($user->username);
+                $achievement1 = $this->getAchievement('Sun 5000');
+                $achievement2 = $this->getAchievement('Sun 2500');
+                $achievement3 = $this->getAchievement('Sun 1000');
+                $achievement4 = $this->getAchievement('Sun 500');
+                $achievement5 = $this->getAchievement('Sun 250');
+                $achievement6 = $this->getAchievement('Sun 100');
+                $achievement7 = $this->getAchievement('Sun 50');
+                $achievement8 = $this->getAchievement('Sun 25');
+                $achievement9 = $this->getAchievement('Sun 10');
+                $achievement10 = $this->getAchievement('Sun 1');
+
+                $this->setAchievement10(
+                    $user,
+                    $achievement1,
+                    $achievement2,
+                    $achievement3,
+                    $achievement4,
+                    $achievement5,
+                    $achievement6,
+                    $achievement7,
+                    $achievement8,
+                    $achievement9,
+                    $achievement10,
+                    $total,
+                    5000,
+                    2500,
+                    1000,
+                    500,
+                    250,
+                    100,
+                    50,
+                    25,
+                    10,
+                    1
+                );
+
+                // Double-star achievements (legacy + unified)
+                $total = $this->getDoubleStarObservationsForUser($user->username);
+                $achievement1 = $this->getAchievement('Double Stars 5000');
+                $achievement2 = $this->getAchievement('Double Stars 2500');
+                $achievement3 = $this->getAchievement('Double Stars 1000');
+                $achievement4 = $this->getAchievement('Double Stars 500');
+                $achievement5 = $this->getAchievement('Double Stars 250');
+                $achievement6 = $this->getAchievement('Double Stars 100');
+                $achievement7 = $this->getAchievement('Double Stars 50');
+                $achievement8 = $this->getAchievement('Double Stars 25');
+                $achievement9 = $this->getAchievement('Double Stars 10');
+                $achievement10 = $this->getAchievement('Double Star 1');
 
                 $this->setAchievement10(
                     $user,
@@ -1573,6 +1992,46 @@ class updateAchievementsCommand extends Command
     private function getUniqueObjectsDrawn(string $username): int
     {
         return $this->uniqueObjectsDrawingsMap[$username] ?? 0;
+    }
+
+    private function getPlanetObservationsForUser(string $username): int
+    {
+        return $this->planetObservedMap[$username] ?? 0;
+    }
+
+    private function getPlanetDrawingsForUser(string $username): int
+    {
+        return $this->planetDrawingsMap[$username] ?? 0;
+    }
+
+    private function getMoonLunarObservationsForUser(string $username): int
+    {
+        return ($this->moonObservedMap[$username] ?? 0) + ($this->lunarFeatureObservedMap[$username] ?? 0);
+    }
+
+    private function getMoonLunarDrawingsForUser(string $username): int
+    {
+        return ($this->moonDrawingsMap[$username] ?? 0) + ($this->lunarFeatureDrawingsMap[$username] ?? 0);
+    }
+
+    private function getSunObservationsForUser(string $username): int
+    {
+        return $this->sunObservedMap[$username] ?? 0;
+    }
+
+    private function getSunDrawingsForUser(string $username): int
+    {
+        return $this->sunDrawingsMap[$username] ?? 0;
+    }
+
+    private function getDoubleStarObservationsForUser(string $username): int
+    {
+        return ($this->getTypeObserved($username, 'DS') ?? 0) + ($this->doubleObservedMap[$username] ?? 0);
+    }
+
+    private function getDoubleStarDrawingsForUser(string $username): int
+    {
+        return ($this->getTypeDrawings($username, 'DS') ?? 0) + ($this->doubleDrawingsMap[$username] ?? 0);
     }
 
     private function getCometObservationsForUser(string $username): int

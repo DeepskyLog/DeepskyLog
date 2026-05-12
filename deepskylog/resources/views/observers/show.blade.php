@@ -223,6 +223,18 @@
 
             <br />
 
+            <style>
+                .inline-svg svg { width: 100%; height: 100%; display: block; }
+                .inline-svg { width: 100%; height: 100%; }
+                .two-line-truncate {
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 2;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            </style>
+
             <x-card>
                 <h2 class="mb-2 mt-2 text-xl px-5 font-bold">
                     {{ __('DeepskyLog Trophy Gallery') }}
@@ -231,13 +243,180 @@
                 <div class="flex flex-wrap gap-x-6 gap-y-4 px-5">
                     @if ($user->achievements->count() > 0)
                         @foreach ($user->achievements as $achievement)
-                            <div title="{{ $achievement->description }}">
-                                <svg width="100" height="100">
-                                    <image xlink:href="{{ $achievement->image }}" src="{{ $achievement->image }}"
-                                        width="100" height="100" />
-                                </svg>
+                            <div title="{{ $achievement->description }}" class="w-24 h-28 p-2 bg-white/5 rounded-lg flex flex-col items-center justify-start shadow">
+                                @php
+                                    $raw = $achievement->name;
+                                    // Remove any 'DeepskyLog' prefix/mention for display and processing
+                                    $raw = preg_replace('/\bdeepskylog\b[:\-\s]*/i', '', $raw);
+                                    // Display name without the site prefix
+                                    $displayName = trim(preg_replace('/\bdeepskylog\b[:\-\s]*/i', '', $achievement->name));
+                                    $noDrawing = preg_replace('/\s+(Drawings|Drawing)$/i', '', $raw);
+                                    $count = '';
+                                    if (preg_match('/(\d+)/', $noDrawing, $m)) {
+                                        $count = $m[1];
+                                    }
+                                    // If no numeric suffix exists, compute sketch-of-the-week/month counts from DB
+                                    if (!$count && preg_match('/sketch.*week/i', $raw)) {
+                                        $count = \App\Models\SketchOfTheWeek::where('user_id', $user->id)->count();
+                                    }
+                                    if (!$count && preg_match('/sketch.*month/i', $raw)) {
+                                        $count = \App\Models\SketchOfTheMonth::where('user_id', $user->id)->count();
+                                    }
+
+                                    // Catalog counts for Messier / Caldwell / Herschel (legacy objectnames in mysqlOld)
+                                    if (!$count && preg_match('/messier/i', $raw)) {
+                                        $catalog = 'M';
+                                        $q = \DB::connection('mysqlOld')->table('objectnames')
+                                            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
+                                            ->where('observations.visibility', '!=', 7)
+                                            ->where('observations.observerid', $user->username)
+                                            ->where('objectnames.catalog', $catalog);
+                                        if ($isDrawing) {
+                                            $q->where('observations.hasDrawing', 1);
+                                        }
+                                        $count = (int) $q->distinct()->count('objectnames.catindex');
+                                    }
+
+                                    if (!$count && preg_match('/caldwell/i', $raw)) {
+                                        $catalog = 'Caldwell';
+                                        $q = \DB::connection('mysqlOld')->table('objectnames')
+                                            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
+                                            ->where('observations.visibility', '!=', 7)
+                                            ->where('observations.observerid', $user->username)
+                                            ->where('objectnames.catalog', $catalog);
+                                        if ($isDrawing) {
+                                            $q->where('observations.hasDrawing', 1);
+                                        }
+                                        $count = (int) $q->distinct()->count('objectnames.catindex');
+                                    }
+
+                                    if (!$count && preg_match('/herschel/i', $raw)) {
+                                        // Distinguish Herschel 400 vs Herschel II
+                                        if (preg_match('/400\s*ii|h400-?ii|herschel\s*ii/i', $raw)) {
+                                            $catalog = 'H400-II';
+                                        } else {
+                                            $catalog = 'H400';
+                                        }
+                                        $q = \DB::connection('mysqlOld')->table('objectnames')
+                                            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
+                                            ->where('observations.visibility', '!=', 7)
+                                            ->where('observations.observerid', $user->username)
+                                            ->where('objectnames.catalog', $catalog);
+                                        if ($isDrawing) {
+                                            $q->where('observations.hasDrawing', 1);
+                                        }
+                                        $count = (int) $q->distinct()->count('objectnames.catindex');
+                                    }
+                                    // Top-ten observer: show the observer's rank (1-10) when applicable
+                                    if (!$count && preg_match('/top\s*ten/i', $raw)) {
+                                        $topTen = collect(\DB::connection('mysqlOld')->table('observations')
+                                            ->select(\DB::raw('COUNT(*) as cnt, observerid'))
+                                            ->groupBy('observerid')
+                                            ->orderByDesc('cnt')
+                                            ->limit(10)
+                                            ->pluck('observerid'))
+                                            ->map(fn($v) => (string) $v)
+                                            ->values()
+                                            ->all();
+                                        $pos = array_search((string)$user->username, $topTen, true);
+                                        if ($pos !== false) {
+                                            $count = $pos + 1;
+                                        }
+                                    }
+                                    $base = trim(preg_replace('/\d+$/', '', $noDrawing));
+                                    $lbase = strtolower($base);
+                                    $special = [
+                                        'planet' => 'Planets', 'planets' => 'Planets',
+                                        'moon' => 'Moon', 'moons' => 'Moon',
+                                        'sun' => 'Sun', 'suns' => 'Sun',
+                                        'double star' => 'Double Stars', 'double stars' => 'Double Stars',
+                                        'object' => 'Objects', 'objects' => 'Objects',
+                                        'comet' => 'Comets', 'comets' => 'Comets',
+                                        'nebula' => 'Nebulae', 'nebulae' => 'Nebulae',
+                                        'galaxy' => 'Galaxies', 'galaxies' => 'Galaxies',
+                                        'open cluster' => 'Open Clusters', 'open clusters' => 'Open Clusters',
+                                        'globular cluster' => 'Globular Clusters', 'globular clusters' => 'Globular Clusters',
+                                        'planetary nebula' => 'Planetary Nebulae', 'planetary nebulae' => 'Planetary Nebulae',
+                                    ];
+                                    $label = $special[$lbase] ?? ucwords(str_replace(['_', '-'], ' ', $base));
+                                    // overlay styling defaults; adjusted per-category for readability
+                                    $overlayBg = 'bg-black/70';
+                                    $overlayText = 'text-white';
+                                    $overlaySizeClass = 'w-9 h-9 md:w-12 md:h-12';
+                                    $overlayTextSize = 'text-3xl md:text-4xl';
+                                    $overlayRing = 'ring-0';
+                                    $overlayWrapperClass = 'absolute inset-0 flex items-center justify-center pointer-events-none z-20';
+                                    if (str_contains($lbase, 'moon')) {
+                                        $overlayBg = 'bg-blue-600';
+                                        $overlayText = 'text-white';
+                                        $overlaySizeClass = 'w-10 h-10 md:w-14 md:h-14';
+                                        $overlayTextSize = 'text-3xl md:text-5xl';
+                                    }
+                                    if (str_contains($lbase, 'sun')) {
+                                        $overlayBg = 'bg-yellow-300';
+                                        $overlayText = 'text-gray-900';
+                                    }
+                                    // Improve contrast for double-star trophies: use opaque background + subtle ring
+                                    if (str_contains($lbase, 'double')) {
+                                        // place a smaller badge at the top-right so the icon remains readable
+                                        $overlayBg = 'bg-white';
+                                        $overlayText = 'text-gray-900';
+                                        $overlaySizeClass = 'w-8 h-8 md:w-10 md:h-10';
+                                        $overlayTextSize = 'text-2xl md:text-3xl';
+                                        $overlayRing = 'ring-2 ring-black/20';
+                                        $overlayWrapperClass = 'absolute top-0 right-0 pointer-events-none z-20 transform translate-x-2 -translate-y-2';
+                                    }
+                                @endphp
+
+                                <div class="flex-1 flex items-center justify-center w-full">
+                                    <div class="relative w-16 h-16 flex items-center justify-center">
+                                        @php
+                                            // Prefer dedicated SVGs for certain categories
+                                            $isDrawing = preg_match('/\bDrawings?\b/i', $raw);
+                                            if (preg_match('/galax/i', $lbase)) {
+                                                $svgPath = public_path($isDrawing ? 'images/achievements/galaxy_drawings.svg' : 'images/achievements/galaxy.svg');
+                                            } elseif (str_contains($lbase, 'comet')) {
+                                                $svgPath = public_path('images/achievements/comet.svg');
+                                            } elseif (str_contains($lbase, 'globular')) {
+                                                $svgPath = public_path($isDrawing ? 'images/achievements/globular_drawings.svg' : 'images/achievements/globular.svg');
+                                            } elseif (str_contains($lbase, 'open cluster')) {
+                                                $svgPath = public_path($isDrawing ? 'images/achievements/open_cluster_drawings.svg' : 'images/achievements/open_cluster.svg');
+                                            } elseif (str_contains($lbase, 'planetary')) {
+                                                $svgPath = public_path($isDrawing ? 'images/achievements/planetary_nebula_drawings.svg' : 'images/achievements/planetary_nebula.svg');
+                                            } else {
+                                                $svgPath = public_path(ltrim($achievement->image, '/'));
+                                            }
+                                            $svg = '';
+                                            if (file_exists($svgPath)) {
+                                                $svg = file_get_contents($svgPath);
+                                                // remove embedded <text> elements to avoid duplicate labels
+                                                $svg = preg_replace('/<text[\s\S]*?<\/text>/i', '', $svg);
+                                                // remove width/height attributes so SVG scales to container
+                                                $svg = preg_replace('/\s*(width|height)="[^"]+"/i', '', $svg);
+                                            }
+                                        @endphp
+                                        <div class="w-full h-full inline-svg">{!! $svg !!}</div>
+                                        @if ($count)
+                                            <div class="{{ $overlayWrapperClass }}">
+                                                <div class="{{ $overlayBg }} rounded-full {{ $overlaySizeClass }} flex items-center justify-center {{ $overlayRing }}">
+                                                    <span class="{{ $overlayText }} {{ $overlayTextSize }} font-extrabold tracking-tight leading-none drop-shadow-md">{{ $count }}</span>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                @if ($count)
+                                    <div class="mt-1 text-xs text-center text-gray-300 leading-tight two-line-truncate w-full">
+                                        <div>{{ $label }}</div>
+                                    </div>
+                                @else
+                                    <div class="mt-1 text-xs text-center text-gray-300 leading-tight two-line-truncate w-full">{{ $displayName }}</div>
+                                @endif
                             </div>
                         @endforeach
+                    @else
+                        <p class="text-sm text-gray-500">No trophies yet.</p>
                     @endif
                 </div>
             </x-card>

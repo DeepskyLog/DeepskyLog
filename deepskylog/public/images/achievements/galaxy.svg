@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Galaxy - M51 spiral">
+  <defs>
+    <radialGradient id="gDisk" cx="50%" cy="55%" r="55%">
+      <stop offset="0%"   stop-color="#fff8e1" stop-opacity="0.65"/>
+      <stop offset="55%"  stop-color="#ffe082" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff8f00" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gNuc" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#ffffff"/>
+      <stop offset="40%"  stop-color="#fffde7"/>
+      <stop offset="100%" stop-color="#ffd54f" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gComp" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#fffde7"/>
+      <stop offset="100%" stop-color="#ffd54f" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Arm outer halo: moderate blur, wider stroke -->
+    <filter id="aHalo" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5"/>
+    </filter>
+    <!-- Arm inner glow: tight blur -->
+    <filter id="aCore" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="1.0"/>
+    </filter>
+    <!-- Nuclear/companion glow -->
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="1.8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background stars -->
+  <g fill="#ffffff" opacity="0.12">
+    <circle cx="5"  cy="7"  r="0.8"/>
+    <circle cx="59" cy="7"  r="0.7"/>
+    <circle cx="61" cy="53" r="0.6"/>
+    <circle cx="3"  cy="56" r="0.7"/>
+    <circle cx="56" cy="42" r="0.5"/>
+    <circle cx="9"  cy="20" r="0.5"/>
+  </g>
+
+  <!-- Extended galactic disk halo -->
+  <ellipse cx="28" cy="36" rx="22" ry="18" fill="url(#gDisk)"/>
+
+  <!-- ARM 1: outer halo (blurred wide stroke) -->
+  <path d="M25 31 C 18 29, 12 34, 10 42 C 9 48, 10 53, 12 56"
+        fill="none" stroke="#ffe082" stroke-width="9" stroke-linecap="round"
+        opacity="0.60" filter="url(#aHalo)"/>
+  <!-- ARM 1: inner luminous lane (tight blur, still soft) -->
+  <path d="M25 31 C 18 29, 12 34, 10 42 C 9 48, 10 53, 12 56"
+        fill="none" stroke="#fff8e1" stroke-width="4" stroke-linecap="round"
+        opacity="0.75" filter="url(#aCore)"/>
+
+  <!-- ARM 2: outer halo -->
+  <path d="M31 41 C 38 46, 44 46, 48 40 C 52 34, 52 24, 52 18"
+        fill="none" stroke="#ffe082" stroke-width="9" stroke-linecap="round"
+        opacity="0.60" filter="url(#aHalo)"/>
+  <!-- ARM 2: inner luminous lane -->
+  <path d="M31 41 C 38 46, 44 46, 48 40 C 52 34, 52 24, 52 18"
+        fill="none" stroke="#fff8e1" stroke-width="4" stroke-linecap="round"
+        opacity="0.75" filter="url(#aCore)"/>
+
+  <!-- Galactic bulge glow (drawn above arms) -->
+  <circle cx="28" cy="36" r="12" fill="url(#gNuc)" filter="url(#glow)"/>
+
+  <!-- Nucleus -->
+  <circle cx="28" cy="36" r="3.5" fill="#fffde7"/>
+  <circle cx="28" cy="36" r="1.6" fill="#ffffff"/>
+
+  <!-- Companion galaxy (NGC 5195) -->
+  <circle cx="52" cy="16" r="6"   fill="url(#gComp)" filter="url(#glow)" opacity="0.85"/>
+  <circle cx="52" cy="16" r="2.4" fill="#fffde7" opacity="0.95"/>
+  <circle cx="52" cy="16" r="1.0" fill="#ffffff"/>
+
+</svg>

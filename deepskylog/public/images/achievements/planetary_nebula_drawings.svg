@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Planetary nebula">
+  <defs>
+    <!-- Ring gradient: transparent centre, bright inner wall, fading outer rim -->
+    <radialGradient id="pnRing" cx="50%" cy="50%" r="50%" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#88eeff" stop-opacity="0"/>
+      <stop offset="45%"  stop-color="#88eeff" stop-opacity="0"/>
+      <stop offset="55%"  stop-color="#88eeff" stop-opacity="0.85"/>
+      <stop offset="68%"  stop-color="#00ccaa" stop-opacity="0.92"/>
+      <stop offset="82%"  stop-color="#00aa88" stop-opacity="0.88"/>
+      <stop offset="92%"  stop-color="#dd6622" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#dd4400" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Outer halo gradient -->
+    <radialGradient id="pnHalo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#2244cc" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#2244cc" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Star glow filter -->
+    <filter id="pnGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="1.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <!-- Soft ring blur for the bleed glow -->
+    <filter id="pnBlur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.2"/>
+    </filter>
+  </defs>
+  <!-- Background stars -->
+  <g fill="#ffffff" opacity="0.10">
+    <circle cx="8"  cy="10" r="0.7"/>
+    <circle cx="55" cy="8"  r="0.6"/>
+    <circle cx="58" cy="52" r="0.7"/>
+    <circle cx="6"  cy="55" r="0.6"/>
+    <circle cx="52" cy="42" r="0.5"/>
+    <circle cx="14" cy="48" r="0.5"/>
+  </g>
+  <!-- Outer halo glow -->
+  <ellipse cx="32" cy="32" rx="25" ry="19" fill="url(#pnHalo)"/>
+  <!-- Ring body (gradient creates annulus: transparent centre → bright ring → fading edge) -->
+  <ellipse cx="32" cy="32" rx="20" ry="15" fill="url(#pnRing)"/>
+  <!-- Soft bleed glow around the ring for depth -->
+  <ellipse cx="32" cy="32" rx="20" ry="15" fill="#00bbcc" opacity="0.30" filter="url(#pnBlur)"/>
+  <!-- Inner nebulosity (faint blue inside hole) -->
+  <ellipse cx="32" cy="32" rx="9"  ry="7"  fill="#4488ff" opacity="0.18"/>
+  <!-- Central white dwarf with glow -->
+  <circle cx="32" cy="32" r="3.5" fill="#ffffff" opacity="0.75" filter="url(#pnGlow)"/>
+  <circle cx="32" cy="32" r="1.5" fill="#ffffff"/>
+
+  <g transform="scale(0.64)">
+    <path d="M74.589,20.617 L71.5,27.5 L78.353,24.379 L78.367,24.394 L74.578,20.602 L74.589,20.617 z M75.097,20.08 L90.756,4.422 L94.546,8.212 L78.887,23.871 L75.097,20.08 z M95.641,3.257 C93.996,1.722 92.133,3.135 92.133,3.135 L95.924,6.92 C95.923,6.92 97.393,5.159 95.641,3.257 z" fill="#CD7F32"/>
+  </g>
+</svg>
