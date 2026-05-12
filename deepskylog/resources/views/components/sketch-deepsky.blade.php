@@ -25,7 +25,7 @@
         $objectModel =
             $object ??
             ($objectName
-                ? \App\Models\ObjectsOld::where("name", $objectName)->first()
+                ? \App\Models\Target::where("name", $objectName)->first()
                 : null);
         $slug =
             $objectModel?->slug ??

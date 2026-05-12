@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Observation;
 use App\Models\User;
-use App\Models\ObjectsOld;
+use App\Models\Target;
 use App\Models\Location;
 use App\Models\Instrument;
 use App\Models\Eyepiece;
@@ -378,7 +378,7 @@ class ObservationsController extends Controller
             $filterIds = collect($items->pluck('filter_id')->filter()->unique()->reject(fn($id) => $id <= 0)->values());
 
             $users = $usernames->isNotEmpty() ? User::whereIn('username', $usernames)->get()->keyBy('username') : collect();
-            $objects = $objectNames->isNotEmpty() ? ObjectsOld::whereIn('name', $objectNames)->get()->keyBy('name') : collect();
+            $objects = $objectNames->isNotEmpty() ? Target::whereIn('name', $objectNames)->get()->keyBy('name') : collect();
             $locations = $locationIds->isNotEmpty() ? Location::whereIn('id', $locationIds)->get()->keyBy('id') : collect();
             $instruments = $instrumentIds->isNotEmpty() ? Instrument::whereIn('id', $instrumentIds)->get()->keyBy('id') : collect();
             $eyepieces = $eyepieceIds->isNotEmpty() ? Eyepiece::whereIn('id', $eyepieceIds)->get()->keyBy('id') : collect();
@@ -1343,7 +1343,7 @@ class ObservationsController extends Controller
 
         // Batch load all related models
         $users = User::whereIn('username', $usernames)->get()->keyBy('username');
-        $objects = ObjectsOld::whereIn('name', $objectNames)->get()->keyBy('name');
+        $objects = Target::whereIn('name', $objectNames)->get()->keyBy('name');
         // Also index fetched objects by slug so views can resolve objects when
         // the observation contains a slug-like `objectname` value instead of
         // the canonical object `name`.

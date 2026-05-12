@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Constellation;
 use App\Models\Observation;
-use App\Models\ObjectsOld;
+use App\Models\Target;
 use App\Models\SketchOfTheWeek;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -49,7 +49,7 @@ class SketchOfTheWeekController extends Controller
             $text .= 'comet ' . ($observation->target_name ?? 'unknown object');
         } else {
             $objectName = $observation->target_name;
-            $object = $objectName ? ObjectsOld::where('name', $objectName)->first() : null;
+            $object = $objectName ? Target::where('name', $objectName)->first() : null;
             $type = $object ? $object->long_type() : 'object';
 
             $text .= 'the ' . $type . ' ';

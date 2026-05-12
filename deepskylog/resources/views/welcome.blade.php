@@ -346,7 +346,7 @@
                     ->all();
                 $objects = empty($deepSkyObjectNames)
                     ? collect()
-                    : \App\Models\ObjectsOld::whereIn("name", $deepSkyObjectNames)
+                    : \App\Models\Target::whereIn("name", $deepSkyObjectNames)
                         ->get()
                         ->keyBy("name");
 
@@ -487,7 +487,7 @@
                     ->all();
                 $preloadedObjects = empty($deepSkyObjectNames)
                     ? collect()
-                    : \App\Models\ObjectsOld::whereIn("name", $deepSkyObjectNames)
+                    : \App\Models\Target::whereIn("name", $deepSkyObjectNames)
                         ->get()
                         ->keyBy("name");
 

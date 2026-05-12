@@ -7,7 +7,7 @@ use App\Models\ObservingListComment;
 use App\Models\ObservingListItem;
 use App\Models\Message;
 use App\Models\Observation;
-use App\Models\ObjectsOld;
+use App\Models\Target;
 use App\Models\User;
 use App\Models\Instrument;
 use App\Models\Location;
@@ -448,7 +448,7 @@ class ObservingListController extends Controller
         }
 
         $objectDescription = $this->normalizePlainText(
-            (string) (ObjectsOld::query()->where('name', $objectName)->value('description') ?? '')
+            (string) (Target::query()->where('name', $objectName)->value('description') ?? '')
         );
 
         $observerName = $this->resolveObserverName($observation->observer_username ?? null);

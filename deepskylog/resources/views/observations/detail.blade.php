@@ -48,14 +48,14 @@
         if ($observationType === "deepsky") {
             $object = ($preloaded_objects ?? collect())->get($obs->objectname);
             // If not found by name, try by slug (handles slug-stored target_name)
-            if (!$object) {
+                if (!$object) {
                 $object = ($preloaded_objects ?? collect())->get(
                     \Illuminate\Support\Str::slug((string) ($obs->objectname ?? ""), "-")
                 );
             }
             // Last-resort: live lookup by slug or name
             if (!$object) {
-                $object = \App\Models\ObjectsOld::where('slug', \Illuminate\Support\Str::slug((string) ($obs->objectname ?? ""), "-"))
+                $object = \App\Models\Target::where('slug', \Illuminate\Support\Str::slug((string) ($obs->objectname ?? ""), "-"))
                     ->orWhere('name', $obs->objectname)
                     ->first();
             }

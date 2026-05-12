@@ -17,7 +17,7 @@
         use App\Models\Filter;
         use App\Models\Instrument;
         use App\Models\Location;
-        use App\Models\ObjectsOld;
+        use App\Models\Target;
         use App\Models\User;
         use Carbon\Carbon;
         use Illuminate\Support\Facades\Cache;
@@ -68,7 +68,7 @@
             User::where("username", html_entity_decode($observerid))->first();
         $object =
             $preloaded_object ??
-            ObjectsOld::where("name", $objectname)->first();
+            Target::where("name", $objectname)->first();
 
         if ($preloaded_constellations && $object) {
             $constellation = $preloaded_constellations[$object->con]->name ?? "";
