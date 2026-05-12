@@ -9,7 +9,6 @@
   - [x] Make migrations and seeder
   - [x] Show detailed observation page, with all details, comments, ...
   - [ ] Add observations page
-    - [ ] Remove ObserversOld.php
     - [ ] Remove DB::connection('mysqlOld')
     - [ ] Try to add an observation for all types of objects, to see if all fields are working correctly.
       - [X] Sun

@@ -1,7 +1,6 @@
 <?php
 
 use App\Console\Commands\updateAchievementsCommand;
-use App\Console\Commands\updateObservationsCommand;
 // legacy updateOld* commands removed
 // legacy update command removed: updateUserTableCommand
 use Illuminate\Foundation\Inspiring;
@@ -24,5 +23,5 @@ Artisan::command('inspire', function () {
 
 Schedule::command(updateAchievementsCommand::class)->everySixHours();
 // Schedule::command(updateUserTableCommand::class)->everyFifteenMinutes();
-Schedule::command(updateObservationsCommand::class)->daily();
+// update:observations command removed; counts are maintained by model observer
 // updateOld* scheduled commands removed
