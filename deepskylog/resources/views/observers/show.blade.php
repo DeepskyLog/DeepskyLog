@@ -259,76 +259,77 @@
                             <th class="px-4">{{ __('Total') }}</th>
                             <th class="px-4">{{ __('Deepsky') }}</th>
                             <th class="px-4">{{ __('Comets') }}</th>
+                            <th class="px-4">{{ __('Double stars') }}</th>
+                            <th class="px-4">{{ __('Sun') }}</th>
+                            <th class="px-4">{{ __('Moon') }}</th>
+                            <th class="px-4">{{ __('Planets') }}</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <tr>
                             <td class="pr-8">{!! __('Number of observations') !!}</td>
-                            <td class="px-4">{{ $observations->count() + $cometObservations }}
-                                / {{ $totalObservations + $totalCometObservations }}
-                            </td>
-                            <td class="px-4">{{ $observations->count() }}
-                                / {{ $totalObservations }}
-                            </td>
+                            <td class="px-4">{{ $allYourObservations ?? 0 }} / {{ $allTotalObservations ?? 0 }}</td>
+                            <td class="px-4">{{ $deepskyYourObservations ?? 0 }} / {{ $deepskyTotalObservations ?? 0 }}</td>
                             <td class="px-4">{{ $cometObservations }}
                                 / {{ $totalCometObservations }}
                             </td>
+                            <td class="px-4">{{ $doubleYourObservations ?? 0 }} / {{ $doubleTotalObservations ?? 0 }}</td>
+                            <td class="px-4">{{ $sunYourObservations ?? 0 }} / {{ $sunTotalObservations ?? 0 }}</td>
+                            <td class="px-4">{{ $moonYourObservations ?? 0 }} / {{ $moonTotalObservations ?? 0 }}</td>
+                            <td class="px-4">{{ $planetsYourObservations ?? 0 }} / {{ $planetsTotalObservations ?? 0 }}</td>
                         </tr>
 
                         <tr>
                             <td class="pr-8">{!! __('Observations last year') !!}</td>
-                            <td class="px-4">{{ $observationsLastYear + $cometObservationsLastYear }} /
-                                {{ $totalObservationsLastYear + $totalCometObservationsLastYear }}
-                            </td>
-                            <td class="px-4">{{ $observationsLastYear }}
-                                / {{ $totalObservationsLastYear }}
-                            </td>
+                            <td class="px-4">{{ $allYourObservationsLastYear ?? 0 }} / {{ $allTotalObservationsLastYear ?? 0 }}</td>
+                            <td class="px-4">{{ $deepskyYourObservationsLastYear ?? 0 }} / {{ $deepskyTotalObservationsLastYear ?? 0 }}</td>
                             <td class="px-4">{{ $cometObservationsLastYear }}
                                 / {{ $totalCometObservationsLastYear }}
                             </td>
+                            <td class="px-4">{{ $doubleYourObservationsLastYear ?? 0 }} / {{ $doubleTotalObservationsLastYear ?? 0 }}</td>
+                            <td class="px-4">{{ $sunYourObservationsLastYear ?? 0 }} / {{ $sunTotalObservationsLastYear ?? 0 }}</td>
+                            <td class="px-4">{{ $moonYourObservationsLastYear ?? 0 }} / {{ $moonTotalObservationsLastYear ?? 0 }}</td>
+                            <td class="px-4">{{ $planetsYourObservationsLastYear ?? 0 }} / {{ $planetsTotalObservationsLastYear ?? 0 }}</td>
                         </tr>
 
                         <tr>
                             <td class="pr-8">{{ __('Number of drawings') }}</td>
-                            <td class="px-4">{{ $observations->where('has_drawing', 1)->count() + $cometDrawings }}
-                                /
-                                {{ $totalNumberOfDrawings + $totalCometDrawings }}
-                            </td>
-                            <td class="px-4">{{ $observations->where('has_drawing', 1)->count() }}
-                                /
-                                {{ $totalNumberOfDrawings }}
-                            </td>
+                            <td class="px-4">{{ $allYourDrawings ?? 0 }} / {{ $allTotalDrawings ?? 0 }}</td>
+                            <td class="px-4">{{ $deepskyYourDrawings ?? 0 }} / {{ $deepskyTotalDrawings ?? 0 }}</td>
                             <td class="px-4">{{ $cometDrawings }}
                                 /
                                 {{ $totalCometDrawings }}
                             </td>
+                            <td class="px-4">{{ $doubleYourDrawings ?? 0 }} / {{ $doubleTotalDrawings ?? 0 }}</td>
+                            <td class="px-4">{{ $sunYourDrawings ?? 0 }} / {{ $sunTotalDrawings ?? 0 }}</td>
+                            <td class="px-4">{{ $moonYourDrawings ?? 0 }} / {{ $moonTotalDrawings ?? 0 }}</td>
+                            <td class="px-4">{{ $planetsYourDrawings ?? 0 }} / {{ $planetsTotalDrawings ?? 0 }}</td>
                         </tr>
 
                         <tr>
                             <td class="pr-8">{!! __('Drawings last year') !!}</td>
-                            @php
-                                $totalDrawings = Observation::getTotalDrawingsLastYear('deepsky');
-                            @endphp
-                            <td class="px-4">{{ $user->getDeepskyDrawingsLastYear() + $user->getCometDrawingsLastYear() }} /
-                                {{ $totalDrawings + Observation::getTotalDrawingsLastYear('comet') }}
+                            <td class="px-4">{{ $allYourDrawingsLastYear ?? 0 }} / {{ $allTotalDrawingsLastYear ?? 0 }}</td>
+                            <td class="px-4">{{ $deepskyYourDrawingsLastYear ?? 0 }} / {{ $deepskyTotalDrawingsLastYear ?? 0 }}</td>
+                            <td class="px-4">{{ $cometYourDrawingsLastYear ?? 0 }}
+                                / {{ $cometTotalDrawingsLastYear ?? 0 }}
                             </td>
-                            <td class="px-4">{{ $user->getDeepskyDrawingsLastYear() }}
-                                / {{ $totalDrawings }}
-                            </td>
-                            <td class="px-4">{{ $user->getCometDrawingsLastYear() }}
-                                / {{ Observation::getTotalDrawingsLastYear('comet') }}
-                            </td>
+                            <td class="px-4">{{ $doubleYourDrawingsLastYear ?? 0 }} / {{ $doubleTotalDrawingsLastYear ?? 0 }}</td>
+                            <td class="px-4">{{ $sunYourDrawingsLastYear ?? 0 }} / {{ $sunTotalDrawingsLastYear ?? 0 }}</td>
+                            <td class="px-4">{{ $moonYourDrawingsLastYear ?? 0 }} / {{ $moonTotalDrawingsLastYear ?? 0 }}</td>
+                            <td class="px-4">{{ $planetsYourDrawingsLastYear ?? 0 }} / {{ $planetsTotalDrawingsLastYear ?? 0 }}</td>
                         </tr>
 
                         <tr>
                             <td class="pr-8">{{ __('Different objects') }}</td>
-                            <td class="px-4">{{ $user->getUniqueObjectsObservations() + $user->getUniqueCometObservations() }} /
-                                {{ $totalUniqueObjects + Observation::getUniqueObjectsObserved('comet') }}</td>
-                            <td class="px-4">{{ $user->getUniqueObjectsObservations() }}
-                                / {{ $totalUniqueObjects }}</td>
-                            <td class="px-4">{{ $user->getUniqueCometObservations() }} /
-                                {{ Observation::getUniqueObjectsObserved('comet') }}</td>
+                            <td class="px-4">{{ $allYourUnique ?? 0 }} / {{ $allTotalUnique ?? 0 }}</td>
+                            <td class="px-4">{{ $deepskyYourUnique ?? 0 }} / {{ $deepskyTotalUnique ?? 0 }}</td>
+                            <td class="px-4">{{ $cometYourUnique ?? 0 }} /
+                                {{ $cometTotalUnique ?? 0 }}</td>
+                            <td class="px-4">{{ $doubleYourUnique ?? 0 }} / {{ $doubleTotalUnique ?? 0 }}</td>
+                            <td class="px-4">{{ $sunYourUnique ?? 0 }} / {{ $sunTotalUnique ?? 0 }}</td>
+                            <td class="px-4">{{ $moonYourUnique ?? 0 }} / {{ $moonTotalUnique ?? 0 }}</td>
+                            <td class="px-4">{{ $planetsYourUnique ?? 0 }} / {{ $planetsTotalUnique ?? 0 }}</td>
                         </tr>
 
                         <tr>

@@ -48,50 +48,107 @@ class ObjectTypesChart
      */
     public function build(User $user): OriginalPieChart
     {
-        $observations[0] = Observation::where('observer_username', $user->username)->where('legacy_source', 'comet')->count();
-        $names[0] = __('Comets');
+        $userWhere = function ($q) use ($user) {
+            $q->where('observations.observer_user_id', $user->id)
+                ->orWhere('observations.observer_username', $user->username);
+        };
 
-        $deepskyobservations = Observation::where('observer_username', $user->username)
-            ->join('objects', 'observations.target_name', '=', 'objects.name')
+        // Deepsky/double-star objects grouped by type — use normalized index join for accuracy
+        $deepskyRows = DB::table('observations')
+            ->join('objects', 'observations.target_name_normalized', '=', 'objects.name_normalized')
+            ->where($userWhere)
+            ->where('observations.target_table', 'objects')
             ->select('objects.type', DB::raw('count(*) as count'))
             ->groupBy('objects.type')
             ->get();
 
-        // Loop through the deep sky observations and add the count and type to the respective arrays
-        foreach ($deepskyobservations as $key => $value) {
-            $observations[$key + 1] = $value->count;
-            $value->type = __('' . TargetType::where('id', $value->type)->first()->type . '');
-            $names[$key + 1] = $value->type;
+        // Preload all target type labels to avoid N+1
+        $targetTypes = TargetType::all()->keyBy('id');
+
+        $observations = [];
+        $names = [];
+
+        foreach ($deepskyRows as $row) {
+            $label = $targetTypes->get($row->type)?->type ?? $row->type;
+            $observations[] = (int) $row->count;
+            $names[] = __($label);
         }
 
-        // If there are any observations that don't fit into the predefined types, group them under 'Rest'
-        if (array_search('Rest', $names)) {
-            $rest = array_search('Rest', $names);
-        } else {
-            $names[] = __('Rest');
-            $rest = array_search('Rest', $names);
-            $observations[] = 0;
+        // Comets
+        $cometCount = (int) DB::table('observations')
+            ->where('legacy_source', 'comet')
+            ->where(function ($q) use ($user) {
+                $q->where('observer_user_id', $user->id)
+                    ->orWhere('observer_username', $user->username);
+            })->count();
+        if ($cometCount > 0) {
+            $observations[] = $cometCount;
+            $names[] = __('Comets');
         }
 
-        // Calculate the total number of observations
-        $total = Observation::where('observer_username', $user->username)->count();
+        // Planets (excluding sun)
+        $planetsCount = (int) DB::table('observations')
+            ->where('target_table', 'planets')
+            ->whereRaw('LOWER(target_key) != ?', ['sun'])
+            ->where(function ($q) use ($user) {
+                $q->where('observer_user_id', $user->id)
+                    ->orWhere('observer_username', $user->username);
+            })->count();
+        if ($planetsCount > 0) {
+            $observations[] = $planetsCount;
+            $names[] = __('Planets');
+        }
 
-        // If the count of observations for a type is less than 1% of the total, group it under 'Rest'
+        // Sun
+        $sunCount = (int) DB::table('observations')
+            ->where('target_table', 'planets')
+            ->whereRaw('LOWER(target_key) = ?', ['sun'])
+            ->where(function ($q) use ($user) {
+                $q->where('observer_user_id', $user->id)
+                    ->orWhere('observer_username', $user->username);
+            })->count();
+        if ($sunCount > 0) {
+            $observations[] = $sunCount;
+            $names[] = __('Sun');
+        }
+
+        // Moon and lunar features
+        $moonCount = (int) DB::table('observations')
+            ->whereIn('target_table', ['moons', 'lunar_features'])
+            ->where(function ($q) use ($user) {
+                $q->where('observer_user_id', $user->id)
+                    ->orWhere('observer_username', $user->username);
+            })->count();
+        if ($moonCount > 0) {
+            $observations[] = $moonCount;
+            $names[] = __('Moon');
+        }
+
+        // Group small slices (<1% of total) into 'Rest'
+        $total = array_sum($observations);
+        $restCount = 0;
+        $keep = [];
+        $keepNames = [];
         for ($i = 0; $i < count($observations); $i++) {
-            if ($observations[$i] < $total / 100) {
-                $observations[$rest] += $observations[$i];
-                $observations[$i] = 0;
+            if ($total > 0 && $observations[$i] < $total / 100) {
+                $restCount += $observations[$i];
+            } else {
+                $keep[] = $observations[$i];
+                $keepNames[] = $names[$i];
             }
         }
+        if ($restCount > 0) {
+            $keep[] = $restCount;
+            $keepNames[] = __('Rest');
+        }
 
-        // Create the pie chart and return it
         return (new OriginalPieChart)
             ->setTitle(__('Object types seen: ') . $user->name)
             ->setSubtitle(__('Source: ') . config('app.old_url'))
-            ->addData($observations)
+            ->addData($keep)
             ->setTheme('dark')
             ->setFontColor('#bbbbbb')
             ->setToolbar(true)
-            ->setLabels($names);
+            ->setLabels($keepNames);
     }
 }

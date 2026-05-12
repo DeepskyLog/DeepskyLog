@@ -6,9 +6,12 @@ use App\Charts\CountriesChart;
 use App\Charts\ObjectTypesChart;
 use App\Charts\ObservationsPerMonthChart;
 use App\Charts\ObservationsPerYearChart;
+use App\Jobs\ComputeObserverStats;
 use App\Models\Observation;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ObserverController extends Controller
 {
@@ -40,47 +43,182 @@ class ObserverController extends Controller
     ) {
         $user = User::where('slug', $slug)->firstOrFail();
 
+        $cacheKey = 'observer_stats:' . $user->id;
+        $inProgressKey = 'observer_stats_in_progress:' . $user->id;
+        $stats = Cache::get($cacheKey);
+
+        // Kick off background precomputation when cache is cold
+        if (!is_array($stats)) {
+            if (Cache::add($inProgressKey, true, 60)) {
+                ComputeObserverStats::dispatch($user->id);
+            }
+        }
+
         $observationsOld = $user->observations();
-        $totalObservations = Observation::getTotalObservations('deepsky');
-
-        $observationsLastYear = Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $user->id)->where('legacy_source', 'deepsky')->count();
-        $totalObservationsLastYear = Observation::where('observed_on', '>=', now()->subYear())->where('legacy_source', 'deepsky')->count();
-
-        $totalNumberOfDrawings = Observation::where('legacy_source', 'deepsky')->where('has_drawing', 1)->count();
-        $totalUniqueObjects = Observation::getUniqueObjectsObserved('deepsky');
-
-        // Calculate comet statistics once to avoid repeated queries in the view
-        $cometObservations = Observation::where('legacy_source', 'comet')->where('observer_user_id', $user->id)->count();
-        $totalCometObservations = Observation::getTotalObservations('comet');
-        $cometObservationsLastYear = $user->getCometObservationsLastYear();
-        $totalCometObservationsLastYear = Observation::getTotalObservationsLastYear('comet');
-        $cometDrawings = Observation::where('legacy_source', 'comet')->where('observer_user_id', $user->id)->where('has_drawing', 1)->count();
-        $totalCometDrawings = Observation::where('legacy_source', 'comet')->where('has_drawing', 1)->count();
-
-        // Determine if this user has any observations with likes (deepsky or comet)
-        $hasPopularObservations = false;
         $username = $user->username;
 
-        $deepskyIds = Observation::where('legacy_source', 'deepsky')->where('observer_user_id', $user->id)->pluck('id')->toArray();
-        $cometIds = Observation::where('legacy_source', 'comet')->where('observer_user_id', $user->id)->pluck('id')->toArray();
+        if (is_array($stats)) {
+            // ── Fast path: all values come from cache ──────────────────────
+            $allYourObservations = $stats['allYourObservations'] ?? 0;
+            $allTotalObservations = $stats['allTotalObservations'] ?? 0;
+            $allYourObservationsLastYear = $stats['allYourObservationsLastYear'] ?? 0;
+            $allTotalObservationsLastYear = $stats['allTotalObservationsLastYear'] ?? 0;
+            $allYourDrawings = $stats['allYourDrawings'] ?? 0;
+            $allTotalDrawings = $stats['allTotalDrawings'] ?? 0;
+            $allYourDrawingsLastYear = $stats['allYourDrawingsLastYear'] ?? 0;
+            $allTotalDrawingsLastYear = $stats['allTotalDrawingsLastYear'] ?? 0;
+            $allYourUnique = $stats['allYourUnique'] ?? 0;
+            $allTotalUnique = $stats['allTotalUnique'] ?? 0;
 
-        if (!empty($deepskyIds) || !empty($cometIds)) {
-            $query = \App\Models\ObservationLike::query();
-            $query->where(function ($q) use ($deepskyIds, $cometIds) {
-                if (!empty($deepskyIds)) {
-                    $q->orWhere(function ($q2) use ($deepskyIds) {
-                        $q2->where('observation_type', 'deepsky')->whereIn('observation_id', $deepskyIds);
-                    });
-                }
+            $deepskyYourObservations = $stats['deepskyYourObservations'] ?? 0;
+            $deepskyTotalObservations = $stats['deepskyTotalObservations'] ?? 0;
+            $deepskyYourObservationsLastYear = $stats['deepskyYourObservationsLastYear'] ?? 0;
+            $deepskyTotalObservationsLastYear = $stats['deepskyTotalObservationsLastYear'] ?? 0;
+            $deepskyYourDrawings = $stats['deepskyYourDrawings'] ?? 0;
+            $deepskyTotalDrawings = $stats['deepskyTotalDrawings'] ?? 0;
+            $deepskyYourDrawingsLastYear = $stats['deepskyYourDrawingsLastYear'] ?? 0;
+            $deepskyTotalDrawingsLastYear = $stats['deepskyTotalDrawingsLastYear'] ?? 0;
+            $deepskyYourUnique = $stats['deepskyYourUnique'] ?? 0;
+            $deepskyTotalUnique = $stats['deepskyTotalUnique'] ?? 0;
 
-                if (!empty($cometIds)) {
-                    $q->orWhere(function ($q2) use ($cometIds) {
-                        $q2->where('observation_type', 'comet')->whereIn('observation_id', $cometIds);
-                    });
-                }
-            });
+            // Legacy view-compat aliases used in older view sections
+            $totalObservations = $deepskyTotalObservations;
+            $observationsLastYear = $deepskyYourObservationsLastYear;
+            $totalObservationsLastYear = $deepskyTotalObservationsLastYear;
+            $totalNumberOfDrawings = $deepskyTotalDrawings;
+            $totalUniqueObjects = $deepskyTotalUnique;
 
-            $hasPopularObservations = $query->exists();
+            $cometObservations = $stats['cometYourObservations'] ?? 0;
+            $totalCometObservations = $stats['cometTotalObservations'] ?? 0;
+            $cometObservationsLastYear = $stats['cometYourObservationsLastYear'] ?? 0;
+            $totalCometObservationsLastYear = $stats['cometTotalObservationsLastYear'] ?? 0;
+            $cometDrawings = $stats['cometYourDrawings'] ?? 0;
+            $totalCometDrawings = $stats['cometTotalDrawings'] ?? 0;
+            $cometYourDrawingsLastYear = $stats['cometYourDrawingsLastYear'] ?? 0;
+            $cometTotalDrawingsLastYear = $stats['cometTotalDrawingsLastYear'] ?? 0;
+            $cometYourUnique = $stats['cometYourUnique'] ?? 0;
+            $cometTotalUnique = $stats['cometTotalUnique'] ?? 0;
+
+            $doubleYourObservations = $stats['doubleYourObservations'] ?? 0;
+            $doubleTotalObservations = $stats['doubleTotalObservations'] ?? 0;
+            $doubleYourObservationsLastYear = $stats['doubleYourObservationsLastYear'] ?? 0;
+            $doubleTotalObservationsLastYear = $stats['doubleTotalObservationsLastYear'] ?? 0;
+            $doubleYourDrawings = $stats['doubleYourDrawings'] ?? 0;
+            $doubleTotalDrawings = $stats['doubleTotalDrawings'] ?? 0;
+            $doubleYourDrawingsLastYear = $stats['doubleYourDrawingsLastYear'] ?? 0;
+            $doubleTotalDrawingsLastYear = $stats['doubleTotalDrawingsLastYear'] ?? 0;
+            $doubleYourUnique = $stats['doubleYourUnique'] ?? 0;
+            $doubleTotalUnique = $stats['doubleTotalUnique'] ?? 0;
+
+            $planetsYourObservations = $stats['planetsYourObservations'] ?? 0;
+            $planetsTotalObservations = $stats['planetsTotalObservations'] ?? 0;
+            $planetsYourObservationsLastYear = $stats['planetsYourObservationsLastYear'] ?? 0;
+            $planetsTotalObservationsLastYear = $stats['planetsTotalObservationsLastYear'] ?? 0;
+            $planetsYourDrawings = $stats['planetsYourDrawings'] ?? 0;
+            $planetsTotalDrawings = $stats['planetsTotalDrawings'] ?? 0;
+            $planetsYourDrawingsLastYear = $stats['planetsYourDrawingsLastYear'] ?? 0;
+            $planetsTotalDrawingsLastYear = $stats['planetsTotalDrawingsLastYear'] ?? 0;
+            $planetsYourUnique = $stats['planetsYourUnique'] ?? 0;
+            $planetsTotalUnique = $stats['planetsTotalUnique'] ?? 0;
+
+            $sunYourObservations = $stats['sunYourObservations'] ?? 0;
+            $sunTotalObservations = $stats['sunTotalObservations'] ?? 0;
+            $sunYourObservationsLastYear = $stats['sunYourObservationsLastYear'] ?? 0;
+            $sunTotalObservationsLastYear = $stats['sunTotalObservationsLastYear'] ?? 0;
+            $sunYourDrawings = $stats['sunYourDrawings'] ?? 0;
+            $sunTotalDrawings = $stats['sunTotalDrawings'] ?? 0;
+            $sunYourDrawingsLastYear = $stats['sunYourDrawingsLastYear'] ?? 0;
+            $sunTotalDrawingsLastYear = $stats['sunTotalDrawingsLastYear'] ?? 0;
+            $sunYourUnique = $stats['sunYourUnique'] ?? 0;
+            $sunTotalUnique = $stats['sunTotalUnique'] ?? 0;
+
+            $moonYourObservations = $stats['moonYourObservations'] ?? 0;
+            $moonTotalObservations = $stats['moonTotalObservations'] ?? 0;
+            $moonYourObservationsLastYear = $stats['moonYourObservationsLastYear'] ?? 0;
+            $moonTotalObservationsLastYear = $stats['moonTotalObservationsLastYear'] ?? 0;
+            $moonYourDrawings = $stats['moonYourDrawings'] ?? 0;
+            $moonTotalDrawings = $stats['moonTotalDrawings'] ?? 0;
+            $moonYourDrawingsLastYear = $stats['moonYourDrawingsLastYear'] ?? 0;
+            $moonTotalDrawingsLastYear = $stats['moonTotalDrawingsLastYear'] ?? 0;
+            $moonYourUnique = $stats['moonYourUnique'] ?? 0;
+            $moonTotalUnique = $stats['moonTotalUnique'] ?? 0;
+
+            $hasPopularObservations = $stats['hasPopularObservations'] ?? false;
+        } else {
+            // ── Slow path: cache cold, use fast queries (no per-year loop, no ID pluck) ──
+            $totalObservations = (int) Observation::where('legacy_source', 'deepsky')->count();
+            $observationsLastYear = (int) Observation::where('legacy_source', 'deepsky')
+                ->where('observed_on', '>=', now()->subYear())
+                ->where('observer_user_id', $user->id)->count();
+            $totalObservationsLastYear = (int) Observation::where('legacy_source', 'deepsky')
+                ->where('observed_on', '>=', now()->subYear())->count();
+            $totalNumberOfDrawings = (int) Observation::where('legacy_source', 'deepsky')
+                ->where('has_drawing', 1)->count();
+            $totalUniqueObjects = Observation::getUniqueObjectsObserved('deepsky');
+
+            $cometObservations = (int) Observation::where('legacy_source', 'comet')
+                ->where('observer_user_id', $user->id)->count();
+            $totalCometObservations = (int) Observation::where('legacy_source', 'comet')->count();
+            $cometObservationsLastYear = $user->getCometObservationsLastYear();
+            $totalCometObservationsLastYear = Observation::getTotalObservationsLastYear('comet');
+            $cometDrawings = (int) Observation::where('legacy_source', 'comet')
+                ->where('observer_user_id', $user->id)->where('has_drawing', 1)->count();
+            $totalCometDrawings = (int) Observation::where('legacy_source', 'comet')
+                ->where('has_drawing', 1)->count();
+            $cometYourDrawingsLastYear = $user->getCometDrawingsLastYear();
+            $cometTotalDrawingsLastYear = Observation::getTotalDrawingsLastYear('comet');
+            $cometYourUnique = $user->getUniqueCometObservations();
+            $cometTotalUnique = Observation::getUniqueObjectsObserved('comet');
+
+            // Avoid loading thousands of IDs into PHP — use a JOIN for the likes check
+            $hasPopularObservations = DB::table('observation_likes as ol')
+                ->join('observations as o', function ($join) {
+                    $join->on('o.id', '=', 'ol.observation_id')
+                        ->on('ol.observation_type', '=', 'o.legacy_source');
+                })
+                ->where(function ($q) use ($user) {
+                    $q->where('o.observer_user_id', $user->id)
+                        ->orWhere('o.observer_username', $user->username);
+                })
+                ->whereIn('ol.observation_type', ['deepsky', 'comet'])
+                ->exists();
+
+            // Category stats will show as zeroes until cache is warm
+            $allYourObservations = $allTotalObservations = 0;
+            $allYourObservationsLastYear = $allTotalObservationsLastYear = 0;
+            $allYourDrawings = $allTotalDrawings = 0;
+            $allYourDrawingsLastYear = $allTotalDrawingsLastYear = 0;
+            $allYourUnique = $allTotalUnique = 0;
+
+            $deepskyYourObservations = $deepskyTotalObservations = 0;
+            $deepskyYourObservationsLastYear = $deepskyTotalObservationsLastYear = 0;
+            $deepskyYourDrawings = $deepskyTotalDrawings = 0;
+            $deepskyYourDrawingsLastYear = $deepskyTotalDrawingsLastYear = 0;
+            $deepskyYourUnique = $deepskyTotalUnique = 0;
+
+            $doubleYourObservations = $doubleTotalObservations = 0;
+            $doubleYourObservationsLastYear = $doubleTotalObservationsLastYear = 0;
+            $doubleYourDrawings = $doubleTotalDrawings = 0;
+            $doubleYourDrawingsLastYear = $doubleTotalDrawingsLastYear = 0;
+            $doubleYourUnique = $doubleTotalUnique = 0;
+
+            $planetsYourObservations = $planetsTotalObservations = 0;
+            $planetsYourObservationsLastYear = $planetsTotalObservationsLastYear = 0;
+            $planetsYourDrawings = $planetsTotalDrawings = 0;
+            $planetsYourDrawingsLastYear = $planetsTotalDrawingsLastYear = 0;
+            $planetsYourUnique = $planetsTotalUnique = 0;
+
+            $sunYourObservations = $sunTotalObservations = 0;
+            $sunYourObservationsLastYear = $sunTotalObservationsLastYear = 0;
+            $sunYourDrawings = $sunTotalDrawings = 0;
+            $sunYourDrawingsLastYear = $sunTotalDrawingsLastYear = 0;
+            $sunYourUnique = $sunTotalUnique = 0;
+
+            $moonYourObservations = $moonTotalObservations = 0;
+            $moonYourObservationsLastYear = $moonTotalObservationsLastYear = 0;
+            $moonYourDrawings = $moonTotalDrawings = 0;
+            $moonYourDrawingsLastYear = $moonTotalDrawingsLastYear = 0;
+            $moonYourUnique = $moonTotalUnique = 0;
         }
 
         // Load up to 3 most recent active sessions for this observer
@@ -158,21 +296,91 @@ class ObserverController extends Controller
 
         return view('observers.show', [
             'user' => $user,
-            // sessions prepared above
             'sessions' => $sessions,
             'observations' => $observationsOld,
+            // Legacy aliases
             'totalObservations' => $totalObservations,
             'observationsLastYear' => $observationsLastYear,
             'totalObservationsLastYear' => $totalObservationsLastYear,
             'totalNumberOfDrawings' => $totalNumberOfDrawings,
             'totalUniqueObjects' => $totalUniqueObjects,
-            // Comet statistics (precomputed to avoid N+1 queries in view)
+            // All-categories totals
+            'allYourObservations' => $allYourObservations,
+            'allTotalObservations' => $allTotalObservations,
+            'allYourObservationsLastYear' => $allYourObservationsLastYear,
+            'allTotalObservationsLastYear' => $allTotalObservationsLastYear,
+            'allYourDrawings' => $allYourDrawings,
+            'allTotalDrawings' => $allTotalDrawings,
+            'allYourDrawingsLastYear' => $allYourDrawingsLastYear,
+            'allTotalDrawingsLastYear' => $allTotalDrawingsLastYear,
+            'allYourUnique' => $allYourUnique,
+            'allTotalUnique' => $allTotalUnique,
+            // Deepsky
+            'deepskyYourObservations' => $deepskyYourObservations,
+            'deepskyTotalObservations' => $deepskyTotalObservations,
+            'deepskyYourObservationsLastYear' => $deepskyYourObservationsLastYear,
+            'deepskyTotalObservationsLastYear' => $deepskyTotalObservationsLastYear,
+            'deepskyYourDrawings' => $deepskyYourDrawings,
+            'deepskyTotalDrawings' => $deepskyTotalDrawings,
+            'deepskyYourDrawingsLastYear' => $deepskyYourDrawingsLastYear,
+            'deepskyTotalDrawingsLastYear' => $deepskyTotalDrawingsLastYear,
+            'deepskyYourUnique' => $deepskyYourUnique,
+            'deepskyTotalUnique' => $deepskyTotalUnique,
+            // Comets
             'cometObservations' => $cometObservations,
             'totalCometObservations' => $totalCometObservations,
             'cometObservationsLastYear' => $cometObservationsLastYear,
             'totalCometObservationsLastYear' => $totalCometObservationsLastYear,
             'cometDrawings' => $cometDrawings,
             'totalCometDrawings' => $totalCometDrawings,
+            'cometYourDrawingsLastYear' => $cometYourDrawingsLastYear,
+            'cometTotalDrawingsLastYear' => $cometTotalDrawingsLastYear,
+            'cometYourUnique' => $cometYourUnique,
+            'cometTotalUnique' => $cometTotalUnique,
+            // Double stars
+            'doubleYourObservations' => $doubleYourObservations,
+            'doubleTotalObservations' => $doubleTotalObservations,
+            'doubleYourObservationsLastYear' => $doubleYourObservationsLastYear,
+            'doubleTotalObservationsLastYear' => $doubleTotalObservationsLastYear,
+            'doubleYourDrawings' => $doubleYourDrawings,
+            'doubleTotalDrawings' => $doubleTotalDrawings,
+            'doubleYourDrawingsLastYear' => $doubleYourDrawingsLastYear,
+            'doubleTotalDrawingsLastYear' => $doubleTotalDrawingsLastYear,
+            'doubleYourUnique' => $doubleYourUnique,
+            'doubleTotalUnique' => $doubleTotalUnique,
+            // Planets
+            'planetsYourObservations' => $planetsYourObservations,
+            'planetsTotalObservations' => $planetsTotalObservations,
+            'planetsYourObservationsLastYear' => $planetsYourObservationsLastYear,
+            'planetsTotalObservationsLastYear' => $planetsTotalObservationsLastYear,
+            'planetsYourDrawings' => $planetsYourDrawings,
+            'planetsTotalDrawings' => $planetsTotalDrawings,
+            'planetsYourDrawingsLastYear' => $planetsYourDrawingsLastYear,
+            'planetsTotalDrawingsLastYear' => $planetsTotalDrawingsLastYear,
+            'planetsYourUnique' => $planetsYourUnique,
+            'planetsTotalUnique' => $planetsTotalUnique,
+            // Sun
+            'sunYourObservations' => $sunYourObservations,
+            'sunTotalObservations' => $sunTotalObservations,
+            'sunYourObservationsLastYear' => $sunYourObservationsLastYear,
+            'sunTotalObservationsLastYear' => $sunTotalObservationsLastYear,
+            'sunYourDrawings' => $sunYourDrawings,
+            'sunTotalDrawings' => $sunTotalDrawings,
+            'sunYourDrawingsLastYear' => $sunYourDrawingsLastYear,
+            'sunTotalDrawingsLastYear' => $sunTotalDrawingsLastYear,
+            'sunYourUnique' => $sunYourUnique,
+            'sunTotalUnique' => $sunTotalUnique,
+            // Moon
+            'moonYourObservations' => $moonYourObservations,
+            'moonTotalObservations' => $moonTotalObservations,
+            'moonYourObservationsLastYear' => $moonYourObservationsLastYear,
+            'moonTotalObservationsLastYear' => $moonTotalObservationsLastYear,
+            'moonYourDrawings' => $moonYourDrawings,
+            'moonTotalDrawings' => $moonTotalDrawings,
+            'moonYourDrawingsLastYear' => $moonYourDrawingsLastYear,
+            'moonTotalDrawingsLastYear' => $moonTotalDrawingsLastYear,
+            'moonYourUnique' => $moonYourUnique,
+            'moonTotalUnique' => $moonTotalUnique,
             // Charts
             'observationsPerYearChart' => $chart->build($user),
             'observationsPerMonthChart' => $chart2->build($user),
