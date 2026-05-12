@@ -17,7 +17,7 @@
         "geocoder-php/nominatim-provider": "^5.0",
         "guzzlehttp/guzzle": "^7.2",
         "joelbutcher/socialstream": "^6",
-        "kudashevs/laravel-share-buttons": "^6",
+        "kudashevs/laravel-share-buttons": "^7",
         "laravel/fortify": "*",
         "laravel/framework": "^12",
         "laravel/jetstream": "^5.1",
