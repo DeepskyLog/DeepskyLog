@@ -27,7 +27,7 @@ class LegacyObjectsSeeder extends Seeder
 
     public function run()
     {
-        $old = DB::connection('mysqlOld');
+        $old = DB::connection();
 
         // Objects
         $old->table('objects')->orderBy('name')->chunk(500, function ($rows) {

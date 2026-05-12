@@ -266,26 +266,34 @@
                                     // Catalog counts for Messier / Caldwell / Herschel (legacy objectnames in mysqlOld)
                                     if (!$count && preg_match('/messier/i', $raw)) {
                                         $catalog = 'M';
-                                        $q = \DB::connection('mysqlOld')->table('objectnames')
-                                            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
-                                            ->where('observations.visibility', '!=', 7)
-                                            ->where('observations.observerid', $user->username)
+                                            $q = \DB::table('objectnames')
+                                            ->join('observations', 'objectnames.objectname', '=', 'observations.target_name')
+                                            ->leftJoin('deepsky_observation_details', 'observations.id', '=', 'deepsky_observation_details.observation_id')
+                                            ->where(function ($sub) {
+                                                $sub->whereNull('deepsky_observation_details.visibility')
+                                                    ->orWhere('deepsky_observation_details.visibility', '!=', 7);
+                                            })
+                                            ->where('observations.observer_username', $user->username)
                                             ->where('objectnames.catalog', $catalog);
                                         if ($isDrawing) {
-                                            $q->where('observations.hasDrawing', 1);
+                                            $q->where('observations.has_drawing', 1);
                                         }
                                         $count = (int) $q->distinct()->count('objectnames.catindex');
                                     }
 
                                     if (!$count && preg_match('/caldwell/i', $raw)) {
                                         $catalog = 'Caldwell';
-                                        $q = \DB::connection('mysqlOld')->table('objectnames')
-                                            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
-                                            ->where('observations.visibility', '!=', 7)
-                                            ->where('observations.observerid', $user->username)
+                                            $q = \DB::table('objectnames')
+                                            ->join('observations', 'objectnames.objectname', '=', 'observations.target_name')
+                                            ->leftJoin('deepsky_observation_details', 'observations.id', '=', 'deepsky_observation_details.observation_id')
+                                            ->where(function ($sub) {
+                                                $sub->whereNull('deepsky_observation_details.visibility')
+                                                    ->orWhere('deepsky_observation_details.visibility', '!=', 7);
+                                            })
+                                            ->where('observations.observer_username', $user->username)
                                             ->where('objectnames.catalog', $catalog);
                                         if ($isDrawing) {
-                                            $q->where('observations.hasDrawing', 1);
+                                            $q->where('observations.has_drawing', 1);
                                         }
                                         $count = (int) $q->distinct()->count('objectnames.catindex');
                                     }
@@ -297,24 +305,28 @@
                                         } else {
                                             $catalog = 'H400';
                                         }
-                                        $q = \DB::connection('mysqlOld')->table('objectnames')
-                                            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
-                                            ->where('observations.visibility', '!=', 7)
-                                            ->where('observations.observerid', $user->username)
+                                            $q = \DB::table('objectnames')
+                                            ->join('observations', 'objectnames.objectname', '=', 'observations.target_name')
+                                            ->leftJoin('deepsky_observation_details', 'observations.id', '=', 'deepsky_observation_details.observation_id')
+                                            ->where(function ($sub) {
+                                                $sub->whereNull('deepsky_observation_details.visibility')
+                                                    ->orWhere('deepsky_observation_details.visibility', '!=', 7);
+                                            })
+                                            ->where('observations.observer_username', $user->username)
                                             ->where('objectnames.catalog', $catalog);
                                         if ($isDrawing) {
-                                            $q->where('observations.hasDrawing', 1);
+                                            $q->where('observations.has_drawing', 1);
                                         }
                                         $count = (int) $q->distinct()->count('objectnames.catindex');
                                     }
                                     // Top-ten observer: show the observer's rank (1-10) when applicable
                                     if (!$count && preg_match('/top\s*ten/i', $raw)) {
-                                        $topTen = collect(\DB::connection('mysqlOld')->table('observations')
-                                            ->select(\DB::raw('COUNT(*) as cnt, observerid'))
-                                            ->groupBy('observerid')
+                                        $topTen = collect(\DB::table('observations')
+                                                ->select(\DB::raw('COUNT(*) as cnt, observer_username'))
+                                            ->groupBy('observer_username')
                                             ->orderByDesc('cnt')
                                             ->limit(10)
-                                            ->pluck('observerid'))
+                                            ->pluck('observer_username'))
                                             ->map(fn($v) => (string) $v)
                                             ->values()
                                             ->all();

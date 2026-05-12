@@ -1093,10 +1093,10 @@ try {
         // sketch_of_the_week stores comet observations as negative observation_id values
         // (i.e. observation_id = -cometobservations.id).
         $cometObjectId = $session->id ?? null;
-        if (!empty($cometObjectId)) {
-            $cometObsIds = \Illuminate\Support\Facades\DB::connection('mysqlOld')
-                ->table('cometobservations')
-                ->where('objectid', $cometObjectId)
+            if (!empty($cometObjectId)) {
+            $cometObsIds = \Illuminate\Support\Facades\DB::table('observations')
+                ->where('legacy_source', 'comet')
+                ->where('target_key', (string) $cometObjectId)
                 ->pluck('id')
                 ->toArray();
 
@@ -1110,10 +1110,9 @@ try {
     } else {
         // For deepsky objects, match by exact object name in the legacy observations table.
         $objName = $session->name ?? '';
-        if (!empty($objName)) {
-            $obsIds = \Illuminate\Support\Facades\DB::connection('mysqlOld')
-                ->table('observations')
-                ->where('objectname', $objName)
+            if (!empty($objName)) {
+            $obsIds = \Illuminate\Support\Facades\DB::table('observations')
+                ->where('target_name', $objName)
                 ->pluck('id')
                 ->toArray();
 

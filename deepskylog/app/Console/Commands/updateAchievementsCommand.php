@@ -124,33 +124,41 @@ class updateAchievementsCommand extends Command
         $users = User::all();
 
         // Precompute top-ten observers once to avoid re-running the heavy aggregation per user
-        $topTenObservers = collect(DB::connection('mysqlOld')->table('observations')
-            ->select(DB::raw('count(*) as count, observerid'))
-            ->groupBy('observerid')
+        $topTenObservers = collect(DB::table('observations')
+            ->select(DB::raw('count(*) as count, observer_username'))
+            ->groupBy('observer_username')
             ->orderBy('count', 'desc')
             ->limit(10)
-            ->pluck('observerid'))
+            ->pluck('observer_username'))
             ->map(fn($v) => (string) $v)
             ->toArray();
 
         // Build maps for catalog-level observed/drawing counts
-        $catalogRows = DB::connection('mysqlOld')->table('objectnames')
-            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
-            ->where('observations.visibility', '!=', 7)
-            ->select('observations.observerid', 'objectnames.catalog', DB::raw('COUNT(DISTINCT objectnames.catindex) as cnt'))
-            ->groupBy('observations.observerid', 'objectnames.catalog')
+        $catalogRows = DB::table('objectnames')
+            ->join('observations', 'objectnames.objectname', '=', 'observations.target_name')
+            ->leftJoin('deepsky_observation_details', 'observations.id', '=', 'deepsky_observation_details.observation_id')
+            ->where(function ($sub) {
+                $sub->whereNull('deepsky_observation_details.visibility')
+                    ->orWhere('deepsky_observation_details.visibility', '!=', 7);
+            })
+            ->select('observations.observer_username as observerid', 'objectnames.catalog', DB::raw('COUNT(DISTINCT objectnames.catindex) as cnt'))
+            ->groupBy('observations.observer_username', 'objectnames.catalog')
             ->get();
 
         foreach ($catalogRows as $r) {
             $this->catalogObservedMap[$r->observerid][(string) $r->catalog] = (int) $r->cnt;
         }
 
-        $catalogDrawingRows = DB::connection('mysqlOld')->table('objectnames')
-            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
-            ->where('observations.visibility', '!=', 7)
-            ->where('observations.hasDrawing', 1)
-            ->select('observations.observerid', 'objectnames.catalog', DB::raw('COUNT(DISTINCT objectnames.catindex) as cnt'))
-            ->groupBy('observations.observerid', 'objectnames.catalog')
+        $catalogDrawingRows = DB::table('objectnames')
+            ->join('observations', 'objectnames.objectname', '=', 'observations.target_name')
+            ->leftJoin('deepsky_observation_details', 'observations.id', '=', 'deepsky_observation_details.observation_id')
+            ->where(function ($sub) {
+                $sub->whereNull('deepsky_observation_details.visibility')
+                    ->orWhere('deepsky_observation_details.visibility', '!=', 7);
+            })
+            ->where('observations.has_drawing', 1)
+            ->select('observations.observer_username as observerid', 'objectnames.catalog', DB::raw('COUNT(DISTINCT objectnames.catindex) as cnt'))
+            ->groupBy('observations.observer_username', 'objectnames.catalog')
             ->get();
 
         foreach ($catalogDrawingRows as $r) {
@@ -158,21 +166,21 @@ class updateAchievementsCommand extends Command
         }
 
         // Build maps for object type counts (distinct object names)
-        $typeRows = DB::connection('mysqlOld')->table('objects')
-            ->join('observations', 'objects.name', '=', 'observations.objectname')
-            ->select('observations.observerid', 'objects.type', DB::raw('COUNT(DISTINCT objects.name) as cnt'))
-            ->groupBy('observations.observerid', 'objects.type')
+        $typeRows = DB::table('objects')
+            ->join('observations', 'objects.name', '=', 'observations.target_name')
+            ->select('observations.observer_username as observerid', 'objects.type', DB::raw('COUNT(DISTINCT objects.name) as cnt'))
+            ->groupBy('observations.observer_username', 'objects.type')
             ->get();
 
         foreach ($typeRows as $r) {
             $this->typeObservedMap[$r->observerid][(string) $r->type] = (int) $r->cnt;
         }
 
-        $typeDrawingRows = DB::connection('mysqlOld')->table('objects')
-            ->join('observations', 'objects.name', '=', 'observations.objectname')
-            ->where('observations.hasDrawing', 1)
-            ->select('observations.observerid', 'objects.type', DB::raw('COUNT(DISTINCT objects.name) as cnt'))
-            ->groupBy('observations.observerid', 'objects.type')
+        $typeDrawingRows = DB::table('objects')
+            ->join('observations', 'objects.name', '=', 'observations.target_name')
+            ->where('observations.has_drawing', 1)
+            ->select('observations.observer_username as observerid', 'objects.type', DB::raw('COUNT(DISTINCT objects.name) as cnt'))
+            ->groupBy('observations.observer_username', 'objects.type')
             ->get();
 
         foreach ($typeDrawingRows as $r) {
@@ -180,57 +188,60 @@ class updateAchievementsCommand extends Command
         }
 
         // Total drawings per user
-        $td = DB::connection('mysqlOld')->table('observations')
-            ->where('hasDrawing', 1)
-            ->select('observerid', DB::raw('COUNT(*) as cnt'))
-            ->groupBy('observerid')
+        $td = DB::table('observations')
+            ->where('has_drawing', 1)
+            ->select('observer_username as observerid', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('observer_username')
             ->get();
         foreach ($td as $r) {
             $this->totalDrawingsMap[$r->observerid] = (int) $r->cnt;
         }
 
         // Unique objects observed/drawn per user
-        $uo = DB::connection('mysqlOld')->table('observations')
-            ->select('observerid', DB::raw('COUNT(DISTINCT objectname) as cnt'))
-            ->groupBy('observerid')
+        $uo = DB::table('observations')
+            ->select('observer_username as observerid', DB::raw('COUNT(DISTINCT target_name) as cnt'))
+            ->groupBy('observer_username')
             ->get();
         foreach ($uo as $r) {
             $this->uniqueObjectsMap[$r->observerid] = (int) $r->cnt;
         }
 
-        $uod = DB::connection('mysqlOld')->table('observations')
-            ->where('hasDrawing', 1)
-            ->select('observerid', DB::raw('COUNT(DISTINCT objectname) as cnt'))
-            ->groupBy('observerid')
+        $uod = DB::table('observations')
+            ->where('has_drawing', 1)
+            ->select('observer_username as observerid', DB::raw('COUNT(DISTINCT target_name) as cnt'))
+            ->groupBy('observer_username')
             ->get();
         foreach ($uod as $r) {
             $this->uniqueObjectsDrawingsMap[$r->observerid] = (int) $r->cnt;
         }
 
         // Comet counts
-        $cometObs = DB::connection('mysqlOld')->table('cometobservations')
-            ->select('observerid', DB::raw('COUNT(*) as cnt'))
-            ->groupBy('observerid')
+        $cometObs = DB::table('observations')
+            ->where('legacy_source', 'comet')
+            ->select('observer_username', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('observer_username')
             ->get();
         foreach ($cometObs as $r) {
-            $this->cometObservationsMap[$r->observerid] = (int) $r->cnt;
+            $this->cometObservationsMap[$r->observer_username] = (int) $r->cnt;
         }
 
-        $cometDraw = DB::connection('mysqlOld')->table('cometobservations')
-            ->where('hasDrawing', 1)
-            ->select('observerid', DB::raw('COUNT(*) as cnt'))
-            ->groupBy('observerid')
+        $cometDraw = DB::table('observations')
+            ->where('legacy_source', 'comet')
+            ->where('has_drawing', 1)
+            ->select('observer_username', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('observer_username')
             ->get();
         foreach ($cometDraw as $r) {
-            $this->cometDrawingsMap[$r->observerid] = (int) $r->cnt;
+            $this->cometDrawingsMap[$r->observer_username] = (int) $r->cnt;
         }
 
-        $uniqueComet = DB::connection('mysqlOld')->table('cometobservations')
-            ->select('observerid', DB::raw('COUNT(DISTINCT objectid) as cnt'))
-            ->groupBy('observerid')
+        $uniqueComet = DB::table('observations')
+            ->where('legacy_source', 'comet')
+            ->select('observer_username', DB::raw('COUNT(DISTINCT target_key) as cnt'))
+            ->groupBy('observer_username')
             ->get();
         foreach ($uniqueComet as $r) {
-            $this->uniqueCometMap[$r->observerid] = (int) $r->cnt;
+            $this->uniqueCometMap[$r->observer_username] = (int) $r->cnt;
         }
 
         // Unified observations (current observations table): planets, moons, lunar features, sun and double-stars

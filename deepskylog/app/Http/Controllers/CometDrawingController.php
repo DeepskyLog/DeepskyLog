@@ -35,7 +35,7 @@ class CometDrawingController extends Controller
                 }
                 if (!$co) {
                     try {
-                        $row = DB::connection('mysqlOld')->table('cometobjects')->where('slug', $objSlug)->orWhere('name', $objSlug)->first();
+                        $row = DB::table('cometobjects')->where('slug', $objSlug)->orWhere('name', $objSlug)->first();
                         if ($row)
                             $query->where('objectid', $row->id);
                     } catch (\Throwable $_) {
@@ -74,7 +74,7 @@ class CometDrawingController extends Controller
         }
         if (!$objectId) {
             try {
-                $row = DB::connection('mysqlOld')->table('cometobjects')->where('slug', $objectSlug)->orWhere('name', $objectSlug)->first();
+                $row = DB::table('cometobjects')->where('slug', $objectSlug)->orWhere('name', $objectSlug)->first();
                 if ($row)
                     $objectId = $row->id;
             } catch (\Throwable $_) {
@@ -132,7 +132,7 @@ class CometDrawingController extends Controller
         }
         if (!$objectId) {
             try {
-                $row = DB::connection('mysqlOld')->table('cometobjects')->where('slug', $objectSlug)->orWhere('name', $objectSlug)->first();
+                $row = DB::table('cometobjects')->where('slug', $objectSlug)->orWhere('name', $objectSlug)->first();
                 if ($row)
                     $objectId = $row->id;
             } catch (\Throwable $_) {

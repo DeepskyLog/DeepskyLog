@@ -15,6 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\Observation;
 use App\Jobs\EnqueueComputeCRForUser;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
@@ -274,10 +275,14 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getObservedCountFromCatalog(string $catalog): int
     {
-        return DB::connection('mysqlOld')->table('objectnames')
-            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
-            ->where('observations.observerid', $this->username)
-            ->where('observations.visibility', '!=', 7)
+        return DB::table('objectnames')
+            ->join('observations', 'objectnames.objectname', '=', 'observations.target_name')
+            ->leftJoin('deepsky_observation_details', 'observations.id', '=', 'deepsky_observation_details.observation_id')
+            ->where(function ($sub) {
+                $sub->whereNull('deepsky_observation_details.visibility')
+                    ->orWhere('deepsky_observation_details.visibility', '!=', 7);
+            })
+            ->where('observations.observer_username', $this->username)
             ->where('objectnames.catalog', $catalog)
             ->addSelect('objectnames.catindex')->distinct()->get()->count();
     }
@@ -290,12 +295,16 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDrawingCountFromCatalog(string $catalog): int
     {
-        return DB::connection('mysqlOld')->table('objectnames')
-            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
-            ->where('observations.observerid', $this->username)
-            ->where('observations.visibility', '!=', 7)
+        return DB::table('objectnames')
+            ->join('observations', 'objectnames.objectname', '=', 'observations.target_name')
+            ->leftJoin('deepsky_observation_details', 'observations.id', '=', 'deepsky_observation_details.observation_id')
+            ->where(function ($sub) {
+                $sub->whereNull('deepsky_observation_details.visibility')
+                    ->orWhere('deepsky_observation_details.visibility', '!=', 7);
+            })
+            ->where('observations.observer_username', $this->username)
             ->where('objectnames.catalog', $catalog)
-            ->where('observations.hasDrawing', 1)
+            ->where('observations.has_drawing', 1)
             ->addSelect('objectnames.catindex')->distinct()->get()->count();
     }
 
@@ -312,15 +321,12 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getOpenClusterObservations(): int
     {
-        $total = count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname
-                                and objects.type = "OPNCL" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name
+                                                                and objects.type = ? and observations.observer_username = ?';
 
-        return $total + count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname
-                                and objects.type = "CLANB" and observations.observerid = "' . $this->username . '"'));
+        $total = count(DB::select($query, ['OPNCL', $this->username]));
+        return $total + count(DB::select($query, ['CLANB', $this->username]));
     }
 
     /**
@@ -337,15 +343,12 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getOpenClusterDrawings(): int
     {
-        $total = count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname and hasDrawing = 1
-                                and objects.type = "OPNCL" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name and observations.has_drawing = 1
+                                                                and objects.type = ? and observations.observer_username = ?';
 
-        return $total + count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname and hasDrawing = 1
-                                and objects.type = "CLANB" and observations.observerid = "' . $this->username . '"'));
+        $total = count(DB::select($query, ['OPNCL', $this->username]));
+        return $total + count(DB::select($query, ['CLANB', $this->username]));
     }
 
     /**
@@ -361,10 +364,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getGlobularClusterObservations(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname
-                                and objects.type = "GLOCL" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name
+                                                                and objects.type = ? and observations.observer_username = ?';
+        return count(DB::select($query, ['GLOCL', $this->username]));
     }
 
     /**
@@ -380,10 +383,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getGlobularClusterDrawings(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname and hasDrawing = 1
-                                and objects.type = "GLOCL" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name and observations.has_drawing = 1
+                                                                and objects.type = ? and observations.observer_username = ?';
+        return count(DB::select($query, ['GLOCL', $this->username]));
     }
 
     /**
@@ -399,10 +402,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getPlanetaryNebulaObservations(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname
-                                and objects.type = "PLNNB" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name
+                                                                and objects.type = ? and observations.observer_username = ?';
+        return count(DB::select($query, ['PLNNB', $this->username]));
     }
 
     /**
@@ -418,10 +421,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getPlanetaryNebulaDrawings(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname and hasDrawing = 1
-                                and objects.type = "PLNNB" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name and observations.has_drawing = 1
+                                                                and objects.type = ? and observations.observer_username = ?';
+        return count(DB::select($query, ['PLNNB', $this->username]));
     }
 
     /**
@@ -437,10 +440,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getGalaxyObservations(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname
-                                and objects.type = "GALXY" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name
+                                                                and objects.type = ? and observations.observer_username = ?';
+        return count(DB::select($query, ['GALXY', $this->username]));
     }
 
     /**
@@ -456,10 +459,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getGalaxyDrawings(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname and hasDrawing = 1
-                                and objects.type = "GALXY" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name and observations.has_drawing = 1
+                                                                and objects.type = ? and observations.observer_username = ?';
+        return count(DB::select($query, ['GALXY', $this->username]));
     }
 
     /**
@@ -491,10 +494,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
         foreach ($objectTypes as $objectType) {
             $query = 'SELECT DISTINCT(objects.name) FROM objects,observations
-                  WHERE objects.name = observations.objectname
+                  WHERE objects.name = observations.target_name
                   AND objects.type = ?
-                  AND observations.observerid = ?';
-            $results = DB::connection('mysqlOld')->select($query, [$objectType, $this->username]);
+                  AND observations.observer_username = ?';
+            $results = DB::select($query, [$objectType, $this->username]);
             $total += count($results);
         }
 
@@ -530,11 +533,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
         foreach ($objectTypes as $objectType) {
             $query = 'SELECT DISTINCT(objects.name) FROM objects,observations
-                  WHERE objects.name = observations.objectname
+                  WHERE objects.name = observations.target_name
                   AND objects.type = ?
-                  AND observations.observerid = ?
-                  AND hasDrawing = 1';
-            $results = DB::connection('mysqlOld')->select($query, [$objectType, $this->username]);
+                  AND observations.observer_username = ?
+                  AND observations.has_drawing = 1';
+            $results = DB::select($query, [$objectType, $this->username]);
             $total += count($results);
         }
 
@@ -548,10 +551,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getUniqueObjectsObservations(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname
-                                and observations.observerid = "' . $this->username . '"'));
+        return count(DB::select('select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name
+                                                                and observations.observer_username = "' . $this->username . '"'));
     }
 
     /**
@@ -561,10 +563,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getUniqueObjectsDrawings(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname and hasDrawing = 1
-                                and observations.observerid = "' . $this->username . '"'));
+        return count(DB::select('select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name and observations.has_drawing = 1
+                                                                and observations.observer_username = "' . $this->username . '"'));
     }
 
     /**
@@ -574,9 +575,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getCometObservations(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select * from cometobservations
-                              where observerid = "' . $this->username . '"'));
+        return Observation::where('legacy_source', 'comet')
+            ->where('observer_username', $this->username)
+            ->count();
     }
 
     /**
@@ -586,9 +587,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getCometDrawings(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select * from cometobservations where hasDrawing = 1
-                              and observerid = "' . $this->username . '"'));
+        return Observation::where('legacy_source', 'comet')
+            ->where('observer_username', $this->username)
+            ->where('has_drawing', 1)
+            ->count();
     }
 
     /**
@@ -598,9 +600,11 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getUniqueCometObservations(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objectid) from cometobservations
-                              where observerid = "' . $this->username . '"'));
+        return Observation::where('legacy_source', 'comet')
+            ->where('observer_username', $this->username)
+            ->whereNotNull('target_key')
+            ->distinct()
+            ->count('target_key');
     }
 
     /**
@@ -614,9 +618,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getTotalNumberOfDrawings(): int
     {
-        return DB::connection('mysqlOld')->table('observations')
-            ->where('observerid', $this->username)
-            ->where('hasDrawing', 1)->get()->count();
+        return DB::table('observations')
+            ->where('observer_username', $this->username)
+            ->where('has_drawing', 1)->get()->count();
     }
 
     /**
@@ -627,15 +631,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isInTopTenOfObservers(): bool
     {
         // Get all the count of all observations combined per user
-        $allObservations = DB::connection('mysqlOld')->table('observations')
-            ->select(DB::raw('count(*) as count, observerid'))
-            ->groupBy('observerid')
+        $allObservations = DB::table('observations')
+            ->select(DB::raw('count(*) as count, observer_username'))
+            ->groupBy('observer_username')
             ->orderBy('count', 'desc')
             ->get();
 
         $userIndex = 0;
         foreach ($allObservations as $user) {
-            if ($user->observerid == $this->username) {
+            if ($user->observer_username == $this->username) {
                 break;
             }
             $userIndex++;

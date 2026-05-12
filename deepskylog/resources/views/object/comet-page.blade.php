@@ -65,9 +65,8 @@
                             try {
                                 $objName = $session->name ?? '';
                                 if (!empty($objName)) {
-                                    $obsIds = \Illuminate\Support\Facades\DB::connection('mysqlOld')
-                                        ->table('observations')
-                                        ->where('objectname', $objName)
+                                    $obsIds = \Illuminate\Support\Facades\DB::table('observations')
+                                        ->where('target_name', $objName)
                                         ->pluck('id')
                                         ->toArray();
 
@@ -80,11 +79,11 @@
                                             $simple = preg_replace('/[^A-Za-z0-9 ]+/', ' ', $objName);
                                             $tokens = array_filter(array_map('trim', preg_split('/\s+/', $simple)));
                                             if (!empty($tokens)) {
-                                                $q = \Illuminate\Support\Facades\DB::connection('mysqlOld')->table('observations');
+                                                $q = \Illuminate\Support\Facades\DB::table('observations');
                                                 $first = array_shift($tokens);
-                                                $q->where('objectname', 'like', '%' . $first . '%');
+                                                $q->where('target_name', 'like', '%' . $first . '%');
                                                 foreach ($tokens as $t) {
-                                                    $q->orWhere('objectname', 'like', '%' . $t . '%');
+                                                    $q->orWhere('target_name', 'like', '%' . $t . '%');
                                                 }
                                                 $altIds = $q->pluck('id')->toArray();
                                                 if (!empty($altIds)) {
@@ -108,12 +107,25 @@
                                         } else {
                                             $tokensForLike[] = '%' . $objName . '%';
                                         }
-                                        $likes = implode(' OR ', array_fill(0, count($tokensForLike), 'coo.name LIKE ?'));
-                                        $sql = 'SELECT s.* FROM sketch_of_the_week s JOIN deepskylog.cometobservations co ON co.id = -s.observation_id JOIN deepskylog.cometobjects coo ON coo.id = co.objectid WHERE ' . $likes . ' ORDER BY s.date DESC';
-                                        $cometRows = \Illuminate\Support\Facades\DB::select($sql, $tokensForLike);
+                                        // Find observations in the unified table that reference cometobjects
+                                        // and map their legacy IDs back to negative sketch references
+                                        $q = \Illuminate\Support\Facades\DB::table('observations as o')
+                                            ->join('cometobjects as coo', 'coo.id', '=', 'o.target_key')
+                                            ->where('o.legacy_source', 'comet');
+                                        foreach ($tokensForLike as $i => $t) {
+                                            if ($i === 0) {
+                                                $q->where('coo.name', 'like', $t);
+                                            } else {
+                                                $q->orWhere('coo.name', 'like', $t);
+                                            }
+                                        }
+                                        $cometRows = $q->select('o.legacy_id as legacy_id')->get();
                                         if (!empty($cometRows)) {
                                             foreach ($cometRows as $r) {
-                                                $objectSketches->push(\App\Models\SketchOfTheWeek::find($r->id));
+                                                $sk = \App\Models\SketchOfTheWeek::where('observation_id', -(int) $r->legacy_id)->first();
+                                                if ($sk) {
+                                                    $objectSketches->push($sk);
+                                                }
                                             }
                                         }
                                     } catch (\Throwable $_) {

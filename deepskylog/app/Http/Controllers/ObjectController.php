@@ -5221,8 +5221,7 @@ class ObjectController extends Controller
             $targetName = $targetRecord->name;
 
             // Move observations in the legacy database
-            DB::connection('mysqlOld')
-                ->table('observations')
+            DB::table('observations')
                 ->where('objectname', $objectName)
                 ->update(['objectname' => $targetName]);
 

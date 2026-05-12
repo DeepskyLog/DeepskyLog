@@ -538,7 +538,7 @@ class ObservationsController extends Controller
         if (!$objectId) {
             try {
                 foreach ($candidates as $cand) {
-                    $row = DB::connection('mysqlOld')->table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                    $row = DB::table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
                     if ($row) {
                         $objectName = $row->name ?? null;
                         $objectId = $row->id ?? null;
@@ -617,7 +617,7 @@ class ObservationsController extends Controller
         if (!$objectId) {
             try {
                 foreach ($candidates as $cand) {
-                    $row = DB::connection('mysqlOld')->table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                    $row = DB::table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
                     if ($row) {
                         $objectName = $row->name ?? null;
                         $objectId = $row->id ?? null;
@@ -846,7 +846,7 @@ class ObservationsController extends Controller
         if (!$objectId) {
             try {
                 foreach ($candidates as $cand) {
-                    $row = DB::connection('mysqlOld')->table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                    $row = DB::table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
                     if ($row) {
                         $objectId = $row->id ?? null;
                         break;
@@ -1399,7 +1399,7 @@ class ObservationsController extends Controller
         } catch (\Throwable $_) {
             // Fallback to legacy table if modern table doesn't exist
             try {
-                $legacyComets = DB::connection('mysqlOld')->table('cometobjects')
+                $legacyComets = DB::table('cometobjects')
                     ->whereIn('id', $objectIds)
                     ->get();
                 $comets = collect($legacyComets)->keyBy('id');

@@ -69,7 +69,7 @@ class CatalogsPage extends Component
 
         // Also include catalogs from the legacy DB if available (some catalogs still live there)
         try {
-            $old = DB::connection('mysqlOld')->table('objectnames')
+            $old = DB::table('objectnames')
                 ->select('catalog')
                 ->whereNotNull('catalog')
                 ->where('catalog', '!=', '')
@@ -98,7 +98,7 @@ class CatalogsPage extends Component
                 ->toArray();
 
             try {
-                $oldCats = DB::connection('mysqlOld')->table('objectnames')
+                $oldCats = DB::table('objectnames')
                     ->whereRaw('LOWER(catalog) = ?', [strtolower($this->selected)])
                     ->distinct()
                     ->pluck('catalog')
@@ -122,7 +122,7 @@ class CatalogsPage extends Component
 
             // Also gather slugs from legacy objectnames if present
             try {
-                $oldSlugs = DB::connection('mysqlOld')->table('objectnames')
+                $oldSlugs = DB::table('objectnames')
                     ->whereIn('catalog', $catalogVariants)
                     ->whereNotNull('slug')
                     ->distinct()
@@ -154,11 +154,11 @@ class CatalogsPage extends Component
 
                 // Merge legacy names if available
                 try {
-                    $oldNames = DB::connection('mysqlOld')->table('objectnames')
+                    $oldNames = DB::table('objectnames')
                         ->whereIn('catalog', $catalogVariants)
                         ->pluck('objectname')
                         ->toArray();
-                    $oldAlt = DB::connection('mysqlOld')->table('objectnames')
+                    $oldAlt = DB::table('objectnames')
                         ->whereIn('catalog', $catalogVariants)
                         ->pluck('altname')
                         ->toArray();
@@ -263,7 +263,7 @@ class CatalogsPage extends Component
 
                 // Legacy objectnames (do not override primary)
                 try {
-                    $oldRows = DB::connection('mysqlOld')->table('objectnames')
+                    $oldRows = DB::table('objectnames')
                         ->whereIn('catalog', $catalogVariants)
                         ->whereIn('slug', $pageSlugs)
                         ->select('slug', 'objectname', 'altname', 'catindex')
@@ -328,7 +328,7 @@ class CatalogsPage extends Component
 
                     // legacy join fallback
                     try {
-                        $joinedOld = DB::connection('mysqlOld')->table('objects as o')
+                        $joinedOld = DB::table('objects as o')
                             ->join('objectnames as n', function ($join) {
                                 $join->on('o.name', '=', 'n.objectname')->orOn('o.name', '=', 'n.altname');
                             })

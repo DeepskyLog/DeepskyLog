@@ -122,11 +122,7 @@ class AdminObjectCheckService
         $headers = ['Observed Name', 'Primary Name', 'Observation Count'];
         $lines = [implode(',', array_map(fn($cell) => '"' . str_replace('"', '""', (string) $cell) . '"', $headers))];
 
-        if (!array_key_exists('mysqlOld', config('database.connections', []))) {
-            return implode("\n", $lines);
-        }
-
-        if (!Schema::connection('mysqlOld')->hasTable('observations')) {
+        if (!Schema::hasTable('observations')) {
             return implode("\n", $lines);
         }
 
@@ -137,7 +133,7 @@ class AdminObjectCheckService
             return implode("\n", $lines);
         }
 
-        DB::connection('mysqlOld')->table('observations')
+        DB::table('observations')
             ->select('objectname', DB::raw('COUNT(*) as observation_count'))
             ->groupBy('objectname')
             ->orderBy('objectname')
@@ -172,11 +168,7 @@ class AdminObjectCheckService
 
     public function repairObservationObjectNamesToPrimary(): int
     {
-        if (!array_key_exists('mysqlOld', config('database.connections', []))) {
-            return 0;
-        }
-
-        if (!Schema::connection('mysqlOld')->hasTable('observations')) {
+        if (!Schema::hasTable('observations')) {
             return 0;
         }
 
@@ -189,7 +181,7 @@ class AdminObjectCheckService
 
         $updated = 0;
 
-        DB::connection('mysqlOld')->table('observations')
+        DB::table('observations')
             ->select('objectname')
             ->whereNotNull('objectname')
             ->distinct()
@@ -209,7 +201,7 @@ class AdminObjectCheckService
                         continue;
                     }
 
-                    $updated += DB::connection('mysqlOld')->table('observations')
+                    $updated += DB::table('observations')
                         ->where('objectname', $rawObjectName)
                         ->update(['objectname' => $primaryName]);
                 }
@@ -307,12 +299,8 @@ class AdminObjectCheckService
     private function buildUnknownObservationsCheck(): array
     {
         try {
-            if (!array_key_exists('mysqlOld', config('database.connections', []))) {
-                return $this->unavailableObservationsResult('The mysqlOld connection is not configured.');
-            }
-
-            if (!Schema::connection('mysqlOld')->hasTable('observations')) {
-                return $this->unavailableObservationsResult('The observations table is not available on the mysqlOld connection.');
+            if (!Schema::hasTable('observations')) {
+                return $this->unavailableObservationsResult('The observations table is not available.');
             }
 
             $knownObjects = $this->buildKnownObjectsMap();
@@ -324,7 +312,7 @@ class AdminObjectCheckService
             $aliasCount = 0;
             $aliasObservationTotal = 0;
 
-            DB::connection('mysqlOld')->table('observations')
+            DB::table('observations')
                 ->select('objectname', DB::raw('COUNT(*) as observation_count'))
                 ->groupBy('objectname')
                 ->orderBy('objectname')

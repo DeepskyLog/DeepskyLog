@@ -47,11 +47,19 @@ class ObserverController extends Controller
         $inProgressKey = 'observer_stats_in_progress:' . $user->id;
         $stats = Cache::get($cacheKey);
 
-        // Kick off background precomputation when cache is cold
+        // Kick off precomputation when cache is cold. If the queue worker
+        // isn't running, compute synchronously so the profile shows counts.
         if (!is_array($stats)) {
             if (Cache::add($inProgressKey, true, 60)) {
-                ComputeObserverStats::dispatch($user->id);
+                try {
+                    ComputeObserverStats::dispatchSync($user->id);
+                } catch (\Throwable $e) {
+                    // Fallback: queue the job if sync execution fails for any reason
+                    ComputeObserverStats::dispatch($user->id);
+                }
             }
+            // Attempt to reload the cached stats after synchronous computation
+            $stats = Cache::get($cacheKey);
         }
 
         $observationsOld = $user->observations();

@@ -9,38 +9,48 @@
   - [x] Make migrations and seeder
   - [x] Show detailed observation page, with all details, comments, ...
   - [ ] Add observations page
-    - [ ] Remove DB::connection('mysqlOld')
     - [ ] Try to add an observation for all types of objects, to see if all fields are working correctly.
-      - [X] Sun
-      - [X] Planet
-      - [X] Open cluster
+      - [] Sun
+      - [ ] Planet
+      - [ ] Open cluster
+      - [ ] Binary star
+      - [ ] Lunar feature
+      - [ ] Galaxy
+      - [ ] Comet
+    - [ ] Do the same, but first create a new object of all types.
+      - [ ] Sun
+      - [ ] Planet
+      - [ ] Open cluster
       - [ ] Binary star
       - [ ] Lunar feature
       - [ ] Galaxy
       - [ ] Comet
     - [ ] If an observation was already entered, fill the date with the latest date that was entered in the field (when the user adds more than one observation in a row).
     - [ ] Fill the location with the latest location that was entered in the field. Do the same for the instrument, eyepiece, lens and filter fields.  If this was not the case, use the standard / default location, instrument, eyepiece, and lens.
-    - [ ] other objects: planets, comets, lunar features, ...
-      - [ ] Need to work on the database tables for these observations.
     - [ ] X, facebook, ... links for the sketch of the week and the month should be adapted, as well as the share buttons for the observations.
+    - [ ] Check for APP_OLD_URL
     - [ ] Share from the observation detail page.  Also share observing lists?
     - [ ] RSS Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
     - [ ] Import observations from a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, ...
-  - [ ] Check code for ObservationOld and remove it, as all observations are now in the same table.
-  - [ ] Check if any of the old models is still used. Maybe remove all the old models.
-  - [ ] Search for observations
-    - [ ] Quick search in the left aside
-    - [ ] Detailed search page
-    - [ ] Export search results in a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, pdf, csv, ...
-  - [ ] Translations
-  - [ ] On real server:
-    - [ ] php artisan db:seed --class=BackfillSessionObservationIdsSeeder
-    - [ ] php artisan db:seed --class=BackfillSketchObservationIdsSeeder
-    - [ ] php artisan db:seed --class=addAchievementsSeeder
-    - [ ] php artisan migrate
+- [ ] Search for observations
+  - [ ] Quick search in the left aside
+  - [ ] Detailed search page
+  - [ ] Export search results in a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, pdf, csv, ...
 - [ ] All missing pages
+- [ ] Create star charts and atlases.
+- [ ] Create observing guides
+- [ ] Translations
+- [ ] On real server:
+  - [ ] php artisan db:seed --class=BackfillSessionObservationIdsSeeder
+  - [ ] php artisan db:seed --class=BackfillSketchObservationIdsSeeder
+  - [ ] php artisan db:seed --class=addAchievementsSeeder
+  - [ ] php artisan migrate
 - [ ] Release new version of pyDeepskyLog
   - [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
+
+### For later
+
+- [ ] Add a wizard to create an observing list.
 
 ### Done
 
@@ -75,7 +85,7 @@
 - [x] Rework message system
 - [x] Totally reworked the sessions. They are now more blog-like
 - [x] New objects detail page
-- [x] Added planets, lunar features, ...
+- [x] Added planets, lunar features, sun, moon
 - [x] Add a page to edit objects. More user-friendly than before, with a button to fetch data from Simbad.
 - [x] Add a page to add a new object, with the same user-friendly form and Simbad fetching.
 - [x] Add a page to show the catalog of objects, with filters and search.
