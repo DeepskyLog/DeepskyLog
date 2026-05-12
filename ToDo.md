@@ -9,7 +9,6 @@
   - [x] Make migrations and seeder
   - [x] Show detailed observation page, with all details, comments, ...
   - [ ] Add observations page
-    - [ ] Add sun, lunar feature, planets, double stars to the table and graphs: http://localhost/observers/wim-de-meester
     - [ ] Add Trophies for planets, sun, moon, double stars, ...
     - [ ] Remove all the other Old classes.
     - [ ] Try to add an observation for all types of objects, to see if all fields are working correctly.

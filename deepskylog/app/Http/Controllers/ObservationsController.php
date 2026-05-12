@@ -923,8 +923,8 @@ class ObservationsController extends Controller
         $legacyQuery = Observation::where('observer_username', $user->username)->orderBy('observed_on', 'desc');
 
         if ($objectName) {
-            // Legacy object resolved: filter legacy observations by objectname
-            $legacyQuery->where('objectname', $objectName);
+            // Legacy object resolved: filter legacy observations by target_name (legacy alias)
+            $legacyQuery->where('target_name', $objectName);
 
             $deepsky = $legacyQuery->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
