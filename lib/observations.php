@@ -1821,7 +1821,6 @@ Correct observations which have been imported will not be registered for a secon
             }
         }
         $sql = $sql . ";";
-        
         $run = $objDatabase->selectRecordset($sql);
         if (!array_key_exists('countquery', $queries)) {
             $j = 0;

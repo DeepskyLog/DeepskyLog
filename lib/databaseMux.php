@@ -196,6 +196,55 @@ class DatabaseMux
     *    SQL should be executed on the NEW DB (used when matching
     *    observations already live in the new DB).
      */
+
+    /**
+     * Extract WHERE conditions that directly reference observations.* columns
+     * from a SQL string. Used to preserve filters (hasDrawing, language, date,
+     * visibility, description, observerid) when rewriting cross-DB JOIN queries.
+     *
+     * @param string $sql The original SQL string
+     * @return string Additional AND conditions to append to a rewritten query
+     */
+    private function extractObservationConditions($sql)
+    {
+        $extra = '';
+        // hasDrawing (TRUE or FALSE)
+        if (preg_match('/AND\s+observations\.hasDrawing\s*=\s*(TRUE|FALSE)/i', $sql, $m)) {
+            $extra .= ' AND observations.hasDrawing=' . strtoupper($m[1]);
+        }
+        // date >= and <=
+        if (preg_match('/AND\s+observations\.date\s*>=\s*"([^"]*)"/i', $sql, $m)) {
+            $extra .= ' AND observations.date>="' . $m[1] . '"';
+        }
+        if (preg_match('/AND\s+observations\.date\s*<=\s*"([^"]*)"/i', $sql, $m)) {
+            $extra .= ' AND observations.date<="' . $m[1] . '"';
+        }
+        // description LIKE
+        if (preg_match('/AND\s+observations\.description\s+like\s+"([^"]*)"/i', $sql, $m)) {
+            $extra .= ' AND observations.description like "' . $m[1] . '"';
+        }
+        // visibility
+        if (preg_match('/AND\s+observations\.visibility\s*<=\s*"([^"]*)"/i', $sql, $m)) {
+            $extra .= ' AND observations.visibility<="' . $m[1] . '"';
+        }
+        if (preg_match('/AND\s+observations\.visibility\s*>=\s*"([^"]*)"/i', $sql, $m)) {
+            $extra .= ' AND observations.visibility>="' . $m[1] . '"';
+        }
+        // language filter: AND (observations.language="xx" OR observations.language="yy" ...)
+        if (preg_match('/AND\s+\(\s*(?:observations\.language\s*=\s*"[^"]+"\s*(?:OR\s*)?)+\)/i', $sql, $m)) {
+            $extra .= ' ' . $m[0];
+        }
+        // observerid
+        if (preg_match('/AND\s+observations\.observerid\s*=\s*"([^"]*)"/i', $sql, $m)) {
+            $extra .= ' AND observations.observerid="' . $m[1] . '"';
+        }
+        // id > N (minobservation)
+        if (preg_match('/AND\s+observations\.id\s*>\s*(\d+)/i', $sql, $m)) {
+            $extra .= ' AND observations.id>' . $m[1];
+        }
+        return $extra;
+    }
+
     private function rewriteObservationObjectnamesJoin($sql)
     {
         $low = strtolower($sql);
@@ -246,7 +295,8 @@ class DatabaseMux
         $sqlTrimmedForTest = ltrim($sql);
         $sqlTrimmedForTest = ltrim($sqlTrimmedForTest, "(");
         if (preg_match('/select\s+count\s*\(/i', $sqlTrimmedForTest)) {
-            $cntSql = 'SELECT count(DISTINCT observations.id) as ObsCnt FROM observations JOIN instruments on observations.instrumentid=instruments.id JOIN locations on observations.locationid=locations.id JOIN observers on observations.observerid=observers.id WHERE observations.id> 0 AND observations.objectname IN ' . $inClause;
+            $extraConds = $this->extractObservationConditions($sql);
+            $cntSql = 'SELECT count(DISTINCT observations.id) as ObsCnt FROM observations WHERE observations.id> 0 AND observations.objectname IN ' . $inClause . $extraConds;
             return ['db' => 'old', 'sql' => $cntSql];
         }
 
@@ -290,7 +340,11 @@ class DatabaseMux
         // migrated `objects` columns would have appeared) and filter by the
         // resolved base names. This is robust and avoids producing malformed
         // SQL for many legacy query shapes.
-        
+
+        // Extract extra observations.* conditions (hasDrawing, language, date, etc.)
+        // so they are preserved in the rewritten query.
+        $extraConds = $this->extractObservationConditions($sql);
+
         // OPTIMIZATION: Apply LIMIT in a subquery BEFORE expensive JOINs
         // to reduce the intermediate result set size
         $selectSql = <<<'SQL'
@@ -299,14 +353,14 @@ class DatabaseMux
         
         if ($limitClause) {
             // TWO-STAGE OPTIMIZATION: Get limited IDs first, then JOIN full data
-            $idSubquery = "SELECT observations.id FROM observations WHERE observations.id> 0 AND observations.objectname IN " . $inClause . $orderByClause . $limitClause;
+            $idSubquery = "SELECT observations.id FROM observations WHERE observations.id> 0 AND observations.objectname IN " . $inClause . $extraConds . $orderByClause . $limitClause;
             $selectSql = <<<'SQL'
     SELECT DISTINCT observations.id as observationid, observations.objectname as objectname, observations.date as observationdate, observations.description as observationdescription, observers.id as observerid, CONCAT(observers.firstname , ' ' , observers.name) as observername, CONCAT(observers.name , ' ' , observers.firstname) as observersortname, NULL as objectconstellation, NULL as objecttype, NULL as objectmagnitude, NULL as objectsurfacebrigthness, instruments.id as instrumentid, instruments.name as instrumentname, instruments.diameter as instrumentdiameter, CONCAT(10000+instruments.diameter,' mm ',instruments.name) as instrumentsort FROM observations INNER JOIN (%s) as limited_obs ON observations.id = limited_obs.id JOIN instruments on observations.instrumentid=instruments.id JOIN locations on observations.locationid=locations.id JOIN observers on observations.observerid=observers.id
     SQL;
             $selectSql = sprintf($selectSql, $idSubquery);
         } else {
             // Single-pass query without pagination
-            $selectSql .= ' ' . $inClause . $orderByClause;
+            $selectSql .= ' ' . $inClause . $extraConds . $orderByClause;
         }
         
         return ['db' => 'old', 'sql' => $selectSql];
