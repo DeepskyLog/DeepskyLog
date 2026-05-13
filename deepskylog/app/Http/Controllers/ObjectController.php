@@ -4408,6 +4408,125 @@ class ObjectController extends Controller
     }
 
     /**
+     * Show a simple comet-selection form (select from comets_orbital_elements)
+     */
+    public function createComet(Request $request)
+    {
+        $q = trim((string) $request->input('q', ''));
+        $query = DB::table('comets_orbital_elements')
+            ->whereRaw('NOT EXISTS (SELECT 1 FROM cometobjects WHERE LOWER(cometobjects.name) = LOWER(comets_orbital_elements.name))');
+
+        if ($q !== '') {
+            $query->where('name', 'like', "%{$q}%");
+        }
+
+        $comets = $query->orderBy('name')->limit(200)->get();
+
+        return view('object.create_comet', compact('q', 'comets'));
+    }
+
+    /**
+     * Persist selected comet from comets_orbital_elements into cometobjects if missing.
+     */
+    public function storeComet(Request $request)
+    {
+        $request->validate([
+            'comet_name' => 'required|string|exists:comets_orbital_elements,name',
+        ]);
+
+        $name = (string) $request->input('comet_name');
+
+        // Check if the comet already exists (case-insensitive match on name)
+        $existing = DB::table('cometobjects')->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])->first();
+        if ($existing) {
+            // Redirect to existing comet page (prefer slug when available)
+            $slug = $existing->slug ?? null;
+            if (!empty($slug)) {
+                return redirect()->route('object.show', ['slug' => $slug])->with('success', __('Comet already exists.'));
+            }
+            return redirect()->route('object.show', ['slug' => $existing->id])->with('success', __('Comet already exists.'));
+        }
+
+        // Prepare insert data
+        $icqname = mb_substr($name, 0, 11);
+        $timestamp = now();
+        $data = [
+            'name' => $name,
+            'icqname' => $icqname,
+            'timestamp' => $timestamp,
+        ];
+
+        // If the cometobjects table has a slug column, generate a unique slug
+        if (Schema::hasColumn('cometobjects', 'slug')) {
+            $base = \Illuminate\Support\Str::slug($name, '-');
+            if (empty($base)) {
+                $base = 'comet';
+            }
+            $slug = $base;
+            $i = 0;
+            while (DB::table('cometobjects')->where('slug', $slug)->exists()) {
+                $i++;
+                $slug = $base . '-' . $i;
+            }
+            $data['slug'] = $slug;
+        }
+
+        try {
+            $id = DB::table('cometobjects')->insertGetId($data);
+        } catch (\Exception $e) {
+            Log::error('Failed to create cometobject', ['error' => $e->getMessage(), 'name' => $name]);
+            return redirect()->back()->with('error', __('Failed to add comet: :msg', ['msg' => $e->getMessage()]));
+        }
+
+        // Ensure slug exists if column is present but wasn't set for some reason
+        if (!isset($data['slug']) && Schema::hasColumn('cometobjects', 'slug')) {
+            $base = \Illuminate\Support\Str::slug($name, '-');
+            if (empty($base)) {
+                $base = 'comet';
+            }
+            $slug = $base;
+            $i = 0;
+            while (DB::table('cometobjects')->where('slug', $slug)->where('id', '!=', $id)->exists()) {
+                $i++;
+                $slug = $base . '-' . $i;
+            }
+            try {
+                DB::table('cometobjects')->where('id', $id)->update(['slug' => $slug]);
+            } catch (\Throwable $_) {
+                // ignore update failures
+            }
+        }
+
+        $row = DB::table('cometobjects')->where('id', $id)->first();
+
+        // Add a search_index row so the comet is immediately discoverable
+        try {
+            DB::table('search_index')->where('source_table', 'cometobjects')->where('source_pk', (string) $id)->delete();
+            DB::table('search_index')->insert([
+                'name' => $row->name,
+                'name_normalized' => mb_strtolower($row->name),
+                'source_table' => 'cometobjects',
+                'source_pk' => (string) $id,
+                'display_name' => $row->name,
+                'source_type' => 'comet',
+                'ra' => null,
+                'decl' => null,
+                'metadata' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        } catch (\Exception $e) {
+            Log::warning('Failed to update search_index for cometobjects', ['error' => $e->getMessage(), 'id' => $id]);
+        }
+
+        if (!empty($row->slug)) {
+            return redirect()->route('object.show', ['slug' => $row->slug])->with('success', __('Comet added.'));
+        }
+
+        return redirect()->route('object.show', ['slug' => $row->id])->with('success', __('Comet added.'));
+    }
+
+    /**
      * POST step 1: validate the name input and redirect to the GET search page.
      */
     public function checkName(Request $request)
@@ -4609,7 +4728,7 @@ class ObjectController extends Controller
             'name' => 'required|string',
             'ra' => 'nullable|string',
             'decl' => 'nullable|string',
-            'type' => 'nullable|string',
+            'type' => 'required|string|exists:deepskytypes,code',
             'mag' => 'nullable|numeric',
             'subr' => 'nullable|numeric',
             'diam1' => 'nullable|numeric',

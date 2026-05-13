@@ -72,6 +72,10 @@
                class="inline-flex items-center bg-gray-600 text-white px-5 py-2 rounded hover:bg-gray-500 font-medium">
                 {{ __('Cancel') }}
             </a>
+            <a href="{{ route('object.create.comet') }}"
+               class="inline-flex items-center bg-indigo-700 text-white px-5 py-2 rounded hover:bg-indigo-600 font-medium">
+                {{ __('Add comet instead') }}
+            </a>
         </div>
     </form>
 </div>

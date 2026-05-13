@@ -489,6 +489,13 @@ Route::get('/object/sun', function () {
 Route::get('/object/create', [App\Http\Controllers\ObjectController::class, 'create'])
     ->name('object.create')->middleware(['auth', 'doNotCacheResponse']);
 
+// Add comet via create wizard: select from comets_orbital_elements and persist to cometobjects
+Route::get('/object/create/comet', [App\Http\Controllers\ObjectController::class, 'createComet'])
+    ->name('object.create.comet')->middleware(['auth', 'doNotCacheResponse']);
+
+Route::post('/object/create/comet', [App\Http\Controllers\ObjectController::class, 'storeComet'])
+    ->name('object.store.comet')->middleware(['auth', 'doNotCacheResponse']);
+
 Route::post('/object/check-name', [App\Http\Controllers\ObjectController::class, 'checkName'])
     ->name('object.checkName')->middleware(['auth', 'doNotCacheResponse']);
 
