@@ -63,11 +63,13 @@
 
             @php
                 $typeRaw = strtoupper(trim((string) ($objectSummary['type_raw'] ?? '')));
+                $resolvedTypeRaw = strtoupper(trim((string) ($resolved['record']->type ?? '')));
                 $isOpenCluster = in_array($typeRaw, ['OPNCL', 'LMCOC', 'SMCOC']);
                 $isGlobular = in_array($typeRaw, ['GLOCL', 'GXAGC', 'LMCGC', 'SMCGC']);
                 $isPlanetary = in_array($typeRaw, ['PLNNB']);
                 $isDark = in_array($typeRaw, ['DRKNB']);
-                $isDouble = in_array($typeRaw, ['DS']);
+                // Detect doubles from the summary `type_raw` or from the resolved object's `type` field
+                $isDouble = in_array($typeRaw, ['DS']) || ($resolvedTypeRaw === 'DS');
             @endphp
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -94,6 +96,7 @@
                 <div></div>
             </div>
 
+            @unless($isDouble)
             <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs text-gray-400 mb-1">{{ __("Estimated large diameter (')") }}</label>
@@ -104,6 +107,7 @@
                     <input name="small_diameter" step="0.1" type="number" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100" value="{{ old('small_diameter', '') }}" />
                 </div>
             </div>
+            @endunless
 
             @if(!empty($isOpenCluster))
                 <div class="mt-3">
@@ -121,6 +125,7 @@
                 <label class="block text-xs text-gray-400 mb-2">{{ __('Characteristics') }}</label>
 
                 {{-- Stellar / Extended should be mutually exclusive: render as radios and map to boolean fields expected by backend --}}
+                @unless($isDouble)
                 <div class="flex items-center gap-6 mb-3">
                     @php
                         $stellarChecked = (int) old('stellar', 0) === 1;
@@ -150,6 +155,7 @@
                         <input type="hidden" name="extended" value="1" />
                     @endif
                 </div>
+                @endunless
 
                 <div class="flex flex-wrap gap-4">
                     @php
@@ -181,23 +187,25 @@
                     @endforeach
 
                     @if($isDouble)
-                        <div class="w-full md:w-1/2 mt-2">
-                            <label class="block text-xs text-gray-400 mb-1">{{ __('Component 1') }}</label>
-                            <select name="component1" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100">
-                                <option value="">{{ __('Select color') }}</option>
-                                @foreach(['1' => 'white', '2' => 'red', '3' => 'orange', '4' => 'yellow', '5' => 'green', '6' => 'blue'] as $val => $color)
-                                    <option value="{{ $val }}" @if(old('component1') == $val) selected @endif>{{ __(ucfirst($color)) }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="w-full md:w-1/2 mt-2">
-                            <label class="block text-xs text-gray-400 mb-1">{{ __('Component 2') }}</label>
-                            <select name="component2" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100">
-                                <option value="">{{ __('Select color') }}</option>
-                                @foreach(['1' => 'white', '2' => 'red', '3' => 'orange', '4' => 'yellow', '5' => 'green', '6' => 'blue'] as $val => $color)
-                                    <option value="{{ $val }}" @if(old('component2') == $val) selected @endif>{{ __(ucfirst($color)) }}</option>
-                                @endforeach
-                            </select>
+                        <div class="w-full mt-2 grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">{{ __('Component 1') }}</label>
+                                <select name="component1" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100">
+                                    <option value="">{{ __('Select color') }}</option>
+                                    @foreach(['1' => 'white', '2' => 'red', '3' => 'orange', '4' => 'yellow', '5' => 'green', '6' => 'blue'] as $val => $color)
+                                        <option value="{{ $val }}" @if(old('component1') == $val) selected @endif>{{ __(ucfirst($color)) }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-400 mb-1">{{ __('Component 2') }}</label>
+                                <select name="component2" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100">
+                                    <option value="">{{ __('Select color') }}</option>
+                                    @foreach(['1' => 'white', '2' => 'red', '3' => 'orange', '4' => 'yellow', '5' => 'green', '6' => 'blue'] as $val => $color)
+                                        <option value="{{ $val }}" @if(old('component2') == $val) selected @endif>{{ __(ucfirst($color)) }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     @endif
                 </div>

@@ -20,7 +20,7 @@
                 @endphp
                 @if (! $isSun)
                     <div class="mb-4">
-                        <strong>{{ __('Type') }}:</strong> {{ ucfirst($resolved['type']) }}
+                        <strong>{{ __('Type') }}:</strong> {{ data_get($objectSummary, 'type_label') ?? ucfirst($resolved['type']) }}
                     </div>
                 @endif
 

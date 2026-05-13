@@ -187,7 +187,15 @@ class ObservationsController extends Controller
             }
 
             $socialData = $this->buildSocialData($obsType, (int) $selectedUnified->id);
-            $preloadedData = $this->preloadDeepskyData(collect([$selected]));
+            if ($obsType === 'comet') {
+                // For unified observations that target a comet, ensure we have
+                // a resolved comet name and preload comet-specific data so
+                // views can display the comet name correctly.
+                $selected->resolved_comet_name = (string) ($selectedUnified->target_name ?? '');
+                $preloadedData = $this->preloadCometData(collect([$selected]));
+            } else {
+                $preloadedData = $this->preloadDeepskyData(collect([$selected]));
+            }
             $moonContext = $this->buildMoonContext($selected, $preloadedData['preloaded_locations']->get($selected->locationid) ?? null);
 
             return view('observations.detail', array_merge([
@@ -1407,6 +1415,38 @@ class ObservationsController extends Controller
             }
         }
 
+        // Attach comet-specific observation detail fields (from
+        // `comet_observation_details`) to each observation object so
+        // legacy templates can read expected properties like `mag`,
+        // `maguncertain`, `lessmagnitude`, `dc`, `coma`, `tail`, `pa`,
+        // `methode` and `chart`.
+        try {
+            $obsIds = $observations->pluck('id')->unique()->filter()->values()->all();
+            if (!empty($obsIds)) {
+                $detailRows = DB::table('comet_observation_details')
+                    ->whereIn('observation_id', $obsIds)
+                    ->get()
+                    ->keyBy('observation_id');
+
+                foreach ($observations as $obsItem) {
+                    $detail = $detailRows->get($obsItem->id) ?? null;
+                    if ($detail) {
+                        $obsItem->mag = isset($detail->magnitude) ? (float) $detail->magnitude : null;
+                        $obsItem->maguncertain = !empty($detail->magnitude_uncertain) ? 1 : 0;
+                        $obsItem->lessmagnitude = !empty($detail->less_magnitude) ? 1 : 0;
+                        $obsItem->dc = $detail->dc ?? null;
+                        $obsItem->coma = isset($detail->coma) ? (int) $detail->coma : null;
+                        $obsItem->tail = isset($detail->tail) ? (int) $detail->tail : null;
+                        $obsItem->pa = isset($detail->position_angle) ? (int) $detail->position_angle : null;
+                        $obsItem->methode = $detail->method ?? null;
+                        $obsItem->chart = $detail->chart ?? null;
+                    }
+                }
+            }
+        } catch (\Throwable $_) {
+            // ignore detail loading failures to avoid breaking page render
+        }
+
         return [
             'preloaded_users' => $users,
             'preloaded_comets' => $comets,
@@ -1841,6 +1881,10 @@ class ObservationsController extends Controller
         if (!empty($slug)) {
             $raw = (string) $slug;
             $candidates = $this->buildSlugCandidates($raw);
+            try {
+                \Log::debug('ObservationsController::create: candidates', ['slug' => $raw, 'candidates' => $candidates]);
+            } catch (\Throwable $_) {
+            }
 
             // Try legacy deepsky object names / objects first
             $objectName = null;
@@ -1850,6 +1894,9 @@ class ObservationsController extends Controller
                     $objectName = $on->objectname;
                     $resolved['type'] = 'deepsky';
                     $resolved['table'] = 'objectnames';
+                    // objectnames rows store `objectname` instead of `name`.
+                    // Normalize so the view can always use ->name.
+                    $on->name = $on->objectname ?? ($on->name ?? null);
                     $resolved['record'] = $on;
                     break;
                 }
@@ -1873,6 +1920,7 @@ class ObservationsController extends Controller
                         $objectName = $on->objectname;
                         $resolved['type'] = 'deepsky';
                         $resolved['table'] = 'objectnames';
+                        $on->name = $on->objectname ?? ($on->name ?? null);
                         $resolved['record'] = $on;
                         break;
                     }
@@ -1914,6 +1962,45 @@ class ObservationsController extends Controller
                     'type_label' => null,
                     'constellation' => null,
                 ];
+
+                // Try to resolve the canonical object in the `objects` table to
+                // provide a human-friendly type label (e.g. "Double star") and
+                // ensure we display the canonical `name` rather than the slug.
+                try {
+                    $target = \App\Models\Target::where('name', $objectName)
+                        ->orWhereIn('slug', $possibleKeys)
+                        ->first();
+                    if ($target) {
+                        $objectSummary['type_raw'] = $target->type ?? null;
+                        $objectSummary['type_label'] = $target->long_type();
+                        // Ensure the resolved record exposes a `name` property for views
+                        if (!empty($resolved['record']) && empty($resolved['record']->name) && !empty($target->name)) {
+                            $resolved['record']->name = $target->name;
+                        }
+                    }
+                } catch (\Throwable $_) {
+                    // ignore - best-effort only
+                }
+                // Fallback: if we still don't have a type_raw, try a direct DB lookup
+                // to catch cases where name/slug variants differ.
+                if (empty($objectSummary['type_raw'])) {
+                    try {
+                        $o = DB::table('objects')
+                            ->whereIn('slug', $possibleKeys)
+                            ->orWhereRaw('LOWER(name) = ?', [mb_strtolower($objectName)])
+                            ->first();
+                        if ($o) {
+                            $objectSummary['type_raw'] = $o->type ?? null;
+                            $tt = DB::table('target_types')->where('id', $o->type)->first();
+                            $objectSummary['type_label'] = $tt ? __($tt->type) : null;
+                            if (!empty($resolved['record']) && empty($resolved['record']->name) && !empty($o->name)) {
+                                $resolved['record']->name = $o->name;
+                            }
+                        }
+                    } catch (\Throwable $_) {
+                        // ignore
+                    }
+                }
             } else {
                 // Try planets (Sun / Moon / planets)
                 $planet = null;
@@ -1969,72 +2056,194 @@ class ObservationsController extends Controller
                         'constellation' => null,
                     ];
                 } else {
-                    // Try comets (cometobjects table)
-                    $comet = null;
+                    // Try moons and lunar features
+                    $lunar = null;
                     foreach ($candidates as $cand) {
                         try {
-                            $comet = DB::table('cometobjects')->where('slug', $cand)->first();
+                            $lunar = DB::table('lunar_features')->where('slug', $cand)->first();
                         } catch (\Throwable $_) {
-                            $comet = null;
+                            $lunar = null;
                         }
-                        if ($comet)
+                        if ($lunar)
                             break;
                     }
 
-                    if (!$comet) {
+                    if (!$lunar) {
                         foreach ($candidates as $cand) {
                             try {
-                                $comet = DB::table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                                $lunar = DB::table('lunar_features')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                            } catch (\Throwable $_) {
+                                $lunar = null;
+                            }
+                            if ($lunar)
+                                break;
+                        }
+                    }
+
+                    if (!$lunar) {
+                        // Maybe it's a moon (e.g., different table); try moons table
+                        foreach ($candidates as $cand) {
+                            try {
+                                $moon = DB::table('moons')->where('slug', $cand)->first();
+                            } catch (\Throwable $_) {
+                                $moon = null;
+                            }
+                            if (!empty($moon)) {
+                                $lunar = $moon;
+                                break;
+                            }
+                        }
+                        if (!$lunar) {
+                            foreach ($candidates as $cand) {
+                                try {
+                                    $moon = DB::table('moons')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                                } catch (\Throwable $_) {
+                                    $moon = null;
+                                }
+                                if (!empty($moon)) {
+                                    $lunar = $moon;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if ($lunar) {
+                        // Determine whether this is a lunar feature or a moon record
+                        $isMoonRecord = isset($lunar->feature_type) ? false : true;
+                        if ($isMoonRecord) {
+                            $resolved['type'] = 'moon';
+                            $resolved['table'] = 'moons';
+                            $resolved['record'] = $lunar;
+
+                            $possibleKeys = [];
+                            if (!empty($lunar->slug))
+                                $possibleKeys[] = (string) $lunar->slug;
+                            if (!empty($lunar->name))
+                                $possibleKeys[] = (string) $lunar->name;
+                            if (!empty($lunar->id))
+                                $possibleKeys[] = (string) $lunar->id;
+                            $possibleKeys = array_values(array_unique(array_filter(array_merge($possibleKeys, $candidates))));
+
+                            $unifiedTotal = Observation::where('target_table', 'moons')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->count();
+                            $unifiedYour = $user ? Observation::where('target_table', 'moons')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->where('observer_username', $user->username)->count() : 0;
+                            $unifiedDrawings = Observation::where('target_table', 'moons')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->where('has_drawing', 1)->count();
+                            $unifiedYourDrawings = $user ? Observation::where('target_table', 'moons')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->where('observer_username', $user->username)->where('has_drawing', 1)->count() : 0;
+
+                            $objectSummary = [
+                                'object_slug' => $lunar->slug ?? $slug,
+                                'total_observations' => $unifiedTotal,
+                                'your_observations' => $unifiedYour,
+                                'total_drawings' => $unifiedDrawings,
+                                'your_drawings' => $unifiedYourDrawings,
+                                'type_raw' => null,
+                                'type_label' => null,
+                                'constellation' => null,
+                            ];
+                        } else {
+                            // lunar feature
+                            $resolved['type'] = 'lunar';
+                            $resolved['table'] = 'lunar_features';
+                            $resolved['record'] = $lunar;
+
+                            $possibleKeys = [];
+                            if (!empty($lunar->slug))
+                                $possibleKeys[] = (string) $lunar->slug;
+                            if (!empty($lunar->name))
+                                $possibleKeys[] = (string) $lunar->name;
+                            if (!empty($lunar->id))
+                                $possibleKeys[] = (string) $lunar->id;
+                            $possibleKeys = array_values(array_unique(array_filter(array_merge($possibleKeys, $candidates))));
+
+                            $unifiedTotal = Observation::where('target_table', 'lunar_features')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->count();
+                            $unifiedYour = $user ? Observation::where('target_table', 'lunar_features')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->where('observer_username', $user->username)->count() : 0;
+                            $unifiedDrawings = Observation::where('target_table', 'lunar_features')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->where('has_drawing', 1)->count();
+                            $unifiedYourDrawings = $user ? Observation::where('target_table', 'lunar_features')->whereIn('target_key', $possibleKeys)->whereNull('legacy_source')->where('observer_username', $user->username)->where('has_drawing', 1)->count() : 0;
+
+                            $objectSummary = [
+                                'object_slug' => $lunar->slug ?? $slug,
+                                'total_observations' => $unifiedTotal,
+                                'your_observations' => $unifiedYour,
+                                'total_drawings' => $unifiedDrawings,
+                                'your_drawings' => $unifiedYourDrawings,
+                                'type_raw' => $lunar->feature_type ?? null,
+                                'type_label' => !empty($lunar->feature_type) ? ucfirst($lunar->feature_type) : null,
+                                'constellation' => null,
+                            ];
+                        }
+                    } else {
+                        // Try comets (cometobjects table)
+                        $comet = null;
+                        foreach ($candidates as $cand) {
+                            try {
+                                $comet = DB::table('cometobjects')->where('slug', $cand)->first();
                             } catch (\Throwable $_) {
                                 $comet = null;
                             }
                             if ($comet)
                                 break;
                         }
-                    }
 
-                    if ($comet) {
-                        $resolved['type'] = 'comet';
-                        $resolved['table'] = 'cometobjects';
-                        $resolved['record'] = $comet;
+                        if (!$comet) {
+                            foreach ($candidates as $cand) {
+                                try {
+                                    $comet = DB::table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                                } catch (\Throwable $_) {
+                                    $comet = null;
+                                }
+                                if ($comet)
+                                    break;
+                            }
+                        }
 
-                        $cometIdStr = (string) $comet->id;
-                        $unifiedTotal = Observation::where('target_table', 'cometobjects')->where('target_key', $cometIdStr)->whereNull('legacy_source')->count();
-                        $unifiedYour = $user ? Observation::where('target_table', 'cometobjects')->where('target_key', $cometIdStr)->whereNull('legacy_source')->where('observer_username', $user->username)->count() : 0;
-                        $unifiedDrawings = Observation::where('target_table', 'cometobjects')->where('target_key', $cometIdStr)->whereNull('legacy_source')->where('has_drawing', 1)->count();
-                        $unifiedYourDrawings = $user ? Observation::where('target_table', 'cometobjects')->where('target_key', $cometIdStr)->whereNull('legacy_source')->where('observer_username', $user->username)->where('has_drawing', 1)->count() : 0;
+                        if ($comet) {
+                            $resolved['type'] = 'comet';
+                            $resolved['table'] = 'cometobjects';
+                            $resolved['record'] = $comet;
 
-                        $legacyTotal = Observation::where('legacy_source', 'comet')->where('target_key', $cometIdStr)->count();
-                        $legacyYour = $user ? Observation::where('legacy_source', 'comet')->where('target_key', $cometIdStr)->where('observer_username', $user->username)->count() : 0;
+                            $cometIdStr = (string) $comet->id;
+                            $unifiedTotal = Observation::where('target_table', 'cometobjects')->where('target_key', $cometIdStr)->whereNull('legacy_source')->count();
+                            $unifiedYour = $user ? Observation::where('target_table', 'cometobjects')->where('target_key', $cometIdStr)->whereNull('legacy_source')->where('observer_username', $user->username)->count() : 0;
+                            $unifiedDrawings = Observation::where('target_table', 'cometobjects')->where('target_key', $cometIdStr)->whereNull('legacy_source')->where('has_drawing', 1)->count();
+                            $unifiedYourDrawings = $user ? Observation::where('target_table', 'cometobjects')->where('target_key', $cometIdStr)->whereNull('legacy_source')->where('observer_username', $user->username)->where('has_drawing', 1)->count() : 0;
 
-                        $objectSummary = [
-                            'object_slug' => $comet->slug ?? $slug,
-                            'total_observations' => $unifiedTotal + $legacyTotal,
-                            'your_observations' => $unifiedYour + $legacyYour,
-                            'total_drawings' => $unifiedDrawings,
-                            'your_drawings' => $unifiedYourDrawings,
-                            'type_raw' => null,
-                            'type_label' => null,
-                            'constellation' => null,
-                        ];
+                            $legacyTotal = Observation::where('legacy_source', 'comet')->where('target_key', $cometIdStr)->count();
+                            $legacyYour = $user ? Observation::where('legacy_source', 'comet')->where('target_key', $cometIdStr)->where('observer_username', $user->username)->count() : 0;
+
+                            $objectSummary = [
+                                'object_slug' => $comet->slug ?? $slug,
+                                'total_observations' => $unifiedTotal + $legacyTotal,
+                                'your_observations' => $unifiedYour + $legacyYour,
+                                'total_drawings' => $unifiedDrawings,
+                                'your_drawings' => $unifiedYourDrawings,
+                                'type_raw' => null,
+                                'type_label' => null,
+                                'constellation' => null,
+                            ];
+                        }
                     }
                 }
             }
-        }
 
-        return view('observations.create', [
-            'resolved' => $resolved,
-            'slug' => $slug,
-            'objectSummary' => $objectSummary,
-            'instrumentSets' => $instrumentSets,
-            'instrumentSet' => $instrumentSet,
-            'locations' => $locations,
-            // Provide server upload limits to the form so the UI can show helpful guidance
-            'php_upload_max_filesize' => ini_get('upload_max_filesize'),
-            'php_post_max_size' => ini_get('post_max_size'),
-            'php_upload_max_bytes' => $this->phpSizeToBytes(ini_get('upload_max_filesize')),
-            'php_post_max_bytes' => $this->phpSizeToBytes(ini_get('post_max_size')),
-        ]);
+            try {
+                \Log::debug('ObservationsController::create: resolved', ['slug' => $slug, 'resolved' => $resolved, 'objectSummary' => $objectSummary]);
+            } catch (\Throwable $_) {
+            }
+
+            return view('observations.create', [
+                'resolved' => $resolved,
+                'slug' => $slug,
+                'objectSummary' => $objectSummary,
+                'instrumentSets' => $instrumentSets,
+                'instrumentSet' => $instrumentSet,
+                'locations' => $locations,
+                // Provide server upload limits to the form so the UI can show helpful guidance
+                'php_upload_max_filesize' => ini_get('upload_max_filesize'),
+                'php_post_max_size' => ini_get('post_max_size'),
+                'php_upload_max_bytes' => $this->phpSizeToBytes(ini_get('upload_max_filesize')),
+                'php_post_max_bytes' => $this->phpSizeToBytes(ini_get('post_max_size')),
+            ]);
+        }
     }
 
     /**
@@ -2480,6 +2689,37 @@ class ObservationsController extends Controller
             // ignore prefill failures
         }
 
+        // Prefill comet-specific detail fields when editing a comet observation
+        try {
+            if (in_array($selectedUnified->target_table, ['cometobjects', 'comets'])) {
+                $details = \Illuminate\Support\Facades\DB::table('comet_observation_details')
+                    ->where('observation_id', $selectedUnified->id)
+                    ->first();
+                if ($details) {
+                    if (!empty($details->method))
+                        $prefill['comet_method'] = $details->method;
+                    if (!empty($details->chart))
+                        $prefill['comet_chart'] = $details->chart;
+                    if (isset($details->magnitude) && $details->magnitude !== null)
+                        $prefill['comet_magnitude_estimate'] = (float) $details->magnitude;
+                    if (!empty($details->magnitude_uncertain))
+                        $prefill['comet_magnitude_uncertain'] = 1;
+                    if (!empty($details->less_magnitude))
+                        $prefill['comet_less_magnitude'] = 1;
+                    if ($details->dc !== null && $details->dc !== '')
+                        $prefill['comet_dc'] = $details->dc;
+                    if (isset($details->coma) && $details->coma !== null)
+                        $prefill['comet_coma'] = (int) $details->coma;
+                    if (isset($details->tail) && $details->tail !== null)
+                        $prefill['comet_tail_length'] = (int) $details->tail;
+                    if (isset($details->position_angle) && $details->position_angle !== null)
+                        $prefill['comet_position_angle'] = (int) $details->position_angle;
+                }
+            }
+        } catch (\Throwable $_) {
+            // ignore prefill failures
+        }
+
         session()->flashInput($prefill);
 
         return redirect()->route('observation.create', ['slug' => $slug]);
@@ -2544,8 +2784,8 @@ class ObservationsController extends Controller
                 }
             }
 
-            // Delete the unified observation row
-            Observation::where('id', $selectedUnified->id)->delete();
+            // Delete the unified observation row via the model so observers fire
+            $selectedUnified->delete();
 
             DB::commit();
         } catch (\Throwable $e) {

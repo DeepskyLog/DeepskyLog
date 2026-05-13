@@ -121,10 +121,14 @@
         } catch (\Throwable $_) {
         }
 
+        // Also consider unified target_table for lunar records (moons / lunar_features)
+        $targetTable = $obsUnified?->target_table ?? null;
+
         if ($isSun) {
             $iconEmoji = '🌞';
-        } elseif ($isMoon || ($obs_type === 'lunar')) {
-            // Use moon icon when target is explicitly lunar or name matches moon keywords
+        } elseif ($isMoon || ($obs_type === 'lunar') || in_array($targetTable, ['lunar_features', 'moons'])) {
+            // Use moon icon when target is explicitly lunar, name matches moon keywords
+            // or the unified observation references the lunar tables
             $iconEmoji = '🌕';
         } elseif ($obs_type === 'deepsky') {
             $iconEmoji = '✨';

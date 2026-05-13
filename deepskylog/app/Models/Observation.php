@@ -78,7 +78,7 @@ class Observation extends Model
 
     public function getHasDrawingAttribute(): bool
     {
-        return (bool) $this->attributes['has_drawing'] ?? false;
+        return (bool) ($this->attributes['has_drawing'] ?? false);
     }
 
     public function getInstrumentidAttribute(): ?int

@@ -9,17 +9,7 @@
   - [x] Make migrations and seeder
   - [x] Show detailed observation page, with all details, comments, ...
   - [ ] Add observations page
-    - [ ] Try to add an observation for all types of objects, to see if all fields are working correctly.
-      - [] Sun
-      - [ ] Planet
-      - [ ] Open cluster
-      - [ ] Binary star
-      - [ ] Lunar feature
-      - [ ] Galaxy
-      - [ ] Comet
-    - [ ] Do the same, but first create a new object of all types.
-      - [ ] Sun
-      - [ ] Planet
+    - [ ] Add an observation for all types of objects, but first create a new object of all types.
       - [ ] Open cluster
       - [ ] Binary star
       - [ ] Lunar feature
@@ -27,11 +17,11 @@
       - [ ] Comet
     - [ ] If an observation was already entered, fill the date with the latest date that was entered in the field (when the user adds more than one observation in a row).
     - [ ] Fill the location with the latest location that was entered in the field. Do the same for the instrument, eyepiece, lens and filter fields.  If this was not the case, use the standard / default location, instrument, eyepiece, and lens.
-    - [ ] X, facebook, ... links for the sketch of the week and the month should be adapted, as well as the share buttons for the observations.
-    - [ ] Check for APP_OLD_URL
-    - [ ] Share from the observation detail page.  Also share observing lists?
-    - [ ] RSS Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
-    - [ ] Import observations from a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, ...
+  - [ ] X, facebook, ... links for the sketch of the week and the month should be adapted, as well as the share buttons for the observations.
+  - [ ] Check for APP_OLD_URL
+  - [ ] Share from the observation detail page.  Also share observing lists?
+  - [ ] RSS Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
+  - [ ] Import observations from a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, ...
 - [ ] Search for observations
   - [ ] Quick search in the left aside
   - [ ] Detailed search page

@@ -8,6 +8,7 @@ use App\Models\Eyepiece;
 use App\Models\Lens;
 use App\Models\Filter;
 use App\Models\Location;
+use Illuminate\Support\Facades\Cache;
 
 class ObservationObserver
 {
@@ -23,20 +24,27 @@ class ObservationObserver
             Filter::where('id', $obs->filter_id)->increment('observations');
         if ($obs->location_id)
             Location::where('id', $obs->location_id)->increment('observations');
+
+        // Invalidate homepage sketch/observation caches so lists refresh quickly
+        // (include non-drawing observations so the "20 newest observations" list updates)
+        $this->forgetHomepageCaches();
     }
 
     public function deleted(Observation $obs): void
     {
         if ($obs->instrument_id)
-            Instrument::where('id', $obs->instrument_id)->decrement('observations');
+            Instrument::where('id', $obs->instrument_id)->where('observations', '>', 0)->decrement('observations');
         if ($obs->eyepiece_id)
-            Eyepiece::where('id', $obs->eyepiece_id)->decrement('observations');
+            Eyepiece::where('id', $obs->eyepiece_id)->where('observations', '>', 0)->decrement('observations');
         if ($obs->lens_id)
-            Lens::where('id', $obs->lens_id)->decrement('observations');
+            Lens::where('id', $obs->lens_id)->where('observations', '>', 0)->decrement('observations');
         if ($obs->filter_id)
-            Filter::where('id', $obs->filter_id)->decrement('observations');
+            Filter::where('id', $obs->filter_id)->where('observations', '>', 0)->decrement('observations');
         if ($obs->location_id)
-            Location::where('id', $obs->location_id)->decrement('observations');
+            Location::where('id', $obs->location_id)->where('observations', '>', 0)->decrement('observations');
+
+        // Deleted observation -> invalidate homepage caches so lists refresh
+        $this->forgetHomepageCaches();
     }
 
     public function restored(Observation $obs): void
@@ -46,49 +54,78 @@ class ObservationObserver
 
     public function updated(Observation $obs): void
     {
-        if ($obs->isDirty('instrument_id')) {
+        if ($obs->wasChanged('instrument_id')) {
             $old = $obs->getOriginal('instrument_id');
             $new = $obs->instrument_id;
             if ($old)
-                Instrument::where('id', $old)->decrement('observations');
+                Instrument::where('id', $old)->where('observations', '>', 0)->decrement('observations');
             if ($new)
                 Instrument::where('id', $new)->increment('observations');
         }
 
-        if ($obs->isDirty('eyepiece_id')) {
+        if ($obs->wasChanged('eyepiece_id')) {
             $old = $obs->getOriginal('eyepiece_id');
             $new = $obs->eyepiece_id;
             if ($old)
-                Eyepiece::where('id', $old)->decrement('observations');
+                Eyepiece::where('id', $old)->where('observations', '>', 0)->decrement('observations');
             if ($new)
                 Eyepiece::where('id', $new)->increment('observations');
         }
 
-        if ($obs->isDirty('lens_id')) {
+        if ($obs->wasChanged('lens_id')) {
             $old = $obs->getOriginal('lens_id');
             $new = $obs->lens_id;
             if ($old)
-                Lens::where('id', $old)->decrement('observations');
+                Lens::where('id', $old)->where('observations', '>', 0)->decrement('observations');
             if ($new)
                 Lens::where('id', $new)->increment('observations');
         }
 
-        if ($obs->isDirty('filter_id')) {
+        if ($obs->wasChanged('filter_id')) {
             $old = $obs->getOriginal('filter_id');
             $new = $obs->filter_id;
             if ($old)
-                Filter::where('id', $old)->decrement('observations');
+                Filter::where('id', $old)->where('observations', '>', 0)->decrement('observations');
             if ($new)
                 Filter::where('id', $new)->increment('observations');
         }
 
-        if ($obs->isDirty('location_id')) {
+        if ($obs->wasChanged('location_id')) {
             $old = $obs->getOriginal('location_id');
             $new = $obs->location_id;
             if ($old)
-                Location::where('id', $old)->decrement('observations');
+                Location::where('id', $old)->where('observations', '>', 0)->decrement('observations');
             if ($new)
                 Location::where('id', $new)->increment('observations');
+        }
+
+        // If drawing-related fields changed, invalidate homepage caches so sketches/observations lists refresh
+        if ($obs->wasChanged('target_type') || $obs->wasChanged('target_name') || $obs->wasChanged('has_drawing')) {
+            $oldHas = (bool) $obs->getOriginal('has_drawing');
+            $newHas = (bool) $obs->has_drawing;
+            if ($oldHas || $newHas) {
+                $this->forgetHomepageCaches();
+            }
+        }
+    }
+
+    /**
+     * Forget a small set of cached homepage sketch/observation pages so the UI refreshes
+     * after drawings are created/updated/deleted. We target the common sketch/obs types
+     * and the first few pages to avoid brute-forcing the entire cache.
+     */
+    private function forgetHomepageCaches(): void
+    {
+        $types = ['all', 'deepsky', 'comet', 'solarsystem'];
+        for ($page = 1; $page <= 3; $page++) {
+            foreach ($types as $type) {
+                try {
+                    Cache::forget("welcome_sketches_page_{$type}_{$page}");
+                    Cache::forget("welcome_observations_page_{$type}_{$page}");
+                } catch (\Throwable $_) {
+                    // ignore cache failures
+                }
+            }
         }
     }
 }
