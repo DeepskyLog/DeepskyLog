@@ -2857,7 +2857,7 @@ Correct observations which have been imported will not be registered for a secon
                         . " tablesorter-childRow\">";
                     if ($lco == "C") {
                         echo "<td colspan=\"7\">"
-                            . ((isset($value['hasDrawing']) && $value['hasDrawing'])
+                            . ($hasDrawing
                             ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/"
                             . $value['observationid']
                             . ".jpg\" data-lightbox=" . $value['observationid']
@@ -2876,7 +2876,7 @@ Correct observations which have been imported will not be registered for a secon
                             } else {
                                 echo "<td> &nbsp; </td>
                                       <td colspan=\"6\">"
-                                                                        . ((isset($value['hasDrawing']) && $value['hasDrawing'])
+                                                                        . ($hasDrawing
                                                                             ? "<p>"
                                                                             . "<a href=\"" . $baseURL
                                                                             . "deepsky/drawings/"
@@ -2895,7 +2895,7 @@ Correct observations which have been imported will not be registered for a secon
                                     . "&nbsp;</td>";
                             } else {
                                 echo "<td colspan=\"6\">"
-                                                . ((isset($value['hasDrawing']) && $value['hasDrawing'])
+                                                . ($hasDrawing
                                                 ? "<p>"
                                                 . "<a  href=\"" . $baseURL . "deepsky/drawings/"
                                                 . $value['observationid']
