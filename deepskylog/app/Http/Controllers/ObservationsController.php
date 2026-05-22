@@ -1878,6 +1878,35 @@ class ObservationsController extends Controller
             $locations = collect();
         }
 
+        // Check whether the user added an observation within the last 15 minutes.
+        // If so, pre-fill the form with those settings so observers can quickly
+        // enter many observations from the same observing session in a row.
+        // Otherwise fall back to the user's standard defaults (handled in the view).
+        $prefill = [];
+        if ($user) {
+            try {
+                $recentObs = Observation::where('observer_user_id', $user->id)
+                    ->whereNull('legacy_source')
+                    ->where('created_at', '>=', Carbon::now()->subMinutes(15))
+                    ->orderByDesc('created_at')
+                    ->first();
+                if ($recentObs) {
+                    $prefill = [
+                        'observed_on' => $recentObs->observed_on
+                            ? Carbon::parse($recentObs->observed_on)->format('Y-m-d')
+                            : Carbon::yesterday()->format('Y-m-d'),
+                        'location_id' => $recentObs->location_id,
+                        'instrument_id' => $recentObs->instrument_id,
+                        'eyepiece_id' => $recentObs->eyepiece_id,
+                        'lens_id' => $recentObs->lens_id,
+                        'filter_id' => $recentObs->filter_id,
+                    ];
+                }
+            } catch (\Throwable $_) {
+                $prefill = [];
+            }
+        }
+
         if (!empty($slug)) {
             $raw = (string) $slug;
             $candidates = $this->buildSlugCandidates($raw);
@@ -2237,6 +2266,7 @@ class ObservationsController extends Controller
                 'instrumentSets' => $instrumentSets,
                 'instrumentSet' => $instrumentSet,
                 'locations' => $locations,
+                'prefill' => $prefill,
                 // Provide server upload limits to the form so the UI can show helpful guidance
                 'php_upload_max_filesize' => ini_get('upload_max_filesize'),
                 'php_post_max_size' => ini_get('post_max_size'),

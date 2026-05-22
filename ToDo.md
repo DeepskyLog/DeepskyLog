@@ -8,10 +8,8 @@
 - [ ] Observations
   - [x] Make migrations and seeder
   - [x] Show detailed observation page, with all details, comments, ...
-  - [ ] Add observations page
-    - [ ] If an observation was already entered, fill the date with the latest date that was entered in the field (when the user adds more than one observation in a row).
-    - [ ] Fill the location with the latest location that was entered in the field. Do the same for the instrument, eyepiece, lens and filter fields.  If this was not the case, use the standard / default location, instrument, eyepiece, and lens.
-  - [ ] X, facebook, ... links for the sketch of the week and the month should be adapted, as well as the share buttons for the observations.
+  - [X] Add observations page
+  - [ ] X, facebook, ... links for the sketch of the week and the month should be adapted, as well as the share buttons for the observations.  There is now still a link to the old deepskylog server, but now that the observations are also in the new version of DeepskyLog, this link to the new observation should be used.  
   - [ ] Check for APP_OLD_URL
   - [ ] Share from the observation detail page.  Also share observing lists?
   - [ ] RSS Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
@@ -22,6 +20,7 @@
   - [ ] Export search results in a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, pdf, csv, ...
 - [ ] All missing pages
 - [ ] Create star charts and atlases.
+  - [ ] With field of view of the instrument, and eyepiece used.
 - [ ] Create observing guides
 - [ ] Translations
 - [ ] On real server:

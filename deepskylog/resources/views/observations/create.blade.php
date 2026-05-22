@@ -178,7 +178,7 @@
                                 name="observed_on"
                                 display-format="{{ $showInches ? 'MM/DD/YYYY' : 'DD/MM/YYYY' }}"
                                 parse-format="YYYY-MM-DD"
-                                value="{{ old('observed_on', \Carbon\Carbon::yesterday()->format('Y-m-d')) }}"
+                                value="{{ old('observed_on', $prefill['observed_on'] ?? \Carbon\Carbon::yesterday()->format('Y-m-d')) }}"
                                 class="w-full" />
                         </div>
                         <div>
@@ -196,7 +196,7 @@
                         <label class="block text-xs text-gray-400 mb-1">{{ __('Location') }}</label>
                         <x-select
                             placeholder="{{ __('Select location') }}"
-                            value="{{ old('location_id', auth()->check() ? auth()->user()->stdlocation : '') }}"
+                            value="{{ old('location_id', $prefill['location_id'] ?? (auth()->check() ? auth()->user()->stdlocation : '')) }}"
                             class="w-full"
                                x-on:selected="document.getElementById('location_hidden').value = $event.detail.value; if (window.__dsl_emit) { window.__dsl_emit('locationSelected', $event.detail.value) } else { window.__dsl_pending_event = { name: 'locationSelected', payload: $event.detail.value } } ; if (window.updateObservationConditionsFromLocation) { window.updateObservationConditionsFromLocation($event.detail.value) } else { window.__dsl_pending_location = $event.detail.value }"
                                x-on:clear="document.getElementById('location_hidden').value = ''; if (window.__dsl_emit) { window.__dsl_emit('locationSelected', '') } else { window.__dsl_pending_event = { name: 'locationSelected', payload: '' } } ; if (window.updateObservationConditionsFromLocation) { window.updateObservationConditionsFromLocation('') } else { window.__dsl_pending_location = '' }"
@@ -206,9 +206,9 @@
                                 <x-select.option label="{{ $loc->name }}" value="{{ $loc->id }}" />
                             @endforeach
                         </x-select>
-                        <input type="hidden" id="location_hidden" name="location_id" value="{{ old('location_id', auth()->check() ? auth()->user()->stdlocation : '') }}" />
+                        <input type="hidden" id="location_hidden" name="location_id" value="{{ old('location_id', $prefill['location_id'] ?? (auth()->check() ? auth()->user()->stdlocation : '')) }}" />
                         @php
-                            $__stdLocId = old('location_id', auth()->check() ? auth()->user()->stdlocation : '');
+                            $__stdLocId = old('location_id', $prefill['location_id'] ?? (auth()->check() ? auth()->user()->stdlocation : ''));
                             $__stdLoc   = collect($locations ?? [])->firstWhere('id', $__stdLocId);
                         @endphp
                         @if($__stdLoc)
@@ -312,18 +312,18 @@
                                 :async-data="route('filter.select.api')"
                                 option-label="name"
                                 option-value="id"
-                                value="{{ old('filter_id', '') }}"
+                                value="{{ old('filter_id', $prefill['filter_id'] ?? '') }}"
                                 placeholder="{{ __('Select filter') }}"
                                 class="w-full"
                                 x-on:selected="document.getElementById('filter_hidden').value = $event.detail.value"
                                 x-on:clear="document.getElementById('filter_hidden').value = ''"
                             />
-                            <input type="hidden" id="filter_hidden" name="filter_id" value="{{ old('filter_id', '') }}" />
+                            <input type="hidden" id="filter_hidden" name="filter_id" value="{{ old('filter_id', $prefill['filter_id'] ?? '') }}" />
                         </div>
                         @livewire('magnification-picker', [
-                            'instrument_id' => old('instrument_id', auth()->check() ? (auth()->user()->stdinstrument ?? auth()->user()->stdtelescope ?? '') : ''),
-                            'eyepiece_id' => old('eyepiece_id', auth()->check() ? auth()->user()->stdeyepiece : ''),
-                            'lens_id' => old('lens_id', auth()->check() ? auth()->user()->stdlens : ''),
+                            'instrument_id' => old('instrument_id', $prefill['instrument_id'] ?? (auth()->check() ? (auth()->user()->stdinstrument ?? auth()->user()->stdtelescope ?? '') : '')),
+                            'eyepiece_id' => old('eyepiece_id', $prefill['eyepiece_id'] ?? (auth()->check() ? auth()->user()->stdeyepiece : '')),
+                            'lens_id' => old('lens_id', $prefill['lens_id'] ?? (auth()->check() ? auth()->user()->stdlens : '')),
                             'instrumentSetId' => $instrumentSet ? $instrumentSet->id : null
                         ])
                     </div>
