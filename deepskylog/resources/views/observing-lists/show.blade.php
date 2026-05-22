@@ -1,4 +1,27 @@
 <x-app-layout>
+    @if ($list->public)
+        @push('head')
+            @php
+                $ogTitle = html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8')
+                    . ' — ' . __('Observing list by') . ' ' . $list->owner->name;
+                $ogDescription = $list->description
+                    ? \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($list->description), ENT_QUOTES | ENT_HTML5, 'UTF-8'), 200)
+                    : __(':count deep-sky objects curated by :owner on DeepskyLog.', [
+                        'count' => $items->total(),
+                        'owner' => $list->owner->name,
+                    ]);
+            @endphp
+            <meta property="og:type" content="website" />
+            <meta property="og:title" content="{{ $ogTitle }}" />
+            <meta property="og:description" content="{{ $ogDescription }}" />
+            <meta property="og:url" content="{{ url()->current() }}" />
+            <meta property="og:site_name" content="DeepskyLog" />
+            <meta name="twitter:card" content="summary" />
+            <meta name="twitter:title" content="{{ $ogTitle }}" />
+            <meta name="twitter:description" content="{{ $ogDescription }}" />
+        @endpush
+    @endif
+
     <div>
         <div class="mx-auto max-w-screen-xl xl:max-w-full bg-gray-900 px-6 py-6 sm:px-6 lg:px-8">
 
@@ -113,6 +136,56 @@
                         <span>{{ $list->subscriptions()->count() }} {{ __('subscribers') }}</span>
                     @endif
                 </div>
+
+                {{-- Social sharing (public lists only) --}}
+                @if ($list->public)
+                    @php
+                        $shareUrl = url()->current();
+                        $shareListName = html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                        $shareOwner = $list->owner->name;
+                        $shareCount = $items->total();
+                        $shareText = __('Check out this observing list on DeepskyLog: ":list" by :owner – :count deep-sky objects!', [
+                            'list'  => $shareListName,
+                            'owner' => $shareOwner,
+                            'count' => $shareCount,
+                        ]) . ' #astronomy #deepsky #deepskylog';
+                        $shareSubject = $shareListName . ' — ' . __('Observing list on DeepskyLog');
+                        $shareBody    = $shareText . "\n\n" . $shareUrl;
+                        $shareTwitter  = 'https://twitter.com/intent/tweet?text=' . rawurlencode($shareText . "\n" . $shareUrl);
+                        $shareFacebook = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($shareUrl) . '&quote=' . rawurlencode($shareText);
+                        $shareWhatsapp = 'https://wa.me/?text=' . rawurlencode($shareText . "\n" . $shareUrl);
+                        $shareMailto   = 'mailto:?subject=' . rawurlencode($shareSubject) . '&body=' . rawurlencode($shareBody);
+                    @endphp
+                    <div class="mt-3 flex items-center gap-2">
+                        <span class="text-xs text-gray-500 mr-1">{{ __('Share:') }}</span>
+                        <a href="{{ $shareTwitter }}" target="_blank" rel="noopener noreferrer"
+                           title="{{ __('Share on X') }}"
+                           class="social-button hover text-gray-400 hover:text-white transition-colors">
+                            <span class="fab fa-square-x-twitter text-lg"></span>
+                        </a>
+                        <a href="{{ $shareFacebook }}" target="_blank" rel="noopener noreferrer"
+                           title="{{ __('Share on Facebook') }}"
+                           class="social-button hover text-gray-400 hover:text-white transition-colors">
+                            <span class="fab fa-facebook-square text-lg"></span>
+                        </a>
+                        <a href="{{ $shareWhatsapp }}" target="_blank" rel="noopener noreferrer"
+                           title="{{ __('Share on WhatsApp') }}"
+                           class="social-button hover text-gray-400 hover:text-white transition-colors">
+                            <span class="fab fa-square-whatsapp text-lg"></span>
+                        </a>
+                        <a href="{{ $shareMailto }}"
+                           title="{{ __('Share by email') }}"
+                           class="social-button hover text-gray-400 hover:text-white transition-colors">
+                            <span class="fas fa-envelope text-lg"></span>
+                        </a>
+                        <a href="{{ $shareUrl }}" id="obs-list-clip"
+                           title="{{ __('Copy link') }}"
+                           rel="nofollow noopener noreferrer"
+                           class="social-button hover text-gray-400 hover:text-white transition-colors">
+                            <span class="fas fa-share text-lg"></span>
+                        </a>
+                    </div>
+                @endif
 
                 {{-- Like button (for non-owners on public lists) --}}
                 @auth
@@ -282,38 +355,60 @@
         </div>
     </div>
 
-    {{-- Like button JavaScript --}}
+    {{-- Like button + copy link JavaScript --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Like button
             const btn = document.getElementById('like-btn');
-            if (!btn) return;
+            if (btn) {
+                btn.addEventListener('click', function () {
+                    const url = btn.dataset.url;
 
-            btn.addEventListener('click', function () {
-                const url = btn.dataset.url;
-                const isLiked = btn.dataset.liked === '1';
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json',
+                        },
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        btn.dataset.liked = data.liked ? '1' : '0';
+                        document.getElementById('like-label').textContent = data.liked ? '{{ __('Liked') }}' : '{{ __('Like') }}';
+                        document.getElementById('like-count').textContent = data.likes_count;
+                        const svg = btn.querySelector('svg');
+                        if (svg) svg.setAttribute('fill', data.liked ? 'currentColor' : 'none');
+                        btn.classList.toggle('bg-pink-700', data.liked);
+                        btn.classList.toggle('text-white', data.liked);
+                        btn.classList.toggle('bg-gray-700', !data.liked);
+                        btn.classList.toggle('text-gray-300', !data.liked);
+                    })
+                    .catch(() => {});
+                });
+            }
 
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Accept': 'application/json',
-                    },
-                })
-                .then(res => res.json())
-                .then(data => {
-                    btn.dataset.liked = data.liked ? '1' : '0';
-                    document.getElementById('like-label').textContent = data.liked ? '{{ __('Liked') }}' : '{{ __('Like') }}';
-                    document.getElementById('like-count').textContent = data.likes_count;
-                    const svg = btn.querySelector('svg');
-                    if (svg) svg.setAttribute('fill', data.liked ? 'currentColor' : 'none');
-                    btn.classList.toggle('bg-pink-700', data.liked);
-                    btn.classList.toggle('text-white', data.liked);
-                    btn.classList.toggle('bg-gray-700', !data.liked);
-                    btn.classList.toggle('text-gray-300', !data.liked);
-                })
-                .catch(() => {});
-            });
+            // Copy link button
+            const clipBtn = document.getElementById('obs-list-clip');
+            if (clipBtn) {
+                clipBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const url = clipBtn.getAttribute('href');
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(url).then(function () {
+                            const icon = clipBtn.querySelector('span');
+                            if (icon) {
+                                icon.classList.remove('fa-share');
+                                icon.classList.add('fa-check');
+                                setTimeout(function () {
+                                    icon.classList.remove('fa-check');
+                                    icon.classList.add('fa-share');
+                                }, 2000);
+                            }
+                        });
+                    }
+                });
+            }
         });
     </script>
 </x-app-layout>

@@ -112,7 +112,9 @@ class ReindexSearch extends Command
             ];
             if (count($rows) >= 1000) {
                 if ($incremental && !empty($pks)) {
-                    DB::table('search_index')->where('source_table', 'objects')->whereIn('source_pk', $pks)->delete();
+                    // Only delete alias entries, not primary entries, to avoid
+                    // losing primary search_index rows during incremental alias updates.
+                    DB::table('search_index')->where('source_table', 'objects')->where('source_type', 'alias')->whereIn('source_pk', $pks)->delete();
                 }
                 DB::table('search_index')->insert($rows);
                 $rows = [];
@@ -121,7 +123,7 @@ class ReindexSearch extends Command
         }
         if (!empty($rows)) {
             if ($incremental && !empty($pks)) {
-                DB::table('search_index')->where('source_table', 'objects')->whereIn('source_pk', $pks)->delete();
+                DB::table('search_index')->where('source_table', 'objects')->where('source_type', 'alias')->whereIn('source_pk', $pks)->delete();
             }
             DB::table('search_index')->insert($rows);
         }

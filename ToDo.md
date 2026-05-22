@@ -9,8 +9,6 @@
   - [x] Make migrations and seeder
   - [x] Show detailed observation page, with all details, comments, ...
   - [X] Add observations page
-  - [ ] X, facebook, ... links for the observations should be adapted.  There is now still a link to the old deepskylog server, but now that the observations are also in the new version of DeepskyLog, this link to the new observation should be used.  Or for some shares, the link to the object is shown, but it should be the link to the observation.
-  - [ ] Share from the observation detail page.  Also share observing lists?
   - [ ] RSS Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
   - [ ] Import observations from a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, ...
 - [ ] Search for observations

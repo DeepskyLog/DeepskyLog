@@ -382,9 +382,23 @@ class AdvancedObjectSearchTable extends PowerGridComponent
                 $sub->whereRaw('1 = 0');
             } else {
                 [$listMode, $listNames] = $preloadedListFilter;
+
+                // Resolve object names to slugs via the objects table so that
+                // objects whose primary search_index entry may be missing are
+                // still matched by their source_pk (slug).
+                $objectSlugsForList = !empty($listNames)
+                    ? DB::table('objects')
+                        ->whereIn('name', $listNames)
+                        ->pluck('slug')
+                        ->toArray()
+                    : [];
+
                 if ($listMode === 'not_in') {
                     if (!empty($listNames)) {
                         $sub->whereNotIn('name', $listNames);
+                    }
+                    if (!empty($objectSlugsForList)) {
+                        $sub->whereNotIn('source_pk', $objectSlugsForList);
                     }
                     // Empty list in not_in mode = no restriction (keep all objects).
                 } else {
@@ -392,7 +406,14 @@ class AdvancedObjectSearchTable extends PowerGridComponent
                     if (empty($listNames)) {
                         $sub->whereRaw('1 = 0');
                     } else {
-                        $sub->whereIn('name', $listNames);
+                        // Match by name (for all source types including comets/planets)
+                        // OR by slug/source_pk (for DSO objects missing from search_index).
+                        $sub->where(function ($q) use ($listNames, $objectSlugsForList) {
+                            $q->whereIn('name', $listNames);
+                            if (!empty($objectSlugsForList)) {
+                                $q->orWhereIn('source_pk', $objectSlugsForList);
+                            }
+                        });
                     }
                 }
             }
