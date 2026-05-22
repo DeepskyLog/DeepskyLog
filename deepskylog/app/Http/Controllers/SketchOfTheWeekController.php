@@ -39,9 +39,11 @@ class SketchOfTheWeekController extends Controller
             throw ValidationException::withMessages(['observation_id' => 'This observation does not have a sketch']);
         }
 
-        // Get the user id
+        // Get the user
         $observerUsername = html_entity_decode((string) $observation->observer_username);
-        $userId = User::where('username', $observerUsername)->firstOrFail()->id;
+        $user = User::where('username', $observerUsername)->firstOrFail();
+        $userId = $user->id;
+        $observerSegment = $user->slug ?: $observerUsername;
 
         // Create text for Facebook, X
         $text = 'As new #deepskylog sketch of the week, we selected this sketch of ';
@@ -51,9 +53,11 @@ class SketchOfTheWeekController extends Controller
         } else {
             $objectName = $observation->target_name;
             $object = $objectName ? Target::where('name', $objectName)->first() : null;
-            $type = $object ? $object->long_type() : 'object';
+            $type = $object ? $object->long_type() : null;
 
-            $text .= 'the ' . $type . ' ';
+            if ($type && strtolower($type) !== 'object') {
+                $text .= 'the ' . $type . ' ';
+            }
 
             $text .= ($objectName ?? 'unknown object');
 
@@ -64,12 +68,12 @@ class SketchOfTheWeekController extends Controller
                 }
             }
         }
-        $text .= ' by ' . User::where('username', $observerUsername)->firstOrFail()->name . '.';
+        $text .= ' by ' . $user->name . '.';
         $text .= '
 More information can be found here:
 
 ';
-        $text .= route('observations.detail', [$observerUsername, $observation->observed_on->format('Y-m-d'), Str::slug((string) $observation->target_name, '-')]);
+        $text .= route('observations.detail', [$observerSegment, $observation->observed_on->format('Y-m-d'), Str::slug((string) $observation->target_name, '-')]);
 
         $text .= '
 
@@ -82,6 +86,29 @@ More information can be found here:
 
         $sketch->save();
 
+        // Resolve the drawing URL (supports both legacy path and storage-backed unified observations)
+        $drawingSrc = null;
+        $drawingFilename = $observation->drawing_filename ?? null;
+        if (!empty($drawingFilename)) {
+            try {
+                if (\Illuminate\Support\Facades\Storage::disk('public')->exists($drawingFilename)) {
+                    $drawingSrc = \Illuminate\Support\Facades\Storage::disk('public')->url($drawingFilename);
+                } else {
+                    $drawingSrc = '/images/' . ltrim($drawingFilename, '/');
+                }
+            } catch (\Throwable $_) {
+                $drawingSrc = '/images/' . ltrim($drawingFilename, '/');
+            }
+        }
+        if (empty($drawingSrc)) {
+            $legacyId = (int) $observation->legacy_id;
+            if ($observation->legacy_source === 'comet') {
+                $drawingSrc = '/images/cometdrawings/' . $legacyId . '.jpg';
+            } else {
+                $drawingSrc = '/images/drawings/' . $legacyId . '.jpg';
+            }
+        }
+
         // Redirect to the sketch of the week page
         return view('/sketch-of-the-week-month/detail', [
             'share' => $text,
@@ -89,8 +116,18 @@ More information can be found here:
             'observation_id' => (int) $request['observation_id'],
             'legacy_observation_id' => (int) $observation->legacy_id,
             'is_comet' => $observation->legacy_source === 'comet',
+            'drawing_src' => $drawingSrc,
             'date' => $request->date,
             'week_month' => 'week',
         ]);
+    }
+
+    public function destroy(int $id)
+    {
+        abort_unless(auth()->check() && auth()->user()->isAdministrator(), 403);
+
+        SketchOfTheWeek::findOrFail($id)->delete();
+
+        return back()->with('status', 'Sketch of the week removed.');
     }
 }

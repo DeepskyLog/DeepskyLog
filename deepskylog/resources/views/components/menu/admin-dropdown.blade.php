@@ -14,10 +14,6 @@
                         <x-menu.item separator icon="users" href="/observers/admin">{{ __('Observers') }}</x-menu.item>
                     @endif
 
-                    <x-menu.item separator icon="plus" href="/sketch-of-the-week/create">{{ __('Add sketch of the week') }}</x-menu.item>
-
-                    <x-menu.item icon="plus" href="/sketch-of-the-month/create">{{ __('Add sketch of the month') }}</x-menu.item>
-
                     @if (Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
                         <x-menu.item separator icon="check-badge" href="{{ route('admin.objects.check') }}">{{ __('Check Objects') }}</x-menu.item>
                     @endif

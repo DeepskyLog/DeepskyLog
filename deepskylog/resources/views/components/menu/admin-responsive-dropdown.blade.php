@@ -26,19 +26,6 @@
                         />
                     @endif
 
-                    <x-dropdown.item
-                        icon="plus"
-                        separator
-                        href="/sketch-of-the-week/create"
-                        label="{{ __('Add sketch of the week') }}"
-                    />
-
-                    <x-dropdown.item
-                        icon="plus"
-                        href="/sketch-of-the-month/create"
-                        label="{{ __('Add sketch of the month') }}"
-                    />
-
                     @if (Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
                         <x-dropdown.item
                             icon="check-badge"

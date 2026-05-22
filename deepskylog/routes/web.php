@@ -168,8 +168,10 @@ Route::get('/sketch-of-the-month', function () {
 })->name('sketch-of-the-month');
 Route::get('/sketch-of-the-week/create', 'App\Http\Controllers\SketchOfTheWeekController@create')->name('sketch-of-the-week.create')->can('add_sketch', User::class);
 Route::post('/sketch-of-the-week', 'App\Http\Controllers\SketchOfTheWeekController@store')->name('sketch-of-the-week.store')->can('add_sketch', User::class);
+Route::delete('/sketch-of-the-week/{id}', 'App\Http\Controllers\SketchOfTheWeekController@destroy')->name('sketch-of-the-week.destroy')->middleware('auth');
 Route::get('/sketch-of-the-month/create', 'App\Http\Controllers\SketchOfTheMonthController@create')->name('sketch-of-the-month.create')->can('add_sketch', User::class);
 Route::post('/sketch-of-the-month', 'App\Http\Controllers\SketchOfTheMonthController@store')->name('sketch-of-the-month.store')->can('add_sketch', User::class);
+Route::delete('/sketch-of-the-month/{id}', 'App\Http\Controllers\SketchOfTheMonthController@destroy')->name('sketch-of-the-month.destroy')->middleware('auth');
 
 Route::get('/', [App\Http\Controllers\SessionController::class, 'homepage']);
 Route::view('/privacy', 'privacy')->name('privacy');

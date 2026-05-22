@@ -21,7 +21,7 @@
                                 <a href="{{ route('observations.detail', [$observation->observer_username, $observation->observed_on->format('Y-m-d'), \Illuminate\Support\Str::slug((string) $observation->target_name, '-')]) }}">
                                     <img
                                         width="400"
-                                        src="/images/cometdrawings/{{ $legacy_observation_id }}.jpg"
+                                        src="{{ $drawing_src }}"
                                     />
 
                                     <div class="text-center">
@@ -44,7 +44,7 @@
                                 <a href="{{ route('observations.detail', [$observation->observer_username, $observation->observed_on->format('Y-m-d'), \Illuminate\Support\Str::slug((string) $observation->target_name, '-')]) }}">
                                     <img
                                         width="400"
-                                        src="/images/drawings/{{ $legacy_observation_id }}.jpg"
+                                        src="{{ $drawing_src }}"
                                     />
 
                                     <div class="text-center">

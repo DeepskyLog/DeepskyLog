@@ -1288,9 +1288,8 @@
                             </ul>
                         @endauth
 
-                        {{-- Admin actions: allow adding comet observation as sketch of week/month --}}
+                        {{-- Admin actions: allow adding observation as sketch of week/month --}}
                         @if (
-                            $observationType === 'comet' &&
                             auth()->check() &&
                             (
                                 auth()->user()->isAdministrator() ||
@@ -1311,6 +1310,12 @@
                                             <input type="hidden" name="date" value="{{ \Carbon\Carbon::now()->toDateString() }}" />
                                             <button type="submit" class="w-full text-left px-3 py-2 bg-yellow-600 hover:bg-yellow-500 text-white rounded text-sm">{{ __('Add as sketch of the week') }}</button>
                                         </form>
+                                    @elseif (auth()->user()->isAdministrator())
+                                        <form method="POST" action="{{ route('sketch-of-the-week.destroy', $sketchOfTheWeek->id) }}" class="mb-2">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="w-full text-left px-3 py-2 bg-red-700 hover:bg-red-600 text-white rounded text-sm">{{ __('Remove as sketch of the week') }}</button>
+                                        </form>
                                     @endif
 
                                     @if (empty($sketchOfTheMonth))
@@ -1319,6 +1324,12 @@
                                             <input type="hidden" name="observation_id" value="{{ $unifiedId }}" />
                                             <input type="hidden" name="date" value="{{ \Carbon\Carbon::now()->toDateString() }}" />
                                             <button type="submit" class="w-full text-left px-3 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-sm">{{ __('Add as sketch of the month') }}</button>
+                                        </form>
+                                    @elseif (auth()->user()->isAdministrator())
+                                        <form method="POST" action="{{ route('sketch-of-the-month.destroy', $sketchOfTheMonth->id) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="w-full text-left px-3 py-2 bg-red-700 hover:bg-red-600 text-white rounded text-sm">{{ __('Remove as sketch of the month') }}</button>
                                         </form>
                                     @endif
                                 @endif
