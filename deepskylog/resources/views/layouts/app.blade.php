@@ -255,6 +255,7 @@
         window.__dsl_debug_enabled = !!(location && location.search && String(location.search).indexOf('dsl_debug=1') !== -
             1);
     </script>
+    @stack('head')
     </head>
 
     <body class="font-sans antialiased dark @yield('body_class') min-h-screen flex flex-col">

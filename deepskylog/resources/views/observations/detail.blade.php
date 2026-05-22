@@ -154,6 +154,23 @@
 
         $moon = $moonContext ?? null;
                     @endphp
+                    @push('head')
+                        @php
+                            $ogTitle = __("Look at this sketch of ") . $objectDisplayName . __(" by ") . ($user?->name ?? $obs->observerid ?? '');
+                            $ogUrl = url()->current();
+                            $ogImageAbsolute = str_starts_with($drawingPath, 'http') ? $drawingPath : url($drawingPath);
+                        @endphp
+                        <meta property="og:type" content="article" />
+                        <meta property="og:title" content="{{ $ogTitle }}" />
+                        <meta property="og:url" content="{{ $ogUrl }}" />
+                        <meta property="og:image" content="{{ $ogImageAbsolute }}" />
+                        <meta property="og:image:alt" content="{{ $objectDisplayName }}" />
+                        <meta property="og:site_name" content="DeepskyLog" />
+                        <meta name="twitter:card" content="summary_large_image" />
+                        <meta name="twitter:title" content="{{ $ogTitle }}" />
+                        <meta name="twitter:image" content="{{ $ogImageAbsolute }}" />
+                        <meta name="twitter:image:alt" content="{{ $objectDisplayName }}" />
+                    @endpush
                     @if (!empty($sketchOfTheWeek))
                         <div
                             class="mb-4 flex items-center gap-3 rounded-lg border border-yellow-400 bg-yellow-900/30 px-5 py-3"
@@ -322,6 +339,21 @@
 
                         {{-- Engagement: likes and comments --}}
                     <div class="rounded-xl bg-gray-800 p-6 mb-6">
+                        @php
+                            $detailShareUrl  = url()->current();
+                            $detailObserver  = $user?->name ?? $obs->observerid ?? '';
+                            $detailHasSketch = (bool) ($obs->hasDrawing ?? $obs->has_drawing ?? false);
+                            $detailVerb      = $detailHasSketch ? __("Look at this sketch of ") : __("Look at this observation of ");
+                            $detailShareDesc = $detailVerb . $objectDisplayName . __(" by ") . $detailObserver . __(" on #deepskylog");
+                            $detailShareTags = $observationType === 'comet'
+                                ? ($detailHasSketch ? '#sketch #astronomy #cometwatch' : '#astronomy #cometwatch')
+                                : ($detailHasSketch ? '#sketch #astronomy #astrosketching' : '#astronomy #deepsky');
+                            $detailShareText  = $detailShareDesc . "\n\n" . $detailShareUrl . "\n\n" . $detailShareTags;
+                            $detailTwitter    = "https://twitter.com/intent/tweet?text=" . rawurlencode($detailShareText);
+                            $detailFacebook   = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlencode($detailShareUrl);
+                            $detailWhatsapp   = "https://wa.me/?text=" . rawurlencode($detailShareText);
+                            $detailMailto     = "mailto:?subject=" . rawurlencode($detailShareDesc) . "&body=" . rawurlencode($detailShareText);
+                        @endphp
                         <div class="flex flex-wrap items-center gap-3 mb-4">
                             <button
                                 data-observation-type="{{ $socialType }}"
@@ -347,6 +379,14 @@
                                     )
                                 }}
                             </span>
+                            {{-- Share buttons --}}
+                            <div id="social-buttons" class="flex items-center gap-1 ml-auto">
+                                <a href="{{ $detailFacebook }}" class="social-button hover" rel="follow" title="{{ __('Share on Facebook') }}"><span class="fab fa-facebook-square"></span></a>
+                                <a href="{{ $detailTwitter }}" class="social-button hover" rel="follow" title="{{ __('Share on X') }}"><span class="fab fa-square-x-twitter"></span></a>
+                                <a href="{{ $detailShareUrl }}" class="social-button hover" id="clip" title="{{ __('Copy link') }}" rel="nofollow noopener noreferrer"><span class="fas fa-share"></span></a>
+                                <a href="{{ $detailMailto }}" class="social-button hover" rel="nofollow" title="{{ __('Share by email') }}"><span class="fas fa-envelope"></span></a>
+                                <a href="{{ $detailWhatsapp }}" class="social-button hover" target="_blank" rel="nofollow" title="{{ __('Share on WhatsApp') }}"><span class="fab fa-square-whatsapp"></span></a>
+                            </div>
                         </div>
 
                         <section>
