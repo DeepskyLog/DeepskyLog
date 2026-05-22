@@ -8,6 +8,7 @@
     "preloaded_instrument" => null,
     "preloaded_eyepiece" => null,
     "preloaded_filter" => null,
+    "preloaded_lens" => null,
     "preloaded_constellations" => null
 ])
 <div class="justify-left mt-5 flex">
@@ -35,6 +36,7 @@
             $instrumentid     = $observation->instrument_id;
             $eyepieceid       = (int) ($observation->eyepiece_id ?? 0);
             $filterid         = (int) ($observation->filter_id ?? 0);
+            $lensid           = (int) ($observation->lens_id ?? 0);
             $magnification    = $observation->magnification;
             $description      = $observation->description;
             $hasDrawing       = $observation->has_drawing;
@@ -52,6 +54,7 @@
             $instrumentid     = $observation->instrumentid;
             $eyepieceid       = (int) ($observation->eyepieceid ?? 0);
             $filterid         = (int) ($observation->filterid ?? 0);
+            $lensid           = (int) ($observation->lensid ?? 0);
             $magnification    = $observation->magnification;
             $description      = $observation->description;
             $hasDrawing       = $observation->hasDrawing;
@@ -82,6 +85,7 @@
         $instrument = $preloaded_instrument ?? Instrument::where("id", $instrumentid)->first();
         $eyepiece   = $preloaded_eyepiece   ?? ($eyepieceid > 0 ? Eyepiece::where("id", $eyepieceid)->first() : null);
         $filter     = $preloaded_filter     ?? ($filterid > 0   ? Filter::where("id", $filterid)->first()   : null);
+        $lens       = $preloaded_lens       ?? ($lensid > 0     ? \App\Models\Lens::where("id", $lensid)->first()     : null);
 
         $tr = $translator ?? null;
         if ($tr === null && auth()->check() && auth()->user()->translate) {
@@ -314,21 +318,31 @@
             @endif
         @elseif ($filterid > 0)
             {{ __(" using a ") }}
-            @php
-                $filterModel = Filter::where("id", $filterid)->first();
-                $filterName = $filterModel ? $filterModel->name : null;
-            @endphp
-            <a
-                href="{{ config('app.old_url') }}/index.php?indexAction=detail_filter&filter={{ $observation->filterid }}"
-                class="font-bold hover:underline"
-            >
-                {{
-                    html_entity_decode(
-                        $filterName ?? __("Unknown filter"),
-                    )
-                }}
-            </a>
+            @if ($filter)
+                <a
+                    href="/filter/{{ $user?->slug ?? 'unknown' }}/{{ $filter->slug }}"
+                    class="font-bold hover:underline"
+                >
+                    {{ html_entity_decode($filter->name) }}
+                </a>
+            @else
+                <span class="font-bold">{{ __("Unknown filter") }}</span>
+            @endif
             {{ __(" filter") }}
+        @endif
+        @if ($lensid > 0)
+            {{ __(" with a ") }}
+            @if ($lens)
+                <a
+                    href="/lens/{{ $user?->slug ?? 'unknown' }}/{{ $lens->slug }}"
+                    class="font-bold hover:underline"
+                >
+                    {{ html_entity_decode($lens->fullName()) }}
+                </a>
+            @else
+                <span class="font-bold">{{ __("Unknown lens") }}</span>
+            @endif
+            {{ __(" lens") }}
         @endif
         .
 

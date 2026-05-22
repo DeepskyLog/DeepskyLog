@@ -9,6 +9,7 @@ use App\Models\SketchOfTheMonth;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class SketchOfTheMonthController extends Controller
@@ -75,11 +76,7 @@ Congratulations, ' . explode(' ', User::where('username', $observerUsername)->fi
 More information can be found here:
 
 ';
-        if ($observation->legacy_source === 'comet') {
-            $text .= 'https://www.deepskylog.org/index.php?indexAction=comets_detail_observation&observation=' . $observation->legacy_id;
-        } else {
-            $text .= 'https://www.deepskylog.org/index.php?indexAction=detail_observation&observation=' . $observation->legacy_id;
-        }
+        $text .= route('observations.detail', [$observerUsername, $observation->observed_on->format('Y-m-d'), Str::slug((string) $observation->target_name, '-')]);
 
         $text .= '
 
@@ -95,6 +92,7 @@ More information can be found here:
         // Redirect to the sketch of the month page
         return view('/sketch-of-the-week-month/detail', [
             'share' => $text,
+            'observation' => $observation,
             'observation_id' => (int) $request['observation_id'],
             'legacy_observation_id' => (int) $observation->legacy_id,
             'is_comet' => $observation->legacy_source === 'comet',

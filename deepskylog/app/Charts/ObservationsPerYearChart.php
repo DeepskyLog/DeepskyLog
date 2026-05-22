@@ -49,7 +49,7 @@ class ObservationsPerYearChart
 
             $chart = (new OriginalLineChart)
                 ->setTitle(__('Number of observations per year: ') . $user->name)
-                ->setSubtitle(__('Source: ') . config('app.old_url'))
+                ->setSubtitle(__('Source: ') . config('app.url'))
                 ->addData(__('Total'), $observations)
                 ->addData(__('Deepsky'), $deepsky_observations)
                 ->addData(__('Comets'), $comet_observations)
@@ -151,7 +151,7 @@ class ObservationsPerYearChart
 
         $chart = (new OriginalLineChart)
             ->setTitle(__('Number of observations per year: ') . $user->name)
-            ->setSubtitle(__('Source: ') . config('app.old_url'))
+            ->setSubtitle(__('Source: ') . config('app.url'))
             ->addData(__('Total'), $observations)
             ->addData(__('Deepsky'), $deepsky_observations)
             ->addData(__('Comets'), $comet_observations)

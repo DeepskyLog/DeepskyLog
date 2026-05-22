@@ -144,7 +144,7 @@ class ObjectTypesChart
 
         return (new OriginalPieChart)
             ->setTitle(__('Object types seen: ') . $user->name)
-            ->setSubtitle(__('Source: ') . config('app.old_url'))
+            ->setSubtitle(__('Source: ') . config('app.url'))
             ->addData($keep)
             ->setTheme('dark')
             ->setFontColor('#bbbbbb')

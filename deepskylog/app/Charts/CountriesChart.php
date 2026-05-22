@@ -94,7 +94,7 @@ class CountriesChart
 
         return (new OriginalPieChart)
             ->setTitle(__('Observations per country: ') . $user->name)
-            ->setSubtitle(__('Source: ') . config('app.old_url'))
+            ->setSubtitle(__('Source: ') . config('app.url'))
             ->addData($values)
             ->setLabels($countries)
             ->setTheme('dark')

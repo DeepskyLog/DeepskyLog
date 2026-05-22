@@ -198,11 +198,16 @@ class ObservationsController extends Controller
             }
             $moonContext = $this->buildMoonContext($selected, $preloadedData['preloaded_locations']->get($selected->locationid) ?? null);
 
+            $lens = null;
+            if (!empty($selected->lensid) && $selected->lensid > 0) {
+                $lens = $preloadedData['preloaded_lenses']->get($selected->lensid) ?? Lens::find($selected->lensid);
+            }
+
             return view('observations.detail', array_merge([
                 'observationType' => $obsType,
                 'observation' => $selected,
                 'detail_url' => $canonicalUrl,
-                'lens' => null,
+                'lens' => $lens,
                 'sketchOfTheWeek' => $sketchOfTheWeek,
                 'sketchOfTheMonth' => $sketchOfTheMonth,
                 // Unified observation id from the unified `observations` table
@@ -1348,6 +1353,7 @@ class ObservationsController extends Controller
         $instrumentIds = $observations->pluck('instrumentid')->unique()->filter();
         $eyepieceIds = $observations->pluck('eyepieceid')->unique()->filter()->reject(fn($id) => $id <= 0);
         $filterIds = $observations->pluck('filterid')->unique()->filter()->reject(fn($id) => $id <= 0);
+        $lensIds = $observations->pluck('lensid')->unique()->filter()->reject(fn($id) => $id <= 0);
 
         // Batch load all related models
         $users = User::whereIn('username', $usernames)->get()->keyBy('username');
@@ -1364,6 +1370,7 @@ class ObservationsController extends Controller
         $instruments = Instrument::whereIn('id', $instrumentIds)->get()->keyBy('id');
         $eyepieces = $eyepieceIds->isNotEmpty() ? Eyepiece::whereIn('id', $eyepieceIds)->get()->keyBy('id') : collect();
         $filters = $filterIds->isNotEmpty() ? Filter::whereIn('id', $filterIds)->get()->keyBy('id') : collect();
+        $lenses = $lensIds->isNotEmpty() ? Lens::whereIn('id', $lensIds)->get()->keyBy('id') : collect();
 
         // Load constellations for all objects
         $constellationIds = $objects->pluck('con')->unique()->filter();
@@ -1376,6 +1383,7 @@ class ObservationsController extends Controller
             'preloaded_instruments' => $instruments,
             'preloaded_eyepieces' => $eyepieces,
             'preloaded_filters' => $filters,
+            'preloaded_lenses' => $lenses,
             'preloaded_constellations' => $constellations,
         ];
     }

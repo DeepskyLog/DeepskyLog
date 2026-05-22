@@ -74,14 +74,8 @@ trait HasObservationsDates
         $row = Observation::where($column, $this->id)
             ->where('observed_on', $observationDate)
             ->orderBy('id')
-            ->first(['legacy_id', 'legacy_source']);
+            ->first();
 
-        if (!$row) {
-            return [$formatted, null];
-        }
-
-        $id = ($row->legacy_source === 'comet') ? -(int) $row->legacy_id : (int) $row->legacy_id;
-
-        return [$formatted, $id];
+        return [$formatted, $row ?: null];
     }
 }

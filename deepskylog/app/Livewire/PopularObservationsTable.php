@@ -6,6 +6,7 @@ use App\Models\Observation;
 use App\Models\ObservationLike;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
@@ -129,12 +130,13 @@ final class PopularObservationsTable extends PowerGridComponent
                     return null;
                 }
 
-                // Link to the external (legacy) deepskylog observation detail page for this observation
-                if ($row->observation_type === 'deepsky') {
-                    $link = config('app.old_url') . '/index.php?indexAction=detail_observation&observation=' . $row->observation_id;
-                } else {
-                    $link = config('app.old_url') . '/index.php?indexAction=comets_detail_observation&observation=' . $row->observation_id;
-                }
+                $username = $obs->observer_username;
+                $user = $this->userMap[$username] ?? null;
+                $observer = $user ? ($user->slug ?: $username) : $username;
+                $date = $obs->observed_on
+                    ? $obs->observed_on->format('Y-m-d')
+                    : Carbon::createFromFormat('Ymd', (string) $obs->legacy_date_int)->format('Y-m-d');
+                $link = route('observations.detail', [$observer, $date, Str::slug((string) $obs->target_name, '-')]);
 
                 return sprintf('<a href="%s" class="font-bold hover:underline" target="_blank" rel="noopener noreferrer">%s</a>', $link, e($objectName));
             })

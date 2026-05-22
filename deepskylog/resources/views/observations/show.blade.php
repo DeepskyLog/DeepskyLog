@@ -178,6 +178,7 @@
                                         $preloaded_instrument = ($preloaded_instruments ?? collect())->get($observation->instrumentid ?? $observation->instrument_id ?? null);
                                         $preloaded_eyepiece = ($preloaded_eyepieces ?? collect())->get($observation->eyepieceid ?? $observation->eyepiece_id ?? null);
                                         $preloaded_filter = ($preloaded_filters ?? collect())->get($observation->filterid ?? $observation->filter_id ?? null);
+                                        $preloaded_lens = ($preloaded_lenses ?? collect())->get($observation->lensid ?? $observation->lens_id ?? null);
                                     @endphp
 
                                     <x-observation-deepsky
@@ -189,6 +190,7 @@
                                         :preloaded_instrument="$preloaded_instrument"
                                         :preloaded_eyepiece="$preloaded_eyepiece"
                                         :preloaded_filter="$preloaded_filter"
+                                        :preloaded_lens="$preloaded_lens"
                                         :preloaded_constellations="$preloaded_constellations ?? collect()"
                                     />
                                 @endforeach
@@ -243,6 +245,7 @@
                                         $preloaded_instrument = ($preloaded_instruments ?? collect())->get($observation->instrumentid ?? null);
                                         $preloaded_eyepiece = ($preloaded_eyepieces ?? collect())->get($observation->eyepieceid ?? null);
                                         $preloaded_filter = ($preloaded_filters ?? collect())->get($observation->filterid ?? null);
+                                        $preloaded_lens = ($preloaded_lenses ?? collect())->get($observation->lensid ?? null);
                                     @endphp
                                     <x-observation-deepsky 
                                         :observation="$observation" 
@@ -253,6 +256,7 @@
                                         :preloaded_instrument="$preloaded_instrument"
                                         :preloaded_eyepiece="$preloaded_eyepiece"
                                         :preloaded_filter="$preloaded_filter"
+                                        :preloaded_lens="$preloaded_lens"
                                         :preloaded_constellations="$preloaded_constellations ?? collect()"
                                     />
                                 @endforeach

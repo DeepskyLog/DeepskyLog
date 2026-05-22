@@ -234,11 +234,9 @@ class User extends Authenticatable implements MustVerifyEmail
         $row = Observation::where('observer_user_id', $this->id)
             ->where('observed_on', $first)
             ->orderBy('id')
-            ->first(['legacy_id', 'legacy_source']);
+            ->first();
 
-        $id = $row ? (($row->legacy_source === 'comet') ? -(int) $row->legacy_id : (int) $row->legacy_id) : null;
-
-        return [$date, $id];
+        return [$date, $row];
     }
 
     /**
@@ -260,11 +258,9 @@ class User extends Authenticatable implements MustVerifyEmail
         $row = Observation::where('observer_user_id', $this->id)
             ->where('observed_on', $last)
             ->orderByDesc('id')
-            ->first(['legacy_id', 'legacy_source']);
+            ->first();
 
-        $id = $row ? (($row->legacy_source === 'comet') ? -(int) $row->legacy_id : (int) $row->legacy_id) : null;
-
-        return [$date, $id];
+        return [$date, $row];
     }
 
     /**

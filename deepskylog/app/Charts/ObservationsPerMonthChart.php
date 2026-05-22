@@ -51,7 +51,7 @@ class ObservationsPerMonthChart
 
             $chart = (new OriginalBarChart)
                 ->setTitle(__('Number of observations per month: ') . $user->name)
-                ->setSubtitle(__('Source: ') . config('app.old_url'))
+                ->setSubtitle(__('Source: ') . config('app.url'))
                 ->setTheme('dark')
                 ->setFontColor('#bbbbbb')
                 ->setStacked(true)
@@ -132,7 +132,7 @@ class ObservationsPerMonthChart
 
         $chart = (new OriginalBarChart)
             ->setTitle(__('Number of observations per month: ') . $user->name)
-            ->setSubtitle(__('Source: ') . config('app.old_url'))
+            ->setSubtitle(__('Source: ') . config('app.url'))
             ->setTheme('dark')
             ->setFontColor('#bbbbbb')
             ->setStacked(true)

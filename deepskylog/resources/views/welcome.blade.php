@@ -535,6 +535,17 @@
                         ->get()
                         ->keyBy("id");
 
+                $lensIds = $observations->pluck("lens_id")
+                    ->filter(fn($id) => (int) $id > 0)
+                    ->unique()
+                    ->values()
+                    ->all();
+                $preloadedLenses = empty($lensIds)
+                    ? collect()
+                    : \App\Models\Lens::whereIn("id", $lensIds)
+                        ->get()
+                        ->keyBy("id");
+
                 $conIds = $preloadedObjects->pluck("con")
                     ->filter()
                     ->unique()
@@ -588,6 +599,7 @@
                                     :preloaded_instrument="$preloadedInstruments[$observation->instrument_id] ?? null"
                                     :preloaded_eyepiece="$preloadedEyepieces[$observation->eyepiece_id] ?? null"
                                     :preloaded_filter="$preloadedFilters[$observation->filter_id] ?? null"
+                                    :preloaded_lens="$preloadedLenses[$observation->lens_id] ?? null"
                                     :preloaded_constellations="$preloadedConstellations"
                                 />
                             @endif

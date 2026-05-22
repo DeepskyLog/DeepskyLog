@@ -20,32 +20,28 @@
 
                         <br />
                         {{-- First observation on / last observation on --}}
+                        @php
+                            [$firstDate, $firstObs] = $user->firstObservationDate();
+                            [$lastDate, $lastObs] = $user->lastObservationDate();
+                        @endphp
 
-                        @if (!is_null($user->firstObservationDate()[0]))
+                        @if (!is_null($firstDate))
                             {{ __('First observation on ') }}
-                            @if ($user->firstObservationDate()[1] > 0)
-                                <a
-                                    href="{{ config('app.old_url') }}/index.php?indexAction=detail_observation&observation={{ $user->firstObservationDate()[1] }}">
-                                    {{ $user->firstObservationDate()[0] }}
+                            @if ($firstObs)
+                                <a href="{{ route('observations.detail', [$user->slug ?: $user->username, $firstObs->observed_on->format('Y-m-d'), \Illuminate\Support\Str::slug((string) $firstObs->target_name, '-')]) }}">
+                                    {{ $firstDate }}
                                 </a>
                             @else
-                                <a
-                                    href="{{ config('app.old_url') }}/index.php?indexAction=comets_detail_observation&observation={{ -$user->firstObservationDate()[1] }}">
-                                    {{ $user->firstObservationDate()[0] }}
-                                </a>
+                                {{ $firstDate }}
                             @endif
                             <br />
                             {{ __('Most recent observation on ') }}
-                            @if ($user->lastObservationDate()[1] > 0)
-                                <a
-                                    href="{{ config('app.old_url') }}/index.php?indexAction=detail_observation&observation={{ $user->lastObservationDate()[1] }}">
-                                    {{ $user->lastObservationDate()[0] }}
+                            @if ($lastObs)
+                                <a href="{{ route('observations.detail', [$user->slug ?: $user->username, $lastObs->observed_on->format('Y-m-d'), \Illuminate\Support\Str::slug((string) $lastObs->target_name, '-')]) }}">
+                                    {{ $lastDate }}
                                 </a>
                             @else
-                                <a
-                                    href="{{ config('app.old_url') }}/index.php?indexAction=comets_detail_observation&observation={{ -$user->lastObservationDate()[1] }}">
-                                    {{ $user->lastObservationDate()[0] }}
-                                </a>
+                                {{ $lastDate }}
                             @endif
                         @else
                             {{ __('No observations added!') }}
@@ -155,7 +151,7 @@
                                 <td>{!! __('Total number of observing lists') !!}</td>
                                 <td>
                                     @if (Auth::user() && $user->id === Auth::user()->id)
-                                        <a href="{{ config('app.old_url') }}/index.php?indexAction=view_lists">
+                                        <a href="{{ route('observing-lists.index') }}">
                                     @endif
                                     {{ $user->getObservingLists()->count() }}
                                     @if (Auth::user() && $user->id === Auth::user()->id)
@@ -169,7 +165,7 @@
                                 <td>{!! __('Public observing lists') !!}</td>
                                 <td>
                                     @if (Auth::user() && $user->id === Auth::user()->id)
-                                        <a href="{{ config('app.old_url') }}/index.php?indexAction=view_lists">
+                                        <a href="{{ route('observing-lists.index') }}">
                                     @endif
                                     {{ $user->getPublicObservingLists()->count() }}
                                     @if (Auth::user() && $user->id === Auth::user()->id)

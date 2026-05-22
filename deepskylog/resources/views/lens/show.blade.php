@@ -55,11 +55,9 @@
                                     $first_observation_date = $lens->first_observation_date();
                                     $last_observation_date = $lens->last_observation_date();
                                 @endphp
-                                @if (! is_null($first_observation_date[0]))
-                                    <a
-                                        href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $first_observation_date[1] }}"
-                                    >
-                                        {{$first_observation_date[0] }}
+                                @if (! is_null($first_observation_date[0]) && $first_observation_date[1])
+                                    <a href="{{ route('observations.detail', [$first_observation_date[1]->observer_username, $first_observation_date[1]->observed_on->format('Y-m-d'), \Illuminate\Support\Str::slug((string) $first_observation_date[1]->target_name, '-')]) }}">
+                                        {{ $first_observation_date[0] }}
                                     </a>
                                 @else
                                     {{ __("No observations added!") }}
@@ -70,10 +68,8 @@
                         <tr>
                             <td>{{ __("Last used on") }}</td>
                             <td>
-                                @if (! is_null($last_observation_date[0]))
-                                    <a
-                                        href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $last_observation_date[1] }}"
-                                    >
+                                @if (! is_null($last_observation_date[0]) && $last_observation_date[1])
+                                    <a href="{{ route('observations.detail', [$last_observation_date[1]->observer_username, $last_observation_date[1]->observed_on->format('Y-m-d'), \Illuminate\Support\Str::slug((string) $last_observation_date[1]->target_name, '-')]) }}">
                                         {{ $last_observation_date[0] }}
                                     </a>
                                 @else
