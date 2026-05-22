@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Magnitude;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 
 class Observation extends Model
@@ -506,5 +507,22 @@ class Observation extends Model
         }
 
         return $map;
+    }
+
+    // ─── Relationships ───────────────────────────────────────────────────────────
+
+    public function instrument(): BelongsTo
+    {
+        return $this->belongsTo(Instrument::class, 'instrument_id');
+    }
+
+    public function eyepiece(): BelongsTo
+    {
+        return $this->belongsTo(Eyepiece::class, 'eyepiece_id');
+    }
+
+    public function observerUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'observer_user_id');
     }
 }

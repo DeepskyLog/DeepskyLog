@@ -9,8 +9,8 @@
   - [x] Make migrations and seeder
   - [x] Show detailed observation page, with all details, comments, ...
   - [X] Add observations page
-  - [ ] RSS Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
-  - [ ] Import observations from a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, ...
+  - [X] RSS Feeds: <https://laravel-news.com/learn-to-create-an-rss-feeds-from-scratch-in-laravel>
+  - [ ] Import observations from a file, like the one used by SkySafari, AstroPlanner, Argo Navis, CSV, OAL, ...
 - [ ] Search for observations
   - [ ] Quick search in the left aside
   - [ ] Detailed search page

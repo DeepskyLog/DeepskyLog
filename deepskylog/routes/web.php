@@ -96,6 +96,11 @@ Route::post('/admin/check-objects/repair-observation-objectnames', [App\Http\Con
     ->name('admin.objects.check.repair-observation-objectnames');
 Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@show')->name('observer.show');
 
+// RSS feeds
+Route::get('/feed/observations', [App\Http\Controllers\RssFeedController::class, 'observations'])->name('feed.observations');
+Route::get('/feed/drawings', [App\Http\Controllers\RssFeedController::class, 'drawings'])->name('feed.drawings');
+Route::get('/feed/observing-lists', [App\Http\Controllers\RssFeedController::class, 'observingLists'])->name('feed.observing-lists');
+
 // Drawings
 Route::get('/drawings', 'App\Http\Controllers\DrawingController@index')->name('drawings.index');
 Route::get('/cometdrawings', 'App\Http\Controllers\CometDrawingController@index')->name('cometdrawings.index');

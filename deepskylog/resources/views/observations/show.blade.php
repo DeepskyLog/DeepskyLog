@@ -63,24 +63,39 @@
                 @endphp
 
                 <div class="flex space-x-2">
-                    {{-- Hide the deepsky toggle when viewing a comet object page (object-scoped comet listing) --}}
-                    @if ($mode !== 'deepsky' && !($mode === 'comet' && !empty($objectFilter)))
-                        <x-button gray icon="eye" class="mb-2" href="{{ $deepskyUrl }}">
-                            {{ __('Show deepsky observations') }}
-                        </x-button>
-                    @endif
+                    @if ($user == '' && empty($objectFilter) && empty($drawingsOnly) && !$isDrawingsPath)
+                        {{-- Global observations page: type filter tabs (All / Deep-sky / Comets / Solar system) --}}
+                        @php
+                            $activeObsType = $obsType ?? 'all';
+                        @endphp
+                        @foreach (["all" => __("All"), "deepsky" => __("Deep-sky"), "comet" => __("Comets"), "solarsystem" => __("Solar system")] as $typeKey => $typeLabel)
+                            @php
+                                $params = array_merge(request()->except(['obs_type', 'deepsky']), $typeKey !== 'all' ? ['obs_type' => $typeKey] : []);
+                                $typeUrl = url('/observations') . ($params ? '?' . http_build_query($params) : '');
+                                $isActive = $activeObsType === $typeKey;
+                            @endphp
+                            <a href="{{ $typeUrl }}"
+                               class="rounded px-3 py-1 text-sm font-medium {{ $isActive ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200 hover:bg-gray-600' }}"
+                            >{{ $typeLabel }}</a>
+                        @endforeach
+                    @else
+                        {{-- Non-global pages: keep the deepsky/comet toggle buttons --}}
+                        @if ($mode !== 'deepsky' && !($mode === 'comet' && !empty($objectFilter)))
+                            <x-button gray icon="eye" class="mb-2" href="{{ $deepskyUrl }}">
+                                {{ __('Show deepsky observations') }}
+                            </x-button>
+                        @endif
 
-                    {{-- Only show the comet toggle when listing is global or per-observer (not object-scoped) --}}
-                    @if (
-                        $mode !== 'comet' &&
-                            empty($objectFilter) &&
-                            empty($drawingsOnly) &&
-                            // Only show comet toggle on the global listing (no specific user).
-                            $user == ''
-                    )
-                        <x-button gray icon="sparkles" class="mb-2" href="{{ $cometUrl }}">
-                            {{ __('Show comet observations') }}
-                        </x-button>
+                        @if (
+                            $mode !== 'comet' &&
+                                empty($objectFilter) &&
+                                empty($drawingsOnly) &&
+                                $user == ''
+                        )
+                            <x-button gray icon="sparkles" class="mb-2" href="{{ $cometUrl }}">
+                                {{ __('Show comet observations') }}
+                            </x-button>
+                        @endif
                     @endif
                 </div>
                 @php
@@ -111,6 +126,16 @@
                             </x-button>
                         @endif
                     </div>
+                @endif
+                @if ($user == '' && empty($objectFilter) && empty($drawingsOnly) && !$isDrawingsPath)
+                    <a href="{{ route('feed.observations') }}"
+                       title="{{ __('Subscribe to RSS feed') }}"
+                       class="ml-2 inline-flex items-center px-3 py-2 rounded bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold">
+                        <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
+                        </svg>
+                        RSS
+                    </a>
                 @endif
             </div>
             <div class="mt-2">
@@ -240,12 +265,12 @@
                                         $observer_key = $observation->observerid ?? $observation->observer_username ?? null;
                                         $preloaded_user = ($preloaded_users ?? collect())->get($observer_key);
 
-                                        $preloaded_object = ($preloaded_objects ?? collect())->get($observation->objectname ?? null);
-                                        $preloaded_location = ($preloaded_locations ?? collect())->get($observation->locationid ?? null);
-                                        $preloaded_instrument = ($preloaded_instruments ?? collect())->get($observation->instrumentid ?? null);
-                                        $preloaded_eyepiece = ($preloaded_eyepieces ?? collect())->get($observation->eyepieceid ?? null);
-                                        $preloaded_filter = ($preloaded_filters ?? collect())->get($observation->filterid ?? null);
-                                        $preloaded_lens = ($preloaded_lenses ?? collect())->get($observation->lensid ?? null);
+                                        $preloaded_object = ($preloaded_objects ?? collect())->get($observation->objectname ?? $observation->target_name ?? null);
+                                        $preloaded_location = ($preloaded_locations ?? collect())->get($observation->locationid ?? $observation->location_id ?? null);
+                                        $preloaded_instrument = ($preloaded_instruments ?? collect())->get($observation->instrumentid ?? $observation->instrument_id ?? null);
+                                        $preloaded_eyepiece = ($preloaded_eyepieces ?? collect())->get($observation->eyepieceid ?? $observation->eyepiece_id ?? null);
+                                        $preloaded_filter = ($preloaded_filters ?? collect())->get($observation->filterid ?? $observation->filter_id ?? null);
+                                        $preloaded_lens = ($preloaded_lenses ?? collect())->get($observation->lensid ?? $observation->lens_id ?? null);
                                     @endphp
                                     <x-observation-deepsky 
                                         :observation="$observation" 

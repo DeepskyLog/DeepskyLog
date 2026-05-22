@@ -255,6 +255,11 @@
         window.__dsl_debug_enabled = !!(location && location.search && String(location.search).indexOf('dsl_debug=1') !== -
             1);
     </script>
+    <!-- RSS feed autodiscovery -->
+    <link rel="alternate" type="application/rss+xml" title="{{ config('app.name', 'DeepskyLog') }} – Latest Observations" href="{{ route('feed.observations') }}" />
+    <link rel="alternate" type="application/rss+xml" title="{{ config('app.name', 'DeepskyLog') }} – Latest Sketches" href="{{ route('feed.drawings') }}" />
+    <link rel="alternate" type="application/rss+xml" title="{{ config('app.name', 'DeepskyLog') }} – New Public Observing Lists" href="{{ route('feed.observing-lists') }}" />
+
     @stack('head')
     </head>
 

@@ -345,18 +345,66 @@ class ObservationsController extends Controller
      */
     public function index()
     {
-        // Default observations page shows deepsky observations (mirrors /drawings behavior)
-        $deepsky = Observation::where('legacy_source', 'deepsky')->orderBy('id', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+        $obsType = request()->query('obs_type', 'all');
+        $allowedTypes = ['all', 'deepsky', 'comet', 'solarsystem'];
+        if (!in_array($obsType, $allowedTypes)) {
+            $obsType = 'all';
+        }
 
-        // Preload related data to avoid N+1 queries
-        $preloadedData = $this->preloadDeepskyData($deepsky);
+        $sort = request()->query('sort', 'observed');
 
-        return view('observations.show', array_merge([
+        $query = Observation::query();
+        if ($obsType === 'all') {
+            $query->whereIn('target_type', ['deepsky', 'comet', 'planet', 'solarsystem', 'lunar']);
+        } elseif ($obsType === 'solarsystem') {
+            $query->whereIn('target_type', ['planet', 'solarsystem', 'lunar']);
+        } else {
+            $query->where('target_type', $obsType);
+        }
+
+        if ($sort === 'id') {
+            $query->orderByDesc('id');
+        } else {
+            $query->orderByDesc('observed_on')->orderByDesc('observed_time')->orderByDesc('id');
+        }
+
+        $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+
+        // Preload related data using unified field names to avoid N+1 queries
+        $items = $deepsky->getCollection();
+        $usernames = $items->pluck('observer_username')->filter()->unique();
+        $objectNames = $items->pluck('target_name')->filter()->unique();
+        $locationIds = $items->pluck('location_id')->filter()->unique();
+        $instrumentIds = $items->pluck('instrument_id')->filter()->unique();
+        $eyepieceIds = $items->pluck('eyepiece_id')->filter()->unique()->reject(fn($id) => $id <= 0);
+        $filterIds = $items->pluck('filter_id')->filter()->unique()->reject(fn($id) => $id <= 0);
+        $lensIds = $items->pluck('lens_id')->filter()->unique()->reject(fn($id) => $id <= 0);
+
+        $users = $usernames->isNotEmpty() ? User::whereIn('username', $usernames)->get()->keyBy('username') : collect();
+        $objects = $objectNames->isNotEmpty() ? Target::whereIn('name', $objectNames)->get()->keyBy('name') : collect();
+        $locations = $locationIds->isNotEmpty() ? Location::whereIn('id', $locationIds)->get()->keyBy('id') : collect();
+        $instruments = $instrumentIds->isNotEmpty() ? Instrument::whereIn('id', $instrumentIds)->get()->keyBy('id') : collect();
+        $eyepieces = $eyepieceIds->isNotEmpty() ? Eyepiece::whereIn('id', $eyepieceIds)->get()->keyBy('id') : collect();
+        $filters = $filterIds->isNotEmpty() ? Filter::whereIn('id', $filterIds)->get()->keyBy('id') : collect();
+        $lenses = $lensIds->isNotEmpty() ? Lens::whereIn('id', $lensIds)->get()->keyBy('id') : collect();
+        $constellationIds = $objects->pluck('con')->unique()->filter();
+        $constellations = $constellationIds->isNotEmpty() ? Constellation::whereIn('id', $constellationIds)->get()->keyBy('id') : collect();
+
+        return view('observations.show', [
             'user' => '',
             'deepsky' => $deepsky,
             'comet' => collect(),
             'mode' => 'deepsky',
-        ], $preloadedData));
+            'obsType' => $obsType,
+            'preloaded_users' => $users,
+            'preloaded_objects' => $objects,
+            'preloaded_locations' => $locations,
+            'preloaded_instruments' => $instruments,
+            'preloaded_eyepieces' => $eyepieces,
+            'preloaded_filters' => $filters,
+            'preloaded_lenses' => $lenses,
+            'preloaded_constellations' => $constellations,
+        ]);
     }
 
     /**
@@ -2472,6 +2520,9 @@ class ObservationsController extends Controller
             } elseif ($table === 'planets') {
                 // planets table stores Sun/Moon/planets; treat as 'planet'
                 $obs->target_type = 'planet';
+            } elseif ($table === 'lunar_features' || $table === 'moons') {
+                // lunar craters/features and natural moons are solar-system objects
+                $obs->target_type = 'lunar';
             } elseif ($table === 'cometobjects' || $table === 'comets') {
                 $obs->target_type = 'comet';
             } else {

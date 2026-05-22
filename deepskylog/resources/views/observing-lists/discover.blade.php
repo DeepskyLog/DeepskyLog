@@ -2,12 +2,22 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-200 leading-tight">{{ __('Discover observing lists') }}</h2>
-            @auth
+            <div class="flex items-center gap-2">
+                <a href="{{ route('feed.observing-lists') }}"
+                   title="{{ __('Subscribe to RSS feed') }}"
+                   class="inline-flex items-center px-3 py-2 rounded bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold">
+                    <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
+                    </svg>
+                    RSS
+                </a>
+                @auth
                 <a href="{{ route('observing-lists.index') }}"
                    class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
                     {{ __('My lists') }}
                 </a>
-            @endauth
+                @endauth
+            </div>
         </div>
     </x-slot>
 
