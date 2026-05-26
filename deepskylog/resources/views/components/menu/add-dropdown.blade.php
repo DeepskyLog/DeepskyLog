@@ -11,6 +11,7 @@
 
                 @unless(Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
                 <x-menu.item icon="user-plus" href="{{ route('observation.add.select') }}">{{ __('Observation') }}</x-menu.item>
+                <x-menu.item icon="arrow-up-tray" href="{{ route('observation.import') }}">{{ __('Import observations') }}</x-menu.item>
 
                 {{-- observing list placeholder (kept commented) --}}
 

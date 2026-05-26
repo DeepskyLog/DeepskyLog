@@ -113,6 +113,9 @@ Route::get('/cometdrawings/{observer}', 'App\Http\Controllers\CometDrawingContro
 Route::get('/observation/add/select', [App\Http\Controllers\ObservationsController::class, 'select'])->name('observation.add.select')->middleware('auth');
 Route::get('/observation/add', [App\Http\Controllers\ObservationsController::class, 'create'])->name('observation.create')->middleware('auth');
 Route::post('/observation', [App\Http\Controllers\ObservationsController::class, 'store'])->name('observation.store')->middleware('auth');
+// Import observations (CSV / OAL XML)
+Route::get('/observation/import', [App\Http\Controllers\ObservationImportController::class, 'showForm'])->name('observation.import')->middleware('auth');
+Route::post('/observation/import', [App\Http\Controllers\ObservationImportController::class, 'import'])->name('observation.import.process')->middleware('auth');
 // Observations (deepsky + comet)
 Route::get('/observations', 'App\Http\Controllers\ObservationsController@index')->name('observations.index');
 Route::get('/observation/{observer}/{date}/{object}/{index?}', [App\Http\Controllers\ObservationsController::class, 'detail'])

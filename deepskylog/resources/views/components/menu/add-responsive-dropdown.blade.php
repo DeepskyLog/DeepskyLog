@@ -16,6 +16,11 @@
                     href="{{ route('observation.add.select') }}"
                     label="{{ __('Observation') }}"
                 />
+                <x-dropdown.item
+                    icon="arrow-up-tray"
+                    href="{{ route('observation.import') }}"
+                    label="{{ __('Import observations') }}"
+                />
 
                 {{-- <x-dropdown.item --}}
                 {{-- separator --}}
