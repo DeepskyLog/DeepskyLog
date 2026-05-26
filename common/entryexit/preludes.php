@@ -92,13 +92,15 @@ function preludesB()
     }
 
     if (defined('LC_MESSAGES')) {
-        setlocale(LC_MESSAGES, $locale); // Linux
-        putenv("LC_ALL={$locale}");
+        setlocale(LC_MESSAGES, $locale . '.UTF-8', $locale); // Linux
+        putenv("LC_ALL={$locale}.UTF-8");
+        putenv("LANGUAGE={$locale}.UTF-8:{$locale}:{$language}"); // fallback chain so nl_NL → nl
         bindtextdomain("messages", "./locale");
         textdomain("messages");
         bind_textdomain_codeset("messages", 'UTF-8');
     } else {
         putenv("LC_ALL={$locale}"); // windows
+        putenv("LANGUAGE={$locale}:{$language}");
         bindtextdomain("messages", ".\locale");
     }
 

@@ -328,23 +328,79 @@ class Sessions {
 		return $objDatabase_new->selectRecordsetArray ( "SELECT observer from sessionObservers where sessionid = \"" . $id . "\";" );
 	}
 	public function getObservations($id) {
-		global $objDatabase_new, $objObservation, $objObject, $objObserver, $objInstrument;
-		$obs = $objDatabase_new->selectRecordsetArray ( "SELECT observationid from sessionObservations where sessionid = \"" . $id . "\";" );
-		$qobs = Array ();
-		for($i = 0; $i < count ( $obs ); $i ++) {
-			$obsid = $obs [$i] ["observationid"];
-			$qobs [$i] = $objObservation->getAllInfoDsObservation ( $obsid );
-			$qobs [$i] ["observationid"] = $obsid;
-			$qobs [$i] ["objecttype"] = $objObject->getDsoProperty ( $qobs [$i] ['objectname'], "type" );
-			$qobs [$i] ["objectconstellation"] = $objObject->getDsoProperty ( $qobs [$i] ['objectname'], "con" );
-			$qobs [$i] ["objectmagnitude"] = $objObject->getDsoProperty ( $qobs [$i] ['objectname'], "mag" );
-			$qobs [$i] ["objectsurfacebrigthness"] = $objObject->getDsoProperty ( $qobs [$i] ['objectname'], "subr" );
-			$observerid = $objObservation->getDsObservationProperty ( $obsid, "observerid" );
-			$qobs [$i] ["observername"] = $objObserver->getObserverProperty ( $observerid, "firstname" ) . " " . $objObserver->getObserverProperty ( $observerid, "name" );
-			$qobs [$i] ["observationdescription"] = $objObservation->getDsObservationProperty ( $obsid, "description" );
-			$qobs [$i] ["observationdate"] = $objObservation->getDsObservationProperty ( $obsid, "date" );
-			$qobs [$i] ["instrumentname"] = $objInstrument->getInstrumentPropertyFromId ( $qobs [$i] ['instrumentid'], "name" );
-			$qobs [$i] ["instrumentdiameter"] = $objInstrument->getInstrumentPropertyFromId ( $qobs [$i] ['instrumentid'], "diameter" );
+		global $objDatabase_new, $objLocation, $dbname, $dbnameNew;
+		// Single cross-database JOIN query replaces N+1 individual queries.
+		// sessionObservations and instruments are in $dbnameNew (deepskylogLaravel);
+		// observations, objects, and observers are in $dbname (deepskylog).
+		$rows = $objDatabase_new->selectRecordsetArray(
+			"SELECT so.observationid,
+			        o.*,
+			        o.description  AS observationdescription,
+			        o.date         AS observationdate,
+			        obj.type       AS objecttype,
+			        obj.con        AS objectconstellation,
+			        obj.mag        AS objectmagnitude,
+			        obj.subr       AS objectsurfacebrigthness,
+			        CONCAT(obs.firstname, ' ', obs.name) AS observername,
+			        i.name         AS instrumentname,
+			        i.diameter     AS instrumentdiameter
+			 FROM `" . $dbnameNew . "`.sessionObservations so
+			 JOIN `" . $dbname . "`.observations  o   ON so.observationid = o.id
+			 LEFT JOIN `" . $dbname . "`.objects  obj ON o.objectname     = obj.name
+			 LEFT JOIN `" . $dbname . "`.observers obs ON o.observerid    = obs.id
+			 LEFT JOIN `" . $dbnameNew . "`.instruments i ON o.instrumentid = i.id
+			 WHERE so.sessionid = \"" . $id . "\""
+		);
+
+		if (empty($rows)) {
+			return array();
+		}
+
+		// Pre-fetch timezone for each unique location (one query per unique
+		// location instead of one per observation).
+		$timezoneCache = array();
+		foreach ($rows as $row) {
+			$locid = $row['locationid'];
+			if (!isset($timezoneCache[$locid])) {
+				$tz = trim((string)$objLocation->getLocationPropertyFromId($locid, 'timezone'));
+				if (!$tz || !in_array($tz, timezone_identifiers_list())) {
+					$tz = date_default_timezone_get() ?: 'UTC';
+				}
+				$timezoneCache[$locid] = $tz;
+			}
+		}
+
+		// Compute localdate / localtime in PHP using cached timezones.
+		$qobs = array();
+		foreach ($rows as $row) {
+			$time  = $row['time'];
+			$date  = $row['date'];
+			$locid = $row['locationid'];
+			$tz    = $timezoneCache[$locid];
+
+			if ($time >= 0) {
+				$dateParts = sscanf($date, "%4d%2d%2d");
+				$timeParts = sscanf(sprintf("%04d", $time), "%2d%2d");
+				$datestr   = $dateParts[0]
+					. "-" . sprintf("%02d", $dateParts[1])
+					. "-" . sprintf("%02d", $dateParts[2])
+					. " " . sprintf("%02d", $timeParts[0])
+					. ":" . sprintf("%02d", $timeParts[1]);
+				try {
+					$dtObj = new DateTime($datestr, new DateTimeZone('UTC'));
+					$dtObj->setTimezone(new DateTimeZone($tz));
+					$row['localdate'] = $dtObj->format('Ymd');
+					$row['localtime'] = (int)$dtObj->format('Hi');
+				} catch (Exception $e) {
+					$row['localdate'] = $date;
+					$row['localtime'] = $time;
+				}
+			} else {
+				$row['localdate'] = $date;
+				$row['localtime'] = $time;
+			}
+
+			$qobs[] = $row;
 		}
 		return $qobs;
 	}

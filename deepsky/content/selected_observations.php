@@ -16,6 +16,10 @@ function selected_observations()
     if (array_key_exists('sessionid', $_GET)) {
         $sessionid = $_GET['sessionid'];
         $_SESSION['Qobs'] = $objSession->getObservations($sessionid);
+        // Clear query-builder params so the CSV/OAL export uses Qobs
+        // (the session's observations) and not a stale unlimited query
+        // left over from a previous observer/object page browse.
+        unset($_SESSION['QobsParams'], $_SESSION['QobsTotal'], $_SESSION['QobsSort'], $_SESSION['QobsSortDirection']);
     }
     // If an observer is requested directly via GET, fetch observations
     // for that observer. If an object/catalog+number is provided as well,

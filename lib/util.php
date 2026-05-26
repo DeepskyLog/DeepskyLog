@@ -531,9 +531,19 @@ class Utils
         $cntFilter = 0;
 
         $allObs = $result;
+        // Cache full observation data so the second loop reuses it without
+        // issuing additional per-row queries.
+        $obsDataCache = array();
 
         foreach ($result as $key => $value) {
-            $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
+            // When $value already contains the full observation row (session
+            // path via getObservations()), reuse it directly.
+            if (isset($value['time']) && isset($value['locationid'])) {
+                $obs = $value;
+            } else {
+                $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
+            }
+            $obsDataCache[$value['observationid']] = $obs;
             $objectname = $obs['objectname'];
             $observerid = $obs['observerid'];
             $inst = $obs['instrumentid'];
@@ -1370,9 +1380,10 @@ class Utils
 
         // Add the observations.
         foreach ($allObs as $key => $value) {
-            $obs = $GLOBALS['objObservation']->getAllInfoDsObservation(
-                $value['observationid']
-            );
+            // Reuse data cached in the first loop above.
+            $obs = isset($obsDataCache[$value['observationid']])
+                ? $obsDataCache[$value['observationid']]
+                : $GLOBALS['objObservation']->getAllInfoDsObservation($value['observationid']);
             $objectname = $obs['objectname'];
             $observerid = $obs['observerid'];
             $inst = $obs['instrumentid'];
@@ -2013,8 +2024,16 @@ class Utils
         global $objLens, $objFilter, $objEyepiece, $objLocation, $objPresentations;
         global $objObservation, $objObserver, $objInstrument;
         foreach ($result as $key => $value) {
-            $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
-            $date = sscanf($obs ['date'], "%4d%2d%2d");
+            // When $value already contains the full observation row (e.g. loaded
+            // via getObservations() for a session), reuse it directly instead of
+            // issuing redundant per-row queries.  Lightweight query results only
+            // carry a subset of fields and still need a full individual fetch.
+            if (isset($value['time']) && isset($value['locationid'])) {
+                $obs = $value;
+            } else {
+                $obs = $objObservation->getAllInfoDsObservation($value['observationid']);
+            }
+            $date = sscanf($obs['date'], "%4d%2d%2d");
             $time = $obs['time'];
             if ($time >= "0") {
                 $hours = (int) ($time / 100);
@@ -2023,28 +2042,31 @@ class Utils
             } else {
                 $time = "";
             }
+            // Use pre-fetched observer name when available (avoids 2 extra queries).
+            if (!empty($obs['observername'])) {
+                $observerName = html_entity_decode($obs['observername']);
+            } else {
+                $observerName = html_entity_decode(
+                    $objObserver->getObserverProperty($obs['observerid'], 'firstname')
+                    . " " . $objObserver->getObserverProperty($obs['observerid'], 'name')
+                );
+            }
+            // Use pre-fetched instrument name when available.
+            $instrumentName = !empty($obs['instrumentname'])
+                ? html_entity_decode($obs['instrumentname'])
+                : html_entity_decode(
+                    $objInstrument->getInstrumentPropertyFromId($obs['instrumentid'], 'name')
+                );
             echo html_entity_decode($obs['objectname'])
-                . ";" . html_entity_decode(
-                    $objObserver->getObserverProperty(
-                        $obs['observerid'],
-                        'firstname'
-                    ) . " " . $objObserver->getObserverProperty(
-                        $obs['observerid'],
-                        'name'
-                    )
-                ) . ";"
+                . ";" . $observerName . ";"
                 . $date[2] . "-" . $date[1] . "-" . $date[0] . ";" . $time . ";"
                 . html_entity_decode(
                     $objLocation->getLocationPropertyFromId(
                         $obs['locationid'],
                         'name'
                     )
-                ) . ";" . html_entity_decode(
-                    $objInstrument->getInstrumentPropertyFromId(
-                        $obs['instrumentid'],
-                        'name'
-                    )
-                ) . ";" . html_entity_decode(
+                ) . ";" . $instrumentName
+                . ";" . html_entity_decode(
                     $objEyepiece->getEyepiecePropertyFromId(
                         $obs['eyepieceid'],
                         'name'
