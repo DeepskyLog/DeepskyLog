@@ -1,7 +1,7 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToCsv;
-use PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToXLS;
+use PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v5\ExportToCsv;
+use PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v5\ExportToXLS;
 use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 return [
@@ -132,10 +132,14 @@ return [
     */
 
     'exportable' => [
-        'default' => 'openspout_v4',
-        'openspout_v4' => [
+        'default' => 'openspout_v5',
+        'openspout_v5' => [
             'xlsx' => ExportToXLS::class,
             'csv' => ExportToCsv::class,
+        ],
+        'openspout_v4' => [
+            'xlsx' => PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToXLS::class,
+            'csv' => PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToCsv::class,
         ],
     ],
 ];

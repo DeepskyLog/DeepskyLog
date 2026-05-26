@@ -271,6 +271,12 @@
                                 />
                             </div>
                         </div>
+                        {{-- License notice below drawing --}}
+                        @if ($user && !empty($user->copyright) && $user->copyright !== 'No license (Not recommended)')
+                            <div class="mt-3 text-sm text-center">
+                                {!! $user->getCopyright() !!}
+                            </div>
+                        @endif
                     @endif
 
                     {{-- Header: observer + object --}}

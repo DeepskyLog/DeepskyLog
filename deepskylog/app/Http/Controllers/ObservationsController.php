@@ -341,6 +341,16 @@ class ObservationsController extends Controller
     }
 
     /**
+     * Show the observation search page with an optional object name filter.
+     */
+    public function search(Request $request)
+    {
+        $q = (string) $request->query('q', '');
+
+        return view('observations.search', ['q' => $q]);
+    }
+
+    /**
      * Show global list of observations (both deepsky and comet) paginated.
      */
     public function index()

@@ -118,6 +118,10 @@ Route::get('/observation/import', [App\Http\Controllers\ObservationImportControl
 Route::post('/observation/import', [App\Http\Controllers\ObservationImportController::class, 'import'])->name('observation.import.process')->middleware('auth');
 // Observations (deepsky + comet)
 Route::get('/observations', 'App\Http\Controllers\ObservationsController@index')->name('observations.index');
+Route::get('/observations/search', [App\Http\Controllers\ObservationsController::class, 'search'])->name('observations.search');
+Route::get('/observations/search/export.pdf', [App\Http\Controllers\ObservationSearchExportController::class, 'pdf'])
+    ->name('observations.search.pdf')
+    ->middleware('doNotCacheResponse');
 Route::get('/observation/{observer}/{date}/{object}/{index?}', [App\Http\Controllers\ObservationsController::class, 'detail'])
     ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
     ->where('index', '[0-9]+')

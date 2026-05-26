@@ -6,9 +6,16 @@
 
 - [ ] Update to laravel 13.
 - [ ] Search for observations
-  - [ ] Quick search in the left aside
+  - [X] Quick search in the left aside
+  - [ ] Export search results in a file
+    - [X] CSV
+    - [X] XLSX
+    - [X] PDF
+    - [ ] SkySafari
+    - [ ] AstroPlanner
+    - [ ] OAL
+  - [ ] Filter objects -> create list of all objects that are on the search observations page.
   - [ ] Detailed search page
-  - [ ] Export search results in a file, like the one used by SkySafari, AstroPlanner, Argo Navis, OAL, pdf, csv, ...
 - [ ] All missing pages
   - [ ] Remove APP_OLD_URL and app.old_url.
 - [ ] Create star charts and atlases.
