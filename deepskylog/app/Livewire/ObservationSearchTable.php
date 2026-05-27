@@ -10,7 +10,9 @@ use App\Models\Observation;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use OpenSpout\Common\Entity\Row;
 use OpenSpout\Writer\CSV\Options as CsvOptions;
@@ -53,6 +55,62 @@ final class ObservationSearchTable extends PowerGridComponent
 
     /** Object name filter passed in from the page (bound via :objectName="$q"). */
     public string $objectName = '';
+    public array $constellations = [];
+    public array $objectTypes = [];
+    public array $objectCategories = [];
+    public array $catalogsInclude = [];
+    public array $catalogsExclude = [];
+    public array $nameSearchCatalogs = [];
+    public string $nameSearchNumber = '';
+    public string $nameText = '';
+    public string $magMin = '';
+    public string $magMax = '';
+    public string $subrMin = '';
+    public string $subrMax = '';
+    public string $diam1Min = '';
+    public string $diam1Max = '';
+    public string $diam2Min = '';
+    public string $diam2Max = '';
+    public string $ratioMin = '';
+    public string $ratioMax = '';
+    public string $contrastReserveMin = '';
+    public string $contrastReserveMax = '';
+    public string $raMin = '';
+    public string $raMax = '';
+    public string $declMin = '';
+    public string $declMax = '';
+    public string $observingStatus = 'all';
+    public array $observingLists = [];
+    public string $observingListsMode = 'in';
+    public string $atlasCode = '';
+    public string $atlasPageSpec = '';
+    public string $atlasPageMin = '';
+    public string $atlasPageMax = '';
+    public string $observedFrom = '';
+    public string $observedTo = '';
+    public array $observers = [];
+    public string $apertureMin = '';
+    public string $apertureMax = '';
+    public string $seeingMax = '';
+    public string $transparencyMax = '';
+    public string $visibilityMin = '';
+    public string $visibilityMax = '';
+    public string $latitudeMin = '';
+    public string $latitudeMax = '';
+    public string $drawingState = 'all';
+    public string $observationDescription = '';
+    public array $languages = [];
+
+    public function mount(string $objectName = '', array $filters = []): void
+    {
+        parent::mount();
+
+        $this->objectName = $objectName;
+
+        if (!empty($filters)) {
+            $this->hydrateAdvancedFilters($filters);
+        }
+    }
 
     public function boot(): void
     {
@@ -88,6 +146,8 @@ final class ObservationSearchTable extends PowerGridComponent
             ->leftJoin('objects', 'observations.target_name', '=', 'objects.name')
             ->leftJoin('constellations', 'objects.con', '=', 'constellations.id')
             ->leftJoin('instruments', 'observations.instrument_id', '=', 'instruments.id')
+            ->leftJoin('locations', 'observations.location_id', '=', 'locations.id')
+            ->leftJoin('deepsky_observation_details', 'observations.id', '=', 'deepsky_observation_details.observation_id')
             ->leftJoin('users', 'observations.observer_username', '=', 'users.username')
             ->select([
                 'observations.id',
@@ -99,18 +159,539 @@ final class ObservationSearchTable extends PowerGridComponent
                 'observations.drawing_filename',
                 'observations.legacy_source',
                 'observations.legacy_id',
+                'observations.language',
+                'observations.seeing',
+                'observations.transparency',
+                'observations.description',
+                'observations.target_table',
                 DB::raw('objects.con as constellation_abbr'),
                 DB::raw('constellations.name as constellation'),
                 DB::raw('COALESCE(users.name, observations.observer_username) as observer_display'),
                 DB::raw('users.slug as observer_slug'),
                 DB::raw('instruments.aperture_mm as aperture_mm'),
+                DB::raw('locations.latitude as location_latitude'),
+                DB::raw('deepsky_observation_details.visibility as visibility'),
             ]);
 
         if ($this->objectName !== '') {
             $query->where('observations.target_name', 'LIKE', '%' . $this->objectName . '%');
         }
 
+        $this->applyAdvancedFilters($query);
+
         return $query;
+    }
+
+    private function hydrateAdvancedFilters(array $filters): void
+    {
+        $this->constellations = array_map('strval', (array) ($filters['constellations'] ?? []));
+        $this->objectTypes = array_map('strval', (array) ($filters['object_types'] ?? []));
+        $this->objectCategories = array_map('strval', (array) ($filters['object_categories'] ?? []));
+        $this->catalogsInclude = array_map('strval', (array) ($filters['catalogs_include'] ?? []));
+        $this->catalogsExclude = array_map('strval', (array) ($filters['catalogs_exclude'] ?? []));
+        $rawNameCatalogs = $filters['name_search_catalogs'] ?? [];
+        if (!is_array($rawNameCatalogs)) {
+            $rawNameCatalogs = [$rawNameCatalogs];
+        }
+        $this->nameSearchCatalogs = array_values(array_filter(array_map('strval', $rawNameCatalogs), fn($value) => $value !== ''));
+        $this->nameSearchNumber = (string) ($filters['name_search_number'] ?? '');
+        $this->nameText = (string) ($filters['name_text'] ?? '');
+        $this->magMin = (string) ($filters['mag_min'] ?? '');
+        $this->magMax = (string) ($filters['mag_max'] ?? '');
+        $this->subrMin = (string) ($filters['subr_min'] ?? '');
+        $this->subrMax = (string) ($filters['subr_max'] ?? '');
+        $this->diam1Min = (string) ($filters['diam1_min'] ?? '');
+        $this->diam1Max = (string) ($filters['diam1_max'] ?? '');
+        $this->diam2Min = (string) ($filters['diam2_min'] ?? '');
+        $this->diam2Max = (string) ($filters['diam2_max'] ?? '');
+        $this->ratioMin = (string) ($filters['ratio_min'] ?? '');
+        $this->ratioMax = (string) ($filters['ratio_max'] ?? '');
+        $this->contrastReserveMin = (string) ($filters['cr_min'] ?? '');
+        $this->contrastReserveMax = (string) ($filters['cr_max'] ?? '');
+        $this->raMin = (string) ($filters['ra_min'] ?? '');
+        $this->raMax = (string) ($filters['ra_max'] ?? '');
+        $this->declMin = (string) ($filters['decl_min'] ?? '');
+        $this->declMax = (string) ($filters['decl_max'] ?? '');
+        $this->observingStatus = (string) ($filters['observing_status'] ?? 'all');
+        $this->observingLists = array_values(array_filter(array_map('strval', (array) ($filters['observing_lists'] ?? []))));
+        $listsMode = (string) ($filters['observing_lists_mode'] ?? 'in');
+        $this->observingListsMode = in_array($listsMode, ['in', 'not_in'], true) ? $listsMode : 'in';
+        $this->atlasCode = (string) ($filters['atlas_code'] ?? '');
+        $this->atlasPageSpec = (string) ($filters['atlas_page_spec'] ?? '');
+        $this->atlasPageMin = (string) ($filters['atlas_page_min'] ?? '');
+        $this->atlasPageMax = (string) ($filters['atlas_page_max'] ?? '');
+        $this->observedFrom = (string) ($filters['observed_from'] ?? '');
+        $this->observedTo = (string) ($filters['observed_to'] ?? '');
+        $this->observers = array_values(array_filter(array_map('trim', (array) ($filters['observers'] ?? [])), fn($value) => $value !== ''));
+        $this->apertureMin = (string) ($filters['aperture_min'] ?? '');
+        $this->apertureMax = (string) ($filters['aperture_max'] ?? '');
+        $this->seeingMax = (string) ($filters['seeing_max'] ?? '');
+        $this->transparencyMax = (string) ($filters['transparency_max'] ?? '');
+        $this->visibilityMin = (string) ($filters['visibility_min'] ?? '');
+        $this->visibilityMax = (string) ($filters['visibility_max'] ?? '');
+        $this->latitudeMin = (string) ($filters['latitude_min'] ?? '');
+        $this->latitudeMax = (string) ($filters['latitude_max'] ?? '');
+        $this->drawingState = (string) ($filters['drawing_state'] ?? 'all');
+        $this->observationDescription = (string) ($filters['observation_description'] ?? '');
+        $this->languages = array_map('strval', (array) ($filters['languages'] ?? []));
+    }
+
+    private function applyAdvancedFilters(Builder $query): void
+    {
+        if (!empty($this->objectCategories)) {
+            $query->whereIn('observations.target_table', $this->objectCategories);
+        }
+
+        if (!empty($this->constellations)) {
+            $query->whereIn('objects.con', $this->constellations);
+        }
+
+        if (!empty($this->objectTypes)) {
+            $query->whereIn('objects.type', $this->objectTypes);
+        }
+
+        if (!empty($this->catalogsInclude)) {
+            $include = array_map('strval', $this->catalogsInclude);
+            $query->whereIn('observations.target_name', function ($subQuery) use ($include) {
+                $subQuery->from('objectnames')
+                    ->select('objectname')
+                    ->whereIn('catalog', $include);
+            });
+        }
+
+        if (!empty($this->catalogsExclude)) {
+            $exclude = array_map('strval', $this->catalogsExclude);
+            $query->whereNotIn('observations.target_name', function ($subQuery) use ($exclude) {
+                $subQuery->from('objectnames')
+                    ->select('objectname')
+                    ->whereIn('catalog', $exclude);
+            });
+        }
+
+        if (!empty($this->nameSearchCatalogs) || $this->nameSearchNumber !== '') {
+            $catalogs = array_values(array_filter(array_map('trim', $this->nameSearchCatalogs), fn($value) => $value !== ''));
+            $number = trim($this->nameSearchNumber);
+            $query->whereIn('observations.target_name', function ($subQuery) use ($catalogs, $number) {
+                $subQuery->from('objectnames')->select('objectname');
+                if (!empty($catalogs)) {
+                    $subQuery->whereIn('catalog', $catalogs);
+                }
+                if ($number !== '') {
+                    $subQuery->where('catindex', $number);
+                }
+            });
+        }
+
+        if ($this->nameText !== '') {
+            $needle = mb_strtolower(trim($this->nameText));
+            $query->where(function (Builder $subQuery) use ($needle) {
+                $subQuery->whereRaw("LOWER(COALESCE(observations.target_name, '')) LIKE ?", ['%' . $needle . '%'])
+                    ->orWhereIn('observations.target_name', function ($nameQuery) use ($needle) {
+                        $nameQuery->from('objectnames')
+                            ->select('objectname')
+                            ->whereRaw("LOWER(COALESCE(altname, '')) LIKE ?", ['%' . $needle . '%']);
+                    });
+            });
+        }
+
+        if ($this->magMin !== '' && is_numeric($this->magMin)) {
+            $query->where('objects.mag', '>=', (float) $this->magMin);
+        }
+        if ($this->magMax !== '' && is_numeric($this->magMax)) {
+            $query->where('objects.mag', '<=', (float) $this->magMax);
+        }
+        if ($this->subrMin !== '' && is_numeric($this->subrMin)) {
+            $query->where('objects.subr', '>=', (float) $this->subrMin);
+        }
+        if ($this->subrMax !== '' && is_numeric($this->subrMax)) {
+            $query->where('objects.subr', '<=', (float) $this->subrMax);
+        }
+        if ($this->diam1Min !== '' && is_numeric($this->diam1Min)) {
+            $query->where('objects.diam1', '>=', (float) $this->diam1Min);
+        }
+        if ($this->diam1Max !== '' && is_numeric($this->diam1Max)) {
+            $query->where('objects.diam1', '<=', (float) $this->diam1Max);
+        }
+        if ($this->diam2Min !== '' && is_numeric($this->diam2Min)) {
+            $query->where('objects.diam2', '>=', (float) $this->diam2Min);
+        }
+        if ($this->diam2Max !== '' && is_numeric($this->diam2Max)) {
+            $query->where('objects.diam2', '<=', (float) $this->diam2Max);
+        }
+        if (($this->ratioMin !== '' && is_numeric($this->ratioMin)) || ($this->ratioMax !== '' && is_numeric($this->ratioMax))) {
+            $query->whereNotNull('objects.diam1')
+                ->where('objects.diam1', '>', 0)
+                ->whereNotNull('objects.diam2')
+                ->where('objects.diam2', '>', 0);
+            if ($this->ratioMin !== '' && is_numeric($this->ratioMin)) {
+                $query->whereRaw('(objects.diam1 / objects.diam2) >= ?', [(float) $this->ratioMin]);
+            }
+            if ($this->ratioMax !== '' && is_numeric($this->ratioMax)) {
+                $query->whereRaw('(objects.diam1 / objects.diam2) <= ?', [(float) $this->ratioMax]);
+            }
+        }
+        if ($this->raMin !== '' && is_numeric($this->raMin)) {
+            $query->where('objects.ra', '>=', (float) $this->raMin);
+        }
+        if ($this->raMax !== '' && is_numeric($this->raMax)) {
+            $query->where('objects.ra', '<=', (float) $this->raMax);
+        }
+        if ($this->declMin !== '' && is_numeric($this->declMin)) {
+            $query->where('objects.decl', '>=', (float) $this->declMin);
+        }
+        if ($this->declMax !== '' && is_numeric($this->declMax)) {
+            $query->where('objects.decl', '<=', (float) $this->declMax);
+        }
+
+        if (!empty($this->observingLists)) {
+            $listIds = array_values(array_filter(array_map(fn($entry) => ($id = (int) $entry) > 0 ? $id : null, $this->observingLists)));
+
+            if (empty($listIds)) {
+                $query->whereRaw('1 = 0');
+            } else {
+                $listNames = DB::table('observing_list_items')
+                    ->whereIn('observing_list_id', $listIds)
+                    ->distinct()
+                    ->pluck('object_name')
+                    ->toArray();
+
+                if ($this->observingListsMode === 'not_in') {
+                    if (!empty($listNames)) {
+                        $query->whereNotIn('observations.target_name', $listNames);
+                    }
+                } elseif (empty($listNames)) {
+                    $query->whereRaw('1 = 0');
+                } else {
+                    $query->whereIn('observations.target_name', $listNames);
+                }
+            }
+        }
+
+        $atlasCode = trim((string) $this->atlasCode);
+        $atlasSpec = trim((string) $this->atlasPageSpec);
+        $atlasMin = trim((string) $this->atlasPageMin);
+        $atlasMax = trim((string) $this->atlasPageMax);
+        if ($atlasCode !== '' || $atlasSpec !== '' || $atlasMin !== '' || $atlasMax !== '') {
+            if ($atlasCode !== '' && preg_match('/^[A-Za-z0-9_]+$/', $atlasCode) && Schema::hasColumn('objects', $atlasCode)) {
+                $query->where('observations.target_table', 'objects');
+
+                $atlasExpr = "NULLIF(TRIM(objects.`{$atlasCode}`), '')";
+
+                if ($atlasSpec !== '') {
+                    $parsed = $this->parseAtlasPageSpec($atlasSpec);
+                    $exactPages = $parsed['pages'];
+                    $ranges = $parsed['ranges'];
+
+                    if (empty($exactPages) && empty($ranges)) {
+                        $query->whereRaw('1 = 0');
+                    } else {
+                        $query->where(function ($atlasQuery) use ($atlasExpr, $exactPages, $ranges) {
+                            if (!empty($exactPages)) {
+                                $atlasQuery->orWhereRaw("CAST({$atlasExpr} AS UNSIGNED) IN (" . implode(',', array_fill(0, count($exactPages), '?')) . ')', $exactPages);
+                            }
+
+                            foreach ($ranges as [$start, $end]) {
+                                $atlasQuery->orWhereRaw("CAST({$atlasExpr} AS UNSIGNED) BETWEEN ? AND ?", [$start, $end]);
+                            }
+                        });
+                    }
+                } else {
+                    if ($atlasMin !== '' && is_numeric($atlasMin)) {
+                        $query->whereRaw("CAST({$atlasExpr} AS UNSIGNED) >= ?", [(int) $atlasMin]);
+                    }
+                    if ($atlasMax !== '' && is_numeric($atlasMax)) {
+                        $query->whereRaw("CAST({$atlasExpr} AS UNSIGNED) <= ?", [(int) $atlasMax]);
+                    }
+                    if ($atlasMin === '' && $atlasMax === '') {
+                        $query->whereRaw("{$atlasExpr} IS NOT NULL");
+                    }
+                }
+            } else {
+                $query->whereRaw('1 = 0');
+            }
+        }
+
+        if ($this->observedFrom !== '') {
+            $query->whereDate('observations.observed_on', '>=', $this->observedFrom);
+        }
+        if ($this->observedTo !== '') {
+            $query->whereDate('observations.observed_on', '<=', $this->observedTo);
+        }
+
+        if (!empty($this->observers)) {
+            $observerTerms = $this->observers;
+            $query->where(function (Builder $subQuery) use ($observerTerms) {
+                foreach ($observerTerms as $term) {
+                    $needle = mb_strtolower($term);
+                    $subQuery->orWhereRaw("LOWER(COALESCE(observations.observer_username, '')) LIKE ?", ['%' . $needle . '%'])
+                        ->orWhereRaw("LOWER(COALESCE(users.name, '')) LIKE ?", ['%' . $needle . '%']);
+                }
+            });
+        }
+
+        if ($this->apertureMin !== '' && is_numeric($this->apertureMin)) {
+            $query->where('instruments.aperture_mm', '>=', (float) $this->apertureMin);
+        }
+        if ($this->apertureMax !== '' && is_numeric($this->apertureMax)) {
+            $query->where('instruments.aperture_mm', '<=', (float) $this->apertureMax);
+        }
+        if ($this->seeingMax !== '' && is_numeric($this->seeingMax)) {
+            $query->whereNotNull('observations.seeing')
+                ->where('observations.seeing', '<=', (int) $this->seeingMax);
+        }
+        if ($this->transparencyMax !== '' && is_numeric($this->transparencyMax)) {
+            $query->whereNotNull('observations.transparency')
+                ->where('observations.transparency', '<=', (int) $this->transparencyMax);
+        }
+        if ($this->visibilityMin !== '' && is_numeric($this->visibilityMin)) {
+            $query->whereNotNull('deepsky_observation_details.visibility')
+                ->where('deepsky_observation_details.visibility', '>=', (int) $this->visibilityMin);
+        }
+        if ($this->visibilityMax !== '' && is_numeric($this->visibilityMax)) {
+            $query->whereNotNull('deepsky_observation_details.visibility')
+                ->where('deepsky_observation_details.visibility', '<=', (int) $this->visibilityMax);
+        }
+        if ($this->latitudeMin !== '' && is_numeric($this->latitudeMin)) {
+            $query->where('locations.latitude', '>=', (float) $this->latitudeMin);
+        }
+        if ($this->latitudeMax !== '' && is_numeric($this->latitudeMax)) {
+            $query->where('locations.latitude', '<=', (float) $this->latitudeMax);
+        }
+        if ($this->drawingState === 'with') {
+            $query->where('observations.has_drawing', true);
+        } elseif ($this->drawingState === 'without') {
+            $query->where('observations.has_drawing', false);
+        }
+        if ($this->observationDescription !== '') {
+            $query->whereRaw("LOWER(COALESCE(observations.description, '')) LIKE ?", ['%' . mb_strtolower($this->observationDescription) . '%']);
+        }
+        if (!empty($this->languages)) {
+            $query->whereIn('observations.language', $this->languages);
+        }
+
+        $this->applyObservingStatusFilter($query);
+        $this->applyContrastReserveFilter($query);
+    }
+
+    private function applyObservingStatusFilter(Builder $query): void
+    {
+        $status = trim((string) $this->observingStatus);
+        if ($status === '' || $status === 'all' || $status === 'seen_any') {
+            return;
+        }
+
+        $authUser = Auth::user();
+
+        $applyExists = function (callable $constraint) use ($query): void {
+            $query->whereExists(function ($subQuery) use ($constraint) {
+                $subQuery->selectRaw('1')
+                    ->from('observations as status_observations')
+                    ->whereColumn('status_observations.target_table', 'observations.target_table')
+                    ->whereRaw('COALESCE(status_observations.target_key, status_observations.target_name) = COALESCE(observations.target_key, observations.target_name)');
+
+                $constraint($subQuery);
+            });
+        };
+
+        $applyNotExists = function (callable $constraint) use ($query): void {
+            $query->whereNotExists(function ($subQuery) use ($constraint) {
+                $subQuery->selectRaw('1')
+                    ->from('observations as status_observations')
+                    ->whereColumn('status_observations.target_table', 'observations.target_table')
+                    ->whereRaw('COALESCE(status_observations.target_key, status_observations.target_name) = COALESCE(observations.target_key, observations.target_name)');
+
+                $constraint($subQuery);
+            });
+        };
+
+        $userConstraint = function ($subQuery) use ($authUser): void {
+            $subQuery->where(function ($userQuery) use ($authUser) {
+                $userQuery->where('status_observations.observer_user_id', $authUser?->id ?? 0);
+                if (!empty($authUser?->username)) {
+                    $userQuery->orWhere('status_observations.observer_username', $authUser->username);
+                }
+            });
+        };
+
+        $otherUserConstraint = function ($subQuery) use ($authUser): void {
+            $subQuery->where(function ($userQuery) use ($authUser) {
+                if (!empty($authUser?->id)) {
+                    $userQuery->where(function ($otherQuery) use ($authUser) {
+                        $otherQuery->whereNotNull('status_observations.observer_user_id')
+                            ->where('status_observations.observer_user_id', '!=', $authUser->id);
+                    });
+                }
+
+                if (!empty($authUser?->username)) {
+                    $method = !empty($authUser?->id) ? 'orWhere' : 'where';
+                    $userQuery->{$method}(function ($otherQuery) use ($authUser) {
+                        $otherQuery->whereNotNull('status_observations.observer_username')
+                            ->where('status_observations.observer_username', '!=', $authUser->username);
+                    });
+                }
+            });
+        };
+
+        switch ($status) {
+            case 'drawn_any':
+                $applyExists(fn($subQuery) => $subQuery->where('status_observations.has_drawing', true));
+                break;
+            case 'unseen_any':
+                $query->whereRaw('1 = 0');
+                break;
+            case 'undrawn_any':
+                $applyNotExists(fn($subQuery) => $subQuery->where('status_observations.has_drawing', true));
+                break;
+            case 'seen_by_me':
+                if (!$authUser) {
+                    $query->whereRaw('1 = 0');
+                    break;
+                }
+                $applyExists($userConstraint);
+                break;
+            case 'drawn_by_me':
+                if (!$authUser) {
+                    $query->whereRaw('1 = 0');
+                    break;
+                }
+                $applyExists(function ($subQuery) use ($userConstraint) {
+                    $userConstraint($subQuery);
+                    $subQuery->where('status_observations.has_drawing', true);
+                });
+                break;
+            case 'unseen_by_me':
+                if (!$authUser) {
+                    $query->whereRaw('1 = 0');
+                    break;
+                }
+                $applyNotExists($userConstraint);
+                break;
+            case 'undrawn_by_me':
+                if (!$authUser) {
+                    $query->whereRaw('1 = 0');
+                    break;
+                }
+                $applyNotExists(function ($subQuery) use ($userConstraint) {
+                    $userConstraint($subQuery);
+                    $subQuery->where('status_observations.has_drawing', true);
+                });
+                break;
+            case 'seen_by_others_not_me':
+                if (!$authUser) {
+                    $query->whereRaw('1 = 0');
+                    break;
+                }
+                $applyExists($otherUserConstraint);
+                $applyNotExists($userConstraint);
+                break;
+            case 'drawn_by_others_not_me':
+                if (!$authUser) {
+                    $query->whereRaw('1 = 0');
+                    break;
+                }
+                $applyExists(function ($subQuery) use ($otherUserConstraint) {
+                    $subQuery->where('status_observations.has_drawing', true)
+                        ->where(function ($otherQuery) use ($otherUserConstraint) {
+                            $otherUserConstraint($otherQuery);
+                        });
+                });
+                $applyNotExists(function ($subQuery) use ($userConstraint) {
+                    $userConstraint($subQuery);
+                    $subQuery->where('status_observations.has_drawing', true);
+                });
+                break;
+        }
+    }
+
+    private function applyContrastReserveFilter(Builder $query): void
+    {
+        $crMin = trim((string) $this->contrastReserveMin);
+        $crMax = trim((string) $this->contrastReserveMax);
+        if ($crMin === '' && $crMax === '') {
+            return;
+        }
+
+        $authUser = Auth::user();
+        $locationId = $authUser?->standardLocation?->id ?? null;
+        $instrumentId = $authUser?->stdtelescope ?? null;
+        $lensId = $authUser?->stdlens ?? null;
+
+        if (!$authUser || !$locationId || !$instrumentId) {
+            $query->whereRaw('1 = 0');
+            return;
+        }
+
+        $query->where('observations.target_table', 'objects');
+
+        $contrastReserveExpression = null;
+        if (!empty($lensId)) {
+            $query->leftJoin('user_object_metrics as uom_lens', function ($join) use ($authUser, $instrumentId, $locationId, $lensId) {
+                $join->on('objects.name', '=', 'uom_lens.object_name')
+                    ->where('uom_lens.user_id', '=', $authUser->id)
+                    ->where('uom_lens.instrument_id', '=', $instrumentId)
+                    ->where('uom_lens.location_id', '=', $locationId)
+                    ->where('uom_lens.lens_id', '=', $lensId);
+            });
+            $query->leftJoin('user_object_metrics as uom_default', function ($join) use ($authUser, $instrumentId, $locationId) {
+                $join->on('objects.name', '=', 'uom_default.object_name')
+                    ->where('uom_default.user_id', '=', $authUser->id)
+                    ->where('uom_default.instrument_id', '=', $instrumentId)
+                    ->where('uom_default.location_id', '=', $locationId)
+                    ->whereNull('uom_default.lens_id');
+            });
+            $contrastReserveExpression = 'COALESCE(uom_lens.contrast_reserve, uom_default.contrast_reserve)';
+        } else {
+            $query->leftJoin('user_object_metrics as uom', function ($join) use ($authUser, $instrumentId, $locationId) {
+                $join->on('objects.name', '=', 'uom.object_name')
+                    ->where('uom.user_id', '=', $authUser->id)
+                    ->where('uom.instrument_id', '=', $instrumentId)
+                    ->where('uom.location_id', '=', $locationId)
+                    ->whereNull('uom.lens_id');
+            });
+            $contrastReserveExpression = 'uom.contrast_reserve';
+        }
+
+        if ($crMin !== '' && is_numeric($crMin)) {
+            $query->whereRaw("{$contrastReserveExpression} >= ?", [(float) $crMin]);
+        }
+        if ($crMax !== '' && is_numeric($crMax)) {
+            $query->whereRaw("{$contrastReserveExpression} <= ?", [(float) $crMax]);
+        }
+    }
+
+    /**
+     * @return array{pages: array<int>, ranges: array<array{0:int,1:int}>}
+     */
+    private function parseAtlasPageSpec(string $spec): array
+    {
+        $pages = [];
+        $ranges = [];
+
+        $tokens = preg_split('/\s*,\s*/', trim($spec)) ?: [];
+        foreach ($tokens as $token) {
+            $token = trim($token);
+            if ($token === '') {
+                continue;
+            }
+
+            if (preg_match('/^(\d+)$/', $token, $matches) === 1) {
+                $page = (int) $matches[1];
+                if ($page >= 0) {
+                    $pages[] = $page;
+                }
+                continue;
+            }
+
+            if (preg_match('/^(\d+)\s*-\s*(\d+)$/', $token, $matches) === 1) {
+                $start = (int) $matches[1];
+                $end = (int) $matches[2];
+                if ($start >= 0 && $end >= 0) {
+                    $ranges[] = [$start <= $end ? $start : $end, $start <= $end ? $end : $start];
+                }
+            }
+        }
+
+        return ['pages' => array_values(array_unique($pages)), 'ranges' => $ranges];
     }
 
     public function fields(): PowerGridFields

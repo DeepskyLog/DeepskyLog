@@ -1,7 +1,13 @@
 <div class="p-4 pb-2 w-full bg-gray-800 rounded-lg dsl-search-card">
+    @php
+        $heading = $title ?: ($q !== ''
+            ? __('Search results for ":q"', ['q' => $q])
+            : __('Search results'));
+    @endphp
     <div class="mb-3 flex items-center gap-3">
-        <h2 class="text-lg font-semibold text-gray-200">Search results for "{{ $q }}"</h2>
+        <h2 class="text-lg font-semibold text-gray-200">{{ $heading }}</h2>
 
+        @if (! $fixedResultsMode)
         <div class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
             @auth
                 @if ($canModifyActiveList)
@@ -59,10 +65,11 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
 
     <div class="w-full">
-        <livewire:search-results-table :q="$q" />
+        <livewire:search-results-table :q="$q" :object-refs="$objectRefs" />
     </div>
 </div>
 

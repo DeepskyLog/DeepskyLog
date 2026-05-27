@@ -35,6 +35,7 @@ class SearchResultsTable extends PowerGridComponent
     public string $sortField = 'display_name';
 
     public string $q = '';
+    public array $objectRefs = [];
     public ?int $previewInstrumentId = null;
     public ?int $previewLensId = null;
     public ?int $previewEyepieceId = null;
@@ -78,7 +79,29 @@ class SearchResultsTable extends PowerGridComponent
     public function datasource(): ?Builder
     {
         $q = trim($this->q);
-        if ($q === '') {
+        $objectRefs = collect($this->objectRefs)
+            ->map(function ($ref): ?array {
+                if (!is_array($ref)) {
+                    return null;
+                }
+
+                $sourceTable = strtolower(trim((string) ($ref['source_table'] ?? '')));
+                $name = Str::lower(trim((string) ($ref['name'] ?? '')));
+
+                if ($sourceTable === '' || $name === '') {
+                    return null;
+                }
+
+                return [
+                    'source_table' => $sourceTable,
+                    'name' => $name,
+                ];
+            })
+            ->filter()
+            ->unique(fn(array $ref): string => $ref['source_table'] . ':' . $ref['name'])
+            ->values();
+
+        if ($q === '' && $objectRefs->isEmpty()) {
             return SearchIndex::query()->whereRaw('0 = 1');
         }
 
@@ -140,9 +163,23 @@ class SearchResultsTable extends PowerGridComponent
                 . 'MAX(ra) as ra, MAX(decl) as decl, '
                 . "COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN source_type END), MIN(source_type)) as source_type, "
                 . "COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN metadata END), MIN(metadata)) as metadata"
-            )
-            ->whereRaw('LOWER(name) LIKE ?', [Str::lower($like)])
-            ->groupBy(DB::raw("LOWER(COALESCE(name, display_name))"));
+            );
+
+        if ($objectRefs->isNotEmpty()) {
+            $sub->where(function ($query) use ($objectRefs) {
+                foreach ($objectRefs as $ref) {
+                    $query->orWhere(function ($inner) use ($ref) {
+                        $inner
+                            ->where('source_table', $ref['source_table'])
+                            ->whereRaw('LOWER(COALESCE(name, display_name)) = ?', [$ref['name']]);
+                    });
+                }
+            });
+        } else {
+            $sub->whereRaw('LOWER(name) LIKE ?', [Str::lower($like)]);
+        }
+
+        $sub->groupBy(DB::raw("LOWER(COALESCE(name, display_name))"));
 
         $query = SearchIndex::query()->fromSub($sub, 'search_index')
             ->leftJoin('objects', function ($join) {

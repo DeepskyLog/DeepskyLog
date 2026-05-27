@@ -6,6 +6,6 @@
 
 @section('content')
     <div class="w-full mt-6 px-2">
-        @livewire('search-results', ['q' => $q])
+        @livewire('search-results', ['q' => $q, 'objectRefs' => $objectRefs ?? [], 'title' => $title ?? null])
     </div>
 @endsection

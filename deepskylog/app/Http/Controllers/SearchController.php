@@ -156,4 +156,24 @@ class SearchController extends Controller
         $filters = $request->except('_token');
         return view('search.advanced-results', ['filters' => $filters]);
     }
+
+    /**
+     * Render the advanced observation search filter builder page.
+     */
+    public function advancedObservations(Request $request)
+    {
+        $filters = $request->except('_token', 'page');
+
+        return view('search.advanced-observations', ['filters' => $filters]);
+    }
+
+    /**
+     * Render the advanced observation search results page.
+     */
+    public function advancedObservationResults(Request $request)
+    {
+        $filters = $request->except('_token');
+
+        return view('search.advanced-observation-results', ['filters' => $filters]);
+    }
 }

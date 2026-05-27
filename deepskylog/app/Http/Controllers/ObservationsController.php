@@ -20,6 +20,7 @@ use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Targets\Moon as AstroMoon;
 use deepskylog\AstronomyLibrary\Time;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -351,6 +352,42 @@ class ObservationsController extends Controller
     }
 
     /**
+     * Extract unique objects from the current observation search result set.
+     * Redirect directly to the object page when only one unique object remains.
+     */
+    public function searchObjects(Request $request)
+    {
+        $q = (string) $request->query('q', '');
+        $objects = $this->resolveExtractedObjectsFromSearch($q);
+
+        if ($objects->isEmpty()) {
+            return redirect()
+                ->route('observations.search', array_filter(['q' => $q !== '' ? $q : null]))
+                ->with('error', __('No objects were found in the selected observations.'));
+        }
+
+        if ($objects->count() === 1) {
+            return redirect()->route('object.show', [
+                'slug' => $this->extractSearchObjectSlug($objects->first()),
+            ]);
+        }
+
+        return view('search.results', [
+            'q' => $q,
+            'title' => $q !== ''
+                ? __('Objects from observations matching ":q"', ['q' => $q])
+                : __('Objects from observations'),
+            'objectRefs' => $objects
+                ->map(fn(array $object): array => [
+                    'source_table' => $object['source_table'],
+                    'name' => $object['name'],
+                ])
+                ->values()
+                ->all(),
+        ]);
+    }
+
+    /**
      * Show global list of observations (both deepsky and comet) paginated.
      */
     public function index()
@@ -415,6 +452,82 @@ class ObservationsController extends Controller
             'preloaded_lenses' => $lenses,
             'preloaded_constellations' => $constellations,
         ]);
+    }
+
+    private function resolveMatchingObservationsForSearch(string $query): Collection
+    {
+        $component = new \App\Livewire\ObservationSearchTable();
+
+        if (method_exists($component, 'boot')) {
+            try {
+                $component->boot();
+            } catch (\Throwable $_) {
+            }
+        }
+
+        $component->objectName = $query;
+
+        $observationIds = $component->datasource()->get()
+            ->pluck('id')
+            ->filter()
+            ->map(fn($id) => (int) $id)
+            ->values();
+
+        if ($observationIds->isEmpty()) {
+            return collect();
+        }
+
+        $observations = Observation::query()
+            ->whereIn('id', $observationIds->all())
+            ->get()
+            ->keyBy('id');
+
+        return $observationIds
+            ->map(fn(int $id): ?Observation => $observations->get($id))
+            ->filter()
+            ->values();
+    }
+
+    private function resolveExtractedObjectsFromSearch(string $query): Collection
+    {
+        return $this->resolveMatchingObservationsForSearch($query)
+            ->map(function (Observation $observation): ?array {
+                $name = trim((string) ($observation->target_name ?? $observation->target_key ?? ''));
+                if ($name === '') {
+                    return null;
+                }
+
+                $sourceTable = strtolower(trim((string) ($observation->target_table ?? 'objects')));
+                $identity = $sourceTable . ':' . strtolower(trim((string) ($observation->target_key ?: $name)));
+
+                return [
+                    'identity' => $identity,
+                    'source_table' => $sourceTable,
+                    'name' => $name,
+                ];
+            })
+            ->filter()
+            ->unique('identity')
+            ->values();
+    }
+
+    /**
+     * @param  array{source_table: string, name: string}  $object
+     */
+    private function extractSearchObjectSlug(array $object): string
+    {
+        $row = DB::table('search_index')
+            ->select(['source_table', 'source_pk', 'name', 'display_name'])
+            ->where('source_table', $object['source_table'])
+            ->whereRaw('LOWER(COALESCE(name, display_name)) = ?', [Str::lower($object['name'])])
+            ->orderBy('id')
+            ->first();
+
+        if ($row && ($row->source_table ?? null) === 'objects' && !empty($row->source_pk)) {
+            return (string) $row->source_pk;
+        }
+
+        return Str::slug((string) ($row->name ?? $row->display_name ?? $object['name']), '-');
     }
 
     /**
@@ -2728,7 +2841,9 @@ class ObservationsController extends Controller
         $prefill = [];
         try {
             if (!empty($selectedUnified->observed_on)) {
-                $prefill['observed_on'] = is_object($selectedUnified->observed_on) ? $selectedUnified->observed_on->format('Y-m-d') : (string) $selectedUnified->observed_on;
+                $prefill['observed_on'] = $selectedUnified->observed_on instanceof \DateTimeInterface
+                    ? $selectedUnified->observed_on->format('Y-m-d')
+                    : (string) $selectedUnified->observed_on;
             }
         } catch (\Throwable $_) {
         }

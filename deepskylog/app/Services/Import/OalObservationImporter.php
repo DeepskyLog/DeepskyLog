@@ -21,11 +21,17 @@ use Illuminate\Support\Str;
  */
 class OalObservationImporter
 {
-    private User $user;
+    private const OAL_TARGET_METADATA_PREFIX = 'DeepskyLog:';
 
-    public function __construct(User $user)
+    private User $user;
+    private OalSchemaValidator $validator;
+
+    private ?string $defaultNamespace = null;
+
+    public function __construct(User $user, ?OalSchemaValidator $validator = null)
     {
         $this->user = $user;
+        $this->validator = $validator ?? app(OalSchemaValidator::class);
     }
 
     /**
@@ -45,6 +51,15 @@ class OalObservationImporter
             $xmlContent = preg_replace('/encoding=["\'][^"\']*["\']/', 'encoding="UTF-8"', $xmlContent, 1) ?? $xmlContent;
         }
 
+        $schemaErrors = $this->validator->validate($xmlContent);
+        if ($schemaErrors !== []) {
+            foreach ($schemaErrors as $error) {
+                $result->addError('OAL 2.1 schema validation error: ' . $error);
+            }
+
+            return $result;
+        }
+
         // ── Parse XML ──────────────────────────────────────────────────────────
 
         libxml_use_internal_errors(true);
@@ -61,6 +76,9 @@ class OalObservationImporter
         }
 
         libxml_clear_errors();
+
+        $this->defaultNamespace = $xml->getNamespaces(true)[''] ?? null;
+        $xml = $this->withDefaultNamespace($xml);
 
         // ── Build lookup maps from the header sections ─────────────────────────
 
@@ -126,6 +144,8 @@ class OalObservationImporter
         ImportResult $result,
         int $row
     ): void {
+        $obs = $this->withDefaultNamespace($obs);
+
         // ── Resolve date/time ─────────────────────────────────────────────────
 
         $beginStr = trim((string) ($obs->begin ?? ''));
@@ -147,8 +167,10 @@ class OalObservationImporter
         // ── Resolve target ────────────────────────────────────────────────────
 
         $targetRef = trim((string) ($obs->target ?? ''));
-        $targetNode = !empty($targetRef) ? ($targets[$targetRef] ?? null) : null;
+        $targetNode = !empty($targetRef) ? $this->withDefaultNamespace($targets[$targetRef] ?? null) : null;
         $targetNameRaw = $targetNode ? trim((string) ($targetNode->name ?? $targetNode->designation ?? '')) : '';
+        $targetTypeHint = $this->extractOalTargetTypeHint($targetNode);
+        $targetMetadata = $this->extractOalTargetMetadata($targetNode);
 
         if (empty($targetNameRaw)) {
             $result->addError("Observation {$row}: Cannot resolve target (ref='{$targetRef}'), skipping.", '', $row);
@@ -157,7 +179,7 @@ class OalObservationImporter
             return;
         }
 
-        [$targetTable, $targetKey, $targetType, $canonicalName] = $this->resolveObject($targetNameRaw);
+        [$targetTable, $targetKey, $targetType, $canonicalName] = $this->resolveObject($targetNameRaw, $targetTypeHint, $targetMetadata);
 
         if ($targetTable === null) {
             $result->addWarning(
@@ -174,7 +196,7 @@ class OalObservationImporter
         // ── Resolve site → location ───────────────────────────────────────────
 
         $siteRef = trim((string) ($obs->site ?? ''));
-        $siteNode = !empty($siteRef) ? ($sites[$siteRef] ?? null) : null;
+        $siteNode = !empty($siteRef) ? $this->withDefaultNamespace($sites[$siteRef] ?? null) : null;
         $locationId = null;
 
         if ($siteNode) {
@@ -191,7 +213,7 @@ class OalObservationImporter
         // ── Resolve scope → instrument ────────────────────────────────────────
 
         $scopeRef = trim((string) ($obs->scope ?? ''));
-        $scopeNode = !empty($scopeRef) ? ($scopes[$scopeRef] ?? null) : null;
+        $scopeNode = !empty($scopeRef) ? $this->withDefaultNamespace($scopes[$scopeRef] ?? null) : null;
         $instrumentId = null;
 
         if ($scopeNode) {
@@ -205,7 +227,7 @@ class OalObservationImporter
         // ── Resolve eyepiece ──────────────────────────────────────────────────
 
         $eyepieceRef = trim((string) ($obs->eyepiece ?? ''));
-        $eyepieceNode = !empty($eyepieceRef) ? ($eyepieces[$eyepieceRef] ?? null) : null;
+        $eyepieceNode = !empty($eyepieceRef) ? $this->withDefaultNamespace($eyepieces[$eyepieceRef] ?? null) : null;
         $eyepieceId = null;
 
         if ($eyepieceNode) {
@@ -219,7 +241,7 @@ class OalObservationImporter
         // ── Resolve lens ──────────────────────────────────────────────────────
 
         $lensRef = trim((string) ($obs->lens ?? ''));
-        $lensNode = !empty($lensRef) ? ($lenses[$lensRef] ?? null) : null;
+        $lensNode = !empty($lensRef) ? $this->withDefaultNamespace($lenses[$lensRef] ?? null) : null;
         $lensId = null;
 
         if ($lensNode) {
@@ -233,7 +255,7 @@ class OalObservationImporter
         // ── Resolve filter ────────────────────────────────────────────────────
 
         $filterRef = trim((string) ($obs->filter ?? ''));
-        $filterNode = !empty($filterRef) ? ($filters[$filterRef] ?? null) : null;
+        $filterNode = !empty($filterRef) ? $this->withDefaultNamespace($filters[$filterRef] ?? null) : null;
         $filterId = null;
 
         if ($filterNode) {
@@ -423,8 +445,8 @@ class OalObservationImporter
                 'timezone' => $timezone,
                 'latitude' => $latitude ?? 0.0,
                 'longitude' => $longitude ?? 0.0,
-                'limitingMagnitude' => null,
-                'skyBackground' => null,
+                'limitingMagnitude' => -999,
+                'skyBackground' => -999,
                 'elevation' => $elevation,
                 'active' => true,
                 'hidden' => false,
@@ -633,6 +655,7 @@ class OalObservationImporter
                 'observer' => $this->user->username,
                 'make_id' => 1,
                 'type_id' => 1,
+                'color_id' => 1,
                 'active' => true,
             ]);
 
@@ -652,49 +675,234 @@ class OalObservationImporter
     /**
      * @return array{string|null, string|null, string|null, string|null}
      */
-    private function resolveObject(string $name): array
+    private function resolveObject(string $name, ?string $targetTypeHint = null, array $targetMetadata = []): array
     {
         $lower = mb_strtolower(trim($name));
         $slug = Str::slug($name, '-');
         $compact = str_replace([' ', '-'], '', $lower);
         $noZeros = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower) ?? $lower;
-        $candidates = array_values(array_unique(array_filter([$lower, $slug, $compact, $noZeros, str_replace('-', '', $slug)])));
+        $metadataKey = trim((string) ($targetMetadata['target_key'] ?? ''));
+        if ($metadataKey !== '') {
+            $metadataLower = mb_strtolower($metadataKey);
+            $candidates = array_values(array_unique(array_filter([$lower, $slug, $compact, $noZeros, str_replace('-', '', $slug), $metadataLower, Str::slug($metadataKey, '-')])));
+        } else {
+            $candidates = array_values(array_unique(array_filter([$lower, $slug, $compact, $noZeros, str_replace('-', '', $slug)])));
+        }
 
+        $preferredTables = [];
+        $metadataTable = strtolower(trim((string) ($targetMetadata['target_table'] ?? '')));
+        if ($metadataTable !== '') {
+            $preferredTables[] = $metadataTable;
+        }
+
+        foreach ($this->hintedTargetTables($targetTypeHint) as $table) {
+            $preferredTables[] = $table;
+        }
+
+        foreach (array_values(array_unique($preferredTables)) as $table) {
+            $resolved = $this->resolveObjectInTable($table, $candidates);
+            if ($resolved !== null) {
+                return $resolved;
+            }
+        }
+
+        foreach (['objects', 'planets', 'lunar_features', 'moons', 'asteroids', 'cometobjects'] as $table) {
+            if (in_array($table, $preferredTables, true)) {
+                continue;
+            }
+
+            $resolved = $this->resolveObjectInTable($table, $candidates);
+            if ($resolved !== null) {
+                return $resolved;
+            }
+        }
+
+        return [null, null, null, null];
+    }
+
+    private function extractOalTargetTypeHint(?\SimpleXMLElement $targetNode): ?string
+    {
+        if ($targetNode === null) {
+            return null;
+        }
+
+        $attributes = $targetNode->attributes('http://www.w3.org/2001/XMLSchema-instance', true);
+        $type = trim((string) ($attributes['type'] ?? ''));
+        if ($type === '') {
+            return null;
+        }
+
+        return strtolower(Str::after($type, ':'));
+    }
+
+    /**
+     * @return array{target_table?: string, target_key?: string, target_type?: string}
+     */
+    private function extractOalTargetMetadata(?\SimpleXMLElement $targetNode): array
+    {
+        if ($targetNode === null) {
+            return [];
+        }
+
+        $notes = trim((string) ($targetNode->notes ?? ''));
+        if ($notes === '' || !str_starts_with($notes, self::OAL_TARGET_METADATA_PREFIX)) {
+            return [];
+        }
+
+        $payload = substr($notes, strlen(self::OAL_TARGET_METADATA_PREFIX));
+        $metadata = [];
+        foreach (explode(';', $payload) as $entry) {
+            [$key, $value] = array_pad(explode('=', $entry, 2), 2, null);
+            $key = trim((string) $key);
+            $value = trim((string) $value);
+            if ($key !== '' && $value !== '') {
+                $metadata[$key] = $value;
+            }
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function hintedTargetTables(?string $targetTypeHint): array
+    {
+        return match ($targetTypeHint) {
+            'comettargettype' => ['cometobjects'],
+            'minorplanettargettype' => ['asteroids'],
+            'moontargettype' => ['moons'],
+            'suntargettype', 'planettargettype' => ['planets'],
+            default => [],
+        };
+    }
+
+    /**
+     * @param  list<string>  $candidates
+     * @return array{string, string, string, string}|null
+     */
+    private function resolveObjectInTable(string $table, array $candidates): ?array
+    {
+        return match ($table) {
+            'objects' => $this->resolveDeepSkyObject($candidates),
+            'planets' => $this->resolveNamedTarget('planets', $candidates, ['name', 'designation'], fn(object $row): array => [
+                'planets',
+                $this->targetKeyFromRow($row),
+                'planet',
+                (string) $row->name,
+            ]),
+            'moons' => $this->resolveNamedTarget('moons', $candidates, ['name', 'designation'], fn(object $row): array => [
+                'moons',
+                $this->targetKeyFromRow($row),
+                'lunar',
+                (string) $row->name,
+            ]),
+            'lunar_features' => $this->resolveNamedTarget('lunar_features', $candidates, ['name'], fn(object $row): array => [
+                'lunar_features',
+                $this->targetKeyFromRow($row),
+                'lunar',
+                (string) $row->name,
+            ]),
+            'asteroids' => $this->resolveNamedTarget('asteroids', $candidates, ['name', 'designation'], fn(object $row): array => [
+                'asteroids',
+                $this->targetKeyFromRow($row),
+                'solarsystem',
+                (string) $row->name,
+            ]),
+            'cometobjects' => $this->resolveNamedTarget('cometobjects', $candidates, ['name'], fn(object $row): array => [
+                'cometobjects',
+                $this->targetKeyFromRow($row),
+                'comet',
+                (string) $row->name,
+            ]),
+            default => null,
+        };
+    }
+
+    /**
+     * @param  list<string>  $candidates
+     * @return array{string, string, string, string}|null
+     */
+    private function resolveDeepSkyObject(array $candidates): ?array
+    {
         foreach ($candidates as $cand) {
             $on = DB::table('objectnames')->where('slug', $cand)->first();
             if ($on) {
-                return ['objects', $on->objectname, 'deepsky', $on->objectname];
+                return ['objects', (string) $on->objectname, 'deepsky', (string) $on->objectname];
             }
         }
         foreach ($candidates as $cand) {
             $on = DB::table('objectnames')->whereRaw('LOWER(objectname) = ?', [$cand])->orWhereRaw('LOWER(altname) = ?', [$cand])->first();
             if ($on) {
-                return ['objects', $on->objectname, 'deepsky', $on->objectname];
+                return ['objects', (string) $on->objectname, 'deepsky', (string) $on->objectname];
             }
         }
         foreach ($candidates as $cand) {
             $o = DB::table('objects')->where('slug', $cand)->first();
             if ($o) {
-                return ['objects', $o->name, 'deepsky', $o->name];
+                return ['objects', (string) $o->name, 'deepsky', (string) $o->name];
             }
         }
         foreach ($candidates as $cand) {
             $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
             if ($o) {
-                return ['objects', $o->name, 'deepsky', $o->name];
-            }
-        }
-        foreach ($candidates as $cand) {
-            try {
-                $co = DB::table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
-                if ($co) {
-                    return ['cometobjects', (string) $co->id, 'comet', $co->name];
-                }
-            } catch (\Throwable $_) {
+                return ['objects', (string) $o->name, 'deepsky', (string) $o->name];
             }
         }
 
-        return [null, null, null, null];
+        return null;
+    }
+
+    /**
+     * @param  list<string>  $candidates
+     * @param  list<string>  $nameColumns
+     * @param  callable(object): array{string, string, string, string}  $mapper
+     * @return array{string, string, string, string}|null
+     */
+    private function resolveNamedTarget(string $table, array $candidates, array $nameColumns, callable $mapper): ?array
+    {
+        foreach ($candidates as $cand) {
+            try {
+                $row = DB::table($table)->where('slug', $cand)->first();
+            } catch (\Throwable $_) {
+                $row = null;
+            }
+
+            if ($row) {
+                return $mapper($row);
+            }
+        }
+
+        foreach ($nameColumns as $column) {
+            foreach ($candidates as $cand) {
+                try {
+                    $row = DB::table($table)->whereRaw('LOWER(' . $column . ') = ?', [$cand])->first();
+                } catch (\Throwable $_) {
+                    $row = null;
+                }
+
+                if ($row) {
+                    return $mapper($row);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private function targetKeyFromRow(object $row): string
+    {
+        $slug = trim((string) ($row->slug ?? ''));
+        if ($slug !== '') {
+            return $slug;
+        }
+
+        $name = trim((string) ($row->name ?? ''));
+        if ($name !== '') {
+            return $name;
+        }
+
+        return (string) ($row->id ?? '');
     }
 
     // ── Numeric helpers ────────────────────────────────────────────────────────
@@ -737,6 +945,21 @@ class OalObservationImporter
         }
 
         return $unit === 'rad' ? rad2deg($val) : $val;
+    }
+
+    private function withDefaultNamespace(?\SimpleXMLElement $node): ?\SimpleXMLElement
+    {
+        if ($node === null) {
+            return null;
+        }
+
+        if ($this->defaultNamespace === null) {
+            return $node;
+        }
+
+        $children = $node->children($this->defaultNamespace);
+
+        return count($children) > 0 ? $children : $node;
     }
 
 }

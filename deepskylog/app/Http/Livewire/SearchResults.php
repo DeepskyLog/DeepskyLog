@@ -11,12 +11,22 @@ class SearchResults extends Component
 {
     public $q;
     public $results = [];
+    public array $objectRefs = [];
+    public ?string $title = null;
     public bool $canModifyActiveList = false;
+    public bool $fixedResultsMode = false;
 
-    public function mount($q = '')
+    public function mount($q = '', $objectRefs = [], $title = null)
     {
         $this->q = $q;
-        $this->performSearch();
+        $this->objectRefs = is_array($objectRefs) ? $objectRefs : [];
+        $this->title = is_string($title) && $title !== '' ? $title : null;
+        $this->fixedResultsMode = $this->objectRefs !== [];
+
+        if (!$this->fixedResultsMode) {
+            $this->performSearch();
+        }
+
         $this->resolveCanModifyActiveList();
     }
 

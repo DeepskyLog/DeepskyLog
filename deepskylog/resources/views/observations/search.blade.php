@@ -62,12 +62,52 @@
                 $exportPdfUrl = route('observations.search.pdf', array_filter([
                     'q' => $q !== '' ? $q : null,
                 ]));
+                $exportSkylistUrl = route('observations.search.skylist', array_filter([
+                    'q' => $q !== '' ? $q : null,
+                ]));
+                $exportObsUrl = route('observations.search.obs', array_filter([
+                    'q' => $q !== '' ? $q : null,
+                ]));
+                $exportOalUrl = route('observations.search.oal', array_filter([
+                    'q' => $q !== '' ? $q : null,
+                ]));
+                $extractObjectsUrl = route('observations.search.objects', array_filter([
+                    'q' => $q !== '' ? $q : null,
+                ]));
             @endphp
             <div class="flex justify-end gap-3 mb-3">
-                <a href="{{ $exportPdfUrl }}"
-                   class="px-4 py-1.5 rounded text-sm font-medium bg-gray-700 hover:bg-gray-600 text-white transition-colors">
-                    {{ __('Export PDF') }}
+                <a href="{{ $extractObjectsUrl }}"
+                   class="px-4 py-1.5 rounded text-sm font-medium bg-indigo-700 hover:bg-indigo-600 text-white transition-colors">
+                    {{ __('Extract objects') }}
                 </a>
+                <x-menu.dropdown :width="72">
+                    <x-slot name="trigger">
+                        <button type="button"
+                                x-ref="trigger"
+                                @click="open = !open"
+                                aria-haspopup="true"
+                                :aria-expanded="open.toString()"
+                                class="inline-flex items-center gap-2 rounded-md border border-indigo-400/50 bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white shadow-[0_0_0_1px_rgba(255,255,255,0.08)] transition hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <span>{{ __('Export') }}</span>
+                        </button>
+                    </x-slot>
+
+                    <x-menu.item href="{{ $exportPdfUrl }}" target="_blank" rel="noopener noreferrer" data-first>
+                        {{ __('Export PDF') }}
+                    </x-menu.item>
+                    <x-menu.item href="{{ $exportSkylistUrl }}" target="_blank" rel="noopener noreferrer">
+                        {{ __('Export SkySafari') }}
+                    </x-menu.item>
+                    <x-menu.item href="{{ $exportObsUrl }}" target="_blank" rel="noopener noreferrer">
+                        {{ __('Export AstroPlanner (.obs)') }}
+                    </x-menu.item>
+                    <x-menu.item href="{{ $exportOalUrl }}" target="_blank" rel="noopener noreferrer" data-last>
+                        {{ __('Export OAL') }}
+                    </x-menu.item>
+                </x-menu.dropdown>
                 <button type="button"
                         @click="toggleCompare()"
                         :class="compareMode
@@ -77,7 +117,7 @@
                     <span x-text="compareMode ? '{{ __('Collapse all') }}' : '{{ __('Compare') }}'"></span>
                 </button>
             </div>
-            <livewire:observation-search-table :objectName="$q" />
+            @livewire('observation-search-table', ['objectName' => $q, 'filters' => []], key('observation-search-table-search-page'))
         </div>
     </div>
 

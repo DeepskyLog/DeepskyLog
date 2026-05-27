@@ -17,7 +17,7 @@
 
             <x-dropdown.item
                 icon="globe-europe-africa"
-                href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&myLanguages=true&searchObservationsQuickPick"
+                href="{{ route('search.observations.advanced') }}"
                 label="{{ __('Search Observations') }}"
             />
         </div>

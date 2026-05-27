@@ -119,8 +119,23 @@ Route::post('/observation/import', [App\Http\Controllers\ObservationImportContro
 // Observations (deepsky + comet)
 Route::get('/observations', 'App\Http\Controllers\ObservationsController@index')->name('observations.index');
 Route::get('/observations/search', [App\Http\Controllers\ObservationsController::class, 'search'])->name('observations.search');
+Route::get('/observations/search/objects', [App\Http\Controllers\ObservationsController::class, 'searchObjects'])
+    ->name('observations.search.objects')
+    ->middleware('doNotCacheResponse');
 Route::get('/observations/search/export.pdf', [App\Http\Controllers\ObservationSearchExportController::class, 'pdf'])
     ->name('observations.search.pdf')
+    ->middleware('doNotCacheResponse');
+Route::get('/observations/search/export.skylist', [App\Http\Controllers\ObservationSearchExportController::class, 'skylist'])
+    ->name('observations.search.skylist')
+    ->middleware('doNotCacheResponse');
+Route::get('/observations/search/export.obs', [App\Http\Controllers\ObservationSearchExportController::class, 'obs'])
+    ->name('observations.search.obs')
+    ->middleware('doNotCacheResponse');
+Route::get('/observations/search/export.apd', [App\Http\Controllers\ObservationSearchExportController::class, 'apd'])
+    ->name('observations.search.apd')
+    ->middleware('doNotCacheResponse');
+Route::get('/observations/search/export.oal.xml', [App\Http\Controllers\ObservationSearchExportController::class, 'oal'])
+    ->name('observations.search.oal')
     ->middleware('doNotCacheResponse');
 Route::get('/observation/{observer}/{date}/{object}/{index?}', [App\Http\Controllers\ObservationsController::class, 'detail'])
     ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
@@ -543,6 +558,10 @@ Route::get('/search/advanced', [App\Http\Controllers\SearchController::class, 'a
     ->name('search.advanced')->middleware('doNotCacheResponse');
 Route::get('/search/advanced/results', [App\Http\Controllers\SearchController::class, 'advancedResults'])
     ->name('search.advanced.results')->middleware('doNotCacheResponse');
+Route::get('/search/observations/advanced', [App\Http\Controllers\SearchController::class, 'advancedObservations'])
+    ->name('search.observations.advanced')->middleware('doNotCacheResponse');
+Route::get('/search/observations/advanced/results', [App\Http\Controllers\SearchController::class, 'advancedObservationResults'])
+    ->name('search.observations.advanced.results')->middleware('doNotCacheResponse');
 
 // Search exports (PDF / plain text / APD)
 Route::get('/search/names.pdf', [App\Http\Controllers\SearchExportController::class, 'namesPdf'])

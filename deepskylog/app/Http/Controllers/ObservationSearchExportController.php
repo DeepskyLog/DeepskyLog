@@ -2,49 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\CarbonImmutable;
+use App\Models\Eyepiece;
+use App\Models\Filter;
+use App\Models\Instrument;
+use App\Models\Lens;
+use App\Models\Location;
+use App\Models\SearchIndex;
+use App\Models\User;
 use App\Livewire\ObservationSearchTable;
 use App\Models\Observation;
+use App\Services\Import\OalSchemaValidator;
 use App\Services\Observations\ObservationPdfDataBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ObservationSearchExportController extends Controller
 {
+    private const OAL_NS = 'http://groups.google.com/group/openastronomylog';
+    private const XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance';
+    private const OAL_SCHEMA_LOCATION = 'http://groups.google.com/group/openastronomylog oal21.xsd';
+    private const OAL_TARGET_METADATA_PREFIX = 'DeepskyLog:';
+
     public function pdf(Request $request, ObservationPdfDataBuilder $builder)
     {
         try {
             $query = trim((string) $request->query('q', ''));
-
-            $component = new ObservationSearchTable();
-            if (method_exists($component, 'boot')) {
-                try {
-                    $component->boot();
-                } catch (\Throwable $_) {
-                }
-            }
-
-            $component->objectName = $query;
-
-            $rows = $component->datasource()->get();
-            $observationIds = $rows
-                ->pluck('id')
-                ->filter()
-                ->map(fn($id) => (int) $id)
-                ->values();
-
-            $observations = $observationIds->isEmpty()
-                ? collect()
-                : Observation::query()
-                    ->whereIn('id', $observationIds->all())
-                    ->get()
-                    ->keyBy('id');
-
-            $entries = $observationIds
-                ->map(function (int $id) use ($observations, $builder): ?array {
-                    $observation = $observations->get($id);
-
-                    return $observation ? $builder->build($observation) : null;
-                })
+            $entries = $this->resolveMatchingObservations($query)
+                ->map(fn(Observation $observation): ?array => $builder->build($observation))
                 ->filter()
                 ->values();
 
@@ -72,6 +60,287 @@ class ObservationSearchExportController extends Controller
             return redirect()
                 ->back()
                 ->with('error', __('Failed to generate observations PDF'));
+        }
+    }
+
+    public function skylist(Request $request)
+    {
+        try {
+            $query = trim((string) $request->query('q', ''));
+            $observations = $this->resolveMatchingObservations($query);
+            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
+
+            $locations = Location::query()
+                ->whereIn('id', $observations->pluck('location_id')->filter()->unique()->all())
+                ->get(['id', 'name'])
+                ->keyBy('id');
+
+            $instruments = Instrument::query()
+                ->whereIn('id', $observations->pluck('instrument_id')->filter()->unique()->all())
+                ->get(['id', 'name', 'focal_length_mm'])
+                ->keyBy('id');
+
+            $eyepieces = Eyepiece::query()
+                ->whereIn('id', $observations->pluck('eyepiece_id')->filter()->unique()->all())
+                ->get(['id', 'name', 'focal_length_mm'])
+                ->keyBy('id');
+
+            $filters = Filter::query()
+                ->whereIn('id', $observations->pluck('filter_id')->filter()->unique()->all())
+                ->get(['id', 'name'])
+                ->keyBy('id');
+
+            $lenses = Lens::query()
+                ->whereIn('id', $observations->pluck('lens_id')->filter()->unique()->all())
+                ->get(['id', 'name'])
+                ->keyBy('id');
+
+            $blocks = $observations
+                ->map(function (Observation $observation) use ($filters, $eyepieces, $instruments, $lenses, $locations, $planetNames): ?string {
+                    $catalog = trim((string) ($observation->target_name ?? $observation->target_key ?? ''));
+
+                    if ($catalog === '') {
+                        return null;
+                    }
+
+                    $lines = [
+                        'SkyObject=BeginObject',
+                        '   ObjectID=' . $this->skySafariObjectId($observation, $catalog, $planetNames),
+                        '   CatalogNumber=' . $this->skylistFieldValue($catalog),
+                        'EndObject=SkyObject',
+                    ];
+
+                    $dateObserved = $this->formatSkylistDateObserved($observation);
+                    if ($dateObserved !== null) {
+                        array_splice($lines, 3 - 1, 0, '   DateObserved=' . $dateObserved);
+                    }
+
+                    $locationName = trim((string) ($locations->get($observation->location_id)?->name ?? ''));
+                    if ($locationName !== '') {
+                        array_splice($lines, count($lines) - 1, 0, '   Location=' . $this->skylistFieldValue($locationName));
+                    }
+
+                    $comment = $this->formatSkylistComment((string) ($observation->description ?? ''));
+                    if ($comment !== null) {
+                        array_splice($lines, count($lines) - 1, 0, '   Comment=' . $this->skylistFieldValue($comment));
+                    }
+
+                    $equipment = $this->formatSkylistEquipment(
+                        $instruments->get($observation->instrument_id)?->name,
+                        $eyepieces->get($observation->eyepiece_id)?->name,
+                        $filters->get($observation->filter_id)?->name,
+                        $lenses->get($observation->lens_id)?->name,
+                    );
+                    if ($equipment !== null) {
+                        array_splice($lines, count($lines) - 1, 0, '   Equipment=' . $this->skylistFieldValue($equipment));
+                    }
+
+                    return implode("\n", $lines);
+                })
+                ->filter()
+                ->values()
+                ->all();
+
+            $content = "SkySafariObservingListVersion=3.0\n";
+
+            if ($blocks !== []) {
+                $content .= implode("\n\n", $blocks) . "\n";
+            }
+
+            return response()->streamDownload(function () use ($content) {
+                echo $content;
+            }, 'observations_' . now()->format('Ymd_His') . '.skylist', ['Content-Type' => 'text/plain']);
+        } catch (\Throwable $exception) {
+            Log::error('ObservationSearchExportController::skylist failed', [
+                'query' => (string) $request->query('q', ''),
+                'error' => (string) $exception,
+            ]);
+
+            return redirect()
+                ->back()
+                ->with('error', __('Failed to generate SkySafari export'));
+        }
+    }
+
+    public function apd(Request $request)
+    {
+        return $this->obs($request);
+    }
+
+    public function obs(Request $request)
+    {
+        try {
+            $query = trim((string) $request->query('q', ''));
+            $observations = $this->resolveMatchingObservations($query);
+            $locations = Location::query()
+                ->whereIn('id', $observations->pluck('location_id')->filter()->unique()->all())
+                ->get(['id', 'name', 'timezone'])
+                ->keyBy('id');
+
+            $users = User::query()
+                ->whereIn('id', $observations->pluck('observer_user_id')->filter()->unique()->all())
+                ->get(['id', 'name', 'username'])
+                ->keyBy('id');
+
+            $instruments = Instrument::query()
+                ->whereIn('id', $observations->pluck('instrument_id')->filter()->unique()->all())
+                ->get(['id', 'name', 'focal_length_mm'])
+                ->keyBy('id');
+
+            $eyepieces = Eyepiece::query()
+                ->whereIn('id', $observations->pluck('eyepiece_id')->filter()->unique()->all())
+                ->get(['id', 'name', 'focal_length_mm'])
+                ->keyBy('id');
+
+            $filters = Filter::query()
+                ->whereIn('id', $observations->pluck('filter_id')->filter()->unique()->all())
+                ->get(['id', 'name'])
+                ->keyBy('id');
+
+            $lenses = Lens::query()
+                ->whereIn('id', $observations->pluck('lens_id')->filter()->unique()->all())
+                ->get(['id', 'name'])
+                ->keyBy('id');
+
+            $targetMetadata = $this->resolveApdTargetMetadata($observations);
+
+            $tmp = tempnam(sys_get_temp_dir(), 'dsl_observation_search_obs_');
+            if ($tmp === false) {
+                throw new \RuntimeException('Failed to create temporary file for OBS export');
+            }
+
+            $db = new \PDO('sqlite:' . $tmp);
+            $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $db->exec("CREATE TABLE Observations (KeyVal varchar, DateTime varchar, Rating varchar, Telescope varchar, Eyepiece varchar, Imager text, Filter varchar, Aid varchar, Observed varchar, Notes varchar, UserFields text, Files varchar, Plan varchar, ID varchar, GUID integer, Name varchar, RA double, Dec double, Type varchar, Constellation varchar, GMTOffset double, AssociatedData varchar, Flags integer, UseUT integer, Special varchar, ObsTable varchar, ObjFields varchar)");
+            $db->exec("CREATE TABLE Sessions (UniqueID test, start double, finish double, notes text, name text, site text, observer text, seeing text, transparency text, user text, ended boolean, displayUT boolean, AssociatedData varchar)");
+
+            $insertObservation = $db->prepare('INSERT INTO Observations (KeyVal, DateTime, Rating, Telescope, Eyepiece, Imager, Filter, Aid, Observed, Notes, UserFields, Files, Plan, ID, GUID, Name, RA, Dec, Type, Constellation, GMTOffset, AssociatedData, Flags, UseUT, Special, ObsTable, ObjFields) VALUES (:keyval, :datetime, :rating, :telescope, :eyepiece, :imager, :filter, :aid, :observed, :notes, :user_fields, :files, :plan, :id, :guid, :name, :ra, :dec, :type, :constellation, :gmt_offset, :associated_data, :flags, :use_ut, :special, :obs_table, :obj_fields)');
+            $insertSession = $db->prepare('INSERT INTO Sessions (UniqueID, start, finish, notes, name, site, observer, seeing, transparency, user, ended, displayUT, AssociatedData) VALUES (:unique_id, :start, :finish, :notes, :name, :site, :observer, :seeing, :transparency, :user, :ended, :display_ut, :associated_data)');
+
+            $guidMap = [];
+            $guidCounter = 1;
+            $prefix = random_int(1000, 9999) . '-' . (string) $this->astroPlannerEpochSeconds(now()->utc());
+
+            foreach ($observations->values() as $index => $observation) {
+                $catalog = trim((string) ($observation->target_name ?? $observation->target_key ?? ''));
+                if ($catalog === '') {
+                    continue;
+                }
+
+                $identity = $this->apdObjectIdentity($observation, $catalog);
+                $metadataKey = $this->apdTargetMetadataKey($observation, $catalog);
+                $metadata = $targetMetadata[$metadataKey] ?? [];
+                $guid = $guidMap[$identity] ?? null;
+
+                if ($guid === null) {
+                    $guid = $guidCounter;
+                    $guidMap[$identity] = $guid;
+                    $guidCounter++;
+                }
+
+                $location = $locations->get($observation->location_id);
+                $timezone = trim((string) ($location?->timezone ?? 'UTC'));
+                $moment = $this->astroPlannerObservationMoment($observation, $timezone);
+                $epochSeconds = $this->astroPlannerEpochSeconds($moment->utc());
+                $gmtOffset = $this->astroPlannerGmtOffsetHours($moment);
+                $keySuffix = $index + 1;
+                $keyVal = $prefix . '-' . $keySuffix;
+                $sessionId = $prefix . '-session-' . $keySuffix;
+
+                $insertObservation->execute([
+                    ':keyval' => $keyVal,
+                    ':datetime' => $epochSeconds . '.',
+                    ':rating' => '0',
+                    ':telescope' => trim((string) ($instruments->get($observation->instrument_id)?->name ?? '')),
+                    ':eyepiece' => trim((string) ($eyepieces->get($observation->eyepiece_id)?->name ?? '')),
+                    ':imager' => '',
+                    ':filter' => trim((string) ($filters->get($observation->filter_id)?->name ?? '')),
+                    ':aid' => trim((string) ($lenses->get($observation->lens_id)?->name ?? '')),
+                    ':observed' => '1',
+                    ':notes' => $this->astroPlannerObsNotesRtf((string) ($observation->description ?? '')),
+                    ':user_fields' => '',
+                    ':files' => '',
+                    ':plan' => '',
+                    ':id' => $identity,
+                    ':guid' => $guid,
+                    ':name' => $catalog,
+                    ':ra' => $metadata['ra'] ?? null,
+                    ':dec' => $metadata['decl'] ?? null,
+                    ':type' => $this->astroPlannerType($observation),
+                    ':constellation' => $this->astroPlannerConstellation($metadata['con'] ?? null),
+                    ':gmt_offset' => $gmtOffset,
+                    ':associated_data' => '',
+                    ':flags' => 1,
+                    ':use_ut' => 0,
+                    ':special' => '',
+                    ':obs_table' => '',
+                    ':obj_fields' => $this->astroPlannerObservationObjFields(
+                        $identity,
+                        $catalog,
+                        $observation,
+                        $metadata,
+                        $gmtOffset,
+                        $moment,
+                        $eyepieces->get($observation->eyepiece_id)?->name,
+                        $instruments->get($observation->instrument_id),
+                        $eyepieces->get($observation->eyepiece_id),
+                    ),
+                ]);
+
+                $insertSession->execute([
+                    ':unique_id' => $sessionId,
+                    ':start' => $epochSeconds,
+                    ':finish' => $epochSeconds + 900,
+                    ':notes' => '',
+                    ':name' => $moment->format('n/j/Y \a\t g:i A'),
+                    ':site' => trim((string) ($location?->name ?? '')),
+                    ':observer' => trim((string) ($users->get($observation->observer_user_id)?->name ?? $observation->observer_username ?? '')),
+                    ':seeing' => $this->astroPlannerSeeingLabel($observation->seeing),
+                    ':transparency' => $this->astroPlannerTransparencyLabel($observation->transparency),
+                    ':user' => '',
+                    ':ended' => 1,
+                    ':display_ut' => 0,
+                    ':associated_data' => '',
+                ]);
+            }
+
+            $db = null;
+
+            return response()->streamDownload(function () use ($tmp) {
+                readfile($tmp);
+            }, 'observations_' . now()->format('Ymd_His') . '.obs', ['Content-Type' => 'application/x-sqlite3']);
+        } catch (\Throwable $exception) {
+            Log::error('ObservationSearchExportController::obs failed', [
+                'query' => (string) $request->query('q', ''),
+                'error' => (string) $exception,
+            ]);
+
+            return redirect()
+                ->back()
+                ->with('error', __('Failed to generate AstroPlanner OBS export'));
+        }
+    }
+
+    public function oal(Request $request, OalSchemaValidator $validator)
+    {
+        try {
+            $query = trim((string) $request->query('q', ''));
+            $content = $this->buildOalXml($this->resolveMatchingObservations($query));
+            $validator->assertValid($content);
+
+            return response($content, 200, [
+                'Content-Type' => 'application/xml; charset=UTF-8',
+                'Content-Disposition' => 'attachment; filename="observations_' . now()->format('Ymd_His') . '.xml"',
+            ]);
+        } catch (\Throwable $exception) {
+            Log::error('ObservationSearchExportController::oal failed', [
+                'query' => (string) $request->query('q', ''),
+                'error' => (string) $exception,
+            ]);
+
+            return redirect()
+                ->back()
+                ->with('error', __('Failed to generate OAL export'));
         }
     }
 
@@ -103,5 +372,1074 @@ class ObservationSearchExportController extends Controller
         return redirect()
             ->back()
             ->with('error', __('PDF library not installed. Please run: composer require barryvdh/laravel-dompdf'));
+    }
+
+    private function resolveMatchingObservations(string $query): Collection
+    {
+        $component = new ObservationSearchTable();
+
+        if (method_exists($component, 'boot')) {
+            try {
+                $component->boot();
+            } catch (\Throwable $_) {
+            }
+        }
+
+        $component->objectName = $query;
+
+        $observationIds = $component->datasource()->get()
+            ->pluck('id')
+            ->filter()
+            ->map(fn($id) => (int) $id)
+            ->values();
+
+        if ($observationIds->isEmpty()) {
+            return collect();
+        }
+
+        $observations = Observation::query()
+            ->whereIn('id', $observationIds->all())
+            ->get()
+            ->keyBy('id');
+
+        return $observationIds
+            ->map(fn(int $id): ?Observation => $observations->get($id))
+            ->filter()
+            ->values();
+    }
+
+    private function resolveObservedTargets(string $query): Collection
+    {
+        $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
+
+        $targets = [];
+
+        foreach ($this->resolveMatchingObservations($query) as $observation) {
+            $catalog = trim((string) ($observation->target_name ?? $observation->target_key ?? ''));
+
+            if ($catalog === '') {
+                continue;
+            }
+
+            $identity = $this->skylistIdentity($observation, $catalog);
+
+            if (array_key_exists($identity, $targets)) {
+                continue;
+            }
+
+            $targets[$identity] = [
+                'identity' => $identity,
+                'catalog' => $catalog,
+                'object_id' => $this->skySafariObjectId($observation, $catalog, $planetNames),
+                'type' => $this->astroPlannerType($observation),
+            ];
+        }
+
+        return collect($targets)->values();
+    }
+
+    private function buildOalXml(Collection $observations): string
+    {
+        $observations = $observations->values();
+
+        $users = User::query()
+            ->whereIn('id', $observations->pluck('observer_user_id')->filter()->unique()->all())
+            ->get(['id', 'name', 'username'])
+            ->keyBy('id');
+
+        $locations = Location::query()
+            ->whereIn('id', $observations->pluck('location_id')->filter()->unique()->all())
+            ->get(['id', 'name', 'latitude', 'longitude', 'elevation', 'timezone'])
+            ->keyBy('id');
+
+        $instruments = Instrument::query()
+            ->whereIn('id', $observations->pluck('instrument_id')->filter()->unique()->all())
+            ->get(['id', 'name', 'aperture_mm', 'focal_length_mm'])
+            ->keyBy('id');
+
+        $eyepieces = Eyepiece::query()
+            ->whereIn('id', $observations->pluck('eyepiece_id')->filter()->unique()->all())
+            ->get(['id', 'name', 'focal_length_mm', 'max_focal_length_mm', 'apparentFOV'])
+            ->keyBy('id');
+
+        $lenses = Lens::query()
+            ->whereIn('id', $observations->pluck('lens_id')->filter()->unique()->all())
+            ->get(['id', 'name', 'factor'])
+            ->keyBy('id');
+
+        $filters = Filter::query()
+            ->whereIn('id', $observations->pluck('filter_id')->filter()->unique()->all())
+            ->get(['id', 'name'])
+            ->keyBy('id');
+
+        $targetMetadata = $this->resolveOalTargetMetadata($observations);
+
+        $targetRefs = [];
+        foreach ($observations as $observation) {
+            $catalog = trim((string) ($observation->target_name ?? $observation->target_key ?? ''));
+            if ($catalog === '') {
+                continue;
+            }
+
+            $targetMetadataKey = $this->apdTargetMetadataKey($observation, $catalog);
+
+            $targetRefs[$this->oalTargetId($observation, $catalog)] = [
+                'catalog' => $catalog,
+                'target_table' => strtolower(trim((string) ($observation->target_table ?? ''))),
+                'target_type' => strtolower(trim((string) ($observation->target_type ?? ''))),
+                'target_key' => trim((string) ($observation->target_key ?? '')),
+                'metadata' => $targetMetadata[$targetMetadataKey] ?? [],
+            ];
+        }
+
+        $document = new \DOMDocument('1.0', 'UTF-8');
+        $document->formatOutput = true;
+
+        $root = $document->createElementNS(self::OAL_NS, 'oal:observations');
+        $root->setAttribute('version', '2.1');
+        $root->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', self::XSI_NS);
+        $root->setAttributeNS(self::XSI_NS, 'xsi:schemaLocation', self::OAL_SCHEMA_LOCATION);
+        $document->appendChild($root);
+
+        $observersNode = $document->createElement('observers');
+        foreach ($observations->groupBy(fn(Observation $observation) => $this->oalObserverId($observation)) as $observerId => $group) {
+            /** @var Observation $observation */
+            $observation = $group->first();
+            $user = $users->get($observation->observer_user_id);
+            [$firstName, $surname] = $this->splitObserverName($user?->name ?? $observation->observer_username ?? 'Observer');
+
+            $observerNode = $document->createElement('observer');
+            $observerNode->setAttribute('id', $observerId);
+            $this->appendOalTextNode($document, $observerNode, 'name', $firstName);
+            $this->appendOalTextNode($document, $observerNode, 'surname', $surname);
+            $observersNode->appendChild($observerNode);
+        }
+        $root->appendChild($observersNode);
+
+        $sitesNode = $document->createElement('sites');
+        foreach ($locations as $location) {
+            $siteNode = $document->createElement('site');
+            $siteNode->setAttribute('id', 'site-' . $location->id);
+            $this->appendOalTextNode($document, $siteNode, 'name', $location->name);
+            $this->appendOalTextNode($document, $siteNode, 'longitude', $location->longitude ?? 0, ['unit' => 'deg']);
+            $this->appendOalTextNode($document, $siteNode, 'latitude', $location->latitude ?? 0, ['unit' => 'deg']);
+            $this->appendOalTextNode($document, $siteNode, 'elevation', $location->elevation ?? 0);
+            $this->appendOalTextNode($document, $siteNode, 'timezone', $this->oalTimezoneOffsetMinutes($location->timezone));
+            $sitesNode->appendChild($siteNode);
+        }
+        $root->appendChild($sitesNode);
+
+        $sessionsNode = $document->createElement('sessions');
+        $root->appendChild($sessionsNode);
+
+        $targetsNode = $document->createElement('targets');
+        foreach ($targetRefs as $targetId => $targetData) {
+            $targetNode = $document->createElement('target');
+            $targetNode->setAttribute('id', $targetId);
+            $targetType = $this->oalTargetXsiType($targetData);
+            if ($targetType !== null) {
+                $targetNode->setAttributeNS(self::XSI_NS, 'xsi:type', $targetType);
+            }
+            $this->appendOalTextNode($document, $targetNode, 'datasource', 'DeepskyLog');
+            $this->appendOalTextNode($document, $targetNode, 'name', $targetData['catalog']);
+            $this->appendOalTargetPosition($document, $targetNode, $targetData['metadata'] ?? []);
+            $this->appendOalTextNode($document, $targetNode, 'constellation', $targetData['metadata']['con'] ?? null);
+            $this->appendOalTextNode($document, $targetNode, 'notes', $this->oalTargetMetadata($targetData));
+            $this->appendOalDeepSkyTargetDetails($document, $targetNode, $targetType, $targetData['metadata'] ?? []);
+            $targetsNode->appendChild($targetNode);
+        }
+        $root->appendChild($targetsNode);
+
+        $scopesNode = $document->createElement('scopes');
+        foreach ($instruments as $instrument) {
+            $scopeNode = $document->createElement('scope');
+            $scopeNode->setAttribute('id', 'scope-' . $instrument->id);
+            $scopeNode->setAttributeNS(self::XSI_NS, 'xsi:type', 'oal:scopeType');
+            $this->appendOalTextNode($document, $scopeNode, 'model', $instrument->name);
+            $this->appendOalTextNode($document, $scopeNode, 'type', 'R');
+            $this->appendOalTextNode($document, $scopeNode, 'aperture', max(1, (float) ($instrument->aperture_mm ?? 1)));
+            $this->appendOalTextNode($document, $scopeNode, 'focalLength', max(1, (float) ($instrument->focal_length_mm ?? 1)));
+            $scopesNode->appendChild($scopeNode);
+        }
+        $root->appendChild($scopesNode);
+
+        $eyepiecesNode = $document->createElement('eyepieces');
+        foreach ($eyepieces as $eyepiece) {
+            $eyepieceNode = $document->createElement('eyepiece');
+            $eyepieceNode->setAttribute('id', 'eyepiece-' . $eyepiece->id);
+            $this->appendOalTextNode($document, $eyepieceNode, 'model', $eyepiece->name);
+            $this->appendOalTextNode($document, $eyepieceNode, 'focalLength', max(1, (float) ($eyepiece->focal_length_mm ?? 1)));
+            if (is_numeric($eyepiece->max_focal_length_mm) && (float) $eyepiece->max_focal_length_mm > 0) {
+                $this->appendOalTextNode($document, $eyepieceNode, 'maxFocalLength', $eyepiece->max_focal_length_mm);
+            }
+            if (is_numeric($eyepiece->apparentFOV) && (float) $eyepiece->apparentFOV > 0) {
+                $this->appendOalTextNode($document, $eyepieceNode, 'apparentFOV', $eyepiece->apparentFOV, ['unit' => 'deg']);
+            }
+            $eyepiecesNode->appendChild($eyepieceNode);
+        }
+        $root->appendChild($eyepiecesNode);
+
+        $lensesNode = $document->createElement('lenses');
+        foreach ($lenses as $lens) {
+            $lensNode = $document->createElement('lens');
+            $lensNode->setAttribute('id', 'lens-' . $lens->id);
+            $this->appendOalTextNode($document, $lensNode, 'model', $lens->name);
+            $this->appendOalTextNode($document, $lensNode, 'factor', max(0.01, (float) ($lens->factor ?? 1)));
+            $lensesNode->appendChild($lensNode);
+        }
+        $root->appendChild($lensesNode);
+
+        $filtersNode = $document->createElement('filters');
+        foreach ($filters as $filter) {
+            $filterNode = $document->createElement('filter');
+            $filterNode->setAttribute('id', 'filter-' . $filter->id);
+            $this->appendOalTextNode($document, $filterNode, 'model', $filter->name);
+            $this->appendOalTextNode($document, $filterNode, 'type', 'other');
+            $filtersNode->appendChild($filterNode);
+        }
+        $root->appendChild($filtersNode);
+
+        $imagersNode = $document->createElement('imagers');
+        $root->appendChild($imagersNode);
+
+        foreach ($observations as $observation) {
+            $catalog = trim((string) ($observation->target_name ?? $observation->target_key ?? ''));
+            if ($catalog === '') {
+                continue;
+            }
+
+            $observationNode = $document->createElement('observation');
+            $observationNode->setAttribute('id', 'observation-' . $observation->id);
+            $this->appendOalTextNode($document, $observationNode, 'observer', $this->oalObserverId($observation));
+
+            if ($observation->location_id && $locations->has($observation->location_id)) {
+                $this->appendOalTextNode($document, $observationNode, 'site', 'site-' . $observation->location_id);
+            }
+            $this->appendOalTextNode($document, $observationNode, 'target', $this->oalTargetId($observation, $catalog));
+            $this->appendOalTextNode(
+                $document,
+                $observationNode,
+                'begin',
+                $this->formatOalBegin($observation, $locations->get($observation->location_id)?->timezone)
+            );
+            if (is_numeric($observation->limiting_magnitude) && (float) $observation->limiting_magnitude > 0) {
+                $this->appendOalTextNode($document, $observationNode, 'faintestStar', (string) $observation->limiting_magnitude);
+            }
+            if (is_numeric($observation->sqm) && (float) $observation->sqm > 0) {
+                $this->appendOalTextNode($document, $observationNode, 'sky-quality', (string) $observation->sqm, ['unit' => 'mags-per-squarearcsec']);
+            }
+            if ($observation->seeing !== null) {
+                $this->appendOalTextNode($document, $observationNode, 'seeing', max(1, min(5, (int) $observation->seeing)));
+            }
+            if ($observation->instrument_id && $instruments->has($observation->instrument_id)) {
+                $this->appendOalTextNode($document, $observationNode, 'scope', 'scope-' . $observation->instrument_id);
+            }
+            if ($observation->eyepiece_id && $eyepieces->has($observation->eyepiece_id)) {
+                $this->appendOalTextNode($document, $observationNode, 'eyepiece', 'eyepiece-' . $observation->eyepiece_id);
+            }
+            if ($observation->lens_id && $lenses->has($observation->lens_id)) {
+                $this->appendOalTextNode($document, $observationNode, 'lens', 'lens-' . $observation->lens_id);
+            }
+            if ($observation->filter_id && $filters->has($observation->filter_id)) {
+                $this->appendOalTextNode($document, $observationNode, 'filter', 'filter-' . $observation->filter_id);
+            }
+
+            $description = trim((string) ($observation->description ?? ''));
+            $resultNode = $document->createElement('result');
+            $language = trim((string) ($observation->language ?? 'en'));
+            if ($language !== '') {
+                $resultNode->setAttribute('lang', strtolower(substr($language, 0, 10)));
+            }
+            $descriptionNode = $document->createElement('description');
+            $descriptionNode->appendChild($document->createTextNode(html_entity_decode(strip_tags($description), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+            $resultNode->appendChild($descriptionNode);
+            $observationNode->appendChild($resultNode);
+
+            $root->appendChild($observationNode);
+        }
+
+        return $document->saveXML();
+    }
+
+    private function skylistIdentity(Observation $observation, string $catalog): string
+    {
+        $targetTable = strtolower(trim((string) ($observation->target_table ?? '')));
+        $targetKey = trim((string) ($observation->target_key ?? ''));
+
+        if ($targetTable !== '' && $targetKey !== '') {
+            return $targetTable . ':' . $targetKey;
+        }
+
+        return strtolower($catalog);
+    }
+
+    private function skySafariObjectId(Observation $observation, string $catalog, array $planetNames): string
+    {
+        $targetTable = strtolower(trim((string) ($observation->target_table ?? '')));
+        $targetType = strtolower(trim((string) ($observation->target_type ?? '')));
+        $lowerCatalog = strtolower($catalog);
+
+        if (
+            in_array($targetTable, ['planets', 'moons', 'cometobjects', 'comets', 'lunar_features', 'asteroids'], true)
+            || in_array($targetType, ['planet', 'solarsystem', 'lunar', 'comet'], true)
+            || in_array($lowerCatalog, $planetNames, true)
+        ) {
+            return '1,-1,-1';
+        }
+
+        return '4,-1,-1';
+    }
+
+    private function formatSkylistDateObserved(Observation $observation): ?string
+    {
+        $observedOn = $observation->observed_on;
+        $date = $observedOn instanceof \DateTimeInterface
+            ? $observedOn->format('Y-m-d')
+            : trim((string) $observedOn);
+
+        if ($date === '') {
+            return null;
+        }
+
+        $time = trim((string) ($observation->observed_time ?? ''));
+        if (preg_match('/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/', $time, $matches) === 1) {
+            $time = sprintf('%02d:%02d:%02d', (int) $matches[1], (int) $matches[2], (int) ($matches[3] ?? 0));
+        } else {
+            $time = '00:00:00';
+        }
+
+        try {
+            $dateTime = CarbonImmutable::createFromFormat('Y-m-d H:i:s', $date . ' ' . $time, 'UTC');
+        } catch (\Throwable $_) {
+            return null;
+        }
+
+        $jdn = gregoriantojd(
+            (int) $dateTime->format('m'),
+            (int) $dateTime->format('d'),
+            (int) $dateTime->format('Y')
+        );
+        $seconds = ((int) $dateTime->format('H') * 3600)
+            + ((int) $dateTime->format('i') * 60)
+            + (int) $dateTime->format('s');
+        $julianDate = $jdn - 0.5 + ($seconds / 86400);
+
+        return rtrim(rtrim(number_format($julianDate, 7, '.', ''), '0'), '.');
+    }
+
+    private function formatSkylistComment(string $description): ?string
+    {
+        $description = preg_replace('/<br\s*\/?>/i', "\n", $description) ?? $description;
+        $description = html_entity_decode(strip_tags($description), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $description = preg_replace("/\r\n?|\n/u", "\n", $description) ?? $description;
+        $description = trim($description);
+
+        return $description !== '' ? $description : null;
+    }
+
+    private function formatSkylistEquipment(?string $instrument, ?string $eyepiece, ?string $filter, ?string $lens): ?string
+    {
+        $parts = collect([$instrument, $eyepiece, $filter, $lens])
+            ->map(fn(?string $part): string => trim((string) $part))
+            ->filter()
+            ->values();
+
+        if ($parts->isEmpty()) {
+            return null;
+        }
+
+        return $parts->implode(', ');
+    }
+
+    private function skylistFieldValue(string $value): string
+    {
+        return str_replace(["\r\n", "\r", "\n"], '\\n', trim($value));
+    }
+
+    private function astroPlannerType(Observation $observation): string
+    {
+        $targetType = strtolower(trim((string) ($observation->target_type ?? '')));
+
+        return match ($targetType) {
+            'planet' => 'Planet',
+            'lunar' => 'Solar System',
+            'comet' => 'Comet',
+            default => 'Observation Target',
+        };
+    }
+
+    private function resolveApdTargetMetadata(Collection $observations): array
+    {
+        $metadata = [];
+        $targets = $observations
+            ->map(function (Observation $observation): ?array {
+                $catalog = trim((string) ($observation->target_name ?? $observation->target_key ?? ''));
+                $table = strtolower(trim((string) ($observation->target_table ?? '')));
+
+                if ($catalog === '' || $table === '') {
+                    return null;
+                }
+
+                return [
+                    'table' => $table,
+                    'catalog' => $catalog,
+                    'catalog_lower' => Str::lower($catalog),
+                ];
+            })
+            ->filter()
+            ->unique(fn(array $target): string => $target['table'] . '|' . $target['catalog_lower'])
+            ->values();
+
+        $objectNames = $targets->where('table', 'objects')->pluck('catalog')->all();
+        if ($objectNames !== []) {
+            $rows = DB::table('objects')
+                ->whereIn('name', $objectNames)
+                ->get(['name', 'ra', 'decl', 'mag', 'diam1', 'diam2', 'pa', 'con']);
+
+            foreach ($rows as $row) {
+                $metadata['objects|' . Str::lower((string) $row->name)] = [
+                    'ra' => is_numeric($row->ra) ? (float) $row->ra : null,
+                    'decl' => is_numeric($row->decl) ? (float) $row->decl : null,
+                    'mag' => is_numeric($row->mag) && (float) $row->mag !== 99.9 ? (float) $row->mag : null,
+                    'diam1' => $row->diam1,
+                    'diam2' => $row->diam2,
+                    'pa' => $row->pa,
+                    'con' => $row->con,
+                ];
+            }
+        }
+
+        foreach (['planets', 'moons', 'asteroids'] as $table) {
+            $names = $targets->where('table', $table)->pluck('catalog')->all();
+            if ($names === []) {
+                continue;
+            }
+
+            $rows = DB::table($table)
+                ->whereIn('name', $names)
+                ->get(['name', 'ra', 'decl']);
+
+            foreach ($rows as $row) {
+                $metadata[$table . '|' . Str::lower((string) $row->name)] = [
+                    'ra' => is_numeric($row->ra) ? (float) $row->ra : null,
+                    'decl' => is_numeric($row->decl) ? (float) $row->decl : null,
+                    'mag' => null,
+                    'diam1' => null,
+                    'diam2' => null,
+                    'pa' => null,
+                    'con' => null,
+                ];
+            }
+        }
+
+        if ($targets->isNotEmpty()) {
+            $searchRows = SearchIndex::query()
+                ->where(function ($query) use ($targets) {
+                    foreach ($targets as $target) {
+                        $query->orWhere(function ($inner) use ($target) {
+                            $inner->where('source_table', $target['table'])
+                                ->where(function ($nameQuery) use ($target) {
+                                    $nameQuery->whereRaw('LOWER(name) = ?', [$target['catalog_lower']])
+                                        ->orWhereRaw('LOWER(COALESCE(display_name, name)) = ?', [$target['catalog_lower']]);
+                                });
+                        });
+                    }
+                })
+                ->get(['source_table', 'name', 'display_name', 'ra', 'decl']);
+
+            foreach ($searchRows as $row) {
+                $name = trim((string) ($row->display_name ?: $row->name));
+                if ($name === '') {
+                    continue;
+                }
+
+                $key = strtolower(trim((string) $row->source_table)) . '|' . Str::lower($name);
+
+                $existing = $metadata[$key] ?? [
+                    'ra' => null,
+                    'decl' => null,
+                    'mag' => null,
+                    'diam1' => null,
+                    'diam2' => null,
+                    'pa' => null,
+                    'con' => null,
+                ];
+
+                if ($existing['ra'] === null && is_numeric($row->ra)) {
+                    $existing['ra'] = (float) $row->ra;
+                }
+                if ($existing['decl'] === null && is_numeric($row->decl)) {
+                    $existing['decl'] = (float) $row->decl;
+                }
+
+                $metadata[$key] = $existing;
+            }
+        }
+
+        return $metadata;
+    }
+
+    private function resolveOalTargetMetadata(Collection $observations): array
+    {
+        $metadata = [];
+
+        $objectTargets = $observations
+            ->filter(fn(Observation $observation): bool => strtolower(trim((string) ($observation->target_table ?? ''))) === 'objects')
+            ->map(function (Observation $observation): ?array {
+                $catalog = trim((string) ($observation->target_name ?? $observation->target_key ?? ''));
+                if ($catalog === '') {
+                    return null;
+                }
+
+                return [
+                    'catalog' => $catalog,
+                    'normalized' => $this->normalizeOalCatalogName($catalog),
+                ];
+            })
+            ->filter()
+            ->unique('normalized')
+            ->values();
+
+        if ($objectTargets->isEmpty()) {
+            return $metadata;
+        }
+
+        $rows = DB::table('objects')
+            ->leftJoin('deepskytypes', 'objects.type', '=', 'deepskytypes.code')
+            ->where(function ($query) use ($objectTargets) {
+                foreach ($objectTargets as $target) {
+                    $query->orWhereRaw('LOWER(REPLACE(objects.name, " ", "")) = ?', [$target['normalized']]);
+                }
+            })
+            ->get([
+                'objects.name',
+                'objects.type',
+                'objects.con',
+                'objects.ra',
+                'objects.decl',
+                'objects.mag',
+                'objects.subr',
+                'objects.diam1',
+                'objects.diam2',
+                'objects.pa',
+                'deepskytypes.name as type_name',
+            ]);
+
+        foreach ($rows as $row) {
+            $normalizedRowName = $this->normalizeOalCatalogName((string) $row->name);
+            $matchingTargets = $objectTargets->where('normalized', $normalizedRowName);
+
+            foreach ($matchingTargets as $target) {
+                $key = 'objects|' . Str::lower($target['catalog']);
+                $metadata[$key] = [
+                    'ra' => is_numeric($row->ra) ? (float) $row->ra : null,
+                    'decl' => is_numeric($row->decl) ? (float) $row->decl : null,
+                    'mag' => is_numeric($row->mag) && (float) $row->mag !== 99.9 ? (float) $row->mag : null,
+                    'subr' => is_numeric($row->subr) && (float) $row->subr > 0 ? (float) $row->subr : null,
+                    'diam1' => is_numeric($row->diam1) && (float) $row->diam1 > 0 ? (float) $row->diam1 : null,
+                    'diam2' => is_numeric($row->diam2) && (float) $row->diam2 > 0 ? (float) $row->diam2 : null,
+                    'pa' => is_numeric($row->pa) && (int) round((float) $row->pa) !== 999 ? (int) round((float) $row->pa) : null,
+                    'con' => trim((string) ($row->con ?? '')) !== '' ? Str::upper(trim((string) $row->con)) : null,
+                    'type_code' => trim((string) ($row->type ?? '')),
+                    'type_name' => trim((string) ($row->type_name ?? '')),
+                ];
+            }
+        }
+
+        return $metadata;
+    }
+
+    private function apdTargetMetadataKey(Observation $observation, string $catalog): string
+    {
+        return strtolower(trim((string) ($observation->target_table ?? ''))) . '|' . Str::lower($catalog);
+    }
+
+    private function apdObjectIdentity(Observation $observation, string $catalog): string
+    {
+        $catalog = trim($catalog);
+        if ($catalog !== '') {
+            return $catalog;
+        }
+
+        return trim((string) ($observation->target_key ?? ''));
+    }
+
+    private function astroPlannerObservationMoment(Observation $observation, ?string $timezone): CarbonImmutable
+    {
+        $timezone = trim((string) $timezone);
+        if ($timezone === '') {
+            $timezone = 'UTC';
+        }
+
+        $date = $observation->observed_on instanceof \DateTimeInterface
+            ? $observation->observed_on->format('Y-m-d')
+            : trim((string) $observation->observed_on);
+
+        if ($date === '' && preg_match('/^\d{8}$/', (string) ($observation->legacy_date_int ?? '')) === 1) {
+            $date = CarbonImmutable::createFromFormat('Ymd', (string) $observation->legacy_date_int, 'UTC')->format('Y-m-d');
+        }
+
+        $time = trim((string) ($observation->observed_time ?? ''));
+        if ($time === '' && preg_match('/^\d{4,6}$/', (string) ($observation->legacy_time_int ?? '')) === 1) {
+            $legacyTime = str_pad((string) $observation->legacy_time_int, 6, '0', STR_PAD_LEFT);
+            $time = substr($legacyTime, 0, 2) . ':' . substr($legacyTime, 2, 2) . ':' . substr($legacyTime, 4, 2);
+        }
+
+        if (preg_match('/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/', $time, $matches) === 1) {
+            $time = sprintf('%02d:%02d:%02d', (int) $matches[1], (int) $matches[2], (int) ($matches[3] ?? 0));
+        } else {
+            $time = '00:00:00';
+        }
+
+        $candidate = trim($date . ' ' . $time);
+        foreach ([$timezone, 'UTC'] as $tz) {
+            foreach (['Y-m-d H:i:s', 'Y-n-j H:i:s', 'Ymd H:i:s'] as $format) {
+                try {
+                    return CarbonImmutable::createFromFormat($format, $candidate, $tz);
+                } catch (\Throwable $_) {
+                }
+            }
+
+            try {
+                return CarbonImmutable::parse($candidate, $tz);
+            } catch (\Throwable $_) {
+            }
+
+            if ($date !== '') {
+                try {
+                    return CarbonImmutable::parse($date, $tz)->setTimeFromTimeString($time);
+                } catch (\Throwable $_) {
+                }
+            }
+        }
+
+        return CarbonImmutable::now('UTC');
+    }
+
+    private function astroPlannerEpochSeconds(\DateTimeInterface $moment): int
+    {
+        return $moment->getTimestamp() + 2082844800;
+    }
+
+    private function astroPlannerGmtOffsetHours(CarbonImmutable $moment): float
+    {
+        return round($moment->getOffset() / 3600, 2);
+    }
+
+    private function astroPlannerObsNotesRtf(string $notes): string
+    {
+        $notes = $this->formatSkylistComment($notes);
+        if ($notes === null) {
+            return '';
+        }
+
+        $escaped = preg_replace_callback('/[\\{}]/u', fn(array $matches): string => '\\' . $matches[0], $notes) ?? $notes;
+        $escaped = preg_replace_callback('/[^\x00-\x7F]/u', function (array $matches): string {
+            $codepoint = mb_ord($matches[0], 'UTF-8');
+
+            return '\\u' . $codepoint . '?';
+        }, $escaped) ?? $escaped;
+        $escaped = str_replace("\n", '\\par ', $escaped);
+
+        return '{\\rtf1\\ansi\\ansicpg1252{\\fonttbl{\\f0\\fnil Segoe UI;}}{\\colortbl\\red0\\green0\\blue0;}\\uc0 \\ql\\f0\\fs24 ' . $escaped . '}';
+    }
+
+    private function astroPlannerObservationObjFields(string $identity, string $catalog, Observation $observation, array $metadata, float $gmtOffset, CarbonImmutable $moment, ?string $eyepieceName, $instrument, $eyepiece): string
+    {
+        $fields = [
+            '1' => $identity,
+            '3' => $catalog,
+            '4' => $this->astroPlannerType($observation),
+            '5' => $this->astroPlannerRaText($metadata['ra'] ?? null),
+            '6' => $this->astroPlannerDecText($metadata['decl'] ?? null),
+            '16' => $this->astroPlannerNumericText($metadata['mag'] ?? null),
+            '21' => $this->formatSizeForApd((object) [
+                'diam1' => $metadata['diam1'] ?? null,
+                'diam2' => $metadata['diam2'] ?? null,
+                'pa' => $metadata['pa'] ?? null,
+            ]),
+            '22' => $this->astroPlannerConstellation($metadata['con'] ?? null),
+            '35' => $moment->format('n/j/Y'),
+            '39' => $this->formatSkylistComment((string) ($observation->description ?? '')) ?? '',
+            '53' => trim((string) $eyepieceName),
+            '54' => $this->astroPlannerMagnificationText($instrument, $eyepiece),
+            '59' => $moment->format('n/j/Y'),
+        ];
+
+        if ($gmtOffset !== 0.0) {
+            $fields['24'] = number_format($gmtOffset, 6, '.', '');
+        }
+
+        return json_encode(array_filter($fields, fn($value): bool => $value !== '' && $value !== null), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '{}';
+    }
+
+    private function astroPlannerRaText($ra): string
+    {
+        if (!is_numeric($ra)) {
+            return '';
+        }
+
+        $value = (float) $ra;
+        if ($value > 24.0) {
+            $value /= 15.0;
+        }
+
+        $hours = floor($value);
+        $minutesFloat = ($value - $hours) * 60.0;
+        $minutes = floor($minutesFloat);
+        $seconds = round(($minutesFloat - $minutes) * 60.0);
+
+        if ($seconds >= 60) {
+            $seconds = 0;
+            $minutes++;
+        }
+        if ($minutes >= 60) {
+            $minutes = 0;
+            $hours++;
+        }
+
+        return sprintf('%02dh %02dm %02ds', ((int) $hours) % 24, (int) $minutes, (int) $seconds);
+    }
+
+    private function astroPlannerDecText($decl): string
+    {
+        if (!is_numeric($decl)) {
+            return '';
+        }
+
+        $value = (float) $decl;
+        $sign = $value < 0 ? '-' : '+';
+        $absolute = abs($value);
+        $degrees = floor($absolute);
+        $minutesFloat = ($absolute - $degrees) * 60.0;
+        $minutes = round($minutesFloat, 1);
+
+        if ($minutes >= 60) {
+            $minutes = 0.0;
+            $degrees++;
+        }
+
+        return sprintf('%s%02d°%04.1f\'', $sign, (int) $degrees, $minutes);
+    }
+
+    private function astroPlannerNumericText($value): string
+    {
+        if (!is_numeric($value)) {
+            return '';
+        }
+
+        $float = (float) $value;
+
+        return floor($float) === $float
+            ? (string) (int) $float
+            : rtrim(rtrim(number_format($float, 1, '.', ''), '0'), '.');
+    }
+
+    private function astroPlannerConstellation($constellation): string
+    {
+        $constellation = trim((string) $constellation);
+        if ($constellation === '') {
+            return '';
+        }
+
+        return Str::title(Str::lower($constellation));
+    }
+
+    private function astroPlannerMagnificationText($instrument, $eyepiece): string
+    {
+        if ($instrument && $eyepiece && is_numeric($instrument->focal_length_mm ?? null) && is_numeric($eyepiece->focal_length_mm ?? null) && (float) $eyepiece->focal_length_mm > 0.0) {
+            return (string) (int) round((float) $instrument->focal_length_mm / (float) $eyepiece->focal_length_mm);
+        }
+
+        return ($instrument || $eyepiece) ? 'n/a' : '';
+    }
+
+    private function astroPlannerSeeingLabel($seeing): string
+    {
+        if (!is_numeric($seeing) || (int) $seeing <= 0) {
+            return '';
+        }
+
+        return (string) __('observations.seeing.' . (int) $seeing);
+    }
+
+    private function astroPlannerTransparencyLabel($transparency): string
+    {
+        if (!is_numeric($transparency) || (int) $transparency <= 0) {
+            return '';
+        }
+
+        return (string) __('observations.transparency.' . (int) $transparency);
+    }
+
+    private function formatApdObservationNotes(Observation $observation, ?string $locationName, ?string $equipment): string
+    {
+        $lines = [];
+
+        $observedOn = $observation->observed_on instanceof \DateTimeInterface
+            ? $observation->observed_on->format('Y-m-d')
+            : trim((string) $observation->observed_on);
+        $observedTime = trim((string) ($observation->observed_time ?? ''));
+        if ($observedOn !== '') {
+            $lines[] = $observedTime !== ''
+                ? 'Observed: ' . $observedOn . ' ' . substr($observedTime, 0, 5)
+                : 'Observed: ' . $observedOn;
+        }
+
+        $locationName = trim((string) $locationName);
+        if ($locationName !== '') {
+            $lines[] = 'Location: ' . $locationName;
+        }
+
+        $equipment = trim((string) $equipment);
+        if ($equipment !== '') {
+            $lines[] = 'Equipment: ' . $equipment;
+        }
+
+        $comment = $this->formatSkylistComment((string) ($observation->description ?? ''));
+        if ($comment !== null) {
+            if ($lines !== []) {
+                $lines[] = '';
+            }
+            $lines[] = $comment;
+        }
+
+        return implode("\n", $lines);
+    }
+
+    private function formatApdObservationGroupNotes(Collection $observations, Collection $locations, Collection $instruments, Collection $eyepieces, Collection $filters, Collection $lenses): string
+    {
+        $notes = $observations
+            ->map(function (Observation $observation) use ($eyepieces, $filters, $instruments, $lenses, $locations): string {
+                return $this->formatApdObservationNotes(
+                    $observation,
+                    $locations->get($observation->location_id)?->name,
+                    $this->formatSkylistEquipment(
+                        $instruments->get($observation->instrument_id)?->name,
+                        $eyepieces->get($observation->eyepiece_id)?->name,
+                        $filters->get($observation->filter_id)?->name,
+                        $lenses->get($observation->lens_id)?->name,
+                    ),
+                );
+            })
+            ->filter(fn(string $note): bool => trim($note) !== '')
+            ->values();
+
+        return $notes->implode("\n\n");
+    }
+
+    private function formatSizeForApd($row): string
+    {
+        $d1 = $row->diam1 ?? null;
+        $d2 = $row->diam2 ?? null;
+        $pa = $row->pa ?? null;
+        $hasD1 = is_numeric($d1) && floatval($d1) > 0;
+        $hasD2 = is_numeric($d2) && floatval($d2) > 0;
+        if (!$hasD1 && !$hasD2) {
+            return '';
+        }
+
+        $d1f = $hasD1 ? floatval($d1) : 0.0;
+        $d2f = $hasD2 ? floatval($d2) : 0.0;
+        $fmt = function ($value) {
+            return floor($value) == $value ? sprintf('%d', $value) : sprintf('%.1f', $value);
+        };
+
+        if ($hasD1 && $hasD2) {
+            if (max($d1f, $d2f) > 60.0) {
+                $d1m = $d1f / 60.0;
+                $d2m = $d2f / 60.0;
+                $d1mFmt = $fmt($d1m);
+                $d2mFmt = $fmt($d2m);
+                if (in_array($d1mFmt, ['0', '0.0'], true) || in_array($d2mFmt, ['0', '0.0'], true)) {
+                    $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
+                } else {
+                    $size = $d1mFmt . "'x" . $d2mFmt . "'";
+                }
+            } else {
+                $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
+            }
+        } else {
+            $single = $hasD1 ? $d1f : $d2f;
+            $size = $single > 60.0 ? $fmt($single / 60.0) . "'" : $fmt($single) . "''";
+        }
+
+        if (is_numeric($pa) && intval(round(floatval($pa))) !== 999) {
+            $size .= '/' . sprintf('%d', round(floatval($pa))) . '°';
+        }
+
+        return (string) $size;
+    }
+
+    private function formatOalBegin(Observation $observation, ?string $timezone = null): string
+    {
+        return $this->astroPlannerObservationMoment($observation, $timezone)->format('Y-m-d\TH:i:sP');
+    }
+
+    private function appendOalTextNode(\DOMDocument $document, \DOMElement $parent, string $name, mixed $value, array $attributes = []): void
+    {
+        if ($value === null) {
+            return;
+        }
+
+        $text = trim((string) $value);
+        if ($text === '') {
+            return;
+        }
+
+        $node = $document->createElement($name);
+        foreach ($attributes as $attribute => $attributeValue) {
+            $node->setAttribute($attribute, (string) $attributeValue);
+        }
+
+        $node->appendChild($document->createTextNode($text));
+        $parent->appendChild($node);
+    }
+
+    private function oalObserverId(Observation $observation): string
+    {
+        if ($observation->observer_user_id) {
+            return 'observer-' . $observation->observer_user_id;
+        }
+
+        return 'observer-' . (Str::slug((string) ($observation->observer_username ?? 'observer')) ?: 'observer');
+    }
+
+    private function oalTargetId(Observation $observation, string $catalog): string
+    {
+        return 'target-' . substr(sha1($this->skylistIdentity($observation, $catalog)), 0, 12);
+    }
+
+    /**
+     * @param  array{catalog: string, target_table: string, target_type: string, target_key: string, metadata?: array<string, mixed>}  $targetData
+     */
+    private function oalTargetXsiType(array $targetData): ?string
+    {
+        $targetTable = $targetData['target_table'];
+        $catalog = strtolower(trim($targetData['catalog']));
+        $typeCode = Str::upper(trim((string) ($targetData['metadata']['type_code'] ?? '')));
+
+        return match (true) {
+            $targetTable === 'cometobjects' => 'oal:CometTargetType',
+            $targetTable === 'asteroids' => 'oal:MinorPlanetTargetType',
+            $targetTable === 'moons' => 'oal:MoonTargetType',
+            $targetTable === 'planets' && $catalog === 'sun' => 'oal:SunTargetType',
+            $targetTable === 'planets' => 'oal:PlanetTargetType',
+            $targetTable === 'objects' && in_array($typeCode, ['AA1STAR', 'DS'], true) => 'oal:deepSkyDS',
+            $targetTable === 'objects' && $typeCode === 'ASTER' => 'oal:deepSkyAS',
+            $targetTable === 'objects' && $typeCode === 'GALCL' => 'oal:deepSkyCG',
+            $targetTable === 'objects' && $typeCode === 'DRKNB' => 'oal:deepSkyDN',
+            $targetTable === 'objects' && $typeCode === 'GLOCL' => 'oal:deepSkyGC',
+            $targetTable === 'objects' && $typeCode === 'PLNNB' => 'oal:deepSkyPN',
+            $targetTable === 'objects' && in_array($typeCode, ['BRTNB', 'CLANB', 'EMINB', 'ENRNN', 'ENSTR', 'GXADN', 'HII', 'SNREM'], true) => 'oal:deepSkyGN',
+            $targetTable === 'objects' && $typeCode === 'GALXY' => 'oal:deepSkyGX',
+            $targetTable === 'objects' && $typeCode === 'OPNCL' => 'oal:deepSkyOC',
+            $targetTable === 'objects' && $typeCode === 'QUASR' => 'oal:deepSkyQS',
+            $targetTable === 'objects' && in_array($typeCode, ['STARC'], true) => 'oal:deepSkySC',
+            $targetTable === 'objects' => 'oal:deepSkyNA',
+            default => null,
+        };
+    }
+
+    /**
+     * @param  array{catalog: string, target_table: string, target_type: string, target_key: string}  $targetData
+     */
+    private function oalTargetMetadata(array $targetData): ?string
+    {
+        if ($targetData['target_table'] !== 'lunar_features') {
+            return null;
+        }
+
+        return sprintf(
+            '%starget_table=%s;target_key=%s;target_type=%s',
+            self::OAL_TARGET_METADATA_PREFIX,
+            $targetData['target_table'],
+            $targetData['target_key'],
+            $targetData['target_type'] !== '' ? $targetData['target_type'] : 'lunar'
+        );
+    }
+
+    private function splitObserverName(string $name): array
+    {
+        $name = trim($name);
+        if ($name === '') {
+            return ['Unknown', 'Observer'];
+        }
+
+        $parts = preg_split('/\s+/u', $name) ?: [$name];
+        $first = array_shift($parts) ?: $name;
+        $surname = trim(implode(' ', $parts));
+
+        return [$first, $surname !== '' ? $surname : $first];
+    }
+
+    /**
+     * @param  array<string, mixed>  $metadata
+     */
+    private function appendOalTargetPosition(
+        \DOMDocument $document,
+        \DOMElement $targetNode,
+        array $metadata
+    ): void {
+        if (!is_numeric($metadata['ra'] ?? null) || !is_numeric($metadata['decl'] ?? null)) {
+            return;
+        }
+
+        $positionNode = $document->createElement('position');
+        $this->appendOalTextNode($document, $positionNode, 'ra', $metadata['ra'], ['unit' => 'deg']);
+        $this->appendOalTextNode($document, $positionNode, 'dec', $metadata['decl'], ['unit' => 'deg']);
+        $targetNode->appendChild($positionNode);
+    }
+
+    /**
+     * @param  array<string, mixed>  $metadata
+     */
+    private function appendOalDeepSkyTargetDetails(
+        \DOMDocument $document,
+        \DOMElement $targetNode,
+        ?string $targetType,
+        array $metadata
+    ): void {
+        if ($targetType === null || !str_starts_with($targetType, 'oal:deepSky')) {
+            return;
+        }
+
+        if (is_numeric($metadata['diam1'] ?? null) && (float) $metadata['diam1'] > 0) {
+            $this->appendOalTextNode($document, $targetNode, 'smallDiameter', $metadata['diam1'], ['unit' => 'arcsec']);
+        }
+
+        if (is_numeric($metadata['diam2'] ?? null) && (float) $metadata['diam2'] > 0) {
+            $this->appendOalTextNode($document, $targetNode, 'largeDiameter', $metadata['diam2'], ['unit' => 'arcsec']);
+        }
+
+        if (is_numeric($metadata['mag'] ?? null)) {
+            $this->appendOalTextNode($document, $targetNode, 'visMag', $metadata['mag']);
+        }
+
+        if ($targetType === 'oal:deepSkyGX' && is_numeric($metadata['pa'] ?? null)) {
+            $this->appendOalTextNode($document, $targetNode, 'pa', $metadata['pa']);
+        }
+    }
+
+    private function normalizeOalCatalogName(string $catalog): string
+    {
+        return Str::lower(preg_replace('/\s+/u', '', trim($catalog)) ?? trim($catalog));
+    }
+
+    private function oalTimezoneOffsetMinutes(?string $timezone): int
+    {
+        $timezone = trim((string) $timezone);
+        if ($timezone === '') {
+            return 0;
+        }
+
+        try {
+            $dateTimeZone = new \DateTimeZone($timezone);
+            $reference = new \DateTimeImmutable('first day of january ' . now()->year, $dateTimeZone);
+
+            return (int) round($dateTimeZone->getOffset($reference) / 60);
+        } catch (\Throwable $_) {
+            return 0;
+        }
     }
 }
