@@ -227,23 +227,25 @@
 
                     @elseif($filterType === 'observers')
                         <label class="block text-xs text-gray-400 mb-1">{{ __('Observers') }}</label>
-                        <div class="space-y-2 max-w-2xl">
-                            @foreach($observers as $index => $observer)
-                                <div wire:key="observer-row-{{ $index }}" class="flex items-center gap-2">
-                                    <input type="text" wire:model.blur="observers.{{ $index }}" placeholder="{{ __('Observer username or display name') }}"
-                                        class="flex-1 bg-gray-900 text-gray-100 text-sm border border-gray-600 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                                    @if(count($observers) > 1)
-                                        <button type="button" wire:click="removeObserverField({{ $index }})"
-                                            class="inline-flex items-center justify-center px-2 py-1.5 text-sm rounded bg-gray-800 text-gray-300 border border-gray-600 hover:bg-gray-700">
-                                            {{ __('Remove') }}
-                                        </button>
-                                    @endif
-                                </div>
-                            @endforeach
-                            <button type="button" wire:click="addObserverField"
-                                class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-md bg-gray-800 text-gray-200 hover:bg-gray-700 border border-gray-600 transition">
-                                {{ __('Add observer') }}
-                            </button>
+                        <div class="max-w-2xl">
+                            @php
+                                $usersAsyncRoute = ! empty($observers) ? route('users.select.api', ['selected' => $observers]) : route('users.select.api');
+                                $selectedUsers = ! empty($observers) ? \App\Models\User::whereIn('username', $observers)->get() : collect();
+                            @endphp
+                            <x-select
+                                :label="null"
+                                async-data="{{ $usersAsyncRoute }}"
+                                multiselect="true"
+                                option-label="name"
+                                option-value="id"
+                                wire:model="observers"
+                                multiple
+                                placeholder="{{ __('Search observers...') }}"
+                            >
+                                @foreach($selectedUsers as $selectedUser)
+                                    <x-select.option label="{{ $selectedUser->name }}" value="{{ $selectedUser->username }}" />
+                                @endforeach
+                            </x-select>
                         </div>
 
                     @elseif($filterType === 'aperture')
@@ -283,7 +285,7 @@
                                 class="w-full max-w-xs bg-gray-900 text-gray-100 text-sm border border-gray-600 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                                 <option value="">{{ __('Best') }}</option>
                                 @for($i = 1; $i <= 7; $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
+                                    <option value="{{ $i }}">{{ __('observations.visibility.' . $i) }}</option>
                                 @endfor
                             </select>
                             <span class="text-gray-500">-</span>
@@ -291,7 +293,7 @@
                                 class="w-full max-w-xs bg-gray-900 text-gray-100 text-sm border border-gray-600 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                                 <option value="">{{ __('Worst') }}</option>
                                 @for($i = 1; $i <= 7; $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
+                                    <option value="{{ $i }}">{{ __('observations.visibility.' . $i) }}</option>
                                 @endfor
                             </select>
                         </div>

@@ -5,14 +5,12 @@
 ## Next steps
 
 - [ ] Update to laravel 13.
-- [ ] Search for observations
-  - [ ] Detailed search page
-- [ ] Search for objects -> Detailed search, no extra Export button...
 - [ ] All missing pages
   - [ ] Remove APP_OLD_URL and app.old_url.
 - [ ] Create star charts and atlases.
   - [ ] With field of view of the instrument, and eyepiece used.
 - [ ] Create observing guides
+- [ ] In Team Settings page: Automatically update table if new user is added (only works when next user is added)
 - [ ] Translations
 - [ ] On real server:
   - [ ] php artisan db:seed --class=BackfillSessionObservationIdsSeeder
@@ -69,6 +67,3 @@
 - [x] Reworked observing lists. Users can comment on them, like them, subscribe to them, ...
 - [x] Objects can be imported in an observing list from a file. The file can be a simple text file, argo navis file, AstroPlanner file, CSV file, or SkySafari file.
 
-## Small issues
-
-- [ ] In Team Settings page: Automatically update table if new user is added (only works when next user is added)

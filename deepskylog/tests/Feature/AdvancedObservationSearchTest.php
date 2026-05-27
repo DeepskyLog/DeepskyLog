@@ -53,6 +53,80 @@ it('renders the advanced observation search page', function () {
     $response->assertSee('Advanced observation search');
 });
 
+it('renders observers as a searchable dropdown', function () {
+    $response = $this->get(route('search.observations.advanced', [
+        'activeFilters' => ['observers'],
+    ]));
+
+    $response->assertOk();
+    $response->assertSee('Search observers...');
+});
+
+it('shows only valid observation languages with full names', function () {
+    Observation::query()->insert([
+        [
+            'observer_username' => 'language-user-1',
+            'observer_user_id' => null,
+            'observed_on' => '2026-05-03',
+            'target_type' => 'deepsky',
+            'target_table' => 'objects',
+            'target_key' => 'NGC 2392',
+            'target_name' => 'NGC 2392',
+            'language' => 'fr',
+            'legacy_source' => null,
+        ],
+        [
+            'observer_username' => 'language-user-2',
+            'observer_user_id' => null,
+            'observed_on' => '2026-05-04',
+            'target_type' => 'deepsky',
+            'target_table' => 'objects',
+            'target_key' => 'M 45',
+            'target_name' => 'M 45',
+            'language' => '20.70',
+            'legacy_source' => null,
+        ],
+        [
+            'observer_username' => 'language-user-3',
+            'observer_user_id' => null,
+            'observed_on' => '2026-05-05',
+            'target_type' => 'deepsky',
+            'target_table' => 'objects',
+            'target_key' => 'M 31',
+            'target_name' => 'M 31',
+            'language' => '2l',
+            'legacy_source' => null,
+        ],
+    ]);
+
+    $component = new AdvancedObservationSearch();
+    $component->mount(['activeFilters' => ['languages']]);
+
+    expect($component->allLanguages)
+        ->toHaveKey('fr', 'French')
+        ->not->toHaveKey('20.70')
+        ->not->toHaveKey('2l');
+});
+
+it('clamps observation latitude filters to the valid range', function () {
+    Livewire::test(AdvancedObservationSearch::class)
+        ->set('activeFilters', ['latitude'])
+        ->set('latitudeMin', '120')
+        ->assertSet('latitudeMin', '90')
+        ->set('latitudeMax', '-123.4')
+        ->assertSet('latitudeMax', '-90');
+});
+
+it('renders descriptive deep-sky visibility labels', function () {
+    $response = $this->get(route('search.observations.advanced', [
+        'activeFilters' => ['visibility'],
+    ]));
+
+    $response->assertOk();
+    $response->assertSee('Very simple, prominent object');
+    $response->assertSee('Object definitely not seen');
+});
+
 it('filters observation results with advanced observation criteria', function () {
     $user = User::factory()->create([
         'name' => 'Alice Observer',

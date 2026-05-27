@@ -71,7 +71,7 @@ class AdvancedObservationSearch extends Component
 
     public string $observedFrom = '';
     public string $observedTo = '';
-    public array $observers = [''];
+    public array $observers = [];
     public string $apertureMin = '';
     public string $apertureMax = '';
     public string $seeingMax = '';
@@ -192,15 +192,24 @@ class AdvancedObservationSearch extends Component
             $this->isContrastReserveConfigured = false;
         }
 
-        $languageList = DB::table('observations')
+        $availableLanguageOptions = collect(config('app.available_locales', []))
+            ->mapWithKeys(fn($code, $label) => [mb_strtolower(trim((string) $code)) => (string) $label]);
+
+        $languageCodes = DB::table('observations')
             ->select('language')
             ->whereNotNull('language')
             ->where('language', '<>', '')
             ->distinct()
-            ->orderBy('language')
             ->pluck('language')
+            ->map(fn($language) => mb_strtolower(trim((string) $language)))
+            ->filter(fn(string $language) => $language !== '' && $availableLanguageOptions->has($language))
+            ->unique()
+            ->sortBy(fn(string $language) => $availableLanguageOptions->get($language))
+            ->values();
+
+        $this->allLanguages = $languageCodes
+            ->mapWithKeys(fn(string $language) => [$language => $availableLanguageOptions->get($language)])
             ->toArray();
-        $this->allLanguages = !empty($languageList) ? array_combine($languageList, $languageList) : [];
 
         if (!empty($filters)) {
             $this->hydrateFromFilters($filters);
@@ -260,14 +269,14 @@ class AdvancedObservationSearch extends Component
         $this->transparencyMax = (string) ($filters['transparency_max'] ?? '');
         $this->visibilityMin = (string) ($filters['visibility_min'] ?? '');
         $this->visibilityMax = (string) ($filters['visibility_max'] ?? '');
-        $this->latitudeMin = (string) ($filters['latitude_min'] ?? '');
-        $this->latitudeMax = (string) ($filters['latitude_max'] ?? '');
+        $this->latitudeMin = $this->normalizeLatitudeValue($filters['latitude_min'] ?? '');
+        $this->latitudeMax = $this->normalizeLatitudeValue($filters['latitude_max'] ?? '');
         $this->drawingState = (string) ($filters['drawing_state'] ?? 'all');
         if (!array_key_exists($this->drawingState, $this->drawingStateOptions)) {
             $this->drawingState = 'all';
         }
         $this->observationDescription = (string) ($filters['observation_description'] ?? '');
-        $this->languages = array_map('strval', (array) ($filters['languages'] ?? []));
+        $this->languages = $this->normalizeLanguageCodes((array) ($filters['languages'] ?? []));
 
         $active = array_values(array_filter(array_map('strval', (array) ($filters['activeFilters'] ?? []))));
         if (empty($active)) {
@@ -334,24 +343,47 @@ class AdvancedObservationSearch extends Component
 
     private function normalizeObserverTerms(array $terms): array
     {
-        $normalized = array_map(fn($value) => (string) $value, $terms);
-
-        return empty($normalized) ? [''] : array_values($normalized);
+        return array_values(array_filter(
+            array_map(fn($value) => trim((string) $value), $terms),
+            fn($value) => $value !== ''
+        ));
     }
 
-    public function addObserverField(): void
+    private function normalizeLanguageCodes(array $languages): array
     {
-        $this->observers[] = '';
+        $availableCodes = collect(config('app.available_locales', []))
+            ->map(fn($code) => mb_strtolower(trim((string) $code)))
+            ->filter()
+            ->unique();
+
+        return collect($languages)
+            ->map(fn($language) => mb_strtolower(trim((string) $language)))
+            ->filter(fn($language) => $language !== '' && $availableCodes->contains($language))
+            ->unique()
+            ->values()
+            ->all();
     }
 
-    public function removeObserverField(int $index): void
+    private function normalizeLatitudeValue(mixed $value): string
     {
-        if (!array_key_exists($index, $this->observers)) {
-            return;
+        $text = trim((string) $value);
+        if ($text === '' || !is_numeric($text)) {
+            return $text === '' ? '' : $text;
         }
 
-        unset($this->observers[$index]);
-        $this->observers = $this->normalizeObserverTerms(array_values($this->observers));
+        $latitude = max(-90.0, min(90.0, (float) $text));
+
+        return rtrim(rtrim(sprintf('%.10F', $latitude), '0'), '.');
+    }
+
+    public function updatedLatitudeMin(mixed $value): void
+    {
+        $this->latitudeMin = $this->normalizeLatitudeValue($value);
+    }
+
+    public function updatedLatitudeMax(mixed $value): void
+    {
+        $this->latitudeMax = $this->normalizeLatitudeValue($value);
     }
 
     public function addFilter(string $type): void
@@ -364,9 +396,6 @@ class AdvancedObservationSearch extends Component
         }
 
         $this->activeFilters[] = $type;
-        if ($type === 'observers' && empty($this->observers)) {
-            $this->observers = [''];
-        }
         $this->refreshAvailableFilterTypes();
     }
 
@@ -399,7 +428,7 @@ class AdvancedObservationSearch extends Component
             'observingLists' => [$this->observingLists, $this->observingListsMode] = [[], 'in'],
             'atlasPage' => [$this->atlasCode, $this->atlasPageSpec, $this->atlasPageMin, $this->atlasPageMax] = ['', '', '', ''],
             'observedBetween' => [$this->observedFrom, $this->observedTo] = ['', ''],
-            'observers' => $this->observers = [''],
+            'observers' => $this->observers = [],
             'aperture' => [$this->apertureMin, $this->apertureMax] = ['', ''],
             'seeing' => $this->seeingMax = '',
             'transparency' => $this->transparencyMax = '',
@@ -622,9 +651,12 @@ class AdvancedObservationSearch extends Component
                 $params['visibility_max'] = $this->visibilityMax;
         }
         if (in_array('latitude', $this->activeFilters, true)) {
-            if ($this->latitudeMin !== '')
+            $this->latitudeMin = $this->normalizeLatitudeValue($this->latitudeMin);
+            $this->latitudeMax = $this->normalizeLatitudeValue($this->latitudeMax);
+
+            if ($this->latitudeMin !== '' && is_numeric($this->latitudeMin))
                 $params['latitude_min'] = $this->latitudeMin;
-            if ($this->latitudeMax !== '')
+            if ($this->latitudeMax !== '' && is_numeric($this->latitudeMax))
                 $params['latitude_max'] = $this->latitudeMax;
         }
         if (in_array('drawing', $this->activeFilters, true) && $this->drawingState !== 'all')

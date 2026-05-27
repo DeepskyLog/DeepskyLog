@@ -357,12 +357,19 @@ class ObservationsController extends Controller
      */
     public function searchObjects(Request $request)
     {
-        $q = (string) $request->query('q', '');
-        $objects = $this->resolveExtractedObjectsFromSearch($q);
+        $q = trim((string) $request->query('q', ''));
+        $filters = $this->extractObservationSearchFilters($request);
+        $objects = $this->resolveExtractedObjectsFromSearch($q, $filters);
 
         if ($objects->isEmpty()) {
+            $redirectParams = $q !== '' ? ['q' => $q] : [];
+            $redirectParams = array_merge($redirectParams, $filters);
+
             return redirect()
-                ->route('observations.search', array_filter(['q' => $q !== '' ? $q : null]))
+                ->route(
+                    $filters !== [] ? 'search.observations.advanced.results' : 'observations.search',
+                    $redirectParams
+                )
                 ->with('error', __('No objects were found in the selected observations.'));
         }
 
@@ -376,7 +383,7 @@ class ObservationsController extends Controller
             'q' => $q,
             'title' => $q !== ''
                 ? __('Objects from observations matching ":q"', ['q' => $q])
-                : __('Objects from observations'),
+                : ($filters !== [] ? __('Objects from selected observations') : __('Objects from observations')),
             'objectRefs' => $objects
                 ->map(fn(array $object): array => [
                     'source_table' => $object['source_table'],
@@ -454,7 +461,7 @@ class ObservationsController extends Controller
         ]);
     }
 
-    private function resolveMatchingObservationsForSearch(string $query): Collection
+    private function resolveMatchingObservationsForSearch(string $query, array $filters = []): Collection
     {
         $component = new \App\Livewire\ObservationSearchTable();
 
@@ -465,7 +472,15 @@ class ObservationsController extends Controller
             }
         }
 
-        $component->objectName = $query;
+        if (method_exists($component, 'mount')) {
+            try {
+                $component->mount($query, $filters);
+            } catch (\Throwable $_) {
+                $component->objectName = $query;
+            }
+        } else {
+            $component->objectName = $query;
+        }
 
         $observationIds = $component->datasource()->get()
             ->pluck('id')
@@ -488,9 +503,9 @@ class ObservationsController extends Controller
             ->values();
     }
 
-    private function resolveExtractedObjectsFromSearch(string $query): Collection
+    private function resolveExtractedObjectsFromSearch(string $query, array $filters = []): Collection
     {
-        return $this->resolveMatchingObservationsForSearch($query)
+        return $this->resolveMatchingObservationsForSearch($query, $filters)
             ->map(function (Observation $observation): ?array {
                 $name = trim((string) ($observation->target_name ?? $observation->target_key ?? ''));
                 if ($name === '') {
@@ -509,6 +524,21 @@ class ObservationsController extends Controller
             ->filter()
             ->unique('identity')
             ->values();
+    }
+
+    private function extractObservationSearchFilters(Request $request): array
+    {
+        $filters = $request->except(['_token', 'page', 'q']);
+
+        return array_filter($filters, function ($value): bool {
+            if (is_array($value)) {
+                return collect($value)
+                    ->flatten()
+                    ->contains(fn($item): bool => trim((string) $item) !== '');
+            }
+
+            return trim((string) $value) !== '';
+        });
     }
 
     /**

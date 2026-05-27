@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Livewire\AdvancedObjectSearchTable;
+use App\Livewire\SearchResultsTable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -15,26 +17,8 @@ class SearchExportController extends Controller
     public function namesPdf(Request $request)
     {
         try {
-            $q = $request->query('q', '');
-
-            $comp = new \App\Livewire\SearchResultsTable();
-            if (method_exists($comp, 'boot')) {
-                try {
-                    $comp->boot();
-                } catch (\Throwable $_) {
-                }
-            }
-            if (method_exists($comp, 'mount')) {
-                try {
-                    $comp->mount();
-                } catch (\Throwable $_) {
-                }
-            }
-
-            $comp->q = $q;
-
-            $query = $comp->datasource();
-            $rows = $query ? $query->get() : collect();
+            [$comp, $rows] = $this->resolveRows($request);
+            $q = trim((string) $request->query('q', ''));
 
             $names = $rows->pluck('display_name')->filter()->values();
 
@@ -45,7 +29,8 @@ class SearchExportController extends Controller
                 $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)->setPaper('a4', 'portrait');
                 $filename = 'search_names_' . date('Ymd_His') . '.pdf';
                 return response()->streamDownload(function () use ($pdf) {
-                    echo $pdf->output(); }, $filename, ['Content-Type' => 'application/pdf']);
+                    echo $pdf->output();
+                }, $filename, ['Content-Type' => 'application/pdf']);
             }
 
             if (class_exists('Dompdf\\Dompdf')) {
@@ -56,7 +41,8 @@ class SearchExportController extends Controller
                 $output = $dompdf->output();
                 $filename = 'search_names_' . date('Ymd_His') . '.pdf';
                 return response()->streamDownload(function () use ($output) {
-                    echo $output; }, $filename, ['Content-Type' => 'application/pdf']);
+                    echo $output;
+                }, $filename, ['Content-Type' => 'application/pdf']);
             }
 
             return redirect()->back()->with('error', __('PDF library not installed. Please run: composer require barryvdh/laravel-dompdf'));
@@ -72,25 +58,7 @@ class SearchExportController extends Controller
     public function tablePdf(Request $request)
     {
         try {
-            $q = $request->query('q', '');
-
-            $comp = new \App\Livewire\SearchResultsTable();
-            if (method_exists($comp, 'boot')) {
-                try {
-                    $comp->boot();
-                } catch (\Throwable $_) {
-                }
-            }
-            if (method_exists($comp, 'mount')) {
-                try {
-                    $comp->mount();
-                } catch (\Throwable $_) {
-                }
-            }
-            $comp->q = $q;
-
-            $query = $comp->datasource();
-            $rows = $query ? $query->get() : collect();
+            [$comp, $rows] = $this->resolveRows($request);
 
             $formatDiameter = function ($d1, $d2, $pa = null) {
                 $hasD1 = is_numeric($d1) && floatval($d1) > 0;
@@ -100,7 +68,8 @@ class SearchExportController extends Controller
                 $d1f = $hasD1 ? floatval($d1) : 0.0;
                 $d2f = $hasD2 ? floatval($d2) : 0.0;
                 $fmt = function ($v) {
-                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v); };
+                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v);
+                };
                 if ($hasD1 && $hasD2) {
                     if (max($d1f, $d2f) > 60.0) {
                         $d1m = $d1f / 60.0;
@@ -158,7 +127,8 @@ class SearchExportController extends Controller
                 $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)->setPaper('a4', 'landscape');
                 $filename = 'search_objects_' . date('Ymd_His') . '.pdf';
                 return response()->streamDownload(function () use ($pdf) {
-                    echo $pdf->output(); }, $filename, ['Content-Type' => 'application/pdf']);
+                    echo $pdf->output();
+                }, $filename, ['Content-Type' => 'application/pdf']);
             }
 
             if (class_exists('Dompdf\\Dompdf')) {
@@ -169,7 +139,8 @@ class SearchExportController extends Controller
                 $output = $dompdf->output();
                 $filename = 'search_objects_' . date('Ymd_His') . '.pdf';
                 return response()->streamDownload(function () use ($output) {
-                    echo $output; }, $filename, ['Content-Type' => 'application/pdf']);
+                    echo $output;
+                }, $filename, ['Content-Type' => 'application/pdf']);
             }
 
             return redirect()->back()->with('error', __('PDF library not installed. Please run: composer require barryvdh/laravel-dompdf'));
@@ -185,25 +156,7 @@ class SearchExportController extends Controller
     public function argoNavis(Request $request)
     {
         try {
-            $q = $request->query('q', '');
-
-            $comp = new \App\Livewire\SearchResultsTable();
-            if (method_exists($comp, 'boot')) {
-                try {
-                    $comp->boot();
-                } catch (\Throwable $_) {
-                }
-            }
-            if (method_exists($comp, 'mount')) {
-                try {
-                    $comp->mount();
-                } catch (\Throwable $_) {
-                }
-            }
-            $comp->q = $q;
-
-            $query = $comp->datasource();
-            $rows = $query ? $query->get() : collect();
+            [, $rows] = $this->resolveRows($request);
 
             $formatDiameter = function ($d1, $d2, $pa = null) {
                 $hasD1 = is_numeric($d1) && floatval($d1) > 0;
@@ -213,7 +166,8 @@ class SearchExportController extends Controller
                 $d1f = $hasD1 ? floatval($d1) : 0.0;
                 $d2f = $hasD2 ? floatval($d2) : 0.0;
                 $fmt = function ($v) {
-                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v); };
+                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v);
+                };
                 if ($hasD1 && $hasD2) {
                     if (max($d1f, $d2f) > 60.0) {
                         $d1m = $d1f / 60.0;
@@ -327,7 +281,8 @@ class SearchExportController extends Controller
             $content = implode("\n", $lines) . "\n";
             $filename = 'search_argo_' . date('Ymd_His') . '.argo';
             return response()->streamDownload(function () use ($content) {
-                echo $content; }, $filename, ['Content-Type' => 'text/plain']);
+                echo $content;
+            }, $filename, ['Content-Type' => 'text/plain']);
         } catch (\Throwable $ex) {
             Log::error('SearchExportController::argoNavis failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate Argo Navis export'));
@@ -340,25 +295,7 @@ class SearchExportController extends Controller
     public function skylist(Request $request)
     {
         try {
-            $q = $request->query('q', '');
-
-            $comp = new \App\Livewire\SearchResultsTable();
-            if (method_exists($comp, 'boot')) {
-                try {
-                    $comp->boot();
-                } catch (\Throwable $_) {
-                }
-            }
-            if (method_exists($comp, 'mount')) {
-                try {
-                    $comp->mount();
-                } catch (\Throwable $_) {
-                }
-            }
-            $comp->q = $q;
-
-            $query = $comp->datasource();
-            $rows = $query ? $query->get() : collect();
+            [, $rows] = $this->resolveRows($request);
 
             $formatDiameter = function ($d1, $d2, $pa = null) {
                 $hasD1 = is_numeric($d1) && floatval($d1) > 0;
@@ -368,7 +305,8 @@ class SearchExportController extends Controller
                 $d1f = $hasD1 ? floatval($d1) : 0.0;
                 $d2f = $hasD2 ? floatval($d2) : 0.0;
                 $fmt = function ($v) {
-                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v); };
+                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v);
+                };
                 if ($hasD1 && $hasD2) {
                     if (max($d1f, $d2f) > 60.0) {
                         $d1m = $d1f / 60.0;
@@ -443,7 +381,8 @@ class SearchExportController extends Controller
             $content = "SkySafariObservingListVersion=3.0\n" . implode("\n\n", $blocks) . "\n";
             $filename = 'search_objects_' . date('Ymd_His') . '.skylist';
             return response()->streamDownload(function () use ($content) {
-                echo $content; }, $filename, ['Content-Type' => 'text/plain']);
+                echo $content;
+            }, $filename, ['Content-Type' => 'text/plain']);
         } catch (\Throwable $ex) {
             Log::error('SearchExportController::skylist failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate SkySafari export'));
@@ -456,29 +395,13 @@ class SearchExportController extends Controller
     public function stxt(Request $request)
     {
         try {
-            $q = $request->query('q', '');
-            $comp = new \App\Livewire\SearchResultsTable();
-            if (method_exists($comp, 'boot')) {
-                try {
-                    $comp->boot();
-                } catch (\Throwable $_) {
-                }
-            }
-            if (method_exists($comp, 'mount')) {
-                try {
-                    $comp->mount();
-                } catch (\Throwable $_) {
-                }
-            }
-            $comp->q = $q;
-
-            $query = $comp->datasource();
-            $rows = $query ? $query->get() : collect();
+            [, $rows] = $this->resolveRows($request);
             $names = $rows->pluck('display_name')->filter()->values();
             $content = implode("\n", $names->all()) . "\n";
             $filename = 'search_objects_' . date('Ymd_His') . '.txt';
             return response()->streamDownload(function () use ($content) {
-                echo $content; }, $filename, ['Content-Type' => 'text/plain']);
+                echo $content;
+            }, $filename, ['Content-Type' => 'text/plain']);
         } catch (\Throwable $ex) {
             Log::error('SearchExportController::stxt failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate SkyTools TXT export'));
@@ -491,24 +414,7 @@ class SearchExportController extends Controller
     public function apd(Request $request)
     {
         try {
-            $q = $request->query('q', '');
-            $comp = new \App\Livewire\SearchResultsTable();
-            if (method_exists($comp, 'boot')) {
-                try {
-                    $comp->boot();
-                } catch (\Throwable $_) {
-                }
-            }
-            if (method_exists($comp, 'mount')) {
-                try {
-                    $comp->mount();
-                } catch (\Throwable $_) {
-                }
-            }
-            $comp->q = $q;
-
-            $query = $comp->datasource();
-            $rows = $query ? $query->get() : collect();
+            [, $rows] = $this->resolveRows($request);
 
             // Create temporary sqlite file
             $tmp = tempnam(sys_get_temp_dir(), 'dsl_apd_');
@@ -550,7 +456,8 @@ class SearchExportController extends Controller
             $db = null;
             $filename = 'search_objects_' . date('Ymd_His') . '.apd';
             return response()->streamDownload(function () use ($tmp) {
-                readfile($tmp); }, $filename, ['Content-Type' => 'application/x-sqlite3']);
+                readfile($tmp);
+            }, $filename, ['Content-Type' => 'application/x-sqlite3']);
         } catch (\Throwable $ex) {
             Log::error('SearchExportController::apd failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate AstroPlanner APD export'));
@@ -630,6 +537,96 @@ class SearchExportController extends Controller
         }
     }
 
+    private function resolveRows(Request $request): array
+    {
+        $component = $this->makeSearchComponent($request);
+
+        $query = $component->datasource();
+        $rows = $query ? $query->get() : collect();
+
+        return [$component, $rows];
+    }
+
+    private function makeSearchComponent(Request $request): SearchResultsTable|AdvancedObjectSearchTable
+    {
+        $filters = $this->extractAdvancedFilters($request);
+
+        if ($filters !== []) {
+            $component = new AdvancedObjectSearchTable();
+            $this->bootSearchComponent($component, $filters);
+
+            return $component;
+        }
+
+        $component = new SearchResultsTable();
+        $this->bootSearchComponent($component);
+        $component->q = trim((string) $request->query('q', ''));
+        $component->objectRefs = $this->normalizeObjectRefs($request->query('object_refs', []));
+
+        return $component;
+    }
+
+    private function bootSearchComponent(object $component, ...$mountArgs): void
+    {
+        if (method_exists($component, 'boot')) {
+            try {
+                $component->boot();
+            } catch (\Throwable $_) {
+            }
+        }
+
+        if (method_exists($component, 'mount')) {
+            try {
+                $component->mount(...$mountArgs);
+            } catch (\Throwable $_) {
+            }
+        }
+    }
+
+    private function extractAdvancedFilters(Request $request): array
+    {
+        $filters = $request->except(['_token', 'page', 'q', 'object_refs']);
+
+        return array_filter($filters, function ($value): bool {
+            if (is_array($value)) {
+                return collect($value)
+                    ->flatten()
+                    ->contains(fn($item): bool => trim((string) $item) !== '');
+            }
+
+            return trim((string) $value) !== '';
+        });
+    }
+
+    private function normalizeObjectRefs(mixed $rawRefs): array
+    {
+        if (!is_array($rawRefs)) {
+            return [];
+        }
+
+        return collect($rawRefs)
+            ->map(function ($ref): ?array {
+                if (!is_array($ref)) {
+                    return null;
+                }
+
+                $sourceTable = strtolower(trim((string) ($ref['source_table'] ?? '')));
+                $name = trim((string) ($ref['name'] ?? ''));
+
+                if ($sourceTable === '' || $name === '') {
+                    return null;
+                }
+
+                return [
+                    'source_table' => $sourceTable,
+                    'name' => $name,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
+    }
+
     private function formatSizeForApd($r): string
     {
         $d1 = $r->diam1 ?? null;
@@ -642,7 +639,8 @@ class SearchExportController extends Controller
         $d1f = $hasD1 ? floatval($d1) : 0.0;
         $d2f = $hasD2 ? floatval($d2) : 0.0;
         $fmt = function ($v) {
-            return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v); };
+            return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v);
+        };
         if ($hasD1 && $hasD2) {
             if (max($d1f, $d2f) > 60.0) {
                 $d1m = $d1f / 60.0;

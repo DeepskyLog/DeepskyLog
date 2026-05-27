@@ -233,7 +233,12 @@ final class ObservationSearchTable extends PowerGridComponent
         $this->latitudeMax = (string) ($filters['latitude_max'] ?? '');
         $this->drawingState = (string) ($filters['drawing_state'] ?? 'all');
         $this->observationDescription = (string) ($filters['observation_description'] ?? '');
-        $this->languages = array_map('strval', (array) ($filters['languages'] ?? []));
+        $this->languages = collect((array) ($filters['languages'] ?? []))
+            ->map(fn($language) => mb_strtolower(trim((string) $language)))
+            ->filter(fn($language) => $language !== '')
+            ->unique()
+            ->values()
+            ->all();
     }
 
     private function applyAdvancedFilters(Builder $query): void
@@ -466,7 +471,7 @@ final class ObservationSearchTable extends PowerGridComponent
             $query->whereRaw("LOWER(COALESCE(observations.description, '')) LIKE ?", ['%' . mb_strtolower($this->observationDescription) . '%']);
         }
         if (!empty($this->languages)) {
-            $query->whereIn('observations.language', $this->languages);
+            $query->whereIn(DB::raw("LOWER(COALESCE(observations.language, ''))"), $this->languages);
         }
 
         $this->applyObservingStatusFilter($query);

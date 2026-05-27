@@ -27,12 +27,20 @@
                 @endif
             @endauth
             @php
-                $exportNamesBase = route('search.names.pdf') . '?q=' . rawurlencode($q ?? '');
-                $exportTableBase = route('search.table.pdf') . '?q=' . rawurlencode($q ?? '');
-                $exportArgoBase = route('search.argo') . '?q=' . rawurlencode($q ?? '');
-                $exportSkylistBase = route('search.skylist') . '?q=' . rawurlencode($q ?? '');
-                $exportStxtBase = route('search.stxt') . '?q=' . rawurlencode($q ?? '');
-                $exportApdBase = route('search.apd') . '?q=' . rawurlencode($q ?? '');
+                $exportParams = [];
+                if (($q ?? '') !== '') {
+                    $exportParams['q'] = $q;
+                }
+                if (!empty($objectRefs ?? [])) {
+                    $exportParams['object_refs'] = $objectRefs;
+                }
+
+                $exportNamesBase = route('search.names.pdf', $exportParams);
+                $exportTableBase = route('search.table.pdf', $exportParams);
+                $exportArgoBase = route('search.argo', $exportParams);
+                $exportSkylistBase = route('search.skylist', $exportParams);
+                $exportStxtBase = route('search.stxt', $exportParams);
+                $exportApdBase = route('search.apd', $exportParams);
             @endphp
 
             <div class="relative inline-block text-left">

@@ -33,7 +33,7 @@ class ObservationSearchExportController extends Controller
     {
         try {
             $query = trim((string) $request->query('q', ''));
-            $entries = $this->resolveMatchingObservations($query)
+            $entries = $this->resolveMatchingObservations($request)
                 ->map(fn(Observation $observation): ?array => $builder->build($observation))
                 ->filter()
                 ->values();
@@ -69,7 +69,7 @@ class ObservationSearchExportController extends Controller
     {
         try {
             $query = trim((string) $request->query('q', ''));
-            $observations = $this->resolveMatchingObservations($query);
+            $observations = $this->resolveMatchingObservations($request);
             $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
 
             $locations = Location::query()
@@ -173,7 +173,7 @@ class ObservationSearchExportController extends Controller
     {
         try {
             $query = trim((string) $request->query('q', ''));
-            $observations = $this->resolveMatchingObservations($query);
+            $observations = $this->resolveMatchingObservations($request);
             $locations = Location::query()
                 ->whereIn('id', $observations->pluck('location_id')->filter()->unique()->all())
                 ->get(['id', 'name', 'timezone'])
@@ -327,7 +327,7 @@ class ObservationSearchExportController extends Controller
     {
         try {
             $query = trim((string) $request->query('q', ''));
-            $content = $this->buildOalXml($this->resolveMatchingObservations($query));
+            $content = $this->buildOalXml($this->resolveMatchingObservations($request));
             $validator->assertValid($content);
 
             return response($content, 200, [
@@ -404,9 +404,11 @@ class ObservationSearchExportController extends Controller
             ->with('error', __('PDF library not installed. Please run: composer require barryvdh/laravel-dompdf'));
     }
 
-    private function resolveMatchingObservations(string $query): Collection
+    private function resolveMatchingObservations(Request $request): Collection
     {
         $component = new ObservationSearchTable();
+        $query = trim((string) $request->query('q', ''));
+        $filters = $this->extractObservationFilters($request);
 
         if (method_exists($component, 'boot')) {
             try {
@@ -415,7 +417,15 @@ class ObservationSearchExportController extends Controller
             }
         }
 
-        $component->objectName = $query;
+        if (method_exists($component, 'mount')) {
+            try {
+                $component->mount($query, $filters);
+            } catch (\Throwable $_) {
+                $component->objectName = $query;
+            }
+        } else {
+            $component->objectName = $query;
+        }
 
         $observationIds = $component->datasource()->get()
             ->pluck('id')
@@ -436,6 +446,21 @@ class ObservationSearchExportController extends Controller
             ->map(fn(int $id): ?Observation => $observations->get($id))
             ->filter()
             ->values();
+    }
+
+    private function extractObservationFilters(Request $request): array
+    {
+        $filters = $request->except(['_token', 'page', 'q']);
+
+        return array_filter($filters, function ($value): bool {
+            if (is_array($value)) {
+                return collect($value)
+                    ->flatten()
+                    ->contains(fn($item): bool => trim((string) $item) !== '');
+            }
+
+            return trim((string) $value) !== '';
+        });
     }
 
     /**
@@ -559,13 +584,13 @@ class ObservationSearchExportController extends Controller
         ];
     }
 
-    private function resolveObservedTargets(string $query): Collection
+    private function resolveObservedTargets(Request $request): Collection
     {
         $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
 
         $targets = [];
 
-        foreach ($this->resolveMatchingObservations($query) as $observation) {
+        foreach ($this->resolveMatchingObservations($request) as $observation) {
             $catalog = trim((string) ($observation->target_name ?? $observation->target_key ?? ''));
 
             if ($catalog === '') {
