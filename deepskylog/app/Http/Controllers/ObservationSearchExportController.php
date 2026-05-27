@@ -8,6 +8,7 @@ use App\Models\Filter;
 use App\Models\Instrument;
 use App\Models\Lens;
 use App\Models\Location;
+use App\Models\ObservationSession;
 use App\Models\SearchIndex;
 use App\Models\User;
 use App\Livewire\ObservationSearchTable;
@@ -16,6 +17,7 @@ use App\Services\Import\OalSchemaValidator;
 use App\Services\Observations\ObservationPdfDataBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -344,6 +346,34 @@ class ObservationSearchExportController extends Controller
         }
     }
 
+    public function sessionOal(string $userSlug, string $sessionSlug, OalSchemaValidator $validator)
+    {
+        [$session, $observations, $sessionContext] = $this->resolveSessionExportPayload($userSlug, $sessionSlug);
+
+        try {
+            $content = $this->buildOalXml($observations, $sessionContext);
+            $validator->assertValid($content);
+
+            $filename = Str::slug((string) ($session->slug ?: $session->name ?: 'session-' . $session->id)) ?: ('session-' . $session->id);
+
+            return response($content, 200, [
+                'Content-Type' => 'application/xml; charset=UTF-8',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '.oal.xml"',
+            ]);
+        } catch (\Throwable $exception) {
+            Log::error('ObservationSearchExportController::sessionOal failed', [
+                'user_slug' => $userSlug,
+                'session_slug' => $sessionSlug,
+                'session_id' => $session->id,
+                'error' => (string) $exception,
+            ]);
+
+            return redirect()
+                ->back()
+                ->with('error', __('Failed to generate OAL export'));
+        }
+    }
+
     private function renderPdf(string $html, string $filename, string $orientation)
     {
         @ini_set('memory_limit', '512M');
@@ -408,6 +438,127 @@ class ObservationSearchExportController extends Controller
             ->values();
     }
 
+    /**
+     * @return array{0: ObservationSession, 1: Collection<int, Observation>, 2: array<string, mixed>|null}
+     */
+    private function resolveSessionExportPayload(string $userSlug, string $sessionSlug): array
+    {
+        $user = User::where('slug', $userSlug)->firstOrFail();
+
+        $session = ObservationSession::where('observerid', $user->username)
+            ->where(function ($query) use ($sessionSlug) {
+                $query->where('slug', $sessionSlug);
+
+                if (is_numeric($sessionSlug)) {
+                    $query->orWhere('id', $sessionSlug);
+                }
+            })
+            ->firstOrFail();
+
+        if (isset($session->active) && (int) $session->active === 0) {
+            $viewer = Auth::user();
+            $allowAdmin = config('sessions.allow_admin_override', false);
+            $viewerIsOwner = $viewer && ($viewer->username === $session->observerid || ($viewer->slug ?? null) === ($user->slug ?? null));
+            $viewerIsAdmin = $viewer && method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges();
+
+            if (!($viewerIsOwner || ($allowAdmin && $viewerIsAdmin))) {
+                abort(404);
+            }
+        }
+
+        $observationIds = DB::table('sessionObservations')
+            ->where('sessionid', $session->id)
+            ->pluck('observationid')
+            ->map(fn($value) => (int) $value)
+            ->filter(fn(int $value): bool => $value > 0)
+            ->values();
+
+        $observations = collect();
+        if ($observationIds->isNotEmpty()) {
+            $byId = Observation::query()
+                ->whereIn('id', $observationIds->all())
+                ->get()
+                ->keyBy('id');
+
+            $observations = $observationIds
+                ->map(fn(int $id): ?Observation => $byId->get($id))
+                ->filter()
+                ->values();
+        }
+
+        $sessionLocation = null;
+        if (!empty($session->locationid)) {
+            $sessionLocation = Location::find($session->locationid);
+        }
+
+        if (!$sessionLocation) {
+            $fallbackLocationId = $observations->pluck('location_id')->filter()->map(fn($value) => (int) $value)->first();
+            if ($fallbackLocationId) {
+                $sessionLocation = Location::find($fallbackLocationId);
+            }
+        }
+
+        return [
+            $session,
+            $observations,
+            $this->buildOalSessionContext($session, $sessionLocation),
+        ];
+    }
+
+    /**
+     * @return array{id: string, begin: string, end: string, site_id: string|null, site: ?Location, language: string|null, weather: string|null, equipment: string|null, comments: string|null, observers: array<int, array{id: string, name: string}>, co_observer_ids: array<int, string>}|null
+     */
+    private function buildOalSessionContext(ObservationSession $session, ?Location $site): ?array
+    {
+        $begin = $this->formatOalDateTime($session->begindate, $site?->timezone);
+        $endSource = $session->enddate ?? $session->begindate;
+        $end = $this->formatOalDateTime($endSource, $site?->timezone);
+
+        $participantUsernames = collect([$session->observerid])
+            ->merge($session->otherObservers())
+            ->map(fn($value) => trim((string) $value))
+            ->filter()
+            ->unique()
+            ->values();
+
+        $participantUsers = User::query()
+            ->whereIn('username', $participantUsernames->all())
+            ->get(['id', 'name', 'username'])
+            ->keyBy('username');
+
+        $observers = $participantUsernames
+            ->map(function (string $username) use ($participantUsers): array {
+                $user = $participantUsers->get($username);
+
+                if ($user) {
+                    return [
+                        'id' => 'observer-' . $user->id,
+                        'name' => $user->name,
+                    ];
+                }
+
+                return [
+                    'id' => 'observer-' . (Str::slug($username) ?: 'observer'),
+                    'name' => $username,
+                ];
+            })
+            ->values();
+
+        return [
+            'id' => 'session-' . $session->id,
+            'begin' => $begin,
+            'end' => $end,
+            'site_id' => $site ? ('site-' . $site->id) : null,
+            'site' => $site,
+            'language' => $this->normalizeLanguageTag($session->language ?? null),
+            'weather' => $this->sanitizeSessionText($session->weather ?? null),
+            'equipment' => $this->sanitizeSessionText($session->equipment ?? null),
+            'comments' => $this->sanitizeSessionText($session->comments ?? null),
+            'observers' => $observers->all(),
+            'co_observer_ids' => $observers->slice(1)->pluck('id')->values()->all(),
+        ];
+    }
+
     private function resolveObservedTargets(string $query): Collection
     {
         $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
@@ -438,7 +589,10 @@ class ObservationSearchExportController extends Controller
         return collect($targets)->values();
     }
 
-    private function buildOalXml(Collection $observations): string
+    /**
+     * @param  array{id: string, begin: string, end: string, site_id: string|null, site: ?Location, language: string|null, weather: string|null, equipment: string|null, comments: string|null, observers: array<int, array{id: string, name: string}>, co_observer_ids: array<int, string>}|null  $sessionContext
+     */
+    private function buildOalXml(Collection $observations, ?array $sessionContext = null): string
     {
         $observations = $observations->values();
 
@@ -451,6 +605,10 @@ class ObservationSearchExportController extends Controller
             ->whereIn('id', $observations->pluck('location_id')->filter()->unique()->all())
             ->get(['id', 'name', 'latitude', 'longitude', 'elevation', 'timezone'])
             ->keyBy('id');
+
+        if (($sessionContext['site'] ?? null) instanceof Location && !$locations->has($sessionContext['site']->id)) {
+            $locations->put($sessionContext['site']->id, $sessionContext['site']);
+        }
 
         $instruments = Instrument::query()
             ->whereIn('id', $observations->pluck('instrument_id')->filter()->unique()->all())
@@ -502,11 +660,24 @@ class ObservationSearchExportController extends Controller
         $document->appendChild($root);
 
         $observersNode = $document->createElement('observers');
+        $observerDefinitions = [];
         foreach ($observations->groupBy(fn(Observation $observation) => $this->oalObserverId($observation)) as $observerId => $group) {
             /** @var Observation $observation */
             $observation = $group->first();
             $user = $users->get($observation->observer_user_id);
-            [$firstName, $surname] = $this->splitObserverName($user?->name ?? $observation->observer_username ?? 'Observer');
+
+            $observerDefinitions[$observerId] = [
+                'id' => $observerId,
+                'name' => $user?->name ?? $observation->observer_username ?? 'Observer',
+            ];
+        }
+
+        foreach (($sessionContext['observers'] ?? []) as $observerDefinition) {
+            $observerDefinitions[$observerDefinition['id']] = $observerDefinition;
+        }
+
+        foreach ($observerDefinitions as $observerId => $observerDefinition) {
+            [$firstName, $surname] = $this->splitObserverName($observerDefinition['name'] ?? 'Observer');
 
             $observerNode = $document->createElement('observer');
             $observerNode->setAttribute('id', $observerId);
@@ -530,6 +701,23 @@ class ObservationSearchExportController extends Controller
         $root->appendChild($sitesNode);
 
         $sessionsNode = $document->createElement('sessions');
+        if ($sessionContext !== null && !empty($sessionContext['site_id'])) {
+            $sessionNode = $document->createElement('session');
+            $sessionNode->setAttribute('id', $sessionContext['id']);
+            if (!empty($sessionContext['language'])) {
+                $sessionNode->setAttribute('lang', $sessionContext['language']);
+            }
+            $this->appendOalTextNode($document, $sessionNode, 'begin', $sessionContext['begin']);
+            $this->appendOalTextNode($document, $sessionNode, 'end', $sessionContext['end']);
+            $this->appendOalTextNode($document, $sessionNode, 'site', $sessionContext['site_id']);
+            foreach ($sessionContext['co_observer_ids'] as $coObserverId) {
+                $this->appendOalTextNode($document, $sessionNode, 'coObserver', $coObserverId);
+            }
+            $this->appendOalTextNode($document, $sessionNode, 'weather', $sessionContext['weather']);
+            $this->appendOalTextNode($document, $sessionNode, 'equipment', $sessionContext['equipment']);
+            $this->appendOalTextNode($document, $sessionNode, 'comments', $sessionContext['comments']);
+            $sessionsNode->appendChild($sessionNode);
+        }
         $root->appendChild($sessionsNode);
 
         $targetsNode = $document->createElement('targets');
@@ -614,6 +802,9 @@ class ObservationSearchExportController extends Controller
 
             if ($observation->location_id && $locations->has($observation->location_id)) {
                 $this->appendOalTextNode($document, $observationNode, 'site', 'site-' . $observation->location_id);
+            }
+            if ($sessionContext !== null && !empty($sessionContext['site_id'])) {
+                $this->appendOalTextNode($document, $observationNode, 'session', $sessionContext['id']);
             }
             $this->appendOalTextNode($document, $observationNode, 'target', $this->oalTargetId($observation, $catalog));
             $this->appendOalTextNode(
@@ -1274,6 +1465,50 @@ class ObservationSearchExportController extends Controller
     private function formatOalBegin(Observation $observation, ?string $timezone = null): string
     {
         return $this->astroPlannerObservationMoment($observation, $timezone)->format('Y-m-d\TH:i:sP');
+    }
+
+    private function formatOalDateTime(mixed $value, ?string $timezone = null): string
+    {
+        $tz = trim((string) ($timezone ?: 'UTC')) ?: 'UTC';
+
+        if ($value instanceof \DateTimeInterface) {
+            return CarbonImmutable::instance($value)->setTimezone($tz)->format('Y-m-d\TH:i:sP');
+        }
+
+        $text = trim((string) $value);
+        if ($text === '') {
+            return CarbonImmutable::now($tz)->format('Y-m-d\TH:i:sP');
+        }
+
+        foreach ([$tz, 'UTC'] as $candidateTz) {
+            foreach (['Y-m-d H:i:s', 'Y-m-d H:i', 'Y-m-d', 'Y-n-j H:i:s', 'Ymd H:i:s'] as $format) {
+                try {
+                    return CarbonImmutable::createFromFormat($format, $text, $candidateTz)->format('Y-m-d\TH:i:sP');
+                } catch (\Throwable $_) {
+                }
+            }
+
+            try {
+                return CarbonImmutable::parse($text, $candidateTz)->format('Y-m-d\TH:i:sP');
+            } catch (\Throwable $_) {
+            }
+        }
+
+        return CarbonImmutable::now($tz)->format('Y-m-d\TH:i:sP');
+    }
+
+    private function sanitizeSessionText(mixed $value): ?string
+    {
+        $text = trim((string) html_entity_decode(strip_tags((string) $value), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
+        return $text !== '' ? $text : null;
+    }
+
+    private function normalizeLanguageTag(mixed $value): ?string
+    {
+        $text = strtolower(trim((string) $value));
+
+        return $text !== '' ? substr($text, 0, 10) : null;
     }
 
     private function appendOalTextNode(\DOMDocument $document, \DOMElement $parent, string $name, mixed $value, array $attributes = []): void

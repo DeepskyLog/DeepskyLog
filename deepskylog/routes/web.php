@@ -348,6 +348,8 @@ Route::get('/instrumentset/{user}/{instrumentset}', 'App\Http\Controllers\Instru
 // Observation sessions
 Route::get('/session/{user}/{session}', 'App\Http\Controllers\SessionController@show')
     ->name('session.show')->middleware('doNotCacheResponse');
+Route::get('/session/{user}/{session}/export.oal.xml', [App\Http\Controllers\ObservationSearchExportController::class, 'sessionOal'])
+    ->name('session.export.oal')->middleware('doNotCacheResponse');
 
 // Object detail pages: /object/{type}/{slugOrId}
 // Specific Moon path: serve a Livewire-first Moon page at /object/moon

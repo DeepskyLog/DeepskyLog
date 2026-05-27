@@ -6,7 +6,6 @@
 
 - [ ] Update to laravel 13.
 - [ ] Search for observations
-  - [ ] Export session to OAL
   - [ ] Detailed search page
 - [ ] Search for objects -> Detailed search, no extra Export button...
 - [ ] All missing pages

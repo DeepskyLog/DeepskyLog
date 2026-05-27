@@ -13,13 +13,20 @@
                 <a class="text-white hover:underline font-medium" href="{{ route('observer.show', $user->slug) }}">{{ $user->name }}</a>
                 @if(!empty($observerStats))
                     <span class="text-gray-500">&middot;</span>
-                    <a class="text-gray-300 hover:underline" href="{{ route('session.show', [$user->slug, $sessionParam]) }}?observer={{ urlencode($session->observerid) }}">{{ $totalObservations }} {{ __('observations') }}</a>
+                    <a class="text-gray-300 hover:underline" href="{{ route('session.show', [$user->slug, $sessionParam]) }}?observer={{ urlencode($session->observerid) }}">{{ $totalObservations }} {{ \Illuminate\Support\Str::lower(__('Observations')) }}</a>
                 @endif
             </p>
 
             <div class="mt-3 flex items-center gap-3">
                 {{-- Share buttons using ShareButtons facade configured in app --}}
                 {!! \ShareButtons::page(url()->current(), __('Observations from :session by :owner', ['session' => html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8'), 'owner' => $user->name])) !!}
+
+                <a href="{{ route('session.export.oal', [$user->slug, $sessionParam]) }}"
+                   class="inline-flex items-center rounded-md border border-indigo-400/50 bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white shadow-[0_0_0_1px_rgba(255,255,255,0.08)] transition hover:bg-indigo-500"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    {{ __('Export OAL') }}
+                </a>
 
                 {{-- Message button moved to bottom of page --}}
             </div>
