@@ -60,7 +60,7 @@
 
             <x-dropdown.item
                 icon="chart-bar-square"
-                href="{{ config('app.old_url') }}/index.php?indexAction=statistics"
+                href="{{ route('statistics.index') }}"
                 label="{{ __('Statistics') }}"
             />
 
