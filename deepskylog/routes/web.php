@@ -72,6 +72,7 @@ Route::get('language/{locale}', function ($locale) {
 Route::get('/teams/{team}', 'App\Http\Controllers\DeepskyLogTeamController@show')->name('teams.show');
 
 // Observers
+Route::get('/observers', [App\Http\Controllers\ObserverController::class, 'index'])->name('observers.index');
 Route::get('/observers/admin', 'App\Http\Controllers\ObserverController@admin')->name('observers.admin')->can('delete', User::class);
 Route::get('/admin/check-objects', [App\Http\Controllers\AdminObjectCheckController::class, 'index'])
     ->middleware('auth')
@@ -94,6 +95,7 @@ Route::get('/admin/check-objects/export/observation-alias-mappings', [App\Http\C
 Route::post('/admin/check-objects/repair-observation-objectnames', [App\Http\Controllers\AdminObjectCheckController::class, 'repairObservationObjectNames'])
     ->middleware('auth')
     ->name('admin.objects.check.repair-observation-objectnames');
+Route::get('/observers/{observer}/catalog', [App\Http\Controllers\ObserverController::class, 'catalog'])->name('observer.catalog');
 Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@show')->name('observer.show');
 
 // RSS feeds

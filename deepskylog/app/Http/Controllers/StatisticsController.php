@@ -25,7 +25,7 @@ class StatisticsController extends Controller
             $selectedCountry = null;
         }
 
-        abort_if($selectedCountry !== null && ! array_key_exists($selectedCountry, $countryOptions), 404);
+        abort_if($selectedCountry !== null && !array_key_exists($selectedCountry, $countryOptions), 404);
 
         $selectedCountryLabel = $selectedCountry ? $countryOptions[$selectedCountry] : null;
 
@@ -238,7 +238,7 @@ class StatisticsController extends Controller
             ->join('locations', 'observations.location_id', '=', 'locations.id')
             ->whereNotNull('locations.country')
             ->where('locations.country', '!=', '')
-            ->when($country, fn (Builder $query) => $query->where('locations.country', $country))
+            ->when($country, fn(Builder $query) => $query->where('locations.country', $country))
             ->select('locations.country', DB::raw('count(*) as count'))
             ->groupBy('locations.country')
             ->orderByDesc('count')
@@ -346,11 +346,11 @@ class StatisticsController extends Controller
                             $objects->where('target_table', 'objects')
                                 ->where(function (Builder $notDouble) {
                                     $notDouble->whereNull('target_name_normalized')
-                                        ->orWhereNotIn('target_name_normalized', fn (Builder $subquery) => $this->doubleStarSubquery($subquery));
+                                        ->orWhereNotIn('target_name_normalized', fn(Builder $subquery) => $this->doubleStarSubquery($subquery));
                                 });
                         })->orWhere(function (Builder $aliases) {
                             $aliases->where('target_table', 'objectnames')
-                                ->whereNotIn('target_key', fn (Builder $subquery) => $this->doubleStarObjectnameSlugSubquery($subquery));
+                                ->whereNotIn('target_key', fn(Builder $subquery) => $this->doubleStarObjectnameSlugSubquery($subquery));
                         });
                     });
             })->orWhere(function (Builder $legacy) {
@@ -362,11 +362,11 @@ class StatisticsController extends Controller
                             $objects->where('target_table', 'objects')
                                 ->where(function (Builder $notDouble) {
                                     $notDouble->whereNull('target_name_normalized')
-                                        ->orWhereNotIn('target_name_normalized', fn (Builder $subquery) => $this->doubleStarSubquery($subquery));
+                                        ->orWhereNotIn('target_name_normalized', fn(Builder $subquery) => $this->doubleStarSubquery($subquery));
                                 });
                         })->orWhere(function (Builder $aliases) {
                             $aliases->where('target_table', 'objectnames')
-                                ->whereNotIn('target_key', fn (Builder $subquery) => $this->doubleStarObjectnameSlugSubquery($subquery));
+                                ->whereNotIn('target_key', fn(Builder $subquery) => $this->doubleStarObjectnameSlugSubquery($subquery));
                         });
                     });
             });
@@ -379,11 +379,11 @@ class StatisticsController extends Controller
             $double->where(function (Builder $objects) {
                 $objects->where('target_table', 'objects')
                     ->where(function (Builder $notDouble) {
-                        $notDouble->whereIn('target_name_normalized', fn (Builder $subquery) => $this->doubleStarSubquery($subquery));
+                        $notDouble->whereIn('target_name_normalized', fn(Builder $subquery) => $this->doubleStarSubquery($subquery));
                     });
             })->orWhere(function (Builder $aliases) {
                 $aliases->where('target_table', 'objectnames')
-                    ->whereIn('target_key', fn (Builder $subquery) => $this->doubleStarObjectnameSlugSubquery($subquery));
+                    ->whereIn('target_key', fn(Builder $subquery) => $this->doubleStarObjectnameSlugSubquery($subquery));
             });
         });
     }
@@ -430,8 +430,8 @@ class StatisticsController extends Controller
     private function localizedCountryLabels(Collection $countries): array
     {
         $countryNames = $countries
-            ->filter(fn ($country) => is_string($country) && trim($country) !== '')
-            ->map(fn (string $country) => trim($country))
+            ->filter(fn($country) => is_string($country) && trim($country) !== '')
+            ->map(fn(string $country) => trim($country))
             ->unique()
             ->values();
 
@@ -446,7 +446,7 @@ class StatisticsController extends Controller
         $labels = [];
         foreach ($countryNames as $country) {
             $countryModel = $countryModels->get($country);
-            $labels[$country] = $countryModel && ! empty($countryModel->code)
+            $labels[$country] = $countryModel && !empty($countryModel->code)
                 ? (Countries::getOne($countryModel->code, app()->getLocale()) ?? $countryModel->country)
                 : $country;
         }

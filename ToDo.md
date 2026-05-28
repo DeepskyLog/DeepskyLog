@@ -7,7 +7,6 @@
 - [ ] Update to laravel 13.
 - [ ] All missing pages
   - [ ] Remove APP_OLD_URL and app.old_url.
-  - [ ] Observers
 - [ ] Create star charts and atlases.
   - [ ] With field of view of the instrument, and eyepiece used.
 - [ ] Create observing guides

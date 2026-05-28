@@ -39,7 +39,7 @@
             <x-dropdown.item
                 separator
                 icon="user-group"
-                href="{{ config('app.old_url') }}/index.php?indexAction=rank_observers"
+                href="{{ route('observers.index') }}"
                 label="{{ __('Observers') }}"
             />
 

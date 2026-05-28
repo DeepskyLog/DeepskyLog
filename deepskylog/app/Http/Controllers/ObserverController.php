@@ -8,19 +8,95 @@ use App\Charts\ObservationsPerMonthChart;
 use App\Charts\ObservationsPerYearChart;
 use App\Jobs\ComputeObserverStats;
 use App\Models\Observation;
+use App\Models\ObservingList;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class ObserverController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request): View
     {
-        //
+        $sourceOptions = $this->observerSourceOptions($request->user());
+        $selectedSource = $this->resolveObserverSource((string) $request->query('source', ''), $request->user(), $sourceOptions);
+        $currentSort = $this->resolveObserverSort((string) $request->query('sort', 'rank'));
+        $currentDirection = $this->resolveObserverSortDirection((string) $request->query('direction', 'asc'));
+        $observerSearch = trim((string) $request->query('observer', ''));
+        $sourceObjectTotal = $this->sourceObjectTotal($selectedSource);
+        $lastYear = now()->subYear()->toDateString();
+
+        $observerRowsQuery = DB::table('observations as observations')
+            ->join('users', 'users.username', '=', 'observations.observer_username')
+            ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
+            ->where(function ($query) {
+                $query->where('observations.legacy_source', 'deepsky')
+                    ->orWhereIn('observations.target_table', ['objects', 'objectnames']);
+            })
+            ->select([
+                'users.id',
+                'users.name',
+                'users.username',
+                'users.slug',
+                DB::raw('COUNT(*) as observations_count'),
+                DB::raw('SUM(CASE WHEN observations.has_drawing = 1 THEN 1 ELSE 0 END) as drawings_count'),
+                DB::raw("SUM(CASE WHEN observations.observed_on >= '" . $lastYear . "' THEN 1 ELSE 0 END) as observations_last_year"),
+                DB::raw("SUM(CASE WHEN observations.has_drawing = 1 AND observations.observed_on >= '" . $lastYear . "' THEN 1 ELSE 0 END) as drawings_last_year"),
+                DB::raw("COUNT(DISTINCT CASE WHEN details.visibility IS NULL OR details.visibility != 7 THEN COALESCE(NULLIF(TRIM(observations.target_key), ''), LOWER(TRIM(observations.target_name))) END) as different_objects_count"),
+            ])
+            ->when($observerSearch !== '', function ($query) use ($observerSearch) {
+                $query->where('users.name', 'like', '%' . $observerSearch . '%');
+            })
+            ->groupBy('users.id', 'users.name', 'users.username', 'users.slug')
+            ->orderByDesc('observations_count')
+            ->orderBy('users.name');
+
+        $observerRows = $observerRowsQuery->get();
+
+        $sourceCounts = $this->sourceObserverCounts($selectedSource);
+
+        $observerRows = $observerRows
+            ->values()
+            ->map(function ($row, int $index) use ($sourceCounts, $sourceObjectTotal) {
+                $username = (string) $row->username;
+                $selectedSourceCount = (int) ($sourceCounts[$username] ?? 0);
+
+                return [
+                    'rank' => $index + 1,
+                    'name' => (string) $row->name,
+                    'username' => $username,
+                    'slug' => (string) ($row->slug ?: $username),
+                    'observations_count' => (int) $row->observations_count,
+                    'drawings_count' => (int) $row->drawings_count,
+                    'observations_last_year' => (int) $row->observations_last_year,
+                    'drawings_last_year' => (int) $row->drawings_last_year,
+                    'different_objects_count' => (int) $row->different_objects_count,
+                    'selected_source_count' => $selectedSourceCount,
+                    'selected_source_percentage' => $sourceObjectTotal > 0
+                        ? round(($selectedSourceCount / $sourceObjectTotal) * 100, 1)
+                        : 0.0,
+                ];
+            });
+
+        $observerRows = $this->sortObserverRows($observerRows, $currentSort, $currentDirection);
+        $observerRows = $this->paginateObserverRows($observerRows, 25, $request);
+
+        return view('observers.index', [
+            'observerRows' => $observerRows,
+            'selectedSource' => $selectedSource,
+            'sourceOptions' => $sourceOptions,
+            'sourceColumnLabel' => $this->sourceColumnLabel($selectedSource),
+            'currentSort' => $currentSort,
+            'currentDirection' => $currentDirection,
+            'observerSearch' => $observerSearch,
+        ]);
     }
 
     /**
@@ -400,6 +476,39 @@ class ObserverController extends Controller
 
     }
 
+    public function catalog(Request $request, string $observer): View
+    {
+        $user = User::where('slug', $observer)->orWhere('username', $observer)->firstOrFail();
+        $sourceOptions = $this->observerSourceOptions($request->user());
+        $selectedSource = $this->resolveObserverSource((string) $request->query('source', ''), $request->user(), $sourceOptions);
+        $includeSubobjects = $request->boolean('include_subobjects');
+        $sourceObjects = $this->sourceObjects($selectedSource);
+        $observedLookup = $this->observedObjectLookup($user, $sourceObjects, $includeSubobjects);
+
+        $sourceObjects = $sourceObjects->values()->map(function (array $object, int $index) use ($user, $observedLookup) {
+            $slug = $object['slug'] ?: Str::slug((string) ($object['display_name'] ?: $object['object_name']), '-');
+            $observed = (bool) ($observedLookup[$object['object_name']] ?? false);
+
+            $object['position'] = $index + 1;
+            $object['slug'] = $slug;
+            $object['observed'] = $observed;
+            $object['target_url'] = $observed
+                ? route('observations.user.object', ['observer' => $user->slug ?: $user->username, 'object' => $slug])
+                : route('object.show', ['slug' => $slug]);
+
+            return $object;
+        });
+
+        return view('observers.catalog', [
+            'user' => $user,
+            'selectedSource' => $selectedSource,
+            'sourceOptions' => $sourceOptions,
+            'sourceObjects' => $sourceObjects,
+            'includeSubobjects' => $includeSubobjects,
+            'observedCount' => $sourceObjects->where('observed', true)->count(),
+        ]);
+    }
+
     /**
      * Update the specified resource in storage.
      */
@@ -419,5 +528,381 @@ class ObserverController extends Controller
     public function admin()
     {
         return view('observers.admin');
+    }
+
+    private function observerSourceOptions(?User $viewer): Collection
+    {
+        $catalogSources = DB::table('objectnames')
+            ->whereNotNull('catalog')
+            ->where('catalog', '!=', '')
+            ->distinct()
+            ->orderBy('catalog')
+            ->pluck('catalog')
+            ->map(function ($catalog) {
+                $catalog = (string) $catalog;
+
+                return [
+                    'key' => 'catalog:' . Str::lower($catalog),
+                    'type' => 'catalog',
+                    'catalog' => $catalog,
+                    'short_label' => $catalog,
+                    'label' => $catalog,
+                ];
+            })
+            ->values();
+
+        if (!$viewer) {
+            return $catalogSources;
+        }
+
+        $ownedLists = $viewer->observingLists()
+            ->with('owner:id,name')
+            ->get(['observing_lists.id', 'observing_lists.name', 'observing_lists.slug', 'observing_lists.owner_user_id']);
+        $subscribedLists = $viewer->subscribedObservingLists()
+            ->with('owner:id,name')
+            ->get(['observing_lists.id', 'observing_lists.name', 'observing_lists.slug', 'observing_lists.owner_user_id']);
+
+        $listSources = $ownedLists
+            ->concat($subscribedLists)
+            ->unique('id')
+            ->sortBy(fn(ObservingList $list) => Str::lower((string) $list->name))
+            ->values()
+            ->map(function (ObservingList $list) use ($viewer) {
+                $name = html_entity_decode((string) $list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                $ownerName = html_entity_decode((string) optional($list->owner)->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+                return [
+                    'key' => 'list:' . $list->id,
+                    'type' => 'list',
+                    'list_id' => (int) $list->id,
+                    'list_slug' => (string) $list->slug,
+                    'short_label' => $name,
+                    'label' => $list->owner_user_id === $viewer->id || $ownerName === '' ? $name : $name . ' (' . $ownerName . ')',
+                ];
+            });
+
+        return $catalogSources->concat($listSources)->values();
+    }
+
+    private function resolveObserverSource(string $selectedKey, ?User $viewer, ?Collection $sourceOptions = null): array
+    {
+        $sourceOptions ??= $this->observerSourceOptions($viewer);
+        $selected = $sourceOptions->firstWhere('key', $selectedKey);
+
+        if (!$selected) {
+            $selected = $sourceOptions->firstWhere('key', 'catalog:m') ?? $sourceOptions->first();
+        }
+
+        return $selected ?? [
+            'key' => 'catalog:m',
+            'type' => 'catalog',
+            'catalog' => 'M',
+            'short_label' => 'M',
+            'label' => 'M',
+        ];
+    }
+
+    private function sourceColumnLabel(array $source): string
+    {
+        return __('Observed :source', ['source' => $source['short_label'] ?? $source['label'] ?? __('catalog')]);
+    }
+
+    private function resolveObserverSort(string $sort): string
+    {
+        $allowedSorts = [
+            'rank',
+            'name',
+            'observations_count',
+            'drawings_count',
+            'observations_last_year',
+            'drawings_last_year',
+            'different_objects_count',
+            'selected_source_count',
+        ];
+
+        return in_array($sort, $allowedSorts, true) ? $sort : 'rank';
+    }
+
+    private function resolveObserverSortDirection(string $direction): string
+    {
+        return Str::lower($direction) === 'desc' ? 'desc' : 'asc';
+    }
+
+    private function sourceObjectTotal(array $source): int
+    {
+        if (($source['type'] ?? null) === 'list') {
+            return (int) DB::table('observing_list_items')
+                ->where('observing_list_id', $source['list_id'])
+                ->distinct('object_name')
+                ->count('object_name');
+        }
+
+        return (int) DB::table('objectnames')
+            ->whereRaw('LOWER(catalog) = ?', [Str::lower((string) ($source['catalog'] ?? ''))])
+            ->distinct('catindex')
+            ->count('catindex');
+    }
+
+    private function sortObserverRows(Collection $rows, string $sort, string $direction): Collection
+    {
+        $sortedRows = $rows->all();
+
+        usort($sortedRows, function (array $left, array $right) use ($sort, $direction) {
+            $leftValue = $left[$sort] ?? null;
+            $rightValue = $right[$sort] ?? null;
+
+            if ($sort === 'name') {
+                $comparison = strcasecmp((string) $leftValue, (string) $rightValue);
+            } else {
+                $comparison = $leftValue <=> $rightValue;
+            }
+
+            if ($direction === 'desc') {
+                $comparison *= -1;
+            }
+
+            if ($comparison !== 0) {
+                return $comparison;
+            }
+
+            $rankComparison = ($left['rank'] ?? 0) <=> ($right['rank'] ?? 0);
+            if ($rankComparison !== 0) {
+                return $rankComparison;
+            }
+
+            return strcasecmp((string) ($left['name'] ?? ''), (string) ($right['name'] ?? ''));
+        });
+
+        return collect($sortedRows)->values();
+    }
+
+    private function paginateObserverRows(Collection $rows, int $perPage, Request $request): LengthAwarePaginator
+    {
+        $currentPage = max(1, (int) $request->query('page', 1));
+        $total = $rows->count();
+        $slice = $rows->forPage($currentPage, $perPage)->values();
+
+        return new LengthAwarePaginator(
+            $slice,
+            $total,
+            $perPage,
+            $currentPage,
+            [
+                'path' => $request->url(),
+                'query' => $request->query(),
+            ]
+        );
+    }
+
+    private function sourceObserverCounts(array $source): array
+    {
+        if (($source['type'] ?? null) === 'list') {
+            $objectNames = DB::table('observing_list_items')
+                ->where('observing_list_id', $source['list_id'])
+                ->pluck('object_name')
+                ->filter()
+                ->unique()
+                ->values();
+
+            if ($objectNames->isEmpty()) {
+                return [];
+            }
+
+            return DB::table('observations as observations')
+                ->join('users', 'users.username', '=', 'observations.observer_username')
+                ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
+                ->where(function ($query) {
+                    $query->where('observations.legacy_source', 'deepsky')
+                        ->orWhereIn('observations.target_table', ['objects', 'objectnames']);
+                })
+                ->where(function ($query) {
+                    $query->whereNull('details.visibility')
+                        ->orWhere('details.visibility', '!=', 7);
+                })
+                ->whereIn('observations.target_name', $objectNames->all())
+                ->groupBy('users.username')
+                ->select('users.username', DB::raw('COUNT(DISTINCT observations.target_name) as observed_count'))
+                ->pluck('observed_count', 'users.username')
+                ->map(fn($count) => (int) $count)
+                ->all();
+        }
+
+        return DB::table('objectnames as objectnames')
+            ->join('observations as observations', 'objectnames.objectname', '=', 'observations.target_name')
+            ->join('users', 'users.username', '=', 'observations.observer_username')
+            ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
+            ->where(function ($query) {
+                $query->where('observations.legacy_source', 'deepsky')
+                    ->orWhereIn('observations.target_table', ['objects', 'objectnames']);
+            })
+            ->where(function ($query) {
+                $query->whereNull('details.visibility')
+                    ->orWhere('details.visibility', '!=', 7);
+            })
+            ->whereRaw('LOWER(objectnames.catalog) = ?', [Str::lower((string) ($source['catalog'] ?? ''))])
+            ->groupBy('users.username')
+            ->select('users.username', DB::raw('COUNT(DISTINCT objectnames.catindex) as observed_count'))
+            ->pluck('observed_count', 'users.username')
+            ->map(fn($count) => (int) $count)
+            ->all();
+    }
+
+    private function sourceObjects(array $source): Collection
+    {
+        if (($source['type'] ?? null) === 'list') {
+            $items = DB::table('observing_list_items')
+                ->where('observing_list_id', $source['list_id'])
+                ->orderBy('sort_order')
+                ->orderBy('id')
+                ->get(['object_name']);
+
+            $objectNames = $items->pluck('object_name')->filter()->unique()->values();
+            $slugLookup = DB::table('objects')
+                ->whereIn('name', $objectNames->all())
+                ->pluck('slug', 'name');
+
+            if ($slugLookup->count() < $objectNames->count()) {
+                $missingNames = $objectNames->reject(fn($name) => $slugLookup->has($name))->values();
+
+                if ($missingNames->isNotEmpty()) {
+                    $fallbackSlugs = DB::table('objectnames')
+                        ->whereIn('objectname', $missingNames->all())
+                        ->whereNotNull('slug')
+                        ->orderBy('objectname')
+                        ->get(['objectname', 'slug'])
+                        ->pluck('slug', 'objectname');
+
+                    $slugLookup = $slugLookup->union($fallbackSlugs);
+                }
+            }
+
+            return $items->map(function ($item) use ($slugLookup) {
+                $objectName = (string) $item->object_name;
+
+                return [
+                    'object_name' => $objectName,
+                    'display_name' => $objectName,
+                    'slug' => (string) ($slugLookup[$objectName] ?? Str::slug($objectName, '-')),
+                ];
+            })->values();
+        }
+
+        $catalog = (string) ($source['catalog'] ?? '');
+        $rows = DB::table('objectnames as objectnames')
+            ->leftJoin('objects as objects', 'objects.name', '=', 'objectnames.objectname')
+            ->whereRaw('LOWER(objectnames.catalog) = ?', [Str::lower($catalog)])
+            ->select([
+                'objectnames.objectname',
+                'objectnames.catalog',
+                'objectnames.catindex',
+                DB::raw('MAX(COALESCE(objects.slug, objectnames.slug)) as resolved_slug'),
+            ])
+            ->groupBy('objectnames.objectname', 'objectnames.catalog', 'objectnames.catindex')
+            ->get()
+            ->map(function ($row) {
+                $displayName = trim((string) $row->catalog . ' ' . (string) $row->catindex);
+
+                return [
+                    'object_name' => (string) $row->objectname,
+                    'display_name' => $displayName !== '' ? $displayName : (string) $row->objectname,
+                    'slug' => (string) ($row->resolved_slug ?: Str::slug((string) ($displayName !== '' ? $displayName : $row->objectname), '-')),
+                    'sort_key' => $this->catalogSortKey((string) $row->catindex, (string) $row->objectname),
+                ];
+            })
+            ->sortBy(fn(array $row) => $row['sort_key'])
+            ->values()
+            ->map(function (array $row) {
+                unset($row['sort_key']);
+
+                return $row;
+            });
+
+        return $rows;
+    }
+
+    private function catalogSortKey(string $catalogIndex, string $fallback): string
+    {
+        $catalogIndex = trim($catalogIndex);
+        if ($catalogIndex !== '' && ctype_digit($catalogIndex)) {
+            return '0-' . str_pad($catalogIndex, 10, '0', STR_PAD_LEFT);
+        }
+
+        return '1-' . Str::lower($catalogIndex !== '' ? $catalogIndex : $fallback);
+    }
+
+    private function observedObjectLookup(User $user, Collection $sourceObjects, bool $includeSubobjects): array
+    {
+        $objectNames = $sourceObjects->pluck('object_name')->filter()->unique()->values();
+
+        if ($objectNames->isEmpty()) {
+            return [];
+        }
+
+        $observedNames = DB::table('observations as observations')
+            ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
+            ->where('observations.observer_username', $user->username)
+            ->where(function ($query) {
+                $query->where('observations.legacy_source', 'deepsky')
+                    ->orWhereIn('observations.target_table', ['objects', 'objectnames']);
+            })
+            ->where(function ($query) {
+                $query->whereNull('details.visibility')
+                    ->orWhere('details.visibility', '!=', 7);
+            })
+            ->whereIn('observations.target_name', $objectNames->all())
+            ->pluck('observations.target_name')
+            ->mapWithKeys(fn($name) => [(string) $name => true])
+            ->all();
+
+        if (!$includeSubobjects) {
+            return $observedNames;
+        }
+
+        $partOfRelations = DB::table('objectpartof')
+            ->whereIn('partofname', $objectNames->all())
+            ->get(['partofname', 'objectname'])
+            ->groupBy('partofname');
+
+        $partObjectNames = $partOfRelations
+            ->flatten(1)
+            ->pluck('objectname')
+            ->filter()
+            ->unique()
+            ->values();
+
+        if ($partObjectNames->isEmpty()) {
+            return $observedNames;
+        }
+
+        $observedPartNames = DB::table('observations as observations')
+            ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
+            ->where('observations.observer_username', $user->username)
+            ->where(function ($query) {
+                $query->where('observations.legacy_source', 'deepsky')
+                    ->orWhereIn('observations.target_table', ['objects', 'objectnames']);
+            })
+            ->where(function ($query) {
+                $query->whereNull('details.visibility')
+                    ->orWhere('details.visibility', '!=', 7);
+            })
+            ->whereIn('observations.target_name', $partObjectNames->all())
+            ->pluck('observations.target_name')
+            ->mapWithKeys(fn($name) => [(string) $name => true])
+            ->all();
+
+        foreach ($partOfRelations as $parentName => $children) {
+            if (isset($observedNames[$parentName])) {
+                continue;
+            }
+
+            foreach ($children as $child) {
+                if (isset($observedPartNames[(string) $child->objectname])) {
+                    $observedNames[(string) $parentName] = true;
+                    break;
+                }
+            }
+        }
+
+        return $observedNames;
     }
 }
