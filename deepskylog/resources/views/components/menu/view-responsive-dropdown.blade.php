@@ -43,7 +43,7 @@
                 label="{{ __('Observers') }}"
             />
 
-            <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=rank_objects">
+            <x-dropdown.item href="{{ route('objects.popular') }}">
                 <x-outline.popular-objects-icon class="h-4 w-4 mr-2 ml-0 text-gray-300" />
                 {{ __('Popular objects') }}
             </x-dropdown.item>

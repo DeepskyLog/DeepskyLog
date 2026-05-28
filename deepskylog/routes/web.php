@@ -680,6 +680,8 @@ Route::delete('/observation/comments/{comment}', [App\Http\Controllers\Observati
 // Popular observations
 Route::get('/popular-observations', [App\Http\Controllers\PopularObservationController::class, 'index'])->name('observations.popular');
 
+Route::get('/popular-objects', [App\Http\Controllers\PopularObjectController::class, 'index'])->name('objects.popular');
+
 // Popular sessions
 Route::get('/popular-sessions', function () {
     return view('observations.popular-sessions');
@@ -822,6 +824,7 @@ Route::get('/sitemap.xml', function () {
         $urls[] = ['loc' => $base . '/', 'lastmod' => $now, 'changefreq' => 'daily', 'priority' => '1.0'];
         $urls[] = ['loc' => $base . '/sessions', 'lastmod' => $now, 'changefreq' => 'daily', 'priority' => '0.8'];
         $urls[] = ['loc' => $base . '/popular-sessions', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
+        $urls[] = ['loc' => $base . '/popular-objects', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
         $urls[] = ['loc' => $base . '/popular-observations', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
         $urls[] = ['loc' => $base . '/drawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
         $urls[] = ['loc' => $base . '/cometdrawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
