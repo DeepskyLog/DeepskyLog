@@ -5,18 +5,38 @@
 ## Next steps
 
 - [ ] Update to laravel 13.
-- [ ] Save when in http://localhost/user/profile and no instrument set -> The stdinstrumentset filed must be a number. 
+- [ ] Save when in http://localhost/user/profile and no instrument set -> The stdinstrumentset field must be a number. 
 - [ ] Create star charts and atlases.
-  - [ ] Contours?
-  - [ ] Add three different types of charts -> already with atlas page?
+  - [ ] Constellation field if no constellation lines are shown.
+    - [ ] Should not be in te middle of the page, because we will add some page numbers there later. Maybe in the top right corner?
+    - [ ] The constellation label now overlaps with the coordinates. Can you move the coordinates above the rectangle?
+    - [ ] NGC 6960: 
+      - [ ] No overlapping labels
+      - [ ] Big box, going over the rectangle with the stars -> fix this.  IF needed, only show part of it, but make sure that the label is shown for that object.
+    - [ ] NGC 891: 
+      - [ ] Make sure to draw all labels
+      - [ ] What is the big rectangle-like thing doing there?
+  - [ ] Poles: NGC 3172
+    - [ ] Is it really in the center?
+    - [ ] Not all stars are shown
+    - [ ] Two extra constellations on the chart?
+  - [ ] Lines above / under object name to see if object observed or drawn.  Full underline = Seen by logged in observer, dashed underline = Seen by other observer, no underline = not seen.  Full overline = drawn by logged in observer, dashed overline = drawn by other observer, no overline = not drawn. 
+  - [ ] Add three different types of charts: Overview, lookup, detail
+    - [ ] Use the magnitudes and field of views from the observer table:
+      - [ ] Remove Font size printed atlas pages
+      - [ ] Use overviewdsos, overviewstars, overviewFoV
   - [ ] Create atlases.
+    - [ ] Add page numbers
+    - [ ] Adapt the page to show the charts and atlases.
 - [ ] Create observing guides
 - [ ] In Team Settings page: Automatically update table if new user is added (only works when next user is added)
 - [ ] Translations
+  - [ ] Check why sv translation removes all the current translations
 - [ ] On real server:
   - [ ] php artisan db:seed --class=BackfillSessionObservationIdsSeeder
   - [ ] php artisan db:seed --class=BackfillSketchObservationIdsSeeder
   - [ ] php artisan db:seed --class=addAchievementsSeeder
+  - [ ] php artisan db:seed --class=LegacyObjectContoursSeeder
   - [ ] php artisan migrate
 - [ ] Release new version of pyDeepskyLog
   - [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
