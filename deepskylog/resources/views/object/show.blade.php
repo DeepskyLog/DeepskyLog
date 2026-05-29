@@ -1178,6 +1178,13 @@ try {
                                                 class="text-gray-300 hover:underline">{{ __('All drawings') }}</a>
                                         @endif
                                     </li>
+                                    @if (!empty($canonicalSlug) || !empty($session->slug))
+                                        <li>
+                                            <a href="{{ route('object.nearby.chart.pdf', ['slug' => $canonicalSlug ?? $session->slug]) }}"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="text-gray-300 hover:underline">{{ __('Export star chart (PDF)') }}</a>
+                                        </li>
+                                    @endif
                                     @auth
                                         @if (!empty($canonicalSlug) && auth()->user()->slug)
                                             <li><a href="{{ route('observations.user.object', ['observer' => auth()->user()->slug, 'object' => $canonicalSlug]) }}"

@@ -5,8 +5,11 @@
 ## Next steps
 
 - [ ] Update to laravel 13.
+- [ ] Save when in http://localhost/user/profile and no instrument set -> The stdinstrumentset filed must be a number. 
 - [ ] Create star charts and atlases.
-  - [ ] With field of view of the instrument, and eyepiece used.
+  - [ ] Contours?
+  - [ ] Add three different types of charts -> already with atlas page?
+  - [ ] Create atlases.
 - [ ] Create observing guides
 - [ ] In Team Settings page: Automatically update table if new user is added (only works when next user is added)
 - [ ] Translations

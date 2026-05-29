@@ -622,6 +622,10 @@ Route::get('/object/{slug}/nearby-names.pdf', [App\Http\Controllers\NearbyExport
 Route::get('/object/{slug}/nearby-table.pdf', [App\Http\Controllers\NearbyExportController::class, 'tablePdf'])
     ->name('object.nearby.table.pdf')->middleware('doNotCacheResponse');
 
+// Nearby star chart PDF export
+Route::get('/object/{slug}/nearby-chart.pdf', [App\Http\Controllers\NearbyExportController::class, 'chartPdf'])
+    ->name('object.nearby.chart.pdf')->middleware('doNotCacheResponse');
+
 // Nearby Argo Navis export (plain text)
 Route::get('/object/{slug}/nearby-argo.txt', [App\Http\Controllers\NearbyExportController::class, 'argoNavis'])
     ->name('object.nearby.argo')->middleware('doNotCacheResponse');

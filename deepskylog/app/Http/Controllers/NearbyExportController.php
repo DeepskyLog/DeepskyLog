@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use App\Models\DeepskyObject;
+use App\Services\StarChartService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class NearbyExportController extends Controller
 {
@@ -54,7 +55,7 @@ class NearbyExportController extends Controller
 
             // Determine a friendly title that includes the main object's name when available
             $mainObjectName = null;
-            if (! empty($slug)) {
+            if (!empty($slug)) {
                 try {
                     $found = DeepskyObject::where('slug', $slug)->orWhere('name', $slug)->first();
                     if ($found) {
@@ -99,7 +100,7 @@ class NearbyExportController extends Controller
 
             return redirect()->back()->with('error', __('PDF library not installed. Please run: composer require barryvdh/laravel-dompdf'));
         } catch (\Throwable $ex) {
-            Log::error('NearbyExportController::namesPdf failed', ['error' => (string)$ex]);
+            Log::error('NearbyExportController::namesPdf failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate names PDF'));
         }
     }
@@ -161,8 +162,67 @@ class NearbyExportController extends Controller
 
             return redirect()->back()->with('error', __('PDF export not available'));
         } catch (\Throwable $ex) {
-            Log::error('NearbyExportController::tablePdf failed', ['error' => (string)$ex]);
+            Log::error('NearbyExportController::tablePdf failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate nearby objects PDF'));
+        }
+    }
+
+    /**
+     * Export a printable star chart PDF centered on the current object.
+     */
+    public function chartPdf(Request $request, StarChartService $starChartService, $slug = null)
+    {
+        try {
+            [$centerRaDeg, $centerDecDeg, $target] = $this->resolveCenterAndTarget($request, $slug);
+
+            if ($centerRaDeg === null || $centerDecDeg === null || $target === null) {
+                return redirect()->back()->with('error', __('Missing coordinates for star chart export'));
+            }
+
+            $radiusArcMin = max(5, min(180, (int) $request->query('radius', 30)));
+            $magnitudeLimit = $request->query('mag_limit');
+            $magnitudeLimit = is_numeric($magnitudeLimit) ? (float) $magnitudeLimit : null;
+
+            $chart = $starChartService->build($target, $centerRaDeg, $centerDecDeg, $radiusArcMin, $magnitudeLimit);
+            $title = __('Star chart for :object', ['object' => $target->name]);
+
+            $html = view('pdf.star_chart', [
+                'title' => $title,
+                'target' => $target,
+                'radius_arc_min' => $chart['radius_arc_min'],
+                'magnitude_limit' => $chart['magnitude_limit'],
+                'svg_data_uri' => 'data:image/svg+xml;base64,' . base64_encode($chart['svg']),
+                'object_count' => $chart['objects']->count(),
+                'star_count' => $chart['stars']->count(),
+            ])->render();
+
+            if (class_exists('\\Barryvdh\\DomPDF\\Facade\\Pdf')) {
+                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)->setPaper('a4', 'landscape');
+                $filename = Str::slug($target->name) . '-star-chart.pdf';
+
+                return response()->streamDownload(function () use ($pdf) {
+                    echo $pdf->output();
+                }, $filename, ['Content-Type' => 'application/pdf']);
+            }
+
+            if (class_exists('Dompdf\\Dompdf')) {
+                $dompdf = new \Dompdf\Dompdf();
+                $dompdf->loadHtml($html);
+                $dompdf->setPaper('A4', 'landscape');
+                $dompdf->render();
+                $output = $dompdf->output();
+                $filename = Str::slug($target->name) . '-star-chart.pdf';
+
+                return response()->streamDownload(function () use ($output) {
+                    echo $output;
+                }, $filename, ['Content-Type' => 'application/pdf']);
+            }
+
+            return redirect()->back()->with('error', __('PDF library not installed. Please run: composer require barryvdh/laravel-dompdf'));
+        } catch (\Throwable $ex) {
+            Log::error('NearbyExportController::chartPdf failed', ['error' => (string) $ex]);
+
+            return redirect()->back()->with('error', __('Failed to generate star chart PDF'));
         }
     }
 
@@ -218,7 +278,7 @@ class NearbyExportController extends Controller
 
             return redirect()->back()->with('error', __('Argo export not available'));
         } catch (\Throwable $ex) {
-            Log::error('NearbyExportController::argoNavis failed', ['error' => (string)$ex]);
+            Log::error('NearbyExportController::argoNavis failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate Argo Navis export'));
         }
     }
@@ -273,9 +333,40 @@ class NearbyExportController extends Controller
 
             return redirect()->back()->with('error', __('Skylist export not available'));
         } catch (\Throwable $ex) {
-            Log::error('NearbyExportController::skylist failed', ['error' => (string)$ex]);
+            Log::error('NearbyExportController::skylist failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate SkySafari export'));
         }
+    }
+
+    /**
+     * @return array{0: float|null, 1: float|null, 2: DeepskyObject|null}
+     */
+    private function resolveCenterAndTarget(Request $request, ?string $slug): array
+    {
+        $ra = $request->query('ra');
+        $dec = $request->query('dec');
+
+        $target = null;
+
+        if ($slug) {
+            $target = DeepskyObject::where('slug', $slug)->orWhere('name', $slug)->first();
+        }
+
+        if (($ra === null || $dec === null) && $target) {
+            $ra = $target->ra;
+            $dec = $target->decl;
+        }
+
+        if ($ra === null || $dec === null) {
+            return [null, null, $target];
+        }
+
+        $centerRaDeg = (float) $ra;
+        if ($centerRaDeg <= 24.0) {
+            $centerRaDeg *= 15.0;
+        }
+
+        return [$centerRaDeg, (float) $dec, $target];
     }
 
     /**
@@ -326,7 +417,7 @@ class NearbyExportController extends Controller
 
             return redirect()->back()->with('error', __('TXT export not available'));
         } catch (\Throwable $ex) {
-            Log::error('NearbyExportController::stxt failed', ['error' => (string)$ex]);
+            Log::error('NearbyExportController::stxt failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate SkyTools TXT export'));
         }
     }
@@ -380,7 +471,7 @@ class NearbyExportController extends Controller
 
             return redirect()->back()->with('error', __('APD export not available'));
         } catch (\Throwable $ex) {
-            Log::error('NearbyExportController::apd failed', ['error' => (string)$ex]);
+            Log::error('NearbyExportController::apd failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate AstroPlanner APD export'));
         }
     }
