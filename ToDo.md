@@ -7,15 +7,6 @@
 - [ ] Update to laravel 13.
 - [ ] Save when in http://localhost/user/profile and no instrument set -> The stdinstrumentset field must be a number. 
 - [ ] Create star charts and atlases.
-  - [ ] Constellation field if no constellation lines are shown.
-    - [ ] Should not be in te middle of the page, because we will add some page numbers there later. Maybe in the top right corner?
-    - [ ] The constellation label now overlaps with the coordinates. Can you move the coordinates above the rectangle?
-    - [ ] NGC 6960: 
-      - [ ] No overlapping labels
-      - [ ] Big box, going over the rectangle with the stars -> fix this.  IF needed, only show part of it, but make sure that the label is shown for that object.
-    - [ ] NGC 891: 
-      - [ ] Make sure to draw all labels
-      - [ ] What is the big rectangle-like thing doing there?
   - [ ] Poles: NGC 3172
     - [ ] Is it really in the center?
     - [ ] Not all stars are shown
@@ -32,6 +23,9 @@
 - [ ] In Team Settings page: Automatically update table if new user is added (only works when next user is added)
 - [ ] Translations
   - [ ] Check why sv translation removes all the current translations
+- [ ] Test! 
+  - [ ] Logged in and logged out, as database expert and as administrator
+  - [ ] Test on laptop and on mobile
 - [ ] On real server:
   - [ ] php artisan db:seed --class=BackfillSessionObservationIdsSeeder
   - [ ] php artisan db:seed --class=BackfillSketchObservationIdsSeeder
@@ -87,4 +81,6 @@
 - [x] Check objects page for administrators, with a button to fetch data from Simbad.
 - [x] Reworked observing lists. Users can comment on them, like them, subscribe to them, ...
 - [x] Objects can be imported in an observing list from a file. The file can be a simple text file, argo navis file, AstroPlanner file, CSV file, or SkySafari file.
+- [X] Observations can be imported from CSV and OAL
+- [X] Observations can be exported to CSV, OAL, AstroPlanner, SkySafari, ...
 

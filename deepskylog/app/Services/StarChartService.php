@@ -7,6 +7,7 @@ use App\Models\Star;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class StarChartService
 {
@@ -24,6 +25,7 @@ class StarChartService
 
         $stars = $this->loadStars($centerRaDeg, $centerDecDeg, $radiusDeg, $magnitudeLimit);
         $objects = $this->loadObjects($centerRaDeg, $centerDecDeg, $radiusDeg, $target);
+        $contours = $this->loadObjectContours($objects);
         $boundaries = $this->loadConstellationBoundaries();
 
         return [
@@ -33,7 +35,7 @@ class StarChartService
             'magnitude_limit' => $magnitudeLimit,
             'stars' => $stars,
             'objects' => $objects,
-            'svg' => $this->renderSvg($centerRaDeg, $centerDecDeg, $radiusDeg, $magnitudeLimit, $target, $stars, $objects, $boundaries),
+            'svg' => $this->renderSvg($centerRaDeg, $centerDecDeg, $radiusDeg, $magnitudeLimit, $target, $stars, $objects, $contours, $boundaries),
         ];
     }
 
@@ -155,6 +157,14 @@ class StarChartService
             ->get()
             ->map(function (DeepskyObject $object) use ($target) {
                 $raDegrees = DeepskyObject::raToDecimal($object->ra);
+                $rawPa = $object->pa === null ? null : (float) $object->pa;
+                $normalizedPa = null;
+                if ($rawPa !== null && $rawPa >= 0.0 && $rawPa < 999.0) {
+                    $normalizedPa = fmod($rawPa, 360.0);
+                    if ($normalizedPa < 0.0) {
+                        $normalizedPa += 360.0;
+                    }
+                }
 
                 return [
                     'name' => $object->name,
@@ -163,7 +173,7 @@ class StarChartService
                     'mag' => $object->mag === null ? null : (float) $object->mag,
                     'diam1' => $object->diam1 === null ? null : (float) $object->diam1,
                     'diam2' => $object->diam2 === null ? null : (float) $object->diam2,
-                    'pa' => $object->pa === null || (float) $object->pa > 360.0 ? null : (float) $object->pa,
+                    'pa' => $normalizedPa,
                     'ra_degrees' => (float) ($raDegrees ?? 0.0),
                     'decl_degrees' => (float) $object->decl,
                     'is_target' => $object->name === $target->name,
@@ -201,6 +211,48 @@ class StarChartService
             })->values();
     }
 
+    /**
+     * @return Collection<int, array<string, mixed>>
+     */
+    private function loadObjectContours(Collection $objects): Collection
+    {
+        if (!Schema::hasTable('object_contours')) {
+            return collect();
+        }
+
+        $objectNames = $objects
+            ->pluck('name')
+            ->filter(fn($name) => is_string($name) && trim($name) !== '')
+            ->map(fn(string $name) => trim($name))
+            ->unique()
+            ->values();
+
+        if ($objectNames->isEmpty()) {
+            return collect();
+        }
+
+        return DB::table('object_contours')
+            ->select(['object_name', 'contour_index', 'point_index', 'ra_degrees', 'decl_degrees'])
+            ->whereIn('object_name', $objectNames->all())
+            ->orderBy('object_name')
+            ->orderBy('contour_index')
+            ->orderBy('point_index')
+            ->get()
+            ->groupBy(fn($row) => (string) $row->object_name . '|' . (int) $row->contour_index)
+            ->map(function (Collection $rows) {
+                $first = $rows->first();
+
+                return [
+                    'object_name' => (string) $first->object_name,
+                    'contour_index' => (int) $first->contour_index,
+                    'points' => $rows->map(fn($row) => [
+                        'ra_degrees' => (float) $row->ra_degrees,
+                        'decl_degrees' => (float) $row->decl_degrees,
+                    ])->values(),
+                ];
+            })->values();
+    }
+
     private function renderSvg(
         float $centerRaDeg,
         float $centerDecDeg,
@@ -209,6 +261,7 @@ class StarChartService
         DeepskyObject $target,
         Collection $stars,
         Collection $objects,
+        Collection $contours,
         Collection $boundaries
     ): string {
         $width = self::CHART_WIDTH;
@@ -237,6 +290,15 @@ class StarChartService
         );
         $svg[] = sprintf('<rect x="%0.2f" y="%0.2f" width="%0.2f" height="%0.2f" fill="#f8f8f8" stroke="#111827" stroke-width="2" />', $left, $top, $plotWidth, $plotHeight);
 
+        // Clip path for the plotting area so object symbols do not draw outside
+        // the main star-plot rectangle. Use userSpaceOnUse so coordinates match
+        // the SVG user coordinate system. Labels are rendered outside this clip.
+        $svg[] = sprintf('<defs><clipPath id="plot-clip" clipPathUnits="userSpaceOnUse"><rect x="%0.2f" y="%0.2f" width="%0.2f" height="%0.2f" /></clipPath></defs>', $left, $top, $plotWidth, $plotHeight);
+
+        // Define a clipping region matching the star-plot rectangle so that
+        // object symbols (rectangles, ellipses, etc.) are not drawn outside
+        // the visible star field area.
+
         $polarMode = abs($centerDecDeg) >= 85.0;
         if ($polarMode) {
             $svg[] = $this->renderPolarGrid($centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
@@ -248,7 +310,9 @@ class StarChartService
 
                 $xDeg = $xHalfDeg - (($i / $gridColumns) * (2 * $xHalfDeg));
                 $raDeg = $centerRaDeg + ($xDeg / $cosDec);
-                $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="9" text-anchor="middle" fill="#6b7280">%s</text>', $x, $top + 12, htmlspecialchars($this->formatRaHours($raDeg), ENT_QUOTES, 'UTF-8'));
+                // Place RA tick labels above the plot rectangle to avoid overlap
+                // with in-plot annotations (e.g. constellation badge).
+                $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="9" text-anchor="middle" fill="#6b7280">%s</text>', $x, $top - 8, htmlspecialchars($this->formatRaHours($raDeg), ENT_QUOTES, 'UTF-8'));
             }
 
             $gridRows = 8;
@@ -261,6 +325,12 @@ class StarChartService
                 $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="9" text-anchor="start" fill="#6b7280">%s</text>', $left + $plotWidth + 6, $y + 3, htmlspecialchars($this->formatDecDms($decDeg), ENT_QUOTES, 'UTF-8'));
             }
         }
+
+        // Begin clipped group so boundaries, contours, stars and object
+        // symbols are constrained to the plotting rectangle.
+        $svg[] = '<g clip-path="url(#plot-clip)">';
+
+        $visibleBoundaryCount = 0;
 
         foreach ($boundaries as $segment) {
             $boundary = $this->renderBoundaryCurvePath(
@@ -281,6 +351,8 @@ class StarChartService
             if ($boundary['path'] === '') {
                 continue;
             }
+
+            $visibleBoundaryCount++;
 
             $svg[] = sprintf('<path d="%s" fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="3 2" />', $boundary['path']);
 
@@ -312,7 +384,80 @@ class StarChartService
             );
         }
 
-        $labelBudget = 40;
+        if ($visibleBoundaryCount === 0) {
+            $targetCon = strtoupper(trim((string) ($target->con ?? '')));
+            if ($targetCon !== '') {
+                // Place constellation badge in the top-right corner inside the plot
+                // area so it doesn't occupy the center (reserved for page numbers).
+                $badgeX = $left + $plotWidth - 36.0;
+                $badgeY = $top + 18.0;
+
+                $svg[] = $this->renderBoundaryLabelOnSide(
+                    $targetCon,
+                    $badgeX,
+                    $badgeY,
+                    0.0,
+                    0.0,
+                    'R',
+                    1.0,
+                    $left,
+                    $top,
+                    $plotWidth,
+                    $plotHeight
+                );
+            }
+        }
+
+        $chartRect = [
+            'min_x' => $left,
+            'min_y' => $top,
+            'max_x' => $left + $plotWidth,
+            'max_y' => $top + $plotHeight,
+        ];
+
+        foreach ($contours as $contour) {
+            $path = $this->renderObjectContourPath(
+                $contour,
+                $centerRaDeg,
+                $centerDecDeg,
+                $xHalfDeg,
+                $yHalfDeg,
+                $left,
+                $top,
+                $plotWidth,
+                $plotHeight,
+                $chartRect
+            );
+
+            if ($path === '') {
+                continue;
+            }
+
+            $isTargetContour = strcasecmp((string) ($contour['object_name'] ?? ''), (string) $target->name) === 0;
+            $stroke = $isTargetContour ? '#1f2937' : '#6b7280';
+            $strokeWidth = $isTargetContour ? 1.5 : 1.0;
+
+            $svg[] = sprintf(
+                '<path data-contour="%s" d="%s" fill="none" stroke="%s" stroke-width="%0.1f" stroke-linejoin="round" stroke-linecap="round" />',
+                htmlspecialchars((string) ($contour['object_name'] ?? ''), ENT_QUOTES, 'UTF-8'),
+                $path,
+                $stroke,
+                $strokeWidth
+            );
+        }
+
+        $objectsWithContours = $contours
+            ->pluck('object_name')
+            ->filter(fn($name) => is_string($name) && trim($name) !== '')
+            ->map(fn(string $name) => strtoupper(trim($name)))
+            ->unique()
+            ->values();
+
+        // Allow labels for all objects by setting budget to the number of objects
+        // visible in the chart (prevents type-based filtering hiding labels).
+        $labelBudget = max(1000, $objects->count());
+        $occupiedLabelBoxes = [];
+        $labelTasks = [];
 
         foreach ($stars as $star) {
             $point = $this->projectToAtlasChart($star['ra_degrees'], $star['decl_degrees'], $centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
@@ -329,21 +474,55 @@ class StarChartService
                 continue;
             }
 
-            $svg[] = $this->renderObjectSymbol(
-                $object['type'] ?? '',
-                $point['x'],
-                $point['y'],
-                $object['diam1'] ?? null,
-                $object['diam2'] ?? null,
-                $object['pa'] ?? null,
-                $object['mag'] ?? null,
-                $arcMinToPx
-            );
+            $hasContour = $objectsWithContours->contains(strtoupper(trim((string) ($object['name'] ?? ''))));
 
+            if (!$hasContour) {
+                $svg[] = $this->renderObjectSymbol(
+                    $object['type'] ?? '',
+                    $point['x'],
+                    $point['y'],
+                    $object['diam1'] ?? null,
+                    $object['diam2'] ?? null,
+                    $object['pa'] ?? null,
+                    $object['mag'] ?? null,
+                    $arcMinToPx,
+                    $chartRect
+                );
+            }
+            // Collect label tasks and render them after the clipped group so
+            // labels are never clipped even when symbols are constrained.
             if ($object['is_target']) {
-                $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="11" font-weight="bold" fill="#111">%s</text>', $point['x'] + 12, $point['y'] - 8, htmlspecialchars($target->name, ENT_QUOTES, 'UTF-8'));
-            } elseif ($labelBudget > 0 && $this->shouldRenderObjectLabel($object)) {
-                $svg[] = $this->renderObjectLabel((string) ($object['name'] ?? ''), $point['x'], $point['y'], $left, $top, $plotWidth, $plotHeight);
+                $labelTasks[] = ['label' => (string) $target->name, 'x' => $point['x'], 'y' => $point['y'], 'font' => 11.0, 'is_target' => true];
+            } elseif ($labelBudget > 0) {
+                // Add a label task for every object (user requested all objects labeled)
+                $labelTasks[] = ['label' => (string) ($object['name'] ?? ''), 'x' => $point['x'], 'y' => $point['y'], 'font' => 8.5, 'is_target' => false];
+            }
+        }
+
+        $svg[] = '</g>';
+
+        // Render collected labels (outside the clip) using the collision-avoiding
+        // placement helper. Decrement non-target label budget when successfully placed.
+        foreach ($labelTasks as $task) {
+            if (!is_string($task['label']) || trim($task['label']) === '') {
+                continue;
+            }
+
+            if (!empty($task['is_target'])) {
+                $labelSvg = $this->placeObjectLabel($task['label'], $task['x'], $task['y'], $left, $top, $plotWidth, $plotHeight, $occupiedLabelBoxes, $task['font']);
+                if ($labelSvg !== '') {
+                    $svg[] = $labelSvg;
+                }
+                continue;
+            }
+
+            if ($labelBudget <= 0) {
+                continue;
+            }
+
+            $labelSvg = $this->placeObjectLabel($task['label'], $task['x'], $task['y'], $left, $top, $plotWidth, $plotHeight, $occupiedLabelBoxes, $task['font']);
+            if ($labelSvg !== '') {
+                $svg[] = $labelSvg;
                 $labelBudget--;
             }
         }
@@ -362,6 +541,82 @@ class StarChartService
         $svg[] = '</svg>';
 
         return implode('', $svg);
+    }
+
+    /**
+     * @param array<string, mixed> $contour
+     * @param array<string, float> $chartRect
+     */
+    private function renderObjectContourPath(
+        array $contour,
+        float $centerRaDeg,
+        float $centerDecDeg,
+        float $xHalfDeg,
+        float $yHalfDeg,
+        float $left,
+        float $top,
+        float $plotWidth,
+        float $plotHeight,
+        array $chartRect
+    ): string {
+        $points = $contour['points'] ?? null;
+        if (!($points instanceof Collection) || $points->count() < 2) {
+            return '';
+        }
+
+        $pathParts = [];
+        $previous = null;
+        $first = null;
+
+        foreach ($points as $point) {
+            $ra = isset($point['ra_degrees']) ? (float) $point['ra_degrees'] : null;
+            $dec = isset($point['decl_degrees']) ? (float) $point['decl_degrees'] : null;
+
+            if ($ra === null || $dec === null) {
+                continue;
+            }
+
+            $projected = $this->projectToAtlasChartUnclipped(
+                $ra,
+                $dec,
+                $centerRaDeg,
+                $centerDecDeg,
+                $xHalfDeg,
+                $yHalfDeg,
+                $left,
+                $top,
+                $plotWidth,
+                $plotHeight
+            );
+
+            $current = [
+                'x' => (float) $projected['x'],
+                'y' => (float) $projected['y'],
+            ];
+
+            if ($first === null) {
+                $first = $current;
+            }
+
+            if ($previous !== null) {
+                $clipped = $this->clipLineToRect($previous['x'], $previous['y'], $current['x'], $current['y'], $chartRect);
+                if ($clipped !== null) {
+                    $pathParts[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $clipped['x1'], $clipped['y1'], $clipped['x2'], $clipped['y2']);
+                }
+            }
+
+            $previous = $current;
+        }
+
+        // Object outlines are closed contours; connect end back to start.
+        if ($previous !== null && $first !== null) {
+            $clipped = $this->clipLineToRect($previous['x'], $previous['y'], $first['x'], $first['y'], $chartRect);
+            if ($clipped !== null) {
+                $pathParts[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $clipped['x1'], $clipped['y1'], $clipped['x2'], $clipped['y2']);
+            }
+        }
+
+        return implode(' ', $pathParts);
     }
 
     private function renderBoundaryCurvePath(
@@ -691,6 +946,104 @@ class StarChartService
         );
     }
 
+    /**
+     * Place an object label trying multiple candidate positions to avoid overlaps.
+     * Updates the passed $occupied array with the chosen label bounding box.
+     *
+     * @param array<int, array{left: float, top: float, right: float, bottom: float}> $occupied
+     */
+    private function placeObjectLabel(string $label, float $x, float $y, float $left, float $top, float $plotWidth, float $plotHeight, array &$occupied, float $fontSize = 8.5): string
+    {
+        $trimmed = trim($label);
+        if ($trimmed === '') {
+            return '';
+        }
+
+        $charWidth = 5.2 * ($fontSize / 8.5);
+        $textWidth = max(10.0, strlen($trimmed) * $charWidth);
+        $textHeight = $fontSize + 4.0;
+
+        $minX = $left + 8.0;
+        $maxX = $left + $plotWidth - 12.0 - $textWidth;
+        if ($maxX < $minX) {
+            $maxX = $minX;
+        }
+        $minY = $top + 10.0 + ($textHeight * 0.2);
+        $maxY = $top + $plotHeight - 6.0;
+        if ($maxY < $minY) {
+            $maxY = $minY;
+        }
+
+        $candidates = [
+            ['lx' => $x + 10.0, 'ly' => $y - 7.0],
+            ['lx' => $x + 10.0, 'ly' => $y + 10.0],
+            ['lx' => $x - 10.0 - $textWidth, 'ly' => $y - 7.0],
+            ['lx' => $x - 10.0 - $textWidth, 'ly' => $y + 10.0],
+            ['lx' => $x - ($textWidth / 2.0), 'ly' => $y - 14.0],
+            ['lx' => $x - ($textWidth / 2.0), 'ly' => $y + 14.0],
+        ];
+
+        $tryBox = function (float $lx, float $ly) use ($minX, $maxX, $minY, $maxY, $textWidth, $textHeight) {
+            $lx = min(max($lx, $minX), $maxX);
+            $ly = min(max($ly, $minY), $maxY);
+
+            $topY = $ly - $textHeight;
+            $bottomY = $ly + 3.0;
+
+            return ['left' => $lx, 'top' => $topY, 'right' => $lx + $textWidth, 'bottom' => $bottomY];
+        };
+
+        $intersects = function (array $a, array $b) {
+            $pad = 3.0;
+            return !($a['right'] + $pad < $b['left'] - $pad || $a['left'] - $pad > $b['right'] + $pad || $a['bottom'] + $pad < $b['top'] - $pad || $a['top'] - $pad > $b['bottom'] + $pad);
+        };
+
+        foreach ($candidates as $c) {
+            $box = $tryBox($c['lx'], $c['ly']);
+            $ok = true;
+            foreach ($occupied as $occ) {
+                if ($intersects($box, $occ)) {
+                    $ok = false;
+                    break;
+                }
+            }
+            if ($ok) {
+                $occupied[] = $box;
+                return sprintf('<text x="%0.2f" y="%0.2f" font-size="%0.1f" fill="#4b5563" text-anchor="start">%s</text>', $box['left'], $box['bottom'] - 3.0, $fontSize, htmlspecialchars($trimmed, ENT_QUOTES, 'UTF-8'));
+            }
+        }
+
+        // Fallback: spiral search outward until a free slot is found.
+        $angles = [];
+        for ($a = 0; $a < 360; $a += 30) {
+            $angles[] = deg2rad($a);
+        }
+
+        foreach ([20, 40, 60, 90] as $radius) {
+            foreach ($angles as $angle) {
+                $lx = $x + cos($angle) * $radius - ($textWidth / 2.0);
+                $ly = $y + sin($angle) * $radius;
+                $box = $tryBox($lx, $ly);
+                $ok = true;
+                foreach ($occupied as $occ) {
+                    if ($intersects($box, $occ)) {
+                        $ok = false;
+                        break;
+                    }
+                }
+                if ($ok) {
+                    $occupied[] = $box;
+                    return sprintf('<text x="%0.2f" y="%0.2f" font-size="%0.1f" fill="#4b5563" text-anchor="start">%s</text>', $box['left'], $box['bottom'] - 3.0, $fontSize, htmlspecialchars($trimmed, ENT_QUOTES, 'UTF-8'));
+                }
+            }
+        }
+
+        // As a last resort, place at the original default position (may overlap).
+        $defaultBox = $tryBox($x + 10.0, $y - 7.0);
+        $occupied[] = $defaultBox;
+        return sprintf('<text x="%0.2f" y="%0.2f" font-size="%0.1f" fill="#4b5563" text-anchor="start">%s</text>', $defaultBox['left'], $defaultBox['bottom'] - 3.0, $fontSize, htmlspecialchars($trimmed, ENT_QUOTES, 'UTF-8'));
+    }
+
     private function isGalaxyClusterType(string $type): bool
     {
         $code = strtoupper(trim($type));
@@ -732,20 +1085,235 @@ class StarChartService
         ?float $positionAngleDeg = null,
         ?float $magnitude = null,
         float $arcMinToPx = 1.0
+        ,
+        ?array $chartRect = null
     ): string {
+        $code = $this->normalizeObjectTypeCode($type);
+        $majorRadiusPx = $this->diameterArcSecToRadiusPx($diam1ArcMin, $arcMinToPx);
+        $minorRadiusPx = $this->diameterArcSecToRadiusPx($diam2ArcMin, $arcMinToPx);
+        $rotationTransform = $this->rotationTransform($positionAngleDeg, $x, $y);
+
+        return match ($code) {
+            'GALXY', 'GX', 'GXAGC', 'GALCL' => $this->renderGalaxySymbol($x, $y, $diam1ArcMin, $diam2ArcMin, $positionAngleDeg, $arcMinToPx),
+            'DS' => $this->renderDoubleStarSymbol($x, $y, $diam1ArcMin, $positionAngleDeg, $magnitude, $arcMinToPx),
+            'AA1STAR', 'SNOVA' => $this->renderPointSourceSymbol($x, $y, $magnitude),
+            // Render asterisms using the same dashed-circle symbol as open clusters
+            // (Lederman 1 is an asterism but should appear as an open cluster).
+            'ASTER' => sprintf(
+                '<circle cx="%0.2f" cy="%0.2f" r="%0.2f" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2 2" />',
+                $x,
+                $y,
+                max(4.5, $majorRadiusPx ?? 5.0)
+            ),
+            'GLOCL' => sprintf(
+                '<circle cx="%0.2f" cy="%0.2f" r="%0.2f" fill="none" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" />',
+                $x,
+                $y,
+                max(4.5, $majorRadiusPx ?? 5.0),
+                $x - max(6.0, ($majorRadiusPx ?? 5.0) + 1.0),
+                $y,
+                $x + max(6.0, ($majorRadiusPx ?? 5.0) + 1.0),
+                $y,
+                $x,
+                $y - max(6.0, ($majorRadiusPx ?? 5.0) + 1.0),
+                $x,
+                $y + max(6.0, ($majorRadiusPx ?? 5.0) + 1.0)
+            ),
+            'OPNCL' => sprintf(
+                '<circle cx="%0.2f" cy="%0.2f" r="%0.2f" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2 2" />',
+                $x,
+                $y,
+                max(4.5, $majorRadiusPx ?? 5.0)
+            ),
+            'DRKNB' => sprintf(
+                '<rect x="%0.2f" y="%0.2f" width="%0.2f" height="%0.2f" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2 2" />',
+                $x - max(4.5, $majorRadiusPx ?? 5.0),
+                $y - max(4.5, $minorRadiusPx ?? $majorRadiusPx ?? 5.0),
+                max(9.0, 2 * (float) ($majorRadiusPx ?? 5.0)),
+                max(9.0, 2 * (float) ($minorRadiusPx ?? $majorRadiusPx ?? 5.0))
+            ),
+            'PLNNB' => sprintf(
+                '<ellipse cx="%0.2f" cy="%0.2f" rx="%0.2f" ry="%0.2f" fill="none" stroke="#666" stroke-width="1"%s /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.9" />',
+                $x,
+                $y,
+                max(3.8, $majorRadiusPx ?? 4.5),
+                max(3.0, $minorRadiusPx ?? $majorRadiusPx ?? 4.5),
+                $rotationTransform,
+                $x - max(7.0, ($majorRadiusPx ?? 4.5) + 2.5),
+                $y,
+                $x + max(7.0, ($majorRadiusPx ?? 4.5) + 2.5),
+                $y
+            ),
+            'CLANB', 'EMINB', 'HII', 'RNHII', 'REFNB', 'BRTNB', 'WRNEB', 'STNEB', 'ENRNN' => sprintf(
+                '<ellipse cx="%0.2f" cy="%0.2f" rx="%0.2f" ry="%0.2f" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2 2"%s /><rect x="%0.2f" y="%0.2f" width="%0.2f" height="%0.2f" fill="none" stroke="#666" stroke-width="0.8" />',
+                $x,
+                $y,
+                max(4.5, $majorRadiusPx ?? 5.0),
+                max(3.8, $minorRadiusPx ?? $majorRadiusPx ?? 4.2),
+                $rotationTransform,
+                $x - 2.0,
+                $y - 2.0,
+                4.0,
+                4.0
+            ),
+            'SNREM' => $this->renderSupernovaRemnantSymbol($x, $y, $diam1ArcMin, $diam2ArcMin, $positionAngleDeg, $arcMinToPx, $chartRect),
+            'QUASR' => sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" />', $x - 5, $y, $x + 5, $y, $x, $y - 5, $x, $y + 5),
+            default => ($majorRadiusPx !== null)
+            ? sprintf(
+                '<ellipse cx="%0.2f" cy="%0.2f" rx="%0.2f" ry="%0.2f" fill="none" stroke="#666" stroke-width="1"%s />',
+                $x,
+                $y,
+                max(3.5, $majorRadiusPx),
+                max(3.0, $minorRadiusPx ?? $majorRadiusPx * 0.8),
+                $rotationTransform
+            )
+            : sprintf('<polygon points="%0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f" fill="none" stroke="#666" stroke-width="1" />', $x, $y - 5, $x + 5, $y, $x, $y + 5, $x - 5, $y),
+        };
+    }
+
+    private function normalizeObjectTypeCode(string $type): string
+    {
         $code = strtoupper(trim($type));
 
         return match ($code) {
-            'GALXY', 'GX', 'GXAGC', 'GALCL' => $this->renderGalaxySymbol($x, $y, $diam1ArcMin, $diam2ArcMin, $positionAngleDeg ?? 0.0, $arcMinToPx),
-            'DS' => $this->renderDoubleStarSymbol($x, $y, $diam1ArcMin, $positionAngleDeg, $magnitude, $arcMinToPx),
-            'GLOCL' => sprintf('<circle cx="%0.2f" cy="%0.2f" r="5" fill="none" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" />', $x, $y, $x - 6, $y, $x + 6, $y, $x, $y - 6, $x, $y + 6),
-            'OPNCL' => sprintf('<circle cx="%0.2f" cy="%0.2f" r="5" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2 2" />', $x, $y),
-            'DRKNB' => sprintf('<rect x="%0.2f" y="%0.2f" width="10" height="10" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2 2" />', $x - 5, $y - 5),
-            'PLNNB' => sprintf('<circle cx="%0.2f" cy="%0.2f" r="4.5" fill="none" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.9" />', $x, $y, $x - 7, $y, $x + 7, $y),
-            'SNREM' => sprintf('<circle cx="%0.2f" cy="%0.2f" r="5" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="1.5 2" />', $x, $y),
-            'QUASR' => sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" />', $x - 5, $y, $x + 5, $y, $x, $y - 5, $x, $y + 5),
-            default => sprintf('<polygon points="%0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f" fill="none" stroke="#666" stroke-width="1" />', $x, $y - 5, $x + 5, $y, $x, $y + 5, $x - 5, $y),
+            'G', 'GALAXY', 'GXADN', 'GACAN' => 'GALXY',
+            'AA1STAR', 'SNOVA' => $code,
+            'HII', 'RNHII', 'EMINB', 'REFNB', 'BRTNB', 'WRNEB', 'STNEB', 'ENRNN' => $code,
+            default => $code,
         };
+    }
+
+    private function renderPointSourceSymbol(float $x, float $y, ?float $magnitude): string
+    {
+        $r = $this->starRadius($magnitude) + 0.5;
+
+        return sprintf(
+            '<circle cx="%0.2f" cy="%0.2f" r="%0.2f" fill="none" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" />',
+            $x,
+            $y,
+            $r,
+            $x - ($r + 2.0),
+            $y,
+            $x + ($r + 2.0),
+            $y,
+            $x,
+            $y - ($r + 2.0),
+            $x,
+            $y + ($r + 2.0)
+        );
+    }
+
+    private function renderAsterismSymbol(float $x, float $y, ?float $majorRadiusPx): string
+    {
+        $r = max(4.5, $majorRadiusPx ?? 6.0);
+        $p1x = $x - $r;
+        $p1y = $y + ($r * 0.6);
+        $p2x = $x;
+        $p2y = $y - $r;
+        $p3x = $x + $r;
+        $p3y = $y + ($r * 0.5);
+
+        return sprintf(
+            '<polyline points="%0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f" fill="none" stroke="#666" stroke-width="1" /><circle cx="%0.2f" cy="%0.2f" r="1.1" fill="#666" /><circle cx="%0.2f" cy="%0.2f" r="1.1" fill="#666" /><circle cx="%0.2f" cy="%0.2f" r="1.1" fill="#666" />',
+            $p1x,
+            $p1y,
+            $p2x,
+            $p2y,
+            $p3x,
+            $p3y,
+            $p1x,
+            $p1y,
+            $p2x,
+            $p2y,
+            $p3x,
+            $p3y
+        );
+    }
+
+    private function renderSupernovaRemnantSymbol(
+        float $x,
+        float $y,
+        ?float $majorDiamArcSec,
+        ?float $minorDiamArcSec,
+        ?float $positionAngleDeg,
+        float $arcMinToPx,
+        ?array $chartRect = null
+    ): string {
+        $majorRadiusPx = $this->diameterArcSecToRadiusPx($majorDiamArcSec, $arcMinToPx);
+        $minorRadiusPx = $this->diameterArcSecToRadiusPx($minorDiamArcSec, $arcMinToPx);
+
+        if ($majorRadiusPx === null && $minorRadiusPx === null) {
+            return sprintf('<rect x="%0.2f" y="%0.2f" width="10" height="10" fill="none" stroke="#666" stroke-width="1.2" />', $x - 5, $y - 5);
+        }
+
+        if ($majorRadiusPx !== null && $minorRadiusPx !== null && $minorRadiusPx > $majorRadiusPx) {
+            [$majorRadiusPx, $minorRadiusPx] = [$minorRadiusPx, $majorRadiusPx];
+        }
+
+        $majorRadiusPx = $majorRadiusPx === null ? 6.0 : max(4.0, $majorRadiusPx);
+        $minorRadiusPx = $minorRadiusPx === null ? max(3.0, $majorRadiusPx * 0.7) : max(3.0, $minorRadiusPx);
+
+        // Unknown PA should not imply a fixed shared orientation.
+        if ($positionAngleDeg === null) {
+            $minorRadiusPx = $majorRadiusPx;
+        }
+
+        $halfWidth = $majorRadiusPx;
+        $halfHeight = $minorRadiusPx;
+
+        // If no chartRect provided, fall back to drawing a raw rect with rotation.
+        if ($chartRect === null) {
+            $rotationTransform = $this->rotationTransform($positionAngleDeg, $x, $y);
+            return sprintf(
+                '<rect x="%0.2f" y="%0.2f" width="%0.2f" height="%0.2f" fill="none" stroke="#666" stroke-width="1.2"%s />',
+                $x - $halfWidth,
+                $y - $halfHeight,
+                $halfWidth * 2.0,
+                $halfHeight * 2.0,
+                $rotationTransform
+            );
+        }
+
+        // Render rectangle as clipped line segments so PDF generators that do not
+        // honor clipPath still only show the portion inside the chart rect.
+        $theta = $positionAngleDeg === null ? 0.0 : $positionAngleDeg;
+        $rad = deg2rad($theta);
+        $cos = cos($rad);
+        $sin = sin($rad);
+
+        $corners = [
+            [$x - $halfWidth, $y - $halfHeight],
+            [$x + $halfWidth, $y - $halfHeight],
+            [$x + $halfWidth, $y + $halfHeight],
+            [$x - $halfWidth, $y + $halfHeight],
+        ];
+
+        // Rotate corners around center
+        $rotated = [];
+        foreach ($corners as [$cx, $cy]) {
+            $dx = $cx - $x;
+            $dy = $cy - $y;
+            $rx = $x + ($dx * $cos) - ($dy * $sin);
+            $ry = $y + ($dx * $sin) + ($dy * $cos);
+            $rotated[] = ['x' => $rx, 'y' => $ry];
+        }
+
+        $pathParts = [];
+        // clip each edge to chartRect
+        for ($i = 0; $i < 4; $i++) {
+            $p1 = $rotated[$i];
+            $p2 = $rotated[($i + 1) % 4];
+            $clipped = $this->clipLineToRect((float) $p1['x'], (float) $p1['y'], (float) $p2['x'], (float) $p2['y'], $chartRect);
+            if ($clipped !== null) {
+                $pathParts[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $clipped['x1'], $clipped['y1'], $clipped['x2'], $clipped['y2']);
+            }
+        }
+
+        if (empty($pathParts)) {
+            return '';
+        }
+
+        return sprintf('<path d="%s" fill="none" stroke="#666" stroke-width="1.2" />', implode(' ', $pathParts));
     }
 
     private function renderDoubleStarSymbol(float $x, float $y, ?float $separationArcSec, ?float $positionAngleDeg, ?float $magnitude, float $arcMinToPx): string
@@ -792,33 +1360,53 @@ class StarChartService
         );
     }
 
-    private function renderGalaxySymbol(float $x, float $y, ?float $majorDiamArcMin, ?float $minorDiamArcMin, float $positionAngleDeg, float $arcMinToPx): string
+    private function renderGalaxySymbol(float $x, float $y, ?float $majorDiamArcMin, ?float $minorDiamArcMin, ?float $positionAngleDeg, float $arcMinToPx): string
     {
-        $majorArcMin = $this->normalizeGalaxyArcMin($majorDiamArcMin);
-        $minorArcMin = $this->normalizeGalaxyArcMin($minorDiamArcMin);
+        $majorRadiusPx = $this->diameterArcSecToRadiusPx($majorDiamArcMin, $arcMinToPx);
+        $minorRadiusPx = $this->diameterArcSecToRadiusPx($minorDiamArcMin, $arcMinToPx);
 
-        if ($majorArcMin === null && $minorArcMin === null) {
+        if ($majorRadiusPx === null && $minorRadiusPx === null) {
             return sprintf('<ellipse cx="%0.2f" cy="%0.2f" rx="7" ry="4" fill="none" stroke="#666" stroke-width="1" />', $x, $y);
         }
 
-        if ($majorArcMin !== null && $minorArcMin !== null && $minorArcMin > $majorArcMin) {
-            [$majorArcMin, $minorArcMin] = [$minorArcMin, $majorArcMin];
+        if ($majorRadiusPx !== null && $minorRadiusPx !== null && $minorRadiusPx > $majorRadiusPx) {
+            [$majorRadiusPx, $minorRadiusPx] = [$minorRadiusPx, $majorRadiusPx];
         }
 
-        $majorRadiusPx = $majorArcMin === null ? 7.0 : max(1.0, min(12.0, $majorArcMin * 1.1));
-        $minorRadiusPx = $minorArcMin === null ? max(0.8, min(5.0, $majorRadiusPx * 0.8)) : max(0.8, min(7.0, $minorArcMin));
-        $rotation = 90.0 - $positionAngleDeg;
+        $majorRadiusPx = $majorRadiusPx === null ? 7.0 : max(1.0, $majorRadiusPx);
+        $minorRadiusPx = $minorRadiusPx === null ? max(0.8, $majorRadiusPx * 0.8) : max(0.8, $minorRadiusPx);
 
-        return sprintf('<ellipse cx="%0.2f" cy="%0.2f" rx="%0.2f" ry="%0.2f" fill="none" stroke="#666" stroke-width="1" transform="rotate(%0.2f %0.2f %0.2f)" />', $x, $y, $majorRadiusPx, $minorRadiusPx, $rotation, $x, $y);
+        // Unknown PA should not imply a shared orientation; draw circular fallback.
+        if ($positionAngleDeg === null) {
+            $minorRadiusPx = $majorRadiusPx;
+        }
+
+        $rotationTransform = $this->rotationTransform($positionAngleDeg, $x, $y);
+
+        return sprintf('<ellipse cx="%0.2f" cy="%0.2f" rx="%0.2f" ry="%0.2f" fill="none" stroke="#666" stroke-width="1"%s />', $x, $y, $majorRadiusPx, $minorRadiusPx, $rotationTransform);
     }
 
-    private function normalizeGalaxyArcMin(?float $value): ?float
+    private function rotationTransform(?float $positionAngleDeg, float $x, float $y): string
     {
-        if ($value === null || $value <= 0.0) {
+        if ($positionAngleDeg === null) {
+            return '';
+        }
+
+        $rotation = 90.0 - $positionAngleDeg;
+
+        return sprintf(' transform="rotate(%0.2f %0.2f %0.2f)"', $rotation, $x, $y);
+    }
+
+    private function diameterArcSecToRadiusPx(?float $diameterArcSec, float $arcMinToPx): ?float
+    {
+        if ($diameterArcSec === null || $diameterArcSec <= 0.0) {
             return null;
         }
 
-        return $value / 60.0;
+        // Legacy diameters are stored in arcseconds.
+        $diameterArcMin = $diameterArcSec / 60.0;
+
+        return ($diameterArcMin * $arcMinToPx) / 2.0;
     }
 
     private function renderTopLegend(float $startX, float $baselineY): string
@@ -834,7 +1422,7 @@ class StarChartService
         }
 
         $x += 5;
-        $keys = ['GALXY', 'PLNNB', 'GLOCL', 'OPNCL', 'DRKNB', 'CLANB', 'GALCL', 'QUASR'];
+        $keys = ['GALXY', 'PLNNB', 'GLOCL', 'OPNCL', 'DRKNB', 'SNREM', 'CLANB', 'GALCL', 'QUASR'];
         foreach ($keys as $code) {
             $svg[] = $this->renderLegendSymbol($code, $x, $baselineY - 8);
             $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="8" fill="#4b5563">%s</text>', $x + 14, $baselineY - 6, $code);
@@ -852,6 +1440,7 @@ class StarChartService
             'GLOCL' => sprintf('<circle cx="%0.2f" cy="%0.2f" r="4.5" fill="none" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" />', $x, $y, $x - 5, $y, $x + 5, $y),
             'OPNCL' => sprintf('<circle cx="%0.2f" cy="%0.2f" r="4.5" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2 2" />', $x, $y),
             'DRKNB' => sprintf('<rect x="%0.2f" y="%0.2f" width="9" height="9" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2 2" />', $x - 4.5, $y - 4.5),
+            'SNREM' => sprintf('<rect x="%0.2f" y="%0.2f" width="11" height="7.6" fill="none" stroke="#666" stroke-width="1.1" />', $x - 5.5, $y - 3.8),
             'CLANB' => sprintf('<rect x="%0.2f" y="%0.2f" width="9" height="9" fill="none" stroke="#666" stroke-width="1" /><circle cx="%0.2f" cy="%0.2f" r="4.5" fill="none" stroke="#666" stroke-width="1" />', $x - 4.5, $y - 4.5, $x, $y),
             'GALCL' => sprintf('<polygon points="%0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f" fill="none" stroke="#666" stroke-width="1" />', $x, $y - 4.5, $x + 4.5, $y, $x, $y + 4.5, $x - 4.5, $y),
             'QUASR' => sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" />', $x - 4.5, $y, $x + 4.5, $y, $x, $y - 4.5, $x, $y + 4.5),
