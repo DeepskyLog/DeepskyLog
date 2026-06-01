@@ -301,7 +301,8 @@ class StarChartService
 
         $polarMode = abs($centerDecDeg) >= 85.0;
         if ($polarMode) {
-            $svg[] = $this->renderPolarGrid($centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
+            // Keep polar grid strictly inside the chart rectangle.
+            $svg[] = sprintf('<g clip-path="url(#plot-clip)">%s</g>', $this->renderPolarGrid($centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight));
         } else {
             $gridColumns = 10;
             for ($i = 0; $i <= $gridColumns; $i++) {
@@ -330,6 +331,10 @@ class StarChartService
         // symbols are constrained to the plotting rectangle.
         $svg[] = '<g clip-path="url(#plot-clip)">';
 
+        // Boundary labels are collected and rendered after the clipped group so
+        // labels near chart edges are not clipped away.
+        $boundaryLabels = [];
+
         $visibleBoundaryCount = 0;
 
         foreach ($boundaries as $segment) {
@@ -354,9 +359,9 @@ class StarChartService
 
             $visibleBoundaryCount++;
 
-            $svg[] = sprintf('<path d="%s" fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="3 2" />', $boundary['path']);
+            $svg[] = sprintf('<path d="%s" fill="none" stroke="#9ca3af" stroke-width="2.4" stroke-linecap="round" opacity="0.7" />', $boundary['path']);
 
-            $svg[] = $this->renderBoundaryLabelOnSide(
+            $boundaryLabels[] = $this->renderBoundaryLabelOnSide(
                 (string) ($segment['label0'] ?? ''),
                 $boundary['label_x'],
                 $boundary['label_y'],
@@ -369,7 +374,7 @@ class StarChartService
                 $plotWidth,
                 $plotHeight
             );
-            $svg[] = $this->renderBoundaryLabelOnSide(
+            $boundaryLabels[] = $this->renderBoundaryLabelOnSide(
                 (string) ($segment['label1'] ?? ''),
                 $boundary['label_x'],
                 $boundary['label_y'],
@@ -459,6 +464,8 @@ class StarChartService
         $occupiedLabelBoxes = [];
         $labelTasks = [];
 
+        $starLabelBoxes = [];
+
         foreach ($stars as $star) {
             $point = $this->projectToAtlasChart($star['ra_degrees'], $star['decl_degrees'], $centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
             if ($point === null) {
@@ -466,6 +473,17 @@ class StarChartService
             }
 
             $svg[] = sprintf('<circle cx="%0.2f" cy="%0.2f" r="%0.2f" fill="#111827" />', $point['x'], $point['y'], $this->starRadius($star['vmag']));
+
+            // Label bright stars in a restrained way similar to atlas charts.
+            $starName = trim((string) ($star['name'] ?? ''));
+            $starMag = $star['vmag'] ?? null;
+            if ($starName !== '' && $starMag !== null && $starMag <= 4.6) {
+                $labelSvg = $this->placeObjectLabel($starName, (float) $point['x'], (float) $point['y'], $left, $top, $plotWidth, $plotHeight, $starLabelBoxes, 7.8);
+                if ($labelSvg !== '') {
+                    // Use darker text than object labels for better readability.
+                    $svg[] = str_replace('fill="#4b5563"', 'fill="#374151"', $labelSvg);
+                }
+            }
         }
 
         foreach ($objects as $object) {
@@ -500,6 +518,12 @@ class StarChartService
         }
 
         $svg[] = '</g>';
+
+        foreach ($boundaryLabels as $boundaryLabelSvg) {
+            if ($boundaryLabelSvg !== '') {
+                $svg[] = $boundaryLabelSvg;
+            }
+        }
 
         // Render collected labels (outside the clip) using the collision-avoiding
         // placement helper. Decrement non-target label budget when successfully placed.
@@ -633,12 +657,6 @@ class StarChartService
         float $plotWidth,
         float $plotHeight
     ): array {
-        $a = $this->toUnitVector($ra0Deg, $dec0Deg);
-        $b = $this->toUnitVector($ra1Deg, $dec1Deg);
-        $dot = max(-1.0, min(1.0, ($a[0] * $b[0]) + ($a[1] * $b[1]) + ($a[2] * $b[2])));
-        $omega = acos($dot);
-        $sinOmega = sin($omega);
-
         $rect = [
             'min_x' => $left,
             'min_y' => $top,
@@ -646,93 +664,48 @@ class StarChartService
             'max_y' => $top + $plotHeight,
         ];
 
-        if ($sinOmega < 1.0e-6) {
-            $p0 = $this->projectToAtlasChartUnclipped($ra0Deg, $dec0Deg, $centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
-            $p1 = $this->projectToAtlasChartUnclipped($ra1Deg, $dec1Deg, $centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
+        // Sample the tabulated RA/Dec boundary segment and clip each sub-segment.
+        // This is robust near poles and avoids over-curved great-circle artifacts.
+        $steps = 24;
+        $pathParts = [];
+        $bestSegmentLength = -1.0;
+        $labelX = null;
+        $labelY = null;
+
+        for ($i = 0; $i < $steps; $i++) {
+            $t0 = $i / $steps;
+            $t1 = ($i + 1) / $steps;
+
+            $raStart = $ra0Deg + ($this->normalizeRaDelta($ra1Deg - $ra0Deg) * $t0);
+            $raEnd = $ra0Deg + ($this->normalizeRaDelta($ra1Deg - $ra0Deg) * $t1);
+            $decStart = $dec0Deg + (($dec1Deg - $dec0Deg) * $t0);
+            $decEnd = $dec0Deg + (($dec1Deg - $dec0Deg) * $t1);
+
+            $p0 = $this->projectToAtlasChartUnclipped($raStart, $decStart, $centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
+            $p1 = $this->projectToAtlasChartUnclipped($raEnd, $decEnd, $centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
             $clipped = $this->clipLineToRect((float) $p0['x'], (float) $p0['y'], (float) $p1['x'], (float) $p1['y'], $rect);
 
             if ($clipped === null) {
-                return ['path' => '', 'label_x' => null, 'label_y' => null, 'normal_x' => 0.0, 'normal_y' => -1.0];
-            }
-
-            $dx = $clipped['x2'] - $clipped['x1'];
-            $dy = $clipped['y2'] - $clipped['y1'];
-            $len = max(1.0e-6, hypot($dx, $dy));
-            $normalX = -$dy / $len;
-            $normalY = $dx / $len;
-
-            return [
-                'path' => sprintf('M %0.2f %0.2f L %0.2f %0.2f', $clipped['x1'], $clipped['y1'], $clipped['x2'], $clipped['y2']),
-                'label_x' => ($clipped['x1'] + $clipped['x2']) / 2.0,
-                'label_y' => ($clipped['y1'] + $clipped['y2']) / 2.0,
-                'normal_x' => $normalX,
-                'normal_y' => $normalY,
-            ];
-        }
-
-        $steps = 120;
-        $pathParts = [];
-        $bestLabelLength = -1.0;
-        $labelX = null;
-        $labelY = null;
-        $normalX = 0.0;
-        $normalY = -1.0;
-        $previousPoint = null;
-
-        for ($i = 0; $i <= $steps; $i++) {
-            $t = $i / $steps;
-            $w0 = sin((1.0 - $t) * $omega) / $sinOmega;
-            $w1 = sin($t * $omega) / $sinOmega;
-            $x = ($w0 * $a[0]) + ($w1 * $b[0]);
-            $y = ($w0 * $a[1]) + ($w1 * $b[1]);
-            $z = ($w0 * $a[2]) + ($w1 * $b[2]);
-            $norm = sqrt(($x * $x) + ($y * $y) + ($z * $z));
-
-            if ($norm <= 0.0) {
                 continue;
             }
 
-            $x /= $norm;
-            $y /= $norm;
-            $z /= $norm;
+            $pathParts[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $clipped['x1'], $clipped['y1'], $clipped['x2'], $clipped['y2']);
 
-            $ra = rad2deg(atan2($y, $x));
-            if ($ra < 0.0) {
-                $ra += 360.0;
+            $segmentLength = hypot($clipped['x2'] - $clipped['x1'], $clipped['y2'] - $clipped['y1']);
+            if ($segmentLength > $bestSegmentLength) {
+                $bestSegmentLength = $segmentLength;
+                $labelX = ($clipped['x1'] + $clipped['x2']) / 2.0;
+                $labelY = ($clipped['y1'] + $clipped['y2']) / 2.0;
             }
-            $dec = rad2deg(asin(max(-1.0, min(1.0, $z))));
-
-            $pt = $this->projectToAtlasChartUnclipped($ra, $dec, $centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
-            $currentPoint = ['x' => (float) $pt['x'], 'y' => (float) $pt['y']];
-
-            if ($previousPoint !== null) {
-                $clipped = $this->clipLineToRect($previousPoint['x'], $previousPoint['y'], $currentPoint['x'], $currentPoint['y'], $rect);
-                if ($clipped !== null) {
-                    $pathParts[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $clipped['x1'], $clipped['y1'], $clipped['x2'], $clipped['y2']);
-
-                    $segmentLength = hypot($clipped['x2'] - $clipped['x1'], $clipped['y2'] - $clipped['y1']);
-                    if ($segmentLength > $bestLabelLength) {
-                        $bestLabelLength = $segmentLength;
-                        $labelX = ($clipped['x1'] + $clipped['x2']) / 2.0;
-                        $labelY = ($clipped['y1'] + $clipped['y2']) / 2.0;
-                        $dx = $clipped['x2'] - $clipped['x1'];
-                        $dy = $clipped['y2'] - $clipped['y1'];
-                        $len = max(1.0e-6, hypot($dx, $dy));
-                        $normalX = -$dy / $len;
-                        $normalY = $dx / $len;
-                    }
-                }
-            }
-
-            $previousPoint = $currentPoint;
         }
 
         return [
             'path' => implode(' ', $pathParts),
             'label_x' => $labelX,
             'label_y' => $labelY,
-            'normal_x' => $normalX,
-            'normal_y' => $normalY,
+            // Prefer sky-frame orientation for reliable side placement.
+            'normal_x' => 0.0,
+            'normal_y' => -1.0,
         ];
     }
 
@@ -1451,19 +1424,80 @@ class StarChartService
     private function renderPolarGrid(float $centerRaDeg, float $centerDecDeg, float $xHalfDeg, float $yHalfDeg, float $left, float $top, float $plotWidth, float $plotHeight): string
     {
         $svg = [];
-        $cx = $left + ($plotWidth / 2);
-        $cy = $top + ($plotHeight / 2);
-        $radius = min($plotWidth, $plotHeight) / 2;
+
+        // In polar mode the coordinate grid must be centered on the celestial
+        // pole, not on the target object. This keeps near-pole targets from
+        // appearing artificially at the grid origin.
+        $poleDec = $centerDecDeg >= 0.0 ? 90.0 : -90.0;
+        $polePoint = $this->projectToAtlasChartUnclipped(
+            $centerRaDeg,
+            $poleDec,
+            $centerRaDeg,
+            $centerDecDeg,
+            $xHalfDeg,
+            $yHalfDeg,
+            $left,
+            $top,
+            $plotWidth,
+            $plotHeight
+        );
+
+        $cx = (float) $polePoint['x'];
+        $cy = (float) $polePoint['y'];
+
+        // When the pole lies outside the frame, use the farthest-corner
+        // distance so concentric declination circles still cross the chart.
+        $corners = [
+            [$left, $top],
+            [$left + $plotWidth, $top],
+            [$left, $top + $plotHeight],
+            [$left + $plotWidth, $top + $plotHeight],
+        ];
+        $radius = 0.0;
+        foreach ($corners as [$cornerX, $cornerY]) {
+            $radius = max($radius, hypot($cornerX - $cx, $cornerY - $cy));
+        }
+
+        $rect = [
+            'min_x' => $left,
+            'min_y' => $top,
+            'max_x' => $left + $plotWidth,
+            'max_y' => $top + $plotHeight,
+        ];
 
         for ($i = 1; $i <= 4; $i++) {
-            $svg[] = sprintf('<circle cx="%0.2f" cy="%0.2f" r="%0.2f" fill="none" stroke="#d9d9d9" stroke-width="0.6" />', $cx, $cy, $radius * ($i / 4));
+            $r = $radius * ($i / 4);
+            $segments = [];
+            $steps = 240;
+
+            for ($s = 0; $s < $steps; $s++) {
+                $a0 = 2.0 * M_PI * ($s / $steps);
+                $a1 = 2.0 * M_PI * (($s + 1) / $steps);
+
+                $x0 = $cx + cos($a0) * $r;
+                $y0 = $cy + sin($a0) * $r;
+                $x1 = $cx + cos($a1) * $r;
+                $y1 = $cy + sin($a1) * $r;
+
+                $clipped = $this->clipLineToRect($x0, $y0, $x1, $y1, $rect);
+                if ($clipped !== null) {
+                    $segments[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $clipped['x1'], $clipped['y1'], $clipped['x2'], $clipped['y2']);
+                }
+            }
+
+            if ($segments !== []) {
+                $svg[] = sprintf('<path d="%s" fill="none" stroke="#d9d9d9" stroke-width="0.6" />', implode(' ', $segments));
+            }
         }
 
         for ($i = 0; $i < 12; $i++) {
             $angle = deg2rad($i * 30.0);
             $x = $cx + cos($angle) * $radius;
             $y = $cy + sin($angle) * $radius;
-            $svg[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#d9d9d9" stroke-width="0.6" />', $cx, $cy, $x, $y);
+            $clipped = $this->clipLineToRect($cx, $cy, $x, $y, $rect);
+            if ($clipped !== null) {
+                $svg[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#d9d9d9" stroke-width="0.6" />', $clipped['x1'], $clipped['y1'], $clipped['x2'], $clipped['y2']);
+            }
         }
 
         return implode('', $svg);
@@ -1472,22 +1506,15 @@ class StarChartService
     private function starRadius(?float $magnitude): float
     {
         if ($magnitude === null) {
-            return 0.8;
-        }
-        if ($magnitude <= 2.0) {
-            return 2.8;
-        }
-        if ($magnitude <= 4.0) {
-            return 2.2;
-        }
-        if ($magnitude <= 6.0) {
-            return 1.7;
-        }
-        if ($magnitude <= 8.0) {
-            return 1.2;
+            return 1.1;
         }
 
-        return 0.8;
+        // Scale across the full chart range (roughly mag 1..14) so stars near
+        // the faint limit are small, while brighter stars pop clearly.
+        $normalized = (14.0 - $magnitude) / 13.0;
+        $normalized = max(0.0, min(1.0, $normalized));
+
+        return 1.1 + (7.0 * ($normalized ** 1.15));
     }
 
     private function resolveMagnitudeLimit(int $radiusArcMin, ?float $magnitudeLimit): float
@@ -1527,7 +1554,10 @@ class StarChartService
 
     private function raWindowDegreesFromXHalf(float $centerDecDeg, float $xHalfDeg): float
     {
-        $cosDec = max(0.12, abs(cos(deg2rad($centerDecDeg))));
+        // Keep the RA window physically correct at high declinations.
+        // A large floor (e.g. 0.12) underestimates the required RA span near
+        // the poles and drops many valid stars/objects from the chart.
+        $cosDec = max(1.0e-6, abs(cos(deg2rad($centerDecDeg))));
         return min(180.0, $xHalfDeg / $cosDec);
     }
 
