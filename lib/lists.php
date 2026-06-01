@@ -36,13 +36,22 @@ class Lists
         return '(' . implode(' OR ', $parts) . ')';
     }
 
+    private function getUsernameWhereClause($column, $username)
+    {
+        $parts = array();
+        foreach ($this->getObserverIdVariants($username) as $variant) {
+            $parts[] = $column . ' = "' . addslashes($variant) . '"';
+        }
+        return '(' . implode(' OR ', $parts) . ')';
+    }
+
     // Returns the observing_lists.id for the given list name and observer username.
     private function getListId($listName, $observerId)
     {
         global $objDatabase;
         return (int)$objDatabase->selectSingleValue(
             "SELECT ol.id FROM observing_lists ol JOIN users u ON u.id = ol.owner_user_id "
-            . "WHERE ol.name = \"" . $listName . "\" AND u.username = \"" . $observerId . "\"",
+            . "WHERE ol.name = \"" . $listName . "\" AND " . $this->getUsernameWhereClause('u.username', $observerId),
             'id', 0
         );
     }
@@ -52,7 +61,7 @@ class Lists
     {
         global $objDatabase;
         return (int)$objDatabase->selectSingleValue(
-            "SELECT id FROM users WHERE username = \"" . $username . "\"",
+            "SELECT id FROM users WHERE " . $this->getUsernameWhereClause('username', $username),
             'id', 0
         );
     }
@@ -208,7 +217,7 @@ class Lists
     public function checkObjectInMyActiveList($value)
     {
         global $objDatabase, $loggedUser, $listname;
-        return $objDatabase->selectSingleValue("SELECT observerobjectlist.objectplace FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND objectname=\"" . $value . "\" AND listname=\"" . $listname . "\"", 'objectplace', 0);
+        return $objDatabase->selectSingleValue("SELECT observerobjectlist.objectplace FROM observerobjectlist WHERE " . $this->getObserverIdWhereClause('observerid', $loggedUser) . " AND objectname=\"" . $value . "\" AND listname=\"" . $listname . "\"", 'objectplace', 0);
     }
     public function checkObjectMyOrPublicList($value, $list)
     {
@@ -249,7 +258,7 @@ class Lists
         $result = '';
         $results = array();
         if ($loggedUser) {
-            $sql = 'SELECT listname FROM observerobjectlist WHERE objectname="' . $theobject . '" AND observerid="' . $loggedUser . '"';
+            $sql = 'SELECT listname FROM observerobjectlist WHERE objectname="' . $theobject . '" AND ' . $this->getObserverIdWhereClause('observerid', $loggedUser);
             $results = $objDatabase->selectSingleArray($sql, 'listname');
             foreach ($results as $key => $value) {
                 $result .= "/" . $value;
@@ -275,7 +284,7 @@ class Lists
         $result = array();
 
         // Return both private lists for the user and public lists.
-        $run = $objDatabase->selectRecordset("SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid=\"" . $loggedUser . "\" ORDER BY observerobjectlist.listname");
+        $run = $objDatabase->selectRecordset("SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE " . $this->getObserverIdWhereClause('observerid', $loggedUser) . " ORDER BY observerobjectlist.listname");
         $get = $run->fetch(PDO::FETCH_OBJ);
         $result1 = array();
         if ($get) {

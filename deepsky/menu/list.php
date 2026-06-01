@@ -18,20 +18,16 @@ function menu_list() {
 		echo "&nbsp;-&nbsp;" . "<a href=\"" . $baseURL . "index.php?indexAction=listaction\">" . _("Manage") . "</a>";
 	$result1 = array ();
 	$result2 = array ();
-	$sql = "SELECT DISTINCT observerobjectlist.listname " . "FROM observerobjectlist " . "WHERE observerid = \"" . $loggedUser . "\" ORDER BY observerobjectlist.listname";
-	$run = $objDatabase->selectRecordset ( $sql );
-	$get = $run->fetch ( PDO::FETCH_OBJ );
-	while ( $get ) {
-		$result1 [] = $get->listname;
-		$get = $run->fetch ( PDO::FETCH_OBJ );
-	}
-	$sql = "SELECT DISTINCT observerobjectlist.listname " . "FROM observerobjectlist " . "WHERE observerid <> \"" . $loggedUser . "\" " . "AND public=\"1\" ORDER BY observerobjectlist.listname";
+	$result1 = $objList->getMyLists();
+	$sql = "SELECT DISTINCT observerobjectlist.listname " . "FROM observerobjectlist " . "WHERE public=\"1\" ORDER BY observerobjectlist.listname";
 	$run = $objDatabase->selectRecordset ( $sql );
 	$get = $run->fetch ( PDO::FETCH_OBJ );
 
 	echo "&nbsp;&nbsp;";
 	while ( $get ) {
-		$result2 [] = $get->listname;
+		if (!in_array($get->listname, $result1, true)) {
+			$result2 [] = $get->listname;
+		}
 		$get = $run->fetch ( PDO::FETCH_OBJ );
 	}
 
