@@ -7,7 +7,6 @@
 - [ ] Update to laravel 13.
 - [ ] Save when in http://localhost/user/profile and no instrument set -> The stdinstrumentset field must be a number. 
 - [ ] Create star charts and atlases.
-  - [ ] Lines above / under object name to see if object observed or drawn.  Full underline = Seen by logged in observer, dashed underline = Seen by other observer, no underline = not seen.  Full overline = drawn by logged in observer, dashed overline = drawn by other observer, no overline = not drawn. 
   - [ ] Add three different types of charts: Overview, lookup, detail
     - [ ] Use the magnitudes and field of views from the observer table:
       - [ ] Remove Font size printed atlas pages

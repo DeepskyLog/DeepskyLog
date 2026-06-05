@@ -464,6 +464,52 @@ class StarChartService
         $occupiedLabelBoxes = [];
         $labelTasks = [];
 
+        // Bulk-query observations/drawings for visible objects so we can
+        // annotate labels with seen/drawn indicators without per-object queries.
+        $objectKeys = $objects->pluck('name')
+            ->filter(fn($n) => is_string($n) && trim((string) $n) !== '')
+            ->map(fn($n) => trim((string) $n))
+            ->unique()
+            ->values()
+            ->all();
+
+        $observedMap = [];
+        $drawnMap = [];
+        $observedByUserMap = [];
+        $drawnByUserMap = [];
+
+        if (!empty($objectKeys)) {
+            $rows = DB::table('observations')
+                ->select(['target_key', DB::raw('COUNT(*) AS cnt'), DB::raw('SUM(CASE WHEN has_drawing=1 THEN 1 ELSE 0 END) AS draw_cnt')])
+                ->where('target_table', 'objects')
+                ->whereIn('target_key', $objectKeys)
+                ->groupBy('target_key')
+                ->get();
+
+            foreach ($rows as $r) {
+                $k = (string) $r->target_key;
+                $observedMap[$k] = ((int) $r->cnt) > 0;
+                $drawnMap[$k] = ((int) $r->draw_cnt) > 0;
+            }
+
+            $user = auth()->user();
+            if ($user) {
+                $userRows = DB::table('observations')
+                    ->select(['target_key', DB::raw('COUNT(*) AS cnt'), DB::raw('SUM(CASE WHEN has_drawing=1 THEN 1 ELSE 0 END) AS draw_cnt')])
+                    ->where('target_table', 'objects')
+                    ->whereIn('target_key', $objectKeys)
+                    ->where('observer_user_id', $user->id)
+                    ->groupBy('target_key')
+                    ->get();
+
+                foreach ($userRows as $r) {
+                    $k = (string) $r->target_key;
+                    $observedByUserMap[$k] = ((int) $r->cnt) > 0;
+                    $drawnByUserMap[$k] = ((int) $r->draw_cnt) > 0;
+                }
+            }
+        }
+
         $starLabelBoxes = [];
 
         foreach ($stars as $star) {
@@ -509,11 +555,40 @@ class StarChartService
             }
             // Collect label tasks and render them after the clipped group so
             // labels are never clipped even when symbols are constrained.
+            $objName = trim((string) ($object['name'] ?? ''));
+            $observedAny = $objName !== '' && !empty($observedMap[$objName]);
+            $drawnAny = $objName !== '' && !empty($drawnMap[$objName]);
+            $observedByUser = $objName !== '' && !empty($observedByUserMap[$objName]);
+            $drawnByUser = $objName !== '' && !empty($drawnByUserMap[$objName]);
+            $userLoggedIn = auth()->check();
+
             if ($object['is_target']) {
-                $labelTasks[] = ['label' => (string) $target->name, 'x' => $point['x'], 'y' => $point['y'], 'font' => 11.0, 'is_target' => true];
+                $labelTasks[] = [
+                    'label' => (string) $target->name,
+                    'x' => $point['x'],
+                    'y' => $point['y'],
+                    'font' => 11.0,
+                    'is_target' => true,
+                    'observed_any' => $observedAny,
+                    'drawn_any' => $drawnAny,
+                    'observed_by_user' => $observedByUser,
+                    'drawn_by_user' => $drawnByUser,
+                    'user_logged_in' => $userLoggedIn,
+                ];
             } elseif ($labelBudget > 0) {
                 // Add a label task for every object (user requested all objects labeled)
-                $labelTasks[] = ['label' => (string) ($object['name'] ?? ''), 'x' => $point['x'], 'y' => $point['y'], 'font' => 8.5, 'is_target' => false];
+                $labelTasks[] = [
+                    'label' => (string) ($object['name'] ?? ''),
+                    'x' => $point['x'],
+                    'y' => $point['y'],
+                    'font' => 8.5,
+                    'is_target' => false,
+                    'observed_any' => $observedAny,
+                    'drawn_any' => $drawnAny,
+                    'observed_by_user' => $observedByUser,
+                    'drawn_by_user' => $drawnByUser,
+                    'user_logged_in' => $userLoggedIn,
+                ];
             }
         }
 
@@ -533,7 +608,22 @@ class StarChartService
             }
 
             if (!empty($task['is_target'])) {
-                $labelSvg = $this->placeObjectLabel($task['label'], $task['x'], $task['y'], $left, $top, $plotWidth, $plotHeight, $occupiedLabelBoxes, $task['font']);
+                $labelSvg = $this->placeObjectLabel(
+                    $task['label'],
+                    $task['x'],
+                    $task['y'],
+                    $left,
+                    $top,
+                    $plotWidth,
+                    $plotHeight,
+                    $occupiedLabelBoxes,
+                    $task['font'],
+                    $task['observed_any'] ?? false,
+                    $task['drawn_any'] ?? false,
+                    $task['observed_by_user'] ?? false,
+                    $task['drawn_by_user'] ?? false,
+                    $task['user_logged_in'] ?? false
+                );
                 if ($labelSvg !== '') {
                     $svg[] = $labelSvg;
                 }
@@ -544,7 +634,22 @@ class StarChartService
                 continue;
             }
 
-            $labelSvg = $this->placeObjectLabel($task['label'], $task['x'], $task['y'], $left, $top, $plotWidth, $plotHeight, $occupiedLabelBoxes, $task['font']);
+            $labelSvg = $this->placeObjectLabel(
+                $task['label'],
+                $task['x'],
+                $task['y'],
+                $left,
+                $top,
+                $plotWidth,
+                $plotHeight,
+                $occupiedLabelBoxes,
+                $task['font'],
+                $task['observed_any'] ?? false,
+                $task['drawn_any'] ?? false,
+                $task['observed_by_user'] ?? false,
+                $task['drawn_by_user'] ?? false,
+                $task['user_logged_in'] ?? false
+            );
             if ($labelSvg !== '') {
                 $svg[] = $labelSvg;
                 $labelBudget--;
@@ -552,7 +657,7 @@ class StarChartService
         }
 
         $footerText = sprintf(
-            'FoV: %s x %s  -  Objects to mag: %s  -  Stars to mag: %s  -  (Center %s, %s)',
+            'FoV: %s° x %s°  -  Objects to mag: %s  -  Stars to mag: %s  -  (Center %s, %s)',
             number_format($xHalfDeg * 2, 1),
             number_format($yHalfDeg * 2, 1),
             $magnitudeLimit,
@@ -561,7 +666,34 @@ class StarChartService
             $this->formatDecDms($centerDecDeg)
         );
 
+        // Footer text (keep near bottom)
         $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="10" fill="#6b7280">%s</text>', $left, $height - 18, htmlspecialchars($footerText, ENT_QUOTES, 'UTF-8'));
+
+        // Small legend for observed/drawn indicators: place it between the
+        // plot rectangle and the footer so it's clearly separated from the FoV
+        // line. Use the plot bottom as a reference and add a small gap.
+        $legendX = $left + 8.0;
+        // Lower the legend further below the plot to avoid crowding the plot border.
+        $legendY = min($height - 30.0, $top + $plotHeight + 34.0);
+
+        $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="9" fill="#6b7280">%s</text>', $legendX, $legendY - 8, htmlspecialchars(__('Legend:'), ENT_QUOTES, 'UTF-8'));
+        $lx = $legendX + 48;
+        // Overline solid (drawn by you)
+        $svg[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#374151" stroke-width="1" />', $lx, $legendY - 12, $lx + 40, $legendY - 12);
+        $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="9" fill="#6b7280">%s</text>', $lx + 46, $legendY - 8, htmlspecialchars(__('drawn by you'), ENT_QUOTES, 'UTF-8'));
+        $lx += 140;
+        // Overline dashed (drawn by others / when logged out)
+        $svg[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#374151" stroke-width="1" stroke-dasharray="3 2" />', $lx, $legendY - 12, $lx + 40, $legendY - 12);
+        $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="9" fill="#6b7280">%s</text>', $lx + 46, $legendY - 8, htmlspecialchars(__('drawn by others'), ENT_QUOTES, 'UTF-8'));
+        $lx += 160;
+        // Underline solid (seen by you)
+        $svg[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#374151" stroke-width="1" />', $lx, $legendY, $lx + 40, $legendY);
+        $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="9" fill="#6b7280">%s</text>', $lx + 46, $legendY + 4, htmlspecialchars(__('seen by you'), ENT_QUOTES, 'UTF-8'));
+        $lx += 140;
+        // Underline dashed (seen by others / when logged out)
+        $svg[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#374151" stroke-width="1" stroke-dasharray="3 2" />', $lx, $legendY, $lx + 40, $legendY);
+        $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="9" fill="#6b7280">%s</text>', $lx + 46, $legendY + 4, htmlspecialchars(__('seen by others'), ENT_QUOTES, 'UTF-8'));
+
         $svg[] = '</svg>';
 
         return implode('', $svg);
@@ -925,8 +1057,22 @@ class StarChartService
      *
      * @param array<int, array{left: float, top: float, right: float, bottom: float}> $occupied
      */
-    private function placeObjectLabel(string $label, float $x, float $y, float $left, float $top, float $plotWidth, float $plotHeight, array &$occupied, float $fontSize = 8.5): string
-    {
+    private function placeObjectLabel(
+        string $label,
+        float $x,
+        float $y,
+        float $left,
+        float $top,
+        float $plotWidth,
+        float $plotHeight,
+        array &$occupied,
+        float $fontSize = 8.5,
+        bool $observedAny = false,
+        bool $drawnAny = false,
+        bool $observedByUser = false,
+        bool $drawnByUser = false,
+        bool $userLoggedIn = false
+    ): string {
         $trimmed = trim($label);
         if ($trimmed === '') {
             return '';
@@ -982,7 +1128,34 @@ class StarChartService
             }
             if ($ok) {
                 $occupied[] = $box;
-                return sprintf('<text x="%0.2f" y="%0.2f" font-size="%0.1f" fill="#4b5563" text-anchor="start">%s</text>', $box['left'], $box['bottom'] - 3.0, $fontSize, htmlspecialchars($trimmed, ENT_QUOTES, 'UTF-8'));
+
+                // Determine line positions
+                $textBaseline = $box['bottom'] - 3.0;
+                $overY = $box['top'] + 2.0;
+                $underY = $textBaseline + 3.0;
+                $leftX = $box['left'];
+                $rightX = $box['right'];
+
+                $lines = '';
+                // Overline (drawn)
+                $overSolid = $userLoggedIn && $drawnByUser;
+                $overDashed = !$overSolid && $drawnAny;
+                if ($overSolid || $overDashed) {
+                    $dash = $overSolid ? '' : ' stroke-dasharray="3 2"';
+                    $lines .= sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#374151" stroke-width="1"%s />', $leftX, $overY, $rightX, $overY, $dash);
+                }
+
+                // Underline (observed)
+                $underSolid = $userLoggedIn && $observedByUser;
+                $underDashed = !$underSolid && $observedAny;
+                if ($underSolid || $underDashed) {
+                    $dash = $underSolid ? '' : ' stroke-dasharray="3 2"';
+                    $lines .= sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#374151" stroke-width="1"%s />', $leftX, $underY, $rightX, $underY, $dash);
+                }
+
+                $text = sprintf('<text x="%0.2f" y="%0.2f" font-size="%0.1f" fill="#4b5563" text-anchor="start">%s</text>', $box['left'], $textBaseline, $fontSize, htmlspecialchars($trimmed, ENT_QUOTES, 'UTF-8'));
+
+                return '<g>' . $lines . $text . '</g>';
             }
         }
 
@@ -1006,7 +1179,30 @@ class StarChartService
                 }
                 if ($ok) {
                     $occupied[] = $box;
-                    return sprintf('<text x="%0.2f" y="%0.2f" font-size="%0.1f" fill="#4b5563" text-anchor="start">%s</text>', $box['left'], $box['bottom'] - 3.0, $fontSize, htmlspecialchars($trimmed, ENT_QUOTES, 'UTF-8'));
+
+                    $textBaseline = $box['bottom'] - 3.0;
+                    $overY = $box['top'] + 2.0;
+                    $underY = $textBaseline + 3.0;
+                    $leftX = $box['left'];
+                    $rightX = $box['right'];
+
+                    $lines = '';
+                    $overSolid = $userLoggedIn && $drawnByUser;
+                    $overDashed = !$overSolid && $drawnAny;
+                    if ($overSolid || $overDashed) {
+                        $dash = $overSolid ? '' : ' stroke-dasharray="3 2"';
+                        $lines .= sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#374151" stroke-width="1"%s />', $leftX, $overY, $rightX, $overY, $dash);
+                    }
+                    $underSolid = $userLoggedIn && $observedByUser;
+                    $underDashed = !$underSolid && $observedAny;
+                    if ($underSolid || $underDashed) {
+                        $dash = $underSolid ? '' : ' stroke-dasharray="3 2"';
+                        $lines .= sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#374151" stroke-width="1"%s />', $leftX, $underY, $rightX, $underY, $dash);
+                    }
+
+                    $text = sprintf('<text x="%0.2f" y="%0.2f" font-size="%0.1f" fill="#4b5563" text-anchor="start">%s</text>', $box['left'], $textBaseline, $fontSize, htmlspecialchars($trimmed, ENT_QUOTES, 'UTF-8'));
+
+                    return '<g>' . $lines . $text . '</g>';
                 }
             }
         }
@@ -1014,7 +1210,30 @@ class StarChartService
         // As a last resort, place at the original default position (may overlap).
         $defaultBox = $tryBox($x + 10.0, $y - 7.0);
         $occupied[] = $defaultBox;
-        return sprintf('<text x="%0.2f" y="%0.2f" font-size="%0.1f" fill="#4b5563" text-anchor="start">%s</text>', $defaultBox['left'], $defaultBox['bottom'] - 3.0, $fontSize, htmlspecialchars($trimmed, ENT_QUOTES, 'UTF-8'));
+
+        $textBaseline = $defaultBox['bottom'] - 3.0;
+        $overY = $defaultBox['top'] + 2.0;
+        $underY = $textBaseline + 3.0;
+        $leftX = $defaultBox['left'];
+        $rightX = $defaultBox['right'];
+
+        $lines = '';
+        $overSolid = $userLoggedIn && $drawnByUser;
+        $overDashed = !$overSolid && $drawnAny;
+        if ($overSolid || $overDashed) {
+            $dash = $overSolid ? '' : ' stroke-dasharray="3 2"';
+            $lines .= sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#374151" stroke-width="1"%s />', $leftX, $overY, $rightX, $overY, $dash);
+        }
+        $underSolid = $userLoggedIn && $observedByUser;
+        $underDashed = !$underSolid && $observedAny;
+        if ($underSolid || $underDashed) {
+            $dash = $underSolid ? '' : ' stroke-dasharray="3 2"';
+            $lines .= sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#374151" stroke-width="1"%s />', $leftX, $underY, $rightX, $underY, $dash);
+        }
+
+        $text = sprintf('<text x="%0.2f" y="%0.2f" font-size="%0.1f" fill="#4b5563" text-anchor="start">%s</text>', $defaultBox['left'], $textBaseline, $fontSize, htmlspecialchars($trimmed, ENT_QUOTES, 'UTF-8'));
+
+        return '<g>' . $lines . $text . '</g>';
     }
 
     private function isGalaxyClusterType(string $type): bool
