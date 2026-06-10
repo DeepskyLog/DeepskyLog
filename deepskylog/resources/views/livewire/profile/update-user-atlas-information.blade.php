@@ -143,18 +143,7 @@
             <x-input-error for="photosize2" class="mt-2" />
         </div>
 
-        <!-- Atlas page font -->
-        <div class="col-span-6 text-sm text-gray-400 sm:col-span-5">
-            <x-number
-                id="atlaspagefont"
-                label="{!! __('Font size printed atlas pages (6..9)') !!}"
-                type="number"
-                min="6"
-                max="9"
-                wire:model.live="atlaspagefont"
-            />
-            <x-input-error for="atlaspagefont" class="mt-2" />
-        </div>
+        <!-- Atlas page font removed per request -->
     </x-slot>
 
     <x-slot name="actions">

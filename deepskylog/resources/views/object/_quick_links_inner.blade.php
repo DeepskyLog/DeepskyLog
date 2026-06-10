@@ -157,6 +157,22 @@
                     </a>
                 </li>
             @endif
+            {{-- Star chart quick type links: Overview / Lookup / Detail --}}
+            @if (!empty($canonicalSlug) || !empty($session->slug))
+                @php $chartSlug = $canonicalSlug ?? $session->slug; @endphp
+                <li class="pt-2 border-t border-gray-700">
+                    <div class="flex items-center gap-2">
+                        <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlug, 'type' => 'overview']) }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
+                            {{ __('Overview chart') }}
+                        </a>
+                        <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlug, 'type' => 'lookup']) }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
+                            {{ __('Lookup chart') }}
+                        </a>
+                        <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlug, 'type' => 'detail']) }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
+                            {{ __('Detail chart') }}
+                        </a>
+                    </div>
+                </li>
         @endif
     </ul>
 </div>

@@ -1179,10 +1179,19 @@ try {
                                         @endif
                                     </li>
                                     @if (!empty($canonicalSlug) || !empty($session->slug))
+                                        @php $chartSlugMain = $canonicalSlug ?? $session->slug; @endphp
                                         <li>
-                                            <a href="{{ route('object.nearby.chart.pdf', ['slug' => $canonicalSlug ?? $session->slug]) }}"
-                                                target="_blank" rel="noopener noreferrer"
-                                                class="text-gray-300 hover:underline">{{ __('Export star chart (PDF)') }}</a>
+                                            <div class="flex items-center gap-2">
+                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'overview']) }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
+                                                    {{ __('Overview chart') }}
+                                                </a>
+                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'lookup']) }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
+                                                    {{ __('Lookup chart') }}
+                                                </a>
+                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'detail']) }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
+                                                    {{ __('Detail chart') }}
+                                                </a>
+                                            </div>
                                         </li>
                                     @endif
                                     @auth

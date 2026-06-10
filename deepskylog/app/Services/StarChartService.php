@@ -18,13 +18,19 @@ class StarChartService
     private const CHART_TOP = 70;
     private const CHART_BOTTOM = 84;
 
-    public function build(DeepskyObject $target, float $centerRaDeg, float $centerDecDeg, int $radiusArcMin, ?float $magnitudeLimit = null): array
+    public function build(DeepskyObject $target, float $centerRaDeg, float $centerDecDeg, int $radiusArcMin, ?float $magnitudeLimit = null, ?float $objectMagnitudeLimit = null, ?float $starMagnitudeLimit = null): array
     {
         $radiusDeg = max(0.1, $radiusArcMin / 60);
-        $magnitudeLimit = $this->resolveMagnitudeLimit($radiusArcMin, $magnitudeLimit);
 
-        $stars = $this->loadStars($centerRaDeg, $centerDecDeg, $radiusDeg, $magnitudeLimit);
-        $objects = $this->loadObjects($centerRaDeg, $centerDecDeg, $radiusDeg, $target);
+        // If a single legacy magnitude limit was provided use it as a sensible
+        // default. Specific per-type limits (object/star) override this when set.
+        $defaultMag = $magnitudeLimit !== null ? $magnitudeLimit : $this->resolveMagnitudeLimit($radiusArcMin, null);
+
+        $starMag = $starMagnitudeLimit ?? $defaultMag;
+        $objectMag = $objectMagnitudeLimit ?? $defaultMag;
+
+        $stars = $this->loadStars($centerRaDeg, $centerDecDeg, $radiusDeg, $starMag);
+        $objects = $this->loadObjects($centerRaDeg, $centerDecDeg, $radiusDeg, $target, $objectMag);
         $contours = $this->loadObjectContours($objects);
         $boundaries = $this->loadConstellationBoundaries();
 
@@ -32,10 +38,14 @@ class StarChartService
             'target' => $target,
             'radius_arc_min' => $radiusArcMin,
             'radius_deg' => $radiusDeg,
-            'magnitude_limit' => $magnitudeLimit,
+            // Legacy key continues to reference the star limit for backward
+            // compatibility. New keys expose per-type limits explicitly.
+            'magnitude_limit' => $starMag,
+            'object_magnitude_limit' => $objectMag,
+            'star_magnitude_limit' => $starMag,
             'stars' => $stars,
             'objects' => $objects,
-            'svg' => $this->renderSvg($centerRaDeg, $centerDecDeg, $radiusDeg, $magnitudeLimit, $target, $stars, $objects, $contours, $boundaries),
+            'svg' => $this->renderSvg($centerRaDeg, $centerDecDeg, $radiusDeg, $objectMag, $starMag, $target, $stars, $objects, $contours, $boundaries),
         ];
     }
 
@@ -129,7 +139,7 @@ class StarChartService
     /**
      * @return Collection<int, array<string, mixed>>
      */
-    private function loadObjects(float $centerRaDeg, float $centerDecDeg, float $radiusDeg, DeepskyObject $target): Collection
+    private function loadObjects(float $centerRaDeg, float $centerDecDeg, float $radiusDeg, DeepskyObject $target, ?float $objectMagnitudeLimit = null): Collection
     {
         $xHalfDeg = $this->xHalfDegrees($radiusDeg);
         $raWindow = $this->raWindowDegreesFromXHalf($centerDecDeg, $xHalfDeg);
@@ -141,7 +151,7 @@ class StarChartService
         $raMinDeg = $centerRaDeg - $raWindow;
         $raMaxDeg = $centerRaDeg + $raWindow;
 
-        return DeepskyObject::query()
+        $query = DeepskyObject::query()
             ->select(['name', 'slug', 'type', 'ra', 'decl', 'mag', 'diam1', 'diam2', 'pa'])
             ->whereBetween('decl', [max(-90.0, $centerDecDeg - $radiusDeg), min(90.0, $centerDecDeg + $radiusDeg)])
             ->where(function (Builder $builder) use ($raMinHours, $raMaxHours, $raMinDeg, $raMaxDeg) {
@@ -153,8 +163,20 @@ class StarChartService
                     $this->applyLegacyRaRange($degQuery, $raMinDeg, $raMaxDeg, 360.0, 24.000001);
                 });
             })
-            ->limit(200)
-            ->get()
+        ;
+
+        if ($objectMagnitudeLimit !== null) {
+            // Include objects that have no recorded magnitude (NULL), the
+            // placeholder value 99.9 (treated as missing), or objects with
+            // magnitude less than or equal to the limit.
+            $query = $query->where(function (Builder $q) use ($objectMagnitudeLimit) {
+                $q->whereNull('mag')
+                    ->orWhere('mag', '=', 99.9)
+                    ->orWhere('mag', '<=', $objectMagnitudeLimit);
+            });
+        }
+
+        $objects = $query->limit(200)->get()
             ->map(function (DeepskyObject $object) use ($target) {
                 $raDegrees = DeepskyObject::raToDecimal($object->ra);
                 $rawPa = $object->pa === null ? null : (float) $object->pa;
@@ -166,11 +188,17 @@ class StarChartService
                     }
                 }
 
+                $mag = $object->mag === null ? null : (float) $object->mag;
+                if ($mag !== null && abs($mag - 99.9) < 0.001) {
+                    // Treat the placeholder 99.9 as missing magnitude
+                    $mag = null;
+                }
+
                 return [
                     'name' => $object->name,
                     'slug' => $object->slug,
                     'type' => $object->type,
-                    'mag' => $object->mag === null ? null : (float) $object->mag,
+                    'mag' => $mag,
                     'diam1' => $object->diam1 === null ? null : (float) $object->diam1,
                     'diam2' => $object->diam2 === null ? null : (float) $object->diam2,
                     'pa' => $normalizedPa,
@@ -184,6 +212,8 @@ class StarChartService
 
                 return abs($xDegrees) <= $xHalfDeg && abs($yDegrees) <= $radiusDeg;
             })->sortBy(fn(array $object) => $object['is_target'] ? -999 : ($object['mag'] ?? 999))->values();
+
+        return $objects;
     }
 
     /**
@@ -257,7 +287,8 @@ class StarChartService
         float $centerRaDeg,
         float $centerDecDeg,
         float $radiusDeg,
-        float $magnitudeLimit,
+        float $objectMagnitudeLimit,
+        float $starMagnitudeLimit,
         DeepskyObject $target,
         Collection $stars,
         Collection $objects,
@@ -660,8 +691,8 @@ class StarChartService
             'FoV: %s° x %s°  -  Objects to mag: %s  -  Stars to mag: %s  -  (Center %s, %s)',
             number_format($xHalfDeg * 2, 1),
             number_format($yHalfDeg * 2, 1),
-            $magnitudeLimit,
-            $magnitudeLimit,
+            $objectMagnitudeLimit,
+            $starMagnitudeLimit,
             $this->formatRaHours($centerRaDeg),
             $this->formatDecDms($centerDecDeg)
         );
@@ -1286,80 +1317,47 @@ class StarChartService
         $rotationTransform = $this->rotationTransform($positionAngleDeg, $x, $y);
 
         return match ($code) {
-            'GALXY', 'GX', 'GXAGC', 'GALCL' => $this->renderGalaxySymbol($x, $y, $diam1ArcMin, $diam2ArcMin, $positionAngleDeg, $arcMinToPx),
-            'DS' => $this->renderDoubleStarSymbol($x, $y, $diam1ArcMin, $positionAngleDeg, $magnitude, $arcMinToPx),
-            'AA1STAR', 'SNOVA' => $this->renderPointSourceSymbol($x, $y, $magnitude),
+            'GALXY', 'GX', 'GXAGC', 'GALCL' => $this->renderGalaxySymbol($x, $y, $diam1ArcMin, $diam2ArcMin, $positionAngleDeg, $arcMinToPx, $chartRect),
+            'DS' => $this->renderDoubleStarSymbol($x, $y, $diam1ArcMin, $positionAngleDeg, $magnitude, $arcMinToPx, $chartRect),
+            'AA1STAR', 'SNOVA' => $this->renderPointSourceSymbol($x, $y, $magnitude, $chartRect),
             // Render asterisms using the same dashed-circle symbol as open clusters
             // (Lederman 1 is an asterism but should appear as an open cluster).
-            'ASTER' => sprintf(
-                '<circle cx="%0.2f" cy="%0.2f" r="%0.2f" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2 2" />',
-                $x,
-                $y,
-                max(4.5, $majorRadiusPx ?? 5.0)
-            ),
-            'GLOCL' => sprintf(
-                '<circle cx="%0.2f" cy="%0.2f" r="%0.2f" fill="none" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" />',
-                $x,
-                $y,
-                max(4.5, $majorRadiusPx ?? 5.0),
-                $x - max(6.0, ($majorRadiusPx ?? 5.0) + 1.0),
-                $y,
-                $x + max(6.0, ($majorRadiusPx ?? 5.0) + 1.0),
-                $y,
-                $x,
-                $y - max(6.0, ($majorRadiusPx ?? 5.0) + 1.0),
-                $x,
-                $y + max(6.0, ($majorRadiusPx ?? 5.0) + 1.0)
-            ),
-            'OPNCL' => sprintf(
-                '<circle cx="%0.2f" cy="%0.2f" r="%0.2f" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2 2" />',
-                $x,
-                $y,
-                max(4.5, $majorRadiusPx ?? 5.0)
-            ),
-            'DRKNB' => sprintf(
-                '<rect x="%0.2f" y="%0.2f" width="%0.2f" height="%0.2f" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2 2" />',
+            'ASTER' => $this->renderClippedCircle($x, $y, max(4.5, $majorRadiusPx ?? 5.0), $chartRect, '#666', 1.0, '2 2'),
+            'GLOCL' => $this->renderGlobularClusterSymbol($x, $y, $majorRadiusPx ?? 5.0, $chartRect),
+            'OPNCL' => $this->renderClippedCircle($x, $y, max(4.5, $majorRadiusPx ?? 5.0), $chartRect, '#666', 1.0, '2 2'),
+            'DRKNB' => $this->renderClippedRect(
                 $x - max(4.5, $majorRadiusPx ?? 5.0),
                 $y - max(4.5, $minorRadiusPx ?? $majorRadiusPx ?? 5.0),
                 max(9.0, 2 * (float) ($majorRadiusPx ?? 5.0)),
-                max(9.0, 2 * (float) ($minorRadiusPx ?? $majorRadiusPx ?? 5.0))
+                max(9.0, 2 * (float) ($minorRadiusPx ?? $majorRadiusPx ?? 5.0)),
+                null,
+                $chartRect,
+                '#666',
+                1.0,
+                '2 2'
             ),
-            'PLNNB' => sprintf(
-                '<ellipse cx="%0.2f" cy="%0.2f" rx="%0.2f" ry="%0.2f" fill="none" stroke="#666" stroke-width="1"%s /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.9" />',
-                $x,
-                $y,
-                max(3.8, $majorRadiusPx ?? 4.5),
-                max(3.0, $minorRadiusPx ?? $majorRadiusPx ?? 4.5),
-                $rotationTransform,
-                $x - max(7.0, ($majorRadiusPx ?? 4.5) + 2.5),
-                $y,
-                $x + max(7.0, ($majorRadiusPx ?? 4.5) + 2.5),
-                $y
-            ),
-            'CLANB', 'EMINB', 'HII', 'RNHII', 'REFNB', 'BRTNB', 'WRNEB', 'STNEB', 'ENRNN' => sprintf(
-                '<ellipse cx="%0.2f" cy="%0.2f" rx="%0.2f" ry="%0.2f" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2 2"%s /><rect x="%0.2f" y="%0.2f" width="%0.2f" height="%0.2f" fill="none" stroke="#666" stroke-width="0.8" />',
-                $x,
-                $y,
-                max(4.5, $majorRadiusPx ?? 5.0),
-                max(3.8, $minorRadiusPx ?? $majorRadiusPx ?? 4.2),
-                $rotationTransform,
-                $x - 2.0,
-                $y - 2.0,
-                4.0,
-                4.0
-            ),
+            'PLNNB' => $this->renderPlnnbSymbol($x, $y, $majorRadiusPx, $minorRadiusPx, $positionAngleDeg, $arcMinToPx, $chartRect),
+            'CLANB', 'EMINB', 'HII', 'RNHII', 'REFNB', 'BRTNB', 'WRNEB', 'STNEB', 'ENRNN' => $this->renderNebSymbol($x, $y, $majorRadiusPx, $minorRadiusPx, $positionAngleDeg, $chartRect),
             'SNREM' => $this->renderSupernovaRemnantSymbol($x, $y, $diam1ArcMin, $diam2ArcMin, $positionAngleDeg, $arcMinToPx, $chartRect),
-            'QUASR' => sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" />', $x - 5, $y, $x + 5, $y, $x, $y - 5, $x, $y + 5),
+            'QUASR' => $this->renderClippedCross($x, $y, 5.0, $chartRect),
             default => ($majorRadiusPx !== null)
-            ? sprintf(
-                '<ellipse cx="%0.2f" cy="%0.2f" rx="%0.2f" ry="%0.2f" fill="none" stroke="#666" stroke-width="1"%s />',
+            ? $this->renderClippedEllipse(
                 $x,
                 $y,
                 max(3.5, $majorRadiusPx),
                 max(3.0, $minorRadiusPx ?? $majorRadiusPx * 0.8),
-                $rotationTransform
+                $positionAngleDeg,
+                $chartRect,
+                '#666',
+                1.0,
+                ''
             )
-            : sprintf('<polygon points="%0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f" fill="none" stroke="#666" stroke-width="1" />', $x, $y - 5, $x + 5, $y, $x, $y + 5, $x - 5, $y),
+            : $this->renderClippedPolygonFromPoints([
+                [$x, $y - 5],
+                [$x + 5, $y],
+                [$x, $y + 5],
+                [$x - 5, $y],
+            ], $chartRect, '#666', 1.0, ''),
         };
     }
 
@@ -1375,27 +1373,47 @@ class StarChartService
         };
     }
 
-    private function renderPointSourceSymbol(float $x, float $y, ?float $magnitude): string
+    private function renderPointSourceSymbol(float $x, float $y, ?float $magnitude, ?array $chartRect = null): string
     {
         $r = $this->starRadius($magnitude) + 0.5;
 
-        return sprintf(
-            '<circle cx="%0.2f" cy="%0.2f" r="%0.2f" fill="none" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" />',
-            $x,
-            $y,
-            $r,
-            $x - ($r + 2.0),
-            $y,
-            $x + ($r + 2.0),
-            $y,
-            $x,
-            $y - ($r + 2.0),
-            $x,
-            $y + ($r + 2.0)
-        );
+        if ($chartRect === null) {
+            return sprintf(
+                '<circle cx="%0.2f" cy="%0.2f" r="%0.2f" fill="none" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" />',
+                $x,
+                $y,
+                $r,
+                $x - ($r + 2.0),
+                $y,
+                $x + ($r + 2.0),
+                $y,
+                $x,
+                $y - ($r + 2.0),
+                $x,
+                $y + ($r + 2.0)
+            );
+        }
+
+        $svg = [];
+        $circlePath = $this->renderClippedCircle($x, $y, $r, $chartRect, '#666', 1.0, '');
+        if ($circlePath !== '') {
+            $svg[] = $circlePath;
+        }
+
+        $h = $this->clipLineToRect($x - ($r + 2.0), $y, $x + ($r + 2.0), $y, $chartRect);
+        if ($h !== null) {
+            $svg[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" />', $h['x1'], $h['y1'], $h['x2'], $h['y2']);
+        }
+
+        $v = $this->clipLineToRect($x, $y - ($r + 2.0), $x, $y + ($r + 2.0), $chartRect);
+        if ($v !== null) {
+            $svg[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" />', $v['x1'], $v['y1'], $v['x2'], $v['y2']);
+        }
+
+        return implode('', $svg);
     }
 
-    private function renderAsterismSymbol(float $x, float $y, ?float $majorRadiusPx): string
+    private function renderAsterismSymbol(float $x, float $y, ?float $majorRadiusPx, ?array $chartRect = null): string
     {
         $r = max(4.5, $majorRadiusPx ?? 6.0);
         $p1x = $x - $r;
@@ -1405,21 +1423,48 @@ class StarChartService
         $p3x = $x + $r;
         $p3y = $y + ($r * 0.5);
 
-        return sprintf(
-            '<polyline points="%0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f" fill="none" stroke="#666" stroke-width="1" /><circle cx="%0.2f" cy="%0.2f" r="1.1" fill="#666" /><circle cx="%0.2f" cy="%0.2f" r="1.1" fill="#666" /><circle cx="%0.2f" cy="%0.2f" r="1.1" fill="#666" />',
-            $p1x,
-            $p1y,
-            $p2x,
-            $p2y,
-            $p3x,
-            $p3y,
-            $p1x,
-            $p1y,
-            $p2x,
-            $p2y,
-            $p3x,
-            $p3y
-        );
+        if ($chartRect === null) {
+            return sprintf(
+                '<polyline points="%0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f" fill="none" stroke="#666" stroke-width="1" /><circle cx="%0.2f" cy="%0.2f" r="1.1" fill="#666" /><circle cx="%0.2f" cy="%0.2f" r="1.1" fill="#666" /><circle cx="%0.2f" cy="%0.2f" r="1.1" fill="#666" />',
+                $p1x,
+                $p1y,
+                $p2x,
+                $p2y,
+                $p3x,
+                $p3y,
+                $p1x,
+                $p1y,
+                $p2x,
+                $p2y,
+                $p3x,
+                $p3y
+            );
+        }
+
+        $svg = [];
+        // Clip polyline segments
+        $seg = $this->clipLineToRect($p1x, $p1y, $p2x, $p2y, $chartRect);
+        if ($seg !== null) {
+            $svg[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $seg['x1'], $seg['y1'], $seg['x2'], $seg['y2']);
+        }
+        $seg = $this->clipLineToRect($p2x, $p2y, $p3x, $p3y, $chartRect);
+        if ($seg !== null) {
+            $svg[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $seg['x1'], $seg['y1'], $seg['x2'], $seg['y2']);
+        }
+
+        // Small filled markers only if fully inside
+        $markerR = 1.1;
+        foreach ([[$p1x, $p1y], [$p2x, $p2y], [$p3x, $p3y]] as [$mx, $my]) {
+            if ($mx - $markerR >= $chartRect['min_x'] && $mx + $markerR <= $chartRect['max_x'] && $my - $markerR >= $chartRect['min_y'] && $my + $markerR <= $chartRect['max_y']) {
+                $svg[] = sprintf('<circle cx="%0.2f" cy="%0.2f" r="1.1" fill="#666" />', $mx, $my);
+            }
+        }
+
+        if (empty($svg)) {
+            return '';
+        }
+
+        return implode('', $svg);
     }
 
     private function renderSupernovaRemnantSymbol(
@@ -1508,7 +1553,7 @@ class StarChartService
         return sprintf('<path d="%s" fill="none" stroke="#666" stroke-width="1.2" />', implode(' ', $pathParts));
     }
 
-    private function renderDoubleStarSymbol(float $x, float $y, ?float $separationArcSec, ?float $positionAngleDeg, ?float $magnitude, float $arcMinToPx): string
+    private function renderDoubleStarSymbol(float $x, float $y, ?float $separationArcSec, ?float $positionAngleDeg, ?float $magnitude, float $arcMinToPx, ?array $chartRect = null): string
     {
         $separationPx = 8.0;
         if ($separationArcSec !== null && $separationArcSec > 0.0) {
@@ -1534,31 +1579,54 @@ class StarChartService
         $rightX = $endX - ($dx * 0.18) + ($dy * 0.22 / max(1.0, $separationPx));
         $rightY = $endY - ($dy * 0.18) - ($dx * 0.22 / max(1.0, $separationPx));
 
-        return sprintf(
-            '<circle cx="%0.2f" cy="%0.2f" r="1.8" fill="#666" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="%0.2f" stroke-linecap="round" /><polygon points="%0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f" fill="#666" />',
-            $x,
-            $y,
-            $x,
-            $y,
-            $endX,
-            $endY,
-            $strokeWidth,
-            $endX,
-            $endY,
-            $leftX - (($dx / max(1.0, $separationPx)) * $headSize),
-            $leftY - (($dy / max(1.0, $separationPx)) * $headSize),
-            $rightX - (($dx / max(1.0, $separationPx)) * $headSize),
-            $rightY - (($dy / max(1.0, $separationPx)) * $headSize),
-        );
+        $svg = [];
+        $r = 1.8;
+        // Filled dot only when fully inside
+        if ($chartRect === null || ($x - $r >= $chartRect['min_x'] && $x + $r <= $chartRect['max_x'] && $y - $r >= $chartRect['min_y'] && $y + $r <= $chartRect['max_y'])) {
+            $svg[] = sprintf('<circle cx="%0.2f" cy="%0.2f" r="%0.2f" fill="#666" />', $x, $y, $r);
+        } else {
+            $circleOutline = $this->renderClippedCircle($x, $y, $r, $chartRect, '#666', 1.0, '');
+            if ($circleOutline !== '') {
+                $svg[] = $circleOutline;
+            }
+        }
+
+        $lineSeg = $this->clipLineToRect($x, $y, $endX, $endY, $chartRect);
+        if ($lineSeg !== null) {
+            $svg[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="%0.2f" stroke-linecap="round" />', $lineSeg['x1'], $lineSeg['y1'], $lineSeg['x2'], $lineSeg['y2'], $strokeWidth);
+        }
+
+        // Render arrow-head as clipped outline segments (no fill) to avoid spilling
+        $p1x = $endX;
+        $p1y = $endY;
+        $p2x = $leftX - (($dx / max(1.0, $separationPx)) * $headSize);
+        $p2y = $leftY - (($dy / max(1.0, $separationPx)) * $headSize);
+        $p3x = $rightX - (($dx / max(1.0, $separationPx)) * $headSize);
+        $p3y = $rightY - (($dy / max(1.0, $separationPx)) * $headSize);
+
+        $edges = [[$p1x, $p1y, $p2x, $p2y], [$p2x, $p2y, $p3x, $p3y], [$p3x, $p3y, $p1x, $p1y]];
+        $pathParts = [];
+        foreach ($edges as [$ax, $ay, $bx, $by]) {
+            $cl = $this->clipLineToRect($ax, $ay, $bx, $by, $chartRect);
+            if ($cl !== null) {
+                $pathParts[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $cl['x1'], $cl['y1'], $cl['x2'], $cl['y2']);
+            }
+        }
+
+        if (!empty($pathParts)) {
+            $svg[] = sprintf('<path d="%s" fill="none" stroke="#666" stroke-width="1" />', implode(' ', $pathParts));
+        }
+
+        return implode('', $svg);
     }
 
-    private function renderGalaxySymbol(float $x, float $y, ?float $majorDiamArcMin, ?float $minorDiamArcMin, ?float $positionAngleDeg, float $arcMinToPx): string
+    private function renderGalaxySymbol(float $x, float $y, ?float $majorDiamArcMin, ?float $minorDiamArcMin, ?float $positionAngleDeg, float $arcMinToPx, ?array $chartRect = null): string
     {
         $majorRadiusPx = $this->diameterArcSecToRadiusPx($majorDiamArcMin, $arcMinToPx);
         $minorRadiusPx = $this->diameterArcSecToRadiusPx($minorDiamArcMin, $arcMinToPx);
 
         if ($majorRadiusPx === null && $minorRadiusPx === null) {
-            return sprintf('<ellipse cx="%0.2f" cy="%0.2f" rx="7" ry="4" fill="none" stroke="#666" stroke-width="1" />', $x, $y);
+            return $this->renderClippedEllipse($x, $y, 7.0, 4.0, $positionAngleDeg, $chartRect, '#666', 1.0, '');
         }
 
         if ($majorRadiusPx !== null && $minorRadiusPx !== null && $minorRadiusPx > $majorRadiusPx) {
@@ -1573,9 +1641,7 @@ class StarChartService
             $minorRadiusPx = $majorRadiusPx;
         }
 
-        $rotationTransform = $this->rotationTransform($positionAngleDeg, $x, $y);
-
-        return sprintf('<ellipse cx="%0.2f" cy="%0.2f" rx="%0.2f" ry="%0.2f" fill="none" stroke="#666" stroke-width="1"%s />', $x, $y, $majorRadiusPx, $minorRadiusPx, $rotationTransform);
+        return $this->renderClippedEllipse($x, $y, $majorRadiusPx, $minorRadiusPx, $positionAngleDeg, $chartRect, '#666', 1.0, '');
     }
 
     private function rotationTransform(?float $positionAngleDeg, float $x, float $y): string
@@ -1638,6 +1704,238 @@ class StarChartService
             'QUASR' => sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" />', $x - 4.5, $y, $x + 4.5, $y, $x, $y - 4.5, $x, $y + 4.5),
             default => sprintf('<polygon points="%0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f" fill="none" stroke="#666" stroke-width="1" />', $x, $y - 4.5, $x + 4.5, $y, $x, $y + 4.5, $x - 4.5, $y),
         };
+    }
+
+    private function renderClippedCircle(float $x, float $y, float $radius, ?array $chartRect = null, string $stroke = '#666', float $strokeWidth = 1.0, string $strokeDash = ''): string
+    {
+        if ($chartRect === null) {
+            $dashAttr = $strokeDash !== '' ? ' stroke-dasharray="' . $strokeDash . '"' : '';
+            return sprintf('<circle cx="%0.2f" cy="%0.2f" r="%0.2f" fill="none" stroke="%s" stroke-width="%0.1f"%s />', $x, $y, $radius, $stroke, $strokeWidth, $dashAttr);
+        }
+
+        $steps = 72;
+        $segments = [];
+        for ($s = 0; $s < $steps; $s++) {
+            $a0 = 2.0 * M_PI * ($s / $steps);
+            $a1 = 2.0 * M_PI * (($s + 1) / $steps);
+
+            $x0 = $x + cos($a0) * $radius;
+            $y0 = $y + sin($a0) * $radius;
+            $x1 = $x + cos($a1) * $radius;
+            $y1 = $y + sin($a1) * $radius;
+
+            $clipped = $this->clipLineToRect($x0, $y0, $x1, $y1, $chartRect);
+            if ($clipped !== null) {
+                $segments[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $clipped['x1'], $clipped['y1'], $clipped['x2'], $clipped['y2']);
+            }
+        }
+
+        if (empty($segments)) {
+            return '';
+        }
+
+        $dashAttr = $strokeDash !== '' ? ' stroke-dasharray="' . $strokeDash . '"' : '';
+        return sprintf('<path d="%s" fill="none" stroke="%s" stroke-width="%0.1f"%s />', implode(' ', $segments), $stroke, $strokeWidth, $dashAttr);
+    }
+
+    private function renderGlobularClusterSymbol(float $x, float $y, float $majorRadiusPx, ?array $chartRect = null): string
+    {
+        $r = max(4.5, $majorRadiusPx ?? 5.0);
+        $parts = [];
+
+        $circle = $this->renderClippedCircle($x, $y, $r, $chartRect, '#666', 1.0, '');
+        if ($circle !== '') {
+            $parts[] = $circle;
+        }
+
+        $len = max(6.0, ($majorRadiusPx ?? 5.0) + 1.0);
+
+        $hclipped = $this->clipLineToRect($x - $len, $y, $x + $len, $y, $chartRect);
+        if ($hclipped !== null) {
+            $parts[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" />', $hclipped['x1'], $hclipped['y1'], $hclipped['x2'], $hclipped['y2']);
+        }
+
+        $vclipped = $this->clipLineToRect($x, $y - $len, $x, $y + $len, $chartRect);
+        if ($vclipped !== null) {
+            $parts[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.8" />', $vclipped['x1'], $vclipped['y1'], $vclipped['x2'], $vclipped['y2']);
+        }
+
+        return implode('', $parts);
+    }
+
+    private function renderClippedEllipse(float $x, float $y, float $rx, float $ry, ?float $positionAngleDeg = null, ?array $chartRect = null, string $stroke = '#666', float $strokeWidth = 1.0, string $strokeDash = ''): string
+    {
+        if ($chartRect === null) {
+            $rot = $positionAngleDeg === null ? 0.0 : 90.0 - $positionAngleDeg;
+            $rotAttr = $positionAngleDeg === null ? '' : sprintf(' transform="rotate(%0.2f %0.2f %0.2f)"', $rot, $x, $y);
+            $dashAttr = $strokeDash !== '' ? ' stroke-dasharray="' . $strokeDash . '"' : '';
+            return sprintf('<ellipse cx="%0.2f" cy="%0.2f" rx="%0.2f" ry="%0.2f" fill="none" stroke="%s" stroke-width="%0.1f"%s%s />', $x, $y, $rx, $ry, $stroke, $strokeWidth, $rotAttr, $dashAttr);
+        }
+
+        $steps = 96;
+        $segments = [];
+        $rotation = $positionAngleDeg === null ? 0.0 : (90.0 - $positionAngleDeg);
+        $rotRad = deg2rad($rotation);
+        $cosR = cos($rotRad);
+        $sinR = sin($rotRad);
+
+        for ($s = 0; $s < $steps; $s++) {
+            $a0 = 2.0 * M_PI * ($s / $steps);
+            $a1 = 2.0 * M_PI * (($s + 1) / $steps);
+
+            $u0 = cos($a0) * $rx;
+            $v0 = sin($a0) * $ry;
+            $u1 = cos($a1) * $rx;
+            $v1 = sin($a1) * $ry;
+
+            $x0 = $x + ($u0 * $cosR - $v0 * $sinR);
+            $y0 = $y + ($u0 * $sinR + $v0 * $cosR);
+            $x1 = $x + ($u1 * $cosR - $v1 * $sinR);
+            $y1 = $y + ($u1 * $sinR + $v1 * $cosR);
+
+            $cl = $this->clipLineToRect($x0, $y0, $x1, $y1, $chartRect);
+            if ($cl !== null) {
+                $segments[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $cl['x1'], $cl['y1'], $cl['x2'], $cl['y2']);
+            }
+        }
+
+        if (empty($segments)) {
+            return '';
+        }
+
+        $dashAttr = $strokeDash !== '' ? ' stroke-dasharray="' . $strokeDash . '"' : '';
+        return sprintf('<path d="%s" fill="none" stroke="%s" stroke-width="%0.1f"%s />', implode(' ', $segments), $stroke, $strokeWidth, $dashAttr);
+    }
+
+    private function renderClippedRect(float $x, float $y, float $width, float $height, ?float $rotationDeg = null, ?array $chartRect = null, string $stroke = '#666', float $strokeWidth = 1.0, string $strokeDash = ''): string
+    {
+        // If no chartRect provided, render raw rect (with rotation if present)
+        if ($chartRect === null) {
+            $rotAttr = $rotationDeg === null ? '' : sprintf(' transform="rotate(%0.2f %0.2f %0.2f)"', $rotationDeg, $x + ($width / 2.0), $y + ($height / 2.0));
+            $dashAttr = $strokeDash !== '' ? ' stroke-dasharray="' . $strokeDash . '"' : '';
+            return sprintf('<rect x="%0.2f" y="%0.2f" width="%0.2f" height="%0.2f" fill="none" stroke="%s" stroke-width="%0.1f"%s />', $x, $y, $width, $height, $stroke, $strokeWidth, $dashAttr . $rotAttr);
+        }
+
+        // Compute corners
+        $cx = $x + ($width / 2.0);
+        $cy = $y + ($height / 2.0);
+        $corners = [
+            [$x, $y],
+            [$x + $width, $y],
+            [$x + $width, $y + $height],
+            [$x, $y + $height],
+        ];
+
+        if ($rotationDeg !== null) {
+            $rad = deg2rad($rotationDeg);
+            $cos = cos($rad);
+            $sin = sin($rad);
+            $rotated = [];
+            foreach ($corners as [$px, $py]) {
+                $dx = $px - $cx;
+                $dy = $py - $cy;
+                $rx = $cx + ($dx * $cos) - ($dy * $sin);
+                $ry = $cy + ($dx * $sin) + ($dy * $cos);
+                $rotated[] = [$rx, $ry];
+            }
+            $corners = $rotated;
+        }
+
+        $parts = [];
+        for ($i = 0; $i < 4; $i++) {
+            [$x1, $y1] = $corners[$i];
+            [$x2, $y2] = $corners[($i + 1) % 4];
+            $cl = $this->clipLineToRect($x1, $y1, $x2, $y2, $chartRect);
+            if ($cl !== null) {
+                $parts[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $cl['x1'], $cl['y1'], $cl['x2'], $cl['y2']);
+            }
+        }
+
+        if (empty($parts)) {
+            return '';
+        }
+
+        $dashAttr = $strokeDash !== '' ? ' stroke-dasharray="' . $strokeDash . '"' : '';
+        return sprintf('<path d="%s" fill="none" stroke="%s" stroke-width="%0.1f"%s />', implode(' ', $parts), $stroke, $strokeWidth, $dashAttr);
+    }
+
+    private function renderClippedPolygonFromPoints(array $points, ?array $chartRect = null, string $stroke = '#666', float $strokeWidth = 1.0, string $strokeDash = ''): string
+    {
+        if (empty($points)) {
+            return '';
+        }
+
+        if ($chartRect === null) {
+            $pts = array_map(fn($p) => sprintf('%0.2f,%0.2f', $p[0], $p[1]), $points);
+            $dashAttr = $strokeDash !== '' ? ' stroke-dasharray="' . $strokeDash . '"' : '';
+            return sprintf('<polygon points="%s" fill="none" stroke="%s" stroke-width="%0.1f"%s />', implode(' ', $pts), $stroke, $strokeWidth, $dashAttr);
+        }
+
+        $parts = [];
+        $n = count($points);
+        for ($i = 0; $i < $n; $i++) {
+            [$x1, $y1] = $points[$i];
+            [$x2, $y2] = $points[($i + 1) % $n];
+            $cl = $this->clipLineToRect($x1, $y1, $x2, $y2, $chartRect);
+            if ($cl !== null) {
+                $parts[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $cl['x1'], $cl['y1'], $cl['x2'], $cl['y2']);
+            }
+        }
+
+        if (empty($parts)) {
+            return '';
+        }
+
+        $dashAttr = $strokeDash !== '' ? ' stroke-dasharray="' . $strokeDash . '"' : '';
+        return sprintf('<path d="%s" fill="none" stroke="%s" stroke-width="%0.1f"%s />', implode(' ', $parts), $stroke, $strokeWidth, $dashAttr);
+    }
+
+    private function renderPlnnbSymbol(float $x, float $y, ?float $majorRadiusPx, ?float $minorRadiusPx, ?float $positionAngleDeg, float $arcMinToPx, ?array $chartRect = null): string
+    {
+        $rx = max(3.8, $majorRadiusPx ?? 4.5);
+        $ry = max(3.0, $minorRadiusPx ?? $majorRadiusPx ?? 4.5);
+        $out = [];
+        $ellipse = $this->renderClippedEllipse($x, $y, $rx, $ry, $positionAngleDeg, $chartRect, '#666', 1.0, '');
+        if ($ellipse !== '') {
+            $out[] = $ellipse;
+        }
+
+        $len = max(7.0, ($majorRadiusPx ?? 4.5) + 2.5);
+        $h = $this->clipLineToRect($x - $len, $y, $x + $len, $y, $chartRect);
+        if ($h !== null) {
+            $out[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="0.9" />', $h['x1'], $h['y1'], $h['x2'], $h['y2']);
+        }
+
+        return implode('', $out);
+    }
+
+    private function renderNebSymbol(float $x, float $y, ?float $majorRadiusPx, ?float $minorRadiusPx, ?float $positionAngleDeg, ?array $chartRect = null): string
+    {
+        $rx = max(4.5, $majorRadiusPx ?? 5.0);
+        $ry = max(3.8, $minorRadiusPx ?? $majorRadiusPx ?? 4.2);
+        $ellipse = $this->renderClippedEllipse($x, $y, $rx, $ry, $positionAngleDeg, $chartRect, '#666', 1.0, '2 2');
+        $rect = $this->renderClippedRect($x - 2.0, $y - 2.0, 4.0, 4.0, null, $chartRect, '#666', 0.8, '');
+
+        return $ellipse . $rect;
+    }
+
+    private function renderClippedCross(float $x, float $y, float $halfLen, ?array $chartRect = null): string
+    {
+        if ($chartRect === null) {
+            return sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" />', $x - $halfLen, $y, $x + $halfLen, $y, $x, $y - $halfLen, $x, $y + $halfLen);
+        }
+
+        $parts = [];
+        $h = $this->clipLineToRect($x - $halfLen, $y, $x + $halfLen, $y, $chartRect);
+        if ($h !== null) {
+            $parts[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" />', $h['x1'], $h['y1'], $h['x2'], $h['y2']);
+        }
+        $v = $this->clipLineToRect($x, $y - $halfLen, $x, $y + $halfLen, $chartRect);
+        if ($v !== null) {
+            $parts[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" />', $v['x1'], $v['y1'], $v['x2'], $v['y2']);
+        }
+
+        return implode('', $parts);
     }
 
     private function renderPolarGrid(float $centerRaDeg, float $centerDecDeg, float $xHalfDeg, float $yHalfDeg, float $left, float $top, float $plotWidth, float $plotHeight): string

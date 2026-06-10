@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DeepskyObject;
+use App\Models\User;
 use App\Services\StarChartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -179,11 +180,47 @@ class NearbyExportController extends Controller
                 return redirect()->back()->with('error', __('Missing coordinates for star chart export'));
             }
 
-            $radiusArcMin = max(5, min(180, (int) $request->query('radius', 30)));
-            $magnitudeLimit = $request->query('mag_limit');
-            $magnitudeLimit = is_numeric($magnitudeLimit) ? (float) $magnitudeLimit : null;
+            // Determine chart type and use user's saved atlas settings. When no
+            // user is logged in fall back to user id 1.
+            $type = strtolower(trim((string) $request->query('type', 'detail')));
+            $user = auth()->user() ?? User::find(1);
 
-            $chart = $starChartService->build($target, $centerRaDeg, $centerDecDeg, $radiusArcMin, $magnitudeLimit);
+            if ($type === 'overview') {
+                $fov = $user->overviewFoV ?? 120;
+                $objectMag = is_numeric($user->overviewdsos) ? (float) $user->overviewdsos : 10.0;
+                $starMag = is_numeric($user->overviewstars) ? (float) $user->overviewstars : 10.0;
+            } elseif ($type === 'lookup') {
+                $fov = $user->lookupFoV ?? 60;
+                $objectMag = is_numeric($user->lookupdsos) ? (float) $user->lookupdsos : 12.0;
+                $starMag = is_numeric($user->lookupstars) ? (float) $user->lookupstars : 12.0;
+            } else {
+                $fov = $user->detailFoV ?? 15;
+                $objectMag = is_numeric($user->detaildsos) ? (float) $user->detaildsos : 15.0;
+                $starMag = is_numeric($user->detailstars) ? (float) $user->detailstars : 15.0;
+            }
+
+            // Allow explicit overrides via query params: radius (arcmin), mag_limit (both), object_mag, star_mag
+            if ($request->has('radius')) {
+                $radiusArcMin = max(5, min(180, (int) $request->query('radius', 30)));
+            } else {
+                // Stored FoV values are full field of view in arcminutes; build expects radius
+                $radiusArcMin = max(5, min(180, (int) round(((float) $fov) / 2.0)));
+            }
+
+            $magLimit = $request->query('mag_limit');
+            if (is_numeric($magLimit)) {
+                $objectMag = $starMag = (float) $magLimit;
+            }
+            $objMagReq = $request->query('object_mag');
+            if (is_numeric($objMagReq)) {
+                $objectMag = (float) $objMagReq;
+            }
+            $starMagReq = $request->query('star_mag');
+            if (is_numeric($starMagReq)) {
+                $starMag = (float) $starMagReq;
+            }
+
+            $chart = $starChartService->build($target, $centerRaDeg, $centerDecDeg, $radiusArcMin, null, $objectMag, $starMag);
             $title = __('Star chart for :object', ['object' => $target->name]);
 
             $html = view('pdf.star_chart', [
@@ -198,7 +235,7 @@ class NearbyExportController extends Controller
 
             if (class_exists('\\Barryvdh\\DomPDF\\Facade\\Pdf')) {
                 $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)->setPaper('a4', 'landscape');
-                $filename = Str::slug($target->name) . '-star-chart.pdf';
+                $filename = Str::slug($target->name) . '-' . $type . '-star-chart.pdf';
 
                 return response()->streamDownload(function () use ($pdf) {
                     echo $pdf->output();
@@ -211,7 +248,7 @@ class NearbyExportController extends Controller
                 $dompdf->setPaper('A4', 'landscape');
                 $dompdf->render();
                 $output = $dompdf->output();
-                $filename = Str::slug($target->name) . '-star-chart.pdf';
+                $filename = Str::slug($target->name) . '-' . $type . '-star-chart.pdf';
 
                 return response()->streamDownload(function () use ($output) {
                     echo $output;
