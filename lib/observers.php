@@ -266,7 +266,7 @@ class Observers
         global $objDatabase;
         return $objDatabase->selectSingleValue(
             "SELECT " . $property
-            . " FROM observers WHERE id COLLATE utf8_bin =\"" . $id . "\"",
+            . " FROM observers WHERE id COLLATE utf8mb4_bin =\"" . $id . "\"",
             $property, $defaultValue
         );
     }
