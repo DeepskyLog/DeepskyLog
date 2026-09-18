@@ -19,24 +19,20 @@ function menu_list() {
 	$result1 = array ();
 	$result2 = array ();
 	$result1 = $objList->getMyLists();
-	$sql = "SELECT DISTINCT observerobjectlist.listname " . "FROM observerobjectlist " . "WHERE public=\"1\" ORDER BY observerobjectlist.listname";
+	// Query the underlying table directly instead of the observerobjectlist view:
+	// the view UNIONs in observing_list_items (tens of thousands of rows) which is
+	// unnecessary here since every list already has exactly one row in observing_lists.
+	$sql = "SELECT DISTINCT name AS listname " . "FROM observing_lists " . "WHERE public=\"1\" ORDER BY name";
 	$run = $objDatabase->selectRecordset ( $sql );
 	$get = $run->fetch ( PDO::FETCH_OBJ );
 
 	echo "&nbsp;&nbsp;";
-	while ( $get ) {
-		if (!in_array($get->listname, $result1, true)) {
-			$result2 [] = $get->listname;
-		}
-		$get = $run->fetch ( PDO::FETCH_OBJ );
-	}
-
-	$sql = "SELECT DISTINCT observerobjectlist.listname " . "FROM observerobjectlist " . "WHERE public=\"1\"";
-	$run = $objDatabase->selectRecordset ( $sql );
-	$get = $run->fetch ( PDO::FETCH_OBJ );
 	$publicLists = array ();
 	while ( $get ) {
 		$publicLists [] = $get->listname;
+		if (!in_array($get->listname, $result1, true)) {
+			$result2 [] = $get->listname;
+		}
 		$get = $run->fetch ( PDO::FETCH_OBJ );
 	}
 

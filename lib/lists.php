@@ -294,7 +294,10 @@ class Lists
             }
         }
 
-        $run = $objDatabase->selectRecordset("SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE public=\"1\" ORDER BY observerobjectlist.listname");
+        // Query observing_lists directly instead of the observerobjectlist view: the view
+        // UNIONs in observing_list_items (tens of thousands of rows) which isn't needed here,
+        // since every list already has exactly one row in observing_lists.
+        $run = $objDatabase->selectRecordset("SELECT DISTINCT name AS listname FROM observing_lists WHERE public=\"1\" ORDER BY name");
         $get = $run->fetch(PDO::FETCH_OBJ);
         $result2 = array();
         if ($get) {
