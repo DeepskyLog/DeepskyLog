@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\Localization\SafeJsonKeyCollector;
 use App\ShareButtons\Presenters\CustomTemplateBasedPresenterMediator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
@@ -19,6 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Make `php artisan localize <locale>` abort on a malformed <locale>.json
+        // instead of silently replacing every translation in it with empty strings.
+        $this->app->bind('localizator.collector.json', SafeJsonKeyCollector::class);
+
         // Replace the ShareButtons presenter with a custom mediator to change URL encoding
         $this->app->singleton(ShareButtons::class, function ($app) {
             $options = config('share-buttons') ?? [];

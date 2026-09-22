@@ -7,7 +7,6 @@
 - [ ] Update to laravel 13.
 - [ ] Create observing guides
 - [ ] Translations
-  - [ ] Check why sv translation removes all the current translations
 - [ ] Test! 
   - [ ] Logged in and logged out, as database expert and as administrator
   - [ ] Test on laptop and on mobile
@@ -71,4 +70,5 @@
 - [x] Objects can be imported in an observing list from a file. The file can be a simple text file, argo navis file, AstroPlanner file, CSV file, or SkySafari file.
 - [X] Observations can be imported from CSV and OAL
 - [X] Observations can be exported to CSV, OAL, AstroPlanner, SkySafari, ...
+- [X] DeepskyLog atlases can be created.  They are updated to have a nicer layout.
 

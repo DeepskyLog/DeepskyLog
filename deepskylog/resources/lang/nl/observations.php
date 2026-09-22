@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'cluster_types' => [
         'A' => 'Rijk, weinig geconcentreerd, verschillende groottes, los',
         'B' => 'Weinig geconcentreerd, verschillende groottes, los',
         'C' => 'Arm, weinig geconcentreerd, verschillende groottes, los',
