@@ -6,10 +6,8 @@
 
 - [ ] Update to laravel 13.
 - [ ] Save when in http://localhost/user/profile and no instrument set -> The stdinstrumentset field must be a number. 
-- [ ] Create star charts and atlases.
-  - [ ] Create atlases.
-    - [ ] Add page numbers
-    - [ ] Adapt the page to show the charts and atlases.
+- [ ] Nieuwe atlas: https://github.com/jromang/osa/releases
+- [ ] Pest doesn't run anymore
 - [ ] Create observing guides
 - [ ] In Team Settings page: Automatically update table if new user is added (only works when next user is added)
 - [ ] Translations
@@ -23,11 +21,14 @@
   - [ ] php artisan db:seed --class=addAchievementsSeeder
   - [ ] php artisan db:seed --class=LegacyObjectContoursSeeder
   - [ ] php artisan migrate
+  - [ ] php artisan objects:fix-html-entities --apply   
+  - [ ] Atlas pagina's worden gezet in storage/app/atlas -> kijk of die directory 755 als permissies heeft
 - [ ] Release new version of pyDeepskyLog
   - [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
 ### For later
 
+- [ ] When printing a map for an object, create three pages, one with the naked eye, one with the finderscope and one with the telescope.  Magnitudes of the stars should be calculated for the given location.
 - [ ] Add a wizard to create an observing list.
 
 ### Done

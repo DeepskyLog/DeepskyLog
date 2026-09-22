@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\AtlasLayout;
 use Illuminate\Database\Eloquent\Model;
 
 class DeepskyObject extends Model
@@ -170,5 +171,43 @@ class DeepskyObject extends Model
         }
 
         return null;
+    }
+
+    /**
+     * Return RA in hours (0..24)
+     */
+    public function raHours(): float
+    {
+        $raDeg = static::raToDecimal($this->ra ?? null);
+        if ($raDeg === null) {
+            return 0.0;
+        }
+
+        $hours = ($raDeg / 15.0);
+        $hours = fmod($hours, 24.0);
+        if ($hours < 0.0) {
+            $hours += 24.0;
+        }
+
+        return $hours;
+    }
+
+    /**
+     * Return declination in degrees as float
+     */
+    public function declDegrees(): float
+    {
+        return $this->decl === null ? 0.0 : (float) $this->decl;
+    }
+
+    /**
+     * Calculate the DeepskyLog atlas page number for this object's coordinates.
+     * Accepts atlas type index (0..5) where
+     * 0 = overview (portrait), 1 = lookup (portrait), 2 = detail (portrait),
+     * 3 = overview (landscape),4 = lookup (landscape),5 = detail (landscape)
+     */
+    public function atlasPageNumber(int $atlastype): int
+    {
+        return AtlasLayout::pageAt($atlastype, $this->raHours(), $this->declDegrees());
     }
 }

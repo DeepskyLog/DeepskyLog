@@ -29,5 +29,8 @@
         "leaflet.fullscreen": "^5.0.0",
         "tailwindcss": "^4.1.7",
         "tinymce": "^8"
+    },
+    "allowScripts": {
+        "core-js-pure@3.50.0": true
     }
 }

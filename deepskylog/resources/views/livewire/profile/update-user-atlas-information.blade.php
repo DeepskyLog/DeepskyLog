@@ -8,41 +8,6 @@
     </x-slot>
 
     <x-slot name="form">
-        <!-- FoV -->
-        <div class="col-span-6 text-sm text-gray-400 sm:col-span-5">
-            <x-number
-                id="overview"
-                label="{!! __('Overview standard FoV (in arcminutes)') !!}"
-                type="number"
-                min="1"
-                max="3600"
-                wire:model.live="overviewFoV"
-            />
-            <x-input-error for="overview" class="mt-2" />
-        </div>
-        <div class="col-span-6 text-sm text-gray-400 sm:col-span-5">
-            <x-number
-                id="lookup"
-                label="{!! __('Lookup standard FoV (in arcminutes)') !!}"
-                type="number"
-                min="1"
-                max="3600"
-                wire:model.live="lookupFoV"
-            />
-            <x-input-error for="lookup" class="mt-2" />
-        </div>
-        <div class="col-span-6 text-sm text-gray-400 sm:col-span-5">
-            <x-number
-                id="detail"
-                label="{!! __('Detail standard FoV (in arcminutes)') !!}"
-                type="number"
-                min="1"
-                max="3600"
-                wire:model.live="detailFoV"
-            />
-            <x-input-error for="detail" class="mt-2" />
-        </div>
-
         <!-- Object magnitudes -->
         <div class="col-span-6 text-sm text-gray-400 sm:col-span-5">
             <x-number

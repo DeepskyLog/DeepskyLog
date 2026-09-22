@@ -16,26 +16,20 @@
         }
 
         .chart {
-            width: 287mm;
-            margin: 5mm auto 0;
+            margin: 5mm 0 0 0;
             padding: 0;
-            page-break-inside: avoid;
-        }
-
-        .chart img {
-            width: 100%;
-            height: auto;
-            display: block;
-            page-break-inside: avoid;
-            page-break-before: avoid;
-            page-break-after: avoid;
+            line-height: 0;
         }
     </style>
 </head>
 
 <body>
     <div class="chart">
-        <img src="{{ $svg_data_uri }}" alt="{{ __('Star chart') }}" />
+        @if (!empty($svg))
+            {!! $svg !!}
+        @elseif (!empty($svg_data_uri))
+            <img src="{{ $svg_data_uri }}" alt="{{ __('Star chart') }}" />
+        @endif
     </div>
 </body>
 

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\DeepskyObject;
-use App\Models\User;
 use App\Services\StarChartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -180,31 +179,34 @@ class NearbyExportController extends Controller
                 return redirect()->back()->with('error', __('Missing coordinates for star chart export'));
             }
 
-            // Determine chart type and use user's saved atlas settings. When no
-            // user is logged in fall back to user id 1.
+            // Atlas page field-of-view values are fixed full widths in arcminutes.
             $type = strtolower(trim((string) $request->query('type', 'detail')));
-            $user = auth()->user() ?? User::find(1);
+            $user = auth()->user();
 
             if ($type === 'overview') {
-                $fov = $user->overviewFoV ?? 120;
-                $objectMag = is_numeric($user->overviewdsos) ? (float) $user->overviewdsos : 10.0;
-                $starMag = is_numeric($user->overviewstars) ? (float) $user->overviewstars : 10.0;
+                $fov = 1200.0;
+                $objectMag = is_numeric($user?->overviewdsos) ? (float) $user->overviewdsos : 10.0;
+                $starMag = is_numeric($user?->overviewstars) ? (float) $user->overviewstars : 10.0;
             } elseif ($type === 'lookup') {
-                $fov = $user->lookupFoV ?? 60;
-                $objectMag = is_numeric($user->lookupdsos) ? (float) $user->lookupdsos : 12.0;
-                $starMag = is_numeric($user->lookupstars) ? (float) $user->lookupstars : 12.0;
+                $fov = 720.0;
+                $objectMag = is_numeric($user?->lookupdsos) ? (float) $user->lookupdsos : 12.0;
+                $starMag = is_numeric($user?->lookupstars) ? (float) $user->lookupstars : 12.0;
             } else {
-                $fov = $user->detailFoV ?? 15;
-                $objectMag = is_numeric($user->detaildsos) ? (float) $user->detaildsos : 15.0;
-                $starMag = is_numeric($user->detailstars) ? (float) $user->detailstars : 15.0;
+                $fov = 360.0;
+                $objectMag = is_numeric($user?->detaildsos) ? (float) $user->detaildsos : 15.0;
+                $starMag = is_numeric($user?->detailstars) ? (float) $user->detailstars : 15.0;
             }
+
+            // Objects with no recorded magnitude are plotted only on the
+            // deepest charts, the same rule the printed atlas pages follow.
+            $showUnknownMagnitudes = $type !== 'overview' && $type !== 'lookup';
 
             // Allow explicit overrides via query params: radius (arcmin), mag_limit (both), object_mag, star_mag
             if ($request->has('radius')) {
-                $radiusArcMin = max(5, min(180, (int) $request->query('radius', 30)));
+                $radiusArcMin = max(5, min(3600, (int) $request->query('radius', 30)));
             } else {
-                // Stored FoV values are full field of view in arcminutes; build expects radius
-                $radiusArcMin = max(5, min(180, (int) round(((float) $fov) / 2.0)));
+                // Field-of-view values are full widths; build expects radius.
+                $radiusArcMin = max(5, min(3600, (int) round(((float) $fov) / 2.0)));
             }
 
             $magLimit = $request->query('mag_limit');
@@ -220,35 +222,66 @@ class NearbyExportController extends Controller
                 $starMag = (float) $starMagReq;
             }
 
-            $chart = $starChartService->build($target, $centerRaDeg, $centerDecDeg, $radiusArcMin, null, $objectMag, $starMag);
+            // Use atlas-mode projection (spherical) for generated charts
+            $chart = $starChartService->build($target, $centerRaDeg, $centerDecDeg, $radiusArcMin, null, $objectMag, $starMag, false, true, false, null, $showUnknownMagnitudes);
             $title = __('Star chart for :object', ['object' => $target->name]);
 
-            $html = view('pdf.star_chart', [
-                'title' => $title,
-                'target' => $target,
-                'radius_arc_min' => $chart['radius_arc_min'],
-                'magnitude_limit' => $chart['magnitude_limit'],
-                'svg_data_uri' => 'data:image/svg+xml;base64,' . base64_encode($chart['svg']),
-                'object_count' => $chart['objects']->count(),
-                'star_count' => $chart['stars']->count(),
-            ])->render();
+            // A4 landscape: 297×210 mm
+            $pw = 297.0;
+            $ph = 210.0;
+            $pageDpi = 144;
+            $widthPx  = (int) round(($pw / 25.4) * $pageDpi);
+            $heightPx = (int) round(($ph / 25.4) * $pageDpi);
 
-            if (class_exists('\\Barryvdh\\DomPDF\\Facade\\Pdf')) {
-                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)->setPaper('a4', 'landscape');
-                $filename = Str::slug($target->name) . '-' . $type . '-star-chart.pdf';
-
-                return response()->streamDownload(function () use ($pdf) {
-                    echo $pdf->output();
-                }, $filename, ['Content-Type' => 'application/pdf']);
+            // Write SVG to a temp file for rasterization
+            $tmpSvgPath = null;
+            $tmp = tempnam(sys_get_temp_dir(), 'dsl_chart_');
+            if ($tmp !== false) {
+                $tmpSvgPath = $tmp . '.svg';
+                rename($tmp, $tmpSvgPath);
+                file_put_contents($tmpSvgPath, $chart['svg']);
             }
 
+            // Rasterize SVG → PNG using ImageMagick (same approach as AtlasController)
+            $imageDataUri = null;
+            if ($tmpSvgPath !== null) {
+                $imageDataUri = $this->rasterizeSvg($tmpSvgPath, $widthPx, $heightPx, $pageDpi);
+            }
+
+            if ($imageDataUri !== null) {
+                $chartData = ['title' => $title, 'image_data_uri' => $imageDataUri];
+            } else {
+                // Fall back to inline SVG with mm dimensions so DomPDF can size it
+                $svgContent = preg_replace(
+                    '/<svg([^>]*)\bwidth="[^"]*"\s*height="[^"]*"/',
+                    '<svg$1 width="' . $pw . 'mm" height="' . $ph . 'mm"',
+                    $chart['svg'],
+                    1
+                );
+                $chartData = ['title' => $title, 'svg' => $svgContent];
+            }
+
+            if ($tmpSvgPath !== null && is_file($tmpSvgPath)) {
+                @unlink($tmpSvgPath);
+            }
+
+            $html = view('pdf.star_chart_bundle', [
+                'charts' => [$chartData],
+                'pageWidthMm' => $pw,
+                'pageHeightMm' => $ph,
+            ])->render();
+
+            $filename = Str::slug($target->name) . '-' . $type . '-star-chart.pdf';
+
             if (class_exists('Dompdf\\Dompdf')) {
-                $dompdf = new \Dompdf\Dompdf();
+                $options = new \Dompdf\Options();
+                $options->set('isHtml5ParserEnabled', true);
+
+                $dompdf = new \Dompdf\Dompdf($options);
                 $dompdf->loadHtml($html);
-                $dompdf->setPaper('A4', 'landscape');
+                $dompdf->setPaper([0, 0, ($pw / 25.4) * 72.0, ($ph / 25.4) * 72.0]);
                 $dompdf->render();
                 $output = $dompdf->output();
-                $filename = Str::slug($target->name) . '-' . $type . '-star-chart.pdf';
 
                 return response()->streamDownload(function () use ($output) {
                     echo $output;
@@ -511,5 +544,37 @@ class NearbyExportController extends Controller
             Log::error('NearbyExportController::apd failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate AstroPlanner APD export'));
         }
+    }
+
+    private function rasterizeSvg(string $svgPath, int $widthPx, int $heightPx, int $dpi = 144): ?string
+    {
+        $pngPath = $svgPath . '.png';
+
+        $candidates = [];
+        $rsvg = trim((string) shell_exec('command -v rsvg-convert 2>/dev/null'));
+        if ($rsvg !== '') {
+            $candidates[] = escapeshellcmd($rsvg) . ' -w ' . $widthPx . ' -h ' . $heightPx . ' ' . escapeshellarg($svgPath) . ' -o ' . escapeshellarg($pngPath);
+        }
+        foreach (['magick', 'convert'] as $bin) {
+            $path = trim((string) shell_exec('command -v ' . $bin . ' 2>/dev/null'));
+            if ($path !== '') {
+                $candidates[] = escapeshellcmd($path) . ' -background white -flatten -density ' . $dpi . ' -resize ' . $widthPx . 'x' . $heightPx . ' ' . escapeshellarg($svgPath) . ' ' . escapeshellarg($pngPath);
+            }
+        }
+
+        foreach ($candidates as $cmd) {
+            @unlink($pngPath);
+            exec($cmd . ' 2>&1', $out, $code);
+            if ($code === 0 && is_file($pngPath)) {
+                $bytes = file_get_contents($pngPath);
+                @unlink($pngPath);
+                if ($bytes !== false && $bytes !== '') {
+                    return 'data:image/png;base64,' . base64_encode($bytes);
+                }
+            }
+        }
+
+        @unlink($pngPath);
+        return null;
     }
 }

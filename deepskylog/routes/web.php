@@ -209,7 +209,11 @@ Route::view('/downloads/magazines', 'layouts.downloads.magazines');
 Route::view('/downloads/dsl-image-catalogs', 'layouts.downloads.dsl_image_catalogs');
 Route::view('/downloads/image-catalogs', 'layouts.downloads.image_catalogs');
 Route::view('/downloads/atlases', 'layouts.downloads.atlases');
-Route::view('/downloads/dsl-atlas', 'layouts.downloads.dsl_atlas');
+Route::get('/downloads/dsl-atlas', [App\Http\Controllers\AtlasController::class, 'index']);
+Route::post('/downloads/dsl-atlas/generate', [App\Http\Controllers\AtlasController::class, 'generate'])->name('downloads.dsl-atlas.generate');
+Route::post('/downloads/dsl-atlas/queue', [App\Http\Controllers\AtlasController::class, 'queue'])->middleware('auth')->name('downloads.dsl-atlas.queue');
+Route::get('/downloads/dsl-atlas/status/{token}', [App\Http\Controllers\AtlasController::class, 'status'])->middleware('auth')->name('downloads.dsl-atlas.status');
+Route::get('/downloads/dsl-atlas/download/{token}', [App\Http\Controllers\AtlasController::class, 'download'])->name('downloads.dsl-atlas.download');
 Route::view('/downloads/forms', 'layouts.downloads.forms');
 
 // Instruments

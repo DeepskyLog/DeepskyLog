@@ -127,6 +127,7 @@ More information can be found here:
             'date' => $request->date,
             'week_month' => 'month',
         ]);
+    }
     public function destroy(int $id)
     {
         abort_unless(auth()->check() && auth()->user()->isAdministrator(), 403);

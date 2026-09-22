@@ -13,14 +13,66 @@ class StarChartService
 {
     private const CHART_WIDTH = 1120;
     private const CHART_HEIGHT = 780;
+    private const PORTRAIT_ATLAS_CHART_WIDTH = 756;
+    private const PORTRAIT_ATLAS_CHART_HEIGHT = 1120;
     private const CHART_LEFT = 56;
     private const CHART_RIGHT = 56;
     private const CHART_TOP = 70;
     private const CHART_BOTTOM = 84;
 
-    public function build(DeepskyObject $target, float $centerRaDeg, float $centerDecDeg, int $radiusArcMin, ?float $magnitudeLimit = null, ?float $objectMagnitudeLimit = null, ?float $starMagnitudeLimit = null): array
+    /** Star magnitudes shown in the top legend. */
+    private const LEGEND_MAGNITUDES = [6.5, 7.0, 8.0, 8.5, 9.0, 9.5, 10.0, 11.5, 12.0];
+
+    /** Object types shown in the top legend. */
+    private const LEGEND_OBJECT_TYPES = ['GALXY', 'PLNNB', 'GLOCL', 'OPNCL', 'DRKNB', 'SNREM', 'CLANB', 'GALCL', 'QUASR'];
+
+    /** Width of one digit as a fraction of the font size, for sizing boxes. */
+    private const DIGIT_WIDTH_RATIO = 0.62;
+
+    /**
+     * Object type codes that are stars rather than deep sky objects.
+     *
+     * DS is a double star, AA1STAR a single one. Both are drawn by the star
+     * layer already, and the chart legend has no symbol for either.
+     */
+    private const STAR_OBJECT_TYPES = ['DS', 'AA1STAR'];
+
+    /** Declination graticule steps in degrees, largest first. */
+    private const GRID_DEC_STEPS_DEG = [30.0, 20.0, 15.0, 10.0, 5.0, 2.0, 1.0, 0.5, 0.25, 1.0 / 6.0, 1.0 / 12.0, 1.0 / 30.0, 1.0 / 60.0];
+
+    /** Right ascension graticule steps in hours, largest first. */
+    private const GRID_RA_STEPS_HOURS = [6.0, 4.0, 3.0, 2.0, 1.0, 0.5, 1.0 / 3.0, 0.25, 1.0 / 6.0, 1.0 / 12.0, 1.0 / 30.0, 1.0 / 60.0];
+
+    /** Horizontal distance between two entries of the magnitude legend. */
+    private const LEGEND_MAGNITUDE_STEP = 39.0;
+
+    /** Horizontal distance between two entries of the object type legend. */
+    private const LEGEND_OBJECT_STEP = 52.0;
+
+    /** Vertical distance between the two legend rows when the legend wraps. */
+    private const LEGEND_ROW_STEP = 20.0;
+
+    /**
+     * Cached atlas projection parameters for the current render.
+     *
+     * @var array<string, float>
+     */
+    private array $atlasProjectionContext = [];
+
+    private bool $atlasProjectionEnabled = false;
+
+    /**
+     * @param  array{page?: int, total?: int, left?: ?int, right?: ?int, top?: ?int, bottom?: ?int}|null  $atlasPage
+     *     Atlas page number of this chart and of the charts adjoining it.
+     * @param  bool  $showUnknownMagnitudes
+     *     Whether to plot objects with no recorded magnitude. They cannot be
+     *     held to the magnitude limit, so only the deepest charts show them.
+     */
+    public function build(DeepskyObject $target, float $centerRaDeg, float $centerDecDeg, float $radiusArcMin, ?float $magnitudeLimit = null, ?float $objectMagnitudeLimit = null, ?float $starMagnitudeLimit = null, bool $fast = false, bool $atlasMode = false, bool $portraitAtlasLayout = false, ?array $atlasPage = null, bool $showUnknownMagnitudes = true): array
     {
         $radiusDeg = max(0.1, $radiusArcMin / 60);
+        $layout = $this->resolveAtlasLayout($atlasMode, $portraitAtlasLayout);
+        $atlasPlotAspect = ((float) $layout['plot_width']) / max(1.0, (float) $layout['plot_height']);
 
         // If a single legacy magnitude limit was provided use it as a sensible
         // default. Specific per-type limits (object/star) override this when set.
@@ -29,10 +81,11 @@ class StarChartService
         $starMag = $starMagnitudeLimit ?? $defaultMag;
         $objectMag = $objectMagnitudeLimit ?? $defaultMag;
 
-        $stars = $this->loadStars($centerRaDeg, $centerDecDeg, $radiusDeg, $starMag);
-        $objects = $this->loadObjects($centerRaDeg, $centerDecDeg, $radiusDeg, $target, $objectMag);
+        $stars = $this->loadStars($centerRaDeg, $centerDecDeg, $radiusDeg, $starMag, $fast, $atlasMode, $atlasPlotAspect, $layout);
+        $objects = $this->loadObjects($centerRaDeg, $centerDecDeg, $radiusDeg, $target, $objectMag, $fast, $atlasMode, $atlasPlotAspect, $layout, $showUnknownMagnitudes);
         $contours = $this->loadObjectContours($objects);
         $boundaries = $this->loadConstellationBoundaries();
+        $constellationLines = $this->loadConstellationLines();
 
         return [
             'target' => $target,
@@ -45,7 +98,172 @@ class StarChartService
             'star_magnitude_limit' => $starMag,
             'stars' => $stars,
             'objects' => $objects,
-            'svg' => $this->renderSvg($centerRaDeg, $centerDecDeg, $radiusDeg, $objectMag, $starMag, $target, $stars, $objects, $contours, $boundaries),
+            // The fast flag may optimize query mechanics, but must not remove
+            // chart content such as labels or observation indicators.
+            'svg' => $this->renderSvg($centerRaDeg, $centerDecDeg, $radiusDeg, $objectMag, $starMag, $target, $stars, $objects, $contours, $boundaries, $constellationLines, false, $atlasMode, $layout, $atlasPage),
+        ];
+    }
+
+    /**
+     * Front page of a generated atlas.
+     *
+     * Carries the atlas title, which of the six atlases this is, and the
+     * symbol every plotted object type is drawn with on the pages that
+     * follow. The symbols come from the same renderer the charts use, so the
+     * legend cannot drift away from what is actually on the pages.
+     *
+     * The canvas matches an atlas page so the bundle scales it identically.
+     */
+    public function buildTitlePage(string $atlasType, string $paper, string $orientation): string
+    {
+        $layout = $this->resolveAtlasLayout(true, strtolower($orientation) === 'portrait');
+        $font = htmlspecialchars($this->monospaceFontFamily(), ENT_QUOTES, 'UTF-8');
+        $width = (float) $layout['width'];
+        $height = (float) $layout['height'];
+        $left = (float) $layout['left'];
+
+        $svg = [];
+        $svg[] = sprintf('<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" preserveAspectRatio="xMidYMid meet">', $width, $height, $width, $height);
+        $svg[] = '<rect width="100%" height="100%" fill="#ffffff" />';
+
+        $titleX = $width * 0.175;
+        $ruleY = $height * 0.06;
+        $svg[] = sprintf(
+            '<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#111827" stroke-width="1.6" />',
+            $titleX + 4,
+            $ruleY,
+            $width - ($left * 0.3),
+            $ruleY
+        );
+
+        $titleSize = $width * 0.062;
+        $svg[] = sprintf(
+            '<text x="%0.2f" y="%0.2f" font-family="%s" font-size="%0.1f" fill="#111827">%s</text>',
+            $titleX,
+            $ruleY + ($titleSize * 1.5),
+            $font,
+            $titleSize,
+            htmlspecialchars(__('Deepskylog Atlas'), ENT_QUOTES, 'UTF-8')
+        );
+
+        $subtitleSize = $titleSize * 0.26;
+        $svg[] = sprintf(
+            '<text x="%0.2f" y="%0.2f" font-family="%s" font-size="%0.1f" fill="#4b5563">%s</text>',
+            $titleX + 4,
+            $ruleY + ($titleSize * 2.3),
+            $font,
+            $subtitleSize,
+            htmlspecialchars($this->atlasDescription($atlasType, $paper, $orientation), ENT_QUOTES, 'UTF-8')
+        );
+
+        // The legend sits at the bottom left, one row per symbol, ending a
+        // little above the foot of the page.
+        $entries = $this->titlePageLegendEntries();
+        $rowStep = 30.0;
+        $symbolX = $left + 24.0;
+        $labelX = $symbolX + 28.0;
+        $firstRowY = $height - 64.0 - ((count($entries) - 1) * $rowStep);
+
+        // Chart symbols are drawn at the size a small object gets on a page,
+        // which is too fine to read as a key; enlarge them about half again.
+        $symbolScale = 1.5;
+
+        $row = 0;
+        foreach ($entries as $code => $label) {
+            $y = $firstRowY + ($row * $rowStep);
+            $svg[] = sprintf(
+                '<g transform="translate(%0.2f %0.2f) scale(%0.2f) translate(%0.2f %0.2f)">%s</g>',
+                $symbolX,
+                $y,
+                $symbolScale,
+                -$symbolX,
+                -$y,
+                $this->renderObjectSymbol((string) $code, $symbolX, $y)
+            );
+            $svg[] = sprintf(
+                '<text x="%0.2f" y="%0.2f" font-family="%s" font-size="12" fill="#111827">%s</text>',
+                $labelX,
+                $y + 4.5,
+                $font,
+                htmlspecialchars($label, ENT_QUOTES, 'UTF-8')
+            );
+            $row++;
+        }
+
+        $svg[] = '</svg>';
+
+        return implode('', $svg);
+    }
+
+    /**
+     * The monospaced family to ask for on the front page and in the index.
+     *
+     * php-svg-lib hands the family name straight to Dompdf's selectFont(),
+     * which resolves it against the working directory rather than Dompdf's
+     * own font directory, so the generic "monospace" quietly falls back to
+     * the default serif face. Naming the metrics file Dompdf ships gets the
+     * real thing; if it ever moves, the generic name is still correct
+     * anywhere else the SVG is rendered.
+     */
+    public function monospaceFontFamily(): string
+    {
+        if (! class_exists(\Dompdf\Dompdf::class)) {
+            return 'monospace';
+        }
+
+        $reflected = (new \ReflectionClass(\Dompdf\Dompdf::class))->getFileName();
+
+        if ($reflected === false) {
+            return 'monospace';
+        }
+
+        $courier = dirname($reflected, 2) . '/lib/fonts/Courier';
+
+        return is_file($courier . '.afm') ? $courier : 'monospace';
+    }
+
+    /**
+     * Which atlas this is, e.g. "Detail atlas - A4 portrait".
+     */
+    private function atlasDescription(string $atlasType, string $paper, string $orientation): string
+    {
+        $types = [
+            'overview' => __('Overview'),
+            'lookup' => __('Lookup'),
+            'detail' => __('Detail'),
+        ];
+        $type = $types[strtolower(trim($atlasType))] ?? ucfirst(strtolower(trim($atlasType)));
+        $orientation = strtolower(trim($orientation)) === 'portrait' ? __('portrait') : __('landscape');
+
+        return __(':type atlas - :paper :orientation', [
+            'type' => $type,
+            'paper' => strtoupper(trim($paper)),
+            'orientation' => $orientation,
+        ]);
+    }
+
+    /**
+     * The object types of the front page legend, keyed by the type code that
+     * draws each symbol.
+     *
+     * One row per distinct symbol: types that share a symbol -- every diffuse
+     * nebula, say -- share a row, so no two rows show the same drawing. Stars
+     * and double stars are absent because loadObjects() never plots them;
+     * they belong to the star layer, which the page header already explains.
+     *
+     * @return array<string, string>
+     */
+    private function titlePageLegendEntries(): array
+    {
+        return [
+            'GALXY' => __('Galaxy, galaxy cluster'),
+            'GLOCL' => __('Globular cluster'),
+            'OPNCL' => __('Open cluster, asterism'),
+            'CLANB' => __('Cluster with nebulosity, diffuse nebula'),
+            'PLNNB' => __('Planetary nebula'),
+            'DRKNB' => __('Dark nebula'),
+            'SNREM' => __('Supernova remnant'),
+            'QUASR' => __('Quasar, active nucleus'),
         ];
     }
 
@@ -95,12 +313,44 @@ class StarChartService
     /**
      * @return Collection<int, array<string, mixed>>
      */
-    private function loadStars(float $centerRaDeg, float $centerDecDeg, float $radiusDeg, float $magnitudeLimit): Collection
+    private function loadStars(float $centerRaDeg, float $centerDecDeg, float $radiusDeg, float $magnitudeLimit, bool $fast = false, bool $atlasMode = false, ?float $atlasPlotAspect = null, ?array $layout = null): Collection
     {
-        $xHalfDeg = $this->xHalfDegrees($radiusDeg);
+        $xHalfDeg = $this->xHalfDegrees($radiusDeg, $fast, $atlasMode, $atlasPlotAspect);
+        $plotWidth = isset($layout['plot_width']) ? (float) $layout['plot_width'] : (self::CHART_WIDTH - self::CHART_LEFT - self::CHART_RIGHT);
+        $plotHeight = isset($layout['plot_height']) ? (float) $layout['plot_height'] : (self::CHART_HEIGHT - self::CHART_TOP - self::CHART_BOTTOM);
+
+        // Default decl/RA window (flat approximation)
         $declMin = max(-90.0, $centerDecDeg - $radiusDeg);
         $declMax = min(90.0, $centerDecDeg + $radiusDeg);
         $raWindow = $this->raWindowDegreesFromXHalf($centerDecDeg, $xHalfDeg);
+
+        // In atlas (spherical) mode the page is a stereographic projection, so
+        // derive the search window from the projected page bounds: near a pole
+        // the corners of the page reach far beyond the flat RA/Dec window.
+        $minProjX = INF;
+        $maxProjX = -INF;
+        $minProjY = INF;
+        $maxProjY = -INF;
+        if ($atlasMode) {
+            [$minProjX, $maxProjX, $minProjY, $maxProjY] = $this->atlasProjectionBounds($xHalfDeg, $radiusDeg, $plotWidth, $plotHeight);
+
+            $window = $this->atlasSkyWindow($centerRaDeg, $centerDecDeg, [$minProjX, $maxProjX, $minProjY, $maxProjY]);
+            $declMin = $window['dec_min'];
+            $declMax = $window['dec_max'];
+            $raWindow = $window['ra_window'];
+        }
+
+        // Projection epsilon margins to avoid boundary precision gaps when
+        // filtering by projected coordinates. Only used when atlas mode is on.
+        $projEpsX = 0.0;
+        $projEpsY = 0.0;
+        if ($atlasMode && $minProjX !== INF && $maxProjX !== -INF && $minProjY !== INF && $maxProjY !== -INF) {
+            // Widen epsilon margin to avoid precision-related exclusion of
+            // stars that project near the curved plotting rectangle edges.
+            $projEpsFactor = 0.12; // 12% margin
+            $projEpsX = max(1.0e-6, ($maxProjX - $minProjX) * $projEpsFactor);
+            $projEpsY = max(1.0e-6, ($maxProjY - $minProjY) * $projEpsFactor);
+        }
 
         $query = Star::query()
             ->select(['name', 'constellation_code', 'bayer', 'bayer_suffix', 'flamsteed', 'ra_degrees', 'decl_degrees', 'vmag'])
@@ -124,12 +374,17 @@ class StarChartService
                 'x_degrees' => $xDegrees,
                 'y_degrees' => $yDegrees,
             ];
-        })->filter(function (array $star) use ($xHalfDeg, $radiusDeg) {
+        })->filter(function (array $star) use ($xHalfDeg, $radiusDeg, $atlasMode, $centerRaDeg, $centerDecDeg, $minProjX, $maxProjX, $minProjY, $maxProjY, $projEpsX, $projEpsY) {
+            if ($atlasMode) {
+                $proj = $this->atlasSphericalProject($star['ra_degrees'], $star['decl_degrees'], $centerRaDeg, $centerDecDeg);
+                return $proj['x'] >= ($minProjX - $projEpsX) && $proj['x'] <= ($maxProjX + $projEpsX) && $proj['y'] >= ($minProjY - $projEpsY) && $proj['y'] <= ($maxProjY + $projEpsY);
+            }
+
             return abs($star['x_degrees']) <= $xHalfDeg && abs($star['y_degrees']) <= $radiusDeg;
         })->sortBy(fn(array $star) => $star['vmag'] ?? 99)->values();
 
         $maxStars = $this->maxStarCount($magnitudeLimit, $radiusDeg);
-        if ($stars->count() > $maxStars) {
+        if (!$atlasMode && $stars->count() > $maxStars) {
             $stars = $stars->take($maxStars)->values();
         }
 
@@ -139,9 +394,11 @@ class StarChartService
     /**
      * @return Collection<int, array<string, mixed>>
      */
-    private function loadObjects(float $centerRaDeg, float $centerDecDeg, float $radiusDeg, DeepskyObject $target, ?float $objectMagnitudeLimit = null): Collection
+    private function loadObjects(float $centerRaDeg, float $centerDecDeg, float $radiusDeg, DeepskyObject $target, ?float $objectMagnitudeLimit = null, bool $fast = false, bool $atlasMode = false, ?float $atlasPlotAspect = null, ?array $layout = null, bool $showUnknownMagnitudes = true): Collection
     {
-        $xHalfDeg = $this->xHalfDegrees($radiusDeg);
+        $xHalfDeg = $this->xHalfDegrees($radiusDeg, $fast, $atlasMode, $atlasPlotAspect);
+        $plotWidth = isset($layout['plot_width']) ? (float) $layout['plot_width'] : (self::CHART_WIDTH - self::CHART_LEFT - self::CHART_RIGHT);
+        $plotHeight = isset($layout['plot_height']) ? (float) $layout['plot_height'] : (self::CHART_HEIGHT - self::CHART_TOP - self::CHART_BOTTOM);
         $raWindow = $this->raWindowDegreesFromXHalf($centerDecDeg, $xHalfDeg);
         $centerRaHours = $centerRaDeg / 15.0;
         $raWindowHours = $raWindow / 15.0;
@@ -150,11 +407,52 @@ class StarChartService
         $raMaxHours = $centerRaHours + $raWindowHours;
         $raMinDeg = $centerRaDeg - $raWindow;
         $raMaxDeg = $centerRaDeg + $raWindow;
+        $declMin = max(-90.0, $centerDecDeg - $radiusDeg);
+        $declMax = min(90.0, $centerDecDeg + $radiusDeg);
+
+        // In atlas mode take the search window from the projected page bounds,
+        // the same way loadStars() does, so object selection matches exactly
+        // what the stereographic page can show.
+        $minProjX = INF;
+        $maxProjX = -INF;
+        $minProjY = INF;
+        $maxProjY = -INF;
+        if ($atlasMode) {
+            [$minProjX, $maxProjX, $minProjY, $maxProjY] = $this->atlasProjectionBounds($xHalfDeg, $radiusDeg, $plotWidth, $plotHeight);
+
+            $window = $this->atlasSkyWindow($centerRaDeg, $centerDecDeg, [$minProjX, $maxProjX, $minProjY, $maxProjY]);
+            $declMin = $window['dec_min'];
+            $declMax = $window['dec_max'];
+            $raWindow = $window['ra_window'];
+            $raMinHours = $centerRaHours - ($raWindow / 15.0);
+            $raMaxHours = $centerRaHours + ($raWindow / 15.0);
+            $raMinDeg = $centerRaDeg - $raWindow;
+            $raMaxDeg = $centerRaDeg + $raWindow;
+        }
 
         $query = DeepskyObject::query()
             ->select(['name', 'slug', 'type', 'ra', 'decl', 'mag', 'diam1', 'diam2', 'pa'])
-            ->whereBetween('decl', [max(-90.0, $centerDecDeg - $radiusDeg), min(90.0, $centerDecDeg + $radiusDeg)])
-            ->where(function (Builder $builder) use ($raMinHours, $raMaxHours, $raMinDeg, $raMaxDeg) {
+            ->whereBetween('decl', [$declMin, $declMax]);
+
+        // Stars listed in the object catalogues are left to the star layer,
+        // which plots them already. Carrying them here only crowded the chart
+        // with a second dot and a STF/STT/HJ or HD catalogue label. A chart
+        // centred on such a star still shows its own target.
+        $query->where(function (Builder $builder) use ($target) {
+            $builder->whereNotIn('type', self::STAR_OBJECT_TYPES);
+
+            // Atlas pages pass a synthetic, unsaved target, so only a real
+            // object earns the exception.
+            if ($target->exists && $target->name !== null && $target->name !== '') {
+                $builder->orWhere('name', $target->name);
+            }
+        });
+
+        // At a pole the chart covers every right ascension. Applying the
+        // legacy hour/degree range in that case can turn a full-circle range
+        // into a narrow or empty predicate after wrap-around normalization.
+        if ($raWindow < 180.0 - 1.0e-9) {
+            $query->where(function (Builder $builder) use ($raMinHours, $raMaxHours, $raMinDeg, $raMaxDeg) {
                 $builder->where(function (Builder $hoursQuery) use ($raMinHours, $raMaxHours) {
                     $hoursQuery->where('ra', '<=', 24.0);
                     $this->applyLegacyRaRange($hoursQuery, $raMinHours, $raMaxHours, 24.0);
@@ -162,22 +460,45 @@ class StarChartService
                     $degQuery->where('ra', '>', 24.0);
                     $this->applyLegacyRaRange($degQuery, $raMinDeg, $raMaxDeg, 360.0, 24.000001);
                 });
-            })
-        ;
-
-        if ($objectMagnitudeLimit !== null) {
-            // Include objects that have no recorded magnitude (NULL), the
-            // placeholder value 99.9 (treated as missing), or objects with
-            // magnitude less than or equal to the limit.
-            $query = $query->where(function (Builder $q) use ($objectMagnitudeLimit) {
-                $q->whereNull('mag')
-                    ->orWhere('mag', '=', 99.9)
-                    ->orWhere('mag', '<=', $objectMagnitudeLimit);
             });
         }
 
-        $objects = $query->limit(200)->get()
-            ->map(function (DeepskyObject $object) use ($target) {
+        if ($objectMagnitudeLimit !== null) {
+            // A missing magnitude is stored either as NULL or as the
+            // placeholder 99.9. Such an object cannot be held to the limit at
+            // all, so it is plotted only where the chart is meant to show
+            // everything it can -- otherwise an overview chart fills up with
+            // objects far below its own limit.
+            $query = $query->where(function (Builder $q) use ($objectMagnitudeLimit, $showUnknownMagnitudes) {
+                $q->where('mag', '<=', $objectMagnitudeLimit);
+
+                if ($showUnknownMagnitudes) {
+                    $q->orWhereNull('mag')->orWhere('mag', '=', 99.9);
+                }
+            });
+        }
+
+        // Projection epsilon margins for object filtering (atlas-mode).
+        $objProjEpsX = 0.0;
+        $objProjEpsY = 0.0;
+        if ($atlasMode && $minProjX !== INF && $maxProjX !== -INF && $minProjY !== INF && $maxProjY !== -INF) {
+            $projEpsFactor = 0.12; // keep same 12% margin for objects
+            $objProjEpsX = max(1.0e-6, ($maxProjX - $minProjX) * $projEpsFactor);
+            $objProjEpsY = max(1.0e-6, ($maxProjY - $minProjY) * $projEpsFactor);
+        }
+
+        // Atlas pages must show everything that falls inside them, so the row
+        // cap is left to the projection filter below. Capping the query itself
+        // dropped objects well inside the magnitude limit from polar pages,
+        // where the declination band alone matches several hundred rows and
+        // no right ascension predicate applies. loadStars() already leaves
+        // atlas charts uncapped in the same way.
+        if (! $atlasMode) {
+            $query->limit(200);
+        }
+
+        $objects = $query->get()
+            ->map(function (DeepskyObject $object) use ($target, $atlasMode, $minProjX, $maxProjX, $minProjY, $maxProjY) {
                 $raDegrees = DeepskyObject::raToDecimal($object->ra);
                 $rawPa = $object->pa === null ? null : (float) $object->pa;
                 $normalizedPa = null;
@@ -206,7 +527,12 @@ class StarChartService
                     'decl_degrees' => (float) $object->decl,
                     'is_target' => $object->name === $target->name,
                 ];
-            })->filter(function (array $object) use ($centerRaDeg, $centerDecDeg, $radiusDeg, $xHalfDeg) {
+            })->filter(function (array $object) use ($centerRaDeg, $centerDecDeg, $radiusDeg, $xHalfDeg, $atlasMode, $minProjX, $maxProjX, $minProjY, $maxProjY, $objProjEpsX, $objProjEpsY) {
+                if ($atlasMode) {
+                    $proj = $this->atlasSphericalProject($object['ra_degrees'], $object['decl_degrees'], $centerRaDeg, $centerDecDeg);
+                    return $proj['x'] >= ($minProjX - $objProjEpsX) && $proj['x'] <= ($maxProjX + $objProjEpsX) && $proj['y'] >= ($minProjY - $objProjEpsY) && $proj['y'] <= ($maxProjY + $objProjEpsY);
+                }
+
                 $xDegrees = $this->normalizeRaDelta($object['ra_degrees'] - $centerRaDeg) * cos(deg2rad($centerDecDeg));
                 $yDegrees = $object['decl_degrees'] - $centerDecDeg;
 
@@ -221,7 +547,13 @@ class StarChartService
      */
     private function loadConstellationBoundaries(): Collection
     {
-        return DB::table('constellation_boundaries')
+        static $cached = null;
+
+        if ($cached instanceof Collection) {
+            return $cached;
+        }
+
+        $boundaries = DB::table('constellation_boundaries')
             ->select(['con0', 'con0pos', 'con1', 'con1pos', 'ra0', 'decl0', 'ra1', 'decl1'])
             ->get()
             ->map(function ($row) {
@@ -239,6 +571,71 @@ class StarChartService
                     'decl1_degrees' => (float) $row->decl1,
                 ];
             })->values();
+
+        $cached = $boundaries;
+
+        return $cached;
+    }
+
+    /**
+     * The constellation figures, flattened into individual line segments.
+     *
+     * The table stores each figure as ordered polylines; a chart only ever
+     * draws the pieces that fall on it, so the joins carry no information and
+     * segments are what the renderer wants. Each one carries its own angular
+     * length, which is what lets a chart reject the ones nowhere near it
+     * without projecting them first.
+     *
+     * @return Collection<int, array<string, float>>
+     */
+    public function loadConstellationLines(): Collection
+    {
+        static $cached = null;
+
+        if ($cached instanceof Collection) {
+            return $cached;
+        }
+
+        if (! Schema::hasTable('constellation_lines')) {
+            return $cached = collect();
+        }
+
+        $segments = [];
+        $previous = null;
+
+        $rows = DB::table('constellation_lines')
+            ->select(['con', 'line_index', 'point_index', 'ra_degrees', 'decl_degrees'])
+            ->orderBy('con')
+            ->orderBy('line_index')
+            ->orderBy('point_index')
+            ->get();
+
+        foreach ($rows as $row) {
+            $current = [
+                'key' => (string) $row->con . '|' . (int) $row->line_index,
+                'ra' => (float) $row->ra_degrees,
+                'decl' => (float) $row->decl_degrees,
+            ];
+
+            if ($previous !== null && $previous['key'] === $current['key']) {
+                $segments[] = [
+                    'ra0_degrees' => $previous['ra'],
+                    'decl0_degrees' => $previous['decl'],
+                    'ra1_degrees' => $current['ra'],
+                    'decl1_degrees' => $current['decl'],
+                    'length_deg' => $this->angularDistanceDeg(
+                        $previous['ra'],
+                        $previous['decl'],
+                        $current['ra'],
+                        $current['decl']
+                    ),
+                ];
+            }
+
+            $previous = $current;
+        }
+
+        return $cached = collect($segments);
     }
 
     /**
@@ -293,27 +690,36 @@ class StarChartService
         Collection $stars,
         Collection $objects,
         Collection $contours,
-        Collection $boundaries
+        Collection $boundaries,
+        Collection $constellationLines,
+        bool $fast = false,
+        bool $atlasMode = false,
+        ?array $layout = null,
+        ?array $atlasPage = null
     ): string {
-        $width = self::CHART_WIDTH;
-        $height = self::CHART_HEIGHT;
-        $left = self::CHART_LEFT;
-        $right = self::CHART_RIGHT;
-        $top = self::CHART_TOP;
-        $bottom = self::CHART_BOTTOM;
-        $plotWidth = $width - $left - $right;
-        $plotHeight = $height - $top - $bottom;
-        $xHalfDeg = $this->xHalfDegrees($radiusDeg);
+        $layout ??= $this->resolveAtlasLayout($atlasMode, false);
+        $width = (int) $layout['width'];
+        $height = (int) $layout['height'];
+        $left = (float) $layout['left'];
+        $right = (float) $layout['right'];
+        $top = (float) $layout['top'];
+        $bottom = (float) $layout['bottom'];
+        $plotWidth = (float) $layout['plot_width'];
+        $plotHeight = (float) $layout['plot_height'];
+        $this->atlasProjectionEnabled = $atlasMode;
+        $atlasPlotAspect = $plotWidth / max(1.0, $plotHeight);
+        $xHalfDeg = $this->xHalfDegrees($radiusDeg, $fast, $atlasMode, $atlasPlotAspect);
         $yHalfDeg = $radiusDeg;
         $cosDec = max(0.01, abs(cos(deg2rad($centerDecDeg))));
         $degPerPx = (2 * $yHalfDeg) / max(1.0, $plotHeight);
         $arcMinToPx = $degPerPx > 0.0 ? (1.0 / (60.0 * $degPerPx)) : 1.0;
 
         $svg = [];
-        $svg[] = sprintf('<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d">', $width, $height, $width, $height);
-        $svg[] = '<rect width="100%" height="100%" fill="#f5f5f5" />';
-        $svg[] = sprintf('<rect x="%0.2f" y="14" width="%0.2f" height="34" fill="#f2f2f2" stroke="#888" stroke-width="0.8" />', $left, $plotWidth);
-        $svg[] = $this->renderTopLegend($left + 8, 33);
+        $svg[] = sprintf('<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" preserveAspectRatio="xMidYMid meet">', $width, $height, $width, $height);
+        $svg[] = '<rect width="100%" height="100%" fill="#ffffff" />';
+        $svg[] = sprintf('<rect x="%0.2f" y="14" width="%0.2f" height="%0.2f" fill="#ffffff" stroke="#888" stroke-width="0.8" />', $left, $plotWidth, $this->topLegendBoxHeight($plotWidth));
+        $svg[] = $this->renderTopLegend($left + 8, 33, $plotWidth);
+        $svg[] = $this->renderAtlasPageNumber($width, $plotWidth, $atlasPage);
         $svg[] = sprintf(
             '<text x="%0.2f" y="27" font-size="10" text-anchor="end" fill="#4b5563">%s</text>',
             $left + $plotWidth - 8,
@@ -321,19 +727,23 @@ class StarChartService
         );
         $svg[] = sprintf('<rect x="%0.2f" y="%0.2f" width="%0.2f" height="%0.2f" fill="#f8f8f8" stroke="#111827" stroke-width="2" />', $left, $top, $plotWidth, $plotHeight);
 
-        // Clip path for the plotting area so object symbols do not draw outside
-        // the main star-plot rectangle. Use userSpaceOnUse so coordinates match
-        // the SVG user coordinate system. Labels are rendered outside this clip.
-        $svg[] = sprintf('<defs><clipPath id="plot-clip" clipPathUnits="userSpaceOnUse"><rect x="%0.2f" y="%0.2f" width="%0.2f" height="%0.2f" /></clipPath></defs>', $left, $top, $plotWidth, $plotHeight);
-
         // Define a clipping region matching the star-plot rectangle so that
         // object symbols (rectangles, ellipses, etc.) are not drawn outside
         // the visible star field area.
 
-        $polarMode = abs($centerDecDeg) >= 85.0;
-        if ($polarMode) {
-            // Keep polar grid strictly inside the chart rectangle.
-            $svg[] = sprintf('<g clip-path="url(#plot-clip)">%s</g>', $this->renderPolarGrid($centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight));
+        $neighbourBoxes = $atlasMode
+            ? $this->atlasNeighbourBoxes($left, $top, $plotWidth, $plotHeight, $atlasPage)
+            : [];
+
+        if ($atlasMode) {
+            // Atlas pages always use the stereographic (cos/sin-corrected)
+            // projection centered on the requested coordinates, so the same
+            // grid renderer produces correctly curved RA/Dec lines whether
+            // or not the field happens to include a celestial pole.
+            $svg[] = sprintf(
+                '<g>%s</g>',
+                $this->renderAtlasGrid($centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight, $neighbourBoxes)
+            );
         } else {
             $gridColumns = 10;
             for ($i = 0; $i <= $gridColumns; $i++) {
@@ -358,9 +768,12 @@ class StarChartService
             }
         }
 
-        // Begin clipped group so boundaries, contours, stars and object
-        // symbols are constrained to the plotting rectangle.
-        $svg[] = '<g clip-path="url(#plot-clip)">';
+        // Begin group for boundaries, contours, stars and object symbols.
+        // We avoid using an SVG clipPath here because some rasterizers
+        // (used for PDF generation) incorrectly apply clipPathUnits and
+        // can hide entire groups. Individual drawing helpers already
+        // perform clipping so the group wrapper is sufficient.
+        $svg[] = '<g>';
 
         // Boundary labels are collected and rendered after the clipped group so
         // labels near chart edges are not clipped away.
@@ -451,6 +864,27 @@ class StarChartService
             'max_y' => $top + $plotHeight,
         ];
 
+        // The constellation figures go on top of the boundaries but under
+        // everything the chart is actually about, so they read as background.
+        $figurePath = $this->renderConstellationFigurePaths(
+            $constellationLines,
+            $centerRaDeg,
+            $centerDecDeg,
+            $xHalfDeg,
+            $yHalfDeg,
+            $left,
+            $top,
+            $plotWidth,
+            $plotHeight
+        );
+
+        if ($figurePath !== '') {
+            $svg[] = sprintf(
+                '<path d="%s" fill="none" stroke="#4b5563" stroke-width="1.1" stroke-linecap="round" opacity="0.55" />',
+                $figurePath
+            );
+        }
+
         foreach ($contours as $contour) {
             $path = $this->renderObjectContourPath(
                 $contour,
@@ -489,14 +923,15 @@ class StarChartService
             ->unique()
             ->values();
 
-        // Allow labels for all objects by setting budget to the number of objects
-        // visible in the chart (prevents type-based filtering hiding labels).
+        // Keep label placement complete even when callers request query
+        // optimizations through the fast flag.
         $labelBudget = max(1000, $objects->count());
         $occupiedLabelBoxes = [];
         $labelTasks = [];
 
-        // Bulk-query observations/drawings for visible objects so we can
-        // annotate labels with seen/drawn indicators without per-object queries.
+        // Bulk-query observations/drawings for visible objects so labels retain
+        // their seen/drawn indicators without per-object queries.
+        $objectKeys = [];
         $objectKeys = $objects->pluck('name')
             ->filter(fn($n) => is_string($n) && trim((string) $n) !== '')
             ->map(fn($n) => trim((string) $n))
@@ -541,8 +976,6 @@ class StarChartService
             }
         }
 
-        $starLabelBoxes = [];
-
         foreach ($stars as $star) {
             $point = $this->projectToAtlasChart($star['ra_degrees'], $star['decl_degrees'], $centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
             if ($point === null) {
@@ -555,7 +988,7 @@ class StarChartService
             $starName = trim((string) ($star['name'] ?? ''));
             $starMag = $star['vmag'] ?? null;
             if ($starName !== '' && $starMag !== null && $starMag <= 4.6) {
-                $labelSvg = $this->placeObjectLabel($starName, (float) $point['x'], (float) $point['y'], $left, $top, $plotWidth, $plotHeight, $starLabelBoxes, 7.8);
+                $labelSvg = $this->placeObjectLabel($starName, (float) $point['x'], (float) $point['y'], $left, $top, $plotWidth, $plotHeight, $occupiedLabelBoxes, 7.8);
                 if ($labelSvg !== '') {
                     // Use darker text than object labels for better readability.
                     $svg[] = str_replace('fill="#4b5563"', 'fill="#374151"', $labelSvg);
@@ -633,6 +1066,10 @@ class StarChartService
 
         // Render collected labels (outside the clip) using the collision-avoiding
         // placement helper. Decrement non-target label budget when successfully placed.
+        // Target labels go first: they may never be dropped, so they claim their
+        // spot before the surrounding objects compete for it.
+        usort($labelTasks, fn(array $a, array $b) => ((int) !empty($b['is_target'])) <=> ((int) !empty($a['is_target'])));
+
         foreach ($labelTasks as $task) {
             if (!is_string($task['label']) || trim($task['label']) === '') {
                 continue;
@@ -653,7 +1090,8 @@ class StarChartService
                     $task['drawn_any'] ?? false,
                     $task['observed_by_user'] ?? false,
                     $task['drawn_by_user'] ?? false,
-                    $task['user_logged_in'] ?? false
+                    $task['user_logged_in'] ?? false,
+                    true
                 );
                 if ($labelSvg !== '') {
                     $svg[] = $labelSvg;
@@ -725,7 +1163,13 @@ class StarChartService
         $svg[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#374151" stroke-width="1" stroke-dasharray="3 2" />', $lx, $legendY, $lx + 40, $legendY);
         $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="9" fill="#6b7280">%s</text>', $lx + 46, $legendY + 4, htmlspecialchars(__('seen by others'), ENT_QUOTES, 'UTF-8'));
 
+        // Drawn last so no star or label can end up on top of them.
+        $svg[] = $this->renderAtlasNeighbourPages($neighbourBoxes);
+
         $svg[] = '</svg>';
+
+        $this->atlasProjectionEnabled = false;
+        $this->atlasProjectionContext = [];
 
         return implode('', $svg);
     }
@@ -806,6 +1250,119 @@ class StarChartService
         return implode(' ', $pathParts);
     }
 
+    /**
+     * One SVG path holding every constellation figure line that touches the
+     * chart.
+     *
+     * Figure lines join star to star, so they are great circles and have to
+     * be sampled as such -- interpolating in right ascension and declination,
+     * the way the boundaries are, would bend them away from the stars they
+     * connect. Segments that cannot reach the field are dropped before any of
+     * that: a full atlas projects these for every one of its pages.
+     *
+     * @param  Collection<int, array<string, float>>  $constellationLines
+     */
+    private function renderConstellationFigurePaths(
+        Collection $constellationLines,
+        float $centerRaDeg,
+        float $centerDecDeg,
+        float $xHalfDeg,
+        float $yHalfDeg,
+        float $left,
+        float $top,
+        float $plotWidth,
+        float $plotHeight
+    ): string {
+        if ($constellationLines->isEmpty()) {
+            return '';
+        }
+
+        $rect = [
+            'min_x' => $left,
+            'min_y' => $top,
+            'max_x' => $left + $plotWidth,
+            'max_y' => $top + $plotHeight,
+        ];
+
+        // Half the diagonal of the field, with a little room for the
+        // projection stretching a corner further than the flat geometry says.
+        $fieldRadiusDeg = 1.1 * sqrt(($xHalfDeg * $xHalfDeg) + ($yHalfDeg * $yHalfDeg));
+
+        // Sample finely enough that a straight line between two samples is
+        // indistinguishable from the projected curve at this field size.
+        $stepDeg = max(0.25, $fieldRadiusDeg / 8.0);
+
+        $pathParts = [];
+
+        foreach ($constellationLines as $segment) {
+            $lengthDeg = (float) $segment['length_deg'];
+            $reach = $fieldRadiusDeg + $lengthDeg;
+
+            if ($this->angularDistanceDeg($centerRaDeg, $centerDecDeg, (float) $segment['ra0_degrees'], (float) $segment['decl0_degrees']) > $reach
+                && $this->angularDistanceDeg($centerRaDeg, $centerDecDeg, (float) $segment['ra1_degrees'], (float) $segment['decl1_degrees']) > $reach) {
+                continue;
+            }
+
+            $steps = max(1, min(64, (int) ceil($lengthDeg / $stepDeg)));
+            $previous = null;
+
+            for ($i = 0; $i <= $steps; $i++) {
+                [$ra, $dec] = $this->greatCirclePoint(
+                    (float) $segment['ra0_degrees'],
+                    (float) $segment['decl0_degrees'],
+                    (float) $segment['ra1_degrees'],
+                    (float) $segment['decl1_degrees'],
+                    $i / $steps
+                );
+
+                $current = $this->projectToAtlasChartUnclipped($ra, $dec, $centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
+
+                if ($previous !== null) {
+                    $clipped = $this->clipLineToRect((float) $previous['x'], (float) $previous['y'], (float) $current['x'], (float) $current['y'], $rect);
+                    if ($clipped !== null) {
+                        $pathParts[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $clipped['x1'], $clipped['y1'], $clipped['x2'], $clipped['y2']);
+                    }
+                }
+
+                $previous = $current;
+            }
+        }
+
+        return implode(' ', $pathParts);
+    }
+
+    /**
+     * A point a fraction of the way along the great circle joining two
+     * positions, as [right ascension, declination] in degrees.
+     *
+     * @return array{0: float, 1: float}
+     */
+    public function greatCirclePoint(float $ra0Deg, float $dec0Deg, float $ra1Deg, float $dec1Deg, float $fraction): array
+    {
+        $a = $this->toUnitVector($ra0Deg, $dec0Deg);
+        $b = $this->toUnitVector($ra1Deg, $dec1Deg);
+
+        $dot = max(-1.0, min(1.0, ($a[0] * $b[0]) + ($a[1] * $b[1]) + ($a[2] * $b[2])));
+        $omega = acos($dot);
+
+        if ($omega < 1.0e-9) {
+            return [$ra0Deg, $dec0Deg];
+        }
+
+        $sinOmega = sin($omega);
+        $scaleA = sin((1.0 - $fraction) * $omega) / $sinOmega;
+        $scaleB = sin($fraction * $omega) / $sinOmega;
+
+        $x = ($a[0] * $scaleA) + ($b[0] * $scaleB);
+        $y = ($a[1] * $scaleA) + ($b[1] * $scaleB);
+        $z = ($a[2] * $scaleA) + ($b[2] * $scaleB);
+
+        return [
+            $this->normalizeRaDegrees(rad2deg(atan2($y, $x))),
+            rad2deg(asin(max(-1.0, min(1.0, $z / max(1.0e-12, sqrt(($x * $x) + ($y * $y) + ($z * $z))))))),
+        ];
+    }
+
     private function renderBoundaryCurvePath(
         float $ra0Deg,
         float $dec0Deg,
@@ -818,7 +1375,8 @@ class StarChartService
         float $left,
         float $top,
         float $plotWidth,
-        float $plotHeight
+        float $plotHeight,
+        ?array $projectionBounds = null
     ): array {
         $rect = [
             'min_x' => $left,
@@ -826,7 +1384,6 @@ class StarChartService
             'max_x' => $left + $plotWidth,
             'max_y' => $top + $plotHeight,
         ];
-
         // Sample the tabulated RA/Dec boundary segment and clip each sub-segment.
         // This is robust near poles and avoids over-curved great-circle artifacts.
         $steps = 24;
@@ -903,6 +1460,26 @@ class StarChartService
         float $plotWidth,
         float $plotHeight
     ): array {
+        if ($this->atlasProjectionEnabled) {
+            if ($this->atlasProjectionContext === []) {
+                $this->prepareAtlasProjectionContext($centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
+            }
+
+            $projected = $this->atlasSphericalProject($raDeg, $decDeg, $centerRaDeg, $centerDecDeg);
+            $minX = $this->atlasProjectionContext['min_x'];
+            $maxX = $this->atlasProjectionContext['max_x'];
+            $minY = $this->atlasProjectionContext['min_y'];
+            $maxY = $this->atlasProjectionContext['max_y'];
+
+            $xNorm = ($maxX - $projected['x']) / max(1.0e-9, $maxX - $minX);
+            $yNorm = ($maxY - $projected['y']) / max(1.0e-9, $maxY - $minY);
+
+            $x = $left + ($xNorm * $plotWidth);
+            $y = $top + ($yNorm * $plotHeight);
+
+            return ['x' => $x, 'y' => $y];
+        }
+
         $deltaRa = $this->normalizeRaDelta($raDeg - $centerRaDeg);
         $xDegrees = $deltaRa * cos(deg2rad($centerDecDeg));
         $yDegrees = $decDeg - $centerDecDeg;
@@ -956,6 +1533,15 @@ class StarChartService
 
     private function applyRaWindow(Builder $builder, float $centerRaDeg, float $windowDeg): void
     {
+        // If the requested RA window spans (or nearly spans) the entire
+        // circle, do not apply any RA-based filtering. This avoids the
+        // degenerate case where a ±180° window normalizes to equal
+        // min/max values and would inadvertently select only a narrow
+        // band (or none) due to normalization semantics.
+        if ($windowDeg >= 180.0 - 1.0e-9) {
+            return;
+        }
+
         $min = $this->normalizeRaDegrees($centerRaDeg - $windowDeg);
         $max = $this->normalizeRaDegrees($centerRaDeg + $windowDeg);
 
@@ -970,8 +1556,19 @@ class StarChartService
         });
     }
 
-    private function clipLineToRect(float $x1, float $y1, float $x2, float $y2, array $rect): ?array
+    /**
+     * Clip a line to the plot rectangle, or leave it whole when there is none.
+     *
+     * Symbols drawn outside a chart -- the front page legend -- have no
+     * rectangle to clip against, and every one of them is meant to be shown
+     * in full.
+     */
+    private function clipLineToRect(float $x1, float $y1, float $x2, float $y2, ?array $rect): ?array
     {
+        if ($rect === null) {
+            return ['x1' => $x1, 'y1' => $y1, 'x2' => $x2, 'y2' => $y2];
+        }
+
         $dx = $x2 - $x1;
         $dy = $y2 - $y1;
         $p = [-$dx, $dx, -$dy, $dy];
@@ -1102,7 +1699,8 @@ class StarChartService
         bool $drawnAny = false,
         bool $observedByUser = false,
         bool $drawnByUser = false,
-        bool $userLoggedIn = false
+        bool $userLoggedIn = false,
+        bool $allowOverlap = false
     ): string {
         $trimmed = trim($label);
         if ($trimmed === '') {
@@ -1192,11 +1790,11 @@ class StarChartService
 
         // Fallback: spiral search outward until a free slot is found.
         $angles = [];
-        for ($a = 0; $a < 360; $a += 30) {
+        for ($a = 0; $a < 360; $a += 15) {
             $angles[] = deg2rad($a);
         }
 
-        foreach ([20, 40, 60, 90] as $radius) {
+        foreach ([20, 30, 40, 55, 70, 90] as $radius) {
             foreach ($angles as $angle) {
                 $lx = $x + cos($angle) * $radius - ($textWidth / 2.0);
                 $ly = $y + sin($angle) * $radius;
@@ -1238,7 +1836,14 @@ class StarChartService
             }
         }
 
-        // As a last resort, place at the original default position (may overlap).
+        // Nothing is free. Drawing here would put this label on top of one that
+        // is already placed, so the label is dropped instead — an unreadable
+        // pile of overlapping names is worse than a missing one. Only the
+        // target of the chart is important enough to be drawn anyway.
+        if (!$allowOverlap) {
+            return '';
+        }
+
         $defaultBox = $tryBox($x + 10.0, $y - 7.0);
         $occupied[] = $defaultBox;
 
@@ -1667,24 +2272,170 @@ class StarChartService
         return ($diameterArcMin * $arcMinToPx) / 2.0;
     }
 
-    private function renderTopLegend(float $startX, float $baselineY): string
+    private function renderTopLegend(float $startX, float $baselineY, float $plotWidth): string
     {
         $svg = [];
         $x = $startX;
 
-        foreach ([6.5, 7.0, 8.0, 8.5, 9.0, 9.5, 10.0, 11.5, 12.0] as $mag) {
+        foreach (self::LEGEND_MAGNITUDES as $mag) {
             $radius = $this->starRadius($mag);
             $svg[] = sprintf('<circle cx="%0.2f" cy="%0.2f" r="%0.2f" fill="#111" />', $x, $baselineY - 9, $radius);
             $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="8" fill="#4b5563">%s</text>', $x + 8, $baselineY - 7, number_format($mag, 1));
-            $x += 39;
+            $x += self::LEGEND_MAGNITUDE_STEP;
         }
 
-        $x += 5;
-        $keys = ['GALXY', 'PLNNB', 'GLOCL', 'OPNCL', 'DRKNB', 'SNREM', 'CLANB', 'GALCL', 'QUASR'];
-        foreach ($keys as $code) {
+        // Narrow (portrait) charts cannot fit both groups on one line, so the
+        // object types move to a second row underneath the star magnitudes.
+        if ($this->topLegendWraps($plotWidth)) {
+            $x = $startX;
+            $baselineY += self::LEGEND_ROW_STEP;
+        } else {
+            $x += 5;
+        }
+
+        foreach (self::LEGEND_OBJECT_TYPES as $code) {
             $svg[] = $this->renderLegendSymbol($code, $x, $baselineY - 8);
             $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="8" fill="#4b5563">%s</text>', $x + 14, $baselineY - 6, $code);
-            $x += 52;
+            $x += self::LEGEND_OBJECT_STEP;
+        }
+
+        return implode('', $svg);
+    }
+
+    /**
+     * Whether the top legend needs a second row for the object types.
+     */
+    private function topLegendWraps(float $plotWidth): bool
+    {
+        // Width taken by both groups on a single row, including the 8px inset
+        // on the left, the 5px gap between the groups and the widest label of
+        // the last object type entry.
+        $required = 8.0
+            + (count(self::LEGEND_MAGNITUDES) * self::LEGEND_MAGNITUDE_STEP)
+            + 5.0
+            + ((count(self::LEGEND_OBJECT_TYPES) - 1) * self::LEGEND_OBJECT_STEP)
+            + 50.0;
+
+        return $required > $plotWidth;
+    }
+
+    /**
+     * Height of the header box holding the top legend.
+     */
+    private function topLegendBoxHeight(float $plotWidth): float
+    {
+        return $this->topLegendWraps($plotWidth) ? 34.0 + self::LEGEND_ROW_STEP : 34.0;
+    }
+
+    /**
+     * Render only a large page number for the selected atlas variant.
+     * The number is rendered to the right of the plot rectangle.
+     */
+    /**
+     * Page number of this chart, in the margin beside the top legend box.
+     *
+     * The type size follows the widest page number in the atlas, so a
+     * four-digit number in the detail atlas still fits the margin and every
+     * page of one atlas is set the same way.
+     *
+     * @param  array{page?: int, total?: int}|null  $atlasPage
+     */
+    private function renderAtlasPageNumber(float $chartWidth, float $plotWidth, ?array $atlasPage): string
+    {
+        $page = (int) ($atlasPage['page'] ?? 0);
+        if ($page < 1) {
+            return '';
+        }
+
+        $widest = max($page, (int) ($atlasPage['total'] ?? $page));
+        $digits = max(1, strlen((string) $widest));
+
+        // Right margin, less the padding on either side of the number.
+        $available = self::CHART_RIGHT - 12.0;
+        $fontSize = max(11.0, min(26.0, $available / ($digits * self::DIGIT_WIDTH_RATIO)));
+
+        return sprintf(
+            '<text x="%0.2f" y="%0.2f" font-size="%0.1f" font-weight="700" fill="#111827" text-anchor="end">%d</text>',
+            $chartWidth - 6.0,
+            14.0 + ($this->topLegendBoxHeight($plotWidth) / 2.0) + ($fontSize * 0.36),
+            $fontSize,
+            $page
+        );
+    }
+
+    /** Type size of the page number boxes on the edges of an atlas page. */
+    private const NEIGHBOUR_PAGE_FONT_SIZE = 13.0;
+
+    /**
+     * Boxes naming the charts that adjoin this one, one per edge.
+     *
+     * Each box straddles the border it points at, so it reads as "the chart
+     * continues here on page N". The rectangles are also handed to the
+     * graticule, which skips any coordinate label they would cover.
+     *
+     * @param  array{left?: ?int, right?: ?int, top?: ?int, bottom?: ?int}|null  $atlasPage
+     * @return array<int, array{page: int, min_x: float, min_y: float, max_x: float, max_y: float}>
+     */
+    private function atlasNeighbourBoxes(float $left, float $top, float $plotWidth, float $plotHeight, ?array $atlasPage): array
+    {
+        if ($atlasPage === null) {
+            return [];
+        }
+
+        $centerX = $left + ($plotWidth / 2.0);
+        $centerY = $top + ($plotHeight / 2.0);
+        $edges = [
+            'left' => [$left, $centerY],
+            'right' => [$left + $plotWidth, $centerY],
+            'top' => [$centerX, $top],
+            'bottom' => [$centerX, $top + $plotHeight],
+        ];
+
+        $fontSize = self::NEIGHBOUR_PAGE_FONT_SIZE;
+        $height = $fontSize + 11.0;
+        $boxes = [];
+
+        foreach ($edges as $side => [$x, $y]) {
+            $page = (int) ($atlasPage[$side] ?? 0);
+            if ($page < 1) {
+                continue;
+            }
+
+            $width = (strlen((string) $page) * $fontSize * self::DIGIT_WIDTH_RATIO) + 14.0;
+
+            $boxes[] = [
+                'page' => $page,
+                'min_x' => $x - ($width / 2.0),
+                'min_y' => $y - ($height / 2.0),
+                'max_x' => $x + ($width / 2.0),
+                'max_y' => $y + ($height / 2.0),
+            ];
+        }
+
+        return $boxes;
+    }
+
+    /**
+     * @param  array<int, array{page: int, min_x: float, min_y: float, max_x: float, max_y: float}>  $boxes
+     */
+    private function renderAtlasNeighbourPages(array $boxes): string
+    {
+        $fontSize = self::NEIGHBOUR_PAGE_FONT_SIZE;
+        $svg = [];
+
+        foreach ($boxes as $box) {
+            $svg[] = sprintf(
+                '<g><rect x="%0.2f" y="%0.2f" width="%0.2f" height="%0.2f" fill="#ffffff" stroke="#111827" stroke-width="1.2" />'
+                . '<text x="%0.2f" y="%0.2f" font-size="%0.1f" text-anchor="middle" fill="#111827">%d</text></g>',
+                $box['min_x'],
+                $box['min_y'],
+                $box['max_x'] - $box['min_x'],
+                $box['max_y'] - $box['min_y'],
+                ($box['min_x'] + $box['max_x']) / 2.0,
+                (($box['min_y'] + $box['max_y']) / 2.0) + ($fontSize * 0.36),
+                $fontSize,
+                $box['page']
+            );
         }
 
         return implode('', $svg);
@@ -1938,41 +2689,23 @@ class StarChartService
         return implode('', $parts);
     }
 
-    private function renderPolarGrid(float $centerRaDeg, float $centerDecDeg, float $xHalfDeg, float $yHalfDeg, float $left, float $top, float $plotWidth, float $plotHeight): string
+    /**
+     * Draw the RA/Dec graticule of an atlas page.
+     *
+     * Lines are drawn at round coordinates (whole degrees, whole minutes of
+     * time, ...) right across the page, and every label sits where its own
+     * line actually meets the edge of the plot. The projection is linear in
+     * neither axis -- next to a pole least of all -- so labels placed at
+     * evenly spaced pixel positions name the wrong lines: a "+90" written in
+     * the top right corner while the pole itself is drawn well below it.
+     *
+     * @param  array<int, array{min_x: float, min_y: float, max_x: float, max_y: float}>  $reserved
+     *     Areas already spoken for, such as the adjoining-page boxes.
+     */
+    private function renderAtlasGrid(float $centerRaDeg, float $centerDecDeg, float $xHalfDeg, float $yHalfDeg, float $left, float $top, float $plotWidth, float $plotHeight, array $reserved = []): string
     {
-        $svg = [];
-
-        // In polar mode the coordinate grid must be centered on the celestial
-        // pole, not on the target object. This keeps near-pole targets from
-        // appearing artificially at the grid origin.
-        $poleDec = $centerDecDeg >= 0.0 ? 90.0 : -90.0;
-        $polePoint = $this->projectToAtlasChartUnclipped(
-            $centerRaDeg,
-            $poleDec,
-            $centerRaDeg,
-            $centerDecDeg,
-            $xHalfDeg,
-            $yHalfDeg,
-            $left,
-            $top,
-            $plotWidth,
-            $plotHeight
-        );
-
-        $cx = (float) $polePoint['x'];
-        $cy = (float) $polePoint['y'];
-
-        // When the pole lies outside the frame, use the farthest-corner
-        // distance so concentric declination circles still cross the chart.
-        $corners = [
-            [$left, $top],
-            [$left + $plotWidth, $top],
-            [$left, $top + $plotHeight],
-            [$left + $plotWidth, $top + $plotHeight],
-        ];
-        $radius = 0.0;
-        foreach ($corners as [$cornerX, $cornerY]) {
-            $radius = max($radius, hypot($cornerX - $cx, $cornerY - $cy));
+        if ($this->atlasProjectionContext === []) {
+            $this->prepareAtlasProjectionContext($centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
         }
 
         $rect = [
@@ -1982,59 +2715,303 @@ class StarChartService
             'max_y' => $top + $plotHeight,
         ];
 
-        for ($i = 1; $i <= 4; $i++) {
-            $r = $radius * ($i / 4);
-            $segments = [];
-            $steps = 240;
+        $window = $this->atlasSkyWindow($centerRaDeg, $centerDecDeg, [
+            $this->atlasProjectionContext['min_x'],
+            $this->atlasProjectionContext['max_x'],
+            $this->atlasProjectionContext['min_y'],
+            $this->atlasProjectionContext['max_y'],
+        ]);
 
-            for ($s = 0; $s < $steps; $s++) {
-                $a0 = 2.0 * M_PI * ($s / $steps);
-                $a1 = 2.0 * M_PI * (($s + 1) / $steps);
+        $decMin = $window['dec_min'];
+        $decMax = $window['dec_max'];
+        $raWindow = $window['ra_window'];
+        $poleOnPage = $raWindow >= 180.0 - 1.0e-9;
 
-                $x0 = $cx + cos($a0) * $r;
-                $y0 = $cy + sin($a0) * $r;
-                $x1 = $cx + cos($a1) * $r;
-                $y1 = $cy + sin($a1) * $r;
+        $decStep = $this->niceGridStep($decMax - $decMin, self::GRID_DEC_STEPS_DEG);
+        // With a pole on the page every meridian runs through it, so use the
+        // hour lines a polar chart is normally drawn with rather than a step
+        // derived from a right ascension range that spans the whole circle.
+        $raStepHours = $poleOnPage
+            ? 1.0
+            : $this->niceGridStep((2.0 * $raWindow) / 15.0, self::GRID_RA_STEPS_HOURS);
 
-                $clipped = $this->clipLineToRect($x0, $y0, $x1, $y1, $rect);
-                if ($clipped !== null) {
-                    $segments[] = sprintf('M %0.2f %0.2f L %0.2f %0.2f', $clipped['x1'], $clipped['y1'], $clipped['x2'], $clipped['y2']);
-                }
+        $svg = [];
+        $decLabels = [];
+        // Right ascension is read off both the top and the bottom of the page,
+        // so a meridian can be followed from either end. The two scales differ
+        // wherever the meridians are not vertical, and next to a pole they
+        // differ completely: the edge beyond the pole carries the meridians
+        // that run over it to the far side of the sky.
+        $raLabels = ['top' => [], 'bottom' => []];
+
+        // Parallels of declination.
+        $raSpan = $poleOnPage ? 180.0 : min(180.0, $raWindow * 1.05);
+        $raSamples = $poleOnPage ? 360 : 180;
+        $firstDecIndex = (int) ceil(($decMin / $decStep) - 1.0e-9);
+        $lastDecIndex = (int) floor(($decMax / $decStep) + 1.0e-9);
+
+        for ($k = $firstDecIndex; $k <= $lastDecIndex; $k++) {
+            $decDeg = $k * $decStep;
+            if (abs($decDeg) >= 90.0) {
+                // A pole is a point, not a parallel; it gets its own label.
+                continue;
             }
 
-            if ($segments !== []) {
-                $svg[] = sprintf('<path d="%s" fill="none" stroke="#d9d9d9" stroke-width="0.6" />', implode(' ', $segments));
+            $points = [];
+            for ($i = 0; $i <= $raSamples; $i++) {
+                $raDeg = $centerRaDeg - $raSpan + ((2.0 * $raSpan * $i) / $raSamples);
+                $points[] = $this->atlasGridPoint($raDeg, $decDeg, $centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
+            }
+
+            $svg[] = $this->renderGridPolyline($points, $rect);
+
+            $crossing = $this->gridEdgeCrossing($points, $rect, 'right');
+            if ($crossing !== null) {
+                $decLabels[] = ['y' => $crossing['y'], 'text' => $this->formatDecDms($decDeg)];
             }
         }
 
-        for ($i = 0; $i < 12; $i++) {
-            $angle = deg2rad($i * 30.0);
-            $x = $cx + cos($angle) * $radius;
-            $y = $cy + sin($angle) * $radius;
-            $clipped = $this->clipLineToRect($cx, $cy, $x, $y, $rect);
-            if ($clipped !== null) {
-                $svg[] = sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#d9d9d9" stroke-width="0.6" />', $clipped['x1'], $clipped['y1'], $clipped['x2'], $clipped['y2']);
+        // Meridians of right ascension.
+        $raStepDeg = $raStepHours * 15.0;
+        $decSamples = 180;
+        $firstRaIndex = (int) ceil((($centerRaDeg - $raWindow) / $raStepDeg) - 1.0e-9);
+        $lastRaIndex = (int) floor((($centerRaDeg + $raWindow) / $raStepDeg) + 1.0e-9);
+        // A full circle must not draw its first meridian twice.
+        $lastRaIndex = min($lastRaIndex, $firstRaIndex + (int) round(360.0 / $raStepDeg) - 1);
+
+        for ($k = $firstRaIndex; $k <= $lastRaIndex; $k++) {
+            $raDeg = $k * $raStepDeg;
+
+            $points = [];
+            for ($i = 0; $i <= $decSamples; $i++) {
+                $decDeg = $decMin + ((($decMax - $decMin) * $i) / $decSamples);
+                $points[] = $this->atlasGridPoint($raDeg, $decDeg, $centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
             }
+
+            $svg[] = $this->renderGridPolyline($points, $rect);
+
+            foreach (['top', 'bottom'] as $edge) {
+                $crossing = $this->gridEdgeCrossing($points, $rect, $edge);
+                if ($crossing !== null) {
+                    $raLabels[$edge][] = ['x' => $crossing['x'], 'text' => $this->formatRaHours($raDeg)];
+                }
+            }
+        }
+
+        foreach (['top' => $top - 8.0, 'bottom' => $top + $plotHeight + 14.0] as $edge => $raLabelY) {
+            foreach ($this->spacedGridLabels($raLabels[$edge], 'x', 34.0) as $label) {
+                $textWidth = strlen($label['text']) * 9.0 * self::DIGIT_WIDTH_RATIO;
+                if ($this->overlapsReserved($label['x'] - ($textWidth / 2.0), $raLabelY - 9.0, $label['x'] + ($textWidth / 2.0), $raLabelY + 2.0, $reserved)) {
+                    continue;
+                }
+
+                $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="9" text-anchor="middle" fill="#6b7280">%s</text>', $label['x'], $raLabelY, htmlspecialchars($label['text'], ENT_QUOTES, 'UTF-8'));
+            }
+        }
+
+        foreach ($this->spacedGridLabels($decLabels, 'y', 12.0) as $label) {
+            $textWidth = strlen($label['text']) * 9.0 * self::DIGIT_WIDTH_RATIO;
+            if ($this->overlapsReserved($left + $plotWidth + 6, $label['y'] - 5.0, $left + $plotWidth + 6 + $textWidth, $label['y'] + 6.0, $reserved)) {
+                continue;
+            }
+
+            $svg[] = sprintf('<text x="%0.2f" y="%0.2f" font-size="9" text-anchor="start" fill="#6b7280">%s</text>', $left + $plotWidth + 6, $label['y'] + 3, htmlspecialchars($label['text'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if ($poleOnPage) {
+            $svg[] = $this->renderAtlasPoleLabel($centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight, $rect);
         }
 
         return implode('', $svg);
     }
 
+    /**
+     * Project one graticule sample, or null when it lies on the far half of
+     * the sky, where the stereographic projection runs away to infinity and
+     * would otherwise draw a line straight across the page.
+     *
+     * @return array{x: float, y: float}|null
+     */
+    private function atlasGridPoint(float $raDeg, float $decDeg, float $centerRaDeg, float $centerDecDeg, float $xHalfDeg, float $yHalfDeg, float $left, float $top, float $plotWidth, float $plotHeight): ?array
+    {
+        $cosDistance = (sin(deg2rad($decDeg)) * sin(deg2rad($centerDecDeg)))
+            + (cos(deg2rad($decDeg)) * cos(deg2rad($centerDecDeg)) * cos(deg2rad($raDeg - $centerRaDeg)));
+
+        if ($cosDistance <= 0.0) {
+            return null;
+        }
+
+        return $this->projectToAtlasChartUnclipped($raDeg, $decDeg, $centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
+    }
+
+    /**
+     * @param  array<int, array{x: float, y: float}|null>  $points
+     * @param  array{min_x: float, min_y: float, max_x: float, max_y: float}  $rect
+     */
+    private function renderGridPolyline(array $points, array $rect): string
+    {
+        $svg = '';
+        $count = count($points);
+
+        for ($i = 1; $i < $count; $i++) {
+            $from = $points[$i - 1];
+            $to = $points[$i];
+            if ($from === null || $to === null) {
+                continue;
+            }
+
+            $clipped = $this->clipLineToRect($from['x'], $from['y'], $to['x'], $to['y'], $rect);
+            if ($clipped !== null) {
+                $svg .= sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#d9d9d9" stroke-width="0.6" />', $clipped['x1'], $clipped['y1'], $clipped['x2'], $clipped['y2']);
+            }
+        }
+
+        return $svg;
+    }
+
+    /**
+     * First point at which a graticule line meets the given edge of the plot.
+     *
+     * @param  array<int, array{x: float, y: float}|null>  $points
+     * @param  array{min_x: float, min_y: float, max_x: float, max_y: float}  $rect
+     * @param  string  $edge  'top', 'bottom' or 'right'
+     * @return array{x: float, y: float}|null
+     */
+    private function gridEdgeCrossing(array $points, array $rect, string $edge): ?array
+    {
+        $count = count($points);
+
+        for ($i = 1; $i < $count; $i++) {
+            $from = $points[$i - 1];
+            $to = $points[$i];
+            if ($from === null || $to === null) {
+                continue;
+            }
+
+            $edgeValue = match ($edge) {
+                'right' => $rect['max_x'],
+                'bottom' => $rect['max_y'],
+                default => $rect['min_y'],
+            };
+            $fromOffset = $edge === 'right' ? $from['x'] - $edgeValue : $from['y'] - $edgeValue;
+            $toOffset = $edge === 'right' ? $to['x'] - $edgeValue : $to['y'] - $edgeValue;
+
+            if (($fromOffset > 0.0 && $toOffset > 0.0) || ($fromOffset < 0.0 && $toOffset < 0.0)) {
+                continue;
+            }
+            if (abs($fromOffset - $toOffset) < 1.0e-12) {
+                continue;
+            }
+
+            $t = $fromOffset / ($fromOffset - $toOffset);
+            $x = $from['x'] + (($to['x'] - $from['x']) * $t);
+            $y = $from['y'] + (($to['y'] - $from['y']) * $t);
+
+            if ($x < $rect['min_x'] - 0.5 || $x > $rect['max_x'] + 0.5) {
+                continue;
+            }
+            if ($y < $rect['min_y'] - 0.5 || $y > $rect['max_y'] + 0.5) {
+                continue;
+            }
+
+            return ['x' => $x, 'y' => $y];
+        }
+
+        return null;
+    }
+
+    /**
+     * Thin out graticule labels that would be printed on top of each other.
+     *
+     * @param  array<int, array{x?: float, y?: float, text: string}>  $labels
+     * @return array<int, array{x?: float, y?: float, text: string}>
+     */
+    private function spacedGridLabels(array $labels, string $axis, float $minimumGap): array
+    {
+        usort($labels, fn(array $a, array $b): int => $a[$axis] <=> $b[$axis]);
+
+        $kept = [];
+        foreach ($labels as $label) {
+            if ($kept !== [] && ($label[$axis] - end($kept)[$axis]) < $minimumGap) {
+                continue;
+            }
+
+            $kept[] = $label;
+        }
+
+        return $kept;
+    }
+
+    /**
+     * @param  array<int, array{min_x: float, min_y: float, max_x: float, max_y: float}>  $reserved
+     */
+    private function overlapsReserved(float $minX, float $minY, float $maxX, float $maxY, array $reserved): bool
+    {
+        foreach ($reserved as $box) {
+            if ($minX < $box['max_x'] && $maxX > $box['min_x'] && $minY < $box['max_y'] && $maxY > $box['min_y']) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param  array{min_x: float, min_y: float, max_x: float, max_y: float}  $rect
+     */
+    private function renderAtlasPoleLabel(float $centerRaDeg, float $centerDecDeg, float $xHalfDeg, float $yHalfDeg, float $left, float $top, float $plotWidth, float $plotHeight, array $rect): string
+    {
+        $poleDec = $centerDecDeg >= 0.0 ? 90.0 : -90.0;
+        $point = $this->projectToAtlasChartUnclipped($centerRaDeg, $poleDec, $centerRaDeg, $centerDecDeg, $xHalfDeg, $yHalfDeg, $left, $top, $plotWidth, $plotHeight);
+
+        if ($point['x'] < $rect['min_x'] || $point['x'] > $rect['max_x'] || $point['y'] < $rect['min_y'] || $point['y'] > $rect['max_y']) {
+            return '';
+        }
+
+        return sprintf(
+            '<text x="%0.2f" y="%0.2f" font-size="9" text-anchor="start" fill="#6b7280">%s</text>',
+            min($point['x'] + 5.0, $rect['max_x'] - 34.0),
+            max($point['y'] - 5.0, $rect['min_y'] + 9.0),
+            htmlspecialchars($this->formatDecDms($poleDec), ENT_QUOTES, 'UTF-8')
+        );
+    }
+
+    /**
+     * Largest candidate step that still puts at least six lines across a span.
+     *
+     * @param  array<int, float>  $candidates  descending
+     */
+    private function niceGridStep(float $span, array $candidates): float
+    {
+        $target = max(1.0e-9, $span) / 6.0;
+
+        foreach ($candidates as $candidate) {
+            if ($candidate <= $target) {
+                return $candidate;
+            }
+        }
+
+        return (float) end($candidates);
+    }
+
     private function starRadius(?float $magnitude): float
     {
         if ($magnitude === null) {
-            return 1.1;
+            return 1.0;
         }
 
-        // Scale across the full chart range (roughly mag 1..14) so stars near
-        // the faint limit are small, while brighter stars pop clearly.
+        // Scale across the full chart range (roughly mag 1..14). The atlas
+        // PDF pipeline rasterizes the SVG at roughly 1.5x its viewBox units,
+        // so the floor/curve here are kept small enough that the faintest
+        // stars still shrink to near-invisible points after that upscale,
+        // matching traditional printed star atlases.
         $normalized = (14.0 - $magnitude) / 13.0;
         $normalized = max(0.0, min(1.0, $normalized));
 
-        return 1.1 + (7.0 * ($normalized ** 1.15));
+        return 0.25 + (7.25 * ($normalized ** 2.8));
     }
 
-    private function resolveMagnitudeLimit(int $radiusArcMin, ?float $magnitudeLimit): float
+    private function resolveMagnitudeLimit(float $radiusArcMin, ?float $magnitudeLimit): float
     {
         if ($magnitudeLimit !== null) {
             return $magnitudeLimit;
@@ -2064,9 +3041,234 @@ class StarChartService
         return 2800;
     }
 
-    private function xHalfDegrees(float $radiusDeg): float
+    private function xHalfDegrees(float $radiusDeg, bool $fast = false, bool $atlasMode = false, ?float $atlasPlotAspect = null): float
     {
+        if ($atlasMode) {
+            $factor = $atlasPlotAspect
+                ?? (self::CHART_WIDTH - self::CHART_LEFT - self::CHART_RIGHT)
+                / (self::CHART_HEIGHT - self::CHART_TOP - self::CHART_BOTTOM);
+
+            // Keep landscape atlas behavior unchanged. For portrait atlas
+            // pages, do not clamp to a square field: horizontal FoV should
+            // shrink with the portrait plot aspect.
+            if ($factor < 1.0) {
+                return max(0.1, $radiusDeg * $factor);
+            }
+
+            return max($radiusDeg, $radiusDeg * $factor);
+        }
+
         return max($radiusDeg, $radiusDeg * 2.3);
+    }
+
+    /**
+     * @return array{width:int,height:int,left:int,right:int,top:int,bottom:int,plot_width:int,plot_height:int}
+     */
+    private function resolveAtlasLayout(bool $atlasMode, bool $portraitAtlasLayout): array
+    {
+        $width = self::CHART_WIDTH;
+        $height = self::CHART_HEIGHT;
+
+        if ($atlasMode && $portraitAtlasLayout) {
+            $width = self::PORTRAIT_ATLAS_CHART_WIDTH;
+            $height = self::PORTRAIT_ATLAS_CHART_HEIGHT;
+        }
+
+        $left = self::CHART_LEFT;
+        $right = self::CHART_RIGHT;
+        $bottom = self::CHART_BOTTOM;
+        $plotWidth = $width - $left - $right;
+
+        // A wrapped legend makes the header box taller, so the plot starts
+        // lower to keep the same gap below the header.
+        $top = self::CHART_TOP + ($this->topLegendBoxHeight($plotWidth) - 34.0);
+
+        return [
+            'width' => $width,
+            'height' => $height,
+            'left' => $left,
+            'right' => $right,
+            'top' => $top,
+            'bottom' => $bottom,
+            'plot_width' => $plotWidth,
+            'plot_height' => $height - $top - $bottom,
+        ];
+    }
+
+    /**
+     * Projected bounds of an atlas page.
+     *
+     * A page shows a fixed angular field: $xHalfDeg horizontally and
+     * $yHalfDeg vertically from its centre to its edge. In the stereographic
+     * projection used here a point at angular distance theta lands at radius
+     * 2*tan(theta/2), so the bounds follow straight from the requested field.
+     *
+     * Deriving them instead by sampling the border of an RA/Dec rectangle --
+     * as this used to -- breaks next to a pole: RA offsets divided by
+     * cos(dec) wrap right around the pole, and the samples that land on the
+     * far side of it inflate the field, push the pole away from the top edge
+     * and put sky beyond the pole on the page.
+     *
+     * @return array{0: float, 1: float, 2: float, 3: float} [minX, maxX, minY, maxY]
+     */
+    private function atlasProjectionBounds(float $xHalfDeg, float $yHalfDeg, float $plotWidth, float $plotHeight): array
+    {
+        $halfX = 2.0 * tan(deg2rad(max(0.001, min(89.0, $xHalfDeg))) / 2.0);
+        $halfY = 2.0 * tan(deg2rad(max(0.001, min(89.0, $yHalfDeg))) / 2.0);
+
+        [$minX, $maxX, $minY, $maxY] = $this->fitAtlasBoundsToPlot(
+            -$halfX,
+            $halfX,
+            -$halfY,
+            $halfY,
+            $plotWidth,
+            $plotHeight
+        );
+
+        // Hairline margin so content sitting exactly on an edge is not lost
+        // to floating point comparisons.
+        $dx = max(1.0e-9, $maxX - $minX);
+        $dy = max(1.0e-9, $maxY - $minY);
+        $marginFactor = 0.002;
+
+        return [
+            $minX - ($dx * $marginFactor),
+            $maxX + ($dx * $marginFactor),
+            $minY - ($dy * $marginFactor),
+            $maxY + ($dy * $marginFactor),
+        ];
+    }
+
+    /**
+     * RA/Dec window covered by the projected bounds of an atlas page.
+     *
+     * Everything the page can show lies inside this window, so it is what the
+     * star and object queries select on. The extremes of a stereographic page
+     * always sit on its border -- unless that border encloses a celestial
+     * pole, in which case every right ascension is on the page.
+     *
+     * @param  array{0: float, 1: float, 2: float, 3: float}  $bounds
+     * @return array{dec_min: float, dec_max: float, ra_window: float}
+     */
+    private function atlasSkyWindow(float $centerRaDeg, float $centerDecDeg, array $bounds): array
+    {
+        [$minX, $maxX, $minY, $maxY] = $bounds;
+
+        $decMin = 90.0;
+        $decMax = -90.0;
+        $raWindow = 0.0;
+        $steps = 96;
+
+        for ($i = 0; $i <= $steps; $i++) {
+            $t = $i / $steps;
+            $x = $minX + (($maxX - $minX) * $t);
+            $y = $minY + (($maxY - $minY) * $t);
+
+            foreach ([[$x, $minY], [$x, $maxY], [$minX, $y], [$maxX, $y]] as [$px, $py]) {
+                [$raDeg, $decDeg] = $this->atlasSphericalUnproject($px, $py, $centerRaDeg, $centerDecDeg);
+                $decMin = min($decMin, $decDeg);
+                $decMax = max($decMax, $decDeg);
+                $raWindow = max($raWindow, abs($this->normalizeRaDelta($raDeg - $centerRaDeg)));
+            }
+        }
+
+        foreach ([90.0, -90.0] as $poleDec) {
+            $pole = $this->atlasSphericalProject($centerRaDeg, $poleDec, $centerRaDeg, $centerDecDeg);
+            if ($pole['x'] < $minX || $pole['x'] > $maxX || $pole['y'] < $minY || $pole['y'] > $maxY) {
+                continue;
+            }
+
+            // The pole is on the page, so the page spans every right ascension.
+            $raWindow = 180.0;
+            if ($poleDec > 0.0) {
+                $decMax = 90.0;
+            } else {
+                $decMin = -90.0;
+            }
+        }
+
+        return [
+            'dec_min' => max(-90.0, $decMin),
+            'dec_max' => min(90.0, $decMax),
+            'ra_window' => min(180.0, $raWindow),
+        ];
+    }
+
+    /**
+     * Prepare spherical projection bounds for atlas rendering.
+     */
+    private function prepareAtlasProjectionContext(float $centerRaDeg, float $centerDecDeg, float $xHalfDeg, float $yHalfDeg, float $left, float $top, float $plotWidth, float $plotHeight): void
+    {
+        [$minX, $maxX, $minY, $maxY] = $this->atlasProjectionBounds($xHalfDeg, $yHalfDeg, $plotWidth, $plotHeight);
+
+        $this->atlasProjectionContext = [
+            'min_x' => $minX,
+            'max_x' => $maxX,
+            'min_y' => $minY,
+            'max_y' => $maxY,
+            'left' => $left,
+            'top' => $top,
+            'plot_width' => $plotWidth,
+            'plot_height' => $plotHeight,
+        ];
+    }
+
+    /**
+     * Spherical projection used for atlas charts.
+     * Returns raw projected coordinates before normalization to the SVG box.
+     *
+     * @return array{x: float, y: float}
+     */
+    private function atlasSphericalProject(float $raDeg, float $decDeg, float $centerRaDeg, float $centerDecDeg): array
+    {
+        $ra = deg2rad($raDeg);
+        $dec = deg2rad($decDeg);
+        $ra0 = deg2rad($centerRaDeg);
+        $dec0 = deg2rad($centerDecDeg);
+
+        $dra = $ra - $ra0;
+        $sinDec = sin($dec);
+        $cosDec = cos($dec);
+        $sinDec0 = sin($dec0);
+        $cosDec0 = cos($dec0);
+
+        $denom = 1.0 + ($sinDec0 * $sinDec) + ($cosDec0 * $cosDec * cos($dra));
+        if (abs($denom) < 1.0e-9) {
+            $denom = 1.0e-9;
+        }
+
+        $k = 2.0 / $denom;
+
+        return [
+            'x' => $k * $cosDec * sin($dra),
+            'y' => $k * (($cosDec0 * $sinDec) - ($sinDec0 * $cosDec * cos($dra))),
+        ];
+    }
+
+    /**
+     * Inverse of atlasSphericalProject(): projected plane back to RA/Dec.
+     *
+     * @return array{0: float, 1: float} [raDeg, decDeg]
+     */
+    private function atlasSphericalUnproject(float $x, float $y, float $centerRaDeg, float $centerDecDeg): array
+    {
+        $rho = hypot($x, $y);
+        if ($rho < 1.0e-12) {
+            return [$this->normalizeRaDegrees($centerRaDeg), $centerDecDeg];
+        }
+
+        $c = 2.0 * atan($rho / 2.0);
+        $sinC = sin($c);
+        $cosC = cos($c);
+        $dec0 = deg2rad($centerDecDeg);
+
+        $dec = asin(max(-1.0, min(1.0, ($cosC * sin($dec0)) + (($y * $sinC * cos($dec0)) / $rho))));
+        $ra = deg2rad($centerRaDeg) + atan2(
+            $x * $sinC,
+            ($rho * cos($dec0) * $cosC) - ($y * sin($dec0) * $sinC)
+        );
+
+        return [$this->normalizeRaDegrees(rad2deg($ra)), rad2deg($dec)];
     }
 
     private function raWindowDegreesFromXHalf(float $centerDecDeg, float $xHalfDeg): float
@@ -2101,22 +3303,49 @@ class StarChartService
         return $raDeg;
     }
 
+    /**
+     * Make the projected sky footprint match the rectangular chart aspect
+     * ratio without changing the underlying stereographic projection.
+     *
+     * @return array{0: float, 1: float, 2: float, 3: float}
+     */
+    private function fitAtlasBoundsToPlot(float $minX, float $maxX, float $minY, float $maxY, float $plotWidth, float $plotHeight): array
+    {
+        $width = max(1.0e-9, $maxX - $minX);
+        $height = max(1.0e-9, $maxY - $minY);
+        $plotAspect = max(1.0e-9, $plotWidth / $plotHeight);
+        $boundsAspect = $width / $height;
+
+        if ($boundsAspect < $plotAspect) {
+            $newWidth = $height * $plotAspect;
+            $padding = ($newWidth - $width) / 2.0;
+            $minX -= $padding;
+            $maxX += $padding;
+        } elseif ($boundsAspect > $plotAspect) {
+            $newHeight = $width / $plotAspect;
+            $padding = ($newHeight - $height) / 2.0;
+            $minY -= $padding;
+            $maxY += $padding;
+        }
+
+        return [$minX, $maxX, $minY, $maxY];
+    }
+
     private function formatRaHours(float $raDeg): string
     {
-        $hours = $this->normalizeRaDegrees($raDeg) / 15.0;
-        $h = (int) floor($hours);
-        $minutes = (int) floor(($hours - $h) * 60.0);
+        // Round rather than truncate: a grid line at a round 21h reaches this
+        // as 20.99999... and must not be labelled 20h59m.
+        $totalMinutes = (int) round(($this->normalizeRaDegrees($raDeg) / 15.0) * 60.0);
+        $totalMinutes %= 24 * 60;
 
-        return sprintf('%02dh%02dm', $h, $minutes);
+        return sprintf('%02dh%02dm', intdiv($totalMinutes, 60), $totalMinutes % 60);
     }
 
     private function formatDecDms(float $decDeg): string
     {
         $sign = $decDeg < 0 ? '-' : '+';
-        $abs = abs($decDeg);
-        $deg = (int) floor($abs);
-        $minutes = (int) floor(($abs - $deg) * 60.0);
+        $totalMinutes = (int) round(abs($decDeg) * 60.0);
 
-        return sprintf('%s%02d°%02d\'', $sign, $deg, $minutes);
+        return sprintf('%s%02d°%02d\'', $sign, intdiv($totalMinutes, 60), $totalMinutes % 60);
     }
 }

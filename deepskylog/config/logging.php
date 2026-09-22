@@ -68,6 +68,9 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
+            // Web requests (www-data) and the queue worker (local user) both
+            // append to the same daily file, so it must stay writable for both.
+            'permission' => 0666,
         ],
 
         'slack' => [
