@@ -92,6 +92,20 @@
                     </div>
                 </div>
             </x-card>
+
+            <br />
+            <x-card title="OpenSkyAtlas">
+                <div class="flex-justify-center flex">
+                    <div class="px-5">
+                        <a href="https://github.com/jromang/osa/releases">
+                            <img src="/images/openskyatlas.png" alt="OpenSkyAtlas" class="w-64" />
+                        </a>
+                    </div>
+                    <div>
+                        {!! __("OpenSkyAtlas by Jean-François Romang is a free, printable A4 deep-sky field atlas built entirely from open catalogues. It shows stars down to magnitude 8.0 and about 1500 deep-sky objects — including every Messier, Caldwell and Herschel 400 object — with galaxies and nebulae drawn at their true size and orientation. The charts are black and white on purpose, so that they stay readable under a red torch. Three editions are available: standard (black on white, for printing), field (white on black, for screens at the telescope) and mirror (flipped for use with a star diagonal). Labels are available in English, French, Spanish and German, and the atlas is released under the CC BY-NC-SA 4.0 licence.") !!}
+                    </div>
+                </div>
+            </x-card>
         </div>
     </div>
 </x-app-layout>

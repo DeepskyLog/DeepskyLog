@@ -5,9 +5,8 @@
 ## Next steps
 
 - [ ] Update to laravel 13.
-- [ ] Nieuwe atlas: https://github.com/jromang/osa/releases
-- [ ] Create observing guides
 - [ ] In Team Settings page: Automatically update table if new user is added (only works when next user is added)
+- [ ] Create observing guides
 - [ ] Translations
   - [ ] Check why sv translation removes all the current translations
 - [ ] Test! 
