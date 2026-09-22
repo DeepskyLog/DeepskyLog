@@ -2,9 +2,11 @@
 
 namespace App\Livewire;
 
-use App\Models\TeamUser;
+use App\Models\Team;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
@@ -23,7 +25,7 @@ final class AdminUserTable extends PowerGridComponent
 
     public $team;
 
-    public string $primaryKey = 'users.id';
+    public string $primaryKey = 'id';
 
     public string $tableName = 'AdminUserTable';
 
@@ -56,13 +58,22 @@ final class AdminUserTable extends PowerGridComponent
     /**
      * PowerGrid datasource.
      *
-     * @return Builder<TeamUser>
+     * The query is built on the User model (and not on TeamUser) because PowerGrid
+     * qualifies the searchable and sortable columns with the table of the query's
+     * base model. Starting from TeamUser would generate conditions like
+     * `team_user.name`, which does not exist. The team membership is checked with
+     * a whereHas instead of a join, so that `id` stays unambiguous: PowerGrid uses
+     * the primary key both to look up a row's action buttons and in the query that
+     * exports the selected rows.
+     *
+     * @return Builder<User>
      */
     public function datasource(): Builder
     {
-        return TeamUser::query()->where('team_id', $this->team)->join('users', function ($users) {
-            $users->on('team_user.user_id', '=', 'users.id');
-        })->select('users.id', 'users.username', 'users.name', 'users.email', 'users.slug', 'users.created_at');
+        return User::query()
+            ->without(['locations', 'instruments', 'eyepieces', 'filters', 'lenses'])
+            ->whereHas('teams', fn (Builder $team) => $team->whereKey($this->team))
+            ->select('users.id', 'users.username', 'users.name', 'users.email', 'users.slug', 'users.created_at');
     }
 
     /*
@@ -185,6 +196,7 @@ final class AdminUserTable extends PowerGridComponent
     {
         return [
             Button::add('destroy')
+                ->can(fn () => $this->canRemoveTeamMembers())
                 ->confirm(__('Are you sure you want to remove the user from the team?'))
                 ->slot(__('Remove'))
                 ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
@@ -226,12 +238,35 @@ final class AdminUserTable extends PowerGridComponent
     */
 
     /**
+     * Whether the current user may remove members from this team.
+     */
+    public function canRemoveTeamMembers(): bool
+    {
+        $team = $this->team();
+
+        return $team !== null && Gate::allows('removeTeamMember', $team);
+    }
+
+    /**
      * Removes a user from the team
      */
     public function remove($id): void
     {
-        $teamuser = TeamUser::where('team_id', '=', $this->team)->where('user_id', '=', $id);
-        $teamuser->delete();
+        $team = $this->team();
+
+        if ($team === null || Gate::denies('removeTeamMember', $team)) {
+            abort(403);
+        }
+
+        $team->users()->detach($id);
+    }
+
+    /**
+     * The team this table shows the members of.
+     */
+    private function team(): ?Team
+    {
+        return Team::find($this->team);
     }
 
     protected function getListeners(): array

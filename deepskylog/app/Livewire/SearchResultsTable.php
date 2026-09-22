@@ -102,7 +102,11 @@ class SearchResultsTable extends PowerGridComponent
             ->values();
 
         if ($q === '' && $objectRefs->isEmpty()) {
-            return SearchIndex::query()->whereRaw('0 = 1');
+            // Nothing to show, but the objects join is kept so that the searchable
+            // objects.* columns still resolve when a search term is typed.
+            return SearchIndex::query()
+                ->leftJoin('objects', 'search_index.source_pk', '=', 'objects.slug')
+                ->whereRaw('0 = 1');
         }
 
         // Populate per-render cached preview models to avoid N+1 DB lookups
@@ -1151,12 +1155,12 @@ class SearchResultsTable extends PowerGridComponent
                 ->bodyAttribute('style', 'white-space:normal; overflow:visible;')
                 ->headerAttribute('class', 'whitespace-normal')
                 ->headerAttribute('style', 'white-space:normal;'),
-            Column::make(__('Mag'), 'mag')
+            Column::make(__('Mag'), 'mag', 'objects.mag')
                 ->sortUsing(function ($query, $direction) {
                     $query->orderBy('objects.mag', $direction);
                 })
                 ->searchable(),
-            Column::make(__('SB'), 'subr')
+            Column::make(__('SB'), 'subr', 'objects.subr')
                 ->sortUsing(function ($query, $direction) {
                     $query->orderBy('objects.subr', $direction);
                 })

@@ -54,7 +54,15 @@ class InstrumentTable extends PowerGridComponent
 
     public function datasource(): ?Builder
     {
-        return Instrument::query()->where('user_id', Auth::id());
+        // The make, type and mount columns are searchable, so their tables are
+        // joined here: PowerGrid qualifies a searchable column with the table of
+        // the query's base model unless the column carries its own table prefix.
+        return Instrument::query()
+            ->select('instruments.*')
+            ->leftJoin('instrument_makes', 'instrument_makes.id', '=', 'instruments.make_id')
+            ->leftJoin('instrument_types', 'instrument_types.id', '=', 'instruments.instrument_type_id')
+            ->leftJoin('mount_types', 'mount_types.id', '=', 'instruments.mount_type_id')
+            ->where('instruments.user_id', Auth::id());
     }
 
     public function fields(): PowerGridFields
@@ -110,7 +118,7 @@ class InstrumentTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make(__('Make'), 'makestr')
+            Column::make(__('Make'), 'makestr', 'instrument_makes.name')
                 ->searchable(),
 
             Column::make('Name', 'name_link', 'name')
@@ -129,7 +137,7 @@ class InstrumentTable extends PowerGridComponent
                 ->toggleable(hasPermission: true, trueLabel: 'Yes', falseLabel: 'No')
                 ->sortable(),
 
-            Column::make(__('Type'), 'instrument_type_name')
+            Column::make(__('Type'), 'instrument_type_name', 'instrument_types.name')
                 ->searchable(),
 
             Column::make(__('Aperture'), 'aperture_mm')
@@ -152,7 +160,7 @@ class InstrumentTable extends PowerGridComponent
                 ->searchable()
                 ->sortable(),
 
-            Column::make(__('Mount'), 'mount')
+            Column::make(__('Mount'), 'mount', 'mount_types.name')
                 ->searchable(),
 
             Column::make(__('Flip'), 'flip_image')

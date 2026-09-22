@@ -37,7 +37,16 @@ final class PopularSessionsTable extends PowerGridComponent
     public function datasource(): Builder
     {
         // Aggregate likes for sessions only
-        $aggQuery = ObservationLike::selectRaw('observation_type, observation_id, COUNT(*) as likes, MIN(id) as id')
+        // The session and observer names are pulled into the aggregate so that they
+        // can be searched: PowerGrid qualifies every searchable column with the
+        // table (here: the alias of this subquery) of the query's base model.
+        $aggQuery = ObservationLike::selectRaw(
+            'observation_type, observation_id, COUNT(*) as likes, MIN(id) as id'
+            . ', (SELECT s.name FROM observation_sessions s WHERE s.id = observation_id LIMIT 1) as session_name'
+            . ', (SELECT COALESCE('
+            . '(SELECT u.name FROM users u WHERE u.username = s.observerid LIMIT 1), s.observerid'
+            . ') FROM observation_sessions s WHERE s.id = observation_id LIMIT 1) as observer_name'
+        )
             ->where('observation_type', 'session')
             ->groupBy('observation_type', 'observation_id')
             ->orderByDesc('likes');

@@ -73,19 +73,29 @@ final class UserPopularObservationsTable extends PowerGridComponent
             ->filter()
             ->toArray();
 
-        if (empty($deepskyIds) && empty($cometIds)) {
-            // Return an empty builder
-            return ObservationLike::query()->whereRaw('0 = 1');
-        }
-
         $aggQuery = ObservationLike::selectRaw(
             'observation_type, observation_id, COUNT(*) as likes, MIN(id) as id, '
             . "(SELECT legacy_date_int FROM observations o WHERE "
             . "(observation_type = 'deepsky' AND o.legacy_source = 'deepsky' AND o.legacy_id = observation_id) "
             . "OR (observation_type = 'comet' AND o.legacy_source = 'comet' AND o.legacy_id = observation_id) "
             . 'LIMIT 1) as obs_date'
+            // Pulled into the aggregate so the object name can be searched:
+            // PowerGrid qualifies every searchable column with the table (here:
+            // the alias of this subquery) of the query's base model.
+            . ', (SELECT o.target_name FROM observations o WHERE '
+            . "(observation_type = 'deepsky' AND o.legacy_source = 'deepsky' AND o.legacy_id = observation_id) "
+            . "OR (observation_type = 'comet' AND o.legacy_source = 'comet' AND o.legacy_id = observation_id) "
+            . 'LIMIT 1) as objectname'
         )
             ->where(function ($q) use ($deepskyIds, $cometIds) {
+                if (empty($deepskyIds) && empty($cometIds)) {
+                    // The user has no observations. Match nothing, but keep the
+                    // shape of the aggregate so its searchable columns resolve.
+                    $q->whereRaw('0 = 1');
+
+                    return;
+                }
+
                 if (!empty($deepskyIds)) {
                     $q->orWhere(function ($q2) use ($deepskyIds) {
                         $q2->where('observation_type', 'deepsky')->whereIn('observation_id', $deepskyIds);

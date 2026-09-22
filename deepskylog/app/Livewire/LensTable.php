@@ -54,7 +54,13 @@ class LensTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Lens::query()->where('user_id', Auth::id());
+        // The make column is searchable, so lens_makes is joined here: PowerGrid
+        // qualifies a searchable column with the table of the query's base model
+        // unless the column carries its own table prefix.
+        return Lens::query()
+            ->select('lenses.*')
+            ->leftJoin('lens_makes', 'lens_makes.id', '=', 'lenses.make_id')
+            ->where('lenses.user_id', Auth::id());
     }
 
     public function fields(): PowerGridFields
@@ -76,7 +82,7 @@ class LensTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make(__('Make'), 'makestr')
+            Column::make(__('Make'), 'makestr', 'lens_makes.name')
                 ->searchable(),
 
             Column::make('Name', 'name_link', 'name')

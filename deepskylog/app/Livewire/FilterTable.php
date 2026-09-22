@@ -52,7 +52,15 @@ final class FilterTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return DSL_Filter::query()->where('user_id', Auth::id());
+        // The make, type and color columns are searchable, so their tables are
+        // joined here: PowerGrid qualifies a searchable column with the table of
+        // the query's base model unless the column carries its own table prefix.
+        return DSL_Filter::query()
+            ->select('filters.*')
+            ->leftJoin('filter_makes', 'filter_makes.id', '=', 'filters.make_id')
+            ->leftJoin('filter_types', 'filter_types.id', '=', 'filters.type_id')
+            ->leftJoin('filter_colors', 'filter_colors.id', '=', 'filters.color_id')
+            ->where('filters.user_id', Auth::id());
     }
 
     public function fields(): PowerGridFields
@@ -79,7 +87,7 @@ final class FilterTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make(__('Make'), 'makestr')
+            Column::make(__('Make'), 'makestr', 'filter_makes.name')
                 ->searchable(),
 
             Column::make('Name', 'name_link', 'name')
@@ -92,10 +100,10 @@ final class FilterTable extends PowerGridComponent
                 ->hidden()
                 ->visibleInExport(true),
 
-            Column::make(__('Type'), 'typestr')
+            Column::make(__('Type'), 'typestr', 'filter_types.name')
                 ->searchable(),
 
-            Column::make(__('Color'), 'colorstr')
+            Column::make(__('Color'), 'colorstr', 'filter_colors.name')
                 ->searchable(),
 
             Column::add()
