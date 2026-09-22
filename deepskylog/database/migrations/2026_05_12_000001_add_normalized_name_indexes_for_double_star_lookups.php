@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     /**
@@ -28,11 +30,17 @@ return new class extends Migration {
 
     public function down(): void
     {
-        DB::statement('DROP INDEX idx_obs_table_name_normalized ON observations');
-        DB::statement('DROP INDEX idx_obs_target_name_normalized ON observations');
-        DB::statement('ALTER TABLE observations DROP COLUMN target_name_normalized');
+        // Go through the schema builder rather than raw SQL: `DROP INDEX x ON t`
+        // is MySQL-only syntax, and the test suite runs on SQLite.
+        Schema::table('observations', function (Blueprint $table) {
+            $table->dropIndex('idx_obs_table_name_normalized');
+            $table->dropIndex('idx_obs_target_name_normalized');
+            $table->dropColumn('target_name_normalized');
+        });
 
-        DB::statement('DROP INDEX idx_objects_name_normalized ON objects');
-        DB::statement('ALTER TABLE objects DROP COLUMN name_normalized');
+        Schema::table('objects', function (Blueprint $table) {
+            $table->dropIndex('idx_objects_name_normalized');
+            $table->dropColumn('name_normalized');
+        });
     }
 };

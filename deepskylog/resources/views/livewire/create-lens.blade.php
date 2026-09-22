@@ -139,7 +139,6 @@
                 <x-card>
                     <form
                         role="form"
-                        action="{{ route("lens.store") }}"
                         method="POST"
                         wire:submit="save"
                     >

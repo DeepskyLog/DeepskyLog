@@ -217,11 +217,8 @@ Route::get('/downloads/dsl-atlas/download/{token}', [App\Http\Controllers\AtlasC
 Route::view('/downloads/forms', 'layouts.downloads.forms');
 
 // Instruments
-Route::resource(
-    'instrument',
-    'App\Http\Controllers\InstrumentController',
-    ['parameters' => ['instrument' => 'instrument']]
-)->middleware('verified')->except('show');
+Route::resource('instrument', 'App\Http\Controllers\InstrumentController')
+    ->middleware(['auth', 'verified'])->only(['index', 'create']);
 
 Route::get('/instrument/{user}/{instrument}', 'App\Http\Controllers\InstrumentController@show')
     ->name('instrument.show');
@@ -242,11 +239,8 @@ Route::post('admin/instrument_make/destroy', 'App\Http\Controllers\InstrumentCon
     ->name('instrumentmake.destroy')->can('add_sketch', User::class);
 
 // Eyepieces
-Route::resource(
-    'eyepiece',
-    'App\Http\Controllers\EyepieceController',
-    ['parameters' => ['eyepiece' => 'eyepiece']]
-)->middleware('verified')->except('show');
+Route::resource('eyepiece', 'App\Http\Controllers\EyepieceController')
+    ->middleware(['auth', 'verified'])->only(['index', 'create']);
 
 Route::get('/eyepiece/{user}/{eyepiece}', 'App\Http\Controllers\EyepieceController@show')
     ->name('eyepiece.show');
@@ -279,11 +273,8 @@ Route::post('admin/eyepiece_type/destroy', 'App\Http\Controllers\EyepieceControl
     ->name('eyepiecetype.destroy')->can('add_sketch', User::class);
 
 // Lenses
-Route::resource(
-    'lens',
-    'App\Http\Controllers\LensController',
-    ['parameters' => ['lens' => 'lens']]
-)->middleware('verified')->except('show');
+Route::resource('lens', 'App\Http\Controllers\LensController')
+    ->middleware(['auth', 'verified'])->only(['index', 'create']);
 
 Route::get('/lens/{user}/{lens}', 'App\Http\Controllers\LensController@show')
     ->name('lens.show');
@@ -304,11 +295,8 @@ Route::post('admin/lens_make/destroy', 'App\Http\Controllers\LensController@dest
     ->name('lensmake.destroy')->can('add_sketch', User::class);
 
 // Filters
-Route::resource(
-    'filter',
-    'App\Http\Controllers\FilterController',
-    ['parameters' => ['filter' => 'filter']]
-)->middleware('verified')->except('show');
+Route::resource('filter', 'App\Http\Controllers\FilterController')
+    ->middleware(['auth', 'verified'])->only(['index', 'create']);
 
 Route::get('/filter/{user}/{filter}', 'App\Http\Controllers\FilterController@show')
     ->name('filter.show');
@@ -329,11 +317,8 @@ Route::post('admin/filter_make/destroy', 'App\Http\Controllers\FilterController@
     ->name('filtermake.destroy')->can('add_sketch', User::class);
 
 // Locations
-Route::resource(
-    'location',
-    'App\Http\Controllers\LocationController',
-    ['parameters' => ['location' => 'location']]
-)->middleware('verified')->except('show');
+Route::resource('location', 'App\Http\Controllers\LocationController')
+    ->middleware(['auth', 'verified'])->only(['index', 'create']);
 
 Route::get('/location/{user}/{location}', 'App\Http\Controllers\LocationController@show')
     ->name('location.show');
@@ -342,11 +327,8 @@ Route::get('/location/{user}/{location}/edit', 'App\Http\Controllers\LocationCon
     ->name('location.edit')->middleware('auth');
 
 // Instrument sets
-Route::resource(
-    'instrumentset',
-    'App\Http\Controllers\InstrumentSetController',
-    ['parameters' => ['instrumentset' => 'instrumentset']]
-)->middleware('verified')->except('show');
+Route::resource('instrumentset', 'App\Http\Controllers\InstrumentSetController')
+    ->middleware(['auth', 'verified'])->only(['index', 'create']);
 
 Route::get('/instrumentset/{user}/{instrumentset}', 'App\Http\Controllers\InstrumentSetController@show')
     ->name('instrumentset.show');

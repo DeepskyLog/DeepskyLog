@@ -139,7 +139,6 @@
                 <x-card>
                     <form
                         role="form"
-                        action="{{ route("instrument.store") }}"
                         method="POST"
                         wire:submit="save"
                     >

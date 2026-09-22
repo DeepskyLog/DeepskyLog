@@ -139,7 +139,6 @@
                 <x-card>
                     <form
                         role="form"
-                        action="{{ route("eyepiece.store") }}"
                         method="POST"
                         wire:submit="save"
                     >

@@ -2,32 +2,53 @@
 
 use App\Http\Controllers\SessionController;
 use App\Jobs\SendSessionInvitations;
-use App\Models\ObservationSession;
+use App\Models\Location;
 use App\Models\User;
-use Illuminate\Support\Facades\Bus;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Bus;
 
 it('does not include the creator when dispatching session invitations via controller store', function () {
     Bus::fake();
 
-    // Create a dummy user as creator
     $creator = User::factory()->create(['username' => 'creatoruser']);
+    // The job is only dispatched when somebody other than the creator is
+    // invited, so the session needs a second participant to be worth asserting on.
+    $invitee = User::factory()->create(['username' => 'inviteduser']);
+    $location = Location::query()->create([
+        'user_id' => $creator->id,
+        'name' => 'Test Site',
+        'longitude' => 4.0,
+        'latitude' => 50.0,
+        'timezone' => 'UTC',
+        'limitingMagnitude' => -999,
+        'skyBackground' => -999,
+        'elevation' => 0,
+        'country' => 'Belgium',
+        'active' => true,
+        'observer' => '',
+        'observations' => 0,
+        'slug' => 'test-site',
+    ]);
+
     Auth::login($creator);
 
-    // Prepare dummy request data
-    $request = new \Illuminate\Http\Request([], [
+    // store() validates the request body, so this has to be a real POST --
+    // Laravel reads a GET request's input from the query string instead.
+    $request = Request::create('/session', 'POST', [
         'name' => 'Test Session',
         'observer' => $creator->username,
+        'locationid' => $location->id,
+        'begindate' => '2026-01-01',
+        'enddate' => '2026-01-02',
+        'otherObservers' => $invitee->username,
         'active' => 1,
     ]);
 
-    // Call controller store method
-    $controller = new SessionController();
-    $response = $controller->store($request);
+    (new SessionController)->store($request);
 
-    // The BuildSessionCopies job may be dispatched; ensure SendSessionInvitations was dispatched
-    Bus::assertDispatched(SendSessionInvitations::class, function ($job) use ($creator) {
-        // The creator should not be in recipients
-        return is_array($job->recipients) && ! in_array($creator->username, $job->recipients, true);
+    Bus::assertDispatched(SendSessionInvitations::class, function ($job) use ($creator, $invitee) {
+        return ! in_array($creator->username, $job->recipients, true)
+            && in_array($invitee->username, $job->recipients, true);
     });
 });

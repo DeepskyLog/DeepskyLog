@@ -140,7 +140,6 @@
                 <x-card>
                     <form
                         role="form"
-                        action="{{ route("filter.store") }}"
                         method="POST"
                         wire:submit="save"
                     >

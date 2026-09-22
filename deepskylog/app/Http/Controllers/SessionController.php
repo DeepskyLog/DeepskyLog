@@ -906,8 +906,10 @@ class SessionController extends Controller
         } catch (\Throwable $e) {
             // If parsing fails, allow the save to proceed and let DB constraints handle it if necessary
         }
-        $session->weather = $validated['weather'] ?? null;
-        $session->equipment = $validated['equipment'] ?? null;
+        // weather and equipment are NOT NULL with an empty-string default;
+        // only comments is nullable.
+        $session->weather = $validated['weather'] ?? '';
+        $session->equipment = $validated['equipment'] ?? '';
         $session->comments = $validated['comments'] ?? null;
         $session->active = isset($validated['active']) ? (int) $validated['active'] : 1;
 

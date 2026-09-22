@@ -123,6 +123,13 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function switchTeam($team): bool
     {
+        // Jetstream's own switchTeam() bails out via belongsToTeam(); this
+        // override deliberately skips that check, but still must not be
+        // handed a null team -- currentTeam() calls switchTeam(personalTeam()).
+        if (is_null($team)) {
+            return false;
+        }
+
         $this->forceFill([
             'current_team_id' => $team->id,
         ])->save();
@@ -133,13 +140,32 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Checks whether the user's active team is the team with the given name.
+     *
+     * Returns false -- rather than throwing -- when the team does not exist or
+     * the user has no active team, so that a missing group never turns into a
+     * 404 on every page that renders the navigation menu.
+     *
+     * @param  string  $teamName  The name of the team to check against
+     * @return bool True if the user's active team is that team
+     */
+    protected function currentTeamIsNamed(string $teamName): bool
+    {
+        $team = Team::where('name', $teamName)->first();
+
+        return $team !== null
+            && $this->currentTeam !== null
+            && $this->isCurrentTeam($team);
+    }
+
+    /**
      * Checks if the user's active team is the administrators team
      *
      * @return bool True if the user's active team is the administrators team
      */
     public function isAdministrator(): bool
     {
-        return $this->isCurrentTeam(Team::where('name', 'Administrators')->firstOrFail());
+        return $this->currentTeamIsNamed('Administrators');
     }
 
     /**
@@ -163,7 +189,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isDatabaseExpert(): bool
     {
-        return $this->isCurrentTeam(Team::where('name', 'Database Experts')->firstOrFail());
+        return $this->currentTeamIsNamed('Database Experts');
     }
 
     /**
@@ -173,7 +199,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isObserver(): bool
     {
-        return $this->isCurrentTeam(Team::where('name', 'Observers')->firstOrFail());
+        return $this->currentTeamIsNamed('Observers');
     }
 
     /**

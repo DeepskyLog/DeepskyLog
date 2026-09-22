@@ -46,20 +46,23 @@ it('decodes an entity in an object name', function () {
 
 it('carries every reference to a renamed object across with it', function () {
     catalogueRow('T&ouml;pler 2');
-    aliasRow('T&ouml;pler 2', 'Topler 2');
+    $aliasId = aliasRow('T&ouml;pler 2', 'Topler 2');
 
     DB::table('observations')->insert([
         'target_table' => 'objects',
         'target_key' => 'T&ouml;pler 2',
         'target_name' => 'T&ouml;pler 2',
         'observer_username' => 'someone',
-        'date' => '2026-01-01',
+        'observed_on' => '2026-01-01',
     ]);
 
     $this->artisan('objects:fix-html-entities', ['--apply' => true])->assertSuccessful();
 
     // Nothing may be left pointing at a name the catalogue no longer holds.
-    expect(DB::table('objectnames')->pluck('objectname')->all())->toBe(['Töpler 2']);
+    // Only the rows created here are checked -- migrations seed the alias
+    // table with Messier names that have nothing to do with this rename.
+    expect(DB::table('objectnames')->where('id', $aliasId)->value('objectname'))->toBe('Töpler 2');
+    expect(DB::table('objectnames')->where('objectname', 'T&ouml;pler 2')->exists())->toBeFalse();
     expect(DB::table('observations')->pluck('target_name')->all())->toBe(['Töpler 2']);
     expect(DB::table('observations')->pluck('target_key')->all())->toBe(['Töpler 2']);
 });
