@@ -6,6 +6,12 @@ use Livewire\Component;
 
 class UpdateUserObservingInformation extends Component
 {
+    /**
+     * Fallback atlas, matching the database default of users.standardAtlasCode,
+     * which is a NOT NULL column.
+     */
+    private const DEFAULT_ATLAS_CODE = 'urano';
+
     public $stdlocation;
 
     public $stdtelescope;
@@ -15,18 +21,20 @@ class UpdateUserObservingInformation extends Component
     public $standardAtlasCode;
 
     public $showInches;
-    
+
     // New defaults for Aladin preview
     public $stdeyepiece;
+
     public $stdlens;
 
     protected $rules = [
-        'stdlocation' => 'numeric',
-        'stdtelescope' => 'numeric',
-        'stdinstrumentset' => 'numeric',
+        'stdlocation' => 'nullable|numeric',
+        'stdtelescope' => 'nullable|numeric',
+        'stdinstrumentset' => 'nullable|numeric',
+        'standardAtlasCode' => 'required|string|exists:atlases,code',
         'showInches' => 'boolean',
-        'stdeyepiece' => 'numeric|nullable',
-        'stdlens' => 'numeric|nullable',
+        'stdeyepiece' => 'nullable|numeric',
+        'stdlens' => 'nullable|numeric',
     ];
 
     /**
@@ -37,7 +45,7 @@ class UpdateUserObservingInformation extends Component
         $this->stdlocation = auth()->user()->stdlocation;
         $this->stdtelescope = auth()->user()->stdtelescope;
         $this->stdinstrumentset = auth()->user()->stdinstrumentset ?? null;
-        $this->standardAtlasCode = auth()->user()->standardAtlasCode;
+        $this->standardAtlasCode = auth()->user()->standardAtlasCode ?: self::DEFAULT_ATLAS_CODE;
         $this->showInches = boolval(auth()->user()->showInches);
         $this->stdeyepiece = auth()->user()->stdeyepiece ?? null;
         $this->stdlens = auth()->user()->stdlens ?? null;
@@ -48,6 +56,18 @@ class UpdateUserObservingInformation extends Component
      */
     public function updateObservingInformation(): void
     {
+        // An unset select sends an empty string, which is not numeric.
+        foreach (['stdlocation', 'stdtelescope', 'stdinstrumentset', 'stdeyepiece', 'stdlens'] as $field) {
+            if ($this->{$field} === '') {
+                $this->{$field} = null;
+            }
+        }
+
+        // standardAtlasCode is NOT NULL, so a cleared select falls back to the default.
+        if (blank($this->standardAtlasCode)) {
+            $this->standardAtlasCode = self::DEFAULT_ATLAS_CODE;
+        }
+
         $this->validate();
 
         if ($this->stdlocation == 0) {

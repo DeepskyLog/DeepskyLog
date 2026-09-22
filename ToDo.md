@@ -5,9 +5,7 @@
 ## Next steps
 
 - [ ] Update to laravel 13.
-- [ ] Save when in http://localhost/user/profile and no instrument set -> The stdinstrumentset field must be a number. 
 - [ ] Nieuwe atlas: https://github.com/jromang/osa/releases
-- [ ] Pest doesn't run anymore
 - [ ] Create observing guides
 - [ ] In Team Settings page: Automatically update table if new user is added (only works when next user is added)
 - [ ] Translations
