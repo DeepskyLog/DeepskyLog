@@ -864,6 +864,13 @@ try {
                                                         'dec' => $nearbyDecDeg ?? '',
                                                         'radius' => $nearbyRadiusSelected ?? 30,
                                                     ]])
+                                                    @include('object-report.link', ['params' => [
+                                                        'source' => 'nearby',
+                                                        'object' => $canonicalSlug ?? ($session->slug ?? ''),
+                                                        'ra' => $nearbyRaDeg ?? '',
+                                                        'dec' => $nearbyDecDeg ?? '',
+                                                        'radius' => $nearbyRadiusSelected ?? 30,
+                                                    ]])
                                                 @endauth
 
                                                 <div class="relative inline-block text-left">

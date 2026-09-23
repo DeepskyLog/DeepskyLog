@@ -83,6 +83,20 @@ class ObjectSetDataBuilder
      */
     public function nightEphemerides(DeepskyObject $object, User $user, Carbon $date): ?array
     {
+        $night = $this->nightConditions($user, $date);
+        $objectEphemerides = $this->objectNightEphemerides($object, $user, $date);
+
+        return $night === null || $objectEphemerides === null ? null : $night + $objectEphemerides;
+    }
+
+    /**
+     * The sun and the moon tonight at the observer's standard location, in
+     * local time.
+     *
+     * @return array<string, string>|null  null when the observer has no standard location
+     */
+    public function nightConditions(User $user, Carbon $date): ?array
+    {
         $location = $this->location($user);
         if ($location === null) {
             return null;
@@ -95,8 +109,6 @@ class ObjectSetDataBuilder
         // The night runs into the next morning, so the morning twilight and
         // sunrise are those of the day after.
         $nextSun = date_sun_info($day->copy()->addDay()->timestamp, (float) $location->latitude, (float) $location->longitude);
-
-        $objectEphemerides = $this->objectEphemerides($object, $geo, $day, $tz);
 
         [$moonRise, $moonSet] = $this->moonRiseSet($geo, $location, $day, $tz);
 
@@ -112,7 +124,26 @@ class ObjectSetDataBuilder
             'astronomical_begin' => self::sunTime($nextSun, 'astronomical_twilight_begin', $tz),
             'moon_rise' => $moonRise,
             'moon_set' => $moonSet,
-        ] + $objectEphemerides;
+        ];
+    }
+
+    /**
+     * The object tonight at the observer's standard location, in local time.
+     *
+     * @return array{rise: string, transit: string, set: string, max_altitude: string, max_altitude_night: string, best_time: string}|null
+     */
+    public function objectNightEphemerides(DeepskyObject $object, User $user, Carbon $date): ?array
+    {
+        $location = $this->location($user);
+        if ($location === null) {
+            return null;
+        }
+
+        $tz = $this->timezone($location);
+        $day = Carbon::createFromFormat('Y-m-d H:i', $date->toDateString() . ' 12:00', $tz);
+        $geo = new GeographicalCoordinates((float) $location->longitude, (float) $location->latitude);
+
+        return $this->objectEphemerides($object, $geo, $day, $tz);
     }
 
     /**
@@ -256,6 +287,14 @@ class ObjectSetDataBuilder
     public function typeNameFor(?string $code): string
     {
         return $this->typeName((string) $code);
+    }
+
+    /**
+     * Constellation name for a constellation code.
+     */
+    public function constellationNameFor(?string $code): string
+    {
+        return $this->constellationName((string) $code);
     }
 
     /**

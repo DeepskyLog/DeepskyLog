@@ -23,6 +23,10 @@ use Illuminate\Support\Collection;
  *
  * Only deep-sky objects have the fixed position a chart and a DSS photo need,
  * so comets, planets and the like in a search result are left out.
+ *
+ * The object reports (App\Livewire\ObjectReport) take their objects from the
+ * same places, so they use this service too, with KIND_REPORT: that only
+ * changes the page title and the file name.
  */
 class ObjectSetSourceService
 {
@@ -32,18 +36,22 @@ class ObjectSetSourceService
      */
     public const MAX_OBJECTS = 200;
 
+    public const KIND_OBJECT_SETS = 'object-sets';
+
+    public const KIND_REPORT = 'report';
+
     /**
      * @return array{objects: Collection<int, DeepskyObject>, title: string, total: int, list_id: ?int, filename: string}
      */
-    public function resolve(Request $request, ?User $user): array
+    public function resolve(Request $request, ?User $user, string $kind = self::KIND_OBJECT_SETS, int $limit = self::MAX_OBJECTS): array
     {
         $source = strtolower(trim((string) $request->query('source', '')));
 
         [$names, $title, $listId, $filename] = match ($source) {
-            'list' => $this->fromList($request, $user),
-            'nearby' => $this->fromNearby($request),
-            'search' => $this->fromSearch($request),
-            default => [collect(), __('Object sets'), null, 'object-sets'],
+            'list' => $this->fromList($request, $user, $kind),
+            'nearby' => $this->fromNearby($request, $kind),
+            'search' => $this->fromSearch($request, $kind),
+            default => [collect(), $this->title($kind, 'none'), null, $kind],
         };
 
         $names = $names
@@ -55,7 +63,7 @@ class ObjectSetSourceService
         $objects = $this->loadInOrder($names);
 
         return [
-            'objects' => $objects->take(self::MAX_OBJECTS)->values(),
+            'objects' => $objects->take($limit)->values(),
             'title' => $title,
             'total' => $objects->count(),
             'list_id' => $listId,
@@ -66,13 +74,13 @@ class ObjectSetSourceService
     /**
      * @return array{0: Collection<int, string>, 1: string, 2: ?int, 3: string}
      */
-    private function fromList(Request $request, ?User $user): array
+    private function fromList(Request $request, ?User $user, string $kind): array
     {
         $slug = trim((string) $request->query('list', ''));
         $list = ObservingList::where('slug', $slug)->first();
 
         if ($list === null) {
-            return [collect(), __('Object sets'), null, 'object-sets'];
+            return [collect(), $this->title($kind, 'none'), null, $kind];
         }
 
         if ($user === null || ! $user->can('view', $list)) {
@@ -85,9 +93,9 @@ class ObjectSetSourceService
 
         return [
             $names,
-            __('Object sets for observing list ":name"', ['name' => $list->name]),
+            $this->title($kind, 'list', ['name' => $list->name]),
             (int) $list->id,
-            'object-sets-' . $list->slug,
+            $kind . '-' . $list->slug,
         ];
     }
 
@@ -97,7 +105,7 @@ class ObjectSetSourceService
      *
      * @return array{0: Collection<int, string>, 1: string, 2: ?int, 3: string}
      */
-    private function fromNearby(Request $request): array
+    private function fromNearby(Request $request, string $kind): array
     {
         $slug = trim((string) $request->query('object', ''));
         $center = $slug !== '' ? DeepskyObject::where('slug', $slug)->orWhere('name', $slug)->first() : null;
@@ -110,7 +118,7 @@ class ObjectSetSourceService
         }
 
         if (! is_numeric($ra) || ! is_numeric($dec)) {
-            return [collect(), __('Object sets'), null, 'object-sets'];
+            return [collect(), $this->title($kind, 'none'), null, $kind];
         }
 
         $raDeg = (float) $ra;
@@ -133,10 +141,10 @@ class ObjectSetSourceService
         return [
             $names,
             $centerName !== null
-                ? __('Object sets for the objects near :object', ['object' => $centerName])
-                : __('Object sets for nearby objects'),
+                ? $this->title($kind, 'near', ['object' => $centerName])
+                : $this->title($kind, 'nearby'),
             null,
-            'object-sets-near-' . ($center?->slug ?? 'position'),
+            $kind . '-near-' . ($center?->slug ?? 'position'),
         ];
     }
 
@@ -145,7 +153,7 @@ class ObjectSetSourceService
      *
      * @return array{0: Collection<int, string>, 1: string, 2: ?int, 3: string}
      */
-    private function fromSearch(Request $request): array
+    private function fromSearch(Request $request, string $kind): array
     {
         $query = $request->query();
         unset($query['source']);
@@ -162,10 +170,38 @@ class ObjectSetSourceService
 
         return [
             $names,
-            $q !== '' ? __('Object sets for the search ":q"', ['q' => $q]) : __('Object sets for the search results'),
+            $q !== '' ? $this->title($kind, 'search', ['q' => $q]) : $this->title($kind, 'results'),
             null,
-            'object-sets-search',
+            $kind . '-search',
         ];
+    }
+
+    /**
+     * The page title for a kind of page and the list of objects it is about.
+     *
+     * @param  array<string, string>  $replace
+     */
+    private function title(string $kind, string $which, array $replace = []): string
+    {
+        if ($kind === self::KIND_REPORT) {
+            return match ($which) {
+                'list' => __('Report for observing list ":name"', $replace),
+                'near' => __('Report for the objects near :object', $replace),
+                'nearby' => __('Report for nearby objects'),
+                'search' => __('Report for the search ":q"', $replace),
+                'results' => __('Report for the search results'),
+                default => __('Report'),
+            };
+        }
+
+        return match ($which) {
+            'list' => __('Object sets for observing list ":name"', $replace),
+            'near' => __('Object sets for the objects near :object', $replace),
+            'nearby' => __('Object sets for nearby objects'),
+            'search' => __('Object sets for the search ":q"', $replace),
+            'results' => __('Object sets for the search results'),
+            default => __('Object sets'),
+        };
     }
 
     /**

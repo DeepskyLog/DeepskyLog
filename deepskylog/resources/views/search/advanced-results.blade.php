@@ -62,6 +62,7 @@
 
                     @auth
                         @include('object-sets.link', ['params' => ['source' => 'search'] + $exportParams])
+                        @include('object-report.link', ['params' => ['source' => 'search'] + $exportParams])
                     @endauth
 
                     <div class="relative inline-block text-left">

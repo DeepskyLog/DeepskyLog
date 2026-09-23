@@ -297,6 +297,7 @@
                                 <div class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
                                     @auth
                                         @include('object-sets.link', ['params' => ['source' => 'list', 'list' => $list->slug]])
+                                        @include('object-report.link', ['params' => ['source' => 'list', 'list' => $list->slug]])
                                     @endauth
                                     <div class="relative inline-block text-left">
                                         <button type="button" @click="open = !open" @keydown.escape="open = false"

@@ -222,7 +222,7 @@ it('generates the pdf with charts, photos, data and index pages', function () {
         'year_ephemerides' => true,
         'index_page' => true,
         'list_id' => $list->id,
-    ]))->handle(app(ObjectSetPdfService::class));
+    ]))->handle();
 
     $status = Cache::get(GenerateObjectSetsPdf::statusKey($token));
     expect($status['state'])->toBe('complete', $status['detail'] ?? '');
@@ -280,7 +280,7 @@ it('replaces an older set of the same list once the new one is ready', function 
             'objects' => [['name' => 'M 31', 'fovs' => [60.0], 'dsos' => [10.0], 'stars' => [10.0], 'photos' => []]],
             'data_page' => false,
             'index_page' => false,
-        ]))->handle(app(ObjectSetPdfService::class));
+        ]))->handle();
 
         return $token;
     };

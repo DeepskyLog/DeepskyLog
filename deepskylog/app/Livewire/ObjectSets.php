@@ -182,6 +182,7 @@ class ObjectSets extends Component
 
         $user = auth()->user();
         $token = (string) Str::uuid();
+        $filename = ObjectSetPdfService::filenameFor($this->filename, $objects);
         $label = $row === null
             ? trans_choice(':count object|:count objects', count($objects), ['count' => count($objects)])
             : $objects[0]['name'];
@@ -190,7 +191,7 @@ class ObjectSets extends Component
             'state' => 'queued',
             'user_id' => $user->id,
             'label' => $label,
-            'filename' => ObjectSetPdfService::filenameFor($this->filename, $objects),
+            'filename' => $filename,
             'created_at' => now()->toIso8601String(),
             'total' => count($objects),
         ], now()->addHours(GenerateObjectSetsPdf::KEEP_HOURS));
@@ -205,6 +206,7 @@ class ObjectSets extends Component
             'list_id' => $this->listId,
         ]);
 
+        $this->tokens = GenerateObjectSetsPdf::forgetUnfinished((int) $user->id, $filename, $this->tokens);
         array_unshift($this->tokens, $token);
         $this->tokens = array_slice(array_values(array_unique($this->tokens)), 0, self::RECENT_SETS);
         Cache::put(GenerateObjectSetsPdf::recentKey((int) $user->id), $this->tokens, now()->addHours(GenerateObjectSetsPdf::KEEP_HOURS));
