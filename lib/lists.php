@@ -527,9 +527,11 @@ class Lists
         if ($place && ($place > 1)) {
             $listIdObjDown = $this->getListId($listname, $loggedUser);
             if ($listIdObjDown) {
-                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = -1 WHERE observing_list_id = " . $listIdObjDown . " AND sort_order = " . $place);
+                // sort_order is INT UNSIGNED, so the swaps below park an item at the
+                // column maximum (4294967295) instead of -1, which strict mode rejects.
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = 4294967295 WHERE observing_list_id = " . $listIdObjDown . " AND sort_order = " . $place);
                 $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . $place . " WHERE observing_list_id = " . $listIdObjDown . " AND sort_order = " . ($place - 1));
-                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . ($place - 1) . " WHERE observing_list_id = " . $listIdObjDown . " AND sort_order = -1");
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . ($place - 1) . " WHERE observing_list_id = " . $listIdObjDown . " AND sort_order = 4294967295");
             }
         }
         if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
@@ -546,13 +548,13 @@ class Lists
         $max = $listIdFromTo ? (int)$objDatabase->selectSingleValue("SELECT MAX(sort_order) AS ObjPl FROM observing_list_items WHERE observing_list_id = " . $listIdFromTo, 'ObjPl', 0) : 0;
         if ($listIdFromTo && ($from > 0) && ($from <= $max) && ($to > 0) && ($to <= $max) && ($from != $to)) {
             if ($from < $to) {
-                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = -1 WHERE observing_list_id = " . $listIdFromTo . " AND sort_order = " . $from);
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = 4294967295 WHERE observing_list_id = " . $listIdFromTo . " AND sort_order = " . $from);
                 $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = sort_order - 1 WHERE observing_list_id = " . $listIdFromTo . " AND sort_order > " . $from . " AND sort_order <= " . $to);
-                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . $to . " WHERE observing_list_id = " . $listIdFromTo . " AND sort_order = -1");
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . $to . " WHERE observing_list_id = " . $listIdFromTo . " AND sort_order = 4294967295");
             } else {
-                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = -1 WHERE observing_list_id = " . $listIdFromTo . " AND sort_order = " . $from);
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = 4294967295 WHERE observing_list_id = " . $listIdFromTo . " AND sort_order = " . $from);
                 $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = sort_order + 1 WHERE observing_list_id = " . $listIdFromTo . " AND sort_order >= " . $to . " AND sort_order < " . $from);
-                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . $to . " WHERE observing_list_id = " . $listIdFromTo . " AND sort_order = -1");
+                $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . $to . " WHERE observing_list_id = " . $listIdFromTo . " AND sort_order = 4294967295");
             }
             if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
                 unset($_SESSION ['QobjParams']);
@@ -570,9 +572,9 @@ class Lists
         }
         $listIdObjUp = $this->getListId($listname, $loggedUser);
         if ($listIdObjUp && $place < (int)$objDatabase->selectSingleValue("SELECT MAX(sort_order) AS ObjPl FROM observing_list_items WHERE observing_list_id = " . $listIdObjUp, 'ObjPl', 0)) {
-            $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = -1 WHERE observing_list_id = " . $listIdObjUp . " AND sort_order = " . $place);
+            $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = 4294967295 WHERE observing_list_id = " . $listIdObjUp . " AND sort_order = " . $place);
             $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . $place . " WHERE observing_list_id = " . $listIdObjUp . " AND sort_order = " . ($place + 1));
-            $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . ($place + 1) . " WHERE observing_list_id = " . $listIdObjUp . " AND sort_order = -1");
+            $objDatabase->execSQL("UPDATE observing_list_items SET sort_order = " . ($place + 1) . " WHERE observing_list_id = " . $listIdObjUp . " AND sort_order = 4294967295");
         }
         if (array_key_exists('QobjParams', $_SESSION) && array_key_exists('source', $_SESSION ['QobjParams']) && ($_SESSION ['QobjParams'] ['source'] == 'tolist')) {
             unset($_SESSION ['QobjParams']);
