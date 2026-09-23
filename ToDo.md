@@ -5,6 +5,7 @@
 ## Next steps
 
 - [ ] Update to laravel 13.
+  - [ ] Only needs PHP 8.4
 - [ ] Create observing guides
 - [ ] Translations
 - [ ] Test! 
@@ -71,4 +72,5 @@
 - [X] Observations can be imported from CSV and OAL
 - [X] Observations can be exported to CSV, OAL, AstroPlanner, SkySafari, ...
 - [X] DeepskyLog atlases can be created.  They are updated to have a nicer layout.
+- [X] Object sets can be created.  They are updated to have a nicer layout.  This was broken in the old version of DeepskyLog but is working again in the new version.
 

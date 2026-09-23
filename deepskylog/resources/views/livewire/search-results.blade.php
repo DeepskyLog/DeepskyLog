@@ -43,6 +43,10 @@
                 $exportApdBase = route('search.apd', $exportParams);
             @endphp
 
+            @auth
+                @include('object-sets.link', ['params' => ['source' => 'search'] + $exportParams])
+            @endauth
+
             <div class="relative inline-block text-left">
                 <button type="button" @click="open = !open" @keydown.escape="open = false"
                     class="inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"

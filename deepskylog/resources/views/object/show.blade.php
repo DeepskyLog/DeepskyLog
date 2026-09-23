@@ -856,6 +856,16 @@ try {
                                                         '&radius=' . rawurlencode($nearbyRadiusSelected ?? 30);
                                                 @endphp
 
+                                                @auth
+                                                    @include('object-sets.link', ['params' => [
+                                                        'source' => 'nearby',
+                                                        'object' => $canonicalSlug ?? ($session->slug ?? ''),
+                                                        'ra' => $nearbyRaDeg ?? '',
+                                                        'dec' => $nearbyDecDeg ?? '',
+                                                        'radius' => $nearbyRadiusSelected ?? 30,
+                                                    ]])
+                                                @endauth
+
                                                 <div class="relative inline-block text-left">
                                                     <button type="button" @click="open = !open"
                                                         @keydown.escape="open = false"

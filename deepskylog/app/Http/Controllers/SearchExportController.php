@@ -537,7 +537,15 @@ class SearchExportController extends Controller
         }
     }
 
-    private function resolveRows(Request $request): array
+    /**
+     * The search component and the rows it yields for the request.
+     *
+     * Public so the object sets page can take its objects from exactly the
+     * search results the exports see.
+     *
+     * @return array{0: SearchResultsTable|AdvancedObjectSearchTable, 1: \Illuminate\Support\Collection}
+     */
+    public function resolveRows(Request $request): array
     {
         $component = $this->makeSearchComponent($request);
 

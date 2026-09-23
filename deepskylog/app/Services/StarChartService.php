@@ -469,11 +469,18 @@ class StarChartService
             // all, so it is plotted only where the chart is meant to show
             // everything it can -- otherwise an overview chart fills up with
             // objects far below its own limit.
-            $query = $query->where(function (Builder $q) use ($objectMagnitudeLimit, $showUnknownMagnitudes) {
+            //
+            // The object a chart is centred on is always plotted, however
+            // faint: a chart of an object that leaves the object out is no use.
+            $query = $query->where(function (Builder $q) use ($objectMagnitudeLimit, $showUnknownMagnitudes, $target) {
                 $q->where('mag', '<=', $objectMagnitudeLimit);
 
                 if ($showUnknownMagnitudes) {
                     $q->orWhereNull('mag')->orWhere('mag', '=', 99.9);
+                }
+
+                if ($target->exists && $target->name !== null && $target->name !== '') {
+                    $q->orWhere('name', $target->name);
                 }
             });
         }
