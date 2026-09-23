@@ -1,9 +1,9 @@
 <?php
 
-// A corrupt lang JSON file is silently reset to an empty translation set by
-// `php artisan localize <lang>`: the localizator json_decode()s the existing
-// file, gets null, and writes back only the freshly scanned keys with empty
-// values. These tests catch the corruption before the translations are lost.
+// A corrupt lang file costs real work: the translations in it are hand written.
+// `php artisan localize <lang>` refuses to run on a malformed <lang>.json rather
+// than overwriting it, but nothing stops a bad hand edit or merge from being
+// committed. These tests catch that before the translations are lost.
 
 test('every json language file contains valid json', function () {
     $files = glob(lang_path('*.json'));
