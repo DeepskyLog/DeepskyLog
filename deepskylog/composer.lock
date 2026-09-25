@@ -496,16 +496,16 @@
         },
         {
             "name": "composer/semver",
-            "version": "3.4.4",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "198166618906cb2de69b95d7d47e5fa8aa1b2b95"
+                "reference": "f7a296f4c4cf8cb8bb83e35d6951a406bb11afa5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/198166618906cb2de69b95d7d47e5fa8aa1b2b95",
-                "reference": "198166618906cb2de69b95d7d47e5fa8aa1b2b95",
+                "url": "https://api.github.com/repos/composer/semver/zipball/f7a296f4c4cf8cb8bb83e35d6951a406bb11afa5",
+                "reference": "f7a296f4c4cf8cb8bb83e35d6951a406bb11afa5",
                 "shasum": ""
             },
             "require": {
@@ -547,7 +547,7 @@
                     "homepage": "http://robbast.nl"
                 }
             ],
-            "description": "Semver library that offers utilities, version constraint parsing and validation.",
+            "description": "Version comparison library that offers utilities, version constraint parsing and validation.",
             "keywords": [
                 "semantic",
                 "semver",
@@ -557,7 +557,7 @@
             "support": {
                 "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/semver/issues",
-                "source": "https://github.com/composer/semver/tree/3.4.4"
+                "source": "https://github.com/composer/semver/tree/3.5.0"
             },
             "funding": [
                 {
@@ -569,7 +569,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-20T19:15:30+00:00"
+            "time": "2026-09-24T14:38:51+00:00"
         },
         {
             "name": "cviebrock/eloquent-sluggable",
@@ -696,16 +696,16 @@
         },
         {
             "name": "deepskylog/laravel-astronomy-library",
-            "version": "v6.8.0",
+            "version": "v6.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DeepskyLog/laravel-astronomy-library.git",
-                "reference": "241fa7e4386ed30ca12c8b3112970ce5fe8e53dc"
+                "reference": "e0f3470f3df28929436309bb6ce705b85654842c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/241fa7e4386ed30ca12c8b3112970ce5fe8e53dc",
-                "reference": "241fa7e4386ed30ca12c8b3112970ce5fe8e53dc",
+                "url": "https://api.github.com/repos/DeepskyLog/laravel-astronomy-library/zipball/e0f3470f3df28929436309bb6ce705b85654842c",
+                "reference": "e0f3470f3df28929436309bb6ce705b85654842c",
                 "shasum": ""
             },
             "require": {
@@ -753,7 +753,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DeepskyLog/laravel-astronomy-library/issues",
-                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v6.8.0"
+                "source": "https://github.com/DeepskyLog/laravel-astronomy-library/tree/v6.8.1"
             },
             "funding": [
                 {
@@ -761,7 +761,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-22T12:21:55+00:00"
+            "time": "2026-09-25T13:02:10+00:00"
         },
         {
             "name": "dflydev/dot-access-data",

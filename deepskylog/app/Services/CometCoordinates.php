@@ -82,31 +82,83 @@ class CometCoordinates
         $i = (float) ($elements->i ?? 0.0);
         $w = (float) ($elements->w ?? 0.0);
         $node = (float) ($elements->node ?? 0.0);
-        $H = is_numeric($elements->H ?? null) ? (float) $elements->H : null;
 
         if ($e < 1.0) {
             $target = new Elliptic();
             $target->setOrbitalElements($q / (1.0 - $e), $e, $i, $w, $node, $perihelion);
-            if ($H !== null) {
-                $target->setHG($H);
-            }
-
-            return $target;
-        }
-
-        if ($e == 1.0) {
+        } elseif ($e == 1.0) {
             $target = new Parabolic();
             $target->setOrbitalElements($q, $i, $w, $node, $perihelion);
         } else {
             $target = new NearParabolic();
             $target->setOrbitalElements($q, $e, $i, $w, $node, $perihelion);
         }
-        if ($H !== null) {
-            $optional = fn ($field) => is_numeric($elements->$field ?? null) ? (float) $elements->$field : null;
-            $target->setCometParams($H, $optional('n') ?? 4.0, $optional('phase_coeff'), $optional('n_pre'), $optional('n_post'));
+
+        $photometry = self::photometry($elements);
+        // Elliptic has comet photometry since version 6.8.1 of the astronomy
+        // library; before that it only knew the H-G system of asteroids.
+        if ($photometry !== null && method_exists($target, 'hasCometParams')) {
+            $target->setCometParams(...$photometry);
         }
 
         return $target;
+    }
+
+    /**
+     * The photometric parameters of a row of `comets_orbital_elements`, as
+     * arguments for setCometParams(): the total magnitude is
+     * m = H + 5 log(delta) + n log(r) + phase_coeff * alpha, with `n` the
+     * coefficient of log r as on aerith.net and in JPL's K1.
+     *
+     * Values outside a plausible range are ignored: older imports stored the
+     * mean motion or a julian day in `n`.
+     */
+    public static function photometry(object $elements): ?array
+    {
+        $value = function (string $field, float $min, float $max) use ($elements): ?float {
+            $v = $elements->$field ?? null;
+
+            return is_numeric($v) && $v >= $min && $v <= $max ? (float) $v : null;
+        };
+        $H = $value('H', -10.0, 30.0);
+        if ($H === null) {
+            return null;
+        }
+
+        // 10 is the usual coefficient of log r when it is not known
+        return [$H, $value('n', 1.0, 60.0) ?? 10.0, $value('phase_coeff', 0.0, 0.1), $value('n_pre', 1.0, 60.0), $value('n_post', 1.0, 60.0)];
+    }
+
+    /**
+     * The predicted total magnitude of the comet, or null when its photometry
+     * is not known (or the installed astronomy library cannot calculate it).
+     */
+    public static function magnitude(Elliptic|Parabolic|NearParabolic $target, Carbon $date): ?float
+    {
+        if (! method_exists($target, 'hasCometParams') || ! $target->hasCometParams()) {
+            return null;
+        }
+
+        return $target->magnitude($date->copy());
+    }
+
+    /**
+     * The predicted magnitudes between two dates, one value every $stepDays days.
+     *
+     * @return array<int, array{date: string, mag: float}>
+     */
+    public static function lightCurve(Elliptic|Parabolic|NearParabolic $target, Carbon $from, Carbon $to, int $stepDays = 5): array
+    {
+        $points = [];
+        for ($date = $from->copy(); $date <= $to; $date->addDays($stepDays)) {
+            $mag = self::magnitude($target, $date);
+            if ($mag === null) {
+                return [];
+            }
+            $points[] = ['date' => $date->toDateString(), 'mag' => $mag];
+        }
+
+        return $points;
     }
 
     /**

@@ -432,6 +432,7 @@ class ObjectEphemerides extends Component
 			$computedDiam1 = null;
 			$computedDiam2 = null;
 			$computedMag = null;
+			$comet = null;
 
 			// Allow callers to request heavy ephemerides computation (comet/orbital
 			// element work). By default we defer these expensive calculations so
@@ -763,10 +764,14 @@ class ObjectEphemerides extends Component
 			if ($raDeg === null || $decDeg === null) {
 				// Comets: calculate the position from the orbital elements
 				try {
-					$coords = CometCoordinates::forName($obj->name ?? ($obj->designation ?? null), $date, $geo_coords, (float) ($userLocation->elevation ?? 0.0));
-					if ($coords) {
+					$cometElements = CometCoordinates::orbitalElements($obj->name ?? ($obj->designation ?? null));
+					$comet = $cometElements ? CometCoordinates::target($cometElements) : null;
+					if ($comet) {
+						$coords = CometCoordinates::calculate($comet, $date, $geo_coords, (float) ($userLocation->elevation ?? 0.0));
 						$raDeg = $coords->getRA()->getCoordinate() * 15.0;
 						$decDeg = $coords->getDeclination()->getCoordinate();
+						// Predicted total magnitude, null when the photometry is not known
+						$computedMag = CometCoordinates::magnitude($comet, $date);
 					}
 				} catch (\Throwable $_) {
 					// ignore comet calc failures
@@ -1067,6 +1072,13 @@ class ObjectEphemerides extends Component
 				'objectId' => $obj->id ?? ($useObjectId ?? null),
 				'objectSlug' => $obj->slug ?? ($obj->name ?? null),
 			];
+
+			// Comets: the predicted magnitude, and the light curve from half a year
+			// before to half a year after the date
+			if (!empty($comet)) {
+				$this->ephemerides['mag'] = $computedMag;
+				$this->ephemerides['predicted_magnitudes'] = CometCoordinates::lightCurve($comet, $date->copy()->subDays(180), $date->copy()->addDays(180));
+			}
 
 			// Ensure the small `object-constellation` preview receives the computed
 			// constellation immediately (defensive: do not overwrite non-empty values

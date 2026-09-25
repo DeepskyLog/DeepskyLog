@@ -10,6 +10,7 @@ use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Time;
 use Carbon\Carbon;
 use App\Models\Location;
+use App\Services\CometLightCurveChart;
 use App\Models\Constellation as ConstellationModel;
 
 class CometDetails extends Component
@@ -287,6 +288,10 @@ class CometDetails extends Component
 
     public function render()
     {
-        return view('livewire.comet-details');
+        $e = is_array($this->ephemerides) ? $this->ephemerides : [];
+
+        return view('livewire.comet-details', [
+            'lightCurve' => CometLightCurveChart::svg($e['predicted_magnitudes'] ?? [], is_array($this->magnitudes) ? $this->magnitudes : [], $e['date'] ?? null),
+        ]);
     }
 }

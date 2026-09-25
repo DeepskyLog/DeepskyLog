@@ -68,3 +68,53 @@ it('calculates the position of a comet without asking JPL Horizons', function ()
 
     expect(CometCoordinates::forName('Unknown comet', $date, new GeographicalCoordinates(4.70, 50.88)))->toBeNull();
 });
+
+it('ignores implausible photometric parameters', function () {
+    expect(CometCoordinates::photometry((object) ['H' => 5.0, 'n' => 15.0]))->toBe([5.0, 15.0, null, null, null])
+        // The mean motion and a julian day ended up in `n` with older imports
+        ->and(CometCoordinates::photometry((object) ['H' => 14.5, 'n' => 0.1287])[1])->toBe(10.0)
+        ->and(CometCoordinates::photometry((object) ['H' => 13.6, 'n' => 2451720.5])[1])->toBe(10.0)
+        // The slope parameter G of the H-G system is not a phase coefficient
+        ->and(CometCoordinates::photometry((object) ['H' => 9.0, 'n' => 5.0, 'phase_coeff' => 0.15])[2])->toBeNull()
+        ->and(CometCoordinates::photometry((object) ['H' => null, 'n' => 10.0]))->toBeNull();
+});
+
+it('predicts the magnitude of a comet', function () {
+    if (! method_exists(Elliptic::class, 'hasCometParams')) {
+        $this->markTestSkipped('Comet photometry for elliptic orbits needs laravel-astronomy-library 6.8.1');
+    }
+    // Osculating elements of JPL Horizons for the date, with JPL's M1 and K1
+    $comet = CometCoordinates::target((object) [
+        'q' => 0.780788135653347, 'e' => 0.9546110184438342, 'i' => 74.19156435379394, 'w' => 198.988728245405,
+        'node' => 255.8558161536839, 'Tp' => 20240421.124383, 'H' => 5.0, 'n' => 15.0,
+    ]);
+    $date = Carbon::create(2024, 4, 21, 22, 0, 0, 'UTC');
+
+    // JPL Horizons: T-mag 4.416
+    expect(CometCoordinates::magnitude($comet, $date))->toEqualWithDelta(4.416, 0.01);
+
+    $curve = CometCoordinates::lightCurve($comet, $date->copy()->subDays(180), $date->copy()->addDays(180));
+    expect($curve)->toHaveCount(73)
+        ->and(min(array_column($curve, 'mag')))->toBeLessThan(4.5)
+        ->and($curve[0]['mag'])->toBeGreaterThan(10.0);
+
+    // Without an absolute magnitude there is no prediction
+    $unknown = CometCoordinates::target((object) ['q' => 0.78, 'e' => 0.95, 'i' => 74.2, 'w' => 199.0, 'node' => 255.9, 'Tp' => 20240421.12]);
+    expect(CometCoordinates::magnitude($unknown, $date))->toBeNull()
+        ->and(CometCoordinates::lightCurve($unknown, $date->copy()->subDays(10), $date))->toBe([]);
+});
+
+it('draws the light curve with the observations of the same period', function () {
+    $predicted = [['date' => '2024-03-01', 'mag' => 7.0], ['date' => '2024-04-21', 'mag' => 4.4], ['date' => '2024-06-01', 'mag' => 7.5]];
+    $observed = [['date' => '2024-04-10', 'mag' => 4.6], ['date' => '2020-01-01', 'mag' => 12.0], ['date' => '2024-05-01', 'mag' => 99.9]];
+
+    $svg = App\Services\CometLightCurveChart::svg($predicted, $observed, '2024-04-21');
+
+    expect($svg)->toStartWith('<svg')
+        ->and(substr_count($svg, '<polyline'))->toBe(1)
+        // One observation in the period, plus the symbol in the legend
+        ->and(substr_count($svg, '<circle'))->toBe(2)
+        ->and($svg)->toContain('stroke-dasharray');
+
+    expect(App\Services\CometLightCurveChart::svg([], $observed))->toBeNull();
+});

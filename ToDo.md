@@ -5,11 +5,9 @@
 ## Next steps
 
 - [ ] Test! 
-  - [ ] Check for magnitudes for comets.   How are they calculated and is this the best way to do so?
   - [ ] Test for functionality problems
   - [ ] Test for security problems
   - [ ] Test manually when logged in and logged out, as database expert and as administrator
-- [ ] Release laravel-astronomy-library 6.8.1 (comet positions: J2000 Sun, dates no longer changed) and run `composer update deepskylog/laravel-astronomy-library`. Until then, comet positions can be off by several arcminutes, and by up to 40' for comets close to the earth.
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4
 - [ ] Translations
