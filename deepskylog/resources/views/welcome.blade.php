@@ -21,12 +21,11 @@
                     {{ __("The database is open for consultation and already contains tens of thousands observations and thousands of sketches and drawings made by amateur astronomers around the world.") }}
                     <br />
                     {!! __(
-                        "To start recording your observations and share your observations with other observers, you are kindly requested to :linkregister:close_link to DeepskyLog. Your personal data will be handled in accordance with our :linkprivacy policy:close_link.",
+                        "To start recording your observations and share your observations with other observers, you are kindly requested to :register_linkregister:close_link to DeepskyLog. Your personal data will be handled in accordance with our :privacy_linkprivacy policy:close_link.",
                         [
-                            "link" => "<a href='/register'>",
+                            "register_link" => "<a href='" . route("register") . "'>",
+                            "privacy_link" => "<a href='" . route("privacy") . "'>",
                             "close_link" => "</a>",
-                            "linkprivacy policy" => "<a href='/privacy'>",
-                            "close_link2" => "</a>",
                         ]
                     ) !!}
                     <br />
@@ -41,7 +40,7 @@
         </x-card>
 
         {{-- Latest sketch of the month / week --}}
-        <div class="flex">
+        <div class="flex flex-col sm:flex-row sm:gap-4">
             <div class="mt-4 rounded-xl">
                 <h2 class="mb-3 ml-3 mt-3 text-xl font-semibold leading-tight">
                     {{
@@ -65,7 +64,7 @@
                 </x-card>
             </div>
 
-            <div class="ml-4 mt-4 rounded-xl">
+            <div class="mt-4 rounded-xl">
                 <h2 class="mb-3 ml-3 mt-3 text-xl font-semibold leading-tight">
                     {{
                         __(
@@ -294,7 +293,7 @@
                     $sketchType = "all";
                 }
             @endphp
-            <div class="ml-3 mt-2 flex gap-3">
+            <div class="ml-3 mt-2 flex flex-wrap gap-2">
                 @foreach (["all" => __("All"), "deepsky" => __("Deep-sky"), "comet" => __("Comets"), "solarsystem" => __("Solar system")] as $typeKey => $typeLabel)
                     @php
                         $params = array_merge(request()->except(["sketch_type", "sketches"]), $typeKey !== "all" ? ["sketch_type" => $typeKey] : []);
@@ -436,7 +435,7 @@
                     $obsType = "all";
                 }
             @endphp
-            <div class="ml-3 mt-2 flex gap-3">
+            <div class="ml-3 mt-2 flex flex-wrap gap-2">
                 @foreach (["all" => __("All"), "deepsky" => __("Deep-sky"), "comet" => __("Comets"), "solarsystem" => __("Solar system")] as $typeKey => $typeLabel)
                     @php
                         $params = array_merge(request()->except(["obs_type", "observations"]), $typeKey !== "all" ? ["obs_type" => $typeKey] : []);

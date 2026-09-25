@@ -1448,7 +1448,7 @@
     "Token Name": "Token-Name",
     "Top margin position for text (y-coordinate)": "Position des oberen Textrands (y-Koordinate)",
     "To start recording your observations and share your observations with other observers, you are kindly requested to :linkregister:close_link to DeepskyLog.": "Um Ihre Beobachtungen aufzuzeichnen und mit anderen Beobachtern zu teilen, werden Sie gebeten, sich bei DeepskyLog zu :linkregistrieren:close_link.",
-    "To start recording your observations and share your observations with other observers, you are kindly requested to :linkregister:close_link to DeepskyLog. Your personal data will be handled in accordance with our :linkprivacy policy:close_link.": "Um Ihre Beobachtungen aufzuzeichnen und mit anderen Beobachtern zu teilen, werden Sie gebeten, sich bei DeepskyLog zu :linkregistrieren:close_link. Ihre persönlichen Daten werden gemäß unserer :linkDatenschutzrichtlinie:close_link behandelt.",
+    "To start recording your observations and share your observations with other observers, you are kindly requested to :register_linkregister:close_link to DeepskyLog. Your personal data will be handled in accordance with our :privacy_linkprivacy policy:close_link.": "Um Ihre Beobachtungen aufzuzeichnen und mit anderen Beobachtern zu teilen, werden Sie gebeten, sich bei DeepskyLog zu :register_linkregistrieren:close_link. Ihre persönlichen Daten werden gemäß unserer :privacy_linkDatenschutzrichtlinie:close_link behandelt.",
     "Total": "Gesamt",
     "Total affected observations: :count.": "Gesamtanzahl betroffener Beobachtungen: :count.",
     "Total number of observing lists": "Gesamtzahl der Beobachtungslisten",

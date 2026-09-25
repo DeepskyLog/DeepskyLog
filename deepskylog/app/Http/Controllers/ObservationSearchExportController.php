@@ -11,10 +11,11 @@ use App\Models\Location;
 use App\Models\ObservationSession;
 use App\Models\SearchIndex;
 use App\Models\User;
-use App\Livewire\ObservationSearchTable;
 use App\Models\Observation;
 use App\Services\Import\OalSchemaValidator;
+use App\Services\ObservationSearchQuery;
 use App\Services\Observations\ObservationPdfDataBuilder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -29,8 +30,38 @@ class ObservationSearchExportController extends Controller
     private const OAL_SCHEMA_LOCATION = 'http://groups.google.com/group/openastronomylog oal21.xsd';
     private const OAL_TARGET_METADATA_PREFIX = 'DeepskyLog:';
 
+    /**
+     * The most observations each export builds in one web request; larger
+     * searches are refused with a request to narrow them down. Every export is
+     * built in memory, so these follow measurements on the full database under
+     * the web server's 128 MB limit: 13k observations take 105 MB as SkySafari
+     * and 123 MB as OAL, AstroPlanner needs ~7 ms per observation, and a
+     * 300-observation PDF takes 20 s and 260 MB (the PDF runs with 512 MB).
+     */
+    private const MAX_EXPORT_OBSERVATIONS = [
+        'pdf' => 500,
+        'skylist' => 10000,
+        'obs' => 2500,
+        'oal' => 7500,
+    ];
+
+    private const EXPORT_FORMAT_NAMES = [
+        'pdf' => 'PDF',
+        'skylist' => 'SkySafari',
+        'obs' => 'AstroPlanner',
+        'oal' => 'OAL',
+    ];
+
     public function pdf(Request $request, ObservationPdfDataBuilder $builder)
     {
+        if ($refused = $this->tooManyObservations($request, 'pdf')) {
+            return $refused;
+        }
+
+        // Building the entries already needs more than the default 128 MB.
+        @ini_set('memory_limit', '512M');
+        @set_time_limit(180);
+
         try {
             $query = trim((string) $request->query('q', ''));
             $entries = $this->resolveMatchingObservations($request)
@@ -67,6 +98,10 @@ class ObservationSearchExportController extends Controller
 
     public function skylist(Request $request)
     {
+        if ($refused = $this->tooManyObservations($request, 'skylist')) {
+            return $refused;
+        }
+
         try {
             $query = trim((string) $request->query('q', ''));
             $observations = $this->resolveMatchingObservations($request);
@@ -171,6 +206,10 @@ class ObservationSearchExportController extends Controller
 
     public function obs(Request $request)
     {
+        if ($refused = $this->tooManyObservations($request, 'obs')) {
+            return $refused;
+        }
+
         try {
             $query = trim((string) $request->query('q', ''));
             $observations = $this->resolveMatchingObservations($request);
@@ -325,6 +364,10 @@ class ObservationSearchExportController extends Controller
 
     public function oal(Request $request, OalSchemaValidator $validator)
     {
+        if ($refused = $this->tooManyObservations($request, 'oal')) {
+            return $refused;
+        }
+
         try {
             $query = trim((string) $request->query('q', ''));
             $content = $this->buildOalXml($this->resolveMatchingObservations($request));
@@ -404,48 +447,39 @@ class ObservationSearchExportController extends Controller
             ->with('error', __('PDF library not installed. Please run: composer require barryvdh/laravel-dompdf'));
     }
 
+    private function matchingObservations(Request $request): EloquentBuilder
+    {
+        return app(ObservationSearchQuery::class)->observations(
+            trim((string) $request->query('q', '')),
+            $this->extractObservationFilters($request)
+        );
+    }
+
     private function resolveMatchingObservations(Request $request): Collection
     {
-        $component = new ObservationSearchTable();
-        $query = trim((string) $request->query('q', ''));
-        $filters = $this->extractObservationFilters($request);
+        return $this->matchingObservations($request)->orderBy('observations.id')->get();
+    }
 
-        if (method_exists($component, 'boot')) {
-            try {
-                $component->boot();
-            } catch (\Throwable $_) {
-            }
+    /**
+     * Refuse an export that matches more observations than it can build within
+     * one web request, with a message asking to narrow the search down.
+     */
+    private function tooManyObservations(Request $request, string $format)
+    {
+        $max = self::MAX_EXPORT_OBSERVATIONS[$format];
+        $count = $this->matchingObservations($request)->count();
+
+        if ($count <= $max) {
+            return null;
         }
 
-        if (method_exists($component, 'mount')) {
-            try {
-                $component->mount($query, $filters);
-            } catch (\Throwable $_) {
-                $component->objectName = $query;
-            }
-        } else {
-            $component->objectName = $query;
-        }
-
-        $observationIds = $component->datasource()->get()
-            ->pluck('id')
-            ->filter()
-            ->map(fn($id) => (int) $id)
-            ->values();
-
-        if ($observationIds->isEmpty()) {
-            return collect();
-        }
-
-        $observations = Observation::query()
-            ->whereIn('id', $observationIds->all())
-            ->get()
-            ->keyBy('id');
-
-        return $observationIds
-            ->map(fn(int $id): ?Observation => $observations->get($id))
-            ->filter()
-            ->values();
+        return redirect()
+            ->back()
+            ->with('error', __('This search matches :count observations, but at most :max observations can be exported as :format. Please narrow down your search.', [
+                'count' => number_format($count),
+                'max' => number_format($max),
+                'format' => self::EXPORT_FORMAT_NAMES[$format],
+            ]));
     }
 
     private function extractObservationFilters(Request $request): array
@@ -867,7 +901,7 @@ class ObservationSearchExportController extends Controller
                 $resultNode->setAttribute('lang', strtolower(substr($language, 0, 10)));
             }
             $descriptionNode = $document->createElement('description');
-            $descriptionNode->appendChild($document->createTextNode(html_entity_decode(strip_tags($description), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+            $descriptionNode->appendChild($document->createTextNode($this->xmlSafeText(html_entity_decode(strip_tags($description), ENT_QUOTES | ENT_HTML5, 'UTF-8'))));
             $resultNode->appendChild($descriptionNode);
             $observationNode->appendChild($resultNode);
 
@@ -1536,20 +1570,33 @@ class ObservationSearchExportController extends Controller
         return $text !== '' ? substr($text, 0, 10) : null;
     }
 
+    /**
+     * Remove the characters XML 1.0 does not allow (control characters other
+     * than tab, newline and carriage return, which some legacy observation
+     * descriptions contain); the OAL file is otherwise not well-formed.
+     */
+    private function xmlSafeText(string $text): string
+    {
+        $clean = preg_replace('/[^\x{9}\x{A}\x{D}\x{20}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '', $text);
+
+        // preg_replace() returns null on invalid UTF-8: repair the encoding first.
+        return $clean ?? (string) preg_replace('/[^\x{9}\x{A}\x{D}\x{20}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '', mb_convert_encoding($text, 'UTF-8', 'UTF-8'));
+    }
+
     private function appendOalTextNode(\DOMDocument $document, \DOMElement $parent, string $name, mixed $value, array $attributes = []): void
     {
         if ($value === null) {
             return;
         }
 
-        $text = trim((string) $value);
+        $text = trim($this->xmlSafeText((string) $value));
         if ($text === '') {
             return;
         }
 
         $node = $document->createElement($name);
         foreach ($attributes as $attribute => $attributeValue) {
-            $node->setAttribute($attribute, (string) $attributeValue);
+            $node->setAttribute($attribute, $this->xmlSafeText((string) $attributeValue));
         }
 
         $node->appendChild($document->createTextNode($text));

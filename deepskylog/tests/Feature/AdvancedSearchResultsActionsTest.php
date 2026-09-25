@@ -98,10 +98,13 @@ it('extracts objects from advanced observation results using the current filters
 
     $response->assertOk();
     $response->assertViewIs('search.results');
-    $response->assertViewHas('objectRefs', function (array $objectRefs): bool {
-        return collect($objectRefs)->values()->all() === [
-            ['source_table' => 'objects', 'name' => 'NGC 2392'],
-            ['source_table' => 'planets', 'name' => 'Mars'],
-        ];
-    });
+    $response->assertViewHas('observationSearch', ['q' => '', 'filters' => ['languages' => ['en']]]);
+
+    // The results table lists only the objects of the filtered observations.
+    $table = new \App\Livewire\SearchResultsTable();
+    $table->boot();
+    $table->observationSearch = ['q' => '', 'filters' => ['languages' => ['en']]];
+
+    expect($table->datasource()->get()->pluck('display_name')->sort()->values()->all())
+        ->toBe(['Mars', 'NGC 2392']);
 });

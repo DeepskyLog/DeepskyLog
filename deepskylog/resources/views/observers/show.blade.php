@@ -439,6 +439,7 @@
                     </tr>
                 </table>
                 
+                <div class="max-w-full overflow-x-auto">
                 <table class="w-auto">
                     <thead>
                         <tr class="text-left">
@@ -582,6 +583,7 @@
                         </tr>
                     </tbody>
                 </table>
+                </div>
 
                 <br />
                   <x-button gray icon="eye" class="mb-2" href="{{ url('/observations/' . $user->slug) }}">

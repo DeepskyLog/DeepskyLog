@@ -1,4 +1,4 @@
-<div data-dsl-ephemeris-aside-root>
+<div class="w-full lg:w-auto" data-dsl-ephemeris-aside-root>
     @if (empty($suppress))
         <div class="w-full lg:w-64 lg:flex-none lg:min-w-[16rem] self-stretch" data-dsl-ephemeris-aside>
             <div class="bg-gray-900 p-4 rounded shadow text-gray-100 flex flex-col flex-1 h-full">

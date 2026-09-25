@@ -82,7 +82,7 @@
     </div>
 
     <div class="w-full">
-        <livewire:search-results-table :q="$q" :object-refs="$objectRefs" />
+        <livewire:search-results-table :q="$q" :object-refs="$objectRefs" :observation-search="$observationSearch" />
     </div>
 </div>
 

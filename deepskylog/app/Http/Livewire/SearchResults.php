@@ -12,16 +12,20 @@ class SearchResults extends Component
     public $q;
     public $results = [];
     public array $objectRefs = [];
+    // An observation search (['q' => ..., 'filters' => [...]]) whose observed
+    // objects are listed; matched in the database by the results table.
+    public ?array $observationSearch = null;
     public ?string $title = null;
     public bool $canModifyActiveList = false;
     public bool $fixedResultsMode = false;
 
-    public function mount($q = '', $objectRefs = [], $title = null)
+    public function mount($q = '', $objectRefs = [], $title = null, $observationSearch = null)
     {
         $this->q = $q;
         $this->objectRefs = is_array($objectRefs) ? $objectRefs : [];
+        $this->observationSearch = is_array($observationSearch) ? $observationSearch : null;
         $this->title = is_string($title) && $title !== '' ? $title : null;
-        $this->fixedResultsMode = $this->objectRefs !== [];
+        $this->fixedResultsMode = $this->objectRefs !== [] || $this->observationSearch !== null;
 
         if (!$this->fixedResultsMode) {
             $this->performSearch();

@@ -109,22 +109,22 @@
     @endphp
 
     @if ($obsUnified)
-        <div class="mr-3 mt-6 flex-shrink-0">
-            <span role="img" aria-label="{{ ucfirst($obs_type) }}" title="{{ ucfirst($obs_type) }}" class="text-2xl">
+        <div class="mr-2 mt-4 flex-shrink-0 sm:mr-3 sm:mt-6">
+            <span role="img" aria-label="{{ ucfirst($obs_type) }}" title="{{ ucfirst($obs_type) }}" class="text-xl sm:text-2xl">
                 {{ $iconEmoji }}
             </span>
         </div>
     @endif
 
-    <div class="mr-4">
+    <div class="mr-3 flex-shrink-0 sm:mr-4">
         <img
             src="{{ $user->profile_photo_url ?? asset('images/placeholder-avatar.png') }}"
             alt="{{ $user->name ?? __('Unknown observer') }}"
-            class="h-20 w-20 rounded-full object-cover"
+            class="h-12 w-12 rounded-full object-cover sm:h-20 sm:w-20"
         />
     </div>
 
-    <div class="max-w-[calc(100%-7rem)]">
+    <div class="min-w-0 flex-1 break-words">
         <a
             href="/observers/{{ $user->slug }}"
             class="font-bold hover:underline"
@@ -220,7 +220,7 @@
             }}
             <br />
             <div class="my-2 rounded-sm bg-gray-900 px-4 py-4">
-                <div class="flex items-start space-x-4">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
                     @if ($hasDrawing && $drawingSrc)
                         <button
                             type="button"
@@ -235,7 +235,7 @@
                         </button>
                     @endif
 
-                    <div class="flex-1">
+                    <div class="w-full min-w-0 flex-1 break-words">
                         @if ($tr)
                             @php
                                 $cacheKey =
@@ -302,7 +302,7 @@
             </div>
         @endif
 
-        <div class="flex items-center space-x-3 mt-2 mb-2">
+        <div class="flex flex-wrap items-center gap-2 mt-2 mb-2">
             @php
                 $observerSegment = $user?->slug ?: $observerid;
                 $objectSegment   = $cometOld?->slug ?: \Illuminate\Support\Str::slug((string) $cometName, "-");

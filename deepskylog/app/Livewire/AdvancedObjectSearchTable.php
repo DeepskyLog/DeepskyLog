@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\SearchIndex;
 use App\Models\Atlas;
 use App\Services\ActiveObservingListService;
+use App\Services\ObjectObservationStatistics;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\Paginator;
@@ -651,125 +652,50 @@ class AdvancedObjectSearchTable extends PowerGridComponent
 
         $status = trim((string) $this->observingStatus);
         $needsObservingStatusFilter = $status !== '' && $status !== 'all';
-        $obsJoinApplied = false;
 
-        // Legacy observations aggregate
-        try {
-            $oldDbName = config('database.connections.mysqlOld.database') ?? env('DB_DATABASE_OLD');
-            $authUser = Auth::user();
-            $legacyUser = $authUser?->username ?? '';
-            if (!empty($oldDbName)) {
-                try {
-                    $quotedUser = DB::getPdo()->quote($legacyUser);
-                } catch (\Throwable $_) {
-                    $quotedUser = "''";
-                }
-
-                $globalSearch = '';
-                try {
-                    $globalSearch = trim((string) ($this->search ?? ''));
-                } catch (\Throwable $_) {
-                    $globalSearch = '';
-                }
-
-                // Build aggregate only for names that survive the current filters.
-                // This keeps PowerGrid pagination/search responsive.
-                $filteredObjectNames = [];
-                try {
-                    $filteredObjectNames = (clone $query)
-                        ->whereNotNull('objects.name')
-                        ->distinct()
-                        ->pluck('objects.name')
-                        ->map(fn($n) => (string) $n)
-                        ->values()
-                        ->toArray();
-                } catch (\Throwable $_) {
-                    $filteredObjectNames = [];
-                }
-
-                // For broad datasets or active text search, skip legacy aggregation and
-                // return neutral values to keep PowerGrid interactions responsive.
-                if ((!empty($globalSearch) || empty($filteredObjectNames) || count($filteredObjectNames) > 1500) && !$needsObservingStatusFilter) {
-                    $select .= ", 0 as total_observations, 0 as total_drawings, 0 as your_observations, 0 as your_drawings, NULL as last_seen_date, NULL as your_last_seen_date, NULL as last_drawing_date, NULL as your_last_drawing_date, 0 as seen, NULL as last_seen";
-                } else {
-                    try {
-                        $quotedNames = implode(', ', array_map(function ($n) {
-                            try {
-                                return DB::getPdo()->quote($n);
-                            } catch (\Throwable $_) {
-                                return "''";
-                            }
-                        }, $filteredObjectNames));
-                    } catch (\Throwable $_) {
-                        $quotedNames = "''";
-                    }
-
-                    $obsAggSql = "SELECT o.objectname AS object_name,
-                    COUNT(*) AS total_observations,
-                    SUM(o.hasDrawing = 1) AS total_drawings,
-                    SUM(o.observerid = {$quotedUser}) AS your_observations,
-                    SUM(o.observerid = {$quotedUser} AND o.hasDrawing = 1) AS your_drawings,
-                    MAX(o.date) AS last_seen_date,
-                    MAX(CASE WHEN o.observerid = {$quotedUser} THEN o.date END) AS your_last_seen_date,
-                    MAX(CASE WHEN o.hasDrawing = 1 THEN o.date END) AS last_drawing_date,
-                    MAX(CASE WHEN o.observerid = {$quotedUser} AND o.hasDrawing = 1 THEN o.date END) AS your_last_drawing_date
-                FROM `" . $oldDbName . "`.`observations` o
-                WHERE o.objectname IN ({$quotedNames})
-                GROUP BY o.objectname";
-
-                    $select .= ", obs.total_observations as total_observations, obs.total_drawings as total_drawings, obs.your_observations as your_observations, obs.your_drawings as your_drawings, obs.last_seen_date as last_seen_date, obs.your_last_seen_date as your_last_seen_date, obs.last_drawing_date as last_drawing_date, obs.your_last_drawing_date as your_last_drawing_date, obs.total_observations as seen, obs.your_last_seen_date as last_seen";
-
-                    try {
-                        $query->leftJoin(DB::raw('(' . $obsAggSql . ') as obs'), function ($join) {
-                            $join->on('obs.object_name', '=', 'objects.name');
-                        });
-                        $obsJoinApplied = true;
-                    } catch (\Throwable $_) {
-                    }
-                }
-            }
-        } catch (\Throwable $_) {
-        }
+        // Observation statistics (total_observations, your_last_seen_date, ...),
+        // which the observing status filter also uses.
+        $username = Auth::user()?->username;
+        $statistics = ObjectObservationStatistics::expressions($username);
+        $select .= ', ' . ObjectObservationStatistics::selectList($username);
 
         if ($needsObservingStatusFilter) {
-            // If aggregation cannot be joined, avoid returning misleading results.
-            if (!$obsJoinApplied) {
-                $query->whereRaw('1 = 0');
-            } else {
-                switch ($status) {
-                    case 'seen_any':
-                        $query->whereRaw('COALESCE(obs.total_observations, 0) > 0');
-                        break;
-                    case 'drawn_any':
-                        $query->whereRaw('COALESCE(obs.total_drawings, 0) > 0');
-                        break;
-                    case 'unseen_any':
-                        $query->whereRaw('COALESCE(obs.total_observations, 0) = 0');
-                        break;
-                    case 'undrawn_any':
-                        $query->whereRaw('COALESCE(obs.total_drawings, 0) = 0');
-                        break;
-                    case 'seen_by_me':
-                        $query->whereRaw('COALESCE(obs.your_observations, 0) > 0');
-                        break;
-                    case 'drawn_by_me':
-                        $query->whereRaw('COALESCE(obs.your_drawings, 0) > 0');
-                        break;
-                    case 'unseen_by_me':
-                        $query->whereRaw('COALESCE(obs.your_observations, 0) = 0');
-                        break;
-                    case 'undrawn_by_me':
-                        $query->whereRaw('COALESCE(obs.your_drawings, 0) = 0');
-                        break;
-                    case 'seen_by_others_not_me':
-                        $query->whereRaw('COALESCE(obs.total_observations, 0) > 0')
-                            ->whereRaw('COALESCE(obs.your_observations, 0) = 0');
-                        break;
-                    case 'drawn_by_others_not_me':
-                        $query->whereRaw('COALESCE(obs.total_drawings, 0) > 0')
-                            ->whereRaw('COALESCE(obs.your_drawings, 0) = 0');
-                        break;
-                }
+            $seen = $statistics['total_observations'];
+            $drawn = $statistics['total_drawings'];
+            $seenByMe = $statistics['your_observations'];
+            $drawnByMe = $statistics['your_drawings'];
+
+            switch ($status) {
+                case 'seen_any':
+                    $query->whereRaw("{$seen} > 0");
+                    break;
+                case 'drawn_any':
+                    $query->whereRaw("{$drawn} > 0");
+                    break;
+                case 'unseen_any':
+                    $query->whereRaw("{$seen} = 0");
+                    break;
+                case 'undrawn_any':
+                    $query->whereRaw("{$drawn} = 0");
+                    break;
+                case 'seen_by_me':
+                    $query->whereRaw("{$seenByMe} > 0");
+                    break;
+                case 'drawn_by_me':
+                    $query->whereRaw("{$drawnByMe} > 0");
+                    break;
+                case 'unseen_by_me':
+                    $query->whereRaw("{$seenByMe} = 0");
+                    break;
+                case 'undrawn_by_me':
+                    $query->whereRaw("{$drawnByMe} = 0");
+                    break;
+                case 'seen_by_others_not_me':
+                    $query->whereRaw("{$seen} > 0")->whereRaw("{$seenByMe} = 0");
+                    break;
+                case 'drawn_by_others_not_me':
+                    $query->whereRaw("{$drawn} > 0")->whereRaw("{$drawnByMe} = 0");
+                    break;
             }
         }
 

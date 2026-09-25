@@ -4,12 +4,14 @@
 
 ## Next steps
 
+- [ ] Test! 
+  - [ ] Test on laptop and on mobile
+  - [ ] Coordinates of comets now use the HORIZONS API, but the updated version of laravel-astronomy-library should also return the correct values now.  Check this and if the laravel-astronomy-library methods are faster, use these.
+  - [ ] Test for security problems
+  - [ ] Logged in and logged out, as database expert and as administrator
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4
 - [ ] Translations
-- [ ] Test! 
-  - [ ] Logged in and logged out, as database expert and as administrator
-  - [ ] Test on laptop and on mobile
 - [ ] On real server:
   - [ ] php artisan db:seed --class=BackfillSessionObservationIdsSeeder
   - [ ] php artisan db:seed --class=BackfillSketchObservationIdsSeeder

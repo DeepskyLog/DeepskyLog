@@ -17,6 +17,7 @@ use App\Models\UserObjectMetric;
 use Illuminate\Support\Facades\Cache;
 use App\Jobs\ComputeContrastReserveForObject;
 use App\Services\ActiveObservingListService;
+use App\Services\ObjectObservationStatistics;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
@@ -104,13 +105,6 @@ class NearbyObjectsTable extends PowerGridComponent
     /** @var \App\Models\Eyepiece|null */
     private ?\App\Models\Eyepiece $previewEyepieceModel = null;
     private ?bool $canModifyActiveListCached = null;
-
-    /**
-     * Derived aggregation SQL for legacy observations (populated when legacy DB exists).
-     * Stored here so we can attach it as a LEFT JOIN after the main select is built.
-     * @var string|null
-     */
-    private ?string $obsAggSql = null;
 
     /**
      * Cached type names to avoid N+1 queries when resolving type codes.
@@ -521,113 +515,22 @@ class NearbyObjectsTable extends PowerGridComponent
 
         // Bindings for the distance expression (used in both the SELECT and WHERE).
         $exprBindings = [$this->decl, $this->decl, $centerRaDeg];
-        // Separate bindings for the full SELECT (includes any legacy-user bindings
-        // appended for the correlated subqueries). Keep them distinct so we can
+        // Separate bindings for the full SELECT. Keep them distinct so we can
         // pass only the required values to each whereRaw/selectRaw call.
         $selectBindings = $exprBindings;
 
-        // Precompute a decl bounding box numeric literals here so the later
-        // legacy observations derived aggregation can restrict itself to only
-        // those objects falling within the same decl window. This avoids a
-        // full scan of the legacy `observations` table when building the
-        // derived aggregation.
-        $minDecl = floatval($this->decl) - $radiusDeg;
-        $maxDecl = floatval($this->decl) + $radiusDeg;
-
-        // Add counts and last-seen/drawing info from legacy observations DB so
-        // the columns can be sortable server-side. Use the configured mysqlOld
-        // database name (falls back to env). Bind the logged-in user's
-        // username for user-specific aggregates; when not authenticated we
-        // bind empty strings which will yield zero/null results.
+        // Observation statistics (total_observations, your_last_seen_date, ...),
+        // exposed by the inner select so the outer wrapper can sort on them.
         try {
-            $oldDbName = config('database.connections.mysqlOld.database') ?? env('DB_DATABASE_OLD');
-            $authUser = Auth::user();
-            $legacyUser = $authUser?->username ?? '';
-            if (!empty($oldDbName)) {
-                // Replace many correlated subqueries with a single derived aggregation
-                // subquery. This computes all observation aggregates for every
-                // object in one pass and makes sorting by these aggregates fast.
-                // We embed a safely quoted legacy username literal to avoid
-                // binding-order complexity.
-                try {
-                    $quotedUser = DB::getPdo()->quote($legacyUser);
-                } catch (\Throwable $_) {
-                    // Fall back to a conservative SQL literal when quoting fails
-                    $quotedUser = "''";
-                }
-
-                // Build derived aggregation SQL (uses fully-qualified DB name).
-                // First, fetch the object names that fall into the decl bounding
-                // box — this produces a small list (the earlier decl index
-                // narrowed objects to a couple hundred rows) which we can then
-                // embed as an IN-list into the legacy observations aggregation.
-                // That avoids scanning the full legacy `observations` table.
-                try {
-                    $objectNames = DeepskyObject::query()
-                        ->whereBetween('decl', [$minDecl, $maxDecl])
-                        ->pluck('name')
-                        ->toArray();
-                } catch (\Throwable $_) {
-                    $objectNames = [];
-                }
-
-                if (empty($objectNames)) {
-                    // No candidate objects in the bounding box; use an empty
-                    // derived aggregation so the LEFT JOIN adds no rows.
-                    $obsAggSql = "SELECT o.objectname AS object_name, 0 AS total_observations, 0 AS total_drawings, 0 AS your_observations, 0 AS your_drawings, NULL AS last_seen_date, NULL AS your_last_seen_date, NULL AS last_drawing_date, NULL AS your_last_drawing_date FROM `" . $oldDbName . "`.`observations` o WHERE 0 = 1 GROUP BY o.objectname";
-                } else {
-                    $quotedNames = implode(', ', array_map(function ($n) {
-                        try {
-                            return DB::getPdo()->quote($n);
-                        } catch (\Throwable $_) {
-                            return "''";
-                        }
-                    }, $objectNames));
-
-                    $obsAggSql = "SELECT o.objectname AS object_name,
-                    COUNT(*) AS total_observations,
-                    SUM(o.hasDrawing = 1) AS total_drawings,
-                    SUM(o.observerid = {$quotedUser}) AS your_observations,
-                    SUM(o.observerid = {$quotedUser} AND o.hasDrawing = 1) AS your_drawings,
-                    MAX(o.date) AS last_seen_date,
-                    MAX(CASE WHEN o.observerid = {$quotedUser} THEN o.date END) AS your_last_seen_date,
-                    MAX(CASE WHEN o.hasDrawing = 1 THEN o.date END) AS last_drawing_date,
-                    MAX(CASE WHEN o.observerid = {$quotedUser} AND o.hasDrawing = 1 THEN o.date END) AS your_last_drawing_date
-                FROM `" . $oldDbName . "`.`observations` o
-                WHERE o.objectname IN ({$quotedNames})
-                GROUP BY o.objectname";
-                }
-
-                // Ensure the inner select includes the obs.* aliases so the
-                // outer wrapper (used by PowerGrid) can reference and sort them.
-                // Also expose aliases that match the PowerGrid field names ('seen', 'last_seen')
-                // so ORDER BY clauses generated by PowerGrid reference real columns.
-                $selectRaw .= ", obs.total_observations as total_observations, obs.total_drawings as total_drawings, obs.your_observations as your_observations, obs.your_drawings as your_drawings, obs.last_seen_date as last_seen_date, obs.your_last_seen_date as your_last_seen_date, obs.last_drawing_date as last_drawing_date, obs.your_last_drawing_date as your_last_drawing_date, obs.total_observations as seen, obs.your_last_seen_date as last_seen";
-
-                // Attach the derived aggregation as a LEFT JOIN; use DB::raw so
-                // the full derived SQL is embedded verbatim into the query.
-                // Note: we embed the quoted username literal directly in the SQL
-                // so no extra parameter bindings are required and binding order
-                // remains stable.
-                $this->obsAggSql = $obsAggSql;
-            }
+            $selectRaw .= ', ' . ObjectObservationStatistics::selectList(Auth::user()?->username);
         } catch (\Throwable $_) {
-            // don't fail the whole query when legacy DB info is unavailable
+            // don't fail the whole query when the statistics are unavailable
         }
 
         $baseQuery = DeepskyObject::query()
             ->leftJoin('constellations', 'constellations.id', '=', 'objects.con')
             ->leftJoin('deepskytypes', 'deepskytypes.code', '=', 'objects.type')
             ->selectRaw($selectRaw, $selectBindings);
-
-        // If we constructed a derived aggregation SQL for legacy observations,
-        // attach it as a LEFT JOIN so the inner subquery exposes obs.* aliases
-        // and the outer wrapper can sort/filter on them efficiently.
-        if (!empty($this->obsAggSql)) {
-            $baseQuery->leftJoin(DB::raw('(' . $this->obsAggSql . ') as obs'), function ($join) {
-                $join->on('obs.object_name', '=', 'objects.name');
-            });
-        }
 
         // Apply a cheap bounding-box prefilter on decl using numeric literals
         // to avoid modifying the prepared statement binding order. This lets

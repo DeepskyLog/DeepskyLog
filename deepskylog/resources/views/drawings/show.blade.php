@@ -3,7 +3,7 @@
         <div
             class="max-w-screen mx-auto bg-gray-900 px-2 py-10 sm:px-6 lg:px-8"
         >
-            <div class="flex items-center justify-between">
+            <div class="flex flex-wrap items-center justify-between gap-2">
                 <h2 class="text-xl font-semibold leading-tight">
                     @if ($user == "")
                         {{ __("Sketches") }}
@@ -11,7 +11,7 @@
                         {{ __("Sketches of " . $user->name) }}
                     @endif
                 </h2>
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
                     @if ($user == "")
                         <a href="{{ route('feed.drawings') }}"
                            title="{{ __('Subscribe to RSS feed') }}"

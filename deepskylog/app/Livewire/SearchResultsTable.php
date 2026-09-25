@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
@@ -22,6 +23,8 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use App\Jobs\ComputeContrastReserveForObject;
+use App\Services\ObjectObservationStatistics;
+use App\Services\ObservationSearchQuery;
 
 #[Lazy]
 class SearchResultsTable extends PowerGridComponent
@@ -36,6 +39,11 @@ class SearchResultsTable extends PowerGridComponent
 
     public string $q = '';
     public array $objectRefs = [];
+    // An observation search (['q' => ..., 'filters' => [...]]): list the
+    // objects of its observations. Matched with a subquery, because the
+    // number of objects can be far too large to pass around as $objectRefs.
+    #[Locked]
+    public ?array $observationSearch = null;
     public ?int $previewInstrumentId = null;
     public ?int $previewLensId = null;
     public ?int $previewEyepieceId = null;
@@ -76,6 +84,42 @@ class SearchResultsTable extends PowerGridComponent
         ];
     }
 
+    /**
+     * Restrict the search_index query to the rows this table lists: the
+     * objects of an observation search, an explicit list of object
+     * references, or the names matching the search term.
+     */
+    private function constrainToResults($query, $objectRefs, string $like): void
+    {
+        $name = 'LOWER(COALESCE(name, display_name))';
+
+        if ($this->observationSearch !== null) {
+            $targets = app(ObservationSearchQuery::class)->targets(
+                trim((string) ($this->observationSearch['q'] ?? '')),
+                (array) ($this->observationSearch['filters'] ?? [])
+            );
+            $query->whereIn(DB::raw("(source_table, {$name})"), $targets);
+
+            return;
+        }
+
+        if ($objectRefs->isNotEmpty()) {
+            $query->where(function ($query) use ($objectRefs, $name) {
+                foreach ($objectRefs as $ref) {
+                    $query->orWhere(function ($inner) use ($ref, $name) {
+                        $inner
+                            ->where('source_table', $ref['source_table'])
+                            ->whereRaw("{$name} = ?", [$ref['name']]);
+                    });
+                }
+            });
+
+            return;
+        }
+
+        $query->whereRaw('LOWER(name) LIKE ?', [Str::lower($like)]);
+    }
+
     public function datasource(): ?Builder
     {
         $q = trim($this->q);
@@ -101,7 +145,7 @@ class SearchResultsTable extends PowerGridComponent
             ->unique(fn(array $ref): string => $ref['source_table'] . ':' . $ref['name'])
             ->values();
 
-        if ($q === '' && $objectRefs->isEmpty()) {
+        if ($q === '' && $objectRefs->isEmpty() && $this->observationSearch === null) {
             // Nothing to show, but the objects join is kept so that the searchable
             // objects.* columns still resolve when a search term is typed.
             return SearchIndex::query()
@@ -169,19 +213,7 @@ class SearchResultsTable extends PowerGridComponent
                 . "COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN metadata END), MIN(metadata)) as metadata"
             );
 
-        if ($objectRefs->isNotEmpty()) {
-            $sub->where(function ($query) use ($objectRefs) {
-                foreach ($objectRefs as $ref) {
-                    $query->orWhere(function ($inner) use ($ref) {
-                        $inner
-                            ->where('source_table', $ref['source_table'])
-                            ->whereRaw('LOWER(COALESCE(name, display_name)) = ?', [$ref['name']]);
-                    });
-                }
-            });
-        } else {
-            $sub->whereRaw('LOWER(name) LIKE ?', [Str::lower($like)]);
-        }
+        $this->constrainToResults($sub, $objectRefs, $like);
 
         $sub->groupBy(DB::raw("LOWER(COALESCE(name, display_name))"));
 
@@ -207,77 +239,11 @@ class SearchResultsTable extends PowerGridComponent
             // ignore failures checking user/profile
         }
 
-        // Attach legacy observations derived aggregation (total_observations, your_last_seen_date)
+        // Observation statistics (total_observations, your_last_seen_date, ...)
         try {
-            $oldDbName = config('database.connections.mysqlOld.database') ?? env('DB_DATABASE_OLD');
-            $authUser = Auth::user();
-            $legacyUser = $authUser?->username ?? '';
-            if (!empty($oldDbName)) {
-                // Build a list of object names that match the current search so
-                // we can drive a compact aggregation over the legacy observations DB.
-                try {
-                    $nameQuery = SearchIndex::query()
-                        ->leftJoin('objects', function ($join) {
-                            $join->on('search_index.source_pk', '=', 'objects.slug')
-                                ->where('search_index.source_table', '=', 'objects');
-                        })
-                        ->whereRaw('LOWER(search_index.name) LIKE ?', [Str::lower($like)])
-                        ->whereNotNull('objects.name');
-
-                    $objectNames = $nameQuery->pluck('objects.name')->toArray();
-                } catch (\Throwable $_) {
-                    $objectNames = [];
-                }
-
-                if (empty($objectNames)) {
-                    $obsAggSql = "SELECT o.objectname AS object_name, 0 AS total_observations, 0 AS total_drawings, 0 AS your_observations, 0 AS your_drawings, NULL AS last_seen_date, NULL AS your_last_seen_date, NULL AS last_drawing_date, NULL AS your_last_drawing_date FROM `" . $oldDbName . "`.`observations` o WHERE 0 = 1 GROUP BY o.objectname";
-                } else {
-                    try {
-                        $quotedNames = implode(', ', array_map(function ($n) {
-                            try {
-                                return DB::getPdo()->quote($n);
-                            } catch (\Throwable $_) {
-                                return "''";
-                            }
-                        }, $objectNames));
-                    } catch (\Throwable $_) {
-                        $quotedNames = "''";
-                    }
-
-                    try {
-                        $quotedUser = DB::getPdo()->quote($legacyUser);
-                    } catch (\Throwable $_) {
-                        $quotedUser = "''";
-                    }
-
-                    $obsAggSql = "SELECT o.objectname AS object_name,
-                    COUNT(*) AS total_observations,
-                    SUM(o.hasDrawing = 1) AS total_drawings,
-                    SUM(o.observerid = {$quotedUser}) AS your_observations,
-                    SUM(o.observerid = {$quotedUser} AND o.hasDrawing = 1) AS your_drawings,
-                    MAX(o.date) AS last_seen_date,
-                    MAX(CASE WHEN o.observerid = {$quotedUser} THEN o.date END) AS your_last_seen_date,
-                    MAX(CASE WHEN o.hasDrawing = 1 THEN o.date END) AS last_drawing_date,
-                    MAX(CASE WHEN o.observerid = {$quotedUser} AND o.hasDrawing = 1 THEN o.date END) AS your_last_drawing_date
-                FROM `" . $oldDbName . "`.`observations` o
-                WHERE o.objectname IN ({$quotedNames})
-                GROUP BY o.objectname";
-                }
-
-                // Expose obs.* aliases to the outer query so PowerGrid can sort on them.
-                $select .= ", obs.total_observations as total_observations, obs.total_drawings as total_drawings, obs.your_observations as your_observations, obs.your_drawings as your_drawings, obs.last_seen_date as last_seen_date, obs.your_last_seen_date as your_last_seen_date, obs.last_drawing_date as last_drawing_date, obs.your_last_drawing_date as your_last_drawing_date, obs.total_observations as seen, obs.your_last_seen_date as last_seen";
-
-                // Attach the derived aggregation as a LEFT JOIN
-                try {
-                    $query->leftJoin(DB::raw('(' . $obsAggSql . ') as obs'), function ($join) {
-                        $join->on('obs.object_name', '=', 'objects.name');
-                    });
-                } catch (\Throwable $_) {
-                    // swallow left join failures
-                }
-            }
+            $select .= ', ' . ObjectObservationStatistics::selectList(Auth::user()?->username);
         } catch (\Throwable $_) {
-            // ignore legacy aggregation failures
+            // ignore statistics failures
         }
 
         // Attach per-user cached metrics (contrast reserve / best mag) when possible

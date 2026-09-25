@@ -15,12 +15,12 @@ use App\Models\SketchOfTheWeek;
 use App\Models\SketchOfTheMonth;
 use App\Models\ObservationLike;
 use App\Models\ObservationComment;
+use App\Services\ObservationSearchQuery;
 use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Targets\Moon as AstroMoon;
 use deepskylog\AstronomyLibrary\Time;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -359,7 +359,9 @@ class ObservationsController extends Controller
     {
         $q = trim((string) $request->query('q', ''));
         $filters = $this->extractObservationSearchFilters($request);
-        $objects = $this->resolveExtractedObjectsFromSearch($q, $filters);
+        // Two rows are enough to tell "none", "exactly one" and "several" apart;
+        // the results table matches the full set in the database itself.
+        $objects = app(ObservationSearchQuery::class)->targets($q, $filters)->limit(2)->get();
 
         if ($objects->isEmpty()) {
             $redirectParams = $q !== '' ? ['q' => $q] : [];
@@ -374,8 +376,13 @@ class ObservationsController extends Controller
         }
 
         if ($objects->count() === 1) {
+            $object = $objects->first();
+
             return redirect()->route('object.show', [
-                'slug' => $this->extractSearchObjectSlug($objects->first()),
+                'slug' => $this->extractSearchObjectSlug([
+                    'source_table' => $object->source_table,
+                    'name' => $object->name,
+                ]),
             ]);
         }
 
@@ -384,13 +391,7 @@ class ObservationsController extends Controller
             'title' => $q !== ''
                 ? __('Objects from observations matching ":q"', ['q' => $q])
                 : ($filters !== [] ? __('Objects from selected observations') : __('Objects from observations')),
-            'objectRefs' => $objects
-                ->map(fn(array $object): array => [
-                    'source_table' => $object['source_table'],
-                    'name' => $object['name'],
-                ])
-                ->values()
-                ->all(),
+            'observationSearch' => ['q' => $q, 'filters' => $filters],
         ]);
     }
 
@@ -459,71 +460,6 @@ class ObservationsController extends Controller
             'preloaded_lenses' => $lenses,
             'preloaded_constellations' => $constellations,
         ]);
-    }
-
-    private function resolveMatchingObservationsForSearch(string $query, array $filters = []): Collection
-    {
-        $component = new \App\Livewire\ObservationSearchTable();
-
-        if (method_exists($component, 'boot')) {
-            try {
-                $component->boot();
-            } catch (\Throwable $_) {
-            }
-        }
-
-        if (method_exists($component, 'mount')) {
-            try {
-                $component->mount($query, $filters);
-            } catch (\Throwable $_) {
-                $component->objectName = $query;
-            }
-        } else {
-            $component->objectName = $query;
-        }
-
-        $observationIds = $component->datasource()->get()
-            ->pluck('id')
-            ->filter()
-            ->map(fn($id) => (int) $id)
-            ->values();
-
-        if ($observationIds->isEmpty()) {
-            return collect();
-        }
-
-        $observations = Observation::query()
-            ->whereIn('id', $observationIds->all())
-            ->get()
-            ->keyBy('id');
-
-        return $observationIds
-            ->map(fn(int $id): ?Observation => $observations->get($id))
-            ->filter()
-            ->values();
-    }
-
-    private function resolveExtractedObjectsFromSearch(string $query, array $filters = []): Collection
-    {
-        return $this->resolveMatchingObservationsForSearch($query, $filters)
-            ->map(function (Observation $observation): ?array {
-                $name = trim((string) ($observation->target_name ?? $observation->target_key ?? ''));
-                if ($name === '') {
-                    return null;
-                }
-
-                $sourceTable = strtolower(trim((string) ($observation->target_table ?? 'objects')));
-                $identity = $sourceTable . ':' . strtolower(trim((string) ($observation->target_key ?: $name)));
-
-                return [
-                    'identity' => $identity,
-                    'source_table' => $sourceTable,
-                    'name' => $name,
-                ];
-            })
-            ->filter()
-            ->unique('identity')
-            ->values();
     }
 
     private function extractObservationSearchFilters(Request $request): array
@@ -971,43 +907,15 @@ class ObservationsController extends Controller
             ], $preloadedData));
         }
 
-        // Not a legacy deepsky object — try planets (Sun and other solar-system targets)
-        $planet = null;
-        foreach ($candidates as $cand) {
-            try {
-                $planet = DB::table('planets')->where('slug', $cand)->first();
-            } catch (\Throwable $_) {
-                $planet = null;
-            }
-            if ($planet)
-                break;
-        }
-
-        if (!$planet) {
-            foreach ($candidates as $cand) {
-                try {
-                    $planet = DB::table('planets')->whereRaw('LOWER(name) = ?', [$cand])->first();
-                } catch (\Throwable $_) {
-                    $planet = null;
-                }
-                if ($planet)
-                    break;
-            }
-        }
+        // Not a legacy deepsky object — try solar-system targets (Sun, planets, Moon and lunar features)
+        $solarTarget = $this->resolveSolarSystemTarget($candidates);
+        $planet = $solarTarget['record'] ?? null;
 
         if ($planet) {
-            // Build possible keys (slug, name, id, plus lower variants)
-            $possibleKeys = [];
-            if (!empty($planet->slug))
-                $possibleKeys[] = (string) $planet->slug;
-            if (!empty($planet->name))
-                $possibleKeys[] = (string) $planet->name;
-            if (!empty($planet->id))
-                $possibleKeys[] = (string) $planet->id;
-            $possibleKeys = array_values(array_unique(array_filter(array_merge($possibleKeys, $candidates))));
+            $possibleKeys = $solarTarget['keys'];
 
             // Query unified observations for planet-targeted rows that have drawings
-            $query = Observation::where('target_table', 'planets')
+            $query = Observation::where('target_table', $solarTarget['table'])
                 ->whereIn('target_key', $possibleKeys)
                 ->whereNull('legacy_source')
                 ->where('has_drawing', 1)
@@ -1155,42 +1063,14 @@ class ObservationsController extends Controller
             ], $preloadedData));
         }
 
-        // Not a legacy deepsky object — try planets (Sun and other solar system bodies)
-        $planet = null;
-        foreach ($candidates as $cand) {
-            try {
-                $planet = DB::table('planets')->where('slug', $cand)->first();
-            } catch (\Throwable $_) {
-                $planet = null;
-            }
-            if ($planet)
-                break;
-        }
-
-        if (!$planet) {
-            foreach ($candidates as $cand) {
-                try {
-                    $planet = DB::table('planets')->whereRaw('LOWER(name) = ?', [$cand])->first();
-                } catch (\Throwable $_) {
-                    $planet = null;
-                }
-                if ($planet)
-                    break;
-            }
-        }
+        // Not a legacy deepsky object — try solar-system targets (Sun, planets, Moon and lunar features)
+        $solarTarget = $this->resolveSolarSystemTarget($candidates);
+        $planet = $solarTarget['record'] ?? null;
 
         if ($planet) {
-            // Build possible keys for matching target_key in unified observations
-            $possibleKeys = [];
-            if (!empty($planet->slug))
-                $possibleKeys[] = (string) $planet->slug;
-            if (!empty($planet->name))
-                $possibleKeys[] = (string) $planet->name;
-            if (!empty($planet->id))
-                $possibleKeys[] = (string) $planet->id;
-            $possibleKeys = array_values(array_unique(array_filter(array_merge($possibleKeys, $candidates))));
+            $possibleKeys = $solarTarget['keys'];
 
-            $query = Observation::where('target_table', 'planets')
+            $query = Observation::where('target_table', $solarTarget['table'])
                 ->whereIn('target_key', $possibleKeys)
                 ->whereNull('legacy_source')
                 ->where('observer_username', $user->username)
@@ -1313,42 +1193,14 @@ class ObservationsController extends Controller
             ], $preloadedData));
         }
 
-        // Not a legacy deepsky object — try planets (Sun and other solar system bodies)
-        $planet = null;
-        foreach ($candidates as $cand) {
-            try {
-                $planet = DB::table('planets')->where('slug', $cand)->first();
-            } catch (\Throwable $_) {
-                $planet = null;
-            }
-            if ($planet)
-                break;
-        }
-
-        if (!$planet) {
-            foreach ($candidates as $cand) {
-                try {
-                    $planet = DB::table('planets')->whereRaw('LOWER(name) = ?', [$cand])->first();
-                } catch (\Throwable $_) {
-                    $planet = null;
-                }
-                if ($planet)
-                    break;
-            }
-        }
+        // Not a legacy deepsky object — try solar-system targets (Sun, planets, Moon and lunar features)
+        $solarTarget = $this->resolveSolarSystemTarget($candidates);
+        $planet = $solarTarget['record'] ?? null;
 
         if ($planet) {
-            // Build possible keys for matching target_key in unified observations
-            $possibleKeys = [];
-            if (!empty($planet->slug))
-                $possibleKeys[] = (string) $planet->slug;
-            if (!empty($planet->name))
-                $possibleKeys[] = (string) $planet->name;
-            if (!empty($planet->id))
-                $possibleKeys[] = (string) $planet->id;
-            $possibleKeys = array_values(array_unique(array_filter(array_merge($possibleKeys, $candidates))));
+            $possibleKeys = $solarTarget['keys'];
 
-            $query = Observation::where('target_table', 'planets')
+            $query = Observation::where('target_table', $solarTarget['table'])
                 ->whereIn('target_key', $possibleKeys)
                 ->whereNull('legacy_source')
                 ->where('has_drawing', 1)
@@ -1466,43 +1318,15 @@ class ObservationsController extends Controller
             ], $preloadedData));
         }
 
-        // Not found in legacy object names — try planets (Sun and other solar system bodies)
-        $planet = null;
-        foreach ($candidates as $cand) {
-            try {
-                $planet = DB::table('planets')->where('slug', $cand)->first();
-            } catch (\Throwable $_) {
-                $planet = null;
-            }
-            if ($planet)
-                break;
-        }
-
-        if (!$planet) {
-            foreach ($candidates as $cand) {
-                try {
-                    $planet = DB::table('planets')->whereRaw('LOWER(name) = ?', [$cand])->first();
-                } catch (\Throwable $_) {
-                    $planet = null;
-                }
-                if ($planet)
-                    break;
-            }
-        }
+        // Not found in legacy object names — try solar-system targets (Sun, planets, Moon and lunar features)
+        $solarTarget = $this->resolveSolarSystemTarget($candidates);
+        $planet = $solarTarget['record'] ?? null;
 
         if ($planet) {
-            // Build candidate keys for matching target_key in unified observations
-            $possibleKeys = [];
-            if (!empty($planet->slug))
-                $possibleKeys[] = (string) $planet->slug;
-            if (!empty($planet->name))
-                $possibleKeys[] = mb_strtolower((string) $planet->name);
-            if (!empty($planet->id))
-                $possibleKeys[] = (string) $planet->id;
-            $possibleKeys = array_values(array_unique(array_filter(array_merge($possibleKeys, $candidates))));
+            $possibleKeys = $solarTarget['keys'];
 
             // Query unified observations table for planet-targeted rows
-            $query = Observation::where('target_table', 'planets')
+            $query = Observation::where('target_table', $solarTarget['table'])
                 ->whereIn('target_key', $possibleKeys)
                 ->whereNull('legacy_source')
                 ->orderBy('observed_on', 'desc');
@@ -1536,6 +1360,62 @@ class ObservationsController extends Controller
         }
 
         abort(404);
+    }
+
+    /**
+     * Resolve slug candidates to a solar-system target stored in the unified
+     * tables: a planet (including the Sun), a lunar feature or a moon.
+     *
+     * Returns the matched record, its table (the value of `target_table` in
+     * the observations table) and the `target_key` values that may refer to
+     * it, or null when nothing matches.
+     */
+    private function resolveSolarSystemTarget(array $candidates): ?array
+    {
+        foreach (['planets', 'lunar_features', 'moons'] as $table) {
+            $record = null;
+            foreach ($candidates as $cand) {
+                try {
+                    $record = DB::table($table)->where('slug', $cand)->first();
+                } catch (\Throwable $_) {
+                    $record = null;
+                }
+                if ($record)
+                    break;
+            }
+
+            if (!$record) {
+                foreach ($candidates as $cand) {
+                    try {
+                        $record = DB::table($table)->whereRaw('LOWER(name) = ?', [$cand])->first();
+                    } catch (\Throwable $_) {
+                        $record = null;
+                    }
+                    if ($record)
+                        break;
+                }
+            }
+
+            if ($record) {
+                $keys = [];
+                if (!empty($record->slug))
+                    $keys[] = (string) $record->slug;
+                if (!empty($record->name)) {
+                    $keys[] = (string) $record->name;
+                    $keys[] = mb_strtolower((string) $record->name);
+                }
+                if (!empty($record->id))
+                    $keys[] = (string) $record->id;
+
+                return [
+                    'record' => $record,
+                    'table' => $table,
+                    'keys' => array_values(array_unique(array_filter(array_merge($keys, $candidates)))),
+                ];
+            }
+        }
+
+        return null;
     }
 
     /**

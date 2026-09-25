@@ -11,12 +11,12 @@
     <div class="py-4 w-full">
         {{-- Search form --}}
         <div class="mb-4 bg-gray-900 p-4 rounded shadow">
-            <form method="GET" action="{{ route('observations.search') }}" class="flex gap-2">
+            <form method="GET" action="{{ route('observations.search') }}" class="flex flex-wrap gap-2">
                 <input type="text"
                        name="q"
                        value="{{ $q }}"
                        placeholder="{{ __('Enter object name (e.g. M 42, NGC 7000, %)') }}"
-                       class="flex-1 rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100 focus:outline-none focus:ring" />
+                       class="min-w-0 flex-1 basis-40 rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100 focus:outline-none focus:ring" />
                 <button type="submit"
                         class="bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">
                     {{ __('Search') }}
@@ -75,7 +75,7 @@
                     'q' => $q !== '' ? $q : null,
                 ]));
             @endphp
-            <div class="flex justify-end gap-3 mb-3">
+            <div class="flex flex-wrap justify-end gap-2 mb-3">
                 <a href="{{ $extractObjectsUrl }}"
                    class="px-4 py-1.5 rounded text-sm font-medium bg-indigo-700 hover:bg-indigo-600 text-white transition-colors">
                     {{ __('Extract objects') }}

@@ -1450,7 +1450,7 @@
     "Token Name": "Nom du jeton",
     "Top margin position for text (y-coordinate)": "Position de la marge supérieure du texte (coordonnée y)",
     "To start recording your observations and share your observations with other observers, you are kindly requested to :linkregister:close_link to DeepskyLog.": "Pour commencer à enregistrer vos observations et à les partager avec d'autres observateurs, vous êtes aimablement invité à :linkregistrer:close_link à DeepskyLog.",
-    "To start recording your observations and share your observations with other observers, you are kindly requested to :linkregister:close_link to DeepskyLog. Your personal data will be handled in accordance with our :linkprivacy policy:close_link.": "Pour commencer à enregistrer vos observations et à les partager avec d'autres observateurs, vous êtes aimablement invité à :linkregistrer:close_link à DeepskyLog. Vos données personnelles seront traitées conformément à notre :linkpolitique de confidentialité:close_link.",
+    "To start recording your observations and share your observations with other observers, you are kindly requested to :register_linkregister:close_link to DeepskyLog. Your personal data will be handled in accordance with our :privacy_linkprivacy policy:close_link.": "Pour commencer à enregistrer vos observations et à les partager avec d'autres observateurs, vous êtes aimablement invité à :register_linkregistrer:close_link à DeepskyLog. Vos données personnelles seront traitées conformément à notre :privacy_linkpolitique de confidentialité:close_link.",
     "Total": "Total",
     "Total affected observations: :count.": "Total d'observations affectées: :count.",
     "Total number of observing lists": "Nombre total de listes d'observation",

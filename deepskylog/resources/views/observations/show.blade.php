@@ -1,7 +1,7 @@
 <x-app-layout>
     <div>
         <div class="max-w-screen mx-auto bg-gray-900 px-2 py-10 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-wrap items-center justify-between gap-2">
                 <h2 class="text-xl font-semibold leading-tight">
                     @php
                         $mode = $mode ?? 'deepsky';
@@ -62,7 +62,7 @@
                         (count($queryExceptImages) ? '?' . http_build_query($queryExceptImages) : '');
                 @endphp
 
-                <div class="flex space-x-2">
+                <div class="flex flex-wrap gap-2">
                     @if ($user == '' && empty($objectFilter) && empty($drawingsOnly) && !$isDrawingsPath)
                         {{-- Global observations page: type filter tabs (All / Deep-sky / Comets / Solar system) --}}
                         @php
@@ -103,7 +103,7 @@
                     $sortObservedUrl = request()->fullUrlWithQuery(['sort' => 'observed']);
                     $sortIdUrl = request()->fullUrlWithQuery(['sort' => 'id']);
                 @endphp
-                <div class="flex items-center ml-2 space-x-2">
+                <div class="flex flex-wrap items-center gap-2">
                     <a href="{{ $sortObservedUrl }}"
                         class="inline-flex items-center px-3 py-2 rounded {{ $currentSort === 'observed' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600' }}">
                         {{ __('Sort: Observed') }}
@@ -115,7 +115,7 @@
                 </div>
                 {{-- Images-only toggle (only for drawings listing paths) --}}
                 @if ($isDrawingsPath)
-                    <div class="ml-2">
+                    <div>
                         @if (!$isImagesOnly)
                             <x-button gray icon="eye" class="mb-2" href="{{ $imagesOnUrl }}">
                                 {{ __('Show images only') }}
@@ -130,7 +130,7 @@
                 @if ($user == '' && empty($objectFilter) && empty($drawingsOnly) && !$isDrawingsPath)
                     <a href="{{ route('feed.observations') }}"
                        title="{{ __('Subscribe to RSS feed') }}"
-                       class="ml-2 inline-flex items-center px-3 py-2 rounded bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold">
+                       class="inline-flex items-center px-3 py-2 rounded bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold">
                         <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                             <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
                         </svg>

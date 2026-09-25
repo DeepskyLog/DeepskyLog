@@ -52,8 +52,8 @@ class CreateUserFromProvider implements CreatesUserFromProvider
             }
 
             return tap(User::create([
-                'name' => $providerUser->getName(),
-                'username' => Str::studly($providerUser->getName()),
+                'name' => $providerUser->getName() ?: $this->uniqueUsername($providerUser),
+                'username' => $this->uniqueUsername($providerUser),
                 'email' => $providerUser->getEmail(),
             ]), function (User $user) use ($provider, $providerUser) {
                 $user->markEmailAsVerified();
@@ -64,10 +64,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                     }
                 }
 
-                $user->switchConnectedAccount(
-                    $this->createsConnectedAccounts->create($user, $provider, $providerUser)
-                );
-                $user->save();
+                $this->createsConnectedAccounts->create($user, $provider, $providerUser);
                 try {
                     \Illuminate\Support\Facades\Log::info('oauth: created user', [
                         'provider' => $provider,
@@ -83,6 +80,33 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                 $this->addToTeam($user, 'Observers');
             });
         });
+    }
+
+    /**
+     * A username for the provider user that no other user has.
+     *
+     * Providers give a display name rather than a username, so two people with
+     * the same name would otherwise share a username, and with it their
+     * observations, which are linked to users by username. A name that is
+     * taken gets a number appended (JohnSmith, JohnSmith2, JohnSmith3, ...).
+     */
+    protected function uniqueUsername(ProviderUserContract $providerUser): string
+    {
+        $name = $providerUser->getName()
+            ?: $providerUser->getNickname()
+            ?: Str::before((string) $providerUser->getEmail(), '@');
+
+        // Letters and digits only (e.g. "deep.sky" becomes "DeepSky"), leaving
+        // room for the number within the column's 255 characters.
+        $words = trim((string) preg_replace('/[^\pL\pN]+/u', ' ', (string) $name));
+        $base = Str::limit(Str::studly($words), 240, '') ?: 'Observer';
+
+        $username = $base;
+        for ($suffix = 2; User::where('username', $username)->exists(); $suffix++) {
+            $username = $base . $suffix;
+        }
+
+        return $username;
     }
 
     /**

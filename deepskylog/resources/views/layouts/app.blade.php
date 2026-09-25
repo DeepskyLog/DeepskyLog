@@ -283,11 +283,11 @@
                     <div class="mx-auto max-w-screen-xl xl:max-w-full bg-gray-900 px-6 py-6 sm:px-6 lg:px-8">
                         <div class="flex flex-col lg:flex-row gap-4 w-full items-start">
                             @livewire('ephemeris-aside')
-                            <div class="flex-1" data-dsl-main-content>
+                            <div class="w-full min-w-0 flex-1" data-dsl-main-content>
                 @else
                     <div class="flex flex-col lg:flex-row gap-4 w-full items-start">
                         @livewire('ephemeris-aside')
-                        <div class="flex-1" data-dsl-main-content>
+                        <div class="w-full min-w-0 flex-1" data-dsl-main-content>
                 @endif
                         {{-- Optional page header slot (used by pages like messages.create) --}}
                         @isset($header)

@@ -17,7 +17,7 @@
                     <a href="{{ url('/cometobservations/' . $canonicalSlug) }}"
                         class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
                 @else
-                    <a href="{{ url('/observations/' . $canonicalSlug) }}"
+                    <a href="{{ route('observations.object', ['slug' => $canonicalSlug]) }}"
                         class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
                 @endif
             @else
@@ -157,11 +157,12 @@
                     </a>
                 </li>
             @endif
-            {{-- Star chart quick type links: Overview / Lookup / Detail --}}
-            @if (!empty($canonicalSlug) || !empty($session->slug))
-                @php $chartSlug = $canonicalSlug ?? $session->slug; @endphp
+        @endif
+        {{-- Star chart quick type links: Overview / Lookup / Detail --}}
+        @if (!empty($canonicalSlug) || !empty($session->slug))
+            @php $chartSlug = $canonicalSlug ?? $session->slug; @endphp
                 <li class="pt-2 border-t border-gray-700">
-                    <div class="flex items-center gap-2">
+                    <div class="flex flex-wrap items-center gap-2">
                         <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlug, 'type' => 'overview']) }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
                             {{ __('Overview chart') }}
                         </a>
