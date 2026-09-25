@@ -61,3 +61,11 @@ it('refuses two users with the same username in the database', function () {
     expect(fn() => User::factory()->create(['username' => 'Taken']))
         ->toThrow(\Illuminate\Database\UniqueConstraintViolationException::class);
 });
+
+it('starts a social login user without the existing broadcast messages', function () {
+    \App\Models\Message::create(['sender' => 'DeepskyLog', 'receiver' => 'all', 'subject' => 'Old news', 'message' => '-', 'date' => now()]);
+
+    $user = app(CreateUserFromProvider::class)->create('github', socialiteUser('7', 'New Comer', 'newcomer@example.com'));
+
+    expect(\App\Models\Message::getNumberOfUnreadMails($user->username))->toBe(0);
+});

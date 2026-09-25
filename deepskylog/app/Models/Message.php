@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Message extends Model
 {
@@ -94,6 +95,25 @@ class Message extends Model
         }
 
         return $text;
+    }
+
+    /**
+     * Remove the existing broadcast messages (receiver 'all') from a new
+     * user's inbox, the same way "delete all" removes them, so a new account
+     * does not start with hundreds of old unread messages. Broadcasts sent
+     * after the account was created still reach the user.
+     */
+    public static function dismissExistingBroadcastsFor(string $username): void
+    {
+        DB::table('messages_deleted')->insertOrIgnoreUsing(
+            ['id', 'receiver', 'deleted_at'],
+            self::query()
+                ->where('receiver', 'all')
+                ->select('id')
+                ->selectRaw('? as receiver', [$username])
+                ->selectRaw('? as deleted_at', [now()])
+                ->toBase()
+        );
     }
 
     /**

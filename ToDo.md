@@ -5,10 +5,10 @@
 ## Next steps
 
 - [ ] Test! 
-  - [ ] Test on laptop and on mobile
-  - [ ] Coordinates of comets now use the HORIZONS API, but the updated version of laravel-astronomy-library should also return the correct values now.  Check this and if the laravel-astronomy-library methods are faster, use these.
+  - [ ] Coordinates of comets and planets now use the HORIZONS API, but the updated version of laravel-astronomy-library should also return the correct values now.  Check this and if the laravel-astronomy-library methods are faster, use these.
+  - [ ] Test for functionality problems
   - [ ] Test for security problems
-  - [ ] Logged in and logged out, as database expert and as administrator
+  - [ ] Test manually when logged in and logged out, as database expert and as administrator
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4
 - [ ] Translations

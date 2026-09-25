@@ -46,9 +46,4 @@ class InstrumentSetController extends Controller
 
         return view('instrumentset.create', ['set' => $set, 'update' => true]);
     }
-
-    public function indexAdmin()
-    {
-        return view('instrumentset-admin.index');
-    }
 }

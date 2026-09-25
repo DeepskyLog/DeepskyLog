@@ -669,9 +669,6 @@ Route::get('/sessions/{session}/adapt', [App\Http\Controllers\SessionController:
 Route::get('/instrumentset/{user}/{instrumentset}/edit', 'App\Http\Controllers\InstrumentSetController@edit')
     ->name('instrumentset.edit')->middleware('auth');
 
-Route::get('/admin/instrumentset', 'App\Http\Controllers\InstrumentSetController@indexAdmin')
-    ->name('instrumentset.indexAdmin')->can('add_sketch', User::class);
-
 // Likes for observations (deepsky / comet)
 Route::post('/observation/like', [App\Http\Controllers\ObservationLikeController::class, 'toggle'])->name('observation.like')->middleware('auth');
 

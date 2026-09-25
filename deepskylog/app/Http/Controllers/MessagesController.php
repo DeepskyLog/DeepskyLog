@@ -228,13 +228,15 @@ class MessagesController extends Controller
     $user = Auth::user();
         $message = Message::findOrFail($id);
 
-        // ensure receiver is user or admin
-        if ($message->receiver !== $user->username && ! $this->userIsAdmin($user)) {
+        // Readable by its receiver, by everyone for a broadcast (receiver 'all',
+        // which every inbox lists), by its sender and by administrators.
+        $isReceiver = $message->receiver === $user->username || strtolower((string) $message->receiver) === 'all';
+        if (! $isReceiver && $message->sender !== $user->username && ! $this->userIsAdmin($user)) {
             abort(403);
         }
 
         // mark as read
-        if (! MessageRead::where('id', $id)->where('receiver', $user->username)->exists()) {
+        if ($isReceiver && ! MessageRead::where('id', $id)->where('receiver', $user->username)->exists()) {
             MessageRead::create(['id' => $id, 'receiver' => $user->username, 'read_at' => now()]);
         }
 

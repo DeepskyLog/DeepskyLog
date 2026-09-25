@@ -2,6 +2,7 @@
 
 namespace App\Actions\Socialstream;
 
+use App\Models\Message;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -78,6 +79,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                     // ignore logging errors
                 }
                 $this->addToTeam($user, 'Observers');
+                Message::dismissExistingBroadcastsFor($user->username);
             });
         });
     }

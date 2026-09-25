@@ -1,16 +1,27 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-wrap items-center justify-between gap-2">
             <h2 class="font-semibold text-xl text-gray-200 leading-tight">{{ __('My observing lists') }}</h2>
-            <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center gap-2">
                 <a href="{{ route('observing-lists.discover') }}"
                    class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
                     {{ __('Discover public lists') }}
                 </a>
-                <a href="{{ route('observing-list.create') }}"
-                   class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500">
-                    {{ __('New list') }}
-                </a>
+                @can('create', \App\Models\ObservingList::class)
+                    <a href="{{ route('observing-list.create') }}"
+                       class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500">
+                        {{ __('New list') }}
+                    </a>
+                @else
+                    {{-- Observing lists are created in the Observer role; offer to switch to it. --}}
+                    @php $observersTeam = auth()->user()?->allTeams()->firstWhere('name', 'Observers'); @endphp
+                    @if ($observersTeam)
+                        <a href="{{ route('current-team.switch', $observersTeam->id) }}"
+                           class="dsl-switch-team inline-flex items-center px-4 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
+                            {{ __('Switch to the Observer role to create a list') }}
+                        </a>
+                    @endif
+                @endcan
             </div>
         </div>
     </x-slot>
