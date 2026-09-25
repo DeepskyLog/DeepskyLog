@@ -420,30 +420,13 @@ class EphemerisAside extends Component
                     $deltaT = Time::deltaT($d);
 
                     // Calculate equatorial coords for the Moon using the local
-                    // astronomy library. This avoids unnecessary external proxy
-                    // calls (which were logging a "Moon" designation) and is
-                    // accurate for the Moon. Use the proxy only as a fallback
-                    // if the library calculation fails for some reason.
+                    // astronomy library.
                     try {
                         $moonTarget->calculateEquatorialCoordinates($d->copy(), $geo_coords, $loc->elevation ?? 0.0);
                         // calculate rise/transit/set
                         $moonTarget->calculateEphemerides($geo_coords, $greenwichSiderialTime, $deltaT);
                     } catch (\Throwable $_) {
-                        try {
-                            $proxyResult = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($moonTarget, $d->copy(), $geo_coords, $loc->elevation ?? 0.0, ['obj' => null]);
-                            if (!empty($proxyResult) && !empty($proxyResult['coords'])) {
-                                $coords = $proxyResult['coords'];
-                                if (method_exists($moonTarget, 'setEquatorialCoordinates')) {
-                                    try {
-                                        $moonTarget->setEquatorialCoordinates($coords);
-                                        $moonTarget->calculateEphemerides($geo_coords, $greenwichSiderialTime, $deltaT);
-                                    } catch (\Throwable $_) {
-                                    }
-                                }
-                            }
-                        } catch (\Throwable $_) {
-                            // give up silently
-                        }
+                        // ignore: no rise and set times
                     }
 
                     $moonRise = null;

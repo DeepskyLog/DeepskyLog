@@ -168,19 +168,7 @@ class MoonDetails extends Component
                     $moonTarget->calculateEquatorialCoordinates($d->copy(), $coords, $loc->elevation ?? 0.0);
                     $moonTarget->calculateEphemerides($coords, $greenwichSiderialTime, $deltaT);
                 } catch (\Throwable $_) {
-                    try {
-                        $proxyResult = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($moonTarget, $d->copy(), $coords, $loc->elevation ?? 0.0, ['obj' => null]);
-                        if (! empty($proxyResult) && ! empty($proxyResult['coords'])) {
-                            if (method_exists($moonTarget, 'setEquatorialCoordinates')) {
-                                try {
-                                    $moonTarget->setEquatorialCoordinates($proxyResult['coords']);
-                                    $moonTarget->calculateEphemerides($coords, $greenwichSiderialTime, $deltaT);
-                                } catch (\Throwable $_) {
-                                }
-                            }
-                        }
-                    } catch (\Throwable $_) {
-                    }
+                    // ignore: no rise and set times
                 }
 
                 $moonRise = null;

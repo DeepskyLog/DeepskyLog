@@ -9,13 +9,11 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
 use App\Models\Target;
 use App\Models\CometObject;
+use App\Services\CometCoordinates;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Time;
-use deepskylog\AstronomyLibrary\Targets\Parabolic;
-use deepskylog\AstronomyLibrary\Targets\Elliptic;
-use deepskylog\AstronomyLibrary\Targets\NearParabolic;
 use Carbon\Carbon;
 use App\Models\Constellation as ConstellationModel;
 
@@ -69,7 +67,7 @@ class ObjectEphemerides extends Component
 			if ($needsRecalc) {
 				try {
 					// Pass the supplied initial ephemerides through so recalculate()
-					// can use authoritative wrapper coordinates when computing
+					// can use the supplied coordinates when computing
 					// derived values (rise/transit/setting, etc.).
 					$this->recalculate([
 						'objectId' => $this->objectId,
@@ -199,7 +197,7 @@ class ObjectEphemerides extends Component
 		try {
 			$payloadArr = is_array($payload) ? $payload : (is_object($payload) ? (array) $payload : []);
 
-			// Accept pre-supplied ephemerides (for example authoritative wrapper coords)
+			// Accept pre-supplied ephemerides (for example coordinates from the page)
 			// and prefer them when computing derived ephemerides. These may be passed
 			// either as top-level `raDeg`/`decDeg` keys or in an `ephemerides` array.
 			$preSuppliedRaDeg = null;
@@ -242,7 +240,7 @@ class ObjectEphemerides extends Component
 
 			// Resolve object record (prefer Eloquent model lookup which respects
 			// configured primaryKey and DB connection). Fall back to slug/name
-			// and lastly allow proceeding when authoritative wrapper coords are
+			// and lastly allow proceeding when coordinates are
 			// supplied in the payload (preSuppliedRaDeg/preSuppliedDecDeg).
 			$obj = null;
 			try {
@@ -311,7 +309,7 @@ class ObjectEphemerides extends Component
 				}
 
 				// If still not found, allow proceeding only if authoritative
-				// coordinates were supplied in the payload (wrapper-provided).
+				// coordinates were supplied in the payload.
 				if (empty($obj)) {
 					$planetName = $payloadArr['objectName'] ?? $this->objectName ?? null;
 					$sourceType = $payloadArr['sourceTypeRaw'] ?? $this->sourceTypeRaw ?? null;
@@ -326,19 +324,6 @@ class ObjectEphemerides extends Component
 								'decl' => null,
 							];
 						} else {
-							// Try a lightweight designation-only probe as a last resort
-							$designationProbe = $payloadArr['objectName'] ?? $this->objectName ?? null;
-							if (!empty($designationProbe) && method_exists(\App\Helpers\HorizonsProxy::class, 'calculateEquatorialCoordinates')) {
-								try {
-									$probeRes = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates(new \deepskylog\AstronomyLibrary\Targets\Target(), Carbon::now('UTC'), new GeographicalCoordinates(0, 0), 0.0, ['designation' => $designationProbe]);
-								} catch (\Throwable $_) {
-									$probeRes = null;
-								}
-								if (is_array($probeRes) && !empty($probeRes['coords'])) {
-									$coords = $probeRes['coords'];
-									$obj = (object) ['id' => null, 'name' => $designationProbe, 'designation' => $designationProbe];
-								}
-							}
 							if (empty($obj)) {
 								return;
 							}
@@ -447,7 +432,6 @@ class ObjectEphemerides extends Component
 			$computedDiam1 = null;
 			$computedDiam2 = null;
 			$computedMag = null;
-			$recomputeForced = false;
 
 			// Allow callers to request heavy ephemerides computation (comet/orbital
 			// element work). By default we defer these expensive calculations so
@@ -463,9 +447,8 @@ class ObjectEphemerides extends Component
 				$decDeg = null;
 			}
 
-			// If the caller supplied authoritative coordinates (eg. from a Horizons wrapper
-			// diagnostic), prefer those over DB-derived values so derived ephemerides are
-			// computed using the wrapper RA/Dec.
+			// If the caller supplied coordinates in the payload, prefer those over
+			// DB-derived values so derived ephemerides are computed from them.
 			try {
 				if (!is_null($preSuppliedRaDeg) && is_numeric($preSuppliedRaDeg)) {
 					$raDeg = (float) $preSuppliedRaDeg;
@@ -525,26 +508,10 @@ class ObjectEphemerides extends Component
 									$geo = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
 									$height = $userLocation->elevation ?? 0.0;
 									try {
-										if (method_exists(\App\Helpers\HorizonsProxy::class, 'calculateEquatorialCoordinates')) {
-											$proxyResult = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($planet, $date, $geo, $height, ['obj' => $obj ?? null]);
-										} else {
-											$proxyResult = null;
-										}
-										if (is_array($proxyResult) && !empty($proxyResult['coords'])) {
-											$computedCoords = $proxyResult['coords'];
-											try {
-												if (method_exists($planet, 'setEquatorialCoordinates')) {
-													$planet->setEquatorialCoordinates($computedCoords);
-												}
-											} catch (\Throwable $_) {
-											}
-										} else {
-											// If proxy did not return coords, fall back to library calculations
-											if (method_exists($planet, 'calculateEquatorialCoordinates')) {
-												$planet->calculateEquatorialCoordinates($date, $geo, $height);
-											} elseif (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-												$planet->calculateApparentEquatorialCoordinates($date);
-											}
+										if (method_exists($planet, 'calculateEquatorialCoordinates')) {
+											$planet->calculateEquatorialCoordinates($date->copy(), $geo, $height);
+										} elseif (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
+											$planet->calculateApparentEquatorialCoordinates($date->copy());
 										}
 									} catch (\Throwable $_) {
 										try {
@@ -769,7 +736,7 @@ class ObjectEphemerides extends Component
 			// If this object looks like a comet and the caller provided a specific
 			// date, prefer recomputing coordinates for that date rather than using
 			// stored DB RA/Dec values which are epoch-dependent. Do not override
-			// authoritative pre-supplied coordinates from a wrapper (preSuppliedRaDeg).
+			// pre-supplied coordinates for that same date (preSuppliedRaDeg).
 			try {
 				$sourceTypeLower = is_string($sourceType) ? mb_strtolower($sourceType) : null;
 				$isComet = false;
@@ -782,22 +749,10 @@ class ObjectEphemerides extends Component
 					}
 				}
 				if ($isComet && !empty($payloadArr['date']) && ($preSuppliedDate === null || (string) $preSuppliedDate !== (string) $payloadArr['date'])) {
-					// If a different date was requested than the pre-supplied wrapper
-					// coordinates, force recomputation so orbital-element/proxy
-					// calculations run for the requested date.
-					$oldDate = $preSuppliedDate ?? null;
-					$newDate = $payloadArr['date'];
+					// If a different date was requested than the pre-supplied coordinates,
+					// calculate the position of the comet for the requested date.
 					$raDeg = null;
 					$decDeg = null;
-					$recomputeForced = true;
-				}
-
-				// Defer heavy comet calculations unless explicitly requested by the
-				// caller via the `computeEphemerides` flag. When deferred, return
-				// without attempting NearParabolic/Parabolic/Elliptic computations.
-				if ($isComet && empty($computeEphem)) {
-					$this->ephemerides = null;
-					return;
 				}
 			} catch (\Throwable $_) {
 				// ignore
@@ -806,233 +761,19 @@ class ObjectEphemerides extends Component
 			// planet events logging removed
 
 			if ($raDeg === null || $decDeg === null) {
-				// Try computing coordinates for comet-like objects using orbital elements
+				// Comets: calculate the position from the orbital elements
 				try {
-					$eVal = isset($obj->e) ? (float) $obj->e : null;
-					$qVal = isset($obj->q) ? (float) $obj->q : null;
-					$aVal = isset($obj->a) ? (float) $obj->a : null;
-					// comet orbital elements logging removed
-					// Build a robust designation to pass to HorizonsProxy: prefer explicit designation,
-					// then slug, then name, then any payload-provided objectName.
-					$hDesig = null;
-					try {
-						$hDesig = $obj->designation ?? $obj->slug ?? $obj->name ?? ($payloadArr['objectName'] ?? $this->objectName ?? null);
-					} catch (\Throwable $_) {
-						$hDesig = $payloadArr['objectName'] ?? $this->objectName ?? null;
-					}
-					$coords = null;
-					if (($eVal !== null && $qVal !== null) || ($aVal !== null && $eVal !== null)) {
-						$peri = null;
-						if (isset($obj->epoch) && is_numeric($obj->epoch)) {
-							try {
-								$peri = Time::fromJd($obj->epoch);
-							} catch (\Throwable $_) {
-								$peri = null;
-							}
-						}
-						if (!$peri)
-							$peri = Carbon::now('UTC');
-						if ($eVal === 1.0) {
-							$par = new Parabolic();
-							$par->setOrbitalElements((float) $qVal, (float) ($obj->i ?? 0.0), (float) ($obj->w ?? 0.0), (float) ($obj->node ?? 0.0), $peri);
-							// If photometry parameters exist in comets_orbital_elements, apply them
-							try {
-								$phot = DB::table('comets_orbital_elements')->where('name', $obj->name ?? ($obj->designation ?? null))->first();
-								if ($phot && isset($phot->H)) {
-									$h = is_numeric($phot->H) ? floatval($phot->H) : null;
-									$nval = isset($phot->n) && is_numeric($phot->n) ? floatval($phot->n) : 4.0;
-									$phase = isset($phot->phase_coeff) && is_numeric($phot->phase_coeff) ? floatval($phot->phase_coeff) : null;
-									$npre = isset($phot->n_pre) && is_numeric($phot->n_pre) ? floatval($phot->n_pre) : null;
-									$npost = isset($phot->n_post) && is_numeric($phot->n_post) ? floatval($phot->n_post) : null;
-									if ($h !== null) {
-										$par->setCometParams($h, $nval, $phase, $npre, $npost);
-									}
-								}
-							} catch (\Throwable $_) {
-								// non-fatal if photometry probe fails
-							}
-							$proxyRes = null;
-							try {
-								$proxyRes = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($par, $date, $geo_coords, $userLocation->elevation ?? 0.0, ['designation' => $hDesig ?? null, 'obj' => $obj, 'ignore_wrapper' => ($recomputeForced ?? false)]);
-							} catch (\Throwable $_) {
-								$proxyRes = null;
-							}
-							if (!empty($proxyRes['coords'])) {
-								$coords = $proxyRes['coords'];
-								if ($coords && method_exists($par, 'setEquatorialCoordinates')) {
-									try {
-										$par->setEquatorialCoordinates($coords);
-									} catch (\Throwable $_) {
-									}
-								}
-							} else {
-								try {
-									$par->calculateEquatorialCoordinates($date, $geo_coords);
-								} catch (\Throwable $_) {
-									try {
-										$par->calculateEquatorialCoordinates($date);
-									} catch (\Throwable $_) {
-									}
-								}
-								if (method_exists($par, 'getEquatorialCoordinatesToday'))
-									$coords = $par->getEquatorialCoordinatesToday();
-								elseif (method_exists($par, 'getEquatorialCoordinates'))
-									$coords = $par->getEquatorialCoordinates();
-							}
-						} elseif ($eVal !== null && $eVal < 1.0 && $aVal !== null) {
-							$ell = new Elliptic();
-							$ell->setOrbitalElements((float) $aVal, $eVal, (float) ($obj->i ?? 0.0), (float) ($obj->w ?? 0.0), (float) ($obj->node ?? 0.0), $peri);
-							// For elliptic (periodic) comets/asteroids, prefer H/G when available
-							try {
-								$phot = DB::table('comets_orbital_elements')->where('name', $obj->name ?? ($obj->designation ?? null))->first();
-								if ($phot && isset($phot->H)) {
-									$Hval = is_numeric($phot->H) ? floatval($phot->H) : null;
-									if ($Hval !== null) {
-										$Gval = 0.15; // default slope
-										$ell->setHG($Hval, $Gval);
-									}
-								}
-							} catch (\Throwable $_) {
-								// ignore
-							}
-							$proxyRes = null;
-							try {
-								$proxyRes = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($ell, $date, $geo_coords, $userLocation->elevation ?? 0.0, ['designation' => $hDesig ?? null, 'obj' => $obj, 'ignore_wrapper' => ($recomputeForced ?? false)]);
-							} catch (\Throwable $_) {
-								$proxyRes = null;
-							}
-							if (!empty($proxyRes['coords'])) {
-								$coords = $proxyRes['coords'];
-								if ($coords && method_exists($ell, 'setEquatorialCoordinates')) {
-									try {
-										$ell->setEquatorialCoordinates($coords);
-									} catch (\Throwable $_) {
-									}
-								}
-							} else {
-								try {
-									$ell->calculateEquatorialCoordinates($date, $geo_coords, $userLocation->elevation ?? 0.0);
-								} catch (\Throwable $_) {
-								}
-								if (method_exists($ell, 'getEquatorialCoordinatesToday'))
-									$coords = $ell->getEquatorialCoordinatesToday();
-								elseif (method_exists($ell, 'getEquatorialCoordinates'))
-									$coords = $ell->getEquatorialCoordinates();
-							}
-						} else {
-							$near = new NearParabolic();
-							$near->setOrbitalElements((float) $qVal, $eVal ?? 1.0, (float) ($obj->i ?? 0.0), (float) ($obj->w ?? 0.0), (float) ($obj->node ?? 0.0), $peri);
-							// Apply comet photometry params when present
-							try {
-								$phot = DB::table('comets_orbital_elements')->where('name', $obj->name ?? ($obj->designation ?? null))->first();
-								if ($phot && isset($phot->H)) {
-									$h = is_numeric($phot->H) ? floatval($phot->H) : null;
-									$nval = isset($phot->n) && is_numeric($phot->n) ? floatval($phot->n) : 4.0;
-									$phase = isset($phot->phase_coeff) && is_numeric($phot->phase_coeff) ? floatval($phot->phase_coeff) : null;
-									$npre = isset($phot->n_pre) && is_numeric($phot->n_pre) ? floatval($phot->n_pre) : null;
-									$npost = isset($phot->n_post) && is_numeric($phot->n_post) ? floatval($phot->n_post) : null;
-									if ($h !== null) {
-										$near->setCometParams($h, $nval, $phase, $npre, $npost);
-									}
-								}
-							} catch (\Throwable $_) {
-								// non-fatal
-							}
-							$proxyRes = null;
-							try {
-								$proxyRes = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($near, $date, $geo_coords, $userLocation->elevation ?? 0.0, ['designation' => $hDesig ?? null, 'obj' => $obj, 'ignore_wrapper' => ($recomputeForced ?? false)]);
-							} catch (\Throwable $_) {
-								$proxyRes = null;
-							}
-							if (!empty($proxyRes['coords'])) {
-								$coords = $proxyRes['coords'];
-								if ($coords && method_exists($near, 'setEquatorialCoordinates')) {
-									try {
-										$near->setEquatorialCoordinates($coords);
-									} catch (\Throwable $_) {
-									}
-								}
-							} else {
-								try {
-									$near->calculateEquatorialCoordinates($date);
-								} catch (\Throwable $_) {
-								}
-								if (method_exists($near, 'getEquatorialCoordinatesToday'))
-									$coords = $near->getEquatorialCoordinatesToday();
-								elseif (method_exists($near, 'getEquatorialCoordinates'))
-									$coords = $near->getEquatorialCoordinates();
-							}
-						}
-						if ($coords) {
-							try {
-								if (method_exists($coords, 'getRA'))
-									$raObj = $coords->getRA();
-								else
-									$raObj = $coords->ra ?? null;
-								$raVal = (is_object($raObj) && method_exists($raObj, 'getCoordinate')) ? $raObj->getCoordinate() : $raObj;
-								if (is_numeric($raVal))
-									$raDeg = ((float) $raVal <= 24.0) ? (float) $raVal * 15.0 : (float) $raVal;
-							} catch (\Throwable $_) {
-							}
-							try {
-								if (method_exists($coords, 'getDeclination'))
-									$decObj = $coords->getDeclination();
-								else
-									$decObj = $coords->dec ?? null;
-								$decVal = (is_object($decObj) && method_exists($decObj, 'getCoordinate')) ? $decObj->getCoordinate() : $decObj;
-								if (is_numeric($decVal))
-									$decDeg = (float) $decVal;
-							} catch (\Throwable $_) {
-							}
-						}
+					$coords = CometCoordinates::forName($obj->name ?? ($obj->designation ?? null), $date, $geo_coords, (float) ($userLocation->elevation ?? 0.0));
+					if ($coords) {
+						$raDeg = $coords->getRA()->getCoordinate() * 15.0;
+						$decDeg = $coords->getDeclination()->getCoordinate();
 					}
 				} catch (\Throwable $_) {
 					// ignore comet calc failures
 				}
-				// If orbital-element based computation didn't give coords, attempt a
-				// designation-only probe via HorizonsProxy. This covers cases where
-				// the DB lacks orbital elements but a wrapper or vendor can resolve
-				// the current position by designation/name.
 				if ($raDeg === null || $decDeg === null) {
-					try {
-						$designationProbe = $obj->designation ?? $obj->name ?? null;
-						if (!empty($designationProbe) && method_exists(\App\Helpers\HorizonsProxy::class, 'calculateEquatorialCoordinates')) {
-							try {
-								$probeRes = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates(new \deepskylog\AstronomyLibrary\Targets\Target(), $date, $geo_coords, $userLocation->elevation ?? 0.0, ['designation' => $designationProbe, 'obj' => $obj, 'ignore_wrapper' => ($recomputeForced ?? false)]);
-							} catch (\Throwable $_) {
-								$probeRes = null;
-							}
-							if (is_array($probeRes) && !empty($probeRes['coords'])) {
-								$coords = $probeRes['coords'];
-								try {
-									if (method_exists($coords, 'getRA'))
-										$raObj = $coords->getRA();
-									else
-										$raObj = $coords->ra ?? null;
-									$raVal = (is_object($raObj) && method_exists($raObj, 'getCoordinate')) ? $raObj->getCoordinate() : $raObj;
-									if (is_numeric($raVal))
-										$raDeg = ((float) $raVal <= 24.0) ? (float) $raVal * 15.0 : (float) $raVal;
-								} catch (\Throwable $_) {
-								}
-								try {
-									if (method_exists($coords, 'getDeclination'))
-										$decObj = $coords->getDeclination();
-									else
-										$decObj = $coords->dec ?? null;
-									$decVal = (is_object($decObj) && method_exists($decObj, 'getCoordinate')) ? $decObj->getCoordinate() : $decObj;
-									if (is_numeric($decVal))
-										$decDeg = (float) $decVal;
-								} catch (\Throwable $_) {
-								}
-							}
-						}
-					} catch (\Throwable $_) {
-						// ignore probe errors
-					}
-					if ($raDeg === null || $decDeg === null) {
-						$this->ephemerides = null;
-						return;
-					}
+					$this->ephemerides = null;
+					return;
 				}
 			}
 

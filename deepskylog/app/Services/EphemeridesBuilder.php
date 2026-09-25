@@ -34,17 +34,14 @@ class EphemeridesBuilder
         try {
             $coords = null;
 
-            // Try HorizonsProxy helper first if available
+            // Comets: calculate the position from the orbital elements
             try {
-                if (method_exists(\App\Helpers\HorizonsProxy::class, 'calculateEquatorialCoordinates')) {
-                    $designation = $obj->designation ?? $obj->slug ?? $obj->name ?? null;
-                    $proxyRes = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates(new \deepskylog\AstronomyLibrary\Targets\Target(), $date, $geo_coords, $userLocation->elevation ?? 0.0, ['designation' => $designation, 'obj' => $obj]);
-                    if (is_array($proxyRes) && !empty($proxyRes['coords'])) {
-                        $coords = $proxyRes['coords'];
-                    }
+                $name = $obj->name ?? $obj->designation ?? null;
+                if ($obj instanceof \App\Models\CometObject || (is_string($name) && preg_match('#^\s*(\d+[PDIX]\b|[CPDXAI]/)#i', $name))) {
+                    $coords = CometCoordinates::forName($name, $date, $geo_coords, (float) ($userLocation->elevation ?? 0.0));
                 }
             } catch (\Throwable $e) {
-                Log::debug('EphemeridesBuilder: horizons proxy failed', ['err' => $e->getMessage()]);
+                Log::debug('EphemeridesBuilder: comet coordinates failed', ['err' => $e->getMessage()]);
             }
 
             // Fall back to stored RA/Dec fields on the object
@@ -67,8 +64,8 @@ class EphemeridesBuilder
             }
 
             // Convert RA in degrees/hours accordingly
-            $raVal = $coords->getRA ? (method_exists($coords, 'getRA') ? $coords->getRA() : ($coords->ra ?? null)) : ($coords->ra ?? null);
-            $decVal = $coords->getDeclination ? (method_exists($coords, 'getDeclination') ? $coords->getDeclination() : ($coords->dec ?? null)) : ($coords->dec ?? null);
+            $raVal = method_exists($coords, 'getRA') ? $coords->getRA() : ($coords->ra ?? null);
+            $decVal = method_exists($coords, 'getDeclination') ? $coords->getDeclination() : ($coords->dec ?? null);
 
             $raDeg = null;
             if (is_object($raVal) && method_exists($raVal, 'getCoordinate')) {

@@ -336,7 +336,7 @@ class AladinPreviewInfo extends Component
             // If the authenticated user has no configured standard instrument set
             // and the incoming payload does not supply any instrument/eyepiece/lens
             // or appearance values, short-circuit to avoid performing heavy
-            // astronomy calculations (HorizonsProxy, AstronomyLibrary, etc.).
+            // astronomy calculations.
             // This addresses slow page loads for logged-in users who haven't
             // configured an instrument set yet — the Sky preview is effectively
             // incomplete until the user provides selections.
@@ -580,74 +580,7 @@ class AladinPreviewInfo extends Component
                         $geo = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
                         $height = $userLocation->elevation ?? 0.0;
                         try {
-                            // Prefer wrapper-provided coordinates via proxy; fall back to library
-                            if (method_exists(\App\Helpers\HorizonsProxy::class, 'calculateEquatorialCoordinates')) {
-                                // Compute a robust designation to pass into the proxy so
-                                // wrapper lookups can succeed. Use designation, slug,
-                                // name or payload-provided objectName as fallbacks.
-                                try {
-                                    $hDesig = null;
-                                    if (isset($obj) && $obj) {
-                                        $hDesig = $obj->designation ?? $obj->slug ?? $obj->name ?? null;
-                                    }
-                                    if (empty($hDesig) && !empty($payloadArr['objectName'] ?? null)) {
-                                        $hDesig = $payloadArr['objectName'];
-                                    }
-                                } catch (\Throwable $_) {
-                                    $hDesig = null;
-                                }
-                                try {
-                                    try {
-                                        \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calling HorizonsProxy (planet) start', ['designation' => $hDesig ?? null, 'objectId' => $obj->id ?? null]);
-                                    } catch (\Throwable $_) {
-                                    }
-                                    $proxyT0 = microtime(true);
-                                    $proxyResult = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($planet, $calcDate, $geo, $height, ['obj' => $obj ?? null, 'designation' => $hDesig ?? null]);
-                                    $proxyElapsed = round((microtime(true) - $proxyT0) * 1000, 2);
-                                    try {
-                                        \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calling HorizonsProxy (planet) end', ['elapsed_ms' => $proxyElapsed, 'designation' => $hDesig ?? null, 'objectId' => $obj->id ?? null]);
-                                    } catch (\Throwable $_) {
-                                    }
-                                } catch (\Throwable $proxyEx) {
-                                    $proxyResult = null;
-                                    try {
-                                        \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: HorizonsProxy exception', ['message' => $proxyEx->getMessage()]);
-                                    } catch (\Throwable $_) {
-                                    }
-                                }
-                            } else {
-                                $proxyResult = null;
-                            }
-
-                            if (is_array($proxyResult) && !empty($proxyResult['coords'])) {
-                                $computedCoords = $proxyResult['coords'];
-                                try {
-                                    if (method_exists($planet, 'setEquatorialCoordinates')) {
-                                        $planet->setEquatorialCoordinates($computedCoords);
-                                    }
-                                } catch (\Throwable $_) {
-                                }
-                            } else {
-                                // If proxy did not return coords, fall back to library calculations
-                                try {
-                                    $libT0 = microtime(true);
-                                    if (method_exists($planet, 'calculateEquatorialCoordinates')) {
-                                        $planet->calculateEquatorialCoordinates($calcDate, $geo, $height);
-                                    } elseif (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-                                        $planet->calculateApparentEquatorialCoordinates($calcDate);
-                                    }
-                                    $libElapsed = round((microtime(true) - $libT0) * 1000, 2);
-                                    try {
-                                        \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: planet library compute elapsed', ['elapsed_ms' => $libElapsed, 'objectId' => $obj->id ?? null]);
-                                    } catch (\Throwable $_) {
-                                    }
-                                } catch (\Throwable $libEx) {
-                                    try {
-                                        \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: planet library exception', ['message' => $libEx->getMessage()]);
-                                    } catch (\Throwable $_) {
-                                    }
-                                }
-                            }
+                            $planet->calculateEquatorialCoordinates($calcDate->copy(), $geo, $height);
                         } catch (\Throwable $_) {
                             try {
                                 if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
