@@ -157,9 +157,9 @@
                 "observer_username",
                 $obsLegacy->observer_username ?? $obsLegacy->observerid,
             )
-                ->where("legacy_source", "deepsky")
-                ->where("legacy_date_int", $obsLegacy->legacy_date_int ?? $obsLegacy->date)
+                ->whereDate("observed_on", $detailDate)
                 ->where("target_name", $obsLegacy->target_name ?? $obsLegacy->objectname)
+                ->orderBy("observed_time")
                 ->orderBy("id")
                 ->pluck("id")
                 ->map(fn($id) => (int) $id)

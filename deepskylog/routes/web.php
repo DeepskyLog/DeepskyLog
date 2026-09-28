@@ -447,12 +447,10 @@ Route::get('/object/sun', function () {
                 // objects
                 $unifiedObjectsCount = \App\Models\Observation::where('target_table', 'objects')
                     ->whereIn('target_key', $possibleKeys)
-                    ->whereNull('legacy_source')
                     ->count();
 
                 $unifiedObjectsDrawings = \App\Models\Observation::where('target_table', 'objects')
                     ->whereIn('target_key', $possibleKeys)
-                    ->whereNull('legacy_source')
                     ->where('has_drawing', 1)
                     ->count();
 
@@ -462,13 +460,11 @@ Route::get('/object/sun', function () {
                 if (\Illuminate\Support\Facades\Auth::check()) {
                     $yourUnifiedObs = \App\Models\Observation::where('target_table', 'objects')
                         ->whereIn('target_key', $possibleKeys)
-                        ->whereNull('legacy_source')
                         ->where('observer_user_id', \Illuminate\Support\Facades\Auth::user()->id)
                         ->count();
 
                     $yourUnifiedDraws = \App\Models\Observation::where('target_table', 'objects')
                         ->whereIn('target_key', $possibleKeys)
-                        ->whereNull('legacy_source')
                         ->where('observer_user_id', \Illuminate\Support\Facades\Auth::user()->id)
                         ->where('has_drawing', 1)
                         ->count();
@@ -480,12 +476,10 @@ Route::get('/object/sun', function () {
                 // planets (Sun)
                 $unifiedPlanetCount = \App\Models\Observation::where('target_table', 'planets')
                     ->whereIn('target_key', $possibleKeys)
-                    ->whereNull('legacy_source')
                     ->count();
 
                 $unifiedPlanetDrawings = \App\Models\Observation::where('target_table', 'planets')
                     ->whereIn('target_key', $possibleKeys)
-                    ->whereNull('legacy_source')
                     ->where('has_drawing', 1)
                     ->count();
 
@@ -495,13 +489,11 @@ Route::get('/object/sun', function () {
                 if (\Illuminate\Support\Facades\Auth::check()) {
                     $yourUnifiedPlanetObs = \App\Models\Observation::where('target_table', 'planets')
                         ->whereIn('target_key', $possibleKeys)
-                        ->whereNull('legacy_source')
                         ->where('observer_user_id', \Illuminate\Support\Facades\Auth::user()->id)
                         ->count();
 
                     $yourUnifiedPlanetDraws = \App\Models\Observation::where('target_table', 'planets')
                         ->whereIn('target_key', $possibleKeys)
-                        ->whereNull('legacy_source')
                         ->where('observer_user_id', \Illuminate\Support\Facades\Auth::user()->id)
                         ->where('has_drawing', 1)
                         ->count();

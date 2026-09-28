@@ -121,7 +121,7 @@ class ObjectReportDataBuilder
 
         foreach (array_chunk($names, 500) as $chunk) {
             $all = Observation::query()
-                ->where('legacy_source', 'deepsky')
+                ->deepsky()
                 ->whereIn('target_name', $chunk)
                 ->selectRaw('target_name, COUNT(*) as observations, SUM(CASE WHEN has_drawing = 1 THEN 1 ELSE 0 END) as drawings')
                 ->groupBy('target_name')
@@ -129,7 +129,7 @@ class ObjectReportDataBuilder
                 ->keyBy('target_name');
 
             $yours = Observation::query()
-                ->where('legacy_source', 'deepsky')
+                ->deepsky()
                 ->where('observer_user_id', $user->id)
                 ->whereIn('target_name', $chunk)
                 ->selectRaw('target_name, COUNT(*) as observations, SUM(CASE WHEN has_drawing = 1 THEN 1 ELSE 0 END) as drawings, MAX(observed_on) as last_seen')

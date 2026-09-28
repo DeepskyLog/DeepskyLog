@@ -111,7 +111,7 @@
                                         // and map their legacy IDs back to negative sketch references
                                         $q = \Illuminate\Support\Facades\DB::table('observations as o')
                                             ->join('cometobjects as coo', 'coo.id', '=', 'o.target_key')
-                                            ->where('o.legacy_source', 'comet');
+                                            ->where('o.target_type', \App\Models\Observation::TYPE_COMET);
                                         foreach ($tokensForLike as $i => $t) {
                                             if ($i === 0) {
                                                 $q->where('coo.name', 'like', $t);

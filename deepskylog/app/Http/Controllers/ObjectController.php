@@ -1265,198 +1265,39 @@ class ObjectController extends Controller
         $lastObservationDate = $lastObservationDate ?? null;
         $lastDrawingDate = $lastDrawingDate ?? null;
 
-        // Compute legacy observation/drawing counts when possible so the view shows accurate totals
+        // Observation and drawing counts of this object. Migrated and new
+        // observations are stored the same way (see App\Models\Observation).
         try {
-            if (!empty($session->name)) {
-                // Skip legacy name-based counts for planets — legacy table rows for planet names
-                // can be noisy. Only consult the legacy `observations` table for non-planet objects.
-                if ((($session->source_type_raw ?? '') !== 'planet') && true) {
-                    try {
-                        // Collapse all object-level count work into one query.
-                        $totalObservations = \App\Models\Observation::where('target_name', $session->name)->where('legacy_source', 'deepsky')->count();
-                        $drawings = \App\Models\Observation::where('target_name', $session->name)->where('legacy_source', 'deepsky')->where('has_drawing', 1)->count();
-                    } catch (\Throwable $_) {
-                        $totalObservations = $totalObservations ?? null;
-                        $drawings = $drawings ?? null;
-                    }
+            $objectObservations = null;
+            $solarSystemTables = ['planet' => 'planets', 'sun' => 'planets', 'moon' => 'moons', 'lunar_feature' => 'lunar_features'];
+            if ($sourceTypeRaw === 'comet' && isset($record->id) && is_numeric($record->id)) {
+                $objectObservations = fn() => \App\Models\Observation::ofComet((int) $record->id);
+            } elseif ($sourceTypeRaw === 'object' && !empty($session->name)) {
+                $objectName = \App\Models\Observation::canonicalDeepskyName($session->name) ?? $session->name;
+                $objectObservations = fn() => \App\Models\Observation::ofDeepskyObject($objectName);
+            } elseif (isset($solarSystemTables[$sourceTypeRaw]) && !empty($record->slug)) {
+                $objectObservations = fn() => \App\Models\Observation::where('target_table', $solarSystemTables[$sourceTypeRaw])
+                    ->where('target_key', $record->slug);
+            }
 
-                    try {
-                        if (Auth::check()) {
-                            $authUser = Auth::user();
-                            if ($authUser) {
-                                $yourObservations = \App\Models\Observation::where('observer_user_id', $authUser->id)->where('target_name', $session->name)->where('legacy_source', 'deepsky')->count();
-                                $yourDrawings = \App\Models\Observation::where('observer_user_id', $authUser->id)->where('target_name', $session->name)->where('legacy_source', 'deepsky')->where('has_drawing', 1)->count();
+            if ($objectObservations !== null) {
+                $totalObservations = $objectObservations()->count();
+                $drawings = $objectObservations()->where('has_drawing', 1)->count();
 
-                                $lastObsRaw = \App\Models\Observation::where('observer_user_id', $authUser->id)->where('target_name', $session->name)->where('legacy_source', 'deepsky')->max('observed_on');
-                                $lastObservationDate = $lastObsRaw ? \Carbon\Carbon::parse($lastObsRaw) : null;
+                $authUser = Auth::user();
+                if ($authUser) {
+                    $yours = fn() => $objectObservations()->where('observer_user_id', $authUser->id);
+                    $yourObservations = $yours()->count();
+                    $yourDrawings = $yours()->where('has_drawing', 1)->count();
 
-                                $lastDrawingRaw = \App\Models\Observation::where('observer_user_id', $authUser->id)->where('target_name', $session->name)->where('legacy_source', 'deepsky')->where('has_drawing', 1)->max('observed_on');
-                                $lastDrawingDate = $lastDrawingRaw ? \Carbon\Carbon::parse($lastDrawingRaw) : null;
-                            }
-                        }
-                    } catch (\Throwable $_) {
-                        // ignore
-                    }
-                }
-                // If this object is a comet, also attempt to read comet observations
-                if ((($session->source_type_raw ?? '') === 'comet') || (($type ?? '') === 'comet')) {
-                    try {
-                        $coObjId = null;
-                        if (isset($session->id) && is_numeric($session->id)) {
-                            $coObjId = (int) $session->id;
-                        } else {
-                            try {
-                                $coModel = \App\Models\CometObject::where('name', $session->name ?? '')->first();
-                                if ($coModel)
-                                    $coObjId = $coModel->id ?? null;
-                            } catch (\Throwable $_) {
-                            }
-                        }
-
-                        if (!empty($coObjId)) {
-                            try {
-                                $totalObservations = \App\Models\Observation::where('legacy_source', 'comet')->where('target_key', $coObjId)->count();
-                            } catch (\Throwable $_) {
-                            }
-
-                            try {
-                                $drawings = \App\Models\Observation::where('legacy_source', 'comet')->where('target_key', $coObjId)->where('has_drawing', 1)->count();
-                            } catch (\Throwable $_) {
-                                $drawings = $drawings ?? null;
-                            }
-
-                            try {
-                                if (Auth::check()) {
-                                    $authUser = Auth::user();
-                                    if ($authUser) {
-                                        $yourObservations = \App\Models\Observation::where('legacy_source', 'comet')->where('target_key', $coObjId)->where('observer_user_id', $authUser->id)->count();
-                                        $yourDrawings = \App\Models\Observation::where('legacy_source', 'comet')->where('target_key', $coObjId)->where('observer_user_id', $authUser->id)->where('has_drawing', 1)->count();
-                                    }
-                                }
-                            } catch (\Throwable $_) {
-                            }
-                        }
-                    } catch (\Throwable $_) {
-                        // ignore comet counting errors
-                    }
+                    $lastObsRaw = $yours()->max('observed_on');
+                    $lastObservationDate = $lastObsRaw ? \Carbon\Carbon::parse($lastObsRaw) : null;
+                    $lastDrawingRaw = $yours()->where('has_drawing', 1)->max('observed_on');
+                    $lastDrawingDate = $lastDrawingRaw ? \Carbon\Carbon::parse($lastDrawingRaw) : null;
                 }
             }
         } catch (\Throwable $_) {
             // defensive: ignore count errors and leave variables as-is
-        }
-
-        // Include any unified (modern) observations stored in the `observations` table
-        // that were not migrated from the legacy DB (legacy_source IS NULL). This covers
-        // modern rows that target `objects` and `planets` (e.g. Sun).
-        try {
-            if (class_exists(\App\Models\Observation::class)) {
-                $possibleKeys = [];
-                if (!empty($record->slug)) {
-                    $possibleKeys[] = (string) $record->slug;
-                }
-                if (!empty($record->name)) {
-                    $possibleKeys[] = (string) $record->name;
-                }
-                if (!empty($slug)) {
-                    $possibleKeys[] = (string) $slug;
-                }
-                if (!empty($record->id) && is_numeric($record->id)) {
-                    $possibleKeys[] = (string) $record->id;
-                }
-                $possibleKeys = array_values(array_unique(array_filter($possibleKeys)));
-
-                if (!empty($possibleKeys)) {
-                    // Add lowercase variants so case differences in stored target_key don't prevent matches
-                    $lowerKeys = array_map(fn($k) => mb_strtolower((string) $k), $possibleKeys);
-                    $possibleKeys = array_values(array_unique(array_merge($possibleKeys, $lowerKeys)));
-
-                    // Objects (deep-sky) rows
-                    $unifiedObjectsCount = \App\Models\Observation::where('target_table', 'objects')
-                        ->whereIn('target_key', $possibleKeys)
-                        ->whereNull('legacy_source')
-                        ->count();
-
-                    $unifiedObjectsDrawings = \App\Models\Observation::where('target_table', 'objects')
-                        ->whereIn('target_key', $possibleKeys)
-                        ->whereNull('legacy_source')
-                        ->where('has_drawing', 1)
-                        ->count();
-
-                    $totalObservations = (int) ($totalObservations ?? 0) + (int) $unifiedObjectsCount;
-                    $drawings = (int) ($drawings ?? 0) + (int) $unifiedObjectsDrawings;
-
-                    if (Auth::check()) {
-                        $yourUnifiedObs = \App\Models\Observation::where('target_table', 'objects')
-                            ->whereIn('target_key', $possibleKeys)
-                            ->whereNull('legacy_source')
-                            ->where('observer_user_id', Auth::user()->id)
-                            ->count();
-
-                        $yourUnifiedDraws = \App\Models\Observation::where('target_table', 'objects')
-                            ->whereIn('target_key', $possibleKeys)
-                            ->whereNull('legacy_source')
-                            ->where('observer_user_id', Auth::user()->id)
-                            ->where('has_drawing', 1)
-                            ->count();
-
-                        $yourObservations = (int) ($yourObservations ?? 0) + (int) $yourUnifiedObs;
-                        $yourDrawings = (int) ($yourDrawings ?? 0) + (int) $yourUnifiedDraws;
-                    }
-
-                    // Planet-targeted rows (covers Sun and other planet observations stored in modern table)
-                    try {
-                        $unifiedPlanetCount = \App\Models\Observation::where('target_table', 'planets')
-                            ->whereIn('target_key', $possibleKeys)
-                            ->whereNull('legacy_source')
-                            ->count();
-
-                        $unifiedPlanetDrawings = \App\Models\Observation::where('target_table', 'planets')
-                            ->whereIn('target_key', $possibleKeys)
-                            ->whereNull('legacy_source')
-                            ->where('has_drawing', 1)
-                            ->count();
-
-                        $totalObservations = (int) ($totalObservations ?? 0) + (int) $unifiedPlanetCount;
-                        $drawings = (int) ($drawings ?? 0) + (int) $unifiedPlanetDrawings;
-
-                        if (Auth::check()) {
-                            $yourUnifiedPlanetObs = \App\Models\Observation::where('target_table', 'planets')
-                                ->whereIn('target_key', $possibleKeys)
-                                ->whereNull('legacy_source')
-                                ->where('observer_user_id', Auth::user()->id)
-                                ->count();
-
-                            $yourUnifiedPlanetDraws = \App\Models\Observation::where('target_table', 'planets')
-                                ->whereIn('target_key', $possibleKeys)
-                                ->whereNull('legacy_source')
-                                ->where('observer_user_id', Auth::user()->id)
-                                ->where('has_drawing', 1)
-                                ->count();
-
-                            $yourObservations = (int) ($yourObservations ?? 0) + (int) $yourUnifiedPlanetObs;
-                            $yourDrawings = (int) ($yourDrawings ?? 0) + (int) $yourUnifiedPlanetDraws;
-                        }
-                    } catch (\Throwable $_) {
-                        // ignore unified planet counting errors
-                    }
-                }
-            }
-        } catch (\Throwable $_) {
-            // ignore unified counting errors
-        }
-
-        // Defensive override: ensure planets never show legacy observation counts.
-        // There are currently no planet observations in the database; force zeros
-        // to avoid misleading totals derived from legacy name-based rows.
-        try {
-            if (($session->source_type_raw ?? '') === 'planet' || ($type ?? '') === 'planet') {
-                $totalObservations = 0;
-                $drawings = 0;
-                $yourObservations = 0;
-                $yourDrawings = 0;
-            }
-        } catch (\Throwable $_) {
-            // ignore
         }
 
         // Atlas page: if a user is logged in and they have a standardAtlasCode set,
@@ -2634,7 +2475,7 @@ class ObjectController extends Controller
                     // Magnitude is stored in comet_observation_details, not in observations itself
                     $rows = DB::table('observations')
                         ->join('comet_observation_details', 'comet_observation_details.observation_id', '=', 'observations.id')
-                        ->where('observations.legacy_source', 'comet')
+                        ->where('observations.target_type', \App\Models\Observation::TYPE_COMET)
                         ->where('observations.target_key', (string) $coObjId)
                         ->whereNotNull('comet_observation_details.magnitude')
                         ->orderBy('observations.observed_on')
@@ -4509,10 +4350,9 @@ class ObjectController extends Controller
 
             $targetName = $targetRecord->name;
 
-            // Move observations in the legacy database
-            DB::table('observations')
-                ->where('objectname', $objectName)
-                ->update(['objectname' => $targetName]);
+            // Move the observations (see the target scheme in App\Models\Observation)
+            \App\Models\Observation::ofDeepskyObject($objectName)
+                ->update(['target_table' => 'objects', 'target_key' => $targetName, 'target_name' => $targetName]);
 
             // Move observing list entries in the new observing_list_items table
             DB::table('observing_list_items')

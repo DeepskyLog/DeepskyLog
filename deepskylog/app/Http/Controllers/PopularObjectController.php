@@ -24,33 +24,12 @@ class PopularObjectController extends Controller
 
     private function popularObjects(string $mode): LengthAwarePaginator
     {
-        $kindExpression = "CASE WHEN target_table = 'cometobjects' OR target_type = 'comet' OR legacy_source = 'comet' THEN 'comet' WHEN target_table = 'planets' THEN 'planet' ELSE 'deepsky' END";
+        $kindExpression = "CASE WHEN target_type = 'comet' THEN 'comet' WHEN target_type = 'planet' THEN 'planet' ELSE 'deepsky' END";
 
         $baseQuery = DB::table('observations')
             ->whereNotNull('target_name')
             ->where('target_name', '!=', '')
-            ->where(function ($builder) {
-                $builder->where('target_type', 'deepsky')
-                    ->orWhere('target_table', 'objects')
-                    ->orWhere('target_table', 'planets')
-                    ->orWhere('target_table', 'cometobjects')
-                    ->orWhere('target_type', 'comet')
-                    ->orWhere('legacy_source', 'comet')
-                    ->orWhere(function ($legacyBuilder) {
-                        $legacyBuilder->whereNull('target_table')
-                            ->where(function ($objectBuilder) {
-                                $objectBuilder->whereExists(function ($subQuery) {
-                                    $subQuery->selectRaw('1')
-                                        ->from('objectnames')
-                                        ->whereColumn('objectnames.objectname', 'observations.target_name');
-                                })->orWhereExists(function ($subQuery) {
-                                    $subQuery->selectRaw('1')
-                                        ->from('objects')
-                                        ->whereColumn('objects.name', 'observations.target_name');
-                                });
-                            });
-                    });
-            })
+            ->whereIn('target_type', ['deepsky', 'comet', 'planet'])
             ->selectRaw('target_name as object_name')
             ->selectRaw('target_key')
             ->selectRaw($kindExpression . ' as object_kind');

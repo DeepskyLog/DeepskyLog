@@ -122,7 +122,7 @@ More information can be found here:
             'observation' => $observation,
             'observation_id' => (int) $request['observation_id'],
             'legacy_observation_id' => (int) $observation->legacy_id,
-            'is_comet' => $observation->legacy_source === 'comet',
+            'is_comet' => $observation->target_type === \App\Models\Observation::TYPE_COMET,
             'drawing_src' => $drawingSrc,
             'date' => $request->date,
             'week_month' => 'month',

@@ -143,11 +143,9 @@
                     request()->route("observer") ?: $user?->slug ?? $obs->observerid,
                 "date" => $obsDate,
                 "object" => $objectLinkSlug,
+                // Always given: the index sits in the middle of the compare URL.
+                "index" => $currentIndex,
             ];
-
-            if ($currentIndex > 1) {
-                $compareParams["index"] = $currentIndex;
-            }
 
             $compareMyLastUrl = route("observations.compare.my-last", $compareParams);
         }

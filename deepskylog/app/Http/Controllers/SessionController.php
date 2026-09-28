@@ -86,19 +86,7 @@ class SessionController extends Controller
             ->map(fn($v) => (int) $v)
             ->toArray();
 
-        // Map new IDs back to legacy IDs per source for querying the old models.
-        // The new observations table records legacy_source ('deepsky'|'comet') and legacy_id.
-        $obsIds = $newObsIds; // kept for count/pivot queries that don't touch old models
-        $deepLegacyIds = [];
-        $cometLegacyIds = [];
-        if (!empty($newObsIds)) {
-            $obsMeta = DBFacade::table('observations')
-                ->whereIn('id', $newObsIds)
-                ->select('legacy_source', 'legacy_id')
-                ->get();
-            $deepLegacyIds = $obsMeta->where('legacy_source', 'deepsky')->pluck('legacy_id')->map(fn($v) => (int) $v)->toArray();
-            $cometLegacyIds = $obsMeta->where('legacy_source', 'comet')->pluck('legacy_id')->map(fn($v) => (int) $v)->toArray();
-        }
+        $obsIds = $newObsIds;
 
         // Allow viewing observations for a specific observer via ?observer={username}
         $targetObserver = request()->get('observer', $session->observerid);
@@ -108,19 +96,11 @@ class SessionController extends Controller
         // Fetch observations and drawings
         if (!empty($obsIds)) {
             // Fetch observations for the session recorded by the requested observer
-            $deepObservations = Observation::whereIn('legacy_id', $deepLegacyIds)
-                ->where('legacy_source', 'deepsky')
+            $allObservations = Observation::whereIn('id', $obsIds)
                 ->where('observer_username', $targetObserver)
                 ->orderBy('id', 'desc')
                 ->get();
-
-            $cometObservations = Observation::whereIn('legacy_id', $cometLegacyIds)
-                ->where('legacy_source', 'comet')
-                ->where('observer_username', $targetObserver)
-                ->orderBy('id', 'desc')
-                ->get();
-
-            $allObservations = $deepObservations->merge($cometObservations)->sortByDesc('id')->values();
+            [$cometObservations, $deepObservations] = $allObservations->partition(fn($o) => $o->target_type === Observation::TYPE_COMET);
 
             // Manual pagination for combined observations
             $perPage = 20;
@@ -141,9 +121,7 @@ class SessionController extends Controller
             );
 
             // Drawings for the requested observer
-            $drawingDeep = Observation::whereIn('legacy_id', $deepLegacyIds)->where('legacy_source', 'deepsky')->where('observer_username', $targetObserver)->where('has_drawing', 1)->orderBy('id', 'desc')->get();
-            $drawingComet = Observation::whereIn('legacy_id', $cometLegacyIds)->where('legacy_source', 'comet')->where('observer_username', $targetObserver)->where('has_drawing', 1)->orderBy('id', 'desc')->get();
-            $allDrawings = $drawingDeep->merge($drawingComet)->sortByDesc('id')->values();
+            $allDrawings = $allObservations->where('has_drawing', true)->values();
 
             // Paginate drawings separately from observations. Use a distinct page name to avoid conflicts.
             $drawingsPerPage = 8;
@@ -463,7 +441,7 @@ class SessionController extends Controller
                     // Determine existing pivot observation ids for this session to avoid double-counting
                     $existingIds = DBFacade::table('sessionObservations')->where('sessionid', $sid)->pluck('observationid')->map(fn($v) => (int) $v)->toArray();
 
-                    $q = DBFacade::table('observations')->whereIn('observer_username', $participants)->whereNull('legacy_source');
+                    $q = DBFacade::table('observations')->whereIn('observer_username', $participants);
                     if ($startDate) {
                         $q->where('observed_on', '>=', $startDate);
                     }

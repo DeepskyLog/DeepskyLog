@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Country;
+use App\Models\Observation;
 use App\Models\TargetType;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -174,30 +175,23 @@ class StatisticsController extends Controller
 
     private function buildObjectTypesChart(?string $country, ?string $countryLabel): OriginalPieChart
     {
-        $directRows = $this->observationQuery($country)
-            ->join('objects', 'observations.target_name_normalized', '=', 'objects.name_normalized')
-            ->where('observations.target_table', 'objects')
-            ->select('objects.type', DB::raw('count(*) as count'))
-            ->groupBy('objects.type');
-
-        $aliasRows = $this->observationQuery($country)
-            ->join('objectnames', 'observations.target_key', '=', 'objectnames.slug')
-            ->join('objects', 'objectnames.objectname', '=', 'objects.name')
-            ->where('observations.target_table', 'objectnames')
+        $rows = $this->observationQuery($country)
+            ->join('objects', 'observations.target_key', '=', 'objects.name')
+            ->where('observations.target_type', Observation::TYPE_DEEPSKY)
             ->select('objects.type', DB::raw('count(*) as count'))
             ->groupBy('objects.type');
 
         $targetTypes = TargetType::all()->keyBy('id');
         $countsByType = [];
 
-        foreach ($directRows->get()->merge($aliasRows->get()) as $row) {
+        foreach ($rows->get() as $row) {
             $countsByType[$row->type] = ($countsByType[$row->type] ?? 0) + (int) $row->count;
         }
 
         $values = [];
         $labels = [];
         foreach ($countsByType as $type => $count) {
-            $label = match ($row->type) {
+            $label = match ($type) {
                 'DS' => __('Double stars'),
                 default => __($targetTypes->get($type)?->type ?? $type),
             };
@@ -329,63 +323,22 @@ class StatisticsController extends Controller
 
     private function applyCometScope(Builder $query): Builder
     {
-        return $query->where(function (Builder $comets) {
-            $comets->where('legacy_source', 'comet')
-                ->orWhere('target_table', 'cometobjects')
-                ->orWhere('target_type', 'comet');
-        });
+        return $query->where('target_type', Observation::TYPE_COMET);
     }
 
     private function applyDeepskyScope(Builder $query): Builder
     {
-        return $query->where(function (Builder $outer) {
-            $outer->where(function (Builder $modern) {
-                $modern->whereNull('legacy_source')
-                    ->where(function (Builder $targets) {
-                        $targets->where(function (Builder $objects) {
-                            $objects->where('target_table', 'objects')
-                                ->where(function (Builder $notDouble) {
-                                    $notDouble->whereNull('target_name_normalized')
-                                        ->orWhereNotIn('target_name_normalized', fn(Builder $subquery) => $this->doubleStarSubquery($subquery));
-                                });
-                        })->orWhere(function (Builder $aliases) {
-                            $aliases->where('target_table', 'objectnames')
-                                ->whereNotIn('target_key', fn(Builder $subquery) => $this->doubleStarObjectnameSlugSubquery($subquery));
-                        });
-                    });
-            })->orWhere(function (Builder $legacy) {
-                $legacy->where('legacy_source', 'deepsky')
-                    ->where(function (Builder $allowed) {
-                        $allowed->where(function (Builder $nullTable) {
-                            $nullTable->whereNull('target_table');
-                        })->orWhere(function (Builder $objects) {
-                            $objects->where('target_table', 'objects')
-                                ->where(function (Builder $notDouble) {
-                                    $notDouble->whereNull('target_name_normalized')
-                                        ->orWhereNotIn('target_name_normalized', fn(Builder $subquery) => $this->doubleStarSubquery($subquery));
-                                });
-                        })->orWhere(function (Builder $aliases) {
-                            $aliases->where('target_table', 'objectnames')
-                                ->whereNotIn('target_key', fn(Builder $subquery) => $this->doubleStarObjectnameSlugSubquery($subquery));
-                        });
-                    });
+        return $query->where('target_type', Observation::TYPE_DEEPSKY)
+            ->where(function (Builder $notDouble) {
+                $notDouble->whereNull('target_name_normalized')
+                    ->orWhereNotIn('target_name_normalized', fn(Builder $subquery) => $this->doubleStarSubquery($subquery));
             });
-        });
     }
 
     private function applyDoubleScope(Builder $query): Builder
     {
-        return $query->where(function (Builder $double) {
-            $double->where(function (Builder $objects) {
-                $objects->where('target_table', 'objects')
-                    ->where(function (Builder $notDouble) {
-                        $notDouble->whereIn('target_name_normalized', fn(Builder $subquery) => $this->doubleStarSubquery($subquery));
-                    });
-            })->orWhere(function (Builder $aliases) {
-                $aliases->where('target_table', 'objectnames')
-                    ->whereIn('target_key', fn(Builder $subquery) => $this->doubleStarObjectnameSlugSubquery($subquery));
-            });
-        });
+        return $query->where('target_type', Observation::TYPE_DEEPSKY)
+            ->whereIn('target_name_normalized', fn(Builder $subquery) => $this->doubleStarSubquery($subquery));
     }
 
     private function doubleStarSubquery(Builder $query): void
@@ -393,14 +346,6 @@ class StatisticsController extends Controller
         $query->select('name_normalized')
             ->from('objects')
             ->where('type', 'DS');
-    }
-
-    private function doubleStarObjectnameSlugSubquery(Builder $query): void
-    {
-        $query->select('objectnames.slug')
-            ->from('objectnames')
-            ->join('objects', 'objectnames.objectname', '=', 'objects.name')
-            ->where('objects.type', 'DS');
     }
 
     private function observationQuery(?string $country): Builder

@@ -597,7 +597,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getCometObservations(): int
     {
-        return Observation::where('legacy_source', 'comet')
+        return Observation::where('target_type', 'comet')
             ->where('observer_username', $this->username)
             ->count();
     }
@@ -609,7 +609,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getCometDrawings(): int
     {
-        return Observation::where('legacy_source', 'comet')
+        return Observation::where('target_type', 'comet')
             ->where('observer_username', $this->username)
             ->where('has_drawing', 1)
             ->count();
@@ -622,7 +622,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getUniqueCometObservations(): int
     {
-        return Observation::where('legacy_source', 'comet')
+        return Observation::where('target_type', 'comet')
             ->where('observer_username', $this->username)
             ->whereNotNull('target_key')
             ->distinct()
@@ -704,12 +704,12 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDeepskyObservationsLastYear(): int
     {
-        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('legacy_source', 'deepsky')->count();
+        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('target_type', 'deepsky')->count();
     }
 
     public function getCometObservationsLastYear(): int
     {
-        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('legacy_source', 'comet')->count();
+        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('target_type', 'comet')->count();
     }
 
     /**
@@ -726,12 +726,12 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDeepskyDrawingsLastYear(): int
     {
-        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('legacy_source', 'deepsky')->where('has_drawing', 1)->count();
+        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('target_type', 'deepsky')->where('has_drawing', 1)->count();
     }
 
     public function getCometDrawingsLastYear(): int
     {
-        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('legacy_source', 'comet')->where('has_drawing', 1)->count();
+        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('target_type', 'comet')->where('has_drawing', 1)->count();
     }
 
     /**

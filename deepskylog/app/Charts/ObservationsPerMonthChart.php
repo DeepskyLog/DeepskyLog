@@ -71,13 +71,13 @@ class ObservationsPerMonthChart
         // Aggregate counts per month using the Observation model so we can add extra categories
         $deepskyGrouped = Observation::selectRaw('MONTH(observed_on) as month, count(*) as cnt')
             ->where('observer_username', $user->username)
-            ->where('legacy_source', 'deepsky')
+            ->where('target_type', 'deepsky')
             ->groupByRaw('MONTH(observed_on)')
             ->get();
 
         $cometGrouped = Observation::selectRaw('MONTH(observed_on) as month, count(*) as cnt')
             ->where('observer_username', $user->username)
-            ->where('legacy_source', 'comet')
+            ->where('target_type', 'comet')
             ->groupByRaw('MONTH(observed_on)')
             ->get();
 

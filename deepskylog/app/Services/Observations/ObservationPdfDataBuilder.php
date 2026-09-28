@@ -30,56 +30,7 @@ class ObservationPdfDataBuilder
 
     public function build(Observation $selectedUnified): ?array
     {
-        if ($selectedUnified->legacy_source === 'deepsky') {
-            $selected = $selectedUnified;
-            $preloadedData = $this->preloadDeepskyData(collect([$selected]));
-            $moonContext = $this->buildMoonContext(
-                $selected,
-                $preloadedData['preloaded_locations']->get($selected->locationid) ?? null,
-            );
-
-            $lens = null;
-            if (!empty($selected->lensid) && $selected->lensid > 0) {
-                $lens = Lens::find($selected->lensid);
-            }
-
-            return array_merge([
-                'observationType' => 'deepsky',
-                'observation' => $selected,
-                'lens' => $lens,
-                'unified_observation_id' => $selectedUnified->id,
-                'drawing_filename' => $selectedUnified->drawing_filename,
-                'drawingDataUri' => $this->resolveDrawingDataUri($selectedUnified, 'deepsky'),
-                'moonContext' => $moonContext,
-            ], $preloadedData);
-        }
-
-        if ($selectedUnified->legacy_source === 'comet') {
-            $selected = $selectedUnified;
-            $selected->resolved_comet_name = (string) ($selectedUnified->target_name ?? '');
-
-            $preloadedData = $this->preloadCometData(collect([$selected]));
-            $moonContext = $this->buildMoonContext(
-                $selected,
-                $preloadedData['preloaded_locations']->get($selected->locationid) ?? null,
-            );
-
-            return array_merge([
-                'observationType' => 'comet',
-                'observation' => $selected,
-                'lens' => null,
-                'unified_observation_id' => $selectedUnified->id,
-                'drawing_filename' => $selectedUnified->drawing_filename,
-                'drawingDataUri' => $this->resolveDrawingDataUri($selectedUnified, 'comet'),
-                'moonContext' => $moonContext,
-            ], $preloadedData);
-        }
-
-        if ($selectedUnified->legacy_source !== null) {
-            return null;
-        }
-
-        $obsType = in_array($selectedUnified->target_type, ['comet'], true) ? 'comet' : 'deepsky';
+        $obsType = $selectedUnified->target_type === Observation::TYPE_COMET ? 'comet' : 'deepsky';
         $selected = $selectedUnified;
 
         try {
@@ -129,7 +80,7 @@ class ObservationPdfDataBuilder
 
         $lens = null;
         if (!empty($selected->lensid) && $selected->lensid > 0) {
-            $lens = $preloadedData['preloaded_lenses']->get($selected->lensid) ?? Lens::find($selected->lensid);
+            $lens = ($preloadedData['preloaded_lenses'] ?? collect())->get($selected->lensid) ?? Lens::find($selected->lensid);
         }
 
         return array_merge([

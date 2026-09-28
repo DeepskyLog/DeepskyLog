@@ -128,9 +128,10 @@
                 "observer_username",
                 $obsLegacy->observer_username,
             )
-                ->where("legacy_source", "comet")
-                ->where("legacy_date_int", $obsLegacy->legacy_date_int)
+                ->whereDate("observed_on", $detailDate)
+                ->where("target_type", \App\Models\Observation::TYPE_COMET)
                 ->where("target_key", $obsLegacy->target_key)
+                ->orderBy("observed_time")
                 ->orderBy("id")
                 ->pluck("id")
                 ->map(fn($id) => (int) $id)

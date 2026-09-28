@@ -76,7 +76,7 @@ class ObjectTypesChart
 
         // Comets
         $cometCount = (int) DB::table('observations')
-            ->where('legacy_source', 'comet')
+            ->where('target_type', 'comet')
             ->where(function ($q) use ($user) {
                 $q->where('observer_user_id', $user->id)
                     ->orWhere('observer_username', $user->username);

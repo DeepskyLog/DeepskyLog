@@ -809,9 +809,10 @@ class OalObservationImporter
                 'solarsystem',
                 (string) $row->name,
             ]),
+            // Comets are stored by id (see App\Models\Observation).
             'cometobjects' => $this->resolveNamedTarget('cometobjects', $candidates, ['name'], fn(object $row): array => [
                 'cometobjects',
-                $this->targetKeyFromRow($row),
+                (string) $row->id,
                 'comet',
                 (string) $row->name,
             ]),

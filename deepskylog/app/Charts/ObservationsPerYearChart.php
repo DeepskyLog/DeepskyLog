@@ -94,14 +94,14 @@ class ObservationsPerYearChart
         $deepskyYearGrouped = DB::table('observations')
             ->selectRaw('YEAR(observed_on) as year, count(*) as cnt')
             ->where('observer_username', $user->username)
-            ->where('legacy_source', 'deepsky')
+            ->where('target_type', 'deepsky')
             ->groupByRaw('YEAR(observed_on)')
             ->get();
 
         $cometYearGrouped = DB::table('observations')
             ->selectRaw('YEAR(observed_on) as year, count(*) as cnt')
             ->where('observer_username', $user->username)
-            ->where('legacy_source', 'comet')
+            ->where('target_type', 'comet')
             ->groupByRaw('YEAR(observed_on)')
             ->get();
 

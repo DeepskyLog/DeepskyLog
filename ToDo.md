@@ -5,7 +5,7 @@
 ## Next steps
 
 - [ ] Test! 
-  - [ ] Test for functionality / inconsistency problems
+  - [ ] Test for functionality / inconsistency problems (code review done, see "Functionality / inconsistency review" at the end of this file)
   - [ ] Test for security problems
   - [ ] Test manually when logged in and logged out, as database expert and as administrator
 - [ ] Update to laravel 13.
@@ -20,6 +20,7 @@
   - [ ] php artisan astronomy:updateOrbitalElements (after the migration: the orbital elements were stored as single precision floats), then php artisan astronomy:updateCometPhotometry (the first command empties the table, including the photometry)
   - [ ] Remove the old storage/logs/horizons_wrapper_*.json files
   - [ ] php artisan objects:fix-html-entities --apply   
+  - [ ] php artisan migrate also runs 2026_09_28_000001_normalize_observation_targets (stores observations made with the web form under the canonical object name / comet id)
   - [ ] Atlas pagina's worden gezet in storage/app/atlas -> kijk of die directory 755 als permissies heeft
 - [ ] Release new version of pyDeepskyLog
   - [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
@@ -77,3 +78,191 @@
 - [X] Object sets can be created.  They are updated to have a nicer layout.  This was broken in the old version of DeepskyLog but is working again in the new version.
 - [X] Reports of lists of objects can be created with your own layout.  The layouts of the old version of DeepskyLog are imported.  This was broken in the old version of DeepskyLog but is working again in the new version.
 
+
+## Functionality / inconsistency review (2026-09-28)
+
+Code review of the whole application, without the security aspects. Paths are relative to `deepskylog/`. Items marked (checked) were confirmed by hand; the others come from a review that read the code and migrations but did not reproduce every case. The test suite passed (259 passed, 7 skipped), so none of this is covered by tests yet.
+
+### Root causes
+
+- [x] **New observations are keyed differently from legacy ones.** Legacy rows have `legacy_source` = deepsky/comet and `target_key` = object name (comets: the numeric comet id). Rows from the web form have `legacy_source` NULL, `target_table='objectnames'` and `target_key` = slug; CSV/OAL imports use `target_table='objects'` with the name. Fixed 2026-09-28: every observation now uses `target_type` + `target_table` + `target_key` (deep-sky: `objects` + canonical name; comets: `cometobjects` + id; see `App\Models\Observation`), `legacy_source` only records provenance; migration `2026_09_28_000001_normalize_observation_targets`. Code that only saw the legacy form:
+  - [x] Session page lists only legacy observations/drawings (`SessionController.php:94-123`), while the counts include new ones.
+  - [x] Object page counts and last observation/drawing dates (`ObjectController.php`); planets no longer always show 0.
+  - [x] Comet pages and comet drawings filter on `legacy_source='comet'` (`ObservationsController::cometShow`, `cometIndexByObject` ~715/808, `CometDrawingController`); comet counts in `create()` use `target_key = comet id` (~2323).
+  - [x] Deep-sky counts on the create page count imported observations twice (`ObservationsController.php:2139-2147`).
+  - [x] Chart markers "seen/drawn by you" match `target_key IN (names)` (`StarChartService.php:956-960`).
+  - [x] Object sets and reports "seen" only use `legacy_source='deepsky'` (`ObjectSetDataBuilder.php:47`, `ObjectReportDataBuilder.php:124,132`).
+  - [x] `ObservationSearchTable` filters on `target_table='objects'` (atlas ~389, contrast reserve ~626, categories ~244, seen/unseen ~506-524).
+  - [x] Cold-cache fallbacks of `ObservationsPerYearChart.php:95-106`, `ObservationsPerMonthChart.php:74-80` and the profile statistics.
+- [ ] **Likes and comments use two ids.** (checked) The detail page reads them by `legacy_id` (`ObservationsController.php:97,128`) but posts `$obs->id` (`observations/detail.blade.php:107`; also the list cards). `ObservationLikeController` tries `legacy_id` first, `ObservationCommentController` only the new id, the popular tables treat it as `legacy_id`, `PopularObservationController` as the new id. Pick the new id and migrate `observation_likes`. Consequences:
+  - [ ] Comments on legacy observations disappear after reload; like counts "reset".
+  - [ ] Deleting a legacy observation deletes the likes/comments of another observation (`ObservationsController.php:2897-2898`).
+  - [ ] `hasPopularObservations` joins on the wrong id (`ComputeObserverStats.php:820-829`, `ObserverController.php:258-262`).
+  - [ ] Likes on planet/lunar observations from list cards return 404 (they send `observation_type` = planet/lunar).
+- [ ] **RA hours/degrees mix-up.** The `objects.ra` column is in hours.
+  - [ ] (checked) Editing an object stores degrees: `parseRaInput()` returns degrees and `update()` stores it (`ObjectController.php:3136,3233`). M 65 is already stored as 169.73 — repair the affected rows (objects and `search_index`).
+  - [ ] (checked) Ephemerides for RA < 1.6 h are wrong: `raToDecimal()` returns degrees and `$raDeg > 24 ? /15 : as-is` uses them as hours (`ObjectController.php:1635,1982`; `EphemeridesBuilder.php:77`). Always divide by 15.
+  - [ ] SIMBAD `RA_d` (degrees) ≤ 24 is read as hours (`ObjectController.php:4380-4386`; create wizard `coords.blade.php:67-69`, `details.blade.php:156`). `updateFromSimbad` also doesn't recompute constellation, atlas pages or SBObj.
+  - [ ] Single-page atlas truncates hh:mm:ss input with `floatval()` ("05:34:31" → 5 h) (`AtlasController.php:176-189`).
+- [ ] **Livewire v2 API calls in Livewire v4.** (checked) `emit`, `emitTo` and `dispatchBrowserEvent` don't exist; the exceptions are swallowed. Comet pages never show their computed data (`CometDetails` waits for `objectEphemeridesUpdated`), and `ObjectConstellation` doesn't update on date change. Replace with `dispatch()` / `->to()` in `ObjectEphemerides.php:1088,1212-1261`, `EphemerisAside.php`, `AladinPreviewInfo.php:365,450,466,1170`, `ObjectConstellation.php:30`, `AladinSelects.php:43`, `SearchResultsTable`, `NearbyObjectsTable`.
+
+### High
+
+- [ ] (checked) Editing a session crashes: `Cache` not imported in `app/Livewire/CreateSession.php` (used at line 236), after the row is already updated.
+- [ ] Observations are linked to a session only when it is created (`BuildSessionCopies`); later observations and edits (dates, observers) never update `sessionObservations`, copies or invitations.
+- [ ] (checked) `sqm` and `limiting_magnitude` from the observation form are never validated/saved, nor prefilled in `edit()` (`ObservationsController.php:2446-2493, 2765-2776`).
+- [ ] (checked) `$obs->time` doesn't exist on `Observation`: time is never shown and the moon context is computed for 12:00 (`detail.blade.php:14-26`, `ObservationsController.php:1813,1842`). Add an accessor from `observed_time` / `legacy_time_int`.
+- [x] Deep-sky details (visibility, diameters, stellar/extended/resolved, …) are not loaded for legacy observations on the detail page and the PDF (`ObservationsController.php:96-126`, `ObservationPdfDataBuilder.php:33-55`).
+- [x] "Compare with my last" 404s for new observations and links to the wrong one when "my last" is new (`ObservationsController.php:228-340`).
+- [x] Editing a legacy comet observation can't find the comet (`edit()` redirects with the numeric id as `slug`, ~2780).
+- [ ] Deleting an object with "move observations to" gave a 500 (fixed in `ObjectController::destroy()`; the `AdminObjectCheckService` part below is still open): `observations.objectname` doesn't exist (`ObjectController.php:4509-4513`). Same column in `AdminObjectCheckService.php:136-138, 184-206` (two admin actions return 500) and 315-317 (section always "unavailable").
+- [ ] Saving the object edit form deletes and recreates all aliases with a regex that corrupts catalog/catindex (`H400 12` → `H` + `400 12`, `vdB-Ha 5` → `vdB` + `-Ha 5`) (`ObjectController.php:3265-3330`); `store()` uses a different regex (4078).
+- [ ] `/api/search` returns 500 unless `substring=1`: `DB::select(DB::raw(...))` and `:q` used twice (`SearchController.php:92,117`). `$allowedTypes` (line 25) doesn't match `search_index.source_type`. Same `DB::raw` misuse in `QuickSearch.php:134`.
+- [ ] Quick search never resolves aliases: uses non-existent `objects.id`, `objectnames.object_id`, `objectnames.alias` (`QuickSearch.php:240-254, 351-379, 814-823`); `case 'planets'` at 296 has no `break`.
+- [ ] (checked) `search:reindex --incremental` (nightly): deletes all alias rows of a changed object (`ReindexSearch.php:62`, also per batch at 117/126), and re-inserts all comets, planets, moons, lunar features and asteroids without deleting (131-239). The last-run timestamp is taken at the end and not written on full runs (243).
+- [ ] Object edits/creates/deletes don't keep `search_index` up to date and never set `objects.timestamp`; `destroy()` leaves alias rows (4531); a rename doesn't update the slug, `search_index`, `observations.target_name` or the `object:resolve:v1:*` cache.
+- [ ] (checked) Advanced object search "Observing lists" filter uses wrong ids: `array_merge` renumbers the list ids (`AdvancedObjectSearch.php:219`). Use `+`.
+- [ ] (checked) A location without SQM can never be saved: -999 is set before `validate()` with min:15 / min:0 (`CreateLocation.php:92-110`), and the form shows no error.
+- [ ] Location `description` column is `string(255)` NOT NULL, but null or long TinyMCE HTML is passed (`CreateLocation.php:120-150`). Use `?? ''` and change the column to `text`.
+- [ ] (checked) Zoom eyepiece `max_focal_length_mm` is never saved: missing from the validation rules (`CreateEyepiece.php:178-193`).
+- [ ] Removing a user from a team uses `detach()` and leaves `current_team_id`, so a removed administrator keeps admin rights (`AdminUserTable.php:242-250`). Use `$team->removeUser()`.
+- [ ] Users can't delete broadcast messages: `destroy()` doesn't treat `receiver='all'` as receiver (`MessagesController.php:448`); same for `replyData()` (575).
+- [ ] Non-admins can send to `all` (stored as broadcast); `receiver` is not checked against existing users (`MessagesController.php:270-283`).
+- [ ] `TranslateObservationDescriptions` looks the id up as `legacy_id` first and caches another observation's translation for 30 days (`TranslateObservationDescriptions.php:46-47`). Use `Observation::find($id)`.
+
+### Medium
+
+Objects
+- [ ] `store()` writes mag 0, subr 0, SBObj 0, pa NULL where legacy data and `update()` use 99.9 / 99.9 / -999 / 999; store validates `type`, update doesn't (`ObjectController.php:4003-4033`).
+- [ ] `update()` sets SBObj to -999 when surface brightness is empty; PA 0 becomes 999 and mag 0 becomes 99.9 (`!empty`) (`ObjectController.php:3150,3180`).
+- [ ] Create wizard name search joins `objectnames.slug = objects.slug`, so aliases are never found and duplicates get created (`ObjectController.php:3742`).
+
+Observations
+- [ ] Editing a legacy observation's date doesn't update `legacy_date_int` / `legacy_time_int`, which the model prefers, so the old date is still shown.
+- [ ] CSV/OAL import duplicate check: without time it overwrites any same-day observation of the object; `update()` resets `has_drawing` (and `transparency` for OAL); legacy rows are skipped, so re-importing an export duplicates them (`CsvObservationImporter.php:266-272`, `OalObservationImporter.php:335-340`).
+- [ ] (plausible) Time zones differ between formats: CSV says UT, OAL export writes local time with offset, OAL import drops the offset.
+- [x] `CometDrawingController.php:39,42` filters on a non-existent `objectid` column (500 on `/cometdrawings?object=…`).
+- [x] (plausible) `where('slug', $key)->orWhere('id', $key)` can return the wrong comet or planet on MySQL ("1p-halley" = 1) (`ObservationsController.php:2513,2526`).
+- [ ] Magnification picker loses the stored magnification when editing: `manual_magnification` isn't passed and `recompute()` overwrites it; `fixedMagnification` is ignored (`observations/create.blade.php:323-328`, `MagnificationPicker.php:52-54`).
+
+Sessions, observing lists, messages
+- [ ] `/popular-sessions` links 404 (`$session->user` isn't a relation, should be `observer`), and the table lists drafts (`PopularSessionsTable.php:129`).
+- [ ] Sitemap never contains sessions: selects non-existent `updated_at` (`routes/web.php:842`).
+- [ ] "Set as active" is shown to every user; non-owners/non-subscribers get 403 (`observing-lists/show.blade.php:49-63`).
+- [ ] Duplicate observing list name gives a 500: no unique validation (`ObservingListController.php:180-191, 213-223`).
+- [ ] "Add all to active list" uses different matching than the search results (`ObservingListController.php:559-571` vs `SearchResultsTable.php:181-218`).
+- [ ] Imported/added list items aren't checked or normalised, so unmatched names vanish from exports and tables (`ObservingListFileImportService.php:265-303`).
+- [ ] Session `language` is always 'en' (`CreateSession.php:318`, `BuildSessionCopies.php:125`), so translation runs the wrong way.
+- [ ] Observing list likes can be farmed for points: unlike doesn't remove the point (`ObservingList.php:130-140`).
+- [ ] Session name validated `max:255` / no max, column is 200 (`SessionController.php:844`, `CreateSession.php:164`).
+
+Equipment, locations, users
+- [ ] Deleting equipment that is in an instrument set fails (FK without cascade); only `InstrumentSetTable` detaches first.
+- [ ] Deleting a default instrument/location/eyepiece/lens doesn't clear `std*`; `instrument.api` then gives a 500 and ignores `selected` (`routes/api.php:262-267`).
+- [ ] `LocationTable.php:68-80` crashes on unknown countries (`'Unknown'`, null).
+- [ ] Saving a location always re-queries elevation/country/timezone (4 HTTP calls) and overwrites them with 0 / 'Unknown' / 'UTC' on failure (`CreateLocation.php:88-90`).
+- [ ] NELM with `fstOffset` is inconsistent: `mount()` loads raw NELM, `save()` adds the offset, so each edit shifts it; `Location::getNelm()` differs from the form.
+- [ ] Instrument values in inches drift on every save (rounding), are converted before `validate()` (double conversion after a validation error), and empty strings × 25.4 throw a TypeError (`CreateInstrument.php:166-169`).
+- [ ] Instrument page shows a rounded focal length (`fd * diameter`) (`instrument/show.blade.php:49,54`).
+- [ ] Changing email drops the other profile fields in the same submit (`UpdateUserProfileInformation.php:31-33`).
+- [ ] `RemoveUserTable` deletes users directly instead of via Jetstream `DeleteUser`, leaving memberships, tokens, photo; FK errors on instrument sets (`RemoveUserTable.php:146-150`).
+
+Charts, atlas, PDFs
+- [ ] PDF jobs have no `failed()`: memory exhaustion or timeout leaves the status "processing" (`QueuedPdfJob.php:146`, `GenerateAtlasPdf.php:337`). (plausible) `retry_after => 90` is shorter than the job timeout, so a second worker can pick the job up again.
+- [ ] Atlas PDFs in `storage/app/atlas` are never pruned, and the atlas job doesn't carry the request locale. Consider moving `GenerateAtlasPdf` onto `QueuedPdfJob`.
+- [ ] Queued charts never show "seen/drawn by you" markers: `auth()->user()` in the worker (`StarChartService.php:968,1034`).
+- [ ] Object-set index lists objects in the 12% margin that are not drawn (`ObjectSetPdfService.php:225`, `StarChartService.php:531-541,1005-1008`).
+
+Ephemerides, comets, contrast reserve
+- [ ] Ephemeris date moves back a day for observers west of UTC (`Carbon::parse($date)` in UTC then `->timezone()`) (`ObjectEphemerides.php:362-370,1039`, `AladinPreviewInfo.php:486,1086`, `ObjectController.php:1604,1740`).
+- [ ] `EphemerisAside::mount()` resets the date to today (UTC) on every page and overwrites the session, so pages, object sets and reports disagree about the date (`EphemerisAside.php:37-44`).
+- [ ] Comet orbital elements fallback `LIKE '%name%'` matches the wrong comet ("Nishimura" → C/1994 N1; "12P" → "112P") (`CometCoordinates.php:202-207`).
+- [ ] `metrics:compute-cr --lens_id` (sync) stores lens-adjusted values under `lens_id = NULL` (`ComputeContrastReserve.php:207,213`).
+- [ ] Contrast reserve differs between the preview and the stored metrics (lens factor on fixed magnification, fallbacks, category names/thresholds) (`ComputeContrastReserveForObject.php:108-136,196-207` vs `AladinPreviewInfo.php` ~700-760). Move to one service.
+- [ ] `ComputeContrastReserveForObject` swallows all exceptions, so `$tries` never applies and the batch counts failures as successes (219-221).
+
+Search and caching
+- [ ] Advanced search diameter filters say arcmin but compare arcsec (`AdvancedObjectSearchTable.php:301-311,527-540`).
+- [ ] "Best mag" column shows the visual magnitude as a magnification ("9x") (`SearchResultsTable.php:929-930`, `NearbyObjectsTable.php:1110`).
+- [ ] Response cache: the hash has no locale, so guests who chose another language get cached English pages; flash messages get lost (`TeamAwareHasher.php`, `routes/web.php:64`). Validate the locale route against the available locales.
+- [ ] Response cache is not cleared for `Observation`, `ObservingList` (+ items/comments), `SketchOfTheWeek/Month`, `DeepskyObject`, `User` (`ClearsResponseCache` trait only on equipment, `Location`, `ObservationSession`).
+
+### Low
+
+Objects and search
+- [ ] Constellation mismatch export only covers the preview sample; `skipped` counts NOT NULL columns (always 0) (`AdminObjectCheckService.php:71-95,218`).
+- [ ] Dead `catalog_create_code` code in `store()` would insert into `atlases` (`ObjectController.php:3908,3980-3995`).
+- [ ] `coordsSearch` duplicate check doesn't scale RA by 1/cos(dec) or wrap at 0/24 h (`ObjectController.php:3840-3852`).
+- [ ] Argo Navis/SkySafari exports compute unused values; APD temp file isn't deleted; APD keeps mag 0 (`SearchExportController.php`).
+- [ ] `DeleteObjectModal` counts by `target_name` while the delete uses another column; without a target, observations point to the deleted object.
+- [ ] `CatalogsPage.php` "legacy" queries hit the same table again; `app/Helpers/CoordinateParser.php` is unused and drops minutes of "12 30".
+- [ ] `/cometobservations/{observer}` route is unreachable after `/cometobservations/{object}`.
+
+Observations
+- [ ] Observation writes don't clear the response cache.
+- [ ] `/observations/{object-slug}` passes `drawingsOnly => true`, so the list is labelled "All drawings".
+- [ ] Links from `ObservationSearchTable.php:716` and `PopularObservationsTable.php:124` omit the index (several observations of one object on one day all open the first).
+- [ ] `ObservationSearchTable::decimalOrZero` (1001) turns "20" into "2" when there is no decimal point.
+- [ ] `Observation::getFirst/LastObservationDateAndIdForEyepieceIds` return `legacy_id` (0 for new observations).
+- [ ] `PopularObservationController::index` builds a list the view doesn't use.
+- [ ] `showObserverObject(Drawings)` and `CometDrawingController::show` show all observations instead of a 404 for an unknown object.
+
+Sessions, lists, messages
+- [ ] `destroyComment` doesn't check that the comment belongs to the list in the URL (`ObservingListController.php:956-965`).
+- [ ] `sort_order` of list items is never set (not fillable), so ordering differs between pages; object sets/reports sort by name and ignore it (`ObjectSetSourceService.php:90-92`).
+- [ ] Session translation cache TTL is `60*24*30` seconds (12 h) (`SessionController.php:547,698,1159`); `session_preview:*` isn't cleared on edit; ids are `max(id)+1`, so a new session can inherit a deleted one's cache and photo, and (plausible) race with the queue worker.
+- [ ] Custom per-observer session slug code never runs (Sluggable runs first); slugs are made from names with HTML entities (`ObservationSession.php:70-80`).
+- [ ] "Show more" drafts link adds `?show_drafts=1`, which nothing reads (`session/user-sessions.blade.php:70`).
+- [ ] `SessionController::store` (unused by the UI) differs from `CreateSession`; `/sessions/create?adapt_from={id}` loads any session without the ownership check of `adapt()`.
+- [ ] Broadcast route allows Database Experts but only admins can broadcast; `broadcast()` sends mails in one try, so one failure stops the rest (`MessagesController.php:335-346`).
+- [ ] Unread counter includes the user's own broadcasts (`Message::getNumberOfUnreadMails`).
+- [ ] `ObservingListExportController` catches the `AuthorizationException`, so unauthorized users get "Failed to generate PDF" instead of 403.
+- [ ] A list stays active after unsubscribing or after the owner makes it private.
+
+Equipment, users, statistics
+- [ ] Filter Wratten/Schott validated `max:25`, columns are 5 characters (`CreateFilter.php:94-95`).
+- [ ] Eyepiece `apparentFOV` validated nullable, column NOT NULL (`CreateEyepiece.php:181`).
+- [ ] New make with an existing name gives a 500 (`XMake::create`, use `firstOrCreate`).
+- [ ] Admin "delete make" has no validation; the eyepiece version resets types to 1 and deletes types instead of moving them (`EyepieceController.php:74-81` and the Filter/Lens/Instrument versions).
+- [x] Object-types pie chart uses the leftover loop variable in `match ($row->type)` (`StatisticsController.php:200`).
+- [ ] Ranks and "different objects" are computed differently on /observers, /statistics and the profile (`ObserverController.php:54,67`, `User::getRank()`).
+- [ ] Sketch of the month text uses `subMonth()` with overflow and `createFromFormat('Y-m-d')` (`SketchOfTheMonthController.php:48`).
+- [ ] `Eyepiece::get_used_instruments()` returns the viewer's default instrument; `get_used_instruments_as_string` (Eyepiece, Location) has no null check.
+- [ ] Equipment/location/set `show`/`edit` use `->first()->id` without a null check (500 instead of 404; `edit` renders the create form).
+- [ ] Equipment slugs are not unique per user (`'unique' => false`).
+- [ ] Lens `factor` allows 0 (division by zero in `Instrument::exit_pupil()`) (`CreateLens.php:77`).
+- [ ] `Instrument::field_of_view()` can show "0° 60'".
+- [ ] `UpdateUserObservingInformation` saves fields one by one, so `EnqueueComputeCRForUser` can run twice; changing `stdlens` doesn't recompute (plausible); eyepieces and lenses have no "Make default" button.
+- [ ] `app/Policies/testPolicy.php` refers to a non-existent `App\Models\test`.
+
+Ephemerides, jobs, commands
+- [ ] `calculateApparentEquatorialCoordinates($date)` fallbacks don't pass `$date->copy()` (harmless with v6.8.3) (`ObjectEphemerides.php:520,528,534`, `AladinPreviewInfo.php:587,595`, `ObjectController.php:1803`).
+- [ ] `metrics:backfill-best-mag --limit` is ignored by `chunk()`, and chunking skips rows because it updates the filtered column (`BackfillBestMagForMetrics.php:48`). Use `chunkById`.
+- [ ] `ComputeEphemerides` cache keys don't match between the job, `ObjectEphemerides` and `pollCache`; `whereNull('user_id')` on locations never matches, so guests get an arbitrary location; `wire:poll.5s` runs forever when the ephemerides are empty.
+- [ ] One date change triggers three recomputes of `ObjectEphemerides` and two of `MoonDetails`.
+- [ ] `AladinPreviewInfo` 1 s debounce drops the second of two quick changes (`AladinPreviewInfo.php:286-300`).
+- [ ] `AladinPreviewInfo` computes planet coordinates but uses the null `$obj->ra` / `$obj->decl` (970-995).
+- [ ] (plausible) `sessions:backfill-slugs` (every 5 min) loops forever on names where `Str::slug()` is empty.
+- [ ] `ComputeObserverStats` uses MySQL-only `MONTH()` / `YEAR()` and swallows all errors.
+- [ ] Near-parabolic comets are geocentric, elliptic ones topocentric (library `NearParabolic.php:97`).
+- [ ] Object-set overview charts always show unknown magnitudes, unlike the atlas (`ObjectSetPdfService.php:212`).
+- [ ] Report layouts without `showelements` get '' instead of 'hetp' (`ReportLayoutCatalog.php:243`).
+- [ ] `/downloads/dsl-atlas/generate` has no auth and falls back to user 1 (`AtlasController.php:120`).
+- [ ] `NearbyExportController.php:21-44, ~415` checks `=== null`, so `ra=` (empty) gives a centre at 0/0. Use `is_numeric`.
+
+Cross-cutting
+- [ ] `routes/api.php` select endpoints call `->first()->id` / `->fullName()` without null checks (lines 262-267, 553, 721-911); `eyepiece.select.api` returns `name` instead of `fullName()` (957, 997, 1027); `eyepiece_types.api` without `make` returns only a blank entry (829-833).
+- [ ] Mobile admin menu links to `/admin/eyepiece-type` instead of `/admin/eyepiece-types` (`components/menu/admin-responsive-dropdown.blade.php:50`).
+- [ ] `env()` used outside config (`CreateLocation.php:210,225,378`, `TrustProxies.php:27`): null after `config:cache`. `config('app.domain')` in `ResolveSocialiteUser.php:48` is not defined.
+
+### Fixed while normalising the observation targets (2026-09-28)
+
+- [x] Session page drew comet observations with the deep-sky card (`isset($observation->objectname)` is always true) and passed new ids to `x-sketch-comet` as old ids.
+- [x] "Compare with my last" never opened for the first observation of an object on a day: without the index the URL has an empty segment (`…/m-65//compare-my-last`) that doesn't match the route.
+- [x] Saving an observation gave a 500 when the user has no observation language (NULL into `observations.language`).
+
+### Left for the security review
+
+- `User::switchTeam()` skips the membership check and `/switch-team/{team}` lets any user switch to Administrators.
+- `AtlasController::download` checks neither ownership nor status.
+- Messages to `all` from non-admins (see High).

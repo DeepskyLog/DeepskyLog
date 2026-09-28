@@ -1112,7 +1112,7 @@ try {
         $cometObjectId = $session->id ?? null;
             if (!empty($cometObjectId)) {
             $cometObsIds = \Illuminate\Support\Facades\DB::table('observations')
-                ->where('legacy_source', 'comet')
+                ->where('target_type', \App\Models\Observation::TYPE_COMET)
                 ->where('target_key', (string) $cometObjectId)
                 ->pluck('id')
                 ->toArray();

@@ -163,10 +163,10 @@
                                 @endphp
 
                                 <div class="max-w-xl">
-                                    @if(isset($drawing->objectname))
-                                        <x-sketch-deepsky :observation_id="$drawing->id" :observer_name="$observer_name" :observer_username="$drawing->observerid" :observation_date="$observation_date" />
+                                    @if($drawing->target_type === \App\Models\Observation::TYPE_COMET)
+                                        <x-sketch-comet :unified_observation="$drawing" :observer_name="$observer_name" :observer_username="$drawing->observerid" :observation_date="$observation_date" />
                                     @else
-                                        <x-sketch-comet :observation_id="$drawing->id" :observer_name="$observer_name" :observer_username="$drawing->observerid" :observation_date="$observation_date" />
+                                        <x-sketch-deepsky :observation_id="$drawing->id" :observer_name="$observer_name" :observer_username="$drawing->observerid" :observation_date="$observation_date" />
                                     @endif
                                 </div>
                             @endforeach
@@ -191,10 +191,10 @@
                     @endphp
                     @if($observations->count() > 0)
                         @foreach($observations as $observation)
-                            @if(isset($observation->objectname))
-                                <x-observation-deepsky :observation="$observation" :translator="$tr" />
-                            @else
+                            @if($observation->target_type === \App\Models\Observation::TYPE_COMET)
                                 <x-observation-comet :observation="$observation" />
+                            @else
+                                <x-observation-deepsky :observation="$observation" :translator="$tr" />
                             @endif
                         @endforeach
 

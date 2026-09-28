@@ -44,7 +44,7 @@ class ObjectSetDataBuilder
             ->values()
             ->all();
 
-        $observations = Observation::where('target_name', $name)->where('legacy_source', 'deepsky');
+        $observations = Observation::ofDeepskyObject($name);
         $yours = (clone $observations)->where('observer_user_id', $user->id);
         $lastSeen = (clone $yours)->max('observed_on');
 

@@ -37,7 +37,7 @@ class ComputeObserverStats implements ShouldQueue
                 return;
             }
 
-            // Double-star counts (include legacy + unified)
+            // Double-star counts
             $doubleTotalObservations = (int) DB::table('observations')
                 ->where('target_table', 'objects')
                 ->whereIn('target_name_normalized', function ($q) {
@@ -121,124 +121,25 @@ class ComputeObserverStats implements ShouldQueue
                     $q->select('name_normalized')->from('objects')->where('type', 'DS');
                 })->distinct()->count('target_name');
 
-            // Compute deepsky metrics (include both unified and legacy then subtract double-stars)
-            $unifiedObjectsCountForUser = (int) Observation::where('target_table', 'objects')
-                ->whereNull('legacy_source')
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                })->count();
-
-            $unifiedObjectsCount = (int) Observation::where('target_table', 'objects')->whereNull('legacy_source')->count();
-
-            $legacyDeepskyYour = (int) Observation::where('legacy_source', 'deepsky')
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                })->count();
-
-            $legacyDeepskyTotal = (int) Observation::where('legacy_source', 'deepsky')->count();
-
-            $deepskyYourObservations = max(0, ($unifiedObjectsCountForUser + $legacyDeepskyYour) - $doubleYourObservations);
-            $deepskyTotalObservations = max(0, ($unifiedObjectsCount + $legacyDeepskyTotal) - $doubleTotalObservations);
-
-            $unifiedYourObsLastYear = (int) Observation::where('target_table', 'objects')
-                ->whereNull('legacy_source')
-                ->where('observed_on', '>=', now()->subYear())
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                })->count();
-
-            $legacyYourObsLastYear = (int) Observation::where('legacy_source', 'deepsky')
-                ->where('observed_on', '>=', now()->subYear())
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                })->count();
-
-            $deepskyYourObservationsLastYear = max(0, $unifiedYourObsLastYear + $legacyYourObsLastYear - $doubleYourObservationsLastYear);
-
-            $unifiedTotalObsLastYear = (int) Observation::where('target_table', 'objects')->whereNull('legacy_source')->where('observed_on', '>=', now()->subYear())->count();
-            $legacyTotalObsLastYear = (int) Observation::where('legacy_source', 'deepsky')->where('observed_on', '>=', now()->subYear())->count();
-
-            $deepskyTotalObservationsLastYear = max(0, $unifiedTotalObsLastYear + $legacyTotalObsLastYear - $doubleTotalObservationsLastYear);
-
-            $unifiedUserDeepskyDraws = (int) Observation::where('target_table', 'objects')->whereNull('legacy_source')->where('has_drawing', 1)->where(function ($q) use ($user) {
+            // Deep-sky metrics: all deep-sky observations minus the double stars,
+            // which are counted separately above.
+            $deepsky = fn() => Observation::deepsky();
+            $mine = fn($q) => $q->where(function ($q) use ($user) {
                 $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-            })->count();
+            });
+            $lastYear = fn($q) => $q->where('observed_on', '>=', now()->subYear());
+            $drawn = fn($q) => $q->where('has_drawing', 1);
 
-            $legacyUserDeepskyDraws = (int) Observation::where('legacy_source', 'deepsky')->where('has_drawing', 1)->where(function ($q) use ($user) {
-                $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-            })->count();
-
-            $deepskyYourDrawings = max(0, ($unifiedUserDeepskyDraws + $legacyUserDeepskyDraws) - $doubleYourDrawings);
-            $deepskyTotalDrawings = max(0, ((int) Observation::where('target_table', 'objects')->whereNull('legacy_source')->where('has_drawing', 1)->count()) + (int) Observation::where('legacy_source', 'deepsky')->where('has_drawing', 1)->count() - $doubleTotalDrawings);
-
-            $unifiedUserDeepskyDrawsLastYear = (int) Observation::where('target_table', 'objects')->whereNull('legacy_source')->where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->where(function ($q) use ($user) {
-                $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-            })->count();
-
-            $legacyUserDeepskyDrawsLastYear = (int) Observation::where('legacy_source', 'deepsky')->where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->where(function ($q) use ($user) {
-                $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-            })->count();
-
-            $deepskyYourDrawingsLastYear = max(0, ($unifiedUserDeepskyDrawsLastYear + $legacyUserDeepskyDrawsLastYear) - $doubleYourDrawingsLastYear);
-            $deepskyTotalDrawingsLastYear = max(0, ((int) Observation::where('target_table', 'objects')->whereNull('legacy_source')->where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->count()) + (int) Observation::where('legacy_source', 'deepsky')->where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->count() - $doubleTotalDrawingsLastYear);
-
-            $unifiedYourUnique = (int) Observation::whereNull('legacy_source')->where('target_table', 'objects')->where(function ($q) use ($user) {
-                $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-            })->distinct()->count('target_name');
-
-            $legacyYourUnique = (int) Observation::where('legacy_source', 'deepsky')->where(function ($q) use ($user) {
-                $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-            })->distinct()->count('target_name');
-
-            $deepskyYourUnique = max(0, $unifiedYourUnique + $legacyYourUnique - $doubleYourUnique);
-            $unifiedTotalUnique = (int) Observation::whereNull('legacy_source')->where('target_table', 'objects')->distinct()->count('target_name');
-            $legacyTotalUnique = (int) Observation::where('legacy_source', 'deepsky')->distinct()->count('target_name');
-            $deepskyTotalUnique = max(0, $unifiedTotalUnique + $legacyTotalUnique - $doubleTotalUnique);
-
-            // Unified (modern) totals across all target tables
-            $unifiedYourObservations = (int) Observation::whereNull('legacy_source')
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                })->count();
-
-            $unifiedTotalObservations = (int) Observation::whereNull('legacy_source')->count();
-
-            $unifiedYourObservationsLastYear = (int) Observation::whereNull('legacy_source')
-                ->where('observed_on', '>=', now()->subYear())
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                })->count();
-
-            $unifiedTotalObservationsLastYear = (int) Observation::whereNull('legacy_source')
-                ->where('observed_on', '>=', now()->subYear())
-                ->count();
-
-            $unifiedYourDrawings = (int) Observation::whereNull('legacy_source')
-                ->where('has_drawing', 1)
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                })->count();
-
-            $unifiedTotalDrawings = (int) Observation::whereNull('legacy_source')->where('has_drawing', 1)->count();
-
-            $unifiedYourDrawingsLastYear = (int) Observation::whereNull('legacy_source')
-                ->where('has_drawing', 1)
-                ->where('observed_on', '>=', now()->subYear())
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                })->count();
-
-            $unifiedTotalDrawingsLastYear = (int) Observation::whereNull('legacy_source')
-                ->where('has_drawing', 1)
-                ->where('observed_on', '>=', now()->subYear())
-                ->count();
-
-            $unifiedYourUnique = (int) Observation::whereNull('legacy_source')
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                })->distinct()->count('target_name');
-
-            $unifiedTotalUnique = (int) Observation::whereNull('legacy_source')->distinct()->count('target_name');
+            $deepskyYourObservations = max(0, (int) $mine($deepsky())->count() - $doubleYourObservations);
+            $deepskyTotalObservations = max(0, (int) $deepsky()->count() - $doubleTotalObservations);
+            $deepskyYourObservationsLastYear = max(0, (int) $lastYear($mine($deepsky()))->count() - $doubleYourObservationsLastYear);
+            $deepskyTotalObservationsLastYear = max(0, (int) $lastYear($deepsky())->count() - $doubleTotalObservationsLastYear);
+            $deepskyYourDrawings = max(0, (int) $drawn($mine($deepsky()))->count() - $doubleYourDrawings);
+            $deepskyTotalDrawings = max(0, (int) $drawn($deepsky())->count() - $doubleTotalDrawings);
+            $deepskyYourDrawingsLastYear = max(0, (int) $lastYear($drawn($mine($deepsky())))->count() - $doubleYourDrawingsLastYear);
+            $deepskyTotalDrawingsLastYear = max(0, (int) $lastYear($drawn($deepsky()))->count() - $doubleTotalDrawingsLastYear);
+            $deepskyYourUnique = max(0, (int) $mine($deepsky())->distinct()->count('target_key') - $doubleYourUnique);
+            $deepskyTotalUnique = max(0, (int) $deepsky()->distinct()->count('target_key') - $doubleTotalUnique);
 
             // Global totals (all observations)
             $allYourObservations = (int) Observation::where(function ($q) use ($user) {
@@ -272,44 +173,44 @@ class ComputeObserverStats implements ShouldQueue
             $allTotalUnique = (int) Observation::distinct()->count('target_name');
 
             // Comet totals
-            $cometYourObservations = (int) Observation::where('legacy_source', 'comet')
+            $cometYourObservations = (int) Observation::comets()
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
                 })->count();
 
-            $cometTotalObservations = (int) Observation::where('legacy_source', 'comet')->count();
+            $cometTotalObservations = (int) Observation::comets()->count();
 
-            $cometYourObservationsLastYear = (int) Observation::where('legacy_source', 'comet')
+            $cometYourObservationsLastYear = (int) Observation::comets()
                 ->where('observed_on', '>=', now()->subYear())
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
                 })->count();
 
-            $cometTotalObservationsLastYear = (int) Observation::where('legacy_source', 'comet')->where('observed_on', '>=', now()->subYear())->count();
+            $cometTotalObservationsLastYear = (int) Observation::comets()->where('observed_on', '>=', now()->subYear())->count();
 
-            $cometYourDrawings = (int) Observation::where('legacy_source', 'comet')
+            $cometYourDrawings = (int) Observation::comets()
                 ->where('has_drawing', 1)
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
                 })->count();
 
-            $cometTotalDrawings = (int) Observation::where('legacy_source', 'comet')->where('has_drawing', 1)->count();
+            $cometTotalDrawings = (int) Observation::comets()->where('has_drawing', 1)->count();
 
-            $cometYourDrawingsLastYear = (int) Observation::where('legacy_source', 'comet')
+            $cometYourDrawingsLastYear = (int) Observation::comets()
                 ->where('has_drawing', 1)
                 ->where('observed_on', '>=', now()->subYear())
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
                 })->count();
 
-            $cometTotalDrawingsLastYear = (int) Observation::where('legacy_source', 'comet')->where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->count();
+            $cometTotalDrawingsLastYear = (int) Observation::comets()->where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->count();
 
-            $cometYourUnique = (int) Observation::where('legacy_source', 'comet')
+            $cometYourUnique = (int) Observation::comets()
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
                 })->distinct()->count('target_name');
 
-            $cometTotalUnique = (int) Observation::where('legacy_source', 'comet')->distinct()->count('target_name');
+            $cometTotalUnique = (int) Observation::comets()->distinct()->count('target_name');
 
             // Planets / Sun / Moons (full computation)
             $planetsYourObservations = DB::table('observations')
@@ -581,16 +482,6 @@ class ComputeObserverStats implements ShouldQueue
                 'moonYourUnique' => $moonYourUnique,
                 'moonTotalUnique' => $moonTotalUnique,
                 // Unified totals
-                'unifiedYourObservations' => $unifiedYourObservations,
-                'unifiedTotalObservations' => $unifiedTotalObservations,
-                'unifiedYourObservationsLastYear' => $unifiedYourObservationsLastYear,
-                'unifiedTotalObservationsLastYear' => $unifiedTotalObservationsLastYear,
-                'unifiedYourDrawings' => $unifiedYourDrawings,
-                'unifiedTotalDrawings' => $unifiedTotalDrawings,
-                'unifiedYourDrawingsLastYear' => $unifiedYourDrawingsLastYear,
-                'unifiedTotalDrawingsLastYear' => $unifiedTotalDrawingsLastYear,
-                'unifiedYourUnique' => $unifiedYourUnique,
-                'unifiedTotalUnique' => $unifiedTotalUnique,
 
                 // Global totals (all observations)
                 'allYourObservations' => $allYourObservations,
@@ -638,17 +529,9 @@ class ComputeObserverStats implements ShouldQueue
                 $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
             };
 
-            $unifiedDeepskyGrouped = DB::table('observations')
+            $deepskyGrouped = DB::table('observations')
                 ->selectRaw('MONTH(observed_on) as month, count(*) as cnt')
-                ->where('target_table', 'objects')
-                ->whereNull('legacy_source')
-                ->where($observerWhere)
-                ->groupByRaw('MONTH(observed_on)')
-                ->get();
-
-            $legacyDeepskyGrouped = DB::table('observations')
-                ->selectRaw('MONTH(observed_on) as month, count(*) as cnt')
-                ->where('legacy_source', 'deepsky')
+                ->where('target_type', Observation::TYPE_DEEPSKY)
                 ->where($observerWhere)
                 ->groupByRaw('MONTH(observed_on)')
                 ->get();
@@ -664,7 +547,7 @@ class ComputeObserverStats implements ShouldQueue
 
             $cometGrouped = DB::table('observations')
                 ->selectRaw('MONTH(observed_on) as month, count(*) as cnt')
-                ->where('legacy_source', 'comet')
+                ->where('target_type', Observation::TYPE_COMET)
                 ->where($observerWhere)
                 ->groupByRaw('MONTH(observed_on)')
                 ->get();
@@ -692,17 +575,14 @@ class ComputeObserverStats implements ShouldQueue
                 ->groupByRaw('MONTH(observed_on)')
                 ->get();
 
-            $unifiedMonths = $mapToMonths($unifiedDeepskyGrouped);
-            $legacyMonths = $mapToMonths($legacyDeepskyGrouped);
+            $deepskyMonths = $mapToMonths($deepskyGrouped);
             $doubleMonths = $mapToMonths($doubleGrouped);
             $cometMonths = $mapToMonths($cometGrouped);
             $planetsMonths = $mapToMonths($planetsGrouped);
             $sunMonths = $mapToMonths($sunGrouped);
             $moonMonths = $mapToMonths($moonGrouped);
 
-            $deepskyMonths = $unifiedMonths;
             for ($i = 0; $i < 12; $i++) {
-                $deepskyMonths[$i] += $legacyMonths[$i];
                 $deepskyMonths[$i] = max(0, $deepskyMonths[$i] - $doubleMonths[$i]);
             }
 
@@ -729,17 +609,9 @@ class ComputeObserverStats implements ShouldQueue
                 return $arr;
             };
 
-            $unifiedDeepskyYearGrouped = DB::table('observations')
+            $deepskyYearGrouped = DB::table('observations')
                 ->selectRaw('YEAR(observed_on) as year, count(*) as cnt')
-                ->where('target_table', 'objects')
-                ->whereNull('legacy_source')
-                ->where($observerWhere)
-                ->groupByRaw('YEAR(observed_on)')
-                ->get();
-
-            $legacyDeepskyYearGrouped = DB::table('observations')
-                ->selectRaw('YEAR(observed_on) as year, count(*) as cnt')
-                ->where('legacy_source', 'deepsky')
+                ->where('target_type', Observation::TYPE_DEEPSKY)
                 ->where($observerWhere)
                 ->groupByRaw('YEAR(observed_on)')
                 ->get();
@@ -755,7 +627,7 @@ class ComputeObserverStats implements ShouldQueue
 
             $cometYearGrouped = DB::table('observations')
                 ->selectRaw('YEAR(observed_on) as year, count(*) as cnt')
-                ->where('legacy_source', 'comet')
+                ->where('target_type', Observation::TYPE_COMET)
                 ->where($observerWhere)
                 ->groupByRaw('YEAR(observed_on)')
                 ->get();
@@ -783,17 +655,14 @@ class ComputeObserverStats implements ShouldQueue
                 ->groupByRaw('YEAR(observed_on)')
                 ->get();
 
-            $unifiedYears = $mapToYears($unifiedDeepskyYearGrouped, $firstYear, $lastYear);
-            $legacyYears = $mapToYears($legacyDeepskyYearGrouped, $firstYear, $lastYear);
+            $deepskyYears = $mapToYears($deepskyYearGrouped, $firstYear, $lastYear);
             $doubleYears = $mapToYears($doubleYearGrouped, $firstYear, $lastYear);
             $cometYears = $mapToYears($cometYearGrouped, $firstYear, $lastYear);
             $planetsYears = $mapToYears($planetsYearGrouped, $firstYear, $lastYear);
             $sunYears = $mapToYears($sunYearGrouped, $firstYear, $lastYear);
             $moonYears = $mapToYears($moonYearGrouped, $firstYear, $lastYear);
 
-            $deepskyYears = $unifiedYears;
             for ($i = 0; $i < count($deepskyYears); $i++) {
-                $deepskyYears[$i] += $legacyYears[$i];
                 $deepskyYears[$i] = max(0, $deepskyYears[$i] - $doubleYears[$i]);
             }
 

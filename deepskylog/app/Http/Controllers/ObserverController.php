@@ -36,10 +36,7 @@ class ObserverController extends Controller
         $observerRowsQuery = DB::table('observations as observations')
             ->join('users', 'users.username', '=', 'observations.observer_username')
             ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
-            ->where(function ($query) {
-                $query->where('observations.legacy_source', 'deepsky')
-                    ->orWhereIn('observations.target_table', ['objects', 'objectnames']);
-            })
+            ->where('observations.target_type', 'deepsky')
             ->select([
                 'users.id',
                 'users.name',
@@ -230,24 +227,24 @@ class ObserverController extends Controller
             $hasPopularObservations = $stats['hasPopularObservations'] ?? false;
         } else {
             // ── Slow path: cache cold, use fast queries (no per-year loop, no ID pluck) ──
-            $totalObservations = (int) Observation::where('legacy_source', 'deepsky')->count();
-            $observationsLastYear = (int) Observation::where('legacy_source', 'deepsky')
+            $totalObservations = (int) Observation::where('target_type', 'deepsky')->count();
+            $observationsLastYear = (int) Observation::where('target_type', 'deepsky')
                 ->where('observed_on', '>=', now()->subYear())
                 ->where('observer_user_id', $user->id)->count();
-            $totalObservationsLastYear = (int) Observation::where('legacy_source', 'deepsky')
+            $totalObservationsLastYear = (int) Observation::where('target_type', 'deepsky')
                 ->where('observed_on', '>=', now()->subYear())->count();
-            $totalNumberOfDrawings = (int) Observation::where('legacy_source', 'deepsky')
+            $totalNumberOfDrawings = (int) Observation::where('target_type', 'deepsky')
                 ->where('has_drawing', 1)->count();
             $totalUniqueObjects = Observation::getUniqueObjectsObserved('deepsky');
 
-            $cometObservations = (int) Observation::where('legacy_source', 'comet')
+            $cometObservations = (int) Observation::where('target_type', 'comet')
                 ->where('observer_user_id', $user->id)->count();
-            $totalCometObservations = (int) Observation::where('legacy_source', 'comet')->count();
+            $totalCometObservations = (int) Observation::where('target_type', 'comet')->count();
             $cometObservationsLastYear = $user->getCometObservationsLastYear();
             $totalCometObservationsLastYear = Observation::getTotalObservationsLastYear('comet');
-            $cometDrawings = (int) Observation::where('legacy_source', 'comet')
+            $cometDrawings = (int) Observation::where('target_type', 'comet')
                 ->where('observer_user_id', $user->id)->where('has_drawing', 1)->count();
-            $totalCometDrawings = (int) Observation::where('legacy_source', 'comet')
+            $totalCometDrawings = (int) Observation::where('target_type', 'comet')
                 ->where('has_drawing', 1)->count();
             $cometYourDrawingsLastYear = $user->getCometDrawingsLastYear();
             $cometTotalDrawingsLastYear = Observation::getTotalDrawingsLastYear('comet');
@@ -711,10 +708,7 @@ class ObserverController extends Controller
             return DB::table('observations as observations')
                 ->join('users', 'users.username', '=', 'observations.observer_username')
                 ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
-                ->where(function ($query) {
-                    $query->where('observations.legacy_source', 'deepsky')
-                        ->orWhereIn('observations.target_table', ['objects', 'objectnames']);
-                })
+                ->where('observations.target_type', 'deepsky')
                 ->where(function ($query) {
                     $query->whereNull('details.visibility')
                         ->orWhere('details.visibility', '!=', 7);
@@ -731,10 +725,7 @@ class ObserverController extends Controller
             ->join('observations as observations', 'objectnames.objectname', '=', 'observations.target_name')
             ->join('users', 'users.username', '=', 'observations.observer_username')
             ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
-            ->where(function ($query) {
-                $query->where('observations.legacy_source', 'deepsky')
-                    ->orWhereIn('observations.target_table', ['objects', 'objectnames']);
-            })
+            ->where('observations.target_type', 'deepsky')
             ->where(function ($query) {
                 $query->whereNull('details.visibility')
                     ->orWhere('details.visibility', '!=', 7);
@@ -841,10 +832,7 @@ class ObserverController extends Controller
         $observedNames = DB::table('observations as observations')
             ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
             ->where('observations.observer_username', $user->username)
-            ->where(function ($query) {
-                $query->where('observations.legacy_source', 'deepsky')
-                    ->orWhereIn('observations.target_table', ['objects', 'objectnames']);
-            })
+            ->where('observations.target_type', 'deepsky')
             ->where(function ($query) {
                 $query->whereNull('details.visibility')
                     ->orWhere('details.visibility', '!=', 7);
@@ -877,10 +865,7 @@ class ObserverController extends Controller
         $observedPartNames = DB::table('observations as observations')
             ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
             ->where('observations.observer_username', $user->username)
-            ->where(function ($query) {
-                $query->where('observations.legacy_source', 'deepsky')
-                    ->orWhereIn('observations.target_table', ['objects', 'objectnames']);
-            })
+            ->where('observations.target_type', 'deepsky')
             ->where(function ($query) {
                 $query->whereNull('details.visibility')
                     ->orWhere('details.visibility', '!=', 7);

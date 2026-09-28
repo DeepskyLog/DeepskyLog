@@ -7,6 +7,7 @@ use deepskylog\AstronomyLibrary\Magnitude;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Observation extends Model
 {
@@ -50,6 +51,74 @@ class Observation extends Model
             'transparency' => 'integer',
             'has_drawing' => 'boolean',
         ];
+    }
+
+    // ─── Target of an observation ──────────────────────────────────────────────
+    //
+    // What was observed is given by target_type, target_table and target_key,
+    // the same for observations migrated from the old DeepskyLog and for
+    // observations made in this version. legacy_source and legacy_id only record
+    // where a migrated row came from; never use them to decide what an
+    // observation is of.
+    //
+    //   deepsky  objects         target_key = objects.name (the canonical name, not an alias)
+    //   comet    cometobjects    target_key = cometobjects.id (the id does not change when a comet is renamed)
+    //   planet   planets         target_key = slug
+    //   lunar    moons           target_key = slug
+    //   lunar    lunar_features  target_key = slug
+    //
+    // target_name is the name shown to the user; for deep-sky objects it equals
+    // target_key.
+
+    public const TYPE_DEEPSKY = 'deepsky';
+
+    public const TYPE_COMET = 'comet';
+
+    public function scopeDeepsky($query)
+    {
+        return $query->where('observations.target_type', self::TYPE_DEEPSKY);
+    }
+
+    public function scopeComets($query)
+    {
+        return $query->where('observations.target_type', self::TYPE_COMET);
+    }
+
+    /**
+     * Observations of one deep-sky object, given by its canonical name (objects.name).
+     */
+    public function scopeOfDeepskyObject($query, string $objectName)
+    {
+        return $query->where('observations.target_type', self::TYPE_DEEPSKY)
+            ->where('observations.target_key', $objectName);
+    }
+
+    /**
+     * Observations of one comet, given by its id (cometobjects.id).
+     */
+    public function scopeOfComet($query, int|string $cometId)
+    {
+        return $query->where('observations.target_type', self::TYPE_COMET)
+            ->where('observations.target_key', (string) $cometId);
+    }
+
+    /**
+     * The canonical name (objects.name) of a deep-sky object given by its name,
+     * one of its aliases or its slug; null when there is no such object.
+     */
+    public static function canonicalDeepskyName(?string $nameOrSlug): ?string
+    {
+        $value = trim((string) $nameOrSlug);
+        if ($value === '') {
+            return null;
+        }
+
+        $name = DB::table('objects')->where('name', $value)->value('name')
+            ?? DB::table('objects')->where('slug', $value)->value('name')
+            ?? DB::table('objectnames')->where('altname', $value)->value('objectname')
+            ?? DB::table('objectnames')->where('slug', $value)->value('objectname');
+
+        return $name !== null ? (string) $name : null;
     }
 
     // ─── Legacy field aliases (backward compatibility) ─────────────────────────
@@ -273,7 +342,7 @@ class Observation extends Model
     {
         $q = static::query();
         if ($source !== null) {
-            $q->where('legacy_source', $source);
+            $q->where('target_type', $source);
         }
 
         return $q->count();
@@ -284,7 +353,7 @@ class Observation extends Model
         $lastYear = now()->subYear();
         $q = static::where('observed_on', '>=', $lastYear->format('Y-m-d'));
         if ($source !== null) {
-            $q->where('legacy_source', $source);
+            $q->where('target_type', $source);
         }
 
         return $q->count();
@@ -295,7 +364,7 @@ class Observation extends Model
         $lastYear = now()->subYear();
         $q = static::where('observed_on', '>=', $lastYear->format('Y-m-d'))->where('has_drawing', 1);
         if ($source !== null) {
-            $q->where('legacy_source', $source);
+            $q->where('target_type', $source);
         }
 
         return $q->count();
@@ -305,7 +374,7 @@ class Observation extends Model
     {
         $q = static::query();
         if ($source !== null) {
-            $q->where('legacy_source', $source);
+            $q->where('target_type', $source);
         }
 
         return $q->distinct('target_name')->count('target_name');
@@ -321,7 +390,7 @@ class Observation extends Model
         }
         $q = static::where('target_name', $targetName);
         if ($source !== null) {
-            $q->where('legacy_source', $source);
+            $q->where('target_type', $source);
         }
 
         return $q->count();
@@ -337,7 +406,7 @@ class Observation extends Model
         }
         $q = static::where('target_name', $targetName)->where('has_drawing', 1);
         if ($source !== null) {
-            $q->where('legacy_source', $source);
+            $q->where('target_type', $source);
         }
 
         return $q->count();
@@ -357,7 +426,7 @@ class Observation extends Model
             $q->where('target_name', $targetName);
         }
         if ($source !== null) {
-            $q->where('legacy_source', $source);
+            $q->where('target_type', $source);
         }
 
         return $q->count();
@@ -377,7 +446,7 @@ class Observation extends Model
             $q->where('target_name', $targetName);
         }
         if ($source !== null) {
-            $q->where('legacy_source', $source);
+            $q->where('target_type', $source);
         }
 
         return $q->count();

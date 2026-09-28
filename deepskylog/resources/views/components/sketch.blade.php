@@ -26,9 +26,7 @@
                         : (string) $observation->observed_on;
             }
 
-            $isComet =
-                $observation?->target_type === "comet" ||
-                $observation?->legacy_source === "comet";
+            $isComet = $observation?->target_type === \App\Models\Observation::TYPE_COMET;
             $legacyObservationId = $observation?->legacy_id;
             $drawingId = $observation?->drawing_filename
                 ?? ($observation?->legacy_id
