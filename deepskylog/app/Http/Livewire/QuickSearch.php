@@ -120,18 +120,18 @@ class QuickSearch extends Component
             }
         };
 
+        // Detect simple catalog queries like "M 1" or just "M " so we
+        // can bias SQL ordering to include low-numbered catalog entries
+        // in the candidate set instead of arbitrary DB order.
+        $isCatalogQuery = preg_match('/^[A-Za-z]\s*(\d*)?$/u', trim($original));
+        $useRegexpSubstr = false;
+
         try {
             if (DB::getSchemaBuilder()->hasTable('search_index')) {
-                // Detect simple catalog queries like "M 1" or just "M " so we
-                // can bias SQL ordering to include low-numbered catalog entries
-                // in the candidate set instead of arbitrary DB order.
-                $isCatalogQuery = preg_match('/^[A-Za-z]\s*(\d*)?$/u', trim($original));
-
                 // Detect whether the DB supports REGEXP_SUBSTR (MySQL 8+). If not,
                 // we'll fall back to a LENGTH-based ordering to remain portable.
-                $useRegexpSubstr = false;
                 try {
-                    $res = DB::select(DB::raw("SELECT REGEXP_SUBSTR('M 10', '[0-9]+') as r"));
+                    $res = DB::select("SELECT REGEXP_SUBSTR('M 10', '[0-9]+') as r");
                     if (is_array($res) && count($res) && isset($res[0]->r)) {
                         $useRegexpSubstr = true;
                     }
@@ -238,17 +238,18 @@ class QuickSearch extends Component
                     $remaining = max(0, $maxCandidates - count($results));
                     if ($remaining > 0) {
                         $aliasQuery = DB::table('objectnames')
-                            ->join('objects', 'objectnames.object_id', '=', 'objects.id')
+                            ->join('objects', 'objectnames.objectname', '=', 'objects.name')
                             ->select(['objects.name as title', 'objects.slug', DB::raw("'object' as type")])
-                            ->whereRaw('LOWER(objectnames.alias) = ?', [Str::lower($original)])
-                            ->orWhereRaw("LOWER(REPLACE(objectnames.alias, ' ', '')) = ?", [Str::lower($qNoSpace)]);
+                            ->where(function ($w) use ($original, $qNoSpace, $likeStarts, $likeContains, $isContains) {
+                                $w->whereRaw('LOWER(objectnames.altname) = ?', [Str::lower($original)])
+                                    ->orWhereRaw("LOWER(REPLACE(objectnames.altname, ' ', '')) = ?", [Str::lower($qNoSpace)])
+                                    ->orWhereRaw('LOWER(objectnames.altname) LIKE ?', [Str::lower($likeStarts)]);
+                                if ($isContains) {
+                                    $w->orWhereRaw('LOWER(objectnames.altname) LIKE ?', [Str::lower($likeContains)]);
+                                }
+                            });
 
-                        $aliasQuery->orWhereRaw('LOWER(objectnames.alias) LIKE ?', [Str::lower($likeStarts)]);
-                        if ($isContains) {
-                            $aliasQuery->orWhereRaw('LOWER(objectnames.alias) LIKE ?', [Str::lower($likeContains)]);
-                        }
-
-                        $aliases = $aliasQuery->groupBy('objects.id', 'objects.name', 'objects.slug')
+                        $aliases = $aliasQuery->groupBy('objects.name', 'objects.slug')
                             ->limit($remaining)
                             ->get();
                         $addRows($aliases, 1);
@@ -301,6 +302,7 @@ class QuickSearch extends Component
                                 ->first();
                             if ($p)
                                 return 'planets:' . $p->id;
+                            break;
                         case 'moons':
                             $m = DB::table('moons')
                                 ->where('id', $sp)
@@ -350,7 +352,7 @@ class QuickSearch extends Component
                 try {
                     $obj = DB::table('objects')->whereRaw('LOWER(name) = ?', [$nameLower])->first();
                     if ($obj)
-                        return 'objects:' . $obj->id;
+                        return 'objects:' . ($obj->slug ?? $obj->name);
                     $lf = DB::table('lunar_features')->whereRaw('LOWER(name) = ?', [$nameLower])->first();
                     if ($lf)
                         return 'lunar_features:' . $lf->id;
@@ -371,12 +373,11 @@ class QuickSearch extends Component
                         $alias = DB::table('objectnames')
                             ->whereRaw('LOWER(altname) = ?', [$nameLower])
                             ->orWhereRaw('LOWER(objectname) = ?', [$nameLower])
-                            ->orWhereRaw('LOWER(alias) = ?', [$nameLower])
                             ->first();
                         if ($alias) {
-                            $objA = DB::table('objects')->where('id', $alias->object_id)->first();
+                            $objA = DB::table('objects')->where('name', $alias->objectname)->first();
                             if ($objA)
-                                return 'objects:' . $objA->id;
+                                return 'objects:' . ($objA->slug ?? $objA->name);
                         }
                     }
                 } catch (\Throwable $_) {
@@ -815,11 +816,10 @@ class QuickSearch extends Component
                 $alias = DB::table('objectnames')
                     ->whereRaw('LOWER(altname) = ?', [$qLower])
                     ->orWhereRaw('LOWER(objectname) = ?', [$qLower])
-                    ->orWhereRaw('LOWER(alias) = ?', [$qLower])
-                    ->orWhereRaw('LOWER(REPLACE(alias, " ", "")) = ?', [$qNoSpaceLower])
+                    ->orWhereRaw("LOWER(REPLACE(altname, ' ', '')) = ?", [$qNoSpaceLower])
                     ->first();
-                if ($alias && !empty($alias->object_id)) {
-                    $obj = DB::table('objects')->where('id', $alias->object_id)->first();
+                if ($alias && !empty($alias->objectname)) {
+                    $obj = DB::table('objects')->where('name', $alias->objectname)->first();
                 }
             }
         } catch (\Throwable $_) {

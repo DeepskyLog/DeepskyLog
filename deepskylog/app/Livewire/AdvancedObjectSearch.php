@@ -215,8 +215,9 @@ class AdvancedObjectSearch extends Component
                 })
                 ->toArray();
 
-            // Combine all lists (owned + subscribed + public)
-            $this->allObservingLists = array_merge($ownedLists, $subscribedLists, $publicLists);
+            // Combine all lists (owned + subscribed + public); + keeps the list ids
+            // as keys, array_merge() would renumber them
+            $this->allObservingLists = $ownedLists + $subscribedLists + $publicLists;
         } catch (\Throwable $_) {
             $this->allObservingLists = [];
         }

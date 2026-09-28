@@ -86,12 +86,6 @@ Code review of the whole application, without the security aspects. Paths are re
 
 ### High
 
-- [ ] `/api/search` returns 500 unless `substring=1`: `DB::select(DB::raw(...))` and `:q` used twice (`SearchController.php:92,117`). `$allowedTypes` (line 25) doesn't match `search_index.source_type`. Same `DB::raw` misuse in `QuickSearch.php:134`.
-- [ ] Quick search never resolves aliases: uses non-existent `objects.id`, `objectnames.object_id`, `objectnames.alias` (`QuickSearch.php:240-254, 351-379, 814-823`); `case 'planets'` at 296 has no `break`.
-- [ ] (checked) `search:reindex --incremental` (nightly): deletes all alias rows of a changed object (`ReindexSearch.php:62`, also per batch at 117/126), and re-inserts all comets, planets, moons, lunar features and asteroids without deleting (131-239). The last-run timestamp is taken at the end and not written on full runs (243).
-- [ ] Object edits/creates/deletes don't keep `search_index` up to date and never set `objects.timestamp`; `destroy()` leaves alias rows (4531); a rename doesn't update the slug, `search_index`, `observations.target_name` or the `object:resolve:v1:*` cache.
-- [ ] (checked) Advanced object search "Observing lists" filter uses wrong ids: `array_merge` renumbers the list ids (`AdvancedObjectSearch.php:219`). Use `+`.
-- [ ] (checked) A location without SQM can never be saved: -999 is set before `validate()` with min:15 / min:0 (`CreateLocation.php:92-110`), and the form shows no error.
 - [ ] Location `description` column is `string(255)` NOT NULL, but null or long TinyMCE HTML is passed (`CreateLocation.php:120-150`). Use `?? ''` and change the column to `text`.
 - [ ] (checked) Zoom eyepiece `max_focal_length_mm` is never saved: missing from the validation rules (`CreateEyepiece.php:178-193`).
 - [ ] Removing a user from a team uses `detach()` and leaves `current_team_id`, so a removed administrator keeps admin rights (`AdminUserTable.php:242-250`). Use `$team->removeUser()`.

@@ -25,6 +25,7 @@ use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 use deepskylog\AstronomyLibrary\Time;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use App\Services\CometCoordinates;
+use App\Services\ObjectSearchIndex;
 use Illuminate\Support\Facades\Cache;
 
 class ObjectController extends Controller
@@ -3092,8 +3093,10 @@ class ObjectController extends Controller
             $SBObj = self::surfaceBrightness($mag, $diam1, $diam2) ?? -999;
         }
 
-        // Store the original name before updating, for updating related tables
+        // Store the original name and slug before updating, for updating related tables
         $originalName = $object->getOriginal('name');
+        $originalSlug = $object->getOriginal('slug');
+        $renamed = $originalName !== $validated['name'];
 
         // Auto-recalculate constellation and all atlas pages from the new coordinates.
         $atlasData = $this->coordinateDerivedFields($raHours, $declDegrees, 'object update');
@@ -3115,12 +3118,29 @@ class ObjectController extends Controller
             'pa' => $pa,
             'description' => $validated['description'] ?? $object->description,
             'datasource' => $validated['datasource'] ?? $object->datasource,
+            'timestamp' => now(),
         ], $atlasData));
+
+        // A renamed object gets the slug of its new name, unless another object has it
+        if ($renamed) {
+            $newSlug = \Illuminate\Support\Str::slug($validated['name'], '-');
+            if ($newSlug !== '' && !DB::table('objects')->where('slug', $newSlug)->where('name', '!=', $originalName)->exists()) {
+                $object->slug = $newSlug;
+            }
+        }
 
         $object->save();
 
         // If name changed, update all related tables
-        if ($originalName !== $validated['name']) {
+        if ($renamed) {
+            // Observations and observing list entries refer to the object by name
+            \App\Models\Observation::ofDeepskyObject($originalName)
+                ->update(['target_key' => $validated['name'], 'target_name' => $validated['name']]);
+
+            DB::table('observing_list_items')
+                ->where('object_name', $originalName)
+                ->update(['object_name' => $validated['name']]);
+
             // Update objectnames table
             DB::table('objectnames')
                 ->where('objectname', $originalName)
@@ -3274,6 +3294,8 @@ class ObjectController extends Controller
                 ]);
             }
         }
+
+        ObjectSearchIndex::syncObject($object->name, [$originalName, $originalSlug]);
 
         return redirect()->route('object.show', ['slug' => $object->slug ?? $object->name])
             ->with('success', __('Object updated successfully.'));
@@ -3898,6 +3920,7 @@ class ObjectController extends Controller
             $objectData = array_merge($defaults, $userValues);
             $objectData['name'] = $validated['name'];
             $objectData['slug'] = \Illuminate\Support\Str::slug($validated['name'], '-');
+            $objectData['timestamp'] = now();
             $obj = DeepskyObject::create($objectData);
         } catch (\Exception $e) {
             Log::error('Failed to create object', ['error' => $e->getMessage(), 'data' => $validated]);
@@ -3931,6 +3954,8 @@ class ObjectController extends Controller
                 'name' => $objectData['name'] ?? null,
             ]);
         }
+
+        ObjectSearchIndex::syncObject($obj->name);
 
         return redirect()->route('object.show', ['slug' => $obj->slug ?? $obj->name])->with('success', __('Object added successfully.'));
     }
@@ -4271,7 +4296,9 @@ class ObjectController extends Controller
             if (isset($updates['mag']) || isset($updates['diam1']) || isset($updates['diam2'])) {
                 $object->SBObj = self::surfaceBrightness($object->mag, $object->diam1, $object->diam2) ?? -999;
             }
+            $object->timestamp = now();
             $object->save();
+            ObjectSearchIndex::syncObject($object->name);
 
             return redirect()->route('object.show', ['slug' => $object->slug ?? $object->name])
                 ->with('success', __('Object updated successfully from SIMBAD.'));
@@ -4359,10 +4386,11 @@ class ObjectController extends Controller
                 ->delete();
         }
 
-        // Remove associated records
+        // Remove associated records; the search_index rows of the object and
+        // its aliases all have the slug of the object as source_pk
+        ObjectSearchIndex::removeObject($objectName, $object->slug);
         DB::table('objectnames')->where('objectname', $objectName)->delete();
         DB::table('objectpartof')->where('objectname', $objectName)->orWhere('partofname', $objectName)->delete();
-        DB::table('search_index')->where('name', $objectName)->delete();
 
         // Delete the object itself
         $object->delete();

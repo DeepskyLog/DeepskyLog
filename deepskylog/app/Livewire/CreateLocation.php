@@ -94,20 +94,25 @@ class CreateLocation extends Component
         $this->updateElevation($this->latitude, $this->longitude);
         $this->updateCountry($this->latitude, $this->longitude);
 
-        // Make sure to add the nelm value without the fstOffset
-        if ($this->sqm !== null) {
-            $this->nelm = $this->nelm + Auth()->user()->fstOffset;
-        } else {
-            $this->sqm = -999;
-            $this->nelm = -999;
-        }
-
         $photoPath = null;
 
         $this->country = preg_replace('/\s*\(.*\)\s*/', '', $this->country);
 
-        // Validate first to ensure uploaded file is acceptable before any processing
+        // Validate first to ensure uploaded file is acceptable before any processing.
+        // The form values are validated, not the stored ones: -999 (no value) and
+        // the NELM with the fstOffset are outside the ranges of the rules.
         $this->validate();
+
+        // Make sure to add the nelm value without the fstOffset
+        if ($this->sqm !== null && $this->sqm !== '') {
+            $skyBackground = $this->sqm;
+            $limitingMagnitude = ($this->nelm === null || $this->nelm === '')
+                ? -999
+                : $this->nelm + (Auth()->user()->fstOffset ?? 0);
+        } else {
+            $skyBackground = -999;
+            $limitingMagnitude = -999;
+        }
 
         // If a photo was uploaded, store it now.
         // dd($this->photo);
@@ -132,8 +137,8 @@ class CreateLocation extends Component
                 'elevation' => $this->elevation,
                 'country' => $this->country,
                 'timezone' => $this->timezone,
-                'skyBackground' => $this->sqm,
-                'limitingMagnitude' => $this->nelm,
+                'skyBackground' => $skyBackground,
+                'limitingMagnitude' => $limitingMagnitude,
             ]);
 
             if ($this->photo) {
@@ -158,8 +163,8 @@ class CreateLocation extends Component
                 'elevation' => $this->elevation,
                 'country' => $this->country,
                 'timezone' => $this->timezone,
-                'skyBackground' => $this->sqm,
-                'limitingMagnitude' => $this->nelm,
+                'skyBackground' => $skyBackground,
+                'limitingMagnitude' => $limitingMagnitude,
                 'user_id' => $user_id,
                 'observer' => $observer,
             ]);
