@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 function insertRaTestObject(string $name, string $slug, float $ra, float $decl): void
 {
+    DB::table('deepskytypes')->insertOrIgnore(['code' => 'GALXY', 'name' => 'Galaxy']);
     DB::table('objects')->insert([
         'name' => $name,
         'slug' => $slug,

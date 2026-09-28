@@ -86,11 +86,6 @@ Code review of the whole application, without the security aspects. Paths are re
 
 ### Medium
 
-Objects
-- [ ] `store()` writes mag 0, subr 0, SBObj 0, pa NULL where legacy data and `update()` use 99.9 / 99.9 / -999 / 999; store validates `type`, update doesn't (`ObjectController.php:4003-4033`).
-- [ ] `update()` sets SBObj to -999 when surface brightness is empty; PA 0 becomes 999 and mag 0 becomes 99.9 (`!empty`) (`ObjectController.php:3150,3180`).
-- [ ] Create wizard name search joins `objectnames.slug = objects.slug`, so aliases are never found and duplicates get created (`ObjectController.php:3742`).
-
 Observations
 - [ ] Editing a legacy observation's date doesn't update `legacy_date_int` / `legacy_time_int`, which the model prefers, so the old date is still shown.
 - [ ] CSV/OAL import duplicate check: without time it overwrites any same-day observation of the object; `update()` resets `has_drawing` (and `transparency` for OAL); legacy rows are skipped, so re-importing an export duplicates them (`CsvObservationImporter.php:266-272`, `OalObservationImporter.php:335-340`).

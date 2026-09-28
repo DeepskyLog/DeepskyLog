@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 
 function insertAliasTestObject(string $name, string $slug): void
 {
+    DB::table('deepskytypes')->insertOrIgnore(['code' => 'GALXY', 'name' => 'Galaxy']);
     DB::table('objects')->insert([
         'name' => $name,
         'slug' => $slug,

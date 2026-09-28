@@ -2881,12 +2881,36 @@ class ObjectController extends Controller
      */
     private static function surfaceBrightness($mag, $diam1, $diam2): ?float
     {
-        if ($mag === null || $mag == 99.9 || $mag == 0 || !($diam1 > 0)) {
+        if ($mag === null || $mag == 99.9 || !($diam1 > 0)) {
             return null;
         }
         $effectiveDiam2 = ($diam2 > 0) ? $diam2 : $diam1;
 
         return $mag + 2.5 * log10(M_PI * $diam1 * $effectiveDiam2 / 4);
+    }
+
+    /**
+     * The brightness and size columns of an object from the create or edit form, with the
+     * sentinels of the legacy data for a missing value: mag and subr 99.9, pa 999, SBObj -999
+     * and diameter 0. A magnitude or position angle of 0 is a real value. The form gives the
+     * diameters in arcminutes, the objects table stores arcseconds.
+     */
+    private static function measurementColumns(array $validated): array
+    {
+        $given = fn(string $key) => isset($validated[$key]) && $validated[$key] !== '';
+
+        $mag = $given('mag') ? (float) $validated['mag'] : 99.9;
+        $diam1 = $given('diam1') ? $validated['diam1'] * 60.0 : 0;
+        $diam2 = $given('diam2') ? $validated['diam2'] * 60.0 : 0;
+
+        return [
+            'mag' => $mag,
+            'subr' => $given('subr') ? (float) $validated['subr'] : 99.9,
+            'diam1' => $diam1,
+            'diam2' => $diam2,
+            'pa' => $given('pa') ? (int) $validated['pa'] : 999,
+            'SBObj' => self::surfaceBrightness($mag, $diam1, $diam2) ?? -999,
+        ];
     }
 
     /**
@@ -3029,7 +3053,7 @@ class ObjectController extends Controller
             'ra' => 'required|string',
             'decl' => 'required|string',
             'con' => 'nullable|string|max:5',
-            'type' => 'required|string|max:8',
+            'type' => 'required|string|exists:deepskytypes,code',
             'mag' => 'nullable|numeric',
             'subr' => 'nullable|numeric',
             'diam1' => 'nullable|numeric',
@@ -3056,43 +3080,6 @@ class ObjectController extends Controller
             ])->withInput();
         }
 
-        // Handle optional fields - use sentinel values when empty
-        // Position angle: 999 means no value
-        $pa = 999;
-        if (!empty($validated['pa']) && $validated['pa'] !== '') {
-            $pa = $validated['pa'];
-        }
-
-        // Diameters: 0 means no value
-        // Note: User enters arcminutes, database stores arcseconds
-        $diam1 = 0;
-        if (!empty($validated['diam1']) && $validated['diam1'] !== '') {
-            $diam1 = $validated['diam1'] * 60.0; // Convert arcminutes to arcseconds
-        }
-
-        $diam2 = 0;
-        if (!empty($validated['diam2']) && $validated['diam2'] !== '') {
-            $diam2 = $validated['diam2'] * 60.0; // Convert arcminutes to arcseconds
-        }
-
-        // Magnitude: 99.9 means no value
-        $mag = 99.9;
-        if (!empty($validated['mag']) && $validated['mag'] !== '') {
-            $mag = $validated['mag'];
-        }
-
-        // Surface brightness: 99.9 means no value
-        $subr = 99.9;
-        if (!empty($validated['subr']) && $validated['subr'] !== '') {
-            $subr = $validated['subr'];
-        }
-
-        // Calculate SBObj if we have the necessary data (not sentinel values)
-        $SBObj = -999;  // Sentinel value for no data
-        if ($subr != 99.9) {
-            $SBObj = self::surfaceBrightness($mag, $diam1, $diam2) ?? -999;
-        }
-
         // Store the original name and slug before updating, for updating related tables
         $originalName = $object->getOriginal('name');
         $originalSlug = $object->getOriginal('slug');
@@ -3110,16 +3097,10 @@ class ObjectController extends Controller
             'decl' => $declDegrees,
             'con' => $newCon,
             'type' => $validated['type'],
-            'mag' => $mag,
-            'subr' => $subr,
-            'SBObj' => $SBObj,
-            'diam1' => $diam1,
-            'diam2' => $diam2,
-            'pa' => $pa,
             'description' => $validated['description'] ?? $object->description,
             'datasource' => $validated['datasource'] ?? $object->datasource,
             'timestamp' => now(),
-        ], $atlasData));
+        ], self::measurementColumns($validated), $atlasData));
 
         // A renamed object gets the slug of its new name, unless another object has it
         if ($renamed) {
@@ -3621,12 +3602,14 @@ class ObjectController extends Controller
             $name = '';
         }
 
-        // Base query: objectnames → objects → target_types (for human-readable type label)
+        // Base query: objectnames → objects → target_types (for human-readable type label).
+        // Joined on the object name: an alias has its own slug, not the one of its object.
         $base = DB::table('objectnames')
-            ->join('objects', 'objectnames.slug', '=', 'objects.slug')
+            ->join('objects', 'objectnames.objectname', '=', 'objects.name')
             ->leftJoin('target_types', 'objects.type', '=', 'target_types.id')
             ->select(
                 'objectnames.objectname',
+                'objectnames.altname',
                 'objectnames.catalog',
                 'objectnames.catindex',
                 'objects.ra',
@@ -3814,25 +3797,8 @@ class ObjectController extends Controller
             $validated = array_merge($validated, $this->coordinateDerivedFields((float) $validated['ra'], (float) $validated['decl'], 'object creation'));
         }
 
-        // Auto-calculate SBObj: mag + 2.5*log10(2827 * (diam1/60) * (diam2/60))
-        // Use diam2 = diam1 when only one diameter is given (circular object)
-        // At this point diam1/diam2 are in arcminutes (as entered by the user).
-        $mag = $validated['mag'] ?? null;
-        $diam1 = $validated['diam1'] ?? null;
-        $diam2 = $validated['diam2'] ?? null;
-        if ($mag !== null && $mag != 0 && $mag != 99.9 && ($diam1 || $diam2)) {
-            $d1 = ($diam1 ?: $diam2) / 60.0;
-            $d2 = ($diam2 ?: $diam1) / 60.0;
-            $validated['SBObj'] = $mag + 2.5 * log10(2827.0 * $d1 * $d2);
-        }
-
-        // The DB stores diameters in arcseconds; convert from arcminutes before persisting.
-        if (!empty($validated['diam1'])) {
-            $validated['diam1'] = $validated['diam1'] * 60.0;
-        }
-        if (!empty($validated['diam2'])) {
-            $validated['diam2'] = $validated['diam2'] * 60.0;
-        }
+        // Magnitudes, diameters (arcminutes → arcseconds), position angle and SBObj
+        $validated = array_merge($validated, self::measurementColumns($validated));
 
         // If privileged user requested creating a new catalog, persist it first
         try {
@@ -3861,8 +3827,9 @@ class ObjectController extends Controller
                 'decl' => 0.0,
                 'type' => '',
                 'con' => '',
-                'mag' => 0.0,
-                'subr' => 0.0,
+                'mag' => 99.9,
+                'subr' => 99.9,
+                'pa' => 999,
                 'diam1' => 0.0,
                 'diam2' => 0.0,
                 'urano' => 0,
@@ -3870,7 +3837,7 @@ class ObjectController extends Controller
                 'sky' => 0,
                 'millenium' => '',
                 'taki' => '',
-                'SBObj' => 0.0,
+                'SBObj' => -999,
                 'description' => '',
                 'psa' => '',
                 'torresB' => '',

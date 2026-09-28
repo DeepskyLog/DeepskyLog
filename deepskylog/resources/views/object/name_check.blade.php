@@ -35,6 +35,9 @@
                                 @else
                                     {{ $cand->objectname }}
                                 @endif
+                                @if(!empty($cand->altname) && $cand->altname !== $cand->objectname)
+                                    <span class="text-sm text-gray-400">({{ $cand->altname }})</span>
+                                @endif
                             </td>
                             <td class="py-2 pr-4 font-mono text-sm">{{ DeepskyObject::formatRa($cand->ra) ?? '—' }}</td>
                             <td class="py-2 pr-4 font-mono text-sm">{{ DeepskyObject::formatDec($cand->decl) ?? '—' }}</td>
