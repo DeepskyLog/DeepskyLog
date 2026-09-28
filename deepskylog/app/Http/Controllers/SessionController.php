@@ -974,7 +974,7 @@ class SessionController extends Controller
             DBFacade::table('sessionObservers')->where('sessionid', $session->id)->delete();
 
             // Remove observation likes that reference this session (observation_type = 'session')
-            \App\Models\ObservationLike::where('observation_type', 'session')->where('observation_id', $session->id)->delete();
+            \App\Models\ObservationLike::where('observation_type', \App\Models\ObservationLike::TYPE_SESSION)->where('observation_id', $session->id)->delete();
 
             // Remove any public image files named after the session id
             $sessionImageDir = public_path('images/sessions');

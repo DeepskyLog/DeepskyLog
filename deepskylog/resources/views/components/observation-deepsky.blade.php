@@ -469,9 +469,9 @@
                     $detailRouteParams["index"] = $occurrenceIndex;
                 }
 
-                // Likes: use the unified observation id + target_type as type key
-                $likeType   = $isUnified ? ($obs_type ?: 'deepsky') : 'deepsky';
-                $likeId     = $obs_id;
+                // Likes are stored by the id in the observations table
+                $likeType   = \App\Models\ObservationLike::TYPE_OBSERVATION;
+                $likeId     = $obsUnified?->id ?? $obs_id;
                 $likesCount = \App\Models\ObservationLike::where("observation_type", $likeType)
                     ->where("observation_id", $likeId)
                     ->count();

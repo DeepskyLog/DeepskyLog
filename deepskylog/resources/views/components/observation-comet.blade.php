@@ -339,9 +339,9 @@
                     $detailRouteParams["index"] = $occurrenceIndex;
                 }
 
-                // Likes: use target_type as type key for unified, 'comet' for legacy
-                $likeType = $isUnified ? ($obs_type ?: 'comet') : 'comet';
-                $likeId   = $obs_id;
+                // Likes are stored by the id in the observations table
+                $likeType = \App\Models\ObservationLike::TYPE_OBSERVATION;
+                $likeId   = $obsUnified?->id ?? $obs_id;
 
                 if ($likes_count !== null && $liked !== null) {
                     $likesCount = $likes_count;

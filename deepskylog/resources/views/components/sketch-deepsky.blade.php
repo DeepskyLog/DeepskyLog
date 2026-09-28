@@ -188,6 +188,10 @@
             }
         }
 
+        // Likes are stored by the id in the observations table; callers pass
+        // either that id or the id of the old DeepskyLog as observation_id.
+        $likeId = ($obsUnified ?? $obsLegacy)?->id;
+
         // Use preloaded likes data if available, otherwise query (fallback)
         if ($likes_count !== null && $liked !== null) {
             $likesCount = $likes_count;
@@ -195,14 +199,14 @@
         } else {
             $likesCount = \App\Models\ObservationLike::where(
                 "observation_type",
-                "deepsky",
+                \App\Models\ObservationLike::TYPE_OBSERVATION,
             )
-                ->where("observation_id", $observation_id)
+                ->where("observation_id", $likeId)
                 ->count();
             $isLiked =
                 auth()->check() &&
-                \App\Models\ObservationLike::where("observation_type", "deepsky")
-                    ->where("observation_id", $observation_id)
+                \App\Models\ObservationLike::where("observation_type", \App\Models\ObservationLike::TYPE_OBSERVATION)
+                    ->where("observation_id", $likeId)
                     ->where("user_id", auth()->id())
                     ->exists();
         }
@@ -282,8 +286,8 @@
         </div>
 
         <button
-            data-observation-type="deepsky"
-            data-observation-id="{{ $observation_id }}"
+            data-observation-type="{{ \App\Models\ObservationLike::TYPE_OBSERVATION }}"
+            data-observation-id="{{ $likeId }}"
             class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white"
         >
             <span class="like-icon">{!!

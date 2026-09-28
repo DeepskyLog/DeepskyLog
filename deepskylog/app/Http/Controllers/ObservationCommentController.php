@@ -14,20 +14,19 @@ class ObservationCommentController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'observation_type' => ['required', 'in:deepsky,comet'],
             'observation_id' => ['required', 'integer'],
             'body' => ['required', 'string', 'max:2000'],
         ]);
 
         $user = Auth::user();
 
-        $owner = $this->resolveObservationOwner($validated['observation_type'], (int) $validated['observation_id']);
+        $owner = $this->resolveObservationOwner((int) $validated['observation_id']);
         if (!$owner) {
             abort(404);
         }
 
         ObservationComment::create([
-            'observation_type' => $validated['observation_type'],
+            'observation_type' => ObservationComment::TYPE_OBSERVATION,
             'observation_id' => (int) $validated['observation_id'],
             'user_id' => $user->id,
             'body' => $validated['body'],
@@ -39,7 +38,7 @@ class ObservationCommentController extends Controller
     public function destroy(ObservationComment $comment): RedirectResponse
     {
         $user = Auth::user();
-        $owner = $this->resolveObservationOwner($comment->observation_type, (int) $comment->observation_id);
+        $owner = $this->resolveObservationOwner((int) $comment->observation_id);
 
         if (!$comment->canBeDeletedBy($user, $owner)) {
             abort(403);
@@ -50,13 +49,17 @@ class ObservationCommentController extends Controller
         return redirect()->back()->with('success', __('Comment deleted.'));
     }
 
-    private function resolveObservationOwner(string $type, int $observationId): ?User
+    /**
+     * @param  int  $observationId  the id in the `observations` table
+     */
+    private function resolveObservationOwner(int $observationId): ?User
     {
         $obs = Observation::find($observationId);
         if (!$obs) {
             return null;
         }
 
-        return User::find($obs->observer_user_id);
+        return User::find($obs->observer_user_id)
+            ?? User::where('username', html_entity_decode((string) $obs->observer_username))->first();
     }
 }

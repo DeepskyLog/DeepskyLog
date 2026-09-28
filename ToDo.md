@@ -6,6 +6,7 @@
 
 - [ ] Test! 
   - [ ] Test for functionality / inconsistency problems (code review done, see "Functionality / inconsistency review" at the end of this file)
+  - [ ] Test for speed problems in the database queries
   - [ ] Test for security problems
   - [ ] Test manually when logged in and logged out, as database expert and as administrator
 - [ ] Update to laravel 13.
@@ -85,25 +86,6 @@ Code review of the whole application, without the security aspects. Paths are re
 
 ### Root causes
 
-- [x] **New observations are keyed differently from legacy ones.** Legacy rows have `legacy_source` = deepsky/comet and `target_key` = object name (comets: the numeric comet id). Rows from the web form have `legacy_source` NULL, `target_table='objectnames'` and `target_key` = slug; CSV/OAL imports use `target_table='objects'` with the name. Fixed 2026-09-28: every observation now uses `target_type` + `target_table` + `target_key` (deep-sky: `objects` + canonical name; comets: `cometobjects` + id; see `App\Models\Observation`), `legacy_source` only records provenance; migration `2026_09_28_000001_normalize_observation_targets`. Code that only saw the legacy form:
-  - [x] Session page lists only legacy observations/drawings (`SessionController.php:94-123`), while the counts include new ones.
-  - [x] Object page counts and last observation/drawing dates (`ObjectController.php`); planets no longer always show 0.
-  - [x] Comet pages and comet drawings filter on `legacy_source='comet'` (`ObservationsController::cometShow`, `cometIndexByObject` ~715/808, `CometDrawingController`); comet counts in `create()` use `target_key = comet id` (~2323).
-  - [x] Deep-sky counts on the create page count imported observations twice (`ObservationsController.php:2139-2147`).
-  - [x] Chart markers "seen/drawn by you" match `target_key IN (names)` (`StarChartService.php:956-960`).
-  - [x] Object sets and reports "seen" only use `legacy_source='deepsky'` (`ObjectSetDataBuilder.php:47`, `ObjectReportDataBuilder.php:124,132`).
-  - [x] `ObservationSearchTable` filters on `target_table='objects'` (atlas ~389, contrast reserve ~626, categories ~244, seen/unseen ~506-524).
-  - [x] Cold-cache fallbacks of `ObservationsPerYearChart.php:95-106`, `ObservationsPerMonthChart.php:74-80` and the profile statistics.
-- [ ] **Likes and comments use two ids.** (checked) The detail page reads them by `legacy_id` (`ObservationsController.php:97,128`) but posts `$obs->id` (`observations/detail.blade.php:107`; also the list cards). `ObservationLikeController` tries `legacy_id` first, `ObservationCommentController` only the new id, the popular tables treat it as `legacy_id`, `PopularObservationController` as the new id. Pick the new id and migrate `observation_likes`. Consequences:
-  - [ ] Comments on legacy observations disappear after reload; like counts "reset".
-  - [ ] Deleting a legacy observation deletes the likes/comments of another observation (`ObservationsController.php:2897-2898`).
-  - [ ] `hasPopularObservations` joins on the wrong id (`ComputeObserverStats.php:820-829`, `ObserverController.php:258-262`).
-  - [ ] Likes on planet/lunar observations from list cards return 404 (they send `observation_type` = planet/lunar).
-- [ ] **RA hours/degrees mix-up.** The `objects.ra` column is in hours.
-  - [ ] (checked) Editing an object stores degrees: `parseRaInput()` returns degrees and `update()` stores it (`ObjectController.php:3136,3233`). M 65 is already stored as 169.73 — repair the affected rows (objects and `search_index`).
-  - [ ] (checked) Ephemerides for RA < 1.6 h are wrong: `raToDecimal()` returns degrees and `$raDeg > 24 ? /15 : as-is` uses them as hours (`ObjectController.php:1635,1982`; `EphemeridesBuilder.php:77`). Always divide by 15.
-  - [ ] SIMBAD `RA_d` (degrees) ≤ 24 is read as hours (`ObjectController.php:4380-4386`; create wizard `coords.blade.php:67-69`, `details.blade.php:156`). `updateFromSimbad` also doesn't recompute constellation, atlas pages or SBObj.
-  - [ ] Single-page atlas truncates hh:mm:ss input with `floatval()` ("05:34:31" → 5 h) (`AtlasController.php:176-189`).
 - [ ] **Livewire v2 API calls in Livewire v4.** (checked) `emit`, `emitTo` and `dispatchBrowserEvent` don't exist; the exceptions are swallowed. Comet pages never show their computed data (`CometDetails` waits for `objectEphemeridesUpdated`), and `ObjectConstellation` doesn't update on date change. Replace with `dispatch()` / `->to()` in `ObjectEphemerides.php:1088,1212-1261`, `EphemerisAside.php`, `AladinPreviewInfo.php:365,450,466,1170`, `ObjectConstellation.php:30`, `AladinSelects.php:43`, `SearchResultsTable`, `NearbyObjectsTable`.
 
 ### High

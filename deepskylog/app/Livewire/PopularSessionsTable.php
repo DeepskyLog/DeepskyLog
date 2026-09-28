@@ -47,7 +47,7 @@ final class PopularSessionsTable extends PowerGridComponent
             . '(SELECT u.name FROM users u WHERE u.username = s.observerid LIMIT 1), s.observerid'
             . ') FROM observation_sessions s WHERE s.id = observation_id LIMIT 1) as observer_name'
         )
-            ->where('observation_type', 'session')
+            ->where('observation_type', ObservationLike::TYPE_SESSION)
             ->groupBy('observation_type', 'observation_id')
             ->orderByDesc('likes');
 

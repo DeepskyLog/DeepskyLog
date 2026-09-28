@@ -152,7 +152,7 @@ document.getElementById('simbadFill').addEventListener('click', function() {
                 const d = json.data;
                 const filled = [];
 
-                // Always update hidden RA/Dec inputs (used on form submit)
+                // Always update hidden RA/Dec inputs (used on form submit); RA is in hours
                 if (d.ra != null) document.querySelector('input[name="ra"]').value = d.ra;
                 if (d.decl != null) document.querySelector('input[name="decl"]').value = d.decl;
 

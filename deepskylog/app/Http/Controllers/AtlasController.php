@@ -170,23 +170,24 @@ class AtlasController extends Controller
             }
 
             if ($target === null) {
-                // create a lightweight fake target for the chart
+                // create a lightweight fake target for the chart; ra/dec may be
+                // decimal (RA in hours, or degrees above 24) or sexagesimal
+                // ("05:34:31", "05 34 31.9", "+22:00:52"), stored as hours/degrees
                 $target = new DeepskyObject();
                 $target->name = $request->input('title', 'Custom center');
-                if (!empty($ra)) {
-                    $target->ra = $ra;
+                $raDeg = DeepskyObject::raToDecimal($ra);
+                if ($raDeg !== null) {
+                    $target->ra = $raDeg / 15.0;
                 }
-                if (!empty($dec)) {
-                    $target->decl = $dec;
+                $decDeg = DeepskyObject::decToDecimal($dec);
+                if ($decDeg !== null) {
+                    $target->decl = $decDeg;
                 }
             }
 
-            // Allow ra/dec query style as in NearbyExportController
-            $centerRaDeg = floatval($target->ra ?? $request->input('ra') ?? 0.0);
-            if ($centerRaDeg <= 24.0) {
-                $centerRaDeg *= 15.0;
-            }
-            $centerDecDeg = floatval($target->decl ?? $request->input('dec') ?? 0.0);
+            // objects.ra is in hours
+            $centerRaDeg = floatval($target->ra ?? 0.0) * 15.0;
+            $centerDecDeg = floatval($target->decl ?? 0.0);
 
             // A single page is centred wherever the caller asked, so only the
             // atlas page it falls on is meaningful -- its neighbours are not.

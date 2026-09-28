@@ -51,7 +51,8 @@ class EphemeridesBuilder
                         $raDeg = \App\Models\DeepskyObject::raToDecimal($obj->ra ?? $obj->RA ?? null);
                         $decDeg = \App\Models\DeepskyObject::decToDecimal($obj->decl ?? $obj->DEC ?? null);
                         if (is_numeric($raDeg) && is_numeric($decDeg)) {
-                            $coords = (object) ['ra' => $raDeg, 'dec' => $decDeg];
+                            // RA in hours, like the comet coordinates above
+                            $coords = (object) ['ra' => $raDeg / 15.0, 'dec' => $decDeg];
                         }
                     }
                 } catch (\Throwable $_) {
@@ -63,7 +64,7 @@ class EphemeridesBuilder
                 return $result;
             }
 
-            // Convert RA in degrees/hours accordingly
+            // RA is in hours here, both from the comet coordinates and from the fallback
             $raVal = method_exists($coords, 'getRA') ? $coords->getRA() : ($coords->ra ?? null);
             $decVal = method_exists($coords, 'getDeclination') ? $coords->getDeclination() : ($coords->dec ?? null);
 
@@ -74,7 +75,7 @@ class EphemeridesBuilder
                 $raNum = $raVal;
             }
             if (is_numeric($raNum)) {
-                $raDeg = ((float) $raNum <= 24.0) ? (float) $raNum * 15.0 : (float) $raNum;
+                $raDeg = (float) $raNum * 15.0;
             }
 
             $decDeg = null;

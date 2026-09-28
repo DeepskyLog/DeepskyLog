@@ -264,8 +264,8 @@
                         </div>
 
                         @php
-                            $sessionLikes = \App\Models\ObservationLike::where('observation_type', 'session')->where('observation_id', $session->id)->count();
-                            $sessionLiked = auth()->check() && \App\Models\ObservationLike::where('observation_type', 'session')->where('observation_id', $session->id)->where('user_id', auth()->id())->exists();
+                            $sessionLikes = \App\Models\ObservationLike::where('observation_type', \App\Models\ObservationLike::TYPE_SESSION)->where('observation_id', $session->id)->count();
+                            $sessionLiked = auth()->check() && \App\Models\ObservationLike::where('observation_type', \App\Models\ObservationLike::TYPE_SESSION)->where('observation_id', $session->id)->where('user_id', auth()->id())->exists();
                         @endphp
 
                         <button data-observation-type="session" data-observation-id="{{ $session->id }}" class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white">

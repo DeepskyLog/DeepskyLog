@@ -61,53 +61,16 @@ final class UserPopularObservationsTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        // Find the user's observation ids from the unified observations table
-        $deepskyIds = Observation::where('observer_username', $this->username)
-            ->where('legacy_source', 'deepsky')
-            ->pluck('legacy_id')
-            ->filter()
-            ->toArray();
-        $cometIds = Observation::where('observer_username', $this->username)
-            ->where('legacy_source', 'comet')
-            ->pluck('legacy_id')
-            ->filter()
-            ->toArray();
-
         $aggQuery = ObservationLike::selectRaw(
             'observation_type, observation_id, COUNT(*) as likes, MIN(id) as id, '
-            . "(SELECT legacy_date_int FROM observations o WHERE "
-            . "(observation_type = 'deepsky' AND o.legacy_source = 'deepsky' AND o.legacy_id = observation_id) "
-            . "OR (observation_type = 'comet' AND o.legacy_source = 'comet' AND o.legacy_id = observation_id) "
-            . 'LIMIT 1) as obs_date'
+            . '(SELECT o.observed_on FROM observations o WHERE o.id = observation_id) as obs_date'
             // Pulled into the aggregate so the object name can be searched:
             // PowerGrid qualifies every searchable column with the table (here:
             // the alias of this subquery) of the query's base model.
-            . ', (SELECT o.target_name FROM observations o WHERE '
-            . "(observation_type = 'deepsky' AND o.legacy_source = 'deepsky' AND o.legacy_id = observation_id) "
-            . "OR (observation_type = 'comet' AND o.legacy_source = 'comet' AND o.legacy_id = observation_id) "
-            . 'LIMIT 1) as objectname'
+            . ', (SELECT o.target_name FROM observations o WHERE o.id = observation_id) as objectname'
         )
-            ->where(function ($q) use ($deepskyIds, $cometIds) {
-                if (empty($deepskyIds) && empty($cometIds)) {
-                    // The user has no observations. Match nothing, but keep the
-                    // shape of the aggregate so its searchable columns resolve.
-                    $q->whereRaw('0 = 1');
-
-                    return;
-                }
-
-                if (!empty($deepskyIds)) {
-                    $q->orWhere(function ($q2) use ($deepskyIds) {
-                        $q2->where('observation_type', 'deepsky')->whereIn('observation_id', $deepskyIds);
-                    });
-                }
-
-                if (!empty($cometIds)) {
-                    $q->orWhere(function ($q2) use ($cometIds) {
-                        $q2->where('observation_type', 'comet')->whereIn('observation_id', $cometIds);
-                    });
-                }
-            })
+            ->where('observation_type', ObservationLike::TYPE_OBSERVATION)
+            ->whereIn('observation_id', Observation::select('id')->where('observer_username', $this->username))
             ->groupBy('observation_type', 'observation_id')
             ->orderByDesc('likes');
 
@@ -128,12 +91,7 @@ final class UserPopularObservationsTable extends PowerGridComponent
             ->add('type')
             ->add('id')
             ->add('objectname', function ($row) {
-                $obs = null;
-                if ($row->observation_type === 'deepsky') {
-                    $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'deepsky')->first();
-                } elseif ($row->observation_type === 'comet') {
-                    $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'comet')->first();
-                }
+                $obs = Observation::find($row->observation_id);
 
                 $objectName = $obs ? $obs->target_name : null;
 
@@ -160,7 +118,7 @@ final class UserPopularObservationsTable extends PowerGridComponent
                 }
 
                 try {
-                    return Carbon::createFromFormat('Ymd', (string) $value)->format('M j, Y');
+                    return Carbon::parse((string) $value)->format('M j, Y');
                 } catch (\Exception $e) {
                     return null;
                 }

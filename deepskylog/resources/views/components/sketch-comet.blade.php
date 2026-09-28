@@ -235,20 +235,23 @@
         </div>
 
         @php
-            $likesCount = \App\Models\ObservationLike::where("observation_type", "comet")
-                ->where("observation_id", $observation_id)
+            // Likes are stored by the id in the observations table, not by
+            // the id of the old DeepskyLog that observation_id holds.
+            $likeId = ($obsUnified ?? $obsLegacy)?->id;
+            $likesCount = \App\Models\ObservationLike::where("observation_type", \App\Models\ObservationLike::TYPE_OBSERVATION)
+                ->where("observation_id", $likeId)
                 ->count();
             $liked =
                 auth()->check() &&
-                \App\Models\ObservationLike::where("observation_type", "comet")
-                    ->where("observation_id", $observation_id)
+                \App\Models\ObservationLike::where("observation_type", \App\Models\ObservationLike::TYPE_OBSERVATION)
+                    ->where("observation_id", $likeId)
                     ->where("user_id", auth()->id())
                     ->exists();
         @endphp
 
         <button
-            data-observation-type="comet"
-            data-observation-id="{{ $observation_id }}"
+            data-observation-type="{{ \App\Models\ObservationLike::TYPE_OBSERVATION }}"
+            data-observation-id="{{ $likeId }}"
             class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white"
         >
             <span class="like-icon">{!!

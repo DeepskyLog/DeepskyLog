@@ -103,7 +103,7 @@
             $drawingPath = "/images/" . (($observationType === "comet") ? "cometdrawings/" : "drawings/") . $obs->id . '.jpg';
         }
 
-        $socialType = $observationType === "comet" ? "comet" : "deepsky";
+        $socialType = \App\Models\ObservationLike::TYPE_OBSERVATION;
         $socialId = (int) $obs->id;
         $likesCount = $likesCount ?? 0;
         $liked = $liked ?? false;
@@ -462,11 +462,6 @@
                                     action="{{ route('observation.comments.store') }}"
                                 >
                                     @csrf
-                                    <input
-                                        type="hidden"
-                                        name="observation_type"
-                                        value="{{ $socialType }}"
-                                    />
                                     <input
                                         type="hidden"
                                         name="observation_id"

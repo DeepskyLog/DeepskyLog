@@ -685,17 +685,14 @@ class ComputeObserverStats implements ShouldQueue
                 'moon' => $moonYears,
             ];
 
-            // Compute whether user has any liked observations (deepsky or comet) — use a JOIN to avoid loading IDs into PHP
+            // Compute whether user has any liked observations — use a JOIN to avoid loading IDs into PHP
             $hasPopularObservations = DB::table('observation_likes as ol')
-                ->join('observations as o', function ($join) {
-                    $join->on('o.id', '=', 'ol.observation_id')
-                        ->on('ol.observation_type', '=', 'o.legacy_source');
-                })
+                ->join('observations as o', 'o.id', '=', 'ol.observation_id')
                 ->where(function ($q) use ($user) {
                     $q->where('o.observer_user_id', $user->id)
                         ->orWhere('o.observer_username', $user->username);
                 })
-                ->whereIn('ol.observation_type', ['deepsky', 'comet'])
+                ->where('ol.observation_type', \App\Models\ObservationLike::TYPE_OBSERVATION)
                 ->exists();
 
             $stats['hasPopularObservations'] = $hasPopularObservations;

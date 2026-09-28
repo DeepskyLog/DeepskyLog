@@ -129,9 +129,7 @@ class ObservationsController extends Controller
             // ignore
         }
 
-        // Likes and comments of migrated observations are still stored under
-        // the id of the old DeepskyLog.
-        $socialData = $this->buildSocialData($obsType, (int) ($selectedUnified->legacy_source !== null ? $selectedUnified->legacy_id : $selectedUnified->id));
+        $socialData = $this->buildSocialData((int) $selectedUnified->id);
         if ($obsType === 'comet') {
             // For unified observations that target a comet, ensure we have
             // a resolved comet name and preload comet-specific data so
@@ -1636,24 +1634,25 @@ class ObservationsController extends Controller
     /**
      * Load likes/comments for a detail page in one place.
      *
+     * @param  int  $observationId  the id in the `observations` table
      * @return array<string, mixed>
      */
-    private function buildSocialData(string $observationType, int $observationId): array
+    private function buildSocialData(int $observationId): array
     {
         $likesCount = ObservationLike::query()
-            ->where('observation_type', $observationType)
+            ->where('observation_type', ObservationLike::TYPE_OBSERVATION)
             ->where('observation_id', $observationId)
             ->count();
 
         $liked = auth()->check() && ObservationLike::query()
-            ->where('observation_type', $observationType)
+            ->where('observation_type', ObservationLike::TYPE_OBSERVATION)
             ->where('observation_id', $observationId)
             ->where('user_id', auth()->id())
             ->exists();
 
         $comments = ObservationComment::query()
             ->with('user')
-            ->where('observation_type', $observationType)
+            ->where('observation_type', ObservationComment::TYPE_OBSERVATION)
             ->where('observation_id', $observationId)
             ->latest()
             ->get();
@@ -2765,14 +2764,12 @@ class ObservationsController extends Controller
             abort(403);
         }
 
-        $observationType = in_array($selectedUnified->target_type, ['comet']) ? 'comet' : 'deepsky';
-
         try {
             DB::beginTransaction();
 
             // Remove likes and comments
-            ObservationLike::where('observation_type', $observationType)->where('observation_id', $selectedUnified->id)->delete();
-            ObservationComment::where('observation_type', $observationType)->where('observation_id', $selectedUnified->id)->delete();
+            ObservationLike::where('observation_type', ObservationLike::TYPE_OBSERVATION)->where('observation_id', $selectedUnified->id)->delete();
+            ObservationComment::where('observation_type', ObservationComment::TYPE_OBSERVATION)->where('observation_id', $selectedUnified->id)->delete();
 
             // Remove sketch associations
             SketchOfTheWeek::where('observation_id', $selectedUnified->id)->delete();

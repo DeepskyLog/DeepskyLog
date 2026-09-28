@@ -1470,10 +1470,8 @@ class ObjectController extends Controller
                 }
 
                 if ($raDeg !== null && $decDeg !== null) {
-                    // EquatorialCoordinates expects RA in hours (0..24).
-                    // Some legacy storage may hold RA as degrees (>24) or as hours (<=24).
-                    // Normalize: if value > 24 assume degrees and convert to hours.
-                    $raHours = (is_numeric($raDeg) && $raDeg > 24.0) ? ((float) $raDeg / 15.0) : (float) $raDeg;
+                    // EquatorialCoordinates expects RA in hours (0..24); $raDeg is in degrees.
+                    $raHours = (float) $raDeg / 15.0;
                     $equa = new EquatorialCoordinates($raHours, (float) $decDeg);
                     $target->setEquatorialCoordinates($equa);
 
@@ -1819,8 +1817,8 @@ class ObjectController extends Controller
                                         try {
                                             $geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
                                             $target = new AstroTarget();
-                                            // EquatorialCoordinates expects RA in hours (0..24).
-                                            $raHours = (is_numeric($raDeg) && $raDeg > 24.0) ? ((float) $raDeg / 15.0) : (float) $raDeg;
+                                            // EquatorialCoordinates expects RA in hours (0..24); $raDeg is in degrees.
+                                            $raHours = (float) $raDeg / 15.0;
                                             $equa = new EquatorialCoordinates($raHours, (float) $decDeg);
                                             $target->setEquatorialCoordinates($equa);
 
@@ -2832,8 +2830,87 @@ class ObjectController extends Controller
     }
 
     /**
+     * The constellation and the atlas pages of a position (RA in hours, declination
+     * in degrees), keyed by their objects column. Empty when the calculation fails.
+     */
+    private function coordinateDerivedFields(float $raHours, float $declDegrees, string $context): array
+    {
+        $fields = [];
+        try {
+            $coords = new EquatorialCoordinates($raHours, $declDegrees);
+            $fields['con'] = $coords->getConstellation();
+
+            foreach ([
+                'urano',
+                'urano_new',
+                'sky',
+                'taki',
+                'psa',
+                'torresB',
+                'torresBC',
+                'torresC',
+                'milleniumbase',
+                'DSLDL',
+                'DSLDP',
+                'DSLLL',
+                'DSLLP',
+                'DSLOL',
+                'DSLOP',
+                'DeepskyHunter',
+                'Interstellarum'
+            ] as $atlasKey) {
+                $fields[$atlasKey] = $coords->calculateAtlasPage($atlasKey);
+            }
+
+            // Millenium Star Atlas full ref: page/volume (I=0-8h, II=8-16h, III=16-24h)
+            $milVol = $raHours <= 8 ? 'I' : ($raHours <= 16 ? 'II' : 'III');
+            $fields['millenium'] = $fields['milleniumbase'] . '/' . $milVol;
+        } catch (\Throwable $e) {
+            Log::warning('Constellation/atlas calculation failed during ' . $context, ['error' => $e->getMessage()]);
+
+            return [];
+        }
+
+        return $fields;
+    }
+
+    /**
+     * SBObj from the magnitude and the diameters in arcseconds: mag + 2.5 * log10(π * diam1 * diam2 / 4),
+     * with diam2 = diam1 for a circular object. Null without a magnitude or a diameter.
+     */
+    private static function surfaceBrightness($mag, $diam1, $diam2): ?float
+    {
+        if ($mag === null || $mag == 99.9 || $mag == 0 || !($diam1 > 0)) {
+            return null;
+        }
+        $effectiveDiam2 = ($diam2 > 0) ? $diam2 : $diam1;
+
+        return $mag + 2.5 * log10(M_PI * $diam1 * $effectiveDiam2 / 4);
+    }
+
+    /**
+     * RA in hours from a SIMBAD VOTable cell: RA_d is decimal degrees, RA is sexagesimal hours.
+     */
+    private static function simbadRaHours(string $fieldName, string $value): ?float
+    {
+        $value = trim($value);
+        if ($value === '') {
+            return null;
+        }
+        if ($fieldName === 'RA_d') {
+            return is_numeric($value) ? fmod((float) $value, 360.0) / 15.0 : null;
+        }
+        if (is_numeric($value)) {
+            return null; // a bare number in the RA column is ambiguous
+        }
+        $raDeg = DeepskyObject::raToDecimal($value);
+
+        return $raDeg === null ? null : $raDeg / 15.0;
+    }
+
+    /**
      * Parse RA input (supports both decimal hours and sexagesimal hh mm ss.sss format).
-     * Returns RA in degrees (0-360) for database storage.
+     * Returns RA in decimal hours (0-24), the unit of the objects.ra column.
      */
     private function parseRaInput(?string $input): ?float
     {
@@ -2845,28 +2922,21 @@ class ObjectController extends Controller
 
         // Check if input contains spaces (sexagesimal format: hh mm ss.sss)
         if (preg_match('/^(\d+)\s+(\d+)\s+([\d.]+)$/', $input, $matches)) {
-            // Sexagesimal format
             $hours = floatval($matches[1]);
             $minutes = floatval($matches[2]);
             $seconds = floatval($matches[3]);
 
-            // Convert to decimal hours
-            $decimalHours = $hours + ($minutes / 60.0) + ($seconds / 3600.0);
-
-            // Convert hours to degrees for storage
-            return $decimalHours * 15.0;
+            return $hours + ($minutes / 60.0) + ($seconds / 3600.0);
         }
 
-        // Decimal format (assume hours)
+        if (!is_numeric($input)) {
+            return null;
+        }
+
+        // Decimal format: hours, unless the value can only be degrees (> 24)
         $value = floatval($input);
 
-        // If value is in hours (0-24), convert to degrees
-        // If already in degrees (> 24), keep as is
-        if ($value <= 24) {
-            return $value * 15.0;  // Convert hours to degrees
-        }
-
-        return $value;  // Already in degrees
+        return $value > 24 ? $value / 15.0 : $value;
     }
 
     /**
@@ -2974,13 +3044,13 @@ class ObjectController extends Controller
         ]);
 
         // Parse RA and Decl (support both decimal and sexagesimal formats)
-        $raDegrees = $this->parseRaInput($validated['ra']);
+        $raHours = $this->parseRaInput($validated['ra']);
         $declDegrees = $this->parseDeclInput($validated['decl']);
 
         // Ensure RA and Decl were parsed successfully
-        if ($raDegrees === null || $declDegrees === null) {
+        if ($raHours === null || $declDegrees === null) {
             return back()->withErrors([
-                'ra' => $raDegrees === null ? 'Invalid RA format' : null,
+                'ra' => $raHours === null ? 'Invalid RA format' : null,
                 'decl' => $declDegrees === null ? 'Invalid Declination format' : null,
             ])->withInput();
         }
@@ -3018,62 +3088,22 @@ class ObjectController extends Controller
 
         // Calculate SBObj if we have the necessary data (not sentinel values)
         $SBObj = -999;  // Sentinel value for no data
-        if ($mag != 99.9 && $subr != 99.9 && $diam1 > 0) {
-            // If diam2 is 0, use diam1 for both dimensions (circular object)
-            $effectiveDiam2 = ($diam2 > 0) ? $diam2 : $diam1;
-
-            // Calculate SBObj (formula: mag + 2.5 * log10(π * diam1 * diam2 / 4))
-            $SBObj = $mag + 2.5 * log10(M_PI * $diam1 * $effectiveDiam2 / 4);
+        if ($subr != 99.9) {
+            $SBObj = self::surfaceBrightness($mag, $diam1, $diam2) ?? -999;
         }
 
         // Store the original name before updating, for updating related tables
         $originalName = $object->getOriginal('name');
 
         // Auto-recalculate constellation and all atlas pages from the new coordinates.
-        // parseRaInput() returns degrees; EquatorialCoordinates expects hours.
-        $raHours = $raDegrees / 15.0;
-        $newCon = $validated['con'] ?? $object->con;
-        $atlasData = [];
-        try {
-            $coords = new EquatorialCoordinates($raHours, $declDegrees);
-
-            // Constellation
-            $newCon = $coords->getConstellation();
-
-            // All 17 supported atlas keys
-            foreach ([
-                'urano',
-                'urano_new',
-                'sky',
-                'taki',
-                'psa',
-                'torresB',
-                'torresBC',
-                'torresC',
-                'milleniumbase',
-                'DSLDL',
-                'DSLDP',
-                'DSLLL',
-                'DSLLP',
-                'DSLOL',
-                'DSLOP',
-                'DeepskyHunter',
-                'Interstellarum'
-            ] as $atlasKey) {
-                $atlasData[$atlasKey] = $coords->calculateAtlasPage($atlasKey);
-            }
-
-            // Millenium Star Atlas volume: I=0–8h, II=8–16h, III=>16h
-            $milVol = $raHours <= 8 ? 'I' : ($raHours <= 16 ? 'II' : 'III');
-            $atlasData['millenium'] = $atlasData['milleniumbase'] . '/' . $milVol;
-        } catch (\Throwable $e) {
-            Log::warning('Atlas/constellation recalculation failed during object update', ['error' => $e->getMessage()]);
-        }
+        $atlasData = $this->coordinateDerivedFields($raHours, $declDegrees, 'object update');
+        $newCon = $atlasData['con'] ?? ($validated['con'] ?? $object->con);
+        unset($atlasData['con']);
 
         // Update the object
         $object->fill(array_merge([
             'name' => $validated['name'],
-            'ra' => $raDegrees,
+            'ra' => $raHours,
             'decl' => $declDegrees,
             'con' => $newCon,
             'type' => $validated['type'],
@@ -3764,40 +3794,7 @@ class ObjectController extends Controller
 
         // Auto-calculate constellation and atlas pages from RA/Dec
         if (!empty($validated['ra']) && !empty($validated['decl'])) {
-            try {
-                $coords = new EquatorialCoordinates($validated['ra'], $validated['decl']);
-                $validated['con'] = $coords->getConstellation();
-
-                // Calculate atlas page numbers for all supported atlases
-                foreach ([
-                    'urano',
-                    'urano_new',
-                    'sky',
-                    'taki',
-                    'psa',
-                    'torresB',
-                    'torresBC',
-                    'torresC',
-                    'milleniumbase',
-                    'DSLDL',
-                    'DSLDP',
-                    'DSLLL',
-                    'DSLLP',
-                    'DSLOL',
-                    'DSLOP',
-                    'DeepskyHunter',
-                    'Interstellarum'
-                ] as $atlasKey) {
-                    $validated[$atlasKey] = $coords->calculateAtlasPage($atlasKey);
-                }
-
-                // Millenium Star Atlas full ref: page/volume (I=0-8h, II=8-16h, III=16-24h)
-                $raH = $validated['ra'];
-                $milVol = $raH <= 8 ? 'I' : ($raH <= 16 ? 'II' : 'III');
-                $validated['millenium'] = $validated['milleniumbase'] . '/' . $milVol;
-            } catch (\Throwable $e) {
-                Log::warning('Constellation/atlas auto-calculation failed', ['error' => $e->getMessage()]);
-            }
+            $validated = array_merge($validated, $this->coordinateDerivedFields((float) $validated['ra'], (float) $validated['decl'], 'object creation'));
         }
 
         // Auto-calculate SBObj: mag + 2.5*log10(2827 * (diam1/60) * (diam2/60))
@@ -4064,8 +4061,10 @@ class ObjectController extends Controller
             switch ($fieldName) {
                 case 'RA':
                 case 'RA_d':
-                    if ($value !== '' && is_numeric($value)) {
-                        $data['ra'] = floatval($value);
+                    // Returned in hours, as the RA inputs of the create wizard expect
+                    $raHours = self::simbadRaHours($fieldName, $value);
+                    if ($raHours !== null) {
+                        $data['ra'] = $raHours;
                     }
                     break;
                 case 'DEC':
@@ -4228,13 +4227,10 @@ class ObjectController extends Controller
                 switch ($fieldName) {
                     case 'RA':
                     case 'RA_d':
-                        if (!empty($value) && is_numeric($value)) {
-                            // Parse RA value to decimal degrees and store as hours
-                            // (database stores RA in decimal hours 0..24).
-                            $raDeg = \App\Models\DeepskyObject::raToDecimal($value);
-                            if ($raDeg !== null) {
-                                $updates['ra'] = $raDeg / 15.0;
-                            }
+                        // The database stores RA in decimal hours (0..24)
+                        $raHours = self::simbadRaHours($fieldName, $value);
+                        if ($raHours !== null) {
+                            $updates['ra'] = $raHours;
                         }
                         break;
                     case 'DEC':
@@ -4277,6 +4273,14 @@ class ObjectController extends Controller
             // Update the object with SIMBAD data
             $updates['datasource'] = 'SIMBAD';
             $object->fill($updates);
+
+            // Keep the columns derived from the position and the brightness in step
+            if (isset($updates['ra']) || isset($updates['decl'])) {
+                $object->fill($this->coordinateDerivedFields((float) $object->ra, (float) $object->decl, 'SIMBAD update'));
+            }
+            if (isset($updates['mag']) || isset($updates['diam1']) || isset($updates['diam2'])) {
+                $object->SBObj = self::surfaceBrightness($object->mag, $object->diam1, $object->diam2) ?? -999;
+            }
             $object->save();
 
             return redirect()->route('object.show', ['slug' => $object->slug ?? $object->name])

@@ -12,6 +12,12 @@ class ObservationComment extends Model
     use HasFactory;
     use SoftDeletes;
 
+    /**
+     * Comments are only made on observations, stored by the id of the
+     * observation in the `observations` table.
+     */
+    public const TYPE_OBSERVATION = ObservationLike::TYPE_OBSERVATION;
+
     protected $fillable = [
         'observation_type',
         'observation_id',

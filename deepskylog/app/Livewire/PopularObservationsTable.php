@@ -55,27 +55,14 @@ final class PopularObservationsTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        // Use unified observations table for subqueries
         $aggQuery = ObservationLike::selectRaw(
             'observation_type, observation_id, COUNT(*) as likes, MIN(id) as id, '
-            . "(SELECT o.legacy_date_int FROM observations o WHERE "
-            . "(observation_type = 'deepsky' AND o.legacy_source = 'deepsky' AND o.legacy_id = observation_id) "
-            . "OR (observation_type = 'comet' AND o.legacy_source = 'comet' AND o.legacy_id = observation_id) "
-            . 'LIMIT 1) as obs_date'
-            . ', (SELECT o.observer_username FROM observations o WHERE '
-            . "(observation_type = 'deepsky' AND o.legacy_source = 'deepsky' AND o.legacy_id = observation_id) "
-            . "OR (observation_type = 'comet' AND o.legacy_source = 'comet' AND o.legacy_id = observation_id) "
-            . 'LIMIT 1) as observerid'
-            . ', (SELECT COALESCE((SELECT u.name FROM users u WHERE u.username = o.observer_username LIMIT 1), o.observer_username) FROM observations o WHERE '
-            . "(observation_type = 'deepsky' AND o.legacy_source = 'deepsky' AND o.legacy_id = observation_id) "
-            . "OR (observation_type = 'comet' AND o.legacy_source = 'comet' AND o.legacy_id = observation_id) "
-            . 'LIMIT 1) as observer_display'
-            . ', (SELECT o.target_name FROM observations o WHERE '
-            . "(observation_type = 'deepsky' AND o.legacy_source = 'deepsky' AND o.legacy_id = observation_id) "
-            . "OR (observation_type = 'comet' AND o.legacy_source = 'comet' AND o.legacy_id = observation_id) "
-            . 'LIMIT 1) as objectname_sort'
+            . '(SELECT o.observed_on FROM observations o WHERE o.id = observation_id) as obs_date'
+            . ', (SELECT o.observer_username FROM observations o WHERE o.id = observation_id) as observerid'
+            . ', (SELECT COALESCE((SELECT u.name FROM users u WHERE u.username = o.observer_username LIMIT 1), o.observer_username) FROM observations o WHERE o.id = observation_id) as observer_display'
+            . ', (SELECT o.target_name FROM observations o WHERE o.id = observation_id) as objectname_sort'
         )
-            ->whereIn('observation_type', ['deepsky', 'comet'])
+            ->where('observation_type', ObservationLike::TYPE_OBSERVATION)
             ->groupBy('observation_type', 'observation_id')
             ->orderByDesc('likes');
 
@@ -117,12 +104,7 @@ final class PopularObservationsTable extends PowerGridComponent
             ->add('observer_display')
             ->add('objectname_sort')
             ->add('objectname', function ($row) {
-                $obs = null;
-                if ($row->observation_type === 'deepsky') {
-                    $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'deepsky')->first();
-                } elseif ($row->observation_type === 'comet') {
-                    $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'comet')->first();
-                }
+                $obs = Observation::find($row->observation_id);
 
                 $objectName = $obs ? $obs->target_name : null;
 
@@ -143,12 +125,7 @@ final class PopularObservationsTable extends PowerGridComponent
             ->add('observer_name', function ($row) {
                 $username = $row->observerid ? html_entity_decode((string) $row->observerid) : null;
                 if (!$username) {
-                    $obs = null;
-                    if ($row->observation_type === 'deepsky') {
-                        $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'deepsky')->first();
-                    } elseif ($row->observation_type === 'comet') {
-                        $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'comet')->first();
-                    }
+                    $obs = Observation::find($row->observation_id);
                     $username = $obs ? html_entity_decode((string) $obs->observer_username) : null;
                 }
                 if (!$username) {
@@ -163,12 +140,7 @@ final class PopularObservationsTable extends PowerGridComponent
             ->add('observer_name_plain', function ($row) {
                 $username = $row->observerid ? html_entity_decode((string) $row->observerid) : null;
                 if (!$username) {
-                    $obs = null;
-                    if ($row->observation_type === 'deepsky') {
-                        $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'deepsky')->first();
-                    } elseif ($row->observation_type === 'comet') {
-                        $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'comet')->first();
-                    }
+                    $obs = Observation::find($row->observation_id);
                     $username = $obs ? html_entity_decode((string) $obs->observer_username) : null;
                 }
                 if (!$username) {
@@ -181,12 +153,7 @@ final class PopularObservationsTable extends PowerGridComponent
                 return $username;
             })
             ->add('objectname_plain', function ($row) {
-                $obs = null;
-                if ($row->observation_type === 'deepsky') {
-                    $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'deepsky')->first();
-                } elseif ($row->observation_type === 'comet') {
-                    $obs = Observation::where('legacy_id', $row->observation_id)->where('legacy_source', 'comet')->first();
-                }
+                $obs = Observation::find($row->observation_id);
                 return $obs ? html_entity_decode((string) $obs->target_name) : null;
             })
             ->add('obs_date')
@@ -198,7 +165,7 @@ final class PopularObservationsTable extends PowerGridComponent
                 }
 
                 try {
-                    return Carbon::createFromFormat('Ymd', (string) $value)->format('M j, Y');
+                    return Carbon::parse((string) $value)->format('M j, Y');
                 } catch (\Exception $e) {
                     return null;
                 }

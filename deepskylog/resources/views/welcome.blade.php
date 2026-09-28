@@ -366,13 +366,13 @@
                     ->all();
                 $deepSkyLikesCounts = empty($deepSkySketchIds)
                     ? collect()
-                    : \App\Models\ObservationLike::where("observation_type", "deepsky")
+                    : \App\Models\ObservationLike::where("observation_type", \App\Models\ObservationLike::TYPE_OBSERVATION)
                         ->whereIn("observation_id", $deepSkySketchIds)
                         ->select("observation_id", \DB::raw("count(*) as count"))
                         ->groupBy("observation_id")
                         ->pluck("count", "observation_id");
                 $deepSkyUserLikes = auth()->check() && !empty($deepSkySketchIds)
-                    ? \App\Models\ObservationLike::where("observation_type", "deepsky")
+                    ? \App\Models\ObservationLike::where("observation_type", \App\Models\ObservationLike::TYPE_OBSERVATION)
                         ->whereIn("observation_id", $deepSkySketchIds)
                         ->where("user_id", auth()->id())
                         ->pluck("observation_id")
