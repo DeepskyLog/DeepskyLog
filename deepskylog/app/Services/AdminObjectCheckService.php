@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Constellation;
 use App\Models\DeepskyObject;
+use App\Models\Observation;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -133,10 +134,10 @@ class AdminObjectCheckService
             return implode("\n", $lines);
         }
 
-        DB::table('observations')
-            ->select('objectname', DB::raw('COUNT(*) as observation_count'))
-            ->groupBy('objectname')
-            ->orderBy('objectname')
+        $this->deepskyObservations()
+            ->select('target_key as objectname', DB::raw('COUNT(*) as observation_count'))
+            ->groupBy('target_key')
+            ->orderBy('target_key')
             ->chunk(500, function (Collection $rows) use (&$lines, $knownObjects, $aliasToPrimary) {
                 foreach ($rows as $row) {
                     $observedName = (string) ($row->objectname ?? '');
@@ -181,31 +182,30 @@ class AdminObjectCheckService
 
         $updated = 0;
 
-        DB::table('observations')
-            ->select('objectname')
-            ->whereNotNull('objectname')
+        // The names are read first: renaming rows while chunking would shift the offsets
+        $observedNames = $this->deepskyObservations()
+            ->whereNotNull('target_key')
             ->distinct()
-            ->orderBy('objectname')
-            ->chunk(500, function (Collection $rows) use ($knownObjects, $aliasToPrimary, &$updated) {
-                foreach ($rows as $row) {
-                    $rawObjectName = (string) ($row->objectname ?? '');
-                    $normalized = $this->normalizeObjectNameKey($rawObjectName);
+            ->pluck('target_key');
 
-                    if ($normalized === '' || isset($knownObjects[$normalized])) {
-                        continue;
-                    }
+        foreach ($observedNames as $observedName) {
+            $rawObjectName = (string) $observedName;
+            $normalized = $this->normalizeObjectNameKey($rawObjectName);
 
-                    $primaryName = $aliasToPrimary[$normalized] ?? null;
+            if ($normalized === '' || isset($knownObjects[$normalized])) {
+                continue;
+            }
 
-                    if ($primaryName === null || $rawObjectName === $primaryName) {
-                        continue;
-                    }
+            $primaryName = $aliasToPrimary[$normalized] ?? null;
 
-                    $updated += DB::table('observations')
-                        ->where('objectname', $rawObjectName)
-                        ->update(['objectname' => $primaryName]);
-                }
-            });
+            if ($primaryName === null || $rawObjectName === $primaryName) {
+                continue;
+            }
+
+            $updated += $this->deepskyObservations()
+                ->where('target_key', $rawObjectName)
+                ->update(['target_table' => 'objects', 'target_key' => $primaryName, 'target_name' => $primaryName]);
+        }
 
         return $updated;
     }
@@ -312,10 +312,10 @@ class AdminObjectCheckService
             $aliasCount = 0;
             $aliasObservationTotal = 0;
 
-            DB::table('observations')
-                ->select('objectname', DB::raw('COUNT(*) as observation_count'))
-                ->groupBy('objectname')
-                ->orderBy('objectname')
+            $this->deepskyObservations()
+                ->select('target_key as objectname', DB::raw('COUNT(*) as observation_count'))
+                ->groupBy('target_key')
+                ->orderBy('target_key')
                 ->chunk(500, function (Collection $rows) use ($knownObjects, $aliasToPrimary, &$examples, &$unknownCount, &$unknownObservationTotal, &$aliasCount, &$aliasObservationTotal) {
                     foreach ($rows as $row) {
                         $objectName = (string) ($row->objectname ?? '');
@@ -362,6 +362,15 @@ class AdminObjectCheckService
         } catch (\Throwable $throwable) {
             return $this->unavailableObservationsResult($throwable->getMessage());
         }
+    }
+
+    /**
+     * Deep-sky observations; target_key holds the name of the object (see the
+     * target scheme in App\Models\Observation).
+     */
+    private function deepskyObservations(): \Illuminate\Database\Query\Builder
+    {
+        return DB::table('observations')->where('target_type', Observation::TYPE_DEEPSKY);
     }
 
     private function unavailableObservationsResult(string $message): array

@@ -3141,6 +3141,13 @@ class ObjectController extends Controller
         if ($request->has('alternative_names')) {
             $altNamesInput = trim($validated['alternative_names'] ?? '');
 
+            // Aliases that are kept keep their catalog and catindex: these come from the
+            // old database and cannot always be derived from the name.
+            $previousNames = DB::table('objectnames')
+                ->where('objectname', $object->name)
+                ->get(['altname', 'catalog', 'catindex'])
+                ->keyBy('altname');
+
             // Delete existing alternative names for this object
             DB::table('objectnames')->where('objectname', $object->name)->delete();
 
@@ -3158,19 +3165,12 @@ class ObjectController extends Controller
                 foreach ($altNames as $altName) {
                     if (!empty($altName)) {
 
-                        // Parse catalog and catindex from altname
-                        // Expected formats: "NGC 3623", "M 65", "IC 1234", etc.
-                        $catalog = '';
-                        $catindex = '';
-
-                        // Try to match catalog prefix and number
-                        if (preg_match('/^([A-Za-z]+)\s*(.+)$/', trim($altName), $matches)) {
-                            $catalog = $matches[1];
-                            $catindex = trim($matches[2]);
+                        $previous = $previousNames->get($altName);
+                        if ($previous) {
+                            $catalog = (string) $previous->catalog;
+                            $catindex = (string) $previous->catindex;
                         } else {
-                            // If no match, use the whole name
-                            $catalog = $altName;
-                            $catindex = '';
+                            [$catalog, $catindex] = \App\Models\ObjectName::splitCatalogDesignation($altName);
                         }
 
                         $slug = \Illuminate\Support\Str::slug($altName);
@@ -3257,12 +3257,7 @@ class ObjectController extends Controller
             ->where('altname', $object->name)
             ->exists();
         if (!$canonicalExists) {
-            $cat = '';
-            $catIdx = '';
-            if (preg_match('/^([A-Za-z]+)\s*(.+)$/', trim($object->name), $m)) {
-                $cat = $m[1];
-                $catIdx = trim($m[2]);
-            }
+            [$cat, $catIdx] = \App\Models\ObjectName::splitCatalogDesignation($object->name);
             // Only insert if the slug is not already claimed by a different object
             $slugTaken = DB::table('objectnames')
                 ->where('slug', $canonicalSlug)
@@ -3916,12 +3911,7 @@ class ObjectController extends Controller
             $objSlug = $objectData['slug'];
 
             // Extract catalog code and catindex from the name (e.g. "Wdm 1" → "Wdm", "1")
-            $catalogCode = '';
-            $catindex = '';
-            if (preg_match('/^([A-Za-z][A-Za-z0-9\-]*)\s+(\S.*)$/', $objName, $m)) {
-                $catalogCode = $m[1];
-                $catindex = $m[2];
-            }
+            [$catalogCode, $catindex] = \App\Models\ObjectName::splitCatalogDesignation($objName);
 
             // Only insert if there is no existing entry for this object name
             $exists = DB::table('objectnames')->where('objectname', $objName)->exists();

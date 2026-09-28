@@ -86,8 +86,6 @@ Code review of the whole application, without the security aspects. Paths are re
 
 ### High
 
-- [ ] Deleting an object with "move observations to" gave a 500 (fixed in `ObjectController::destroy()`; the `AdminObjectCheckService` part below is still open): `observations.objectname` doesn't exist (`ObjectController.php:4509-4513`). Same column in `AdminObjectCheckService.php:136-138, 184-206` (two admin actions return 500) and 315-317 (section always "unavailable").
-- [ ] Saving the object edit form deletes and recreates all aliases with a regex that corrupts catalog/catindex (`H400 12` → `H` + `400 12`, `vdB-Ha 5` → `vdB` + `-Ha 5`) (`ObjectController.php:3265-3330`); `store()` uses a different regex (4078).
 - [ ] `/api/search` returns 500 unless `substring=1`: `DB::select(DB::raw(...))` and `:q` used twice (`SearchController.php:92,117`). `$allowedTypes` (line 25) doesn't match `search_index.source_type`. Same `DB::raw` misuse in `QuickSearch.php:134`.
 - [ ] Quick search never resolves aliases: uses non-existent `objects.id`, `objectnames.object_id`, `objectnames.alias` (`QuickSearch.php:240-254, 351-379, 814-823`); `case 'planets'` at 296 has no `break`.
 - [ ] (checked) `search:reindex --incremental` (nightly): deletes all alias rows of a changed object (`ReindexSearch.php:62`, also per batch at 117/126), and re-inserts all comets, planets, moons, lunar features and asteroids without deleting (131-239). The last-run timestamp is taken at the end and not written on full runs (243).
