@@ -5,7 +5,7 @@
 ## Next steps
 
 - [ ] Test! 
-  - [ ] Test for functionality problems
+  - [ ] Test for functionality / inconsistency problems
   - [ ] Test for security problems
   - [ ] Test manually when logged in and logged out, as database expert and as administrator
 - [ ] Update to laravel 13.

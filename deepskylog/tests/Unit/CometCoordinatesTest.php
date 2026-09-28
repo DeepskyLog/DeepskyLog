@@ -118,3 +118,29 @@ it('draws the light curve with the observations of the same period', function ()
 
     expect(App\Services\CometLightCurveChart::svg([], $observed))->toBeNull();
 });
+
+it('uses the light curve of aerith.net in parts', function () {
+    $elements = (object) [
+        'q' => 0.780788135653347, 'e' => 0.9546110184438342, 'i' => 74.19156435379394, 'w' => 198.988728245405,
+        'node' => 255.8558161536839, 'Tp' => 20240421.124383, 'H' => 5.0, 'n' => 13.5,
+        'light_curve' => json_encode([
+            ['from' => -100, 'to' => 14, 'H' => 4.6, 'K' => 9.5, 'shift' => 0],
+            ['from' => 14, 'to' => 175, 'H' => 4.3, 'K' => 11.0, 'shift' => 10],
+            // Implausible parts are left out
+            ['from' => 175, 'to' => null, 'H' => 2451720.5, 'K' => 10.0, 'shift' => 0],
+        ]),
+    ];
+
+    expect(CometCoordinates::lightCurveParts($elements))->toHaveCount(2)
+        ->and(CometCoordinates::lightCurveParts((object) ['light_curve' => null]))->toBe([]);
+
+    $comet = CometCoordinates::target($elements);
+    if (! method_exists($comet, 'setCometLightCurve')) {
+        $this->markTestSkipped('Light curves in parts need laravel-astronomy-library 6.8.3');
+    }
+
+    // 4.6 + 5 log(1.690081) + 9.5 log(1.211017), with the distances of JPL Horizons
+    expect(CometCoordinates::magnitude($comet, Carbon::create(2024, 3, 1, 0, 0, 0, 'UTC')))->toEqualWithDelta(6.529, 0.01)
+        // 4.3 + 5 log(1.557525) + 11 log(1.071307): r of 10 days later
+        ->and(CometCoordinates::magnitude($comet, Carbon::create(2024, 5, 21, 0, 0, 0, 'UTC')))->toEqualWithDelta(5.591, 0.01);
+});

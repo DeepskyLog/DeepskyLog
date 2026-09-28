@@ -100,8 +100,50 @@ class CometCoordinates
         if ($photometry !== null && method_exists($target, 'hasCometParams')) {
             $target->setCometParams(...$photometry);
         }
+        // The light curve of aerith.net in parts, since version 6.8.3; it takes
+        // precedence over H and n.
+        $parts = self::lightCurveParts($elements);
+        if (! empty($parts) && method_exists($target, 'setCometLightCurve')) {
+            $target->setCometLightCurve($parts);
+        }
 
         return $target;
+    }
+
+    /**
+     * The light curve of aerith.net in parts, each valid for a range of days
+     * around the perihelion, from the `light_curve` column.
+     *
+     * @return array<int, array{from: ?float, to: ?float, H: float, K: float, shift: float}>
+     */
+    public static function lightCurveParts(object $elements): array
+    {
+        $parts = $elements->light_curve ?? null;
+        if (is_string($parts)) {
+            $parts = json_decode($parts, true);
+        }
+        if (! is_array($parts)) {
+            return [];
+        }
+
+        $number = fn ($v, float $min, float $max) => is_numeric($v) && $v >= $min && $v <= $max ? (float) $v : null;
+        $valid = [];
+        foreach ($parts as $part) {
+            $H = $number($part['H'] ?? null, -20.0, 35.0);
+            $K = $number($part['K'] ?? null, -20.0, 60.0);
+            if ($H === null || $K === null) {
+                continue;
+            }
+            $valid[] = [
+                'from' => is_numeric($part['from'] ?? null) ? (float) $part['from'] : null,
+                'to' => is_numeric($part['to'] ?? null) ? (float) $part['to'] : null,
+                'H' => $H,
+                'K' => $K,
+                'shift' => is_numeric($part['shift'] ?? null) ? (float) $part['shift'] : 0.0,
+            ];
+        }
+
+        return $valid;
     }
 
     /**
@@ -120,7 +162,7 @@ class CometCoordinates
 
             return is_numeric($v) && $v >= $min && $v <= $max ? (float) $v : null;
         };
-        $H = $value('H', -10.0, 30.0);
+        $H = $value('H', -20.0, 35.0);
         if ($H === null) {
             return null;
         }
