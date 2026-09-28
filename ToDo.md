@@ -84,10 +84,6 @@
 
 Code review of the whole application, without the security aspects. Paths are relative to `deepskylog/`. Items marked (checked) were confirmed by hand; the others come from a review that read the code and migrations but did not reproduce every case. The test suite passed (259 passed, 7 skipped), so none of this is covered by tests yet.
 
-### Root causes
-
-- [ ] **Livewire v2 API calls in Livewire v4.** (checked) `emit`, `emitTo` and `dispatchBrowserEvent` don't exist; the exceptions are swallowed. Comet pages never show their computed data (`CometDetails` waits for `objectEphemeridesUpdated`), and `ObjectConstellation` doesn't update on date change. Replace with `dispatch()` / `->to()` in `ObjectEphemerides.php:1088,1212-1261`, `EphemerisAside.php`, `AladinPreviewInfo.php:365,450,466,1170`, `ObjectConstellation.php:30`, `AladinSelects.php:43`, `SearchResultsTable`, `NearbyObjectsTable`.
-
 ### High
 
 - [ ] (checked) Editing a session crashes: `Cache` not imported in `app/Livewire/CreateSession.php` (used at line 236), after the row is already updated.

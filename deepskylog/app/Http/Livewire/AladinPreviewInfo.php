@@ -362,7 +362,7 @@ class AladinPreviewInfo extends Component
 
                 if (Auth::check() && !$hasStdSet && !$hasPayloadSelection && $payloadDiam1 === null && $payloadMag === null) {
                     try {
-                        $this->dispatchBrowserEvent('aladin-preview-info-updated', [
+                        $this->dispatch('aladin-preview-info-updated', ...[
                             'status' => 'incomplete',
                             'contrast_reserve' => $this->contrast_reserve,
                             'optimum_detection_magnification' => $this->optimum_detection_magnification,
@@ -447,7 +447,7 @@ class AladinPreviewInfo extends Component
 
             if (empty($userLocation)) {
                 try {
-                    $this->dispatchBrowserEvent('aladin-preview-info-updated', [
+                    $this->dispatch('aladin-preview-info-updated', ...[
                         'status' => 'incomplete',
                         'contrast_reserve' => $this->contrast_reserve,
                         'optimum_detection_magnification' => $this->optimum_detection_magnification,
@@ -463,7 +463,7 @@ class AladinPreviewInfo extends Component
             // we cannot compute contrast/optimum.
             if (!$obj && $payloadDiam1 === null && $payloadMag === null) {
                 try {
-                    $this->dispatchBrowserEvent('aladin-preview-info-updated', [
+                    $this->dispatch('aladin-preview-info-updated', ...[
                         'status' => 'incomplete',
                         'contrast_reserve' => $this->contrast_reserve,
                         'optimum_detection_magnification' => $this->optimum_detection_magnification,
@@ -1132,7 +1132,7 @@ class AladinPreviewInfo extends Component
                         unset($previewEphemerides['altitude_graph'], $previewEphemerides['year_graph'], $previewEphemerides['year_magnitude_graph'], $previewEphemerides['year_diameter_graph']);
                     }
 
-                    $this->dispatch('aladin-preview-info-updated', [
+                    $this->dispatch('aladin-preview-info-updated', ...[
                         'status' => 'ok',
                         'contrast_reserve' => $this->contrast_reserve,
                         'contrast_reserve_category' => $this->contrast_reserve_category ?? null,
@@ -1167,7 +1167,7 @@ class AladinPreviewInfo extends Component
             $this->last_error = (string) $e->getMessage();
             Log::error('AladinPreviewInfo: recalculate() failed', ['object_id' => $this->objectId, 'user_id' => Auth::id(), 'error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             try {
-                $this->dispatchBrowserEvent('aladin-preview-info-updated', [
+                $this->dispatch('aladin-preview-info-updated', ...[
                     'status' => 'error',
                     'error' => $this->last_error,
                     'payload' => $payload,

@@ -617,10 +617,6 @@ class SearchResultsTable extends PowerGridComponent
             try {
                 $this->dispatch('hasPendingCalculationsUpdated', hasPending: $this->hasPendingCalculations);
             } catch (\Throwable $_) {
-                try {
-                    $this->dispatchBrowserEvent('hasPendingCalculationsUpdated', ['hasPending' => $this->hasPendingCalculations]);
-                } catch (\Throwable $__) {
-                }
             }
         } catch (\Throwable $_) {
             $this->hasPendingCalculations = false;
@@ -1481,10 +1477,6 @@ class SearchResultsTable extends PowerGridComponent
             // Instruct PowerGrid to refresh this table server-side and client-side
             try {
                 $this->dispatch('pg:eventRefresh-' . $this->tableName);
-            } catch (\Throwable $_) {
-            }
-            try {
-                $this->dispatchBrowserEvent('pg:eventRefresh-' . $this->tableName);
             } catch (\Throwable $_) {
             }
         } catch (\Throwable $_) {

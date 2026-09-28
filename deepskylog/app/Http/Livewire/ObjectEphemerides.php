@@ -1085,10 +1085,10 @@ class ObjectEphemerides extends Component
 			// on the client because `ObjectConstellation` ignores null clears).
 			try {
 				if (!empty($consName)) {
-					$this->emitTo('object-constellation', 'setConstellation', $consName);
+					$this->dispatch('setConstellation', value: $consName)->to('object-constellation');
 				}
 			} catch (\Throwable $_) {
-				// ignore emit failures
+				// ignore dispatch failures
 			}
 
 			// Defensive: do not expose RA/Dec for the Moon — users requested hiding
@@ -1209,15 +1209,9 @@ class ObjectEphemerides extends Component
 						Log::debug('ObjectEphemerides: about to emit objectEphemeridesUpdated', ['objectId' => $previewPayload['objectId'] ?? null, 'ephemerides' => $previewPayload['ephemerides'] ?? null]);
 					} catch (\Throwable $_) {
 					}
-					$this->emit('objectEphemeridesUpdated', $previewPayload);
-					// Also emit to the `object-constellation` Livewire component (if mounted)
-					try {
-						$this->emitTo('object-constellation', 'setConstellation', $emitPayload['constellation'] ?? null);
-						// Also broadcast a generic event for other listeners if needed
-						$this->emit('objectConstellationUpdated', ['objectId' => $emitPayload['objectId'] ?? null, 'constellation' => $emitPayload['constellation'] ?? null]);
-					} catch (\Throwable $_) {
-						// non-fatal if emitTo fails (component not mounted)
-					}
+					// Broadcast to every listener: preview, comet/moon details and the
+					// `object-constellation` component (the payload carries the constellation).
+					$this->dispatch('objectEphemeridesUpdated', payload: $previewPayload);
 					// Also dispatch a browser event so non-authenticated pages (no Livewire preview mounted)
 					// still receive the computed ephemerides and update client-side UI listeners.
 					try {
@@ -1252,19 +1246,7 @@ class ObjectEphemerides extends Component
 							$browserPreview = $previewPayload;
 						}
 
-						$this->dispatchBrowserEvent('aladin-preview-info-updated', $browserPreview);
-						// Also dispatch a specialized event to force-update the small Livewire
-						// `object-constellation` component instance on the client. The client
-						// listener will locate the mounted Livewire component and set its
-						// `constellation` public property immediately.
-						try {
-							$this->dispatchBrowserEvent('dsl-force-constellation', [
-								'objectId' => $emitPayload['objectId'] ?? null,
-								'constellation' => $emitPayload['constellation'] ?? null,
-							]);
-						} catch (\Throwable $_) {
-							// non-fatal
-						}
+						$this->dispatch('aladin-preview-info-updated', ...$browserPreview);
 					} catch (\Throwable $_) {
 						// non-fatal if browser event dispatch fails in the server environment
 					}

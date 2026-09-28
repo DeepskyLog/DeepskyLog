@@ -3954,10 +3954,6 @@ class NearbyObjectsTable extends PowerGridComponent
                 $this->dispatch('pg:eventRefresh-' . $this->tableName);
             } catch (\Throwable $_) {
             }
-            try {
-                $this->dispatchBrowserEvent('pg:eventRefresh-' . $this->tableName);
-            } catch (\Throwable $_) {
-            }
         } catch (\Throwable $_) {
             // swallow to avoid breaking UI
         }
@@ -4064,21 +4060,12 @@ class NearbyObjectsTable extends PowerGridComponent
             $this->refreshTick = intval($this->refreshTick) + 1;
             // Also dispatch PowerGrid's eventRefresh for this table so the
             // front-end PowerGrid handler forces a full refresh (handles lazy
-            // loading and virtual scroll cases). Emit both a server-side
-            // dispatch (existing listener hooks) and a browser event so the
-            // vendor frontend code receives the signal to reload rows.
+            // loading and virtual scroll cases). Livewire's dispatch() reaches
+            // both server-side listeners and the browser.
             try {
-                // server-side for any Livewire listeners
                 $this->dispatch('pg:eventRefresh-' . $this->tableName);
             } catch (\Throwable $_) {
                 // ignore dispatch failures
-            }
-            try {
-                // browser event: PowerGrid's client side listens for this
-                // custom event (examples in project use `$dispatch('pg:eventRefresh-...')`).
-                $this->dispatchBrowserEvent('pg:eventRefresh-' . $this->tableName);
-            } catch (\Throwable $_) {
-                // ignore browser event failures
             }
 
             // Clear bulk precompute cache if lens selection changed

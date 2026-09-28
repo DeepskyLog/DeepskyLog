@@ -47,57 +47,20 @@ class EphemerisAside extends Component
         // Broadcast initial date so other Livewire components (tables, previews)
         // receive the same ephemeris date on first render.
         try {
-            $this->emit('ephemerisDateChanged', $this->date);
+            $this->dispatch('ephemerisDateChanged', date: $this->date);
         } catch (\Throwable $_) {
-            try {
-                $this->dispatch('ephemerisDateChanged', date: $this->date);
-            } catch (\Throwable $_) {
-                // ignore
-            }
+            // ignore
         }
     }
 
     public function updatedDate($value)
     {
-        // Broadcast an event so other Livewire components can update (Livewire v3 uses dispatch())
+        // Broadcast the date change to every listening component (object
+        // ephemerides, moon/sun/comet details, Aladin preview, tables).
         try {
-            try {
-                \Illuminate\Support\Facades\Log::debug('EphemerisAside: updatedDate dispatching', ['date' => $this->date]);
-            } catch (\Throwable $_) {
-            }
-            // Target commonly-listening components so server-side listeners receive the date change
-            try {
-                $this->dispatch('ephemerisDateChanged', date: $this->date)->to('object-ephemerides');
-            } catch (\Throwable $_) {
-                // ignore target failure
-            }
-            try {
-                $this->dispatch('ephemerisDateChanged', date: $this->date)->to('moon-details');
-            } catch (\Throwable $_) {
-                // ignore
-            }
-            try {
-                $this->dispatch('ephemerisDateChanged', date: $this->date)->to('aladin-preview-info');
-            } catch (\Throwable $_) {
-                // ignore target failure
-            }
-            // also emit a generic event for other listeners (date-only)
-            try {
-                $this->emit('ephemerisDateChanged', $this->date);
-            } catch (\Throwable $_) {
-                // fallback to dispatch when emit is unavailable
-                $this->dispatch('ephemerisDateChanged', date: $this->date);
-            }
-            try {
-                \Illuminate\Support\Facades\Log::debug('EphemerisAside: emitTo object-ephemerides ephemerisDateChanged', ['date' => $this->date]);
-            } catch (\Throwable $_) {
-            }
-            try {
-                $this->emitTo('object-ephemerides', 'ephemerisDateChanged', $this->date);
-            } catch (\Throwable $_) {
-            }
+            $this->dispatch('ephemerisDateChanged', date: $this->date);
         } catch (\Throwable $_) {
-            // fallback for older Livewire versions (noop)
+            // ignore
         }
         $this->recalculate();
         // Keep session in sync with updated aside date
@@ -128,21 +91,15 @@ class EphemerisAside extends Component
                 // Dispatch a sanitized browser event to avoid exposing the Moon's
                 // illuminated_fraction to generic client-side listeners which
                 // may update planet pages incorrectly. Moon-specific Livewire
-                // listeners still receive the full payload via emitTo below.
-                $browserPayload = $payloadForObjects;
-                $this->dispatchBrowserEvent('dsl-ephemeris-aside-updated', $browserPayload);
+                // listeners still receive the full payload via dispatch()->to() below.
+                $this->dispatch('dsl-ephemeris-aside-updated', ...$payloadForObjects);
             } catch (\Throwable $_) {
             }
             // Emit a sanitized payload to general Livewire listeners so object
             // ephemerides components do not receive the Moon's illumination.
             try {
-                $this->emit('ephemerisPayloadUpdated', $payloadForObjects);
+                $this->dispatch('ephemerisPayloadUpdated', payload: $payloadForObjects);
             } catch (\Throwable $_) {
-                try {
-                    $this->dispatch('ephemerisPayloadUpdated', payload: $payloadForObjects)->to('object-ephemerides');
-                } catch (\Throwable $__) {
-                    $this->dispatch('ephemerisPayloadUpdated', payload: $payloadForObjects);
-                }
             }
 
             // Also attempt a server-side authoritative recompute for the
@@ -207,39 +164,18 @@ class EphemerisAside extends Component
                                 }
                                 $sanitizedPreview['moon_illumination'] = $sanitizedPreview['ephemerides']['moon_illumination'] ?? ($sanitizedPreview['moon_illumination'] ?? null);
                             }
-                            $this->emit('objectEphemeridesUpdated', $sanitizedPreview);
+                            $this->dispatch('objectEphemeridesUpdated', payload: $sanitizedPreview);
                         } catch (\Throwable $_) {
-                            try {
-                                $this->dispatch('objectEphemeridesUpdated', payload: $sanitizedPreview)->to('object-ephemerides');
-                            } catch (\Throwable $_) {
-                            }
                         }
                     }
                 }
             } catch (\Throwable $_) {
             }
 
+            // Also send the full payload (with the Moon's illumination) directly
+            // to moon-details so it uses the exact same computed values as the aside.
             try {
-                \Illuminate\Support\Facades\Log::debug('EphemerisAside: emitTo object-ephemerides ephemerisPayloadUpdated', ['payload' => $payloadForObjects]);
-            } catch (\Throwable $_) {
-            }
-            try {
-                $this->emitTo('object-ephemerides', 'ephemerisPayloadUpdated', $payloadForObjects);
-            } catch (\Throwable $_) {
-            }
-
-            // Also send a moon-only payload directly to moon-details so it uses
-            // the exact same computed values as the aside.
-            try {
-                try {
-                    $this->emitTo('moon-details', 'ephemerisPayloadUpdated', $payload);
-                } catch (\Throwable $_) {
-                    try {
-                        $this->dispatch('ephemerisPayloadUpdated', payload: $payload)->to('moon-details');
-                    } catch (\Throwable $__) {
-                        $this->dispatch('ephemerisPayloadUpdated', payload: $payload);
-                    }
-                }
+                $this->dispatch('ephemerisPayloadUpdated', payload: $payload)->to('moon-details');
             } catch (\Throwable $_) {
             }
         } catch (\Throwable $_) {
@@ -254,21 +190,9 @@ class EphemerisAside extends Component
         } catch (\Throwable $_) {
         }
         try {
-            try {
-                $this->dispatch('ephemerisDateChanged', date: $this->date)->to('object-ephemerides');
-            } catch (\Throwable $_) {
-            }
-            try {
-                $this->dispatch('ephemerisDateChanged', date: $this->date)->to('moon-details');
-            } catch (\Throwable $_) {
-            }
-            try {
-                $this->dispatch('ephemerisDateChanged', date: $this->date)->to('aladin-preview-info');
-            } catch (\Throwable $_) {
-            }
             $this->dispatch('ephemerisDateChanged', date: $this->date);
         } catch (\Throwable $_) {
-            // fallback
+            // ignore
         }
         $this->recalculate();
         // Dispatch a lightweight browser event with the freshly computed aside payload
@@ -288,29 +212,16 @@ class EphemerisAside extends Component
                 unset($payloadForObjects['illuminated_fraction']);
             try {
                 // See above: dispatch sanitized payload to avoid leaking Moon illum
-                $browserPayload = $payloadForObjects;
-                $this->dispatchBrowserEvent('dsl-ephemeris-aside-updated', $browserPayload);
+                $this->dispatch('dsl-ephemeris-aside-updated', ...$payloadForObjects);
             } catch (\Throwable $_) {
             }
             try {
-                try {
-                    $this->dispatch('ephemerisPayloadUpdated', payload: $payloadForObjects)->to('object-ephemerides');
-                } catch (\Throwable $_) {
-                    $this->dispatch('ephemerisPayloadUpdated', payload: $payloadForObjects);
-                }
-                try {
-                    \Illuminate\Support\Facades\Log::debug('EphemerisAside: emitTo object-ephemerides ephemerisPayloadUpdated (setDateFromEvent)', ['payload' => $payloadForObjects]);
-                } catch (\Throwable $_) {
-                }
-                try {
-                    $this->emitTo('object-ephemerides', 'ephemerisPayloadUpdated', $payloadForObjects);
-                } catch (\Throwable $_) {
-                }
+                $this->dispatch('ephemerisPayloadUpdated', payload: $payloadForObjects);
             } catch (\Throwable $_) {
             }
             // Also send the full moon payload specifically to moon-details
             try {
-                $this->emitTo('moon-details', 'ephemerisPayloadUpdated', $payload);
+                $this->dispatch('ephemerisPayloadUpdated', payload: $payload)->to('moon-details');
             } catch (\Throwable $_) {
             }
         } catch (\Throwable $_) {

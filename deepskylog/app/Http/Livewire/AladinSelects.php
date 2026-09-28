@@ -38,9 +38,9 @@ class AladinSelects extends Component
                 'objectId' => (is_string($this->objectId) && trim($this->objectId) === '') ? null : $this->objectId,
             ];
 
-            // Emit a Livewire browser event the frontend JS listens for so hidden
+            // Dispatch a browser event the frontend JS listens for so hidden
             // inputs get synced and client-side logic runs.
-            $this->dispatchBrowserEvent('aladin-selects-changed', $payload);
+            $this->dispatch('aladin-selects-changed', ...$payload);
 
             // Also dispatch a Livewire event targeted at the preview component so it
             // performs the recalculation server-side immediately if it's mounted.
