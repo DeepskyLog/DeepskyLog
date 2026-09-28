@@ -178,6 +178,7 @@ class CreateEyepiece extends Component
             'focal_length_mm' => 'numeric|min:1',
             'apparentFOV' => 'numeric|min:1|max:150|nullable',
             'field_stop_mm' => 'numeric|min:1|max:150|nullable',
+            'max_focal_length_mm' => 'numeric|gt:focal_length_mm|nullable',
             'photo' => 'nullable|image',
             'description' => 'nullable|string',
         ]);

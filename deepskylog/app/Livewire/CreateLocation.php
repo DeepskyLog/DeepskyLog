@@ -130,7 +130,7 @@ class CreateLocation extends Component
         if ($this->update) {
             $this->location->update([
                 'name' => $this->name,
-                'description' => $this->description,
+                'description' => $this->description ?? '',
                 'latitude' => $this->latitude,
                 'longitude' => $this->longitude,
                 'hidden' => $this->hidden,
@@ -156,7 +156,7 @@ class CreateLocation extends Component
 
             $location = Location::create([
                 'name' => $this->name,
-                'description' => $this->description,
+                'description' => $this->description ?? '',
                 'latitude' => $this->latitude,
                 'longitude' => $this->longitude,
                 'hidden' => $this->hidden,

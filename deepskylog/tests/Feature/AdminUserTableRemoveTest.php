@@ -51,3 +51,26 @@ test('somebody who does not own the team cannot remove its members', function ()
 
     expect($team->fresh()->users)->toHaveCount(2);
 });
+
+test('a removed member does not keep the rights of the team they were removed from', function () {
+    $admin = $this->createUserAndAssignToTeam('Administrators');
+    $administrators = $this->getTeamFromString('Administrators');
+    $administrators->forceFill(['user_id' => $admin->id])->save();
+    $observers = $this->getTeamFromString('Observers');
+
+    $removed = User::factory()->create();
+    $removed->teams()->attach($observers);
+    $removed->teams()->attach($administrators);
+    $removed->switchTeam($administrators);
+    expect($removed->fresh()->isAdministrator())->toBeTrue();
+
+    test()->actingAs($admin);
+    Livewire::test(AdminUserTable::class, ['team' => $administrators->id])
+        ->dispatch('remove', $removed->id)
+        ->assertOk();
+
+    $removed = $removed->fresh();
+    expect($removed->isAdministrator())->toBeFalse()
+        ->and($removed->hasAdministratorPrivileges())->toBeFalse()
+        ->and($removed->current_team_id)->toBe($observers->id);
+});

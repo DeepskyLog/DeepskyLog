@@ -84,15 +84,6 @@
 
 Code review of the whole application, without the security aspects. Paths are relative to `deepskylog/`. Items marked (checked) were confirmed by hand; the others come from a review that read the code and migrations but did not reproduce every case. The test suite passed (259 passed, 7 skipped), so none of this is covered by tests yet.
 
-### High
-
-- [ ] Location `description` column is `string(255)` NOT NULL, but null or long TinyMCE HTML is passed (`CreateLocation.php:120-150`). Use `?? ''` and change the column to `text`.
-- [ ] (checked) Zoom eyepiece `max_focal_length_mm` is never saved: missing from the validation rules (`CreateEyepiece.php:178-193`).
-- [ ] Removing a user from a team uses `detach()` and leaves `current_team_id`, so a removed administrator keeps admin rights (`AdminUserTable.php:242-250`). Use `$team->removeUser()`.
-- [ ] Users can't delete broadcast messages: `destroy()` doesn't treat `receiver='all'` as receiver (`MessagesController.php:448`); same for `replyData()` (575).
-- [ ] Non-admins can send to `all` (stored as broadcast); `receiver` is not checked against existing users (`MessagesController.php:270-283`).
-- [ ] `TranslateObservationDescriptions` looks the id up as `legacy_id` first and caches another observation's translation for 30 days (`TranslateObservationDescriptions.php:46-47`). Use `Observation::find($id)`.
-
 ### Medium
 
 Objects

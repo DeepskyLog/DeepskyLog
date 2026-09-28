@@ -271,6 +271,13 @@ class MessagesController extends Controller
             return $this->broadcast($request);
         }
 
+        // Any other receiver must be an existing user: only administrators may
+        // send to 'all', and a non-existing username would be stored as a
+        // message nobody can read.
+        $request->validate([
+            'receiver' => ['exists:users,username', 'not_in:all'],
+        ]);
+
         $safeSubject = Message::sanitizeHtml($request->subject);
         $safeMessage = Message::sanitizeHtml($request->message);
 
@@ -443,9 +450,10 @@ class MessagesController extends Controller
 
         $message = Message::findOrFail($id);
 
-        // ensure the current user is allowed to delete this message: either the receiver,
-        // the sender, or an administrator.
-        if ($message->receiver !== $user->username && $message->sender !== $user->username && ! $this->userIsAdmin($user)) {
+        // ensure the current user is allowed to delete this message: either the receiver
+        // (everyone for a broadcast, receiver 'all'), the sender, or an administrator.
+        $isReceiver = $message->receiver === $user->username || strtolower((string) $message->receiver) === 'all';
+        if (! $isReceiver && $message->sender !== $user->username && ! $this->userIsAdmin($user)) {
             abort(403);
         }
 
@@ -571,8 +579,9 @@ class MessagesController extends Controller
     $auth = Auth::user();
         $message = Message::findOrFail($id);
 
-        // ensure receiver is user or admin
-        if ($message->receiver !== $auth->username && ! $this->userIsAdmin($auth)) {
+        // ensure receiver is user (everyone for a broadcast, receiver 'all') or admin
+        $isReceiver = $message->receiver === $auth->username || strtolower((string) $message->receiver) === 'all';
+        if (! $isReceiver && ! $this->userIsAdmin($auth)) {
             abort(403);
         }
 

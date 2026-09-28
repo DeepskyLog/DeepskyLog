@@ -42,8 +42,7 @@ class TranslateObservationDescriptions implements ShouldQueue
                 continue; // Already translated
             }
 
-            $observation = Observation::where('legacy_id', $id)->where('legacy_source', 'deepsky')->first()
-                ?? Observation::find($id);
+            $observation = Observation::find($id);
             if (!$observation || empty($observation->description)) {
                 continue;
             }

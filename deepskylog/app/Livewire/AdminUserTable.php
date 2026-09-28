@@ -258,7 +258,22 @@ final class AdminUserTable extends PowerGridComponent
             abort(403);
         }
 
-        $team->users()->detach($id);
+        $user = User::find($id);
+        if ($user === null) {
+            return;
+        }
+
+        // removeUser() also clears current_team_id when it points to this team,
+        // so a removed administrator loses the rights of the team at once.
+        $team->removeUser($user);
+
+        // Every user needs an active team: fall back to one they still belong to.
+        if ($user->current_team_id === null) {
+            $fallback = $user->teams()->first();
+            if ($fallback !== null) {
+                $user->switchTeam($fallback);
+            }
+        }
     }
 
     /**
