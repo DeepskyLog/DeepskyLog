@@ -380,17 +380,18 @@ class OalObservationImporter
     private function parseOalDateTime(string $value): array
     {
         $value = trim($value);
-        // ISO 8601: 2005-01-21T20:45:00 or 2005-01-21T20:45:00Z or with offset
-        try {
-            $dt = Carbon::parse($value);
-
-            return [$dt->format('Y-m-d'), $dt->format('H:i:s')];
-        } catch (\Throwable $_) {
-        }
-
         // Date only: 2005-01-21
         if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value)) {
             return [$value, null];
+        }
+
+        // ISO 8601: 2005-01-21T20:45:00 or 2005-01-21T20:45:00Z or with offset
+        try {
+            // Stored in UT; a value without an offset is taken as UT.
+            $dt = Carbon::parse($value, 'UTC')->utc();
+
+            return [$dt->format('Y-m-d'), $dt->format('H:i:s')];
+        } catch (\Throwable $_) {
         }
 
         return [null, null];

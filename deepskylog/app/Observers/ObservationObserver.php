@@ -8,6 +8,7 @@ use App\Models\Eyepiece;
 use App\Models\Lens;
 use App\Models\Filter;
 use App\Models\Location;
+use App\Services\SessionObservationLinker;
 use Illuminate\Support\Facades\Cache;
 
 class ObservationObserver
@@ -24,6 +25,8 @@ class ObservationObserver
             Filter::where('id', $obs->filter_id)->increment('observations');
         if ($obs->location_id)
             Location::where('id', $obs->location_id)->increment('observations');
+
+        $this->syncSessions($obs);
 
         // Invalidate homepage sketch/observation caches so lists refresh quickly
         // (include non-drawing observations so the "20 newest observations" list updates)
@@ -43,6 +46,12 @@ class ObservationObserver
         if ($obs->location_id)
             Location::where('id', $obs->location_id)->where('observations', '>', 0)->decrement('observations');
 
+        try {
+            SessionObservationLinker::forgetObservation((int) $obs->id);
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
         // Deleted observation -> invalidate homepage caches so lists refresh
         $this->forgetHomepageCaches();
     }
@@ -54,6 +63,10 @@ class ObservationObserver
 
     public function updated(Observation $obs): void
     {
+        if ($obs->wasChanged(['observed_on', 'observer_username'])) {
+            $this->syncSessions($obs);
+        }
+
         if ($obs->wasChanged('instrument_id')) {
             $old = $obs->getOriginal('instrument_id');
             $new = $obs->instrument_id;
@@ -106,6 +119,18 @@ class ObservationObserver
             if ($oldHas || $newHas) {
                 $this->forgetHomepageCaches();
             }
+        }
+    }
+
+    /**
+     * Link the observation to the sessions of its observer that cover its date.
+     */
+    private function syncSessions(Observation $obs): void
+    {
+        try {
+            SessionObservationLinker::syncObservation($obs);
+        } catch (\Throwable $e) {
+            report($e);
         }
     }
 

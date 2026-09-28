@@ -132,24 +132,10 @@
             $drawingDataUri = $entry['drawingDataUri'] ?? null;
             $user = ($entry['preloaded_users'] ?? collect())->get($obs->observerid);
 
-            $obsDate = !empty($obs->observed_on)
-                ? \Carbon\Carbon::parse($obs->observed_on)->format('Y-m-d')
-                : (strlen((string) ($obs->date ?? '')) === 8
-                    ? substr((string) $obs->date, 0, 4) . '-' . substr((string) $obs->date, 4, 2) . '-' . substr((string) $obs->date, 6, 2)
-                    : (string) ($obs->date ?? ''));
-
-            $obsTime = trim((string) ($obs->observed_time ?? ''));
-            if ($obsTime !== '' && preg_match('/^(\d{1,2}):(\d{2})/', $obsTime, $matches)) {
-                $obsTime = sprintf('%02d:%02d', (int) $matches[1], (int) $matches[2]);
-            } else {
-                $legacyTime = preg_replace('/\D+/', '', (string) ($obs->legacy_time_int ?? ''));
-                if (!empty($legacyTime)) {
-                    $legacyTime = str_pad(substr($legacyTime, 0, 4), 4, '0', STR_PAD_LEFT);
-                    $obsTime = substr($legacyTime, 0, 2) . ':' . substr($legacyTime, 2, 2);
-                } else {
-                    $obsTime = '';
-                }
-            }
+            // Stored in UT, shown in the time zone of the location.
+            $obsLocation = ($entry['preloaded_locations'] ?? collect())->get($obs->locationid);
+            $obsDate = $obs->localDate($obsLocation) ?? '';
+            $obsTime = $obs->localObservedAt($obsLocation)?->format('H:i T') ?? '';
 
             $rows = [];
             $characteristics = [];

@@ -16,7 +16,9 @@
             $observerSlug = $obs->observerUser?->slug ?: ($obs->observer_username ?? '');
 
             $date   = $obs->observed_on ? $obs->observed_on->format('Y-m-d') : '';
-            $time   = $obs->observed_time ? \Illuminate\Support\Str::substr((string) $obs->observed_time, 0, 5) : null;
+            // The URL uses the UT date; the label the local date and time of the location.
+            $local  = $obs->localObservedAt();
+            $time   = $local?->format('H:i T');
             $object = \Illuminate\Support\Str::slug((string) $obs->target_name, '-');
 
             $link = ($observerSlug && $date && $object)
@@ -69,7 +71,7 @@
             // Build HTML description
             $descParts = [];
             if ($date) {
-                $dateLabel = $date . ($time ? ' ' . $time : '');
+                $dateLabel = $local ? $local->format('Y-m-d') . ' ' . $time : $date;
                 $descParts[] = '<strong>Date:</strong> ' . e($dateLabel);
             }
             if ($observerName) {

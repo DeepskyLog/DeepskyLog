@@ -26,6 +26,19 @@ class ObservationConditions extends Component
         $this->nelm = $initialNelm !== null && $initialNelm !== '' ? $initialNelm : null;
         $this->bortle = $initialBortle !== null && $initialBortle !== '' ? $initialBortle : null;
         $this->lastAction = null;
+
+        // Prefilled values (editing an observation) come without a Bortle class.
+        if ($this->bortle === null) {
+            try {
+                if ($this->sqm !== null) {
+                    $this->bortle = Magnitude::sqmToBortle((float) $this->sqm);
+                } elseif ($this->nelm !== null) {
+                    $this->bortle = Magnitude::nelmToBortle((float) $this->nelm);
+                }
+            } catch (\Throwable $_) {
+                $this->bortle = null;
+            }
+        }
     }
 
     public function onLocationSelected($locationId)

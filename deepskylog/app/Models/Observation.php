@@ -146,6 +146,123 @@ class Observation extends Model
         return null;
     }
 
+    /**
+     * Legacy-compatible UT time as an HHMM integer (2130 = 21:30), or null when
+     * the time is unknown. Migrated observations without a time have
+     * legacy_time_int = -9999 and were given observed_time 23:59:00.
+     */
+    public function getTimeAttribute(): ?int
+    {
+        $legacy = $this->attributes['legacy_time_int'] ?? null;
+        $observed = $this->attributes['observed_time'] ?? null;
+
+        if ($observed !== null && $observed !== '') {
+            if ($legacy !== null && (int) $legacy < 0 && str_starts_with((string) $observed, '23:59')) {
+                return null;
+            }
+            if (preg_match('/^(\d{1,2}):(\d{2})/', (string) $observed, $m)) {
+                $hours = (int) $m[1];
+                $minutes = (int) $m[2];
+                if ($hours <= 23 && $minutes <= 59) {
+                    return $hours * 100 + $minutes;
+                }
+            }
+        }
+
+        if ($legacy !== null && (int) $legacy >= 0 && (int) $legacy <= 2359 && (int) $legacy % 100 < 60) {
+            return (int) $legacy;
+        }
+
+        return null;
+    }
+
+    // ─── Date and time ─────────────────────────────────────────────────────────
+    //
+    // observed_on and observed_time are stored in UT (as in the old DeepskyLog).
+    // The user enters and sees them in the time zone of the observing location.
+
+    /**
+     * Time zone of the observing location; UTC when the observation has none.
+     */
+    public function locationTimezone(?Location $location = null): string
+    {
+        $timezone = $location?->timezone
+            ?? ($this->location_id ? Location::whereKey($this->location_id)->value('timezone') : null);
+
+        return self::validTimezone($timezone);
+    }
+
+    /**
+     * Moment of the observation in the time zone of the location, or null when
+     * the time is unknown.
+     */
+    public function localObservedAt(?Location $location = null): ?Carbon
+    {
+        $time = $this->time;
+        if ($time === null || $this->observed_on === null) {
+            return null;
+        }
+
+        return Carbon::parse($this->observed_on)->setTimezone('UTC')
+            ->setTime(intdiv($time, 100), $time % 100)
+            ->setTimezone($this->locationTimezone($location));
+    }
+
+    /**
+     * Local date (Y-m-d) of the observation. Without a time the stored date is
+     * the only one there is.
+     */
+    public function localDate(?Location $location = null): ?string
+    {
+        $local = $this->localObservedAt($location);
+        if ($local !== null) {
+            return $local->format('Y-m-d');
+        }
+
+        return $this->observed_on !== null ? Carbon::parse($this->observed_on)->format('Y-m-d') : null;
+    }
+
+    /**
+     * Local time (H:i) of the observation, or null when unknown.
+     */
+    public function localTime(?Location $location = null): ?string
+    {
+        return $this->localObservedAt($location)?->format('H:i');
+    }
+
+    /**
+     * Convert a date and time entered in the time zone of the location to the
+     * UT date (Y-m-d) and time (H:i:s) that are stored. Without a time the date
+     * is kept as it is.
+     *
+     * @return array{0: string, 1: ?string}
+     */
+    public static function utcFromLocal(string $date, ?string $time, ?string $timezone): array
+    {
+        $date = trim($date);
+        $time = trim((string) $time);
+        if ($time === '') {
+            return [$date, null];
+        }
+
+        try {
+            $utc = Carbon::parse(substr($date, 0, 10) . ' ' . $time, self::validTimezone($timezone))->setTimezone('UTC');
+
+            return [$utc->format('Y-m-d'), $utc->format('H:i:s')];
+        } catch (\Throwable $_) {
+            return [$date, $time];
+        }
+    }
+
+    private static function validTimezone(?string $timezone): string
+    {
+        if (!empty($timezone) && in_array($timezone, \DateTimeZone::listIdentifiers(\DateTimeZone::ALL_WITH_BC), true)) {
+            return $timezone;
+        }
+
+        return 'UTC';
+    }
+
     public function getHasDrawingAttribute(): bool
     {
         return (bool) ($this->attributes['has_drawing'] ?? false);

@@ -8,42 +8,16 @@
         );
         $myUser = auth()->user();
 
-        $currentDateInt = (string) ($current->date ?? "");
-        $currentDate =
-            strlen($currentDateInt) === 8
-                ? substr($currentDateInt, 0, 4) .
-                    "-" .
-                    substr($currentDateInt, 4, 2) .
-                    "-" .
-                    substr($currentDateInt, 6, 2)
-                : $currentDateInt;
-        $currentTime = !empty($current->time)
-            ? sprintf(
-                "%02d:%02d",
-                intdiv((int) $current->time, 100),
-                (int) $current->time % 100,
-            )
-            : null;
+        // Stored in UT, shown in the time zone of the location.
+        $currentLocal = $current->localObservedAt();
+        $currentDate = $current->localDate();
+        $currentTime = $currentLocal?->format("H:i T");
 
         $previousDate = null;
         $previousTime = null;
         if ($previous) {
-            $previousDateInt = (string) ($previous->date ?? "");
-            $previousDate =
-                strlen($previousDateInt) === 8
-                    ? substr($previousDateInt, 0, 4) .
-                        "-" .
-                        substr($previousDateInt, 4, 2) .
-                        "-" .
-                        substr($previousDateInt, 6, 2)
-                    : $previousDateInt;
-            $previousTime = !empty($previous->time)
-                ? sprintf(
-                    "%02d:%02d",
-                    intdiv((int) $previous->time, 100),
-                    (int) $previous->time % 100,
-                )
-                : null;
+            $previousDate = $previous->localDate();
+            $previousTime = $previous->localObservedAt()?->format("H:i T");
         }
 
         $currentLocation = ($preloaded_locations ?? collect())->get(

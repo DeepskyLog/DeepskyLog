@@ -301,7 +301,8 @@ class ObservationPdfDataBuilder
                 return Carbon::createFromFormat(
                     'Y-m-d H:i',
                     sprintf('%s %02d:%02d', $formattedDate, $hours, $minutes),
-                    $timezone,
+                    // Observation times are UT.
+                    'UTC',
                 );
             }
 
@@ -319,7 +320,7 @@ class ObservationPdfDataBuilder
 
         $timeValue = (int) $observation->time;
 
-        return $timeValue > 0 && $timeValue <= 2359 && ($timeValue % 100) < 60;
+        return $timeValue >= 0 && $timeValue <= 2359 && ($timeValue % 100) < 60;
     }
 
     private function determineMoonFrameIndex(mixed $phaseRatio, mixed $illuminatedFraction): ?int

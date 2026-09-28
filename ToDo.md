@@ -86,13 +86,6 @@ Code review of the whole application, without the security aspects. Paths are re
 
 ### High
 
-- [ ] (checked) Editing a session crashes: `Cache` not imported in `app/Livewire/CreateSession.php` (used at line 236), after the row is already updated.
-- [ ] Observations are linked to a session only when it is created (`BuildSessionCopies`); later observations and edits (dates, observers) never update `sessionObservations`, copies or invitations.
-- [ ] (checked) `sqm` and `limiting_magnitude` from the observation form are never validated/saved, nor prefilled in `edit()` (`ObservationsController.php:2446-2493, 2765-2776`).
-- [ ] (checked) `$obs->time` doesn't exist on `Observation`: time is never shown and the moon context is computed for 12:00 (`detail.blade.php:14-26`, `ObservationsController.php:1813,1842`). Add an accessor from `observed_time` / `legacy_time_int`.
-- [x] Deep-sky details (visibility, diameters, stellar/extended/resolved, …) are not loaded for legacy observations on the detail page and the PDF (`ObservationsController.php:96-126`, `ObservationPdfDataBuilder.php:33-55`).
-- [x] "Compare with my last" 404s for new observations and links to the wrong one when "my last" is new (`ObservationsController.php:228-340`).
-- [x] Editing a legacy comet observation can't find the comet (`edit()` redirects with the numeric id as `slug`, ~2780).
 - [ ] Deleting an object with "move observations to" gave a 500 (fixed in `ObjectController::destroy()`; the `AdminObjectCheckService` part below is still open): `observations.objectname` doesn't exist (`ObjectController.php:4509-4513`). Same column in `AdminObjectCheckService.php:136-138, 184-206` (two admin actions return 500) and 315-317 (section always "unavailable").
 - [ ] Saving the object edit form deletes and recreates all aliases with a regex that corrupts catalog/catindex (`H400 12` → `H` + `400 12`, `vdB-Ha 5` → `vdB` + `-Ha 5`) (`ObjectController.php:3265-3330`); `store()` uses a different regex (4078).
 - [ ] `/api/search` returns 500 unless `substring=1`: `DB::select(DB::raw(...))` and `:q` used twice (`SearchController.php:92,117`). `$allowedTypes` (line 25) doesn't match `search_index.source_type`. Same `DB::raw` misuse in `QuickSearch.php:134`.

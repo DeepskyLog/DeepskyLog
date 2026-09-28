@@ -4,12 +4,12 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
                 <label class="block text-xs text-gray-400 mb-1">{{ __('Limiting magnitude') }}</label>
-                <input name="limiting_magnitude" type="number" step="0.01" wire:model.debounce.500ms="nelm" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100" />
+                <input name="limiting_magnitude" type="number" step="0.01" value="{{ $nelm }}" wire:model.debounce.500ms="nelm" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100" />
             </div>
 
             <div>
                 <label class="block text-xs text-gray-400 mb-1">{{ __('SQM') }}</label>
-                <input name="sqm" type="number" step="0.01" wire:model.debounce.500ms="sqm" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100" />
+                <input name="sqm" type="number" step="0.01" value="{{ $sqm }}" wire:model.debounce.500ms="sqm" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100" />
             </div>
 
             <div>
@@ -17,7 +17,7 @@
                 <select name="bortle" wire:model.debounce.500ms="bortle" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100">
                     <option value="">{{ __('Select Bortle') }}</option>
                     @for ($i = 1; $i <= 9; $i++)
-                        <option value="{{ $i }}">{{ $i }}</option>
+                        <option value="{{ $i }}" @selected((string) $bortle === (string) $i)>{{ $i }}</option>
                     @endfor
                 </select>
             </div>
@@ -216,7 +216,13 @@
                     setValue(sqmInput, sqm !== null ? sqm.toFixed(2) : null);
                 }
             }
+            // Values prefilled when editing (or kept after a validation error)
+            // must not be replaced by those of the preselected location.
+            const hasInitialValues = toFloat(nelmInput.value) !== null || toFloat(sqmInput.value) !== null;
             // If a location was selected before this script loaded, apply it now
+            if (window.__dsl_pending_location !== undefined && hasInitialValues) {
+                delete window.__dsl_pending_location;
+            }
             if (window.__dsl_pending_location !== undefined) {
                 try {
                     window.updateObservationConditionsFromLocation(window.__dsl_pending_location);
@@ -227,7 +233,7 @@
             // Also, if the form has a preselected location (hidden input), apply it now
             try {
                 const locHidden = document.getElementById('location_hidden');
-                if (locHidden && locHidden.value) {
+                if (locHidden && locHidden.value && !hasInitialValues) {
                     window.updateObservationConditionsFromLocation(locHidden.value);
                 }
             } catch (e) {

@@ -1761,7 +1761,8 @@ class ObservationsController extends Controller
                 return Carbon::createFromFormat(
                     'Y-m-d H:i',
                     sprintf('%s %02d:%02d', $formattedDate, $hours, $minutes),
-                    $timezone,
+                    // Observation times are UT.
+                    'UTC',
                 );
             }
 
@@ -1782,7 +1783,7 @@ class ObservationsController extends Controller
 
         $timeValue = (int) $observation->time;
 
-        return $timeValue > 0 && $timeValue <= 2359 && ($timeValue % 100) < 60;
+        return $timeValue >= 0 && $timeValue <= 2359 && ($timeValue % 100) < 60;
     }
 
     /**
@@ -2380,6 +2381,8 @@ class ObservationsController extends Controller
             'magnification' => 'nullable|string|max:32',
             'seeing' => 'nullable|integer|between:1,5',
             'transparency' => 'nullable|integer|between:1,5',
+            'sqm' => 'nullable|numeric|between:10,23',
+            'limiting_magnitude' => 'nullable|numeric|between:0,8',
             // Keep a reasonable validator cap (in kilobytes). Note: PHP limits may be lower than this.
             'sketch' => 'nullable|file|image|max:5120',
             // Deepsky-specific detail fields (optional)
@@ -2438,8 +2441,14 @@ class ObservationsController extends Controller
         $obs->target_table = $target['table'];
         $obs->target_key = $target['key'];
         $obs->target_name = $target['name'];
-        $obs->observed_on = $validated['observed_on'];
-        $obs->observed_time = $validated['observed_time'] ?? null;
+        // The form gives the date and time in the time zone of the location;
+        // they are stored in UT.
+        $timezone = !empty($validated['location_id']) ? Location::whereKey($validated['location_id'])->value('timezone') : null;
+        [$obs->observed_on, $obs->observed_time] = Observation::utcFromLocal(
+            (string) $validated['observed_on'],
+            $validated['observed_time'] ?? null,
+            $timezone,
+        );
         $obs->description = $validated['description'] ?? null;
         // Accept either a plain language id or an object-like string (e.g. "{label:'English',value:'en',}")
         $langInput = $validated['language'] ?? null;
@@ -2489,6 +2498,8 @@ class ObservationsController extends Controller
         // computed from instrument/eyepiece/lens and must not be stored.
         $obs->seeing = $validated['seeing'] ?? null;
         $obs->transparency = $validated['transparency'] ?? null;
+        $obs->sqm = isset($validated['sqm']) && $validated['sqm'] !== '' ? round((float) $validated['sqm'], 2) : null;
+        $obs->limiting_magnitude = isset($validated['limiting_magnitude']) && $validated['limiting_magnitude'] !== '' ? round((float) $validated['limiting_magnitude'], 2) : null;
 
         // Handle optional sketch upload
         if ($request->hasFile('sketch') && $request->file('sketch')->isValid()) {
@@ -2621,17 +2632,15 @@ class ObservationsController extends Controller
         }
 
         // Prepare flashed input so create view is prefilled
+        // The form shows the date and time in the time zone of the location.
         $prefill = [];
         try {
-            if (!empty($selectedUnified->observed_on)) {
-                $prefill['observed_on'] = $selectedUnified->observed_on instanceof \DateTimeInterface
-                    ? $selectedUnified->observed_on->format('Y-m-d')
-                    : (string) $selectedUnified->observed_on;
-            }
+            $prefill['observed_on'] = $selectedUnified->localDate();
         } catch (\Throwable $_) {
         }
-        if (!empty($selectedUnified->observed_time)) {
-            $prefill['observed_time'] = (string) $selectedUnified->observed_time;
+        $localTime = $selectedUnified->localTime();
+        if ($localTime !== null) {
+            $prefill['observed_time'] = $localTime;
         }
         $prefill['description'] = $selectedUnified->description ?? null;
         $prefill['language'] = $selectedUnified->language ?? null;
@@ -2643,6 +2652,16 @@ class ObservationsController extends Controller
         $prefill['magnification'] = $selectedUnified->magnification ?? null;
         $prefill['seeing'] = $selectedUnified->seeing ?? null;
         $prefill['transparency'] = $selectedUnified->transparency ?? null;
+        // Migrated observations use -1 (SQM) and 0 (limiting magnitude) for
+        // "not given"; only prefill values the form accepts.
+        $sqm = $selectedUnified->getRawOriginal('sqm');
+        if ($sqm !== null && (float) $sqm >= 10 && (float) $sqm <= 23) {
+            $prefill['sqm'] = (float) $sqm;
+        }
+        $limitingMagnitude = $selectedUnified->getRawOriginal('limiting_magnitude');
+        if ($limitingMagnitude !== null && (float) $limitingMagnitude > 0 && (float) $limitingMagnitude <= 8) {
+            $prefill['limiting_magnitude'] = (float) $limitingMagnitude;
+        }
         $prefill['edit_unified_id'] = $selectedUnified->id;
 
         // The create form is opened by slug; deep-sky objects and comets are

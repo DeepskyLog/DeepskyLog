@@ -75,7 +75,7 @@ it('shows a session oal export button and exports the session as valid oal', fun
     $otherObservation = Observation::query()->create([
         'observer_username' => $owner->username,
         'observer_user_id' => $owner->id,
-        'observed_on' => '2024-01-13',
+        'observed_on' => '2024-01-20',
         'observed_time' => '00:05:00',
         'location_id' => $location->id,
         'language' => 'en',
@@ -88,10 +88,10 @@ it('shows a session oal export button and exports the session as valid oal', fun
         'legacy_source' => null,
     ]);
 
-    DB::table('sessionObservations')->insert([
-        'sessionid' => $session->id,
-        'observationid' => $sessionObservation->id,
-    ]);
+    // Observations are linked to the session automatically; the second one
+    // falls outside its dates.
+    expect(DB::table('sessionObservations')->where('sessionid', $session->id)->pluck('observationid')->map(fn ($v) => (int) $v)->all())
+        ->toBe([$sessionObservation->id]);
 
     $showResponse = $this->get(route('session.show', [$owner->slug, $session->slug]));
 

@@ -11,20 +11,11 @@
                     "-" .
                     substr($dateInt, 6, 2)
                 : $dateInt;
-        $obsTimeInt = (int) $obs->time;
-        $obsTime =
-            isset($obs->time) &&
-            $obs->time !== null &&
-            $obs->time !== "" &&
-            $obsTimeInt > 0 &&
-            $obsTimeInt <= 2359 &&
-            $obsTimeInt % 100 < 60
-                ? sprintf(
-                    "%02d:%02d",
-                    intdiv($obsTimeInt, 100),
-                    $obsTimeInt % 100,
-                )
-                : null;
+        // Stored in UT, shown in the time zone of the location. $obsDate stays
+        // the UT date: it is part of the URLs of the observation.
+        $obsLocal = $obs->localObservedAt();
+        $obsLocalDate = $obsLocal ? $obsLocal->format("Y-m-d") : $obsDate;
+        $obsTime = $obsLocal?->format("H:i T");
 
         $backUrl =
             $observationType === "comet"
@@ -309,7 +300,7 @@
                                 {{ __("on") }}
                                 <span class="text-white font-semibold">{{
                                     \Carbon\Carbon::create(
-                                        $obsDate,
+                                        $obsLocalDate,
                                     )->translatedFormat("j M Y")
                                 }}</span>
                                 @if ($obsTime)

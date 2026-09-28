@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\ObservationSession;
-use Carbon\Carbon;
+use App\Services\SessionObservationLinker;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -20,12 +20,18 @@ class BuildSessionCopies implements ShouldQueue
     public array $participants;
 
     /**
+     * Participants who get a copy of the session; null means all of them.
+     */
+    public ?array $copiesFor;
+
+    /**
      * Create a new job instance.
      */
-    public function __construct(int $sessionId, array $participants)
+    public function __construct(int $sessionId, array $participants, ?array $copiesFor = null)
     {
         $this->sessionId = $sessionId;
         $this->participants = array_values(array_unique(array_filter($participants)));
+        $this->copiesFor = $copiesFor === null ? null : array_values(array_unique(array_filter($copiesFor)));
     }
 
     /**
@@ -38,47 +44,6 @@ class BuildSessionCopies implements ShouldQueue
             if (!$session) {
                 return;
             }
-
-            // Determine date range as SQL dates for the new observations table.
-            $startDate = null;
-            $endDate = null;
-            try {
-                if (!empty($session->begindate)) {
-                    $startDate = Carbon::parse($session->begindate)->format('Y-m-d');
-                }
-            } catch (\Throwable $e) {
-                $startDate = null;
-            }
-            try {
-                if (!empty($session->enddate)) {
-                    $endDate = Carbon::parse($session->enddate)->format('Y-m-d');
-                }
-            } catch (\Throwable $e) {
-                $endDate = null;
-            }
-
-            // Collect new observations.id values for all participants filtered by date range.
-            $obsQuery = DB::table('observations')
-                ->whereIn('observer_username', $this->participants);
-            if ($startDate) {
-                $obsQuery->where('observed_on', '>=', $startDate);
-            }
-            if ($endDate) {
-                $obsQuery->where('observed_on', '<=', $endDate);
-            }
-            $allObsIds = $obsQuery->pluck('id')->map(fn($v) => (string) $v)->toArray();
-
-            // Helper: write sessionObservations
-            $writeSessionObservations = function ($sid, $ids) {
-                DB::table('sessionObservations')->where('sessionid', $sid)->delete();
-                $rows = [];
-                foreach ($ids as $oid) {
-                    $rows[] = ['sessionid' => $sid, 'observationid' => $oid];
-                }
-                if (!empty($rows)) {
-                    DB::table('sessionObservations')->insert($rows);
-                }
-            };
 
             // Persist sessionObservers for primary session
             DB::table('sessionObservers')->where('sessionid', $session->id)->delete();
@@ -93,14 +58,11 @@ class BuildSessionCopies implements ShouldQueue
                 DB::table('sessionObservers')->insert($rows);
             }
 
-            // Write observations for primary
-            if (!empty($allObsIds)) {
-                $writeSessionObservations($session->id, $allObsIds);
-            }
+            SessionObservationLinker::syncSession($session);
 
             // Create per-user copies
-            foreach ($this->participants as $p) {
-                if ($p === $session->observerid) {
+            foreach ($this->copiesFor ?? $this->participants as $p) {
+                if ($p === $session->observerid || !in_array($p, $this->participants, true)) {
                     continue;
                 }
 
@@ -139,21 +101,7 @@ class BuildSessionCopies implements ShouldQueue
                     DB::table('sessionObservers')->insert($copyRows);
                 }
 
-                // observations for copy: only this participant's observations within the session date range
-                // Collect new observations.id values for this specific participant.
-                $pObsQuery = DB::table('observations')
-                    ->where('observer_username', $p);
-                if ($startDate) {
-                    $pObsQuery->where('observed_on', '>=', $startDate);
-                }
-                if ($endDate) {
-                    $pObsQuery->where('observed_on', '<=', $endDate);
-                }
-                $pObsIds = $pObsQuery->pluck('id')->map(fn($v) => (string) $v)->toArray();
-
-                if (!empty($pObsIds)) {
-                    $writeSessionObservations($copy->id, $pObsIds);
-                }
+                SessionObservationLinker::syncSession($copy);
             }
         } catch (\Throwable $e) {
             report($e);

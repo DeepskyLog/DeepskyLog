@@ -184,7 +184,7 @@
                         <div>
                             <label class="block text-xs text-gray-400 mb-1">
                                 {{ __('Time') }}
-                                <span class="text-xs text-gray-400">({{ $showInches ? 'hh:mm AM/PM' : '24h' }})</span>
+                                <span class="text-xs text-gray-400">({{ $showInches ? 'hh:mm AM/PM' : '24h' }}, {{ __('local time at the location') }})</span>
                             </label>
                             @if($showInches)
                                 <x-time-picker name="observed_time" without-seconds="true" value="{{ old('observed_time', '') }}" class="w-full" />

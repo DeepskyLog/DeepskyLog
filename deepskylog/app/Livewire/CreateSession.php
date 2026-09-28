@@ -6,8 +6,10 @@ use App\Jobs\BuildSessionCopies;
 use App\Jobs\SendSessionInvitations;
 use App\Models\ObservationSession;
 use App\Models\User;
+use App\Services\SessionObservationLinker;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -216,6 +218,9 @@ class CreateSession extends Component
         }
 
         if ($this->session) {
+            // Participants before this edit, to find the observers who were added.
+            $previousParticipants = SessionObservationLinker::participants($this->session);
+
             // If we're updating an existing inactive session (draft), activate it
             $activeToSave = $this->session->active == 0 ? 1 : ($this->active ?? $this->session->active);
 
@@ -265,6 +270,26 @@ class CreateSession extends Component
                 }
             } catch (\Throwable $e) {
                 // non-fatal: log and continue
+                report($e);
+            }
+
+            // The dates or observers may have changed: relink the observations, and
+            // give the added observers a copy of the session and an invitation.
+            try {
+                SessionObservationLinker::syncSession($this->session);
+
+                $participants = SessionObservationLinker::participants($this->session);
+                $added = array_values(array_diff($participants, $previousParticipants));
+                if (! empty($added)) {
+                    BuildSessionCopies::dispatch($this->session->id, $participants, $added);
+
+                    $creator = auth()->user()->username ?? null;
+                    $invitees = array_values(array_filter($added, fn ($u) => $u !== $creator));
+                    if (! empty($invitees)) {
+                        SendSessionInvitations::dispatch($this->session->id, $invitees, $creator ?? ($this->observer ?? 'admin'));
+                    }
+                }
+            } catch (\Throwable $e) {
                 report($e);
             }
 
