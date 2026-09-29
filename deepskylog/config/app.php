@@ -58,6 +58,13 @@ return [
 
     'asset_url' => env('ASSET_URL', '/'),
 
+    // Host name used for generated e-mail addresses of social logins without
+    // one ({id}@{provider}.{domain}); defaults to the host of APP_URL.
+    'domain' => env('APP_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST) ?: 'localhost'),
+
+    // Comma-separated list of trusted proxies (App\Http\Middleware\TrustProxies)
+    'trusted_proxies' => env('TRUSTED_PROXIES'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

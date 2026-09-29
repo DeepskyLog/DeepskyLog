@@ -55,6 +55,16 @@ return [
         'redirect' => env('TWITTER_REDIRECT', env('TWITTER_REDIRECT_URI')),
     ],
 
+    'bigdatacloud' => [
+        // Reverse geocoding and time zones of new locations
+        'key' => env('BIGDATA_API_KEY'),
+    ],
+
+    'lightpollutionmap' => [
+        // Sky brightness of new locations
+        'key' => env('LIGHTPOLLUTIONMAP_API_KEY'),
+    ],
+
     'google' => [
         // GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET are already standard
         'client_id' => env('GOOGLE_CLIENT_ID', env('GOOGLE_KEY')),

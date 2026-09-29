@@ -240,7 +240,7 @@ class CreateLocation extends Component
                     'latitude' => $latitude,
                     'longitude' => $longitude,
                     'localityLanguage' => 'en',
-                    'key' => env('BIGDATA_API_KEY'),
+                    'key' => config('services.bigdatacloud.key'),
                 ],
             ]);
             $data = json_decode($response->getBody(), true);
@@ -255,7 +255,7 @@ class CreateLocation extends Component
                 'query' => [
                     'latitude' => $latitude,
                     'longitude' => $longitude,
-                    'key' => env('BIGDATA_API_KEY'),
+                    'key' => config('services.bigdatacloud.key'),
                 ],
             ]);
             $data = json_decode($response->getBody(), true);
@@ -408,7 +408,7 @@ class CreateLocation extends Component
                     'ql' => 'wa_2015',
                     'qt' => 'point',
                     'qd' => $this->longitude.','.$this->latitude,
-                    'key' => env('LIGHTPOLLUTIONMAP_API_KEY'),
+                    'key' => config('services.lightpollutionmap.key'),
                 ],
             ]);
 

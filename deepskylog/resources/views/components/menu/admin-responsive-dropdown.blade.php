@@ -47,7 +47,7 @@
                         />
 
                         <x-dropdown.item
-                            href="/admin/eyepiece-type"
+                            href="/admin/eyepiece-types"
                             label="{{ __('Eyepiece Types') }}"
                         />
 

@@ -45,7 +45,7 @@ class ResolveSocialiteUser implements ResolvesSocialiteUsers
             }
 
             if (Socialstream::generatesMissingEmails()) {
-                $user->email = $user->getEmail() ?? ("{$user->id}@{$provider}".config('app.domain'));
+                $user->email = $user->getEmail() ?? ("{$user->id}@{$provider}.".config('app.domain'));
             }
 
             return $user;
