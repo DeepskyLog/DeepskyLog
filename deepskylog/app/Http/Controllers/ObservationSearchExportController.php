@@ -1214,13 +1214,14 @@ class ObservationSearchExportController extends Controller
         return trim((string) ($observation->target_key ?? ''));
     }
 
+    /**
+     * Moment of the observation in the time zone of the location. The date and
+     * time are stored in UT. Without a time the stored date is the only thing
+     * known: it is given as midnight UT, not shifted to the location, so that
+     * the date does not change.
+     */
     private function astroPlannerObservationMoment(Observation $observation, ?string $timezone): CarbonImmutable
     {
-        $timezone = trim((string) $timezone);
-        if ($timezone === '') {
-            $timezone = 'UTC';
-        }
-
         $date = $observation->observed_on instanceof \DateTimeInterface
             ? $observation->observed_on->format('Y-m-d')
             : trim((string) $observation->observed_on);
@@ -1229,41 +1230,24 @@ class ObservationSearchExportController extends Controller
             $date = CarbonImmutable::createFromFormat('Ymd', (string) $observation->legacy_date_int, 'UTC')->format('Y-m-d');
         }
 
-        $time = trim((string) ($observation->observed_time ?? ''));
-        if ($time === '' && preg_match('/^\d{4,6}$/', (string) ($observation->legacy_time_int ?? '')) === 1) {
-            $legacyTime = str_pad((string) $observation->legacy_time_int, 6, '0', STR_PAD_LEFT);
-            $time = substr($legacyTime, 0, 2) . ':' . substr($legacyTime, 2, 2) . ':' . substr($legacyTime, 4, 2);
+        try {
+            $moment = CarbonImmutable::parse(substr($date, 0, 10), 'UTC')->startOfDay();
+        } catch (\Throwable $_) {
+            return CarbonImmutable::now('UTC');
         }
 
-        if (preg_match('/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/', $time, $matches) === 1) {
-            $time = sprintf('%02d:%02d:%02d', (int) $matches[1], (int) $matches[2], (int) ($matches[3] ?? 0));
-        } else {
-            $time = '00:00:00';
+        $time = $observation->time;
+        if ($time === null) {
+            return $moment;
         }
 
-        $candidate = trim($date . ' ' . $time);
-        foreach ([$timezone, 'UTC'] as $tz) {
-            foreach (['Y-m-d H:i:s', 'Y-n-j H:i:s', 'Ymd H:i:s'] as $format) {
-                try {
-                    return CarbonImmutable::createFromFormat($format, $candidate, $tz);
-                } catch (\Throwable $_) {
-                }
-            }
-
-            try {
-                return CarbonImmutable::parse($candidate, $tz);
-            } catch (\Throwable $_) {
-            }
-
-            if ($date !== '') {
-                try {
-                    return CarbonImmutable::parse($date, $tz)->setTimeFromTimeString($time);
-                } catch (\Throwable $_) {
-                }
-            }
+        $seconds = preg_match('/^\d{1,2}:\d{2}:(\d{2})/', (string) $observation->observed_time, $m) === 1 ? (int) $m[1] : 0;
+        $moment = $moment->setTime(intdiv($time, 100), $time % 100, $seconds);
+        try {
+            return $moment->setTimezone(trim((string) $timezone) !== '' ? trim((string) $timezone) : 'UTC');
+        } catch (\Throwable $_) {
+            return $moment;
         }
-
-        return CarbonImmutable::now('UTC');
     }
 
     private function astroPlannerEpochSeconds(\DateTimeInterface $moment): int

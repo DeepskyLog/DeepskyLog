@@ -226,6 +226,26 @@ class Instrument extends Model
         return round($this->focal_length_mm / $eyepiece->focal_length_mm) . 'x';
     }
 
+    /**
+     * Magnification with this equipment, rounded to a whole number, or null
+     * when it cannot be determined. An instrument with a fixed magnification
+     * (binoculars, finders) needs no eyepiece.
+     */
+    public function magnificationFor(?Eyepiece $eyepiece, ?Lens $lens = null): ?int
+    {
+        $factor = $lens && (float) $lens->factor > 0 ? (float) $lens->factor : 1.0;
+
+        if ((float) $this->fixedMagnification > 0) {
+            return (int) round($this->fixedMagnification * $factor);
+        }
+
+        if ($eyepiece && (float) $this->focal_length_mm > 0 && (float) $eyepiece->focal_length_mm > 0) {
+            return (int) round($this->focal_length_mm * $factor / $eyepiece->focal_length_mm);
+        }
+
+        return null;
+    }
+
     public function field_of_view(Eyepiece $eyepiece, ?Lens $lens = null): string
     {
         $focal_length = $this->focal_length_mm;

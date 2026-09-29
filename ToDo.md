@@ -86,14 +86,6 @@ Code review of the whole application, without the security aspects. Paths are re
 
 ### Medium
 
-Observations
-- [ ] Editing a legacy observation's date doesn't update `legacy_date_int` / `legacy_time_int`, which the model prefers, so the old date is still shown.
-- [ ] CSV/OAL import duplicate check: without time it overwrites any same-day observation of the object; `update()` resets `has_drawing` (and `transparency` for OAL); legacy rows are skipped, so re-importing an export duplicates them (`CsvObservationImporter.php:266-272`, `OalObservationImporter.php:335-340`).
-- [ ] (plausible) Time zones differ between formats: CSV says UT, OAL export writes local time with offset, OAL import drops the offset.
-- [x] `CometDrawingController.php:39,42` filters on a non-existent `objectid` column (500 on `/cometdrawings?object=…`).
-- [x] (plausible) `where('slug', $key)->orWhere('id', $key)` can return the wrong comet or planet on MySQL ("1p-halley" = 1) (`ObservationsController.php:2513,2526`).
-- [ ] Magnification picker loses the stored magnification when editing: `manual_magnification` isn't passed and `recompute()` overwrites it; `fixedMagnification` is ignored (`observations/create.blade.php:323-328`, `MagnificationPicker.php:52-54`).
-
 Sessions, observing lists, messages
 - [ ] `/popular-sessions` links 404 (`$session->user` isn't a relation, should be `observer`), and the table lists drafts (`PopularSessionsTable.php:129`).
 - [ ] Sitemap never contains sessions: selects non-existent `updated_at` (`routes/web.php:842`).

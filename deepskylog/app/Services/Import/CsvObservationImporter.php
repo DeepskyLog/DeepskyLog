@@ -7,7 +7,6 @@ use App\Models\Filter;
 use App\Models\Instrument;
 use App\Models\Lens;
 use App\Models\Location;
-use App\Models\Observation;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +34,8 @@ use Illuminate\Support\Str;
  */
 class CsvObservationImporter
 {
+    use SavesImportedObservations;
+
     private User $user;
 
     public function __construct(User $user)
@@ -264,42 +265,25 @@ class CsvObservationImporter
                     'legacy_source' => null,
                 ];
 
-                // Duplicate check: same observer + object + date + time
-                /** @var Observation|null $existing */
-                $existing = Observation::where('observer_user_id', $this->user->id)
-                    ->where('target_name', $canonicalName)
-                    ->whereDate('observed_on', $observedOn)
-                    ->whereNull('legacy_source')
-                    ->when($observedTime !== null, fn($q) => $q->where('observed_time', $observedTime))
-                    ->first();
+                // Updates the observation when it is already there
+                [$obs, $updated] = $this->saveImportedObservation($fields, $observedTime);
+                $obsId = $obs->id;
+                $result->imported++;
+                $result->importedObservations[] = [
+                    'row' => $rowNumber,
+                    'object' => $canonicalName,
+                    'date' => $observedOn,
+                    'id' => $obsId,
+                    'updated' => $updated,
+                ];
 
-                if ($existing) {
-                    $existing->update($fields);
-                    $obsId = $existing->id;
-                    $result->imported++;
-                    $result->importedObservations[] = [
-                        'row' => $rowNumber,
-                        'object' => $canonicalName,
-                        'date' => $observedOn,
-                        'id' => $obsId,
-                        'updated' => true,
-                    ];
+                if ($updated) {
                     $result->addSuccess(
                         "Row {$rowNumber}: Updated existing observation of '{$canonicalName}' on {$observedOn}.",
                         '',
                         $rowNumber
                     );
                 } else {
-                    $obs = Observation::create($fields);
-                    $obsId = $obs->id;
-                    $result->imported++;
-                    $result->importedObservations[] = [
-                        'row' => $rowNumber,
-                        'object' => $canonicalName,
-                        'date' => $observedOn,
-                        'id' => $obsId,
-                        'updated' => false,
-                    ];
                     $result->addSuccess(
                         "Row {$rowNumber}: Imported observation of '{$canonicalName}' on {$observedOn}.",
                         '',

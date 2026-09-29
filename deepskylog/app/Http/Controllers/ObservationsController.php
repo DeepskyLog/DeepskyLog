@@ -2449,6 +2449,15 @@ class ObservationsController extends Controller
             $validated['observed_time'] ?? null,
             $timezone,
         );
+        // Migrated observations keep the old YYYYMMDD / HHMM columns, which
+        // the model and several views prefer over observed_on; keep them in
+        // step with the edited date and time (-9999 = no time, as migrated).
+        if ($obs->legacy_date_int !== null) {
+            $obs->legacy_date_int = (int) Carbon::parse($obs->observed_on)->format('Ymd');
+            $obs->legacy_time_int = $obs->observed_time !== null
+                ? (int) str_replace(':', '', substr($obs->observed_time, 0, 5))
+                : -9999;
+        }
         $obs->description = $validated['description'] ?? null;
         // Accept either a plain language id or an object-like string (e.g. "{label:'English',value:'en',}")
         $langInput = $validated['language'] ?? null;
@@ -2494,8 +2503,10 @@ class ObservationsController extends Controller
         $obs->lens_id = $validated['lens_id'] ?? null;
         $obs->filter_id = $validated['filter_id'] ?? null;
         $obs->location_id = $validated['location_id'] ?? null;
-        // Persist seeing and transparency when provided. Magnification is
-        // computed from instrument/eyepiece/lens and must not be stored.
+        // The magnification is stored in the detail table of the target
+        // type: the form fills it from the equipment, but it can be changed
+        // (zoom eyepieces), and migrated observations have their own.
+        $magnification = Observation::normalizeMagnification($validated['magnification'] ?? null);
         $obs->seeing = $validated['seeing'] ?? null;
         $obs->transparency = $validated['transparency'] ?? null;
         $obs->sqm = isset($validated['sqm']) && $validated['sqm'] !== '' ? round((float) $validated['sqm'], 2) : null;
@@ -2533,6 +2544,7 @@ class ObservationsController extends Controller
                     'coma' => array_key_exists('comet_coma', $validated) && $validated['comet_coma'] !== '' ? (int) $validated['comet_coma'] : null,
                     'tail' => array_key_exists('comet_tail_length', $validated) && $validated['comet_tail_length'] !== '' ? (int) $validated['comet_tail_length'] : null,
                     'position_angle' => array_key_exists('comet_position_angle', $validated) && $validated['comet_position_angle'] !== '' ? (int) $validated['comet_position_angle'] : null,
+                    'magnification' => $magnification,
                 ];
                 \Illuminate\Support\Facades\DB::table('comet_observation_details')->updateOrInsert(
                     ['observation_id' => $obs->id],
@@ -2566,6 +2578,7 @@ class ObservationsController extends Controller
                     'nice_field' => !empty($validated['nice_field']) ? 1 : 0,
                     'component1' => array_key_exists('component1', $validated) && $validated['component1'] !== '' ? (int) $validated['component1'] : null,
                     'component2' => array_key_exists('component2', $validated) && $validated['component2'] !== '' ? (int) $validated['component2'] : null,
+                    'magnification' => $magnification,
                 ];
 
                 // Use updateOrInsert to create or update the details row keyed by observation_id

@@ -21,6 +21,8 @@ use Illuminate\Support\Str;
  */
 class OalObservationImporter
 {
+    use SavesImportedObservations;
+
     private const OAL_TARGET_METADATA_PREFIX = 'DeepskyLog:';
 
     private User $user;
@@ -317,7 +319,6 @@ class OalObservationImporter
             'filter_id' => $filterId,
             'lens_id' => $lensId,
             'seeing' => $seeing,
-            'transparency' => null,
             'limiting_magnitude' => $limitingMagnitude,
             'sqm' => $sqm,
             'language' => $language,
@@ -330,46 +331,23 @@ class OalObservationImporter
             'legacy_source' => null,
         ];
 
-        // Duplicate check: same observer + object + date + time
-        /** @var Observation|null $existing */
-        $existing = Observation::where('observer_user_id', $this->user->id)
-            ->where('target_name', $canonicalName)
-            ->whereDate('observed_on', $observedOn)
-            ->whereNull('legacy_source')
-            ->when($observedTime !== null, fn($q) => $q->where('observed_time', $observedTime))
-            ->first();
-
-        if ($existing) {
-            $existing->update($fields);
-            $result->imported++;
-            $result->importedObservations[] = [
-                'row' => $row,
-                'object' => $canonicalName,
-                'date' => $observedOn,
-                'id' => $existing->id,
-                'updated' => true,
-            ];
-            $result->addSuccess(
-                "Observation {$row}: Updated existing observation of '{$canonicalName}' on {$observedOn}.",
-                '',
-                $row
-            );
-        } else {
-            $observation = Observation::create($fields);
-            $result->imported++;
-            $result->importedObservations[] = [
-                'row' => $row,
-                'object' => $canonicalName,
-                'date' => $observedOn,
-                'id' => $observation->id,
-                'updated' => false,
-            ];
-            $result->addSuccess(
-                "Observation {$row}: Imported '{$canonicalName}' on {$observedOn}.",
-                '',
-                $row
-            );
-        }
+        // Updates the observation when it is already there
+        [$observation, $updated] = $this->saveImportedObservation($fields, $observedTime);
+        $result->imported++;
+        $result->importedObservations[] = [
+            'row' => $row,
+            'object' => $canonicalName,
+            'date' => $observedOn,
+            'id' => $observation->id,
+            'updated' => $updated,
+        ];
+        $result->addSuccess(
+            $updated
+                ? "Observation {$row}: Updated existing observation of '{$canonicalName}' on {$observedOn}."
+                : "Observation {$row}: Imported '{$canonicalName}' on {$observedOn}.",
+            '',
+            $row
+        );
     }
 
     /**

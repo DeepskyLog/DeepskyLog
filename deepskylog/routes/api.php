@@ -1333,20 +1333,13 @@ Route::get('magnification', function (Request $request) {
     $eyepieceId   = $request->query('eyepiece_id');
     $lensId       = $request->query('lens_id');
 
-    if (! $instrumentId || ! $eyepieceId) {
+    $instrument = $instrumentId ? \App\Models\Instrument::find($instrumentId) : null;
+    if (! $instrument) {
         return response()->json(['magnification' => null]);
     }
 
-    $instrument = \App\Models\Instrument::find($instrumentId);
-    $eyepiece   = \App\Models\Eyepiece::find($eyepieceId);
+    $eyepiece = $eyepieceId ? \App\Models\Eyepiece::find($eyepieceId) : null;
+    $lens     = $lensId ? \App\Models\Lens::find($lensId) : null;
 
-    if (! $instrument || ! $eyepiece) {
-        return response()->json(['magnification' => null]);
-    }
-
-    $lens = $lensId ? \App\Models\Lens::find($lensId) : null;
-    $mag  = $instrument->magnification($eyepiece, $lens);
-    $num  = preg_replace('/[^0-9.]/', '', (string) $mag);
-
-    return response()->json(['magnification' => $num !== '' ? (float) $num : null]);
+    return response()->json(['magnification' => $instrument->magnificationFor($eyepiece, $lens)]);
 })->name('magnification.compute');

@@ -324,6 +324,7 @@
                             'instrument_id' => old('instrument_id', $prefill['instrument_id'] ?? (auth()->check() ? (auth()->user()->stdinstrument ?? auth()->user()->stdtelescope ?? '') : '')),
                             'eyepiece_id' => old('eyepiece_id', $prefill['eyepiece_id'] ?? (auth()->check() ? auth()->user()->stdeyepiece : '')),
                             'lens_id' => old('lens_id', $prefill['lens_id'] ?? (auth()->check() ? auth()->user()->stdlens : '')),
+                            'manual_magnification' => old('magnification', $prefill['magnification'] ?? null),
                             'instrumentSetId' => $instrumentSet ? $instrumentSet->id : null
                         ])
                     </div>

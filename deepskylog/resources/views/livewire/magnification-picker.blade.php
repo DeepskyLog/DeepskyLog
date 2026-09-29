@@ -106,12 +106,13 @@
     // ── Magnification: compute client-side to avoid Livewire re-renders ──────
     window.dslComputeMagnification = function(instrumentId, eyepieceId, lensId) {
         var magInput = document.querySelector('[name="magnification"]');
-        if (!instrumentId || !eyepieceId) {
+        if (!instrumentId) {
             if (magInput) magInput.value = '';
             return;
         }
-        var url = '/api/magnification?instrument_id=' + encodeURIComponent(instrumentId)
-                + '&eyepiece_id=' + encodeURIComponent(eyepieceId);
+        // An instrument with a fixed magnification needs no eyepiece.
+        var url = '/api/magnification?instrument_id=' + encodeURIComponent(instrumentId);
+        if (eyepieceId) url += '&eyepiece_id=' + encodeURIComponent(eyepieceId);
         if (lensId) url += '&lens_id=' + encodeURIComponent(lensId);
         fetch(url)
             .then(function(r) { return r.json(); })

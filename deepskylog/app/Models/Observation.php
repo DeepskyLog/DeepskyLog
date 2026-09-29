@@ -179,6 +179,51 @@ class Observation extends Model
         return null;
     }
 
+    /** Magnification read from the detail tables; false = not read yet. */
+    private string|null|false $storedMagnification = false;
+
+    /**
+     * Magnification stored with the observation (in deepsky_observation_details
+     * or comet_observation_details), or null when none was given. A value set
+     * on the model (e.g. by a join) is used as it is.
+     */
+    public function getMagnificationAttribute(): ?string
+    {
+        if (array_key_exists('magnification', $this->attributes)) {
+            return $this->attributes['magnification'];
+        }
+        if ($this->storedMagnification !== false) {
+            return $this->storedMagnification;
+        }
+
+        $table = match ($this->attributes['target_type'] ?? null) {
+            self::TYPE_DEEPSKY => 'deepsky_observation_details',
+            self::TYPE_COMET => 'comet_observation_details',
+            default => null,
+        };
+        $value = $table !== null && $this->exists
+            ? DB::table($table)->where('observation_id', $this->getKey())->value('magnification')
+            : null;
+        $value = trim((string) $value);
+
+        return $this->storedMagnification = ($value !== '' && (float) $value > 0 ? $value : null);
+    }
+
+    /**
+     * Normalise a magnification entered by the user ("120", "120x", "120,5")
+     * to the value stored in the detail tables, or null when there is none.
+     */
+    public static function normalizeMagnification(mixed $value): ?string
+    {
+        $value = str_replace(',', '.', trim((string) $value));
+        $value = preg_replace('/\s*[xX×]$/u', '', $value) ?? $value;
+        if (!is_numeric($value) || (float) $value <= 0) {
+            return null;
+        }
+
+        return (string) (float) round((float) $value, 1);
+    }
+
     // ─── Date and time ─────────────────────────────────────────────────────────
     //
     // observed_on and observed_time are stored in UT (as in the old DeepskyLog).

@@ -25,7 +25,10 @@ class MagnificationPicker extends Component
         $this->instrumentSetId = $instrumentSetId;
         $this->manual_magnification = $manual_magnification;
 
-        $this->recompute();
+        // A magnification that was entered (or stored with the observation
+        // being edited, e.g. for a zoom eyepiece) is kept; the computed one
+        // only fills an empty field.
+        $this->recompute(trim((string) $manual_magnification) === '');
     }
 
     public function updated($propertyName)
@@ -35,24 +38,19 @@ class MagnificationPicker extends Component
         }
     }
 
-    public function recompute(): void
+    public function recompute(bool $overwrite = true): void
     {
         $this->computed_magnification = null;
 
         try {
-            if (!empty($this->instrument_id) && !empty($this->eyepiece_id)) {
-                $inst = Instrument::find($this->instrument_id);
-                $ep = Eyepiece::find($this->eyepiece_id);
-                $ln = $this->lens_id ? Lens::find($this->lens_id) : null;
+            $inst = !empty($this->instrument_id) ? Instrument::find($this->instrument_id) : null;
+            if ($inst) {
+                $ep = !empty($this->eyepiece_id) ? Eyepiece::find($this->eyepiece_id) : null;
+                $ln = !empty($this->lens_id) ? Lens::find($this->lens_id) : null;
+                $this->computed_magnification = $inst->magnificationFor($ep, $ln);
 
-                if ($inst && $ep) {
-                    $val = $inst->magnification($ep, $ln); // e.g. '200x'
-                    $num = preg_replace('/[^0-9\.]/', '', (string) $val);
-                    $this->computed_magnification = $num !== '' ? (float) $num : null;
-
-                    if ($this->computed_magnification) {
-                        $this->manual_magnification = (string) round($this->computed_magnification);
-                    }
+                if ($this->computed_magnification && $overwrite) {
+                    $this->manual_magnification = (string) $this->computed_magnification;
                 }
             }
         } catch (\Throwable $_) {
