@@ -9,39 +9,18 @@ use Illuminate\Support\Facades\DB;
 use marineusde\LarapexCharts\Charts\PieChart as OriginalPieChart;
 
 /**
- * Builds a pie chart of observations per country for a given user.
+ * Class ObjectTypesChart
  *
- * This method retrieves the count of comet observations and deep sky observations made by the user for each country,
- * and stores them in two separate arrays. It then creates a pie chart with these data, sets the title, subtitle, colors,
- * and other properties of the chart, and returns it.
- *
- * The method uses raw SQL queries to retrieve the count of observations from the 'cometobservations' and 'observations' tables.
- * The queries join the 'locations' table on the 'locationid' column, select the 'country' column from the 'locations' table and the count of observations,
- * and group them by 'country'.
- *
- * The method then initializes two arrays, and populates them with the countries and the count of observations for each country.
- *
- * Finally, the method creates a new OriginalPieChart object, sets its properties, and adds the count of observations as data and the countries as labels.
- *
- * @param  User  $user  The user for whom the chart is to be built.
- * @return OriginalPieChart The built pie chart.
+ * This class is responsible for building a pie chart that represents the number of observations per object type.
  */
 class ObjectTypesChart
 {
     /**
      * Builds a pie chart of observations per object type for a given user.
      *
-     * This method retrieves the count of comet observations and deep sky observations made by the user,
-     * and stores them in an array. It then creates a pie chart with these data, sets the title, subtitle, colors,
-     * and other properties of the chart, and returns it.
-     *
-     * The method uses raw SQL queries to retrieve the count of observations from the 'cometobservations' and 'observations' tables.
-     * The queries join the 'objects' table on the 'objectname' column, select the 'type' column from the 'objects' table and the count of observations,
-     * and group them by 'type'.
-     *
-     * The method then initializes two arrays, and populates them with the object types and the count of observations for each type.
-     *
-     * Finally, the method creates a new OriginalPieChart object, sets its properties, and adds the count of observations as data and the object types as labels.
+     * Deep sky observations (target_table 'objects') are joined to the 'objects' table on the normalized name and
+     * grouped by object type. Comets, planets, the sun, and the moon with its lunar features each get one slice.
+     * Slices smaller than 1% of the total are grouped into 'Rest'.
      *
      * @param  User  $user  The user for whom the chart is to be built.
      * @return OriginalPieChart The built pie chart.

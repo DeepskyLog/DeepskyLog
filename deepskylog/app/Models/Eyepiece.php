@@ -70,7 +70,7 @@ class Eyepiece extends Model
     /**
      * Retrieves the date of the first observation made with the eyepiece.
      *
-     * This method calculates the earliest observation date for the eyepiece from ObservationsOld
+     * This method calculates the earliest observation date for the eyepiece from the observations table
      *
      * If no observations are found, it returns [null, null].
      *
@@ -96,7 +96,7 @@ class Eyepiece extends Model
     /**
      * Retrieves the date of the last observation made with the eyepiece.
      *
-     * This method calculates the last observation date for the eyepiece from ObservationsOld
+     * This method calculates the last observation date for the eyepiece from the observations table
      *
      * If no observations are found, it returns [null, null].
      *

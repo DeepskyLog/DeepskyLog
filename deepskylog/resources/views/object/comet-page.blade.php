@@ -97,7 +97,7 @@
                                         }
                                     }
 
-                                    // Also attempt to find sketches that reference cometobservations (negative observation_id)
+                                    // Also attempt to find sketches of observations of comets whose name matches
                                     try {
                                         $tokensForLike = [];
                                         if (!empty($tokens)) {
@@ -107,23 +107,20 @@
                                         } else {
                                             $tokensForLike[] = '%' . $objName . '%';
                                         }
-                                        // Find observations in the unified table that reference cometobjects
-                                        // and map their legacy IDs back to negative sketch references
+                                        // Find comet observations whose comet name matches
                                         $q = \Illuminate\Support\Facades\DB::table('observations as o')
                                             ->join('cometobjects as coo', 'coo.id', '=', 'o.target_key')
                                             ->where('o.target_type', \App\Models\Observation::TYPE_COMET);
-                                        foreach ($tokensForLike as $i => $t) {
-                                            if ($i === 0) {
-                                                $q->where('coo.name', 'like', $t);
-                                            } else {
-                                                $q->orWhere('coo.name', 'like', $t);
+                                        $q->where(function ($sub) use ($tokensForLike) {
+                                            foreach ($tokensForLike as $t) {
+                                                $sub->orWhere('coo.name', 'like', $t);
                                             }
-                                        }
-                                        $cometRows = $q->select('o.legacy_id as legacy_id')->get();
+                                        });
+                                        $cometRows = $q->select('o.id as id')->get();
                                         if (!empty($cometRows)) {
                                             foreach ($cometRows as $r) {
-                                                $sk = \App\Models\SketchOfTheWeek::where('observation_id', -(int) $r->legacy_id)->first();
-                                                if ($sk) {
+                                                $sk = \App\Models\SketchOfTheWeek::where('observation_id', (int) $r->id)->first();
+                                                if ($sk && !$objectSketches->contains('id', $sk->id)) {
                                                     $objectSketches->push($sk);
                                                 }
                                             }

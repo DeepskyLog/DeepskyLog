@@ -353,7 +353,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Retrieves the count of open cluster observations for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, is of type "OPNCL" or "CLANB",
      * and belongs to the current user. The count of these distinct object names is
@@ -374,7 +374,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Retrieves the count of open cluster drawings for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, has a drawing, is of type "OPNCL" or
      * "CLANB", and belongs to the current user. The count of these distinct object
@@ -396,7 +396,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Retrieves the count of globular cluster observations for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, is of type "GLOCL", and belongs to the
      * current user. The count of these distinct object names is returned as the total
@@ -415,7 +415,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Retrieves the count of globular cluster drawings for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, has a drawing, is of type "GLOCL",
      * and belongs to the current user. The count of these distinct object names is
@@ -434,7 +434,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Retrieves the count of planetary nebula observations for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, is of type "PLNNB", and belongs to
      * the current user. The count of these distinct object names is returned as the
@@ -453,7 +453,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Retrieves the count of planetary nebula drawings for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, has a drawing, is of type "PLNNB",
      * and belongs to the current user. The count of these distinct object names is
@@ -472,7 +472,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Retrieves the count of galaxy observations for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, is of type "GALXY", and belongs to
      * the current user. The count of these distinct object names is returned as
@@ -491,7 +491,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Retrieves the count of galaxy drawings for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, has a drawing, is of type "GALXY",
      * and belongs to the current user. The count of these distinct object names is
@@ -510,7 +510,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Retrieves the count of nebula observations for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name and belongs to one of the following
      * object types: "EMINB", "ENRNN", "ENSTR", "REFNB", "RNHII", "HII", "SNREM",
@@ -549,7 +549,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Retrieves the count of nebula drawings for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, has a drawing, and belongs to one of
      * the following object types: "EMINB", "ENRNN", "ENSTR", "REFNB", "RNHII",
@@ -652,9 +652,9 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Retrieves the total number of drawings for the current user.
      *
-     * This function queries the 'observations' table in the 'mysqlOld' database
-     * to count the number of rows where the 'observerid' column matches the
-     * current user's username and the 'hasDrawing' column is 1.
+     * This function counts the rows of the 'observations' table where the
+     * 'observer_username' column matches the current user's username and the
+     * 'has_drawing' column is 1.
      *
      * @return int The total number of drawings for the current user.
      */
@@ -701,9 +701,8 @@ class User extends Authenticatable implements MustVerifyEmail
      * Retrieves the count of deep sky observations made by the user in the last year.
      *
      * This method calculates the total number of deep sky observations made by the user in the last year.
-     * It first retrieves the current year and subtracts one to get the previous year.
-     * It then queries the 'observations' table for entries where the 'date' column's year is greater than or equal to the last year
-     * and the 'observerid' matches the current user's username.
+     * It queries the 'observations' table for deep sky entries where 'observed_on' lies within the last year
+     * and 'observer_user_id' matches the current user's id.
      *
      * The count of these entries is returned, representing the total number of deep sky observations made by the user in the last year.
      *
@@ -723,9 +722,8 @@ class User extends Authenticatable implements MustVerifyEmail
      * Retrieves the count of deep sky drawings made by the user in the last year.
      *
      * This method calculates the total number of deep sky drawings made by the user in the last year.
-     * It first retrieves the current year and subtracts one to get the previous year.
-     * It then queries the 'observations' table for entries where the 'date' column's year is greater than or equal to the last year,
-     * the 'observerid' matches the current user's username, and the 'hasDrawing' column is set to 1 (indicating that the observation has a drawing).
+     * It queries the 'observations' table for deep sky entries where 'observed_on' lies within the last year,
+     * 'observer_user_id' matches the current user's id, and the 'has_drawing' column is set to 1 (indicating that the observation has a drawing).
      *
      * The count of these entries is returned, representing the total number of deep sky drawings made by the user in the last year.
      *

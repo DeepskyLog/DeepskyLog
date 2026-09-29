@@ -39,7 +39,6 @@ class MessagesController extends Controller
         $onlyUnread = (string) $request->query('unread') === '1';
 
     // If sorting by 'from', order by the users.name (full name) using a left join.
-        // messages lives on the 'mysqlOld' connection; the users table is on the default connection.
         // Build two sets: received/broadcast messages, and grouped sent messages.
         // We'll merge them in PHP and paginate manually so sent messages that were
         // duplicated for multiple recipients show only once (as a 'group').

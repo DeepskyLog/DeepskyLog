@@ -57,7 +57,7 @@ class Lens extends Model
     /**
      * Retrieves the date of the first observation made with the lens.
      *
-     * This method calculates the earliest observation date for the lens from ObservationsOld
+     * This method calculates the earliest observation date for the lens from the observations table
      *
      * If no observations are found, it returns [null, null].
      *
@@ -74,7 +74,7 @@ class Lens extends Model
     /**
      * Retrieves the date of the last observation made with the lens.
      *
-     * This method calculates the last observation date for the lens from ObservationsOld
+     * This method calculates the last observation date for the lens from the observations table
      *
      * If no observations are found, it returns [null, null].
      *

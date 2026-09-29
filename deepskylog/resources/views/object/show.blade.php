@@ -63,7 +63,7 @@
                 {{-- Summary row: object type, constellation and quick stats (observations/drawings, user-specific counts) --}}
                 @php
                     $objectName = $session->name ?? '';
-                    // Prefer controller-provided totals when available, otherwise query legacy observations table
+                    // Prefer controller-provided totals when available, otherwise query the observations table
                     $totalObs =
                         isset($totalObservations) && $totalObservations !== null
                             ? $totalObservations
@@ -1107,8 +1107,6 @@ try {
 
     if ($isComet) {
         // For comet pages, use the comet object ID directly to avoid cross-comet false matches.
-        // sketch_of_the_week stores comet observations as negative observation_id values
-        // (i.e. observation_id = -cometobservations.id).
         $cometObjectId = $session->id ?? null;
             if (!empty($cometObjectId)) {
             $cometObsIds = \Illuminate\Support\Facades\DB::table('observations')
@@ -1118,14 +1116,13 @@ try {
                 ->toArray();
 
             if (!empty($cometObsIds)) {
-                $negativeCometObsIds = array_map(fn($id) => -$id, $cometObsIds);
-                $objectSketches = \App\Models\SketchOfTheWeek::whereIn('observation_id', $negativeCometObsIds)
+                $objectSketches = \App\Models\SketchOfTheWeek::whereIn('observation_id', $cometObsIds)
                     ->orderByDesc('date')
                     ->get();
             }
         }
     } else {
-        // For deepsky objects, match by exact object name in the legacy observations table.
+        // For deepsky objects, match by exact object name.
         $objName = $session->name ?? '';
             if (!empty($objName)) {
             $obsIds = \Illuminate\Support\Facades\DB::table('observations')

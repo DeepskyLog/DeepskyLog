@@ -5,9 +5,7 @@
 ## Next steps
 
 - [ ] Test! 
-  - [ ] Test for functionality / inconsistency problems (code review done, see "Functionality / inconsistency review" at the end of this file)
-  - [ ] Check code for use of the legacy tables.  
-  - [ ] Test for speed problems in the database queries, also think about crawlers and bots that can generate a lot of queries.
+  - [ ] Check the whole code for speed problems in the database queries, also think about crawlers and bots that can generate a lot of queries.
   - [ ] Test for security problems
   - [ ] Test manually when logged in and logged out, as database expert and as administrator
 - [ ] Update to laravel 13.

@@ -1212,8 +1212,7 @@ class ObjectController extends Controller
             $session->preview = $image;
         }
 
-        // Load alternative names (aliases) from legacy objectnames table when available.
-        // Use the mysqlOld connection which contains the legacy `objectnames` table.
+        // Load alternative names (aliases) from the objectnames table when available.
         $alternatives = [];
         try {
             if (!empty($record->name)) {

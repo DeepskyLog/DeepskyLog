@@ -13,25 +13,22 @@ use marineusde\LarapexCharts\Options\XAxisOption;
  * Class ObservationsPerMonthChart
  *
  * This class is responsible for building a bar chart that represents the number of observations per month.
- * The chart includes deep sky observations and comet observations.
+ * The chart includes deep sky, comet, double star, planet, sun and moon observations.
  */
 class ObservationsPerMonthChart
 {
     /**
      * Builds a bar chart of observations per month for a given user.
      *
-     * This method retrieves the count of comet observations and deep sky observations made by the user for each month,
-     * and stores them in two separate arrays. It then creates a bar chart with these data, sets the title, subtitle, colors,
-     * and other properties of the chart, and returns it.
+     * This method counts the observations made by the user for each month and category, and returns a stacked
+     * bar chart of them.
      *
-     * The method uses raw SQL queries to retrieve the count of observations from the 'cometobservations' and 'observations' tables.
-     * The queries group the observations by month and count them.
+     * The series come from the cached observer statistics ('observer_stats:{id}') when available. Otherwise the
+     * 'observations' table is grouped by month of 'observed_on' for each category: deep sky and comets (by
+     * 'target_type'), planets, sun, and moon and lunar features (by 'target_table'). Double stars are only filled
+     * from the cache.
      *
-     * The method then initializes two arrays with 12 zeros (representing the 12 months of the year), and populates them with the
-     * count of observations for each month.
-     *
-     * Finally, the method creates a new OriginalBarChart object, sets its properties, and adds the count of deep sky and comet observations
-     * as data series. The x-axis labels are set to the names of the months.
+     * Each series has 12 values (one per month), and the x-axis labels are the names of the months.
      *
      * @param  User  $user  The user for whom the chart is to be built.
      * @return OriginalBarChart The built bar chart.

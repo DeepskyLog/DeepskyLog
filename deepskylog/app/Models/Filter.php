@@ -70,7 +70,7 @@ class Filter extends Model
     /**
      * Retrieves the date of the first observation made with the filter.
      *
-     * This method calculates the earliest observation date for the filter from ObservationsOld
+     * This method calculates the earliest observation date for the filter from the observations table
      *
      * If no observations are found, it returns [null, null].
      *
@@ -87,7 +87,7 @@ class Filter extends Model
     /**
      * Retrieves the date of the last observation made with the filter.
      *
-     * This method calculates the last observation date for the filter from ObservationsOld
+     * This method calculates the last observation date for the filter from the observations table
      *
      * If no observations are found, it returns [null, null].
      *

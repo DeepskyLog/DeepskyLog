@@ -629,7 +629,7 @@ class ObservationsController extends Controller
         } catch (\Throwable $_) {
         }
 
-        // Try legacy cometobjects on mysqlOld
+        // Try the cometobjects table
         if (!$objectId) {
             try {
                 foreach ($candidates as $cand) {

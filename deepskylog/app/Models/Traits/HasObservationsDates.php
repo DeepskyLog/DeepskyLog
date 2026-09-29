@@ -27,7 +27,7 @@ trait HasObservationsDates
      * Retrieves the date of the first observation made with the model.
      *
      * @param  string  $fieldName  The legacy field name (e.g. 'instrumentid', 'locationid')
-     * @return array An array containing the formatted date of the first observation and its legacy ID.
+     * @return array An array containing the formatted date of the first observation and the observation itself.
      */
     public function first_observation_date_generic(string $fieldName): array
     {
@@ -46,7 +46,7 @@ trait HasObservationsDates
      * Retrieves the date of the last observation made with the model.
      *
      * @param  string  $fieldName  The legacy field name (e.g. 'instrumentid', 'locationid')
-     * @return array An array containing the formatted date of the last observation and its legacy ID.
+     * @return array An array containing the formatted date of the last observation and the observation itself.
      */
     public function last_observation_date_generic(string $fieldName): array
     {
@@ -62,10 +62,10 @@ trait HasObservationsDates
     }
 
     /**
-     * Helper to format the date and resolve the legacy observation ID for view links.
+     * Helper to format the date and find the observation made on that date, for view links.
      *
-     * Returns [formattedDate, id] where id is positive for deepsky and negative for
-     * comet observations, preserving the convention expected by existing blade views.
+     * Returns [formattedDate, observation], where observation is the first Observation
+     * made with this equipment on that date, or null.
      */
     public function get_date_and_id_generic(string $observationDate, string $language, string $column): array
     {

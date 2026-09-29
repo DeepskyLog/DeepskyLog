@@ -259,7 +259,7 @@
                                         $count = \App\Models\SketchOfTheMonth::where('user_id', $user->id)->count();
                                     }
 
-                                    // Catalog counts for Messier / Caldwell / Herschel (legacy objectnames in mysqlOld)
+                                    // Catalog counts for Messier / Caldwell / Herschel (objectnames table)
                                     if (!$count && preg_match('/messier/i', $raw)) {
                                         $catalog = 'M';
                                             $q = \DB::table('objectnames')

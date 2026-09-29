@@ -40,12 +40,10 @@ class updateAchievementsCommand extends Command
     private $moonObservedMap = [];
     private $lunarFeatureObservedMap = [];
     private $sunObservedMap = [];
-    private $doubleObservedMap = [];
     private $planetDrawingsMap = [];
     private $moonDrawingsMap = [];
     private $lunarFeatureDrawingsMap = [];
     private $sunDrawingsMap = [];
-    private $doubleDrawingsMap = [];
     private $userAchievementsMap = [];
 
     public function handle(): void
@@ -210,7 +208,7 @@ class updateAchievementsCommand extends Command
 
         // Comet counts
         $cometObs = DB::table('observations')
-            ->where('legacy_source', 'comet')
+            ->where('target_type', Observation::TYPE_COMET)
             ->select('observer_username', DB::raw('COUNT(*) as cnt'))
             ->groupBy('observer_username')
             ->get();
@@ -219,7 +217,7 @@ class updateAchievementsCommand extends Command
         }
 
         $cometDraw = DB::table('observations')
-            ->where('legacy_source', 'comet')
+            ->where('target_type', Observation::TYPE_COMET)
             ->where('has_drawing', 1)
             ->select('observer_username', DB::raw('COUNT(*) as cnt'))
             ->groupBy('observer_username')
@@ -229,7 +227,7 @@ class updateAchievementsCommand extends Command
         }
 
         $uniqueComet = DB::table('observations')
-            ->where('legacy_source', 'comet')
+            ->where('target_type', Observation::TYPE_COMET)
             ->select('observer_username', DB::raw('COUNT(DISTINCT target_key) as cnt'))
             ->groupBy('observer_username')
             ->get();
@@ -237,7 +235,7 @@ class updateAchievementsCommand extends Command
             $this->uniqueCometMap[$r->observer_username] = (int) $r->cnt;
         }
 
-        // Unified observations (current observations table): planets, moons, lunar features, sun and double-stars
+        // Unified observations (current observations table): planets, moons, lunar features and sun
         $planetRowsUnified = Observation::whereNull('legacy_source')
             ->where('target_table', 'planets')
             ->select('observer_username', DB::raw('COUNT(DISTINCT target_key) as cnt'))
@@ -276,19 +274,7 @@ class updateAchievementsCommand extends Command
             $this->sunObservedMap[$r->observer_username] = (int) $r->cnt;
         }
 
-        // Unified double-star counts (join current objects table to observations)
-        $doubleRowsUnified = DB::table('objects')
-            ->join('observations', 'objects.name', '=', 'observations.target_name')
-            ->whereNull('observations.legacy_source')
-            ->where('objects.type', 'DS')
-            ->select('observations.observer_username as observer_username', DB::raw('COUNT(DISTINCT objects.name) as cnt'))
-            ->groupBy('observations.observer_username')
-            ->get();
-        foreach ($doubleRowsUnified as $r) {
-            $this->doubleObservedMap[$r->observer_username] = (int) $r->cnt;
-        }
-
-        // Unified drawings (current observations table): planets, moons, lunar features, sun and double-stars
+        // Unified drawings (current observations table): planets, moons, lunar features and sun
         $planetDrawingsUnified = Observation::whereNull('legacy_source')
             ->where('target_table', 'planets')
             ->where('has_drawing', 1)
@@ -328,18 +314,6 @@ class updateAchievementsCommand extends Command
             ->get();
         foreach ($sunDrawingsUnified as $r) {
             $this->sunDrawingsMap[$r->observer_username] = (int) $r->cnt;
-        }
-
-        $doubleDrawRowsUnified = DB::table('objects')
-            ->join('observations', 'objects.name', '=', 'observations.target_name')
-            ->whereNull('observations.legacy_source')
-            ->where('objects.type', 'DS')
-            ->where('observations.has_drawing', 1)
-            ->select('observations.observer_username as observer_username', DB::raw('COUNT(DISTINCT objects.name) as cnt'))
-            ->groupBy('observations.observer_username')
-            ->get();
-        foreach ($doubleDrawRowsUnified as $r) {
-            $this->doubleDrawingsMap[$r->observer_username] = (int) $r->cnt;
         }
 
         // Loop over all users
@@ -801,7 +775,7 @@ class updateAchievementsCommand extends Command
                     1
                 );
 
-                // Double-star achievements (legacy + unified)
+                // Double-star achievements
                 $total = $this->getDoubleStarObservationsForUser($user->username);
                 $achievement1 = $this->getAchievement('Double Stars 5000');
                 $achievement2 = $this->getAchievement('Double Stars 2500');
@@ -2030,12 +2004,12 @@ class updateAchievementsCommand extends Command
 
     private function getDoubleStarObservationsForUser(string $username): int
     {
-        return ($this->getTypeObserved($username, 'DS') ?? 0) + ($this->doubleObservedMap[$username] ?? 0);
+        return $this->getTypeObserved($username, 'DS');
     }
 
     private function getDoubleStarDrawingsForUser(string $username): int
     {
-        return ($this->getTypeDrawings($username, 'DS') ?? 0) + ($this->doubleDrawingsMap[$username] ?? 0);
+        return $this->getTypeDrawings($username, 'DS');
     }
 
     private function getCometObservationsForUser(string $username): int

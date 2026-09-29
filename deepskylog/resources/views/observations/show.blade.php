@@ -159,7 +159,7 @@
                             @foreach ($deepsky as $observation)
                                 <div class="mt-3 max-w-xl pr-3">
                                     @php
-                                        // Support both legacy ObservationsOld and modern Observation models
+                                        // observerid is an accessor of Observation for observer_username
                                         $observer_key = $observation->observerid ?? $observation->observer_username ?? null;
                                         $observer_name = ($preloaded_users ?? collect())->get($observer_key)?->name ?? $observer_key ?? __('Unknown');
 
