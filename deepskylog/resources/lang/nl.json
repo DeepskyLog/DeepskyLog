@@ -1651,6 +1651,7 @@
     "This is a secure area of the application. Please confirm your password before continuing.": "Dit is een beveiligde gedeelte van de applicatie. Bevestig je wachtwoord voordat je verder gaat.",
     "This list has no objects yet.": "Deze lijst heeft nog geen objecten.",
     "This object appears in :count observing list. That entry will be removed.|This object appears in :count observing lists. Those entries will be removed.": "Dit object staat in :count waarnemingslijst. Dat item wordt verwijderd.|Dit object staat in :count waarnemingslijsten. Die items worden verwijderd.",
+    "This object has observations. Choose an object to move them to before deleting it.": "Dit object heeft waarnemingen. Kies een object om ze naar te verplaatsen voordat je het verwijdert.",
     "This password does not match our records.": "Dit wachtwoord komt niet overeen met onze gegevens.",
     "This registration allows access to a variety of useful tools, including information on the objects observed and sketches made.": "Deze registratie geeft toegang tot een verscheidenheid aan nuttige tools, waaronder informatie over de waargenomen objecten en gemaakte schetsen.",
     "This search matches :count observations, but at most :max observations can be exported as :format. Please narrow down your search.": "Deze zoekopdracht levert :count waarnemingen op, maar er kunnen maximaal :max waarnemingen als :format geëxporteerd worden. Verfijn je zoekopdracht.",

@@ -1651,6 +1651,7 @@
     "This is a secure area of the application. Please confirm your password before continuing.": "Ceci est une zone sécurisée de l'application. Veuillez confirmer votre mot de passe avant de continuer.",
     "This list has no objects yet.": "Cette liste n'a pas encore d'objets.",
     "This object appears in :count observing list. That entry will be removed.|This object appears in :count observing lists. Those entries will be removed.": "Cet objet figure dans :count liste d'observation. Cette entrée sera supprimée.|Cet objet figure dans :count listes d'observation. Ces entrées seront supprimées.",
+    "This object has observations. Choose an object to move them to before deleting it.": "Cet objet a des observations. Choisissez un objet vers lequel les déplacer avant de le supprimer.",
     "This password does not match our records.": "Ce mot de passe ne correspond pas à nos enregistrements.",
     "This registration allows access to a variety of useful tools, including information on the objects observed and sketches made.": "Cette inscription permet d'accéder à une variété d'outils utiles, y compris des informations sur les objets observés et les croquis réalisés.",
     "This search matches :count observations, but at most :max observations can be exported as :format. Please narrow down your search.": "Cette recherche correspond à :count observations, mais au maximum :max observations peuvent être exportées en :format. Veuillez affiner votre recherche.",

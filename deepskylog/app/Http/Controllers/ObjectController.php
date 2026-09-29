@@ -3686,9 +3686,19 @@ class ObjectController extends Controller
 
         // DB stores RA in decimal hours (0–24); raToDecimal() returns degrees (0–360).
         // Convert to hours so the whereBetween comparison is in the same unit as the DB.
-        $raHours = $raDeg / 15.0;
-        $decRadius = 0.5;          // degrees
-        $raRadius = $decRadius / 15.0; // equivalent hours
+        $raHours = fmod(fmod($raDeg / 15.0, 24.0) + 24.0, 24.0);
+        $decRadius = 0.5; // degrees
+
+        // An hour of RA spans 15 cos(dec) degrees, so the RA range widens towards the poles.
+        // The declination of the box edge closest to the pole gives the widest range needed.
+        $edgeDec = min(90.0, abs($decDeg) + $decRadius);
+        $cosEdgeDec = cos(deg2rad($edgeDec));
+        $raRadius = $cosEdgeDec > 1e-6 ? $decRadius / (15.0 * $cosEdgeDec) : 12.0; // hours
+
+        // Squared angular distance in degrees, with the RA difference taken the short way around 0/24 h
+        $raDiff = '(CASE WHEN ABS(objects.ra - ?) > 12 THEN 24 - ABS(objects.ra - ?) ELSE ABS(objects.ra - ?) END) * ?';
+        $raScale = 15.0 * cos(deg2rad($decDeg));
+        $distanceBindings = [$raHours, $raHours, $raHours, $raScale];
 
         $nearby = DB::table('objects')
             ->leftJoin('target_types', 'objects.type', '=', 'target_types.id')
@@ -3700,9 +3710,23 @@ class ObjectController extends Controller
                 'objects.type',
                 'target_types.type as type_label'
             )
-            ->whereBetween('objects.ra', [$raHours - $raRadius, $raHours + $raRadius])
+            ->when($raRadius < 12.0, function ($query) use ($raHours, $raRadius) {
+                $min = $raHours - $raRadius;
+                $max = $raHours + $raRadius;
+
+                if ($min < 0.0) {
+                    $query->where(fn($q) => $q->where('objects.ra', '>=', $min + 24.0)->orWhere('objects.ra', '<=', $max));
+                } elseif ($max > 24.0) {
+                    $query->where(fn($q) => $q->where('objects.ra', '>=', $min)->orWhere('objects.ra', '<=', $max - 24.0));
+                } else {
+                    $query->whereBetween('objects.ra', [$min, $max]);
+                }
+            })
             ->whereBetween('objects.decl', [$decDeg - $decRadius, $decDeg + $decRadius])
-            ->orderByRaw('ABS(objects.ra - ?) + ABS(objects.decl - ?)', [$raHours, $decDeg])
+            ->orderByRaw(
+                "($raDiff) * ($raDiff) + (objects.decl - ?) * (objects.decl - ?)",
+                [...$distanceBindings, ...$distanceBindings, $decDeg, $decDeg]
+            )
             ->paginate(25)
             ->withQueryString();
 
@@ -3742,11 +3766,6 @@ class ObjectController extends Controller
      */
     public function store(Request $request)
     {
-        // If a new catalog code was provided, normalize to uppercase before validation
-        if ($request->filled('catalog_create_code')) {
-            $request->merge(['catalog_create_code' => strtoupper(trim($request->input('catalog_create_code')))]);
-        }
-
         $validated = $request->validate([
             'name' => 'required|string',
             'ra' => 'nullable|string',
@@ -3758,8 +3777,6 @@ class ObjectController extends Controller
             'diam2' => 'nullable|numeric',
             'pa' => 'nullable|integer',
             'catalog' => 'nullable|string',
-            'catalog_create_code' => ['nullable', 'string', 'regex:/^[A-Z0-9_-]{1,10}$/', 'unique:atlases,code'],
-            'catalog_create_description' => ['nullable', 'string', 'max:255'],
         ]);
 
         // Convert RA to decimal hours (DB stores hours, not degrees)
@@ -3781,25 +3798,6 @@ class ObjectController extends Controller
 
         // Magnitudes, diameters (arcminutes → arcseconds), position angle and SBObj
         $validated = array_merge($validated, self::measurementColumns($validated));
-
-        // If privileged user requested creating a new catalog, persist it first
-        try {
-            $user = Auth::user();
-            if ($user && ($user->isAdministrator() || $user->isDatabaseExpert())) {
-                $newCode = trim($request->input('catalog_create_code'));
-                if (!empty($newCode)) {
-                    // Insert if not exists
-                    DB::table('atlases')->insertOrIgnore([
-                        'code' => $newCode,
-                        'name' => $newCode,
-                    ]);
-                    // Make sure the object's catalog references the new code
-                    $validated['catalog'] = $newCode;
-                }
-            }
-        } catch (\Throwable $e) {
-            Log::warning('Catalog creation during object add failed', ['error' => $e->getMessage()]);
-        }
 
         // Create a DeepskyObject record — only pass columns that exist in the objects table.
         // Provide empty/zero defaults for legacy NOT NULL columns that have no DB default.
@@ -4329,6 +4327,11 @@ class ObjectController extends Controller
                 ->where('object_name', $objectName)
                 ->update(['object_name' => $targetName]);
         } else {
+            // Observations can't be left pointing to a deleted object
+            if (\App\Models\Observation::ofDeepskyObject($objectName)->exists()) {
+                return redirect()->back()->with('error', __('This object has observations. Choose an object to move them to before deleting it.'));
+            }
+
             // No move target — remove any observing list entries for this object
             DB::table('observing_list_items')
                 ->where('object_name', $objectName)

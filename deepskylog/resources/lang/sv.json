@@ -1648,6 +1648,7 @@
     "This is a secure area of the application. Please confirm your password before continuing.": "Detta är ett säkert område i applikationen. Bekräfta ditt lösenord innan du fortsätter.",
     "This list has no objects yet.": "Denna lista innehåller inga objekt ännu.",
     "This object appears in :count observing list. That entry will be removed.|This object appears in :count observing lists. Those entries will be removed.": "Objektet finns i :count observationslista. Den posten tas bort.|Objektet finns i :count observationslistor. De posterna tas bort.",
+    "This object has observations. Choose an object to move them to before deleting it.": "Det här objektet har observationer. Välj ett objekt att flytta dem till innan du tar bort det.",
     "This password does not match our records.": "Lösenordet matchar inte våra uppgifter.",
     "This registration allows access to a variety of useful tools, including information on the objects observed and sketches made.": "Denna registrering ger tillgång till olika användbara verktyg, inklusive information om de observerade objekten och skisserna som gjorts.",
     "This search matches :count observations, but at most :max observations can be exported as :format. Please narrow down your search.": "Sökningen matchar :count observationer, men högst :max observationer kan exporteras som :format. Begränsa sökningen.",

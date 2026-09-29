@@ -595,7 +595,8 @@ class ObservationsController extends Controller
 
     /**
      * Show comet observations filtered by object slug (object-scoped comet list).
-     * URL: /cometobservations/{object}
+     * URL: /cometobservations/{object}, which is also /cometobservations/{observer}: a slug that
+     * is no comet but a user shows the comet observations of that observer (cometShow()).
      */
     public function cometIndexByObject(string $slug)
     {

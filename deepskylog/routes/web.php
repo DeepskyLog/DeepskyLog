@@ -176,9 +176,10 @@ Route::get('/observations/{observer}', 'App\Http\Controllers\ObservationsControl
 // Separate comet observations pages
 // Comet observations: support object-scoped pages and observer pages
 Route::get('/cometobservations/{observer}/{object}', 'App\\Http\\Controllers\\ObservationsController@cometShowObserverObject')->name('observations.comet.user.object');
+// Serves both /cometobservations/{object} and /cometobservations/{observer}: cometIndexByObject()
+// shows the observer page when the slug is no comet but a user
 Route::get('/cometobservations/{object}', 'App\\Http\\Controllers\\ObservationsController@cometIndexByObject')->name('observations.comet.object');
 Route::get('/cometobservations', 'App\\Http\\Controllers\\ObservationsController@cometIndex')->name('observations.comet.index');
-Route::get('/cometobservations/{observer}', 'App\\Http\\Controllers\\ObservationsController@cometShow')->name('observations.comet.show');
 
 // Sketch of the week / month
 Route::get('/sketch-of-the-week', function () {

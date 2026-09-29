@@ -6,6 +6,7 @@
 
 - [ ] Test! 
   - [ ] Test for functionality / inconsistency problems (code review done, see "Functionality / inconsistency review" at the end of this file)
+  - [ ] Check code for use of the legacy tables.  
   - [ ] Test for speed problems in the database queries, also think about crawlers and bots that can generate a lot of queries.
   - [ ] Test for security problems
   - [ ] Test manually when logged in and logged out, as database expert and as administrator
@@ -33,6 +34,11 @@
     - [ ] `systemctl daemon-reload`, `systemctl reset-failed deepskylog-pdf-worker.service` (it gave up after five failed starts), `systemctl enable --now deepskylog-pdf-worker.service`, then `systemctl status deepskylog-pdf-worker.service` must say "active (running)".
     - [ ] `php artisan queue:restart`, so the existing worker loads the new code and config as well.
     - [ ] Make an atlas page and an object set and check that both finish and can be downloaded. If not: `journalctl -u deepskylog-pdf-worker.service -n 50` and `storage/logs/laravel-<date>.log`.
+  - [ ] Separate cache store for the response cache (`responsecache`, in `config/cache.php`): clearing the response cache empties its whole store, and it is now cleared much more often.
+    - [ ] Check `grep -n RESPONSE_CACHE .env` in `/mnt/bigdisk/var/www/test.deepskylog.org/deepskylog`.
+    - [ ] If it says `RESPONSE_CACHE_DRIVER=file`: remove that line. This can be done before the update, as the old code also falls back to `file`. Do not set it to `responsecache` before the update: the old code does not know that store and the site stops working.
+    - [ ] After changing `.env`: `php artisan config:clear` (or `php artisan config:cache` if the server uses a cached config).
+    - [ ] After the update: `php artisan responsecache:clear`, so no page cached without a locale is still served.
 - [ ] Release new version of pyDeepskyLog
   - [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
@@ -94,24 +100,7 @@
 
 Code review of the whole application, without the security aspects. Paths are relative to `deepskylog/`. Items marked (checked) were confirmed by hand; the others come from a review that read the code and migrations but did not reproduce every case. The test suite passed (259 passed, 7 skipped), so none of this is covered by tests yet.
 
-### Medium
-
-Search and caching
-- [x] Advanced search diameter filters say arcmin but compare arcsec (`AdvancedObjectSearchTable.php:301-311,527-540`).
-- [x] "Best mag" column shows the visual magnitude as a magnification ("9x") (`SearchResultsTable.php:929-930`, `NearbyObjectsTable.php:1110`).
-- [x] Response cache: the hash has no locale, so guests who chose another language get cached English pages; flash messages get lost (`TeamAwareHasher.php`, `routes/web.php:64`). Validate the locale route against the available locales.
-- [x] Response cache is not cleared for `Observation`, `ObservingList` (+ items/comments), `SketchOfTheWeek/Month`, `DeepskyObject`, `User` (`ClearsResponseCache` trait only on equipment, `Location`, `ObservationSession`).
-
 ### Low
-
-Objects and search
-- [ ] Constellation mismatch export only covers the preview sample; `skipped` counts NOT NULL columns (always 0) (`AdminObjectCheckService.php:71-95,218`).
-- [ ] Dead `catalog_create_code` code in `store()` would insert into `atlases` (`ObjectController.php:3908,3980-3995`).
-- [ ] `coordsSearch` duplicate check doesn't scale RA by 1/cos(dec) or wrap at 0/24 h (`ObjectController.php:3840-3852`).
-- [ ] Argo Navis/SkySafari exports compute unused values; APD temp file isn't deleted; APD keeps mag 0 (`SearchExportController.php`).
-- [ ] `DeleteObjectModal` counts by `target_name` while the delete uses another column; without a target, observations point to the deleted object.
-- [ ] `CatalogsPage.php` "legacy" queries hit the same table again; `app/Helpers/CoordinateParser.php` is unused and drops minutes of "12 30".
-- [ ] `/cometobservations/{observer}` route is unreachable after `/cometobservations/{object}`.
 
 Observations
 - [ ] Observation writes don't clear the response cache.

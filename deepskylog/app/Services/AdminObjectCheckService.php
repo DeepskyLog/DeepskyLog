@@ -14,6 +14,8 @@ class AdminObjectCheckService
 {
     private const DISPLAY_LIMIT = 250;
 
+    private const CONSTELLATION_SAMPLE_SIZE = 500;
+
     public function buildReport(): array
     {
         $constellations = Constellation::query()->pluck('name', 'id')->map(fn($name) => (string) $name);
@@ -72,7 +74,7 @@ class AdminObjectCheckService
     public function exportConstellationMismatches(): string
     {
         $constellations = Constellation::query()->pluck('name', 'id')->map(fn($name) => (string) $name);
-        $report = $this->buildConstellationCheck($constellations);
+        $report = $this->scanConstellationMismatches($constellations, null, null);
 
         $rows = ['Object', 'Stored Code', 'Stored Name', 'Expected Code', 'Expected Name', 'RA', 'Declination'];
         $lines = [implode(',', array_map(fn($cell) => '"' . str_replace('"', '""', (string) $cell) . '"', $rows))];
@@ -212,69 +214,91 @@ class AdminObjectCheckService
 
     private function buildConstellationCheck(Collection $constellations): array
     {
-        // Quick counts (fast indexed queries)
         $totalCount = DB::table('objects')->count();
-        $validCount = DB::table('objects')->whereNotNull('ra')->whereNotNull('decl')->count();
-        $skipped = $totalCount - $validCount;
 
-        // Find mismatches by sampling first 500 objects (fast preview)
-        // Full check should be run as a background job for comprehensive audit
-        $mismatchCount = 0;
-        $examples = [];
-        $sampleLimit = 500; // Sample only 500 objects for fast preview
-        $objectsScanned = 0;
-
-        DB::table('objects')
-            ->select('name', 'con', 'ra', 'decl')
-            ->whereNotNull('ra')
-            ->whereNotNull('decl')
-            ->orderBy('name')
-            ->limit($sampleLimit)
-            ->chunk(500, function (Collection $objects) use ($constellations, &$mismatchCount, &$examples, &$objectsScanned) {
-                foreach ($objects as $object) {
-                    $objectsScanned++;
-
-                    $raHours = $this->normalizeRaToHours($object->ra);
-                    $declination = DeepskyObject::decToDecimal($object->decl);
-
-                    if ($raHours === null || $declination === null) {
-                        continue;
-                    }
-
-                    $expectedCode = strtoupper((new EquatorialCoordinates($raHours, $declination))->getConstellation());
-                    $storedCode = strtoupper(trim((string) ($object->con ?? '')));
-
-                    if ($storedCode === $expectedCode) {
-                        continue;
-                    }
-
-                    $mismatchCount++;
-
-                    if (count($examples) >= self::DISPLAY_LIMIT) {
-                        continue;
-                    }
-
-                    $examples[] = [
-                        'name' => $object->name,
-                        'stored_code' => $storedCode,
-                        'stored_name' => $constellations->get($storedCode),
-                        'expected_code' => $expectedCode,
-                        'expected_name' => $constellations->get($expectedCode),
-                        'ra' => DeepskyObject::formatRa($object->ra),
-                        'decl' => DeepskyObject::formatDec($object->decl),
-                    ];
-                }
-            });
+        // Only a sample is checked for the page, the export and the repair action cover all objects
+        $scan = $this->scanConstellationMismatches($constellations, self::CONSTELLATION_SAMPLE_SIZE, self::DISPLAY_LIMIT);
+        $objectsScanned = $scan['checked'];
+        $mismatchCount = $scan['mismatch_count'];
 
         return [
             'total' => $totalCount,
             'checked' => $objectsScanned,
-            'correct' => $objectsScanned - $mismatchCount,
+            'correct' => $objectsScanned - $mismatchCount - $scan['skipped'],
+            'skipped' => $scan['skipped'],
+            'mismatch_count' => $mismatchCount,
+            'examples' => $scan['examples'],
+            'display_limit' => self::DISPLAY_LIMIT,
+            'note' => $objectsScanned < $totalCount ? "Preview: Scanned first {$objectsScanned} objects. Found {$mismatchCount} mismatches in this sample. Run the repair action to fix all constellation issues." : null,
+        ];
+    }
+
+    /**
+     * Compares the stored constellation of the objects with the one of their coordinates.
+     *
+     * Objects whose coordinates can't be parsed are counted as skipped.
+     *
+     * @param  int|null  $limit  the number of objects to check, null for all
+     * @param  int|null  $exampleLimit  the number of mismatches to return, null for all
+     */
+    private function scanConstellationMismatches(Collection $constellations, ?int $limit, ?int $exampleLimit): array
+    {
+        $mismatchCount = 0;
+        $skipped = 0;
+        $examples = [];
+        $objectsScanned = 0;
+
+        $check = function (Collection $objects) use ($constellations, $exampleLimit, &$mismatchCount, &$skipped, &$examples, &$objectsScanned) {
+            foreach ($objects as $object) {
+                $objectsScanned++;
+
+                $raHours = $this->normalizeRaToHours($object->ra);
+                $declination = DeepskyObject::decToDecimal($object->decl);
+
+                if ($raHours === null || $declination === null) {
+                    $skipped++;
+
+                    continue;
+                }
+
+                $expectedCode = strtoupper((new EquatorialCoordinates($raHours, $declination))->getConstellation());
+                $storedCode = strtoupper(trim((string) ($object->con ?? '')));
+
+                if ($storedCode === $expectedCode) {
+                    continue;
+                }
+
+                $mismatchCount++;
+
+                if ($exampleLimit !== null && count($examples) >= $exampleLimit) {
+                    continue;
+                }
+
+                $examples[] = [
+                    'name' => $object->name,
+                    'stored_code' => $storedCode,
+                    'stored_name' => $constellations->get($storedCode),
+                    'expected_code' => $expectedCode,
+                    'expected_name' => $constellations->get($expectedCode),
+                    'ra' => DeepskyObject::formatRa($object->ra),
+                    'decl' => DeepskyObject::formatDec($object->decl),
+                ];
+            }
+        };
+
+        $query = DB::table('objects')->select('name', 'con', 'ra', 'decl')->orderBy('name');
+
+        if ($limit !== null) {
+            $check($query->limit($limit)->get());
+        } else {
+            $query->chunk(500, $check);
+        }
+
+        return [
+            'checked' => $objectsScanned,
             'skipped' => $skipped,
             'mismatch_count' => $mismatchCount,
             'examples' => $examples,
-            'display_limit' => self::DISPLAY_LIMIT,
-            'note' => $objectsScanned < $validCount ? "Preview: Scanned first {$objectsScanned} objects. Found {$mismatchCount} mismatches in this sample. Run the repair action to fix all constellation issues." : null,
         ];
     }
 

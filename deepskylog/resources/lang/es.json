@@ -1651,6 +1651,7 @@
     "This is a secure area of the application. Please confirm your password before continuing.": "Esta es un área segura de la aplicación. Por favor, confirma tu contraseña antes de continuar.",
     "This list has no objects yet.": "Esta lista no tiene objetos aún.",
     "This object appears in :count observing list. That entry will be removed.|This object appears in :count observing lists. Those entries will be removed.": "Este objeto aparece en :count lista de observación. Esa entrada se eliminará.|Este objeto aparece en :count listas de observación. Esas entradas se eliminarán.",
+    "This object has observations. Choose an object to move them to before deleting it.": "Este objeto tiene observaciones. Elija un objeto al que moverlas antes de eliminarlo.",
     "This password does not match our records.": "Esta contraseña no coincide con nuestros registros.",
     "This registration allows access to a variety of useful tools, including information on the objects observed and sketches made.": "Este registro permite el acceso a una variedad de herramientas útiles, incluyendo información sobre los objetos observados y los bocetos realizados.",
     "This search matches :count observations, but at most :max observations can be exported as :format. Please narrow down your search.": "Esta búsqueda da :count observaciones, pero como máximo se pueden exportar :max observaciones como :format. Acota la búsqueda.",

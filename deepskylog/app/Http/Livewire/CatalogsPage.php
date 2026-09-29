@@ -67,22 +67,6 @@ class CatalogsPage extends Component
 
         $catalogs = $catalogQuery->distinct()->orderBy('catalog')->limit(200)->pluck('catalog')->toArray();
 
-        // Also include catalogs from the legacy DB if available (some catalogs still live there)
-        try {
-            $old = DB::table('objectnames')
-                ->select('catalog')
-                ->whereNotNull('catalog')
-                ->where('catalog', '!=', '')
-                ->distinct()
-                ->orderBy('catalog')
-                ->limit(200)
-                ->pluck('catalog')
-                ->toArray();
-            $catalogs = array_unique(array_merge($catalogs, $old));
-        } catch (\Throwable $_) {
-            // ignore if legacy connection not configured
-        }
-
         $catalogs = collect($catalogs)->sort()->values();
 
         $constellationCounts = collect();
@@ -97,17 +81,6 @@ class CatalogsPage extends Component
                 ->pluck('catalog')
                 ->toArray();
 
-            try {
-                $oldCats = DB::table('objectnames')
-                    ->whereRaw('LOWER(catalog) = ?', [strtolower($this->selected)])
-                    ->distinct()
-                    ->pluck('catalog')
-                    ->toArray();
-                $catalogVariants = array_unique(array_merge($catalogVariants, $oldCats));
-            } catch (\Throwable $_) {
-                // ignore
-            }
-
             // Always include the selected literal value as a fallback (covers exact matches).
             if (!in_array($this->selected, $catalogVariants, true)) {
                 $catalogVariants[] = $this->selected;
@@ -120,28 +93,14 @@ class CatalogsPage extends Component
                 ->pluck('slug')
                 ->toArray();
 
-            // Also gather slugs from legacy objectnames if present
-            try {
-                $oldSlugs = DB::table('objectnames')
-                    ->whereIn('catalog', $catalogVariants)
-                    ->whereNotNull('slug')
-                    ->distinct()
-                    ->pluck('slug')
-                    ->toArray();
-                $slugs = array_unique(array_merge($slugs, $oldSlugs));
-            } catch (\Throwable $_) {
-                // ignore
-            }
-
             // Ensure non-empty and remove null/empty values
             $slugs = array_values(array_filter($slugs, function ($s) {
                 return !empty($s);
             }));
 
             // If slugs are missing for many entries, try a fallback: match objects.name
-            // against objectnames.objectname and objectnames.altname from primary and legacy tables.
+            // against objectnames.objectname and objectnames.altname.
             try {
-                // Collect canonical and alt names from primary
                 $names = DB::table('objectnames')
                     ->whereIn('catalog', $catalogVariants)
                     ->pluck('objectname')
@@ -151,21 +110,6 @@ class CatalogsPage extends Component
                     ->pluck('altname')
                     ->toArray();
                 $names = array_filter(array_unique(array_merge($names, $alt)));
-
-                // Merge legacy names if available
-                try {
-                    $oldNames = DB::table('objectnames')
-                        ->whereIn('catalog', $catalogVariants)
-                        ->pluck('objectname')
-                        ->toArray();
-                    $oldAlt = DB::table('objectnames')
-                        ->whereIn('catalog', $catalogVariants)
-                        ->pluck('altname')
-                        ->toArray();
-                    $names = array_filter(array_unique(array_merge($names, $oldNames, $oldAlt)));
-                } catch (\Throwable $_) {
-                    // ignore
-                }
 
                 if (!empty($names)) {
                     $foundSlugs = DB::table('objects')
@@ -229,13 +173,13 @@ class CatalogsPage extends Component
         }
 
         // Build display names for objects on the current page: prefer catalog-specific
-        // objectnames (primary, then legacy). Format: <catalog-specific name> (<main name>).
+        // objectnames. Format: <catalog-specific name> (<main name>).
         $displayNames = [];
         if ($objects && $objects instanceof \Illuminate\Pagination\LengthAwarePaginator && $objects->total() > 0) {
             $pageSlugs = collect($objects->items())->pluck('slug')->toArray();
 
             if (!empty($pageSlugs)) {
-                // Primary objectnames by slug; prefer catalog index for display when available
+                // Objectnames by slug; prefer catalog index for display when available
                 $rows = DB::table('objectnames')
                     ->whereIn('catalog', $catalogVariants)
                     ->whereIn('slug', $pageSlugs)
@@ -243,52 +187,10 @@ class CatalogsPage extends Component
                     ->get();
 
                 foreach ($rows as $r) {
-                    $main = $r->objectname ?: $r->altname;
-                    if ($r->catindex && strlen(trim($r->catindex)) > 0) {
-                        $display = $this->selected . ' ' . trim($r->catindex);
-                    } elseif ($main) {
-                        // Fall back to using the catalog label + name when no index
-                        $cat = $this->selected;
-                        if (stripos($main, $cat) === 0) {
-                            $display = $main;
-                        } else {
-                            $display = $cat . ' ' . $main;
-                        }
-                    } else {
-                        continue;
-                    }
-
-                    $displayNames[$r->slug] = $display;
-                }
-
-                // Legacy objectnames (do not override primary)
-                try {
-                    $oldRows = DB::table('objectnames')
-                        ->whereIn('catalog', $catalogVariants)
-                        ->whereIn('slug', $pageSlugs)
-                        ->select('slug', 'objectname', 'altname', 'catindex')
-                        ->get();
-
-                    foreach ($oldRows as $r) {
-                        if (isset($displayNames[$r->slug]))
-                            continue;
-                        $main = $r->objectname ?: $r->altname;
-                        if ($r->catindex && strlen(trim($r->catindex)) > 0) {
-                            $display = $this->selected . ' ' . trim($r->catindex);
-                        } elseif ($main) {
-                            $cat = $this->selected;
-                            if (stripos($main, $cat) === 0) {
-                                $display = $main;
-                            } else {
-                                $display = $cat . ' ' . $main;
-                            }
-                        } else {
-                            continue;
-                        }
+                    $display = $this->catalogDisplayName($r->objectname ?: $r->altname, $r->catindex);
+                    if ($display !== null) {
                         $displayNames[$r->slug] = $display;
                     }
-                } catch (\Throwable $_) {
-                    // ignore
                 }
 
                 // For any remaining slugs try joining on objects.name -> objectnames.objectname|altname
@@ -306,58 +208,13 @@ class CatalogsPage extends Component
                         ->get();
 
                     foreach ($joined as $r) {
-                        if (isset($displayNames[$r->slug]))
-                            continue;
-                        $main = $r->objectname ?: $r->altname;
-                        // joined rows may include catindex
-                        $catindex = property_exists($r, 'catindex') ? $r->catindex : null;
-                        if ($catindex && strlen(trim($catindex)) > 0) {
-                            $display = $this->selected . ' ' . trim($catindex);
-                        } elseif ($main) {
-                            $cat = $this->selected;
-                            if (stripos($main, $cat) === 0) {
-                                $display = $main;
-                            } else {
-                                $display = $cat . ' ' . $main;
-                            }
-                        } else {
+                        if (isset($displayNames[$r->slug])) {
                             continue;
                         }
-                        $displayNames[$r->slug] = $display;
-                    }
-
-                    // legacy join fallback
-                    try {
-                        $joinedOld = DB::table('objects as o')
-                            ->join('objectnames as n', function ($join) {
-                                $join->on('o.name', '=', 'n.objectname')->orOn('o.name', '=', 'n.altname');
-                            })
-                            ->whereIn('o.slug', $missing)
-                            ->whereIn('n.catalog', $catalogVariants)
-                            ->select('o.slug', 'n.objectname', 'n.altname', 'n.catindex')
-                            ->get();
-
-                        foreach ($joinedOld as $r) {
-                            if (isset($displayNames[$r->slug]))
-                                continue;
-                            $main = $r->objectname ?: $r->altname;
-                            $catindex = property_exists($r, 'catindex') ? $r->catindex : null;
-                            if ($catindex && strlen(trim($catindex)) > 0) {
-                                $display = $this->selected . ' ' . trim($catindex);
-                            } elseif ($main) {
-                                $cat = $this->selected;
-                                if (stripos($main, $cat) === 0) {
-                                    $display = $main;
-                                } else {
-                                    $display = $cat . ' ' . $main;
-                                }
-                            } else {
-                                continue;
-                            }
+                        $display = $this->catalogDisplayName($r->objectname ?: $r->altname, $r->catindex);
+                        if ($display !== null) {
                             $displayNames[$r->slug] = $display;
                         }
-                    } catch (\Throwable $_) {
-                        // ignore
                     }
                 }
 
@@ -388,5 +245,22 @@ class CatalogsPage extends Component
             'objects' => $objects,
             'displayNames' => isset($displayNames) ? $displayNames : [],
         ]);
+    }
+
+    /**
+     * The name of an object in the selected catalog: the catalog with the index when there is one,
+     * else the name, prefixed with the catalog when it doesn't start with it.
+     */
+    private function catalogDisplayName(?string $main, ?string $catindex): ?string
+    {
+        if ($catindex !== null && trim($catindex) !== '') {
+            return $this->selected . ' ' . trim($catindex);
+        }
+
+        if (!$main) {
+            return null;
+        }
+
+        return stripos($main, $this->selected) === 0 ? $main : $this->selected . ' ' . $main;
     }
 }

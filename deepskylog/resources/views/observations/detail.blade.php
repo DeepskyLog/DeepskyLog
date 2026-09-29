@@ -24,7 +24,7 @@
         if ($user && !empty($user->slug)) {
             $backUrl =
                 $observationType === "comet"
-                    ? route("observations.comet.show", $user->slug)
+                    ? route("observations.comet.object", ["object" => $user->slug])
                     : route("observations.show", $user->slug);
         }
 

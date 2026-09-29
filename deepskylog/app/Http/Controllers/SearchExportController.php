@@ -60,46 +60,7 @@ class SearchExportController extends Controller
         try {
             [$comp, $rows] = $this->resolveRows($request);
 
-            $formatDiameter = function ($d1, $d2, $pa = null) {
-                $hasD1 = is_numeric($d1) && floatval($d1) > 0;
-                $hasD2 = is_numeric($d2) && floatval($d2) > 0;
-                if (!$hasD1 && !$hasD2)
-                    return '';
-                $d1f = $hasD1 ? floatval($d1) : 0.0;
-                $d2f = $hasD2 ? floatval($d2) : 0.0;
-                $fmt = function ($v) {
-                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v);
-                };
-                if ($hasD1 && $hasD2) {
-                    if (max($d1f, $d2f) > 60.0) {
-                        $d1m = $d1f / 60.0;
-                        $d2m = $d2f / 60.0;
-                        $d1m_fmt = $fmt($d1m);
-                        $d2m_fmt = $fmt($d2m);
-                        if ($d1m_fmt === '0' || $d1m_fmt === '0.0' || $d2m_fmt === '0' || $d2m_fmt === '0.0') {
-                            $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
-                        } else {
-                            $size = $d1m_fmt . "'x" . $d2m_fmt . "'";
-                        }
-                    } else {
-                        $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
-                    }
-                } else {
-                    $single = $hasD1 ? $d1f : $d2f;
-                    if ($single > 60.0) {
-                        $single_fmt = $fmt($single / 60.0) . "'";
-                    } else {
-                        $single_fmt = $fmt($single) . "''";
-                    }
-                    $size = $single_fmt;
-                }
-                if (is_numeric($pa) && intval(round(floatval($pa))) !== 999) {
-                    $size .= '/' . sprintf('%d', round(floatval($pa))) . '°';
-                }
-                return $size;
-            };
-
-            $data = $rows->map(function ($r) use ($formatDiameter, $comp) {
+            $data = $rows->map(function ($r) use ($comp) {
                 $d1 = $r->diam1 ?? null;
                 $d2 = $r->diam2 ?? null;
                 $pa = $r->pa ?? null;
@@ -111,7 +72,7 @@ class SearchExportController extends Controller
                     'constellation' => $r->constellation ?? '',
                     'mag' => (is_numeric($r->mag) && floatval($r->mag) != 99.9 && floatval($r->mag) != 0.0) ? (string) $r->mag : '-',
                     'sb' => (is_numeric($r->subr) && floatval($r->subr) != 99.9 && floatval($r->subr) != 0.0) ? (string) $r->subr : '-',
-                    'diameter' => $formatDiameter($d1, $d2, $pa),
+                    'diameter' => $this->formatSize($d1, $d2, $pa),
                     'atlas_page' => property_exists($comp, 'includeAtlas') && $comp->includeAtlas ? ($r->atlas_page ?? '-') : '-',
                     'cr' => isset($r->computed_contrast_reserve) && is_numeric($r->computed_contrast_reserve) ? number_format(round(floatval($r->computed_contrast_reserve), 2), 2) : ($r->computed_contrast_reserve_category ?? '-'),
                     'best_mag' => $this->computeBestMagForExport($r, $comp),
@@ -158,45 +119,6 @@ class SearchExportController extends Controller
         try {
             [, $rows] = $this->resolveRows($request);
 
-            $formatDiameter = function ($d1, $d2, $pa = null) {
-                $hasD1 = is_numeric($d1) && floatval($d1) > 0;
-                $hasD2 = is_numeric($d2) && floatval($d2) > 0;
-                if (!$hasD1 && !$hasD2)
-                    return '';
-                $d1f = $hasD1 ? floatval($d1) : 0.0;
-                $d2f = $hasD2 ? floatval($d2) : 0.0;
-                $fmt = function ($v) {
-                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v);
-                };
-                if ($hasD1 && $hasD2) {
-                    if (max($d1f, $d2f) > 60.0) {
-                        $d1m = $d1f / 60.0;
-                        $d2m = $d2f / 60.0;
-                        $d1m_fmt = $fmt($d1m);
-                        $d2m_fmt = $fmt($d2m);
-                        if ($d1m_fmt === '0' || $d1m_fmt === '0.0' || $d2m_fmt === '0' || $d2m_fmt === '0.0') {
-                            $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
-                        } else {
-                            $size = $d1m_fmt . "'x" . $d2m_fmt . "'";
-                        }
-                    } else {
-                        $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
-                    }
-                } else {
-                    $single = $hasD1 ? $d1f : $d2f;
-                    if ($single > 60.0) {
-                        $single_fmt = $fmt($single / 60.0) . "'";
-                    } else {
-                        $single_fmt = $fmt($single) . "''";
-                    }
-                    $size = $single_fmt;
-                }
-                if (is_numeric($pa) && intval(round(floatval($pa))) !== 999) {
-                    $size .= '/' . sprintf('%d', round(floatval($pa))) . '°';
-                }
-                return $size;
-            };
-
             $typeMap = [
                 'ASTER' => 'ASTERISM',
                 'BRTNB' => 'BRIGHT',
@@ -236,9 +158,7 @@ class SearchExportController extends Controller
                 'AA8STAR' => 'ASTERISM',
             ];
 
-            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
-
-            $lines = $rows->map(function ($r) use ($formatDiameter, $typeMap, $planetNames) {
+            $lines = $rows->map(function ($r) use ($typeMap) {
                 $name = 'DSL ' . ($r->display_name ?? $r->name ?? '');
                 $ra = $this->formatRAColon($r->obj_ra ?? $r->ra ?? null);
                 $dec = $this->formatDecColon($r->obj_decl ?? $r->decl ?? null);
@@ -253,29 +173,11 @@ class SearchExportController extends Controller
                 }
 
                 $mag = (is_numeric($r->mag) && floatval($r->mag) != 99.9 && floatval($r->mag) != 0.0) ? (string) $r->mag : '';
-                $size = $formatDiameter($r->diam1 ?? null, $r->diam2 ?? null, $r->pa ?? null);
-                $atlas = ''; // atlas handled in table export only
+                $size = $this->formatSize($r->diam1 ?? null, $r->diam2 ?? null, $r->pa ?? null);
                 $cr = isset($r->computed_contrast_reserve) && is_numeric($r->computed_contrast_reserve) ? number_format(round(floatval($r->computed_contrast_reserve), 2), 2) : ($r->computed_contrast_reserve_category ?? '');
                 $best = $this->computeBestMagForExport($r, null);
 
-                $lowerName = strtolower(trim((string) ($r->display_name ?? $r->name ?? '')));
-                // Default to deep-sky. Classify solar-system objects (planets, moons,
-                // comets) as 1,-1,-1 and stars as 2,-1,-1 using both the source
-                // table and the object's type hints.
-                $objectId = '4,-1,-1';
-                $sourceTable = strtolower(trim((string) ($r->source_table ?? '')));
-                if (in_array($sourceTable, ['planets', 'moons', 'cometobjects', 'lunar_features'], true) || in_array($lowerName, $planetNames, true)) {
-                    $objectId = '1,-1,-1';
-                } else {
-                    $rawTypeCodeUpper = strtoupper(trim((string) ($r->obj_type ?? $r->source_type ?? '')));
-                    $typeNameUpper = strtoupper(trim((string) ($r->type_name ?? '')));
-                    $starCodes = ['DS', 'AA1STAR', 'AA3STAR', 'AA4STAR', 'AA8STAR'];
-                    if ($rawTypeCodeUpper !== '' && (in_array($rawTypeCodeUpper, $starCodes, true) || str_contains($rawTypeCodeUpper, 'STAR') || str_contains($typeNameUpper, 'STAR'))) {
-                        $objectId = '2,-1,-1';
-                    }
-                }
-
-                return implode('|', [$name, $ra, $dec, $type, $mag, implode(';', array_filter([$size, $atlas, 'CR ' . ($cr === '' ? '-' : $cr), $best]))]);
+                return implode('|', [$name, $ra, $dec, $type, $mag, implode(';', array_filter([$size, 'CR ' . ($cr === '' ? '-' : $cr), $best]))]);
             })->values()->all();
 
             $content = implode("\n", $lines) . "\n";
@@ -297,55 +199,10 @@ class SearchExportController extends Controller
         try {
             [, $rows] = $this->resolveRows($request);
 
-            $formatDiameter = function ($d1, $d2, $pa = null) {
-                $hasD1 = is_numeric($d1) && floatval($d1) > 0;
-                $hasD2 = is_numeric($d2) && floatval($d2) > 0;
-                if (!$hasD1 && !$hasD2)
-                    return '';
-                $d1f = $hasD1 ? floatval($d1) : 0.0;
-                $d2f = $hasD2 ? floatval($d2) : 0.0;
-                $fmt = function ($v) {
-                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v);
-                };
-                if ($hasD1 && $hasD2) {
-                    if (max($d1f, $d2f) > 60.0) {
-                        $d1m = $d1f / 60.0;
-                        $d2m = $d2f / 60.0;
-                        $d1m_fmt = $fmt($d1m);
-                        $d2m_fmt = $fmt($d2m);
-                        if ($d1m_fmt === '0' || $d1m_fmt === '0.0' || $d2m_fmt === '0' || $d2m_fmt === '0.0') {
-                            $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
-                        } else {
-                            $size = $d1m_fmt . "'x" . $d2m_fmt . "'";
-                        }
-                    } else {
-                        $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
-                    }
-                } else {
-                    $single = $hasD1 ? $d1f : $d2f;
-                    if ($single > 60.0) {
-                        $single_fmt = $fmt($single / 60.0) . "'";
-                    } else {
-                        $single_fmt = $fmt($single) . "''";
-                    }
-                    $size = $single_fmt;
-                }
-                if (is_numeric($pa) && intval(round(floatval($pa))) !== 999) {
-                    $size .= '/' . sprintf('%d', round(floatval($pa))) . '°';
-                }
-                return $size;
-            };
-
             $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
 
-            $blocks = $rows->map(function ($r) use ($formatDiameter, $planetNames) {
+            $blocks = $rows->map(function ($r) use ($planetNames) {
                 $catalog = trim((string) ($r->display_name ?? $r->name ?? ''));
-                $common = '';
-                $date = null;
-                $size = $formatDiameter($r->diam1 ?? null, $r->diam2 ?? null, $r->pa ?? null);
-                $atlas = '';
-                $cr = isset($r->computed_contrast_reserve) && is_numeric($r->computed_contrast_reserve) ? number_format(round(floatval($r->computed_contrast_reserve), 2), 2) : ($r->computed_contrast_reserve_category ?? '');
-                $best = $this->computeBestMagForExport($r, null);
 
                 $lowerName = strtolower($catalog);
                 $objectId = '4,-1,-1';
@@ -366,12 +223,6 @@ class SearchExportController extends Controller
                 $lines[] = "   ObjectID={$objectId}";
                 if ($catalog !== '') {
                     $lines[] = "   CatalogNumber=" . str_replace("\n", "\\n", $catalog);
-                }
-                if ($common !== '') {
-                    $lines[] = "   CommonName=" . str_replace("\n", "\\n", $common);
-                }
-                if ($date) {
-                    $lines[] = "   DateObserved={$date}";
                 }
                 $lines[] = "EndObject=SkyObject";
 
@@ -413,6 +264,8 @@ class SearchExportController extends Controller
      */
     public function apd(Request $request)
     {
+        $tmp = false;
+
         try {
             [, $rows] = $this->resolveRows($request);
 
@@ -436,16 +289,8 @@ class SearchExportController extends Controller
                 $type = $r->type_name ?? $r->source_type ?? '';
                 $ra = is_numeric($r->obj_ra ?? $r->ra) ? floatval($r->obj_ra ?? $r->ra) : null;
                 $dec = is_numeric($r->obj_decl ?? $r->decl) ? floatval($r->obj_decl ?? $r->decl) : null;
-                $mag = (is_numeric($r->mag) && floatval($r->mag) != 99.9) ? floatval($r->mag) : null;
-                $size = '';
-                try {
-                    $d1 = $r->diam1 ?? null;
-                    $d2 = $r->diam2 ?? null;
-                    $pa = $r->pa ?? null;
-                    $size = $this->formatSizeForApd((object) ['diam1' => $d1, 'diam2' => $d2, 'pa' => $pa]);
-                } catch (\Throwable $_) {
-                    $size = '';
-                }
+                $mag = (is_numeric($r->mag) && floatval($r->mag) != 99.9 && floatval($r->mag) != 0.0) ? floatval($r->mag) : null;
+                $size = $this->formatSize($r->diam1 ?? null, $r->diam2 ?? null, $r->pa ?? null);
                 $catalogue = '';
                 $notes = '';
 
@@ -456,9 +301,16 @@ class SearchExportController extends Controller
             $db = null;
             $filename = 'search_objects_' . date('Ymd_His') . '.apd';
             return response()->streamDownload(function () use ($tmp) {
-                readfile($tmp);
+                try {
+                    readfile($tmp);
+                } finally {
+                    @unlink($tmp);
+                }
             }, $filename, ['Content-Type' => 'application/x-sqlite3']);
         } catch (\Throwable $ex) {
+            if ($tmp !== false) {
+                @unlink($tmp);
+            }
             Log::error('SearchExportController::apd failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate AstroPlanner APD export'));
         }
@@ -635,11 +487,12 @@ class SearchExportController extends Controller
             ->all();
     }
 
-    private function formatSizeForApd($r): string
+    /**
+     * The size of an object for the exports, in arcseconds or (above a minute) arcminutes,
+     * with the position angle when it is known.
+     */
+    private function formatSize($d1, $d2, $pa = null): string
     {
-        $d1 = $r->diam1 ?? null;
-        $d2 = $r->diam2 ?? null;
-        $pa = $r->pa ?? null;
         $hasD1 = is_numeric($d1) && floatval($d1) > 0;
         $hasD2 = is_numeric($d2) && floatval($d2) > 0;
         if (!$hasD1 && !$hasD2)

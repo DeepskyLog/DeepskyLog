@@ -59,7 +59,7 @@
                 @endif
             @else
                 @if ($isCometLocal)
-                    <li><a href="{{ route('observations.comet.show', ['observer' => auth()->user()->slug]) }}"
+                    <li><a href="{{ route('observations.comet.object', ['object' => auth()->user()->slug]) }}"
                             class="text-gray-300 hover:underline">{{ __('My observations') }}</a></li>
                     <li><a href="{{ route('cometdrawings.show', ['observer' => auth()->user()->slug]) }}"
                             class="text-gray-300 hover:underline">{{ __('My drawings') }}</a></li>
