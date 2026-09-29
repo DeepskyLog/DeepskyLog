@@ -46,8 +46,11 @@ trait ClearsResponseCache
      * after the response has been sent, however many models were saved; in
      * the console (queue workers, commands, tests) it happens immediately,
      * since those processes may run for a long time.
+     *
+     * Public so that writes that bypass the model events (raw queries on
+     * related tables) can clear the cache as well.
      */
-    protected static function clearResponseCache(): void
+    public static function clearResponseCache(): void
     {
         $clear = function () {
             try {

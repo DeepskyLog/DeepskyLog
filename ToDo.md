@@ -102,15 +102,6 @@ Code review of the whole application, without the security aspects. Paths are re
 
 ### Low
 
-Observations
-- [ ] Observation writes don't clear the response cache.
-- [ ] `/observations/{object-slug}` passes `drawingsOnly => true`, so the list is labelled "All drawings".
-- [ ] Links from `ObservationSearchTable.php:716` and `PopularObservationsTable.php:124` omit the index (several observations of one object on one day all open the first).
-- [ ] `ObservationSearchTable::decimalOrZero` (1001) turns "20" into "2" when there is no decimal point.
-- [ ] `Observation::getFirst/LastObservationDateAndIdForEyepieceIds` return `legacy_id` (0 for new observations).
-- [ ] `PopularObservationController::index` builds a list the view doesn't use.
-- [ ] `showObserverObject(Drawings)` and `CometDrawingController::show` show all observations instead of a 404 for an unknown object.
-
 Sessions, lists, messages
 - [ ] `destroyComment` doesn't check that the comment belongs to the list in the URL (`ObservingListController.php:956-965`).
 - [ ] `sort_order` of list items is never set (not fillable), so ordering differs between pages; object sets/reports sort by name and ignore it (`ObjectSetSourceService.php:90-92`).

@@ -81,9 +81,12 @@ class CometDrawingController extends Controller
             }
         }
 
-        $query = Observation::comets()->where('observer_username', $user->username)->where('has_drawing', 1)->orderBy('observed_on', 'desc');
-        if ($objectId)
-            $query->where('target_key', (string) $objectId);
+        if (!$objectId) {
+            abort(404);
+        }
+
+        $query = Observation::comets()->where('observer_username', $user->username)->where('has_drawing', 1)->orderBy('observed_on', 'desc')
+            ->where('target_key', (string) $objectId);
 
         $sketches = $query->paginate(20);
 
@@ -139,10 +142,12 @@ class CometDrawingController extends Controller
             }
         }
 
-        $query = Observation::comets()->where('has_drawing', 1)->orderBy('id', 'desc');
-        if ($objectId)
-            $query->where('target_key', (string) $objectId);
-        $sketches = $query->paginate(20);
+        if (!$objectId) {
+            abort(404);
+        }
+
+        $sketches = Observation::comets()->where('has_drawing', 1)->where('target_key', (string) $objectId)
+            ->orderBy('id', 'desc')->paginate(20);
 
         // Preload users to avoid N+1 queries in the view
         $observerIds = $sketches->pluck('observer_username')->unique()->all();

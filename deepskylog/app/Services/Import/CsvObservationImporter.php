@@ -7,6 +7,7 @@ use App\Models\Filter;
 use App\Models\Instrument;
 use App\Models\Lens;
 use App\Models\Location;
+use App\Models\Observation;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -297,6 +298,8 @@ class CsvObservationImporter
                         ['observation_id' => $obsId],
                         ['visibility' => $visibility]
                     );
+                    // Written without model events.
+                    Observation::clearResponseCache();
                 }
             } catch (\Throwable $e) {
                 $result->addError(

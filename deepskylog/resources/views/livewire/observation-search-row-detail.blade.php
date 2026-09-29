@@ -49,15 +49,8 @@
     }
 
     // Observation detail route
-    $detailDate     = $obs->observed_on instanceof \Carbon\Carbon
-        ? $obs->observed_on->format('Y-m-d')
-        : \Carbon\Carbon::parse($obs->observed_on)->format('Y-m-d');
     $observerSlug   = $observer?->slug ?? $obs->observer_username;
-    $detailUrl      = route('observations.detail', [
-        'observer' => $observerSlug,
-        'date'     => $detailDate,
-        'object'   => $obs->target_name,
-    ]);
+    $detailUrl      = $obs->detailUrl($observerSlug);
 @endphp
 
 <div class="bg-gray-850 border border-gray-700 rounded-lg p-4 m-2">
@@ -235,6 +228,8 @@
 
     {{-- Link to full detail --}}
     <div class="mt-3 text-right">
-        <a href="{{ $detailUrl }}" class="text-xs text-blue-400 hover:underline">{{ __('View full observation') }} →</a>
+        @if ($detailUrl)
+            <a href="{{ $detailUrl }}" class="text-xs text-blue-400 hover:underline">{{ __('View full observation') }} →</a>
+        @endif
     </div>
 </div>

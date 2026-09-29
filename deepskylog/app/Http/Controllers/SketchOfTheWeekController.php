@@ -8,7 +8,6 @@ use App\Models\Target;
 use App\Models\SketchOfTheWeek;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class SketchOfTheWeekController extends Controller
@@ -73,7 +72,7 @@ class SketchOfTheWeekController extends Controller
 More information can be found here:
 
 ';
-        $text .= route('observations.detail', [$observerSegment, $observation->observed_on->format('Y-m-d'), Str::slug((string) $observation->target_name, '-')]);
+        $text .= $observation->detailUrl($observerSegment);
 
         $text .= '
 

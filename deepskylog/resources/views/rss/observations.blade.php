@@ -19,11 +19,8 @@
             // The URL uses the UT date; the label the local date and time of the location.
             $local  = $obs->localObservedAt();
             $time   = $local?->format('H:i T');
-            $object = \Illuminate\Support\Str::slug((string) $obs->target_name, '-');
 
-            $link = ($observerSlug && $date && $object)
-                ? route('observations.detail', [$observerSlug, $date, $object])
-                : url('/observations');
+            $link = ($observerSlug ? $obs->detailUrl($observerSlug) : null) ?? url('/observations');
 
             $title   = trim(($obs->target_name ?? 'Unknown object') . ' – ' . $observerName);
             $pubDate = $obs->created_at ? $obs->created_at->toRfc2822String() : now()->toRfc2822String();

@@ -710,21 +710,9 @@ final class ObservationSearchTable extends PowerGridComponent
                 if (empty($name)) {
                     return '-';
                 }
-                // Build observation detail URL: /observation/{observer}/{date}/{object}
                 $observer = $row->observer_slug ?: $row->observer_username;
-                $date = null;
-                if (!empty($row->observed_on)) {
-                    $date = Carbon::parse($row->observed_on)->format('Y-m-d');
-                } elseif (!empty($row->legacy_date_int)) {
-                    try {
-                        $date = Carbon::createFromFormat('Ymd', (string) $row->legacy_date_int)->format('Y-m-d');
-                    } catch (\Throwable $_) {
-                        $date = null;
-                    }
-                }
-                if ($observer && $date) {
-                    $objectSlug = Str::slug($name, '-');
-                    $url = route('observations.detail', [$observer, $date, $objectSlug]);
+                $url = $row instanceof Observation && $observer ? $row->detailUrl($observer) : null;
+                if ($url) {
                     return sprintf(
                         '<a href="%s" class="font-bold hover:underline text-blue-400">%s</a>',
                         e($url),
@@ -1001,7 +989,10 @@ final class ObservationSearchTable extends PowerGridComponent
             return '0';
         }
 
-        return rtrim(rtrim((string) $value, '0'), '.');
+        $value = (string) $value;
+
+        // Only strip trailing zeros of a fraction: "20" must stay "20".
+        return str_contains($value, '.') ? rtrim(rtrim($value, '0'), '.') : $value;
     }
 
     private function exportLanguage(mixed $language): string

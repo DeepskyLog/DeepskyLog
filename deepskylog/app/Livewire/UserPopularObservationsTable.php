@@ -6,7 +6,6 @@ use App\Models\Observation;
 use App\Models\ObservationLike;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
@@ -102,10 +101,10 @@ final class UserPopularObservationsTable extends PowerGridComponent
                 $username = $obs->observer_username;
                 $this->observerUser ??= \App\Models\User::where('username', $username)->first();
                 $observer = $this->observerUser ? ($this->observerUser->slug ?: $username) : $username;
-                $date = $obs->observed_on
-                    ? $obs->observed_on->format('Y-m-d')
-                    : Carbon::createFromFormat('Ymd', (string) $obs->legacy_date_int)->format('Y-m-d');
-                $link = route('observations.detail', [$observer, $date, Str::slug((string) $obs->target_name, '-')]);
+                $link = $obs->detailUrl($observer);
+                if (!$link) {
+                    return e($objectName);
+                }
 
                 return sprintf('<a href="%s" class="font-bold hover:underline" target="_blank" rel="noopener noreferrer">%s</a>', $link, e($objectName));
             })

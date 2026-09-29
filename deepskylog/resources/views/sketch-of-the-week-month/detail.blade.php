@@ -18,7 +18,7 @@
                     <div class="flex flex-wrap px-5">
                         <div class="mt-3 max-w-xl pr-3">
                             @if ($is_comet)
-                                <a href="{{ route('observations.detail', [$observation->observer_username, $observation->observed_on->format('Y-m-d'), \Illuminate\Support\Str::slug((string) $observation->target_name, '-')]) }}">
+                                <a href="{{ $observation->detailUrl() }}">
                                     <img
                                         width="400"
                                         src="{{ $drawing_src }}"
@@ -41,7 +41,7 @@
                                     </div>
                                 </a>
                             @else
-                                <a href="{{ route('observations.detail', [$observation->observer_username, $observation->observed_on->format('Y-m-d'), \Illuminate\Support\Str::slug((string) $observation->target_name, '-')]) }}">
+                                <a href="{{ $observation->detailUrl() }}">
                                     <img
                                         width="400"
                                         src="{{ $drawing_src }}"

@@ -9,7 +9,6 @@ use App\Models\SketchOfTheMonth;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class SketchOfTheMonthController extends Controller
@@ -80,7 +79,7 @@ Congratulations, ' . explode(' ', $user->name)[0] . '!';
 More information can be found here:
 
 ';
-        $text .= route('observations.detail', [$observerSegment, $observation->observed_on->format('Y-m-d'), Str::slug((string) $observation->target_name, '-')]);
+        $text .= $observation->detailUrl($observerSegment);
 
         $text .= '
 

@@ -435,39 +435,10 @@
         <div class="flex flex-wrap items-center gap-2 mt-2 mb-2">
             @php
                 $observerSegment = $user?->slug ?: $observerid;
-                $objectSegment   = $object?->slug ?: \Illuminate\Support\Str::slug($objectname, "-");
 
-                if ($isUnified) {
-                    $matchingIds = \App\Models\Observation::where("observer_username", $observerid)
-                        ->whereDate("observed_on", $observation_date)
-                        ->where("target_name", $objectname)
-                        ->orderBy("observed_time")
-                        ->orderBy("id")
-                        ->pluck("id")
-                        ->map(fn($id) => (int) $id)
-                        ->values();
-                } else {
-                    $matchingIds = \App\Models\Observation::where("observer_username", $observerid)
-                        ->where("legacy_source", "deepsky")
-                        ->where("legacy_date_int", $observation->legacy_date_int ?? $observation->date)
-                        ->where("target_name", $objectname)
-                        ->orderBy("id")
-                        ->pluck("id")
-                        ->map(fn($id) => (int) $id)
-                        ->values();
-                }
-
-                $position = $matchingIds->search((int) $obs_id);
-                $occurrenceIndex = $position === false ? 1 : (int) $position + 1;
-
-                $detailRouteParams = [
-                    "observer" => $observerSegment,
-                    "date"     => $observation_date,
-                    "object"   => $objectSegment,
-                ];
-                if ($occurrenceIndex > 1) {
-                    $detailRouteParams["index"] = $occurrenceIndex;
-                }
+                // With the index when the observer has several observations of the
+                // object that day.
+                $detailHref = $obsUnified?->detailUrl($observerSegment);
 
                 // Likes are stored by the id in the observations table
                 $likeType   = \App\Models\ObservationLike::TYPE_OBSERVATION;
@@ -479,17 +450,6 @@
                     ->where("observation_id", $likeId)
                     ->where("user_id", auth()->id())
                     ->exists();
-            @endphp
-            @php
-                $detailHref = null;
-                $canBuildDetail = !empty($detailRouteParams['observer']) && !empty($detailRouteParams['date']) && !empty($detailRouteParams['object']);
-                if ($canBuildDetail) {
-                    try {
-                        $detailHref = route('observations.detail', $detailRouteParams);
-                    } catch (\Throwable $_) {
-                        $detailHref = null;
-                    }
-                }
             @endphp
             <a
                 href="{{ $detailHref ?? '#' }}"

@@ -28,7 +28,7 @@
                         @if (!is_null($firstDate))
                             {{ __('First observation on ') }}
                             @if ($firstObs)
-                                <a href="{{ route('observations.detail', [$user->slug ?: $user->username, $firstObs->observed_on->format('Y-m-d'), \Illuminate\Support\Str::slug((string) $firstObs->target_name, '-')]) }}">
+                                <a href="{{ $firstObs->detailUrl($user->slug ?: $user->username) }}">
                                     {{ $firstDate }}
                                 </a>
                             @else
@@ -37,7 +37,7 @@
                             <br />
                             {{ __('Most recent observation on ') }}
                             @if ($lastObs)
-                                <a href="{{ route('observations.detail', [$user->slug ?: $user->username, $lastObs->observed_on->format('Y-m-d'), \Illuminate\Support\Str::slug((string) $lastObs->target_name, '-')]) }}">
+                                <a href="{{ $lastObs->detailUrl($user->slug ?: $user->username) }}">
                                     {{ $lastDate }}
                                 </a>
                             @else

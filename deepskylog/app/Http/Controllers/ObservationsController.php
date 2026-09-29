@@ -567,7 +567,6 @@ class ObservationsController extends Controller
                 'comet' => collect(),
                 'mode' => 'deepsky',
                 'objectFilter' => true,
-                'drawingsOnly' => true,
                 'objectName' => $objectName,
             ], $preloadedData));
         }
@@ -1045,18 +1044,7 @@ class ObservationsController extends Controller
             ], $preloadedData));
         }
 
-        // Fallback: show all legacy observations for this observer
-        $deepsky = $legacyQuery->paginate(20, ['*'], 'deepsky')->appends(request()->query());
-        $preloadedData = $this->preloadDeepskyData($deepsky);
-
-        return view('observations.show', array_merge([
-            'user' => $user,
-            'deepsky' => $deepsky,
-            'comet' => collect(),
-            'mode' => 'deepsky',
-            'objectFilter' => false,
-            'objectName' => null,
-        ], $preloadedData));
+        abort(404);
     }
 
     /**
@@ -1132,6 +1120,7 @@ class ObservationsController extends Controller
                 'comet' => collect(),
                 'mode' => 'deepsky',
                 'objectFilter' => true,
+                'objectName' => $objectName,
             ], $preloadedData));
         }
 
@@ -1174,17 +1163,7 @@ class ObservationsController extends Controller
             ], $preloadedData));
         }
 
-        // Fallback: show all legacy drawings for this observer
-        $deepsky = $legacyQuery->paginate(20, ['*'], 'deepsky')->appends(request()->query());
-        $preloadedData = $this->preloadDeepskyData($deepsky);
-
-        return view('observations.show', array_merge([
-            'user' => $user,
-            'deepsky' => $deepsky,
-            'comet' => collect(),
-            'mode' => 'deepsky',
-            'objectFilter' => false,
-        ], $preloadedData));
+        abort(404);
     }
 
     /**
@@ -1489,33 +1468,7 @@ class ObservationsController extends Controller
      */
     private function slugMatches(string $routeValue, string $name): bool
     {
-        if ($name === '') {
-            return false;
-        }
-
-        $routeCandidates = $this->buildSlugCandidates($routeValue);
-        $nameCandidates = $this->buildSlugCandidates($name);
-
-        return count(array_intersect($routeCandidates, $nameCandidates)) > 0;
-    }
-
-    /**
-     * Build candidate variants used for tolerant slug matching.
-     */
-    private function buildSlugCandidates(string $value): array
-    {
-        $lower = mb_strtolower(trim($value));
-        $slug = Str::slug($value, '-');
-        $compact = str_replace([' ', '-'], '', $lower);
-        $noLeadingZeros = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower) ?? $lower;
-
-        return array_values(array_unique(array_filter([
-            $lower,
-            $slug,
-            $compact,
-            $noLeadingZeros,
-            str_replace('-', '', $slug),
-        ])));
+        return Observation::slugMatches($routeValue, $name);
     }
 
     /**
@@ -1554,82 +1507,11 @@ class ObservationsController extends Controller
     }
 
     /**
-     * Build detail URL for a legacy observation record by resolving it in the
-     * unified observations table and deriving its index for that day/object.
-     */
-    private function buildObservationDetailUrlForLegacy(string $legacySource, int $legacyId): ?string
-    {
-        $unified = Observation::query()
-            ->where('legacy_source', $legacySource)
-            ->where('legacy_id', $legacyId)
-            ->first();
-
-        if (!$unified || !$unified->observed_on) {
-            return null;
-        }
-
-        $observerUser = User::where('username', $unified->observer_username)->first();
-        $observerParam = $observerUser?->slug ?: $unified->observer_username;
-        $objectSlug = Str::slug((string) ($unified->target_name ?? ''), '-');
-        $date = $this->normalizeObservedOnDate($unified->observed_on, '');
-        if ($date === '') {
-            return null;
-        }
-
-        $matches = Observation::where('observer_username', $unified->observer_username)
-            ->whereDate('observed_on', $date)
-            ->orderBy('observed_time')
-            ->orderBy('id')
-            ->get()
-            ->filter(fn($candidate) => $this->slugMatches($objectSlug, (string) ($candidate->target_name ?? '')))
-            ->values();
-
-        $index = 1;
-        foreach ($matches as $position => $candidate) {
-            if ((int) $candidate->id === (int) $unified->id) {
-                $index = $position + 1;
-                break;
-            }
-        }
-
-        return $this->buildObservationDetailUrl($observerParam, $date, $objectSlug, $index);
-    }
-
-    /**
      * Build canonical detail URL for a unified observation id.
      */
     private function buildObservationDetailUrlForUnified(int $unifiedId): ?string
     {
-        $unified = Observation::query()->where('id', $unifiedId)->first();
-        if (!$unified || !$unified->observed_on) {
-            return null;
-        }
-
-        $observerUser = User::where('username', $unified->observer_username)->first();
-        $observerParam = $observerUser?->slug ?: $unified->observer_username;
-        $objectSlug = Str::slug((string) ($unified->target_name ?? ''), '-');
-        $date = $this->normalizeObservedOnDate($unified->observed_on, '');
-        if ($date === '') {
-            return null;
-        }
-
-        $matches = Observation::where('observer_username', $unified->observer_username)
-            ->whereDate('observed_on', $date)
-            ->orderBy('observed_time')
-            ->orderBy('id')
-            ->get()
-            ->filter(fn($candidate) => $this->slugMatches($objectSlug, (string) ($candidate->target_name ?? '')))
-            ->values();
-
-        $index = 1;
-        foreach ($matches as $position => $candidate) {
-            if ((int) $candidate->id === (int) $unified->id) {
-                $index = $position + 1;
-                break;
-            }
-        }
-
-        return $this->buildObservationDetailUrl($observerParam, $date, $objectSlug, $index);
+        return Observation::query()->find($unifiedId)?->detailUrl();
     }
 
     /**
@@ -1936,7 +1818,7 @@ class ObservationsController extends Controller
 
         if (!empty($slug)) {
             $raw = (string) $slug;
-            $candidates = $this->buildSlugCandidates($raw);
+            $candidates = Observation::slugCandidates($raw);
             try {
                 \Log::debug('ObservationsController::create: candidates', ['slug' => $raw, 'candidates' => $candidates]);
             } catch (\Throwable $_) {
@@ -2594,6 +2476,10 @@ class ObservationsController extends Controller
             } catch (\Throwable $_) {
             }
         }
+
+        // The detail rows are written without model events, so an edit that
+        // only changes them would otherwise leave the cached pages stale.
+        Observation::clearResponseCache();
 
         // Prefer redirecting to the canonical detail page for the newly-created unified observation
         try {

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class Observation extends Model
 {
@@ -124,6 +125,93 @@ class Observation extends Model
             ?? DB::table('objectnames')->where('slug', $value)->value('objectname');
 
         return $name !== null ? (string) $name : null;
+    }
+
+    // ─── Detail page URL ────────────────────────────────────────────────────────
+    //
+    // /observation/{observer}/{date}/{object}/{index?}: the index numbers the
+    // observations of one observer of one object on one day, ordered by time
+    // and id, and is left out for the first. ObservationsController::detail()
+    // resolves it the same way.
+
+    /**
+     * Variants of an object name or slug used to match a URL segment
+     * tolerantly ("M 31", "m-31", "m31", "M 031").
+     *
+     * @return array<int, string>
+     */
+    public static function slugCandidates(string $value): array
+    {
+        $lower = mb_strtolower(trim($value));
+        $slug = Str::slug($value, '-');
+        $compact = str_replace([' ', '-'], '', $lower);
+        $noLeadingZeros = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower) ?? $lower;
+
+        return array_values(array_unique(array_filter([
+            $lower,
+            $slug,
+            $compact,
+            $noLeadingZeros,
+            str_replace('-', '', $slug),
+        ])));
+    }
+
+    public static function slugMatches(string $routeValue, string $name): bool
+    {
+        if ($name === '') {
+            return false;
+        }
+
+        return array_intersect(static::slugCandidates($routeValue), static::slugCandidates($name)) !== [];
+    }
+
+    /**
+     * The position (from 1) of this observation among those of the same
+     * observer of the same object on the same day.
+     */
+    public function detailIndex(): int
+    {
+        if (!$this->observed_on) {
+            return 1;
+        }
+
+        $objectSlug = Str::slug((string) $this->target_name, '-');
+        $position = static::where('observer_username', $this->observer_username)
+            ->whereDate('observed_on', $this->observed_on->format('Y-m-d'))
+            ->orderBy('observed_time')
+            ->orderBy('id')
+            ->get(['id', 'target_name'])
+            ->filter(fn($candidate) => static::slugMatches($objectSlug, (string) $candidate->target_name))
+            ->values()
+            ->search(fn($candidate) => (int) $candidate->id === (int) $this->id);
+
+        return $position === false ? 1 : $position + 1;
+    }
+
+    /**
+     * URL of the detail page, or null without a date or object.
+     *
+     * @param  string|null  $observer  the observer segment (slug), if already known
+     */
+    public function detailUrl(?string $observer = null): ?string
+    {
+        $objectSlug = Str::slug((string) $this->target_name, '-');
+        if (!$this->observed_on || $objectSlug === '') {
+            return null;
+        }
+
+        $observer ??= User::where('username', $this->observer_username)->value('slug') ?: $this->observer_username;
+        $params = [
+            'observer' => $observer,
+            'date' => $this->observed_on->format('Y-m-d'),
+            'object' => $objectSlug,
+        ];
+        $index = $this->detailIndex();
+        if ($index > 1) {
+            $params['index'] = $index;
+        }
+
+        return route('observations.detail', $params);
     }
 
     // ─── Legacy field aliases (backward compatibility) ─────────────────────────
@@ -684,51 +772,45 @@ class Observation extends Model
     }
 
     /**
-     * Return a mapping eyepiece_id => ['date' => <formatted string>, 'id' => <signed int>]
-     * for the first (earliest) observation for each eyepiece id.
+     * Return a mapping eyepiece_id => ['date' => <formatted string>, 'id' => Observation]
+     * for the first (earliest) observation for each eyepiece id, the same
+     * observation that Eyepiece::first_observation_date() gives without the map.
      *
      * @param  int[]  $eyepieceIds
      */
     public static function getFirstObservationDateAndIdForEyepieceIds(array $eyepieceIds): array
     {
-        if (empty($eyepieceIds)) {
-            return [];
-        }
-        $rows = static::whereIn('eyepiece_id', $eyepieceIds)
-            ->orderBy('eyepiece_id')
-            ->orderBy('observed_on')
-            ->get(['eyepiece_id', 'observed_on', 'legacy_id', 'legacy_source']);
-
-        $language = app()->getLocale();
-        $map = [];
-        foreach ($rows as $r) {
-            $eid = (int) $r->eyepiece_id;
-            if (isset($map[$eid])) {
-                continue;
-            }
-            $formatted = Carbon::parse($r->observed_on)->locale($language)->isoFormat('LL');
-            $id = ($r->legacy_source === 'comet') ? -(int) $r->legacy_id : (int) $r->legacy_id;
-            $map[$eid] = ['date' => $formatted, 'id' => $id];
-        }
-
-        return $map;
+        return static::observationDateMapForEyepieceIds($eyepieceIds, false);
     }
 
     /**
-     * Return a mapping eyepiece_id => ['date' => <formatted string>, 'id' => <signed int>]
+     * Return a mapping eyepiece_id => ['date' => <formatted string>, 'id' => Observation]
      * for the last (latest) observation for each eyepiece id.
      *
      * @param  int[]  $eyepieceIds
      */
     public static function getLastObservationDateAndIdForEyepieceIds(array $eyepieceIds): array
     {
+        return static::observationDateMapForEyepieceIds($eyepieceIds, true);
+    }
+
+    /**
+     * On the first or last date, the observation with the lowest id, as in
+     * HasObservationsDates::get_date_and_id_generic().
+     *
+     * @param  int[]  $eyepieceIds
+     */
+    private static function observationDateMapForEyepieceIds(array $eyepieceIds, bool $last): array
+    {
         if (empty($eyepieceIds)) {
             return [];
         }
         $rows = static::whereIn('eyepiece_id', $eyepieceIds)
+            ->whereNotNull('observed_on')
             ->orderBy('eyepiece_id')
-            ->orderByDesc('observed_on')
-            ->get(['eyepiece_id', 'observed_on', 'legacy_id', 'legacy_source']);
+            ->orderBy('observed_on', $last ? 'desc' : 'asc')
+            ->orderBy('id')
+            ->get();
 
         $language = app()->getLocale();
         $map = [];
@@ -738,8 +820,7 @@ class Observation extends Model
                 continue;
             }
             $formatted = Carbon::parse($r->observed_on)->locale($language)->isoFormat('LL');
-            $id = ($r->legacy_source === 'comet') ? -(int) $r->legacy_id : (int) $r->legacy_id;
-            $map[$eid] = ['date' => $formatted, 'id' => $id];
+            $map[$eid] = ['date' => $formatted, 'id' => $r];
         }
 
         return $map;
