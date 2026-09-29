@@ -6,7 +6,7 @@
 
 - [ ] Test! 
   - [ ] Test for functionality / inconsistency problems (code review done, see "Functionality / inconsistency review" at the end of this file)
-  - [ ] Test for speed problems in the database queries
+  - [ ] Test for speed problems in the database queries, also think about crawlers and bots that can generate a lot of queries.
   - [ ] Test for security problems
   - [ ] Test manually when logged in and logged out, as database expert and as administrator
 - [ ] Update to laravel 13.
@@ -86,17 +86,6 @@
 Code review of the whole application, without the security aspects. Paths are relative to `deepskylog/`. Items marked (checked) were confirmed by hand; the others come from a review that read the code and migrations but did not reproduce every case. The test suite passed (259 passed, 7 skipped), so none of this is covered by tests yet.
 
 ### Medium
-
-Equipment, locations, users
-- [ ] Deleting equipment that is in an instrument set fails (FK without cascade); only `InstrumentSetTable` detaches first.
-- [ ] Deleting a default instrument/location/eyepiece/lens doesn't clear `std*`; `instrument.api` then gives a 500 and ignores `selected` (`routes/api.php:262-267`).
-- [ ] `LocationTable.php:68-80` crashes on unknown countries (`'Unknown'`, null).
-- [ ] Saving a location always re-queries elevation/country/timezone (4 HTTP calls) and overwrites them with 0 / 'Unknown' / 'UTC' on failure (`CreateLocation.php:88-90`).
-- [ ] NELM with `fstOffset` is inconsistent: `mount()` loads raw NELM, `save()` adds the offset, so each edit shifts it; `Location::getNelm()` differs from the form.
-- [ ] Instrument values in inches drift on every save (rounding), are converted before `validate()` (double conversion after a validation error), and empty strings × 25.4 throw a TypeError (`CreateInstrument.php:166-169`).
-- [ ] Instrument page shows a rounded focal length (`fd * diameter`) (`instrument/show.blade.php:49,54`).
-- [ ] Changing email drops the other profile fields in the same submit (`UpdateUserProfileInformation.php:31-33`).
-- [ ] `RemoveUserTable` deletes users directly instead of via Jetstream `DeleteUser`, leaving memberships, tokens, photo; FK errors on instrument sets (`RemoveUserTable.php:146-150`).
 
 Charts, atlas, PDFs
 - [ ] PDF jobs have no `failed()`: memory exhaustion or timeout leaves the status "processing" (`QueuedPdfJob.php:146`, `GenerateAtlasPdf.php:337`). (plausible) `retry_after => 90` is shorter than the job timeout, so a second worker can pick the job up again.

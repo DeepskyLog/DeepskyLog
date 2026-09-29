@@ -216,10 +216,12 @@
                         @endif
                         @php
                             $__dsl_locations = [];
+                            $__dsl_fst = auth()->check() ? (float) (auth()->user()->fstOffset ?? 0) : 0;
                             foreach (($locations ?? collect()) as $__loc) {
                                     $__dsl_locations[$__loc->id] = [
                                         'sqm' => isset($__loc->skyBackground) && $__loc->skyBackground > 0 ? (float) $__loc->skyBackground : null,
-                                        'limmag' => isset($__loc->limitingMagnitude) && $__loc->limitingMagnitude > 0 ? (float) $__loc->limitingMagnitude : null,
+                                        // The NELM of the observer: the location stores it without the fstOffset
+                                        'limmag' => isset($__loc->limitingMagnitude) && $__loc->limitingMagnitude > 0 ? (float) $__loc->getNelm($__dsl_fst) : null,
                                         'bortle' => $__loc->getBortle() !== null ? (int) $__loc->getBortle() : null,
                                     ];
                             }

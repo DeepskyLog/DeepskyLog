@@ -21,6 +21,23 @@ class InstrumentSet extends Model
 
     protected $with = [];
 
+    /**
+     * Detach the pivot rows (their foreign keys have no cascade) and clear the
+     * default of the users that have this set as their standard set.
+     */
+    protected static function booted()
+    {
+        static::deleting(function (self $set) {
+            $set->instruments()->detach();
+            $set->locations()->detach();
+            $set->eyepieces()->detach();
+            $set->filters()->detach();
+            $set->lenses()->detach();
+
+            User::where('stdinstrumentset', $set->id)->update(['stdinstrumentset' => null]);
+        });
+    }
+
     public function sluggable(): array
     {
         return [

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
 use App\Traits\ClearsResponseCache;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Lens extends Model
 {
     use ClearsResponseCache;
+    use DetachesOnDelete;
     use HasObservationsDates;
     use Sluggable;
 
@@ -84,6 +86,14 @@ class Lens extends Model
     public function last_observation_date(): array
     {
         return $this->last_observation_date_generic('lensid');
+    }
+
+    /**
+     * The users column that holds this as the user's default.
+     */
+    public function standardUserColumn(): ?string
+    {
+        return 'stdlens';
     }
 
     /**

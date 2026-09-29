@@ -200,8 +200,9 @@ class InstrumentTable extends PowerGridComponent
     #[On('clickToDelete')]
     public function clickToDelete(int $id): void
     {
-        $instrument = Instrument::where('id', '=', $id);
-        $instrument->delete();
+        // Delete the model, not a query, so it detaches itself from instrument
+        // sets and is cleared as the default of its user.
+        Instrument::where('id', $id)->where('user_id', Auth::id())->first()?->delete();
     }
 
     #[On('clickToMakeDefault')]

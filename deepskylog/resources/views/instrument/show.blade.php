@@ -46,12 +46,12 @@
                             <tr>
                                 <td>{{ __("Focal Length") }}</td>
                                 @auth
-                                    <td>{{ Auth::user()->showInches ? (number_format($instrument->fd * $instrument->diameter / 25.4, 2, '.' ,',')) . ' ' . __('inch') : $instrument->fd * $instrument->diameter . ' ' . __('mm')}}
+                                    <td>{{ Auth::user()->showInches ? (number_format($instrument->focal_length_mm / 25.4, 2, '.' ,',')) . ' ' . __('inch') : round($instrument->focal_length_mm, 1) . ' ' . __('mm')}}
                                         (F/{{ $instrument->fd }})
                                     </td>
                                 @endauth
                                 @guest
-                                    <td>{{ $instrument->fd * $instrument->diameter . ' ' . __('mm')}}</td>
+                                    <td>{{ round($instrument->focal_length_mm, 1) . ' ' . __('mm')}}</td>
                                 @endguest
                             </tr>
                         @endif

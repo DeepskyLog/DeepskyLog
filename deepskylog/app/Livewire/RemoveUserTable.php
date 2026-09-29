@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Jetstream\Contracts\DeletesUsers;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
@@ -118,36 +119,42 @@ final class RemoveUserTable extends PowerGridComponent
     {
         return [
             Rule::button('destroy')
-                ->when(fn ($user) => $user->id == 1)
-                ->hide(),
-            Rule::button('destroy')
-                ->when(fn ($user) => $user->id == Auth::user()->id)
-                ->hide(),
-            Rule::button('destroy')
-                ->when(fn ($user) => $user->locations->count() > 0)
-                ->hide(),
-            Rule::button('destroy')
-                ->when(fn ($user) => $user->instruments->count() > 0)
-                ->hide(),
-            Rule::button('destroy')
-                ->when(fn ($user) => $user->eyepieces->count() > 0)
-                ->hide(),
-            Rule::button('destroy')
-                ->when(fn ($user) => $user->filters->count() > 0)
-                ->hide(),
-            Rule::button('destroy')
-                ->when(fn ($user) => $user->lenses->count() > 0)
-                ->hide(),
-            Rule::button('destroy')
-                ->when(fn ($user) => $user->getObservingLists()->count() > 0)
+                ->when(fn ($user) => ! $this->canBeRemoved($user))
                 ->hide(),
         ];
     }
 
+    /**
+     * A user can only be removed when it is not the first account or the
+     * administrator itself, and has nothing of its own in DeepskyLog.
+     */
+    private function canBeRemoved(User $user): bool
+    {
+        return $user->id != 1
+            && $user->id != Auth::id()
+            && ! $user->locations()->exists()
+            && ! $user->instruments()->exists()
+            && ! $user->eyepieces()->exists()
+            && ! $user->filters()->exists()
+            && ! $user->lenses()->exists()
+            && ! $user->observingLists()->exists()
+            && ! $user->observations()->exists()
+            && ! $user->sketchOfTheWeek()->exists()
+            && ! $user->sketchOfTheMonth()->exists();
+    }
+
     public function destroy($id): void
     {
-        $user = User::where('id', '=', $id);
-        $user->delete();
+        $user = User::find($id);
+
+        // The rules only hide the button, so the conditions are checked again
+        if (! $user || ! Auth::user()->can('delete', User::class) || ! $this->canBeRemoved($user)) {
+            return;
+        }
+
+        // Jetstream's action also removes the team memberships, owned teams,
+        // tokens, connected accounts, profile photo and instrument sets
+        app(DeletesUsers::class)->delete($user);
     }
 
     protected function getListeners(): array

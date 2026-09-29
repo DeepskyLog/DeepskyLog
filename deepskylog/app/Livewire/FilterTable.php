@@ -142,7 +142,8 @@ final class FilterTable extends PowerGridComponent
     #[On('clickToDelete')]
     public function clickToDelete(int $id): void
     {
-        $filter = DSL_Filter::where('id', '=', $id);
-        $filter->delete();
+        // Delete the model, not a query, so it detaches itself from instrument
+        // sets and is cleared as the default of its user.
+        DSL_Filter::where('id', $id)->where('user_id', Auth::id())->first()?->delete();
     }
 }

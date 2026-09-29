@@ -117,20 +117,8 @@ class InstrumentSetTable extends PowerGridComponent
     #[On('clickToDelete')]
     public function clickToDelete(int $id): void
     {
-        $set = InstrumentSet::find($id);
-
-        if (! $set) {
-            return;
-        }
-
-        // Detach all related pivot records first to avoid FK constraint failures
-        $set->instruments()->detach();
-        $set->locations()->detach();
-        $set->eyepieces()->detach();
-        $set->filters()->detach();
-        $set->lenses()->detach();
-
-        $set->delete();
+        // The model detaches the pivot rows and clears the standard set
+        InstrumentSet::where('id', $id)->where('user_id', Auth::id())->first()?->delete();
     }
 
     #[On('clickToMakeDefault')]

@@ -30,23 +30,26 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user->updateProfilePhoto($input['photo']);
         }
 
+        if ($input['copyrightSelection'] === 'Enter your own copyright text') {
+            $copyright = $input['copyright'];
+        } else {
+            $copyright = $input['copyrightSelection'];
+        }
+
+        // The other fields are saved too when the email address changes
+        $user->forceFill([
+            'name' => $input['name'],
+            'country' => $input['country'],
+            'about' => Str::limit($input['about'], 1000),
+            'fstOffset' => $input['fstOffset'],
+            'copyright' => $copyright,
+            'copyrightSelection' => $input['copyrightSelection'],
+        ]);
+
         if ($input['email'] !== $user->email) {
             $this->updateVerifiedUser($user, $input);
         } else {
-            if ($input['copyrightSelection'] === 'Enter your own copyright text') {
-                $copyright = $input['copyright'];
-            } else {
-                $copyright = $input['copyrightSelection'];
-            }
-            $user->forceFill([
-                'name' => $input['name'],
-                'email' => $input['email'],
-                'country' => $input['country'],
-                'about' => Str::limit($input['about'], 1000),
-                'fstOffset' => $input['fstOffset'],
-                'copyright' => $copyright,
-                'copyrightSelection' => $input['copyrightSelection'],
-            ])->save();
+            $user->save();
         }
     }
 
@@ -58,7 +61,6 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     protected function updateVerifiedUser(User $user, array $input): void
     {
         $user->forceFill([
-            'name' => $input['name'],
             'email' => $input['email'],
             'email_verified_at' => null,
         ])->save();

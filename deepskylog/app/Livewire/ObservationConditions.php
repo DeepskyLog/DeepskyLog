@@ -70,7 +70,9 @@ class ObservationConditions extends Component
                     $this->bortle = null;
                 }
             } elseif (!empty($loc->limitingMagnitude) && $loc->limitingMagnitude > 0) {
-                $this->nelm = (float) $loc->limitingMagnitude;
+                // The location stores the NELM without the fstOffset, the observation
+                // takes the NELM of the observer (with the offset).
+                $this->nelm = (float) $loc->getNelm($fstOffset);
                 try {
                     $this->sqm = round(Magnitude::nelmToSqm($this->nelm, $fstOffset), 2);
                 } catch (\Throwable $_) {

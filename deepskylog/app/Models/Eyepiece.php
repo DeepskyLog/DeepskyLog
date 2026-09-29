@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
 use App\Traits\ClearsResponseCache;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -12,6 +13,7 @@ use Illuminate\Support\Collection;
 class Eyepiece extends Model
 {
     use ClearsResponseCache;
+    use DetachesOnDelete;
     use HasObservationsDates;
     use Sluggable;
 
@@ -207,6 +209,14 @@ class Eyepiece extends Model
         $dir = strtolower($direction) === 'asc' ? 'asc' : 'desc';
 
         return $query->orderByRaw("COALESCE(focal_length_mm, 0) $dir")->orderBy('name');
+    }
+
+    /**
+     * The users column that holds this as the user's default.
+     */
+    public function standardUserColumn(): ?string
+    {
+        return 'stdeyepiece';
     }
 
     /**

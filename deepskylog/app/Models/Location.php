@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
 use App\Traits\ClearsResponseCache;
 use Carbon\Carbon;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Session;
 class Location extends Model
 {
     use ClearsResponseCache;
+    use DetachesOnDelete;
     use HasObservationsDates;
     use Sluggable;
 
@@ -130,12 +132,13 @@ class Location extends Model
     /**
      * Get SQM value, calculated from limitingMagnitude if needed.
      */
-    public function getSqm($fstOffset = 0)
+    public function getSqm()
     {
         if ($this->skyBackground > 0) {
             return $this->skyBackground;
         } elseif ($this->limitingMagnitude > 0) {
-            return round(Magnitude::nelmToSqm($this->limitingMagnitude, $fstOffset), 2);
+            // The stored NELM is without the fstOffset of the observer
+            return round(Magnitude::nelmToSqm($this->limitingMagnitude), 2);
         } else {
             return null;
         }
@@ -147,7 +150,8 @@ class Location extends Model
     public function getNelm($fstOffset = 0)
     {
         if ($this->limitingMagnitude > 0) {
-            return $this->limitingMagnitude;
+            // The stored NELM is without the fstOffset, as sqmToNelm() applies it
+            return round($this->limitingMagnitude - $fstOffset, 2);
         } elseif ($this->skyBackground > 0) {
             return round(Magnitude::sqmToNelm($this->skyBackground, $fstOffset), 1);
         } else {
@@ -369,6 +373,14 @@ class Location extends Model
         }
 
         return $end . ' / ' . $start;
+    }
+
+    /**
+     * The users column that holds this as the user's default.
+     */
+    public function standardUserColumn(): ?string
+    {
+        return 'stdlocation';
     }
 
     /**

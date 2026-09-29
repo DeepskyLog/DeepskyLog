@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
 use App\Traits\ClearsResponseCache;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -12,6 +13,7 @@ use Illuminate\Support\Collection;
 class Instrument extends Model
 {
     use ClearsResponseCache;
+    use DetachesOnDelete;
     use HasObservationsDates;
     use Sluggable;
 
@@ -286,6 +288,14 @@ class Instrument extends Model
         }
 
         return round($this->aperture_mm / ($this->focal_length_mm / $eyepiece->focal_length_mm), 1) . 'mm';
+    }
+
+    /**
+     * The users column that holds this as the user's default.
+     */
+    public function standardUserColumn(): ?string
+    {
+        return 'stdtelescope';
     }
 
     /**

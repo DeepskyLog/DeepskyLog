@@ -164,7 +164,8 @@ final class EyepieceTable extends PowerGridComponent
     #[On('clickToDelete')]
     public function clickToDelete(int $id): void
     {
-        $eyepiece = Eyepiece::where('id', '=', $id);
-        $eyepiece->delete();
+        // Delete the model, not a query, so it detaches itself from instrument
+        // sets and is cleared as the default of its user.
+        Eyepiece::where('id', $id)->where('user_id', Auth::id())->first()?->delete();
     }
 }

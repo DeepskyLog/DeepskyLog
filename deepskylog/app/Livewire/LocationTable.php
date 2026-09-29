@@ -71,13 +71,16 @@ final class LocationTable extends PowerGridComponent
                 // Switch key and value
                 $c = array_flip($c);
 
-                // If $location->country ends with something between brackets, remove that part
-                $location->country = preg_replace('/\s*\(.*\)\s*/', '', $location->country);
+                // If the country ends with something between brackets, remove that part
+                $country = preg_replace('/\s*\(.*\)\s*/', '', (string) $location->country);
 
-                $country_code = $c[$location->country];
+                // Unknown or empty countries (e.g. 'Unknown' after a failed lookup) are shown as is
+                if (! isset($c[$country])) {
+                    return ($country === '' || $country === 'Unknown') ? __('Unknown') : $country;
+                }
 
                 // Translate country using the current language
-                return Countries::getOne($country_code, app()->getLocale());
+                return Countries::getOne($c[$country], app()->getLocale());
             })
             ->add('elevation', function ($location) {
                 // Convert the elevation to feet if it is set
@@ -90,8 +93,7 @@ final class LocationTable extends PowerGridComponent
                 return $elevation;
             })
             ->add('skyBackground', function ($location) {
-                $fstOffset = Auth()->user()->fstOffset ?? 0;
-                $sqm = $location->getSqm($fstOffset);
+                $sqm = $location->getSqm();
 
                 return $sqm !== null ? $sqm : __('Unknown');
             })
@@ -183,8 +185,9 @@ final class LocationTable extends PowerGridComponent
     #[On('clickToDelete')]
     public function clickToDelete(int $id): void
     {
-        $location = Location::where('id', '=', $id);
-        $location->delete();
+        // Delete the model, not a query, so it detaches itself from instrument
+        // sets and is cleared as the default of its user.
+        Location::where('id', $id)->where('user_id', Auth::id())->first()?->delete();
     }
 
     #[On('clickToMakeDefault')]

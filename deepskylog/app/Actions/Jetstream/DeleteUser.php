@@ -38,6 +38,11 @@ class DeleteUser implements DeletesUsers
             $user->deleteProfilePhoto();
             $user->connectedAccounts->each->delete();
             $user->tokens->each->delete();
+            // Rows with a foreign key on the user without a cascade
+            $user->instrumentSets->each->delete();
+            foreach (['experience_audits', 'experiences', 'achievement_user', 'challenge_user'] as $table) {
+                DB::table($table)->where('user_id', $user->id)->delete();
+            }
             $user->delete();
         });
     }

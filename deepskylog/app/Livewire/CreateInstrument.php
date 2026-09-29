@@ -168,12 +168,8 @@ class CreateInstrument extends Component
             $this->focal_length_mm = 0;
         }
 
-        // Check if aperture and focal length are set in inches
-        if (Auth::user()->showInches) {
-            $this->aperture_mm = $this->aperture_mm * 25.4;
-            $this->focal_length_mm = $this->focal_length_mm * 25.4;
-        }
-
+        // The form values are validated; in inches they are converted afterwards,
+        // so the form keeps showing inches after a validation error.
         $data = $this->validate([
             'name' => 'required|min:3',
             'instrument_type_id' => 'required',
@@ -186,6 +182,12 @@ class CreateInstrument extends Component
             'photo' => 'nullable|image',
             'description' => 'nullable|string',
         ]);
+
+        // Check if aperture and focal length are set in inches
+        if (Auth::user()->showInches) {
+            $data['aperture_mm'] = (int) round($this->inchesToMm($data['aperture_mm'], $this->instrument?->aperture_mm));
+            $data['focal_length_mm'] = $this->inchesToMm($data['focal_length_mm'] ?? 0, $this->instrument?->focal_length_mm);
+        }
 
         if ($this->flipped_image) {
             $data['flip_image'] = true;
@@ -222,5 +224,19 @@ class CreateInstrument extends Component
             return redirect('/instrument/'.Auth()->user()->slug.'/'.$instrument->slug);
         }
 
+    }
+
+    /**
+     * Converts a value in inches to millimeters. When the value is the one mount()
+     * showed for the stored millimeters (rounded to 0.1"), the stored value is
+     * kept, so saving without changes doesn't shift it.
+     */
+    private function inchesToMm($inches, $storedMm): float
+    {
+        if ($storedMm !== null && round($storedMm / 25.4, 1) == (float) $inches) {
+            return (float) $storedMm;
+        }
+
+        return (float) $inches * 25.4;
     }
 }

@@ -258,13 +258,22 @@ Route::get('location.select.api', function (Request $request) {
 
 Route::get('instrument.api', function (Request $request) {
     $allInstruments = [];
-    // Show the selected option
+    // Show the selected option(s); without a value, the standard instrument
     if ($request->exists('selected')) {
-        $allInstruments[] = [
-            'id' => auth()->user()->stdtelescope,
-            'name' => Instrument::where('id', auth()->user()->stdtelescope)->first()->fullName(),
-            'description' => Instrument::where('id', auth()->user()->stdtelescope)->first()->description,
-        ];
+        $selected = array_filter((array) $request->selected, fn ($sel) => $sel !== null && $sel !== '');
+        if (empty($selected)) {
+            $selected = [auth()->user()->stdtelescope];
+        }
+        foreach ($selected as $sel) {
+            $instrument = Instrument::where('id', $sel)->first();
+            if ($instrument) {
+                $allInstruments[] = [
+                    'id' => $instrument->id,
+                    'name' => $instrument->fullName(),
+                    'description' => $instrument->description,
+                ];
+            }
+        }
     }
 
     // If an instrument_set is provided, try to return only instruments that belong to that set

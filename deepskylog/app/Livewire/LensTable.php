@@ -127,7 +127,8 @@ class LensTable extends PowerGridComponent
     #[On('clickToDelete')]
     public function clickToDelete(int $id): void
     {
-        $lens = Lens::where('id', '=', $id);
-        $lens->delete();
+        // Delete the model, not a query, so it detaches itself from instrument
+        // sets and is cleared as the default of its user.
+        Lens::where('id', $id)->where('user_id', Auth::id())->first()?->delete();
     }
 }

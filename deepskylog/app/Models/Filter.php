@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
 use App\Traits\ClearsResponseCache;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Filter extends Model
 {
     use ClearsResponseCache;
+    use DetachesOnDelete;
     use HasObservationsDates;
     use Sluggable;
 

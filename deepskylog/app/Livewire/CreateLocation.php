@@ -77,12 +77,16 @@ class CreateLocation extends Component
             $this->longitude = $location->longitude;
             $this->hidden = $location->hidden;
             $this->elevation = $location->elevation;
+            $this->country = $location->country;
+            $this->timezone = $location->timezone;
 
             if ($location->skyBackground > 0) {
                 $this->sqm = $location->skyBackground ?? null;
                 $this->updatedSqm($this->sqm);
             } elseif ($location->limitingMagnitude > 0) {
-                $this->nelm = $location->limitingMagnitude ?? null;
+                // The stored NELM is without the fstOffset of the observer, the
+                // form shows (and save() stores) it with the offset.
+                $this->nelm = $location->getNelm(Auth()->user()->fstOffset ?? 0);
                 $this->updatedNelm($this->nelm);
             }
             // Frontend initialization of the map is handled client-side via Livewire hooks
@@ -91,8 +95,12 @@ class CreateLocation extends Component
 
     public function save()
     {
-        $this->updateElevation($this->latitude, $this->longitude);
-        $this->updateCountry($this->latitude, $this->longitude);
+        // Only look the elevation, country and time zone up for a new location,
+        // moved coordinates or values that are still missing.
+        if ($this->needsLookup()) {
+            $this->updateElevation($this->latitude, $this->longitude);
+            $this->updateCountry($this->latitude, $this->longitude);
+        }
 
         $photoPath = null;
 
@@ -185,6 +193,24 @@ class CreateLocation extends Component
         $this->description = $value;
     }
 
+    private function needsLookup(): bool
+    {
+        if (! $this->update) {
+            return true;
+        }
+
+        $moved = abs((float) $this->latitude - (float) $this->location->latitude) > 1e-6
+            || abs((float) $this->longitude - (float) $this->location->longitude) > 1e-6;
+
+        return $moved
+            || $this->elevation === null || $this->elevation === ''
+            || empty($this->country) || $this->country === 'Unknown'
+            || empty($this->timezone);
+    }
+
+    /**
+     * Looks the elevation up. On a failure the current value is kept (0 when there is none).
+     */
     public function updateElevation($latitude, $longitude): void
     {
         $client = new Client;
@@ -195,14 +221,16 @@ class CreateLocation extends Component
                 ],
             ]);
             $data = json_decode($response->getBody(), true);
-            $this->elevation = $data['results'][0]['elevation'] ?? 0;
-
-            $this->updateCountry($latitude, $longitude);
+            $this->elevation = $data['results'][0]['elevation'] ?? $this->elevation ?? 0;
         } catch (GuzzleException) {
-            $this->elevation = 0;
+            $this->elevation ??= 0;
         }
     }
 
+    /**
+     * Looks the country and time zone up. On a failure the current values are
+     * kept ('Unknown' and 'UTC' when there are none).
+     */
     public function updateCountry($latitude, $longitude): void
     {
         $client = new Client;
@@ -216,9 +244,9 @@ class CreateLocation extends Component
                 ],
             ]);
             $data = json_decode($response->getBody(), true);
-            $this->country = $data['countryName'] ?? 'Unknown';
+            $this->country = ($data['countryName'] ?? '') ?: ($this->country ?: 'Unknown');
         } catch (GuzzleException $e) {
-            $this->country = 'Unknown';
+            $this->country = $this->country ?: 'Unknown';
         }
 
         $client2 = new Client;
@@ -231,9 +259,9 @@ class CreateLocation extends Component
                 ],
             ]);
             $data = json_decode($response->getBody(), true);
-            $this->timezone = $data['ianaTimeId'] ?? 'UTC';
+            $this->timezone = ($data['ianaTimeId'] ?? '') ?: ($this->timezone ?: 'UTC');
         } catch (GuzzleException $e) {
-            $this->timezone = 'UTC';
+            $this->timezone = $this->timezone ?: 'UTC';
         }
     }
 
