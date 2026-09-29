@@ -189,9 +189,15 @@ class ObjectSetPdfService
         $raDeg = $object->raHours() * 15.0;
         $decDeg = $object->declDegrees();
         $index = [];
+        $clampFov = fn ($fov): float => min(3600.0, max(1.0, (float) $fov));
+        $smallestFov = $fovs === [] ? null : min(array_map($clampFov, $fovs));
 
         foreach ($fovs as $k => $fov) {
-            $fov = min(3600.0, max(1.0, (float) $fov));
+            $fov = $clampFov($fov);
+            // As in the atlas, objects without a magnitude are only drawn on the
+            // detail chart (the smallest field); on the overview and lookup charts
+            // they swamp the objects brighter than the limit.
+            $showUnknownMagnitudes = $fov <= $smallestFov;
             // A missing magnitude takes the one before it, so "10 12" for
             // three charts draws the last one to magnitude 12 as well.
             $dsoMag = $this->valueAt($dsos, $k, 15.0, 1.0, 20.0);
@@ -209,7 +215,7 @@ class ObjectSetPdfService
                 true,
                 false,
                 null,
-                true
+                $showUnknownMagnitudes
             );
 
             $pages[] = [

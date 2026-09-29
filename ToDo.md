@@ -102,21 +102,6 @@ Code review of the whole application, without the security aspects. Paths are re
 
 ### Low
 
-Ephemerides, jobs, commands
-- [ ] `calculateApparentEquatorialCoordinates($date)` fallbacks don't pass `$date->copy()` (harmless with v6.8.3) (`ObjectEphemerides.php:520,528,534`, `AladinPreviewInfo.php:587,595`, `ObjectController.php:1803`).
-- [ ] `metrics:backfill-best-mag --limit` is ignored by `chunk()`, and chunking skips rows because it updates the filtered column (`BackfillBestMagForMetrics.php:48`). Use `chunkById`.
-- [ ] `ComputeEphemerides` cache keys don't match between the job, `ObjectEphemerides` and `pollCache`; `whereNull('user_id')` on locations never matches, so guests get an arbitrary location; `wire:poll.5s` runs forever when the ephemerides are empty.
-- [ ] One date change triggers three recomputes of `ObjectEphemerides` and two of `MoonDetails`.
-- [ ] `AladinPreviewInfo` 1 s debounce drops the second of two quick changes (`AladinPreviewInfo.php:286-300`).
-- [ ] `AladinPreviewInfo` computes planet coordinates but uses the null `$obj->ra` / `$obj->decl` (970-995).
-- [ ] (plausible) `sessions:backfill-slugs` (every 5 min) loops forever on names where `Str::slug()` is empty.
-- [ ] `ComputeObserverStats` uses MySQL-only `MONTH()` / `YEAR()` and swallows all errors.
-- [ ] Near-parabolic comets are geocentric, elliptic ones topocentric (library `NearParabolic.php:97`).
-- [ ] Object-set overview charts always show unknown magnitudes, unlike the atlas (`ObjectSetPdfService.php:212`).
-- [ ] Report layouts without `showelements` get '' instead of 'hetp' (`ReportLayoutCatalog.php:243`).
-- [ ] `/downloads/dsl-atlas/generate` has no auth and falls back to user 1 (`AtlasController.php:120`).
-- [ ] `NearbyExportController.php:21-44, ~415` checks `=== null`, so `ra=` (empty) gives a centre at 0/0. Use `is_numeric`.
-
 Cross-cutting
 - [ ] `routes/api.php` select endpoints call `->first()->id` / `->fullName()` without null checks (lines 262-267, 553, 721-911); `eyepiece.select.api` returns `name` instead of `fullName()` (957, 997, 1027); `eyepiece_types.api` without `make` returns only a blank entry (829-833).
 - [ ] Mobile admin menu links to `/admin/eyepiece-type` instead of `/admin/eyepiece-types` (`components/menu/admin-responsive-dropdown.blade.php:50`).

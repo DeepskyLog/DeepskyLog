@@ -26,6 +26,15 @@ class ComputeEphemerides implements ShouldQueue
         $this->locationId = $locationId;
     }
 
+    /**
+     * The cache key the ephemerides are stored under. ObjectEphemerides looks
+     * them up (and polls for them) with the same key.
+     */
+    public static function cacheKey(string $objectIdentifier, string $dateIso, ?int $locationId): string
+    {
+        return 'ephemerides:' . md5($objectIdentifier . '|' . $dateIso . '|' . ($locationId ?? '0'));
+    }
+
     public function handle(): void
     {
         // Resolve object record: try Target, then CometObject, then fallback to name
@@ -53,7 +62,7 @@ class ComputeEphemerides implements ShouldQueue
         }
         if (!$userLocation) {
             try {
-                $userLocation = \App\Models\Location::where('active', true)->whereNull('user_id')->first() ?? \App\Models\Location::where('active', true)->first();
+                $userLocation = \App\Models\Location::forEphemerides();
             } catch (\Throwable $_) {
                 $userLocation = null;
             }
@@ -64,7 +73,6 @@ class ComputeEphemerides implements ShouldQueue
 
         $ephem = EphemeridesBuilder::compute($obj ?? (object) ['name' => $this->objectIdentifier, 'designation' => $this->objectIdentifier], $date, $userLocation, $geo_coords);
 
-        $cacheKey = 'ephemerides:' . md5($this->objectIdentifier . '|' . $this->dateIso . '|' . ($this->locationId ?? '0'));
-        Cache::put($cacheKey, $ephem, now()->addHours(6));
+        Cache::put(self::cacheKey($this->objectIdentifier, $this->dateIso, $this->locationId), $ephem, now()->addHours(6));
     }
 }

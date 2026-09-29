@@ -138,6 +138,7 @@ class ObserverController extends Controller
                     ComputeObserverStats::dispatchSync($user->id);
                 } catch (\Throwable $e) {
                     // Fallback: queue the job if sync execution fails for any reason
+                    report($e);
                     ComputeObserverStats::dispatch($user->id);
                 }
             }

@@ -95,6 +95,21 @@ class Location extends Model
         return $this->belongsTo('App\Models\User');
     }
 
+    /**
+     * The location ephemerides are calculated for: the standard location of
+     * the user, else (for guests) the oldest active location. Every location
+     * belongs to an observer, so there is no site-wide one; ordering on the id
+     * gives every component (and the queue jobs) the same location.
+     */
+    public static function forEphemerides(?User $user = null): ?self
+    {
+        if ($user && $user->standardLocation) {
+            return $user->standardLocation;
+        }
+
+        return self::where('active', true)->orderBy('id')->first();
+    }
+
     public function first_observation_date(): array
     {
         return $this->first_observation_date_generic('locationid');

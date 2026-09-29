@@ -91,11 +91,6 @@ it('only deletes the likes and comments of the deleted observation', function ()
 });
 
 it('knows an observer has popular observations when a new observation is liked', function () {
-    // The stats job uses the MySQL date functions.
-    $pdo = DB::connection()->getPdo();
-    $pdo->sqliteCreateFunction('YEAR', fn ($date) => $date === null ? null : (int) substr($date, 0, 4), 1);
-    $pdo->sqliteCreateFunction('MONTH', fn ($date) => $date === null ? null : (int) substr($date, 5, 2), 1);
-
     $owner = User::factory()->withPersonalTeam()->create();
     $viewer = User::factory()->create();
     $observation = socialTestObservation($owner);

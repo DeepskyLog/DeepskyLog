@@ -32,9 +32,7 @@ class GenerateAtlasPdf extends QueuedPdfJob
 
     protected function renderPdf(User $user, callable $progress): string
     {
-        $parameters = $this->parameters;
-        $parameters['_user_id'] = $user->id;
-        $request = Request::create('/downloads/dsl-atlas/generate', 'POST', $parameters);
+        $request = Request::create('/downloads/dsl-atlas/generate', 'POST', $this->parameters);
         $request->setUserResolver(fn () => $user);
 
         // renderAtlas() rather than generate(): we want the real exception,

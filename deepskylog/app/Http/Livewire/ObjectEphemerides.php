@@ -24,8 +24,13 @@ class ObjectEphemerides extends Component
 	public $objectName;
 	public $sourceTypeRaw;
 
-	public $requestedDate = null;
-	public $requestedLocationId = null;
+	// Cache key of the ComputeEphemerides job that is running for this
+	// component, and the number of times pollCache() looked for its result.
+	public $pendingCacheKey = null;
+	public $pollAttempts = 0;
+
+	// Poll every 5 s for at most two minutes (see the view)
+	public const MAX_POLL_ATTEMPTS = 24;
 
 	// Suppression flags set by the parent view when a type-specific
 	// component (e.g. MoonDetails) will render those rows instead.
@@ -169,20 +174,20 @@ class ObjectEphemerides extends Component
 	public function pollCache()
 	{
 		try {
-			if (empty($this->objectId) || empty($this->requestedDate))
+			if (empty($this->pendingCacheKey))
 				return;
-			$ident = is_numeric((string) $this->objectId) ? (string) $this->objectId : (string) $this->objectId;
-			$loc = $this->requestedLocationId ?? '0';
-			$cacheKey = 'ephemerides:' . md5($ident . '|' . $this->requestedDate . '|' . ($loc ?? '0'));
-			if (\Illuminate\Support\Facades\Cache::has($cacheKey)) {
-				$cached = \Illuminate\Support\Facades\Cache::get($cacheKey);
-				if (is_array($cached)) {
-					$this->ephemerides = $cached;
-					// Let Livewire re-render; callers may stop polling client-side when present.
-				}
+			$cached = \Illuminate\Support\Facades\Cache::get($this->pendingCacheKey);
+			if (is_array($cached)) {
+				$this->ephemerides = $cached;
+				$this->pendingCacheKey = null;
+				return;
+			}
+			// Stop polling when the job does not deliver (no worker, or it failed)
+			if (++$this->pollAttempts >= self::MAX_POLL_ATTEMPTS) {
+				$this->pendingCacheKey = null;
 			}
 		} catch (\Throwable $_) {
-			// swallow
+			$this->pendingCacheKey = null;
 		}
 	}
 
@@ -193,6 +198,9 @@ class ObjectEphemerides extends Component
 	public function recalculate($payload = null)
 	{
 		$this->ephemerides = null;
+		// A new calculation supersedes the job we may still be waiting for
+		$this->pendingCacheKey = null;
+		$this->pollAttempts = 0;
 		// (debug logs removed)
 
 		try {
@@ -337,23 +345,12 @@ class ObjectEphemerides extends Component
 
 			// (debug removed)
 
-			$authUser = Auth::user();
-			$userLocation = $authUser?->standardLocation ?? null;
-			// (debug removed)
-			// If no authenticated user's standard location is available (guest view),
-			// attempt to use a public/default active Location so we can still compute
-			// ephemerides for anonymous visitors (useful for planets like Mercury/Venus).
-			if (!$userLocation) {
-				try {
-					// Prefer an active location with no user_id (site-level location)
-					$userLocation = \App\Models\Location::where('active', true)->whereNull('user_id')->first();
-					// Fallback: any active location
-					if (!$userLocation) {
-						$userLocation = \App\Models\Location::where('active', true)->first();
-					}
-				} catch (\Throwable $_) {
-					$userLocation = null;
-				}
+			// The user's standard location; guests get the same default location
+			// as the ephemeris aside, so ephemerides can be shown to them as well.
+			try {
+				$userLocation = \App\Models\Location::forEphemerides(Auth::user());
+			} catch (\Throwable $_) {
+				$userLocation = null;
 			}
 			// (debug removed)
 			if (!$userLocation)
@@ -363,27 +360,14 @@ class ObjectEphemerides extends Component
 			// (a date without a time is a date of the observer, read in their timezone)
 			$date = EphemerisDate::parse($payloadArr['date'] ?? null, EphemerisDate::timezone($userLocation));
 
-			// Persist requested date (ISO) so the poller can look up cache entries
-			try {
-				$this->requestedDate = $date->toIso8601String();
-			} catch (\Throwable $_) {
-				$this->requestedDate = null;
-			}
-
 			$geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
 
-			// remember location id for poller/cache key
-			try {
-				$this->requestedLocationId = $userLocation->id ?? null;
-			} catch (\Throwable $_) {
-				$this->requestedLocationId = null;
-			}
-
-			// Cache lookup key for ephemerides: object identifier + date + location
+			// Cache lookup key for ephemerides: object identifier + date + location,
+			// the same key the ComputeEphemerides job (dispatched below with the
+			// same identifier) stores them under
 			$cacheKey = null;
 			try {
-				$ident = is_object($obj) ? ($obj->id ?? ($obj->slug ?? ($obj->name ?? ''))) : (string) ($useObjectId ?? '');
-				$cacheKey = 'ephemerides:' . md5($ident . '|' . ($date->toIso8601String() ?? '') . '|' . ($userLocation->id ?? '0'));
+				$cacheKey = \App\Jobs\ComputeEphemerides::cacheKey((string) $useObjectId, $date->toIso8601String(), $userLocation->id ?? null);
 			} catch (\Throwable $_) {
 				$cacheKey = null;
 			}
@@ -410,7 +394,9 @@ class ObjectEphemerides extends Component
 			$computeEphem = $computeEphem ?? (!empty($payloadArr['computeEphemerides']) && $payloadArr['computeEphemerides']);
 			if ($computeEphem && !empty($cacheKey)) {
 				try {
-					\App\Jobs\ComputeEphemerides::dispatch($useObjectId, $date->toIso8601String(), $userLocation->id ?? null);
+					\App\Jobs\ComputeEphemerides::dispatch((string) $useObjectId, $date->toIso8601String(), $userLocation->id ?? null);
+					// Poll the cache until the job has stored the result
+					$this->pendingCacheKey = $cacheKey;
 				} catch (\Throwable $_) {
 				}
 				// Return for now; cached value will be available after job finishes.
@@ -509,7 +495,7 @@ class ObjectEphemerides extends Component
 									} catch (\Throwable $_) {
 										try {
 											if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-												$planet->calculateApparentEquatorialCoordinates($date);
+												$planet->calculateApparentEquatorialCoordinates($date->copy());
 											}
 										} catch (\Throwable $_) {
 											// give up
@@ -517,13 +503,13 @@ class ObjectEphemerides extends Component
 									}
 								} else {
 									if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-										$planet->calculateApparentEquatorialCoordinates($date);
+										$planet->calculateApparentEquatorialCoordinates($date->copy());
 									}
 								}
 							} catch (\Throwable $_) {
 								try {
 									if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-										$planet->calculateApparentEquatorialCoordinates($date);
+										$planet->calculateApparentEquatorialCoordinates($date->copy());
 									}
 								} catch (\Throwable $_) {
 									// give up

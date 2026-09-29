@@ -280,26 +280,29 @@ class AladinPreviewInfo extends Component
                 }
             }
 
-            // Server-side debounce: avoid repeated heavy recalculations when
-            // the preview is being updated rapidly. Use a per-user+object cache
-            // entry to track last dispatch time (microtime) and ignore requests
-            // within the debounce window.
+            // Server-side debounce: several events often carry the same change
+            // (the same selection or date arriving twice), so skip a request
+            // identical to one handled less than the debounce window ago. A
+            // different request (a second, quick change) is always handled:
+            // skipping it would leave the preview showing the first change.
             try {
                 $userId = Auth::id() ?? 'guest';
                 $incomingObj = $payloadObjectId ?: $this->objectId ?: 'none';
                 $cacheKey = "aladin_preview_last_dispatch:{$userId}:{$incomingObj}";
+                $fingerprintPayload = is_array($payload) ? $payload : (is_object($payload) ? (array) $payload : []);
+                unset($fingerprintPayload['_ts']);
+                $fingerprint = md5(serialize($fingerprintPayload));
                 $last = Cache::get($cacheKey);
-                if ($last && (microtime(true) - $last) < (self::PREVIEW_DEBOUNCE_MS / 1000)) {
+                if (is_array($last) && ($last['fingerprint'] ?? null) === $fingerprint
+                    && (microtime(true) - (float) ($last['at'] ?? 0)) < (self::PREVIEW_DEBOUNCE_MS / 1000)) {
                     try {
-                        Log::debug('AladinPreviewInfo: recalc debounced', ['user_id' => $userId, 'object' => $incomingObj, 'since_last_ms' => round((microtime(true) - $last) * 1000, 2)]);
+                        Log::debug('AladinPreviewInfo: recalc debounced', ['user_id' => $userId, 'object' => $incomingObj, 'since_last_ms' => round((microtime(true) - (float) $last['at']) * 1000, 2)]);
                     } catch (\Throwable $_) {
                     }
                     return;
                 }
-                // record last dispatch time for a short period so other rapid
-                // requests get suppressed. Keep the cache entry for 30s to avoid
-                // leaving stale keys around.
-                Cache::put($cacheKey, microtime(true), 30);
+                // Keep the cache entry for 30s to avoid leaving stale keys around.
+                Cache::put($cacheKey, ['fingerprint' => $fingerprint, 'at' => microtime(true)], 30);
             } catch (\Throwable $_) {
                 // don't block processing if cache/backend fails
             }
@@ -573,7 +576,7 @@ class AladinPreviewInfo extends Component
                         } catch (\Throwable $_) {
                             try {
                                 if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-                                    $planet->calculateApparentEquatorialCoordinates($calcDate);
+                                    $planet->calculateApparentEquatorialCoordinates($calcDate->copy());
                                 }
                             } catch (\Throwable $_) {
                             }
@@ -581,7 +584,7 @@ class AladinPreviewInfo extends Component
                     } else {
                         try {
                             if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-                                $planet->calculateApparentEquatorialCoordinates($calcDate);
+                                $planet->calculateApparentEquatorialCoordinates($calcDate->copy());
                             }
                         } catch (\Throwable $_) {
                         }
@@ -861,23 +864,39 @@ class AladinPreviewInfo extends Component
                 if (isset($computedCoords) && $computedCoords) {
                     $coords = $computedCoords;
                 }
-                if ($obj && $userLocation && (isset($obj->ra) && isset($obj->decl) || isset($coords))) {
+                $payloadHasCoords = is_numeric($payloadArr['raDeg'] ?? null) && is_numeric($payloadArr['decDeg'] ?? null);
+                if ($obj && $userLocation && (isset($obj->ra) && isset($obj->decl) || isset($coords) || $payloadHasCoords)) {
                     $tz = $userLocation->timezone ?? config('app.timezone');
-                    // attempt to convert RA/Dec using DeepskyObject helpers when available
                     $raDeg = null;
                     $decDeg = null;
+                    // Coordinates for the date: the ones ObjectEphemerides sent, else
+                    // the planet coordinates calculated above. Planets have no
+                    // RA/Dec in the database.
+                    if ($payloadHasCoords) {
+                        $raDeg = (float) $payloadArr['raDeg'];
+                        $decDeg = (float) $payloadArr['decDeg'];
+                    } elseif (isset($coords) && $coords) {
+                        try {
+                            $raDeg = $coords->getRA()->getCoordinate() * 15.0;
+                            $decDeg = $coords->getDeclination()->getCoordinate();
+                        } catch (\Throwable $_) {
+                            $raDeg = null;
+                            $decDeg = null;
+                        }
+                    }
+                    // attempt to convert RA/Dec using DeepskyObject helpers when available
                     try {
-                        if (method_exists(\App\Models\DeepskyObject::class, 'raToDecimal')) {
-                            $raDeg = \App\Models\DeepskyObject::raToDecimal($obj->ra);
-                            $decDeg = \App\Models\DeepskyObject::decToDecimal($obj->decl);
+                        if (($raDeg === null || $decDeg === null) && method_exists(\App\Models\DeepskyObject::class, 'raToDecimal')) {
+                            $raDeg = \App\Models\DeepskyObject::raToDecimal($obj->ra ?? null);
+                            $decDeg = \App\Models\DeepskyObject::decToDecimal($obj->decl ?? null);
                         }
                     } catch (\Throwable $_) {
                         $raDeg = null;
                         $decDeg = null;
                     }
                     if ($raDeg === null || $decDeg === null) {
-                        $raDeg = is_numeric($obj->ra) ? (float) $obj->ra : null;
-                        $decDeg = is_numeric($obj->decl) ? (float) $obj->decl : null;
+                        $raDeg = is_numeric($obj->ra ?? null) ? (float) $obj->ra : null;
+                        $decDeg = is_numeric($obj->decl ?? null) ? (float) $obj->decl : null;
                     }
                     if ($raDeg !== null && $decDeg !== null) {
                         $geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);

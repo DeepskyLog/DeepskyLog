@@ -323,6 +323,12 @@ it('cleans up a layout from the editor', function () {
         ->and($layout['fields'])->toHaveCount(count(ReportLayoutCatalog::FIELDS));
 });
 
+it('gives a layout without showelements the default elements, but keeps an empty choice', function () {
+    expect(ReportLayoutCatalog::normalize(['settings' => ['pagesize' => 'A4']])['settings']['showelements'])->toBe('hetp')
+        ->and(ReportLayoutCatalog::normalize(['settings' => ['showelements' => '']])['settings']['showelements'])->toBe('')
+        ->and(ReportLayoutCatalog::normalize([])['settings']['top'])->toBe(ReportLayoutCatalog::SETTINGS['top']);
+});
+
 it('draws a report over several pages and columns, grouped by constellation', function () {
     $layout = ReportLayoutCatalog::builtInDefault();
     $layout['settings']['showelements'] = 'htplsi';

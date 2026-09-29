@@ -235,7 +235,12 @@ class ReportLayoutCatalog
 
     private static function setting(string $key, mixed $value, string $default): string
     {
-        $value = trim((string) ($value ?? ''));
+        // A layout without the setting gets the default; for showelements an
+        // empty value is a choice (show none of the elements), so only null is.
+        if ($value === null) {
+            return $default;
+        }
+        $value = trim((string) $value);
 
         return match ($key) {
             'pagesize' => in_array(strtoupper($value), self::PAGE_SIZES, true) ? strtoupper($value) : $default,

@@ -22,7 +22,7 @@ class NearbyExportController extends Controller
             $dec = $request->query('dec');
             $radiusArcMin = intval($request->query('radius', 30));
 
-            if ($ra === null || $dec === null) {
+            if (! is_numeric($ra) || ! is_numeric($dec)) {
                 // Try to look up object by slug to get coords
                 if ($slug) {
                     $obj = DeepskyObject::where('slug', $slug)->orWhere('name', $slug)->first();
@@ -33,7 +33,7 @@ class NearbyExportController extends Controller
                 }
             }
 
-            if ($ra === null || $dec === null) {
+            if (! is_numeric($ra) || ! is_numeric($dec)) {
                 return redirect()->back()->with('error', __('Missing coordinates for nearby export'));
             }
 
@@ -116,7 +116,7 @@ class NearbyExportController extends Controller
             $dec = $request->query('dec');
             $radiusArcMin = intval($request->query('radius', 30));
 
-            if ($ra === null || $dec === null) {
+            if (! is_numeric($ra) || ! is_numeric($dec)) {
                 // Try to look up object by slug to get coords
                 if ($slug) {
                     $obj = DeepskyObject::where('slug', $slug)->orWhere('name', $slug)->first();
@@ -127,7 +127,7 @@ class NearbyExportController extends Controller
                 }
             }
 
-            if ($ra === null || $dec === null) {
+            if (! is_numeric($ra) || ! is_numeric($dec)) {
                 return redirect()->back()->with('error', __('Missing coordinates for nearby export'));
             }
 
@@ -307,7 +307,7 @@ class NearbyExportController extends Controller
             $dec = $request->query('dec');
             $radiusArcMin = intval($request->query('radius', 30));
 
-            if ($ra === null || $dec === null) {
+            if (! is_numeric($ra) || ! is_numeric($dec)) {
                 if ($slug) {
                     $obj = DeepskyObject::where('slug', $slug)->orWhere('name', $slug)->first();
                     if ($obj) {
@@ -317,7 +317,7 @@ class NearbyExportController extends Controller
                 }
             }
 
-            if ($ra === null || $dec === null) {
+            if (! is_numeric($ra) || ! is_numeric($dec)) {
                 return redirect()->back()->with('error', __('Missing coordinates for nearby export'));
             }
 
@@ -364,7 +364,7 @@ class NearbyExportController extends Controller
             $dec = $request->query('dec');
             $radiusArcMin = intval($request->query('radius', 30));
 
-            if ($ra === null || $dec === null) {
+            if (! is_numeric($ra) || ! is_numeric($dec)) {
                 if ($slug) {
                     $obj = DeepskyObject::where('slug', $slug)->orWhere('name', $slug)->first();
                     if ($obj) {
@@ -374,7 +374,7 @@ class NearbyExportController extends Controller
                 }
             }
 
-            if ($ra === null || $dec === null) {
+            if (! is_numeric($ra) || ! is_numeric($dec)) {
                 return redirect()->back()->with('error', __('Missing coordinates for nearby export'));
             }
 
@@ -422,12 +422,12 @@ class NearbyExportController extends Controller
             $target = DeepskyObject::where('slug', $slug)->orWhere('name', $slug)->first();
         }
 
-        if (($ra === null || $dec === null) && $target) {
+        if ((! is_numeric($ra) || ! is_numeric($dec)) && $target) {
             $ra = $target->ra;
             $dec = $target->decl;
         }
 
-        if ($ra === null || $dec === null) {
+        if (! is_numeric($ra) || ! is_numeric($dec)) {
             return [null, null, $target];
         }
 
@@ -449,7 +449,7 @@ class NearbyExportController extends Controller
             $dec = $request->query('dec');
             $radiusArcMin = intval($request->query('radius', 30));
 
-            if ($ra === null || $dec === null) {
+            if (! is_numeric($ra) || ! is_numeric($dec)) {
                 if ($slug) {
                     $obj = DeepskyObject::where('slug', $slug)->orWhere('name', $slug)->first();
                     if ($obj) {
@@ -459,7 +459,7 @@ class NearbyExportController extends Controller
                 }
             }
 
-            if ($ra === null || $dec === null) {
+            if (! is_numeric($ra) || ! is_numeric($dec)) {
                 return redirect()->back()->with('error', __('Missing coordinates for nearby export'));
             }
 
@@ -503,7 +503,7 @@ class NearbyExportController extends Controller
             $dec = $request->query('dec');
             $radiusArcMin = intval($request->query('radius', 30));
 
-            if ($ra === null || $dec === null) {
+            if (! is_numeric($ra) || ! is_numeric($dec)) {
                 if ($slug) {
                     $obj = DeepskyObject::where('slug', $slug)->orWhere('name', $slug)->first();
                     if ($obj) {
@@ -513,7 +513,7 @@ class NearbyExportController extends Controller
                 }
             }
 
-            if ($ra === null || $dec === null) {
+            if (! is_numeric($ra) || ! is_numeric($dec)) {
                 return redirect()->back()->with('error', __('Missing coordinates for nearby export'));
             }
 

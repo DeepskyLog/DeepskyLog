@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\DeepskyObject;
-use App\Models\User;
 use App\Services\AtlasIndexPageService;
 use App\Services\AtlasLayout;
 use App\Services\AtlasObjectIndexService;
@@ -25,10 +24,10 @@ class AtlasController extends Controller
 
     public function queue(Request $request)
     {
-        $user = $request->user() ?? User::find((int) $request->input('_user_id', 0));
+        $user = $request->user();
         abort_unless($user, 403);
 
-        $parameters = $request->except(['_token', '_user_id']);
+        $parameters = $request->except(['_token']);
         $token = (string) Str::uuid();
         Cache::put(GenerateAtlasPdf::statusKey($token), [
             'state' => 'queued',
@@ -117,7 +116,9 @@ class AtlasController extends Controller
         $orientation = strtolower(trim((string) $request->input('orientation', 'landscape')));
         $scope = strtolower(trim((string) $request->input('scope', 'single')));
 
-        $user = $request->user() ?? User::find((int) $request->input('_user_id', 1));
+        // The web route requires a login; the queue job sets the user resolver.
+        $user = $request->user();
+        abort_unless($user, 403);
 
         // Allow long-running atlas generation (remove PHP execution time limit)
         if (function_exists('set_time_limit')) {

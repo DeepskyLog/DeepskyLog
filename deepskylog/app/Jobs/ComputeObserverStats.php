@@ -522,54 +522,56 @@ class ComputeObserverStats implements ShouldQueue
             };
 
             // User-scoped grouped queries
+            $month = $this->datePart('month', 'observed_on');
+            $year = $this->datePart('year', 'observed_on');
             $observerWhere = function ($q) use ($user) {
                 $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
             };
 
             $deepskyGrouped = DB::table('observations')
-                ->selectRaw('MONTH(observed_on) as month, count(*) as cnt')
+                ->selectRaw($month . ' as month, count(*) as cnt')
                 ->where('target_type', Observation::TYPE_DEEPSKY)
                 ->where($observerWhere)
-                ->groupByRaw('MONTH(observed_on)')
+                ->groupByRaw($month)
                 ->get();
 
             $doubleGrouped = DB::table('observations')
-                ->selectRaw('MONTH(observed_on) as month, count(*) as cnt')
+                ->selectRaw($month . ' as month, count(*) as cnt')
                 ->where('target_table', 'objects')
                 ->where($observerWhere)
                 ->whereIn('target_name_normalized', function ($q) {
                     $q->select('name_normalized')->from('objects')->where('type', 'DS');
-                })->groupByRaw('MONTH(observed_on)')
+                })->groupByRaw($month)
                 ->get();
 
             $cometGrouped = DB::table('observations')
-                ->selectRaw('MONTH(observed_on) as month, count(*) as cnt')
+                ->selectRaw($month . ' as month, count(*) as cnt')
                 ->where('target_type', Observation::TYPE_COMET)
                 ->where($observerWhere)
-                ->groupByRaw('MONTH(observed_on)')
+                ->groupByRaw($month)
                 ->get();
 
             $planetsGrouped = DB::table('observations')
-                ->selectRaw('MONTH(observed_on) as month, count(*) as cnt')
+                ->selectRaw($month . ' as month, count(*) as cnt')
                 ->where('target_table', 'planets')
                 ->whereRaw('LOWER(target_key) != ?', ['sun'])
                 ->where($observerWhere)
-                ->groupByRaw('MONTH(observed_on)')
+                ->groupByRaw($month)
                 ->get();
 
             $sunGrouped = DB::table('observations')
-                ->selectRaw('MONTH(observed_on) as month, count(*) as cnt')
+                ->selectRaw($month . ' as month, count(*) as cnt')
                 ->where('target_table', 'planets')
                 ->whereRaw('LOWER(target_key) = ?', ['sun'])
                 ->where($observerWhere)
-                ->groupByRaw('MONTH(observed_on)')
+                ->groupByRaw($month)
                 ->get();
 
             $moonGrouped = DB::table('observations')
-                ->selectRaw('MONTH(observed_on) as month, count(*) as cnt')
+                ->selectRaw($month . ' as month, count(*) as cnt')
                 ->whereIn('target_table', ['moons', 'lunar_features'])
                 ->where($observerWhere)
-                ->groupByRaw('MONTH(observed_on)')
+                ->groupByRaw($month)
                 ->get();
 
             $deepskyMonths = $mapToMonths($deepskyGrouped);
@@ -586,7 +588,7 @@ class ComputeObserverStats implements ShouldQueue
             // Per-year series
             $firstYear = DB::table('observations')
                 ->where($observerWhere)
-                ->min(DB::raw('YEAR(observed_on)'));
+                ->min(DB::raw($year));
 
             if (is_null($firstYear)) {
                 $firstYear = intval(date('Y'));
@@ -607,49 +609,49 @@ class ComputeObserverStats implements ShouldQueue
             };
 
             $deepskyYearGrouped = DB::table('observations')
-                ->selectRaw('YEAR(observed_on) as year, count(*) as cnt')
+                ->selectRaw($year . ' as year, count(*) as cnt')
                 ->where('target_type', Observation::TYPE_DEEPSKY)
                 ->where($observerWhere)
-                ->groupByRaw('YEAR(observed_on)')
+                ->groupByRaw($year)
                 ->get();
 
             $doubleYearGrouped = DB::table('observations')
-                ->selectRaw('YEAR(observed_on) as year, count(*) as cnt')
+                ->selectRaw($year . ' as year, count(*) as cnt')
                 ->where('target_table', 'objects')
                 ->where($observerWhere)
                 ->whereIn('target_name_normalized', function ($q) {
                     $q->select('name_normalized')->from('objects')->where('type', 'DS');
-                })->groupByRaw('YEAR(observed_on)')
+                })->groupByRaw($year)
                 ->get();
 
             $cometYearGrouped = DB::table('observations')
-                ->selectRaw('YEAR(observed_on) as year, count(*) as cnt')
+                ->selectRaw($year . ' as year, count(*) as cnt')
                 ->where('target_type', Observation::TYPE_COMET)
                 ->where($observerWhere)
-                ->groupByRaw('YEAR(observed_on)')
+                ->groupByRaw($year)
                 ->get();
 
             $planetsYearGrouped = DB::table('observations')
-                ->selectRaw('YEAR(observed_on) as year, count(*) as cnt')
+                ->selectRaw($year . ' as year, count(*) as cnt')
                 ->where('target_table', 'planets')
                 ->whereRaw('LOWER(target_key) != ?', ['sun'])
                 ->where($observerWhere)
-                ->groupByRaw('YEAR(observed_on)')
+                ->groupByRaw($year)
                 ->get();
 
             $sunYearGrouped = DB::table('observations')
-                ->selectRaw('YEAR(observed_on) as year, count(*) as cnt')
+                ->selectRaw($year . ' as year, count(*) as cnt')
                 ->where('target_table', 'planets')
                 ->whereRaw('LOWER(target_key) = ?', ['sun'])
                 ->where($observerWhere)
-                ->groupByRaw('YEAR(observed_on)')
+                ->groupByRaw($year)
                 ->get();
 
             $moonYearGrouped = DB::table('observations')
-                ->selectRaw('YEAR(observed_on) as year, count(*) as cnt')
+                ->selectRaw($year . ' as year, count(*) as cnt')
                 ->whereIn('target_table', ['moons', 'lunar_features'])
                 ->where($observerWhere)
-                ->groupByRaw('YEAR(observed_on)')
+                ->groupByRaw($year)
                 ->get();
 
             $deepskyYears = $mapToYears($deepskyYearGrouped, $firstYear, $lastYear);
@@ -696,10 +698,25 @@ class ComputeObserverStats implements ShouldQueue
 
             // Cache for 6 hours
             Cache::put($cacheKey, $stats, now()->addHours(6));
-        } catch (\Throwable $e) {
-            // Ensure we don't leave the in-progress flag set
+        } finally {
+            // Ensure we don't leave the in-progress flag set; errors go on to
+            // the queue (failed_jobs) or the synchronous caller, which logs them
+            Cache::forget($inProgressKey);
+        }
+    }
+
+    /**
+     * The SQL expression for the year or month of a date column: MySQL has
+     * YEAR() and MONTH(), SQLite (the tests) only strftime().
+     */
+    private function datePart(string $part, string $column): string
+    {
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            return $part === 'year'
+                ? "CAST(strftime('%Y', {$column}) AS INTEGER)"
+                : "CAST(strftime('%m', {$column}) AS INTEGER)";
         }
 
-        Cache::forget($inProgressKey);
+        return $part === 'year' ? "YEAR({$column})" : "MONTH({$column})";
     }
 }

@@ -1636,7 +1636,7 @@ class ObjectController extends Controller
                                 // no user location: use apparent (geocentric) coordinates
                                 try {
                                     if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-                                        $planet->calculateApparentEquatorialCoordinates($date);
+                                        $planet->calculateApparentEquatorialCoordinates($date->copy());
                                     }
                                 } catch (\Throwable $_) {
                                     // ignore

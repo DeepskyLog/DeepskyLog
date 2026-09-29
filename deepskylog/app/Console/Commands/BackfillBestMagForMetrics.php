@@ -32,8 +32,7 @@ class BackfillBestMagForMetrics extends Command
 
         $query = UserObjectMetric::query()
             ->whereNotNull('contrast_reserve')
-            ->whereNull('optimum_detection_magnification')
-            ->orderBy('id', 'asc');
+            ->whereNull('optimum_detection_magnification');
 
         $total = $query->count();
         $this->info("Found {$total} rows with contrast_reserve but missing optimum_detection_magnification");
@@ -45,8 +44,14 @@ class BackfillBestMagForMetrics extends Command
         $bar = $this->output->createProgressBar(min($total, $limit));
         $bar->start();
 
-        $query->limit($limit)->chunk($chunk, function ($rows) use (&$processed, $dry, $bar) {
+        // chunkById pages on the id, so the rows the recomputation takes out of
+        // the filter (it fills optimum_detection_magnification) do not shift the
+        // pages; chunk() ignores limit(), so stop at the limit ourselves.
+        $query->chunkById($chunk, function ($rows) use (&$processed, $dry, $bar, $limit) {
             foreach ($rows as $row) {
+                if ($processed >= $limit) {
+                    return false;
+                }
                 $processed++;
                 $bar->advance();
                 if ($dry) {

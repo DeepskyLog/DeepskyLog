@@ -311,3 +311,30 @@ it('lists only the objects the chart draws, not those in the margin around it', 
     expect(collect($chart['objects'])->pluck('name')->all())->toContain('NGC 9999')
         ->and(collect($chart['drawn_objects'])->pluck('name')->sort()->values()->all())->toBe(['M 31', 'M 32']);
 });
+
+it('only draws objects without a magnitude on the detail chart, as the atlas does', function () {
+    Storage::fake('local');
+    $owner = User::factory()->create();
+    objectSetList($owner);
+
+    // Record the showUnknownMagnitudes argument of every chart
+    $spy = new class extends App\Services\StarChartService
+    {
+        public array $showUnknown = [];
+
+        public function build(App\Models\DeepskyObject $target, float $centerRaDeg, float $centerDecDeg, float $radiusArcMin, ?float $magnitudeLimit = null, ?float $objectMagnitudeLimit = null, ?float $starMagnitudeLimit = null, bool $fast = false, bool $atlasMode = false, bool $portraitAtlasLayout = false, ?array $atlasPage = null, bool $showUnknownMagnitudes = true): array
+        {
+            $this->showUnknown[(int) round($radiusArcMin * 2)] = $showUnknownMagnitudes;
+
+            return parent::build(...func_get_args());
+        }
+    };
+    app()->instance(App\Services\StarChartService::class, $spy);
+
+    app(ObjectSetPdfService::class)->render([
+        'objects' => [['name' => 'M 31', 'fovs' => [120.0, 15.0, 60.0], 'dsos' => [10.0], 'stars' => [10.0], 'photos' => []]],
+    ], $owner);
+
+    expect($spy->showUnknown)->toBe([120 => false, 15 => true, 60 => false]);
+});
+
