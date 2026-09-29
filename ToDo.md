@@ -24,6 +24,15 @@
   - [ ] php artisan migrate also runs 2026_09_28_000001_normalize_observation_targets (stores observations made with the web form under the canonical object name / comet id)
   - [ ] php artisan observing-lists:normalize-items (dry run: check the renames and merges), then php artisan observing-lists:normalize-items --apply (renames list items to the canonical object names so they show up in the list tables and exports; items that match no object are only reported)
   - [ ] Atlas pagina's worden gezet in storage/app/atlas -> kijk of die directory 755 als permissies heeft
+  - [ ] Second queue worker for the PDF jobs (atlas, object sets, object reports). They now go to the `database-long` connection (queue `long`), so without this worker they stay "waiting for a worker". See also Tips.md.
+    - [ ] Update the code only when no PDF is queued or being made: a PDF job that was queued before the update cannot be run by the new code (check with `SELECT id, queue, payload FROM jobs WHERE payload LIKE '%Pdf%';`).
+    - [ ] After the update, in `/mnt/bigdisk/var/www/test.deepskylog.org/deepskylog`: `grep -n database-long config/queue.php` must show the new connection.
+    - [ ] `php artisan config:clear` (or `php artisan config:cache` if the server uses a cached config): otherwise the worker does not know `database-long` and stops at once with exit code 1.
+    - [ ] Test by hand, as the user of `deepskylog-worker.service`: `sudo -u <user> php artisan queue:work database-long --sleep=3` must print that it is processing jobs, not an error. Stop it with Ctrl+C.
+    - [ ] Check `/etc/systemd/system/deepskylog-pdf-worker.service`: the same `User=`, `Group=` and `WorkingDirectory=` as `deepskylog-worker.service`, `Description=DeepskyLog PDF queue worker`, and `ExecStart=/usr/bin/php /mnt/bigdisk/var/www/test.deepskylog.org/deepskylog/artisan queue:work database-long --sleep=3`.
+    - [ ] `systemctl daemon-reload`, `systemctl reset-failed deepskylog-pdf-worker.service` (it gave up after five failed starts), `systemctl enable --now deepskylog-pdf-worker.service`, then `systemctl status deepskylog-pdf-worker.service` must say "active (running)".
+    - [ ] `php artisan queue:restart`, so the existing worker loads the new code and config as well.
+    - [ ] Make an atlas page and an object set and check that both finish and can be downloaded. If not: `journalctl -u deepskylog-pdf-worker.service -n 50` and `storage/logs/laravel-<date>.log`.
 - [ ] Release new version of pyDeepskyLog
   - [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
@@ -86,12 +95,6 @@
 Code review of the whole application, without the security aspects. Paths are relative to `deepskylog/`. Items marked (checked) were confirmed by hand; the others come from a review that read the code and migrations but did not reproduce every case. The test suite passed (259 passed, 7 skipped), so none of this is covered by tests yet.
 
 ### Medium
-
-Charts, atlas, PDFs
-- [ ] PDF jobs have no `failed()`: memory exhaustion or timeout leaves the status "processing" (`QueuedPdfJob.php:146`, `GenerateAtlasPdf.php:337`). (plausible) `retry_after => 90` is shorter than the job timeout, so a second worker can pick the job up again.
-- [ ] Atlas PDFs in `storage/app/atlas` are never pruned, and the atlas job doesn't carry the request locale. Consider moving `GenerateAtlasPdf` onto `QueuedPdfJob`.
-- [ ] Queued charts never show "seen/drawn by you" markers: `auth()->user()` in the worker (`StarChartService.php:968,1034`).
-- [ ] Object-set index lists objects in the 12% margin that are not drawn (`ObjectSetPdfService.php:225`, `StarChartService.php:531-541,1005-1008`).
 
 Ephemerides, comets, contrast reserve
 - [ ] Ephemeris date moves back a day for observers west of UTC (`Carbon::parse($date)` in UTC then `->timezone()`) (`ObjectEphemerides.php:362-370,1039`, `AladinPreviewInfo.php:486,1086`, `ObjectController.php:1604,1740`).

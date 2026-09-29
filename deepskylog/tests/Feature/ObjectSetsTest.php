@@ -295,3 +295,19 @@ it('replaces an older set of the same list once the new one is ready', function 
         ->and(Storage::disk('local')->exists(GenerateObjectSetsPdf::path($other)))->toBeTrue()
         ->and(Cache::get(GenerateObjectSetsPdf::recentKey($owner->id)))->toBe([$new, $other]);
 });
+
+it('lists only the objects the chart draws, not those in the margin around it', function () {
+    insertObjectSetObject('M 31', 'm-31', 0.712313, 41.26917, 11400.0);
+    insertObjectSetObject('M 32', 'm-32', 0.711611, 40.86528);
+    // 1.65 degrees east of the centre, just beyond the side of the chart, in
+    // the margin loadObjects() takes around the page.
+    insertObjectSetObject('NGC 9999', 'ngc-9999', 0.712313 + 1.65 / 15.0 / cos(deg2rad(40.56917)), 40.56917, 60.0);
+    $target = App\Models\DeepskyObject::find('M 31');
+
+    $chart = app(App\Services\StarChartService::class)->build(
+        $target, $target->raHours() * 15.0, $target->declDegrees(), 60.0, null, 10.0, 10.0, true, true, false, null, true
+    );
+
+    expect(collect($chart['objects'])->pluck('name')->all())->toContain('NGC 9999')
+        ->and(collect($chart['drawn_objects'])->pluck('name')->sort()->values()->all())->toBe(['M 31', 'M 32']);
+});

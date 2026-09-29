@@ -62,6 +62,15 @@ class StarChartService
     private bool $atlasProjectionEnabled = false;
 
     /**
+     * Upper-cased names of the objects the last renderSvg() actually drew:
+     * loadObjects() also returns the ones in the margin around the page,
+     * which never make it onto the chart.
+     *
+     * @var array<string, true>
+     */
+    private array $drawnObjectNames = [];
+
+    /**
      * @param  array{page?: int, total?: int, left?: ?int, right?: ?int, top?: ?int, bottom?: ?int}|null  $atlasPage
      *     Atlas page number of this chart and of the charts adjoining it.
      * @param  bool  $showUnknownMagnitudes
@@ -87,7 +96,7 @@ class StarChartService
         $boundaries = $this->loadConstellationBoundaries();
         $constellationLines = $this->loadConstellationLines();
 
-        return [
+        $chart = [
             'target' => $target,
             'radius_arc_min' => $radiusArcMin,
             'radius_deg' => $radiusDeg,
@@ -98,10 +107,18 @@ class StarChartService
             'star_magnitude_limit' => $starMag,
             'stars' => $stars,
             'objects' => $objects,
+            // Filled in below, once renderSvg() has drawn the chart.
+            'drawn_objects' => collect(),
             // The fast flag may optimize query mechanics, but must not remove
             // chart content such as labels or observation indicators.
             'svg' => $this->renderSvg($centerRaDeg, $centerDecDeg, $radiusDeg, $objectMag, $starMag, $target, $stars, $objects, $contours, $boundaries, $constellationLines, false, $atlasMode, $layout, $atlasPage),
         ];
+
+        $chart['drawn_objects'] = $objects
+            ->filter(fn (array $object) => isset($this->drawnObjectNames[strtoupper(trim((string) ($object['name'] ?? '')))]))
+            ->values();
+
+        return $chart;
     }
 
     /**
@@ -714,6 +731,7 @@ class StarChartService
         $plotWidth = (float) $layout['plot_width'];
         $plotHeight = (float) $layout['plot_height'];
         $this->atlasProjectionEnabled = $atlasMode;
+        $this->drawnObjectNames = [];
         $atlasPlotAspect = $plotWidth / max(1.0, $plotHeight);
         $xHalfDeg = $this->xHalfDegrees($radiusDeg, $fast, $atlasMode, $atlasPlotAspect);
         $yHalfDeg = $radiusDeg;
@@ -910,6 +928,8 @@ class StarChartService
                 continue;
             }
 
+            $this->drawnObjectNames[strtoupper(trim((string) ($contour['object_name'] ?? '')))] = true;
+
             $isTargetContour = strcasecmp((string) ($contour['object_name'] ?? ''), (string) $target->name) === 0;
             $stroke = $isTargetContour ? '#1f2937' : '#6b7280';
             $strokeWidth = $isTargetContour ? 1.5 : 1.0;
@@ -1008,6 +1028,8 @@ class StarChartService
             if ($point === null) {
                 continue;
             }
+
+            $this->drawnObjectNames[strtoupper(trim((string) ($object['name'] ?? '')))] = true;
 
             $hasContour = $objectsWithContours->contains(strtoupper(trim((string) ($object['name'] ?? ''))));
 

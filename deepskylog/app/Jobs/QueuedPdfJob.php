@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -22,6 +23,10 @@ use Throwable;
  *
  * Each observer's recent PDFs of a kind are listed in the cache as well, so
  * the page that queued them can show them again when the observer returns.
+ *
+ * These jobs run for up to hours, so they go to the long-running connection
+ * of config/queue.php, whose retry_after outlasts them: on the default
+ * connection a second worker would pick a PDF up again after 90 seconds.
  */
 abstract class QueuedPdfJob implements ShouldQueue
 {
@@ -50,6 +55,10 @@ abstract class QueuedPdfJob implements ShouldQueue
         ?string $locale = null,
     ) {
         $this->locale = $locale ?? App::getLocale();
+
+        if (is_string($connection = config('queue.long_running'))) {
+            $this->onConnection($connection);
+        }
     }
 
     /** Cache key prefix, e.g. "object_sets". */
@@ -117,8 +126,14 @@ abstract class QueuedPdfJob implements ShouldQueue
         App::setLocale($this->locale);
         Carbon::setLocale($this->locale);
 
+        $previousUser = Auth::hasUser() ? Auth::user() : null;
+
         try {
             $user = User::findOrFail($this->userId);
+
+            // The charts mark what the observer saw or drew themselves, and
+            // ask auth() who that is; the worker has no one logged in.
+            Auth::setUser($user);
 
             $content = $this->renderPdf($user, fn (array $extra) => $this->updateStatus('processing', $extra));
 
@@ -154,7 +169,33 @@ abstract class QueuedPdfJob implements ShouldQueue
             } catch (Throwable $_) {
                 // Never let a broken log channel take the worker down.
             }
+        } finally {
+            // The worker goes on to other jobs, which must not run as this
+            // user; run synchronously, the request keeps its own.
+            $previousUser === null ? Auth::forgetUser() : Auth::setUser($previousUser);
         }
+    }
+
+    /**
+     * Called by the queue when the job died outside handle()'s own catch:
+     * it ran out of time, or the worker was killed (e.g. out of memory) and
+     * the job was given up on after retry_after. Without this the status
+     * would say "processing" until it expired.
+     */
+    public function failed(?Throwable $exception): void
+    {
+        // Without a status the PDF expired or was forgotten for a newer one.
+        $status = Cache::get(static::statusKey($this->token));
+        if (! is_array($status) || ($status['state'] ?? '') === 'complete') {
+            return;
+        }
+
+        $this->updateStatus('failed', [
+            'error' => 'PDF generation failed.',
+            'detail' => $exception === null
+                ? 'The worker stopped before the PDF was finished.'
+                : Str::limit(get_class($exception) . ': ' . $exception->getMessage(), 500),
+        ]);
     }
 
     /**

@@ -222,7 +222,7 @@ class ObjectSetPdfService
                 'fov' => $fov,
                 'dso_mag' => $dsoMag,
                 'star_mag' => $starMag,
-                'objects' => collect($chart['objects'])
+                'objects' => collect($chart['drawn_objects'])
                     ->sort(fn (array $a, array $b) => strnatcasecmp((string) $a['name'], (string) $b['name']))
                     ->map(fn (array $row) => [
                         'name' => (string) $row['name'],

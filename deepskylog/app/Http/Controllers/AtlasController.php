@@ -30,10 +30,10 @@ class AtlasController extends Controller
 
         $parameters = $request->except(['_token', '_user_id']);
         $token = (string) Str::uuid();
-        Cache::put('atlas_pdf:' . $token, [
+        Cache::put(GenerateAtlasPdf::statusKey($token), [
             'state' => 'queued',
             'user_id' => $user->id,
-        ], now()->addDay());
+        ], now()->addHours(GenerateAtlasPdf::KEEP_HOURS));
 
         GenerateAtlasPdf::dispatch($token, (int) $user->id, $parameters);
 
@@ -46,7 +46,7 @@ class AtlasController extends Controller
 
     public function status(Request $request, string $token)
     {
-        $status = Cache::get('atlas_pdf:' . $token);
+        $status = Cache::get(GenerateAtlasPdf::statusKey($token));
         abort_unless($status && (int) ($status['user_id'] ?? 0) === (int) $request->user()->id, 404);
 
         return response()->json($status);
@@ -56,7 +56,7 @@ class AtlasController extends Controller
     {
         abort_unless((bool) preg_match('/^[0-9a-f-]{36}$/i', $token), 404);
 
-        $path = 'atlas/' . $token . '.pdf';
+        $path = GenerateAtlasPdf::path($token);
         abort_unless(
             Storage::disk('local')->exists($path),
             404
@@ -64,7 +64,7 @@ class AtlasController extends Controller
 
         // The job records the descriptive name it generated under; fall back
         // to the defaults if the status entry has expired out of the cache.
-        $status = Cache::get('atlas_pdf:' . $token);
+        $status = Cache::get(GenerateAtlasPdf::statusKey($token));
         $filename = is_array($status) && is_string($status['filename'] ?? null) && $status['filename'] !== ''
             ? $status['filename']
             : self::filenameFor('detail', 'A4', 'landscape');

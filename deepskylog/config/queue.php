@@ -42,6 +42,19 @@ return [
             'after_commit' => false,
         ],
 
+        // The PDF jobs (atlas, object sets, object reports) run for up to six
+        // hours. retry_after must outlast them, or a second worker takes the
+        // job up again while the first is still at it; raising it on the
+        // connection above would leave crashed short jobs waiting for hours.
+        // Needs a worker of its own: php artisan queue:work database-long
+        'database-long' => [
+            'driver' => 'database',
+            'table' => 'jobs',
+            'queue' => 'long',
+            'retry_after' => 22200,
+            'after_commit' => false,
+        ],
+
         'beanstalkd' => [
             'driver' => 'beanstalkd',
             'host' => 'localhost',
@@ -72,6 +85,18 @@ return [
         ],
 
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Long-running Jobs Connection
+    |--------------------------------------------------------------------------
+    |
+    | The connection App\Jobs\QueuedPdfJob dispatches to. Null leaves those
+    | jobs on the default connection (such as the sync one of the tests).
+    |
+    */
+
+    'long_running' => env('QUEUE_LONG_RUNNING_CONNECTION', env('QUEUE_CONNECTION', 'database') === 'database' ? 'database-long' : null),
 
     /*
     |--------------------------------------------------------------------------
