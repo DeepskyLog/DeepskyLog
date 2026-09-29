@@ -308,7 +308,7 @@
             @php
                 $page = request()->get("sketches", 1);
                 $cacheKey = "welcome_sketches_page_" . $sketchType . "_" . $page;
-                $sketches = Cache::remember($cacheKey, 300, function () use ($page, $sketchType) {
+                $sketches = \App\Helpers\HomepagePagination::cap(Cache::remember($cacheKey, 300, function () use ($page, $sketchType) {
                     $query = \App\Models\Observation::query()
                         ->where("has_drawing", true);
                     if ($sketchType === "all") {
@@ -324,9 +324,8 @@
                     return $query
                         ->orderByDesc("observed_on")
                         ->orderByDesc("id")
-                        ->paginate(20, ["*"], "sketches", $page)
-                        ->appends(request()->except("sketches"));
-                });
+                        ->deferredPaginate(20, "sketches", (int) $page);
+                }));
 
                 $observerIds = $sketches->pluck("observer_username")
                     ->filter()
@@ -450,7 +449,7 @@
             @php
                 $page = request()->get("observations", 1);
                 $cacheKey = "welcome_observations_page_" . $obsType . "_" . $page;
-                $observations = Cache::remember($cacheKey, 300, function () use ($page, $obsType) {
+                $observations = \App\Helpers\HomepagePagination::cap(Cache::remember($cacheKey, 300, function () use ($page, $obsType) {
                     $query = \App\Models\Observation::query();
                     if ($obsType === "all") {
                         // include both legacy 'solarsystem' and normalized 'planet' and 'lunar'
@@ -465,9 +464,8 @@
                     return $query
                         ->orderByDesc("observed_on")
                         ->orderByDesc("id")
-                        ->paginate(20, ["*"], "observations", $page)
-                        ->appends(request()->except("observations"));
-                });
+                        ->deferredPaginate(20, "observations", (int) $page);
+                }));
 
                 $observerIds = $observations->pluck("observer_username")
                     ->filter()

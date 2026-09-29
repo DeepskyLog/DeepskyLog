@@ -33,7 +33,7 @@ class DrawingController extends Controller
             $query->where('target_type', $obsType);
         }
 
-        $sketches = $query->orderBy('id', 'desc')->paginate(20)->appends(request()->query());
+        $sketches = $query->orderBy('id', 'desc')->deferredPaginate(20)->appends(request()->query());
 
         // Preload users to avoid N+1 queries in the view
         $observerIds = $sketches->pluck('observer_username')->unique()->all();

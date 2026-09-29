@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Magnitude;
+use App\Traits\DeferredPagination;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 
 class Observation extends Model
 {
+    use DeferredPagination;
+
     protected $table = 'observations';
 
     protected $fillable = [

@@ -326,7 +326,7 @@ class ObservationsController extends Controller
             $query->orderByDesc('observed_on')->orderByDesc('observed_time')->orderByDesc('id');
         }
 
-        $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+        $deepsky = $query->deferredPaginate(20, 'deepsky')->appends(request()->query());
 
         // Preload related data using unified field names to avoid N+1 queries
         $items = $deepsky->getCollection();
@@ -580,7 +580,7 @@ class ObservationsController extends Controller
      */
     public function cometIndex()
     {
-        $comet = Observation::comets()->orderBy('id', 'desc')->paginate(20, ['*'], 'comet')->appends(request()->query());
+        $comet = Observation::comets()->orderBy('id', 'desc')->deferredPaginate(20, 'comet')->appends(request()->query());
 
         // Preload related data to avoid N+1 queries
         $preloadedData = $this->preloadCometData($comet);

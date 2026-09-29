@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\HomepagePagination;
 use App\Jobs\TranslateObservationDescriptions;
 use App\Models\Location;
 use App\Models\Observation;
@@ -1020,13 +1021,18 @@ class SessionController extends Controller
      */
     public function homepage(Request $request)
     {
+        // Reject crawler URLs (combined or deep page parameters) before doing any work.
+        if (! HomepagePagination::isValidRequest($request)) {
+            abort(404);
+        }
+
         $query = ObservationSession::where('active', 1)
             ->withObserver()
             ->orderByDesc('enddate')
             ->orderByDesc('begindate');
 
         $perPage = 6;
-        $sessions = $query->paginate($perPage, $columns = ['*'], $pageName = 'sessions')->appends(request()->except('sessions'));
+        $sessions = HomepagePagination::cap($query->paginate($perPage, $columns = ['*'], $pageName = 'sessions'));
 
         // Prefetch related locations to avoid N+1 when resolving location pictures
         $collection = $sessions->getCollection();
