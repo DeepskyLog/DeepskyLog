@@ -298,17 +298,18 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             if ($this->subrMax !== '' && is_numeric($this->subrMax)) {
                 $objQ->where('subr', '<=', floatval($this->subrMax));
             }
+            // Diameters are entered in arcmin; the objects table stores arcsec.
             if ($this->diam1Min !== '' && is_numeric($this->diam1Min)) {
-                $objQ->where('diam1', '>=', floatval($this->diam1Min));
+                $objQ->where('diam1', '>=', floatval($this->diam1Min) * 60);
             }
             if ($this->diam1Max !== '' && is_numeric($this->diam1Max)) {
-                $objQ->where('diam1', '<=', floatval($this->diam1Max));
+                $objQ->where('diam1', '<=', floatval($this->diam1Max) * 60);
             }
             if ($this->diam2Min !== '' && is_numeric($this->diam2Min)) {
-                $objQ->where('diam2', '>=', floatval($this->diam2Min));
+                $objQ->where('diam2', '>=', floatval($this->diam2Min) * 60);
             }
             if ($this->diam2Max !== '' && is_numeric($this->diam2Max)) {
-                $objQ->where('diam2', '<=', floatval($this->diam2Max));
+                $objQ->where('diam2', '<=', floatval($this->diam2Max) * 60);
             }
             if (($this->ratioMin !== '' && is_numeric($this->ratioMin)) || ($this->ratioMax !== '' && is_numeric($this->ratioMax))) {
                 $objQ->whereNotNull('diam1')->where('diam1', '>', 0)
@@ -523,20 +524,20 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             $query->where('objects.subr', '<=', floatval($this->subrMax));
         }
 
-        // ── Diameter 1 filter ─────────────────────────────────────────────────
+        // ── Diameter 1 filter (entered in arcmin, stored in arcsec) ───────────
         if ($this->diam1Min !== '' && is_numeric($this->diam1Min)) {
-            $query->where('objects.diam1', '>=', floatval($this->diam1Min));
+            $query->where('objects.diam1', '>=', floatval($this->diam1Min) * 60);
         }
         if ($this->diam1Max !== '' && is_numeric($this->diam1Max)) {
-            $query->where('objects.diam1', '<=', floatval($this->diam1Max));
+            $query->where('objects.diam1', '<=', floatval($this->diam1Max) * 60);
         }
 
-        // ── Diameter 2 filter ─────────────────────────────────────────────────
+        // ── Diameter 2 filter (entered in arcmin, stored in arcsec) ───────────
         if ($this->diam2Min !== '' && is_numeric($this->diam2Min)) {
-            $query->where('objects.diam2', '>=', floatval($this->diam2Min));
+            $query->where('objects.diam2', '>=', floatval($this->diam2Min) * 60);
         }
         if ($this->diam2Max !== '' && is_numeric($this->diam2Max)) {
-            $query->where('objects.diam2', '<=', floatval($this->diam2Max));
+            $query->where('objects.diam2', '<=', floatval($this->diam2Max) * 60);
         }
 
         // ── Diam1/Diam2 ratio filter ──────────────────────────────────────────

@@ -62,6 +62,10 @@ Route::middleware([
 
 // Switch language
 Route::get('language/{locale}', function ($locale) {
+    if (!in_array($locale, config('app.available_locales'), true)) {
+        abort(404);
+    }
+
     app()->setLocale($locale);
     session()->put('locale', $locale);
 

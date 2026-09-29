@@ -54,6 +54,14 @@ return [
             'path' => storage_path('framework/cache/data'),
         ],
 
+        // Separate store for spatie/laravel-responsecache: clearing the response
+        // cache flushes its whole store, which must not take other cached data
+        // (such as the status of queued PDF jobs) with it.
+        'responsecache' => [
+            'driver' => 'file',
+            'path' => storage_path('framework/cache/responsecache'),
+        ],
+
         'memcached' => [
             'driver' => 'memcached',
             'persistent_id' => env('MEMCACHED_PERSISTENT_ID'),

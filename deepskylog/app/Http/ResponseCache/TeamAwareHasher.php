@@ -8,10 +8,12 @@ use Spatie\ResponseCache\Hasher\DefaultHasher;
 /**
  * Team-aware hasher for ResponseCache.
  *
- * This extends Spatie's DefaultHasher and adds the authenticated user's
- * id and current_team_id (if any) into the generated hash. That ensures
- * cached responses are specific per user/team so switching teams will
- * fetch the correct cached page.
+ * This extends Spatie's DefaultHasher and adds the current locale and the
+ * authenticated user's id and current_team_id (if any) into the generated
+ * hash. That ensures cached responses are specific per language and
+ * user/team, so a guest who chose another language or a user switching
+ * teams gets the correct page. The locale is known here because the
+ * Localization middleware runs before CacheResponse.
  */
 class TeamAwareHasher extends DefaultHasher
 {
@@ -23,7 +25,7 @@ class TeamAwareHasher extends DefaultHasher
      */
     public function getHashFor(Request $request): string
     {
-        $base = parent::getHashFor($request);
+        $base = parent::getHashFor($request) . '|locale:' . app()->getLocale();
 
         try {
             $user = $request->user();

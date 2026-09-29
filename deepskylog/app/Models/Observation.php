@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ClearsResponseCache;
 use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Magnitude;
 use App\Traits\DeferredPagination;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class Observation extends Model
 {
+    use ClearsResponseCache;
     use DeferredPagination;
 
     protected $table = 'observations';

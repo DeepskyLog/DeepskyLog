@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Services\AtlasLayout;
+use App\Traits\ClearsResponseCache;
 use Illuminate\Database\Eloquent\Model;
 
 class DeepskyObject extends Model
 {
+    use ClearsResponseCache;
+
     // Use default connection at runtime
     protected $table = 'objects';
 

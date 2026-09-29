@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\ClearsResponseCache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ObservationLike extends Model
 {
+    use ClearsResponseCache;
+
     /**
      * A like of an observation, whatever its target, by the id of the
      * observation in the `observations` table (never the id of the old

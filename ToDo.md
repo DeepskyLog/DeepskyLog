@@ -97,10 +97,10 @@ Code review of the whole application, without the security aspects. Paths are re
 ### Medium
 
 Search and caching
-- [ ] Advanced search diameter filters say arcmin but compare arcsec (`AdvancedObjectSearchTable.php:301-311,527-540`).
-- [ ] "Best mag" column shows the visual magnitude as a magnification ("9x") (`SearchResultsTable.php:929-930`, `NearbyObjectsTable.php:1110`).
-- [ ] Response cache: the hash has no locale, so guests who chose another language get cached English pages; flash messages get lost (`TeamAwareHasher.php`, `routes/web.php:64`). Validate the locale route against the available locales.
-- [ ] Response cache is not cleared for `Observation`, `ObservingList` (+ items/comments), `SketchOfTheWeek/Month`, `DeepskyObject`, `User` (`ClearsResponseCache` trait only on equipment, `Location`, `ObservationSession`).
+- [x] Advanced search diameter filters say arcmin but compare arcsec (`AdvancedObjectSearchTable.php:301-311,527-540`).
+- [x] "Best mag" column shows the visual magnitude as a magnification ("9x") (`SearchResultsTable.php:929-930`, `NearbyObjectsTable.php:1110`).
+- [x] Response cache: the hash has no locale, so guests who chose another language get cached English pages; flash messages get lost (`TeamAwareHasher.php`, `routes/web.php:64`). Validate the locale route against the available locales.
+- [x] Response cache is not cleared for `Observation`, `ObservingList` (+ items/comments), `SketchOfTheWeek/Month`, `DeepskyObject`, `User` (`ClearsResponseCache` trait only on equipment, `Location`, `ObservationSession`).
 
 ### Low
 

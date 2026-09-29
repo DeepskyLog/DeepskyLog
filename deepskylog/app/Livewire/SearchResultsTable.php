@@ -893,38 +893,13 @@ class SearchResultsTable extends PowerGridComponent
                         return e((int) $cachedBest) . 'x';
                     }
 
-                    // Lightweight fallback computation (estimate from SB/diameters)
-                    $origMag = $row->mag ?? null;
-                    $origSubr = $row->subr ?? null;
-
-                    $m = (is_numeric($origMag) && floatval($origMag) != 99.9) ? floatval($origMag) : null;
-                    if ($m === null) {
-                        $d1f = is_numeric($row->diam1) ? floatval($row->diam1) : null;
-                        $d2f = is_numeric($row->diam2) ? floatval($row->diam2) : null;
-                        $subr = is_numeric($origSubr) ? floatval($origSubr) : null;
-                        if (($d1f !== null && $d1f > 0) && (empty($d2f) || $d2f <= 0)) {
-                            $d2f = $d1f;
-                        } elseif (($d2f !== null && $d2f > 0) && (empty($d1f) || $d1f <= 0)) {
-                            $d1f = $d2f;
-                        }
-
-                        if ($subr !== null && $d1f !== null && $d2f !== null && $d1f > 0 && $d2f > 0) {
-                            $area = pi() * ($d1f / 2.0) * ($d2f / 2.0);
-                            if ($area > 0) {
-                                $estimated = $subr - 2.5 * log10($area);
-                                $m = $estimated;
-                            }
-                        }
-                    }
-
+                    // Fall back to the instrument's fixed magnification or the one given by its
+                    // typical eyepiece. The object's visual magnitude is not a magnification.
                     $mag = $userInstrument->fixedMagnification ?? null;
                     if (!$mag && isset($row->typicalEyepieceFocal) && !empty($userInstrument->focal_length_mm)) {
                         $mag = (int) round(($userInstrument->focal_length_mm / $row->typicalEyepieceFocal));
                     }
 
-                    if ($m !== null) {
-                        return e((int) round($m)) . 'x';
-                    }
                     if ($mag) {
                         return e((int) $mag) . 'x';
                     }

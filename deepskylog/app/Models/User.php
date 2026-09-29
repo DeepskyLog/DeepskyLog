@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ClearsResponseCache;
 use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -28,6 +29,7 @@ use LevelUp\Experience\Concerns\HasAchievements;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
+    use ClearsResponseCache;
     use GiveExperience;
     use HasAchievements;
     use HasApiTokens;
@@ -88,6 +90,24 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     protected $with = ['locations', 'instruments', 'eyepieces', 'filters', 'lenses'];
+
+    /**
+     * Login and session state that never appears on a cached page, so
+     * changing it does not clear the response cache.
+     */
+    protected function responseCacheIgnoredAttributes(): array
+    {
+        return [
+            'password',
+            'remember_token',
+            'two_factor_secret',
+            'two_factor_recovery_codes',
+            'two_factor_confirmed_at',
+            'email_verified_at',
+            'current_team_id',
+            'active_observing_list_id',
+        ];
+    }
 
     /**
      * Return the sluggable configuration array for this model.

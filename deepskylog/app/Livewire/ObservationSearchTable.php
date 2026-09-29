@@ -311,17 +311,18 @@ final class ObservationSearchTable extends PowerGridComponent
         if ($this->subrMax !== '' && is_numeric($this->subrMax)) {
             $query->where('objects.subr', '<=', (float) $this->subrMax);
         }
+        // Diameters are entered in arcmin; the objects table stores arcsec.
         if ($this->diam1Min !== '' && is_numeric($this->diam1Min)) {
-            $query->where('objects.diam1', '>=', (float) $this->diam1Min);
+            $query->where('objects.diam1', '>=', (float) $this->diam1Min * 60);
         }
         if ($this->diam1Max !== '' && is_numeric($this->diam1Max)) {
-            $query->where('objects.diam1', '<=', (float) $this->diam1Max);
+            $query->where('objects.diam1', '<=', (float) $this->diam1Max * 60);
         }
         if ($this->diam2Min !== '' && is_numeric($this->diam2Min)) {
-            $query->where('objects.diam2', '>=', (float) $this->diam2Min);
+            $query->where('objects.diam2', '>=', (float) $this->diam2Min * 60);
         }
         if ($this->diam2Max !== '' && is_numeric($this->diam2Max)) {
-            $query->where('objects.diam2', '<=', (float) $this->diam2Max);
+            $query->where('objects.diam2', '<=', (float) $this->diam2Max * 60);
         }
         if (($this->ratioMin !== '' && is_numeric($this->ratioMin)) || ($this->ratioMax !== '' && is_numeric($this->ratioMax))) {
             $query->whereNotNull('objects.diam1')
