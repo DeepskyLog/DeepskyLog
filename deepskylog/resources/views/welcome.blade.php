@@ -190,12 +190,11 @@
             @php
                 $page = request()->get('sketches', 1);
                 $cacheKey = 'welcome_sketches_page_' . $page;
-                $sketches = Cache::remember($cacheKey, 300, function() use ($page) {
+                $sketches = \App\Helpers\HomepagePagination::cap(Cache::remember($cacheKey, 300, function() use ($page) {
                     return ObservationsOld::where('hasDrawing', '1')
                         ->orderBy('id', 'desc')
-                        ->paginate(10, $columns = ['*'], $pageName = 'sketches', page: $page)
-                        ->appends(request()->except('sketches'));
-                });
+                        ->paginate(10, $columns = ['*'], $pageName = 'sketches', page: $page);
+                }));
 
                 $observerIds = $sketches->pluck('observerid')->unique()->values()->all();
                 $observerUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
@@ -263,12 +262,11 @@
             @php
                 $page = request()->get('cometsketches', 1);
                 $cacheKey = 'welcome_comet_sketches_page_' . $page;
-                $sketches = Cache::remember($cacheKey, 300, function() use ($page) {
+                $sketches = \App\Helpers\HomepagePagination::cap(Cache::remember($cacheKey, 300, function() use ($page) {
                     return CometObservationsOld::where('hasDrawing', '1')
                         ->orderBy('id', 'desc')
-                        ->paginate(10, $columns = ['*'], $pageName = 'cometsketches', page: $page)
-                        ->appends(request()->except('cometsketches'));
-                });
+                        ->paginate(10, $columns = ['*'], $pageName = 'cometsketches', page: $page);
+                }));
 
                 $observerIds = $sketches->pluck('observerid')->unique()->values()->all();
                 $observerUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
@@ -313,11 +311,10 @@
             @php
                 $page = request()->get('deepsky', 1);
                 $cacheKey = 'welcome_deepsky_page_' . $page;
-                $observations = Cache::remember($cacheKey, 300, function() use ($page) {
+                $observations = \App\Helpers\HomepagePagination::cap(Cache::remember($cacheKey, 300, function() use ($page) {
                     return ObservationsOld::orderBy('id', 'desc')
-                        ->paginate(10, $columns = ['*'], pageName: 'deepsky', page: $page)
-                        ->appends(request()->except('deepsky'));
-                });
+                        ->deferredPaginate(10, pageName: 'deepsky', page: (int) $page);
+                }));
                 
                 // Preload all related data to avoid N+1 queries in observation-deepsky component
                 $observerIds = $observations->pluck('observerid')->unique()->filter()->all();
@@ -378,11 +375,10 @@
             @php
                 $page = request()->get('comets', 1);
                 $cacheKey = 'welcome_comets_page_' . $page;
-                $observations = Cache::remember($cacheKey, 300, function() use ($page) {
+                $observations = \App\Helpers\HomepagePagination::cap(Cache::remember($cacheKey, 300, function() use ($page) {
                     return CometObservationsOld::orderBy('id', 'desc')
-                        ->paginate(10, $columns = ['*'], pageName: 'comets', page: $page)
-                        ->appends(request()->except('comets'));
-                });
+                        ->deferredPaginate(10, pageName: 'comets', page: (int) $page);
+                }));
                 
                 // Preload all related data to avoid N+1 queries in observation-comet component
                 $observerIds = $observations->pluck('observerid')->unique()->filter()->all();

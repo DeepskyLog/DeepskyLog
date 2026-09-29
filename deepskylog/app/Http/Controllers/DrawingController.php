@@ -18,7 +18,7 @@ class DrawingController extends Controller
      */
     public function index()
     {
-        $sketches = ObservationsOld::where('hasDrawing', 1)->orderBy('id', 'desc')->paginate(20);
+        $sketches = ObservationsOld::where('hasDrawing', 1)->orderBy('id', 'desc')->deferredPaginate(20);
 
         // Preload users to avoid N+1 queries in the view
         $observerIds = $sketches->pluck('observerid')->unique()->all();

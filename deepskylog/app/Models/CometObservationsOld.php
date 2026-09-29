@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use App\Traits\ClearsResponseCache;
+use App\Traits\DeferredPagination;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CometObservationsOld extends Model
 {
-    use ClearsResponseCache;
+    use ClearsResponseCache, DeferredPagination;
 
     protected $connection = 'mysqlOld';
 

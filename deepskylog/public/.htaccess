@@ -5,6 +5,15 @@
 
     RewriteEngine On
 
+    # Homepage crawler trap: the homepage paginators never link with more than
+    # one page parameter, or past page 10 (see App\Helpers\HomepagePagination),
+    # so reject those URLs before they reach PHP. THE_REQUEST is used because
+    # every URL has become index.php by the time the rules are re-run.
+    RewriteCond %{THE_REQUEST} ^[A-Z]+\s/(index\.php|dashboard)?(\?\S*)?\s
+    RewriteCond %{QUERY_STRING} (^|&)(sessions|sketches|cometsketches|deepsky|comets)=(?!(?:[1-9]|10)(?:&|$)) [NC,OR]
+    RewriteCond %{QUERY_STRING} (^|&)(sessions|sketches|cometsketches|deepsky|comets)=[^&]*&(.*&)?(sessions|sketches|cometsketches|deepsky|comets)= [NC]
+    RewriteRule ^ - [R=404,L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -18,4 +27,17 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+    # Block meta-externalagent
+    RewriteCond %{HTTP_USER_AGENT} meta-externalagent [NC]
+    RewriteRule .* - [F,L]
+
+    # Block FacebookBot
+    RewriteCond %{HTTP_USER_AGENT} FacebookBot [NC]
+    RewriteRule .* - [F,L]
+
+    # Block Meta-ExternalFetcher
+    RewriteCond %{HTTP_USER_AGENT} Meta-ExternalFetcher [NC]
+    RewriteRule .* - [F,L]
+
 </IfModule>

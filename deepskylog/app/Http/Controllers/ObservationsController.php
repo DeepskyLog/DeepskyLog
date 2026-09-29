@@ -23,7 +23,7 @@ class ObservationsController extends Controller
     public function index()
     {
         // Default observations page shows deepsky observations (mirrors /drawings behavior)
-        $deepsky = ObservationsOld::orderBy('id', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+        $deepsky = ObservationsOld::orderBy('id', 'desc')->deferredPaginate(20, 'deepsky')->appends(request()->query());
 
         // Preload related data to avoid N+1 queries
         $preloadedData = $this->preloadDeepskyData($deepsky);
@@ -136,7 +136,7 @@ class ObservationsController extends Controller
      */
     public function cometIndex()
     {
-        $comet = CometObservationsOld::orderBy('id', 'desc')->paginate(20, ['*'], 'comet')->appends(request()->query());
+        $comet = CometObservationsOld::orderBy('id', 'desc')->deferredPaginate(20, 'comet')->appends(request()->query());
 
         // Preload related data to avoid N+1 queries
         $preloadedData = $this->preloadCometData($comet);
