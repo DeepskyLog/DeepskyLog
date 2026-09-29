@@ -121,9 +121,10 @@ class Message extends Model
      */
     public static function getNumberOfUnreadMails($id): int
     {
+        // Broadcasts count for everybody except the administrator who sent them.
         $allMails = self::where(function ($q) use ($id) {
             $q->where('receiver', $id)
-                ->orWhere('receiver', 'all');
+                ->orWhere(fn ($q) => $q->where('receiver', 'all')->where('sender', '<>', $id));
         })->pluck('id');
 
         $deletedMails = MessageDeleted::where('receiver', $id)->pluck('id');

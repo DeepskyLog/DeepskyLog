@@ -77,7 +77,6 @@ class BuildSessionCopies implements ShouldQueue
                 $copy = ObservationSession::create([
                     'name' => $session->name,
                     'observerid' => $p,
-                    'slug' => $session->slug,
                     'locationid' => $session->locationid,
                     'begindate' => $session->begindate,
                     'enddate' => $session->enddate,

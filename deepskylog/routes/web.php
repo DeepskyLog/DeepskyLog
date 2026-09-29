@@ -642,8 +642,6 @@ Route::get('/object/{slug}/nearby-apd.apd', [App\Http\Controllers\NearbyExportCo
 // Create session (authenticated)
 Route::get('/sessions/create', [App\Http\Controllers\SessionController::class, 'create'])
     ->name('session.create')->middleware(['auth', 'doNotCacheResponse']);
-Route::post('/sessions', [App\Http\Controllers\SessionController::class, 'store'])
-    ->name('session.store')->middleware(['auth', 'doNotCacheResponse']);
 
 // My sessions (authenticated)
 // Note: /my-sessions removed in favor of /sessions/{user} - use route('session.user', [Auth::user()->slug]) when needed
@@ -704,7 +702,7 @@ Route::get('/messages/{id}', [App\Http\Controllers\MessagesController::class, 's
     ->middleware(['auth', 'doNotCacheResponse']);
 
 // Admin broadcast
-Route::post('/messages/broadcast', [App\Http\Controllers\MessagesController::class, 'broadcast'])->name('messages.broadcast')->middleware('can:add_sketch,App\\Models\\User');
+Route::post('/messages/broadcast', [App\Http\Controllers\MessagesController::class, 'broadcast'])->name('messages.broadcast')->middleware('can:broadcast,App\\Models\\User');
 
 // Mark all messages as read
 Route::post('/messages/mark-all-read', [App\Http\Controllers\MessagesController::class, 'markAllRead'])

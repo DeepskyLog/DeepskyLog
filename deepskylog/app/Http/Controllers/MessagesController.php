@@ -339,17 +339,20 @@ class MessagesController extends Controller
         }
 
         // Send email notifications to users who have enabled mail notifications.
-        try {
-            $usersWithMail = User::where('sendMail', true)->pluck('email', 'username');
-            foreach ($usersWithMail as $username => $email) {
-                // avoid sending to empty emails
-                if (empty($email)) {
-                    continue;
-                }
-                Mail::to($email)->send(new MessageReceived($senderName, $request->subject, $safeMessage, User::where('username', $username)->value('name')));
+        // One failing address must not keep the others from getting the mail.
+        $usersWithMail = User::where('sendMail', true)
+            ->whereNotNull('email')
+            ->where('email', '<>', '')
+            ->get(['username', 'email', 'name']);
+        foreach ($usersWithMail as $recipient) {
+            try {
+                Mail::to($recipient->email)->send(new MessageReceived($senderName, $request->subject, $safeMessage, $recipient->name));
+            } catch (\Throwable $e) {
+                logger()->error('Failed to send broadcast email notification', [
+                    'username' => $recipient->username,
+                    'error' => $e->getMessage(),
+                ]);
             }
-        } catch (\Throwable $e) {
-            logger()->error('Failed to send broadcast email notifications: '.$e->getMessage());
         }
 
         return redirect()->route('messages.index')->with('status', __('Broadcast sent'));

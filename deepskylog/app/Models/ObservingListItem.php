@@ -19,11 +19,26 @@ class ObservingListItem extends Model
         'source_mode',
         'source_observation_id',
         'added_by_user_id',
+        'sort_order',
     ];
 
     protected $casts = [
         'source_mode' => 'string',
+        'sort_order' => 'integer',
     ];
+
+    /**
+     * New items go to the end of their list, so every page and export shows
+     * the list in the order the objects were added.
+     */
+    protected static function booted(): void
+    {
+        static::creating(function (ObservingListItem $item) {
+            if (empty($item->sort_order) && $item->observing_list_id) {
+                $item->sort_order = (int) static::where('observing_list_id', $item->observing_list_id)->max('sort_order') + 1;
+            }
+        });
+    }
 
     /**
      * Get the observing list this item belongs to.

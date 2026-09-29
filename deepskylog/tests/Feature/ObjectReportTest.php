@@ -224,7 +224,8 @@ it('queues the report with the layout as it is in the editor', function () {
 
     Queue::assertPushed(GenerateObjectReportPdf::class, function (GenerateObjectReportPdf $job) use ($owner, $list) {
         return $job->userId === $owner->id
-            && $job->parameters['objects'] === ['M 31', 'M 32']
+            // In the order of the list, not by name.
+            && $job->parameters['objects'] === ['M 32', 'M 31']
             && $job->parameters['layout']['fields']['altname']['width'] == 80
             && $job->parameters['sort'] === true
             && $job->parameters['title'] === 'My report'

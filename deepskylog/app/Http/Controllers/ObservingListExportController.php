@@ -12,9 +12,10 @@ class ObservingListExportController extends Controller
 {
     public function namesPdf(Request $request, ObservingList $list)
     {
-        try {
-            $this->authorize('view', $list);
+        // Outside the try: an unauthorized user must get a 403, not "Failed to generate".
+        $this->authorize('view', $list);
 
+        try {
             [, $rows] = $this->resolveRows($list);
 
             $names = $rows->pluck('display_name')->filter()->values();
@@ -36,9 +37,9 @@ class ObservingListExportController extends Controller
 
     public function tablePdf(Request $request, ObservingList $list)
     {
-        try {
-            $this->authorize('view', $list);
+        $this->authorize('view', $list);
 
+        try {
             [$comp, $rows] = $this->resolveRows($list);
 
             $data = $rows->map(function ($row) use ($comp) {
@@ -79,9 +80,9 @@ class ObservingListExportController extends Controller
 
     public function argoNavis(Request $request, ObservingList $list)
     {
-        try {
-            $this->authorize('view', $list);
+        $this->authorize('view', $list);
 
+        try {
             [, $rows] = $this->resolveRows($list);
 
             $typeMap = [
@@ -174,9 +175,9 @@ class ObservingListExportController extends Controller
 
     public function skylist(Request $request, ObservingList $list)
     {
-        try {
-            $this->authorize('view', $list);
+        $this->authorize('view', $list);
 
+        try {
             [, $rows] = $this->resolveRows($list);
 
             $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
@@ -226,9 +227,9 @@ class ObservingListExportController extends Controller
 
     public function stxt(Request $request, ObservingList $list)
     {
-        try {
-            $this->authorize('view', $list);
+        $this->authorize('view', $list);
 
+        try {
             [, $rows] = $this->resolveRows($list);
 
             $names = $rows->pluck('display_name')->filter()->values();
@@ -246,9 +247,9 @@ class ObservingListExportController extends Controller
 
     public function apd(Request $request, ObservingList $list)
     {
-        try {
-            $this->authorize('view', $list);
+        $this->authorize('view', $list);
 
+        try {
             [, $rows] = $this->resolveRows($list);
 
             $tmp = tempnam(sys_get_temp_dir(), 'dsl_observing_list_apd_');

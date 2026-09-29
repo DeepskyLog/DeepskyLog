@@ -523,7 +523,7 @@ class SessionController extends Controller
             $translated = $rawComments;
             if ($shouldTranslate && $lang) {
                 $cacheKey = 'session_preview:' . $session->id . ':' . $lang;
-                $translated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawComments, $lang) {
+                $translated = Cache::remember($cacheKey, now()->addDays(30), function () use ($rawComments, $lang) {
                     try {
                         $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
                         $t = $tr->translate($rawComments);
@@ -674,7 +674,7 @@ class SessionController extends Controller
             $translated = $rawComments;
             if ($shouldTranslate && $lang) {
                 $cacheKey = 'session_preview:' . $session->id . ':' . $lang;
-                $translated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawComments, $lang) {
+                $translated = Cache::remember($cacheKey, now()->addDays(30), function () use ($rawComments, $lang) {
                     try {
                         $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
                         $t = $tr->translate($rawComments);
@@ -767,18 +767,20 @@ class SessionController extends Controller
 
         // Only show inactive (draft) sessions to the page owner. Do not allow administrator override here.
         if ($ownerUsername && $viewerIsOwner) {
+            // The first 10 drafts, or all of them after "Show more" (?show_drafts=1).
+            $showAllDrafts = $request->boolean('show_drafts');
             $allDrafts = ObservationSession::where('observerid', $ownerUsername)
                 ->where('active', 0)
                 ->with('observer')
                 ->orderByDesc('id')
-                ->limit(11)
+                ->when(!$showAllDrafts, fn ($query) => $query->limit(11))
                 ->get();
 
-            if ($allDrafts->count() > 10) {
+            if (!$showAllDrafts && $allDrafts->count() > 10) {
                 $inactiveMore = true;
             }
 
-            $inactiveSessions = $allDrafts->slice(0, 10);
+            $inactiveSessions = $showAllDrafts ? $allDrafts : $allDrafts->slice(0, 10);
 
             // Attach display names of other observers for each draft
             $inactiveSessions = $inactiveSessions->map(function ($s) {
@@ -805,135 +807,19 @@ class SessionController extends Controller
     /**
      * Show form to create a new observation session.
      */
-    public function create()
+    public function create(Request $request)
     {
-        // Only authenticated users can create sessions (route is protected by middleware)
-        $users = User::orderBy('name')->get();
-        $locations = Location::orderBy('name')->get();
-
-        return $this->noCacheResponse(response()->view('session.create', compact('users', 'locations')));
-    }
-
-    /**
-     * Store a newly created observation session.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:200',
-            'observer' => 'required|string|exists:users,username',
-            'locationid' => 'required|integer|exists:locations,id',
-            'begindate' => 'required|date',
-            'enddate' => 'required|date',
-            'weather' => 'nullable|string',
-            'equipment' => 'nullable|string',
-            'comments' => 'nullable|string',
-            'active' => 'sometimes|boolean',
-        ]);
-
-        $session = new ObservationSession;
-        $session->name = $validated['name'];
-        $session->observerid = $validated['observer'];
-        $session->locationid = $validated['locationid'] ?? null;
-        // Debug: log incoming raw date values
-        try {
-            \Illuminate\Support\Facades\Log::info('SessionController.store raw dates', ['begindate_raw' => $request->input('begindate'), 'enddate_raw' => $request->input('enddate')]);
-        } catch (\Throwable $e) {
-            // ignore
+        // ?adapt_from={id} opens an existing session in the form (see adapt()),
+        // which saves over it, so it needs the same check as adapt().
+        $session = null;
+        if ($request->filled('adapt_from')) {
+            $session = ObservationSession::findOrFail($request->query('adapt_from'));
+            if (!$session->canBeEditedBy($request->user())) {
+                abort(403);
+            }
         }
 
-        // Normalize date-only inputs to literal datetimes (no timezone conversion)
-        if (!empty($validated['begindate'])) {
-            try {
-                $raw = (string) $validated['begindate'];
-                if (preg_match('/^(\d{4}-\d{2}-\d{2})/', $raw, $m)) {
-                    $session->begindate = $m[1] . ' 00:00:00';
-                } else {
-                    $session->begindate = $validated['begindate'];
-                }
-            } catch (\Throwable $e) {
-                $session->begindate = $validated['begindate'];
-            }
-        } else {
-            $session->begindate = null;
-        }
-
-        if (!empty($validated['enddate'])) {
-            try {
-                $raw = (string) $validated['enddate'];
-                if (preg_match('/^(\d{4}-\d{2}-\d{2})/', $raw, $m)) {
-                    $session->enddate = $m[1] . ' 23:59:59';
-                } else {
-                    $session->enddate = $validated['enddate'];
-                }
-            } catch (\Throwable $e) {
-                $session->enddate = $validated['enddate'];
-            }
-        } else {
-            $session->enddate = null;
-        }
-
-        // Validate that enddate is not before begindate
-        try {
-            if (!empty($session->begindate) && !empty($session->enddate)) {
-                $begin = \Carbon\Carbon::parse($session->begindate);
-                $end = \Carbon\Carbon::parse($session->enddate);
-                if ($end->lt($begin)) {
-                    return redirect()->back()->withInput()->withErrors(['enddate' => __('The end date must be the same as or after the begin date.')]);
-                }
-            }
-        } catch (\Throwable $e) {
-            // If parsing fails, allow the save to proceed and let DB constraints handle it if necessary
-        }
-        // weather and equipment are NOT NULL with an empty-string default;
-        // only comments is nullable.
-        $session->weather = $validated['weather'] ?? '';
-        $session->equipment = $validated['equipment'] ?? '';
-        $session->comments = $validated['comments'] ?? null;
-        $session->language = ObservationSession::languageOf(Auth::user());
-        $session->active = isset($validated['active']) ? (int) $validated['active'] : 1;
-
-        $session->save();
-
-        // After saving the primary session, dispatch job to build per-user copies and sessionObservations
-        try {
-            $otherObservers = $request->input('otherObservers');
-            $otherArray = [];
-            if (!empty($otherObservers)) {
-                if (is_array($otherObservers)) {
-                    $otherArray = $otherObservers;
-                } else {
-                    $otherArray = array_filter(array_map('trim', explode(',', $otherObservers)));
-                }
-            }
-
-            $participants = array_values(array_unique(array_filter(array_merge([$session->observerid], $otherArray))));
-            \App\Jobs\BuildSessionCopies::dispatch($session->id, $participants);
-
-            // Dispatch invitation messages asynchronously
-            try {
-                $sender = auth()->check() ? auth()->user()->username : ($session->observerid ?? 'admin');
-                $creator = auth()->check() ? auth()->user()->username : null;
-                $invitees = $participants;
-                if (!empty($creator)) {
-                    $invitees = array_values(array_filter($participants, function ($u) use ($creator) {
-                        return $u !== $creator;
-                    }));
-                }
-
-                if (!empty($invitees)) {
-                    \App\Jobs\SendSessionInvitations::dispatch($session->id, $invitees, $sender);
-                }
-            } catch (\Throwable $e) {
-                report($e);
-            }
-        } catch (\Throwable $e) {
-            report($e);
-        }
-        // Redirect to the newly created session page. Find the user by username to get the slug for URL.
-        $user = User::where('username', $session->observerid)->first();
-
-        return redirect()->route('session.show', [$user ? $user->slug : $session->observerid, $session->slug ?? $session->id]);
+        return $this->noCacheResponse(response()->view('session.create', compact('session')));
     }
 
     /**
@@ -944,9 +830,7 @@ class SessionController extends Controller
     {
         $session = ObservationSession::findOrFail($sessionId);
 
-        // Allow owner or administrators (when feature flag enabled) to adapt the session
-        $allowAdmin = config('sessions.allow_admin_override', false);
-        if (!auth()->check() || (auth()->user()->username !== $session->observerid && !($allowAdmin && method_exists(auth()->user(), 'hasAdministratorPrivileges') && auth()->user()->hasAdministratorPrivileges()))) {
+        if (!$session->canBeEditedBy(auth()->user())) {
             abort(403);
         }
 
@@ -961,9 +845,7 @@ class SessionController extends Controller
     {
         $session = ObservationSession::findOrFail($sessionId);
 
-        // Allow owner or administrators (when feature flag enabled) to delete the session
-        $allowAdmin = config('sessions.allow_admin_override', false);
-        if (!auth()->check() || (auth()->user()->username !== $session->observerid && !($allowAdmin && method_exists(auth()->user(), 'hasAdministratorPrivileges') && auth()->user()->hasAdministratorPrivileges()))) {
+        if (!$session->canBeEditedBy(auth()->user())) {
             abort(403);
         }
 
@@ -1141,7 +1023,7 @@ class SessionController extends Controller
             $translated = $rawComments;
             if ($shouldTranslate && $lang) {
                 $cacheKey = 'session_preview:' . $session->id . ':' . $lang;
-                $translated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawComments, $lang) {
+                $translated = Cache::remember($cacheKey, now()->addDays(30), function () use ($rawComments, $lang) {
                     try {
                         $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
                         $t = $tr->translate($rawComments);

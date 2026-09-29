@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ActiveObservingListService;
 use App\Traits\ClearsResponseCache;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,6 +28,20 @@ class ObservingList extends Model
         'comments_count' => 'integer',
         'likes_count' => 'integer',
     ];
+
+    protected static function booted(): void
+    {
+        // A private list is only for its owner: nobody else stays subscribed
+        // to it or keeps it as active list.
+        static::updated(function (ObservingList $list) {
+            if ($list->wasChanged('public') && !$list->public) {
+                $list->subscriptions()->delete();
+                app(ActiveObservingListService::class)->clearForOthers($list);
+            }
+        });
+
+        static::deleting(fn (ObservingList $list) => app(ActiveObservingListService::class)->clearForOthers($list, true));
+    }
 
     /**
      * Return the sluggable configuration for this model.

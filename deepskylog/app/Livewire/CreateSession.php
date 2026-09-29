@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Services\SessionObservationLinker;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -48,6 +47,8 @@ class CreateSession extends Component
     public function mount($session = null)
     {
         if ($session) {
+            abort_unless($session->canBeEditedBy(Auth::user()), 403);
+
             $this->session = $session;
             // Decode any stored HTML entities so the edit form shows human-readable characters
             $this->name = ! empty($session->name) ? html_entity_decode($session->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') : $session->name;
@@ -162,6 +163,15 @@ class CreateSession extends Component
             // ignore logging failures
         }
 
+        // The observer is not in the form: a session stays with its observer,
+        // and a new one belongs to whoever creates it.
+        if ($this->session) {
+            abort_unless($this->session->canBeEditedBy(Auth::user()), 403);
+            $this->observer = $this->session->observerid;
+        } else {
+            $this->observer = Auth::user()->username;
+        }
+
         $data = $this->validate([
             'name' => 'required|min:3|max:200',
             'observer' => 'nullable|exists:users,username',
@@ -236,17 +246,7 @@ class CreateSession extends Component
                 'active' => $activeToSave,
             ]);
 
-            // Bust translation cache so stale cached values (e.g. from when fields were empty)
-            // are not served after the session content is updated.
-            foreach (Cache::get('laravel_locales', ['en', 'nl', 'fr', 'de', 'es']) as $locale) {
-                Cache::forget('session_weather:' . $this->session->id . ':' . $locale);
-                Cache::forget('session_equipment:' . $this->session->id . ':' . $locale);
-                Cache::forget('session_comments:' . $this->session->id . ':' . $locale);
-            }
-            // Always clear 'en' explicitly as a safeguard
-            Cache::forget('session_weather:' . $this->session->id . ':en');
-            Cache::forget('session_equipment:' . $this->session->id . ':en');
-            Cache::forget('session_comments:' . $this->session->id . ':en');
+            // The translation caches are cleared by ObservationSession::saved.
 
             // Keep component state in sync
             $this->session->active = $activeToSave;

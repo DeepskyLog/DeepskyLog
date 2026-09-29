@@ -102,18 +102,6 @@ Code review of the whole application, without the security aspects. Paths are re
 
 ### Low
 
-Sessions, lists, messages
-- [ ] `destroyComment` doesn't check that the comment belongs to the list in the URL (`ObservingListController.php:956-965`).
-- [ ] `sort_order` of list items is never set (not fillable), so ordering differs between pages; object sets/reports sort by name and ignore it (`ObjectSetSourceService.php:90-92`).
-- [ ] Session translation cache TTL is `60*24*30` seconds (12 h) (`SessionController.php:547,698,1159`); `session_preview:*` isn't cleared on edit; ids are `max(id)+1`, so a new session can inherit a deleted one's cache and photo, and (plausible) race with the queue worker.
-- [ ] Custom per-observer session slug code never runs (Sluggable runs first); slugs are made from names with HTML entities (`ObservationSession.php:70-80`).
-- [ ] "Show more" drafts link adds `?show_drafts=1`, which nothing reads (`session/user-sessions.blade.php:70`).
-- [ ] `SessionController::store` (unused by the UI) differs from `CreateSession`; `/sessions/create?adapt_from={id}` loads any session without the ownership check of `adapt()`.
-- [ ] Broadcast route allows Database Experts but only admins can broadcast; `broadcast()` sends mails in one try, so one failure stops the rest (`MessagesController.php:335-346`).
-- [ ] Unread counter includes the user's own broadcasts (`Message::getNumberOfUnreadMails`).
-- [ ] `ObservingListExportController` catches the `AuthorizationException`, so unauthorized users get "Failed to generate PDF" instead of 403.
-- [ ] A list stays active after unsubscribing or after the owner makes it private.
-
 Equipment, users, statistics
 - [ ] Filter Wratten/Schott validated `max:25`, columns are 5 characters (`CreateFilter.php:94-95`).
 - [ ] Eyepiece `apparentFOV` validated nullable, column NOT NULL (`CreateEyepiece.php:181`).

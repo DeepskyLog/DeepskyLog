@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Traits\ClearsResponseCache;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class ObservationSession extends Model
@@ -14,10 +16,6 @@ class ObservationSession extends Model
     protected $table = 'observation_sessions';
 
     public $timestamps = false;
-
-    // Legacy table uses manual ids (not auto-increment). Ensure Eloquent doesn't
-    // expect DB to generate ids and assign a new legacy id when creating.
-    public $incrementing = false;
 
     protected $keyType = 'int';
 
@@ -58,36 +56,66 @@ class ObservationSession extends Model
         return [
             'slug' => [
                 'source' => 'name',
+                // Names are stored with HTML entities ("M31 &amp; M32").
+                'method' => fn (string $string, string $separator) => Str::slug(
+                    html_entity_decode($string, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                    $separator
+                ),
             ],
         ];
     }
 
-    // Ensure slug uniqueness scoped to observerid
+    /**
+     * Sessions are addressed as /session/{user}/{slug}, so a slug only has to
+     * be unique among the sessions of one observer.
+     */
+    public function scopeWithUniqueSlugConstraints(Builder $query, Model $model, string $attribute, array $config, string $slug): Builder
+    {
+        return $query->where('observerid', $model->observerid);
+    }
+
     public static function booted()
     {
-        static::creating(function ($model) {
-            // Ensure a legacy numeric id exists. Use max(id)+1 as the next id.
-            if (empty($model->id)) {
-                try {
-                    $max = self::max('id');
-                    $model->id = $max ? ((int) $max + 1) : 1;
-                } catch (\Throwable $e) {
-                    // In rare cases (e.g., missing table) leave id empty and let DB report.
-                }
-            }
+        // The id is assigned by the database. The table is AUTO_INCREMENT, so
+        // the id of a deleted session is never given to a new one (which would
+        // then show the deleted session's photo and cached translations).
+        static::saved(fn (ObservationSession $session) => $session->forgetCachedTranslations());
+        static::deleted(fn (ObservationSession $session) => $session->forgetCachedTranslations());
+    }
 
-            // Ensure slug uniqueness scoped to observerid when name present
-            if (empty($model->slug) && ! empty($model->name)) {
-                $base = Str::slug($model->name);
-                $slug = $base;
-                $i = 2;
-                while (self::where('slug', $slug)->where('observerid', $model->observerid)->exists()) {
-                    $slug = $base.'-'.$i;
-                    $i++;
-                }
-                $model->slug = $slug;
+    /**
+     * The owner may edit, adapt and delete a session; administrators only
+     * when sessions.allow_admin_override is set.
+     */
+    public function canBeEditedBy(?User $user): bool
+    {
+        if ($user === null) {
+            return false;
+        }
+
+        if ($user->username === $this->observerid) {
+            return true;
+        }
+
+        return config('sessions.allow_admin_override', false) && $user->hasAdministratorPrivileges();
+    }
+
+    /**
+     * Forget the cached translations of the weather, equipment and comments
+     * and of the preview text on the session overviews.
+     */
+    public function forgetCachedTranslations(): void
+    {
+        $locales = array_unique(array_merge(
+            ['en', 'nl', 'fr', 'de', 'es', 'sv'],
+            (array) Cache::get('laravel_locales', [])
+        ));
+
+        foreach ($locales as $locale) {
+            foreach (['session_weather', 'session_equipment', 'session_comments', 'session_preview'] as $prefix) {
+                Cache::forget($prefix . ':' . $this->id . ':' . $locale);
             }
-        });
+        }
     }
 
     /**

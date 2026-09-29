@@ -1,14 +1,13 @@
 <?php
 
-use App\Http\Controllers\SessionController;
 use App\Jobs\SendSessionInvitations;
+use App\Livewire\CreateSession;
 use App\Models\Location;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Bus;
+use Livewire\Livewire;
 
-it('does not include the creator when dispatching session invitations via controller store', function () {
+it('does not include the creator when dispatching session invitations when creating a session', function () {
     Bus::fake();
 
     $creator = User::factory()->create(['username' => 'creatoruser']);
@@ -31,21 +30,16 @@ it('does not include the creator when dispatching session invitations via contro
         'slug' => 'test-site',
     ]);
 
-    Auth::login($creator);
+    $this->actingAs($creator);
 
-    // store() validates the request body, so this has to be a real POST --
-    // Laravel reads a GET request's input from the query string instead.
-    $request = Request::create('/session', 'POST', [
-        'name' => 'Test Session',
-        'observer' => $creator->username,
-        'locationid' => $location->id,
-        'begindate' => '2026-01-01',
-        'enddate' => '2026-01-02',
-        'otherObservers' => $invitee->username,
-        'active' => 1,
-    ]);
-
-    (new SessionController)->store($request);
+    Livewire::test(CreateSession::class)
+        ->set('name', 'Test Session')
+        ->set('locationid', $location->id)
+        ->set('begindate', '2026-01-01')
+        ->set('enddate', '2026-01-02')
+        ->set('otherObservers', [$invitee->username])
+        ->call('save')
+        ->assertHasNoErrors();
 
     Bus::assertDispatched(SendSessionInvitations::class, function ($job) use ($creator, $invitee) {
         return ! in_array($creator->username, $job->recipients, true)

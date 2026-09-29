@@ -87,8 +87,10 @@ class ObjectSetSourceService
             throw new AuthorizationException();
         }
 
-        $names = $list->items()->pluck('object_name')
-            ->sort(fn ($a, $b) => strnatcasecmp((string) $a, (string) $b))
+        $names = $list->items()
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->pluck('object_name')
             ->values();
 
         return [

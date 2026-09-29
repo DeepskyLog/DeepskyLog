@@ -133,7 +133,7 @@ class ObservingListController extends Controller
             throw new AuthorizationException();
         }
 
-        // Logged-in users follow policy rules (owner/subscriber/public).
+        // Logged-in users follow policy rules (owner, or anybody for a public list).
         if ($user && !$user->can('view', $list)) {
             throw new AuthorizationException();
         }
@@ -141,7 +141,8 @@ class ObservingListController extends Controller
         $list->load('owner');
 
         $items = $list->items()
-            ->orderBy('created_at', 'desc')
+            ->orderBy('sort_order')
+            ->orderBy('id')
             ->paginate(50);
 
         $comments = $list->comments()
@@ -323,6 +324,10 @@ class ObservingListController extends Controller
         }
 
         $list->subscribers()->detach($user->id);
+
+        if ($this->activeListService->isActive($user, $list)) {
+            $this->activeListService->clearActiveList($user);
+        }
 
         return redirect()->back()->with('success', __('Unsubscribed from observing list.'));
     }
@@ -987,6 +992,10 @@ class ObservingListController extends Controller
     public function destroyComment(Request $request, ObservingList $list, ObservingListComment $comment): RedirectResponse
     {
         $user = auth()->user();
+
+        if ((int) $comment->observing_list_id !== (int) $list->id) {
+            abort(404);
+        }
 
         if (!$comment->canBeDeletedBy($user)) {
             throw new AuthorizationException();

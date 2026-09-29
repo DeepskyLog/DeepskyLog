@@ -37,4 +37,12 @@ class UserPolicy
     {
         return $user->isAdministrator() || $user->isDatabaseExpert();
     }
+
+    /**
+     * Only administrators may send a message to all observers.
+     */
+    public function broadcast(User $user): bool
+    {
+        return $user->isAdministrator();
+    }
 }
