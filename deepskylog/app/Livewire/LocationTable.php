@@ -193,8 +193,10 @@ final class LocationTable extends PowerGridComponent
     #[On('clickToMakeDefault')]
     public function clickToMakeDefault(int $id): void
     {
-        auth()->user()->forceFill([
-            'stdlocation' => $id,
-        ])->save();
+        if (Location::where('id', $id)->where('user_id', Auth::id())->exists()) {
+            auth()->user()->forceFill([
+                'stdlocation' => $id,
+            ])->save();
+        }
     }
 }

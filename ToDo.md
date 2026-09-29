@@ -102,22 +102,6 @@ Code review of the whole application, without the security aspects. Paths are re
 
 ### Low
 
-Equipment, users, statistics
-- [ ] Filter Wratten/Schott validated `max:25`, columns are 5 characters (`CreateFilter.php:94-95`).
-- [ ] Eyepiece `apparentFOV` validated nullable, column NOT NULL (`CreateEyepiece.php:181`).
-- [ ] New make with an existing name gives a 500 (`XMake::create`, use `firstOrCreate`).
-- [ ] Admin "delete make" has no validation; the eyepiece version resets types to 1 and deletes types instead of moving them (`EyepieceController.php:74-81` and the Filter/Lens/Instrument versions).
-- [x] Object-types pie chart uses the leftover loop variable in `match ($row->type)` (`StatisticsController.php:200`).
-- [ ] Ranks and "different objects" are computed differently on /observers, /statistics and the profile (`ObserverController.php:54,67`, `User::getRank()`).
-- [ ] Sketch of the month text uses `subMonth()` with overflow and `createFromFormat('Y-m-d')` (`SketchOfTheMonthController.php:48`).
-- [ ] `Eyepiece::get_used_instruments()` returns the viewer's default instrument; `get_used_instruments_as_string` (Eyepiece, Location) has no null check.
-- [ ] Equipment/location/set `show`/`edit` use `->first()->id` without a null check (500 instead of 404; `edit` renders the create form).
-- [ ] Equipment slugs are not unique per user (`'unique' => false`).
-- [ ] Lens `factor` allows 0 (division by zero in `Instrument::exit_pupil()`) (`CreateLens.php:77`).
-- [ ] `Instrument::field_of_view()` can show "0° 60'".
-- [ ] `UpdateUserObservingInformation` saves fields one by one, so `EnqueueComputeCRForUser` can run twice; changing `stdlens` doesn't recompute (plausible); eyepieces and lenses have no "Make default" button.
-- [ ] `app/Policies/testPolicy.php` refers to a non-existent `App\Models\test`.
-
 Ephemerides, jobs, commands
 - [ ] `calculateApparentEquatorialCoordinates($date)` fallbacks don't pass `$date->copy()` (harmless with v6.8.3) (`ObjectEphemerides.php:520,528,534`, `AladinPreviewInfo.php:587,595`, `ObjectController.php:1803`).
 - [ ] `metrics:backfill-best-mag --limit` is ignored by `chunk()`, and chunking skips rows because it updates the filtered column (`BackfillBestMagForMetrics.php:48`). Use `chunkById`.

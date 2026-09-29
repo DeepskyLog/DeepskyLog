@@ -124,14 +124,7 @@ class updateAchievementsCommand extends Command
         $users = User::all();
 
         // Precompute top-ten observers once to avoid re-running the heavy aggregation per user
-        $topTenObservers = collect(DB::table('observations')
-            ->select(DB::raw('count(*) as count, observer_username'))
-            ->groupBy('observer_username')
-            ->orderBy('count', 'desc')
-            ->limit(10)
-            ->pluck('observer_username'))
-            ->map(fn($v) => (string) $v)
-            ->toArray();
+        $topTenObservers = User::topTenObserverUsernames();
 
         // Build maps for catalog-level observed/drawing counts
         $catalogRows = DB::table('objectnames')

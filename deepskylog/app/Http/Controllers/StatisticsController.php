@@ -77,7 +77,7 @@ class StatisticsController extends Controller
                     'last_year' => (int) $query->where('observed_on', '>=', now()->subYear())->count(),
                     'drawings' => (int) $query->where('has_drawing', 1)->count(),
                     'drawings_last_year' => (int) $query->where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->count(),
-                    'unique' => (int) $query->distinct()->count('target_name'),
+                    'unique' => Observation::countDifferentObjects($query),
                 };
             }
 

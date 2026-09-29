@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Traits\ClearsResponseCache;
-use Cviebrock\EloquentSluggable\Sluggable;
+use App\Traits\HasUniqueSlugPerUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +13,7 @@ class InstrumentSet extends Model
 {
     use ClearsResponseCache;
     use HasFactory;
-    use Sluggable;
+    use HasUniqueSlugPerUser;
 
     protected $fillable = [
         'user_id', 'name', 'description', 'active', 'picture',
@@ -43,7 +43,7 @@ class InstrumentSet extends Model
         return [
             'slug' => [
                 'source' => 'name',
-                'unique' => false,
+                'unique' => true,
             ],
         ];
     }

@@ -124,8 +124,10 @@ class InstrumentSetTable extends PowerGridComponent
     #[On('clickToMakeDefault')]
     public function clickToMakeDefault(int $id): void
     {
-        auth()->user()->forceFill([
-            'stdinstrumentset' => $id,
-        ])->save();
+        if (InstrumentSet::where('id', $id)->where('user_id', Auth::id())->exists()) {
+            auth()->user()->forceFill([
+                'stdinstrumentset' => $id,
+            ])->save();
+        }
     }
 }

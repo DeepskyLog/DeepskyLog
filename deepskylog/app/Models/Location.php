@@ -5,8 +5,8 @@ namespace App\Models;
 use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
 use App\Traits\ClearsResponseCache;
+use App\Traits\HasUniqueSlugPerUser;
 use Carbon\Carbon;
-use Cviebrock\EloquentSluggable\Sluggable;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Magnitude;
@@ -19,7 +19,7 @@ class Location extends Model
     use ClearsResponseCache;
     use DetachesOnDelete;
     use HasObservationsDates;
-    use Sluggable;
+    use HasUniqueSlugPerUser;
 
     protected $fillable = [
         'user_id',
@@ -80,7 +80,7 @@ class Location extends Model
         return [
             'slug' => [
                 'source' => 'name',
-                'unique' => false,
+                'unique' => true,
             ],
         ];
     }
@@ -110,7 +110,10 @@ class Location extends Model
             if ($instrument == 0) {
                 continue;
             }
-            $inst = Instrument::where('id', $instrument)->first();
+            $inst = Instrument::with('user')->where('id', $instrument)->first();
+            if (! $inst || ! $inst->user) {
+                continue;
+            }
             $to_return .= "<a href='/instrument/" . $inst->user->slug . '/' . $inst->slug . "'>" .
                 $inst->fullName() . '</a>' . ', ';
         }

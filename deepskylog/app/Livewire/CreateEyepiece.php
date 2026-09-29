@@ -143,7 +143,7 @@ class CreateEyepiece extends Component
             $make_name = $this->eyepiece_new_make;
 
             // Create a new make
-            $make = EyepieceMake::create(['name' => $make_name])->id;
+            $make = EyepieceMake::firstOrCreate(['name' => trim($make_name)])->id;
         } else {
             $make = 1;
         }
@@ -158,7 +158,7 @@ class CreateEyepiece extends Component
             $type_name = $this->eyepiece_new_type;
 
             // Create a new type
-            $type = EyepieceType::create(['name' => $type_name, 'eyepiece_makes_id' => $make])->id;
+            $type = EyepieceType::firstOrCreate(['name' => trim($type_name), 'eyepiece_makes_id' => $make])->id;
         } else {
             $type = 1;
         }
@@ -176,7 +176,7 @@ class CreateEyepiece extends Component
         $data = $this->validate([
             'name' => 'required|min:3',
             'focal_length_mm' => 'numeric|min:1',
-            'apparentFOV' => 'numeric|min:1|max:150|nullable',
+            'apparentFOV' => 'required|numeric|min:1|max:150',
             'field_stop_mm' => 'numeric|min:1|max:150|nullable',
             'max_focal_length_mm' => 'numeric|gt:focal_length_mm|nullable',
             'photo' => 'nullable|image',

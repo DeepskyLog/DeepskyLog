@@ -70,45 +70,14 @@ class UpdateUserObservingInformation extends Component
 
         $this->validate();
 
-        if ($this->stdlocation == 0) {
-            auth()->user()->forceFill([
-                'stdlocation' => null,
-            ])->save();
-        } else {
-            auth()->user()->forceFill([
-                'stdlocation' => $this->stdlocation,
-            ])->save();
-        }
-        if ($this->stdtelescope == 0) {
-            auth()->user()->forceFill([
-                'stdtelescope' => null,
-            ])->save();
-        } else {
-            auth()->user()->forceFill([
-                'stdtelescope' => $this->stdtelescope,
-            ])->save();
-        }
-        if ($this->stdinstrumentset == 0) {
-            auth()->user()->forceFill([
-                'stdinstrumentset' => null,
-            ])->save();
-        } else {
-            auth()->user()->forceFill([
-                'stdinstrumentset' => $this->stdinstrumentset,
-            ])->save();
-        }
-        // Persist eyepiece and lens defaults
-        if ($this->stdeyepiece == 0) {
-            auth()->user()->forceFill(['stdeyepiece' => null])->save();
-        } else {
-            auth()->user()->forceFill(['stdeyepiece' => $this->stdeyepiece])->save();
-        }
-        if ($this->stdlens == 0) {
-            auth()->user()->forceFill(['stdlens' => null])->save();
-        } else {
-            auth()->user()->forceFill(['stdlens' => $this->stdlens])->save();
-        }
+        // Saved at once, so that the recompute of the contrast reserve that a
+        // changed default instrument, location or lens queues (User::booted()) runs once.
         auth()->user()->forceFill([
+            'stdlocation' => $this->stdlocation ?: null,
+            'stdtelescope' => $this->stdtelescope ?: null,
+            'stdinstrumentset' => $this->stdinstrumentset ?: null,
+            'stdeyepiece' => $this->stdeyepiece ?: null,
+            'stdlens' => $this->stdlens ?: null,
             'standardAtlasCode' => $this->standardAtlasCode,
             'showInches' => $this->showInches,
         ])->save();

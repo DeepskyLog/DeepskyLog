@@ -666,28 +666,15 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get whether the user is in the top ten of observers based on the count of their observations.
+     * Get whether the user is in the top ten of observers (see getRank()).
      *
      * @return bool Whether the user is in the top ten of observers.
      */
     public function isInTopTenOfObservers(): bool
     {
-        // Get all the count of all observations combined per user
-        $allObservations = DB::table('observations')
-            ->select(DB::raw('count(*) as count, observer_username'))
-            ->groupBy('observer_username')
-            ->orderBy('count', 'desc')
-            ->get();
+        $rank = $this->getRank();
 
-        $userIndex = 0;
-        foreach ($allObservations as $user) {
-            if ($user->observer_username == $this->username) {
-                break;
-            }
-            $userIndex++;
-        }
-
-        return $userIndex < 10;
+        return $rank >= 1 && $rank <= 10;
     }
 
     /**
@@ -755,35 +742,63 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Retrieves the rank of the user based on the count of their observations.
+     * The rank of the user among the observers, by number of observations of
+     * every kind (deep-sky, comets, planets, Moon and Sun), as on /observers: one more than the number of observers with
+     * more observations, so observers with the same number share a rank.
      *
-     * This method calculates the rank of the user among all users based on the count of their observations.
-     * It first retrieves the count of all observations made by each user from the 'observations' table,
-     * groups them by 'observerid', and orders them in descending order of count.
-     *
-     * It then iterates over these grouped observations, incrementing a user index until it finds the current user's username.
-     * The user index at this point represents the rank of the user among all users based on the count of their observations.
-     *
-     * The rank is returned as an integer. Note that the rank is zero-based, so a rank of 0 means the user has the highest count of observations.
-     *
-     * @return int The rank of the user based on the count of their observations.
+     * @return int The rank, or 0 if the user has no observations.
      */
     public function getRank(): int
     {
-        $allObservations = Observation::selectRaw('count(*) as count, observer_user_id')
-            ->groupBy('observer_user_id')
-            ->orderByDesc('count')
-            ->get();
-
-        $userIndex = 0;
-        foreach ($allObservations as $user) {
-            if ($user->observer_user_id == $this->id) {
-                break;
-            }
-            $userIndex++;
+        $own = Observation::where('observer_username', $this->username)->count();
+        if ($own === 0) {
+            return 0;
         }
 
-        return $userIndex + 1;
+        return 1 + DB::query()->fromSub(
+            self::observationCounts()->havingRaw('COUNT(*) > ?', [$own]),
+            'counts'
+        )->count();
+    }
+
+    /**
+     * The number of observers that have a rank (see getRank()).
+     */
+    public static function rankedObserverCount(): int
+    {
+        return DB::query()->fromSub(self::observationCounts(), 'counts')->count();
+    }
+
+    /**
+     * The usernames of the observers with a rank of 10 or better (see getRank()).
+     *
+     * @return array<int, string>
+     */
+    public static function topTenObserverUsernames(): array
+    {
+        $counts = self::observationCounts()
+            ->addSelect(DB::raw('COUNT(*) as observations_count'))
+            ->orderByDesc('observations_count')
+            ->get();
+        $tenth = $counts->get(9)?->observations_count;
+
+        return $counts
+            ->filter(fn($row) => $tenth === null || $row->observations_count >= $tenth)
+            ->pluck('username')
+            ->map(fn($username) => (string) $username)
+            ->values()
+            ->all();
+    }
+
+    /**
+     * The observations grouped per observer, the ranking of /observers.
+     */
+    private static function observationCounts(): \Illuminate\Database\Query\Builder
+    {
+        return DB::table('observations')
+            ->join('users', 'users.username', '=', 'observations.observer_username')
+            ->groupBy('users.id', 'users.username')
+            ->select('users.id', 'users.username');
     }
 
     /**
@@ -963,8 +978,8 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Register model event hooks to react when the user's standard instrument or
-     * standard location changes. We enqueue a background job to recompute
+     * Register model event hooks to react when the user's standard instrument,
+     * location or lens changes. We enqueue a background job to recompute
      * contrast-reserve metrics for the user so the cached per-user metrics stay
      * in sync with profile changes.
      */
@@ -973,16 +988,15 @@ class User extends Authenticatable implements MustVerifyEmail
         static::updated(function (self $user) {
             try {
                 // Field names used in the database: stdtelescope (instrument) and stdlocation
-                $instrumentDirty = $user->wasChanged('stdtelescope');
-                $locationDirty = $user->wasChanged('stdlocation');
-
-                if ($instrumentDirty || $locationDirty) {
+                // The metrics are stored per lens as well, so a new default lens needs them too
+                if ($user->wasChanged(['stdtelescope', 'stdlocation', 'stdlens'])) {
                     $instrId = $user->stdtelescope ?? null;
                     $locId = $user->stdlocation ?? null;
-                    Log::info('User: standard instrument/location changed - enqueuing metrics recompute', ['user_id' => $user->id, 'stdtelescope' => $instrId, 'stdlocation' => $locId]);
+                    $lensId = $user->stdlens ?? null;
+                    Log::info('User: standard instrument/location/lens changed - enqueuing metrics recompute', ['user_id' => $user->id, 'stdtelescope' => $instrId, 'stdlocation' => $locId, 'stdlens' => $lensId]);
 
                     // Enqueue the job so it runs asynchronously (and itself will dispatch per-object jobs)
-                    EnqueueComputeCRForUser::dispatch($user->id, $instrId, $locId);
+                    EnqueueComputeCRForUser::dispatch($user->id, $instrId, $locId, $lensId);
                 }
             } catch (\Throwable $ex) {
                 Log::error('User: failed to enqueue metrics recompute', ['error' => $ex->getMessage(), 'user_id' => $user->id]);

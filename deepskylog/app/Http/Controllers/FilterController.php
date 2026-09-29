@@ -6,6 +6,8 @@ use App\Models\Filter;
 use App\Models\FilterMake;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class FilterController extends Controller
 {
@@ -26,8 +28,8 @@ class FilterController extends Controller
 
     public function show(string $user_slug, string $filter_slug)
     {
-        $user_id = User::where('slug', $user_slug)->first()->id;
-        $filter = Filter::where('slug', $filter_slug)->where('user_id', $user_id)->first();
+        $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
+        $filter = Filter::where('slug', $filter_slug)->where('user_id', $user_id)->firstOrFail();
 
         // Check if there is an image for this filter
         if ($filter->picture != null) {
@@ -44,8 +46,8 @@ class FilterController extends Controller
 
     public function edit(string $user_slug, string $filter_slug)
     {
-        $user_id = User::where('slug', $user_slug)->first()->id;
-        $filter = Filter::where('slug', $filter_slug)->where('user_id', $user_id)->first();
+        $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
+        $filter = Filter::where('slug', $filter_slug)->where('user_id', $user_id)->firstOrFail();
 
         return view(
             'filter.create',
@@ -65,15 +67,27 @@ class FilterController extends Controller
 
     public function storeMake(Request $request)
     {
-        FilterMake::where('id', $request->id)->update(['name' => $request->filter_make]);
+        $data = $request->validate([
+            'id' => 'required|integer|not_in:1|exists:filter_makes,id',
+            'filter_make' => ['required', 'string', 'max:255', Rule::unique('filter_makes', 'name')->ignore($request->id)],
+        ]);
+
+        FilterMake::whereKey($data['id'])->update(['name' => trim($data['filter_make'])]);
 
         return redirect()->route('filter.indexAdmin');
     }
 
     public function destroyMake(Request $request)
     {
-        Filter::where('make_id', $request->id)->update(['make_id' => $request->new_make]);
-        FilterMake::where('id', $request->id)->delete();
+        $data = $request->validate([
+            'id' => 'required|integer|not_in:1|exists:filter_makes,id',
+            'new_make' => 'required|integer|different:id|exists:filter_makes,id',
+        ]);
+
+        DB::transaction(function () use ($data) {
+            Filter::where('make_id', $data['id'])->update(['make_id' => $data['new_make']]);
+            FilterMake::whereKey($data['id'])->delete();
+        });
 
         return redirect()->route('filter.indexAdmin');
     }

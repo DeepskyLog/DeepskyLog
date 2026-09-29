@@ -131,4 +131,14 @@ class LensTable extends PowerGridComponent
         // sets and is cleared as the default of its user.
         Lens::where('id', $id)->where('user_id', Auth::id())->first()?->delete();
     }
+
+    #[On('clickToMakeDefault')]
+    public function clickToMakeDefault(int $id): void
+    {
+        if (Lens::where('id', $id)->where('user_id', Auth::id())->exists()) {
+            auth()->user()->forceFill([
+                'stdlens' => $id,
+            ])->save();
+        }
+    }
 }

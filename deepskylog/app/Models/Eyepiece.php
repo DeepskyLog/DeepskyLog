@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
 use App\Traits\ClearsResponseCache;
-use Cviebrock\EloquentSluggable\Sluggable;
+use App\Traits\HasUniqueSlugPerUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
@@ -15,7 +15,7 @@ class Eyepiece extends Model
     use ClearsResponseCache;
     use DetachesOnDelete;
     use HasObservationsDates;
-    use Sluggable;
+    use HasUniqueSlugPerUser;
 
     protected $fillable = [
         'user_id',
@@ -40,7 +40,7 @@ class Eyepiece extends Model
         return [
             'slug' => [
                 'source' => 'name',
-                'unique' => false,
+                'unique' => true,
             ],
         ];
     }
@@ -130,10 +130,12 @@ class Eyepiece extends Model
                 continue;
             }
 
-            $inst = Instrument::where('id', $instrument)->first();
-            $user_slug = User::where('id', $inst->user_id)->pluck('slug')[0];
+            $inst = Instrument::with('user')->where('id', $instrument)->first();
+            if (! $inst || ! $inst->user) {
+                continue;
+            }
 
-            $to_return .= "<a href='/instrument/" . $user_slug . '/' . $inst->slug . "'>" .
+            $to_return .= "<a href='/instrument/" . $inst->user->slug . '/' . $inst->slug . "'>" .
                 $inst->fullName() . '</a>' . ', ';
         }
 
@@ -149,28 +151,20 @@ class Eyepiece extends Model
             return collect(self::$bulkUsedInstrumentsMap[$this->id]);
         }
 
-        // Fast-path: if the authenticated user has a standard instrument set
-        // or a selected standard instrument, restrict calculations to that
-        // instrument only. This avoids many legacy per-eyepiece queries
-        // against the old `observations` table when the user expects
-        // calculations only for their default instrument.
-        try {
-            $authUser = auth()->user();
-            if ($authUser && !empty($authUser->standardInstrument)) {
-                $inst = $authUser->standardInstrument;
-                if ($inst && isset($inst->id)) {
-                    return collect([$inst->id]);
-                }
-            }
-        } catch (\Throwable $_) {
-            // ignore and fall back to legacy behaviour
-        }
-
-        return Observation::where('eyepiece_id', $this->id)->groupby('instrument_id')->distinct()->pluck('instrument_id');
+        // The instruments this eyepiece was used with, whoever is looking;
+        // remembered for the request, as it is asked for every row of a table.
+        return collect(self::$usedInstrumentsCache[$this->id] ??= Observation::where('eyepiece_id', $this->id)
+            ->whereNotNull('instrument_id')
+            ->distinct()
+            ->pluck('instrument_id')
+            ->all());
     }
 
     // Request-scoped bulk map of eyepiece_id => array of instrument ids.
     protected static array $bulkUsedInstrumentsMap = [];
+
+    // Request-scoped cache of get_used_instruments() per eyepiece id.
+    protected static array $usedInstrumentsCache = [];
 
     // Request-scoped bulk map eyepiece_id => ['date'=>..., 'id'=>...] for first/last observations
     protected static array $bulkFirstObservationMap = [];

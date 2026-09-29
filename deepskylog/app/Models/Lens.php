@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
 use App\Traits\ClearsResponseCache;
-use Cviebrock\EloquentSluggable\Sluggable;
+use App\Traits\HasUniqueSlugPerUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -14,7 +14,7 @@ class Lens extends Model
     use ClearsResponseCache;
     use DetachesOnDelete;
     use HasObservationsDates;
-    use Sluggable;
+    use HasUniqueSlugPerUser;
 
     protected $fillable = [
         'user_id',
@@ -34,7 +34,7 @@ class Lens extends Model
         return [
             'slug' => [
                 'source' => 'name',
-                'unique' => false,
+                'unique' => true,
             ],
         ];
     }

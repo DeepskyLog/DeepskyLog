@@ -6,6 +6,8 @@ use App\Models\Instrument;
 use App\Models\InstrumentMake;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class InstrumentController extends Controller
 {
@@ -26,8 +28,8 @@ class InstrumentController extends Controller
 
     public function show(string $user_slug, string $instrument_slug)
     {
-        $user_id = User::where('slug', $user_slug)->first()->id;
-        $instrument = Instrument::where('slug', $instrument_slug)->where('user_id', $user_id)->first();
+        $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
+        $instrument = Instrument::where('slug', $instrument_slug)->where('user_id', $user_id)->firstOrFail();
 
         // Check if there is an image for this instrument
         if ($instrument->picture != null) {
@@ -44,8 +46,8 @@ class InstrumentController extends Controller
 
     public function edit(string $user_slug, string $instrument_slug)
     {
-        $user_id = User::where('slug', $user_slug)->first()->id;
-        $instrument = Instrument::where('slug', $instrument_slug)->where('user_id', $user_id)->first();
+        $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
+        $instrument = Instrument::where('slug', $instrument_slug)->where('user_id', $user_id)->firstOrFail();
 
         return view(
             'instrument.create',
@@ -65,15 +67,27 @@ class InstrumentController extends Controller
 
     public function storeMake(Request $request)
     {
-        InstrumentMake::where('id', $request->id)->update(['name' => $request->instrument_make]);
+        $data = $request->validate([
+            'id' => 'required|integer|not_in:1|exists:instrument_makes,id',
+            'instrument_make' => ['required', 'string', 'max:255', Rule::unique('instrument_makes', 'name')->ignore($request->id)],
+        ]);
+
+        InstrumentMake::whereKey($data['id'])->update(['name' => trim($data['instrument_make'])]);
 
         return redirect()->route('instrument.indexAdmin');
     }
 
     public function destroyMake(Request $request)
     {
-        Instrument::where('make_id', $request->id)->update(['make_id' => $request->new_make]);
-        InstrumentMake::where('id', $request->id)->delete();
+        $data = $request->validate([
+            'id' => 'required|integer|not_in:1|exists:instrument_makes,id',
+            'new_make' => 'required|integer|different:id|exists:instrument_makes,id',
+        ]);
+
+        DB::transaction(function () use ($data) {
+            Instrument::where('make_id', $data['id'])->update(['make_id' => $data['new_make']]);
+            InstrumentMake::whereKey($data['id'])->delete();
+        });
 
         return redirect()->route('instrument.indexAdmin');
     }

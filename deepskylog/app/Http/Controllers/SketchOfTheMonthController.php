@@ -45,7 +45,7 @@ class SketchOfTheMonthController extends Controller
         $userId = $user->id;
         $observerSegment = $user->slug ?: $observerUsername;
         // Create text for Facebook, X and Instagram
-        $carbon_date = Carbon::createFromFormat('Y-m-d', $request['date'])->subMonth();
+        $carbon_date = Carbon::parse($request['date'])->startOfMonth()->subMonthNoOverflow();
 
         $monthName = $carbon_date->format('F');
         $year = $carbon_date->format('Y');

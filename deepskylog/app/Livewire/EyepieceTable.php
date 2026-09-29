@@ -168,4 +168,14 @@ final class EyepieceTable extends PowerGridComponent
         // sets and is cleared as the default of its user.
         Eyepiece::where('id', $id)->where('user_id', Auth::id())->first()?->delete();
     }
+
+    #[On('clickToMakeDefault')]
+    public function clickToMakeDefault(int $id): void
+    {
+        if (Eyepiece::where('id', $id)->where('user_id', Auth::id())->exists()) {
+            auth()->user()->forceFill([
+                'stdeyepiece' => $id,
+            ])->save();
+        }
+    }
 }

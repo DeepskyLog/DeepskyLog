@@ -6,9 +6,12 @@ use App\Traits\ClearsResponseCache;
 use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Magnitude;
 use App\Traits\DeferredPagination;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -48,6 +51,31 @@ class Observation extends Model
         'sqm',
     ];
 
+    /**
+     * The statistics on an observer's page are cached for six hours
+     * (ComputeObserverStats); forget them when one of their observations is
+     * saved or deleted, so the page shows the change at once. When the
+     * observer of an observation changes, both observers are cleared.
+     */
+    protected static function booted(): void
+    {
+        static::saved(fn (self $observation) => $observation->forgetObserverStats());
+        static::deleted(fn (self $observation) => $observation->forgetObserverStats());
+    }
+
+    public function forgetObserverStats(): void
+    {
+        $userIds = array_filter([$this->observer_user_id, $this->getOriginal('observer_user_id')]);
+        $usernames = array_filter([$this->observer_username, $this->getOriginal('observer_username')]);
+        if ($usernames !== []) {
+            $userIds = array_merge($userIds, User::whereIn('username', $usernames)->pluck('id')->all());
+        }
+
+        foreach (array_unique($userIds) as $userId) {
+            Cache::forget('observer_stats:'.$userId);
+        }
+    }
+
     protected function casts(): array
     {
         return [
@@ -79,6 +107,36 @@ class Observation extends Model
     public const TYPE_DEEPSKY = 'deepsky';
 
     public const TYPE_COMET = 'comet';
+
+    /**
+     * deepsky_observation_details.visibility of an object that was definitely not seen.
+     */
+    public const VISIBILITY_NOT_SEEN = 7;
+
+    /**
+     * The target an observation counts for when counting different objects.
+     */
+    public const DIFFERENT_OBJECT_SQL = "COALESCE(NULLIF(TRIM(observations.target_key), ''), LOWER(TRIM(observations.target_name)))";
+
+    /**
+     * The number of different objects among the observations of the query, the
+     * one definition used on /observers, /statistics and the observer pages:
+     * one per target, not counting observations of objects that were not seen.
+     */
+    public static function countDifferentObjects(EloquentBuilder|QueryBuilder $query): int
+    {
+        $query = ($query instanceof EloquentBuilder ? $query->toBase() : $query)->clone();
+
+        return (int) $query
+            ->whereNotExists(function (QueryBuilder $details) {
+                $details->selectRaw('1')
+                    ->from('deepsky_observation_details')
+                    ->whereColumn('deepsky_observation_details.observation_id', 'observations.id')
+                    ->where('deepsky_observation_details.visibility', self::VISIBILITY_NOT_SEEN);
+            })
+            ->selectRaw('COUNT(DISTINCT '.self::DIFFERENT_OBJECT_SQL.') as aggregate')
+            ->value('aggregate');
+    }
 
     public function scopeDeepsky($query)
     {

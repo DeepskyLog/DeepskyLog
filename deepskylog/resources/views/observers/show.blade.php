@@ -317,18 +317,9 @@
                                     }
                                     // Top-ten observer: show the observer's rank (1-10) when applicable
                                     if (!$count && preg_match('/top\s*ten/i', $raw)) {
-                                        $topTen = collect(\DB::table('observations')
-                                                ->select(\DB::raw('COUNT(*) as cnt, observer_username'))
-                                            ->groupBy('observer_username')
-                                            ->orderByDesc('cnt')
-                                            ->limit(10)
-                                            ->pluck('observer_username'))
-                                            ->map(fn($v) => (string) $v)
-                                            ->values()
-                                            ->all();
-                                        $pos = array_search((string)$user->username, $topTen, true);
-                                        if ($pos !== false) {
-                                            $count = $pos + 1;
+                                        $rank = $user->getRank();
+                                        if ($rank >= 1 && $rank <= 10) {
+                                            $count = $rank;
                                         }
                                     }
                                     $base = trim(preg_replace('/\d+$/', '', $noDrawing));
@@ -578,7 +569,7 @@
 
                         <tr>
                             <td class="pr-8">{{ __('Rank') }}</td>
-                            <td class="px-4">{{ $user->getRank() }} / {{ User::count() }} </td>
+                            <td class="px-4">{{ $user->getRank() ?: '-' }} / {{ User::rankedObserverCount() }} </td>
                             <td class="px-4"></td>
                         </tr>
                     </tbody>

@@ -247,7 +247,7 @@
                                 class="mt-1 block w-full"
                                 wire:model.live="apparentFOV"
                                 step="1"
-                                min="0"
+                                min="1"
                                 max="150"
                                 required
                                 value="{{ old('apparentFOV') }}"

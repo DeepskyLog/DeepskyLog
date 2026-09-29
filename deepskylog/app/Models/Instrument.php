@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
 use App\Traits\ClearsResponseCache;
-use Cviebrock\EloquentSluggable\Sluggable;
+use App\Traits\HasUniqueSlugPerUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
@@ -15,7 +15,7 @@ class Instrument extends Model
     use ClearsResponseCache;
     use DetachesOnDelete;
     use HasObservationsDates;
-    use Sluggable;
+    use HasUniqueSlugPerUser;
 
     protected $fillable = [
         'user_id',
@@ -43,7 +43,7 @@ class Instrument extends Model
         return [
             'slug' => [
                 'source' => 'name',
-                'unique' => false,
+                'unique' => true,
             ],
         ];
     }
@@ -250,44 +250,47 @@ class Instrument extends Model
 
     public function field_of_view(Eyepiece $eyepiece, ?Lens $lens = null): string
     {
-        $focal_length = $this->focal_length_mm;
-        if ($lens) {
-            $focal_length = $this->focal_length_mm * $lens->factor;
-        }
-        if ($eyepiece->field_stop_mm != 0) {
-            $tfov = $eyepiece->field_stop_mm / $focal_length * 57.2958;
-            // Convert $tfov to degrees and minutes and return as a string
-            $degrees = floor($tfov);
-            $minutes = round(($tfov - $degrees) * 60);
-            if ($minutes < 10) {
-                $minutes = '0' . $minutes;
-            }
-            $tfov = $degrees . '° ' . $minutes . "'";
-        } elseif ($eyepiece->apparentFOV > 10) {
-            // Calculate the true field of view
-            $tfov = $eyepiece->apparentFOV / ($focal_length / $eyepiece->focal_length_mm);
-            // Convert $tfov to degrees and minutes and return as a string
-            $degrees = floor($tfov);
-            $minutes = round(($tfov - $degrees) * 60);
-            // Add a 0 to the minutes if it is less than 10
-            if ($minutes < 10) {
-                $minutes = '0' . $minutes;
-            }
-            $tfov = $degrees . '° ' . $minutes . "'";
-        } else {
-            $tfov = __('Unknown');
+        $focal_length = $this->effective_focal_length($lens);
+        if ($focal_length <= 0) {
+            return __('Unknown');
         }
 
-        return $tfov;
+        if ($eyepiece->field_stop_mm > 0) {
+            $tfov = $eyepiece->field_stop_mm / $focal_length * 57.2958;
+        } elseif ($eyepiece->apparentFOV > 10 && $eyepiece->focal_length_mm > 0) {
+            // Calculate the true field of view
+            $tfov = $eyepiece->apparentFOV / ($focal_length / $eyepiece->focal_length_mm);
+        } else {
+            return __('Unknown');
+        }
+
+        // Round to whole minutes first, so that 59.6' gives 1° 00' and not 0° 60'
+        $minutes = (int) round($tfov * 60);
+
+        return sprintf("%d° %02d'", intdiv($minutes, 60), $minutes % 60);
     }
 
     public function exit_pupil(Eyepiece $eyepiece, ?Lens $lens = null): string
     {
-        if ($lens) {
-            return round($this->aperture_mm / ($this->focal_length_mm * $lens->factor / $eyepiece->focal_length_mm), 1) . 'mm';
+        $focal_length = $this->effective_focal_length($lens);
+        if ($focal_length <= 0 || $eyepiece->focal_length_mm <= 0) {
+            return __('Unknown');
         }
 
-        return round($this->aperture_mm / ($this->focal_length_mm / $eyepiece->focal_length_mm), 1) . 'mm';
+        return round($this->aperture_mm / ($focal_length / $eyepiece->focal_length_mm), 1) . 'mm';
+    }
+
+    /**
+     * The focal length with the lens; a lens without a valid factor is ignored.
+     */
+    private function effective_focal_length(?Lens $lens): float
+    {
+        $focal_length = (float) $this->focal_length_mm;
+        if ($lens && $lens->factor > 0) {
+            $focal_length *= $lens->factor;
+        }
+
+        return $focal_length;
     }
 
     /**

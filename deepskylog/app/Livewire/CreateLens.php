@@ -61,7 +61,7 @@ class CreateLens extends Component
             $make_name = $this->lens_new_make;
 
             // Create a new make
-            $make = LensMake::create(['name' => $make_name])->id;
+            $make = LensMake::firstOrCreate(['name' => trim($make_name)])->id;
         } else {
             $make = 1;
         }
@@ -78,7 +78,7 @@ class CreateLens extends Component
 
         $data = $this->validate([
             'name' => 'required|min:3',
-            'factor' => 'required|numeric|min:0',
+            'factor' => 'required|numeric|gt:0',
             'photo' => 'nullable|image',
             'description' => 'nullable|string',
         ]);

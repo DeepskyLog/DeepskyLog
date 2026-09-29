@@ -208,8 +208,10 @@ class InstrumentTable extends PowerGridComponent
     #[On('clickToMakeDefault')]
     public function clickToMakeDefault(int $id): void
     {
-        auth()->user()->forceFill([
-            'stdtelescope' => $id,
-        ])->save();
+        if (Instrument::where('id', $id)->where('user_id', Auth::id())->exists()) {
+            auth()->user()->forceFill([
+                'stdtelescope' => $id,
+            ])->save();
+        }
     }
 }

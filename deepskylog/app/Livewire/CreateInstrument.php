@@ -149,7 +149,7 @@ class CreateInstrument extends Component
             $make_name = $this->instrument_new_make;
 
             // Create a new make
-            $make = InstrumentMake::create(['name' => $make_name])->id;
+            $make = InstrumentMake::firstOrCreate(['name' => trim($make_name)])->id;
         } else {
             $make = 1;
         }

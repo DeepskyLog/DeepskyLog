@@ -19,7 +19,7 @@ class InstrumentSetController extends Controller
 
     public function show(string $user_slug, string $set_slug)
     {
-        $user_id = User::where('slug', $user_slug)->first()->id;
+        $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
         $set = InstrumentSet::with([
             'user',
             'instruments.user',
@@ -27,14 +27,14 @@ class InstrumentSetController extends Controller
             'filters.user',
             'lenses.user',
             'locations.user',
-        ])->where('slug', $set_slug)->where('user_id', $user_id)->first();
+        ])->where('slug', $set_slug)->where('user_id', $user_id)->firstOrFail();
 
         return view('instrumentset.show', ['set' => $set]);
     }
 
     public function edit(string $user_slug, string $set_slug)
     {
-        $user_id = User::where('slug', $user_slug)->first()->id;
+        $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
         $set = InstrumentSet::with([
             'user',
             'instruments.user',
@@ -42,7 +42,7 @@ class InstrumentSetController extends Controller
             'filters.user',
             'lenses.user',
             'locations.user',
-        ])->where('slug', $set_slug)->where('user_id', $user_id)->first();
+        ])->where('slug', $set_slug)->where('user_id', $user_id)->firstOrFail();
 
         return view('instrumentset.create', ['set' => $set, 'update' => true]);
     }

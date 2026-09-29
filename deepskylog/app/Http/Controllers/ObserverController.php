@@ -36,7 +36,6 @@ class ObserverController extends Controller
         $observerRowsQuery = DB::table('observations as observations')
             ->join('users', 'users.username', '=', 'observations.observer_username')
             ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
-            ->where('observations.target_type', 'deepsky')
             ->select([
                 'users.id',
                 'users.name',
@@ -46,11 +45,8 @@ class ObserverController extends Controller
                 DB::raw('SUM(CASE WHEN observations.has_drawing = 1 THEN 1 ELSE 0 END) as drawings_count'),
                 DB::raw("SUM(CASE WHEN observations.observed_on >= '" . $lastYear . "' THEN 1 ELSE 0 END) as observations_last_year"),
                 DB::raw("SUM(CASE WHEN observations.has_drawing = 1 AND observations.observed_on >= '" . $lastYear . "' THEN 1 ELSE 0 END) as drawings_last_year"),
-                DB::raw("COUNT(DISTINCT CASE WHEN details.visibility IS NULL OR details.visibility != 7 THEN COALESCE(NULLIF(TRIM(observations.target_key), ''), LOWER(TRIM(observations.target_name))) END) as different_objects_count"),
+                DB::raw('COUNT(DISTINCT CASE WHEN details.visibility IS NULL OR details.visibility != '.Observation::VISIBILITY_NOT_SEEN.' THEN '.Observation::DIFFERENT_OBJECT_SQL.' END) as different_objects_count'),
             ])
-            ->when($observerSearch !== '', function ($query) use ($observerSearch) {
-                $query->where('users.name', 'like', '%' . $observerSearch . '%');
-            })
             ->groupBy('users.id', 'users.name', 'users.username', 'users.slug')
             ->orderByDesc('observations_count')
             ->orderBy('users.name');
@@ -59,14 +55,21 @@ class ObserverController extends Controller
 
         $sourceCounts = $this->sourceObserverCounts($selectedSource);
 
+        // Observers with the same number of observations share a rank, as in User::getRank().
+        $rank = 0;
+        $previousCount = null;
         $observerRows = $observerRows
             ->values()
-            ->map(function ($row, int $index) use ($sourceCounts, $sourceObjectTotal) {
+            ->map(function ($row, int $index) use ($sourceCounts, $sourceObjectTotal, &$rank, &$previousCount) {
                 $username = (string) $row->username;
                 $selectedSourceCount = (int) ($sourceCounts[$username] ?? 0);
+                if ((int) $row->observations_count !== $previousCount) {
+                    $rank = $index + 1;
+                    $previousCount = (int) $row->observations_count;
+                }
 
                 return [
-                    'rank' => $index + 1,
+                    'rank' => $rank,
                     'name' => (string) $row->name,
                     'username' => $username,
                     'slug' => (string) ($row->slug ?: $username),
@@ -81,6 +84,13 @@ class ObserverController extends Controller
                         : 0.0,
                 ];
             });
+
+        // Search after ranking, so that an observer keeps their rank among all observers.
+        if ($observerSearch !== '') {
+            $observerRows = $observerRows
+                ->filter(fn(array $row) => Str::contains($row['name'], $observerSearch, ignoreCase: true))
+                ->values();
+        }
 
         $observerRows = $this->sortObserverRows($observerRows, $currentSort, $currentDirection);
         $observerRows = $this->paginateObserverRows($observerRows, 25, $request);

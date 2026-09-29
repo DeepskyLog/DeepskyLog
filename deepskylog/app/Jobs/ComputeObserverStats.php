@@ -106,20 +106,20 @@ class ComputeObserverStats implements ShouldQueue
                     $q->select('name_normalized')->from('objects')->where('type', 'DS');
                 })->count();
 
-            $doubleTotalUnique = (int) DB::table('observations')
+            $doubleTotalUnique = Observation::countDifferentObjects(DB::table('observations')
                 ->where('target_table', 'objects')
                 ->whereIn('target_name_normalized', function ($q) {
                     $q->select('name_normalized')->from('objects')->where('type', 'DS');
-                })->distinct()->count('target_name');
+                }));
 
-            $doubleYourUnique = (int) DB::table('observations')
+            $doubleYourUnique = Observation::countDifferentObjects(DB::table('observations')
                 ->where('target_table', 'objects')
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)
                         ->orWhere('observer_username', $user->username);
                 })->whereIn('target_name_normalized', function ($q) {
                     $q->select('name_normalized')->from('objects')->where('type', 'DS');
-                })->distinct()->count('target_name');
+                }));
 
             // Deep-sky metrics: all deep-sky observations minus the double stars,
             // which are counted separately above.
@@ -138,8 +138,8 @@ class ComputeObserverStats implements ShouldQueue
             $deepskyTotalDrawings = max(0, (int) $drawn($deepsky())->count() - $doubleTotalDrawings);
             $deepskyYourDrawingsLastYear = max(0, (int) $lastYear($drawn($mine($deepsky())))->count() - $doubleYourDrawingsLastYear);
             $deepskyTotalDrawingsLastYear = max(0, (int) $lastYear($drawn($deepsky()))->count() - $doubleTotalDrawingsLastYear);
-            $deepskyYourUnique = max(0, (int) $mine($deepsky())->distinct()->count('target_key') - $doubleYourUnique);
-            $deepskyTotalUnique = max(0, (int) $deepsky()->distinct()->count('target_key') - $doubleTotalUnique);
+            $deepskyYourUnique = max(0, Observation::countDifferentObjects($mine($deepsky())) - $doubleYourUnique);
+            $deepskyTotalUnique = max(0, Observation::countDifferentObjects($deepsky()) - $doubleTotalUnique);
 
             // Global totals (all observations)
             $allYourObservations = (int) Observation::where(function ($q) use ($user) {
@@ -166,11 +166,11 @@ class ComputeObserverStats implements ShouldQueue
 
             $allTotalDrawingsLastYear = (int) Observation::where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->count();
 
-            $allYourUnique = (int) Observation::where(function ($q) use ($user) {
+            $allYourUnique = Observation::countDifferentObjects(Observation::where(function ($q) use ($user) {
                 $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-            })->distinct()->count('target_name');
+            }));
 
-            $allTotalUnique = (int) Observation::distinct()->count('target_name');
+            $allTotalUnique = Observation::countDifferentObjects(Observation::query());
 
             // Comet totals
             $cometYourObservations = (int) Observation::comets()
@@ -205,12 +205,12 @@ class ComputeObserverStats implements ShouldQueue
 
             $cometTotalDrawingsLastYear = (int) Observation::comets()->where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->count();
 
-            $cometYourUnique = (int) Observation::comets()
+            $cometYourUnique = Observation::countDifferentObjects(Observation::comets()
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                })->distinct()->count('target_name');
+                }));
 
-            $cometTotalUnique = (int) Observation::comets()->distinct()->count('target_name');
+            $cometTotalUnique = Observation::countDifferentObjects(Observation::comets());
 
             // Planets / Sun / Moons (full computation)
             $planetsYourObservations = DB::table('observations')
@@ -273,18 +273,17 @@ class ComputeObserverStats implements ShouldQueue
                 ->where('observed_on', '>=', now()->subYear())
                 ->count();
 
-            $planetsYourUnique = DB::table('observations')
+            $planetsYourUnique = Observation::countDifferentObjects(DB::table('observations')
                 ->where('target_table', 'planets')
                 ->whereRaw('LOWER(target_key) != ?', ['sun'])
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)
                         ->orWhere('observer_username', $user->username);
-                })->distinct()->count('target_name');
+                }));
 
-            $planetsTotalUnique = DB::table('observations')
+            $planetsTotalUnique = Observation::countDifferentObjects(DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) != ?', ['sun'])
-                ->distinct()->count('target_name');
+                ->whereRaw('LOWER(target_key) != ?', ['sun']));
 
             // Sun
             $sunYourObservations = DB::table('observations')
@@ -347,18 +346,17 @@ class ComputeObserverStats implements ShouldQueue
                 ->where('observed_on', '>=', now()->subYear())
                 ->count();
 
-            $sunYourUnique = DB::table('observations')
+            $sunYourUnique = Observation::countDifferentObjects(DB::table('observations')
                 ->where('target_table', 'planets')
                 ->whereRaw('LOWER(target_key) = ?', ['sun'])
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)
                         ->orWhere('observer_username', $user->username);
-                })->distinct()->count('target_name');
+                }));
 
-            $sunTotalUnique = DB::table('observations')
+            $sunTotalUnique = Observation::countDifferentObjects(DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) = ?', ['sun'])
-                ->distinct()->count('target_name');
+                ->whereRaw('LOWER(target_key) = ?', ['sun']));
 
             // Moon
             $moonTargetTables = ['moons', 'lunar_features'];
@@ -415,16 +413,15 @@ class ComputeObserverStats implements ShouldQueue
                 ->where('observed_on', '>=', now()->subYear())
                 ->count();
 
-            $moonYourUnique = DB::table('observations')
+            $moonYourUnique = Observation::countDifferentObjects(DB::table('observations')
                 ->whereIn('target_table', $moonTargetTables)
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)
                         ->orWhere('observer_username', $user->username);
-                })->distinct()->count('target_name');
+                }));
 
-            $moonTotalUnique = DB::table('observations')
-                ->whereIn('target_table', $moonTargetTables)
-                ->distinct()->count('target_name');
+            $moonTotalUnique = Observation::countDifferentObjects(DB::table('observations')
+                ->whereIn('target_table', $moonTargetTables));
 
             $stats = [
                 'doubleTotalObservations' => $doubleTotalObservations,

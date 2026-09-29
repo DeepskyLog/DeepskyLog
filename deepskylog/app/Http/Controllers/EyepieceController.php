@@ -7,6 +7,8 @@ use App\Models\EyepieceMake;
 use App\Models\EyepieceType;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class EyepieceController extends Controller
 {
@@ -27,8 +29,8 @@ class EyepieceController extends Controller
 
     public function show(string $user_slug, string $eyepiece_slug)
     {
-        $user_id = User::where('slug', $user_slug)->first()->id;
-        $eyepiece = Eyepiece::where('slug', $eyepiece_slug)->where('user_id', $user_id)->first();
+        $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
+        $eyepiece = Eyepiece::where('slug', $eyepiece_slug)->where('user_id', $user_id)->firstOrFail();
 
         // Check if there is an image for this eyepiece
         if ($eyepiece->picture != null) {
@@ -45,8 +47,8 @@ class EyepieceController extends Controller
 
     public function edit(string $user_slug, string $eyepiece_slug)
     {
-        $user_id = User::where('slug', $user_slug)->first()->id;
-        $eyepiece = Eyepiece::where('slug', $eyepiece_slug)->where('user_id', $user_id)->first();
+        $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
+        $eyepiece = Eyepiece::where('slug', $eyepiece_slug)->where('user_id', $user_id)->firstOrFail();
 
         return view(
             'eyepiece.create',
@@ -66,17 +68,39 @@ class EyepieceController extends Controller
 
     public function storeMake(Request $request)
     {
-        EyepieceMake::where('id', $request->id)->update(['name' => $request->eyepiece_make]);
+        $data = $request->validate([
+            'id' => 'required|integer|not_in:1|exists:eyepiece_makes,id',
+            'eyepiece_make' => ['required', 'string', 'max:255', Rule::unique('eyepiece_makes', 'name')->ignore($request->id)],
+        ]);
+
+        EyepieceMake::whereKey($data['id'])->update(['name' => trim($data['eyepiece_make'])]);
 
         return redirect()->route('eyepiece.indexAdmin');
     }
 
     public function destroyMake(Request $request)
     {
-        Eyepiece::where('make_id', $request->id)->update(['type_id' => 1]);
-        Eyepiece::where('make_id', $request->id)->update(['make_id' => $request->new_make]);
-        EyepieceType::where('eyepiece_makes_id', $request->id)->delete();
-        EyepieceMake::where('id', $request->id)->delete();
+        $data = $request->validate([
+            'id' => 'required|integer|not_in:1|exists:eyepiece_makes,id',
+            'new_make' => 'required|integer|different:id|exists:eyepiece_makes,id',
+        ]);
+
+        DB::transaction(function () use ($data) {
+            // Move the types of the deleted make to the new make, merging
+            // them with a type of the same name the new make already has.
+            foreach (EyepieceType::where('eyepiece_makes_id', $data['id'])->get() as $type) {
+                $existing = EyepieceType::where('eyepiece_makes_id', $data['new_make'])
+                    ->where('name', $type->name)->first();
+                if ($existing) {
+                    Eyepiece::where('type_id', $type->id)->update(['type_id' => $existing->id]);
+                    $type->delete();
+                } else {
+                    $type->update(['eyepiece_makes_id' => $data['new_make']]);
+                }
+            }
+            Eyepiece::where('make_id', $data['id'])->update(['make_id' => $data['new_make']]);
+            EyepieceMake::whereKey($data['id'])->delete();
+        });
 
         return redirect()->route('eyepiece.indexAdmin');
     }

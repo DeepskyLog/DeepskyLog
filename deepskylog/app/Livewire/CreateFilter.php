@@ -70,7 +70,7 @@ class CreateFilter extends Component
             $make_name = $this->filter_new_make;
 
             // Create a new make
-            $make = FilterMake::create(['name' => $make_name])->id;
+            $make = FilterMake::firstOrCreate(['name' => trim($make_name)])->id;
         } else {
             $make = 1;
         }
@@ -92,8 +92,8 @@ class CreateFilter extends Component
             'name' => 'required|min:3',
             'color_id' => 'numeric|min:1',
             'type_id' => 'required|numeric|min:1',
-            'wratten' => 'nullable|string|max:25',
-            'schott' => 'nullable|string|max:25',
+            'wratten' => 'nullable|string|max:5',
+            'schott' => 'nullable|string|max:5',
             'photo' => 'nullable|image',
             'description' => 'nullable|string',
         ]);

@@ -15,7 +15,7 @@ class EyepieceFactory extends Factory
     public function definition(): array
     {
         $make = EyepieceMake::firstOrCreate(['name' => 'DefaultEyepieceMake']);
-        $type = EyepieceType::firstOrCreate(['name' => 'DefaultEyepieceType']);
+        $type = EyepieceType::firstOrCreate(['name' => 'DefaultEyepieceType', 'eyepiece_makes_id' => $make->id]);
 
         return [
             'make_id' => $make->id,
@@ -27,7 +27,7 @@ class EyepieceFactory extends Factory
             'field_stop_mm' => null,
             'active' => true,
             'user_id' => User::factory(),
-            'observer' => null,
+            'observer' => 'factory-observer',
             'observations' => 0,
             'picture' => null,
             'slug' => $this->faker->word(),

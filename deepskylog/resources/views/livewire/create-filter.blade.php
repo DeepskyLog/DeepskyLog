@@ -201,6 +201,7 @@
                                             type="text"
                                             class="mt-1 block w-full"
                                             wire:model.live="wratten"
+                                            maxlength="5"
                                             value="{{ old('wratten') }}"
                                         />
 
@@ -210,6 +211,7 @@
                                             type="text"
                                             class="mt-1 block w-full"
                                             wire:model.live="schott"
+                                            maxlength="5"
                                             value="{{ old('schott') }}"
                                         />
                                     </div>

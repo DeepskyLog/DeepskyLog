@@ -24,8 +24,8 @@ class LocationController extends Controller
 
     public function show(string $user_slug, string $location_slug)
     {
-        $user_id = User::where('slug', $user_slug)->first()->id;
-        $location = Location::where('slug', $location_slug)->where('user_id', $user_id)->first();
+        $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
+        $location = Location::where('slug', $location_slug)->where('user_id', $user_id)->firstOrFail();
 
         // Check if there is an image for this location
         if ($location->picture != null) {
@@ -42,8 +42,8 @@ class LocationController extends Controller
 
     public function edit(string $user_slug, string $location_slug)
     {
-        $user_id = User::where('slug', $user_slug)->first()->id;
-        $location = Location::where('slug', $location_slug)->where('user_id', $user_id)->first();
+        $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
+        $location = Location::where('slug', $location_slug)->where('user_id', $user_id)->firstOrFail();
 
         return view(
             'location.create',
