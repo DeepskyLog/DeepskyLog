@@ -6,7 +6,7 @@ use App\Jobs\GenerateObjectReportPdf;
 use App\Models\DeepskyObject;
 use App\Models\ReportLayout;
 use App\Services\ReportLayoutCatalog;
-use Carbon\Carbon;
+use App\Support\EphemerisDate;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -290,12 +290,6 @@ class ObjectReport extends Component
 
     private function ephemerisDate(): string
     {
-        $date = session('dsl_ephemeris_date');
-
-        try {
-            return $date ? Carbon::parse($date)->toDateString() : now()->toDateString();
-        } catch (\Throwable $_) {
-            return now()->toDateString();
-        }
+        return EphemerisDate::current();
     }
 }

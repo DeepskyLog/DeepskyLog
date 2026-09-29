@@ -6,7 +6,7 @@ use App\Jobs\GenerateObjectSetsPdf;
 use App\Models\DeepskyObject;
 use App\Services\ObjectSetDataBuilder;
 use App\Services\ObjectSetPdfService;
-use Carbon\Carbon;
+use App\Support\EphemerisDate;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -239,13 +239,7 @@ class ObjectSets extends Component
 
     private function ephemerisDate(): string
     {
-        $date = session('dsl_ephemeris_date');
-
-        try {
-            return $date ? Carbon::parse($date)->toDateString() : now()->toDateString();
-        } catch (\Throwable $_) {
-            return now()->toDateString();
-        }
+        return EphemerisDate::current();
     }
 
     /**

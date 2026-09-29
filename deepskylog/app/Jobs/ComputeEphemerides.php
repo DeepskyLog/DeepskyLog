@@ -59,7 +59,7 @@ class ComputeEphemerides implements ShouldQueue
             }
         }
 
-        $date = Carbon::parse($this->dateIso);
+        $date = \App\Support\EphemerisDate::parse($this->dateIso, \App\Support\EphemerisDate::timezone($userLocation));
         $geo_coords = new \deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates($userLocation->longitude ?? 0.0, $userLocation->latitude ?? 0.0);
 
         $ephem = EphemeridesBuilder::compute($obj ?? (object) ['name' => $this->objectIdentifier, 'designation' => $this->objectIdentifier], $date, $userLocation, $geo_coords);

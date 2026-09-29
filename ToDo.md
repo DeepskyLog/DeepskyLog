@@ -96,14 +96,6 @@ Code review of the whole application, without the security aspects. Paths are re
 
 ### Medium
 
-Ephemerides, comets, contrast reserve
-- [ ] Ephemeris date moves back a day for observers west of UTC (`Carbon::parse($date)` in UTC then `->timezone()`) (`ObjectEphemerides.php:362-370,1039`, `AladinPreviewInfo.php:486,1086`, `ObjectController.php:1604,1740`).
-- [ ] `EphemerisAside::mount()` resets the date to today (UTC) on every page and overwrites the session, so pages, object sets and reports disagree about the date (`EphemerisAside.php:37-44`).
-- [ ] Comet orbital elements fallback `LIKE '%name%'` matches the wrong comet ("Nishimura" → C/1994 N1; "12P" → "112P") (`CometCoordinates.php:202-207`).
-- [ ] `metrics:compute-cr --lens_id` (sync) stores lens-adjusted values under `lens_id = NULL` (`ComputeContrastReserve.php:207,213`).
-- [ ] Contrast reserve differs between the preview and the stored metrics (lens factor on fixed magnification, fallbacks, category names/thresholds) (`ComputeContrastReserveForObject.php:108-136,196-207` vs `AladinPreviewInfo.php` ~700-760). Move to one service.
-- [ ] `ComputeContrastReserveForObject` swallows all exceptions, so `$tries` never applies and the batch counts failures as successes (219-221).
-
 Search and caching
 - [ ] Advanced search diameter filters say arcmin but compare arcsec (`AdvancedObjectSearchTable.php:301-311,527-540`).
 - [ ] "Best mag" column shows the visual magnitude as a magnification ("9x") (`SearchResultsTable.php:929-930`, `NearbyObjectsTable.php:1110`).

@@ -26,6 +26,7 @@ use deepskylog\AstronomyLibrary\Time;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use App\Services\CometCoordinates;
 use App\Services\ObjectSearchIndex;
+use App\Support\EphemerisDate;
 use Illuminate\Support\Facades\Cache;
 
 class ObjectController extends Controller
@@ -1440,12 +1441,7 @@ class ObjectController extends Controller
             $userLocation = $authUser?->standardLocation ?? null;
             if ($userLocation && isset($record->ra) && isset($record->decl)) {
                 // Use a canonical ephemeris date: prefer session or request, fall back to now
-                $date = $this->getCanonicalEphemerisDate();
-                // Use user's timezone if available
-                try {
-                    $date = $date->timezone($userLocation->timezone ?? config('app.timezone'));
-                } catch (\Throwable $_) {
-                }
+                $date = $this->getCanonicalEphemerisDate($userLocation);
 
                 $geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
 
@@ -2605,44 +2601,30 @@ class ObjectController extends Controller
     }
 
     /**
-     * Return the canonical ephemeris date for this request.
+     * Return the canonical ephemeris date for this request, in the timezone of
+     * the location (else of the user's standard location).
      * Preference order: request query `date`, session `dsl_ephemeris_date`, now().
+     * A date without a time is a date of the observer: noon in their timezone.
      *
      * @return \Carbon\Carbon
      */
-    private function getCanonicalEphemerisDate()
+    private function getCanonicalEphemerisDate($location = null)
     {
+        $tz = EphemerisDate::timezone($location instanceof \App\Models\Location ? $location : null);
+
+        $value = null;
         try {
-            $q = request()->query('date');
-            if (!empty($q)) {
-                try {
-                    return \Carbon\Carbon::parse($q);
-                } catch (\Throwable $_) {
-                    // ignore parse errors
-                }
-            }
+            $value = request()->query('date');
         } catch (\Throwable $_) {
-            // ignore
+        }
+        if (empty($value)) {
+            try {
+                $value = session()->get(EphemerisDate::SESSION_KEY);
+            } catch (\Throwable $_) {
+            }
         }
 
-        try {
-            $sess = session()->get('dsl_ephemeris_date');
-            if (!empty($sess)) {
-                try {
-                    return \Carbon\Carbon::createFromFormat('Y-m-d', $sess);
-                } catch (\Throwable $_) {
-                    try {
-                        return \Carbon\Carbon::parse($sess);
-                    } catch (\Throwable $_) {
-                        // ignore
-                    }
-                }
-            }
-        } catch (\Throwable $_) {
-            // ignore
-        }
-
-        return \Carbon\Carbon::now();
+        return EphemerisDate::parse(is_string($value) ? $value : null, $tz);
     }
 
     /**

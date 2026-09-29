@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Target;
 use App\Models\CometObject;
 use App\Services\CometCoordinates;
+use App\Support\EphemerisDate;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
@@ -359,17 +360,8 @@ class ObjectEphemerides extends Component
 				return;
 
 			// Date handling: allow payload-provided date
-			$date = Carbon::now();
-			if (!empty($payloadArr['date'])) {
-				try {
-					$date = Carbon::parse($payloadArr['date']);
-				} catch (\Throwable $_) {
-				}
-			}
-			try {
-				$date = $date->timezone($userLocation->timezone ?? config('app.timezone'));
-			} catch (\Throwable $_) {
-			}
+			// (a date without a time is a date of the observer, read in their timezone)
+			$date = EphemerisDate::parse($payloadArr['date'] ?? null, EphemerisDate::timezone($userLocation));
 
 			// Persist requested date (ISO) so the poller can look up cache entries
 			try {
@@ -1036,7 +1028,7 @@ class ObjectEphemerides extends Component
 			// RA/Dec, magnitude and diameter values embedded in the response.
 			// preparing ephemerides logging removed
 			$this->ephemerides = [
-				'date' => $date->timezone($tz)->toDateString(),
+				'date' => $date->toDateString(),
 				'rising' => $rising,
 				'transit' => $transit,
 				'setting' => $setting,

@@ -28,6 +28,14 @@ class CometCoordinates
     /**
      * Find the orbital elements of a comet by name, e.g. "12P/Pons-Brooks" or
      * "C/2023 A3 (Tsuchinshan-ATLAS)".
+     *
+     * Names that are written differently ("C/2023 A3 Tsuchinshan-ATLAS") are
+     * matched on their designation, or, without a designation, on the whole
+     * name of the discoverers ("Tsuchinshan-ATLAS"). Only a unique match is
+     * returned: a part of a name matches other comets too ("12P" is in "112P",
+     * "Nishimura" in "Nakamura-Nishimura-Machholz", and two comets are called
+     * "Nishimura"),
+     * and no position is better than the position of another comet.
      */
     public static function orbitalElements(?string $name): ?object
     {
@@ -37,13 +45,55 @@ class CometCoordinates
         }
 
         $table = DB::table('comets_orbital_elements');
+        if ($row = (clone $table)->where('name', $name)->first()) {
+            return $row;
+        }
 
-        return (clone $table)->where('name', $name)->first()
-            ?? (clone $table)->where('name', 'like', '%' . $name . '%')->first()
-            // Names without the discoverer in parentheses, or with other parentheses
-            ?? (clone $table)
-                ->whereRaw("LOWER(REPLACE(REPLACE(name, '(', ''), ')', '')) LIKE ?", ['%' . mb_strtolower(preg_replace('/[()]/', '', $name)) . '%'])
-                ->first();
+        [$designation, $discoverers] = self::splitName($name);
+        $needle = $designation ?? $discoverers;
+        if ($needle === '') {
+            return null;
+        }
+        $candidates = (clone $table)
+            // (only a first selection, the names are compared below)
+            ->where('name', 'like', '%' . $needle . '%')
+            ->get()
+            ->map(fn (object $row) => [$row, ...self::splitName((string) $row->name)]);
+
+        $unique = function ($matches) {
+            return $matches->count() === 1 ? $matches->first()[0] : null;
+        };
+
+        if ($designation === null) {
+            return $unique($candidates->filter(fn (array $c) => $c[2] === $discoverers));
+        }
+
+        $sameDesignation = $candidates->filter(fn (array $c) => $c[1] === $designation);
+
+        return $unique($sameDesignation->filter(fn (array $c) => $c[2] === $discoverers))
+            ?? $unique($sameDesignation);
+    }
+
+    /**
+     * The designation (upper case, null when the name has none) and the name
+     * of the discoverers (lower case, without parentheses) of a comet name,
+     * e.g. ["C/2023 A3", "tsuchinshan-atlas"] or ["12P", "pons-brooks"].
+     *
+     * @return array{0: ?string, 1: string}
+     */
+    public static function splitName(string $name): array
+    {
+        $name = preg_replace('/\s+/', ' ', trim($name));
+        $designation = null;
+        // Numbered periodic comets (12P, 73P-B) and provisional designations
+        // (C/2023 A3, P/2010 H5, D/1993 F2-P1, C/-43 K1)
+        if (preg_match('~^(\d+[PDI](?:-[A-Z]{1,2}\d*)?|[PCDXAI]/-?\d{1,4} [A-Z]{1,2}\d*(?:-[A-Z]{1,2}\d*)?)(?=[ /]|$)~i', $name, $m)) {
+            $designation = mb_strtoupper($m[1]);
+            $name = substr($name, strlen($m[1]));
+        }
+        $discoverers = trim(preg_replace('/\s+/', ' ', str_replace(['(', ')'], ' ', ltrim($name, ' /'))));
+
+        return [$designation, mb_strtolower($discoverers)];
     }
 
     /**

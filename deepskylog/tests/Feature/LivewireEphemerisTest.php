@@ -14,6 +14,24 @@ it('ephemeris aside sets date on mount', function () {
         ->assertSet('date', $date);
 });
 
+it('ephemeris aside keeps the date of the session on mount', function () {
+    session()->put('dsl_ephemeris_date', '2026-12-24');
+
+    Livewire::test(\App\Http\Livewire\EphemerisAside::class)
+        ->assertSet('date', '2026-12-24')
+        ->assertDispatched('ephemerisDateChanged', date: '2026-12-24');
+
+    expect(session('dsl_ephemeris_date'))->toBe('2026-12-24');
+});
+
+it('ephemeris aside stores a date set by an event in the session', function () {
+    Livewire::test(\App\Http\Livewire\EphemerisAside::class)
+        ->dispatch('setEphemerisDate', '2027-01-02')
+        ->assertSet('date', '2027-01-02');
+
+    expect(session('dsl_ephemeris_date'))->toBe('2027-01-02');
+});
+
 it('search results table sets ephemerisDate when handler called', function () {
     $date = Carbon::now()->toDateString();
 

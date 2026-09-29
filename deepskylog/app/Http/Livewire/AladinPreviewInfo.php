@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use App\Services\ContrastReserveCalculator;
+use App\Support\EphemerisDate;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
@@ -340,6 +342,12 @@ class AladinPreviewInfo extends Component
             // This addresses slow page loads for logged-in users who haven't
             // configured an instrument set yet — the Sky preview is effectively
             // incomplete until the user provides selections.
+            // The payload as an array, and the appearance values it may provide
+            // (used by the guard below and by the calculations further on)
+            $payloadArr = is_array($payload) ? $payload : (is_object($payload) ? (array) $payload : []);
+            $payloadDiam1 = $payloadArr['diam1'] ?? null;
+            $payloadMag = array_key_exists('mag', $payloadArr) ? $payloadArr['mag'] : null;
+
             try {
                 $hasStdSet = false;
                 try {
@@ -476,20 +484,10 @@ class AladinPreviewInfo extends Component
             }
 
             // perform calculations similar to ObjectController::show
-            $date = \Carbon\Carbon::now();
-            // allow caller to provide a date in payload (ISO string or Y-m-d format)
-            try {
-                if (!empty($payload) && (is_array($payload) || is_object($payload))) {
-                    $p = (array) $payload;
-                    if (!empty($p['date'])) {
-                        try {
-                            $date = \Carbon\Carbon::parse($p['date']);
-                        } catch (\Throwable $_) { /* ignore parse errors */
-                        }
-                    }
-                }
-            } catch (\Throwable $_) {
-            }
+            // allow caller to provide a date in payload (ISO string or Y-m-d format);
+            // a date without a time is a date of the observer, read in their timezone
+            $payloadDate = (!empty($payload) && (is_array($payload) || is_object($payload))) ? (((array) $payload)['date'] ?? null) : null;
+            $date = EphemerisDate::parse($payloadDate, EphemerisDate::timezone($userLocation));
             $coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
             $astrolib = new AstronomyLibrary($date, $coords, $userLocation->elevation ?? 0.0);
 
@@ -565,16 +563,7 @@ class AladinPreviewInfo extends Component
                 if (!$skipPlanetCompute && $isPlanet && $planetClass && class_exists($planetClass)) {
                     $planet = new $planetClass();
                     // determine date from payload if provided
-                    $calcDate = \Carbon\Carbon::now();
-                    if (!empty($payload) && (is_array($payload) || is_object($payload))) {
-                        $pp = (array) $payload;
-                        if (!empty($pp['date'])) {
-                            try {
-                                $calcDate = \Carbon\Carbon::parse($pp['date']);
-                            } catch (\Throwable $_) {
-                            }
-                        }
-                    }
+                    $calcDate = $date->copy();
                     // Use user's location for topocentric coords when available
                     if ($userLocation && isset($userLocation->longitude) && isset($userLocation->latitude)) {
                         $geo = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
@@ -685,53 +674,13 @@ class AladinPreviewInfo extends Component
             $aperture = $userInstrument->aperture_mm ?? null;
             $debug_aperture = $aperture;
 
-            // try to derive magnification
-            $mag = $userInstrument->fixedMagnification ?? null;
-            $debug_mag = $mag;
-            if (!$mag && $userInstrument->focal_length_mm && isset($obj->typicalEyepieceFocal)) {
-                $mag = round($userInstrument->focal_length_mm / $obj->typicalEyepieceFocal);
-            }
-
-
-            $possibleUsedForContrast = null;
-            if (!$mag && $sbobj !== null && $sqm !== null && $aperture) {
-                $possible = [25, 50, 75, 100, 150, 200];
-                if (!empty($possible) && !$explicitNoLens && $lensFactor !== 1.0) {
-                    $possible = array_map(fn($v) => (int) round($v * $lensFactor), $possible);
-                }
-                $possibleUsedForContrast = $possible;
-                // try to derive from instrument set eyepieces
-                $instSet = $authUser?->standardInstrumentSet ?? null;
-                if ($instSet && $userInstrument?->focal_length_mm) {
-                    try {
-                        $setModel = $instSet;
-                        if ($setModel && count($setModel->eyepieces) > 0) {
-                            $derived = [];
-                            foreach ($setModel->eyepieces as $sep) {
-                                if ($sep->active && !empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
-                                    $derived[] = (int) round(($userInstrument->focal_length_mm / $sep->focal_length_mm) * ($explicitNoLens ? 1.0 : $lensFactor));
-                                }
-                            }
-                            $derived = array_values(array_unique(array_filter($derived)));
-                            if (!empty($derived)) {
-                                $possible = $derived;
-                                $possibleUsedForContrast = $possible;
-                            }
-                        }
-                    } catch (\Throwable $_) {
-                    }
-                }
-                if (!empty($possible)) {
-                    $mag = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possible);
-                }
-                $debug_possible_used_for_contrast = $possibleUsedForContrast;
-                $debug_mag = $mag;
-            }
-
-            if ($sbobj !== null && $sqm !== null && $aperture && $mag) {
+            // Contrast reserve at the best of the observer's magnifications, as
+            // for the stored metrics of the tables (ContrastReserveCalculator)
+            $crResult = null;
+            if ($sbobj !== null && $sqm !== null && $aperture && $userInstrument) {
                 try {
                     $crT0 = microtime(true);
-                    $contrast = $target->calculateContrastReserve($sbobj, $sqm, $aperture, $mag);
+                    $crResult = ContrastReserveCalculator::calculate($target, $userInstrument, $userLocation, $authUser, $lensFactor);
                     $crElapsed = round((microtime(true) - $crT0) * 1000, 2);
                     try {
                         \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calculateContrastReserve elapsed', ['elapsed_ms' => $crElapsed, 'objectId' => $obj->id ?? null]);
@@ -742,26 +691,15 @@ class AladinPreviewInfo extends Component
                         \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: calculateContrastReserve exception', ['message' => $crEx->getMessage()]);
                     } catch (\Throwable $_) {
                     }
-                    $contrast = null;
+                    $crResult = null;
                 }
+            }
+            $debug_mag = $crResult['magnification'] ?? null;
+
+            if ($crResult && $crResult['magnification']) {
+                $contrast = $crResult['contrast_reserve'];
                 $this->contrast_reserve = is_numeric($contrast) ? round($contrast, 2) : null;
-                $cat = null;
-                if (is_numeric($this->contrast_reserve)) {
-                    $c = (float) $this->contrast_reserve;
-                    if ($c > 1.0)
-                        $cat = 'very_easy';
-                    elseif ($c > 0.5)
-                        $cat = 'easy';
-                    elseif ($c > 0.35)
-                        $cat = 'quite_difficult';
-                    elseif ($c > 0.1)
-                        $cat = 'difficult';
-                    elseif ($c > -0.2)
-                        $cat = 'questionable';
-                    else
-                        $cat = 'not_visible';
-                }
-                $this->contrast_reserve_category = $cat;
+                $this->contrast_reserve_category = $crResult['category'];
                 $this->contrast_used_location = $userLocation?->name ?? null;
                 $this->contrast_used_instrument = $userInstrument?->fullName() ?? ($userInstrument?->name ?? null);
                 // expose SQM and NELM used for the calculation when available
@@ -906,58 +844,11 @@ class AladinPreviewInfo extends Component
                     }
                 }
 
-                $possibleMags = [];
-                if (!empty($epMap)) {
-                    $possibleMags = array_values(array_unique(array_keys($epMap)));
-                } elseif (!empty($eyepieceFocals) && $userInstrument?->focal_length_mm) {
-                    foreach ($eyepieceFocals as $ef) {
-                        if ($ef > 0)
-                            $possibleMags[] = (int) round($userInstrument->focal_length_mm / $ef);
-                    }
-                    $possibleMags = array_values(array_unique(array_filter($possibleMags)));
-                }
-                if (empty($possibleMags) && !empty($possibleUsedForContrast)) {
-                    $possibleMags = $possibleUsedForContrast;
-                }
-                if (!empty($possibleMags) && $sbobj !== null && $sqm !== null && $aperture) {
-                    $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
-                    $this->optimum_detection_magnification = $best ? (int) $best : null;
-                } else {
-                    $this->optimum_detection_magnification = null;
-                }
-
-                if (!empty($best) && isset($epMap[(int) $best])) {
-                    $this->optimum_eyepieces = $epMap[(int) $best];
-                } else {
-                    $selectedEps = [];
-                    foreach ($possibleMags as $pm) {
-                        if (isset($epMap[$pm])) {
-                            foreach ($epMap[$pm] as $epInfo)
-                                $selectedEps[] = $epInfo;
-                        }
-                    }
-                    $uniq = [];
-                    $finalEps = [];
-                    foreach ($selectedEps as $e) {
-                        $k = ($e['name'] ?? '') . '|' . ($e['focal'] ?? '');
-                        if (!isset($uniq[$k])) {
-                            $uniq[$k] = true;
-                            $finalEps[] = $e;
-                        }
-                    }
-                    if (empty($finalEps) && !empty($eyepiecesForDisplay)) {
-                        $uniq = [];
-                        $finalEps = [];
-                        foreach ($eyepiecesForDisplay as $e) {
-                            $k = ($e['name'] ?? '') . '|' . ($e['focal'] ?? '');
-                            if (!isset($uniq[$k])) {
-                                $uniq[$k] = true;
-                                $finalEps[] = $e;
-                            }
-                        }
-                    }
-                    $this->optimum_eyepieces = $finalEps;
-                }
+                // The optimum magnification is the one of the contrast reserve
+                $best = $crResult['magnification'] ?? null;
+                $this->optimum_detection_magnification = $best ? (int) $best : null;
+                // (no eyepieces with a fixed magnification or the generic magnifications)
+                $this->optimum_eyepieces = ($best && !empty($crResult['eyepieces'])) ? ($epMap[(int) $best] ?? []) : [];
             } catch (\Throwable $_) {
                 $this->optimum_detection_magnification = null;
                 $this->optimum_eyepieces = [];
@@ -1083,7 +974,7 @@ class AladinPreviewInfo extends Component
                             if (is_numeric($maxHeight))
                                 $maxHeight = round($maxHeight, 1);
                             $ephemerides = [
-                                'date' => $date->timezone($tz)->toDateString(),
+                                'date' => $date->toDateString(),
                                 'rising' => $rising,
                                 'transit' => $transit,
                                 'setting' => $setting,

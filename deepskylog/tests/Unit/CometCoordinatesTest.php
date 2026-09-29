@@ -53,6 +53,32 @@ it('finds the elements of a comet by name', function () {
         ->and(CometCoordinates::orbitalElements(''))->toBeNull();
 });
 
+it('does not take another comet with a part of the name', function () {
+    insertComet('12P/Pons-Brooks', 0.78086113, 0.95456124, 74.19091, 198.98800, 255.85535, 20240421.13116);
+    insertComet('112P/Urata-Niijima', 1.44, 0.59, 24.2, 21.5, 31.8, 20240101.0);
+    insertComet('C/1994 N1 (Nakamura-Nishimura-Machholz)', 1.14, 1.0, 94.7, 146.4, 287.4, 19940909.0);
+    insertComet('C/2023 P1 (Nishimura)', 0.22, 1.0, 132.5, 115.6, 66.8, 20230917.0);
+
+    expect(CometCoordinates::orbitalElements('12P')->name)->toBe('12P/Pons-Brooks')
+        ->and(CometCoordinates::orbitalElements('112P')->name)->toBe('112P/Urata-Niijima')
+        ->and(CometCoordinates::orbitalElements('12P/Pons Brooks')->name)->toBe('12P/Pons-Brooks')
+        ->and(CometCoordinates::orbitalElements('Nishimura')->name)->toBe('C/2023 P1 (Nishimura)')
+        ->and(CometCoordinates::orbitalElements('C/2023 P1')->name)->toBe('C/2023 P1 (Nishimura)')
+        ->and(CometCoordinates::orbitalElements('Nakamura'))->toBeNull();
+
+    insertComet('C/2021 O1 (Nishimura)', 0.07, 1.0, 44.5, 222.0, 73.5, 20211130.0);
+
+    // Two comets have this name: rather none than the wrong one
+    expect(CometCoordinates::orbitalElements('Nishimura'))->toBeNull();
+});
+
+it('splits a comet name into the designation and the discoverers', function () {
+    expect(CometCoordinates::splitName('C/2023 A3 (Tsuchinshan-ATLAS)'))->toBe(['C/2023 A3', 'tsuchinshan-atlas'])
+        ->and(CometCoordinates::splitName('12P/Pons-Brooks'))->toBe(['12P', 'pons-brooks'])
+        ->and(CometCoordinates::splitName('D/1993 F2-P1 (Shoemaker-Levy 9)'))->toBe(['D/1993 F2-P1', 'shoemaker-levy 9'])
+        ->and(CometCoordinates::splitName('Nishimura'))->toBe([null, 'nishimura']);
+});
+
 it('calculates the position of a comet without asking JPL Horizons', function () {
     insertComet('12P/Pons-Brooks', 0.78086113, 0.95456124, 74.19091, 198.98800, 255.85535, 20240421.13116);
     $date = Carbon::create(2026, 9, 25, 22, 0, 0, 'UTC');

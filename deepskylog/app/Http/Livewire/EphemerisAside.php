@@ -6,6 +6,7 @@ use Livewire\Component;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Location;
+use App\Support\EphemerisDate;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Targets\Moon as AstroMoon;
@@ -34,13 +35,15 @@ class EphemerisAside extends Component
 
     public function mount()
     {
-        $this->date = Carbon::now()->toDateString();
+        // Keep the date chosen earlier in this session, so every page, object
+        // set and report uses the same date; else today at the location.
+        $this->date = EphemerisDate::current($this->timezone());
         $this->recalculate();
         // Persist canonical aside date in session so other server-rendered
         // components can read it during initial render and compute matching
         // ephemerides without waiting for Livewire hydration events.
         try {
-            session()->put('dsl_ephemeris_date', $this->date);
+            session()->put(EphemerisDate::SESSION_KEY, $this->date);
         } catch (\Throwable $_) {
             // ignore session failures
         }
@@ -65,7 +68,7 @@ class EphemerisAside extends Component
         $this->recalculate();
         // Keep session in sync with updated aside date
         try {
-            session()->put('dsl_ephemeris_date', $this->date);
+            session()->put(EphemerisDate::SESSION_KEY, $this->date);
         } catch (\Throwable $_) {
             // ignore
         }
@@ -184,7 +187,12 @@ class EphemerisAside extends Component
 
     public function setDateFromEvent($d)
     {
-        $this->date = $d ?: Carbon::now()->toDateString();
+        $this->date = $d ?: EphemerisDate::today($this->timezone());
+        try {
+            session()->put(EphemerisDate::SESSION_KEY, $this->date);
+        } catch (\Throwable $_) {
+            // ignore session failures
+        }
         try {
             \Illuminate\Support\Facades\Log::debug('EphemerisAside: setDateFromEvent dispatching', ['date' => $this->date]);
         } catch (\Throwable $_) {
@@ -231,18 +239,7 @@ class EphemerisAside extends Component
     protected function recalculate()
     {
         try {
-            $user = Auth::user();
-            $loc = null;
-            if ($user && $user->standardLocation) {
-                $loc = $user->standardLocation;
-            } else {
-                // fallback: first active Location row in DB (no user-specific fallback available)
-                try {
-                    $loc = Location::where('active', 1)->first();
-                } catch (\Throwable $_) {
-                    $loc = null;
-                }
-            }
+            $loc = $this->location();
 
             // default placeholders if no location available
             if (!$loc instanceof Location) {
@@ -259,14 +256,8 @@ class EphemerisAside extends Component
 
             // Use Location helper methods which respect Session date; set local date for calculations
             // We'll create a Carbon at midday in the location timezone to avoid DST issues
-            try {
-                $d = Carbon::createFromFormat('Y-m-d', $this->date);
-            } catch (\Exception $_) {
-                $d = Carbon::now();
-            }
-            $d->hour = 12;
-
-            $timezone = $loc->timezone ?? config('app.timezone');
+            $timezone = EphemerisDate::timezone($loc);
+            $d = EphemerisDate::parse($this->date, $timezone)->setTime(12, 0);
 
             // Sunrise / Sunset / Transit
             // The Location methods read Session::date; for safety compute directly here using date_sun_info
@@ -370,6 +361,27 @@ class EphemerisAside extends Component
         } catch (\Throwable $e) {
             // fallback: keep placeholders
         }
+    }
+
+    /**
+     * The user's standard location, else the first active location.
+     */
+    protected function location(): ?Location
+    {
+        $user = Auth::user();
+        if ($user && $user->standardLocation) {
+            return $user->standardLocation;
+        }
+        try {
+            return Location::where('active', 1)->first();
+        } catch (\Throwable $_) {
+            return null;
+        }
+    }
+
+    protected function timezone(): string
+    {
+        return EphemerisDate::timezone($this->location());
     }
 
     public function render()
