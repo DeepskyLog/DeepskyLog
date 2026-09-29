@@ -84,7 +84,8 @@ class BuildSessionCopies implements ShouldQueue
                     'weather' => $session->weather,
                     'equipment' => $session->equipment,
                     'comments' => $session->comments,
-                    'language' => 'en',
+                    // The copy carries the original's text, so also its language.
+                    'language' => $session->language,
                     'active' => 0,
                 ]);
 

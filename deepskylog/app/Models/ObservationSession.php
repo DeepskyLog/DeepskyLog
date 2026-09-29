@@ -43,6 +43,16 @@ class ObservationSession extends Model
         'language' => 'en',
     ];
 
+    /**
+     * The language a session written by the given user is in: the language
+     * they write their observations in, as for observations. Descriptions are
+     * translated from this language, so it must not simply default to 'en'.
+     */
+    public static function languageOf(?User $author): string
+    {
+        return $author?->observationlanguage ?: $author?->language ?: (string) config('app.locale', 'en');
+    }
+
     public function sluggable(): array
     {
         return [

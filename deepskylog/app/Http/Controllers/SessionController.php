@@ -820,7 +820,7 @@ class SessionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:200',
             'observer' => 'required|string|exists:users,username',
             'locationid' => 'required|integer|exists:locations,id',
             'begindate' => 'required|date',
@@ -890,6 +890,7 @@ class SessionController extends Controller
         $session->weather = $validated['weather'] ?? '';
         $session->equipment = $validated['equipment'] ?? '';
         $session->comments = $validated['comments'] ?? null;
+        $session->language = ObservationSession::languageOf(Auth::user());
         $session->active = isset($validated['active']) ? (int) $validated['active'] : 1;
 
         $session->save();

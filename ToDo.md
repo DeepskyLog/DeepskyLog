@@ -22,6 +22,7 @@
   - [ ] Remove the old storage/logs/horizons_wrapper_*.json files
   - [ ] php artisan objects:fix-html-entities --apply   
   - [ ] php artisan migrate also runs 2026_09_28_000001_normalize_observation_targets (stores observations made with the web form under the canonical object name / comet id)
+  - [ ] php artisan observing-lists:normalize-items (dry run: check the renames and merges), then php artisan observing-lists:normalize-items --apply (renames list items to the canonical object names so they show up in the list tables and exports; items that match no object are only reported)
   - [ ] Atlas pagina's worden gezet in storage/app/atlas -> kijk of die directory 755 als permissies heeft
 - [ ] Release new version of pyDeepskyLog
   - [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
@@ -85,17 +86,6 @@
 Code review of the whole application, without the security aspects. Paths are relative to `deepskylog/`. Items marked (checked) were confirmed by hand; the others come from a review that read the code and migrations but did not reproduce every case. The test suite passed (259 passed, 7 skipped), so none of this is covered by tests yet.
 
 ### Medium
-
-Sessions, observing lists, messages
-- [ ] `/popular-sessions` links 404 (`$session->user` isn't a relation, should be `observer`), and the table lists drafts (`PopularSessionsTable.php:129`).
-- [ ] Sitemap never contains sessions: selects non-existent `updated_at` (`routes/web.php:842`).
-- [ ] "Set as active" is shown to every user; non-owners/non-subscribers get 403 (`observing-lists/show.blade.php:49-63`).
-- [ ] Duplicate observing list name gives a 500: no unique validation (`ObservingListController.php:180-191, 213-223`).
-- [ ] "Add all to active list" uses different matching than the search results (`ObservingListController.php:559-571` vs `SearchResultsTable.php:181-218`).
-- [ ] Imported/added list items aren't checked or normalised, so unmatched names vanish from exports and tables (`ObservingListFileImportService.php:265-303`).
-- [ ] Session `language` is always 'en' (`CreateSession.php:318`, `BuildSessionCopies.php:125`), so translation runs the wrong way.
-- [ ] Observing list likes can be farmed for points: unlike doesn't remove the point (`ObservingList.php:130-140`).
-- [ ] Session name validated `max:255` / no max, column is 200 (`SessionController.php:844`, `CreateSession.php:164`).
 
 Equipment, locations, users
 - [ ] Deleting equipment that is in an instrument set fails (FK without cascade); only `InstrumentSetTable` detaches first.
@@ -196,14 +186,7 @@ Cross-cutting
 - [ ] Mobile admin menu links to `/admin/eyepiece-type` instead of `/admin/eyepiece-types` (`components/menu/admin-responsive-dropdown.blade.php:50`).
 - [ ] `env()` used outside config (`CreateLocation.php:210,225,378`, `TrustProxies.php:27`): null after `config:cache`. `config('app.domain')` in `ResolveSocialiteUser.php:48` is not defined.
 
-### Fixed while normalising the observation targets (2026-09-28)
-
-- [x] Session page drew comet observations with the deep-sky card (`isset($observation->objectname)` is always true) and passed new ids to `x-sketch-comet` as old ids.
-- [x] "Compare with my last" never opened for the first observation of an object on a day: without the index the URL has an empty segment (`…/m-65//compare-my-last`) that doesn't match the route.
-- [x] Saving an observation gave a 500 when the user has no observation language (NULL into `observations.language`).
-
 ### Left for the security review
 
 - `User::switchTeam()` skips the membership check and `/switch-team/{team}` lets any user switch to Administrators.
 - `AtlasController::download` checks neither ownership nor status.
-- Messages to `all` from non-admins (see High).

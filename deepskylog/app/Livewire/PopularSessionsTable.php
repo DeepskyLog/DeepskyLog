@@ -48,6 +48,8 @@ final class PopularSessionsTable extends PowerGridComponent
             . ') FROM observation_sessions s WHERE s.id = observation_id LIMIT 1) as observer_name'
         )
             ->where('observation_type', ObservationLike::TYPE_SESSION)
+            // Drafts (active = 0) are only visible to their owner, so they don't belong here.
+            ->whereIn('observation_id', ObservationSession::where('active', 1)->select('id'))
             ->groupBy('observation_type', 'observation_id')
             ->orderByDesc('likes');
 
@@ -74,7 +76,7 @@ final class PopularSessionsTable extends PowerGridComponent
 
                 $name = $session->name ?? __('Session :id', ['id' => $row->observation_id]);
 
-                return sprintf('<a href="%s" class="font-bold hover:underline">%s</a>', route('session.show', [$session->user->slug ?? $session->observerid, $session->slug ?? $session->id]), e($name));
+                return sprintf('<a href="%s" class="font-bold hover:underline">%s</a>', route('session.show', [$session->observer?->slug ?? $session->observerid, $session->slug ?? $session->id]), e($name));
             })
             ->add('session_name_plain', function ($row) {
                 $session = ObservationSession::find($row->observation_id);

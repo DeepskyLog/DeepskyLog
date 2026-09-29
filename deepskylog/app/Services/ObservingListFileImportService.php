@@ -264,10 +264,16 @@ class ObservingListFileImportService
      */
     protected function importObjectNames(ObservingList $list, array $objectNames, User $user): void
     {
-        foreach ($objectNames as $name) {
-            $name = trim((string) $name);
+        // Store every object under the name the list tables and exports match
+        // on; names DeepskyLog doesn't know would silently vanish from them.
+        $resolved = app(ObservingListItemNameResolver::class)->resolveMany($objectNames);
+        $unknown = [];
 
-            if (empty($name)) {
+        foreach ($resolved as $inputName => $name) {
+            if ($name === null) {
+                $unknown[] = $inputName;
+                $this->skippedCount++;
+
                 continue;
             }
 
@@ -299,6 +305,12 @@ class ObservingListFileImportService
                 // Continue with next object instead of failing
                 $this->skippedCount++;
             }
+        }
+
+        if ($unknown !== []) {
+            $shown = array_slice($unknown, 0, 20);
+            $this->errors[] = __('Unknown objects: :names', ['names' => implode(', ', $shown)])
+                . (count($unknown) > count($shown) ? ' ' . __('and :count more', ['count' => count($unknown) - count($shown)]) : '');
         }
     }
 

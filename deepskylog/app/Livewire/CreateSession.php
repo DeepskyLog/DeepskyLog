@@ -163,7 +163,7 @@ class CreateSession extends Component
         }
 
         $data = $this->validate([
-            'name' => 'required|min:3',
+            'name' => 'required|min:3|max:200',
             'observer' => 'nullable|exists:users,username',
             'locationid' => 'required|exists:locations,id',
             'begindate' => 'required|date',
@@ -230,8 +230,8 @@ class CreateSession extends Component
                 'locationid' => $this->locationid,
                 'begindate' => $this->begindate,
                 'enddate' => $this->enddate,
-                'weather' => $this->weather,
-                'equipment' => $this->equipment,
+                'weather' => $this->weather ?? '',
+                'equipment' => $this->equipment ?? '',
                 'comments' => $this->comments,
                 'active' => $activeToSave,
             ]);
@@ -337,10 +337,10 @@ class CreateSession extends Component
             'locationid' => $this->locationid,
             'begindate' => $this->begindate,
             'enddate' => $this->enddate,
-            'weather' => $this->weather,
-            'equipment' => $this->equipment,
+            'weather' => $this->weather ?? '',
+            'equipment' => $this->equipment ?? '',
             'comments' => $this->comments,
-            'language' => 'en',
+            'language' => ObservationSession::languageOf(Auth::user()),
             'active' => $this->active,
         ]);
 

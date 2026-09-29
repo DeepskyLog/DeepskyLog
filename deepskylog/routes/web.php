@@ -832,13 +832,15 @@ Route::get('/sitemap.xml', function () {
             $sessions = ObservationSession::where('active', 1)
                 ->orderByDesc('enddate')
                 ->limit(1000)
-                ->get(['slug', 'observerid', 'updated_at']);
+                ->with('observer:id,username,slug')
+                ->get(['id', 'slug', 'observerid', 'enddate']);
 
+            // observation_sessions has no timestamps: the end of the session is
+            // the closest thing to a modification date.
             foreach ($sessions as $s) {
-                $user = User::where('username', $s->observerid)->first();
-                $slug = $user ? $user->slug : $s->observerid;
-                $loc = $base . '/session/' . ($slug ?? $s->observerid) . '/' . ($s->slug ?? $s->id);
-                $urls[] = ['loc' => $loc, 'lastmod' => optional($s->updated_at)->toAtomString() ?? $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
+                $slug = $s->observer?->slug ?? $s->observerid;
+                $loc = $base . '/session/' . $slug . '/' . ($s->slug ?? $s->id);
+                $urls[] = ['loc' => $loc, 'lastmod' => optional($s->enddate)->toAtomString() ?? $now, 'changefreq' => 'monthly', 'priority' => '0.5'];
             }
         } catch (\Throwable $e) {
             // If the DB is unavailable, return only the static urls

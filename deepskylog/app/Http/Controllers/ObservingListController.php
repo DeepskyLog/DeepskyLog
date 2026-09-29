@@ -13,6 +13,7 @@ use App\Models\Instrument;
 use App\Models\Location;
 use App\Services\ActiveObservingListService;
 use App\Services\ObservingListFileImportService;
+use App\Services\ObservingListItemNameResolver;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -20,6 +21,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rules\Unique;
 
 class ObservingListController extends Controller
 {
@@ -178,7 +182,7 @@ class ObservingListController extends Controller
         $this->authorize('create', ObservingList::class);
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', $this->uniqueListNameRule()],
             'description' => ['nullable', 'string', 'max:5000'],
             'public' => ['boolean'],
         ]);
@@ -211,7 +215,7 @@ class ObservingListController extends Controller
         $this->authorize('update', $list);
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', $this->uniqueListNameRule($list)],
             'description' => ['nullable', 'string', 'max:5000'],
             'public' => ['boolean'],
         ]);
@@ -227,8 +231,17 @@ class ObservingListController extends Controller
     }
 
     /**
-     * Delete an observing list.
+     * The database has a unique index on (owner_user_id, name): check it during
+     * validation so a duplicate name gives an error message instead of a 500.
      */
+    private function uniqueListNameRule(?ObservingList $ignore = null): Unique
+    {
+        $rule = Rule::unique('observing_lists', 'name')
+            ->where('owner_user_id', $ignore?->owner_user_id ?? auth()->id());
+
+        return $ignore ? $rule->ignore($ignore->id) : $rule;
+    }
+
     /**
      * Empty all items from an observing list (but keep the list itself).
      */
@@ -243,6 +256,9 @@ class ObservingListController extends Controller
             ->with('success', __(':count items removed from the list.', ['count' => $itemCount]));
     }
 
+    /**
+     * Delete an observing list.
+     */
     public function destroy(ObservingList $list): RedirectResponse
     {
         $this->authorize('delete', $list);
@@ -557,14 +573,17 @@ class ObservingListController extends Controller
         $objectNames = [];
 
         if ($request->filled('search_query')) {
-            // Re-run the search to get matching display names
+            // Re-run the search exactly as the search results table and its
+            // exports do (wildcards, one row per object), and store each result
+            // under the name the list tables match on: objects.name for deep-sky
+            // objects (also when the search hit an alias), else the index name.
             $q = trim($request->input('search_query'));
             if (strlen($q) > 0) {
-                $like = '%' . $q . '%';
-                $objectNames = DB::table('search_index')
-                    ->whereRaw('LOWER(name) LIKE ?', [strtolower($like)])
-                    ->whereNotNull('display_name')
-                    ->pluck('display_name')
+                [, $rows] = app(SearchExportController::class)
+                    ->resolveRows(Request::create('/search', 'GET', ['q' => $q]));
+                $objectNames = collect($rows)
+                    ->map(fn ($row) => $row->obj_name ?? $row->name ?? $row->display_name ?? null)
+                    ->filter()
                     ->unique()
                     ->values()
                     ->toArray();
@@ -574,7 +593,9 @@ class ObservingListController extends Controller
                 'object_names' => ['required', 'array', 'max:2000'],
                 'object_names.*' => ['required', 'string', 'max:255'],
             ]);
-            $objectNames = $request->input('object_names');
+            $objectNames = array_values(array_filter(
+                app(ObservingListItemNameResolver::class)->resolveMany($request->input('object_names'))
+            ));
         }
 
         $added = 0;
@@ -834,6 +855,16 @@ class ObservingListController extends Controller
             'object_name' => ['required', 'string', 'max:255'],
             'item_description' => ['nullable', 'string', 'max:2000'],
         ]);
+
+        // Store the object under the name the list tables and exports match on;
+        // an unknown name would be saved but never shown.
+        $objectName = app(ObservingListItemNameResolver::class)->resolve($validated['object_name']);
+        if ($objectName === null) {
+            throw ValidationException::withMessages([
+                'object_name' => __('Unknown object: :name', ['name' => $validated['object_name']]),
+            ]);
+        }
+        $validated['object_name'] = $objectName;
 
         // Idempotent insert – ignore if already in list
         $list->items()->firstOrCreate(

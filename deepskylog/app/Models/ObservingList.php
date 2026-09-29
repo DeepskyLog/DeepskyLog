@@ -130,6 +130,11 @@ class ObservingList extends Model
         if ($like) {
             $like->delete();
             $this->decrement('likes_count');
+            // Take back the point the like gave, or liking and unliking would
+            // farm points for the owner.
+            if ($user->id !== $this->owner_user_id && $this->owner?->experience()->exists()) {
+                $this->owner->deductPoints(1);
+            }
             return false; // Unlike
         } else {
             $this->likes()->create(['user_id' => $user->id]);

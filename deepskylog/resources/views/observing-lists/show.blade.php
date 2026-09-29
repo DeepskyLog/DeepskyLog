@@ -45,7 +45,8 @@
                     {{-- Action buttons --}}
                     <div class="flex flex-wrap items-center gap-2 flex-shrink-0">
                         @auth
-                            {{-- Active indicator / set active --}}
+                            {{-- Active indicator / set active (only owners and subscribers may activate a list) --}}
+                            @can('setAsActive', $list)
                             @if ($isActive)
                                 <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-700 text-blue-100 rounded text-xs font-semibold">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,6 +63,7 @@
                                     </button>
                                 </form>
                             @endif
+                            @endcan
 
                             {{-- Subscribe / Unsubscribe (for non-owners) --}}
                             @if (!$isOwner && $list->public)
