@@ -6,6 +6,11 @@ use App\Livewire\CreateInstrument;
 use App\Livewire\CreateInstrumentSet;
 use App\Livewire\CreateLens;
 use App\Livewire\CreateLocation;
+use App\Livewire\EyepieceTable;
+use App\Livewire\FilterTable;
+use App\Livewire\InstrumentTable;
+use App\Livewire\LensTable;
+use App\Livewire\LocationTable;
 use App\Models\User;
 use Database\Factories\EyepieceFactory;
 use Database\Factories\FilterFactory;
@@ -91,3 +96,51 @@ it('lets an administrator edit the record of another user', function () {
     expect($instrument->canBeEditedBy(auth()->user()))->toBeTrue()
         ->and($instrument->canBeEditedBy(null))->toBeFalse();
 });
+
+// The PowerGrid toggle callback gets the id and the column from the browser.
+function mountTable(string $table, User $user)
+{
+    Livewire::withoutLazyLoading();
+
+    return Livewire::actingAs($user)->test($table);
+}
+
+dataset('equipment tables', [
+    'instrument' => [InstrumentFactory::class, InstrumentTable::class],
+    'eyepiece' => [EyepieceFactory::class, EyepieceTable::class],
+    'lens' => [LensFactory::class, LensTable::class],
+    'filter' => [FilterFactory::class, FilterTable::class],
+    'location' => [LocationFactory::class, LocationTable::class],
+]);
+
+it('lets the owner toggle the active flag in the table', function (string $factory, string $table) {
+    $owner = User::factory()->create();
+    $record = createOwnedBy($factory, $owner);
+    $record->forceFill(['active' => 1])->save();
+
+    mountTable($table, $owner)
+        ->call('onUpdatedToggleable', (string) $record->id, 'active', '0');
+
+    expect((bool) $record->fresh()->active)->toBeFalse();
+})->with('equipment tables');
+
+it('does not toggle the records of another user in the table', function (string $factory, string $table) {
+    $owner = User::factory()->create();
+    $record = createOwnedBy($factory, $owner);
+    $record->forceFill(['active' => 1])->save();
+
+    mountTable($table, User::factory()->create())
+        ->call('onUpdatedToggleable', (string) $record->id, 'active', '0');
+
+    expect((bool) $record->fresh()->active)->toBeTrue();
+})->with('equipment tables');
+
+it('only toggles the active column in the table', function (string $factory, string $table) {
+    $owner = User::factory()->create();
+    $record = createOwnedBy($factory, $owner);
+
+    mountTable($table, $owner)
+        ->call('onUpdatedToggleable', (string) $record->id, 'user_id', '0');
+
+    expect((int) $record->fresh()->user_id)->toBe($owner->id);
+})->with('equipment tables');

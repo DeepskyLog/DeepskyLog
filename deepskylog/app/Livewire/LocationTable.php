@@ -177,8 +177,14 @@ final class LocationTable extends PowerGridComponent
 
     public function onUpdatedToggleable($id, $field, $value): void
     {
-        Location::query()->where('id', $id)->update([
-            $field => boolval($value),
+        // $id and $field come from the browser: only the active flag of the
+        // user's own records may be toggled.
+        if ($field !== 'active') {
+            return;
+        }
+
+        Location::query()->where('id', $id)->where('user_id', Auth::id())->update([
+            'active' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
         ]);
     }
 

@@ -189,11 +189,14 @@ class InstrumentTable extends PowerGridComponent
      */
     public function onUpdatedToggleable(string $id, string $field, string $value): void
     {
-        // $id may be numeric in string form; cast where needed
-        $bool = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+        // $id and $field come from the browser: only the active flag of the
+        // user's own records may be toggled.
+        if ($field !== 'active') {
+            return;
+        }
 
-        Instrument::query()->where('id', $id)->update([
-            $field => $bool,
+        Instrument::query()->where('id', $id)->where('user_id', Auth::id())->update([
+            'active' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
         ]);
     }
 

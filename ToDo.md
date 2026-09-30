@@ -46,8 +46,6 @@ Paths are relative to `deepskylog/`. The Critical and High items were checked in
 
 #### High
 
-- [ ] **The PowerGrid toggle handler writes any column of any row.** `onUpdatedToggleable()` in `InstrumentTable`, `EyepieceTable`, `LensTable`, `FilterTable` and `LocationTable` (e.g. `app/Livewire/InstrumentTable.php:190`) runs `where('id', $id)->update([$field => bool])` with `$id` and `$field` from the browser, so anyone can set `user_id`, `active` or `hidden` on other users' records.
-  - Fix: add `->where('user_id', Auth::id())` and only allow the `active` column.
 - [ ] **Stored XSS.** User text is stored unsanitized and printed with `{!! !!}`. HTMLPurifier is installed, but only `Message::sanitizeHtml()` uses it.
   - [ ] Observation descriptions (and their translations): `{!! html_entity_decode($description) !!}` in `components/observation-deepsky.blade.php:386-388`, `components/observation-comet.blade.php`, `observations/detail.blade.php`, `livewire/observation-search-row-detail.blade.php:214-216`, `observations/compare-my-last.blade.php` and `pdf/observation_search.blade.php:381`.
   - [ ] Equipment and location descriptions: `instrument`, `eyepiece`, `filter`, `lens`, `location` and `instrumentset` `show.blade.php`.
