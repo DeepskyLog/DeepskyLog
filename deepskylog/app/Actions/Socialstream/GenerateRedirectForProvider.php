@@ -19,11 +19,8 @@ class GenerateRedirectForProvider implements GeneratesProviderRedirect
             // Log some diagnostic info about the session / request before redirect
             Log::info('oauth: redirect init', [
                 'provider' => $provider,
-                'url' => Request::fullUrl(),
+                'url' => Request::url(),
                 'method' => Request::method(),
-                'session_id' => session()->getId(),
-                'session_cookie' => request()->cookie(config('session.cookie')),
-                'cookies' => request()->cookies->all(),
             ]);
         } catch (\Throwable $e) {
             Log::warning('oauth: failed to log redirect diagnostics', ['error' => $e->getMessage()]);

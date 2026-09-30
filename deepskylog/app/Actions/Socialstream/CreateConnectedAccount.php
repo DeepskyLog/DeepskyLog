@@ -20,8 +20,6 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
                 'provider_id' => $providerUser->getId(),
                 'provider_email' => $providerUser->getEmail(),
                 'user_id' => is_object($user) ? $user->id : $user,
-                'session_id' => session()->getId(),
-                'session_cookie' => request()->cookie(config('session.cookie')),
             ]);
         } catch (\Throwable $e) {
             // ignore logging errors

@@ -20,12 +20,8 @@ class ResolveSocialiteUser implements ResolvesSocialiteUsers
             // Log diagnostic info at callback time
             Log::info('oauth: callback received', [
                 'provider' => $provider,
-                'url' => Request::fullUrl(),
+                'url' => Request::url(),
                 'method' => Request::method(),
-                'session_id' => session()->getId(),
-                'session_cookie' => request()->cookie(config('session.cookie')),
-                'cookies' => request()->cookies->all(),
-                'query' => request()->query(),
             ]);
 
             $user = Socialite::driver($provider)->user();
@@ -53,10 +49,6 @@ class ResolveSocialiteUser implements ResolvesSocialiteUsers
             Log::warning('oauth: InvalidStateException on callback', [
                 'provider' => $provider,
                 'error' => $e->getMessage(),
-                'session_id' => session()->getId(),
-                'session_cookie' => request()->cookie(config('session.cookie')),
-                'cookies' => request()->cookies->all(),
-                'query' => request()->query(),
             ]);
 
             // Re-throw to let configured handler deal with it (or bubble up)

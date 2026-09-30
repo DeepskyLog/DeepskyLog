@@ -3048,7 +3048,6 @@ class ObjectController extends Controller
             'part_of_type' => gettype($request->input('part_of')),
             'contains_type' => gettype($request->input('contains')),
             'alternative_names' => $request->input('alternative_names'),
-            'all_input' => $request->all(),
         ]);
 
         // Validate the request

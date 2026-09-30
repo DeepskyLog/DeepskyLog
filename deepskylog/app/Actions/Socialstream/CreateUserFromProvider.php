@@ -44,9 +44,6 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                     'provider_id' => $providerUser->getId(),
                     'provider_email' => $providerUser->getEmail(),
                     'provider_name' => $providerUser->getName(),
-                    'session_id' => session()->getId(),
-                    'session_cookie' => request()->cookie(config('session.cookie')),
-                    'cookies' => request()->cookies->all(),
                 ]);
             } catch (\Throwable $e) {
                 // Do not break the flow for logging failures
@@ -72,8 +69,6 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                         'provider_id' => $providerUser->getId(),
                         'user_id' => $user->id,
                         'user_email' => $user->email,
-                        'session_id' => session()->getId(),
-                        'session_cookie' => request()->cookie(config('session.cookie')),
                     ]);
                 } catch (\Throwable $e) {
                     // ignore logging errors
