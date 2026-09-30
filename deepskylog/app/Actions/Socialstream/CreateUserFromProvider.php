@@ -5,6 +5,7 @@ namespace App\Actions\Socialstream;
 use App\Models\Message;
 use App\Models\Team;
 use App\Models\User;
+use App\Support\OAuthEmail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
@@ -42,8 +43,6 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                 \Illuminate\Support\Facades\Log::info('oauth: creating user from provider', [
                     'provider' => $provider,
                     'provider_id' => $providerUser->getId(),
-                    'provider_email' => $providerUser->getEmail(),
-                    'provider_name' => $providerUser->getName(),
                 ]);
             } catch (\Throwable $e) {
                 // Do not break the flow for logging failures
@@ -54,7 +53,13 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                 'username' => $this->uniqueUsername($providerUser),
                 'email' => $providerUser->getEmail(),
             ]), function (User $user) use ($provider, $providerUser) {
-                $user->markEmailAsVerified();
+                // A generated email cannot be verified, and only stands in for
+                // the missing one.
+                if (OAuthEmail::isVerifiedByProvider($provider, $providerUser) || OAuthEmail::isGenerated($user->email)) {
+                    $user->markEmailAsVerified();
+                } else {
+                    $user->sendEmailVerificationNotification();
+                }
 
                 if (Features::profilePhotos()) {
                     if (Socialstream::hasProviderAvatarsFeature() && Jetstream::managesProfilePhotos() && $providerUser->getAvatar()) {
@@ -68,7 +73,6 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                         'provider' => $provider,
                         'provider_id' => $providerUser->getId(),
                         'user_id' => $user->id,
-                        'user_email' => $user->email,
                     ]);
                 } catch (\Throwable $e) {
                     // ignore logging errors

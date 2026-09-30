@@ -1845,5 +1845,6 @@
     "{0} No observations were updated.|{1} Updated 1 observation to its primary object name.|[2,*] Updated :count observations to their primary object names.": "{0} Aucune observation n'a été mise à jour.|{1} 1 observation mise à jour avec le nom principal de son objet.|[2,*] :count observations mises à jour avec le nom principal de leur objet.",
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} Aucun nom d'objet orphelin trouvé.|{1} 1 nom d'objet orphelin trouvé.|[2,*] :count noms d'objets orphelins trouvés.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Aucun nom d'objet orphelin n'a été supprimé.|{1} 1 nom d'objet orphelin supprimé.|[2,*] :count noms d'objets orphelins supprimés.",
-    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Aucune cible d'observation inconnue trouvée.|{1} 1 cible d'observation inconnue trouvée.|[2,*] :count cibles d'observation inconnues trouvées."
+    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Aucune cible d'observation inconnue trouvée.|{1} 1 cible d'observation inconnue trouvée.|[2,*] :count cibles d'observation inconnues trouvées.",
+    "This email address cannot be used.": "Cette adresse e-mail ne peut pas être utilisée."
 }

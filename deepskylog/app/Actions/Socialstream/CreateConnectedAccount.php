@@ -18,7 +18,6 @@ class CreateConnectedAccount implements CreatesConnectedAccounts
             \Illuminate\Support\Facades\Log::info('oauth: creating connected account', [
                 'provider' => $provider,
                 'provider_id' => $providerUser->getId(),
-                'provider_email' => $providerUser->getEmail(),
                 'user_id' => is_object($user) ? $user->id : $user,
             ]);
         } catch (\Throwable $e) {

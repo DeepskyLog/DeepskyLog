@@ -27,6 +27,7 @@ use JoelButcher\Socialstream\Features;
 use JoelButcher\Socialstream\Concerns\ConfirmsFilament;
 use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider as CreatesUserFromProviderContract;
+use App\Support\OAuthEmail;
 use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Support\Session;
@@ -64,7 +65,12 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallbackContract
         $user = Socialstream::newUserModel()->where('email', $providerAccount->getEmail())->first();
 
         if ($user) {
-            if (! Features::authenticatesExistingUnlinkedUsers()) {
+            // Linking logs the provider user into this account, so both sides
+            // must have proven they own the email: otherwise whoever registered
+            // the address first shares the account with its owner.
+            if (! Features::authenticatesExistingUnlinkedUsers()
+                || ! $user->hasVerifiedEmail()
+                || ! OAuthEmail::isVerifiedByProvider($provider, $providerAccount)) {
                 return $this->oauthFailed(
                     error: __('An account already exists with the same email address. Please log in to connect your :provider account.', ['provider' => Providers::name($provider)]),
                     provider: $provider,

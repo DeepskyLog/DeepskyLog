@@ -27,7 +27,7 @@ function providerUser(): ProviderUser
         ->setToken('user-token');
 }
 
-it('does not log cookies, session ids or OAuth codes', function () {
+it('does not log cookies, session ids, OAuth codes or personal data', function () {
     $written = [];
     Log::shouldReceive('info', 'warning', 'error', 'debug')
         ->andReturnUsing(function ($message, $context = []) use (&$written) {
@@ -51,5 +51,7 @@ it('does not log cookies, session ids or OAuth codes', function () {
     $log = implode("\n", $written);
     expect($written)->not->toBeEmpty()
         ->and($log)->not->toContain('secret-')
-        ->and($log)->not->toContain(session()->getId());
+        ->and($log)->not->toContain(session()->getId())
+        ->and($log)->not->toContain('jane@example.com')
+        ->and($log)->not->toContain('Jane');
 });

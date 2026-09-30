@@ -44,11 +44,6 @@
 
 Paths are relative to `deepskylog/`. The Critical and High items were checked in the code and the server config; no exploit was tried on a running site.
 
-#### High
-
-- [ ] **Social login signs into a pre-registered account.** `Features::authExistingUnlinkedUsers()` is on (`config/socialstream.php`), and `app/Actions/Socialstream/AuthenticateOAuthCallback.php` links and logs in any account with the provider's email, even when that email was never verified. An attacker who registers `victim@gmail.com` with their own password ends up sharing the victim's account once the victim uses "Sign in with Google".
-  - Fix: only link when the local email is verified (and the provider says its email is verified), or turn the feature off; do not allow registration on the domain of the generated emails.
-
 #### Medium
 
 - [ ] Roles depend on the team name: `isAdministrator()`/`isDatabaseExpert()` compare `currentTeam->name`, `TeamPolicy::create` returns true and `teams.name` is not unique. Not reachable now (`CreatesTeams` is not bound, so `/teams/create` fails, and new users own no team), but it becomes a path to admin as soon as team creation works. Check roles by team id; make `TeamPolicy::create` admin-only; reject the reserved names in `CreateTeam`/`UpdateTeamName`.

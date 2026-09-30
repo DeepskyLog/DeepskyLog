@@ -1842,5 +1842,6 @@
     "{0} No observations were updated.|{1} Updated 1 observation to its primary object name.|[2,*] Updated :count observations to their primary object names.": "{0} Inga observationer uppdaterades.|{1} 1 observation uppdaterades till objektets huvudnamn.|[2,*] :count observationer uppdaterades till objektens huvudnamn.",
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} Inga föräldralösa objektnamn hittades.|{1} 1 föräldralöst objektnamn hittades.|[2,*] :count föräldralösa objektnamn hittades.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Inga föräldralösa objektnamn togs bort.|{1} 1 föräldralöst objektnamn togs bort.|[2,*] :count föräldralösa objektnamn togs bort.",
-    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Inga okända observationsmål hittades.|{1} 1 okänt observationsmål hittades.|[2,*] :count okända observationsmål hittades."
+    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Inga okända observationsmål hittades.|{1} 1 okänt observationsmål hittades.|[2,*] :count okända observationsmål hittades.",
+    "This email address cannot be used.": "Den här e-postadressen kan inte användas."
 }
