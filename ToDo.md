@@ -46,10 +46,6 @@ Paths are relative to `deepskylog/`. The Critical and High items were checked in
 
 #### Medium
 
-- [ ] Legacy MD5 password check uses `==` (`app/Providers/FortifyServiceProvider.php:64`): "0e…" hashes compare equal. Use `hash_equals()` and only for 32-hex-digit hashes; rehash or reset the remaining MD5 passwords.
-- [ ] OAuth login skips two-factor authentication: `AuthenticateOAuthCallback` logs the user in before the pipeline runs. It also has no `link()` method, so linking a provider while logged in crashes (`OAuthController::confirm()`).
-- [ ] Login throttle is keyed on the raw email/username plus IP (`FortifyServiceProvider.php:38-41`): each capitalisation gets its own bucket. Lowercase the key and add a per-account limiter.
-- [ ] `TrustHosts` is commented out (`app/Http/Kernel.php:19`): if Apache passes any Host header, password-reset links can point to an attacker's domain. Enable it or call `URL::forceRootUrl(config('app.url'))`.
 - [ ] PDF jobs can be queued without limit: `POST /downloads/dsl-atlas/generate` (`routes/web.php:218`) renders the whole atlas in the web request (`set_time_limit(0)`, no throttle); the atlas queue and `ObjectSets::generate()` (`$rows` not locked or capped) can fill the long-running worker. Only allow `scope=single` synchronously, throttle, allow 1–2 open jobs per user, and cap rows × FOVs × photos.
 - [ ] Formula injection in CSV/XLSX exports (`ObservationSearchTable.php:836-888` and the PowerGrid exports): text starting with `=` becomes a real formula. Prefix cells starting with `= + - @ \t \r` with `'`.
 - [ ] `POST /messages` sends email, needs only `auth` (not `verified`) and has no throttle. Add `verified` and a `throttle:messages` limiter; also limiters for comments and registration.

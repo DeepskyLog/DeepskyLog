@@ -2,37 +2,38 @@
 
 namespace App\Actions\Socialstream;
 
+use App\Support\OAuthEmail;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Pipeline;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\ViewErrorBag;
+use JoelButcher\Socialstream\Concerns\ConfirmsFilament;
+use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback as AuthenticatesOAuthCallbackContract;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
+use JoelButcher\Socialstream\Contracts\OAuthFailedResponse;
 use JoelButcher\Socialstream\Contracts\OAuthLoginResponse;
-use JoelButcher\Socialstream\Contracts\OAuthRegisterResponse;
 use JoelButcher\Socialstream\Contracts\OAuthProviderLinkedResponse;
 use JoelButcher\Socialstream\Contracts\OAuthProviderLinkFailedResponse;
-use JoelButcher\Socialstream\Contracts\OAuthFailedResponse;
+use JoelButcher\Socialstream\Contracts\OAuthRegisterResponse;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
-use JoelButcher\Socialstream\Socialstream;
-use JoelButcher\Socialstream\Providers;
-use JoelButcher\Socialstream\Events\OAuthLogin;
 use JoelButcher\Socialstream\Events\NewOAuthRegistration;
+use JoelButcher\Socialstream\Events\OAuthFailed;
+use JoelButcher\Socialstream\Events\OAuthLogin;
 use JoelButcher\Socialstream\Events\OAuthProviderLinked;
 use JoelButcher\Socialstream\Events\OAuthProviderLinkFailed;
-use JoelButcher\Socialstream\Events\OAuthFailed;
 use JoelButcher\Socialstream\Features;
-use JoelButcher\Socialstream\Concerns\ConfirmsFilament;
-use JoelButcher\Socialstream\Concerns\InteractsWithComposer;
-use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider as CreatesUserFromProviderContract;
-use App\Support\OAuthEmail;
+use JoelButcher\Socialstream\Providers;
+use JoelButcher\Socialstream\Socialstream;
+use Laravel\Fortify\Events\TwoFactorAuthenticationChallenged;
+use Laravel\Fortify\Features as FortifyFeatures;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\Jetstream;
-use Illuminate\Support\Session;
-use Illuminate\Support\ViewErrorBag;
-use Illuminate\Support\MessageBag;
+use Laravel\Socialite\Contracts\User as ProviderUser;
 
 class AuthenticateOAuthCallback implements AuthenticatesOAuthCallbackContract
 {
@@ -48,7 +49,7 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallbackContract
         //
     }
 
-    public function authenticate(string $provider, \Laravel\Socialite\Contracts\User $providerAccount): OAuthLoginResponse|OAuthRegisterResponse|RedirectResponse|OAuthProviderLinkedResponse|OAuthProviderLinkFailedResponse|OAuthFailedResponse
+    public function authenticate(string $provider, ProviderUser $providerAccount): OAuthLoginResponse|OAuthRegisterResponse|RedirectResponse|OAuthFailedResponse
     {
         if ($user = auth()->user()) {
             cache()->put("socialstream.{$user->id}:$provider.provider", $providerAccount, ttl: new \DateInterval('PT10M'));
@@ -101,81 +102,91 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallbackContract
         return $this->oauthFailed(error: $error, provider: $provider, providerAccount: $providerAccount);
     }
 
-    protected function register(string $provider, \Laravel\Socialite\Contracts\User $providerAccount): OAuthRegisterResponse|RedirectResponse
+    /**
+     * Link the provider account to the logged-in user, after they confirmed it on the prompt.
+     */
+    public function link(Authenticatable $user, string $provider, ProviderUser $providerAccount): OAuthProviderLinkedResponse|OAuthProviderLinkFailedResponse
+    {
+        $account = Socialstream::findConnectedAccountForProviderAndId($provider, $providerAccount->getId());
+
+        if ($account && $user->getAuthIdentifier() !== $account->user_id) {
+            event(new OAuthProviderLinkFailed($user, $provider, $account, $providerAccount));
+
+            $this->flashBanner(__('It looks like this :provider account is used by another user. Please log in.', ['provider' => Providers::name($provider)]), 'danger');
+
+            return app(OAuthProviderLinkFailedResponse::class);
+        }
+
+        if (! $account) {
+            $account = $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
+        }
+
+        event(new OAuthProviderLinked($user, $provider, $account, $providerAccount));
+
+        $this->flashBanner(__('You have successfully linked your :provider account.', ['provider' => Providers::name($provider)]), 'success');
+
+        return app(OAuthProviderLinkedResponse::class);
+    }
+
+    protected function register(string $provider, ProviderUser $providerAccount): OAuthRegisterResponse
     {
         $user = $this->createsUser->create($provider, $providerAccount);
 
-        return tap(
-            (new Pipeline(app()))->send(request())->through([
-                function ($request, $next) use ($user) {
-                    // Explicit guard login here to ensure session is written
-                    $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
-
-                    return $next($request);
-                },
-            ])->then(fn() => app(OAuthRegisterResponse::class)),
-            fn() => event(new NewOAuthRegistration($user, $provider, $providerAccount))
-        );
-    }
-
-    protected function login(Authenticatable $user, mixed $account, string $provider, \Laravel\Socialite\Contracts\User $providerAccount): OAuthLoginResponse|RedirectResponse
-    {
-        // Update connected account
-        $this->updatesConnectedAccounts->update($user, $account, $provider, $providerAccount);
-
-        // Ensure explicit guard login to persist auth into session
         $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
 
-        // Run the rest of the Fortify login pipeline (PrepareAuthenticatedSession etc.)
-        $response = tap(
-            $this->loginPipeline(request(), $user)->then(fn() => app(OAuthLoginResponse::class)),
-            fn() => event(new OAuthLogin($user, $provider, $account, $providerAccount)),
-        );
+        event(new NewOAuthRegistration($user, $provider, $providerAccount));
 
-        return $response;
+        return app(OAuthRegisterResponse::class);
     }
 
-    protected function loginPipeline(Request $request, Authenticatable $user): Pipeline
+    /**
+     * Log the user in, or, when they have two-factor authentication enabled, send them to the
+     * challenge first: the provider only proves the first factor. Fortify's challenge
+     * controller finishes the login from the login.id in the session.
+     */
+    protected function login(Authenticatable $user, mixed $account, string $provider, ProviderUser $providerAccount): OAuthLoginResponse|RedirectResponse
     {
-        if (! class_exists(Fortify::class)) {
-            return (new Pipeline(app()))->send($request)->through(array_filter([
-                function ($request, $next) use ($user) {
-                    app(StatefulGuard::class)->loginUsingId($user->getAuthIdentifier(), Socialstream::hasRememberSessionFeatures());
+        $this->updatesConnectedAccounts->update($user, $account, $provider, $providerAccount);
 
-                    return $next($request);
-                },
-                function ($request, $next) {
-                    if ($request->hasSession()) {
-                        $request->session()->regenerate();
-                    }
+        $request = request();
 
-                    return $next($request);
-                },
-            ]));
+        if ($this->requiresTwoFactorChallenge($user)) {
+            session()->put([
+                'login.id' => $user->getAuthIdentifier(),
+                'login.remember' => Socialstream::hasRememberSessionFeatures(),
+            ]);
+
+            TwoFactorAuthenticationChallenged::dispatch($user);
+
+            return redirect()->route('two-factor.login');
         }
 
-        if (Fortify::$authenticateThroughCallback) {
-            return (new Pipeline(app()))->send($request)->through($this->replaceFortifyAuthPipes(array_filter(
-                call_user_func(Fortify::$authenticateThroughCallback, $request)
-            )));
+        $this->guard->login($user, Socialstream::hasRememberSessionFeatures());
+
+        if ($request->hasSession()) {
+            $request->session()->regenerate();
         }
 
-        if (is_array(config('fortify.pipelines.login'))) {
-            return (new Pipeline(app()))->send($request)->through($this->replaceFortifyAuthPipes(array_filter(
-                config('fortify.pipelines.login')
-            )));
-        }
+        event(new OAuthLogin($user, $provider, $account, $providerAccount));
 
-        return (new Pipeline(app()))->send($request)->through(array_filter([
-            config('fortify.limiters.login') ? null : \Laravel\Fortify\Actions\EnsureLoginIsNotThrottled::class,
-            config('fortify.lowercase_usernames') ? \Laravel\Fortify\Actions\CanonicalizeUsername::class : null,
-            \Laravel\Fortify\Features::enabled(\Laravel\Fortify\Features::twoFactorAuthentication()) ? \Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable::class : null,
-            \JoelButcher\Socialstream\Actions\AttemptToAuthenticate::class.':'.$user->getAuthIdentifier(),
-            \Laravel\Fortify\Actions\PrepareAuthenticatedSession::class,
-        ]));
+        return app(OAuthLoginResponse::class);
     }
 
-    private function oauthFailed(string $error, string $provider, \Laravel\Socialite\Contracts\User $providerAccount): OAuthFailedResponse
+    /**
+     * The same test as Fortify's RedirectIfTwoFactorAuthenticatable.
+     */
+    private function requiresTwoFactorChallenge(Authenticatable $user): bool
+    {
+        if (! FortifyFeatures::enabled(FortifyFeatures::twoFactorAuthentication())
+            || ! in_array(TwoFactorAuthenticatable::class, class_uses_recursive($user))
+            || ! $user->two_factor_secret) {
+            return false;
+        }
+
+        return ! Fortify::confirmsTwoFactorAuthentication() || ! is_null($user->two_factor_confirmed_at);
+    }
+
+    private function oauthFailed(string $error, string $provider, ProviderUser $providerAccount): OAuthFailedResponse
     {
         event(new OAuthFailed($provider, $providerAccount));
 
@@ -187,13 +198,27 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallbackContract
         return app(OAuthFailedResponse::class);
     }
 
+    private function flashBanner(string $message, string $style): void
+    {
+        if (class_exists(Jetstream::class)) {
+            Session::flash('flash.banner', $message);
+            Session::flash('flash.bannerStyle', $style);
+
+            return;
+        }
+
+        $style === 'success'
+            ? Session::flash('status', $message)
+            : Session::flash('errors', (new ViewErrorBag())->put('default', new MessageBag(['socialstream' => $message])));
+    }
+
     private function canRegister(): bool
     {
         if ($this->usesFilament() && $this->canRegisterUsingFilament()) {
             return true;
         }
 
-        if (class_exists(Fortify::class) && !\Laravel\Fortify\Features::enabled(\Laravel\Fortify\Features::registration())) {
+        if (class_exists(Fortify::class) && ! FortifyFeatures::enabled(FortifyFeatures::registration())) {
             return false;
         }
 
@@ -208,20 +233,5 @@ class AuthenticateOAuthCallback implements AuthenticatesOAuthCallbackContract
         }
 
         return Features::hasCreateAccountOnFirstLoginFeatures() && Features::hasGlobalLoginFeatures();
-    }
-
-    private function replaceFortifyAuthPipes(mixed $pipes): array
-    {
-        return array_map(function ($pipe) {
-            if ($pipe === \Laravel\Fortify\Actions\AttemptToAuthenticate::class) {
-                return \JoelButcher\Socialstream\Actions\AttemptToAuthenticate::class;
-            }
-
-            if ($pipe === \Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable::class) {
-                return \JoelButcher\Socialstream\Actions\RedirectIfTwoFactorAuthenticatable::class;
-            }
-
-            return $pipe;
-        }, $pipes);
     }
 }

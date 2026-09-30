@@ -5,8 +5,8 @@ use JoelButcher\Socialstream\Http\Controllers\OAuthController;
 
 
 Route::group(['middleware' => config('socialstream.middleware', ['web'])], function () {
-    Route::get('/oauth/{provider}/callback/prompt', [OAuthController::class, 'prompt'])->name('oauth.callback.prompt');
-    Route::post('/oauth/{provider}/callback/confirm', [OAuthController::class, 'confirm'])->name(
+    Route::get('/oauth/{provider}/callback/prompt', [OAuthController::class, 'prompt'])->middleware('auth')->name('oauth.callback.prompt');
+    Route::post('/oauth/{provider}/callback/confirm', [OAuthController::class, 'confirm'])->middleware('auth')->name(
         'oauth.callback.confirm'
     );
 });
