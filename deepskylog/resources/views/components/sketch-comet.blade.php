@@ -79,7 +79,7 @@
                 "observer_username",
                 $obsUnified->observer_username,
             )
-                ->whereDate("observed_on", $detailDate)
+                ->where("observed_on", $detailDate)
                 ->where("target_name", $obsUnified->target_name)
                 ->orderBy("observed_time")
                 ->orderBy("id")
@@ -128,7 +128,7 @@
                 "observer_username",
                 $obsLegacy->observer_username,
             )
-                ->whereDate("observed_on", $detailDate)
+                ->where("observed_on", $detailDate)
                 ->where("target_type", \App\Models\Observation::TYPE_COMET)
                 ->where("target_key", $obsLegacy->target_key)
                 ->orderBy("observed_time")

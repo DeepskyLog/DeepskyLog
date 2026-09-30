@@ -89,8 +89,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
-    protected $with = ['locations', 'instruments', 'eyepieces', 'filters', 'lenses'];
-
     /**
      * Login and session state that never appears on a cached page, so
      * changing it does not clear the response cache.
@@ -171,11 +169,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected function currentTeamIsNamed(string $teamName): bool
     {
-        $team = Team::where('name', $teamName)->first();
-
-        return $team !== null
-            && $this->currentTeam !== null
-            && $this->isCurrentTeam($team);
+        // Compares with the currentTeam relation, which is loaded once, instead
+        // of looking the team up by name: the menus call this about 20 times per
+        // page. Team names are unique.
+        return $this->currentTeam?->name === $teamName;
     }
 
     /**
@@ -195,11 +192,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasAdministratorPrivileges(): bool
     {
-        if ($this->teams()->where('name', 'Administrators')->count() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        // Uses the teams relation, which is loaded once, instead of counting in
+        // the database on every call.
+        return $this->teams->contains('name', 'Administrators');
     }
 
     /**

@@ -44,7 +44,7 @@ trait SavesImportedObservations
                 ->orWhere(fn($q) => $q->whereNull('observer_user_id')->where('observer_username', $this->user->username)))
             ->where('target_type', $targetType)
             ->where('target_key', $targetKey)
-            ->whereDate('observed_on', $observedOn)
+            ->where('observed_on', $observedOn)
             ->orderBy('id');
 
         $withoutTime = fn($q) => $q->where(fn($q) => $q->whereNull('observed_time')

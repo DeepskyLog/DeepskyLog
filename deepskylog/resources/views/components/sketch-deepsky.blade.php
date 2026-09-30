@@ -105,7 +105,7 @@
                 "observer_username",
                 $obsUnified->observer_username,
             )
-                ->whereDate("observed_on", $detailDate)
+                ->where("observed_on", $detailDate)
                 ->where("target_name", $obsUnified->target_name)
                 ->orderBy("observed_time")
                 ->orderBy("id")
@@ -157,7 +157,7 @@
                 "observer_username",
                 $obsLegacy->observer_username ?? $obsLegacy->observerid,
             )
-                ->whereDate("observed_on", $detailDate)
+                ->where("observed_on", $detailDate)
                 ->where("target_name", $obsLegacy->target_name ?? $obsLegacy->objectname)
                 ->orderBy("observed_time")
                 ->orderBy("id")

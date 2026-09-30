@@ -124,7 +124,9 @@ class ObserverController extends Controller
         ObjectTypesChart $chart3,
         CountriesChart $chart4
     ) {
-        $user = User::where('slug', $slug)->firstOrFail();
+        $user = User::where('slug', $slug)
+            ->withCount(['locations', 'instruments', 'eyepieces', 'filters', 'lenses'])
+            ->firstOrFail();
 
         $cacheKey = 'observer_stats:' . $user->id;
         $inProgressKey = 'observer_stats_in_progress:' . $user->id;

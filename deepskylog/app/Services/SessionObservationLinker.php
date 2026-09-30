@@ -41,10 +41,10 @@ class SessionObservationLinker
         if ($start !== null || $end !== null) {
             $query = DB::table('observations')->whereIn('observer_username', self::participants($session));
             if ($start !== null) {
-                $query->whereDate('observed_on', '>=', $start);
+                $query->where('observed_on', '>=', $start);
             }
             if ($end !== null) {
-                $query->whereDate('observed_on', '<=', $end);
+                $query->where('observed_on', '<=', $end);
             }
             $ids = $query->pluck('id')->all();
         }

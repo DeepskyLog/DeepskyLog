@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Magnitude;
 use App\Traits\DeferredPagination;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -85,6 +86,19 @@ class Observation extends Model
             'transparency' => 'integer',
             'has_drawing' => 'boolean',
         ];
+    }
+
+    /**
+     * Store observed_on as Y-m-d, as the DATE column does in MySQL. The date
+     * cast alone writes Y-m-d H:i:s, which SQLite keeps, so an exact
+     * where('observed_on', 'Y-m-d') (which, unlike whereDate(), can use the
+     * (observer_username, observed_on) index) would not match there.
+     */
+    protected function observedOn(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => $value === null || $value === '' ? null : Carbon::parse($value)->format('Y-m-d'),
+        );
     }
 
     // ─── Target of an observation ──────────────────────────────────────────────
@@ -235,7 +249,7 @@ class Observation extends Model
 
         $objectSlug = Str::slug((string) $this->target_name, '-');
         $position = static::where('observer_username', $this->observer_username)
-            ->whereDate('observed_on', $this->observed_on->format('Y-m-d'))
+            ->where('observed_on', $this->observed_on->format('Y-m-d'))
             ->orderBy('observed_time')
             ->orderBy('id')
             ->get(['id', 'target_name'])

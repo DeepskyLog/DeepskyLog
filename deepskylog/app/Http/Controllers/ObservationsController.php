@@ -51,7 +51,7 @@ class ObservationsController extends Controller
 
         // Resolve candidates from the unified observations table first.
         $unifiedMatches = Observation::where('observer_username', $observerUser->username)
-            ->whereDate('observed_on', $date)
+            ->where('observed_on', $date)
             ->orderBy('observed_time')
             ->orderBy('id')
             ->get()
@@ -175,7 +175,7 @@ class ObservationsController extends Controller
         $observerUser = User::where('slug', $observer)->orWhere('username', $observer)->firstOrFail();
 
         $unifiedMatches = Observation::where('observer_username', $observerUser->username)
-            ->whereDate('observed_on', $date)
+            ->where('observed_on', $date)
             ->orderBy('observed_time')
             ->orderBy('id')
             ->get()
@@ -2504,7 +2504,7 @@ class ObservationsController extends Controller
         $observerUser = User::where('slug', $observer)->orWhere('username', $observer)->firstOrFail();
 
         $unifiedMatches = Observation::where('observer_username', $observerUser->username)
-            ->whereDate('observed_on', $date)
+            ->where('observed_on', $date)
             ->orderBy('observed_time')
             ->orderBy('id')
             ->get()
@@ -2656,7 +2656,7 @@ class ObservationsController extends Controller
         $observerUser = User::where('slug', $observer)->orWhere('username', $observer)->firstOrFail();
 
         $unifiedMatches = Observation::where('observer_username', $observerUser->username)
-            ->whereDate('observed_on', $date)
+            ->where('observed_on', $date)
             ->orderBy('observed_time')
             ->orderBy('id')
             ->get()

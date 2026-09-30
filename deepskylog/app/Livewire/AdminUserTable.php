@@ -71,7 +71,6 @@ final class AdminUserTable extends PowerGridComponent
     public function datasource(): Builder
     {
         return User::query()
-            ->without(['locations', 'instruments', 'eyepieces', 'filters', 'lenses'])
             ->whereHas('teams', fn (Builder $team) => $team->whereKey($this->team))
             ->select('users.id', 'users.username', 'users.name', 'users.email', 'users.slug', 'users.created_at');
     }

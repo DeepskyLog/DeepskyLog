@@ -83,7 +83,7 @@
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="/location">
                                     @endif
-                                    {{ $user->locations->count() }}
+                                    {{ $user->locations_count }}
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         </a>
                                     @endif
@@ -97,7 +97,7 @@
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="/instrument">
                                     @endif
-                                    {{ $user->instruments->count() }}
+                                    {{ $user->instruments_count }}
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         </a>
                                     @endif
@@ -111,7 +111,7 @@
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="/eyepiece">
                                     @endif
-                                    {{ $user->eyepieces->count() }}
+                                    {{ $user->eyepieces_count }}
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         </a>
                                     @endif
@@ -125,7 +125,7 @@
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="/filter">
                                     @endif
-                                    {{ $user->filters->count() }}
+                                    {{ $user->filters_count }}
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         </a>
                                     @endif
@@ -139,7 +139,7 @@
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         <a href="/lens">
                                     @endif
-                                    {{ $user->lenses->count() }}
+                                    {{ $user->lenses_count }}
                                     @if (Auth::user() && $user->id === Auth::user()->id)
                                         </a>
                                     @endif
