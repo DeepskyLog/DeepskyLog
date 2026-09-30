@@ -77,7 +77,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                 } catch (\Throwable $e) {
                     // ignore logging errors
                 }
-                $this->addToTeam($user, 'Observers');
+                $this->addToTeam($user, Team::OBSERVERS);
                 Message::dismissExistingBroadcastsFor($user->username);
             });
         });
@@ -113,9 +113,9 @@ class CreateUserFromProvider implements CreatesUserFromProvider
     /**
      * Add the user to the given team.
      */
-    protected function addToTeam(User $user, string $team): void
+    protected function addToTeam(User $user, int $teamId): void
     {
-        $team = Team::where('name', $team)->firstOrFail();
+        $team = Team::findOrFail($teamId);
         $user->teams()->attach($team);
         $user->switchTeam($team);
     }

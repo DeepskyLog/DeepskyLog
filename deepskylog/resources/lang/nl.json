@@ -1846,5 +1846,6 @@
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} Geen verweesde objectnamen gevonden.|{1} 1 verweesde objectnaam gevonden.|[2,*] :count verweesde objectnamen gevonden.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Er zijn geen verweesde objectnamen verwijderd.|{1} 1 verweesde objectnaam verwijderd.|[2,*] :count verweesde objectnamen verwijderd.",
     "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Geen onbekende waarnemingsdoelen gevonden.|{1} 1 onbekend waarnemingsdoel gevonden.|[2,*] :count onbekende waarnemingsdoelen gevonden.",
-    "This email address cannot be used.": "Dit e-mailadres kan niet gebruikt worden."
+    "This email address cannot be used.": "Dit e-mailadres kan niet gebruikt worden.",
+    "This team name is reserved.": "Deze teamnaam is gereserveerd."
 }

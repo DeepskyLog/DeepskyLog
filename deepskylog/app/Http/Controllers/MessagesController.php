@@ -6,6 +6,7 @@ use App\Mail\MessageReceived;
 use App\Models\Message;
 use App\Models\MessageDeleted;
 use App\Models\MessageRead;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -653,7 +654,7 @@ class MessagesController extends Controller
         }
 
         return User::where('username', $user->username)->whereHas('teams', function ($q) {
-            $q->where('name', 'Administrators');
+            $q->where('teams.id', Team::ADMINISTRATORS);
         })->exists();
     }
 }

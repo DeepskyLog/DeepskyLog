@@ -1846,5 +1846,6 @@
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} Aucun nom d'objet orphelin trouvé.|{1} 1 nom d'objet orphelin trouvé.|[2,*] :count noms d'objets orphelins trouvés.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Aucun nom d'objet orphelin n'a été supprimé.|{1} 1 nom d'objet orphelin supprimé.|[2,*] :count noms d'objets orphelins supprimés.",
     "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Aucune cible d'observation inconnue trouvée.|{1} 1 cible d'observation inconnue trouvée.|[2,*] :count cibles d'observation inconnues trouvées.",
-    "This email address cannot be used.": "Cette adresse e-mail ne peut pas être utilisée."
+    "This email address cannot be used.": "Cette adresse e-mail ne peut pas être utilisée.",
+    "This team name is reserved.": "Ce nom d'équipe est réservé."
 }

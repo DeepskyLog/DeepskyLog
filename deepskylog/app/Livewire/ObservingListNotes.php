@@ -2,26 +2,43 @@
 
 namespace App\Livewire;
 
+use App\Models\ObservingList;
 use App\Models\ObservingListItem;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ObservingListNotes extends Component
 {
+    #[Locked]
     public int $listId;
+
+    #[Locked]
     public string $listSlug = '';
+
+    #[Locked]
     public bool $isOwner = false;
 
     /** @var array<int, string> */
     public array $visibleObjectNames = [];
     public bool $syncedWithTable = false;
 
-    public function mount(int $listId, string $listSlug = '', bool $isOwner = false): void
+    public function mount(int $listId): void
     {
-        $this->listId = $listId;
-        $this->listSlug = $listSlug;
-        $this->isOwner = $isOwner;
+        $list = ObservingList::findOrFail($listId);
+
+        // Guests have no user for the policy: they may see public lists only.
+        abort_unless(
+            Auth::check() ? Gate::allows('view', $list) : (bool) $list->public,
+            403
+        );
+
+        $this->listId = $list->id;
+        $this->listSlug = (string) $list->slug;
+        $this->isOwner = Auth::id() !== null && Auth::id() === $list->owner_user_id;
     }
 
     #[On('observing-list-table-visible-objects-updated')]

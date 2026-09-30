@@ -14,8 +14,9 @@ class GroupSeeder extends Seeder
      */
     public function run()
     {
-        Team::forceCreate(['user_id' => 1, 'name' => 'Observers', 'personal_team' => 0]);
-        Team::forceCreate(['user_id' => 1, 'name' => 'Administrators', 'personal_team' => 0]);
-        Team::forceCreate(['user_id' => 1, 'name' => 'Database Experts', 'personal_team' => 0]);
+        // The roles are checked on these ids (see User::isAdministrator()).
+        Team::forceCreate(['id' => Team::OBSERVERS, 'user_id' => 1, 'name' => 'Observers', 'personal_team' => 0]);
+        Team::forceCreate(['id' => Team::ADMINISTRATORS, 'user_id' => 1, 'name' => 'Administrators', 'personal_team' => 0]);
+        Team::forceCreate(['id' => Team::DATABASE_EXPERTS, 'user_id' => 1, 'name' => 'Database Experts', 'personal_team' => 0]);
     }
 }

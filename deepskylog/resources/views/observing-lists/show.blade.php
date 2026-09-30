@@ -339,7 +339,7 @@
                         </div>
 
                         @auth
-                            @livewire('observing-list-notes', ['listId' => $list->id, 'listSlug' => $list->slug, 'isOwner' => $isOwner], key('observing-list-notes-' . $list->id))
+                            @livewire('observing-list-notes', ['listId' => $list->id], key('observing-list-notes-' . $list->id))
                         @endauth
                     @endif
                 </section>

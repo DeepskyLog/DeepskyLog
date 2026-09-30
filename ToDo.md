@@ -46,8 +46,6 @@ Paths are relative to `deepskylog/`. The Critical and High items were checked in
 
 #### Medium
 
-- [ ] Roles depend on the team name: `isAdministrator()`/`isDatabaseExpert()` compare `currentTeam->name`, `TeamPolicy::create` returns true and `teams.name` is not unique. Not reachable now (`CreatesTeams` is not bound, so `/teams/create` fails, and new users own no team), but it becomes a path to admin as soon as team creation works. Check roles by team id; make `TeamPolicy::create` admin-only; reject the reserved names in `CreateTeam`/`UpdateTeamName`.
-- [ ] `ObservingListNotes`: `$listId` and `$isOwner` are not `#[Locked]` and no `view` policy is checked, so the notes of other users' private lists can be read. Lock them, compute `isOwner` on the server and check `Gate::allows('view', $list)`.
 - [ ] Legacy MD5 password check uses `==` (`app/Providers/FortifyServiceProvider.php:64`): "0e…" hashes compare equal. Use `hash_equals()` and only for 32-hex-digit hashes; rehash or reset the remaining MD5 passwords.
 - [ ] OAuth login skips two-factor authentication: `AuthenticateOAuthCallback` logs the user in before the pipeline runs. It also has no `link()` method, so linking a provider while logged in crashes (`OAuthController::confirm()`).
 - [ ] Login throttle is keyed on the raw email/username plus IP (`FortifyServiceProvider.php:38-41`): each capitalisation gets its own bucket. Lowercase the key and add a per-account limiter.

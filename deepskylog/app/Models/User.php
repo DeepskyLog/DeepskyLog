@@ -189,21 +189,17 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Checks whether the user's active team is the team with the given name.
+     * Checks whether the user's active team is the team with the given id.
      *
-     * Returns false -- rather than throwing -- when the team does not exist or
-     * the user has no active team, so that a missing group never turns into a
-     * 404 on every page that renders the navigation menu.
+     * Compares the id, not the name: team names can be changed by their owner,
+     * so a team renamed to "Administrators" must not grant any role.
      *
-     * @param  string  $teamName  The name of the team to check against
+     * @param  int  $teamId  One of the Team::OBSERVERS/ADMINISTRATORS/DATABASE_EXPERTS ids
      * @return bool True if the user's active team is that team
      */
-    protected function currentTeamIsNamed(string $teamName): bool
+    protected function currentTeamIs(int $teamId): bool
     {
-        // Compares with the currentTeam relation, which is loaded once, instead
-        // of looking the team up by name: the menus call this about 20 times per
-        // page. Team names are unique.
-        return $this->currentTeam?->name === $teamName;
+        return $this->current_team_id !== null && (int) $this->current_team_id === $teamId;
     }
 
     /**
@@ -213,7 +209,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isAdministrator(): bool
     {
-        return $this->currentTeamIsNamed('Administrators');
+        return $this->currentTeamIs(Team::ADMINISTRATORS);
     }
 
     /**
@@ -225,7 +221,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         // Uses the teams relation, which is loaded once, instead of counting in
         // the database on every call.
-        return $this->teams->contains('name', 'Administrators');
+        return $this->teams->contains('id', Team::ADMINISTRATORS);
     }
 
     /**
@@ -235,7 +231,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isDatabaseExpert(): bool
     {
-        return $this->currentTeamIsNamed('Database Experts');
+        return $this->currentTeamIs(Team::DATABASE_EXPERTS);
     }
 
     /**
@@ -245,7 +241,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isObserver(): bool
     {
-        return $this->currentTeamIsNamed('Observers');
+        return $this->currentTeamIs(Team::OBSERVERS);
     }
 
     /**
