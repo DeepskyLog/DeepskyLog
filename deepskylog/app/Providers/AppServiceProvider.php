@@ -19,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Data of the observation cards, kept for one request (or queue job).
+        $this->app->scoped(\App\Services\Observations\ObservationCardData::class);
+
         // Replace the ShareButtons presenter with a custom mediator to change URL encoding
         $this->app->singleton(ShareButtons::class, function ($app) {
             $options = config('share-buttons') ?? [];

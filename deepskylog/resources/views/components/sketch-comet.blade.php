@@ -13,8 +13,10 @@
 ])
 <div>
     @php
+        $cards = \App\Services\Observations\ObservationCardData::instance();
         $obsUnified = $unified_observation;
-        $obsLegacy = $observation_id ? \App\Models\Observation::where('legacy_source', 'comet')->where('legacy_id', $observation_id)->first() : null;
+        // Only looked up without the unified observation.
+        $obsLegacy = !$obsUnified && $observation_id ? \App\Models\Observation::where('legacy_source', 'comet')->where('legacy_id', $observation_id)->first() : null;
         $comet = $preloaded_comet;
         $cometName =
             $obsUnified?->target_name ?? ($comet?->name ?? __("Unknown comet"));
@@ -28,10 +30,7 @@
             $obsLegacy?->observerid ?? "");
         $resolvedObserverSlug = $observer_slug;
         if (!$resolvedObserverSlug && $resolvedObserverUsername) {
-            $resolvedObserver = \App\Models\User::whereRaw("LOWER(username) = ?", [
-                mb_strtolower((string) $resolvedObserverUsername),
-            ])->first();
-            $resolvedObserverSlug = $resolvedObserver?->slug;
+            $resolvedObserverSlug = $cards->user($resolvedObserverUsername)?->slug;
         }
         $observerUrl = route(
             "observer.show",
@@ -75,14 +74,8 @@
                     "-",
                 );
 
-            $matchingIds = \App\Models\Observation::where(
-                "observer_username",
-                $obsUnified->observer_username,
-            )
-                ->where("observed_on", $detailDate)
-                ->where("target_name", $obsUnified->target_name)
-                ->orderBy("observed_time")
-                ->orderBy("id")
+            $matchingIds = $cards->sameDay((string) $obsUnified->observer_username, (string) $detailDate)
+                ->filter(fn($row) => mb_strtolower((string) $row->target_name) === mb_strtolower((string) $obsUnified->target_name))
                 ->pluck("id")
                 ->map(fn($id) => (int) $id)
                 ->values();
@@ -238,15 +231,7 @@
             // Likes are stored by the id in the observations table, not by
             // the id of the old DeepskyLog that observation_id holds.
             $likeId = ($obsUnified ?? $obsLegacy)?->id;
-            $likesCount = \App\Models\ObservationLike::where("observation_type", \App\Models\ObservationLike::TYPE_OBSERVATION)
-                ->where("observation_id", $likeId)
-                ->count();
-            $liked =
-                auth()->check() &&
-                \App\Models\ObservationLike::where("observation_type", \App\Models\ObservationLike::TYPE_OBSERVATION)
-                    ->where("observation_id", $likeId)
-                    ->where("user_id", auth()->id())
-                    ->exists();
+            ['count' => $likesCount, 'liked' => $liked] = $cards->likes($likeId);
         @endphp
 
         <button

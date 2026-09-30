@@ -156,8 +156,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                             @foreach($drawings as $drawing)
                                 @php
-                                    // Use preloaded user data to avoid N+1 query
-                                    $drawingUser = $drawingUsers[$drawing->observerid] ?? null;
+                                    $drawingUser = \App\Services\Observations\ObservationCardData::instance()->user($drawing->observerid);
                                     $observer_name = $drawingUser ? $drawingUser->name : $drawing->observerid;
                                     $observation_date = substr($drawing->date, 0, 4) . "-" . substr($drawing->date, 4, 2) . "-" . substr($drawing->date, 6, 2);
                                 @endphp
@@ -166,7 +165,7 @@
                                     @if($drawing->target_type === \App\Models\Observation::TYPE_COMET)
                                         <x-sketch-comet :unified_observation="$drawing" :observer_name="$observer_name" :observer_username="$drawing->observerid" :observation_date="$observation_date" />
                                     @else
-                                        <x-sketch-deepsky :observation_id="$drawing->id" :observer_name="$observer_name" :observer_username="$drawing->observerid" :observation_date="$observation_date" />
+                                        <x-sketch-deepsky :observation_id="$drawing->id" :unified_observation="$drawing" :observer_name="$observer_name" :observer_username="$drawing->observerid" :observation_date="$observation_date" />
                                     @endif
                                 </div>
                             @endforeach

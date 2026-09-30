@@ -161,7 +161,7 @@
                                     @php
                                         // observerid is an accessor of Observation for observer_username
                                         $observer_key = $observation->observerid ?? $observation->observer_username ?? null;
-                                        $observer_name = ($preloaded_users ?? collect())->get($observer_key)?->name ?? $observer_key ?? __('Unknown');
+                                        $observer_name = \App\Services\Observations\ObservationCardData::instance()->user($observer_key)?->name ?? $observer_key ?? __('Unknown');
 
                                         if (!empty($observation->date)) {
                                             $observation_date =
@@ -193,30 +193,9 @@
                             <h3 class="mb-3 text-lg font-semibold text-gray-200">{{ __('All drawings') }}</h3>
                             <div class="grid grid-cols-1 gap-4 px-5">
                                 @foreach ($deepsky as $observation)
-                                    @php
-                                        // Support both legacy and unified observation records
-                                        $observer_key = $observation->observerid ?? $observation->observer_username ?? null;
-                                        $preloaded_user = ($preloaded_users ?? collect())->get($observer_key);
-
-                                        $preloaded_object = ($preloaded_objects ?? collect())->get($observation->objectname ?? ($observation->target_name ?? null));
-                                        $preloaded_location = ($preloaded_locations ?? collect())->get($observation->locationid ?? $observation->location_id ?? null);
-                                        $preloaded_instrument = ($preloaded_instruments ?? collect())->get($observation->instrumentid ?? $observation->instrument_id ?? null);
-                                        $preloaded_eyepiece = ($preloaded_eyepieces ?? collect())->get($observation->eyepieceid ?? $observation->eyepiece_id ?? null);
-                                        $preloaded_filter = ($preloaded_filters ?? collect())->get($observation->filterid ?? $observation->filter_id ?? null);
-                                        $preloaded_lens = ($preloaded_lenses ?? collect())->get($observation->lensid ?? $observation->lens_id ?? null);
-                                    @endphp
-
                                     <x-observation-deepsky
                                         :observation="$observation"
                                         :translator="$tr"
-                                        :preloaded_user="$preloaded_user"
-                                        :preloaded_object="$preloaded_object"
-                                        :preloaded_location="$preloaded_location"
-                                        :preloaded_instrument="$preloaded_instrument"
-                                        :preloaded_eyepiece="$preloaded_eyepiece"
-                                        :preloaded_filter="$preloaded_filter"
-                                        :preloaded_lens="$preloaded_lens"
-                                        :preloaded_constellations="$preloaded_constellations ?? collect()"
                                     />
                                 @endforeach
                             </div>
@@ -232,19 +211,8 @@
                             </h3>
                             <div class="grid grid-cols-1 gap-4 px-5">
                                 @foreach ($comet as $observation)
-                                    @php
-                                        // Pass preloaded data to comet observation component
-                                        $preloaded_user = ($preloaded_users ?? collect())->get($observation->observerid);
-                                        $preloaded_comet = ($preloaded_comets ?? collect())->get($observation->objectid);
-                                        $preloaded_location = ($preloaded_locations ?? collect())->get($observation->locationid);
-                                        $preloaded_instrument = ($preloaded_instruments ?? collect())->get($observation->instrumentid);
-                                    @endphp
                                     <x-observation-comet 
                                         :observation="$observation" 
-                                        :preloaded_user="$preloaded_user"
-                                        :preloaded_comet="$preloaded_comet"
-                                        :preloaded_location="$preloaded_location"
-                                        :preloaded_instrument="$preloaded_instrument"
                                     />
                                 @endforeach
                             </div>
@@ -260,29 +228,9 @@
                             </h3>
                             <div class="grid grid-cols-1 gap-4 px-5">
                                 @foreach ($deepsky as $observation)
-                                    @php
-                                        // Support legacy and unified observation shapes when preloading
-                                        $observer_key = $observation->observerid ?? $observation->observer_username ?? null;
-                                        $preloaded_user = ($preloaded_users ?? collect())->get($observer_key);
-
-                                        $preloaded_object = ($preloaded_objects ?? collect())->get($observation->objectname ?? $observation->target_name ?? null);
-                                        $preloaded_location = ($preloaded_locations ?? collect())->get($observation->locationid ?? $observation->location_id ?? null);
-                                        $preloaded_instrument = ($preloaded_instruments ?? collect())->get($observation->instrumentid ?? $observation->instrument_id ?? null);
-                                        $preloaded_eyepiece = ($preloaded_eyepieces ?? collect())->get($observation->eyepieceid ?? $observation->eyepiece_id ?? null);
-                                        $preloaded_filter = ($preloaded_filters ?? collect())->get($observation->filterid ?? $observation->filter_id ?? null);
-                                        $preloaded_lens = ($preloaded_lenses ?? collect())->get($observation->lensid ?? $observation->lens_id ?? null);
-                                    @endphp
                                     <x-observation-deepsky 
                                         :observation="$observation" 
                                         :translator="$tr"
-                                        :preloaded_user="$preloaded_user"
-                                        :preloaded_object="$preloaded_object"
-                                        :preloaded_location="$preloaded_location"
-                                        :preloaded_instrument="$preloaded_instrument"
-                                        :preloaded_eyepiece="$preloaded_eyepiece"
-                                        :preloaded_filter="$preloaded_filter"
-                                        :preloaded_lens="$preloaded_lens"
-                                        :preloaded_constellations="$preloaded_constellations ?? collect()"
                                     />
                                 @endforeach
                             </div>

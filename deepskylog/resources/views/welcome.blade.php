@@ -327,56 +327,8 @@
                         ->deferredPaginate(20, "sketches", (int) $page);
                 }));
 
-                $observerIds = $sketches->pluck("observer_username")
-                    ->filter()
-                    ->unique()
-                    ->values()
-                    ->all();
-                $observerUsers = User::whereIn("username", $observerIds)
-                    ->get()
-                    ->keyBy("username");
-
-                $deepSkyObjectNames = $sketches->where("target_type", "deepsky")
-                    ->pluck("target_name")
-                    ->filter()
-                    ->unique()
-                    ->values()
-                    ->all();
-                $objects = empty($deepSkyObjectNames)
-                    ? collect()
-                    : \App\Models\Target::whereIn("name", $deepSkyObjectNames)
-                        ->get()
-                        ->keyBy("name");
-
-                $cometObjectIds = $sketches->where("target_type", "comet")
-                    ->pluck("target_key")
-                    ->filter()
-                    ->unique()
-                    ->values()
-                    ->all();
-                $preloadedSketchComets = empty($cometObjectIds)
-                    ? collect()
-                    : \App\Models\CometObject::whereIn("id", $cometObjectIds)
-                        ->get()
-                        ->keyBy("id");
-
-                $deepSkySketchIds = $sketches->where("target_type", "deepsky")
-                    ->pluck("id")
-                    ->all();
-                $deepSkyLikesCounts = empty($deepSkySketchIds)
-                    ? collect()
-                    : \App\Models\ObservationLike::where("observation_type", \App\Models\ObservationLike::TYPE_OBSERVATION)
-                        ->whereIn("observation_id", $deepSkySketchIds)
-                        ->select("observation_id", \DB::raw("count(*) as count"))
-                        ->groupBy("observation_id")
-                        ->pluck("count", "observation_id");
-                $deepSkyUserLikes = auth()->check() && !empty($deepSkySketchIds)
-                    ? \App\Models\ObservationLike::where("observation_type", \App\Models\ObservationLike::TYPE_OBSERVATION)
-                        ->whereIn("observation_id", $deepSkySketchIds)
-                        ->where("user_id", auth()->id())
-                        ->pluck("observation_id")
-                        ->flip()
-                    : collect();
+                // Observers, objects, likes, ... of all cards in grouped queries.
+                $cards = \App\Services\Observations\ObservationCardData::instance()->preload($sketches);
             @endphp
 
             <div class="mt-2">
@@ -384,7 +336,7 @@
                     <div class="flex flex-wrap px-5">
                         @foreach ($sketches as $sketch)
                             @php
-                                $observerUser = $observerUsers[$sketch->observer_username] ?? null;
+                                $observerUser = $cards->user($sketch->observer_username);
                                 $observer_name = $observerUser?->name ?? $sketch->observer_username;
                                 $observation_date = optional($sketch->observed_on)?->format("Y-m-d");
                             @endphp
@@ -397,7 +349,7 @@
                                         :observer_username="$sketch->observer_username"
                                         :observer_slug="$observerUser?->slug"
                                         :observation_date="$observation_date"
-                                        :preloaded_comet="$preloadedSketchComets[$sketch->target_key] ?? null"
+                                        :preloaded_comet="$cards->comet($sketch->target_key)"
                                     />
                                 </div>
                             @else
@@ -409,9 +361,6 @@
                                         :observer_username="$sketch->observer_username"
                                         :observer_slug="$observerUser?->slug"
                                         :observation_date="$observation_date"
-                                        :object="$objects[$sketch->target_name] ?? null"
-                                        :likes_count="$deepSkyLikesCounts[$sketch->id] ?? 0"
-                                        :liked="$deepSkyUserLikes->has($sketch->id)"
                                     />
                                 </div>
                             @endif
@@ -467,104 +416,8 @@
                         ->deferredPaginate(20, "observations", (int) $page);
                 }));
 
-                $observerIds = $observations->pluck("observer_username")
-                    ->filter()
-                    ->unique()
-                    ->values()
-                    ->all();
-                $preloadedUsers = \App\Models\User::whereIn("username", $observerIds)
-                    ->get()
-                    ->keyBy("username");
-
-                $deepSkyObjectNames = $observations->where("target_type", "deepsky")
-                    ->pluck("target_name")
-                    ->filter()
-                    ->unique()
-                    ->values()
-                    ->all();
-                $preloadedObjects = empty($deepSkyObjectNames)
-                    ? collect()
-                    : \App\Models\Target::whereIn("name", $deepSkyObjectNames)
-                        ->get()
-                        ->keyBy("name");
-
-                $allLocationIds = $observations->pluck("location_id")
-                    ->filter(fn($id) => (int) $id > 0)
-                    ->unique()
-                    ->values()
-                    ->all();
-                $preloadedLocations = empty($allLocationIds)
-                    ? collect()
-                    : \App\Models\Location::whereIn("id", $allLocationIds)
-                        ->get()
-                        ->keyBy("id");
-
-                $allInstrumentIds = $observations->pluck("instrument_id")
-                    ->filter(fn($id) => (int) $id > 0)
-                    ->unique()
-                    ->values()
-                    ->all();
-                $preloadedInstruments = empty($allInstrumentIds)
-                    ? collect()
-                    : \App\Models\Instrument::whereIn("id", $allInstrumentIds)
-                        ->get()
-                        ->keyBy("id");
-
-                $eyepieceIds = $observations->pluck("eyepiece_id")
-                    ->filter(fn($id) => (int) $id > 0)
-                    ->unique()
-                    ->values()
-                    ->all();
-                $preloadedEyepieces = empty($eyepieceIds)
-                    ? collect()
-                    : \App\Models\Eyepiece::whereIn("id", $eyepieceIds)
-                        ->get()
-                        ->keyBy("id");
-
-                $filterIds = $observations->pluck("filter_id")
-                    ->filter(fn($id) => (int) $id > 0)
-                    ->unique()
-                    ->values()
-                    ->all();
-                $preloadedFilters = empty($filterIds)
-                    ? collect()
-                    : \App\Models\Filter::whereIn("id", $filterIds)
-                        ->get()
-                        ->keyBy("id");
-
-                $lensIds = $observations->pluck("lens_id")
-                    ->filter(fn($id) => (int) $id > 0)
-                    ->unique()
-                    ->values()
-                    ->all();
-                $preloadedLenses = empty($lensIds)
-                    ? collect()
-                    : \App\Models\Lens::whereIn("id", $lensIds)
-                        ->get()
-                        ->keyBy("id");
-
-                $conIds = $preloadedObjects->pluck("con")
-                    ->filter()
-                    ->unique()
-                    ->values()
-                    ->all();
-                $preloadedConstellations = empty($conIds)
-                    ? collect()
-                    : \App\Models\Constellation::whereIn("id", $conIds)
-                        ->get()
-                        ->keyBy("id");
-
-                $cometObjectIds = $observations->where("target_type", "comet")
-                    ->pluck("target_key")
-                    ->filter()
-                    ->unique()
-                    ->values()
-                    ->all();
-                $preloadedComets = empty($cometObjectIds)
-                    ? collect()
-                    : \App\Models\CometObject::whereIn("id", $cometObjectIds)
-                        ->get()
-                        ->keyBy("id");
+                // Observers, objects, equipment, likes, ... of all cards in grouped queries.
+                \App\Services\Observations\ObservationCardData::instance()->preload($observations);
 
                 $tr = null;
                 if (auth()->check() && auth()->user()->translate) {
@@ -581,23 +434,11 @@
                             @if ($observation->target_type === "comet")
                                 <x-observation-comet
                                     :observation="$observation"
-                                    :preloaded_user="$preloadedUsers[$observation->observer_username] ?? null"
-                                    :preloaded_comet="$preloadedComets[$observation->target_key] ?? null"
-                                    :preloaded_location="$preloadedLocations[$observation->location_id] ?? null"
-                                    :preloaded_instrument="$preloadedInstruments[$observation->instrument_id] ?? null"
                                 />
                             @else
                                 <x-observation-deepsky
                                     :observation="$observation"
                                     :translator="$tr"
-                                    :preloaded_user="$preloadedUsers[$observation->observer_username] ?? null"
-                                    :preloaded_object="$preloadedObjects[$observation->target_name] ?? null"
-                                    :preloaded_location="$preloadedLocations[$observation->location_id] ?? null"
-                                    :preloaded_instrument="$preloadedInstruments[$observation->instrument_id] ?? null"
-                                    :preloaded_eyepiece="$preloadedEyepieces[$observation->eyepiece_id] ?? null"
-                                    :preloaded_filter="$preloadedFilters[$observation->filter_id] ?? null"
-                                    :preloaded_lens="$preloadedLenses[$observation->lens_id] ?? null"
-                                    :preloaded_constellations="$preloadedConstellations"
                                 />
                             @endif
                         @endforeach

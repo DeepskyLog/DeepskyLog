@@ -6,10 +6,6 @@
 
 - [ ] Test! 
   - [ ] Fix the speed problems found (measured on the local database, as a guest: `/statistics` 5 s, `/popular-objects` 2 s, `/observers` 1.8 s, `/object/m-51` 231 queries, `/drawings` 392 queries, `/` 266 queries).
-    - [ ] Queries run on almost every page
-      - [ ] `Message::getNumberOfUnreadMails()` (unread badge on every logged-in page) plucks all message ids and diffs them in PHP: use one `COUNT(*)` with `NOT EXISTS`, cache per user.
-      - [ ] Card components (`observation-deepsky`, `observation-comet`, `sketch-deepsky`, `sketch-comet`) query per card: likes count and "liked by me", `Observation::find`, magnification accessor, `Target::long_type()` (`target_types`), user lookups with `LOWER(username)`. Preload them in one grouped query in the callers (also in `session/show.blade.php`, which passes no preloads at all).
-      - [ ] The object type probe in `navigation-menu.blade.php` (up to 6 queries on every `/object/*` page): let the page pass a flag.
     - [ ] Missing indexes (one migration)
       - [ ] `observations(target_type, target_key)`: the `ofDeepskyObject`/`ofComet` scopes scan all rows (35–250 ms per count, several per object page, and two per star chart).
       - [ ] `observations(created_at)`: RSS feeds.

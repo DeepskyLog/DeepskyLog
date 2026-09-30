@@ -699,6 +699,11 @@
                             {{ __('DeepskyLog sketches of the week') }}
                         </h2>
                         <div class="px-5 flex flex-wrap">
+                            @php
+                                // The observations of the cards and their observers, likes, ... in grouped queries.
+                                (new \Illuminate\Database\Eloquent\Collection($user->sketchOfTheWeek->all()))->loadMissing(['observation', 'user']);
+                                \App\Services\Observations\ObservationCardData::instance()->preload($user->sketchOfTheWeek->pluck('observation'));
+                            @endphp
                             @foreach ($user->sketchOfTheWeek as $sketch)
                                 <div class="max-w-xl mt-3 pr-3">
                                     <x-sketch :sketch="$sketch" />
@@ -716,6 +721,11 @@
                             {{ __('DeepskyLog sketches of the month') }}
                         </h2>
                         <div class="px-5 flex flex-wrap">
+                            @php
+                                // The observations of the cards and their observers, likes, ... in grouped queries.
+                                (new \Illuminate\Database\Eloquent\Collection($user->sketchOfTheMonth->all()))->loadMissing(['observation', 'user']);
+                                \App\Services\Observations\ObservationCardData::instance()->preload($user->sketchOfTheMonth->pluck('observation'));
+                            @endphp
                             @foreach ($user->sketchOfTheMonth as $sketch)
                                 <div class="max-w-xl mt-3 pr-3">
                                     {{-- Show the correct drawing --}}

@@ -35,8 +35,7 @@
                             <div class="mt-3 max-w-xl pr-3">
                                 {{-- Show the correct drawing --}}
                                 @php
-                                    // Use preloaded user data to avoid N+1 query
-                                    $sketchUser = $sketchUsers[$sketch->observer_username] ?? null;
+                                    $sketchUser = \App\Services\Observations\ObservationCardData::instance()->user($sketch->observer_username);
                                     $observer_name = $sketchUser ? $sketchUser->name : $sketch->observer_username;
                                     $observation_date = optional($sketch->observed_on)?->format('Y-m-d');
                                 @endphp

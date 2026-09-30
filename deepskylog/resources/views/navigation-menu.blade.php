@@ -14,45 +14,11 @@
             // Default centered nav container
             $navContainerClass = 'mx-auto max-w-6xl px-4 sm:px-6 lg:px-8';
 
-            // If we're on an object page, try a lightweight lookup to detect
-            // whether the requested slug maps to a deepsky object. When true,
-            // render the nav container full-bleed so header/background align
-            // with the page container (prevents a white gap at the top).
-            try {
-                if (request()->is('object/*')) {
-                    $slug = request()->segment(2) ?? '';
-                    $candidates = [];
-                    if (! empty($slug)) {
-                        $raw = (string) $slug;
-                        $lower = mb_strtolower($raw);
-                        $candidates[] = $lower;
-                        $candidates[] = \Illuminate\Support\Str::slug($raw, '-');
-                        $candidates[] = str_replace('-', '', $lower);
-                        $candidates = array_values(array_unique(array_filter($candidates)));
-                    }
-
-                    $found = false;
-                    foreach ($candidates as $c) {
-                        // Check canonical objectnames mapping first
-                        $on = \Illuminate\Support\Facades\DB::table('objectnames')->where('slug', $c)->first();
-                        if ($on) {
-                            $found = true;
-                            break;
-                        }
-                        // Check objects table for matching slug
-                        $o = \Illuminate\Support\Facades\DB::table('objects')->where('slug', $c)->first();
-                        if ($o) {
-                            $found = true;
-                            break;
-                        }
-                    }
-
-                    if ($found) {
-                        $navContainerClass = 'w-full px-4 sm:px-6 lg:px-8';
-                    }
-                }
-            } catch (\Throwable $_) {
-                // keep default on error
+            // Deep-sky object pages render full-bleed (ObjectController::show()
+            // shares dsl_deepsky_full_container); widen the nav container too so
+            // header and background align with the page container.
+            if (! empty($dsl_deepsky_full_container)) {
+                $navContainerClass = 'w-full px-4 sm:px-6 lg:px-8';
             }
         @endphp
 

@@ -13,13 +13,6 @@
 ])
 <div class="justify-left mt-5 flex">
     @php
-        use App\Models\Constellation;
-        use App\Models\Eyepiece;
-        use App\Models\Filter;
-        use App\Models\Instrument;
-        use App\Models\Location;
-        use App\Models\Target;
-        use App\Models\User;
         use Carbon\Carbon;
         use Illuminate\Support\Facades\Cache;
 
@@ -65,27 +58,23 @@
             $obs_id           = $observation->id;
         }
 
-        // Use preloaded data if available, otherwise fall back to DB queries
-        $user =
-            $preloaded_user ??
-            User::where("username", html_entity_decode($observerid))->first();
-        $object =
-            $preloaded_object ??
-            Target::where("name", $objectname)->first();
+        // Use preloaded data if available, otherwise the data the page preloaded
+        // for its cards (ObservationCardData, which queries what is missing).
+        $cards = \App\Services\Observations\ObservationCardData::instance();
+        $user = $preloaded_user ?? $cards->user(html_entity_decode($observerid));
+        $object = $preloaded_object ?? $cards->target($objectname);
 
         if ($preloaded_constellations && $object) {
             $constellation = $preloaded_constellations[$object->con]->name ?? "";
         } else {
-            $constellation = $object
-                ? Constellation::where("id", $object->con)->first()?->name ?? ""
-                : "";
+            $constellation = $object ? $cards->constellationName($object->con) : "";
         }
 
-        $location   = $preloaded_location   ?? Location::where("id", $locationid)->first();
-        $instrument = $preloaded_instrument ?? Instrument::where("id", $instrumentid)->first();
-        $eyepiece   = $preloaded_eyepiece   ?? ($eyepieceid > 0 ? Eyepiece::where("id", $eyepieceid)->first() : null);
-        $filter     = $preloaded_filter     ?? ($filterid > 0   ? Filter::where("id", $filterid)->first()   : null);
-        $lens       = $preloaded_lens       ?? ($lensid > 0     ? \App\Models\Lens::where("id", $lensid)->first()     : null);
+        $location   = $preloaded_location   ?? $cards->location($locationid);
+        $instrument = $preloaded_instrument ?? $cards->instrument($instrumentid);
+        $eyepiece   = $preloaded_eyepiece   ?? ($eyepieceid > 0 ? $cards->eyepiece($eyepieceid) : null);
+        $filter     = $preloaded_filter     ?? ($filterid > 0   ? $cards->filter($filterid)     : null);
+        $lens       = $preloaded_lens       ?? ($lensid > 0     ? $cards->lens($lensid)         : null);
 
         $tr = $translator ?? null;
         if ($tr === null && auth()->check() && auth()->user()->translate) {
@@ -443,13 +432,7 @@
                 // Likes are stored by the id in the observations table
                 $likeType   = \App\Models\ObservationLike::TYPE_OBSERVATION;
                 $likeId     = $obsUnified?->id ?? $obs_id;
-                $likesCount = \App\Models\ObservationLike::where("observation_type", $likeType)
-                    ->where("observation_id", $likeId)
-                    ->count();
-                $liked = auth()->check() && \App\Models\ObservationLike::where("observation_type", $likeType)
-                    ->where("observation_id", $likeId)
-                    ->where("user_id", auth()->id())
-                    ->exists();
+                ['count' => $likesCount, 'liked' => $liked] = $cards->likes($likeId);
             @endphp
             <a
                 href="{{ $detailHref ?? '#' }}"

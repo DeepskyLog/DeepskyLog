@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Observations\ObservationCardData;
 use App\Traits\ClearsResponseCache;
 use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Magnitude;
@@ -62,6 +63,9 @@ class Observation extends Model
     {
         static::saved(fn (self $observation) => $observation->forgetObserverStats());
         static::deleted(fn (self $observation) => $observation->forgetObserverStats());
+        // A new, moved or deleted observation changes the index in the detail URLs.
+        static::saved(fn () => ObservationCardData::instance()->forgetSameDay());
+        static::deleted(fn () => ObservationCardData::instance()->forgetSameDay());
     }
 
     public function forgetObserverStats(): void
@@ -248,11 +252,8 @@ class Observation extends Model
         }
 
         $objectSlug = Str::slug((string) $this->target_name, '-');
-        $position = static::where('observer_username', $this->observer_username)
-            ->where('observed_on', $this->observed_on->format('Y-m-d'))
-            ->orderBy('observed_time')
-            ->orderBy('id')
-            ->get(['id', 'target_name'])
+        $position = ObservationCardData::instance()
+            ->sameDay((string) $this->observer_username, $this->observed_on->format('Y-m-d'))
             ->filter(fn($candidate) => static::slugMatches($objectSlug, (string) $candidate->target_name))
             ->values()
             ->search(fn($candidate) => (int) $candidate->id === (int) $this->id);
@@ -272,7 +273,7 @@ class Observation extends Model
             return null;
         }
 
-        $observer ??= User::where('username', $this->observer_username)->value('slug') ?: $this->observer_username;
+        $observer ??= ObservationCardData::instance()->user($this->observer_username)?->slug ?: $this->observer_username;
         $params = [
             'observer' => $observer,
             'date' => $this->observed_on->format('Y-m-d'),
@@ -366,9 +367,50 @@ class Observation extends Model
         $value = $table !== null && $this->exists
             ? DB::table($table)->where('observation_id', $this->getKey())->value('magnification')
             : null;
+
+        return $this->storedMagnification = self::storedMagnificationValue($value);
+    }
+
+    /**
+     * Read the magnifications of these observations from the detail tables in
+     * one query per table, so the magnification accessor does not query per
+     * observation (the observation cards show it).
+     *
+     * @param  iterable<Observation>  $observations
+     */
+    public static function preloadMagnifications(iterable $observations): void
+    {
+        $byTable = [];
+        foreach ($observations as $observation) {
+            if (! $observation->exists || $observation->storedMagnification !== false
+                || array_key_exists('magnification', $observation->attributes)) {
+                continue;
+            }
+            $table = match ($observation->attributes['target_type'] ?? null) {
+                self::TYPE_DEEPSKY => 'deepsky_observation_details',
+                self::TYPE_COMET => 'comet_observation_details',
+                default => null,
+            };
+            if ($table === null) {
+                $observation->storedMagnification = null;
+            } else {
+                $byTable[$table][$observation->getKey()] = $observation;
+            }
+        }
+
+        foreach ($byTable as $table => $models) {
+            $values = DB::table($table)->whereIn('observation_id', array_keys($models))->pluck('magnification', 'observation_id');
+            foreach ($models as $id => $observation) {
+                $observation->storedMagnification = self::storedMagnificationValue($values->get($id));
+            }
+        }
+    }
+
+    private static function storedMagnificationValue(mixed $value): ?string
+    {
         $value = trim((string) $value);
 
-        return $this->storedMagnification = ($value !== '' && (float) $value > 0 ? $value : null);
+        return $value !== '' && (float) $value > 0 ? $value : null;
     }
 
     /**

@@ -237,6 +237,7 @@ class MessagesController extends Controller
         // mark as read
         if ($isReceiver && ! MessageRead::where('id', $id)->where('receiver', $user->username)->exists()) {
             MessageRead::create(['id' => $id, 'receiver' => $user->username, 'read_at' => now()]);
+            Message::forgetUnreadCount($user->username);
         }
 
         // Fetch sender user if available. Do NOT overwrite an admin user's real name here.
@@ -400,6 +401,8 @@ class MessagesController extends Controller
             }
         }
 
+        Message::forgetUnreadCount($user->username);
+
         // Redirect back to the inbox page (preserves query params) so the refreshed
         // list shows updated read/unread state.
         return redirect()->back()->with('status', __('All messages marked as read'));
@@ -440,6 +443,8 @@ class MessagesController extends Controller
             }
         }
 
+        Message::forgetUnreadCount($user->username);
+
         return redirect()->route('messages.index')->with('status', __('All messages deleted'));
     }
 
@@ -469,6 +474,7 @@ class MessagesController extends Controller
                 // ignore duplicate key or other insert error
             }
         }
+        Message::forgetUnreadCount($user->username);
 
         $page = request()->input('page', 1);
         // Clamp page to available pages so deleting the last item on a page moves the user to a valid page
@@ -523,6 +529,7 @@ class MessagesController extends Controller
                 }
             }
         }
+        Message::forgetUnreadCount($user->username);
 
         $page = request()->input('page', 1);
         // Clamp page similar to single delete

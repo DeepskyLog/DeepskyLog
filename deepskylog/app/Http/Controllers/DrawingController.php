@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Observation;
 use App\Models\User;
+use App\Services\Observations\ObservationCardData;
 
 class DrawingController extends Controller
 {
@@ -35,11 +36,10 @@ class DrawingController extends Controller
 
         $sketches = $query->orderBy('id', 'desc')->deferredPaginate(20)->appends(request()->query());
 
-        // Preload users to avoid N+1 queries in the view
-        $observerIds = $sketches->pluck('observer_username')->unique()->all();
-        $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+        // Observers, objects, likes, ... of the sketch cards in grouped queries.
+        ObservationCardData::instance()->preload($sketches);
 
-        return view('drawings.show', ['user' => '', 'sketches' => $sketches, 'sketchUsers' => $sketchUsers, 'obsType' => $obsType]);
+        return view('drawings.show', ['user' => '', 'sketches' => $sketches, 'obsType' => $obsType]);
     }
 
     /**
@@ -75,10 +75,9 @@ class DrawingController extends Controller
 
         $sketches = $query->orderBy('observed_on', 'desc')->paginate(20)->appends(request()->query());
 
-        // Preload users to avoid N+1 queries in the view
-        $observerIds = $sketches->pluck('observer_username')->unique()->all();
-        $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+        // Observers, objects, likes, ... of the sketch cards in grouped queries.
+        ObservationCardData::instance()->preload($sketches);
 
-        return view('drawings.show', ['user' => $user, 'sketches' => $sketches, 'sketchUsers' => $sketchUsers, 'obsType' => $obsType]);
+        return view('drawings.show', ['user' => $user, 'sketches' => $sketches, 'obsType' => $obsType]);
     }
 }

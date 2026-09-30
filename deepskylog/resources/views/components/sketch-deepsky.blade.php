@@ -17,16 +17,17 @@
 <div>
     @php
         // Use preloaded data if available, otherwise fetch from DB (fallback for backward compatibility)
+        $cards = \App\Services\Observations\ObservationCardData::instance();
         $obsUnified = $unified_observation;
-        $obsLegacy = $observation ?? ($observation_id ? \App\Models\Observation::find($observation_id) : null);
+        // Only looked up without the unified observation (x-sketch passes the
+        // id of the old DeepskyLog as observation_id).
+        $obsLegacy = $observation ?? (!$obsUnified && $observation_id ? \App\Models\Observation::find($observation_id) : null);
 
         $objectName =
             $obsUnified?->target_name ?? ($obsLegacy?->objectname ?? __("Unknown"));
         $objectModel =
             $object ??
-            ($objectName
-                ? \App\Models\Target::where("name", $objectName)->first()
-                : null);
+            ($objectName ? $cards->target($objectName) : null);
         $slug =
             $objectModel?->slug ??
             \Illuminate\Support\Str::slug($objectName ?? "", "-");
@@ -38,10 +39,7 @@
             $obsLegacy?->observerid ?? "");
         $resolvedObserverSlug = $observer_slug;
         if (!$resolvedObserverSlug && $resolvedObserverUsername) {
-            $resolvedObserver = \App\Models\User::whereRaw("LOWER(username) = ?", [
-                mb_strtolower((string) $resolvedObserverUsername),
-            ])->first();
-            $resolvedObserverSlug = $resolvedObserver?->slug;
+            $resolvedObserverSlug = $cards->user($resolvedObserverUsername)?->slug;
         }
 
         // Only build observer URL when we have a usable route parameter; otherwise leave null
@@ -101,14 +99,8 @@
                     "-",
                 );
 
-            $matchingIds = \App\Models\Observation::where(
-                "observer_username",
-                $obsUnified->observer_username,
-            )
-                ->where("observed_on", $detailDate)
-                ->where("target_name", $obsUnified->target_name)
-                ->orderBy("observed_time")
-                ->orderBy("id")
+            $matchingIds = $cards->sameDay((string) $obsUnified->observer_username, (string) $detailDate)
+                ->filter(fn($row) => mb_strtolower((string) $row->target_name) === mb_strtolower((string) $obsUnified->target_name))
                 ->pluck("id")
                 ->map(fn($id) => (int) $id)
                 ->values();
@@ -197,18 +189,7 @@
             $likesCount = $likes_count;
             $isLiked = $liked;
         } else {
-            $likesCount = \App\Models\ObservationLike::where(
-                "observation_type",
-                \App\Models\ObservationLike::TYPE_OBSERVATION,
-            )
-                ->where("observation_id", $likeId)
-                ->count();
-            $isLiked =
-                auth()->check() &&
-                \App\Models\ObservationLike::where("observation_type", \App\Models\ObservationLike::TYPE_OBSERVATION)
-                    ->where("observation_id", $likeId)
-                    ->where("user_id", auth()->id())
-                    ->exists();
+            ['count' => $likesCount, 'liked' => $isLiked] = $cards->likes($likeId);
         }
     @endphp
     @php

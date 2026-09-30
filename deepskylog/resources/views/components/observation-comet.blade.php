@@ -39,10 +39,10 @@
             $obs_mag          = $observation->mag ?? null;
         }
 
-        // Use preloaded data when available, otherwise fall back to queries
-        $user =
-            $preloaded_user ??
-            \App\Models\User::where("username", html_entity_decode($observerid))->first();
+        // Use preloaded data when available, otherwise the data the page preloaded
+        // for its cards (ObservationCardData, which queries what is missing).
+        $cards = \App\Services\Observations\ObservationCardData::instance();
+        $user = $preloaded_user ?? $cards->user(html_entity_decode($observerid));
         // Fallback when user cannot be found
         if (!$user) {
             $user = (object) [
@@ -139,7 +139,7 @@
             // Use preloaded comet when available
             $cometOld =
                 $preloaded_comet ??
-                ($objectid ? \App\Models\CometObject::where("id", $objectid)->first() : null);
+                ($objectid ? $cards->comet($objectid) : null);
             $cometName = $cometOld ? $cometOld->name : ($isUnified ? ($observation->target_name ?? __("Unknown comet")) : __("Unknown comet"));
             $slug =
                 $cometOld?->slug ?? \Illuminate\Support\Str::slug($cometName ?? "", "-");
@@ -169,8 +169,7 @@
             {{ __(" from ") }}
             @php
                 $location =
-                    $preloaded_location ??
-                    \App\Models\Location::where("id", $locationid)->first();
+                    $preloaded_location ?? $cards->location($locationid);
                 $locationSlug = $location ? $location->slug : "";
                 $locationName = $location ? $location->name : __("Unknown location");
             @endphp
@@ -189,8 +188,7 @@
         @if ($instrumentid > 0)
             @php
                 $instrument =
-                    $preloaded_instrument ??
-                    \App\Models\Instrument::where("id", $instrumentid)->first();
+                    $preloaded_instrument ?? $cards->instrument($instrumentid);
                 $instrumentSlug = $instrument ? $instrument->slug : "";
                 $instrumentName = $instrument ? $instrument->fullName() : __("Unknown instrument");
             @endphp
@@ -318,12 +316,7 @@
                     $likesCount = $likes_count;
                     $isLiked    = $liked;
                 } else {
-                    $likesCount = \App\Models\ObservationLike::where("observation_type", $likeType)
-                        ->where("observation_id", $likeId)->count();
-                    $isLiked = auth()->check() && \App\Models\ObservationLike::where("observation_type", $likeType)
-                        ->where("observation_id", $likeId)
-                        ->where("user_id", auth()->id())
-                        ->exists();
+                    ['count' => $likesCount, 'liked' => $isLiked] = $cards->likes($likeId);
                 }
             @endphp
             <a

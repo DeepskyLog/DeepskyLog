@@ -69,3 +69,40 @@ it('does not remove the existing broadcasts from other users', function () {
 
     expect(Message::getNumberOfUnreadMails($this->alice->username))->toBe(1);
 });
+
+it('keeps the unread count of a user up to date while it is cached', function () {
+    $alice = $this->alice->username;
+    $personal = createTestMessage($this->bob->username, $alice);
+    createTestMessage('DeepskyLog', 'all');
+
+    expect(Message::getNumberOfUnreadMails($alice))->toBe(2);
+
+    // Served from the cache: no query on the messages tables.
+    DB::enableQueryLog();
+    expect(Message::getNumberOfUnreadMails($alice))->toBe(2)
+        ->and(collect(DB::getQueryLog())->filter(fn ($q) => str_contains($q['query'], 'messages'))->all())->toBe([]);
+    DB::disableQueryLog();
+
+    // A new personal message, a new broadcast, reading and deleting all change it.
+    $second = createTestMessage($this->bob->username, $alice);
+    expect(Message::getNumberOfUnreadMails($alice))->toBe(3);
+    createTestMessage('DeepskyLog', 'all');
+    expect(Message::getNumberOfUnreadMails($alice))->toBe(4)
+        ->and(Message::getNumberOfUnreadMails($this->bob->username))->toBe(2);
+
+    $this->actingAs($this->alice)->get(route('messages.show', $personal->id))->assertOk();
+    expect(Message::getNumberOfUnreadMails($alice))->toBe(3);
+
+    $this->actingAs($this->alice)->post(route('messages.destroy', $second->id));
+    expect(Message::getNumberOfUnreadMails($alice))->toBe(2);
+
+    $this->actingAs($this->alice)->post(route('messages.markAllRead'));
+    expect(Message::getNumberOfUnreadMails($alice))->toBe(0);
+});
+
+it('does not count a broadcast for the administrator who sent it', function () {
+    createTestMessage($this->alice->username, 'all');
+
+    expect(Message::getNumberOfUnreadMails($this->alice->username))->toBe(0)
+        ->and(Message::getNumberOfUnreadMails($this->bob->username))->toBe(1);
+});

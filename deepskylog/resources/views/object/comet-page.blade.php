@@ -140,6 +140,11 @@
                                 <div class="mt-2">
                                     <x-card>
                                         <div class="flex flex-wrap px-5">
+                                            @php
+                                                // The observations of the cards and their observers, likes, ... in grouped queries.
+                                                (new \Illuminate\Database\Eloquent\Collection($objectSketches->all()))->loadMissing(['observation', 'user']);
+                                                \App\Services\Observations\ObservationCardData::instance()->preload($objectSketches->pluck('observation'));
+                                            @endphp
                                             @foreach ($objectSketches as $sketch)
                                                 <x-sketch :sketch="$sketch" />
                                             @endforeach

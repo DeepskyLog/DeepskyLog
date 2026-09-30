@@ -6,11 +6,14 @@ use Carbon\Carbon;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class Message extends Model
 {
     protected $table = 'messages';
+
+    private const UNREAD_VERSION_KEY = 'unread_mails_version';
 
     protected $fillable = ['id', 'sender', 'receiver', 'subject', 'message', 'date'];
 
@@ -114,24 +117,71 @@ class Message extends Model
                 ->selectRaw('? as deleted_at', [now()])
                 ->toBase()
         );
+        self::forgetUnreadCount($username);
     }
 
     /**
      * Return the number of unread mails for a given receiver id (username).
+     *
+     * Shown as the badge in the menu of every logged-in page, so it is cached
+     * per user. The cached count is dropped when a message to the user is
+     * sent, read or deleted (forgetUnreadCount()); a broadcast changes the
+     * count of everybody, so it moves the version all cached counts carry
+     * instead. Both are read in one cache lookup.
      */
     public static function getNumberOfUnreadMails($id): int
     {
+        $userKey = 'unread_mails:'.$id;
+        $cached = Cache::many([self::UNREAD_VERSION_KEY, $userKey]);
+        $version = (string) ($cached[self::UNREAD_VERSION_KEY] ?? '');
+        $entry = $cached[$userKey];
+
+        if (is_array($entry) && ($entry['version'] ?? null) === $version) {
+            return (int) $entry['count'];
+        }
+
+        $count = self::countUnreadMails((string) $id);
+        Cache::put($userKey, ['version' => $version, 'count' => $count], now()->addMinutes(10));
+
+        return $count;
+    }
+
+    /**
+     * Drop the cached unread count of a user, after one of their messages was
+     * sent, read or deleted.
+     */
+    public static function forgetUnreadCount(string $username): void
+    {
+        Cache::forget('unread_mails:'.$username);
+    }
+
+    private static function countUnreadMails(string $username): int
+    {
         // Broadcasts count for everybody except the administrator who sent them.
-        $allMails = self::where(function ($q) use ($id) {
-            $q->where('receiver', $id)
-                ->orWhere(fn ($q) => $q->where('receiver', 'all')->where('sender', '<>', $id));
-        })->pluck('id');
+        return self::query()
+            ->where(function ($q) use ($username) {
+                $q->where('receiver', $username)
+                    ->orWhere(fn ($q) => $q->where('receiver', 'all')->where('sender', '<>', $username));
+            })
+            ->whereNotExists(fn ($q) => $q->from('messages_deleted')
+                ->whereColumn('messages_deleted.id', 'messages.id')
+                ->where('messages_deleted.receiver', $username))
+            ->whereNotExists(fn ($q) => $q->from('messages_read')
+                ->whereColumn('messages_read.id', 'messages.id')
+                ->where('messages_read.receiver', $username))
+            ->count();
+    }
 
-        $deletedMails = MessageDeleted::where('receiver', $id)->pluck('id');
-        $readMails = MessageRead::where('receiver', $id)->pluck('id');
-
-        $remaining = $allMails->diff($deletedMails)->diff($readMails);
-
-        return $remaining->count();
+    protected static function booted(): void
+    {
+        $changed = function (Message $message) {
+            if (strtolower((string) $message->receiver) === 'all') {
+                Cache::forever(self::UNREAD_VERSION_KEY, (string) hrtime(true));
+            } else {
+                self::forgetUnreadCount((string) $message->receiver);
+            }
+        };
+        static::created($changed);
+        static::deleted($changed);
     }
 }

@@ -50,8 +50,7 @@
                         @foreach ($sketches as $sketch)
                             <div class="mt-3 max-w-xl pr-3">
                                 @php
-                                    // Use preloaded user data to avoid N+1 query
-                                    $sketchUser = $sketchUsers[$sketch->observerid] ?? null;
+                                    $sketchUser = \App\Services\Observations\ObservationCardData::instance()->user($sketch->observerid);
                                     $observer_name = $sketchUser ? $sketchUser->name : $sketch->observerid;
                                     $observation_date = substr($sketch->date, 0, 4) . "-" . substr($sketch->date, 4, 2) . "-" . substr($sketch->date, 6, 2);
 

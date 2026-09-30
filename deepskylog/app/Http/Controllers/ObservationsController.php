@@ -16,6 +16,7 @@ use App\Models\SketchOfTheMonth;
 use App\Models\ObservationLike;
 use App\Models\ObservationComment;
 use App\Services\ObservationSearchQuery;
+use App\Services\Observations\ObservationCardData;
 use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Targets\Moon as AstroMoon;
@@ -328,25 +329,7 @@ class ObservationsController extends Controller
 
         $deepsky = $query->deferredPaginate(20, 'deepsky')->appends(request()->query());
 
-        // Preload related data using unified field names to avoid N+1 queries
-        $items = $deepsky->getCollection();
-        $usernames = $items->pluck('observer_username')->filter()->unique();
-        $objectNames = $items->pluck('target_name')->filter()->unique();
-        $locationIds = $items->pluck('location_id')->filter()->unique();
-        $instrumentIds = $items->pluck('instrument_id')->filter()->unique();
-        $eyepieceIds = $items->pluck('eyepiece_id')->filter()->unique()->reject(fn($id) => $id <= 0);
-        $filterIds = $items->pluck('filter_id')->filter()->unique()->reject(fn($id) => $id <= 0);
-        $lensIds = $items->pluck('lens_id')->filter()->unique()->reject(fn($id) => $id <= 0);
-
-        $users = $usernames->isNotEmpty() ? User::whereIn('username', $usernames)->get()->keyBy('username') : collect();
-        $objects = $objectNames->isNotEmpty() ? Target::whereIn('name', $objectNames)->get()->keyBy('name') : collect();
-        $locations = $locationIds->isNotEmpty() ? Location::whereIn('id', $locationIds)->get()->keyBy('id') : collect();
-        $instruments = $instrumentIds->isNotEmpty() ? Instrument::whereIn('id', $instrumentIds)->get()->keyBy('id') : collect();
-        $eyepieces = $eyepieceIds->isNotEmpty() ? Eyepiece::whereIn('id', $eyepieceIds)->get()->keyBy('id') : collect();
-        $filters = $filterIds->isNotEmpty() ? Filter::whereIn('id', $filterIds)->get()->keyBy('id') : collect();
-        $lenses = $lensIds->isNotEmpty() ? Lens::whereIn('id', $lensIds)->get()->keyBy('id') : collect();
-        $constellationIds = $objects->pluck('con')->unique()->filter();
-        $constellations = $constellationIds->isNotEmpty() ? Constellation::whereIn('id', $constellationIds)->get()->keyBy('id') : collect();
+        $this->preloadCards($deepsky);
 
         return view('observations.show', [
             'user' => '',
@@ -354,14 +337,6 @@ class ObservationsController extends Controller
             'comet' => collect(),
             'mode' => 'deepsky',
             'obsType' => $obsType,
-            'preloaded_users' => $users,
-            'preloaded_objects' => $objects,
-            'preloaded_locations' => $locations,
-            'preloaded_instruments' => $instruments,
-            'preloaded_eyepieces' => $eyepieces,
-            'preloaded_filters' => $filters,
-            'preloaded_lenses' => $lenses,
-            'preloaded_constellations' => $constellations,
         ]);
     }
 
@@ -463,34 +438,7 @@ class ObservationsController extends Controller
 
             $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
-            // Preload related data to avoid N+1 queries
-            $items = $deepsky->getCollection();
-            $usernames = collect([$user->username]);
-            $objectNames = collect($items->pluck('target_name')->filter()->unique()->values());
-            $locationIds = collect($items->pluck('location_id')->filter()->unique()->values());
-            $instrumentIds = collect($items->pluck('instrument_id')->filter()->unique()->values());
-            $eyepieceIds = collect($items->pluck('eyepiece_id')->filter()->unique()->reject(fn($id) => $id <= 0)->values());
-            $filterIds = collect($items->pluck('filter_id')->filter()->unique()->reject(fn($id) => $id <= 0)->values());
-
-            $users = $usernames->isNotEmpty() ? User::whereIn('username', $usernames)->get()->keyBy('username') : collect();
-            $objects = $objectNames->isNotEmpty() ? Target::whereIn('name', $objectNames)->get()->keyBy('name') : collect();
-            $locations = $locationIds->isNotEmpty() ? Location::whereIn('id', $locationIds)->get()->keyBy('id') : collect();
-            $instruments = $instrumentIds->isNotEmpty() ? Instrument::whereIn('id', $instrumentIds)->get()->keyBy('id') : collect();
-            $eyepieces = $eyepieceIds->isNotEmpty() ? Eyepiece::whereIn('id', $eyepieceIds)->get()->keyBy('id') : collect();
-            $filters = $filterIds->isNotEmpty() ? Filter::whereIn('id', $filterIds)->get()->keyBy('id') : collect();
-
-            $constellationIds = $objects->pluck('con')->unique()->filter();
-            $constellations = $constellationIds->isNotEmpty() ? Constellation::whereIn('id', $constellationIds)->get()->keyBy('id') : collect();
-
-            $preloadedData = [
-                'preloaded_users' => $users,
-                'preloaded_objects' => $objects,
-                'preloaded_locations' => $locations,
-                'preloaded_instruments' => $instruments,
-                'preloaded_eyepieces' => $eyepieces,
-                'preloaded_filters' => $filters,
-                'preloaded_constellations' => $constellations,
-            ];
+            $preloadedData = $this->preloadCards($deepsky);
 
             return view('observations.show', array_merge([
                 'user' => $user,
@@ -559,7 +507,7 @@ class ObservationsController extends Controller
             $fakeUser = (object) ['name' => $objectName, 'slug' => $slug, 'username' => null];
 
             // Preload related data to avoid N+1 queries
-            $preloadedData = $this->preloadDeepskyData($deepsky);
+            $preloadedData = $this->preloadCards($deepsky);
 
             return view('observations.show', array_merge([
                 'user' => $fakeUser,
@@ -582,7 +530,7 @@ class ObservationsController extends Controller
         $comet = Observation::comets()->orderBy('id', 'desc')->deferredPaginate(20, 'comet')->appends(request()->query());
 
         // Preload related data to avoid N+1 queries
-        $preloadedData = $this->preloadCometData($comet);
+        $preloadedData = $this->preloadCards($comet);
 
         return view('observations.show', array_merge([
             'user' => '',
@@ -662,7 +610,7 @@ class ObservationsController extends Controller
         $fakeUser = (object) ['name' => $objectName ?? $slug, 'slug' => $slug, 'username' => null];
 
         // Preload related data to avoid N+1 queries
-        $preloadedData = $this->preloadCometData($comet);
+        $preloadedData = $this->preloadCards($comet);
 
         return view('observations.show', array_merge([
             'user' => $fakeUser,
@@ -731,7 +679,7 @@ class ObservationsController extends Controller
         $comet = $query->paginate(20, ['*'], 'comet')->appends(request()->query());
 
         // Preload related data to avoid N+1 queries
-        $preloadedData = $this->preloadCometData($comet);
+        $preloadedData = $this->preloadCards($comet);
 
         return view('observations.show', array_merge([
             'user' => $user,
@@ -753,7 +701,7 @@ class ObservationsController extends Controller
         $comet = Observation::comets()->where('observer_username', $user->username)->orderBy('observed_on', 'desc')->paginate(20, ['*'], 'comet')->appends(request()->query());
 
         // Preload related data to avoid N+1 queries
-        $preloadedData = $this->preloadCometData($comet);
+        $preloadedData = $this->preloadCards($comet);
 
         return view('observations.show', array_merge([
             'user' => $user,
@@ -776,7 +724,7 @@ class ObservationsController extends Controller
             $deepsky = Observation::where('observer_username', $user->username)->where('has_drawing', 1)->orderBy('observed_on', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
             // Preload related data to avoid N+1 queries
-            $preloadedData = $this->preloadDeepskyData($deepsky);
+            $preloadedData = $this->preloadCards($deepsky);
 
             return view('observations.show', array_merge([
                 'user' => $user,
@@ -842,7 +790,7 @@ class ObservationsController extends Controller
             $fakeUser = (object) ['name' => $objectName, 'slug' => $slug, 'username' => null];
 
             // Preload related data to avoid N+1 queries
-            $preloadedData = $this->preloadDeepskyData($deepsky);
+            $preloadedData = $this->preloadCards($deepsky);
 
             return view('observations.show', array_merge([
                 'user' => $fakeUser,
@@ -994,7 +942,7 @@ class ObservationsController extends Controller
             $deepsky = $legacyQuery->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
             // Preload related data to avoid N+1 queries
-            $preloadedData = $this->preloadDeepskyData($deepsky);
+            $preloadedData = $this->preloadCards($deepsky);
 
             return view('observations.show', array_merge([
                 'user' => $user,
@@ -1112,7 +1060,7 @@ class ObservationsController extends Controller
             $deepsky = $legacyQuery->paginate(20, ['*'], 'deepsky')->appends(request()->query());
 
             // Preload related data to avoid N+1 queries
-            $preloadedData = $this->preloadDeepskyData($deepsky);
+            $preloadedData = $this->preloadCards($deepsky);
 
             return view('observations.show', array_merge([
                 'user' => $user,
@@ -1226,7 +1174,7 @@ class ObservationsController extends Controller
             $fakeUser = (object) ['name' => $objectName, 'slug' => $slug, 'username' => null];
 
             // Preload related data to avoid N+1 queries
-            $preloadedData = $this->preloadDeepskyData($deepsky);
+            $preloadedData = $this->preloadCards($deepsky);
 
             return view('observations.show', array_merge([
                 'user' => $fakeUser,
@@ -1335,6 +1283,18 @@ class ObservationsController extends Controller
         }
 
         return null;
+    }
+
+    /**
+     * Preload what the observation cards of a list page show (observers,
+     * objects, equipment, likes, ...) in grouped queries; the cards read it
+     * from ObservationCardData, so nothing is passed to the view.
+     */
+    private function preloadCards($observations): array
+    {
+        ObservationCardData::instance()->preload($observations);
+
+        return [];
     }
 
     /**

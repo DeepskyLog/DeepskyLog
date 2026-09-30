@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use App\Models\Atlas;
 use App\Models\DeepskyObject;
@@ -2577,6 +2578,9 @@ class ObjectController extends Controller
         try {
             if (($type === 'deepsky' || $type === 'objects')) {
                 $vars['dsl_deepsky_full_container'] = true;
+                // Shared so the navigation menu (a separate Livewire component,
+                // which does not see the page's variables) renders full width too.
+                View::share('dsl_deepsky_full_container', true);
             }
         } catch (\Throwable $_) {
             // ignore

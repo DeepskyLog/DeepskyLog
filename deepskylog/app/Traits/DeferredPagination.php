@@ -5,9 +5,21 @@ namespace App\Traits;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Cache;
 
 trait DeferredPagination
 {
+    /**
+     * A saved or deleted row can change every cached total of the table
+     * (see deferredTotal()), so it moves the version they carry.
+     */
+    public static function bootDeferredPagination(): void
+    {
+        $forget = fn ($model) => Cache::forever(self::deferredTotalVersionKey($model->getTable()), (string) hrtime(true));
+        static::saved($forget);
+        static::deleted($forget);
+    }
+
     /**
      * Paginate using a "deferred join": first select only the primary keys for
      * the requested page, then fetch the full rows for those keys.
@@ -23,7 +35,7 @@ trait DeferredPagination
         $page = ($page !== null && $page >= 1) ? $page : Paginator::resolveCurrentPage($pageName);
         $keyName = $query->getModel()->getKeyName();
 
-        $total = $query->toBase()->getCountForPagination();
+        $total = self::deferredTotal($query);
 
         $ids = $total > 0
             ? (clone $query)->select($keyName)->forPage($page, $perPage)->pluck($keyName)
@@ -42,5 +54,36 @@ trait DeferredPagination
             'path' => Paginator::resolveCurrentPath(),
             'pageName' => $pageName,
         ]);
+    }
+
+    /**
+     * The number of rows of the query, cached: counting all observations
+     * takes 40 ms on every page of a list, the page itself a few. The cached
+     * count carries the version of the table, which a saved or deleted row
+     * moves; both are read in one cache lookup.
+     */
+    private static function deferredTotal(Builder $query): int
+    {
+        $base = $query->toBase();
+        $table = $query->getModel()->getTable();
+        $key = 'deferred_total:'.$table.':'.md5($base->toSql().'|'.json_encode($base->getBindings()));
+        $versionKey = self::deferredTotalVersionKey($table);
+
+        $cached = Cache::many([$versionKey, $key]);
+        $version = (string) ($cached[$versionKey] ?? '');
+        $entry = $cached[$key];
+        if (is_array($entry) && ($entry['version'] ?? null) === $version) {
+            return (int) $entry['total'];
+        }
+
+        $total = $base->getCountForPagination();
+        Cache::put($key, ['version' => $version, 'total' => $total], now()->addHour());
+
+        return $total;
+    }
+
+    private static function deferredTotalVersionKey(string $table): string
+    {
+        return 'deferred_total_version:'.$table;
     }
 }
