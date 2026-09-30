@@ -259,65 +259,23 @@
                                         $count = \App\Models\SketchOfTheMonth::where('user_id', $user->id)->count();
                                     }
 
+                                    $isDrawing = preg_match('/\bDrawings?\b/i', $raw);
+
                                     // Catalog counts for Messier / Caldwell / Herschel (objectnames table)
-                                    if (!$count && preg_match('/messier/i', $raw)) {
-                                        $catalog = 'M';
-                                            $q = \DB::table('objectnames')
-                                            ->join('observations', 'objectnames.objectname', '=', 'observations.target_name')
-                                            ->leftJoin('deepsky_observation_details', 'observations.id', '=', 'deepsky_observation_details.observation_id')
-                                            ->where(function ($sub) {
-                                                $sub->whereNull('deepsky_observation_details.visibility')
-                                                    ->orWhere('deepsky_observation_details.visibility', '!=', 7);
-                                            })
-                                            ->where('observations.observer_username', $user->username)
-                                            ->where('objectnames.catalog', $catalog);
-                                        if ($isDrawing) {
-                                            $q->where('observations.has_drawing', 1);
-                                        }
-                                        $count = (int) $q->distinct()->count('objectnames.catindex');
-                                    }
-
-                                    if (!$count && preg_match('/caldwell/i', $raw)) {
-                                        $catalog = 'Caldwell';
-                                            $q = \DB::table('objectnames')
-                                            ->join('observations', 'objectnames.objectname', '=', 'observations.target_name')
-                                            ->leftJoin('deepsky_observation_details', 'observations.id', '=', 'deepsky_observation_details.observation_id')
-                                            ->where(function ($sub) {
-                                                $sub->whereNull('deepsky_observation_details.visibility')
-                                                    ->orWhere('deepsky_observation_details.visibility', '!=', 7);
-                                            })
-                                            ->where('observations.observer_username', $user->username)
-                                            ->where('objectnames.catalog', $catalog);
-                                        if ($isDrawing) {
-                                            $q->where('observations.has_drawing', 1);
-                                        }
-                                        $count = (int) $q->distinct()->count('objectnames.catindex');
-                                    }
-
-                                    if (!$count && preg_match('/herschel/i', $raw)) {
+                                    $achievementCatalog = null;
+                                    if (preg_match('/messier/i', $raw)) {
+                                        $achievementCatalog = 'M';
+                                    } elseif (preg_match('/caldwell/i', $raw)) {
+                                        $achievementCatalog = 'Caldwell';
+                                    } elseif (preg_match('/herschel/i', $raw)) {
                                         // Distinguish Herschel 400 vs Herschel II
-                                        if (preg_match('/400\s*ii|h400-?ii|herschel\s*ii/i', $raw)) {
-                                            $catalog = 'H400-II';
-                                        } else {
-                                            $catalog = 'H400';
-                                        }
-                                            $q = \DB::table('objectnames')
-                                            ->join('observations', 'objectnames.objectname', '=', 'observations.target_name')
-                                            ->leftJoin('deepsky_observation_details', 'observations.id', '=', 'deepsky_observation_details.observation_id')
-                                            ->where(function ($sub) {
-                                                $sub->whereNull('deepsky_observation_details.visibility')
-                                                    ->orWhere('deepsky_observation_details.visibility', '!=', 7);
-                                            })
-                                            ->where('observations.observer_username', $user->username)
-                                            ->where('objectnames.catalog', $catalog);
-                                        if ($isDrawing) {
-                                            $q->where('observations.has_drawing', 1);
-                                        }
-                                        $count = (int) $q->distinct()->count('objectnames.catindex');
+                                        $achievementCatalog = preg_match('/400\s*ii|h400-?ii|herschel\s*ii/i', $raw) ? 'H400-II' : 'H400';
+                                    }
+                                    if (!$count && $achievementCatalog !== null) {
+                                        $count = $catalogCounts[$achievementCatalog][$isDrawing ? 'drawn' : 'observed'] ?? 0;
                                     }
                                     // Top-ten observer: show the observer's rank (1-10) when applicable
                                     if (!$count && preg_match('/top\s*ten/i', $raw)) {
-                                        $rank = $user->getRank();
                                         if ($rank >= 1 && $rank <= 10) {
                                             $count = $rank;
                                         }
@@ -371,7 +329,6 @@
                                     <div class="relative w-16 h-16 flex items-center justify-center">
                                         @php
                                             // Prefer dedicated SVGs for certain categories
-                                            $isDrawing = preg_match('/\bDrawings?\b/i', $raw);
                                             if (preg_match('/galax/i', $lbase)) {
                                                 $svgPath = public_path($isDrawing ? 'images/achievements/galaxy_drawings.svg' : 'images/achievements/galaxy.svg');
                                             } elseif (str_contains($lbase, 'comet')) {
@@ -514,62 +471,62 @@
                         <tr>
                             <td class="pr-8">{{ __('Messier objects') }}</td>
                             <td class="px-4"></td>
-                            <td class="px-4">{{ $user->getObservedCountFromCatalog('M') }} / 110</td>
+                            <td class="px-4">{{ $catalogCounts['M']['observed'] }} / 110</td>
                             <td class="px-4"></td>
                         </tr>
 
                         <tr>
                             <td class="pr-8">{!! __('Drawings of Messier objects') !!}</td>
                             <td class="px-4"></td>
-                            <td class="px-4">{{ $user->getDrawingCountFromCatalog('M') }} / 110</td>
+                            <td class="px-4">{{ $catalogCounts['M']['drawn'] }} / 110</td>
                             <td class="px-4"></td>
                         </tr>
 
                         <tr>
                             <td class="pr-8">{{ __('Caldwell objects') }}</td>
                             <td class="px-4"></td>
-                            <td class="px-4">{{ $user->getObservedCountFromCatalog('Caldwell') }} / 109</td>
+                            <td class="px-4">{{ $catalogCounts['Caldwell']['observed'] }} / 109</td>
                             <td class="px-4"></td>
                         </tr>
 
                         <tr>
                             <td class="pr-8">{!! __('Drawings of Caldwell objects') !!}</td>
                             <td class="px-4"></td>
-                            <td class="px-4">{{ $user->getDrawingCountFromCatalog('Caldwell') }} / 109</td>
+                            <td class="px-4">{{ $catalogCounts['Caldwell']['drawn'] }} / 109</td>
                             <td class="px-4"></td>
                         </tr>
 
                         <tr>
                             <td class="pr-8">{{ __('H400 objects') }}</td>
                             <td class="px-4"></td>
-                            <td class="px-4">{{ $user->getObservedCountFromCatalog('H400') }} / 400</td>
+                            <td class="px-4">{{ $catalogCounts['H400']['observed'] }} / 400</td>
                             <td class="px-4"></td>
                         </tr>
 
                         <tr>
                             <td class="pr-8">{!! __('Drawings of H400 objects') !!}</td>
                             <td class="px-4"></td>
-                            <td class="px-4">{{ $user->getDrawingCountFromCatalog('H400') }} / 400</td>
+                            <td class="px-4">{{ $catalogCounts['H400']['drawn'] }} / 400</td>
                             <td class="px-4"></td>
                         </tr>
 
                         <tr>
                             <td class="pr-8">{{ __('H400-II objects') }}</td>
                             <td class="px-4"></td>
-                            <td class="px-4">{{ $user->getObservedCountFromCatalog('H400-II') }} / 400</td>
+                            <td class="px-4">{{ $catalogCounts['H400-II']['observed'] }} / 400</td>
                             <td class="px-4"></td>
                         </tr>
 
                         <tr>
                             <td class="pr-8">{!! __('Drawings of H400-II objects') !!}</td>
                             <td class="px-4"></td>
-                            <td class="px-4">{{ $user->getDrawingCountFromCatalog('H400-II') }} / 400</td>
+                            <td class="px-4">{{ $catalogCounts['H400-II']['drawn'] }} / 400</td>
                             <td class="px-4"></td>
                         </tr>
 
                         <tr>
                             <td class="pr-8">{{ __('Rank') }}</td>
-                            <td class="px-4">{{ $user->getRank() ?: '-' }} / {{ User::rankedObserverCount() }} </td>
+                            <td class="px-4">{{ $rank ?: '-' }} / {{ $rankedObserverCount }} </td>
                             <td class="px-4"></td>
                         </tr>
                     </tbody>

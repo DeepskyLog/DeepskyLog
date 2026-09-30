@@ -8,6 +8,7 @@ use App\Models\TargetType;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use marineusde\LarapexCharts\Charts\BarChart as OriginalBarChart;
 use marineusde\LarapexCharts\Charts\LineChart as OriginalLineChart;
@@ -17,6 +18,15 @@ use Monarobase\CountryList\CountryListFacade as Countries;
 
 class StatisticsController extends Controller
 {
+    /**
+     * The counts are cached for an hour: they are aggregates over all
+     * observations (a few seconds of queries), and a new observation changing
+     * them an hour later is no problem.
+     */
+    private const CACHE_SECONDS = 3600;
+
+    private const CATEGORIES = ['deepsky', 'comets', 'double', 'planets', 'sun', 'moon'];
+
     public function index(Request $request)
     {
         $countryOptions = $this->countryOptions();
@@ -30,17 +40,42 @@ class StatisticsController extends Controller
 
         $selectedCountryLabel = $selectedCountry ? $countryOptions[$selectedCountry] : null;
 
+        // Only numbers are cached; the labels and charts are built per request,
+        // in the language of the visitor.
+        $counts = Cache::remember(
+            'statistics:counts:' . ($selectedCountry ?? 'all'),
+            self::CACHE_SECONDS,
+            fn() => $this->counts($selectedCountry)
+        );
+
         return view('statistics.index', [
             'countryOptions' => $countryOptions,
             'selectedCountry' => $selectedCountry,
             'selectedCountryLabel' => $selectedCountryLabel,
             'summaryColumns' => $this->summaryColumns(),
-            'summaryRows' => $this->summaryRows($selectedCountry),
-            'observationsPerYearChart' => $this->buildObservationsPerYearChart($selectedCountry, $selectedCountryLabel),
-            'observationsPerMonthChart' => $this->buildObservationsPerMonthChart($selectedCountry, $selectedCountryLabel),
-            'objectTypesChart' => $this->buildObjectTypesChart($selectedCountry, $selectedCountryLabel),
-            'countriesChart' => $this->buildCountriesChart($selectedCountry, $selectedCountryLabel),
+            'summaryRows' => $this->summaryRows($counts['summary']),
+            'observationsPerYearChart' => $this->buildObservationsPerYearChart($counts['per_year'], $selectedCountryLabel),
+            'observationsPerMonthChart' => $this->buildObservationsPerMonthChart($counts['per_month'], $selectedCountryLabel),
+            'objectTypesChart' => $this->buildObjectTypesChart($counts['object_types'], $selectedCountryLabel),
+            'countriesChart' => $this->buildCountriesChart($counts['countries'], $selectedCountryLabel),
         ]);
+    }
+
+    /**
+     * All counts of the page for one country (or all countries), as plain
+     * arrays so they can be cached.
+     *
+     * @return array{summary: array<string, array<string, int>>, per_year: array<string, mixed>, per_month: array<string, list<int>>, object_types: array<string, mixed>, countries: array<string, int>}
+     */
+    private function counts(?string $country): array
+    {
+        return [
+            'summary' => $this->summaryCounts($country),
+            'per_year' => $this->perYearCounts($country),
+            'per_month' => $this->perMonthCounts($country),
+            'object_types' => $this->objectTypeCounts($country),
+            'countries' => $this->countryCounts($country),
+        ];
     }
 
     private function summaryColumns(): array
@@ -56,7 +91,29 @@ class StatisticsController extends Controller
         ];
     }
 
-    private function summaryRows(?string $country): array
+    /**
+     * @return array<string, array<string, int>> row => category => count
+     */
+    private function summaryCounts(?string $country): array
+    {
+        $counts = [];
+        foreach (array_keys($this->summaryColumns()) as $category) {
+            $query = fn() => $this->categoryQuery($category, $country);
+
+            $counts['observations'][$category] = (int) $query()->count();
+            $counts['last_year'][$category] = (int) $query()->where('observed_on', '>=', now()->subYear())->count();
+            $counts['drawings'][$category] = (int) $query()->where('has_drawing', 1)->count();
+            $counts['drawings_last_year'][$category] = (int) $query()->where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->count();
+            $counts['unique'][$category] = Observation::countDifferentObjects($query());
+        }
+
+        return $counts;
+    }
+
+    /**
+     * @param  array<string, array<string, int>>  $counts  from summaryCounts()
+     */
+    private function summaryRows(array $counts): array
     {
         $rowDefinitions = [
             'observations' => __('Number of observations'),
@@ -68,44 +125,96 @@ class StatisticsController extends Controller
 
         $rows = [];
         foreach ($rowDefinitions as $key => $label) {
-            $values = [];
-            foreach (array_keys($this->summaryColumns()) as $category) {
-                $query = $this->categoryQuery($category, $country);
-
-                $values[$category] = match ($key) {
-                    'observations' => (int) $query->count(),
-                    'last_year' => (int) $query->where('observed_on', '>=', now()->subYear())->count(),
-                    'drawings' => (int) $query->where('has_drawing', 1)->count(),
-                    'drawings_last_year' => (int) $query->where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->count(),
-                    'unique' => Observation::countDifferentObjects($query),
-                };
-            }
-
             $rows[] = [
                 'key' => $key,
                 'label' => $label,
-                'values' => $values,
+                'values' => $counts[$key] ?? [],
             ];
         }
 
         return $rows;
     }
 
-    private function buildObservationsPerYearChart(?string $country, ?string $countryLabel): OriginalLineChart
+    /**
+     * @return array{first_year: int, last_year: int, series: array<string, list<int>>}
+     */
+    private function perYearCounts(?string $country): array
     {
         $yearExpression = $this->datePartExpression('year', 'observed_on');
 
         $firstYear = (int) ($this->observationQuery($country)
             ->min(DB::raw($yearExpression)) ?? date('Y'));
         $lastYear = (int) date('Y');
-        $xAxis = range($firstYear, $lastYear);
 
-        $deepsky = $this->mapYears($this->groupedByYear('deepsky', $country), $firstYear, $lastYear);
-        $comets = $this->mapYears($this->groupedByYear('comets', $country), $firstYear, $lastYear);
-        $double = $this->mapYears($this->groupedByYear('double', $country), $firstYear, $lastYear);
-        $planets = $this->mapYears($this->groupedByYear('planets', $country), $firstYear, $lastYear);
-        $sun = $this->mapYears($this->groupedByYear('sun', $country), $firstYear, $lastYear);
-        $moon = $this->mapYears($this->groupedByYear('moon', $country), $firstYear, $lastYear);
+        $series = [];
+        foreach (self::CATEGORIES as $category) {
+            $series[$category] = $this->mapYears($this->groupedByYear($category, $country), $firstYear, $lastYear);
+        }
+
+        return ['first_year' => $firstYear, 'last_year' => $lastYear, 'series' => $series];
+    }
+
+    /**
+     * @return array<string, list<int>> category => 12 monthly counts
+     */
+    private function perMonthCounts(?string $country): array
+    {
+        $series = [];
+        foreach (self::CATEGORIES as $category) {
+            $series[$category] = $this->mapMonths($this->groupedByMonth($category, $country));
+        }
+
+        return $series;
+    }
+
+    /**
+     * @return array{deepsky: array<string, int>, comets: int, planets: int, sun: int, moon: int}
+     */
+    private function objectTypeCounts(?string $country): array
+    {
+        $rows = $this->observationQuery($country)
+            ->join('objects', 'observations.target_key', '=', 'objects.name')
+            ->where('observations.target_type', Observation::TYPE_DEEPSKY)
+            ->select('objects.type', DB::raw('count(*) as count'))
+            ->groupBy('objects.type')
+            ->get();
+
+        $deepsky = [];
+        foreach ($rows as $row) {
+            $deepsky[$row->type] = ($deepsky[$row->type] ?? 0) + (int) $row->count;
+        }
+
+        return [
+            'deepsky' => $deepsky,
+            'comets' => (int) $this->categoryQuery('comets', $country)->count(),
+            'planets' => (int) $this->categoryQuery('planets', $country)->count(),
+            'sun' => (int) $this->categoryQuery('sun', $country)->count(),
+            'moon' => (int) $this->categoryQuery('moon', $country)->count(),
+        ];
+    }
+
+    /**
+     * @return array<string, int> country => observations, most first
+     */
+    private function countryCounts(?string $country): array
+    {
+        return DB::table('observations')
+            ->join('locations', 'observations.location_id', '=', 'locations.id')
+            ->whereNotNull('locations.country')
+            ->where('locations.country', '!=', '')
+            ->when($country, fn(Builder $query) => $query->where('locations.country', $country))
+            ->select('locations.country', DB::raw('count(*) as count'))
+            ->groupBy('locations.country')
+            ->orderByDesc('count')
+            ->pluck('count', 'country')
+            ->map(fn($count) => (int) $count)
+            ->all();
+    }
+
+    private function buildObservationsPerYearChart(array $counts, ?string $countryLabel): OriginalLineChart
+    {
+        $xAxis = range($counts['first_year'], $counts['last_year']);
+        ['deepsky' => $deepsky, 'comets' => $comets, 'double' => $double, 'planets' => $planets, 'sun' => $sun, 'moon' => $moon] = $counts['series'];
 
         $total = [];
         for ($index = 0; $index < count($xAxis); $index++) {
@@ -135,14 +244,9 @@ class StatisticsController extends Controller
         return $chart;
     }
 
-    private function buildObservationsPerMonthChart(?string $country, ?string $countryLabel): OriginalBarChart
+    private function buildObservationsPerMonthChart(array $counts, ?string $countryLabel): OriginalBarChart
     {
-        $deepsky = $this->mapMonths($this->groupedByMonth('deepsky', $country));
-        $comets = $this->mapMonths($this->groupedByMonth('comets', $country));
-        $double = $this->mapMonths($this->groupedByMonth('double', $country));
-        $planets = $this->mapMonths($this->groupedByMonth('planets', $country));
-        $sun = $this->mapMonths($this->groupedByMonth('sun', $country));
-        $moon = $this->mapMonths($this->groupedByMonth('moon', $country));
+        ['deepsky' => $deepsky, 'comets' => $comets, 'double' => $double, 'planets' => $planets, 'sun' => $sun, 'moon' => $moon] = $counts;
 
         return (new OriginalBarChart)
             ->setTitle(__('Number of observations per month: ') . $this->chartContext($countryLabel))
@@ -173,24 +277,13 @@ class StatisticsController extends Controller
             ->addData(__('Moon'), $moon);
     }
 
-    private function buildObjectTypesChart(?string $country, ?string $countryLabel): OriginalPieChart
+    private function buildObjectTypesChart(array $counts, ?string $countryLabel): OriginalPieChart
     {
-        $rows = $this->observationQuery($country)
-            ->join('objects', 'observations.target_key', '=', 'objects.name')
-            ->where('observations.target_type', Observation::TYPE_DEEPSKY)
-            ->select('objects.type', DB::raw('count(*) as count'))
-            ->groupBy('objects.type');
-
         $targetTypes = TargetType::all()->keyBy('id');
-        $countsByType = [];
-
-        foreach ($rows->get() as $row) {
-            $countsByType[$row->type] = ($countsByType[$row->type] ?? 0) + (int) $row->count;
-        }
 
         $values = [];
         $labels = [];
-        foreach ($countsByType as $type => $count) {
+        foreach ($counts['deepsky'] as $type => $count) {
             $label = match ($type) {
                 'DS' => __('Double stars'),
                 default => __($targetTypes->get($type)?->type ?? $type),
@@ -201,10 +294,10 @@ class StatisticsController extends Controller
         }
 
         $extraTypes = [
-            __('Comets') => (int) $this->categoryQuery('comets', $country)->count(),
-            __('Planets') => (int) $this->categoryQuery('planets', $country)->count(),
-            __('Sun') => (int) $this->categoryQuery('sun', $country)->count(),
-            __('Moon') => (int) $this->categoryQuery('moon', $country)->count(),
+            __('Comets') => $counts['comets'],
+            __('Planets') => $counts['planets'],
+            __('Sun') => $counts['sun'],
+            __('Moon') => $counts['moon'],
         ];
 
         foreach ($extraTypes as $label => $count) {
@@ -226,25 +319,18 @@ class StatisticsController extends Controller
             ->setToolbar(true);
     }
 
-    private function buildCountriesChart(?string $country, ?string $countryLabel): OriginalPieChart
+    /**
+     * @param  array<string, int>  $counts  from countryCounts()
+     */
+    private function buildCountriesChart(array $counts, ?string $countryLabel): OriginalPieChart
     {
-        $rows = DB::table('observations')
-            ->join('locations', 'observations.location_id', '=', 'locations.id')
-            ->whereNotNull('locations.country')
-            ->where('locations.country', '!=', '')
-            ->when($country, fn(Builder $query) => $query->where('locations.country', $country))
-            ->select('locations.country', DB::raw('count(*) as count'))
-            ->groupBy('locations.country')
-            ->orderByDesc('count')
-            ->get();
-
-        $localizedCountries = $this->localizedCountryLabels($rows->pluck('country'));
+        $localizedCountries = $this->localizedCountryLabels(collect(array_keys($counts)));
         $labels = [];
         $values = [];
 
-        foreach ($rows as $row) {
-            $labels[] = $localizedCountries[$row->country] ?? $row->country;
-            $values[] = (int) $row->count;
+        foreach ($counts as $country => $count) {
+            $labels[] = $localizedCountries[$country] ?? $country;
+            $values[] = $count;
         }
 
         return (new OriginalPieChart)
@@ -359,14 +445,15 @@ class StatisticsController extends Controller
 
     private function countryOptions(): array
     {
-        $countries = DB::table('observations')
+        $countries = Cache::remember('statistics:countries', self::CACHE_SECONDS, fn() => DB::table('observations')
             ->join('locations', 'observations.location_id', '=', 'locations.id')
             ->whereNotNull('locations.country')
             ->where('locations.country', '!=', '')
             ->distinct()
-            ->pluck('locations.country');
+            ->pluck('locations.country')
+            ->all());
 
-        $labels = $this->localizedCountryLabels($countries);
+        $labels = $this->localizedCountryLabels(collect($countries));
         asort($labels, SORT_NATURAL | SORT_FLAG_CASE);
 
         return $labels;

@@ -18,6 +18,8 @@ class ComputeObserverStats implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public const SITE_TOTALS_KEY = 'observer_stats:site_totals';
+
     protected int $userId;
 
     public function __construct(int $userId)
@@ -37,473 +39,13 @@ class ComputeObserverStats implements ShouldQueue
                 return;
             }
 
-            // Double-star counts
-            $doubleTotalObservations = (int) DB::table('observations')
-                ->where('target_table', 'objects')
-                ->whereIn('target_name_normalized', function ($q) {
-                    $q->select('name_normalized')->from('objects')->where('type', 'DS');
-                })->count();
-
-            $doubleYourObservations = (int) DB::table('observations')
-                ->where('target_table', 'objects')
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->whereIn('target_name_normalized', function ($q) {
-                    $q->select('name_normalized')->from('objects')->where('type', 'DS');
-                })->count();
-
-            $doubleTotalObservationsLastYear = (int) DB::table('observations')
-                ->where('target_table', 'objects')
-                ->where('observed_on', '>=', now()->subYear())
-                ->whereIn('target_name_normalized', function ($q) {
-                    $q->select('name_normalized')->from('objects')->where('type', 'DS');
-                })->count();
-
-            $doubleYourObservationsLastYear = (int) DB::table('observations')
-                ->where('target_table', 'objects')
-                ->where('observed_on', '>=', now()->subYear())
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->whereIn('target_name_normalized', function ($q) {
-                    $q->select('name_normalized')->from('objects')->where('type', 'DS');
-                })->count();
-
-            $doubleTotalDrawings = (int) DB::table('observations')
-                ->where('target_table', 'objects')
-                ->where('has_drawing', 1)
-                ->whereIn('target_name_normalized', function ($q) {
-                    $q->select('name_normalized')->from('objects')->where('type', 'DS');
-                })->count();
-
-            $doubleYourDrawings = (int) DB::table('observations')
-                ->where('target_table', 'objects')
-                ->where('has_drawing', 1)
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->whereIn('target_name_normalized', function ($q) {
-                    $q->select('name_normalized')->from('objects')->where('type', 'DS');
-                })->count();
-
-            $doubleTotalDrawingsLastYear = (int) DB::table('observations')
-                ->where('target_table', 'objects')
-                ->where('has_drawing', 1)
-                ->where('observed_on', '>=', now()->subYear())
-                ->whereIn('target_name_normalized', function ($q) {
-                    $q->select('name_normalized')->from('objects')->where('type', 'DS');
-                })->count();
-
-            $doubleYourDrawingsLastYear = (int) DB::table('observations')
-                ->where('target_table', 'objects')
-                ->where('has_drawing', 1)
-                ->where('observed_on', '>=', now()->subYear())
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->whereIn('target_name_normalized', function ($q) {
-                    $q->select('name_normalized')->from('objects')->where('type', 'DS');
-                })->count();
-
-            $doubleTotalUnique = Observation::countDifferentObjects(DB::table('observations')
-                ->where('target_table', 'objects')
-                ->whereIn('target_name_normalized', function ($q) {
-                    $q->select('name_normalized')->from('objects')->where('type', 'DS');
-                }));
-
-            $doubleYourUnique = Observation::countDifferentObjects(DB::table('observations')
-                ->where('target_table', 'objects')
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->whereIn('target_name_normalized', function ($q) {
-                    $q->select('name_normalized')->from('objects')->where('type', 'DS');
-                }));
-
-            // Deep-sky metrics: all deep-sky observations minus the double stars,
-            // which are counted separately above.
-            $deepsky = fn() => Observation::deepsky();
-            $mine = fn($q) => $q->where(function ($q) use ($user) {
-                $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-            });
-            $lastYear = fn($q) => $q->where('observed_on', '>=', now()->subYear());
-            $drawn = fn($q) => $q->where('has_drawing', 1);
-
-            $deepskyYourObservations = max(0, (int) $mine($deepsky())->count() - $doubleYourObservations);
-            $deepskyTotalObservations = max(0, (int) $deepsky()->count() - $doubleTotalObservations);
-            $deepskyYourObservationsLastYear = max(0, (int) $lastYear($mine($deepsky()))->count() - $doubleYourObservationsLastYear);
-            $deepskyTotalObservationsLastYear = max(0, (int) $lastYear($deepsky())->count() - $doubleTotalObservationsLastYear);
-            $deepskyYourDrawings = max(0, (int) $drawn($mine($deepsky()))->count() - $doubleYourDrawings);
-            $deepskyTotalDrawings = max(0, (int) $drawn($deepsky())->count() - $doubleTotalDrawings);
-            $deepskyYourDrawingsLastYear = max(0, (int) $lastYear($drawn($mine($deepsky())))->count() - $doubleYourDrawingsLastYear);
-            $deepskyTotalDrawingsLastYear = max(0, (int) $lastYear($drawn($deepsky()))->count() - $doubleTotalDrawingsLastYear);
-            $deepskyYourUnique = max(0, Observation::countDifferentObjects($mine($deepsky())) - $doubleYourUnique);
-            $deepskyTotalUnique = max(0, Observation::countDifferentObjects($deepsky()) - $doubleTotalUnique);
-
-            // Global totals (all observations)
-            $allYourObservations = (int) Observation::where(function ($q) use ($user) {
-                $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-            })->count();
-
-            $allTotalObservations = (int) Observation::count();
-
-            $allYourObservationsLastYear = (int) Observation::where(function ($q) use ($user) {
-                $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-            })->where('observed_on', '>=', now()->subYear())->count();
-
-            $allTotalObservationsLastYear = (int) Observation::where('observed_on', '>=', now()->subYear())->count();
-
-            $allYourDrawings = (int) Observation::where(function ($q) use ($user) {
-                $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-            })->where('has_drawing', 1)->count();
-
-            $allTotalDrawings = (int) Observation::where('has_drawing', 1)->count();
-
-            $allYourDrawingsLastYear = (int) Observation::where(function ($q) use ($user) {
-                $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-            })->where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->count();
-
-            $allTotalDrawingsLastYear = (int) Observation::where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->count();
-
-            $allYourUnique = Observation::countDifferentObjects(Observation::where(function ($q) use ($user) {
-                $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
+            // The totals of all observers are the same on every observer page,
+            // so they are computed once for all of them.
+            $stats = array_merge(self::siteTotals(), self::categoryCounts('Your', function ($q) use ($user) {
+                return $q->where(function ($q) use ($user) {
+                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
+                });
             }));
-
-            $allTotalUnique = Observation::countDifferentObjects(Observation::query());
-
-            // Comet totals
-            $cometYourObservations = (int) Observation::comets()
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                })->count();
-
-            $cometTotalObservations = (int) Observation::comets()->count();
-
-            $cometYourObservationsLastYear = (int) Observation::comets()
-                ->where('observed_on', '>=', now()->subYear())
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                })->count();
-
-            $cometTotalObservationsLastYear = (int) Observation::comets()->where('observed_on', '>=', now()->subYear())->count();
-
-            $cometYourDrawings = (int) Observation::comets()
-                ->where('has_drawing', 1)
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                })->count();
-
-            $cometTotalDrawings = (int) Observation::comets()->where('has_drawing', 1)->count();
-
-            $cometYourDrawingsLastYear = (int) Observation::comets()
-                ->where('has_drawing', 1)
-                ->where('observed_on', '>=', now()->subYear())
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                })->count();
-
-            $cometTotalDrawingsLastYear = (int) Observation::comets()->where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->count();
-
-            $cometYourUnique = Observation::countDifferentObjects(Observation::comets()
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)->orWhere('observer_username', $user->username);
-                }));
-
-            $cometTotalUnique = Observation::countDifferentObjects(Observation::comets());
-
-            // Planets / Sun / Moons (full computation)
-            $planetsYourObservations = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', '!=', 'sun')
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->count();
-
-            $planetsTotalObservations = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', '!=', 'sun')
-                ->count();
-
-            $planetsYourObservationsLastYear = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', '!=', 'sun')
-                ->where('observed_on', '>=', now()->subYear())
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->count();
-
-            $planetsTotalObservationsLastYear = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', '!=', 'sun')
-                ->where('observed_on', '>=', now()->subYear())
-                ->count();
-
-            $planetsYourDrawings = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', '!=', 'sun')
-                ->where('has_drawing', 1)
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->count();
-
-            $planetsTotalDrawings = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', '!=', 'sun')
-                ->where('has_drawing', 1)
-                ->count();
-
-            $planetsYourDrawingsLastYear = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', '!=', 'sun')
-                ->where('has_drawing', 1)
-                ->where('observed_on', '>=', now()->subYear())
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->count();
-
-            $planetsTotalDrawingsLastYear = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', '!=', 'sun')
-                ->where('has_drawing', 1)
-                ->where('observed_on', '>=', now()->subYear())
-                ->count();
-
-            $planetsYourUnique = Observation::countDifferentObjects(DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', '!=', 'sun')
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                }));
-
-            $planetsTotalUnique = Observation::countDifferentObjects(DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', '!=', 'sun'));
-
-            // Sun
-            $sunYourObservations = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', 'sun')
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->count();
-
-            $sunTotalObservations = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', 'sun')
-                ->count();
-
-            $sunYourObservationsLastYear = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', 'sun')
-                ->where('observed_on', '>=', now()->subYear())
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->count();
-
-            $sunTotalObservationsLastYear = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', 'sun')
-                ->where('observed_on', '>=', now()->subYear())
-                ->count();
-
-            $sunYourDrawings = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', 'sun')
-                ->where('has_drawing', 1)
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->count();
-
-            $sunTotalDrawings = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', 'sun')
-                ->where('has_drawing', 1)
-                ->count();
-
-            $sunYourDrawingsLastYear = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', 'sun')
-                ->where('has_drawing', 1)
-                ->where('observed_on', '>=', now()->subYear())
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->count();
-
-            $sunTotalDrawingsLastYear = DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', 'sun')
-                ->where('has_drawing', 1)
-                ->where('observed_on', '>=', now()->subYear())
-                ->count();
-
-            $sunYourUnique = Observation::countDifferentObjects(DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', 'sun')
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                }));
-
-            $sunTotalUnique = Observation::countDifferentObjects(DB::table('observations')
-                ->where('target_table', 'planets')
-                ->where('target_key', 'sun'));
-
-            // Moon
-            $moonTargetTables = ['moons', 'lunar_features'];
-
-            $moonYourObservations = DB::table('observations')
-                ->whereIn('target_table', $moonTargetTables)
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->count();
-
-            $moonTotalObservations = DB::table('observations')
-                ->whereIn('target_table', $moonTargetTables)
-                ->count();
-
-            $moonYourObservationsLastYear = DB::table('observations')
-                ->whereIn('target_table', $moonTargetTables)
-                ->where('observed_on', '>=', now()->subYear())
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->count();
-
-            $moonTotalObservationsLastYear = DB::table('observations')
-                ->whereIn('target_table', $moonTargetTables)
-                ->where('observed_on', '>=', now()->subYear())
-                ->count();
-
-            $moonYourDrawings = DB::table('observations')
-                ->whereIn('target_table', $moonTargetTables)
-                ->where('has_drawing', 1)
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->count();
-
-            $moonTotalDrawings = DB::table('observations')
-                ->whereIn('target_table', $moonTargetTables)
-                ->where('has_drawing', 1)
-                ->count();
-
-            $moonYourDrawingsLastYear = DB::table('observations')
-                ->whereIn('target_table', $moonTargetTables)
-                ->where('has_drawing', 1)
-                ->where('observed_on', '>=', now()->subYear())
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                })->count();
-
-            $moonTotalDrawingsLastYear = DB::table('observations')
-                ->whereIn('target_table', $moonTargetTables)
-                ->where('has_drawing', 1)
-                ->where('observed_on', '>=', now()->subYear())
-                ->count();
-
-            $moonYourUnique = Observation::countDifferentObjects(DB::table('observations')
-                ->whereIn('target_table', $moonTargetTables)
-                ->where(function ($q) use ($user) {
-                    $q->where('observer_user_id', $user->id)
-                        ->orWhere('observer_username', $user->username);
-                }));
-
-            $moonTotalUnique = Observation::countDifferentObjects(DB::table('observations')
-                ->whereIn('target_table', $moonTargetTables));
-
-            $stats = [
-                'doubleTotalObservations' => $doubleTotalObservations,
-                'doubleYourObservations' => $doubleYourObservations,
-                'doubleTotalObservationsLastYear' => $doubleTotalObservationsLastYear,
-                'doubleYourObservationsLastYear' => $doubleYourObservationsLastYear,
-                'doubleTotalDrawings' => $doubleTotalDrawings,
-                'doubleYourDrawings' => $doubleYourDrawings,
-                'doubleTotalDrawingsLastYear' => $doubleTotalDrawingsLastYear,
-                'doubleYourDrawingsLastYear' => $doubleYourDrawingsLastYear,
-                'doubleTotalUnique' => $doubleTotalUnique,
-                'doubleYourUnique' => $doubleYourUnique,
-
-                'deepskyYourObservations' => $deepskyYourObservations,
-                'deepskyTotalObservations' => $deepskyTotalObservations,
-                'deepskyYourObservationsLastYear' => $deepskyYourObservationsLastYear,
-                'deepskyTotalObservationsLastYear' => $deepskyTotalObservationsLastYear,
-                'deepskyYourDrawings' => $deepskyYourDrawings,
-                'deepskyTotalDrawings' => $deepskyTotalDrawings,
-                'deepskyYourDrawingsLastYear' => $deepskyYourDrawingsLastYear,
-                'deepskyTotalDrawingsLastYear' => $deepskyTotalDrawingsLastYear,
-                'deepskyYourUnique' => $deepskyYourUnique,
-                'deepskyTotalUnique' => $deepskyTotalUnique,
-
-                'planetsYourObservations' => $planetsYourObservations,
-                'planetsTotalObservations' => $planetsTotalObservations,
-                'planetsYourObservationsLastYear' => $planetsYourObservationsLastYear,
-                'planetsTotalObservationsLastYear' => $planetsTotalObservationsLastYear,
-                'planetsYourDrawings' => $planetsYourDrawings,
-                'planetsTotalDrawings' => $planetsTotalDrawings,
-                'planetsYourDrawingsLastYear' => $planetsYourDrawingsLastYear,
-                'planetsTotalDrawingsLastYear' => $planetsTotalDrawingsLastYear,
-                'planetsYourUnique' => $planetsYourUnique,
-                'planetsTotalUnique' => $planetsTotalUnique,
-
-                'sunYourObservations' => $sunYourObservations,
-                'sunTotalObservations' => $sunTotalObservations,
-                'sunYourObservationsLastYear' => $sunYourObservationsLastYear,
-                'sunTotalObservationsLastYear' => $sunTotalObservationsLastYear,
-                'sunYourDrawings' => $sunYourDrawings,
-                'sunTotalDrawings' => $sunTotalDrawings,
-                'sunYourDrawingsLastYear' => $sunYourDrawingsLastYear,
-                'sunTotalDrawingsLastYear' => $sunTotalDrawingsLastYear,
-                'sunYourUnique' => $sunYourUnique,
-                'sunTotalUnique' => $sunTotalUnique,
-
-                'moonYourObservations' => $moonYourObservations,
-                'moonTotalObservations' => $moonTotalObservations,
-                'moonYourObservationsLastYear' => $moonYourObservationsLastYear,
-                'moonTotalObservationsLastYear' => $moonTotalObservationsLastYear,
-                'moonYourDrawings' => $moonYourDrawings,
-                'moonTotalDrawings' => $moonTotalDrawings,
-                'moonYourDrawingsLastYear' => $moonYourDrawingsLastYear,
-                'moonTotalDrawingsLastYear' => $moonTotalDrawingsLastYear,
-                'moonYourUnique' => $moonYourUnique,
-                'moonTotalUnique' => $moonTotalUnique,
-                // Unified totals
-
-                // Global totals (all observations)
-                'allYourObservations' => $allYourObservations,
-                'allTotalObservations' => $allTotalObservations,
-                'allYourObservationsLastYear' => $allYourObservationsLastYear,
-                'allTotalObservationsLastYear' => $allTotalObservationsLastYear,
-                'allYourDrawings' => $allYourDrawings,
-                'allTotalDrawings' => $allTotalDrawings,
-                'allYourDrawingsLastYear' => $allYourDrawingsLastYear,
-                'allTotalDrawingsLastYear' => $allTotalDrawingsLastYear,
-                'allYourUnique' => $allYourUnique,
-                'allTotalUnique' => $allTotalUnique,
-
-                // Comet totals
-                'cometYourObservations' => $cometYourObservations,
-                'cometTotalObservations' => $cometTotalObservations,
-                'cometYourObservationsLastYear' => $cometYourObservationsLastYear,
-                'cometTotalObservationsLastYear' => $cometTotalObservationsLastYear,
-                'cometYourDrawings' => $cometYourDrawings,
-                'cometTotalDrawings' => $cometTotalDrawings,
-                'cometYourDrawingsLastYear' => $cometYourDrawingsLastYear,
-                'cometTotalDrawingsLastYear' => $cometTotalDrawingsLastYear,
-                'cometYourUnique' => $cometYourUnique,
-                'cometTotalUnique' => $cometTotalUnique,
-            ];
 
             // Precompute per-month series (user-specific) for charts to avoid runtime queries
             $months = range(1, 12);
@@ -703,6 +245,58 @@ class ComputeObserverStats implements ShouldQueue
             // the queue (failed_jobs) or the synchronous caller, which logs them
             Cache::forget($inProgressKey);
         }
+    }
+
+    /**
+     * The counts of all observers ('{category}Total{Metric}', see
+     * categoryCounts()), cached under one key for all observer pages.
+     *
+     * @return array<string, int>
+     */
+    public static function siteTotals(): array
+    {
+        return Cache::remember(self::SITE_TOTALS_KEY, now()->addHours(6), fn () => self::categoryCounts('Total'));
+    }
+
+    /**
+     * The number of observations, observations of the last year, drawings,
+     * drawings of the last year and different objects of each category, as
+     * '{category}{prefix}{Metric}' (e.g. 'cometYourDrawingsLastYear'). The
+     * deep-sky counts leave out the double stars, which are counted apart.
+     *
+     * @param  \Closure|null  $scope  restricts the observations (to one observer)
+     * @return array<string, int>
+     */
+    private static function categoryCounts(string $prefix, ?\Closure $scope = null): array
+    {
+        $doubleStars = fn ($q) => $q->select('name_normalized')->from('objects')->where('type', 'DS');
+        $categories = [
+            'double' => fn () => DB::table('observations')->where('target_table', 'objects')->whereIn('target_name_normalized', $doubleStars),
+            'deepsky' => fn () => Observation::deepsky(),
+            'all' => fn () => Observation::query(),
+            'comet' => fn () => Observation::comets(),
+            'planets' => fn () => DB::table('observations')->where('target_table', 'planets')->where('target_key', '!=', 'sun'),
+            'sun' => fn () => DB::table('observations')->where('target_table', 'planets')->where('target_key', 'sun'),
+            'moon' => fn () => DB::table('observations')->whereIn('target_table', ['moons', 'lunar_features']),
+        ];
+
+        $counts = [];
+        foreach ($categories as $category => $query) {
+            $base = fn () => $scope ? $scope($query()) : $query();
+            $key = $category.$prefix;
+
+            $counts[$key.'Observations'] = (int) $base()->count();
+            $counts[$key.'ObservationsLastYear'] = (int) $base()->where('observed_on', '>=', now()->subYear())->count();
+            $counts[$key.'Drawings'] = (int) $base()->where('has_drawing', 1)->count();
+            $counts[$key.'DrawingsLastYear'] = (int) $base()->where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->count();
+            $counts[$key.'Unique'] = Observation::countDifferentObjects($base());
+        }
+
+        foreach (['Observations', 'ObservationsLastYear', 'Drawings', 'DrawingsLastYear', 'Unique'] as $metric) {
+            $counts['deepsky'.$prefix.$metric] = max(0, $counts['deepsky'.$prefix.$metric] - $counts['double'.$prefix.$metric]);
+        }
+
+        return $counts;
     }
 
     /**

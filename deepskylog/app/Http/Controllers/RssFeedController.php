@@ -4,28 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Observation;
 use App\Models\ObservingList;
+use App\Services\Observations\ObservationCardData;
 use Illuminate\Http\Response;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class RssFeedController extends Controller
 {
+    /**
+     * Feed readers poll often; a feed is rendered at most once per quarter of
+     * an hour.
+     */
+    private const CACHE_SECONDS = 900;
+
     /**
      * RSS feed for the latest observations.
      */
     public function observations(): Response
     {
-        $observations = Observation::with(['instrument', 'eyepiece', 'observerUser'])
-            ->orderBy('created_at', 'desc')
-            ->limit(50)
-            ->get();
-
-        $feedUpdated = $observations->first()?->created_at ?? now();
-
-        $contents = view('rss.observations', compact('observations', 'feedUpdated'))->render();
-
-        return response($contents, 200, [
-            'Content-Type' => 'application/rss+xml; charset=UTF-8',
-        ]);
+        return $this->feed('rss:observations', fn() => $this->renderObservations(false));
     }
 
     /**
@@ -33,19 +29,7 @@ class RssFeedController extends Controller
      */
     public function drawings(): Response
     {
-        $observations = Observation::with(['instrument', 'eyepiece', 'observerUser'])
-            ->where('has_drawing', true)
-            ->orderBy('created_at', 'desc')
-            ->limit(50)
-            ->get();
-
-        $feedUpdated = $observations->first()?->created_at ?? now();
-
-        $contents = view('rss.observations', compact('observations', 'feedUpdated'))->render();
-
-        return response($contents, 200, [
-            'Content-Type' => 'application/rss+xml; charset=UTF-8',
-        ]);
+        return $this->feed('rss:drawings', fn() => $this->renderObservations(true));
     }
 
     /**
@@ -53,18 +37,40 @@ class RssFeedController extends Controller
      */
     public function observingLists(): Response
     {
-        $lists = ObservingList::with(['owner', 'items'])
-            ->withCount('items')
-            ->where('public', true)
+        return $this->feed('rss:observing-lists', function () {
+            $lists = ObservingList::with(['owner', 'items'])
+                ->withCount('items')
+                ->where('public', true)
+                ->orderBy('created_at', 'desc')
+                ->limit(50)
+                ->get();
+
+            $feedUpdated = $lists->first()?->created_at ?? now();
+
+            return view('rss.observing-lists', compact('lists', 'feedUpdated'))->render();
+        });
+    }
+
+    private function renderObservations(bool $drawingsOnly): string
+    {
+        $observations = Observation::with(['instrument.instrument_make', 'eyepiece', 'observerUser'])
+            ->when($drawingsOnly, fn($query) => $query->where('has_drawing', true))
             ->orderBy('created_at', 'desc')
             ->limit(50)
             ->get();
 
-        $feedUpdated = $lists->first()?->created_at ?? now();
+        // The locations (for the local time) and the observations of the same
+        // day (for the index in the detail URLs) in a few queries.
+        $cards = ObservationCardData::instance()->preload($observations);
 
-        $contents = view('rss.observing-lists', compact('lists', 'feedUpdated'))->render();
+        $feedUpdated = $observations->first()?->created_at ?? now();
 
-        return response($contents, 200, [
+        return view('rss.observations', compact('observations', 'feedUpdated', 'cards'))->render();
+    }
+
+    private function feed(string $cacheKey, \Closure $render): Response
+    {
+        return response(Cache::remember($cacheKey, self::CACHE_SECONDS, $render), 200, [
             'Content-Type' => 'application/rss+xml; charset=UTF-8',
         ]);
     }

@@ -17,7 +17,7 @@
 
             $date   = $obs->observed_on ? $obs->observed_on->format('Y-m-d') : '';
             // The URL uses the UT date; the label the local date and time of the location.
-            $local  = $obs->localObservedAt();
+            $local  = $obs->localObservedAt($cards->location($obs->location_id));
             $time   = $local?->format('H:i T');
 
             $link = ($observerSlug ? $obs->detailUrl($observerSlug) : null) ?? url('/observations');

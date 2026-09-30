@@ -2,13 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PopularObjectController extends Controller
 {
+    private const PER_PAGE = 50;
+
+    /**
+     * The ranking groups all observations, so the number of objects and each
+     * page (with the slugs of its objects) are cached for an hour.
+     */
+    private const CACHE_SECONDS = 3600;
+
     public function index(Request $request)
     {
         $mode = $request->query('mode', 'observations');
@@ -18,11 +29,66 @@ class PopularObjectController extends Controller
 
         return view('observations.popular-objects', [
             'mode' => $mode,
-            'popularObjects' => $this->popularObjects($mode),
+            'popularObjects' => $this->popularObjects($mode, $request),
         ]);
     }
 
-    private function popularObjects(string $mode): LengthAwarePaginator
+    private function popularObjects(string $mode, Request $request): LengthAwarePaginator
+    {
+        $page = Paginator::resolveCurrentPage();
+
+        $total = Cache::remember("popular_objects:{$mode}:total", self::CACHE_SECONDS, fn() => DB::query()
+            ->fromSub($this->groupedQuery($mode), 'popular_objects')
+            ->count());
+
+        // Pages past the last one are empty; not cached, so that requests for
+        // arbitrary page numbers cannot fill the cache.
+        $rows = $page > (int) ceil($total / self::PER_PAGE)
+            ? []
+            : Cache::remember("popular_objects:{$mode}:page:{$page}", self::CACHE_SECONDS, fn() => $this->pageRows($mode, $page));
+
+        $items = array_map(fn(array $row) => (object) [
+            'name' => $row['name'],
+            'count' => $row['count'],
+            'object_url' => route('object.show', ['slug' => $row['slug']]),
+            'count_url' => $this->buildCountUrl($row['kind'], $mode, $row['slug']),
+        ], $rows);
+
+        return new LengthAwarePaginator($items, $total, self::PER_PAGE, $page, [
+            'path' => Paginator::resolveCurrentPath(),
+            'query' => $request->query(),
+        ]);
+    }
+
+    /**
+     * The objects of one page, most observed first, with the slug of each.
+     *
+     * @return list<array{name: string, kind: string, count: int, slug: string}>
+     */
+    private function pageRows(string $mode, int $page): array
+    {
+        return $this->groupedQuery($mode)
+            ->orderByDesc('total_count')
+            ->orderBy('object_name')
+            ->forPage($page, self::PER_PAGE)
+            ->get()
+            ->map(fn($row) => [
+                'name' => (string) $row->object_name,
+                'kind' => (string) $row->object_kind,
+                'count' => (int) ($row->total_count ?? 0),
+                'slug' => $this->resolveObjectSlug(
+                    (string) $row->object_kind,
+                    $row->sample_target_key,
+                    (string) $row->object_name
+                ),
+            ])
+            ->all();
+    }
+
+    /**
+     * The observations (or drawings) grouped per object.
+     */
+    private function groupedQuery(string $mode): Builder
     {
         $kindExpression = "CASE WHEN target_type = 'comet' THEN 'comet' WHEN target_type = 'planet' THEN 'planet' ELSE 'deepsky' END";
 
@@ -43,25 +109,7 @@ class PopularObjectController extends Controller
             ->select('object_name', 'object_kind')
             ->selectRaw('MIN(target_key) as sample_target_key')
             ->selectRaw('COUNT(*) as total_count')
-            ->groupBy('object_name', 'object_kind')
-            ->orderByDesc('total_count')
-            ->orderBy('object_name')
-            ->paginate(50)
-            ->withQueryString()
-            ->through(function ($row) use ($mode) {
-                $objectSlug = $this->resolveObjectSlug(
-                    (string) $row->object_kind,
-                    $row->sample_target_key,
-                    (string) $row->object_name
-                );
-
-                return (object) [
-                    'name' => (string) $row->object_name,
-                    'count' => (int) ($row->total_count ?? 0),
-                    'object_url' => route('object.show', ['slug' => $objectSlug]),
-                    'count_url' => $this->buildCountUrl((string) $row->object_kind, $mode, $objectSlug),
-                ];
-            });
+            ->groupBy('object_name', 'object_kind');
     }
 
     private function buildCountUrl(string $objectKind, string $mode, string $objectSlug): string

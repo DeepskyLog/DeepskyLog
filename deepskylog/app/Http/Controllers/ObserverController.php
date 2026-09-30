@@ -21,6 +21,13 @@ use Illuminate\View\View;
 class ObserverController extends Controller
 {
     /**
+     * The ranking of /observers groups all observations; it and the counts of
+     * the catalogs are cached for an hour. The counts of observing lists are
+     * not: their owners expect to see an edit at once.
+     */
+    private const RANKING_CACHE_SECONDS = 3600;
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request): View
@@ -31,27 +38,7 @@ class ObserverController extends Controller
         $currentDirection = $this->resolveObserverSortDirection((string) $request->query('direction', 'asc'));
         $observerSearch = trim((string) $request->query('observer', ''));
         $sourceObjectTotal = $this->sourceObjectTotal($selectedSource);
-        $lastYear = now()->subYear()->toDateString();
-
-        $observerRowsQuery = DB::table('observations as observations')
-            ->join('users', 'users.username', '=', 'observations.observer_username')
-            ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
-            ->select([
-                'users.id',
-                'users.name',
-                'users.username',
-                'users.slug',
-                DB::raw('COUNT(*) as observations_count'),
-                DB::raw('SUM(CASE WHEN observations.has_drawing = 1 THEN 1 ELSE 0 END) as drawings_count'),
-                DB::raw("SUM(CASE WHEN observations.observed_on >= '" . $lastYear . "' THEN 1 ELSE 0 END) as observations_last_year"),
-                DB::raw("SUM(CASE WHEN observations.has_drawing = 1 AND observations.observed_on >= '" . $lastYear . "' THEN 1 ELSE 0 END) as drawings_last_year"),
-                DB::raw('COUNT(DISTINCT CASE WHEN details.visibility IS NULL OR details.visibility != '.Observation::VISIBILITY_NOT_SEEN.' THEN '.Observation::DIFFERENT_OBJECT_SQL.' END) as different_objects_count'),
-            ])
-            ->groupBy('users.id', 'users.name', 'users.username', 'users.slug')
-            ->orderByDesc('observations_count')
-            ->orderBy('users.name');
-
-        $observerRows = $observerRowsQuery->get();
+        $observerRows = collect(Cache::remember('observers:ranking', self::RANKING_CACHE_SECONDS, fn() => $this->observerRankingRows()));
 
         $sourceCounts = $this->sourceObserverCounts($selectedSource);
 
@@ -132,20 +119,30 @@ class ObserverController extends Controller
         $inProgressKey = 'observer_stats_in_progress:' . $user->id;
         $stats = Cache::get($cacheKey);
 
-        // Kick off precomputation when cache is cold. If the queue worker
-        // isn't running, compute synchronously so the profile shows counts.
+        // Compute the statistics when the cache is cold: in the request for a
+        // logged-in observer, on the queue for guests (crawlers would otherwise
+        // run the counts for every observer). The job clears the in-progress
+        // flag when it is done; until then it is not queued again.
         if (!is_array($stats)) {
-            if (Cache::add($inProgressKey, true, 60)) {
+            if (Cache::add($inProgressKey, true, 600)) {
                 try {
-                    ComputeObserverStats::dispatchSync($user->id);
+                    if (request()->user()) {
+                        ComputeObserverStats::dispatchSync($user->id);
+                    } else {
+                        ComputeObserverStats::dispatch($user->id);
+                    }
                 } catch (\Throwable $e) {
-                    // Fallback: queue the job if sync execution fails for any reason
                     report($e);
-                    ComputeObserverStats::dispatch($user->id);
+                    Cache::forget($inProgressKey);
                 }
             }
-            // Attempt to reload the cached stats after synchronous computation
             $stats = Cache::get($cacheKey);
+        }
+
+        // A page without the statistics must not be served from the response
+        // cache after they are computed.
+        if (!is_array($stats)) {
+            request()->attributes->set('responsecache.doNotCache', true);
         }
 
         $observationsOld = $user->observations();
@@ -479,8 +476,45 @@ class ObserverController extends Controller
             'countriesChart' => $chart4->build($user),
             'hasPopularObservations' => $hasPopularObservations,
             'username' => $username,
+            'rank' => $user->getRank(),
+            'rankedObserverCount' => User::rankedObserverCount(),
+            'catalogCounts' => $this->catalogCounts($user, ['M', 'Caldwell', 'H400', 'H400-II']),
         ]);
 
+    }
+
+    /**
+     * The number of different objects of each catalog the observer has seen
+     * and drawn, in one query.
+     *
+     * @param  list<string>  $catalogs
+     * @return array<string, array{observed: int, drawn: int}>
+     */
+    private function catalogCounts(User $user, array $catalogs): array
+    {
+        $rows = DB::table('objectnames')
+            ->join('observations', 'objectnames.objectname', '=', 'observations.target_name')
+            ->leftJoin('deepsky_observation_details', 'observations.id', '=', 'deepsky_observation_details.observation_id')
+            ->where(function ($sub) {
+                $sub->whereNull('deepsky_observation_details.visibility')
+                    ->orWhere('deepsky_observation_details.visibility', '!=', Observation::VISIBILITY_NOT_SEEN);
+            })
+            ->where('observations.observer_username', $user->username)
+            ->whereIn('objectnames.catalog', $catalogs)
+            ->groupBy('objectnames.catalog')
+            ->select('objectnames.catalog')
+            ->selectRaw('COUNT(DISTINCT objectnames.catindex) as observed')
+            ->selectRaw('COUNT(DISTINCT CASE WHEN observations.has_drawing = 1 THEN objectnames.catindex END) as drawn')
+            ->get()
+            ->keyBy(fn($row) => Str::lower((string) $row->catalog));
+
+        $counts = [];
+        foreach ($catalogs as $catalog) {
+            $row = $rows->get(Str::lower($catalog));
+            $counts[$catalog] = ['observed' => (int) ($row->observed ?? 0), 'drawn' => (int) ($row->drawn ?? 0)];
+        }
+
+        return $counts;
     }
 
     public function catalog(Request $request, string $observer): View
@@ -537,14 +571,47 @@ class ObserverController extends Controller
         return view('observers.admin');
     }
 
+    /**
+     * The observers with their counts, most observations first.
+     *
+     * @return list<object>
+     */
+    private function observerRankingRows(): array
+    {
+        $lastYear = now()->subYear()->toDateString();
+
+        return DB::table('observations as observations')
+            ->join('users', 'users.username', '=', 'observations.observer_username')
+            ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
+            ->select([
+                'users.id',
+                'users.name',
+                'users.username',
+                'users.slug',
+                DB::raw('COUNT(*) as observations_count'),
+                DB::raw('SUM(CASE WHEN observations.has_drawing = 1 THEN 1 ELSE 0 END) as drawings_count'),
+                DB::raw("SUM(CASE WHEN observations.observed_on >= '" . $lastYear . "' THEN 1 ELSE 0 END) as observations_last_year"),
+                DB::raw("SUM(CASE WHEN observations.has_drawing = 1 AND observations.observed_on >= '" . $lastYear . "' THEN 1 ELSE 0 END) as drawings_last_year"),
+                DB::raw('COUNT(DISTINCT CASE WHEN details.visibility IS NULL OR details.visibility != '.Observation::VISIBILITY_NOT_SEEN.' THEN '.Observation::DIFFERENT_OBJECT_SQL.' END) as different_objects_count'),
+            ])
+            ->groupBy('users.id', 'users.name', 'users.username', 'users.slug')
+            ->orderByDesc('observations_count')
+            ->orderBy('users.name')
+            ->get()
+            ->all();
+    }
+
     private function observerSourceOptions(?User $viewer): Collection
     {
-        $catalogSources = DB::table('objectnames')
+        $catalogs = Cache::remember('observers:catalogs', self::RANKING_CACHE_SECONDS, fn() => DB::table('objectnames')
             ->whereNotNull('catalog')
             ->where('catalog', '!=', '')
             ->distinct()
             ->orderBy('catalog')
             ->pluck('catalog')
+            ->all());
+
+        $catalogSources = collect($catalogs)
             ->map(function ($catalog) {
                 $catalog = (string) $catalog;
 
@@ -644,10 +711,12 @@ class ObserverController extends Controller
                 ->count('object_name');
         }
 
-        return (int) DB::table('objectnames')
-            ->where('catalog', (string) ($source['catalog'] ?? ''))
+        $catalog = (string) ($source['catalog'] ?? '');
+
+        return Cache::remember('observers:catalog_total:' . md5(Str::lower($catalog)), self::RANKING_CACHE_SECONDS, fn() => (int) DB::table('objectnames')
+            ->where('catalog', $catalog)
             ->distinct('catindex')
-            ->count('catindex');
+            ->count('catindex'));
     }
 
     private function sortObserverRows(Collection $rows, string $sort, string $direction): Collection
@@ -731,7 +800,9 @@ class ObserverController extends Controller
                 ->all();
         }
 
-        return DB::table('objectnames as objectnames')
+        $catalog = (string) ($source['catalog'] ?? '');
+
+        return Cache::remember('observers:catalog_counts:' . md5(Str::lower($catalog)), self::RANKING_CACHE_SECONDS, fn() => DB::table('objectnames as objectnames')
             ->join('observations as observations', 'objectnames.objectname', '=', 'observations.target_name')
             ->join('users', 'users.username', '=', 'observations.observer_username')
             ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
@@ -740,12 +811,12 @@ class ObserverController extends Controller
                 $query->whereNull('details.visibility')
                     ->orWhere('details.visibility', '!=', 7);
             })
-            ->where('objectnames.catalog', (string) ($source['catalog'] ?? ''))
+            ->where('objectnames.catalog', $catalog)
             ->groupBy('users.username')
             ->select('users.username', DB::raw('COUNT(DISTINCT objectnames.catindex) as observed_count'))
             ->pluck('observed_count', 'users.username')
             ->map(fn($count) => (int) $count)
-            ->all();
+            ->all());
     }
 
     private function sourceObjects(array $source): Collection

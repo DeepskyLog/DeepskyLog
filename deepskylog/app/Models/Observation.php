@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\ComputeObserverStats;
 use App\Services\Observations\ObservationCardData;
 use App\Traits\ClearsResponseCache;
 use Carbon\Carbon;
@@ -57,7 +58,9 @@ class Observation extends Model
      * The statistics on an observer's page are cached for six hours
      * (ComputeObserverStats); forget them when one of their observations is
      * saved or deleted, so the page shows the change at once. When the
-     * observer of an observation changes, both observers are cleared.
+     * observer of an observation changes, both observers are cleared. The
+     * totals of all observers shown next to them are cleared too, or an
+     * observer could see more observations of their own than in total.
      */
     protected static function booted(): void
     {
@@ -79,6 +82,7 @@ class Observation extends Model
         foreach (array_unique($userIds) as $userId) {
             Cache::forget('observer_stats:'.$userId);
         }
+        Cache::forget(ComputeObserverStats::SITE_TOTALS_KEY);
     }
 
     protected function casts(): array

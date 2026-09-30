@@ -73,10 +73,24 @@ class ComputeContrastReserveForObject implements ShouldQueue
      */
     public static function metricValues(DeepskyObject $obj, int $userId, ?int $instrumentId, ?int $locationId, ?int $lensId): array
     {
-        $user = User::find($userId);
-        $instrument = $instrumentId ? Instrument::find($instrumentId) : null;
-        $location = $locationId ? Location::find($locationId) : null;
+        return self::valuesFor(
+            $obj,
+            User::find($userId),
+            $instrumentId ? Instrument::find($instrumentId) : null,
+            $locationId ? Location::find($locationId) : null,
+            $lensId
+        );
+    }
 
+    /**
+     * metricValues() with the equipment already loaded, for jobs that compute
+     * many objects with the same equipment.
+     *
+     * @param  array<int, list<\App\Models\Eyepiece>>|null  $magnifications  from ContrastReserveCalculator::magnifications()
+     * @return array<string, mixed>
+     */
+    public static function valuesFor(DeepskyObject $obj, ?User $user, ?Instrument $instrument, ?Location $location, ?int $lensId, ?array $magnifications = null): array
+    {
         $result = ['contrast_reserve' => null, 'category' => null, 'magnification' => null, 'eyepieces' => []];
         if ($instrument && $location) {
             $result = ContrastReserveCalculator::calculate(
@@ -84,7 +98,9 @@ class ComputeContrastReserveForObject implements ShouldQueue
                 $instrument,
                 $location,
                 $user,
-                ContrastReserveCalculator::lensFactor($lensId)
+                // the lens only changes the magnifications
+                $magnifications === null ? ContrastReserveCalculator::lensFactor($lensId) : 1.0,
+                $magnifications
             );
         }
 
