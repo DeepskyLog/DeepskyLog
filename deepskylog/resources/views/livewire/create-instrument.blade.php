@@ -62,7 +62,7 @@
                             editor.save();
                             try {
                                 // Prefer direct @this.set to synchronously update the Livewire property
-                                @this.set('description', editor.getContent());
+                                @this.set('description', editor.getContent(), false);
                             } catch (err) {
                                 // Fallback to emit if @this isn't available
                                 if (typeof Livewire !== 'undefined' && typeof Livewire.dispatch === 'function') {
@@ -158,7 +158,7 @@
                                 name="instrument_new_make"
                                 label="{!! __('Only add a make for the instrument here if the correct make is not available in the dropdown above.') !!}"
                                 type="text"
-                                wire:model.live="instrument_new_make"
+                                wire:model="instrument_new_make"
                                 class="mt-1 block w-full"
                                 value=""
                                 id="instrument_new_make"
@@ -169,7 +169,7 @@
                                 name="name"
                                 label="{!! __('Name of the instrument') !!}"
                                 type="text"
-                                wire:model.live="name"
+                                wire:model="name"
                                 class="mt-1 block w-full"
                                 value="{{ old('name') }}"/>
 
@@ -198,8 +198,8 @@
                                 label="{{ $mm_or_inch }}"
                                 type="number"
                                 class="mt-1 block w-full"
-                                wire:model.live="aperture_mm"
-                                x-on:input="$wire.updateAperture"
+                                wire:model="aperture_mm"
+                                x-on:input.debounce.500ms="$wire.updateAperture"
                                 step="0.1"
                                 min="0.1"
                                 required
@@ -221,8 +221,8 @@
                                 class="mt-1 block w-full"
                                 step="0.1"
                                 min="0.0"
-                                wire:model.live="focal_length_mm"
-                                x-on:input="$wire.updateFd"
+                                wire:model="focal_length_mm"
+                                x-on:input.debounce.500ms="$wire.updateFd"
                                 value="{{ old('focal_length') }}"/>
 
                             {{-- Add the F/D of the instrument--}}
@@ -231,10 +231,10 @@
                                 label="{!! __('F/D of the instrument') !!}"
                                 type="number"
                                 class="mt-1 block w-full"
-                                wire:model.live="f_d"
+                                wire:model="f_d"
                                 step="0.1"
                                 min="0.0"
-                                x-on:input="$wire.updateFocal"
+                                x-on:input.debounce.500ms="$wire.updateFocal"
                                 value="{{ old('f_d') }}"
                             />
 
@@ -243,7 +243,7 @@
                                 name="fixedMagnification"
                                 label="{!! __('Fixed magnification of the instrument (for example for finderscopes / binoculars)') !!}"
                                 type="number"
-                                wire:model.live="fixedMagnification"
+                                wire:model="fixedMagnification"
                                 class="mt-1 block w-full"
                                 value="{{ old('fixedMagnification') }}"
                             />
@@ -254,7 +254,7 @@
                                 label="{!! __('Obstruction of the instrument (in %)') !!}"
                                 type="number"
                                 class="mt-1 block w-full"
-                                wire:model.live="obstruction_perc"
+                                wire:model="obstruction_perc"
                                 step="0.1"
                                 min="0.0"
                                 value="{{ old('obstruction_perc') }}"
@@ -294,7 +294,7 @@
                             </div>
                             <div class="col-span-6 sm:col-span-5" wire:ignore>
                                 <textarea
-                                    wire:model.live="description"
+                                    wire:model="description"
                                     class="h-48 min-h-fit mt-1 block w-full"
                                     name="description"
                                     id="description"

@@ -30,6 +30,15 @@ class OalObservationImporter
 
     private ?string $defaultNamespace = null;
 
+    /**
+     * The targets resolved during this import, by name, type hint and
+     * metadata: a file usually holds the same object many times, and a lookup
+     * takes up to 20 queries per table.
+     *
+     * @var array<string, array{string|null, string|null, string|null, string|null}>
+     */
+    private array $resolvedObjects = [];
+
     public function __construct(User $user, ?OalSchemaValidator $validator = null)
     {
         $this->user = $user;
@@ -655,6 +664,16 @@ class OalObservationImporter
      * @return array{string|null, string|null, string|null, string|null}
      */
     private function resolveObject(string $name, ?string $targetTypeHint = null, array $targetMetadata = []): array
+    {
+        $key = serialize([$name, $targetTypeHint, $targetMetadata]);
+
+        return $this->resolvedObjects[$key] ??= $this->lookUpObject($name, $targetTypeHint, $targetMetadata);
+    }
+
+    /**
+     * @return array{string|null, string|null, string|null, string|null}
+     */
+    private function lookUpObject(string $name, ?string $targetTypeHint, array $targetMetadata): array
     {
         $lower = mb_strtolower(trim($name));
         $slug = Str::slug($name, '-');

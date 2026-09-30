@@ -229,15 +229,28 @@ class EphemerisAside extends Component
     }
 
     /**
+     * The location of location(), looked up once per request: mount() needs
+     * it for the timezone and again for the ephemerides.
+     */
+    protected ?Location $resolvedLocation = null;
+
+    protected bool $locationResolved = false;
+
+    /**
      * The user's standard location, else the default location for guests.
      */
     protected function location(): ?Location
     {
-        try {
-            return Location::forEphemerides(Auth::user());
-        } catch (\Throwable $_) {
-            return null;
+        if (! $this->locationResolved) {
+            try {
+                $this->resolvedLocation = Location::forEphemerides(Auth::user());
+            } catch (\Throwable $_) {
+                $this->resolvedLocation = null;
+            }
+            $this->locationResolved = true;
         }
+
+        return $this->resolvedLocation;
     }
 
     protected function timezone(): string

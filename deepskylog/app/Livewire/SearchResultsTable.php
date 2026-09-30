@@ -2,12 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Support\SchemaColumns;
 use App\Livewire\Concerns\LimitsExportRows;
 use App\Models\SearchIndex;
 use App\Models\Atlas;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
@@ -271,7 +271,7 @@ class SearchResultsTable extends PowerGridComponent
             $authUser = Auth::user();
             if ($authUser && !empty($authUser->standardAtlasCode) && preg_match('/^[A-Za-z0-9_]+$/', (string) $authUser->standardAtlasCode)) {
                 $acol = (string) $authUser->standardAtlasCode;
-                if (Schema::hasColumn('objects', $acol)) {
+                if (SchemaColumns::has('objects', $acol)) {
                     $select .= ', objects.`' . $acol . '` as atlas_page';
                 }
             }

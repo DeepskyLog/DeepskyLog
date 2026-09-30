@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Instrument;
 use App\Models\InstrumentMake;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
@@ -31,7 +30,7 @@ final class AdminInstrumentTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return InstrumentMake::query();
+        return InstrumentMake::query()->withCount('instruments');
     }
 
     public function relationSearch(): array
@@ -45,7 +44,7 @@ final class AdminInstrumentTable extends PowerGridComponent
             ->add('id')
             ->add('name')
             ->add('number_of_instruments', function ($instrument_make) {
-                return Instrument::where('make_id', $instrument_make->id)->count();
+                return $instrument_make->instruments_count;
             });
     }
 

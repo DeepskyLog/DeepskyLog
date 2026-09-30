@@ -2,10 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Support\SchemaColumns;
 use App\Models\SavedObservationSearch;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 
 class AdvancedObservationSearch extends Component
@@ -129,7 +130,7 @@ class AdvancedObservationSearch extends Component
             ->orderBy('name')
             ->get(['code', 'name']);
         $this->allAtlases = $atlasOptions
-            ->filter(fn($atlas) => preg_match('/^[A-Za-z0-9_]+$/', (string) $atlas->code) && Schema::hasColumn('objects', (string) $atlas->code))
+            ->filter(fn($atlas) => preg_match('/^[A-Za-z0-9_]+$/', (string) $atlas->code) && SchemaColumns::has('objects', (string) $atlas->code))
             ->mapWithKeys(fn($atlas) => [(string) $atlas->code => (string) $atlas->name])
             ->toArray();
 
@@ -195,12 +196,14 @@ class AdvancedObservationSearch extends Component
         $availableLanguageOptions = collect(config('app.available_locales', []))
             ->mapWithKeys(fn($code, $label) => [mb_strtolower(trim((string) $code)) => (string) $label]);
 
-        $languageCodes = DB::table('observations')
+        // A scan over all observations: the list hardly changes, so keep it for a day.
+        $languageCodes = collect(Cache::remember('advanced_observation_search:languages', now()->addDay(), fn () => DB::table('observations')
             ->select('language')
             ->whereNotNull('language')
             ->where('language', '<>', '')
             ->distinct()
             ->pluck('language')
+            ->all()))
             ->map(fn($language) => mb_strtolower(trim((string) $language)))
             ->filter(fn(string $language) => $language !== '' && $availableLanguageOptions->has($language))
             ->unique()

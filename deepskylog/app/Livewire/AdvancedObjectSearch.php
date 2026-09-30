@@ -2,10 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Support\SchemaColumns;
 use App\Models\SavedObjectSearch;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 
 class AdvancedObjectSearch extends Component
@@ -151,7 +151,7 @@ class AdvancedObjectSearch extends Component
             ->orderBy('name')
             ->get(['code', 'name']);
         $this->allAtlases = $atlasOptions
-            ->filter(fn($a) => preg_match('/^[A-Za-z0-9_]+$/', (string) $a->code) && Schema::hasColumn('objects', (string) $a->code))
+            ->filter(fn($a) => preg_match('/^[A-Za-z0-9_]+$/', (string) $a->code) && SchemaColumns::has('objects', (string) $a->code))
             ->mapWithKeys(fn($a) => [(string) $a->code => (string) $a->name])
             ->toArray();
 

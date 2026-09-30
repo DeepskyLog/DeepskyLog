@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Support\SchemaColumns;
 use App\Livewire\Concerns\LimitsExportRows;
 use App\Models\SearchIndex;
 use App\Models\Atlas;
@@ -13,7 +14,6 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
@@ -592,7 +592,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
         $atlasMin = trim((string) $this->atlasPageMin);
         $atlasMax = trim((string) $this->atlasPageMax);
         if ($atlasCode !== '' || $atlasSpec !== '' || $atlasMin !== '' || $atlasMax !== '') {
-            if ($atlasCode !== '' && preg_match('/^[A-Za-z0-9_]+$/', $atlasCode) && Schema::hasColumn('objects', $atlasCode)) {
+            if ($atlasCode !== '' && preg_match('/^[A-Za-z0-9_]+$/', $atlasCode) && SchemaColumns::has('objects', $atlasCode)) {
                 $query->where('search_index.source_table', 'objects');
 
                 $atlasExpr = "NULLIF(TRIM(objects.`{$atlasCode}`), '')";
@@ -656,7 +656,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             $authUser = Auth::user();
             if ($authUser && !empty($authUser->standardAtlasCode) && preg_match('/^[A-Za-z0-9_]+$/', (string) $authUser->standardAtlasCode)) {
                 $acol = (string) $authUser->standardAtlasCode;
-                if (Schema::hasColumn('objects', $acol)) {
+                if (SchemaColumns::has('objects', $acol)) {
                     $select .= ', objects.`' . $acol . '` as atlas_page';
                 }
             }

@@ -6,17 +6,6 @@
 
 - [ ] Test! 
   - [ ] Fix the speed problems found (measured on the local database, as a guest: `/statistics` 5 s, `/popular-objects` 2 s, `/observers` 1.8 s, `/object/m-51` 231 queries, `/drawings` 392 queries, `/` 266 queries).
-    - [ ] Smaller items
-      - [ ] Importers: memoize the resolved object names during an import.
-      - [ ] `ObservationSearchTable` / `ObservationSearchQuery`: `target_name LIKE '%q%'`; match on `target_name_normalized` instead.
-      - [ ] `CountriesChart`: `Country::where()->first()` per row.
-      - [ ] Admin make/type tables and `RemoveUserTable`: one `count()`/`exists()` per row, use `withCount()`/`withExists()`.
-      - [ ] `Schema::hasColumn()` on every render in `SearchResultsTable`, `AdvancedObjectSearchTable`, `NearbyObjectsTable`: cache it.
-      - [ ] `wire:model.live` on text fields in the create forms and `DeleteObjectModal`: use `.blur` or `.live.debounce`.
-      - [ ] `AdvancedObservationSearch::mount()` runs `SELECT DISTINCT language` over all observations: cache it.
-      - [ ] `/sessions`: `otherObservers()` per session; `EphemerisAside` runs `Location::forEphemerides` twice per page.
-      - [ ] `AppServiceProvider::boot()` walks `app/Livewire` with `File::allFiles()` on every request: cache the component map.
-      - [ ] `sessions:backfill-slugs` runs every 5 minutes: hourly, or remove once all slugs exist.
   - [ ] Test for security problems
   - [ ] Test manually when logged in and logged out, as database expert and as administrator
 - [ ] Update to laravel 13.

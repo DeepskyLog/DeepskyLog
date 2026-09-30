@@ -2,13 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Support\SchemaColumns;
 use App\Models\DeepskyObject;
 use App\Models\Atlas;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -627,7 +627,7 @@ class NearbyObjectsTable extends PowerGridComponent
      * Fallback behaviour:
      * - For any other field the method will attempt a fully-qualified
      *   `ORDER BY objects.<field> <ASC|DESC>` where `<field>` is validated
-     *   with a conservative regex and `Schema::hasColumn('objects', $field)`.
+     *   with a conservative regex and `SchemaColumns::has('objects', $field)`.
      *
      * Error handling and guarantees:
      * - The method catches and swallows exceptions to avoid breaking the
@@ -756,7 +756,7 @@ class NearbyObjectsTable extends PowerGridComponent
             $sd = strtoupper($sd) === 'DESC' ? 'DESC' : 'ASC';
 
             // Default fallback (fully-qualified), with validation to avoid SQL injection.
-            if (is_string($sf) && preg_match('/^[A-Za-z0-9_]+$/', $sf) && Schema::hasColumn('objects', $sf)) {
+            if (is_string($sf) && preg_match('/^[A-Za-z0-9_]+$/', $sf) && SchemaColumns::has('objects', $sf)) {
                 $outer->orderBy("objects.{$sf}", $sd);
             }
         } catch (\Throwable $_) {

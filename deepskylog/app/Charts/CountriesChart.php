@@ -32,13 +32,18 @@ class CountriesChart
     {
         $deepsky = Observation::where('observer_username', $user->username)->join('locations', 'observations.location_id', '=', 'locations.id')->select('locations.country', DB::raw('count(*) as count'))->groupBy('locations.country')->get();
 
+        // The Country models of all these countries, in one query. Keyed on the lower
+        // case name, as the column compares case-insensitively in the database.
+        $countryModels = Country::whereIn('country', $deepsky->pluck('country')->filter()->unique()->values())
+            ->get()
+            ->keyBy(fn (Country $country) => mb_strtolower(rtrim((string) $country->country)));
+
         $countries = [];
         $values = [];
 
         // Build country labels and values.
         foreach ($deepsky as $item) {
-            // Try to find a Country model for this location country value.
-            $countryModel = Country::where('country', $item->country)->first();
+            $countryModel = $countryModels->get(mb_strtolower(rtrim((string) $item->country)));
 
             // Prefer localized name from Countries::getOne when we have a code.
             if ($countryModel && $countryModel->code) {

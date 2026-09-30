@@ -31,7 +31,7 @@ class ObservationSearchQuery
         if ($filters === []) {
             $observations = Observation::query();
             if ($search !== '') {
-                $observations->where('observations.target_name', 'LIKE', '%' . $search . '%');
+                ObservationSearchTable::whereTargetNameStartsWith($observations, $search);
             }
 
             return $observations;

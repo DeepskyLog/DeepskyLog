@@ -335,6 +335,7 @@ class SessionController extends Controller
 
         $perPage = 12;
         $sessions = $query->paginate($perPage)->withQueryString();
+        ObservationSession::preloadOtherObservers($sessions->getCollection());
 
         // Prefetch related locations to avoid N+1 when resolving location pictures
         $collection = $sessions->getCollection();
@@ -572,6 +573,7 @@ class SessionController extends Controller
 
         $perPage = 12;
         $sessions = $query->paginate($perPage)->withQueryString();
+        ObservationSession::preloadOtherObservers($sessions->getCollection());
 
         // Prefetch related locations to avoid N+1 when resolving location pictures
         $collection = $sessions->getCollection();
@@ -689,6 +691,7 @@ class SessionController extends Controller
 
         $perPage = 12;
         $sessions = $query->paginate($perPage)->withQueryString();
+        ObservationSession::preloadOtherObservers($sessions->getCollection());
 
         // Prefetch related locations to avoid N+1 when resolving location pictures
         $collection = $sessions->getCollection();
@@ -890,6 +893,7 @@ class SessionController extends Controller
 
         $perPage = 6;
         $sessions = HomepagePagination::cap($query->paginate($perPage, $columns = ['*'], $pageName = 'sessions'));
+        ObservationSession::preloadOtherObservers($sessions->getCollection());
 
         // Prefetch related locations to avoid N+1 when resolving location pictures
         $collection = $sessions->getCollection();

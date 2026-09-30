@@ -62,7 +62,7 @@
                             editor.save();
                             try {
                                 // Prefer direct @this.set to synchronously update the Livewire property
-                                @this.set('description', editor.getContent());
+                                @this.set('description', editor.getContent(), false);
                             } catch (err) {
                                 // Fallback to emit if @this isn't available
                                 if (typeof Livewire !== 'undefined') {
@@ -159,7 +159,7 @@
                                 name="filter_new_make"
                                 label="{!! __('Only add a make for the filter here if the correct make is not available in the dropdown above.') !!}"
                                 type="text"
-                                wire:model.live="filter_new_make"
+                                wire:model="filter_new_make"
                                 class="mt-1 block w-full"
                                 value=""
                                 id="filter_new_make"
@@ -170,7 +170,7 @@
                                 name="name"
                                 label="{!! __('Name of the filter') !!}"
                                 type="text"
-                                wire:model.live="name"
+                                wire:model="name"
                                 class="mt-1 block w-full"
                                 value="{{ old('name') }}"/>
 
@@ -200,7 +200,7 @@
                                             label="{{ __('Wratten') }}"
                                             type="text"
                                             class="mt-1 block w-full"
-                                            wire:model.live="wratten"
+                                            wire:model="wratten"
                                             maxlength="5"
                                             value="{{ old('wratten') }}"
                                         />
@@ -210,7 +210,7 @@
                                             label="{{ __('Schott') }}"
                                             type="text"
                                             class="mt-1 block w-full"
-                                            wire:model.live="schott"
+                                            wire:model="schott"
                                             maxlength="5"
                                             value="{{ old('schott') }}"
                                         />
@@ -223,7 +223,7 @@
                                 </div>
                                 <div class="col-span-6 sm:col-span-5" wire:ignore>
                                     <textarea
-                                        wire:model.live="description"
+                                        wire:model="description"
                                         class="h-48 min-h-fit mt-1 block w-full"
                                         name="description"
                                         id="description"

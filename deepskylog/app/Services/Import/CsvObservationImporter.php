@@ -39,6 +39,14 @@ class CsvObservationImporter
 
     private User $user;
 
+    /**
+     * The objects resolved during this import, by object name: a file usually
+     * holds the same object many times, and a lookup takes up to 20 queries.
+     *
+     * @var array<string, array{string|null, string|null, string|null, string|null}>
+     */
+    private array $resolvedObjects = [];
+
     public function __construct(User $user)
     {
         $this->user = $user;
@@ -380,6 +388,14 @@ class CsvObservationImporter
      * @return array{string|null, string|null, string|null, string|null}
      */
     private function resolveObject(string $name): array
+    {
+        return $this->resolvedObjects[$name] ??= $this->lookUpObject($name);
+    }
+
+    /**
+     * @return array{string|null, string|null, string|null, string|null}
+     */
+    private function lookUpObject(string $name): array
     {
         $lower = mb_strtolower(trim($name));
         $slug = Str::slug($name, '-');

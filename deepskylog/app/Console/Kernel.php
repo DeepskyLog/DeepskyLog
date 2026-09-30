@@ -19,8 +19,10 @@ class Kernel extends ConsoleKernel
         if (config('cache.default') === 'redis') {
             $schedule->command('cache:prune-stale-tags')->hourly();
         }
-        // Backfill session slugs regularly (idempotent)
-        $schedule->command('sessions:backfill-slugs')->everyFiveMinutes();
+        // Backfill session slugs (idempotent). Sessions saved through the model
+        // get a slug from ObservationSession::sluggable(); this only catches
+        // sessions written without one (imports, the old site).
+        $schedule->command('sessions:backfill-slugs')->hourly();
 
         $schedule->command('astronomy:updateCometPhotometry')->weeklyOn(2, '4:30');
         // Incremental search index reindex (one-run nightly; safe for production)

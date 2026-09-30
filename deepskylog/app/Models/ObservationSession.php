@@ -13,6 +13,13 @@ class ObservationSession extends Model
 {
     use ClearsResponseCache, Sluggable;
 
+    /**
+     * The usernames of sessionObservers, set by preloadOtherObservers().
+     *
+     * @var list<string>|null
+     */
+    private ?array $preloadedOtherObservers = null;
+
     protected $table = 'observation_sessions';
 
     public $timestamps = false;
@@ -124,10 +131,35 @@ class ObservationSession extends Model
      */
     public function otherObservers()
     {
-        return \DB::table('sessionObservers')
+        return $this->preloadedOtherObservers ?? \DB::table('sessionObservers')
             ->where('sessionid', $this->id)
             ->pluck('observer')
             ->toArray();
+    }
+
+    /**
+     * Fetch the other observers (sessionObservers) of the sessions in one
+     * query, for pages that list sessions with their number of observers;
+     * otherObservers() and otherObserversCount() then query nothing.
+     *
+     * @param  iterable<ObservationSession>  $sessions
+     */
+    public static function preloadOtherObservers(iterable $sessions): void
+    {
+        $sessions = collect($sessions)->filter(fn ($session) => $session instanceof self);
+        $ids = $sessions->pluck('id')->filter()->unique()->values()->all();
+        if ($ids === []) {
+            return;
+        }
+
+        $observers = \DB::table('sessionObservers')
+            ->whereIn('sessionid', $ids)
+            ->get(['sessionid', 'observer'])
+            ->groupBy('sessionid');
+
+        foreach ($sessions as $session) {
+            $session->preloadedOtherObservers = $observers->get($session->id, collect())->pluck('observer')->all();
+        }
     }
 
     /**
@@ -153,10 +185,7 @@ class ObservationSession extends Model
      */
     public function otherObserversCount()
     {
-        $names = \DB::table('sessionObservers')
-            ->where('sessionid', $this->id)
-            ->pluck('observer')
-            ->toArray();
+        $names = $this->otherObservers();
 
         $unique = array_values(array_unique($names));
         $count = count($unique);

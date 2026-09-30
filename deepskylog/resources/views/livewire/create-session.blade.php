@@ -18,7 +18,7 @@
                         <x-input
                             name="name"
                             label="{{ __('Session name') }}"
-                            wire:model.live="name"
+                            wire:model="name"
                             class="mt-1 block w-full"
                             required
                         />
@@ -83,14 +83,14 @@
                     <div class="mb-4 mt-4">
                         <div class="col-span-6 text-sm text-gray-400 mt-1 sm:col-span-5">{{ __("Weather") }}</div>
                         <div wire:ignore>
-                            <textarea wire:model.live="weather" id="weather" class="h-40 min-h-fit mt-1 block w-full" name="weather">{{ old('weather') }}</textarea>
+                            <textarea wire:model="weather" id="weather" class="h-40 min-h-fit mt-1 block w-full" name="weather">{{ old('weather') }}</textarea>
                         </div>
                     </div>
 
                     <div class="mb-4">
                         <div class="col-span-6 text-sm text-gray-400 mt-1 sm:col-span-5">{{ __("Equipment") }}</div>
                         <div wire:ignore>
-                            <textarea wire:model.live="equipment" id="equipment" class="h-32 min-h-fit mt-1 block w-full" name="equipment">{{ old('equipment') }}</textarea>
+                            <textarea wire:model="equipment" id="equipment" class="h-32 min-h-fit mt-1 block w-full" name="equipment">{{ old('equipment') }}</textarea>
                         </div>
                     </div>
 
@@ -98,7 +98,7 @@
                         <div class="col-span-6 text-sm text-gray-400 mt-1 sm:col-span-5">{{ __("Comments") }}</div>
                         <div wire:ignore>
                             {{-- make comments larger for easier editing --}}
-                            <textarea wire:model.live="comments" id="comments" class="h-64 min-h-fit mt-1 block w-full" name="comments">{{ old('comments') }}</textarea>
+                            <textarea wire:model="comments" id="comments" class="h-64 min-h-fit mt-1 block w-full" name="comments">{{ old('comments') }}</textarea>
                         </div>
                     </div>
 
@@ -187,7 +187,7 @@
                             setup: function (editor) {
                                 editor.on('init', function () {
                                     editor.save();
-                                    try { @this.set(id, editor.getContent()); } catch (err) { if (typeof Livewire !== 'undefined' && typeof Livewire.dispatch === 'function') Livewire.dispatch('set'+id.charAt(0).toUpperCase()+id.slice(1), editor.getContent()); }
+                                    try { @this.set(id, editor.getContent(), false); } catch (err) { if (typeof Livewire !== 'undefined' && typeof Livewire.dispatch === 'function') Livewire.dispatch('set'+id.charAt(0).toUpperCase()+id.slice(1), editor.getContent()); }
                                 });
                                 editor.on('change', function () {
                                     editor.save();

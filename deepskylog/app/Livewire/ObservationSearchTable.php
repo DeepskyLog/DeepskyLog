@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Support\SchemaColumns;
 use App\Livewire\Concerns\LimitsExportRows;
 use App\Models\Filter;
 use App\Models\Instrument;
@@ -13,7 +14,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use OpenSpout\Common\Entity\Row;
 use OpenSpout\Writer\CSV\Options as CsvOptions;
@@ -174,12 +174,27 @@ final class ObservationSearchTable extends PowerGridComponent
             ]);
 
         if ($this->objectName !== '') {
-            $query->where('observations.target_name', 'LIKE', '%' . $this->objectName . '%');
+            self::whereTargetNameStartsWith($query, $this->objectName);
         }
 
         $this->applyAdvancedFilters($query);
 
         return $query;
+    }
+
+    /**
+     * Observations whose target name starts with the name, ignoring case and
+     * spaces ("m51" finds M 51 and M 51A), on the indexed stored column
+     * `target_name_normalized` (LOWER(REPLACE(target_name, ' ', ''))). A
+     * prefix match can use the index; '%name%' on target_name scanned all
+     * observations. Wildcards in the name still work, as before: '%' lists
+     * everything, '%51' finds the names containing 51.
+     */
+    public static function whereTargetNameStartsWith(Builder $query, string $name): void
+    {
+        $needle = mb_strtolower(str_replace(' ', '', trim($name)));
+
+        $query->where('observations.target_name_normalized', 'LIKE', $needle . '%');
     }
 
     private function hydrateAdvancedFilters(array $filters): void
@@ -378,7 +393,7 @@ final class ObservationSearchTable extends PowerGridComponent
         $atlasMin = trim((string) $this->atlasPageMin);
         $atlasMax = trim((string) $this->atlasPageMax);
         if ($atlasCode !== '' || $atlasSpec !== '' || $atlasMin !== '' || $atlasMax !== '') {
-            if ($atlasCode !== '' && preg_match('/^[A-Za-z0-9_]+$/', $atlasCode) && Schema::hasColumn('objects', $atlasCode)) {
+            if ($atlasCode !== '' && preg_match('/^[A-Za-z0-9_]+$/', $atlasCode) && SchemaColumns::has('objects', $atlasCode)) {
                 $query->where('observations.target_table', 'objects');
 
                 $atlasExpr = "NULLIF(TRIM(objects.`{$atlasCode}`), '')";

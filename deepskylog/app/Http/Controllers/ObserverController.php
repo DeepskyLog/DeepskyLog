@@ -318,6 +318,7 @@ class ObserverController extends Controller
             ->limit(3);
 
         $sessions = $sessionsQuery->get();
+        \App\Models\ObservationSession::preloadOtherObservers($sessions);
 
         // Prefetch related locations to avoid N+1
         $locationIds = $sessions->pluck('locationid')->filter()->unique()->values()->all();

@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Laravel\Jetstream\Contracts\DeletesUsers;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
@@ -21,6 +22,14 @@ final class RemoveUserTable extends PowerGridComponent
     use WithExport;
 
     public string $tableName = 'RemoveUserTable';
+
+    /**
+     * The relations of a user that keep the account from being removed.
+     */
+    private const OWNED_RELATIONS = [
+        'locations', 'instruments', 'eyepieces', 'filters', 'lenses',
+        'observingLists', 'observations', 'sketchOfTheWeek', 'sketchOfTheMonth',
+    ];
 
     public function setUp(): array
     {
@@ -42,7 +51,9 @@ final class RemoveUserTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return User::query();
+        // One EXISTS subquery per relation in the page query, instead of nine
+        // queries per row in canBeRemoved().
+        return User::query()->withExists(self::OWNED_RELATIONS);
     }
 
     public function relationSearch(): array
@@ -130,17 +141,21 @@ final class RemoveUserTable extends PowerGridComponent
      */
     private function canBeRemoved(User $user): bool
     {
-        return $user->id != 1
-            && $user->id != Auth::id()
-            && ! $user->locations()->exists()
-            && ! $user->instruments()->exists()
-            && ! $user->eyepieces()->exists()
-            && ! $user->filters()->exists()
-            && ! $user->lenses()->exists()
-            && ! $user->observingLists()->exists()
-            && ! $user->observations()->exists()
-            && ! $user->sketchOfTheWeek()->exists()
-            && ! $user->sketchOfTheMonth()->exists();
+        if ($user->id == 1 || $user->id == Auth::id()) {
+            return false;
+        }
+
+        foreach (self::OWNED_RELATIONS as $relation) {
+            $attribute = Str::snake($relation) . '_exists';
+            if (! array_key_exists($attribute, $user->getAttributes())) {
+                $user->loadExists($relation);
+            }
+            if ($user->getAttribute($attribute)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function destroy($id): void
