@@ -13,8 +13,9 @@ return [
      *  You can provide your own class given that it implements the
      *  CacheProfile interface.
      */
-    // Use a team/user-aware cache profile that avoids caching requests with
-    // session cookies or authenticated users.
+    // Use a team/user-aware cache profile that only caches pages for guests
+    // whose session holds nothing that changes the page, and only with the
+    // query parameters listed below.
     'cache_profile' => App\Http\ResponseCache\TeamAwareCacheProfile::class,
 
     /*
@@ -95,4 +96,34 @@ return [
      * This class is responsible for serializing responses.
      */
     'serializer' => \Spatie\ResponseCache\Serializers\DefaultSerializer::class,
+
+    /*
+     * Query parameters that pages read (App\Http\ResponseCache\TeamAwareHasher
+     * keys the cache on these only, sorted). A request with any other
+     * parameter is neither served from nor stored in the cache, so a
+     * parameter missing from this list only costs caching, never a wrong
+     * page. Patterns as in Str::is().
+     */
+    'query_parameters' => [
+        '*page', '*Page', 'adapt_from', 'alternative_names', 'catalog', 'comet', 'comet_name', 'contains',
+        'country', 'date', 'dec', 'decl', 'deepsky', 'direction', 'edit_unified_id', 'eyepiece', 'eyepiece_id',
+        'filter', 'format', 'images', 'include_subobjects', 'index', 'instrument', 'instrument_id',
+        'instrument_set', 'lang', 'language', 'lens', 'lens_id', 'limit', 'list', 'location', 'mag_limit',
+        'make', 'max_pages', 'message', 'mode', 'move_to_slug', 'name', 'number', 'obs_type', 'object',
+        'object_mag', 'object_names', 'object_refs', 'object_type', 'observation_id', 'observation_type',
+        'observations', 'observer', 'orientation', 'paper', 'part_of', 'per_page', 'provider', 'public', 'q',
+        'ra', 'radius', 'rasterize', 'receiver', 'reply_to', 'scope', 'search', 'search_query', 'selected',
+        'selected_ids', 'session', 'sessions', 'show_drafts', 'sketch_type', 'sketches', 'slug', 'sort',
+        'source', 'star_mag', 'subject', 'substring', 'target_slug', 'target_table', 'title', 'to', 'type',
+        'unread', 'user',
+    ],
+
+    /*
+     * Tracking parameters that no page reads: they are left out of the cache
+     * key, so links from newsletters or social media share the cached page.
+     */
+    'ignored_query_parameters' => [
+        'utm_*', 'fbclid', 'gclid', 'gbraid', 'wbraid', 'dclid', 'msclkid', 'yclid', 'mc_cid', 'mc_eid',
+        'igshid', '_ga', '_gl', 'ref',
+    ],
 ];

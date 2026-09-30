@@ -893,19 +893,19 @@ try {
                                                         <div class="py-1 text-sm text-gray-100" role="menu"
                                                             aria-orientation="vertical">
                                                             <a href="{{ $exportNamesBase }}" target="_blank"
-                                                                rel="noopener noreferrer"
+                                                                rel="nofollow noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export names (PDF)') }}</a>
                                                             <a href="{{ $exportTableBase }}" target="_blank"
-                                                                rel="noopener noreferrer"
+                                                                rel="nofollow noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export table (PDF)') }}</a>
                                                             <a href="{{ $exportArgoBase }}" target="_blank"
-                                                                rel="noopener noreferrer"
+                                                                rel="nofollow noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export Argo Navis') }}</a>
                                                             <a href="{{ $exportSkylistBase }}" target="_blank"
-                                                                rel="noopener noreferrer"
+                                                                rel="nofollow noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export SkySafari (.skylist)') }}</a>
                                                             @php
@@ -937,11 +937,11 @@ try {
                                                                     rawurlencode($nearbyRadiusSelected ?? 30);
                                                             @endphp
                                                             <a href="{{ $exportStxtBase }}" target="_blank"
-                                                                rel="noopener noreferrer"
+                                                                rel="nofollow noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export SkyTools (.txt)') }}</a>
                                                             <a href="{{ $exportApdBase }}" target="_blank"
-                                                                rel="noopener noreferrer"
+                                                                rel="nofollow noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export AstroPlanner (.apd)') }}</a>
                                                         </div>
@@ -1197,13 +1197,13 @@ try {
                                         @php $chartSlugMain = $canonicalSlug ?? $session->slug; @endphp
                                         <li>
                                             <div class="flex items-center gap-2">
-                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'overview']) }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
+                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'overview']) }}" target="_blank" rel="nofollow noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
                                                     {{ __('Overview chart') }}
                                                 </a>
-                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'lookup']) }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
+                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'lookup']) }}" target="_blank" rel="nofollow noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
                                                     {{ __('Lookup chart') }}
                                                 </a>
-                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'detail']) }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
+                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'detail']) }}" target="_blank" rel="nofollow noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
                                                     {{ __('Detail chart') }}
                                                 </a>
                                             </div>

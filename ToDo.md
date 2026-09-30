@@ -6,12 +6,6 @@
 
 - [ ] Test! 
   - [ ] Fix the speed problems found (measured on the local database, as a guest: `/statistics` 5 s, `/popular-objects` 2 s, `/observers` 1.8 s, `/object/m-51` 231 queries, `/drawings` 392 queries, `/` 266 queries).
-    - [ ] Crawlers and bots
-      - [ ] `/api/users.select.api` has no auth and runs `User::all()` with all equipment (and exposes all usernames).
-      - [ ] `SESSION_DRIVER=database` inserts a `sessions` row for every request without cookies (also for cached pages), kept 10 days (`SESSION_LIFETIME=14400`): use `file`/`redis`, or do not store sessions for bots.
-      - [ ] The response cache refuses every request with a session cookie, so only bots get cached pages; every model save flushes the whole cache; junk query parameters give new cache keys. Key on `auth()` only, whitelist query parameters in `TeamAwareHasher`, invalidate more selectively.
-      - [ ] `robots.txt`: disallow the export paths (`*.pdf`, `*.apd`, `*.skylist`, `nearby-*.txt`, `export.*`) and add `rel="nofollow"` to the export links.
-      - [ ] `/observations` copies all query parameters into the pagination links (`ObservationsController.php:329`) and has no page cap.
     - [ ] Heavy work on each request
       - [ ] Cache the aggregates of `/statistics` (about 35 COUNTs), `/popular-objects` (GROUP BY over all observations, twice, plus 50 slug lookups), `/observers` (0.5 s + 1 s queries) and `/catalogs`, e.g. one hour.
       - [ ] Cache the RSS feeds for 10–15 minutes and eager load `location` (46 timezone queries per feed).

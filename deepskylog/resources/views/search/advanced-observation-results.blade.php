@@ -75,16 +75,16 @@
                             </button>
                         </x-slot>
 
-                        <x-menu.item href="{{ $exportPdfUrl }}" target="_blank" rel="noopener noreferrer" data-first>
+                        <x-menu.item href="{{ $exportPdfUrl }}" target="_blank" rel="nofollow noopener noreferrer" data-first>
                             {{ __('Export PDF') }}
                         </x-menu.item>
-                        <x-menu.item href="{{ $exportSkylistUrl }}" target="_blank" rel="noopener noreferrer">
+                        <x-menu.item href="{{ $exportSkylistUrl }}" target="_blank" rel="nofollow noopener noreferrer">
                             {{ __('Export SkySafari') }}
                         </x-menu.item>
-                        <x-menu.item href="{{ $exportObsUrl }}" target="_blank" rel="noopener noreferrer">
+                        <x-menu.item href="{{ $exportObsUrl }}" target="_blank" rel="nofollow noopener noreferrer">
                             {{ __('Export AstroPlanner (.obs)') }}
                         </x-menu.item>
-                        <x-menu.item href="{{ $exportOalUrl }}" target="_blank" rel="noopener noreferrer" data-last>
+                        <x-menu.item href="{{ $exportOalUrl }}" target="_blank" rel="nofollow noopener noreferrer" data-last>
                             {{ __('Export OAL') }}
                         </x-menu.item>
                     </x-menu.dropdown>

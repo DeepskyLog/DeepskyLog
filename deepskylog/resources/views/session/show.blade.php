@@ -24,7 +24,7 @@
                 <a href="{{ route('session.export.oal', [$user->slug, $sessionParam]) }}"
                    class="inline-flex items-center rounded-md border border-indigo-400/50 bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white shadow-[0_0_0_1px_rgba(255,255,255,0.08)] transition hover:bg-indigo-500"
                    target="_blank"
-                   rel="noopener noreferrer">
+                   rel="nofollow noopener noreferrer">
                     {{ __('Export OAL') }}
                 </a>
 

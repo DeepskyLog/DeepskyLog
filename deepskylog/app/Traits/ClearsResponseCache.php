@@ -13,14 +13,49 @@ trait ClearsResponseCache
     {
         // Invalidate all response cache entries. With team-aware hashing the same
         // URL produces several cache entries (per locale, user and team), so
-        // forgetting single URLs is not enough.
-        static::created(fn () => static::clearResponseCache());
-        static::updated(function ($model) {
-            if ($model->responseCacheRelevantChanges()) {
+        // forgetting single URLs is not enough. Changes that no cached page
+        // shows (private settings, private lists, draft sessions) are skipped:
+        // cached pages are only served to guests.
+        static::created(function ($model) {
+            if ($model->affectsCachedPages()) {
                 static::clearResponseCache();
             }
         });
-        static::deleted(fn () => static::clearResponseCache());
+        static::updated(function ($model) {
+            if ($model->responseCacheRelevantChanges() && ($model->affectsCachedPages() || $model->affectedCachedPagesBefore())) {
+                static::clearResponseCache();
+            }
+        });
+        static::deleted(function ($model) {
+            if ($model->affectsCachedPages()) {
+                static::clearResponseCache();
+            }
+        });
+    }
+
+    /**
+     * Whether guests can see this record, so that a change to it can show up
+     * on a cached page. Models with private or draft records override this.
+     */
+    protected function affectsCachedPages(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Whether guests could see this record before the current update (from
+     * the original attributes), so that hiding a record clears the cache too.
+     */
+    protected function affectedCachedPagesBefore(): bool
+    {
+        $current = $this->getAttributes();
+        $this->setRawAttributes($this->getRawOriginal());
+
+        try {
+            return $this->affectsCachedPages();
+        } finally {
+            $this->setRawAttributes($current);
+        }
     }
 
     /**

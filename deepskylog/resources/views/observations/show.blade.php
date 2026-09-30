@@ -53,10 +53,12 @@
 
                     // Images-only mode for drawings listings (triggered via ?images=1)
                     $isImagesOnly = $isDrawingsPath && (request()->query('images') == '1' || request()->has('images'));
-                    // URL helpers to toggle images-only while preserving other query params
-                    $imagesOnUrl = request()->fullUrlWithQuery(['images' => 1]);
+                    // URL helpers to toggle images-only, keeping only the listing
+                    // parameters (see App\Helpers\ListingPagination) and page 1
+                    $listingQuery = \App\Helpers\ListingPagination::query();
+                    $imagesOnUrl = url()->current() . '?' . http_build_query(array_merge($listingQuery, ['images' => 1]));
                     // Back to standard view: current URL without the images query parameter
-                    $queryExceptImages = request()->except('images');
+                    $queryExceptImages = \App\Helpers\ListingPagination::query(['images']);
                     $imagesOffUrl =
                         url()->current() .
                         (count($queryExceptImages) ? '?' . http_build_query($queryExceptImages) : '');
@@ -70,7 +72,7 @@
                         @endphp
                         @foreach (["all" => __("All"), "deepsky" => __("Deep-sky"), "comet" => __("Comets"), "solarsystem" => __("Solar system")] as $typeKey => $typeLabel)
                             @php
-                                $params = array_merge(request()->except(['obs_type', 'deepsky']), $typeKey !== 'all' ? ['obs_type' => $typeKey] : []);
+                                $params = array_merge(\App\Helpers\ListingPagination::query(['obs_type']), $typeKey !== 'all' ? ['obs_type' => $typeKey] : []);
                                 $typeUrl = url('/observations') . ($params ? '?' . http_build_query($params) : '');
                                 $isActive = $activeObsType === $typeKey;
                             @endphp
@@ -100,8 +102,8 @@
                 </div>
                 @php
                     $currentSort = request()->query('sort', 'observed');
-                    $sortObservedUrl = request()->fullUrlWithQuery(['sort' => 'observed']);
-                    $sortIdUrl = request()->fullUrlWithQuery(['sort' => 'id']);
+                    $sortObservedUrl = url()->current() . '?' . http_build_query(array_merge($listingQuery, ['sort' => 'observed']));
+                    $sortIdUrl = url()->current() . '?' . http_build_query(array_merge($listingQuery, ['sort' => 'id']));
                 @endphp
                 <div class="flex flex-wrap items-center gap-2">
                     <a href="{{ $sortObservedUrl }}"

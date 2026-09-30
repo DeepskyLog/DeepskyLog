@@ -60,4 +60,13 @@ class ObservingListItem extends Model
     {
         return $this->belongsTo(Observation::class, 'source_observation_id');
     }
+
+    /**
+     * Guests only see public lists, so changes on a private list do not
+     * clear the response cache.
+     */
+    protected function affectsCachedPages(): bool
+    {
+        return ObservingList::whereKey($this->observing_list_id)->where('public', true)->exists();
+    }
 }

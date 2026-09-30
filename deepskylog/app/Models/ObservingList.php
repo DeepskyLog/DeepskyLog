@@ -187,4 +187,13 @@ class ObservingList extends Model
         $comment->delete();
         $this->decrement('comments_count');
     }
+
+    /**
+     * Guests only see public lists, so changes on a private list do not
+     * clear the response cache.
+     */
+    protected function affectsCachedPages(): bool
+    {
+        return (bool) $this->public;
+    }
 }

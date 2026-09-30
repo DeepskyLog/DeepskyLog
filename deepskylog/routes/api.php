@@ -41,8 +41,9 @@ use App\Http\Controllers\SearchController;
 | Endpoints that read the logged-in user (their equipment, locations,
 | profile settings) need 'auth:sanctum': the site's own pages are
 | authenticated by their session cookie, guests get a 401. Object search,
-| users.select.api (the observation search is open to guests) and the
-| documented /api/{instrument,eyepieces,lenses,filters}/{userid} stay public.
+| users.select.api (the observation search is open to guests; guests only
+| get observers with observations) and the documented
+| /api/{instrument,eyepieces,lenses,filters}/{userid} stay public.
 |
 */
 
@@ -660,79 +661,61 @@ Route::get('addUserToTeam.index', function (Request $request) {
     return $allUsers;
 })->name('addUserToTeam.index')->middleware('auth:sanctum');
 
-// Users select helper for message receiver (returns username as id and full name)
+// Users select helper for the message receiver, the session's other
+// observers and the observer filter of the observation search (returns the
+// username as id and the full name). The observation search is open to
+// guests, so guests only get observers with observations, who are listed on
+// /observers anyway, and cannot look users up by e-mail address. The search
+// runs in the database and returns at most $limit users.
 Route::get('users.select.api', function (Request $request) {
-    $allUsers = [];
+    $limit = 50;
+    $loggedIn = $request->user('sanctum') !== null;
+
+    $query = User::query()->select(['id', 'name', 'username']);
+    if (!$loggedIn) {
+        $query->whereExists(function ($q) {
+            $q->selectRaw('1')->from('observations')->whereColumn('observations.observer_username', 'users.username');
+        });
+    }
 
     // Support comma-separated selected_ids parameter used by some callers
+    $selected = $request->input('selected', []);
     if (!$request->exists('selected') && $request->filled('selected_ids')) {
-        $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
-        if (!empty($ids)) {
-            $request->merge(['selected' => $ids]);
-        }
+        $selected = explode(',', (string) $request->selected_ids);
     }
+    $selected = array_values(array_filter(array_map('trim', array_map('strval', array_filter((array) $selected, 'is_scalar')))));
+    $selected = array_slice($selected, 0, $limit);
+
+    $selectedUsers = collect();
+    if ($selected !== []) {
+        $selectedUsers = (clone $query)
+            ->where(function ($q) use ($selected, $loggedIn) {
+                $q->whereIn('username', $selected);
+                if ($loggedIn) {
+                    $q->orWhereIn('email', $selected);
+                }
+            })
+            ->get();
+    }
+
+    $search = trim((string) $request->input('search', ''));
 
     // If selected is provided and there's no search term, return only the selected items
-    if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
-        $selected = $request->selected;
-        if (!is_array($selected)) {
-            $selected = [$selected];
-        }
-        foreach ($selected as $sel) {
-            $u = User::where('username', $sel)->orWhere('email', $sel)->first();
-            if ($u) {
-                $allUsers[] = [
-                    'id' => $u->username,
-                    'name' => $u->name,
-                ];
-            }
-        }
-
-        return $allUsers;
+    if ($request->exists('selected') && $search === '') {
+        return $selectedUsers->map(fn ($u) => ['id' => $u->username, 'name' => $u->name])->values();
     }
 
-    // Otherwise return selected first + the full (or filtered) list
-    if ($request->exists('selected')) {
-        $selected = $request->selected;
-        if (!is_array($selected)) {
-            $selected = [$selected];
-        }
-        foreach ($selected as $sel) {
-            $u = User::where('username', $sel)->orWhere('email', $sel)->first();
-            if ($u) {
-                $allUsers[] = [
-                    'id' => $u->username,
-                    'name' => $u->name,
-                ];
-            }
-        }
+    // Otherwise return selected first + the (filtered) list, sorted by full name
+    if ($search !== '') {
+        $like = '%' . addcslashes($search, '%_\\') . '%';
+        $query->where(fn ($q) => $q->where('name', 'like', $like)->orWhere('username', 'like', $like));
     }
+    $users = $query->orderBy('name')->limit($limit)->get();
 
-    // Get all users and sort by full name (case-insensitive)
-    $users = User::all()->sortBy(function ($u) {
-        return Str::lower($u->name);
-    });
-
-    foreach ($users as $user) {
-        if ($request->search == '' || Str::contains(Str::lower($user->name), Str::lower($request->search)) || Str::contains(Str::lower($user->username), Str::lower($request->search))) {
-            $allUsers[] = [
-                'id' => $user->username,
-                'name' => $user->name,
-            ];
-        }
-    }
-
-    // Remove duplicates while preserving order
-    $seen = [];
-    $unique = [];
-    foreach ($allUsers as $u) {
-        if (!isset($seen[$u['id']])) {
-            $seen[$u['id']] = true;
-            $unique[] = $u;
-        }
-    }
-
-    return $unique;
+    return $selectedUsers->concat($users)
+        ->unique('username')
+        ->map(fn ($u) => ['id' => $u->username, 'name' => $u->name])
+        ->values();
 })->name('users.select.api');
 
 Route::get('instrument_makes.api', function (Request $request) {

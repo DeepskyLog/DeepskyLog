@@ -32,7 +32,8 @@ class Kernel extends HttpKernel
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class,
+            // Does not store sessions for cookieless crawlers.
+            \App\Http\Middleware\StartSession::class,
             // After StartSession, so logged-in users are counted per account
             // (limiter 'web' in RouteServiceProvider).
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':web',

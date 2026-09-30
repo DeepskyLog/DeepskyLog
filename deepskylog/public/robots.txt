@@ -14,6 +14,19 @@ Disallow: /api/
 Disallow: /cart
 Disallow: /messages
 
+# Exports are generated on each request (PDFs, Argo Navis, SkySafari, APD,
+# OAL): keep crawlers off them. Matched by path, so that the static PDFs in
+# /downloads/ and /DSL/atlasses/ stay crawlable.
+Disallow: /*/export.
+Disallow: /*/export/
+Disallow: /object/*/nearby-
+Disallow: /search/*.pdf
+Disallow: /search/*.txt
+Disallow: /*.apd
+Disallow: /*.skylist
+Disallow: /object-sets
+Disallow: /object-report
+
 # Optional: discourage crawling of URLs with query strings (may hide paginated/filter pages)
 # Uncomment if you want to block query-strings site-wide
 # Disallow URLs with query strings — keep only first page crawled

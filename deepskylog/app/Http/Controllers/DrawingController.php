@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ListingPagination;
 use App\Models\Observation;
 use App\Models\User;
 use App\Services\Observations\ObservationCardData;
@@ -19,6 +20,10 @@ class DrawingController extends Controller
      */
     public function index()
     {
+        if (!ListingPagination::isValidPage(request(), 'page')) {
+            abort(404);
+        }
+
         $obsType = request()->query('obs_type', 'all');
         $allowedTypes = ['all', 'deepsky', 'comet', 'solarsystem'];
         if (!in_array($obsType, $allowedTypes)) {
@@ -34,7 +39,7 @@ class DrawingController extends Controller
             $query->where('target_type', $obsType);
         }
 
-        $sketches = $query->orderBy('id', 'desc')->deferredPaginate(20)->appends(request()->query());
+        $sketches = ListingPagination::cap($query->orderBy('id', 'desc')->deferredPaginate(20));
 
         // Observers, objects, likes, ... of the sketch cards in grouped queries.
         ObservationCardData::instance()->preload($sketches);
@@ -73,7 +78,7 @@ class DrawingController extends Controller
             $query->where('target_type', $obsType);
         }
 
-        $sketches = $query->orderBy('observed_on', 'desc')->paginate(20)->appends(request()->query());
+        $sketches = $query->orderBy('observed_on', 'desc')->paginate(20)->appends(ListingPagination::query());
 
         // Observers, objects, likes, ... of the sketch cards in grouped queries.
         ObservationCardData::instance()->preload($sketches);

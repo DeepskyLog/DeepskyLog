@@ -315,17 +315,17 @@
                                             class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
                                             style="display:none;">
                                             <div class="py-1 text-sm text-gray-100" role="menu" aria-orientation="vertical">
-                                                <a href="{{ $exportNamesBase }}" target="_blank" rel="noopener noreferrer"
+                                                <a href="{{ $exportNamesBase }}" target="_blank" rel="nofollow noopener noreferrer"
                                                     class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export names (PDF)') }}</a>
-                                                <a href="{{ $exportTableBase }}" target="_blank" rel="noopener noreferrer"
+                                                <a href="{{ $exportTableBase }}" target="_blank" rel="nofollow noopener noreferrer"
                                                     class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export table (PDF)') }}</a>
-                                                <a href="{{ $exportArgoBase }}" target="_blank" rel="noopener noreferrer"
+                                                <a href="{{ $exportArgoBase }}" target="_blank" rel="nofollow noopener noreferrer"
                                                     class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export Argo Navis') }}</a>
-                                                <a href="{{ $exportSkylistBase }}" target="_blank" rel="noopener noreferrer"
+                                                <a href="{{ $exportSkylistBase }}" target="_blank" rel="nofollow noopener noreferrer"
                                                     class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export SkySafari (.skylist)') }}</a>
-                                                <a href="{{ $exportStxtBase }}" target="_blank" rel="noopener noreferrer"
+                                                <a href="{{ $exportStxtBase }}" target="_blank" rel="nofollow noopener noreferrer"
                                                     class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export SkyTools (.txt)') }}</a>
-                                                <a href="{{ $exportApdBase }}" target="_blank" rel="noopener noreferrer"
+                                                <a href="{{ $exportApdBase }}" target="_blank" rel="nofollow noopener noreferrer"
                                                     class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export AstroPlanner (.apd)') }}</a>
                                             </div>
                                         </div>

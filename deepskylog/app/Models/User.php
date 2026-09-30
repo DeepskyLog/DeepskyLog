@@ -90,8 +90,9 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * Login and session state that never appears on a cached page, so
-     * changing it does not clear the response cache.
+     * Login and session state, and settings that are only read for the
+     * logged-in user themself, never appear on a cached page (those are only
+     * served to guests), so changing them does not clear the response cache.
      */
     protected function responseCacheIgnoredAttributes(): array
     {
@@ -103,7 +104,29 @@ class User extends Authenticatable implements MustVerifyEmail
             'two_factor_confirmed_at',
             'email_verified_at',
             'current_team_id',
+            'current_connected_account_id',
             'active_observing_list_id',
+            'stdeyepiece',
+            'stdlens',
+            'stdinstrumentset',
+            'observationlanguage',
+            'standardAtlasCode',
+            'fstOffset',
+            'overviewdsos',
+            'lookupdsos',
+            'detaildsos',
+            'overviewstars',
+            'lookupstars',
+            'detailstars',
+            'atlaspagefont',
+            'photosize1',
+            'photosize2',
+            'overviewFoV',
+            'lookupFoV',
+            'detailFoV',
+            'sendMail',
+            'showInches',
+            'version',
         ];
     }
 

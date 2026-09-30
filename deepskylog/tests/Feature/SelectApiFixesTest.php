@@ -2,6 +2,7 @@
 
 use App\Models\EyepieceMake;
 use App\Models\EyepieceType;
+use App\Models\Observation;
 use App\Models\User;
 use Database\Factories\EyepieceFactory;
 use Illuminate\Support\Facades\Auth;
@@ -104,12 +105,41 @@ it('refuses guests on the endpoints that read the logged-in user', function (str
 ]);
 
 it('keeps the observer list public for the observation search', function () {
-    $user = User::factory()->create();
+    $observer = User::factory()->create();
+    Observation::query()->create([
+        'observer_username' => $observer->username, 'observer_user_id' => $observer->id, 'observed_on' => '2026-03-01',
+        'target_type' => 'deepsky', 'target_table' => 'objects', 'target_key' => 'M 65', 'target_name' => 'M 65',
+        'has_drawing' => false,
+    ]);
+    $withoutObservations = User::factory()->create();
 
     $this->getJson(route('users.select.api'))
         ->assertOk()
-        ->assertJsonFragment(['id' => $user->username])
-        ->assertJsonMissing(['email' => $user->email]);
+        ->assertJsonFragment(['id' => $observer->username])
+        ->assertJsonMissing(['id' => $withoutObservations->username])
+        ->assertJsonMissing(['email' => $observer->email]);
+
+    // Guests cannot find a username from an e-mail address.
+    expect($this->getJson(route('users.select.api', ['selected' => $observer->email]))->json())->toBe([]);
+});
+
+it('lists all users to logged-in users, searched in the database', function () {
+    $alice = User::factory()->create(['name' => 'Alice Andromeda', 'username' => 'alice_a']);
+    $bob = User::factory()->create(['name' => 'Bob Betelgeuse', 'username' => 'bob_b']);
+    $this->actingAs($bob);
+
+    $this->getJson(route('users.select.api', ['search' => 'androm']))
+        ->assertOk()
+        ->assertExactJson([['id' => 'alice_a', 'name' => 'Alice Andromeda']]);
+
+    // A search term with LIKE wildcards matches them literally.
+    expect($this->getJson(route('users.select.api', ['search' => '%']))->json())->toBe([]);
+
+    $this->getJson(route('users.select.api', ['selected' => $alice->email]))
+        ->assertExactJson([['id' => 'alice_a', 'name' => 'Alice Andromeda']]);
+
+    expect($this->getJson(route('users.select.api', ['selected' => 'bob_b', 'search' => 'alice']))->json('*.id'))
+        ->toBe(['bob_b', 'alice_a']);
 });
 
 it('keeps the documented equipment api public', function () {

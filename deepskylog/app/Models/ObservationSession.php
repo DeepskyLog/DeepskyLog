@@ -168,4 +168,13 @@ class ObservationSession extends Model
 
         return max(1, $count);
     }
+
+    /**
+     * Inactive (draft) sessions are only shown to their owner, so changes on
+     * them do not clear the response cache.
+     */
+    protected function affectsCachedPages(): bool
+    {
+        return (int) $this->active === 1;
+    }
 }

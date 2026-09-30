@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ListingPagination;
 use App\Models\Observation;
 use App\Models\User;
 use App\Models\Target;
@@ -304,6 +305,11 @@ class ObservationsController extends Controller
      */
     public function index()
     {
+        // Reject pages past the cap (or no page number) before doing any work.
+        if (!ListingPagination::isValidPage(request(), 'deepsky')) {
+            abort(404);
+        }
+
         $obsType = request()->query('obs_type', 'all');
         $allowedTypes = ['all', 'deepsky', 'comet', 'solarsystem'];
         if (!in_array($obsType, $allowedTypes)) {
@@ -327,7 +333,7 @@ class ObservationsController extends Controller
             $query->orderByDesc('observed_on')->orderByDesc('observed_time')->orderByDesc('id');
         }
 
-        $deepsky = $query->deferredPaginate(20, 'deepsky')->appends(request()->query());
+        $deepsky = ListingPagination::cap($query->deferredPaginate(20, 'deepsky'));
 
         $this->preloadCards($deepsky);
 
@@ -436,7 +442,7 @@ class ObservationsController extends Controller
                     ->orderByDesc('id');
             }
 
-            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(ListingPagination::query());
 
             $preloadedData = $this->preloadCards($deepsky);
 
@@ -501,7 +507,7 @@ class ObservationsController extends Controller
         }
 
         if ($objectName) {
-            $deepsky = Observation::ofDeepskyObject($objectName)->orderBy('observed_on', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+            $deepsky = Observation::ofDeepskyObject($objectName)->orderBy('observed_on', 'desc')->paginate(20, ['*'], 'deepsky')->appends(ListingPagination::query());
 
             // Provide a lightweight user-like object so the view header can show a title
             $fakeUser = (object) ['name' => $objectName, 'slug' => $slug, 'username' => null];
@@ -527,7 +533,11 @@ class ObservationsController extends Controller
      */
     public function cometIndex()
     {
-        $comet = Observation::comets()->orderBy('id', 'desc')->deferredPaginate(20, 'comet')->appends(request()->query());
+        if (!ListingPagination::isValidPage(request(), 'comet')) {
+            abort(404);
+        }
+
+        $comet = ListingPagination::cap(Observation::comets()->orderBy('id', 'desc')->deferredPaginate(20, 'comet'));
 
         // Preload related data to avoid N+1 queries
         $preloadedData = $this->preloadCards($comet);
@@ -605,7 +615,7 @@ class ObservationsController extends Controller
             abort(404);
         }
 
-        $comet = Observation::ofComet($objectId)->orderBy('observed_on', 'desc')->paginate(20, ['*'], 'comet')->appends(request()->query());
+        $comet = Observation::ofComet($objectId)->orderBy('observed_on', 'desc')->paginate(20, ['*'], 'comet')->appends(ListingPagination::query());
 
         $fakeUser = (object) ['name' => $objectName ?? $slug, 'slug' => $slug, 'username' => null];
 
@@ -676,7 +686,7 @@ class ObservationsController extends Controller
             $query->where('target_key', $objectId);
         }
 
-        $comet = $query->paginate(20, ['*'], 'comet')->appends(request()->query());
+        $comet = $query->paginate(20, ['*'], 'comet')->appends(ListingPagination::query());
 
         // Preload related data to avoid N+1 queries
         $preloadedData = $this->preloadCards($comet);
@@ -698,7 +708,7 @@ class ObservationsController extends Controller
     {
         $user = User::where('slug', $slug)->firstOrFail();
 
-        $comet = Observation::comets()->where('observer_username', $user->username)->orderBy('observed_on', 'desc')->paginate(20, ['*'], 'comet')->appends(request()->query());
+        $comet = Observation::comets()->where('observer_username', $user->username)->orderBy('observed_on', 'desc')->paginate(20, ['*'], 'comet')->appends(ListingPagination::query());
 
         // Preload related data to avoid N+1 queries
         $preloadedData = $this->preloadCards($comet);
@@ -721,7 +731,7 @@ class ObservationsController extends Controller
         // If slug matches a user, reuse existing pattern but filter drawings only
         $user = User::where('slug', $slug)->first();
         if ($user) {
-            $deepsky = Observation::where('observer_username', $user->username)->where('has_drawing', 1)->orderBy('observed_on', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+            $deepsky = Observation::where('observer_username', $user->username)->where('has_drawing', 1)->orderBy('observed_on', 'desc')->paginate(20, ['*'], 'deepsky')->appends(ListingPagination::query());
 
             // Preload related data to avoid N+1 queries
             $preloadedData = $this->preloadCards($deepsky);
@@ -785,7 +795,7 @@ class ObservationsController extends Controller
         }
 
         if ($objectName) {
-            $deepsky = Observation::ofDeepskyObject($objectName)->where('has_drawing', 1)->orderBy('observed_on', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+            $deepsky = Observation::ofDeepskyObject($objectName)->where('has_drawing', 1)->orderBy('observed_on', 'desc')->paginate(20, ['*'], 'deepsky')->appends(ListingPagination::query());
 
             $fakeUser = (object) ['name' => $objectName, 'slug' => $slug, 'username' => null];
 
@@ -813,7 +823,7 @@ class ObservationsController extends Controller
                 ->where('has_drawing', 1)
                 ->orderBy('observed_on', 'desc');
 
-            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(ListingPagination::query());
 
             $fakeUser = (object) ['name' => $planet->name ?? $slug, 'slug' => $slug, 'username' => null];
 
@@ -939,7 +949,7 @@ class ObservationsController extends Controller
         if ($objectName) {
             $legacyQuery->ofDeepskyObject($objectName);
 
-            $deepsky = $legacyQuery->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+            $deepsky = $legacyQuery->paginate(20, ['*'], 'deepsky')->appends(ListingPagination::query());
 
             // Preload related data to avoid N+1 queries
             $preloadedData = $this->preloadCards($deepsky);
@@ -966,7 +976,7 @@ class ObservationsController extends Controller
                 ->where('observer_username', $user->username)
                 ->orderBy('observed_on', 'desc');
 
-            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(ListingPagination::query());
 
             // Preload users for unified observations
             $usernames = $deepsky->pluck('observer_username')->unique()->filter();
@@ -1057,7 +1067,7 @@ class ObservationsController extends Controller
         if ($objectName) {
             $legacyQuery->ofDeepskyObject($objectName);
 
-            $deepsky = $legacyQuery->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+            $deepsky = $legacyQuery->paginate(20, ['*'], 'deepsky')->appends(ListingPagination::query());
 
             // Preload related data to avoid N+1 queries
             $preloadedData = $this->preloadCards($deepsky);
@@ -1085,7 +1095,7 @@ class ObservationsController extends Controller
                 ->where('observer_username', $user->username)
                 ->orderBy('observed_on', 'desc');
 
-            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(ListingPagination::query());
 
             // Preload users for unified observations
             $usernames = $deepsky->pluck('observer_username')->unique()->filter();
@@ -1169,7 +1179,7 @@ class ObservationsController extends Controller
         }
 
         if ($objectName) {
-            $deepsky = Observation::ofDeepskyObject($objectName)->orderBy('observed_on', 'desc')->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+            $deepsky = Observation::ofDeepskyObject($objectName)->orderBy('observed_on', 'desc')->paginate(20, ['*'], 'deepsky')->appends(ListingPagination::query());
 
             $fakeUser = (object) ['name' => $objectName, 'slug' => $slug, 'username' => null];
 
@@ -1198,7 +1208,7 @@ class ObservationsController extends Controller
                 ->whereIn('target_key', $possibleKeys)
                 ->orderBy('observed_on', 'desc');
 
-            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(request()->query());
+            $deepsky = $query->paginate(20, ['*'], 'deepsky')->appends(ListingPagination::query());
 
             $fakeUser = (object) ['name' => $planet->name ?? $slug, 'slug' => $slug, 'username' => null];
 

@@ -45,4 +45,13 @@ class ObservingListComment extends Model
             || $user->id === $this->list->owner_user_id
             || $user->isAdministrator();
     }
+
+    /**
+     * Guests only see public lists, so changes on a private list do not
+     * clear the response cache.
+     */
+    protected function affectsCachedPages(): bool
+    {
+        return ObservingList::whereKey($this->observing_list_id)->where('public', true)->exists();
+    }
 }
