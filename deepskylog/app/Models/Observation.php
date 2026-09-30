@@ -136,9 +136,12 @@ class Observation extends Model
     public const VISIBILITY_NOT_SEEN = 7;
 
     /**
-     * The target an observation counts for when counting different objects.
+     * The target an observation counts for when counting different objects:
+     * COALESCE(NULLIF(TRIM(target_key), ''), LOWER(TRIM(target_name))), kept in
+     * the stored generated column different_object_key, which is indexed per
+     * observer and per target_type.
      */
-    public const DIFFERENT_OBJECT_SQL = "COALESCE(NULLIF(TRIM(observations.target_key), ''), LOWER(TRIM(observations.target_name)))";
+    public const DIFFERENT_OBJECT_SQL = 'observations.different_object_key';
 
     /**
      * The number of different objects among the observations of the query, the

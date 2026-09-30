@@ -16,9 +16,11 @@ class PopularObjectController extends Controller
 
     /**
      * The ranking groups all observations, so the number of objects and each
-     * page (with the slugs of its objects) are cached for an hour.
+     * page (with the slugs of its objects) are fresh for an hour; for a day
+     * after that the old ranking is shown while it is computed again after the
+     * response is sent (Cache::flexible()).
      */
-    private const CACHE_SECONDS = 3600;
+    private const CACHE_SECONDS = [3600, 86400];
 
     public function index(Request $request)
     {
@@ -37,15 +39,15 @@ class PopularObjectController extends Controller
     {
         $page = Paginator::resolveCurrentPage();
 
-        $total = Cache::remember("popular_objects:{$mode}:total", self::CACHE_SECONDS, fn() => DB::query()
-            ->fromSub($this->groupedQuery($mode), 'popular_objects')
+        $total = Cache::flexible("popular_objects:{$mode}:total", self::CACHE_SECONDS, fn() => DB::query()
+            ->fromSub($this->observationsQuery($mode)->selectRaw('1')->groupBy('target_type', 'target_name'), 'popular_objects')
             ->count());
 
         // Pages past the last one are empty; not cached, so that requests for
         // arbitrary page numbers cannot fill the cache.
         $rows = $page > (int) ceil($total / self::PER_PAGE)
             ? []
-            : Cache::remember("popular_objects:{$mode}:page:{$page}", self::CACHE_SECONDS, fn() => $this->pageRows($mode, $page));
+            : Cache::flexible("popular_objects:{$mode}:page:{$page}", self::CACHE_SECONDS, fn() => $this->pageRows($mode, $page));
 
         $items = array_map(fn(array $row) => (object) [
             'name' => $row['name'],
@@ -86,30 +88,27 @@ class PopularObjectController extends Controller
     }
 
     /**
-     * The observations (or drawings) grouped per object.
+     * The observations (or drawings) grouped per object. The kind of object
+     * follows from target_type, so grouping on target_type and target_name
+     * uses their index instead of a temporary table of all observations.
      */
     private function groupedQuery(string $mode): Builder
     {
-        $kindExpression = "CASE WHEN target_type = 'comet' THEN 'comet' WHEN target_type = 'planet' THEN 'planet' ELSE 'deepsky' END";
+        return $this->observationsQuery($mode)
+            ->selectRaw('target_name as object_name')
+            ->selectRaw("CASE WHEN target_type = 'comet' THEN 'comet' WHEN target_type = 'planet' THEN 'planet' ELSE 'deepsky' END as object_kind")
+            ->selectRaw('MIN(target_key) as sample_target_key')
+            ->selectRaw('COUNT(*) as total_count')
+            ->groupBy('target_type', 'target_name');
+    }
 
-        $baseQuery = DB::table('observations')
+    private function observationsQuery(string $mode): Builder
+    {
+        return DB::table('observations')
             ->whereNotNull('target_name')
             ->where('target_name', '!=', '')
             ->whereIn('target_type', ['deepsky', 'comet', 'planet'])
-            ->selectRaw('target_name as object_name')
-            ->selectRaw('target_key')
-            ->selectRaw($kindExpression . ' as object_kind');
-
-        if ($mode === 'drawings') {
-            $baseQuery->where('has_drawing', 1);
-        }
-
-        return DB::query()
-            ->fromSub($baseQuery, 'object_observations')
-            ->select('object_name', 'object_kind')
-            ->selectRaw('MIN(target_key) as sample_target_key')
-            ->selectRaw('COUNT(*) as total_count')
-            ->groupBy('object_name', 'object_kind');
+            ->when($mode === 'drawings', fn(Builder $query) => $query->where('has_drawing', 1));
     }
 
     private function buildCountUrl(string $objectKind, string $mode, string $objectSlug): string

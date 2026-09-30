@@ -211,6 +211,24 @@ it('caches the counts of the statistics page', function () {
     expect($total())->toBe(2);
 });
 
+it('shows the old counts of the statistics page while they are counted again after the response', function () {
+    $observer = User::factory()->create();
+    insertCachingTestObservation($observer->username, 'M 31');
+    $total = fn () => collect($this->get(route('statistics.index'))->assertOk()->viewData('summaryRows'))
+        ->firstWhere('key', 'observations')['values']['total'];
+
+    expect($total())->toBe(1);
+    insertCachingTestObservation($observer->username, 'M 32');
+
+    $this->travel(2)->hours();
+    expect($total())->toBe(1)
+        ->and($total())->toBe(2);
+
+    $this->travel(2)->days();
+    insertCachingTestObservation($observer->username, 'M 33');
+    expect($total())->toBe(3);
+});
+
 it('caches the ranking of the popular objects per page', function () {
     $observer = User::factory()->create();
     insertCachingTestObject('Popular Galaxy', 0.71, 41.27);

@@ -19,11 +19,13 @@ use Monarobase\CountryList\CountryListFacade as Countries;
 class StatisticsController extends Controller
 {
     /**
-     * The counts are cached for an hour: they are aggregates over all
-     * observations (a few seconds of queries), and a new observation changing
-     * them an hour later is no problem.
+     * The counts are fresh for an hour: they are aggregates over all
+     * observations (about a second of queries), and a new observation changing
+     * them an hour later is no problem. For a day after that the old counts
+     * are shown while they are counted again after the response is sent
+     * (Cache::flexible()), so that no visitor waits for them.
      */
-    private const CACHE_SECONDS = 3600;
+    private const CACHE_SECONDS = [3600, 86400];
 
     private const CATEGORIES = ['deepsky', 'comets', 'double', 'planets', 'sun', 'moon'];
 
@@ -42,7 +44,7 @@ class StatisticsController extends Controller
 
         // Only numbers are cached; the labels and charts are built per request,
         // in the language of the visitor.
-        $counts = Cache::remember(
+        $counts = Cache::flexible(
             'statistics:counts:' . ($selectedCountry ?? 'all'),
             self::CACHE_SECONDS,
             fn() => $this->counts($selectedCountry)
@@ -63,19 +65,91 @@ class StatisticsController extends Controller
 
     /**
      * All counts of the page for one country (or all countries), as plain
-     * arrays so they can be cached.
+     * arrays so they can be cached. The observations are counted in one pass,
+     * grouped per year, month, drawing and recency, with a sum per category:
+     * a query per category and count took seconds.
      *
      * @return array{summary: array<string, array<string, int>>, per_year: array<string, mixed>, per_month: array<string, list<int>>, object_types: array<string, mixed>, countries: array<string, int>}
      */
     private function counts(?string $country): array
     {
+        $groups = $this->groupedCounts($country);
+        $summary = $this->summaryCounts($groups, $country);
+
         return [
-            'summary' => $this->summaryCounts($country),
-            'per_year' => $this->perYearCounts($country),
-            'per_month' => $this->perMonthCounts($country),
-            'object_types' => $this->objectTypeCounts($country),
+            'summary' => $summary,
+            'per_year' => $this->perYearCounts($groups),
+            'per_month' => $this->perMonthCounts($groups),
+            'object_types' => $this->objectTypeCounts($summary['observations'], $country),
             'countries' => $this->countryCounts($country),
         ];
+    }
+
+    /**
+     * The number of observations of each category, per year, month, drawing
+     * and whether they are of the last year.
+     *
+     * @return list<array{year: ?int, month: ?int, drawing: bool, recent: bool, counts: array<string, int>}>
+     */
+    private function groupedCounts(?string $country): array
+    {
+        $yearExpression = $this->datePartExpression('year', 'observations.observed_on');
+        $monthExpression = $this->datePartExpression('month', 'observations.observed_on');
+
+        $query = $this->observationQuery($country)
+            ->selectRaw($yearExpression . ' as observed_year')
+            ->selectRaw($monthExpression . ' as observed_month')
+            ->selectRaw('observations.has_drawing as is_drawing')
+            ->selectRaw('CASE WHEN observations.observed_on >= ? THEN 1 ELSE 0 END as is_recent', [now()->subYear()]);
+        foreach ($this->categoryConditions() as $category => $condition) {
+            $query->selectRaw("SUM(CASE WHEN {$condition} THEN 1 ELSE 0 END) as count_{$category}");
+        }
+
+        return $this->joinDoubleStars($query)
+            ->groupBy('observed_year', 'observed_month', 'is_drawing', 'is_recent')
+            ->get()
+            ->map(fn($row) => [
+                'year' => $row->observed_year === null ? null : (int) $row->observed_year,
+                'month' => $row->observed_month === null ? null : (int) $row->observed_month,
+                'drawing' => (bool) $row->is_drawing,
+                'recent' => (bool) $row->is_recent,
+                'counts' => $this->categoryValues($row),
+            ])
+            ->all();
+    }
+
+    /**
+     * The SQL condition of each category (the columns of the summary), for
+     * the observations joined by joinDoubleStars().
+     *
+     * @return array<string, string>
+     */
+    private function categoryConditions(): array
+    {
+        return [
+            'total' => '1 = 1',
+            'deepsky' => "observations.target_type = '" . Observation::TYPE_DEEPSKY . "' AND double_stars.name_normalized IS NULL",
+            'comets' => "observations.target_type = '" . Observation::TYPE_COMET . "'",
+            'double' => "observations.target_type = '" . Observation::TYPE_DEEPSKY . "' AND double_stars.name_normalized IS NOT NULL",
+            'planets' => "observations.target_table = 'planets' AND observations.target_key != 'sun'",
+            'sun' => "observations.target_table = 'planets' AND observations.target_key = 'sun'",
+            'moon' => "observations.target_table IN ('moons', 'lunar_features')",
+        ];
+    }
+
+    /**
+     * Join the double stars on the observed name, so that deep-sky
+     * observations of a double star have a double_stars.name_normalized.
+     */
+    private function joinDoubleStars(Builder $query): Builder
+    {
+        return $query->leftJoinSub(
+            DB::table('objects')->where('type', 'DS')->distinct()->select('name_normalized'),
+            'double_stars',
+            'double_stars.name_normalized',
+            '=',
+            'observations.target_name_normalized'
+        );
     }
 
     private function summaryColumns(): array
@@ -92,22 +166,91 @@ class StatisticsController extends Controller
     }
 
     /**
+     * @param  list<array{year: ?int, month: ?int, drawing: bool, recent: bool, counts: array<string, int>}>  $groups  from groupedCounts()
      * @return array<string, array<string, int>> row => category => count
      */
-    private function summaryCounts(?string $country): array
+    private function summaryCounts(array $groups, ?string $country): array
     {
+        $categories = array_keys($this->summaryColumns());
         $counts = [];
-        foreach (array_keys($this->summaryColumns()) as $category) {
-            $query = fn() => $this->categoryQuery($category, $country);
-
-            $counts['observations'][$category] = (int) $query()->count();
-            $counts['last_year'][$category] = (int) $query()->where('observed_on', '>=', now()->subYear())->count();
-            $counts['drawings'][$category] = (int) $query()->where('has_drawing', 1)->count();
-            $counts['drawings_last_year'][$category] = (int) $query()->where('has_drawing', 1)->where('observed_on', '>=', now()->subYear())->count();
-            $counts['unique'][$category] = Observation::countDifferentObjects($query());
+        foreach (['observations', 'last_year', 'drawings', 'drawings_last_year'] as $row) {
+            $counts[$row] = array_fill_keys($categories, 0);
         }
 
+        foreach ($groups as $group) {
+            foreach ($group['counts'] as $category => $count) {
+                $counts['observations'][$category] += $count;
+                if ($group['recent']) {
+                    $counts['last_year'][$category] += $count;
+                }
+                if ($group['drawing']) {
+                    $counts['drawings'][$category] += $count;
+                }
+                if ($group['drawing'] && $group['recent']) {
+                    $counts['drawings_last_year'][$category] += $count;
+                }
+            }
+        }
+
+        $counts['unique'] = $this->differentObjectCounts($country);
+
         return $counts;
+    }
+
+    /**
+     * The number of different objects of each category, counted as
+     * Observation::countDifferentObjects() does. The categories are counted
+     * in groups that the indexes on different_object_key serve (all
+     * observations, deep-sky with the double stars, comets, and the Sun,
+     * Moon and planets), rather than all in one pass over the observations.
+     *
+     * @return array<string, int>
+     */
+    private function differentObjectCounts(?string $country): array
+    {
+        $conditions = $this->categoryConditions();
+        $groups = [
+            [['total'], fn(Builder $query) => $query],
+            [['deepsky', 'double'], fn(Builder $query) => $this->joinDoubleStars($query->where('observations.target_type', Observation::TYPE_DEEPSKY))],
+            [['comets'], fn(Builder $query) => $query->where('observations.target_type', Observation::TYPE_COMET)],
+            [['planets', 'sun', 'moon'], fn(Builder $query) => $query->whereIn('observations.target_table', ['planets', 'moons', 'lunar_features'])],
+        ];
+
+        $values = [];
+        foreach ($groups as [$categories, $scope]) {
+            $query = $scope($this->observationQuery($country))
+                ->whereNotExists(function (Builder $details) {
+                    $details->selectRaw('1')
+                        ->from('deepsky_observation_details')
+                        ->whereColumn('deepsky_observation_details.observation_id', 'observations.id')
+                        ->where('deepsky_observation_details.visibility', Observation::VISIBILITY_NOT_SEEN);
+                });
+            foreach ($categories as $category) {
+                $query->selectRaw('COUNT(DISTINCT CASE WHEN ' . $conditions[$category] . ' THEN ' . Observation::DIFFERENT_OBJECT_SQL . " END) as count_{$category}");
+            }
+
+            $row = $query->first();
+            foreach ($categories as $category) {
+                $values[$category] = (int) ($row->{"count_{$category}"} ?? 0);
+            }
+        }
+
+        return array_merge(array_fill_keys(array_keys($conditions), 0), $values);
+    }
+
+    /**
+     * The count of each category in a row selected per categoryConditions().
+     *
+     * @return array<string, int>
+     */
+    private function categoryValues(?object $row): array
+    {
+        $values = [];
+        foreach (array_keys($this->categoryConditions()) as $category) {
+            $values[$category] = (int) ($row->{"count_{$category}"} ?? 0);
+        }
+
+        return $values;
     }
 
     /**
@@ -136,41 +279,52 @@ class StatisticsController extends Controller
     }
 
     /**
+     * @param  list<array{year: ?int, month: ?int, drawing: bool, recent: bool, counts: array<string, int>}>  $groups  from groupedCounts()
      * @return array{first_year: int, last_year: int, series: array<string, list<int>>}
      */
-    private function perYearCounts(?string $country): array
+    private function perYearCounts(array $groups): array
     {
-        $yearExpression = $this->datePartExpression('year', 'observed_on');
-
-        $firstYear = (int) ($this->observationQuery($country)
-            ->min(DB::raw($yearExpression)) ?? date('Y'));
+        $years = array_filter(array_column($groups, 'year'), fn($year) => $year !== null);
+        $firstYear = $years === [] ? (int) date('Y') : min($years);
         $lastYear = (int) date('Y');
 
-        $series = [];
-        foreach (self::CATEGORIES as $category) {
-            $series[$category] = $this->mapYears($this->groupedByYear($category, $country), $firstYear, $lastYear);
+        $series = array_fill_keys(self::CATEGORIES, $firstYear > $lastYear ? [] : array_fill(0, $lastYear - $firstYear + 1, 0));
+        foreach ($groups as $group) {
+            if ($group['year'] === null || $group['year'] < $firstYear || $group['year'] > $lastYear) {
+                continue;
+            }
+            foreach (self::CATEGORIES as $category) {
+                $series[$category][$group['year'] - $firstYear] += $group['counts'][$category];
+            }
         }
 
         return ['first_year' => $firstYear, 'last_year' => $lastYear, 'series' => $series];
     }
 
     /**
+     * @param  list<array{year: ?int, month: ?int, drawing: bool, recent: bool, counts: array<string, int>}>  $groups  from groupedCounts()
      * @return array<string, list<int>> category => 12 monthly counts
      */
-    private function perMonthCounts(?string $country): array
+    private function perMonthCounts(array $groups): array
     {
-        $series = [];
-        foreach (self::CATEGORIES as $category) {
-            $series[$category] = $this->mapMonths($this->groupedByMonth($category, $country));
+        $series = array_fill_keys(self::CATEGORIES, array_fill(0, 12, 0));
+        foreach ($groups as $group) {
+            if ($group['month'] === null || $group['month'] < 1 || $group['month'] > 12) {
+                continue;
+            }
+            foreach (self::CATEGORIES as $category) {
+                $series[$category][$group['month'] - 1] += $group['counts'][$category];
+            }
         }
 
         return $series;
     }
 
     /**
+     * @param  array<string, int>  $observations  observations per category, from summaryCounts()
      * @return array{deepsky: array<string, int>, comets: int, planets: int, sun: int, moon: int}
      */
-    private function objectTypeCounts(?string $country): array
+    private function objectTypeCounts(array $observations, ?string $country): array
     {
         $rows = $this->observationQuery($country)
             ->join('objects', 'observations.target_key', '=', 'objects.name')
@@ -186,10 +340,10 @@ class StatisticsController extends Controller
 
         return [
             'deepsky' => $deepsky,
-            'comets' => (int) $this->categoryQuery('comets', $country)->count(),
-            'planets' => (int) $this->categoryQuery('planets', $country)->count(),
-            'sun' => (int) $this->categoryQuery('sun', $country)->count(),
-            'moon' => (int) $this->categoryQuery('moon', $country)->count(),
+            'comets' => $observations['comets'],
+            'planets' => $observations['planets'],
+            'sun' => $observations['sun'],
+            'moon' => $observations['moon'],
         ];
     }
 
@@ -343,97 +497,6 @@ class StatisticsController extends Controller
             ->setToolbar(true);
     }
 
-    private function groupedByYear(string $category, ?string $country): Collection
-    {
-        $yearExpression = $this->datePartExpression('year', 'observed_on');
-
-        return $this->categoryQuery($category, $country)
-            ->selectRaw($yearExpression . ' as year, count(*) as cnt')
-            ->groupByRaw($yearExpression)
-            ->get();
-    }
-
-    private function groupedByMonth(string $category, ?string $country): Collection
-    {
-        $monthExpression = $this->datePartExpression('month', 'observed_on');
-
-        return $this->categoryQuery($category, $country)
-            ->selectRaw($monthExpression . ' as month, count(*) as cnt')
-            ->groupByRaw($monthExpression)
-            ->get();
-    }
-
-    private function mapYears(Collection $grouped, int $firstYear, int $lastYear): array
-    {
-        $series = array_fill(0, $lastYear - $firstYear + 1, 0);
-
-        foreach ($grouped as $row) {
-            $year = (int) $row->year;
-            if ($year >= $firstYear && $year <= $lastYear) {
-                $series[$year - $firstYear] = (int) $row->cnt;
-            }
-        }
-
-        return $series;
-    }
-
-    private function mapMonths(Collection $grouped): array
-    {
-        $series = array_fill(0, 12, 0);
-
-        foreach ($grouped as $row) {
-            $month = (int) $row->month;
-            if ($month >= 1 && $month <= 12) {
-                $series[$month - 1] = (int) $row->cnt;
-            }
-        }
-
-        return $series;
-    }
-
-    private function categoryQuery(string $category, ?string $country): Builder
-    {
-        $query = $this->observationQuery($country);
-
-        return match ($category) {
-            'total' => $query,
-            'deepsky' => $this->applyDeepskyScope($query),
-            'comets' => $this->applyCometScope($query),
-            'double' => $this->applyDoubleScope($query),
-            'planets' => $query->where('target_table', 'planets')->where('target_key', '!=', 'sun'),
-            'sun' => $query->where('target_table', 'planets')->where('target_key', 'sun'),
-            'moon' => $query->whereIn('target_table', ['moons', 'lunar_features']),
-            default => $query,
-        };
-    }
-
-    private function applyCometScope(Builder $query): Builder
-    {
-        return $query->where('target_type', Observation::TYPE_COMET);
-    }
-
-    private function applyDeepskyScope(Builder $query): Builder
-    {
-        return $query->where('target_type', Observation::TYPE_DEEPSKY)
-            ->where(function (Builder $notDouble) {
-                $notDouble->whereNull('target_name_normalized')
-                    ->orWhereNotIn('target_name_normalized', fn(Builder $subquery) => $this->doubleStarSubquery($subquery));
-            });
-    }
-
-    private function applyDoubleScope(Builder $query): Builder
-    {
-        return $query->where('target_type', Observation::TYPE_DEEPSKY)
-            ->whereIn('target_name_normalized', fn(Builder $subquery) => $this->doubleStarSubquery($subquery));
-    }
-
-    private function doubleStarSubquery(Builder $query): void
-    {
-        $query->select('name_normalized')
-            ->from('objects')
-            ->where('type', 'DS');
-    }
-
     private function observationQuery(?string $country): Builder
     {
         return DB::table('observations')
@@ -445,7 +508,7 @@ class StatisticsController extends Controller
 
     private function countryOptions(): array
     {
-        $countries = Cache::remember('statistics:countries', self::CACHE_SECONDS, fn() => DB::table('observations')
+        $countries = Cache::flexible('statistics:countries', self::CACHE_SECONDS, fn() => DB::table('observations')
             ->join('locations', 'observations.location_id', '=', 'locations.id')
             ->whereNotNull('locations.country')
             ->where('locations.country', '!=', '')
