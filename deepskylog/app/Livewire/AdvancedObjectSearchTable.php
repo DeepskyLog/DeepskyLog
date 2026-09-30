@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\LimitsExportRows;
 use App\Models\SearchIndex;
 use App\Models\Atlas;
 use App\Services\ActiveObservingListService;
@@ -21,13 +22,12 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use App\Jobs\ComputeContrastReserveForObject;
 
 #[Lazy]
 class AdvancedObjectSearchTable extends PowerGridComponent
 {
-    use WithExport;
+    use LimitsExportRows;
 
     public string $tableName = 'advanced-search-results-table';
     public string $primaryKey = 'search_index_id';

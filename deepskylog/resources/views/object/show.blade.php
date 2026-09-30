@@ -709,7 +709,7 @@ try {
                                                         ->first();
                                                     if ($uts && is_array($uts->settings)) {
                                                         if (isset($uts->settings['radiusArcMin'])) {
-                                                            $nearbyRadiusSelected = intval(
+                                                            $nearbyRadiusSelected = \App\Livewire\NearbyObjectsTable::clampRadius(
                                                                 $uts->settings['radiusArcMin'],
                                                             );
                                                         }

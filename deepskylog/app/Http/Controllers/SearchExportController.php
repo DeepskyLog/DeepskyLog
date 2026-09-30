@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Livewire\AdvancedObjectSearchTable;
 use App\Livewire\SearchResultsTable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -12,12 +13,24 @@ use Illuminate\Support\Str;
 class SearchExportController extends Controller
 {
     /**
+     * Most objects one export may hold. dompdf builds the PDFs in memory,
+     * the plain text and AstroPlanner files are cheap per object.
+     */
+    private const MAX_EXPORT_OBJECTS = [
+        'pdf' => 1000,
+        'file' => 10000,
+    ];
+
+    /**
      * Generate a PDF listing names of search results based on query param q.
      */
     public function namesPdf(Request $request)
     {
         try {
-            [$comp, $rows] = $this->resolveRows($request);
+            [$comp, $rows] = $this->resolveRows($request, self::MAX_EXPORT_OBJECTS['pdf']);
+            if ($refused = $this->tooManyObjects($rows, 'pdf')) {
+                return $refused;
+            }
             $q = trim((string) $request->query('q', ''));
 
             $names = $rows->pluck('display_name')->filter()->values();
@@ -58,7 +71,10 @@ class SearchExportController extends Controller
     public function tablePdf(Request $request)
     {
         try {
-            [$comp, $rows] = $this->resolveRows($request);
+            [$comp, $rows] = $this->resolveRows($request, self::MAX_EXPORT_OBJECTS['pdf']);
+            if ($refused = $this->tooManyObjects($rows, 'pdf')) {
+                return $refused;
+            }
 
             $data = $rows->map(function ($r) use ($comp) {
                 $d1 = $r->diam1 ?? null;
@@ -117,7 +133,10 @@ class SearchExportController extends Controller
     public function argoNavis(Request $request)
     {
         try {
-            [, $rows] = $this->resolveRows($request);
+            [, $rows] = $this->resolveRows($request, self::MAX_EXPORT_OBJECTS['file']);
+            if ($refused = $this->tooManyObjects($rows, 'file')) {
+                return $refused;
+            }
 
             $typeMap = [
                 'ASTER' => 'ASTERISM',
@@ -197,7 +216,10 @@ class SearchExportController extends Controller
     public function skylist(Request $request)
     {
         try {
-            [, $rows] = $this->resolveRows($request);
+            [, $rows] = $this->resolveRows($request, self::MAX_EXPORT_OBJECTS['file']);
+            if ($refused = $this->tooManyObjects($rows, 'file')) {
+                return $refused;
+            }
 
             $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
 
@@ -246,7 +268,10 @@ class SearchExportController extends Controller
     public function stxt(Request $request)
     {
         try {
-            [, $rows] = $this->resolveRows($request);
+            [, $rows] = $this->resolveRows($request, self::MAX_EXPORT_OBJECTS['file']);
+            if ($refused = $this->tooManyObjects($rows, 'file')) {
+                return $refused;
+            }
             $names = $rows->pluck('display_name')->filter()->values();
             $content = implode("\n", $names->all()) . "\n";
             $filename = 'search_objects_' . date('Ymd_His') . '.txt';
@@ -267,7 +292,10 @@ class SearchExportController extends Controller
         $tmp = false;
 
         try {
-            [, $rows] = $this->resolveRows($request);
+            [, $rows] = $this->resolveRows($request, self::MAX_EXPORT_OBJECTS['file']);
+            if ($refused = $this->tooManyObjects($rows, 'file')) {
+                return $refused;
+            }
 
             // Create temporary sqlite file
             $tmp = tempnam(sys_get_temp_dir(), 'dsl_apd_');
@@ -397,14 +425,37 @@ class SearchExportController extends Controller
      *
      * @return array{0: SearchResultsTable|AdvancedObjectSearchTable, 1: \Illuminate\Support\Collection}
      */
-    public function resolveRows(Request $request): array
+    public function resolveRows(Request $request, ?int $max = null): array
     {
         $component = $this->makeSearchComponent($request);
 
         $query = $component->datasource();
+        if ($query && $max !== null) {
+            // The one row too many tells tooManyObjects() to refuse.
+            $query->limit($max + 1);
+        }
         $rows = $query ? $query->get() : collect();
 
         return [$component, $rows];
+    }
+
+    /**
+     * Refuse an export whose search matches more objects than the format
+     * allows, with a message asking to narrow the search down.
+     */
+    private function tooManyObjects(Collection $rows, string $kind)
+    {
+        $max = self::MAX_EXPORT_OBJECTS[$kind];
+
+        if ($rows->count() <= $max) {
+            return null;
+        }
+
+        return redirect()
+            ->back()
+            ->with('error', __('This search matches more than :max objects, the most that can be exported in this format. Please narrow down your search.', [
+                'max' => number_format($max),
+            ]));
     }
 
     private function makeSearchComponent(Request $request): SearchResultsTable|AdvancedObjectSearchTable

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\LimitsExportRows;
 use App\Models\ObservationLike;
 use App\Models\ObservationSession;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,11 +11,10 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class PopularSessionsTable extends PowerGridComponent
 {
-    use WithExport;
+    use LimitsExportRows;
 
     public string $tableName = 'popular-sessions';
 

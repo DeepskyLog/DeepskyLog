@@ -191,20 +191,8 @@ class SessionController extends Controller
         }
 
         // Prepare translations for session fields (weather, equipment, comments) if user requested
-        // Allow forcing translation via query string for testing: ?force_translate=1
-        $forceTranslate = request()->boolean('force_translate');
-        $forceLang = request()->get('force_lang');
-        $shouldTranslate = (Auth::check() && Auth::user()->translate) || $forceTranslate;
-        $lang = null;
-        if ($shouldTranslate) {
-            if (!empty($forceLang)) {
-                $lang = $forceLang;
-            } elseif (Auth::check()) {
-                $lang = Auth::user()->language ?? config('app.locale');
-            } else {
-                $lang = config('app.locale');
-            }
-        }
+        $shouldTranslate = Auth::check() && Auth::user()->translate;
+        $lang = $shouldTranslate ? (Auth::user()->language ?? config('app.locale')) : null;
 
         // Dispatch background job to pre-warm translation cache for deep-sky observations on this page.
         // The blade component uses Cache::get() (non-blocking), so this job populates cache asynchronously.
@@ -459,20 +447,8 @@ class SessionController extends Controller
             }
         }
 
-        // Allow forcing translation via query string for testing: ?force_translate=1
-        $forceTranslate = request()->boolean('force_translate');
-        $forceLang = request()->get('force_lang');
-        $shouldTranslate = (Auth::check() && Auth::user()->translate) || $forceTranslate;
-        $lang = null;
-        if ($shouldTranslate) {
-            if (!empty($forceLang)) {
-                $lang = $forceLang;
-            } elseif (Auth::check()) {
-                $lang = Auth::user()->language ?? config('app.locale');
-            } else {
-                $lang = config('app.locale');
-            }
-        }
+        $shouldTranslate = Auth::check() && Auth::user()->translate;
+        $lang = $shouldTranslate ? (Auth::user()->language ?? config('app.locale')) : null;
 
         // Preload primary observers for the sessions so views can safely access $session->observer
         $observerUsernames = $collection->pluck('observerid')->filter()->unique()->values()->all();
@@ -937,20 +913,8 @@ class SessionController extends Controller
                 ->toArray();
         }
 
-        // Allow forcing translation via query string for testing: ?force_translate=1
-        $forceTranslate = request()->boolean('force_translate');
-        $forceLang = request()->get('force_lang');
-        $shouldTranslate = (Auth::check() && Auth::user()->translate) || $forceTranslate;
-        $lang = null;
-        if ($shouldTranslate) {
-            if (!empty($forceLang)) {
-                $lang = $forceLang;
-            } elseif (Auth::check()) {
-                $lang = Auth::user()->language ?? config('app.locale');
-            } else {
-                $lang = config('app.locale');
-            }
-        }
+        $shouldTranslate = Auth::check() && Auth::user()->translate;
+        $lang = $shouldTranslate ? (Auth::user()->language ?? config('app.locale')) : null;
 
         // Preload primary observers for the sessions so views can safely access $session->observer
         $observerUsernames = $collection->pluck('observerid')->filter()->unique()->values()->all();

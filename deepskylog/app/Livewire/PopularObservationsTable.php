@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\LimitsExportRows;
 use App\Models\Observation;
 use App\Models\ObservationLike;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,16 +12,14 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class PopularObservationsTable extends PowerGridComponent
 {
-    use WithExport;
+    use LimitsExportRows;
 
     public string $tableName = 'popular-observations';
 
     /**
-        use WithExport;
      * Populated in datasource() for the sample page rows to avoid extra queries.
      *
      * @var array<string, \App\Models\User>

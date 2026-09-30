@@ -130,19 +130,19 @@ Route::get('/observations/search/objects', [App\Http\Controllers\ObservationsCon
     ->middleware('doNotCacheResponse');
 Route::get('/observations/search/export.pdf', [App\Http\Controllers\ObservationSearchExportController::class, 'pdf'])
     ->name('observations.search.pdf')
-    ->middleware('doNotCacheResponse');
+    ->middleware(['auth', 'doNotCacheResponse', 'throttle:exports']);
 Route::get('/observations/search/export.skylist', [App\Http\Controllers\ObservationSearchExportController::class, 'skylist'])
     ->name('observations.search.skylist')
-    ->middleware('doNotCacheResponse');
+    ->middleware(['doNotCacheResponse', 'throttle:exports']);
 Route::get('/observations/search/export.obs', [App\Http\Controllers\ObservationSearchExportController::class, 'obs'])
     ->name('observations.search.obs')
-    ->middleware('doNotCacheResponse');
+    ->middleware(['doNotCacheResponse', 'throttle:exports']);
 Route::get('/observations/search/export.apd', [App\Http\Controllers\ObservationSearchExportController::class, 'apd'])
     ->name('observations.search.apd')
-    ->middleware('doNotCacheResponse');
+    ->middleware(['doNotCacheResponse', 'throttle:exports']);
 Route::get('/observations/search/export.oal.xml', [App\Http\Controllers\ObservationSearchExportController::class, 'oal'])
     ->name('observations.search.oal')
-    ->middleware('doNotCacheResponse');
+    ->middleware(['doNotCacheResponse', 'throttle:exports']);
 Route::get('/observation/{observer}/{date}/{object}/{index?}', [App\Http\Controllers\ObservationsController::class, 'detail'])
     ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
     ->where('index', '[0-9]+')
@@ -356,7 +356,7 @@ Route::get('/instrumentset/{user}/{instrumentset}', 'App\Http\Controllers\Instru
 Route::get('/session/{user}/{session}', 'App\Http\Controllers\SessionController@show')
     ->name('session.show')->middleware('doNotCacheResponse');
 Route::get('/session/{user}/{session}/export.oal.xml', [App\Http\Controllers\ObservationSearchExportController::class, 'sessionOal'])
-    ->name('session.export.oal')->middleware('doNotCacheResponse');
+    ->name('session.export.oal')->middleware(['doNotCacheResponse', 'throttle:exports']);
 
 // Object detail pages: /object/{type}/{slugOrId}
 // Specific Moon path: serve a Livewire-first Moon page at /object/moon
@@ -566,30 +566,30 @@ Route::get('/search/observations/advanced/results', [App\Http\Controllers\Search
 
 // Search exports (PDF / plain text / APD)
 Route::get('/search/names.pdf', [App\Http\Controllers\SearchExportController::class, 'namesPdf'])
-    ->name('search.names.pdf')->middleware('doNotCacheResponse');
+    ->name('search.names.pdf')->middleware(['auth', 'doNotCacheResponse', 'throttle:exports']);
 Route::get('/search/table.pdf', [App\Http\Controllers\SearchExportController::class, 'tablePdf'])
-    ->name('search.table.pdf')->middleware('doNotCacheResponse');
+    ->name('search.table.pdf')->middleware(['auth', 'doNotCacheResponse', 'throttle:exports']);
 Route::get('/search/argo.txt', [App\Http\Controllers\SearchExportController::class, 'argoNavis'])
-    ->name('search.argo')->middleware('doNotCacheResponse');
+    ->name('search.argo')->middleware(['doNotCacheResponse', 'throttle:exports']);
 Route::get('/search/skylist.skylist', [App\Http\Controllers\SearchExportController::class, 'skylist'])
-    ->name('search.skylist')->middleware('doNotCacheResponse');
+    ->name('search.skylist')->middleware(['doNotCacheResponse', 'throttle:exports']);
 Route::get('/search/stxt.txt', [App\Http\Controllers\SearchExportController::class, 'stxt'])
-    ->name('search.stxt')->middleware('doNotCacheResponse');
+    ->name('search.stxt')->middleware(['doNotCacheResponse', 'throttle:exports']);
 Route::get('/search/apd.apd', [App\Http\Controllers\SearchExportController::class, 'apd'])
-    ->name('search.apd')->middleware('doNotCacheResponse');
+    ->name('search.apd')->middleware(['doNotCacheResponse', 'throttle:exports']);
 
 Route::get('/observing-list/{list}/export/names.pdf', [App\Http\Controllers\ObservingListExportController::class, 'namesPdf'])
-    ->name('observing-list.export.names.pdf')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+    ->name('observing-list.export.names.pdf')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
 Route::get('/observing-list/{list}/export/table.pdf', [App\Http\Controllers\ObservingListExportController::class, 'tablePdf'])
-    ->name('observing-list.export.table.pdf')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+    ->name('observing-list.export.table.pdf')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
 Route::get('/observing-list/{list}/export/argo.txt', [App\Http\Controllers\ObservingListExportController::class, 'argoNavis'])
-    ->name('observing-list.export.argo')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+    ->name('observing-list.export.argo')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
 Route::get('/observing-list/{list}/export/skylist.skylist', [App\Http\Controllers\ObservingListExportController::class, 'skylist'])
-    ->name('observing-list.export.skylist')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+    ->name('observing-list.export.skylist')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
 Route::get('/observing-list/{list}/export/stxt.txt', [App\Http\Controllers\ObservingListExportController::class, 'stxt'])
-    ->name('observing-list.export.stxt')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+    ->name('observing-list.export.stxt')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
 Route::get('/observing-list/{list}/export/apd.apd', [App\Http\Controllers\ObservingListExportController::class, 'apd'])
-    ->name('observing-list.export.apd')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+    ->name('observing-list.export.apd')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
 
 // Catalogs overview page
 Route::get('/catalogs', [App\Http\Controllers\CatalogController::class, 'index'])
@@ -613,31 +613,31 @@ Route::delete('/object/{slug}', [App\Http\Controllers\ObjectController::class, '
 
 // Nearby names PDF export (uses query params ra, dec, radius)
 Route::get('/object/{slug}/nearby-names.pdf', [App\Http\Controllers\NearbyExportController::class, 'namesPdf'])
-    ->name('object.nearby.names.pdf')->middleware('doNotCacheResponse');
+    ->name('object.nearby.names.pdf')->middleware(['auth', 'doNotCacheResponse', 'throttle:exports']);
 
 // Nearby table PDF export (landscape full table)
 Route::get('/object/{slug}/nearby-table.pdf', [App\Http\Controllers\NearbyExportController::class, 'tablePdf'])
-    ->name('object.nearby.table.pdf')->middleware('doNotCacheResponse');
+    ->name('object.nearby.table.pdf')->middleware(['auth', 'doNotCacheResponse', 'throttle:exports']);
 
 // Nearby star chart PDF export
 Route::get('/object/{slug}/nearby-chart.pdf', [App\Http\Controllers\NearbyExportController::class, 'chartPdf'])
-    ->name('object.nearby.chart.pdf')->middleware('doNotCacheResponse');
+    ->name('object.nearby.chart.pdf')->middleware(['auth', 'doNotCacheResponse', 'throttle:exports']);
 
 // Nearby Argo Navis export (plain text)
 Route::get('/object/{slug}/nearby-argo.txt', [App\Http\Controllers\NearbyExportController::class, 'argoNavis'])
-    ->name('object.nearby.argo')->middleware('doNotCacheResponse');
+    ->name('object.nearby.argo')->middleware(['doNotCacheResponse', 'throttle:exports']);
 
 // Nearby SkySafari .skylist export (plain text)
 Route::get('/object/{slug}/nearby-skylist.skylist', [App\Http\Controllers\NearbyExportController::class, 'skylist'])
-    ->name('object.nearby.skylist')->middleware('doNotCacheResponse');
+    ->name('object.nearby.skylist')->middleware(['doNotCacheResponse', 'throttle:exports']);
 
 // Nearby SkyTools plain TXT export (one object name per line)
 Route::get('/object/{slug}/nearby-stxt.txt', [App\Http\Controllers\NearbyExportController::class, 'stxt'])
-    ->name('object.nearby.stxt')->middleware('doNotCacheResponse');
+    ->name('object.nearby.stxt')->middleware(['doNotCacheResponse', 'throttle:exports']);
 
 // Nearby AstroPlanner .apd export (SQLite database file)
 Route::get('/object/{slug}/nearby-apd.apd', [App\Http\Controllers\NearbyExportController::class, 'apd'])
-    ->name('object.nearby.apd')->middleware('doNotCacheResponse');
+    ->name('object.nearby.apd')->middleware(['doNotCacheResponse', 'throttle:exports']);
 
 // Create session (authenticated)
 Route::get('/sessions/create', [App\Http\Controllers\SessionController::class, 'create'])

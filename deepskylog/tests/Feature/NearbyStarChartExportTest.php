@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 it('exports a nearby star chart pdf for an object', function () {
@@ -80,7 +81,7 @@ it('exports a nearby star chart pdf for an object', function () {
         ],
     ]);
 
-    $response = $this->get(route('object.nearby.chart.pdf', [
+    $response = $this->actingAs(User::factory()->create())->get(route('object.nearby.chart.pdf', [
         'slug' => 'm-31',
         'ra' => 10.684708,
         'dec' => 41.268750,

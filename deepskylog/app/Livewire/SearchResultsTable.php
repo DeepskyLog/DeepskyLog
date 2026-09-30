@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\LimitsExportRows;
 use App\Models\SearchIndex;
 use App\Models\Atlas;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,7 +22,6 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use App\Jobs\ComputeContrastReserveForObject;
 use App\Services\ObjectObservationStatistics;
 use App\Services\ObservationSearchQuery;
@@ -29,7 +29,7 @@ use App\Services\ObservationSearchQuery;
 #[Lazy]
 class SearchResultsTable extends PowerGridComponent
 {
-    use WithExport;
+    use LimitsExportRows;
 
     public string $tableName = 'search-results-table';
     public string $primaryKey = 'search_index_id';

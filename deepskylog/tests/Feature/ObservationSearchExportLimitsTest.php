@@ -37,7 +37,8 @@ beforeEach(function () {
 it('refuses an export that matches more observations than it can build', function () {
     insertExportLimitObservations($this->observer, 501);
 
-    $response = $this->from(route('observations.search'))
+    $response = $this->actingAs($this->observer)
+        ->from(route('observations.search'))
         ->get(route('observations.search.pdf'));
 
     $response->assertRedirect(route('observations.search'));

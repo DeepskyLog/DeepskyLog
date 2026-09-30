@@ -42,6 +42,9 @@ class NearbyObjectsTable extends PowerGridComponent
     public ?float $ra = null;
     public ?float $decl = null;
 
+    /** Largest radius the radius selector offers (2°), in arcminutes. */
+    public const MAX_RADIUS_ARCMIN = 120;
+
     public int $radiusArcMin = 30;
     public int $perPage = 25;
     // Incrementing tick to force component re-render when external Aladin preview
@@ -124,6 +127,20 @@ class NearbyObjectsTable extends PowerGridComponent
     public ?string $atlasName = null;
     public bool $includeAtlas = false;
 
+    /**
+     * Keep a radius coming from the client, the query string or the stored
+     * settings within what the radius selector offers.
+     */
+    public static function clampRadius(mixed $arcmin): int
+    {
+        return max(1, min(self::MAX_RADIUS_ARCMIN, (int) $arcmin));
+    }
+
+    public function updatedRadiusArcMin(): void
+    {
+        $this->radiusArcMin = self::clampRadius($this->radiusArcMin);
+    }
+
     public function boot(): void
     {
         config(['livewire-powergrid.filter' => 'outside']);
@@ -142,7 +159,7 @@ class NearbyObjectsTable extends PowerGridComponent
                         $this->perPage = intval($s['perPage']);
                     }
                     if (isset($s['radiusArcMin'])) {
-                        $this->radiusArcMin = intval($s['radiusArcMin']);
+                        $this->radiusArcMin = self::clampRadius($s['radiusArcMin']);
                     }
                     if (isset($s['sortField'])) {
                         $this->sortField = $s['sortField'];
@@ -203,7 +220,7 @@ class NearbyObjectsTable extends PowerGridComponent
                         $this->sortDirection = $s['sortDirection'];
                     }
                     if (isset($s['radiusArcMin'])) {
-                        $this->radiusArcMin = intval($s['radiusArcMin']);
+                        $this->radiusArcMin = self::clampRadius($s['radiusArcMin']);
                     }
                     if (isset($s['perPage'])) {
                         $this->perPage = intval($s['perPage']);
@@ -277,7 +294,7 @@ class NearbyObjectsTable extends PowerGridComponent
             }
 
             // Build a simplified query to count objects without metrics
-            $radiusDeg = $this->radiusArcMin / 60.0;
+            $radiusDeg = self::clampRadius($this->radiusArcMin) / 60.0;
             $centerRaDeg = floatval($this->ra);
             if ($centerRaDeg <= 24.0) {
                 $centerRaDeg = $centerRaDeg * 15.0;
@@ -476,7 +493,7 @@ class NearbyObjectsTable extends PowerGridComponent
             $this->previewEyepieceModel = null;
         }
 
-        $radiusDeg = $this->radiusArcMin / 60.0;
+        $radiusDeg = self::clampRadius($this->radiusArcMin) / 60.0;
 
         $centerRaDeg = floatval($this->ra);
         if ($centerRaDeg <= 24.0) {
@@ -3885,7 +3902,7 @@ class NearbyObjectsTable extends PowerGridComponent
     #[On('nearbyRadiusChanged')]
     public function updateRadius(int $arcmin): void
     {
-        $this->radiusArcMin = intval($arcmin);
+        $this->radiusArcMin = self::clampRadius($arcmin);
         // Persist the changed radius for the authenticated user
         try {
             $this->saveUserTableSettings(['radiusArcMin' => $this->radiusArcMin]);
@@ -4203,6 +4220,9 @@ class NearbyObjectsTable extends PowerGridComponent
         ]);
 
         $existing = is_array($row->settings) ? $row->settings : (is_string($row->settings) ? json_decode($row->settings, true) ?? [] : []);
+        if (isset($overrides['radiusArcMin'])) {
+            $overrides['radiusArcMin'] = self::clampRadius($overrides['radiusArcMin']);
+        }
         $merged = array_merge($existing ?? [], $overrides);
         $row->settings = $merged;
         $row->save();

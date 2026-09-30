@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Livewire\NearbyObjectsTable;
 use App\Models\DeepskyObject;
 use App\Services\StarChartService;
 use Illuminate\Http\Request;
@@ -11,6 +12,14 @@ use Illuminate\Support\Str;
 
 class NearbyExportController extends Controller
 {
+    /** Largest chart radius, in arcminutes: half the overview chart's width. */
+    private const MAX_CHART_RADIUS_ARCMIN = 600;
+
+    /** Magnitude range the atlas settings in the profile accept. */
+    private const MIN_CHART_MAGNITUDE = 1.0;
+
+    private const MAX_CHART_MAGNITUDE = 20.0;
+
     /**
      * Generate a PDF listing names of nearby objects based on RA/Dec and radius.
      * Accepts query params: ra (degrees or hours), dec (degrees), radius (arcminutes)
@@ -20,7 +29,7 @@ class NearbyExportController extends Controller
         try {
             $ra = $request->query('ra');
             $dec = $request->query('dec');
-            $radiusArcMin = intval($request->query('radius', 30));
+            $radiusArcMin = NearbyObjectsTable::clampRadius($request->query('radius', 30));
 
             if (! is_numeric($ra) || ! is_numeric($dec)) {
                 // Try to look up object by slug to get coords
@@ -114,7 +123,7 @@ class NearbyExportController extends Controller
         try {
             $ra = $request->query('ra');
             $dec = $request->query('dec');
-            $radiusArcMin = intval($request->query('radius', 30));
+            $radiusArcMin = NearbyObjectsTable::clampRadius($request->query('radius', 30));
 
             if (! is_numeric($ra) || ! is_numeric($dec)) {
                 // Try to look up object by slug to get coords
@@ -135,7 +144,7 @@ class NearbyExportController extends Controller
             // auth-driven settings (like the user's standard atlas) are populated
             // before calling exportPdf(). Then set the RA/Dec inputs and delegate
             // to the component's export method which reuses the datasource.
-            $comp = new \App\Livewire\NearbyObjectsTable();
+            $comp = new NearbyObjectsTable();
             // Run boot/mount if available so the component picks up auth user info
             if (method_exists($comp, 'boot')) {
                 try {
@@ -203,10 +212,10 @@ class NearbyExportController extends Controller
 
             // Allow explicit overrides via query params: radius (arcmin), mag_limit (both), object_mag, star_mag
             if ($request->has('radius')) {
-                $radiusArcMin = max(5, min(3600, (int) $request->query('radius', 30)));
+                $radiusArcMin = max(5, min(self::MAX_CHART_RADIUS_ARCMIN, (int) $request->query('radius', 30)));
             } else {
                 // Field-of-view values are full widths; build expects radius.
-                $radiusArcMin = max(5, min(3600, (int) round(((float) $fov) / 2.0)));
+                $radiusArcMin = max(5, min(self::MAX_CHART_RADIUS_ARCMIN, (int) round(((float) $fov) / 2.0)));
             }
 
             $magLimit = $request->query('mag_limit');
@@ -221,6 +230,11 @@ class NearbyExportController extends Controller
             if (is_numeric($starMagReq)) {
                 $starMag = (float) $starMagReq;
             }
+
+            // Each fainter magnitude loads a few times more stars: keep the
+            // limits within what the atlas settings in the profile allow.
+            $objectMag = max(self::MIN_CHART_MAGNITUDE, min(self::MAX_CHART_MAGNITUDE, $objectMag));
+            $starMag = max(self::MIN_CHART_MAGNITUDE, min(self::MAX_CHART_MAGNITUDE, $starMag));
 
             // Use atlas-mode projection (spherical) for generated charts
             $chart = $starChartService->build($target, $centerRaDeg, $centerDecDeg, $radiusArcMin, null, $objectMag, $starMag, false, true, false, null, $showUnknownMagnitudes);
@@ -305,7 +319,7 @@ class NearbyExportController extends Controller
         try {
             $ra = $request->query('ra');
             $dec = $request->query('dec');
-            $radiusArcMin = intval($request->query('radius', 30));
+            $radiusArcMin = NearbyObjectsTable::clampRadius($request->query('radius', 30));
 
             if (! is_numeric($ra) || ! is_numeric($dec)) {
                 if ($slug) {
@@ -324,7 +338,7 @@ class NearbyExportController extends Controller
             // Instantiate the Livewire component and run its lifecycle so any
             // auth-driven settings (like the user's standard atlas) are populated
             // before calling the export method.
-            $comp = new \App\Livewire\NearbyObjectsTable();
+            $comp = new NearbyObjectsTable();
             if (method_exists($comp, 'boot')) {
                 try {
                     $comp->boot();
@@ -362,7 +376,7 @@ class NearbyExportController extends Controller
         try {
             $ra = $request->query('ra');
             $dec = $request->query('dec');
-            $radiusArcMin = intval($request->query('radius', 30));
+            $radiusArcMin = NearbyObjectsTable::clampRadius($request->query('radius', 30));
 
             if (! is_numeric($ra) || ! is_numeric($dec)) {
                 if ($slug) {
@@ -379,7 +393,7 @@ class NearbyExportController extends Controller
             }
 
             // Instantiate the Livewire component and run lifecycle
-            $comp = new \App\Livewire\NearbyObjectsTable();
+            $comp = new NearbyObjectsTable();
             if (method_exists($comp, 'boot')) {
                 try {
                     $comp->boot();
@@ -447,7 +461,7 @@ class NearbyExportController extends Controller
         try {
             $ra = $request->query('ra');
             $dec = $request->query('dec');
-            $radiusArcMin = intval($request->query('radius', 30));
+            $radiusArcMin = NearbyObjectsTable::clampRadius($request->query('radius', 30));
 
             if (! is_numeric($ra) || ! is_numeric($dec)) {
                 if ($slug) {
@@ -463,7 +477,7 @@ class NearbyExportController extends Controller
                 return redirect()->back()->with('error', __('Missing coordinates for nearby export'));
             }
 
-            $comp = new \App\Livewire\NearbyObjectsTable();
+            $comp = new NearbyObjectsTable();
             if (method_exists($comp, 'boot')) {
                 try {
                     $comp->boot();
@@ -501,7 +515,7 @@ class NearbyExportController extends Controller
         try {
             $ra = $request->query('ra');
             $dec = $request->query('dec');
-            $radiusArcMin = intval($request->query('radius', 30));
+            $radiusArcMin = NearbyObjectsTable::clampRadius($request->query('radius', 30));
 
             if (! is_numeric($ra) || ! is_numeric($dec)) {
                 if ($slug) {
@@ -517,7 +531,7 @@ class NearbyExportController extends Controller
                 return redirect()->back()->with('error', __('Missing coordinates for nearby export'));
             }
 
-            $comp = new \App\Livewire\NearbyObjectsTable();
+            $comp = new NearbyObjectsTable();
             if (method_exists($comp, 'boot')) {
                 try {
                     $comp->boot();

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\LimitsExportRows;
 use App\Models\Filter;
 use App\Models\Instrument;
 use App\Models\Lens;
@@ -23,12 +24,11 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 final class ObservationSearchTable extends PowerGridComponent
 {
-    use WithExport;
+    use LimitsExportRows;
 
     private const IMPORT_EXPORT_HEADERS = [
         'Object name',
@@ -824,6 +824,10 @@ final class ObservationSearchTable extends PowerGridComponent
             return false;
         }
 
+        if ($this->exportTooLarge($selected)) {
+            return false;
+        }
+
         $rows = $this->buildImportCompatibleRows($selected);
         $path = $this->makeExportPath('csv');
 
@@ -844,6 +848,10 @@ final class ObservationSearchTable extends PowerGridComponent
     public function exportToXLS(bool $selected = false): BinaryFileResponse|bool
     {
         if ($selected && count($this->checkboxValues) === 0) {
+            return false;
+        }
+
+        if ($this->exportTooLarge($selected)) {
             return false;
         }
 

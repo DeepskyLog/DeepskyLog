@@ -33,6 +33,9 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
+            // After StartSession, so logged-in users are counted per account
+            // (limiter 'web' in RouteServiceProvider).
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':web',
             \App\Http\Middleware\NoCacheForAuth::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,

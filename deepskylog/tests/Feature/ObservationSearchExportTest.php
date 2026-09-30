@@ -1000,7 +1000,7 @@ it('downloads observation search pdf', function () {
         'legacy_source' => null,
     ]);
 
-    $response = $this->get(route('observations.search.pdf', ['q' => 'NGC 2392']));
+    $response = $this->actingAs($user)->get(route('observations.search.pdf', ['q' => 'NGC 2392']));
 
     $response->assertOk();
     $response->assertHeader('content-type', 'application/pdf');
