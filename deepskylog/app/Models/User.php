@@ -157,17 +157,23 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Overrides the methods from HasTeams.Switch the user's context to the given team.
+     * Overrides the methods from HasTeams. Switch the user's context to the given team.
      *
      * @param  mixed  $team  The team to switch to
-     * @return bool True if the team was switched
+     * @return bool True if the team was switched, false if the user is not a member of it
      */
     public function switchTeam($team): bool
     {
-        // Jetstream's own switchTeam() bails out via belongsToTeam(); this
-        // override deliberately skips that check, but still must not be
-        // handed a null team -- currentTeam() calls switchTeam(personalTeam()).
+        // currentTeam() calls switchTeam(personalTeam()), which is null here.
         if (is_null($team)) {
+            return false;
+        }
+
+        // The team decides the user's rights (Administrators, Database Experts),
+        // so only a team the user is a member of may become the active team.
+        // Asks the database rather than the teams relation, which may have been
+        // loaded before the user was attached to the team.
+        if (! $this->ownsTeam($team) && ! $this->teams()->whereKey($team->id)->exists()) {
             return false;
         }
 

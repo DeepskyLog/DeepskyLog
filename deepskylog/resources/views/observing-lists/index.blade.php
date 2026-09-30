@@ -16,10 +16,13 @@
                     {{-- Observing lists are created in the Observer role; offer to switch to it. --}}
                     @php $observersTeam = auth()->user()?->allTeams()->firstWhere('name', 'Observers'); @endphp
                     @if ($observersTeam)
-                        <a href="{{ route('current-team.switch', $observersTeam->id) }}"
-                           class="dsl-switch-team inline-flex items-center px-4 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
-                            {{ __('Switch to the Observer role to create a list') }}
-                        </a>
+                        <form method="POST" action="{{ route('current-team.switch', $observersTeam->id) }}">
+                            @csrf
+                            <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
+                                {{ __('Switch to the Observer role to create a list') }}
+                            </button>
+                        </form>
                     @endif
                 @endcan
             </div>

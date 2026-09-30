@@ -45,11 +45,10 @@ Route::middleware([
         return redirect()->back(303);
     })->name('current-team.update');
 
-    // Provide a simple GET link that switches the current team and redirects back.
-    // This is intended for use in navigation/dropdowns where a normal link (full
-    // navigation) avoids client-side JS interceptors turning the request into an
-    // XHR/fetch which would not automatically follow the server redirect.
-    Route::get('/switch-team/{team}', function (\Illuminate\Http\Request $request, $team) {
+    // Switches the current team from the navigation/dropdowns and redirects back.
+    // A POST (with CSRF token) so another site cannot switch the team with a
+    // link or an <img>; switchTeam() refuses teams the user is not a member of.
+    Route::post('/switch-team/{team}', function (\Illuminate\Http\Request $request, $team) {
         $teamModel = Laravel\Jetstream\Jetstream::newTeamModel()->findOrFail($team);
 
         if (!$request->user()->switchTeam($teamModel)) {

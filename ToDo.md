@@ -5,7 +5,6 @@
 ## Next steps
 
 - [ ] Test! 
-  - [ ] Fix the speed problems found (measured on the local database, as a guest: `/statistics` 5 s, `/popular-objects` 2 s, `/observers` 1.8 s, `/object/m-51` 231 queries, `/drawings` 392 queries, `/` 266 queries).
   - [ ] Test for security problems
   - [ ] Test manually when logged in and logged out, as database expert and as administrator
 - [ ] Update to laravel 13.
@@ -40,6 +39,71 @@
     - [ ] After the update: `php artisan responsecache:clear`, so no page cached without a locale is still served.
 - [ ] Release new version of pyDeepskyLog
   - [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
+
+### Security review (2026-09-30)
+
+Paths are relative to `deepskylog/`. The Critical and High items were checked in the code and the server config; no exploit was tried on a running site.
+
+#### Critical
+
+- [ ] **Photo uploads can run code on the server.** `CreateInstrument`, `CreateEyepiece`, `CreateFilter`, `CreateLens`, `CreateLocation`, `CreateInstrumentSet` and `CreateSession` (e.g. `app/Livewire/CreateInstrument.php:158-163`) store the photo publicly as `slug.'.'.getClientOriginalExtension()`. The `image`/`mimes:png,jpg` rules only check the content, and in the first four the file is stored before `validate()`. Both vhosts (`test.deepskylog.org.conf:11`, `www.deepskylog.org.conf:21`) have `AddHandler application/x-httpd-php .fcgi .php .fpl`, so a valid PNG with PHP code in it, named `x.fcgi`, is run by `/storage/photos/...fcgi`. Named `x.html`, the same file is stored XSS on the site's origin.
+  - Fix: `$this->photo->store('photos/…', 'public')` (random name, extension from the content); validate before storing; remove `.fcgi .fpl` from `AddHandler`; switch PHP off under `storage/app/public`; check `storage/app/public` on the server for non-image files that are already there.
+
+#### High
+
+- [ ] **Any logged-in user can edit another user's instruments, eyepieces, lenses, filters, locations and instrument sets.** The `edit()` methods of the six controllers load the record by the slugs in the URL without comparing `user_id` with `Auth::id()`, and the Livewire `save()` methods do not check either.
+  - Fix: `abort_unless($item->user_id === auth()->id() || auth()->user()->isAdministrator(), 403)` in `edit()`, and again in the components' `mount()` and `save()` (as `CreateSession` does with `canBeEditedBy()`).
+- [ ] **The PowerGrid toggle handler writes any column of any row.** `onUpdatedToggleable()` in `InstrumentTable`, `EyepieceTable`, `LensTable`, `FilterTable` and `LocationTable` (e.g. `app/Livewire/InstrumentTable.php:190`) runs `where('id', $id)->update([$field => bool])` with `$id` and `$field` from the browser, so anyone can set `user_id`, `active` or `hidden` on other users' records.
+  - Fix: add `->where('user_id', Auth::id())` and only allow the `active` column.
+- [ ] **Stored XSS.** User text is stored unsanitized and printed with `{!! !!}`. HTMLPurifier is installed, but only `Message::sanitizeHtml()` uses it.
+  - [ ] Observation descriptions (and their translations): `{!! html_entity_decode($description) !!}` in `components/observation-deepsky.blade.php:386-388`, `components/observation-comet.blade.php`, `observations/detail.blade.php`, `livewire/observation-search-row-detail.blade.php:214-216`, `observations/compare-my-last.blade.php` and `pdf/observation_search.blade.php:381`.
+  - [ ] Equipment and location descriptions: `instrument`, `eyepiece`, `filter`, `lens`, `location` and `instrumentset` `show.blade.php`.
+  - [ ] Equipment, make and location names: the `get_used_*_as_string()` helpers (`app/Models/Instrument.php`, `Eyepiece.php`, `Location.php`), `instrumentset/show.blade.php`, `fullName()` printed through `html_entity_decode`, `observers/show.blade.php:60,73`, and the admin PowerGrid tables (the script runs for admins).
+  - [ ] User name: `sprintf('<a …>%s</a>', $row->name)` in `app/Livewire/AdminUserTable.php:108` and `RemoveUserTable.php:68` (runs in the administrator's session).
+  - [ ] Profile "about": `{!! $user->about !!}` in `observers/show.blade.php:211`.
+  - [ ] Custom copyright text: `User::getCopyright()` returns it unescaped, and it is printed raw on every observation of that user.
+  - [ ] Message subject: `Message::getSafeSubjectAttribute()` purifies and then runs `html_entity_decode`, which turns `&lt;img onerror=…&gt;` into live markup (also used for session invitations).
+  - [ ] Session weather, equipment and comments: `strip_tags()` with an allowlist in `session/show.blade.php:78,92,109` keeps attributes such as `onmouseover`.
+  - Fix: one `Html::purify()` helper for the rich-text fields (on save and on output), `e()`/`{{ }}` for names, no `html_entity_decode` on names; `e($text)` in the custom branch of `getCopyright()`.
+- [ ] **Social login signs into a pre-registered account.** `Features::authExistingUnlinkedUsers()` is on (`config/socialstream.php`), and `app/Actions/Socialstream/AuthenticateOAuthCallback.php` links and logs in any account with the provider's email, even when that email was never verified. An attacker who registers `victim@gmail.com` with their own password ends up sharing the victim's account once the victim uses "Sign in with Google".
+  - Fix: only link when the local email is verified (and the provider says its email is verified), or turn the feature off; do not allow registration on the domain of the generated emails.
+- [ ] **Session cookies and OAuth codes are written to the logs.** `GenerateRedirectForProvider`, `ResolveSocialiteUser`, `CreateUserFromProvider`, `CreateConnectedAccount` and `UpdateConnectedAccount` (`app/Actions/Socialstream/`) log `session_cookie`, `cookies` and `query`, already decrypted. `storage/logs` already contains them. `ObjectController::update` also logs `$request->all()`.
+  - Fix: remove those log fields, purge the old logs, and truncate the `sessions` table.
+
+#### Medium
+
+- [ ] Roles depend on the team name: `isAdministrator()`/`isDatabaseExpert()` compare `currentTeam->name`, `TeamPolicy::create` returns true and `teams.name` is not unique. Not reachable now (`CreatesTeams` is not bound, so `/teams/create` fails, and new users own no team), but it becomes a path to admin as soon as team creation works. Check roles by team id; make `TeamPolicy::create` admin-only; reject the reserved names in `CreateTeam`/`UpdateTeamName`.
+- [ ] `ObservingListNotes`: `$listId` and `$isOwner` are not `#[Locked]` and no `view` policy is checked, so the notes of other users' private lists can be read. Lock them, compute `isOwner` on the server and check `Gate::allows('view', $list)`.
+- [ ] Legacy MD5 password check uses `==` (`app/Providers/FortifyServiceProvider.php:64`): "0e…" hashes compare equal. Use `hash_equals()` and only for 32-hex-digit hashes; rehash or reset the remaining MD5 passwords.
+- [ ] OAuth login skips two-factor authentication: `AuthenticateOAuthCallback` logs the user in before the pipeline runs. It also has no `link()` method, so linking a provider while logged in crashes (`OAuthController::confirm()`).
+- [ ] Login throttle is keyed on the raw email/username plus IP (`FortifyServiceProvider.php:38-41`): each capitalisation gets its own bucket. Lowercase the key and add a per-account limiter.
+- [ ] `TrustHosts` is commented out (`app/Http/Kernel.php:19`): if Apache passes any Host header, password-reset links can point to an attacker's domain. Enable it or call `URL::forceRootUrl(config('app.url'))`.
+- [ ] PDF jobs can be queued without limit: `POST /downloads/dsl-atlas/generate` (`routes/web.php:218`) renders the whole atlas in the web request (`set_time_limit(0)`, no throttle); the atlas queue and `ObjectSets::generate()` (`$rows` not locked or capped) can fill the long-running worker. Only allow `scope=single` synchronously, throttle, allow 1–2 open jobs per user, and cap rows × FOVs × photos.
+- [ ] Formula injection in CSV/XLSX exports (`ObservationSearchTable.php:836-888` and the PowerGrid exports): text starting with `=` becomes a real formula. Prefix cells starting with `= + - @ \t \r` with `'`.
+- [ ] `POST /messages` sends email, needs only `auth` (not `verified`) and has no throttle. Add `verified` and a `throttle:messages` limiter; also limiters for comments and registration.
+- [ ] No security headers (CSP, X-Frame-Options, HSTS, X-Content-Type-Options, Referrer-Policy).
+- [ ] Deleting user 1 deletes the three system teams (`app/Actions/Jetstream/DeleteUser.php:60-62`; user 1 owns them in `GroupSeeder`). Skip the system teams in `deleteTeams()`.
+- [ ] Other users' equipment can be referenced: `CreateInstrumentSet` (`instruments.*`, `locations.*`), `ObservationsController::store` and `Profile/UpdateUserObservingInformation` (`stdlocation`, `stdtelescope`, …) accept ids without checking the owner. Use `Rule::exists(...)->where('user_id', auth()->id())`.
+
+#### Low / hardening
+
+- [ ] `AtlasController.php:463-468` sets `isPhpEnabled` and `isRemoteEnabled` in dompdf (and `isRemoteEnabled` at line 268): not exploitable now, but turn both off and narrow the chroot.
+- [ ] `AtlasController::download` checks neither ownership nor status (the token is an unguessable UUID). Add `auth` and the `user_id` check, as in `ObjectSetController` and `ObjectReportController`.
+- [ ] Hidden locations: the clearoutside link and image in `location/show.blade.php:181-188` still show the coordinates to about 1 km.
+- [ ] `users.select.api` (`routes/api.php:670`) returns the account for a given email, so it confirms which emails are registered.
+- [ ] Internal exception text is shown in the PDF job status (`QueuedPdfJob`). Log it and show a generic message.
+- [ ] OAuth tokens in `connected_accounts` are not encrypted: add `encrypted` casts.
+- [ ] Set `SESSION_SECURE_COOKIE=true` in production.
+- [ ] Slug-based photo filenames can collide, so one user can overwrite another's photo (fixed by the random names above).
+- [ ] `Profile/UpdateUserLanguageInformation` never calls `validate()`: `language` and `observationlanguage` are stored as sent.
+- [ ] `EyepieceTable.php:146-150` still has a debug `js('alert(...)')` listener.
+- [ ] `UpdateUserProfileInformation.php:25`: the rule `'string:max:1000'` is malformed.
+- [ ] `observations/create.blade.php:334`: use `@js(old(...))` in `x-data` instead of `'{{ }}'`.
+- [ ] Open the uploaded AstroPlanner file read-only (`ObservingListFileImportService::parseAstroPlanner`).
+
+#### Checked and found fine
+
+No SQL or command injection, no `unserialize`/`eval` on user data, no open redirects, no XXE in the XML imports, no secrets in git (`.env` was never tracked), `composer audit` and `npm audit` clean, no CSRF exclusions, the response cache does not serve per-user pages, observing lists / observations / sessions / messages / object editing are authorized, object-set and report downloads check the owner, exports are throttled and capped.
 
 ### For later
 
@@ -93,8 +157,3 @@
 - [X] DeepskyLog atlases can be created.  They are updated to have a nicer layout.
 - [X] Object sets can be created.  They are updated to have a nicer layout.  This was broken in the old version of DeepskyLog but is working again in the new version.
 - [X] Reports of lists of objects can be created with your own layout.  The layouts of the old version of DeepskyLog are imported.  This was broken in the old version of DeepskyLog but is working again in the new version.
-
-### Left for the security review
-
-- `User::switchTeam()` skips the membership check and `/switch-team/{team}` lets any user switch to Administrators.
-- `AtlasController::download` checks neither ownership nor status.
