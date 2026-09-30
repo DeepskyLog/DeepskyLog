@@ -26,4 +26,10 @@ class ObservationLike extends Model
     {
         return $this->belongsTo(Observation::class, 'observation_id');
     }
+
+    /** The liked session, for likes of TYPE_SESSION. */
+    public function session(): BelongsTo
+    {
+        return $this->belongsTo(ObservationSession::class, 'observation_id');
+    }
 }

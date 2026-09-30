@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Livewire\Concerns\LimitsExportRows;
 use App\Models\ObservationLike;
 use App\Models\ObservationSession;
+use App\Services\Observations\ObservationCardData;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
@@ -61,6 +62,13 @@ final class PopularSessionsTable extends PowerGridComponent
         $outer->getQuery()->select($tableAlias.'.*');
         $outer->orderByDesc($tableAlias.'.likes');
 
+        // The sessions and their observers of the page, in one query each.
+        $outer->with('session')->afterQuery(function ($likes) {
+            ObservationCardData::instance()->preloadUsernames(
+                $likes->map(fn ($like) => $like->session ? html_entity_decode((string) $like->session->observerid) : null)
+            );
+        });
+
         return $outer;
     }
 
@@ -69,17 +77,18 @@ final class PopularSessionsTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('session_name', function ($row) {
-                $session = ObservationSession::find($row->observation_id);
+                $session = $row->session;
                 if (! $session) {
                     return null;
                 }
 
                 $name = $session->name ?? __('Session :id', ['id' => $row->observation_id]);
+                $observer = ObservationCardData::instance()->user(html_entity_decode((string) $session->observerid));
 
-                return sprintf('<a href="%s" class="font-bold hover:underline">%s</a>', route('session.show', [$session->observer?->slug ?? $session->observerid, $session->slug ?? $session->id]), e($name));
+                return sprintf('<a href="%s" class="font-bold hover:underline">%s</a>', route('session.show', [$observer?->slug ?? $session->observerid, $session->slug ?? $session->id]), e($name));
             })
             ->add('session_name_plain', function ($row) {
-                $session = ObservationSession::find($row->observation_id);
+                $session = $row->session;
                 if (! $session) {
                     return null;
                 }
@@ -87,12 +96,11 @@ final class PopularSessionsTable extends PowerGridComponent
                 return $session->name ?? __('Session :id', ['id' => $row->observation_id]);
             })
             ->add('observer_name', function ($row) {
-                $session = ObservationSession::find($row->observation_id);
-                if (! $session) {
+                if (! $row->session) {
                     return null;
                 }
-                $username = html_entity_decode($session->observerid);
-                $user = \App\Models\User::where('username', $username)->first();
+                $username = html_entity_decode((string) $row->session->observerid);
+                $user = ObservationCardData::instance()->user($username);
                 if ($user) {
                     return sprintf('<a href="%s">%s</a>', route('observer.show', $user->slug), e($user->name ?? $user->username));
                 }
@@ -100,12 +108,11 @@ final class PopularSessionsTable extends PowerGridComponent
                 return e($username);
             })
             ->add('observer_name_plain', function ($row) {
-                $session = ObservationSession::find($row->observation_id);
-                if (! $session) {
+                if (! $row->session) {
                     return null;
                 }
-                $username = html_entity_decode($session->observerid);
-                $user = \App\Models\User::where('username', $username)->first();
+                $username = html_entity_decode((string) $row->session->observerid);
+                $user = ObservationCardData::instance()->user($username);
                 if ($user) {
                     return $user->name ?? $user->username;
                 }

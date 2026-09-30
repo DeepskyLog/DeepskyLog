@@ -3121,6 +3121,7 @@ class ObjectController extends Controller
             // Observations and observing list entries refer to the object by name
             \App\Models\Observation::ofDeepskyObject($originalName)
                 ->update(['target_key' => $validated['name'], 'target_name' => $validated['name']]);
+            \App\Services\ObjectObservationStatistics::refreshObjects([$originalName, $validated['name']]);
 
             DB::table('observing_list_items')
                 ->where('object_name', $originalName)
@@ -3558,6 +3559,7 @@ class ObjectController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+            SearchIndex::markUniqueNames([$row->name]);
         } catch (\Exception $e) {
             Log::warning('Failed to update search_index for cometobjects', ['error' => $e->getMessage(), 'id' => $id]);
         }
@@ -4343,6 +4345,7 @@ class ObjectController extends Controller
             // Move the observations (see the target scheme in App\Models\Observation)
             \App\Models\Observation::ofDeepskyObject($objectName)
                 ->update(['target_table' => 'objects', 'target_key' => $targetName, 'target_name' => $targetName]);
+            \App\Services\ObjectObservationStatistics::refreshObjects([$objectName, $targetName]);
 
             // Move observing list entries in the new observing_list_items table
             DB::table('observing_list_items')

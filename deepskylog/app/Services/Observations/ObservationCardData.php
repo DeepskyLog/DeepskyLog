@@ -92,6 +92,35 @@ class ObservationCardData
         return $this;
     }
 
+    /**
+     * Load only what the detail URLs of these observations need (observer and
+     * same-day index), for pages that link to observations without cards.
+     *
+     * @param  iterable<mixed>  $observations
+     */
+    public function preloadDetailUrls(iterable $observations): self
+    {
+        $observations = collect($observations)->filter(fn ($o) => $o instanceof Observation)->values();
+        if ($observations->isNotEmpty()) {
+            $this->preloadUsers($observations->pluck('observer_username'));
+            $this->preloadSameDay($observations);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Load these users in one query, for user().
+     *
+     * @param  iterable<string|null>  $usernames
+     */
+    public function preloadUsernames(iterable $usernames): self
+    {
+        $this->preloadUsers(collect($usernames));
+
+        return $this;
+    }
+
     public function user(?string $username): ?User
     {
         $key = mb_strtolower(trim((string) $username));

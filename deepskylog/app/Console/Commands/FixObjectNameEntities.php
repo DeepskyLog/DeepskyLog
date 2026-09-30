@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\ObjectObservationStatistics;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -149,6 +150,9 @@ class FixObjectNameEntities extends Command
                     }
                 }
             });
+
+            // The observations were renamed without their model events.
+            ObjectObservationStatistics::refreshObjects([$old, $new]);
 
             $fixed++;
         }

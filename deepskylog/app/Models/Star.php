@@ -30,23 +30,32 @@ class Star extends Model
      */
     public function displayName(): ?string
     {
+        return self::displayNameFor($this);
+    }
+
+    /**
+     * displayName() for a plain row of the stars table, so the charts can
+     * read their thousands of stars without hydrating a model for each.
+     */
+    public static function displayNameFor(object $star): ?string
+    {
         $parts = array_filter([
-            $this->flamsteed,
-            $this->bayer,
-            $this->bayer_suffix,
-            $this->constellation_code,
+            $star->flamsteed ?? null,
+            $star->bayer ?? null,
+            $star->bayer_suffix ?? null,
+            $star->constellation_code ?? null,
         ], fn($value) => $value !== null && $value !== '');
 
         if ($parts !== []) {
             return implode(' ', $parts);
         }
 
-        $name = trim((string) $this->name);
+        $name = trim((string) ($star->name ?? ''));
 
-        return ($name === '' || $this->isCatalogueDesignation($name)) ? null : $name;
+        return ($name === '' || self::isCatalogueDesignation($name)) ? null : $name;
     }
 
-    private function isCatalogueDesignation(string $name): bool
+    private static function isCatalogueDesignation(string $name): bool
     {
         foreach (self::CATALOGUE_PREFIXES as $prefix) {
             if (stripos($name, $prefix) === 0) {

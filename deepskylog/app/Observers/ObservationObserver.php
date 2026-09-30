@@ -8,6 +8,7 @@ use App\Models\Eyepiece;
 use App\Models\Lens;
 use App\Models\Filter;
 use App\Models\Location;
+use App\Services\ObjectObservationStatistics;
 use App\Services\SessionObservationLinker;
 use Illuminate\Support\Facades\Cache;
 
@@ -27,6 +28,7 @@ class ObservationObserver
             Location::where('id', $obs->location_id)->increment('observations');
 
         $this->syncSessions($obs);
+        $this->refreshObjectStatistics($obs);
 
         // Invalidate homepage sketch/observation caches so lists refresh quickly
         // (include non-drawing observations so the "20 newest observations" list updates)
@@ -52,6 +54,8 @@ class ObservationObserver
             report($e);
         }
 
+        $this->refreshObjectStatistics($obs);
+
         // Deleted observation -> invalidate homepage caches so lists refresh
         $this->forgetHomepageCaches();
     }
@@ -65,6 +69,10 @@ class ObservationObserver
     {
         if ($obs->wasChanged(['observed_on', 'observer_username'])) {
             $this->syncSessions($obs);
+        }
+
+        if ($obs->wasChanged(['target_type', 'target_name', 'observer_username', 'observed_on', 'has_drawing'])) {
+            $this->refreshObjectStatistics($obs);
         }
 
         if ($obs->wasChanged('instrument_id')) {
@@ -129,6 +137,19 @@ class ObservationObserver
     {
         try {
             SessionObservationLinker::syncObservation($obs);
+        } catch (\Throwable $e) {
+            report($e);
+        }
+    }
+
+    /**
+     * Recalculate the statistics of the object tables (seen, last seen, ...)
+     * the observation counts for.
+     */
+    private function refreshObjectStatistics(Observation $obs): void
+    {
+        try {
+            ObjectObservationStatistics::refreshObservation($obs);
         } catch (\Throwable $e) {
             report($e);
         }

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\DeepskyObject;
 use App\Models\Star;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -36,6 +37,12 @@ class StarChartService
      * layer already, and the chart legend has no symbol for either.
      */
     private const STAR_OBJECT_TYPES = ['DS', 'AA1STAR'];
+
+    /**
+     * Stars up to this magnitude carry their name on a chart. loadStars()
+     * only reads the names of these: the rest are never labelled.
+     */
+    private const STAR_LABEL_MAGNITUDE = 4.6;
 
     /** Declination graticule steps in degrees, largest first. */
     private const GRID_DEC_STEPS_DEG = [30.0, 20.0, 15.0, 10.0, 5.0, 2.0, 1.0, 0.5, 0.25, 1.0 / 6.0, 1.0 / 12.0, 1.0 / 30.0, 1.0 / 60.0];
@@ -369,43 +376,118 @@ class StarChartService
             $projEpsY = max(1.0e-6, ($maxProjY - $minProjY) * $projEpsFactor);
         }
 
-        $query = Star::query()
-            ->select(['name', 'constellation_code', 'bayer', 'bayer_suffix', 'flamsteed', 'ra_degrees', 'decl_degrees', 'vmag'])
+        // The declination range as a list of one-degree zones (the
+        // decl_zone column, floor(decl_degrees)): an equality per zone lets
+        // the (decl_zone, ra_degrees, vmag, decl_degrees) index use the right
+        // ascension range too, where a range on decl_degrees stopped the
+        // index there. The zones only narrow the scan; the declination range
+        // itself still decides which stars are in.
+        $zones = range((int) floor($declMin), (int) floor($declMax));
+
+        // Only columns of that index (and the id every index carries), so the
+        // query never reads a row of the 38 million row table: reading them
+        // was nearly all of the time a detail chart took. The names come
+        // afterwards, for the few stars bright enough to be labelled.
+        // Rows, not models: a detail chart has tens of thousands of stars.
+        // Sorted by magnitude in SQL, ties by position: the order the old
+        // query gave the detail charts, where it read the (decl_degrees,
+        // ra_degrees) index. (Brighter limits used to read the vmag index,
+        // ties then by id; only the order of equally bright stars differs.)
+        $query = Star::query()->toBase()
+            ->select(['id', 'ra_degrees', 'decl_degrees', 'vmag'])
+            ->whereIn('decl_zone', $zones)
             ->whereNotNull('ra_degrees')
             ->whereNotNull('decl_degrees')
             ->whereNotNull('vmag')
             ->where('vmag', '<=', $magnitudeLimit)
-            ->whereBetween('decl_degrees', [$declMin, $declMax]);
+            ->whereBetween('decl_degrees', [$declMin, $declMax])
+            ->orderBy('vmag')
+            ->orderBy('decl_degrees')
+            ->orderBy('ra_degrees')
+            ->orderBy('id');
 
         $this->applyRaWindow($query, $centerRaDeg, $raWindow);
 
-        $stars = $query->get()->map(function (Star $star) use ($centerRaDeg, $centerDecDeg) {
-            $xDegrees = $this->normalizeRaDelta((float) $star->ra_degrees - $centerRaDeg) * cos(deg2rad($centerDecDeg));
-            $yDegrees = (float) $star->decl_degrees - $centerDecDeg;
+        $select = function (?int $limit) use ($query, $centerRaDeg, $centerDecDeg, $xHalfDeg, $radiusDeg, $atlasMode, $minProjX, $maxProjX, $minProjY, $maxProjY, $projEpsX, $projEpsY): array {
+            $rows = $limit === null ? $query->get() : (clone $query)->limit($limit)->get();
+            $names = $this->labelledStarNames($rows);
 
-            return [
-                'name' => $star->displayName(),
-                'ra_degrees' => (float) $star->ra_degrees,
-                'decl_degrees' => (float) $star->decl_degrees,
-                'vmag' => $star->vmag === null ? null : (float) $star->vmag,
-                'x_degrees' => $xDegrees,
-                'y_degrees' => $yDegrees,
-            ];
-        })->filter(function (array $star) use ($xHalfDeg, $radiusDeg, $atlasMode, $centerRaDeg, $centerDecDeg, $minProjX, $maxProjX, $minProjY, $maxProjY, $projEpsX, $projEpsY) {
-            if ($atlasMode) {
-                $proj = $this->atlasSphericalProject($star['ra_degrees'], $star['decl_degrees'], $centerRaDeg, $centerDecDeg);
-                return $proj['x'] >= ($minProjX - $projEpsX) && $proj['x'] <= ($maxProjX + $projEpsX) && $proj['y'] >= ($minProjY - $projEpsY) && $proj['y'] <= ($maxProjY + $projEpsY);
-            }
+            $stars = $rows->map(function (object $star) use ($centerRaDeg, $centerDecDeg, $names) {
+                $xDegrees = $this->normalizeRaDelta((float) $star->ra_degrees - $centerRaDeg) * cos(deg2rad($centerDecDeg));
+                $yDegrees = (float) $star->decl_degrees - $centerDecDeg;
 
-            return abs($star['x_degrees']) <= $xHalfDeg && abs($star['y_degrees']) <= $radiusDeg;
-        })->sortBy(fn(array $star) => $star['vmag'] ?? 99)->values();
+                return [
+                    'name' => $names[$star->id] ?? null,
+                    'ra_degrees' => (float) $star->ra_degrees,
+                    'decl_degrees' => (float) $star->decl_degrees,
+                    'vmag' => $star->vmag === null ? null : (float) $star->vmag,
+                    'x_degrees' => $xDegrees,
+                    'y_degrees' => $yDegrees,
+                ];
+            })->filter(function (array $star) use ($xHalfDeg, $radiusDeg, $atlasMode, $centerRaDeg, $centerDecDeg, $minProjX, $maxProjX, $minProjY, $maxProjY, $projEpsX, $projEpsY) {
+                if ($atlasMode) {
+                    $proj = $this->atlasSphericalProject($star['ra_degrees'], $star['decl_degrees'], $centerRaDeg, $centerDecDeg);
+                    return $proj['x'] >= ($minProjX - $projEpsX) && $proj['x'] <= ($maxProjX + $projEpsX) && $proj['y'] >= ($minProjY - $projEpsY) && $proj['y'] <= ($maxProjY + $projEpsY);
+                }
 
-        $maxStars = $this->maxStarCount($magnitudeLimit, $radiusDeg);
-        if (!$atlasMode && $stars->count() > $maxStars) {
-            $stars = $stars->take($maxStars)->values();
+                return abs($star['x_degrees']) <= $xHalfDeg && abs($star['y_degrees']) <= $radiusDeg;
+            })->values();
+
+            return [$stars, $rows->count()];
+        };
+
+        if ($atlasMode) {
+            // Atlas pages draw every star to the limit.
+            return $select(null)[0];
         }
 
-        return $stars;
+        // Only the brightest $maxStars are drawn, so ask for those in SQL.
+        // The window above is the same rectangle the filter tests, so it
+        // drops at most a star on its edge to rounding: a few extra rows
+        // cover that, and in the unlikely case they do not, read them all.
+        $maxStars = $this->maxStarCount($magnitudeLimit, $radiusDeg);
+        $limit = $maxStars + 100;
+        [$stars, $read] = $select($limit);
+        if ($stars->count() < $maxStars && $read >= $limit) {
+            [$stars] = $select(null);
+        }
+
+        return $stars->take($maxStars)->values();
+    }
+
+    /**
+     * Chart names of the stars in $rows bright enough to be labelled, by id.
+     *
+     * @param  Collection<int, object>  $rows
+     * @return array<int, string>
+     */
+    private function labelledStarNames(Collection $rows): array
+    {
+        // The rows are sorted by magnitude, so the labelled ones lead.
+        $ids = [];
+        foreach ($rows as $row) {
+            if ((float) $row->vmag > self::STAR_LABEL_MAGNITUDE) {
+                break;
+            }
+            $ids[] = $row->id;
+        }
+
+        $names = [];
+        foreach (array_chunk($ids, 1000) as $chunk) {
+            $named = Star::query()->toBase()
+                ->select(['id', 'name', 'constellation_code', 'bayer', 'bayer_suffix', 'flamsteed'])
+                ->whereIn('id', $chunk)
+                ->get();
+
+            foreach ($named as $star) {
+                $name = Star::displayNameFor($star);
+                if ($name !== null) {
+                    $names[$star->id] = $name;
+                }
+            }
+        }
+
+        return $names;
     }
 
     /**
@@ -1014,7 +1096,7 @@ class StarChartService
             // Label bright stars in a restrained way similar to atlas charts.
             $starName = trim((string) ($star['name'] ?? ''));
             $starMag = $star['vmag'] ?? null;
-            if ($starName !== '' && $starMag !== null && $starMag <= 4.6) {
+            if ($starName !== '' && $starMag !== null && $starMag <= self::STAR_LABEL_MAGNITUDE) {
                 $labelSvg = $this->placeObjectLabel($starName, (float) $point['x'], (float) $point['y'], $left, $top, $plotWidth, $plotHeight, $occupiedLabelBoxes, 7.8);
                 if ($labelSvg !== '') {
                     // Use darker text than object labels for better readability.
@@ -1560,7 +1642,7 @@ class StarChartService
         $builder->whereBetween('ra', [$min, $max]);
     }
 
-    private function applyRaWindow(Builder $builder, float $centerRaDeg, float $windowDeg): void
+    private function applyRaWindow(QueryBuilder $builder, float $centerRaDeg, float $windowDeg): void
     {
         // If the requested RA window spans (or nearly spans) the entire
         // circle, do not apply any RA-based filtering. This avoids the
@@ -1579,7 +1661,7 @@ class StarChartService
             return;
         }
 
-        $builder->where(function (Builder $query) use ($min, $max) {
+        $builder->where(function (QueryBuilder $query) use ($min, $max) {
             $query->whereBetween('ra_degrees', [0.0, $max])
                 ->orWhereBetween('ra_degrees', [$min, 360.0]);
         });

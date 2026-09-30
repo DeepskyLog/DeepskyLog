@@ -103,6 +103,41 @@ it('stores the values of metrics:compute-cr under the lens', function () {
     expect(UserObjectMetric::where('object_name', 'M 31')->pluck('lens_id')->all())->toBe([$lens->id]);
 });
 
+it('replaces the stored values when metrics:compute-cr runs again', function () {
+    insertContrastReserveObject();
+    insertContrastReserveObject('M 32');
+    [$user, $instrument, $location] = contrastReserveEquipment();
+    UserObjectMetric::create([
+        'user_id' => $user->id, 'instrument_id' => $instrument->id, 'location_id' => $location->id,
+        'lens_id' => null, 'object_name' => 'M 31', 'contrast_reserve' => 99.0,
+    ]);
+
+    $args = ['user_id' => $user->id, '--instrument_id' => $instrument->id, '--location_id' => $location->id];
+    $this->artisan('metrics:compute-cr', $args)->assertSuccessful();
+    $this->artisan('metrics:compute-cr', $args + ['--queued' => true])->assertSuccessful();
+
+    $metrics = UserObjectMetric::whereNull('lens_id')->orderBy('object_name')->get();
+    expect($metrics->pluck('object_name')->all())->toBe(['M 31', 'M 32'])
+        ->and((float) $metrics->first()->contrast_reserve)->not->toBe(99.0);
+});
+
+it('queues the metrics per chunk of objects when the standard equipment changes', function () {
+    insertContrastReserveObject();
+    insertContrastReserveObject('M 32');
+    [$user, $instrument, $location, $lens] = contrastReserveEquipment();
+    \Illuminate\Support\Facades\Queue::fake();
+
+    $user->forceFill(['stdtelescope' => $instrument->id, 'stdlocation' => $location->id, 'stdlens' => $lens->id])->save();
+    \Illuminate\Support\Facades\Queue::assertPushed(\App\Jobs\EnqueueComputeCRForUser::class, 1);
+
+    (new \App\Jobs\EnqueueComputeCRForUser($user->id, $instrument->id, $location->id, $lens->id))->handle();
+    \Illuminate\Support\Facades\Queue::assertPushed(
+        \App\Jobs\ComputeContrastReserveForObjectsBatch::class,
+        fn ($job) => $job->recompute && $job->objectNames === ['M 31', 'M 32'] && $job->lensId === $lens->id
+    );
+    \Illuminate\Support\Facades\Queue::assertNotPushed(ComputeContrastReserveForObject::class);
+});
+
 it('lets the queue retry a failing contrast reserve job', function () {
     insertContrastReserveObject();
     [$user, $instrument, $location] = contrastReserveEquipment();

@@ -207,6 +207,7 @@ class AdminObjectCheckService
             $updated += $this->deepskyObservations()
                 ->where('target_key', $rawObjectName)
                 ->update(['target_table' => 'objects', 'target_key' => $primaryName, 'target_name' => $primaryName]);
+            ObjectObservationStatistics::refreshObjects([$rawObjectName, $primaryName]);
         }
 
         return $updated;

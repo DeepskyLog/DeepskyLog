@@ -325,37 +325,25 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             $preloadedObjectSlugs = $objQ->pluck('slug')->toArray();
         }
 
-        // Build a subquery that groups search_index rows by canonical name.
+        // The search_index rows to list, one per canonical name (see below).
         // When categories are specified we restrict to those source_tables;
         // otherwise we include all source_tables.
-        $sub = DB::table('search_index')
-            ->where('source_type', '<>', 'alias')
-            ->selectRaw(
-                'MIN(id) as search_index_id, '
-                . "LOWER(COALESCE(name, display_name)) as canonical_name_norm, "
-                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN source_table END), MIN(source_table)) as source_table, "
-                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN source_pk END), MIN(source_pk)) as source_pk, "
-                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN display_name END), COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN display_name END), MIN(display_name))) as display_name, "
-                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN name END), COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN name END), MIN(name))) as name, "
-                . 'MAX(ra) as ra, MAX(decl) as decl, '
-                . "COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN source_type END), MIN(source_type)) as source_type, "
-                . "COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN metadata END), MIN(metadata)) as metadata"
-            );
+        $rows = DB::table('search_index')->where('source_type', '<>', 'alias');
 
         if (!empty($categories)) {
-            $sub->whereIn('source_table', $categories);
+            $rows->whereIn('source_table', $categories);
         }
 
         // ── Catalog include/exclude via objectnames ───────────────────────────
         if (!empty($this->catalogsInclude)) {
             $include = array_map('strval', $this->catalogsInclude);
-            $sub->whereIn('name', function ($q) use ($include) {
+            $rows->whereIn('name', function ($q) use ($include) {
                 $q->from('objectnames')->whereIn('catalog', $include)->select('objectname');
             });
         }
         if (!empty($this->catalogsExclude)) {
             $exclude = array_map('strval', $this->catalogsExclude);
-            $sub->whereNotIn('name', function ($q) use ($exclude) {
+            $rows->whereNotIn('name', function ($q) use ($exclude) {
                 $q->from('objectnames')->whereIn('catalog', $exclude)->select('objectname');
             });
         }
@@ -365,7 +353,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             $catalogs = array_values(array_filter(array_map('trim', $this->nameSearchCatalogs), fn($v) => $v !== ''));
             $number = trim((string) $this->nameSearchNumber);
 
-            $sub->whereIn('name', function ($q) use ($catalogs, $number) {
+            $rows->whereIn('name', function ($q) use ($catalogs, $number) {
                 $q->from('objectnames')->select('objectname');
 
                 if (!empty($catalogs)) {
@@ -377,11 +365,11 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             });
         }
 
-        // ── Apply observing list pre-filter to $sub (before GROUP BY) ────────
+        // ── Apply observing list pre-filter to $rows (before GROUP BY) ────────
         // This lets MySQL use search_index_name_index instead of a full scan.
         if ($preloadedListFilter !== null) {
             if ($preloadedListFilter === 'zero') {
-                $sub->whereRaw('1 = 0');
+                $rows->whereRaw('1 = 0');
             } else {
                 [$listMode, $listNames] = $preloadedListFilter;
 
@@ -397,20 +385,20 @@ class AdvancedObjectSearchTable extends PowerGridComponent
 
                 if ($listMode === 'not_in') {
                     if (!empty($listNames)) {
-                        $sub->whereNotIn('name', $listNames);
+                        $rows->whereNotIn('name', $listNames);
                     }
                     if (!empty($objectSlugsForList)) {
-                        $sub->whereNotIn('source_pk', $objectSlugsForList);
+                        $rows->whereNotIn('source_pk', $objectSlugsForList);
                     }
                     // Empty list in not_in mode = no restriction (keep all objects).
                 } else {
                     // 'in' mode
                     if (empty($listNames)) {
-                        $sub->whereRaw('1 = 0');
+                        $rows->whereRaw('1 = 0');
                     } else {
                         // Match by name (for all source types including comets/planets)
                         // OR by slug/source_pk (for DSO objects missing from search_index).
-                        $sub->where(function ($q) use ($listNames, $objectSlugsForList) {
+                        $rows->where(function ($q) use ($listNames, $objectSlugsForList) {
                             $q->whereIn('name', $listNames);
                             if (!empty($objectSlugsForList)) {
                                 $q->orWhereIn('source_pk', $objectSlugsForList);
@@ -421,21 +409,45 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             }
         }
 
-        // ── Apply objects-table pre-filter to $sub (before GROUP BY) ──────────
-        // Restricts $sub to matching source_pks so MySQL uses search_index_source_pk_index
+        // ── Apply objects-table pre-filter to $rows (before GROUP BY) ──────────
+        // Restricts $rows to matching source_pks so MySQL uses search_index_source_pk_index
         // instead of scanning all 83K rows + filesort.
         if ($preloadedObjectSlugs !== null) {
             // These filters only apply to deep-sky objects.
-            $sub->where('source_table', 'objects');
+            $rows->where('source_table', 'objects');
 
             if (empty($preloadedObjectSlugs)) {
-                $sub->whereRaw('1 = 0');
+                $rows->whereRaw('1 = 0');
             } else {
-                $sub->whereIn('source_pk', $preloadedObjectSlugs);
+                $rows->whereIn('source_pk', $preloadedObjectSlugs);
             }
         }
 
-        $sub->groupBy(DB::raw("LOWER(COALESCE(name, display_name))"));
+        // Rows sharing a canonical name are merged into one, preferring the
+        // deep-sky object's values. Only the few rows whose name another row
+        // has as well need a GROUP BY (name_unique, see
+        // SearchIndex::markUniqueNames()); grouping the whole index took about
+        // 2.5 s per sort or page click. A group filtered down to one row gives
+        // that row's own values, so this lists the same as grouping everything.
+        $key = SearchIndex::NAME_KEY;
+        $unique = (clone $rows)
+            ->where('name_unique', true)
+            ->selectRaw("id as search_index_id, {$key} as canonical_name_norm, source_table, source_pk, display_name, name, ra, decl, source_type, metadata");
+        $merged = (clone $rows)
+            ->where('name_unique', false)
+            ->selectRaw(
+                'MIN(id) as search_index_id, '
+                . "{$key} as canonical_name_norm, "
+                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN source_table END), MIN(source_table)) as source_table, "
+                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN source_pk END), MIN(source_pk)) as source_pk, "
+                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN display_name END), COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN display_name END), MIN(display_name))) as display_name, "
+                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN name END), COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN name END), MIN(name))) as name, "
+                . 'MAX(ra) as ra, MAX(decl) as decl, '
+                . "COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN source_type END), MIN(source_type)) as source_type, "
+                . "COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN metadata END), MIN(metadata)) as metadata"
+            )
+            ->groupBy(DB::raw($key));
+        $sub = $unique->unionAll($merged);
 
         $query = SearchIndex::query()->fromSub($sub, 'search_index')
             ->leftJoin('objects', function ($join) {
@@ -656,9 +668,9 @@ class AdvancedObjectSearchTable extends PowerGridComponent
 
         // Observation statistics (total_observations, your_last_seen_date, ...),
         // which the observing status filter also uses.
-        $username = Auth::user()?->username;
-        $statistics = ObjectObservationStatistics::expressions($username);
-        $select .= ', ' . ObjectObservationStatistics::selectList($username);
+        ObjectObservationStatistics::join($query, Auth::user()?->username);
+        $statistics = ObjectObservationStatistics::expressions();
+        $select .= ', ' . ObjectObservationStatistics::selectList();
 
         if ($needsObservingStatusFilter) {
             $seen = $statistics['total_observations'];

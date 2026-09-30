@@ -51,6 +51,37 @@ class ObjectMetricsQueue
     }
 
     /**
+     * Queue the metrics of all objects for this equipment, replacing the
+     * stored ones, as ComputeContrastReserveForObjectsBatch jobs of
+     * NAMES_PER_JOB objects. Returns the number of jobs queued.
+     */
+    public static function queueRecompute(int $userId, int $instrumentId, int $locationId, ?int $lensId): int
+    {
+        $chunks = self::allObjectNameChunks();
+        foreach ($chunks as $chunk) {
+            ComputeContrastReserveForObjectsBatch::dispatch($userId, $instrumentId, $locationId, $chunk, $lensId, null, true);
+        }
+
+        return count($chunks);
+    }
+
+    /**
+     * The names of all objects, sorted, in chunks of NAMES_PER_JOB.
+     *
+     * @return list<list<string>>
+     */
+    public static function allObjectNameChunks(): array
+    {
+        $names = DB::table('objects')->orderBy('name')->distinct()->pluck('name')
+            ->map(fn ($name) => (string) $name)
+            ->filter(fn ($name) => trim($name) !== '')
+            ->values()
+            ->all();
+
+        return array_chunk($names, self::NAMES_PER_JOB);
+    }
+
+    /**
      * Whether jobs queued with this token are still to finish.
      */
     public static function pending(?string $token): bool

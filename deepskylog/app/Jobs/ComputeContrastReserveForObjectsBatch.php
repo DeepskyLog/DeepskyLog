@@ -17,9 +17,10 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * Computes and stores the metrics (user_object_metrics) of several objects
- * with the same equipment, for the objects that have none yet. The equipment
- * and the magnifications are loaded once, the rows written with one insert
- * per chunk. Queued by ObjectMetricsQueue for the object tables.
+ * with the same equipment, for the objects that have none yet, or for all of
+ * them with $recompute. The equipment and the magnifications are loaded once,
+ * the rows written with one insert per chunk. Queued by ObjectMetricsQueue,
+ * for the object tables and after a change of the standard equipment.
  */
 class ComputeContrastReserveForObjectsBatch implements ShouldQueue
 {
@@ -45,8 +46,9 @@ class ComputeContrastReserveForObjectsBatch implements ShouldQueue
     public array $objectNames;
     public ?int $lensId;
     public ?string $token;
+    public bool $recompute;
 
-    public function __construct(int $userId, ?int $instrumentId, ?int $locationId, array $objectNames, ?int $lensId = null, ?string $token = null)
+    public function __construct(int $userId, ?int $instrumentId, ?int $locationId, array $objectNames, ?int $lensId = null, ?string $token = null, bool $recompute = false)
     {
         $this->userId = $userId;
         $this->instrumentId = $instrumentId;
@@ -54,6 +56,7 @@ class ComputeContrastReserveForObjectsBatch implements ShouldQueue
         $this->objectNames = $objectNames;
         $this->lensId = $lensId;
         $this->token = $token;
+        $this->recompute = $recompute;
     }
 
     public function handle(): void
@@ -76,8 +79,11 @@ class ComputeContrastReserveForObjectsBatch implements ShouldQueue
             return;
         }
 
-        // Computed meanwhile (by another table or job): not again.
-        $missing = ObjectMetricsQueue::missing($this->userId, $this->instrumentId, $this->locationId, $this->lensId, $this->objectNames);
+        // Computed meanwhile (by another table or job): not again, unless the
+        // stored values are to be replaced.
+        $missing = $this->recompute
+            ? $this->objectNames
+            : ObjectMetricsQueue::missing($this->userId, $this->instrumentId, $this->locationId, $this->lensId, $this->objectNames);
         if ($missing === []) {
             return;
         }
@@ -104,7 +110,22 @@ class ComputeContrastReserveForObjectsBatch implements ShouldQueue
                     'updated_at' => $now,
                 ];
             }
-            if ($rows !== []) {
+            if ($this->recompute) {
+                // Replaces the stored rows. Not upsert(): the table has no unique
+                // key to match on, and a NULL lens_id would never match anyway.
+                DB::transaction(function () use ($chunk, $rows) {
+                    DB::table('user_object_metrics')
+                        ->where('user_id', $this->userId)
+                        ->where('instrument_id', $this->instrumentId)
+                        ->where('location_id', $this->locationId)
+                        ->when($this->lensId === null, fn ($query) => $query->whereNull('lens_id'), fn ($query) => $query->where('lens_id', $this->lensId))
+                        ->whereIn('object_name', $chunk)
+                        ->delete();
+                    if ($rows !== []) {
+                        DB::table('user_object_metrics')->insert($rows);
+                    }
+                });
+            } elseif ($rows !== []) {
                 DB::table('user_object_metrics')->insert($rows);
             }
         }

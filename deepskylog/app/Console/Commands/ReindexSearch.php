@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\SearchIndex;
 use App\Services\ObjectSearchIndex;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -231,6 +232,11 @@ class ReindexSearch extends Command
         }
         if (!empty($rows))
             DB::table('search_index')->insert($rows);
+
+        // Flag the rows whose name no other row has, which the advanced search
+        // lists without grouping them.
+        $this->info('Marking unique names...');
+        SearchIndex::markUniqueNames();
 
         // Store the start of this run, so rows changed while it ran are picked
         // up by the next incremental run. A full run counts as well.

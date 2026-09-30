@@ -6,13 +6,6 @@
 
 - [ ] Test! 
   - [ ] Fix the speed problems found (measured on the local database, as a guest: `/statistics` 5 s, `/popular-objects` 2 s, `/observers` 1.8 s, `/object/m-51` 231 queries, `/drawings` 392 queries, `/` 266 queries).
-    - [ ] Heavy work on each request
-      - [ ] `AdvancedObjectSearchTable` groups the whole `search_index` (`GROUP BY LOWER(COALESCE(...))`) on every sort or page click (2.3 s): store the canonical name in an indexed column or a table rebuilt by `search:reindex`.
-      - [ ] Sorting/filtering on the correlated statistics columns of `ObjectObservationStatistics` (seen, last seen) takes up to 3.5 s: keep per-object statistics in a table, or disable sorting on them for large result sets.
-      - [ ] `PopularSessionsTable` / `PopularObservationsTable`: several `find()` and User loads per row; join the needed columns into the aggregate query.
-      - [ ] Astronomy library: `Time::deltaT()` runs `DeltaT::first()` (and a year lookup) on every call, 171–379 queries per object page. Memoize in a static array in ~/GitHub/laravel-astronomy-library and release.
-      - [ ] `StarChartService::loadStars()` can only use the decl part of the `(decl_degrees, ra_degrees)` index (4–6 s per detail chart, the main cost of atlas PDFs) and hydrates `Star` models: add a declination zone column with an index `(zone, ra_degrees, vmag)`, use `toBase()`, put the `LIMIT` in SQL outside atlas mode.
-      - [ ] Changing the standard instrument, location or lens queues 50k `ComputeContrastReserveForObject` jobs of about 9 queries each: dispatch per chunk of objects, load the equipment once, write with one `upsert()`, make the job unique per user/equipment.
     - [ ] Smaller items
       - [ ] Importers: memoize the resolved object names during an import.
       - [ ] `ObservationSearchTable` / `ObservationSearchQuery`: `target_name LIKE '%q%'`; match on `target_name_normalized` instead.
@@ -34,7 +27,8 @@
   - [ ] php artisan db:seed --class=BackfillSketchObservationIdsSeeder
   - [ ] php artisan db:seed --class=addAchievementsSeeder
   - [ ] php artisan db:seed --class=LegacyObjectContoursSeeder
-  - [ ] php artisan migrate
+  - [ ] php artisan migrate (the `stars` index takes about a minute on 38M rows)
+  - [ ] php artisan observations:rebuild-object-stats (after the migration; until then every object shows as unseen), then php artisan responsecache:clear
   - [ ] php artisan astronomy:updateOrbitalElements (after the migration: the orbital elements were stored as single precision floats), then php artisan astronomy:updateCometPhotometry (the first command empties the table, including the photometry)
   - [ ] Remove the old storage/logs/horizons_wrapper_*.json files
   - [ ] php artisan objects:fix-html-entities --apply   

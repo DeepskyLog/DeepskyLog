@@ -2,21 +2,31 @@
 
 namespace App\Jobs;
 
+use App\Services\ObjectMetricsQueue;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Job that enqueues per-object compute jobs for a user's instrument/location by
- * invoking the metrics:compute-cr artisan command with --queued; lens optional.
+ * Job that recomputes the metrics of all objects for a user's instrument/location
+ * (lens optional), by queueing ComputeContrastReserveForObjectsBatch jobs of
+ * ObjectMetricsQueue::NAMES_PER_JOB objects. Unique per user and equipment, so
+ * changing the standard equipment back and forth queues it once.
  */
-class EnqueueComputeCRForUser implements ShouldQueue
+class EnqueueComputeCRForUser implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * How long the uniqueness lock is kept when the job never runs.
+     *
+     * @var int
+     */
+    public $uniqueFor = 3600;
 
     public int $userId;
     public ?int $instrumentId;
@@ -31,23 +41,21 @@ class EnqueueComputeCRForUser implements ShouldQueue
         $this->lensId = $lensId;
     }
 
+    public function uniqueId(): string
+    {
+        return implode(':', [$this->userId, $this->instrumentId ?? '-', $this->locationId ?? '-', $this->lensId ?? '-']);
+    }
+
     public function handle(): void
     {
-        try {
-            $args = ['user_id' => $this->userId, '--queued' => true];
-            if ($this->instrumentId) {
-                $args['--instrument_id'] = $this->instrumentId;
-            }
-            if ($this->locationId) {
-                $args['--location_id'] = $this->locationId;
-            }
-            if ($this->lensId) {
-                $args['--lens_id'] = $this->lensId;
-            }
+        // Without an instrument and a location there is nothing to compute.
+        if (! $this->instrumentId || ! $this->locationId) {
+            return;
+        }
 
-            Log::info('EnqueueComputeCRForUser: invoking metrics:compute-cr', $args);
-            // This will dispatch per-object jobs (ComputeContrastReserveForObject)
-            Artisan::call('metrics:compute-cr', $args);
+        try {
+            $jobs = ObjectMetricsQueue::queueRecompute($this->userId, $this->instrumentId, $this->locationId, $this->lensId);
+            Log::info('EnqueueComputeCRForUser: queued metrics recompute', ['user' => $this->userId, 'jobs' => $jobs]);
         } catch (\Throwable $ex) {
             Log::error('EnqueueComputeCRForUser: failed to enqueue compute-cr', ['error' => $ex->getMessage(), 'user' => $this->userId]);
         }

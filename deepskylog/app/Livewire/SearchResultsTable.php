@@ -281,7 +281,8 @@ class SearchResultsTable extends PowerGridComponent
 
         // Observation statistics (total_observations, your_last_seen_date, ...)
         try {
-            $select .= ', ' . ObjectObservationStatistics::selectList(Auth::user()?->username);
+            ObjectObservationStatistics::join($query, Auth::user()?->username);
+            $select .= ', ' . ObjectObservationStatistics::selectList();
         } catch (\Throwable $_) {
             // ignore statistics failures
         }

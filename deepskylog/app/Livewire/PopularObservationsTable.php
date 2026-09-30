@@ -3,8 +3,8 @@
 namespace App\Livewire;
 
 use App\Livewire\Concerns\LimitsExportRows;
-use App\Models\Observation;
 use App\Models\ObservationLike;
+use App\Services\Observations\ObservationCardData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use PowerComponents\LivewirePowerGrid\Column;
@@ -18,13 +18,6 @@ final class PopularObservationsTable extends PowerGridComponent
     use LimitsExportRows;
 
     public string $tableName = 'popular-observations';
-
-    /**
-     * Populated in datasource() for the sample page rows to avoid extra queries.
-     *
-     * @var array<string, \App\Models\User>
-     */
-    protected array $userMap = [];
 
     public function boot(): void
     {
@@ -64,24 +57,6 @@ final class PopularObservationsTable extends PowerGridComponent
             ->groupBy('observation_type', 'observation_id')
             ->orderByDesc('likes');
 
-        // Prefetch a reasonable window of rows (first 200) to build the username -> User map.
-        $sample = (clone $aggQuery)->limit(200)->get();
-
-        $usernames = $sample->pluck('observerid')
-            ->filter()
-            ->map(fn($v) => html_entity_decode((string) $v))
-            ->unique()
-            ->values()
-            ->toArray();
-
-        $this->userMap = [];
-        if (!empty($usernames)) {
-            $users = \App\Models\User::whereIn('username', $usernames)->get()->keyBy('username');
-            foreach ($users as $username => $user) {
-                $this->userMap[$username] = $user;
-            }
-        }
-
         $sub = $aggQuery->toBase();
 
         $outer = ObservationLike::query();
@@ -89,6 +64,12 @@ final class PopularObservationsTable extends PowerGridComponent
         $outer->getQuery()->fromSub($sub, $tableAlias);
         $outer->getQuery()->select($tableAlias . '.*');
         $outer->orderByDesc($tableAlias . '.likes');
+
+        // The observations of the page, their observers and same-day indexes
+        // (for the detail URL), in one query each.
+        $outer->with('observation')->afterQuery(function ($likes) {
+            ObservationCardData::instance()->preloadDetailUrls($likes->pluck('observation')->filter());
+        });
 
         return $outer;
     }
@@ -102,18 +83,14 @@ final class PopularObservationsTable extends PowerGridComponent
             ->add('observer_display')
             ->add('objectname_sort')
             ->add('objectname', function ($row) {
-                $obs = Observation::find($row->observation_id);
-
+                $obs = $row->observation;
                 $objectName = $obs ? $obs->target_name : null;
 
                 if (!$objectName) {
                     return null;
                 }
 
-                $username = $obs->observer_username;
-                $user = $this->userMap[$username] ?? null;
-                $observer = $user ? ($user->slug ?: $username) : $username;
-                $link = $obs->detailUrl($observer);
+                $link = $obs->detailUrl();
                 if (!$link) {
                     return e($objectName);
                 }
@@ -121,37 +98,29 @@ final class PopularObservationsTable extends PowerGridComponent
                 return sprintf('<a href="%s" class="font-bold hover:underline" target="_blank" rel="noopener noreferrer">%s</a>', $link, e($objectName));
             })
             ->add('observer_name', function ($row) {
-                $username = $row->observerid ? html_entity_decode((string) $row->observerid) : null;
-                if (!$username) {
-                    $obs = Observation::find($row->observation_id);
-                    $username = $obs ? html_entity_decode((string) $obs->observer_username) : null;
-                }
+                $username = $this->observerUsername($row);
                 if (!$username) {
                     return null;
                 }
-                if (isset($this->userMap[$username])) {
-                    $user = $this->userMap[$username];
+                $user = ObservationCardData::instance()->user($username);
+                if ($user) {
                     return sprintf('<a href="%s">%s</a>', route('observer.show', $user->slug), e($user->name ?? $user->username));
                 }
                 return e($username);
             })
             ->add('observer_name_plain', function ($row) {
-                $username = $row->observerid ? html_entity_decode((string) $row->observerid) : null;
-                if (!$username) {
-                    $obs = Observation::find($row->observation_id);
-                    $username = $obs ? html_entity_decode((string) $obs->observer_username) : null;
-                }
+                $username = $this->observerUsername($row);
                 if (!$username) {
                     return null;
                 }
-                if (isset($this->userMap[$username])) {
-                    $user = $this->userMap[$username];
+                $user = ObservationCardData::instance()->user($username);
+                if ($user) {
                     return $user->name ?? $user->username;
                 }
                 return $username;
             })
             ->add('objectname_plain', function ($row) {
-                $obs = Observation::find($row->observation_id);
+                $obs = $row->observation;
                 return $obs ? html_entity_decode((string) $obs->target_name) : null;
             })
             ->add('obs_date')
@@ -169,6 +138,13 @@ final class PopularObservationsTable extends PowerGridComponent
                 }
             })
             ->add('likes');
+    }
+
+    private function observerUsername($row): ?string
+    {
+        $username = $row->observerid ?: $row->observation?->observer_username;
+
+        return $username ? html_entity_decode((string) $username) : null;
     }
 
     public function columns(): array

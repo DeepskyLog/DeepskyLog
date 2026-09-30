@@ -414,16 +414,13 @@ class NearbyObjectsTable extends PowerGridComponent
 
         // Observation statistics (total_observations, your_last_seen_date, ...),
         // exposed by the inner select so the outer wrapper can sort on them.
-        try {
-            $selectRaw .= ', ' . ObjectObservationStatistics::selectList(Auth::user()?->username);
-        } catch (\Throwable $_) {
-            // don't fail the whole query when the statistics are unavailable
-        }
+        $selectRaw .= ', ' . ObjectObservationStatistics::selectList();
 
         $baseQuery = DeepskyObject::query()
             ->leftJoin('constellations', 'constellations.id', '=', 'objects.con')
             ->leftJoin('deepskytypes', 'deepskytypes.code', '=', 'objects.type')
             ->selectRaw($selectRaw, $selectBindings);
+        ObjectObservationStatistics::join($baseQuery, Auth::user()?->username);
 
         // Apply a cheap bounding-box prefilter on decl using numeric literals
         // to avoid modifying the prepared statement binding order. This lets

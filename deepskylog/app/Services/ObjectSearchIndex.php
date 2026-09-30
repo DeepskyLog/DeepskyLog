@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\SearchIndex;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -76,6 +77,8 @@ class ObjectSearchIndex
                 'source_pk' => $pk,
                 'display_name' => $display,
                 'source_type' => 'alias',
+                // Aliases are never merged with other rows (see SearchIndex::markUniqueNames())
+                'name_unique' => true,
                 'created_at' => $now,
                 'updated_at' => $now,
             ];
@@ -108,6 +111,8 @@ class ObjectSearchIndex
             }
         });
 
+        SearchIndex::markUniqueNames(array_merge($oldKeys, [$name]));
+
         self::forgetResolutions(array_merge($oldKeys, [$name, $object->slug ?? null]));
     }
 
@@ -122,6 +127,7 @@ class ObjectSearchIndex
         $keys = array_merge([$name, $slug], $aliases->pluck('altname')->all(), $aliases->pluck('slug')->all());
 
         self::deleteRows([$name, $slug]);
+        SearchIndex::markUniqueNames([$name]);
         self::forgetResolutions($keys);
     }
 
