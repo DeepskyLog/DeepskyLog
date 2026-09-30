@@ -1089,7 +1089,7 @@ class ObservationSearchExportController extends Controller
                         $query->orWhere(function ($inner) use ($target) {
                             $inner->where('source_table', $target['table'])
                                 ->where(function ($nameQuery) use ($target) {
-                                    $nameQuery->whereRaw('LOWER(name) = ?', [$target['catalog_lower']])
+                                    $nameQuery->where('name', $target['catalog_lower'])
                                         ->orWhereRaw('LOWER(COALESCE(display_name, name)) = ?', [$target['catalog_lower']]);
                                 });
                         });

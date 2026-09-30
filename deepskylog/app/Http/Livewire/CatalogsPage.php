@@ -76,7 +76,7 @@ class CatalogsPage extends Component
         if (!empty($this->selected)) {
             // Resolve catalog variants conservatively: prefer exact (case-insensitive) matches only.
             $catalogVariants = DB::table('objectnames')
-                ->whereRaw('LOWER(catalog) = ?', [strtolower($this->selected)])
+                ->where('catalog', $this->selected)
                 ->distinct()
                 ->pluck('catalog')
                 ->toArray();

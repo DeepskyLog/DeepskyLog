@@ -822,37 +822,41 @@ class Observation extends Model
     }
 
     /**
-     * Get the date of the last observation for a user, optionally filtered by target_name.
+     * Get the date of the last observation for a user, optionally of one object.
      */
     public static function getLastObservationDateForUser(?\App\Models\User $user = null, ?string $targetName = null): ?Carbon
+    {
+        return static::lastObservedOnForUser($user, $targetName, false);
+    }
+
+    /**
+     * Get the date of the last drawing for a user, optionally of one object.
+     */
+    public static function getLastDrawingDateForUser(?\App\Models\User $user = null, ?string $targetName = null): ?Carbon
+    {
+        return static::lastObservedOnForUser($user, $targetName, true);
+    }
+
+    /**
+     * The last observed_on of a user's observations (or drawings). A deep-sky
+     * object is matched on its canonical name with ofDeepskyObject(), which uses
+     * the (target_type, target_key) index; other targets on target_name.
+     */
+    private static function lastObservedOnForUser(?\App\Models\User $user, ?string $targetName, bool $drawingsOnly): ?Carbon
     {
         $user = $user ?? Auth::user();
         if (!$user) {
             return null;
         }
         $q = static::where('observer_user_id', $user->id);
+        if ($drawingsOnly) {
+            $q->where('has_drawing', 1);
+        }
         if ($targetName !== null && $targetName !== '') {
-            $q->where('target_name', $targetName);
+            $objectName = static::canonicalDeepskyName($targetName);
+            $objectName !== null ? $q->ofDeepskyObject($objectName) : $q->where('target_name', $targetName);
         }
-        $date = $q->orderByDesc('observed_on')->value('observed_on');
-
-        return $date ? Carbon::parse($date) : null;
-    }
-
-    /**
-     * Get the date of the last drawing for a user, optionally filtered by target_name.
-     */
-    public static function getLastDrawingDateForUser(?\App\Models\User $user = null, ?string $targetName = null): ?Carbon
-    {
-        $user = $user ?? Auth::user();
-        if (!$user) {
-            return null;
-        }
-        $q = static::where('observer_user_id', $user->id)->where('has_drawing', 1);
-        if ($targetName !== null && $targetName !== '') {
-            $q->where('target_name', $targetName);
-        }
-        $date = $q->orderByDesc('observed_on')->value('observed_on');
+        $date = $q->max('observed_on');
 
         return $date ? Carbon::parse($date) : null;
     }

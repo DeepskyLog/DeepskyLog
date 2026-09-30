@@ -15,7 +15,7 @@ trait ResolvesLocalizedNames
     protected function resolveLocalizedToCanonical(string $term, ?string $locale = null): array
     {
         $query = ObjectNameTranslation::query()
-            ->whereRaw('LOWER(`name`) = ?', [mb_strtolower($term)]);
+            ->where('name', $term);
 
         if ($locale) {
             $query->where('locale', $locale);

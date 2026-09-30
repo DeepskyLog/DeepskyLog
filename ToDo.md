@@ -6,13 +6,6 @@
 
 - [ ] Test! 
   - [ ] Fix the speed problems found (measured on the local database, as a guest: `/statistics` 5 s, `/popular-objects` 2 s, `/observers` 1.8 s, `/object/m-51` 231 queries, `/drawings` 392 queries, `/` 266 queries).
-    - [ ] Missing indexes (one migration)
-      - [ ] `observations(target_type, target_key)`: the `ofDeepskyObject`/`ofComet` scopes scan all rows (35–250 ms per count, several per object page, and two per star chart).
-      - [ ] `observations(created_at)`: RSS feeds.
-      - [ ] `observation_likes(observation_type, observation_id)`: the only index starts with `user_id`.
-      - [ ] Drop `LOWER(col) = ?` / `LOWER(col) LIKE` (the columns are `utf8mb4_unicode_ci`, so already case-insensitive): object slug lookups in `ObjectController` (an unknown `/object/{slug}` costs 150 ms before the 404), about 10 places in `ObservationsController`, `ObserverController`, `StatisticsController`, the importers, `search_index` in the search.
-      - [ ] `show.blade.php:1128` and `comet-page.blade.php:69` filter observations on `target_name` without `target_type`; `comet-page.blade.php:122` runs `SketchOfTheWeek::where()` in a loop.
-      - [ ] `Observation::getLastDrawingDateForUser()` / `getLastObservationDateForUser()` (object page, about 200 ms): use `ofDeepskyObject()` with `observer_user_id` and `max('observed_on')`.
     - [ ] Crawlers and bots
       - [ ] No rate limiting on the web routes nor on `/livewire/update` (only the API has `throttle`). Add per-IP limiters, stricter for guests and for exports.
       - [ ] Public exports without limits: `object/{slug}/nearby-chart.pdf` (radius up to 60°, `star_mag` unbounded, can load millions of stars), `nearby-names.pdf` (radius unbounded), `search/*.pdf` (`SearchExportController::resolveRows()` has no cap), `observations/search/export.*` and the PowerGrid exports (up to all observations). Clamp the parameters, cap the rows, throttle, and require login for the PDFs or queue them.

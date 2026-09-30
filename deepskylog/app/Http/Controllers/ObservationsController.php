@@ -484,15 +484,15 @@ class ObservationsController extends Controller
         if (!$objectName) {
             foreach ($candidates as $cand) {
                 $on = DB::table('objectnames')
-                    ->whereRaw('LOWER(objectname) = ?', [$cand])
-                    ->orWhereRaw('LOWER(altname) = ?', [$cand])
+                    ->where('objectname', $cand)
+                    ->orWhere('altname', $cand)
                     ->first();
                 if ($on) {
                     $objectName = $on->objectname;
                     break;
                 }
 
-                $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                $o = DB::table('objects')->where('name', $cand)->first();
                 if ($o) {
                     $objectName = $o->name;
                     break;
@@ -567,7 +567,7 @@ class ObservationsController extends Controller
         // Try modern CometObject first
         try {
             foreach ($candidates as $cand) {
-                $co = \App\Models\CometObject::whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                $co = \App\Models\CometObject::where('name', $cand)->orWhere('slug', $cand)->first();
                 if ($co) {
                     $objectName = $co->name;
                     $objectId = $co->id;
@@ -581,7 +581,7 @@ class ObservationsController extends Controller
         if (!$objectId) {
             try {
                 foreach ($candidates as $cand) {
-                    $row = DB::table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                    $row = DB::table('cometobjects')->where('name', $cand)->orWhere('slug', $cand)->first();
                     if ($row) {
                         $objectName = $row->name ?? null;
                         $objectId = $row->id ?? null;
@@ -648,7 +648,7 @@ class ObservationsController extends Controller
         $objectId = null;
         try {
             foreach ($candidates as $cand) {
-                $co = \App\Models\CometObject::whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                $co = \App\Models\CometObject::where('name', $cand)->orWhere('slug', $cand)->first();
                 if ($co) {
                     $objectName = $co->name;
                     $objectId = $co->id;
@@ -660,7 +660,7 @@ class ObservationsController extends Controller
         if (!$objectId) {
             try {
                 foreach ($candidates as $cand) {
-                    $row = DB::table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                    $row = DB::table('cometobjects')->where('name', $cand)->orWhere('slug', $cand)->first();
                     if ($row) {
                         $objectName = $row->name ?? null;
                         $objectId = $row->id ?? null;
@@ -768,15 +768,15 @@ class ObservationsController extends Controller
         if (!$objectName) {
             foreach ($candidates as $cand) {
                 $on = DB::table('objectnames')
-                    ->whereRaw('LOWER(objectname) = ?', [$cand])
-                    ->orWhereRaw('LOWER(altname) = ?', [$cand])
+                    ->where('objectname', $cand)
+                    ->orWhere('altname', $cand)
                     ->first();
                 if ($on) {
                     $objectName = $on->objectname;
                     break;
                 }
 
-                $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                $o = DB::table('objects')->where('name', $cand)->first();
                 if ($o) {
                     $objectName = $o->name;
                     break;
@@ -848,7 +848,7 @@ class ObservationsController extends Controller
         $objectId = null;
         try {
             foreach ($candidates as $cand) {
-                $co = \App\Models\CometObject::whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                $co = \App\Models\CometObject::where('name', $cand)->orWhere('slug', $cand)->first();
                 if ($co) {
                     $objectId = $co->id;
                     break;
@@ -860,7 +860,7 @@ class ObservationsController extends Controller
         if (!$objectId) {
             try {
                 foreach ($candidates as $cand) {
-                    $row = DB::table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                    $row = DB::table('cometobjects')->where('name', $cand)->orWhere('slug', $cand)->first();
                     if ($row) {
                         $objectId = $row->id ?? null;
                         break;
@@ -917,15 +917,15 @@ class ObservationsController extends Controller
         if (!$objectName) {
             foreach ($candidates as $cand) {
                 $on = DB::table('objectnames')
-                    ->whereRaw('LOWER(objectname) = ?', [$cand])
-                    ->orWhereRaw('LOWER(altname) = ?', [$cand])
+                    ->where('objectname', $cand)
+                    ->orWhere('altname', $cand)
                     ->first();
                 if ($on) {
                     $objectName = $on->objectname;
                     break;
                 }
 
-                $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                $o = DB::table('objects')->where('name', $cand)->first();
                 if ($o) {
                     $objectName = $o->name;
                     break;
@@ -1035,15 +1035,15 @@ class ObservationsController extends Controller
         if (!$objectName) {
             foreach ($candidates as $cand) {
                 $on = DB::table('objectnames')
-                    ->whereRaw('LOWER(objectname) = ?', [$cand])
-                    ->orWhereRaw('LOWER(altname) = ?', [$cand])
+                    ->where('objectname', $cand)
+                    ->orWhere('altname', $cand)
                     ->first();
                 if ($on) {
                     $objectName = $on->objectname;
                     break;
                 }
 
-                $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                $o = DB::table('objects')->where('name', $cand)->first();
                 if ($o) {
                     $objectName = $o->name;
                     break;
@@ -1152,15 +1152,15 @@ class ObservationsController extends Controller
         if (!$objectName) {
             foreach ($candidates as $cand) {
                 $on = DB::table('objectnames')
-                    ->whereRaw('LOWER(objectname) = ?', [$cand])
-                    ->orWhereRaw('LOWER(altname) = ?', [$cand])
+                    ->where('objectname', $cand)
+                    ->orWhere('altname', $cand)
                     ->first();
                 if ($on) {
                     $objectName = $on->objectname;
                     break;
                 }
 
-                $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                $o = DB::table('objects')->where('name', $cand)->first();
                 if ($o) {
                     $objectName = $o->name;
                     break;
@@ -1254,7 +1254,7 @@ class ObservationsController extends Controller
             if (!$record) {
                 foreach ($candidates as $cand) {
                     try {
-                        $record = DB::table($table)->whereRaw('LOWER(name) = ?', [$cand])->first();
+                        $record = DB::table($table)->where('name', $cand)->first();
                     } catch (\Throwable $_) {
                         $record = null;
                     }
@@ -1811,8 +1811,8 @@ class ObservationsController extends Controller
             if (!$objectName) {
                 foreach ($candidates as $cand) {
                     $on = DB::table('objectnames')
-                        ->whereRaw('LOWER(objectname) = ?', [$cand])
-                        ->orWhereRaw('LOWER(altname) = ?', [$cand])
+                        ->where('objectname', $cand)
+                        ->orWhere('altname', $cand)
                         ->first();
                     if ($on) {
                         $objectName = $on->objectname;
@@ -1823,7 +1823,7 @@ class ObservationsController extends Controller
                         break;
                     }
 
-                    $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                    $o = DB::table('objects')->where('name', $cand)->first();
                     if ($o) {
                         $objectName = $o->name;
                         $resolved['type'] = 'deepsky';
@@ -1875,7 +1875,7 @@ class ObservationsController extends Controller
                     try {
                         $o = DB::table('objects')
                             ->whereIn('slug', $possibleKeys)
-                            ->orWhereRaw('LOWER(name) = ?', [mb_strtolower($objectName)])
+                            ->orWhere('name', $objectName)
                             ->first();
                         if ($o) {
                             $objectSummary['type_raw'] = $o->type ?? null;
@@ -1905,7 +1905,7 @@ class ObservationsController extends Controller
                 if (!$planet) {
                     foreach ($candidates as $cand) {
                         try {
-                            $planet = DB::table('planets')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                            $planet = DB::table('planets')->where('name', $cand)->first();
                         } catch (\Throwable $_) {
                             $planet = null;
                         }
@@ -1959,7 +1959,7 @@ class ObservationsController extends Controller
                     if (!$lunar) {
                         foreach ($candidates as $cand) {
                             try {
-                                $lunar = DB::table('lunar_features')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                                $lunar = DB::table('lunar_features')->where('name', $cand)->first();
                             } catch (\Throwable $_) {
                                 $lunar = null;
                             }
@@ -1984,7 +1984,7 @@ class ObservationsController extends Controller
                         if (!$lunar) {
                             foreach ($candidates as $cand) {
                                 try {
-                                    $moon = DB::table('moons')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                                    $moon = DB::table('moons')->where('name', $cand)->first();
                                 } catch (\Throwable $_) {
                                     $moon = null;
                                 }
@@ -2075,7 +2075,7 @@ class ObservationsController extends Controller
                         if (!$comet) {
                             foreach ($candidates as $cand) {
                                 try {
-                                    $comet = DB::table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->first();
+                                    $comet = DB::table('cometobjects')->where('name', $cand)->first();
                                 } catch (\Throwable $_) {
                                     $comet = null;
                                 }

@@ -68,7 +68,7 @@ class ObjectTypesChart
         // Planets (excluding sun)
         $planetsCount = (int) DB::table('observations')
             ->where('target_table', 'planets')
-            ->whereRaw('LOWER(target_key) != ?', ['sun'])
+            ->where('target_key', '!=', 'sun')
             ->where(function ($q) use ($user) {
                 $q->where('observer_user_id', $user->id)
                     ->orWhere('observer_username', $user->username);
@@ -81,7 +81,7 @@ class ObjectTypesChart
         // Sun
         $sunCount = (int) DB::table('observations')
             ->where('target_table', 'planets')
-            ->whereRaw('LOWER(target_key) = ?', ['sun'])
+            ->where('target_key', 'sun')
             ->where(function ($q) use ($user) {
                 $q->where('observer_user_id', $user->id)
                     ->orWhere('observer_username', $user->username);

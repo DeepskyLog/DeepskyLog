@@ -87,7 +87,7 @@ class SearchResults extends Component
         try {
             if (DB::getSchemaBuilder()->hasTable('search_index')) {
                 $this->results = DB::table('search_index')
-                    ->whereRaw('LOWER(name) LIKE ?', [Str::lower($like)])
+                    ->where('name', 'like', $like)
                     ->orderBy('name')
                     ->limit(200)
                     ->get()
@@ -101,7 +101,7 @@ class SearchResults extends Component
         // Fallback: search objects and aliases
         $objs = DB::table('objects')
             ->select(['name as title', 'slug', DB::raw("'object' as source_type")])
-            ->whereRaw('LOWER(name) LIKE ?', [Str::lower($like)])
+            ->where('name', 'like', $like)
             ->limit(200)
             ->get()
             ->toArray();

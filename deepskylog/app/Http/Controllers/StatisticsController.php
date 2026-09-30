@@ -314,8 +314,8 @@ class StatisticsController extends Controller
             'deepsky' => $this->applyDeepskyScope($query),
             'comets' => $this->applyCometScope($query),
             'double' => $this->applyDoubleScope($query),
-            'planets' => $query->where('target_table', 'planets')->whereRaw('LOWER(target_key) != ?', ['sun']),
-            'sun' => $query->where('target_table', 'planets')->whereRaw('LOWER(target_key) = ?', ['sun']),
+            'planets' => $query->where('target_table', 'planets')->where('target_key', '!=', 'sun'),
+            'sun' => $query->where('target_table', 'planets')->where('target_key', 'sun'),
             'moon' => $query->whereIn('target_table', ['moons', 'lunar_features']),
             default => $query,
         };

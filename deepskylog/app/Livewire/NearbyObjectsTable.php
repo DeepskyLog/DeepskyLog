@@ -222,7 +222,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 try {
                     $m = Atlas::where('code', (string) $this->atlasCode)->first();
                     if (!$m) {
-                        $m = Atlas::whereRaw('LOWER(`code`) = ?', [strtolower((string) $this->atlasCode)])->first();
+                        $m = Atlas::where('code', (string) $this->atlasCode)->first();
                     }
                     $this->atlasName = $m?->name ?? null;
                 } catch (\Throwable $_) {
@@ -2437,7 +2437,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 $requested = (string) $authUser->standardAtlasCode;
                 $m = Atlas::where('code', $requested)->first();
                 if (!$m) {
-                    $m = Atlas::whereRaw('LOWER(`code`) = ?', [strtolower($requested)])->first();
+                    $m = Atlas::where('code', $requested)->first();
                 }
                 if ($m?->name) {
                     $atlasTitle = $m->name;

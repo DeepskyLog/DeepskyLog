@@ -215,7 +215,7 @@ class ComputeObserverStats implements ShouldQueue
             // Planets / Sun / Moons (full computation)
             $planetsYourObservations = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) != ?', ['sun'])
+                ->where('target_key', '!=', 'sun')
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)
                         ->orWhere('observer_username', $user->username);
@@ -223,12 +223,12 @@ class ComputeObserverStats implements ShouldQueue
 
             $planetsTotalObservations = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) != ?', ['sun'])
+                ->where('target_key', '!=', 'sun')
                 ->count();
 
             $planetsYourObservationsLastYear = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) != ?', ['sun'])
+                ->where('target_key', '!=', 'sun')
                 ->where('observed_on', '>=', now()->subYear())
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)
@@ -237,13 +237,13 @@ class ComputeObserverStats implements ShouldQueue
 
             $planetsTotalObservationsLastYear = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) != ?', ['sun'])
+                ->where('target_key', '!=', 'sun')
                 ->where('observed_on', '>=', now()->subYear())
                 ->count();
 
             $planetsYourDrawings = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) != ?', ['sun'])
+                ->where('target_key', '!=', 'sun')
                 ->where('has_drawing', 1)
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)
@@ -252,13 +252,13 @@ class ComputeObserverStats implements ShouldQueue
 
             $planetsTotalDrawings = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) != ?', ['sun'])
+                ->where('target_key', '!=', 'sun')
                 ->where('has_drawing', 1)
                 ->count();
 
             $planetsYourDrawingsLastYear = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) != ?', ['sun'])
+                ->where('target_key', '!=', 'sun')
                 ->where('has_drawing', 1)
                 ->where('observed_on', '>=', now()->subYear())
                 ->where(function ($q) use ($user) {
@@ -268,14 +268,14 @@ class ComputeObserverStats implements ShouldQueue
 
             $planetsTotalDrawingsLastYear = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) != ?', ['sun'])
+                ->where('target_key', '!=', 'sun')
                 ->where('has_drawing', 1)
                 ->where('observed_on', '>=', now()->subYear())
                 ->count();
 
             $planetsYourUnique = Observation::countDifferentObjects(DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) != ?', ['sun'])
+                ->where('target_key', '!=', 'sun')
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)
                         ->orWhere('observer_username', $user->username);
@@ -283,12 +283,12 @@ class ComputeObserverStats implements ShouldQueue
 
             $planetsTotalUnique = Observation::countDifferentObjects(DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) != ?', ['sun']));
+                ->where('target_key', '!=', 'sun'));
 
             // Sun
             $sunYourObservations = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) = ?', ['sun'])
+                ->where('target_key', 'sun')
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)
                         ->orWhere('observer_username', $user->username);
@@ -296,12 +296,12 @@ class ComputeObserverStats implements ShouldQueue
 
             $sunTotalObservations = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) = ?', ['sun'])
+                ->where('target_key', 'sun')
                 ->count();
 
             $sunYourObservationsLastYear = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) = ?', ['sun'])
+                ->where('target_key', 'sun')
                 ->where('observed_on', '>=', now()->subYear())
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)
@@ -310,13 +310,13 @@ class ComputeObserverStats implements ShouldQueue
 
             $sunTotalObservationsLastYear = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) = ?', ['sun'])
+                ->where('target_key', 'sun')
                 ->where('observed_on', '>=', now()->subYear())
                 ->count();
 
             $sunYourDrawings = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) = ?', ['sun'])
+                ->where('target_key', 'sun')
                 ->where('has_drawing', 1)
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)
@@ -325,13 +325,13 @@ class ComputeObserverStats implements ShouldQueue
 
             $sunTotalDrawings = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) = ?', ['sun'])
+                ->where('target_key', 'sun')
                 ->where('has_drawing', 1)
                 ->count();
 
             $sunYourDrawingsLastYear = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) = ?', ['sun'])
+                ->where('target_key', 'sun')
                 ->where('has_drawing', 1)
                 ->where('observed_on', '>=', now()->subYear())
                 ->where(function ($q) use ($user) {
@@ -341,14 +341,14 @@ class ComputeObserverStats implements ShouldQueue
 
             $sunTotalDrawingsLastYear = DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) = ?', ['sun'])
+                ->where('target_key', 'sun')
                 ->where('has_drawing', 1)
                 ->where('observed_on', '>=', now()->subYear())
                 ->count();
 
             $sunYourUnique = Observation::countDifferentObjects(DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) = ?', ['sun'])
+                ->where('target_key', 'sun')
                 ->where(function ($q) use ($user) {
                     $q->where('observer_user_id', $user->id)
                         ->orWhere('observer_username', $user->username);
@@ -356,7 +356,7 @@ class ComputeObserverStats implements ShouldQueue
 
             $sunTotalUnique = Observation::countDifferentObjects(DB::table('observations')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) = ?', ['sun']));
+                ->where('target_key', 'sun'));
 
             // Moon
             $moonTargetTables = ['moons', 'lunar_features'];
@@ -554,7 +554,7 @@ class ComputeObserverStats implements ShouldQueue
             $planetsGrouped = DB::table('observations')
                 ->selectRaw($month . ' as month, count(*) as cnt')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) != ?', ['sun'])
+                ->where('target_key', '!=', 'sun')
                 ->where($observerWhere)
                 ->groupByRaw($month)
                 ->get();
@@ -562,7 +562,7 @@ class ComputeObserverStats implements ShouldQueue
             $sunGrouped = DB::table('observations')
                 ->selectRaw($month . ' as month, count(*) as cnt')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) = ?', ['sun'])
+                ->where('target_key', 'sun')
                 ->where($observerWhere)
                 ->groupByRaw($month)
                 ->get();
@@ -634,7 +634,7 @@ class ComputeObserverStats implements ShouldQueue
             $planetsYearGrouped = DB::table('observations')
                 ->selectRaw($year . ' as year, count(*) as cnt')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) != ?', ['sun'])
+                ->where('target_key', '!=', 'sun')
                 ->where($observerWhere)
                 ->groupByRaw($year)
                 ->get();
@@ -642,7 +642,7 @@ class ComputeObserverStats implements ShouldQueue
             $sunYearGrouped = DB::table('observations')
                 ->selectRaw($year . ' as year, count(*) as cnt')
                 ->where('target_table', 'planets')
-                ->whereRaw('LOWER(target_key) = ?', ['sun'])
+                ->where('target_key', 'sun')
                 ->where($observerWhere)
                 ->groupByRaw($year)
                 ->get();

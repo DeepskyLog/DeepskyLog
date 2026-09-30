@@ -399,7 +399,7 @@ class OalObservationImporter
     private function resolveOrCreateLocationFromOal(\SimpleXMLElement $node, string $name, ImportResult $result, int $row): ?int
     {
         $loc = Location::where('user_id', $this->user->id)
-            ->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])
+            ->where('name', $name)
             ->first();
 
         if ($loc) {
@@ -452,7 +452,7 @@ class OalObservationImporter
         }
 
         $inst = Instrument::where('user_id', $this->user->id)
-            ->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])
+            ->where('name', $name)
             ->first();
 
         if ($inst) {
@@ -462,7 +462,7 @@ class OalObservationImporter
         // Also try model alone
         if (!empty($model)) {
             $inst = Instrument::where('user_id', $this->user->id)
-                ->whereRaw('LOWER(name) = ?', [mb_strtolower($model)])
+                ->where('name', $model)
                 ->first();
             if ($inst) {
                 return $inst->id;
@@ -520,11 +520,11 @@ class OalObservationImporter
         }
 
         $ep = Eyepiece::where('user_id', $this->user->id)
-            ->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])
+            ->where('name', $name)
             ->first();
         if (!$ep && !empty($model)) {
             $ep = Eyepiece::where('user_id', $this->user->id)
-                ->whereRaw('LOWER(name) = ?', [mb_strtolower($model)])
+                ->where('name', $model)
                 ->first();
         }
 
@@ -570,11 +570,11 @@ class OalObservationImporter
         }
 
         $lens = Lens::where('user_id', $this->user->id)
-            ->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])
+            ->where('name', $name)
             ->first();
         if (!$lens && !empty($model)) {
             $lens = Lens::where('user_id', $this->user->id)
-                ->whereRaw('LOWER(name) = ?', [mb_strtolower($model)])
+                ->where('name', $model)
                 ->first();
         }
 
@@ -615,11 +615,11 @@ class OalObservationImporter
         }
 
         $filter = Filter::where('user_id', $this->user->id)
-            ->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])
+            ->where('name', $name)
             ->first();
         if (!$filter && !empty($model)) {
             $filter = Filter::where('user_id', $this->user->id)
-                ->whereRaw('LOWER(name) = ?', [mb_strtolower($model)])
+                ->where('name', $model)
                 ->first();
         }
 
@@ -812,7 +812,7 @@ class OalObservationImporter
             }
         }
         foreach ($candidates as $cand) {
-            $on = DB::table('objectnames')->whereRaw('LOWER(objectname) = ?', [$cand])->orWhereRaw('LOWER(altname) = ?', [$cand])->first();
+            $on = DB::table('objectnames')->where('objectname', $cand)->orWhere('altname', $cand)->first();
             if ($on) {
                 return ['objects', (string) $on->objectname, 'deepsky', (string) $on->objectname];
             }
@@ -824,7 +824,7 @@ class OalObservationImporter
             }
         }
         foreach ($candidates as $cand) {
-            $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
+            $o = DB::table('objects')->where('name', $cand)->first();
             if ($o) {
                 return ['objects', (string) $o->name, 'deepsky', (string) $o->name];
             }
@@ -856,7 +856,7 @@ class OalObservationImporter
         foreach ($nameColumns as $column) {
             foreach ($candidates as $cand) {
                 try {
-                    $row = DB::table($table)->whereRaw('LOWER(' . $column . ') = ?', [$cand])->first();
+                    $row = DB::table($table)->where($column, $cand)->first();
                 } catch (\Throwable $_) {
                     $row = null;
                 }

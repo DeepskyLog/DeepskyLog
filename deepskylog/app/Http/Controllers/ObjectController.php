@@ -155,6 +155,7 @@ class ObjectController extends Controller
         if (!empty($slug)) {
             // Try all slug candidate variants against objectnames.slug
             $on = null;
+            $looseMatch = null;
             foreach ($candidates as $cand) {
                 // 1) exact slug match
                 $on = DB::table('objectnames')->where('slug', $cand)->first();
@@ -164,24 +165,40 @@ class ObjectController extends Controller
 
                 // 2) exact name/altname (case-insensitive)
                 $on = DB::table('objectnames')
-                    ->whereRaw('LOWER(objectname) = ?', [$cand])
-                    ->orWhereRaw('LOWER(altname) = ?', [$cand])
+                    ->where('objectname', $cand)
+                    ->orWhere('altname', $cand)
                     ->first();
                 if ($on) {
                     break;
                 }
 
-                // 3) name/altname with spaces/dashes removed (e.g. M 31 -> m31)
-                $on = DB::table('objectnames')
-                    ->whereRaw('LOWER(REPLACE(objectname, " ", "")) = ?', [$cand])
-                    ->orWhereRaw('LOWER(REPLACE(altname, " ", "")) = ?', [$cand])
-                    ->orWhereRaw('LOWER(REPLACE(objectname, "-", "")) = ?', [$cand])
-                    ->orWhereRaw('LOWER(REPLACE(altname, "-", "")) = ?', [$cand])
-                    ->first();
+                // 3) name/altname with spaces or dashes removed (e.g. M 31 -> m31).
+                //    The indexed generated columns of objectnames have both
+                //    removed, which gives a few rows to choose from: a name that
+                //    matches with only spaces or only dashes removed wins, so
+                //    ic1871 is IC 1871 and not IC 187-1.
+                $rows = DB::table('objectnames')
+                    ->where('objectname_compact', str_replace([' ', '-'], '', $cand))
+                    ->orWhere('altname_compact', str_replace([' ', '-'], '', $cand))
+                    ->get();
+                $on = $rows->first(function ($row) use ($cand) {
+                    foreach ([$row->objectname, $row->altname] as $name) {
+                        $name = mb_strtolower($name);
+                        if (str_replace(' ', '', $name) === $cand || str_replace('-', '', $name) === $cand) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                });
                 if ($on) {
                     break;
                 }
+                // Names that only match with both removed (sh2155 -> Sh 2-155)
+                // are used when no candidate matches otherwise.
+                $looseMatch ??= $rows->first();
             }
+            $on ??= $looseMatch;
             if ($on) {
                 // Found a canonical alias mapping to a deepsky object
                 $record = DB::table('objects')->where('name', $on->objectname)->first();
@@ -318,8 +335,10 @@ class ObjectController extends Controller
 
         // If the slug fast-path didn't find a record, try the broader resolution logic.
         if (!$record) {
-            // Try to resolve via search_index first (helps with aliases and normalized names)
-            $si = SearchIndex::where('name', $slug)->orWhere('name_normalized', mb_strtolower($slug))->first();
+            // Try to resolve via search_index first (helps with aliases). No need to
+            // also match name_normalized: it is the lowercased name, and name is
+            // compared case-insensitively already.
+            $si = SearchIndex::where('name', $slug)->first();
             if ($si) {
                 // normalize some common table names to our internal types
                 switch ($si->source_table) {
@@ -2755,8 +2774,8 @@ class ObjectController extends Controller
         // Try objectnames table first (for aliases)
         $on = DB::table('objectnames')
             ->where('slug', $slug)
-            ->orWhereRaw('LOWER(objectname) = ?', [mb_strtolower($slug)])
-            ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($slug)])
+            ->orWhere('objectname', $slug)
+            ->orWhere('altname', $slug)
             ->first();
 
         if ($on) {
@@ -2994,8 +3013,8 @@ class ObjectController extends Controller
         // Try objectnames table first (for aliases)
         $on = DB::table('objectnames')
             ->where('slug', $slug)
-            ->orWhereRaw('LOWER(objectname) = ?', [mb_strtolower($slug)])
-            ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($slug)])
+            ->orWhere('objectname', $slug)
+            ->orWhere('altname', $slug)
             ->first();
 
         if ($on) {
@@ -3301,8 +3320,8 @@ class ObjectController extends Controller
 
         $on = DB::table('objectnames')
             ->where('slug', $slug)
-            ->orWhereRaw('LOWER(objectname) = ?', [mb_strtolower($slug)])
-            ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($slug)])
+            ->orWhere('objectname', $slug)
+            ->orWhere('altname', $slug)
             ->first();
 
         if ($on) {
@@ -3438,7 +3457,7 @@ class ObjectController extends Controller
     {
         $q = trim((string) $request->input('q', ''));
         $query = DB::table('comets_orbital_elements')
-            ->whereRaw('NOT EXISTS (SELECT 1 FROM cometobjects WHERE LOWER(cometobjects.name) = LOWER(comets_orbital_elements.name))');
+            ->whereRaw('NOT EXISTS (SELECT 1 FROM cometobjects WHERE cometobjects.name = comets_orbital_elements.name)');
 
         if ($q !== '') {
             $query->where('name', 'like', "%{$q}%");
@@ -3461,7 +3480,7 @@ class ObjectController extends Controller
         $name = (string) $request->input('comet_name');
 
         // Check if the comet already exists (case-insensitive match on name)
-        $existing = DB::table('cometobjects')->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])->first();
+        $existing = DB::table('cometobjects')->where('name', $name)->first();
         if ($existing) {
             // Redirect to existing comet page (prefer slug when available)
             $slug = $existing->slug ?? null;
@@ -3625,8 +3644,8 @@ class ObjectController extends Controller
             $q = mb_strtolower($name);
             $candidates = (clone $base)
                 ->where(function ($qb) use ($q) {
-                    $qb->whereRaw('LOWER(objectnames.objectname) LIKE ?', ["%{$q}%"])
-                        ->orWhereRaw('LOWER(objectnames.altname) LIKE ?', ["%{$q}%"]);
+                    $qb->where('objectnames.objectname', 'like', "%{$q}%")
+                        ->orWhere('objectnames.altname', 'like', "%{$q}%");
                 })
                 ->orderBy('objectnames.catalog')
                 ->orderBy('objectnames.catindex')
@@ -4108,8 +4127,8 @@ class ObjectController extends Controller
         // Try objectnames table first (for aliases)
         $on = DB::table('objectnames')
             ->where('slug', $slug)
-            ->orWhereRaw('LOWER(objectname) = ?', [mb_strtolower($slug)])
-            ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($slug)])
+            ->orWhere('objectname', $slug)
+            ->orWhere('altname', $slug)
             ->first();
 
         if ($on) {
@@ -4269,8 +4288,8 @@ class ObjectController extends Controller
         $record = null;
         $on = DB::table('objectnames')
             ->where('slug', $slug)
-            ->orWhereRaw('LOWER(objectname) = ?', [mb_strtolower($slug)])
-            ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($slug)])
+            ->orWhere('objectname', $slug)
+            ->orWhere('altname', $slug)
             ->first();
 
         if ($on) {
@@ -4301,8 +4320,8 @@ class ObjectController extends Controller
             $targetRecord = null;
             $targetOn = DB::table('objectnames')
                 ->where('slug', $moveToSlug)
-                ->orWhereRaw('LOWER(objectname) = ?', [mb_strtolower($moveToSlug)])
-                ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($moveToSlug)])
+                ->orWhere('objectname', $moveToSlug)
+                ->orWhere('altname', $moveToSlug)
                 ->first();
 
             if ($targetOn) {

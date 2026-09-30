@@ -43,12 +43,18 @@
             ? \App\Models\Observation::getDrawingsCountForUser(auth()->user(), $objectName)
             : 0;
     }
-    $lastObs = auth()->check()
-        ? \App\Models\Observation::getLastObservationDateForUser(auth()->user(), $objectName)
-        : null;
-    $lastDrawing = auth()->check()
-        ? \App\Models\Observation::getLastDrawingDateForUser(auth()->user(), $objectName)
-        : null;
+    // Prefer the controller-provided last dates (null when the user has not observed the object yet)
+    if (isset($yourObservations)) {
+        $lastObs = $lastObservationDate ?? null;
+        $lastDrawing = $lastDrawingDate ?? null;
+    } else {
+        $lastObs = auth()->check()
+            ? \App\Models\Observation::getLastObservationDateForUser(auth()->user(), $objectName)
+            : null;
+        $lastDrawing = auth()->check()
+            ? \App\Models\Observation::getLastDrawingDateForUser(auth()->user(), $objectName)
+            : null;
+    }
     $objSlug = $canonicalSlug ?? ($session->slug ?? \Illuminate\Support\Str::slug($session->name ?? ''));
     $isCometLocal = strtolower(trim((string) ($session->source_type_raw ?? ''))) === 'comet';
 @endphp

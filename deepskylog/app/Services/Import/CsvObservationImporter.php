@@ -395,7 +395,7 @@ class CsvObservationImporter
             }
         }
         foreach ($candidates as $cand) {
-            $on = DB::table('objectnames')->whereRaw('LOWER(objectname) = ?', [$cand])->orWhereRaw('LOWER(altname) = ?', [$cand])->first();
+            $on = DB::table('objectnames')->where('objectname', $cand)->orWhere('altname', $cand)->first();
             if ($on) {
                 return ['objects', $on->objectname, 'deepsky', $on->objectname];
             }
@@ -409,7 +409,7 @@ class CsvObservationImporter
             }
         }
         foreach ($candidates as $cand) {
-            $o = DB::table('objects')->whereRaw('LOWER(name) = ?', [$cand])->first();
+            $o = DB::table('objects')->where('name', $cand)->first();
             if ($o) {
                 return ['objects', $o->name, 'deepsky', $o->name];
             }
@@ -418,7 +418,7 @@ class CsvObservationImporter
         // comets
         foreach ($candidates as $cand) {
             try {
-                $co = DB::table('cometobjects')->whereRaw('LOWER(name) = ?', [$cand])->orWhereRaw('LOWER(slug) = ?', [$cand])->first();
+                $co = DB::table('cometobjects')->where('name', $cand)->orWhere('slug', $cand)->first();
                 if ($co) {
                     return ['cometobjects', (string) $co->id, 'comet', $co->name];
                 }
@@ -435,7 +435,7 @@ class CsvObservationImporter
     private function findLocation(string $name): ?Location
     {
         return Location::where('user_id', $this->user->id)
-            ->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])
+            ->where('name', $name)
             ->first();
     }
 
@@ -445,7 +445,7 @@ class CsvObservationImporter
     private function findInstrument(string $name): ?Instrument
     {
         return Instrument::where('user_id', $this->user->id)
-            ->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])
+            ->where('name', $name)
             ->first();
     }
 
@@ -455,7 +455,7 @@ class CsvObservationImporter
     private function findEyepiece(string $name): ?Eyepiece
     {
         return Eyepiece::where('user_id', $this->user->id)
-            ->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])
+            ->where('name', $name)
             ->first();
     }
 
@@ -465,7 +465,7 @@ class CsvObservationImporter
     private function findFilter(string $name): ?Filter
     {
         return Filter::where('user_id', $this->user->id)
-            ->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])
+            ->where('name', $name)
             ->first();
     }
 
@@ -475,7 +475,7 @@ class CsvObservationImporter
     private function findLens(string $name): ?Lens
     {
         return Lens::where('user_id', $this->user->id)
-            ->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])
+            ->where('name', $name)
             ->first();
     }
 

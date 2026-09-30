@@ -290,11 +290,11 @@ final class ObservationSearchTable extends PowerGridComponent
         if ($this->nameText !== '') {
             $needle = mb_strtolower(trim($this->nameText));
             $query->where(function (Builder $subQuery) use ($needle) {
-                $subQuery->whereRaw("LOWER(COALESCE(observations.target_name, '')) LIKE ?", ['%' . $needle . '%'])
+                $subQuery->whereRaw("COALESCE(observations.target_name, '') LIKE ?", ['%' . $needle . '%'])
                     ->orWhereIn('observations.target_name', function ($nameQuery) use ($needle) {
                         $nameQuery->from('objectnames')
                             ->select('objectname')
-                            ->whereRaw("LOWER(COALESCE(altname, '')) LIKE ?", ['%' . $needle . '%']);
+                            ->whereRaw("COALESCE(altname, '') LIKE ?", ['%' . $needle . '%']);
                     });
             });
         }
@@ -429,8 +429,8 @@ final class ObservationSearchTable extends PowerGridComponent
             $query->where(function (Builder $subQuery) use ($observerTerms) {
                 foreach ($observerTerms as $term) {
                     $needle = mb_strtolower($term);
-                    $subQuery->orWhereRaw("LOWER(COALESCE(observations.observer_username, '')) LIKE ?", ['%' . $needle . '%'])
-                        ->orWhereRaw("LOWER(COALESCE(users.name, '')) LIKE ?", ['%' . $needle . '%']);
+                    $subQuery->orWhereRaw("COALESCE(observations.observer_username, '') LIKE ?", ['%' . $needle . '%'])
+                        ->orWhereRaw("COALESCE(users.name, '') LIKE ?", ['%' . $needle . '%']);
                 }
             });
         }
@@ -469,7 +469,7 @@ final class ObservationSearchTable extends PowerGridComponent
             $query->where('observations.has_drawing', false);
         }
         if ($this->observationDescription !== '') {
-            $query->whereRaw("LOWER(COALESCE(observations.description, '')) LIKE ?", ['%' . mb_strtolower($this->observationDescription) . '%']);
+            $query->whereRaw("COALESCE(observations.description, '') LIKE ?", ['%' . mb_strtolower($this->observationDescription) . '%']);
         }
         if (!empty($this->languages)) {
             $query->whereIn(DB::raw("LOWER(COALESCE(observations.language, ''))"), $this->languages);

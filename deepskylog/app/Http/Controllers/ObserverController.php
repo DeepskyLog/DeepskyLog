@@ -645,7 +645,7 @@ class ObserverController extends Controller
         }
 
         return (int) DB::table('objectnames')
-            ->whereRaw('LOWER(catalog) = ?', [Str::lower((string) ($source['catalog'] ?? ''))])
+            ->where('catalog', (string) ($source['catalog'] ?? ''))
             ->distinct('catindex')
             ->count('catindex');
     }
@@ -740,7 +740,7 @@ class ObserverController extends Controller
                 $query->whereNull('details.visibility')
                     ->orWhere('details.visibility', '!=', 7);
             })
-            ->whereRaw('LOWER(objectnames.catalog) = ?', [Str::lower((string) ($source['catalog'] ?? ''))])
+            ->where('objectnames.catalog', (string) ($source['catalog'] ?? ''))
             ->groupBy('users.username')
             ->select('users.username', DB::raw('COUNT(DISTINCT objectnames.catindex) as observed_count'))
             ->pluck('observed_count', 'users.username')
@@ -791,7 +791,7 @@ class ObserverController extends Controller
         $catalog = (string) ($source['catalog'] ?? '');
         $rows = DB::table('objectnames as objectnames')
             ->leftJoin('objects as objects', 'objects.name', '=', 'objectnames.objectname')
-            ->whereRaw('LOWER(objectnames.catalog) = ?', [Str::lower($catalog)])
+            ->where('objectnames.catalog', $catalog)
             ->select([
                 'objectnames.objectname',
                 'objectnames.catalog',

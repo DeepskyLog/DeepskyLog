@@ -111,7 +111,7 @@ class ObservationsPerYearChart
             ->selectRaw('YEAR(observed_on) as year, count(*) as cnt')
             ->where('observer_username', $user->username)
             ->where('target_table', 'planets')
-            ->whereRaw('LOWER(target_key) != ?', ['sun'])
+            ->where('target_key', '!=', 'sun')
             ->groupByRaw('YEAR(observed_on)')
             ->get();
 
@@ -119,7 +119,7 @@ class ObservationsPerYearChart
             ->selectRaw('YEAR(observed_on) as year, count(*) as cnt')
             ->where('observer_username', $user->username)
             ->where('target_table', 'planets')
-            ->whereRaw('LOWER(target_key) = ?', ['sun'])
+            ->where('target_key', 'sun')
             ->groupByRaw('YEAR(observed_on)')
             ->get();
 

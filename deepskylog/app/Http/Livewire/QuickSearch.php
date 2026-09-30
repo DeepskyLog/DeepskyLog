@@ -141,7 +141,7 @@ class QuickSearch extends Component
                 // exact matches (use name/display_name from search_index)
                 $exacts = DB::table('search_index')
                     ->select(['name', 'display_name', 'source_table', 'source_pk', 'source_type'])
-                    ->whereRaw('LOWER(name) = ?', [$qLower])
+                    ->where('name', $qLower)
                     ->orWhereRaw("LOWER(REPLACE(name, ' ', '')) = ?", [$qNoSpaceLower])
                     ->limit(10)
                     ->get();
@@ -151,7 +151,7 @@ class QuickSearch extends Component
                     $remaining = $maxCandidates - count($results);
                     $prefixQuery = DB::table('search_index')
                         ->select(['name', 'display_name', 'source_table', 'source_pk', 'source_type'])
-                        ->whereRaw('LOWER(name) LIKE ?', [Str::lower($likeStarts)]);
+                        ->where('name', 'like', $likeStarts);
                     if (!empty($isCatalogQuery)) {
                         if ($useRegexpSubstr) {
                             $prefixQuery->orderByRaw("IFNULL(CAST(REGEXP_SUBSTR(name, '[0-9]+') AS UNSIGNED), 999999) ASC, LENGTH(name) ASC, name ASC");
@@ -171,7 +171,7 @@ class QuickSearch extends Component
                     $remaining = $maxCandidates - count($results);
                     $containsQuery = DB::table('search_index')
                         ->select(['name', 'display_name', 'source_table', 'source_pk', 'source_type'])
-                        ->whereRaw('LOWER(name) LIKE ?', [Str::lower($likeContains)]);
+                        ->where('name', 'like', $likeContains);
                     if (!empty($isCatalogQuery)) {
                         if ($useRegexpSubstr) {
                             $containsQuery->orderByRaw("IFNULL(CAST(REGEXP_SUBSTR(name, '[0-9]+') AS UNSIGNED), 999999) ASC, LENGTH(name) ASC, name ASC");
@@ -194,7 +194,7 @@ class QuickSearch extends Component
             // objects exact
             $exacts = DB::table('objects')
                 ->select(['name as title', 'slug', DB::raw("'object' as type")])
-                ->whereRaw('LOWER(name) = ?', [$qLower])
+                ->where('name', $qLower)
                 ->orWhereRaw("LOWER(REPLACE(name, ' ', '')) = ?", [$qNoSpaceLower])
                 ->limit(10)
                 ->get();
@@ -204,7 +204,7 @@ class QuickSearch extends Component
                 $remaining = $maxCandidates - count($results);
                 $prefixQueryObj = DB::table('objects')
                     ->select(['name as title', 'slug', DB::raw("'object' as type")])
-                    ->whereRaw('LOWER(name) LIKE ?', [Str::lower($likeStarts)]);
+                    ->where('name', 'like', $likeStarts);
                 if (!empty($isCatalogQuery)) {
                     if ($useRegexpSubstr) {
                         $prefixQueryObj->orderByRaw("IFNULL(CAST(REGEXP_SUBSTR(name, '[0-9]+') AS UNSIGNED), 999999) ASC, LENGTH(name) ASC, name ASC");
@@ -220,7 +220,7 @@ class QuickSearch extends Component
                 $remaining = $maxCandidates - count($results);
                 $containsQueryObj = DB::table('objects')
                     ->select(['name as title', 'slug', DB::raw("'object' as type")])
-                    ->whereRaw('LOWER(name) LIKE ?', [Str::lower($likeContains)]);
+                    ->where('name', 'like', $likeContains);
                 if (!empty($isCatalogQuery)) {
                     if ($useRegexpSubstr) {
                         $containsQueryObj->orderByRaw("IFNULL(CAST(REGEXP_SUBSTR(name, '[0-9]+') AS UNSIGNED), 999999) ASC, LENGTH(name) ASC, name ASC");
@@ -241,11 +241,11 @@ class QuickSearch extends Component
                             ->join('objects', 'objectnames.objectname', '=', 'objects.name')
                             ->select(['objects.name as title', 'objects.slug', DB::raw("'object' as type")])
                             ->where(function ($w) use ($original, $qNoSpace, $likeStarts, $likeContains, $isContains) {
-                                $w->whereRaw('LOWER(objectnames.altname) = ?', [Str::lower($original)])
+                                $w->where('objectnames.altname', $original)
                                     ->orWhereRaw("LOWER(REPLACE(objectnames.altname, ' ', '')) = ?", [Str::lower($qNoSpace)])
-                                    ->orWhereRaw('LOWER(objectnames.altname) LIKE ?', [Str::lower($likeStarts)]);
+                                    ->orWhere('objectnames.altname', 'like', $likeStarts);
                                 if ($isContains) {
-                                    $w->orWhereRaw('LOWER(objectnames.altname) LIKE ?', [Str::lower($likeContains)]);
+                                    $w->orWhere('objectnames.altname', 'like', $likeContains);
                                 }
                             });
 
@@ -350,29 +350,29 @@ class QuickSearch extends Component
             if (!empty($nameTry)) {
                 $nameLower = Str::lower(trim($nameTry));
                 try {
-                    $obj = DB::table('objects')->whereRaw('LOWER(name) = ?', [$nameLower])->first();
+                    $obj = DB::table('objects')->where('name', $nameLower)->first();
                     if ($obj)
                         return 'objects:' . ($obj->slug ?? $obj->name);
-                    $lf = DB::table('lunar_features')->whereRaw('LOWER(name) = ?', [$nameLower])->first();
+                    $lf = DB::table('lunar_features')->where('name', $nameLower)->first();
                     if ($lf)
                         return 'lunar_features:' . $lf->id;
-                    $p = DB::table('planets')->whereRaw('LOWER(name) = ?', [$nameLower])->first();
+                    $p = DB::table('planets')->where('name', $nameLower)->first();
                     if ($p)
                         return 'planets:' . $p->id;
-                    $m = DB::table('moons')->whereRaw('LOWER(name) = ?', [$nameLower])->first();
+                    $m = DB::table('moons')->where('name', $nameLower)->first();
                     if ($m)
                         return 'moons:' . $m->id;
-                    $c = DB::table('cometobjects')->whereRaw('LOWER(name) = ?', [$nameLower])->first();
+                    $c = DB::table('cometobjects')->where('name', $nameLower)->first();
                     if ($c)
                         return 'cometobjects:' . $c->id;
-                    $a = DB::table('asteroids')->whereRaw('LOWER(name) = ?', [$nameLower])->first();
+                    $a = DB::table('asteroids')->where('name', $nameLower)->first();
                     if ($a)
                         return 'asteroids:' . $a->id;
 
                     if (DB::getSchemaBuilder()->hasTable('objectnames')) {
                         $alias = DB::table('objectnames')
-                            ->whereRaw('LOWER(altname) = ?', [$nameLower])
-                            ->orWhereRaw('LOWER(objectname) = ?', [$nameLower])
+                            ->where('altname', $nameLower)
+                            ->orWhere('objectname', $nameLower)
                             ->first();
                         if ($alias) {
                             $objA = DB::table('objects')->where('name', $alias->objectname)->first();
@@ -570,7 +570,7 @@ class QuickSearch extends Component
                                         ->first();
                                     if ($on && !empty($on->objectname)) {
                                         $obj = DB::table('objects')
-                                            ->whereRaw('LOWER(name) = ?', [Str::lower($on->objectname)])
+                                            ->where('name', $on->objectname)
                                             ->orWhere('slug', $on->slug)
                                             ->first();
                                     }
@@ -587,7 +587,7 @@ class QuickSearch extends Component
                                 $tryName = $row->name ?? $row->display_name ?? null;
                                 if (!empty($tryName)) {
                                     $obj2 = DB::table('objects')
-                                        ->whereRaw('LOWER(name) = ?', [Str::lower($tryName)])
+                                        ->where('name', $tryName)
                                         ->orWhereRaw('LOWER(REPLACE(name, " ", "")) = ?', [Str::lower(preg_replace('/\s+/', '', $tryName))])
                                         ->first();
                                     if ($obj2) {
@@ -807,15 +807,15 @@ class QuickSearch extends Component
         // falling back to the suggestion list.
         try {
             $obj = DB::table('objects')
-                ->whereRaw('LOWER(name) = ?', [$qLower])
+                ->where('name', $qLower)
                 ->orWhereRaw('LOWER(REPLACE(name, " ", "")) = ?', [$qNoSpaceLower])
                 ->orWhere('slug', $original)
                 ->first();
 
             if (!$obj && DB::getSchemaBuilder()->hasTable('objectnames')) {
                 $alias = DB::table('objectnames')
-                    ->whereRaw('LOWER(altname) = ?', [$qLower])
-                    ->orWhereRaw('LOWER(objectname) = ?', [$qLower])
+                    ->where('altname', $qLower)
+                    ->orWhere('objectname', $qLower)
                     ->orWhereRaw("LOWER(REPLACE(altname, ' ', '')) = ?", [$qNoSpaceLower])
                     ->first();
                 if ($alias && !empty($alias->objectname)) {

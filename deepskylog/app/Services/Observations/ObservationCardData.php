@@ -99,7 +99,7 @@ class ObservationCardData
             return null;
         }
         if (! array_key_exists($key, $this->users)) {
-            $this->users[$key] = User::whereRaw('LOWER(username) = ?', [$key])->first();
+            $this->users[$key] = User::where('username', $key)->first();
         }
 
         return $this->users[$key];

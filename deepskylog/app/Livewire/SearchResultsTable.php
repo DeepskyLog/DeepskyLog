@@ -117,7 +117,7 @@ class SearchResultsTable extends PowerGridComponent
             return;
         }
 
-        $query->whereRaw('LOWER(name) LIKE ?', [Str::lower($like)]);
+        $query->where('name', 'like', $like);
     }
 
     public function datasource(): ?Builder
@@ -1012,7 +1012,7 @@ class SearchResultsTable extends PowerGridComponent
                 $requested = (string) $authUser->standardAtlasCode;
                 $m = Atlas::where('code', $requested)->first();
                 if (!$m) {
-                    $m = Atlas::whereRaw('LOWER(`code`) = ?', [strtolower($requested)])->first();
+                    $m = Atlas::where('code', $requested)->first();
                 }
                 if ($m?->name) {
                     $atlasTitle = $m->name;

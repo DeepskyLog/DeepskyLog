@@ -463,22 +463,22 @@ class AdvancedObjectSearchTable extends PowerGridComponent
         if ($nameNeedle !== '') {
             $needle = mb_strtolower($nameNeedle);
             $query->where(function ($q) use ($needle) {
-                $q->whereRaw('LOWER(COALESCE(search_index.display_name, \'\')) LIKE ?', ['%' . $needle . '%'])
-                    ->orWhereRaw('LOWER(COALESCE(search_index.name, \'\')) LIKE ?', ['%' . $needle . '%'])
-                    ->orWhereRaw('LOWER(COALESCE(objects.name, \'\')) LIKE ?', ['%' . $needle . '%'])
+                $q->whereRaw('COALESCE(search_index.display_name, \'\') LIKE ?', ['%' . $needle . '%'])
+                    ->orWhereRaw('COALESCE(search_index.name, \'\') LIKE ?', ['%' . $needle . '%'])
+                    ->orWhereRaw('COALESCE(objects.name, \'\') LIKE ?', ['%' . $needle . '%'])
                     ->orWhereExists(function ($sq) use ($needle) {
                         // Match aliases stored in search_index rows for the same canonical source item.
                         $sq->selectRaw('1')
                             ->from('search_index as si_alias')
                             ->whereRaw('si_alias.source_table = search_index.source_table')
                             ->whereRaw('si_alias.source_pk = search_index.source_pk')
-                            ->whereRaw('LOWER(COALESCE(si_alias.display_name, \'\')) LIKE ?', ['%' . $needle . '%']);
+                            ->whereRaw('COALESCE(si_alias.display_name, \'\') LIKE ?', ['%' . $needle . '%']);
                     })
                     ->orWhereIn('objects.name', function ($sq) use ($needle) {
                         // Match alternative names from objectnames (e.g. "Jupiter\'s Ghost").
                         $sq->from('objectnames')
                             ->select('objectname')
-                            ->whereRaw('LOWER(COALESCE(altname, \'\')) LIKE ?', ['%' . $needle . '%']);
+                            ->whereRaw('COALESCE(altname, \'\') LIKE ?', ['%' . $needle . '%']);
                     });
             });
         }

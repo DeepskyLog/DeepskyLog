@@ -80,11 +80,13 @@
                     $yourDrawings = auth()->check()
                         ? ($yourDrawings ?? \App\Models\Observation::getDrawingsCountForUser(auth()->user(), $objectName))
                         : 0;
+                    // The controller computes the last dates with the counts; they
+                    // are null when the user has not observed the object yet.
                     $lastObs = auth()->check()
-                        ? ($lastObservationDate ?? \App\Models\Observation::getLastObservationDateForUser(auth()->user(), $objectName))
+                        ? (isset($yourObservations) ? $lastObservationDate ?? null : \App\Models\Observation::getLastObservationDateForUser(auth()->user(), $objectName))
                         : null;
                     $lastDrawing = auth()->check()
-                        ? ($lastDrawingDate ?? \App\Models\Observation::getLastDrawingDateForUser(auth()->user(), $objectName))
+                        ? (isset($yourObservations) ? $lastDrawingDate ?? null : \App\Models\Observation::getLastDrawingDateForUser(auth()->user(), $objectName))
                         : null;
                 @endphp
 
@@ -424,9 +426,7 @@
                                             } else {
                                                 if (class_exists(\App\Models\ObjectPartOf::class)) {
                                                     // Try exact case-insensitive match first
-                                                    $po = \App\Models\ObjectPartOf::whereRaw('LOWER(partofname) = ?', [
-                                                        mb_strtolower($session->name ?? ''),
-                                                    ])
+                                                    $po = \App\Models\ObjectPartOf::where('partofname', $session->name ?? '')
                                                         ->pluck('objectname')
                                                         ->unique()
                                                         ->toArray();
@@ -1122,19 +1122,15 @@ try {
             }
         }
     } else {
-        // For deepsky objects, match by exact object name.
+        // For deepsky objects, match the observations of the object.
         $objName = $session->name ?? '';
-            if (!empty($objName)) {
-            $obsIds = \Illuminate\Support\Facades\DB::table('observations')
-                ->where('target_name', $objName)
-                ->pluck('id')
-                ->toArray();
-
-            if (!empty($obsIds)) {
-                $objectSketches = \App\Models\SketchOfTheWeek::whereIn('observation_id', $obsIds)
-                    ->orderByDesc('date')
-                    ->get();
-            }
+        if (!empty($objName)) {
+            $objectSketches = \App\Models\SketchOfTheWeek::whereIn(
+                'observation_id',
+                \App\Models\Observation::ofDeepskyObject($objName)->select('id')
+            )
+                ->orderByDesc('date')
+                ->get();
         }
     }
 } catch (\Throwable $_) {

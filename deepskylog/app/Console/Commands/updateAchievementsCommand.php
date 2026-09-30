@@ -266,7 +266,7 @@ class updateAchievementsCommand extends Command
         // Sun observations (planets table rows named 'Sun' - case-insensitive)
         $sunRowsUnified = Observation::whereNull('legacy_source')
             ->where('target_table', 'planets')
-            ->whereRaw('LOWER(target_name) = ?', ['sun'])
+            ->where('target_name', 'sun')
             ->select('observer_username', DB::raw('COUNT(*) as cnt'))
             ->groupBy('observer_username')
             ->get();
@@ -307,7 +307,7 @@ class updateAchievementsCommand extends Command
 
         $sunDrawingsUnified = Observation::whereNull('legacy_source')
             ->where('target_table', 'planets')
-            ->whereRaw('LOWER(target_name) = ?', ['sun'])
+            ->where('target_name', 'sun')
             ->where('has_drawing', 1)
             ->select('observer_username', DB::raw('COUNT(*) as cnt'))
             ->groupBy('observer_username')

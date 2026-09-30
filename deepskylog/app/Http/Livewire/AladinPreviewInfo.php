@@ -207,8 +207,8 @@ class AladinPreviewInfo extends Component
                                         if (!$objNameRow) {
                                             // try altname/name variants in the legacy table
                                             $objNameRow = DB::table('objectnames')
-                                                ->whereRaw('LOWER(objectname) = ?', [mb_strtolower($slugCandidate)])
-                                                ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($slugCandidate)])
+                                                ->where('objectname', $slugCandidate)
+                                                ->orWhere('altname', $slugCandidate)
                                                 ->first();
                                         }
                                         if ($objNameRow && !empty($objNameRow->objectname)) {

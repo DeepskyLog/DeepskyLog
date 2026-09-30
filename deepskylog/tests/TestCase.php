@@ -5,10 +5,24 @@ namespace Tests;
 use App\Models\Team;
 use App\Models\User;
 use Database\Seeders\GroupSeeder;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Tests\Support\CaseInsensitiveBlueprint;
 
 abstract class TestCase extends BaseTestCase
 {
+    /**
+     * Create the tables of the test database with case-insensitive string
+     * columns, as on MariaDB.
+     */
+    public function createApplication()
+    {
+        $app = parent::createApplication();
+        $app->bind(Blueprint::class, CaseInsensitiveBlueprint::class);
+
+        return $app;
+    }
+
     /**
      * Create a user and assign it to the specified team.
      *
