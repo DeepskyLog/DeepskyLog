@@ -36,6 +36,8 @@ class CreateInstrumentSet extends Component
     public function mount(): void
     {
         if ($this->set) {
+            abort_unless($this->set->canBeEditedBy(Auth::user()), 403);
+
             $this->name = $this->set->name;
             $this->description = $this->set->description;
             // Pre-load related item ids so multi-selects show existing selections when editing
@@ -67,6 +69,10 @@ class CreateInstrumentSet extends Component
 
     public function save()
     {
+        if ($this->set) {
+            abort_unless($this->set->canBeEditedBy(Auth::user()), 403);
+        }
+
         $data = $this->validate([
             'name' => 'required|min:3',
             'photo' => 'nullable|image|max:10240', // max 10MB
@@ -89,7 +95,7 @@ class CreateInstrumentSet extends Component
         ]);
 
         if ($this->photo) {
-            $upload_name = Str::slug(Auth()->user()->slug.' '.$this->name, '-').'.'.$this->photo->getClientOriginalExtension();
+            $upload_name = Str::slug(Auth()->user()->slug.' '.$this->name, '-').'.'.$this->photo->extension();
             $photoPath = $this->photo->storePubliclyAs('photos/instrumentset', $upload_name, 'public');
             $data['picture'] = $photoPath;
         }

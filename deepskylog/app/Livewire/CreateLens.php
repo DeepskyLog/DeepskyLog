@@ -32,6 +32,8 @@ class CreateLens extends Component
     public function mount(): void
     {
         if ($this->lens) {
+            abort_unless($this->lens->canBeEditedBy(Auth::user()), 403);
+
             $this->name = $this->lens->name;
 
             $this->factor = floatval($this->lens->factor);
@@ -52,6 +54,10 @@ class CreateLens extends Component
 
     public function save()
     {
+        if ($this->lens) {
+            abort_unless($this->lens->canBeEditedBy(Auth::user()), 403);
+        }
+
         if ($this->lens_make != 1 && $this->lens_make) {
             $make = $this->lens_make;
         } elseif ($this->lens_new_make != '') {
@@ -66,22 +72,22 @@ class CreateLens extends Component
             $make = 1;
         }
 
-        $photoPath = null;
-        if ($this->photo) {
-            $upload_name = Str::slug(
-                Auth()->user()->slug.' '.$make.' '.$this->name,
-                '-'
-            ).'.'.$this->photo->getClientOriginalExtension();
-            // Make a slug from the upload_name
-            $photoPath = $this->photo->storePubliclyAs('photos/lens', $upload_name, 'public');
-        }
-
         $data = $this->validate([
             'name' => 'required|min:3',
             'factor' => 'required|numeric|gt:0',
             'photo' => 'nullable|image',
             'description' => 'nullable|string',
         ]);
+
+        $photoPath = null;
+        if ($this->photo) {
+            $upload_name = Str::slug(
+                Auth()->user()->slug.' '.$make.' '.$this->name,
+                '-'
+            ).'.'.$this->photo->extension();
+            // Make a slug from the upload_name
+            $photoPath = $this->photo->storePubliclyAs('photos/lens', $upload_name, 'public');
+        }
 
         $data['make_id'] = $make;
 

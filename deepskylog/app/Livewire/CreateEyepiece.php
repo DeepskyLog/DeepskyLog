@@ -48,6 +48,8 @@ class CreateEyepiece extends Component
     public function mount(): void
     {
         if ($this->eyepiece) {
+            abort_unless($this->eyepiece->canBeEditedBy(Auth::user()), 403);
+
             $this->name = $this->eyepiece->name;
 
             $this->eyepiece_make = $this->eyepiece->make_id;
@@ -133,6 +135,10 @@ class CreateEyepiece extends Component
 
     public function save()
     {
+        if ($this->eyepiece) {
+            abort_unless($this->eyepiece->canBeEditedBy(Auth::user()), 403);
+        }
+
         // Eyepiece Make
         if ($this->eyepiece_make != 1 && $this->eyepiece_make) {
             $make = $this->eyepiece_make;
@@ -163,16 +169,6 @@ class CreateEyepiece extends Component
             $type = 1;
         }
 
-        $photoPath = null;
-        if ($this->photo) {
-            $upload_name = Str::slug(
-                Auth()->user()->slug.' '.$this->name,
-                '-'
-            ).'.'.$this->photo->getClientOriginalExtension();
-            // Make a slug from the upload_name
-            $photoPath = $this->photo->storePubliclyAs('photos/eyepieces', $upload_name, 'public');
-        }
-
         $data = $this->validate([
             'name' => 'required|min:3',
             'focal_length_mm' => 'numeric|min:1',
@@ -182,6 +178,16 @@ class CreateEyepiece extends Component
             'photo' => 'nullable|image',
             'description' => 'nullable|string',
         ]);
+
+        $photoPath = null;
+        if ($this->photo) {
+            $upload_name = Str::slug(
+                Auth()->user()->slug.' '.$this->name,
+                '-'
+            ).'.'.$this->photo->extension();
+            // Make a slug from the upload_name
+            $photoPath = $this->photo->storePubliclyAs('photos/eyepieces', $upload_name, 'public');
+        }
 
         if ($this->field_stop_mm == '') {
             $data['field_stop_mm'] = 0;

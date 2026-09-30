@@ -52,6 +52,8 @@ class CreateInstrument extends Component
     public function mount(): void
     {
         if ($this->instrument) {
+            abort_unless($this->instrument->canBeEditedBy(Auth::user()), 403);
+
             $this->name = $this->instrument->name;
 
             if (Auth::user()->showInches) {
@@ -140,6 +142,10 @@ class CreateInstrument extends Component
 
     public function save()
     {
+        if ($this->instrument) {
+            abort_unless($this->instrument->canBeEditedBy(Auth::user()), 403);
+        }
+
         if ($this->instrument_make != 1 && $this->instrument_make) {
             $make = $this->instrument_make;
         } elseif ($this->instrument_new_make != '') {
@@ -152,16 +158,6 @@ class CreateInstrument extends Component
             $make = InstrumentMake::firstOrCreate(['name' => trim($make_name)])->id;
         } else {
             $make = 1;
-        }
-
-        $photoPath = null;
-        if ($this->photo) {
-            $upload_name = Str::slug(
-                Auth()->user()->slug.' '.$make.' '.$this->name,
-                '-'
-            ).'.'.$this->photo->getClientOriginalExtension();
-            // Make a slug from the upload_name
-            $photoPath = $this->photo->storePubliclyAs('photos/instruments', $upload_name, 'public');
         }
 
         if ($this->focal_length_mm == '') {
@@ -182,6 +178,16 @@ class CreateInstrument extends Component
             'photo' => 'nullable|image',
             'description' => 'nullable|string',
         ]);
+
+        $photoPath = null;
+        if ($this->photo) {
+            $upload_name = Str::slug(
+                Auth()->user()->slug.' '.$make.' '.$this->name,
+                '-'
+            ).'.'.$this->photo->extension();
+            // Make a slug from the upload_name
+            $photoPath = $this->photo->storePubliclyAs('photos/instruments', $upload_name, 'public');
+        }
 
         // Check if aperture and focal length are set in inches
         if (Auth::user()->showInches) {

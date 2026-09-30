@@ -6,6 +6,7 @@ use App\Models\Filter;
 use App\Models\FilterMake;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
@@ -30,6 +31,7 @@ class FilterController extends Controller
     {
         $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
         $filter = Filter::where('slug', $filter_slug)->where('user_id', $user_id)->firstOrFail();
+        abort_unless($filter->canBeEditedBy(Auth::user()), 403);
 
         // Check if there is an image for this filter
         if ($filter->picture != null) {

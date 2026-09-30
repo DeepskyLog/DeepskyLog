@@ -69,6 +69,8 @@ class CreateLocation extends Component
     public function mount($location = null): void
     {
         if ($location) {
+            abort_unless($location->canBeEditedBy(Auth::user()), 403);
+
             $this->location = $location;
             $this->update = true;
             $this->name = $location->name;
@@ -95,6 +97,10 @@ class CreateLocation extends Component
 
     public function save()
     {
+        if ($this->location) {
+            abort_unless($this->location->canBeEditedBy(Auth::user()), 403);
+        }
+
         // Only look the elevation, country and time zone up for a new location,
         // moved coordinates or values that are still missing.
         if ($this->needsLookup()) {
@@ -128,7 +134,7 @@ class CreateLocation extends Component
             $upload_name = Str::slug(
                 Auth()->user()->slug.' '.$this->name,
                 '-'
-            ).'.'.$this->photo->getClientOriginalExtension();
+            ).'.'.$this->photo->extension();
             // Make a slug from the upload_name
             $photoPath = $this->photo->storePubliclyAs('photos/locations', $upload_name, 'public');
 

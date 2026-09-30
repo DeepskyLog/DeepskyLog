@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\OwnedByUser;
 use App\Traits\ClearsResponseCache;
 use App\Traits\HasUniqueSlugPerUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,6 +15,7 @@ class InstrumentSet extends Model
     use ClearsResponseCache;
     use HasFactory;
     use HasUniqueSlugPerUser;
+    use OwnedByUser;
 
     protected $fillable = [
         'user_id', 'name', 'description', 'active', 'picture',

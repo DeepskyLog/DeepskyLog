@@ -6,6 +6,7 @@ use App\Models\Instrument;
 use App\Models\InstrumentMake;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
@@ -30,6 +31,7 @@ class InstrumentController extends Controller
     {
         $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
         $instrument = Instrument::where('slug', $instrument_slug)->where('user_id', $user_id)->firstOrFail();
+        abort_unless($instrument->canBeEditedBy(Auth::user()), 403);
 
         // Check if there is an image for this instrument
         if ($instrument->picture != null) {

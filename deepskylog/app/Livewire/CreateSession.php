@@ -296,7 +296,7 @@ class CreateSession extends Component
             // Handle photo upload for update: store on the public disk and persist path to DB
             try {
                 if ($this->photo) {
-                    $ext = $this->photo->getClientOriginalExtension() ?: 'jpg';
+                    $ext = $this->photo->extension();
                     $filename = $this->session->id.'.'.$ext;
 
                     // Remove any previous storage-based image path on this session
@@ -347,7 +347,7 @@ class CreateSession extends Component
         // Persist uploaded photo for the new session (only creator's session gets the image)
         try {
             if ($this->photo) {
-                $ext = $this->photo->getClientOriginalExtension() ?: 'jpg';
+                $ext = $this->photo->extension();
                 $filename = $session->id.'.'.$ext;
                 $path = $this->photo->storePubliclyAs('photos/sessions', $filename, 'public');
                 $session->picture = $path;

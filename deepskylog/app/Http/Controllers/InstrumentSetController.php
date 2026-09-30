@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\InstrumentSet;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class InstrumentSetController extends Controller
 {
@@ -28,6 +29,7 @@ class InstrumentSetController extends Controller
             'lenses.user',
             'locations.user',
         ])->where('slug', $set_slug)->where('user_id', $user_id)->firstOrFail();
+        abort_unless($set->canBeEditedBy(Auth::user()), 403);
 
         return view('instrumentset.show', ['set' => $set]);
     }

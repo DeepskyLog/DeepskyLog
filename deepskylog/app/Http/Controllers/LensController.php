@@ -6,6 +6,7 @@ use App\Models\Lens;
 use App\Models\LensMake;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
@@ -30,6 +31,7 @@ class LensController extends Controller
     {
         $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
         $lens = Lens::where('slug', $lens_slug)->where('user_id', $user_id)->firstOrFail();
+        abort_unless($lens->canBeEditedBy(Auth::user()), 403);
 
         // Check if there is an image for this lens
         if ($lens->picture != null) {

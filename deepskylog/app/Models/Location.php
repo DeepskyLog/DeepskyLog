@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
+use App\Models\Traits\OwnedByUser;
 use App\Traits\ClearsResponseCache;
 use App\Traits\HasUniqueSlugPerUser;
 use Carbon\Carbon;
@@ -20,6 +21,7 @@ class Location extends Model
     use DetachesOnDelete;
     use HasObservationsDates;
     use HasUniqueSlugPerUser;
+    use OwnedByUser;
 
     protected $fillable = [
         'user_id',

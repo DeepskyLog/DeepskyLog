@@ -38,6 +38,8 @@ class CreateFilter extends Component
     public function mount(): void
     {
         if ($this->filter) {
+            abort_unless($this->filter->canBeEditedBy(Auth::user()), 403);
+
             $this->name = $this->filter->name;
 
             $this->type_id = $this->filter->type_id;
@@ -61,6 +63,10 @@ class CreateFilter extends Component
 
     public function save()
     {
+        if ($this->filter) {
+            abort_unless($this->filter->canBeEditedBy(Auth::user()), 403);
+        }
+
         if ($this->filter_make != 1 && $this->filter_make) {
             $make = $this->filter_make;
         } elseif ($this->filter_new_make != '') {
@@ -75,16 +81,6 @@ class CreateFilter extends Component
             $make = 1;
         }
 
-        $photoPath = null;
-        if ($this->photo) {
-            $upload_name = Str::slug(
-                Auth()->user()->slug.' '.$make.' '.$this->name,
-                '-'
-            ).'.'.$this->photo->getClientOriginalExtension();
-            // Make a slug from the upload_name
-            $photoPath = $this->photo->storePubliclyAs('photos/filter', $upload_name, 'public');
-        }
-
         if ($this->type_id != 7) {
             $this->color_id = 1;
         }
@@ -97,6 +93,16 @@ class CreateFilter extends Component
             'photo' => 'nullable|image',
             'description' => 'nullable|string',
         ]);
+
+        $photoPath = null;
+        if ($this->photo) {
+            $upload_name = Str::slug(
+                Auth()->user()->slug.' '.$make.' '.$this->name,
+                '-'
+            ).'.'.$this->photo->extension();
+            // Make a slug from the upload_name
+            $photoPath = $this->photo->storePubliclyAs('photos/filter', $upload_name, 'public');
+        }
 
         $data['make_id'] = $make;
 

@@ -44,15 +44,8 @@
 
 Paths are relative to `deepskylog/`. The Critical and High items were checked in the code and the server config; no exploit was tried on a running site.
 
-#### Critical
-
-- [ ] **Photo uploads can run code on the server.** `CreateInstrument`, `CreateEyepiece`, `CreateFilter`, `CreateLens`, `CreateLocation`, `CreateInstrumentSet` and `CreateSession` (e.g. `app/Livewire/CreateInstrument.php:158-163`) store the photo publicly as `slug.'.'.getClientOriginalExtension()`. The `image`/`mimes:png,jpg` rules only check the content, and in the first four the file is stored before `validate()`. Both vhosts (`test.deepskylog.org.conf:11`, `www.deepskylog.org.conf:21`) have `AddHandler application/x-httpd-php .fcgi .php .fpl`, so a valid PNG with PHP code in it, named `x.fcgi`, is run by `/storage/photos/...fcgi`. Named `x.html`, the same file is stored XSS on the site's origin.
-  - Fix: `$this->photo->store('photos/…', 'public')` (random name, extension from the content); validate before storing; remove `.fcgi .fpl` from `AddHandler`; switch PHP off under `storage/app/public`; check `storage/app/public` on the server for non-image files that are already there.
-
 #### High
 
-- [ ] **Any logged-in user can edit another user's instruments, eyepieces, lenses, filters, locations and instrument sets.** The `edit()` methods of the six controllers load the record by the slugs in the URL without comparing `user_id` with `Auth::id()`, and the Livewire `save()` methods do not check either.
-  - Fix: `abort_unless($item->user_id === auth()->id() || auth()->user()->isAdministrator(), 403)` in `edit()`, and again in the components' `mount()` and `save()` (as `CreateSession` does with `canBeEditedBy()`).
 - [ ] **The PowerGrid toggle handler writes any column of any row.** `onUpdatedToggleable()` in `InstrumentTable`, `EyepieceTable`, `LensTable`, `FilterTable` and `LocationTable` (e.g. `app/Livewire/InstrumentTable.php:190`) runs `where('id', $id)->update([$field => bool])` with `$id` and `$field` from the browser, so anyone can set `user_id`, `active` or `hidden` on other users' records.
   - Fix: add `->where('user_id', Auth::id())` and only allow the `active` column.
 - [ ] **Stored XSS.** User text is stored unsanitized and printed with `{!! !!}`. HTMLPurifier is installed, but only `Message::sanitizeHtml()` uses it.

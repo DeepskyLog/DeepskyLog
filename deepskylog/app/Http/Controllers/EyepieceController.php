@@ -7,6 +7,7 @@ use App\Models\EyepieceMake;
 use App\Models\EyepieceType;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
@@ -31,6 +32,7 @@ class EyepieceController extends Controller
     {
         $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
         $eyepiece = Eyepiece::where('slug', $eyepiece_slug)->where('user_id', $user_id)->firstOrFail();
+        abort_unless($eyepiece->canBeEditedBy(Auth::user()), 403);
 
         // Check if there is an image for this eyepiece
         if ($eyepiece->picture != null) {
