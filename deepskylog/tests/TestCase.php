@@ -7,18 +7,27 @@ use App\Models\User;
 use Database\Seeders\GroupSeeder;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Pagination\Paginator;
 use Tests\Support\CaseInsensitiveBlueprint;
 
 abstract class TestCase extends BaseTestCase
 {
     /**
      * Create the tables of the test database with case-insensitive string
-     * columns, as on MariaDB.
+     * columns, as on MariaDB, and start every test with Laravel's paginator
+     * views.
      */
     public function createApplication()
     {
         $app = parent::createApplication();
         $app->bind(Blueprint::class, CaseInsensitiveBlueprint::class);
+
+        // A paginated Livewire component switches the paginator views to its
+        // own and switches them back when it is destroyed, which it is not
+        // when its request aborts or throws. The views are static, so reset
+        // them, or the plain paginators of later tests render Livewire links.
+        Paginator::defaultView('pagination::tailwind');
+        Paginator::defaultSimpleView('pagination::simple-tailwind');
 
         return $app;
     }
