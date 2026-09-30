@@ -354,6 +354,11 @@
                 headers: { 'Accept': 'application/json' },
             });
             if (!response.ok) {
+                const refused = response.status === 429 ? await response.json().catch(() => null) : null;
+                if (refused?.message) {
+                    status.textContent = refused.message;
+                    return;
+                }
                 throw new Error('queue-failed');
             }
 

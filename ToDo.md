@@ -46,10 +46,6 @@ Paths are relative to `deepskylog/`. The Critical and High items were checked in
 
 #### Medium
 
-- [ ] PDF jobs can be queued without limit: `POST /downloads/dsl-atlas/generate` (`routes/web.php:218`) renders the whole atlas in the web request (`set_time_limit(0)`, no throttle); the atlas queue and `ObjectSets::generate()` (`$rows` not locked or capped) can fill the long-running worker. Only allow `scope=single` synchronously, throttle, allow 1–2 open jobs per user, and cap rows × FOVs × photos.
-- [ ] Formula injection in CSV/XLSX exports (`ObservationSearchTable.php:836-888` and the PowerGrid exports): text starting with `=` becomes a real formula. Prefix cells starting with `= + - @ \t \r` with `'`.
-- [ ] `POST /messages` sends email, needs only `auth` (not `verified`) and has no throttle. Add `verified` and a `throttle:messages` limiter; also limiters for comments and registration.
-- [ ] No security headers (CSP, X-Frame-Options, HSTS, X-Content-Type-Options, Referrer-Policy).
 - [ ] Deleting user 1 deletes the three system teams (`app/Actions/Jetstream/DeleteUser.php:60-62`; user 1 owns them in `GroupSeeder`). Skip the system teams in `deleteTeams()`.
 - [ ] Other users' equipment can be referenced: `CreateInstrumentSet` (`instruments.*`, `locations.*`), `ObservationsController::store` and `Profile/UpdateUserObservingInformation` (`stdlocation`, `stdtelescope`, …) accept ids without checking the owner. Use `Rule::exists(...)->where('user_id', auth()->id())`.
 

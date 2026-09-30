@@ -1844,5 +1844,9 @@
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Inga föräldralösa objektnamn togs bort.|{1} 1 föräldralöst objektnamn togs bort.|[2,*] :count föräldralösa objektnamn togs bort.",
     "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Inga okända observationsmål hittades.|{1} 1 okänt observationsmål hittades.|[2,*] :count okända observationsmål hittades.",
     "This email address cannot be used.": "Den här e-postadressen kan inte användas.",
-    "This team name is reserved.": "Detta teamnamn är reserverat."
+    "This team name is reserved.": "Detta teamnamn är reserverat.",
+    "This set has :count charts and photos; at most :max fit in one PDF.": "Den här uppsättningen har :count kartor och foton; högst :max ryms i en PDF.",
+    "You already have :count PDFs waiting or being made. Wait until one of them is ready.": "Du har redan :count PDF:er som väntar eller skapas. Vänta tills en av dem är klar.",
+    "You have asked for too many PDFs. Try again in :minutes minutes.": "Du har begärt för många PDF:er. Försök igen om :minutes minuter.",
+    "A whole atlas is generated in the background; use the queue.": "En hel atlas skapas i bakgrunden; använd kön."
 }

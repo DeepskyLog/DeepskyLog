@@ -1847,5 +1847,9 @@
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} No se ha eliminado ningún nombre de objeto huérfano.|{1} Se ha eliminado 1 nombre de objeto huérfano.|[2,*] Se han eliminado :count nombres de objetos huérfanos.",
     "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} No se han encontrado objetivos de observación desconocidos.|{1} Se ha encontrado 1 objetivo de observación desconocido.|[2,*] Se han encontrado :count objetivos de observación desconocidos.",
     "This email address cannot be used.": "Esta dirección de correo electrónico no se puede utilizar.",
-    "This team name is reserved.": "Este nombre de equipo está reservado."
+    "This team name is reserved.": "Este nombre de equipo está reservado.",
+    "This set has :count charts and photos; at most :max fit in one PDF.": "Este conjunto tiene :count cartas y fotos; en un PDF caben como máximo :max.",
+    "You already have :count PDFs waiting or being made. Wait until one of them is ready.": "Ya tienes :count PDF en espera o en preparación. Espera hasta que uno de ellos esté listo.",
+    "You have asked for too many PDFs. Try again in :minutes minutes.": "Has solicitado demasiados PDF. Inténtalo de nuevo dentro de :minutes minutos.",
+    "A whole atlas is generated in the background; use the queue.": "Un atlas completo se genera en segundo plano; usa la cola."
 }

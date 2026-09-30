@@ -26,6 +26,25 @@ class ObjectSets extends Component
     /** How many of a user's recent sets the page keeps track of. */
     private const RECENT_SETS = 20;
 
+    /** How many values a row's field may hold. */
+    public const MAX_VALUES = 6;
+
+    /**
+     * How many charts and photos one PDF may hold: the most objects the page
+     * is given (ObjectSetSourceService::MAX_OBJECTS) with the default three
+     * fields of view and two photos each.
+     */
+    public const MAX_CHARTS = 1000;
+
+    /**
+     * The objects of the rows, by row: the rows themselves can be changed
+     * from the browser, so the names are taken from here.
+     *
+     * @var array<int, string>
+     */
+    #[Locked]
+    public array $names = [];
+
     #[Locked]
     public string $title = '';
 
@@ -95,6 +114,7 @@ class ObjectSets extends Component
             ])
             ->values()
             ->all();
+        $this->names = array_column($this->rows, 'name');
 
         $this->tokens = collect(Cache::get(GenerateObjectSetsPdf::recentKey((int) $user->id), []))
             ->filter(fn ($token) => is_string($token) && Cache::has(GenerateObjectSetsPdf::statusKey($token)))
@@ -158,17 +178,20 @@ class ObjectSets extends Component
      */
     public function generate(?int $row = null): void
     {
-        $selected = $row === null
-            ? $this->rows
-            : (isset($this->rows[$row]) ? [$this->rows[$row]] : []);
+        $indexes = $row === null ? array_keys($this->names) : (isset($this->names[$row]) ? [$row] : []);
+        $values = fn (int $i, string $field) => array_slice(
+            ObjectSetPdfService::parseNumbers(is_string($this->rows[$i][$field] ?? null) ? $this->rows[$i][$field] : ''),
+            0,
+            self::MAX_VALUES
+        );
 
-        $objects = collect($selected)
-            ->map(fn (array $r) => [
-                'name' => $r['name'],
-                'fovs' => ObjectSetPdfService::parseNumbers($r['fovs']),
-                'dsos' => ObjectSetPdfService::parseNumbers($r['dsos']),
-                'stars' => ObjectSetPdfService::parseNumbers($r['stars']),
-                'photos' => ObjectSetPdfService::parseNumbers($r['photos']),
+        $objects = collect($indexes)
+            ->map(fn (int $i) => [
+                'name' => $this->names[$i],
+                'fovs' => $values($i, 'fovs'),
+                'dsos' => $values($i, 'dsos'),
+                'stars' => $values($i, 'stars'),
+                'photos' => $values($i, 'photos'),
             ])
             ->filter(fn (array $o) => $o['fovs'] !== [] || $o['photos'] !== [] || $this->dataPage)
             ->values()
@@ -180,7 +203,20 @@ class ObjectSets extends Component
             return;
         }
 
+        $charts = collect($objects)->sum(fn (array $o) => count($o['fovs']) + count($o['photos']));
+        if ($charts > self::MAX_CHARTS) {
+            $this->addError('generate', __('This set has :count charts and photos; at most :max fit in one PDF.', ['count' => $charts, 'max' => self::MAX_CHARTS]));
+
+            return;
+        }
+
         $user = auth()->user();
+        if (($refusal = GenerateObjectSetsPdf::refusal((int) $user->id)) !== null) {
+            $this->addError('generate', $refusal);
+
+            return;
+        }
+
         $token = (string) Str::uuid();
         $filename = ObjectSetPdfService::filenameFor($this->filename, $objects);
         $label = $row === null
@@ -205,6 +241,7 @@ class ObjectSets extends Component
             'date' => $this->ephemerisDate(),
             'list_id' => $this->listId,
         ]);
+        GenerateObjectSetsPdf::recordQueued((int) $user->id);
 
         $this->tokens = GenerateObjectSetsPdf::forgetUnfinished((int) $user->id, $filename, $this->tokens);
         array_unshift($this->tokens, $token);

@@ -338,3 +338,50 @@ it('only draws objects without a magnitude on the detail chart, as the atlas doe
     expect($spy->showUnknown)->toBe([120 => false, 15 => true, 60 => false]);
 });
 
+
+it('takes the object names from the page, not from rows changed in the browser', function () {
+    Queue::fake();
+    $owner = User::factory()->create();
+    $list = objectSetList($owner);
+    $objects = App\Models\DeepskyObject::orderBy('name')->get();
+
+    Livewire::actingAs($owner)
+        ->test(ObjectSets::class, ['objects' => $objects, 'listId' => $list->id])
+        ->set('rows.0.name', 'NGC 1')
+        ->set('rows.2', ['name' => 'NGC 2', 'size' => '', 'diam_arcmin' => 0.0, 'fovs' => '60', 'dsos' => '10', 'stars' => '10', 'photos' => '', 'all' => false, 'checked' => []])
+        ->set('rows.1.fovs', '1 2 3 4 5 6 7 8 9 10')
+        ->call('generate');
+
+    Queue::assertPushed(GenerateObjectSetsPdf::class, fn (GenerateObjectSetsPdf $job) => array_column($job->parameters['objects'], 'name') === ['M 31', 'M 32']
+        && count($job->parameters['objects'][1]['fovs']) === ObjectSets::MAX_VALUES);
+});
+
+it('refuses a set with more charts than fit in one pdf', function () {
+    Queue::fake();
+    $owner = User::factory()->create();
+    // 90 objects with six fields of view and six photos each: 1080 charts.
+    $objects = collect(range(1, 90))->map(fn (int $i) => (new App\Models\DeepskyObject())->forceFill(['name' => 'NGC ' . $i, 'diam1' => 60.0, 'diam2' => 30.0]));
+
+    $component = Livewire::actingAs($owner)->test(ObjectSets::class, ['objects' => $objects]);
+    $component->set('rows', array_map(fn (array $row) => array_merge($row, ['fovs' => '1 2 3 4 5 6', 'photos' => '1 2 3 4 5 6']), $component->get('rows')))
+        ->call('generate')
+        ->assertHasErrors('generate');
+
+    Queue::assertNothingPushed();
+});
+
+it('lets an observer have at most two pdfs waiting', function () {
+    Queue::fake();
+    $owner = User::factory()->create();
+    objectSetList($owner);
+    $objects = App\Models\DeepskyObject::orderBy('name')->get();
+
+    $component = Livewire::actingAs($owner)->test(ObjectSets::class, ['objects' => $objects])
+        ->call('generate', 0)
+        ->call('generate', 1)
+        ->assertHasNoErrors()
+        ->call('generate')
+        ->assertHasErrors('generate');
+
+    Queue::assertPushed(GenerateObjectSetsPdf::class, 2);
+});

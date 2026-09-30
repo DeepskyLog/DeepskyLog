@@ -1,7 +1,7 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v5\ExportToCsv;
-use PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v5\ExportToXLS;
+use App\Support\Exports\ExportToCsv;
+use App\Support\Exports\ExportToXLS;
 use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 return [
@@ -133,6 +133,8 @@ return [
 
     'exportable' => [
         'default' => 'openspout_v5',
+        // PowerGrid's OpenSpout v5 exporters, escaping cells a spreadsheet
+        // would read as a formula.
         'openspout_v5' => [
             'xlsx' => ExportToXLS::class,
             'csv' => ExportToCsv::class,

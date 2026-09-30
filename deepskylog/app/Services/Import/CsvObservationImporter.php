@@ -9,6 +9,7 @@ use App\Models\Lens;
 use App\Models\Location;
 use App\Models\Observation;
 use App\Models\User;
+use App\Support\SpreadsheetCell;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -78,8 +79,8 @@ class CsvObservationImporter
             // Allow both ; and , as delimiter; prefer ; (as per spec)
             $fields = str_getcsv($line, ';');
 
-            // Trim every field
-            $fields = array_map('trim', $fields);
+            // Trim every field, and undo the escaping of formulas of an export
+            $fields = array_map(fn (string $field) => SpreadsheetCell::unescape(trim($field)), $fields);
 
             // Pad to at least 15 columns
             while (count($fields) < 15) {

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Support\SchemaColumns;
+use App\Support\SpreadsheetCell;
 use App\Livewire\Concerns\LimitsExportRows;
 use App\Models\Filter;
 use App\Models\Instrument;
@@ -850,7 +851,7 @@ final class ObservationSearchTable extends PowerGridComponent
         $writer->openToFile($path);
 
         foreach ($rows as $row) {
-            $writer->addRow(Row::fromValues($row));
+            $writer->addRow(Row::fromValues(SpreadsheetCell::escapeRow($row)));
         }
 
         $writer->close();
@@ -878,7 +879,7 @@ final class ObservationSearchTable extends PowerGridComponent
         $writer->addRow(Row::fromValues(self::IMPORT_EXPORT_HEADERS));
 
         foreach ($rows as $row) {
-            $writer->addRow(Row::fromValues($row));
+            $writer->addRow(Row::fromValues(SpreadsheetCell::escapeRow($row)));
         }
 
         $writer->close();

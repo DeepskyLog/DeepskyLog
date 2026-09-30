@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Throwable;
@@ -36,6 +37,21 @@ abstract class QueuedPdfJob implements ShouldQueue
 
     /** Generated PDFs are kept this long for downloading. */
     public const KEEP_HOURS = 48;
+
+    /**
+     * How many PDFs, of all kinds together, an observer may have waiting or
+     * being made: one worker makes them one after the other, for hours.
+     */
+    public const MAX_OPEN_PER_USER = 2;
+
+    /** How many PDFs, of all kinds together, an observer may ask for in an hour. */
+    public const MAX_PER_HOUR = 20;
+
+    /** How many of a user's recent PDFs of a kind are kept track of. */
+    public const RECENT = 20;
+
+    /** @var array<int, class-string<QueuedPdfJob>> */
+    public const KINDS = [GenerateAtlasPdf::class, GenerateObjectSetsPdf::class, GenerateObjectReportPdf::class];
 
     /**
      * The language of the request that queued the PDF: the worker has no
@@ -91,6 +107,60 @@ abstract class QueuedPdfJob implements ShouldQueue
     }
 
     /**
+     * Why the observer may not queue another PDF now, or null when they may.
+     */
+    public static function refusal(int $userId): ?string
+    {
+        if (self::openCount($userId) >= self::MAX_OPEN_PER_USER) {
+            return __('You already have :count PDFs waiting or being made. Wait until one of them is ready.', ['count' => self::MAX_OPEN_PER_USER]);
+        }
+
+        $key = self::rateKey($userId);
+        if (RateLimiter::tooManyAttempts($key, self::MAX_PER_HOUR)) {
+            return __('You have asked for too many PDFs. Try again in :minutes minutes.', [
+                'minutes' => max(1, (int) ceil(RateLimiter::availableIn($key) / 60)),
+            ]);
+        }
+
+        return null;
+    }
+
+    /**
+     * Count a queued PDF towards the observer's hourly limit.
+     */
+    public static function recordQueued(int $userId): void
+    {
+        RateLimiter::hit(self::rateKey($userId), 3600);
+    }
+
+    /**
+     * The observer's PDFs, of all kinds, that are waiting or being made.
+     */
+    public static function openCount(int $userId): int
+    {
+        $open = 0;
+
+        foreach (self::KINDS as $kind) {
+            foreach ((array) Cache::get($kind::recentKey($userId), []) as $token) {
+                $status = is_string($token) ? Cache::get($kind::statusKey($token)) : null;
+
+                if (is_array($status)
+                    && (int) ($status['user_id'] ?? 0) === $userId
+                    && in_array($status['state'] ?? '', ['queued', 'processing'], true)) {
+                    $open++;
+                }
+            }
+        }
+
+        return $open;
+    }
+
+    private static function rateKey(int $userId): string
+    {
+        return 'pdf_jobs:' . $userId;
+    }
+
+    /**
      * Forget the observer's earlier PDFs of the same list that are not
      * finished -- waiting, being made or failed -- now that a new one of it
      * has been asked for. A finished one stays until the new one is ready,
@@ -120,8 +190,16 @@ abstract class QueuedPdfJob implements ShouldQueue
 
     public function handle(): void
     {
-        $this->updateStatus('processing');
         $this->pruneOldPdfs();
+
+        // Forgotten while it waited, because the observer asked for the same
+        // PDF again (forgetUnfinished): the newer job makes it. Without this
+        // asking again and again would fill the worker with the same PDF.
+        if (! Cache::has(static::statusKey($this->token)) && ! $this->stillWanted()) {
+            return;
+        }
+
+        $this->updateStatus('processing');
 
         App::setLocale($this->locale);
         Carbon::setLocale($this->locale);

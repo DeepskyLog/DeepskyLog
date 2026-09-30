@@ -17,6 +17,9 @@ use Illuminate\Support\Str;
 
 class AtlasController extends Controller
 {
+    /** The request fields renderAtlas() reads. */
+    private const PARAMETERS = ['type', 'paper', 'orientation', 'scope', 'rasterize', 'radius', 'slug', 'ra', 'dec', 'title', 'max_pages'];
+
     public function index()
     {
         return view('layouts.downloads.dsl_atlas');
@@ -27,14 +30,30 @@ class AtlasController extends Controller
         $user = $request->user();
         abort_unless($user, 403);
 
-        $parameters = $request->except(['_token']);
+        $request->validate(['scope' => ['nullable', 'in:single,whole']]);
+
+        if (($refusal = GenerateAtlasPdf::refusal((int) $user->id)) !== null) {
+            return response()->json(['message' => $refusal], 429);
+        }
+
+        $parameters = $request->only(self::PARAMETERS);
         $token = (string) Str::uuid();
         Cache::put(GenerateAtlasPdf::statusKey($token), [
             'state' => 'queued',
             'user_id' => $user->id,
+            'created_at' => now()->toIso8601String(),
         ], now()->addHours(GenerateAtlasPdf::KEEP_HOURS));
 
         GenerateAtlasPdf::dispatch($token, (int) $user->id, $parameters);
+        GenerateAtlasPdf::recordQueued((int) $user->id);
+
+        // Listed so the atlases count towards the observer's open PDFs.
+        $recent = array_values(array_filter(
+            (array) Cache::get(GenerateAtlasPdf::recentKey((int) $user->id), []),
+            fn ($t) => is_string($t) && Cache::has(GenerateAtlasPdf::statusKey($t))
+        ));
+        array_unshift($recent, $token);
+        Cache::put(GenerateAtlasPdf::recentKey((int) $user->id), array_slice($recent, 0, GenerateAtlasPdf::RECENT), now()->addHours(GenerateAtlasPdf::KEEP_HOURS));
 
         return response()->json([
             'token' => $token,
@@ -88,8 +107,17 @@ class AtlasController extends Controller
         return 'dsl-atlas-' . implode('-', array_filter($parts)) . '.pdf';
     }
 
+    /**
+     * A single page, rendered in the request. A whole atlas takes hours and
+     * goes through queue().
+     */
     public function generate(Request $request, ?StarChartService $starChartService = null)
     {
+        $scope = strtolower(trim((string) $request->input('scope', 'single')));
+        if ($scope !== 'single') {
+            return redirect()->back()->with('error', __('A whole atlas is generated in the background; use the queue.'));
+        }
+
         try {
             return $this->renderAtlas($request, $starChartService);
         } catch (\Throwable $ex) {

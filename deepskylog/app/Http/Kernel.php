@@ -20,6 +20,8 @@ class Kernel extends HttpKernel
         // forged Host header cannot end up in password-reset and other mailed links.
         \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
+        // CSP, X-Frame-Options, HSTS and the like on every response.
+        \App\Http\Middleware\SecurityHeaders::class,
         \Illuminate\Http\Middleware\HandleCors::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,

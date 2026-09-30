@@ -73,5 +73,24 @@ class RouteServiceProvider extends ServiceProvider
                 ? [Limit::perMinute(10)->by('minute:' . $key), Limit::perHour(100)->by('hour:' . $key)]
                 : [Limit::perMinute(3)->by('minute:' . $key), Limit::perHour(20)->by('hour:' . $key)];
         });
+
+        // Messages are also mailed to the recipient.
+        RateLimiter::for('messages', function (Request $request) {
+            $key = 'user:' . ($request->user()?->id ?: $request->ip());
+
+            return [Limit::perMinute(5)->by('minute:' . $key), Limit::perDay(50)->by('day:' . $key)];
+        });
+
+        // Comments on observations and observing lists.
+        RateLimiter::for('comments', function (Request $request) {
+            $key = 'user:' . ($request->user()?->id ?: $request->ip());
+
+            return [Limit::perMinute(10)->by('minute:' . $key), Limit::perHour(100)->by('hour:' . $key)];
+        });
+
+        // New accounts, per address (Fortify's POST /register).
+        RateLimiter::for('registration', function (Request $request) {
+            return [Limit::perMinute(3)->by('minute:' . $request->ip()), Limit::perDay(10)->by('day:' . $request->ip())];
+        });
     }
 }

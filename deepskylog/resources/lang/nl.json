@@ -1847,5 +1847,9 @@
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Er zijn geen verweesde objectnamen verwijderd.|{1} 1 verweesde objectnaam verwijderd.|[2,*] :count verweesde objectnamen verwijderd.",
     "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Geen onbekende waarnemingsdoelen gevonden.|{1} 1 onbekend waarnemingsdoel gevonden.|[2,*] :count onbekende waarnemingsdoelen gevonden.",
     "This email address cannot be used.": "Dit e-mailadres kan niet gebruikt worden.",
-    "This team name is reserved.": "Deze teamnaam is gereserveerd."
+    "This team name is reserved.": "Deze teamnaam is gereserveerd.",
+    "This set has :count charts and photos; at most :max fit in one PDF.": "Deze set heeft :count kaarten en foto's; er passen er hoogstens :max in één PDF.",
+    "You already have :count PDFs waiting or being made. Wait until one of them is ready.": "Je hebt al :count PDF's die wachten of gemaakt worden. Wacht tot er een klaar is.",
+    "You have asked for too many PDFs. Try again in :minutes minutes.": "Je hebt te veel PDF's aangevraagd. Probeer het over :minutes minuten opnieuw.",
+    "A whole atlas is generated in the background; use the queue.": "Een volledige atlas wordt op de achtergrond gemaakt; gebruik de wachtrij."
 }

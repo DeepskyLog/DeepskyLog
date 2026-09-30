@@ -12,6 +12,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -51,6 +52,17 @@ class FortifyServiceProvider extends ServiceProvider
 
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
+        });
+
+        // Fortify has no limiter setting for registration, so add the
+        // 'registration' limiter (RouteServiceProvider) to its route once the
+        // routes are loaded; with route:cache it is cached along with them.
+        $this->app->booted(function () {
+            foreach (Route::getRoutes()->getRoutes() as $route) {
+                if ($route->getName() === 'register.store' && ! in_array('throttle:registration', $route->middleware(), true)) {
+                    $route->middleware('throttle:registration');
+                }
+            }
         });
 
         Fortify::authenticateUsing(function (Request $request) {

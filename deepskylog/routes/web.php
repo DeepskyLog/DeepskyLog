@@ -214,8 +214,8 @@ Route::view('/downloads/dsl-image-catalogs', 'layouts.downloads.dsl_image_catalo
 Route::view('/downloads/image-catalogs', 'layouts.downloads.image_catalogs');
 Route::view('/downloads/atlases', 'layouts.downloads.atlases');
 Route::get('/downloads/dsl-atlas', [App\Http\Controllers\AtlasController::class, 'index']);
-Route::post('/downloads/dsl-atlas/generate', [App\Http\Controllers\AtlasController::class, 'generate'])->middleware('auth')->name('downloads.dsl-atlas.generate');
-Route::post('/downloads/dsl-atlas/queue', [App\Http\Controllers\AtlasController::class, 'queue'])->middleware('auth')->name('downloads.dsl-atlas.queue');
+Route::post('/downloads/dsl-atlas/generate', [App\Http\Controllers\AtlasController::class, 'generate'])->middleware(['auth', 'throttle:exports'])->name('downloads.dsl-atlas.generate');
+Route::post('/downloads/dsl-atlas/queue', [App\Http\Controllers\AtlasController::class, 'queue'])->middleware(['auth', 'throttle:exports'])->name('downloads.dsl-atlas.queue');
 Route::get('/downloads/dsl-atlas/status/{token}', [App\Http\Controllers\AtlasController::class, 'status'])->middleware('auth')->name('downloads.dsl-atlas.status');
 Route::get('/downloads/dsl-atlas/download/{token}', [App\Http\Controllers\AtlasController::class, 'download'])->name('downloads.dsl-atlas.download');
 Route::view('/downloads/forms', 'layouts.downloads.forms');
@@ -669,7 +669,7 @@ Route::post('/observation/like', [App\Http\Controllers\ObservationLikeController
 // Comments for observations (deepsky / comet)
 Route::post('/observation/comments', [App\Http\Controllers\ObservationCommentController::class, 'store'])
     ->name('observation.comments.store')
-    ->middleware(['auth', 'verified']);
+    ->middleware(['auth', 'verified', 'throttle:comments']);
 Route::delete('/observation/comments/{comment}', [App\Http\Controllers\ObservationCommentController::class, 'destroy'])
     ->name('observation.comments.destroy')
     ->middleware(['auth', 'verified']);
@@ -695,7 +695,7 @@ Route::get('/messages/create', [App\Http\Controllers\MessagesController::class, 
     ->middleware(['auth', 'doNotCacheResponse']);
 Route::post('/messages', [App\Http\Controllers\MessagesController::class, 'store'])
     ->name('messages.store')
-    ->middleware('auth');
+    ->middleware(['auth', 'verified', 'throttle:messages']);
 Route::get('/messages/{id}', [App\Http\Controllers\MessagesController::class, 'show'])
     ->name('messages.show')
     ->middleware(['auth', 'doNotCacheResponse']);
@@ -808,7 +808,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Comments: add and delete
     Route::post('/observing-list/{list}/comments', [App\Http\Controllers\ObservingListController::class, 'storeComment'])
-        ->name('observing-list.comments.store');
+        ->name('observing-list.comments.store')->middleware('throttle:comments');
     Route::delete('/observing-list/{list}/comments/{comment}', [App\Http\Controllers\ObservingListController::class, 'destroyComment'])
         ->name('observing-list.comments.destroy');
 });

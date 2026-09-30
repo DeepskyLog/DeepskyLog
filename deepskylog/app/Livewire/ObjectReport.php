@@ -166,6 +166,12 @@ class ObjectReport extends Component
         }
 
         $user = auth()->user();
+        if (($refusal = GenerateObjectReportPdf::refusal((int) $user->id)) !== null) {
+            $this->addError('generate', $refusal);
+
+            return;
+        }
+
         $token = (string) Str::uuid();
         $title = trim($this->reportTitle);
         $filename = Str::slug($this->filename) . '.pdf';
@@ -187,6 +193,7 @@ class ObjectReport extends Component
             'date' => $this->ephemerisDate(),
             'list_id' => $this->listId,
         ]);
+        GenerateObjectReportPdf::recordQueued((int) $user->id);
 
         $this->tokens = GenerateObjectReportPdf::forgetUnfinished((int) $user->id, $filename, $this->tokens);
         array_unshift($this->tokens, $token);
