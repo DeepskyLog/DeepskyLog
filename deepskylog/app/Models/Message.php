@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
+use App\Support\Html;
 use Carbon\Carbon;
-use HTMLPurifier;
-use HTMLPurifier_Config;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -44,28 +43,7 @@ class Message extends Model
 
     public static function sanitizeHtml(?string $html): string
     {
-        if (empty($html)) {
-            return '';
-        }
-
-        static $purifier = null;
-        if ($purifier === null) {
-            $config = HTMLPurifier_Config::createDefault();
-            $config->set('HTML.Allowed',
-                'a[href|title|target],b,strong,i,em,br,'.
-                'p[style|align|class],div[style|align|class],span[style|class],'.
-                'ul[style|class],ol[style|class],li[style|class],blockquote,code,pre,'.
-                'img[src|alt|title|width|height]'
-            );
-            $config->set('URI.AllowedSchemes', ['http' => true, 'https' => true]);
-            $config->set('Attr.AllowedFrameTargets', ['_blank']);
-            $config->set('CSS.AllowedProperties', ['text-align', 'margin-left', 'margin', 'padding-left', 'text-indent', 'list-style-type']);
-            $config->set('Cache.DefinitionImpl', null);
-
-            $purifier = new HTMLPurifier($config);
-        }
-
-        return $purifier->purify($html);
+        return Html::purify($html);
     }
 
     public function getSafeMessageAttribute(): string
@@ -73,13 +51,15 @@ class Message extends Model
         return self::sanitizeHtml($this->message);
     }
 
+    /**
+     * The subject as plain text, for printing with {{ }}: tags are removed and
+     * entities such as '&amp;' or '&eacute;' decoded to the actual character.
+     */
     public function getSafeSubjectAttribute(): string
     {
-        // Purify the subject (allow minimal inline formatting if present),
-        // then decode any HTML entities so titles containing sequences like
-        // '&amp;' or '&eacute;' render as the actual character in the UI.
-        $purified = self::sanitizeHtml($this->subject);
-        return html_entity_decode($purified, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = strip_tags(self::sanitizeHtml($this->subject));
+
+        return html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
     public function getSafePreviewAttribute(): string

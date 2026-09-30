@@ -152,7 +152,7 @@
                     '<a href="' .
                     $link .
                     '" class="font-bold hover:underline">' .
-                    $cometName .
+                    e($cometName) .
                     "</a>",
             ])
         !!}
@@ -201,11 +201,11 @@
                 href="/instrument/{{ $user->slug }}/{{ $instrumentSlug }}"
                 class="font-bold hover:underline"
             >
-                {!!
+                {{
                     html_entity_decode(
                         $instrumentName,
                     )
-                !!} .
+                }} .
             </a>
         @endif
 
@@ -255,16 +255,9 @@
                                     },
                                 );
                             @endphp
-                            {!!
-                                $translated ??
-                                    html_entity_decode($observation->description)
-                            !!}
+                            {!! \App\Support\Html::purify($translated ?? $observation->description, true) !!}
                         @else
-                            {!!
-                                html_entity_decode(
-                                    $observation->description,
-                                )
-                            !!}
+                            {!! \App\Support\Html::purify($observation->description, true) !!}
                         @endif
                     </div>
                 </div>

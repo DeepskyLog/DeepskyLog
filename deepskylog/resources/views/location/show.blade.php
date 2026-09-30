@@ -9,7 +9,7 @@
 
                     @if (!empty($location->description))
                         <div class="w-full md:w-64 mx-auto mt-4 p-3 border border-gray-700 bg-gray-800 text-gray-100 rounded prose prose-invert">
-                            {!! html_entity_decode($location->description ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') !!}
+                            {!! \App\Support\Html::purify($location->description, true) !!}
                         </div>
                     @endif
 

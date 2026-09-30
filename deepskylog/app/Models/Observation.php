@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\PurifiedHtml;
 use App\Jobs\ComputeObserverStats;
 use App\Services\Observations\ObservationCardData;
 use App\Traits\ClearsResponseCache;
@@ -93,6 +94,7 @@ class Observation extends Model
             'seeing' => 'integer',
             'transparency' => 'integer',
             'has_drawing' => 'boolean',
+            'description' => PurifiedHtml::class,
         ];
     }
 

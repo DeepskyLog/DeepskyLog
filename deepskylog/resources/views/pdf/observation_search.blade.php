@@ -378,7 +378,7 @@
 
             @if (!empty($obs->description))
                 <div class="section-title">{{ __('Notes') }}</div>
-                <div class="notes">{!! html_entity_decode((string) $obs->description) !!}</div>
+                <div class="notes">{!! \App\Support\Html::purify((string) $obs->description, true) !!}</div>
             @endif
         </div>
     @endforeach

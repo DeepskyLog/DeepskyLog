@@ -141,7 +141,7 @@
                                 </td>
                                 <td class="px-2 py-2 font-medium">
                                     <div class="flex items-center gap-2">
-                                        <a href="{{ route('messages.show', $m->id) }}">{!! $m->safe_subject ?: '<span class="text-gray-400">'.__('(no subject)').'</span>' !!}</a>
+                                        <a href="{{ route('messages.show', $m->id) }}">@if ($m->safe_subject !== ''){{ $m->safe_subject }}@else<span class="text-gray-400">{{ __('(no subject)') }}</span>@endif</a>
                                         @if (! $isRead && ! $isSent)
                                             <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-red-600 text-white shadow-sm ring-2 ring-red-300 animate-pulse uppercase tracking-wide" title="{{ __('New message') }}" aria-label="{{ __('New message') }}">{{ __('New') }}</span>
                                         @endif

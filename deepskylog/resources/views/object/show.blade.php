@@ -243,7 +243,7 @@
                                     @if (!empty(trim($session->comments ?? '')))
                                         <tr>
                                             <td class="pr-4 font-medium">{{ __('Description') }}</td>
-                                            <td>{!! nl2br(e($session->comments ?? '')) !!}</td>
+                                            <td>{!! \App\Support\Html::purify($session->comments, true) !!}</td>
                                         </tr>
                                     @endif
                                     @auth

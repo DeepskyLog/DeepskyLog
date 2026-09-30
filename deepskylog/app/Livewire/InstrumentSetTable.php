@@ -64,7 +64,7 @@ class InstrumentSetTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('name_link', function ($set) {
-                return '<a class="font-bold" href="/instrumentset/'.Auth()->user()->slug.'/'.$set->slug.'">'.$set->name.'</a>';
+                return '<a class="font-bold" href="/instrumentset/'.e(Auth()->user()->slug).'/'.e($set->slug).'">'.e(html_entity_decode((string) $set->name)).'</a>';
             })
             ->add('name')
             ->add('instruments_count')

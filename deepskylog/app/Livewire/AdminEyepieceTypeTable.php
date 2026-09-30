@@ -47,7 +47,7 @@ final class AdminEyepieceTypeTable extends PowerGridComponent
                 return $eyepiece_type->eyepieces_count;
             })
             ->add('eyepiece_make', function ($eyepiece_type) {
-                return $eyepiece_type->make?->name;
+                return e(html_entity_decode((string) $eyepiece_type->make?->name));
             });
 
     }

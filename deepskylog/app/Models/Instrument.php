@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\PurifiedHtml;
 use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
 use App\Models\Traits\OwnedByUser;
@@ -36,6 +37,10 @@ class Instrument extends Model
         'obstruction_perc',
         'picture',
         'description',
+    ];
+
+    protected $casts = [
+        'description' => PurifiedHtml::class,
     ];
 
     protected $with = ['instrument_make', 'mount_type', 'instrument_type'];
@@ -101,8 +106,8 @@ class Instrument extends Model
             if (!$ep || !$ep->user) {
                 continue;
             }
-            $to_return .= "<a href='/eyepiece/" . $ep->user->slug . '/' . $ep->slug . "'>" .
-                $ep->fullName() . '</a>' . ', ';
+            $to_return .= "<a href='/eyepiece/" . e($ep->user->slug) . '/' . e($ep->slug) . "'>" .
+                e(html_entity_decode($ep->fullName())) . '</a>' . ', ';
         }
 
         // Remove the trailing comma and space (if any)
@@ -142,8 +147,8 @@ class Instrument extends Model
             if (!$filt || !$filt->user) {
                 continue;
             }
-            $to_return .= "<a href='/filter/" . $filt->user->slug . '/' . $filt->slug . "'>" .
-                $filt->name . '</a>' . ', ';
+            $to_return .= "<a href='/filter/" . e($filt->user->slug) . '/' . e($filt->slug) . "'>" .
+                e(html_entity_decode($filt->name)) . '</a>' . ', ';
         }
 
         // Remove the trailing comma and space (if any)
@@ -173,8 +178,8 @@ class Instrument extends Model
             if (!$lns || !$lns->user) {
                 continue;
             }
-            $to_return .= "<a href='/lens/" . $lns->user->slug . '/' . $lns->slug . "'>" .
-                $lns->name . '</a>' . ', ';
+            $to_return .= "<a href='/lens/" . e($lns->user->slug) . '/' . e($lns->slug) . "'>" .
+                e(html_entity_decode($lns->name)) . '</a>' . ', ';
         }
 
         // Remove the trailing comma and space (if any)
@@ -204,8 +209,8 @@ class Instrument extends Model
             if (!$loc || !$loc->user) {
                 continue;
             }
-            $to_return .= "<a href='/location/" . $loc->user->slug . '/' . $loc->slug . "'>" .
-                $loc->name . '</a>' . ', ';
+            $to_return .= "<a href='/location/" . e($loc->user->slug) . '/' . e($loc->slug) . "'>" .
+                e(html_entity_decode($loc->name)) . '</a>' . ', ';
         }
 
         // Remove the trailing comma and space (if any)

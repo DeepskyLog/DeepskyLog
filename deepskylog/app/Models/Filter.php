@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\PurifiedHtml;
 use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
 use App\Models\Traits\OwnedByUser;
@@ -30,6 +31,10 @@ class Filter extends Model
         'observer',
         'picture',
         'description',
+    ];
+
+    protected $casts = [
+        'description' => PurifiedHtml::class,
     ];
 
     protected $with = ['filter_make', 'filter_color', 'filter_type'];

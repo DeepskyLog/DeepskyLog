@@ -61,7 +61,7 @@ final class LocationTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('name_link', function ($location) {
-                return '<a class="font-bold" href="/location/'.Auth()->user()->slug.'/'.$location->slug.'">'.$location->name.'</a>';
+                return '<a class="font-bold" href="/location/'.e(Auth()->user()->slug).'/'.e($location->slug).'">'.e(html_entity_decode((string) $location->name)).'</a>';
             })
             ->add('name')
             ->add('active')

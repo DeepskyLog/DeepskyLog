@@ -8,7 +8,7 @@
                          alt="{{ $lens->name }}">
                     @if (!empty($lens->description))
                         <div class="mt-4 p-3 border border-gray-700 bg-gray-800 text-gray-100 rounded prose prose-invert">
-                            {!! html_entity_decode($lens->description ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') !!}
+                            {!! \App\Support\Html::purify($lens->description, true) !!}
                         </div>
                     @endif
                 </div>

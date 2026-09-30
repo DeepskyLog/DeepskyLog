@@ -75,7 +75,7 @@
                         @if($weatherVisible)
                             <tr>
                                 <td class="pr-4 font-medium">{{ __('Weather') }}</td>
-                                <td>{!! strip_tags($weatherTranslated, '<p><br><em><strong><b><i><u><ul><ol><li>') !!}</td>
+                                <td>{!! \App\Support\Html::purify($weatherTranslated) !!}</td>
                             </tr>
                         @endif
                         <tr>
@@ -89,13 +89,13 @@
                         @if($equipmentVisible)
                             <tr>
                                 <td class="pr-4 font-medium">{{ __('Equipment') }}</td>
-                                <td>{!! strip_tags($equipmentTranslated, '<p><br><em><strong><b><i><u><ul><ol><li>') !!}</td>
+                                <td>{!! \App\Support\Html::purify($equipmentTranslated) !!}</td>
                             </tr>
                         @endif
                         @if(false)
                             {{-- comments moved out of table --}}
                             <tr>
-                                <td>{!! html_entity_decode(nl2br(e($session->comments))) !!}</td>
+                                <td>{!! \App\Support\Html::purify($session->comments, true) !!}</td>
                             </tr>
                         @endif
                     </table>
@@ -106,7 +106,7 @@
                         @endphp
                         <div class="mt-4">
                             <x-card>
-                                <div class="text-sm">{!! strip_tags($commentsTranslated, '<p><br><em><strong><b><i><u><ul><ol><li>') !!}</div>
+                                <div class="text-sm">{!! \App\Support\Html::purify($commentsTranslated) !!}</div>
                             </x-card>
                         </div>
                     @endif

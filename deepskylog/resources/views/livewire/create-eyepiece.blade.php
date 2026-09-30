@@ -268,7 +268,7 @@
                             {{-- Enter the name of the eyepiece--}}
                             <x-input
                                 name="name"
-                                label="{!! __('Name of the eyepiece - proposal: ') . $proposed_name !!}"
+                                :label="__('Name of the eyepiece - proposal: ') . $proposed_name"
                                 type="text"
                                 wire:model="name"
                                 class="mt-1 block w-full"

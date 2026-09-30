@@ -94,10 +94,10 @@ class MessagesController extends Controller
                 $obj->_is_group = true;
                 $obj->_group_count = (int) ($g->recipients ?? 1);
                 // Provide minimal safe_*/formatted_date fallbacks
-                $obj->safe_subject = $g->subject;
-                $obj->safe_preview = strip_tags($g->message);
+                $obj->safe_subject = html_entity_decode(strip_tags(Message::sanitizeHtml($g->subject)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                $obj->safe_preview = html_entity_decode(strip_tags(Message::sanitizeHtml($g->message)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
                 $obj->formatted_date = $g->date;
-                $obj->safe_message = $g->message;
+                $obj->safe_message = Message::sanitizeHtml($g->message);
                 return $obj;
             });
 

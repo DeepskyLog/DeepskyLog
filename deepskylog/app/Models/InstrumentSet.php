@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\PurifiedHtml;
 use App\Models\Traits\OwnedByUser;
 use App\Traits\ClearsResponseCache;
 use App\Traits\HasUniqueSlugPerUser;
@@ -19,6 +20,10 @@ class InstrumentSet extends Model
 
     protected $fillable = [
         'user_id', 'name', 'description', 'active', 'picture',
+    ];
+
+    protected $casts = [
+        'description' => PurifiedHtml::class,
     ];
 
     protected $with = [];

@@ -70,9 +70,9 @@ class InstrumentTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('makestr', function ($instrument) {
-                return $instrument->instrument_make->name;
+                return e(html_entity_decode((string) $instrument->instrument_make->name));
             })->add('name_link', function ($instrument) {
-                return '<a class="font-bold" href="/instrument/'.Auth()->user()->slug.'/'.$instrument->slug.'">'.$instrument->name.'</a>';
+                return '<a class="font-bold" href="/instrument/'.e(Auth()->user()->slug).'/'.e($instrument->slug).'">'.e(html_entity_decode((string) $instrument->name)).'</a>';
             })
             ->add('aperture_mm', function ($instrument) {
                 if (Auth::user()->showInches) {
@@ -109,7 +109,7 @@ class InstrumentTable extends PowerGridComponent
                 if ($instrument->instrument_type->name == 'Naked Eye' || $instrument->instrument_type->name == 'Binoculars' || $instrument->instrument_type->name == 'Finderscope') {
                     return '';
                 } else {
-                    return $instrument->mount_type->name;
+                    return e(html_entity_decode((string) $instrument->mount_type->name));
                 }
             })
             ->add('created_at_formatted', fn ($dish) => Carbon::parse($dish->created_at)->format('M j, Y'));

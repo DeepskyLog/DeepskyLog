@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\PurifiedHtml;
 use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
 use App\Models\Traits\OwnedByUser;
@@ -27,6 +28,10 @@ class Lens extends Model
         'observer',
         'picture',
         'description',
+    ];
+
+    protected $casts = [
+        'description' => PurifiedHtml::class,
     ];
 
     protected $with = ['lens_make'];

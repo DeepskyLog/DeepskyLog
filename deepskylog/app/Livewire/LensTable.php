@@ -68,9 +68,9 @@ class LensTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('makestr', function ($lens) {
-                return $lens->lens_make->name;
+                return e(html_entity_decode((string) $lens->lens_make->name));
             })->add('name_link', function ($lens) {
-                return '<a class="font-bold" href="/lens/'.Auth()->user()->slug.'/'.$lens->slug.'">'.$lens->name.'</a>';
+                return '<a class="font-bold" href="/lens/'.e(Auth()->user()->slug).'/'.e($lens->slug).'">'.e(html_entity_decode((string) $lens->name)).'</a>';
             })
             ->add('name')
             ->add('active')

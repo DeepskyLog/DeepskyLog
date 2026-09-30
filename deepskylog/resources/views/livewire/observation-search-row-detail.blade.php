@@ -77,7 +77,7 @@
                     <div class="text-xs uppercase tracking-wide text-gray-400">{{ __('Instrument') }}</div>
                     <div class="mt-0.5 font-semibold">
                         <a href="/instrument/{{ $observerSlug }}/{{ $instrument->slug }}" class="hover:underline text-blue-400">
-                            {!! html_entity_decode($instrument->fullName()) !!}
+                            {{ html_entity_decode($instrument->fullName()) }}
                         </a>
                     </div>
                 </div>
@@ -211,9 +211,9 @@
                             }
                         );
                     @endphp
-                    {!! $translatedDesc ?? html_entity_decode($obs->description) !!}
+                    {!! \App\Support\Html::purify($translatedDesc ?? $obs->description, true) !!}
                 @else
-                    {!! html_entity_decode($obs->description) !!}
+                    {!! \App\Support\Html::purify($obs->description, true) !!}
                 @endif
             </div>
         </div>

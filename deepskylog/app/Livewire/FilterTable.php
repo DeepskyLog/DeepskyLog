@@ -68,15 +68,15 @@ final class FilterTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('makestr', function ($filter) {
-                return $filter->filter_make->name;
+                return e(html_entity_decode((string) $filter->filter_make->name));
             })->add('name_link', function ($filter) {
-                return '<a class="font-bold" href="/filter/'.Auth()->user()->slug.'/'.$filter->slug.'">'.$filter->name.'</a>';
+                return '<a class="font-bold" href="/filter/'.e(Auth()->user()->slug).'/'.e($filter->slug).'">'.e(html_entity_decode((string) $filter->name)).'</a>';
             })
             ->add('typestr', function ($filter) {
-                return $filter->filter_type->name;
+                return e(html_entity_decode((string) $filter->filter_type->name));
             })
             ->add('colorstr', function ($filter) {
-                return $filter->filter_color->name;
+                return e(html_entity_decode((string) $filter->filter_color->name));
             })->add('name')
             ->add('active')
             ->add('active_label', fn ($filter) => $filter->active ? 'Yes' : 'No')

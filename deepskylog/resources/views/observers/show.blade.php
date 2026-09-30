@@ -57,7 +57,7 @@
                                 <td>
                                     @if ($user->stdlocation && $user->stdlocation != null)
                                         <a href="/location/{{ $user->slug }}/{{ $user->standardLocation->slug }}">
-                                            {!! $user->standardLocation->name !!}
+                                            {{ html_entity_decode($user->standardLocation->name) }}
                                         </a>
                                     @endif
                                 </td>
@@ -70,7 +70,7 @@
                                     @if ($user->stdtelescope)
                                         <a
                                             href="/instrument/{{ $user->slug }}/{{ $user->standardInstrument->slug }}">
-                                            {!! $user->standardInstrument->fullName() !!}
+                                            {{ html_entity_decode($user->standardInstrument->fullName()) }}
                                         </a>
                                     @endif
                                 </td>
@@ -208,7 +208,7 @@
                                     {{ __('About me') }}
                                 </h2>
                                 <div class="px-5 ">
-                                    {!! $user->about !!}
+                                    {!! \App\Support\Html::purify($user->about, true) !!}
                                 </div>
                             </x-card>
                             <br />

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\PurifiedHtml;
 use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
 use App\Models\Traits\OwnedByUser;
@@ -33,6 +34,10 @@ class Eyepiece extends Model
         'field_stop_mm',
         'picture',
         'description',
+    ];
+
+    protected $casts = [
+        'description' => PurifiedHtml::class,
     ];
 
     protected $with = ['eyepiece_make', 'eyepiece_type'];
@@ -137,8 +142,8 @@ class Eyepiece extends Model
                 continue;
             }
 
-            $to_return .= "<a href='/instrument/" . $inst->user->slug . '/' . $inst->slug . "'>" .
-                $inst->fullName() . '</a>' . ', ';
+            $to_return .= "<a href='/instrument/" . e($inst->user->slug) . '/' . e($inst->slug) . "'>" .
+                e(html_entity_decode($inst->fullName())) . '</a>' . ', ';
         }
 
         // Remove the trailing comma and space

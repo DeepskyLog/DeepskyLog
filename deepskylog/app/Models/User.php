@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\PurifiedHtml;
 use App\Traits\ClearsResponseCache;
 use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -78,6 +79,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'about' => PurifiedHtml::class,
     ];
 
     /**
@@ -266,7 +268,9 @@ class User extends Authenticatable implements MustVerifyEmail
         } elseif (strcmp($text, 'Attribution-NonCommercial-NoDerivs CC BY-NC-ND') === 0) {
             $copyright = '<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.';
         } else {
-            $copyright = $text;
+            // Free text of the observer: printed as HTML by the views, so escape it
+            // (old rows hold entities such as &copy;, hence the decode first).
+            $copyright = e(html_entity_decode((string) $text, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
         }
 
         return $copyright;

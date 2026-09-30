@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\PurifiedHtml;
 use App\Traits\ClearsResponseCache;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
@@ -38,6 +39,9 @@ class ObservationSession extends Model
     protected $casts = [
         'begindate' => 'datetime:Y-m-d H:i:s',
         'enddate' => 'datetime:Y-m-d H:i:s',
+        'weather' => PurifiedHtml::class,
+        'equipment' => PurifiedHtml::class,
+        'comments' => PurifiedHtml::class,
     ];
 
     /**

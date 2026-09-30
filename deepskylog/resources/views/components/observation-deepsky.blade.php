@@ -185,7 +185,7 @@
                     ' <a href="' .
                     $link .
                     '" class="font-bold hover:underline">' .
-                    $objectname .
+                    e($objectname) .
                     "</a>",
             ])
         !!}
@@ -245,11 +245,11 @@
                 href="/instrument/{{ $user?->slug ?? 'unknown' }}/{{ $instrument->slug }}"
                 class="font-bold hover:underline"
             >
-                {!!
+                {{
                     html_entity_decode(
                         $instrument->fullName(),
                     )
-                !!}
+                }}
             </a>
         @else
             <span class="font-bold">{{
@@ -383,9 +383,9 @@
                                 }
                             });
                         @endphp
-                        {!! $translated ?? html_entity_decode($description) !!}
+                        {!! \App\Support\Html::purify($translated ?? $description, true) !!}
                     @else
-                        {!! html_entity_decode($description) !!}
+                        {!! \App\Support\Html::purify($description, true) !!}
                     @endif
                 </div>
             </div>

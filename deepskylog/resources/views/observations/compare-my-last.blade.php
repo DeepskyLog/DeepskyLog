@@ -126,11 +126,11 @@
                         <span class="text-gray-400"
                             >{{ __("Instrument") }}:</span
                         >
-                        <span class="font-semibold">{!!
+                        <span class="font-semibold">{{
                             $currentInstrument?->fullName()
                                 ? html_entity_decode($currentInstrument->fullName())
                                 : "-"
-                        !!}</span>
+                        }}</span>
                     </div>
                 </div>
 
@@ -144,11 +144,7 @@
                         <div
                             class="text-sm leading-relaxed text-gray-200 rounded bg-gray-900 p-3"
                         >
-                            {!!
-                                html_entity_decode(
-                                    $current->description,
-                                )
-                            !!}
+                            {!! \App\Support\Html::purify($current->description, true) !!}
                         </div>
                     </div>
                 @endif
@@ -206,11 +202,11 @@
                             <span class="text-gray-400"
                                 >{{ __("Instrument") }}:</span
                             >
-                            <span class="font-semibold">{!!
+                            <span class="font-semibold">{{
                                 $previousInstrument?->fullName()
                                     ? html_entity_decode($previousInstrument->fullName())
                                     : "-"
-                            !!}</span>
+                            }}</span>
                         </div>
                     </div>
                     @if (!empty($previous->description))
@@ -223,11 +219,7 @@
                             <div
                                 class="text-sm leading-relaxed text-gray-200 rounded bg-gray-900 p-3"
                             >
-                                {!!
-                                    html_entity_decode(
-                                        $previous->description,
-                                    )
-                                !!}
+                                {!! \App\Support\Html::purify($previous->description, true) !!}
                             </div>
                         </div>
                     @endif

@@ -65,7 +65,7 @@ final class RemoveUserTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('name', function ($row) {
-                return sprintf('<a href="%s">%s</a>', route('observer.show', $row->slug), $row->name);
+                return sprintf('<a href="%s">%s</a>', route('observer.show', $row->slug), e($row->name));
             })->add('created_at_formatted', function ($row) {
                 return $row->created_at->format('Y-m-d');
             });

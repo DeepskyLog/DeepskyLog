@@ -46,16 +46,6 @@ Paths are relative to `deepskylog/`. The Critical and High items were checked in
 
 #### High
 
-- [ ] **Stored XSS.** User text is stored unsanitized and printed with `{!! !!}`. HTMLPurifier is installed, but only `Message::sanitizeHtml()` uses it.
-  - [ ] Observation descriptions (and their translations): `{!! html_entity_decode($description) !!}` in `components/observation-deepsky.blade.php:386-388`, `components/observation-comet.blade.php`, `observations/detail.blade.php`, `livewire/observation-search-row-detail.blade.php:214-216`, `observations/compare-my-last.blade.php` and `pdf/observation_search.blade.php:381`.
-  - [ ] Equipment and location descriptions: `instrument`, `eyepiece`, `filter`, `lens`, `location` and `instrumentset` `show.blade.php`.
-  - [ ] Equipment, make and location names: the `get_used_*_as_string()` helpers (`app/Models/Instrument.php`, `Eyepiece.php`, `Location.php`), `instrumentset/show.blade.php`, `fullName()` printed through `html_entity_decode`, `observers/show.blade.php:60,73`, and the admin PowerGrid tables (the script runs for admins).
-  - [ ] User name: `sprintf('<a …>%s</a>', $row->name)` in `app/Livewire/AdminUserTable.php:108` and `RemoveUserTable.php:68` (runs in the administrator's session).
-  - [ ] Profile "about": `{!! $user->about !!}` in `observers/show.blade.php:211`.
-  - [ ] Custom copyright text: `User::getCopyright()` returns it unescaped, and it is printed raw on every observation of that user.
-  - [ ] Message subject: `Message::getSafeSubjectAttribute()` purifies and then runs `html_entity_decode`, which turns `&lt;img onerror=…&gt;` into live markup (also used for session invitations).
-  - [ ] Session weather, equipment and comments: `strip_tags()` with an allowlist in `session/show.blade.php:78,92,109` keeps attributes such as `onmouseover`.
-  - Fix: one `Html::purify()` helper for the rich-text fields (on save and on output), `e()`/`{{ }}` for names, no `html_entity_decode` on names; `e($text)` in the custom branch of `getCopyright()`.
 - [ ] **Social login signs into a pre-registered account.** `Features::authExistingUnlinkedUsers()` is on (`config/socialstream.php`), and `app/Actions/Socialstream/AuthenticateOAuthCallback.php` links and logs in any account with the provider's email, even when that email was never verified. An attacker who registers `victim@gmail.com` with their own password ends up sharing the victim's account once the victim uses "Sign in with Google".
   - Fix: only link when the local email is verified (and the provider says its email is verified), or turn the feature off; do not allow registration on the domain of the generated emails.
 - [ ] **Session cookies and OAuth codes are written to the logs.** `GenerateRedirectForProvider`, `ResolveSocialiteUser`, `CreateUserFromProvider`, `CreateConnectedAccount` and `UpdateConnectedAccount` (`app/Actions/Socialstream/`) log `session_cookie`, `cookies` and `query`, already decrypted. `storage/logs` already contains them. `ObjectController::update` also logs `$request->all()`.
