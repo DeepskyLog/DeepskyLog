@@ -29,6 +29,7 @@
     ":count object(s) imported, :skipped skipped.": ":count Objekt(e) importiert, :skipped übersprungen.",
     ":count object|:count objects": ":count Objekt|:count Objekte",
     ":count observation is linked to this object.|:count observations are linked to this object.": ":count Beobachtung ist mit diesem Objekt verknüpft.|:count Beobachtungen sind mit diesem Objekt verknüpft.",
+    ":count observation on DeepskyLog|:count observations on DeepskyLog": ":count Beobachtung auf DeepskyLog|:count Beobachtungen auf DeepskyLog",
     ":from to :to": ":from bis :to",
     ":object added to :list.": ":object zu :list hinzugefügt.",
     ":object does not rise above the horizon": ":object geht nicht über dem Horizont auf",
@@ -413,7 +414,9 @@
     "DeepskyLog Privacy Policy": "DeepskyLog-Datenschutzrichtlinie",
     "DeepskyLog sketches of the month": "DeepskyLog-Skizzen des Monats",
     "DeepskyLog sketches of the week": "DeepskyLog-Skizzen der Woche",
+    "DeepskyLog sketch of the month": "DeepskyLog-Zeichnung des Monats",
     "DeepskyLog Sketch of the Month": "DeepskyLog-Skizze des Monats",
+    "DeepskyLog sketch of the week": "DeepskyLog-Zeichnung der Woche",
     "DeepskyLog Sketch of the Week": "DeepskyLog-Skizze der Woche",
     "DeepskyLog sponsors": "DeepskyLog-Sponsoren",
     "DeepskyLog Trophy Gallery": "DeepskyLog-Trophäengalerie",
@@ -1508,6 +1511,7 @@
     "Share on X": "Auf X teilen",
     "Share this session": "Diese Sitzung teilen",
     "Share this sketch": "Diese Skizze teilen",
+    "Share…": "Teilen…",
     "Show": "Anzeigen",
     "Show (t) title, (h) made up for, (e) ephemerides, (p) page numbers, (l) legend, (s) separation lines, (i) index": "Anzeigen: (t) Titel, (h) erstellt für, (e) Ephemeriden, (p) Seitenzahlen, (l) Legende, (s) Trennlinien, (i) Index",
     "Show comet observations": "Zeige Kometenbeobachtungen",
@@ -1638,6 +1642,9 @@
     "The selected sketch is larger than the server upload limit (:limit). Please choose a smaller file.": "Die ausgewählte Skizze ist größer als das Server-Upload-Limit (:limit). Bitte wählen Sie eine kleinere Datei.",
     "These people have been invited to your team and have been sent an invitation email. They may join the team by accepting the email invitation.": "Diese Personen wurden zu Ihrem Team eingeladen und haben eine Einladungs-E-Mail erhalten. Sie können dem Team beitreten, indem sie die E-Mail-Einladung akzeptieren.",
     "The sketch failed to upload.": "Die Zeichnung konnte nicht hochgeladen werden.",
+    "The sketch has been copied: paste it (Ctrl+V) into your mail.": "Die Zeichnung wurde kopiert: Fügen Sie sie (Strg+V) in Ihre E-Mail ein.",
+    "The sketch has been copied: paste it (Ctrl+V) into your post on X.": "Die Zeichnung wurde kopiert: Fügen Sie sie (Strg+V) in Ihren Beitrag auf X ein.",
+    "The sketch is ready: tap the share button again.": "Die Zeichnung ist bereit: Tippen Sie erneut auf die Teilen-Schaltfläche.",
     "The team's name and owner information.": "Der Name des Teams und die Eigentümerinformationen.",
     "The text has been copied: paste it into your Facebook post.": "Der Text wurde kopiert: Füge ihn in deinen Facebook-Beitrag ein.",
     "The uploaded file is empty or could not be read.": "Die hochgeladene Datei ist leer oder konnte nicht gelesen werden.",
@@ -1859,6 +1866,5 @@
     "{0} No observations were updated.|{1} Updated 1 observation to its primary object name.|[2,*] Updated :count observations to their primary object names.": "{0} Es wurden keine Beobachtungen aktualisiert.|{1} 1 Beobachtung auf den Hauptnamen ihres Objekts aktualisiert.|[2,*] :count Beobachtungen auf die Hauptnamen ihrer Objekte aktualisiert.",
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} Keine verwaisten Objektnamen gefunden.|{1} 1 verwaister Objektname gefunden.|[2,*] :count verwaiste Objektnamen gefunden.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Es wurden keine verwaisten Objektnamen entfernt.|{1} 1 verwaister Objektname entfernt.|[2,*] :count verwaiste Objektnamen entfernt.",
-    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Keine unbekannten Beobachtungsziele gefunden.|{1} 1 unbekanntes Beobachtungsziel gefunden.|[2,*] :count unbekannte Beobachtungsziele gefunden.",
-    ":count observation on DeepskyLog|:count observations on DeepskyLog": ":count Beobachtung auf DeepskyLog|:count Beobachtungen auf DeepskyLog"
+    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Keine unbekannten Beobachtungsziele gefunden.|{1} 1 unbekanntes Beobachtungsziel gefunden.|[2,*] :count unbekannte Beobachtungsziele gefunden."
 }

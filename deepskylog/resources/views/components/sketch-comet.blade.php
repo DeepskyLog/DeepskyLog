@@ -209,22 +209,23 @@
     </div>
 
     <div class="text-center mt-2 mb-3 flex items-center justify-center gap-3">
-        <div id="social-buttons">
-            @php
-                $shareUrl   = $detailUrl ?? $objectUrl;
-                $shareDesc  = __("Look at this sketch of ") . ($cometName ?? __("Unknown comet")) . __(" by ") . $observer_name . __(" on #deepskylog");
-                $shareTags  = "#sketch #astronomy #cometwatch";
-                $shareText  = $shareDesc . "\n\n" . $shareUrl . "\n\n" . $shareTags;
-                $twitterHref  = "https://twitter.com/intent/tweet?text=" . rawurlencode($shareText);
-                $facebookHref = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlencode($shareUrl);
-                $whatsappHref = "https://wa.me/?text=" . rawurlencode($shareText);
-                $mailtoHref   = "mailto:?subject=" . rawurlencode($shareDesc) . "&body=" . rawurlencode($shareText);
-            @endphp
+        @php
+            $shareUrl   = $detailUrl ?? $objectUrl;
+            $shareDesc  = __("Look at this sketch of ") . ($cometName ?? __("Unknown comet")) . __(" by ") . $observer_name . __(" on #deepskylog");
+            $shareTags  = "#sketch #astronomy #cometwatch";
+            $shareText  = $shareDesc . "\n\n" . $shareUrl . "\n\n" . $shareTags;
+            $twitterHref  = "https://twitter.com/intent/tweet?text=" . rawurlencode($shareText);
+            $facebookHref = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlencode($shareUrl);
+            $whatsappHref = "https://wa.me/?text=" . rawurlencode($shareText);
+            $mailtoHref   = "mailto:?subject=" . rawurlencode($shareDesc) . "&body=" . rawurlencode($shareDesc . "\n\n" . $shareUrl);
+        @endphp
+        <div id="social-buttons" data-share data-share-image="{{ $imgSrc }}" data-share-title="{{ $shareDesc }}" data-share-text="{{ $shareDesc . "\n\n" . $shareTags }}" data-share-url="{{ $shareUrl }}">
             <a href="{{ $facebookHref }}" class="social-button hover" data-share-text="{{ $shareDesc . "\n\n" . $shareTags }}" rel="follow"><span class="fab fa-facebook-square"></span></a>
             <a href="{{ $twitterHref }}" class="social-button hover" rel="follow"><span class="fab fa-square-x-twitter"></span></a>
             <a href="{{ $shareUrl }}" class="social-button hover" id="clip" title="{{ __("Copy link") }}" rel="nofollow noopener noreferrer"><span class="fas fa-share"></span></a>
             <a href="{{ $mailtoHref }}" class="social-button hover" rel="nofollow"><span class="fas fa-envelope"></span></a>
             <a href="{{ $whatsappHref }}" class="social-button hover" target="_blank" rel="nofollow"><span class="fab fa-square-whatsapp"></span></a>
+            <a href="{{ $shareUrl }}" class="social-button native-share hover" title="{{ __('Share…') }}" rel="nofollow"><span class="fas fa-share-nodes"></span></a>
         </div>
 
         @php

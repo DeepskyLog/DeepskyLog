@@ -16,13 +16,19 @@
             $ogDescription = $ogDescription !== ''
                 ? \Illuminate\Support\Str::limit($ogDescription, 200)
                 : trans_choice(':count observation on DeepskyLog|:count observations on DeepskyLog', (int) $totalObservations, ['count' => (int) $totalObservations]);
-            $ogImage = !empty($image) ? (str_starts_with($image, 'http') ? $image : url($image)) : url('/images/logo2.png');
+            // WhatsApp skips large images: the session picture is shared as a preview of at most 300 KB.
+            $ogPreview = !empty($image) ? \App\Services\SharePreviewImage::for($image) : null;
+            $ogImage = $ogPreview['url'] ?? url('/images/logo2.png');
         @endphp
         <meta property="og:type" content="article" />
         <meta property="og:title" content="{{ $ogTitle }}" />
         <meta property="og:description" content="{{ $ogDescription }}" />
         <meta property="og:url" content="{{ url()->current() }}" />
         <meta property="og:image" content="{{ $ogImage }}" />
+        @if (!empty($ogPreview['width']) && !empty($ogPreview['height']))
+            <meta property="og:image:width" content="{{ $ogPreview['width'] }}" />
+            <meta property="og:image:height" content="{{ $ogPreview['height'] }}" />
+        @endif
         <meta property="og:site_name" content="DeepskyLog" />
         <meta name="description" content="{{ $ogDescription }}" />
         <meta name="twitter:card" content="{{ !empty($image) ? 'summary_large_image' : 'summary' }}" />

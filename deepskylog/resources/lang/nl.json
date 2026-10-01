@@ -29,6 +29,7 @@
     ":count object(s) imported, :skipped skipped.": ":count object(en) geïmporteerd, :skipped overgeslagen.",
     ":count object|:count objects": ":count object|:count objecten",
     ":count observation is linked to this object.|:count observations are linked to this object.": ":count waarneming is aan dit object gekoppeld.|:count waarnemingen zijn aan dit object gekoppeld.",
+    ":count observation on DeepskyLog|:count observations on DeepskyLog": ":count waarneming op DeepskyLog|:count waarnemingen op DeepskyLog",
     ":from to :to": ":from tot :to",
     ":object added to :list.": ":object toegevoegd aan :list.",
     ":object does not rise above the horizon": ":object komt niet boven de horizon",
@@ -413,7 +414,9 @@
     "DeepskyLog Privacy Policy": "DeepskyLog Privacybeleid",
     "DeepskyLog sketches of the month": "DeepskyLog schetsen van de maand",
     "DeepskyLog sketches of the week": "DeepskyLog schetsen van de week",
+    "DeepskyLog sketch of the month": "DeepskyLog-schets van de maand",
     "DeepskyLog Sketch of the Month": "DeepskyLog Schets van de Maand",
+    "DeepskyLog sketch of the week": "DeepskyLog-schets van de week",
     "DeepskyLog Sketch of the Week": "DeepskyLog Schets van de Week",
     "DeepskyLog sponsors": "DeepskyLog sponsors",
     "DeepskyLog Trophy Gallery": "DeepskyLog Trofeeëngalerij",
@@ -1510,6 +1513,7 @@
     "Share on X": "Delen op X",
     "Share this session": "Deze sessie delen",
     "Share this sketch": "Deel deze schets",
+    "Share…": "Delen…",
     "Show": "Toon",
     "Show (t) title, (h) made up for, (e) ephemerides, (p) page numbers, (l) legend, (s) separation lines, (i) index": "Toon (t) titel, (h) opgemaakt voor, (e) efemeriden, (p) paginanummers, (l) legende, (s) scheidingslijnen, (i) index",
     "Show comet observations": "Toon komeetwaarnemingen",
@@ -1640,6 +1644,9 @@
     "The selected sketch is larger than the server upload limit (:limit). Please choose a smaller file.": "De geselecteerde schets is groter dan de server upload limiet (:limit). Kies een kleinere file.",
     "These people have been invited to your team and have been sent an invitation email. They may join the team by accepting the email invitation.": "Deze mensen zijn uitgenodigd voor je team en hebben een uitnodigingsmail ontvangen. Ze kunnen zich bij het team aansluiten door de e-mailuitnodiging te accepteren.",
     "The sketch failed to upload.": "De tekening kon niet geüpload worden.",
+    "The sketch has been copied: paste it (Ctrl+V) into your mail.": "De schets is gekopieerd: plak hem (Ctrl+V) in je e-mail.",
+    "The sketch has been copied: paste it (Ctrl+V) into your post on X.": "De schets is gekopieerd: plak hem (Ctrl+V) in je bericht op X.",
+    "The sketch is ready: tap the share button again.": "De schets is klaar: tik nog eens op de deelknop.",
     "The team's name and owner information.": "De naam van het team en eigenaarsinformatie.",
     "The text has been copied: paste it into your Facebook post.": "De tekst is gekopieerd: plak hem in je Facebook-bericht.",
     "The uploaded file is empty or could not be read.": "Het geüploade bestand is leeg of kon niet gelezen worden.",
@@ -1862,6 +1869,5 @@
     "{0} No observations were updated.|{1} Updated 1 observation to its primary object name.|[2,*] Updated :count observations to their primary object names.": "{0} Er zijn geen waarnemingen bijgewerkt.|{1} 1 waarneming bijgewerkt naar de primaire objectnaam.|[2,*] :count waarnemingen bijgewerkt naar hun primaire objectnaam.",
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} Geen verweesde objectnamen gevonden.|{1} 1 verweesde objectnaam gevonden.|[2,*] :count verweesde objectnamen gevonden.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Er zijn geen verweesde objectnamen verwijderd.|{1} 1 verweesde objectnaam verwijderd.|[2,*] :count verweesde objectnamen verwijderd.",
-    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Geen onbekende waarnemingsdoelen gevonden.|{1} 1 onbekend waarnemingsdoel gevonden.|[2,*] :count onbekende waarnemingsdoelen gevonden.",
-    ":count observation on DeepskyLog|:count observations on DeepskyLog": ":count waarneming op DeepskyLog|:count waarnemingen op DeepskyLog"
+    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Geen onbekende waarnemingsdoelen gevonden.|{1} 1 onbekend waarnemingsdoel gevonden.|[2,*] :count onbekende waarnemingsdoelen gevonden."
 }

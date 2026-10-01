@@ -172,3 +172,22 @@ it('gives Facebook a preview of the observation, because it ignores the text of 
         ->assertSee('<meta property="og:image" content="'.url('/images/logo2.png').'" />', false)
         ->assertSee('data-share-text="Look at this observation of M 65', false);
 });
+
+it('hands the sketch to the X button and the share sheet, which take no image from a link', function () {
+    $owner = User::factory()->create();
+    socialTestObservation($owner, ['has_drawing' => true, 'drawing_filename' => 'sketches/m65.jpg']);
+
+    $this->get(route('observations.detail', socialTestDetailParams($owner)))
+        ->assertOk()
+        ->assertSee('data-share-image="/images/sketches/m65.jpg"', false)
+        ->assertSee('class="social-button native-share hover"', false);
+});
+
+it('gives the share buttons no image when the observation has no sketch', function () {
+    $owner = User::factory()->create();
+    socialTestObservation($owner);
+
+    $this->get(route('observations.detail', socialTestDetailParams($owner)))
+        ->assertOk()
+        ->assertSee('data-share-image=""', false);
+});

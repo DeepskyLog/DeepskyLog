@@ -79,3 +79,18 @@
 .fa-envelope {
     color:#ea4445;
 }
+
+/* Only shown where the browser has a share sheet (share-buttons.js adds the class). */
+a.native-share {
+    display:none !important;
+}
+
+.can-native-share a.native-share {
+    display:inline-block !important;
+    margin:0.125em;
+    font-size:1.5em;
+}
+
+.fa-share-nodes {
+    color:#9ca3af;
+}

@@ -157,15 +157,19 @@
                                 ? \Illuminate\Support\Str::limit($ogDescription, 200)
                                 : __('Observations and sketches of deep-sky objects, comets, the Moon, the Sun and the planets on DeepskyLog.');
                             $ogUrl = url()->current();
-                            $ogImageAbsolute = $ogHasSketch
-                                ? (str_starts_with($drawingPath, 'http') ? $drawingPath : url($drawingPath))
-                                : url('/images/logo2.png');
+                            // WhatsApp skips large images: a sketch is shared as a preview of at most 300 KB.
+                            $ogImage = $ogHasSketch ? \App\Services\SharePreviewImage::for($drawingPath) : null;
+                            $ogImageAbsolute = $ogImage['url'] ?? url('/images/logo2.png');
                         @endphp
                         <meta property="og:type" content="article" />
                         <meta property="og:title" content="{{ $ogTitle }}" />
                         <meta property="og:description" content="{{ $ogDescription }}" />
                         <meta property="og:url" content="{{ $ogUrl }}" />
                         <meta property="og:image" content="{{ $ogImageAbsolute }}" />
+                        @if (!empty($ogImage['width']) && !empty($ogImage['height']))
+                            <meta property="og:image:width" content="{{ $ogImage['width'] }}" />
+                            <meta property="og:image:height" content="{{ $ogImage['height'] }}" />
+                        @endif
                         <meta property="og:image:alt" content="{{ $objectDisplayName }}" />
                         <meta property="og:site_name" content="DeepskyLog" />
                         <meta name="description" content="{{ $ogDescription }}" />
@@ -362,7 +366,7 @@
                             $detailTwitter    = "https://twitter.com/intent/tweet?text=" . rawurlencode($detailShareText);
                             $detailFacebook   = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlencode($detailShareUrl);
                             $detailWhatsapp   = "https://wa.me/?text=" . rawurlencode($detailShareText);
-                            $detailMailto     = "mailto:?subject=" . rawurlencode($detailShareDesc) . "&body=" . rawurlencode($detailShareText);
+                            $detailMailto     = "mailto:?subject=" . rawurlencode($detailShareDesc) . "&body=" . rawurlencode($detailShareDesc . "\n\n" . $detailShareUrl);
                         @endphp
                         <div class="flex flex-wrap items-center gap-3 mb-4">
                             <button
@@ -390,12 +394,13 @@
                                 }}
                             </span>
                             {{-- Share buttons --}}
-                            <div id="social-buttons" class="flex items-center gap-1 ml-auto">
+                            <div id="social-buttons" class="flex items-center gap-1 ml-auto" data-share data-share-image="{{ $detailHasSketch ? $drawingPath : '' }}" data-share-title="{{ $detailShareDesc }}" data-share-text="{{ $detailShareDesc . "\n\n" . $detailShareTags }}" data-share-url="{{ $detailShareUrl }}">
                                 <a href="{{ $detailFacebook }}" class="social-button hover" data-share-text="{{ $detailShareDesc . "\n\n" . $detailShareTags }}" rel="follow" title="{{ __('Share on Facebook') }}"><span class="fab fa-facebook-square"></span></a>
                                 <a href="{{ $detailTwitter }}" class="social-button hover" rel="follow" title="{{ __('Share on X') }}"><span class="fab fa-square-x-twitter"></span></a>
                                 <a href="{{ $detailShareUrl }}" class="social-button hover" id="clip" title="{{ __('Copy link') }}" rel="nofollow noopener noreferrer"><span class="fas fa-share"></span></a>
                                 <a href="{{ $detailMailto }}" class="social-button hover" rel="nofollow" title="{{ __('Share by email') }}"><span class="fas fa-envelope"></span></a>
                                 <a href="{{ $detailWhatsapp }}" class="social-button hover" target="_blank" rel="nofollow" title="{{ __('Share on WhatsApp') }}"><span class="fab fa-square-whatsapp"></span></a>
+                                <a href="{{ $detailShareUrl }}" class="social-button native-share hover" title="{{ __('Share…') }}" rel="nofollow"><span class="fas fa-share-nodes"></span></a>
                             </div>
                         </div>
 

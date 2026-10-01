@@ -29,6 +29,7 @@
     ":count object(s) imported, :skipped skipped.": ":count objekt importerade, :skipped överhoppade.",
     ":count object|:count objects": ":count objekt|:count objekt",
     ":count observation is linked to this object.|:count observations are linked to this object.": ":count observation är kopplad till det här objektet.|:count observationer är kopplade till det här objektet.",
+    ":count observation on DeepskyLog|:count observations on DeepskyLog": ":count observation på DeepskyLog|:count observationer på DeepskyLog",
     ":from to :to": ":from till :to",
     ":object added to :list.": ":object har lagts till i :list.",
     ":object does not rise above the horizon": ":object går inte upp över horisonten",
@@ -412,7 +413,9 @@
     "DeepskyLog Privacy Policy": "DeepskyLog Sekretesspolicy",
     "DeepskyLog sketches of the month": "DeepskyLog skisser av månaden",
     "DeepskyLog sketches of the week": "DeepskyLog skisser av veckan",
+    "DeepskyLog sketch of the month": "Månadens DeepskyLog-skiss",
     "DeepskyLog Sketch of the Month": "DeepskyLog Skiss av månaden",
+    "DeepskyLog sketch of the week": "Veckans DeepskyLog-skiss",
     "DeepskyLog Sketch of the Week": "DeepskyLog Skiss av veckan",
     "DeepskyLog sponsors": "DeepskyLog sponsorer",
     "DeepskyLog Trophy Gallery": "DeepskyLog Trophy Gallery",
@@ -1507,6 +1510,7 @@
     "Share on X": "Dela på X",
     "Share this session": "Dela denna session",
     "Share this sketch": "Dela denna skiss",
+    "Share…": "Dela…",
     "Show": "Visa",
     "Show (t) title, (h) made up for, (e) ephemerides, (p) page numbers, (l) legend, (s) separation lines, (i) index": "Visa (t) titel, (h) framtagen för, (e) efemerider, (p) sidnummer, (l) teckenförklaring, (s) skiljelinjer, (i) register",
     "Show comet observations": "Visa kometobservationer",
@@ -1637,6 +1641,9 @@
     "The selected sketch is larger than the server upload limit (:limit). Please choose a smaller file.": "Den valda skissen är större än serverns uppladdningsgräns (:limit). Välj en mindre fil.",
     "These people have been invited to your team and have been sent an invitation email. They may join the team by accepting the email invitation.": "Dessa personer har bjudits in till ditt team och har skickats en inbjudan via e-post. De kan gå med i teamet genom att acceptera e-postinbjudan.",
     "The sketch failed to upload.": "Det gick inte att ladda upp skissen.",
+    "The sketch has been copied: paste it (Ctrl+V) into your mail.": "Skissen har kopierats: klistra in den (Ctrl+V) i ditt e-postmeddelande.",
+    "The sketch has been copied: paste it (Ctrl+V) into your post on X.": "Skissen har kopierats: klistra in den (Ctrl+V) i ditt inlägg på X.",
+    "The sketch is ready: tap the share button again.": "Skissen är klar: tryck på dela-knappen igen.",
     "The team's name and owner information.": "Teamets namn och ägarinformation.",
     "The text has been copied: paste it into your Facebook post.": "Texten har kopierats: klistra in den i ditt Facebook-inlägg.",
     "The uploaded file is empty or could not be read.": "Den uppladdade filen är tom eller kunde inte läsas.",
@@ -1859,6 +1866,5 @@
     "{0} No observations were updated.|{1} Updated 1 observation to its primary object name.|[2,*] Updated :count observations to their primary object names.": "{0} Inga observationer uppdaterades.|{1} 1 observation uppdaterades till objektets huvudnamn.|[2,*] :count observationer uppdaterades till objektens huvudnamn.",
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} Inga föräldralösa objektnamn hittades.|{1} 1 föräldralöst objektnamn hittades.|[2,*] :count föräldralösa objektnamn hittades.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Inga föräldralösa objektnamn togs bort.|{1} 1 föräldralöst objektnamn togs bort.|[2,*] :count föräldralösa objektnamn togs bort.",
-    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Inga okända observationsmål hittades.|{1} 1 okänt observationsmål hittades.|[2,*] :count okända observationsmål hittades.",
-    ":count observation on DeepskyLog|:count observations on DeepskyLog": ":count observation på DeepskyLog|:count observationer på DeepskyLog"
+    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Inga okända observationsmål hittades.|{1} 1 okänt observationsmål hittades.|[2,*] :count okända observationsmål hittades."
 }

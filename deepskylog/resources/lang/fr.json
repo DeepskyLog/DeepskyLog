@@ -29,6 +29,7 @@
     ":count object(s) imported, :skipped skipped.": ":count objet(s) importé(s), :skipped ignoré(s).",
     ":count object|:count objects": ":count objet|:count objets",
     ":count observation is linked to this object.|:count observations are linked to this object.": ":count observation est liée à cet objet.|:count observations sont liées à cet objet.",
+    ":count observation on DeepskyLog|:count observations on DeepskyLog": ":count observation sur DeepskyLog|:count observations sur DeepskyLog",
     ":from to :to": "de :from à :to",
     ":object added to :list.": ":object ajouté à :list.",
     ":object does not rise above the horizon": ":object ne se lève pas au-dessus de l'horizon",
@@ -413,7 +414,9 @@
     "DeepskyLog Privacy Policy": "Politique de confidentialité de DeepskyLog",
     "DeepskyLog sketches of the month": "Croquis du mois de DeepskyLog",
     "DeepskyLog sketches of the week": "Croquis de la semaine de DeepskyLog",
+    "DeepskyLog sketch of the month": "Croquis DeepskyLog du mois",
     "DeepskyLog Sketch of the Month": "Croquis du mois de DeepskyLog",
+    "DeepskyLog sketch of the week": "Croquis DeepskyLog de la semaine",
     "DeepskyLog Sketch of the Week": "Croquis de la semaine de DeepskyLog",
     "DeepskyLog sponsors": "Sponsors de DeepskyLog",
     "DeepskyLog Trophy Gallery": "Galerie des trophées de DeepskyLog",
@@ -1510,6 +1513,7 @@
     "Share on X": "Partager sur X",
     "Share this session": "Partager cette session",
     "Share this sketch": "Partager ce croquis",
+    "Share…": "Partager…",
     "Show": "Afficher",
     "Show (t) title, (h) made up for, (e) ephemerides, (p) page numbers, (l) legend, (s) separation lines, (i) index": "Afficher (t) titre, (h) préparé pour, (e) éphémérides, (p) numéros de page, (l) légende, (s) lignes de séparation, (i) index",
     "Show comet observations": "Voir les observations de comètes",
@@ -1640,6 +1644,9 @@
     "The selected sketch is larger than the server upload limit (:limit). Please choose a smaller file.": "Le croquis sélectionné est plus grand que la limite de téléchargement du serveur (:limit). Veuillez choisir un fichier plus petit.",
     "These people have been invited to your team and have been sent an invitation email. They may join the team by accepting the email invitation.": "Ces personnes ont été invitées dans votre équipe et ont reçu un e-mail d'invitation. Ils peuvent rejoindre l'équipe en acceptant l'invitation par e-mail.",
     "The sketch failed to upload.": "L'envoi du croquis a échoué.",
+    "The sketch has been copied: paste it (Ctrl+V) into your mail.": "Le croquis a été copié : collez-le (Ctrl+V) dans votre e-mail.",
+    "The sketch has been copied: paste it (Ctrl+V) into your post on X.": "Le croquis a été copié : collez-le (Ctrl+V) dans votre publication sur X.",
+    "The sketch is ready: tap the share button again.": "Le croquis est prêt : touchez à nouveau le bouton de partage.",
     "The team's name and owner information.": "Le nom de l'équipe et les informations sur le propriétaire.",
     "The text has been copied: paste it into your Facebook post.": "Le texte a été copié : collez-le dans votre publication Facebook.",
     "The uploaded file is empty or could not be read.": "Le fichier envoyé est vide ou illisible.",
@@ -1862,6 +1869,5 @@
     "{0} No observations were updated.|{1} Updated 1 observation to its primary object name.|[2,*] Updated :count observations to their primary object names.": "{0} Aucune observation n'a été mise à jour.|{1} 1 observation mise à jour avec le nom principal de son objet.|[2,*] :count observations mises à jour avec le nom principal de leur objet.",
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} Aucun nom d'objet orphelin trouvé.|{1} 1 nom d'objet orphelin trouvé.|[2,*] :count noms d'objets orphelins trouvés.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Aucun nom d'objet orphelin n'a été supprimé.|{1} 1 nom d'objet orphelin supprimé.|[2,*] :count noms d'objets orphelins supprimés.",
-    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Aucune cible d'observation inconnue trouvée.|{1} 1 cible d'observation inconnue trouvée.|[2,*] :count cibles d'observation inconnues trouvées.",
-    ":count observation on DeepskyLog|:count observations on DeepskyLog": ":count observation sur DeepskyLog|:count observations sur DeepskyLog"
+    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Aucune cible d'observation inconnue trouvée.|{1} 1 cible d'observation inconnue trouvée.|[2,*] :count cibles d'observation inconnues trouvées."
 }

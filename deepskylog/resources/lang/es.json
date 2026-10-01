@@ -29,6 +29,7 @@
     ":count object(s) imported, :skipped skipped.": ":count objeto(s) importado(s), :skipped omitido(s).",
     ":count object|:count objects": ":count objeto|:count objetos",
     ":count observation is linked to this object.|:count observations are linked to this object.": ":count observación está vinculada a este objeto.|:count observaciones están vinculadas a este objeto.",
+    ":count observation on DeepskyLog|:count observations on DeepskyLog": ":count observación en DeepskyLog|:count observaciones en DeepskyLog",
     ":from to :to": "de :from a :to",
     ":object added to :list.": ":object añadido a :list.",
     ":object does not rise above the horizon": ":object no sale por encima del horizonte",
@@ -413,7 +414,9 @@
     "DeepskyLog Privacy Policy": "Política de privacidad de DeepskyLog",
     "DeepskyLog sketches of the month": "Bocetos del mes de DeepskyLog",
     "DeepskyLog sketches of the week": "Bocetos de la semana de DeepskyLog",
+    "DeepskyLog sketch of the month": "Dibujo DeepskyLog del mes",
     "DeepskyLog Sketch of the Month": "Boceto del mes de DeepskyLog",
+    "DeepskyLog sketch of the week": "Dibujo DeepskyLog de la semana",
     "DeepskyLog Sketch of the Week": "Boceto de la semana de DeepskyLog",
     "DeepskyLog sponsors": "Patrocinadores de DeepskyLog",
     "DeepskyLog Trophy Gallery": "Galería de trofeos de DeepskyLog",
@@ -1510,6 +1513,7 @@
     "Share on X": "Compartir en X",
     "Share this session": "Compartir esta sesión",
     "Share this sketch": "Compartir este boceto",
+    "Share…": "Compartir…",
     "Show": "Mostrar",
     "Show (t) title, (h) made up for, (e) ephemerides, (p) page numbers, (l) legend, (s) separation lines, (i) index": "Mostrar (t) título, (h) preparado para, (e) efemérides, (p) números de página, (l) leyenda, (s) líneas de separación, (i) índice",
     "Show comet observations": "Mostrar observaciones de cometas",
@@ -1640,6 +1644,9 @@
     "The selected sketch is larger than the server upload limit (:limit). Please choose a smaller file.": "El boceto seleccionado es más grande que el límite de carga del servidor (:limit). Por favor, elige un archivo más pequeño.",
     "These people have been invited to your team and have been sent an invitation email. They may join the team by accepting the email invitation.": "Estas personas han sido invitadas a tu equipo y se les ha enviado un correo electrónico de invitación. Pueden unirse al equipo aceptando la invitación por correo electrónico.",
     "The sketch failed to upload.": "No se ha podido subir el boceto.",
+    "The sketch has been copied: paste it (Ctrl+V) into your mail.": "El dibujo se ha copiado: pégalo (Ctrl+V) en tu correo.",
+    "The sketch has been copied: paste it (Ctrl+V) into your post on X.": "El dibujo se ha copiado: pégalo (Ctrl+V) en tu publicación en X.",
+    "The sketch is ready: tap the share button again.": "El dibujo está listo: vuelve a tocar el botón de compartir.",
     "The team's name and owner information.": "El nombre del equipo y la información del propietario.",
     "The text has been copied: paste it into your Facebook post.": "El texto se ha copiado: pégalo en tu publicación de Facebook.",
     "The uploaded file is empty or could not be read.": "El archivo subido está vacío o no se ha podido leer.",
@@ -1862,6 +1869,5 @@
     "{0} No observations were updated.|{1} Updated 1 observation to its primary object name.|[2,*] Updated :count observations to their primary object names.": "{0} No se ha actualizado ninguna observación.|{1} Se ha actualizado 1 observación al nombre principal de su objeto.|[2,*] Se han actualizado :count observaciones al nombre principal de su objeto.",
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} No se han encontrado nombres de objetos huérfanos.|{1} Se ha encontrado 1 nombre de objeto huérfano.|[2,*] Se han encontrado :count nombres de objetos huérfanos.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} No se ha eliminado ningún nombre de objeto huérfano.|{1} Se ha eliminado 1 nombre de objeto huérfano.|[2,*] Se han eliminado :count nombres de objetos huérfanos.",
-    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} No se han encontrado objetivos de observación desconocidos.|{1} Se ha encontrado 1 objetivo de observación desconocido.|[2,*] Se han encontrado :count objetivos de observación desconocidos.",
-    ":count observation on DeepskyLog|:count observations on DeepskyLog": ":count observación en DeepskyLog|:count observaciones en DeepskyLog"
+    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} No se han encontrado objetivos de observación desconocidos.|{1} Se ha encontrado 1 objetivo de observación desconocido.|[2,*] Se han encontrado :count objetivos de observación desconocidos."
 }

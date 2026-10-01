@@ -199,6 +199,8 @@ Route::get('/sketch-of-the-month', function () {
         ]
     );
 })->name('sketch-of-the-month');
+// The resized og:image of a shared sketch or session picture (App\Services\SharePreviewImage).
+Route::get('/share-preview/{path}', 'App\Http\Controllers\SharePreviewController@show')->where('path', '.*')->name('share-preview')->middleware('doNotCacheResponse');
 Route::get('/sketch-of-the-week/create', 'App\Http\Controllers\SketchOfTheWeekController@create')->name('sketch-of-the-week.create')->can('add_sketch', User::class);
 Route::post('/sketch-of-the-week', 'App\Http\Controllers\SketchOfTheWeekController@store')->name('sketch-of-the-week.store')->can('add_sketch', User::class);
 Route::delete('/sketch-of-the-week/{id}', 'App\Http\Controllers\SketchOfTheWeekController@destroy')->name('sketch-of-the-week.destroy')->middleware('auth');
