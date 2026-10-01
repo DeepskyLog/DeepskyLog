@@ -665,8 +665,9 @@ Route::get('addUserToTeam.index', function (Request $request) {
 // observers and the observer filter of the observation search (returns the
 // username as id and the full name). The observation search is open to
 // guests, so guests only get observers with observations, who are listed on
-// /observers anyway, and cannot look users up by e-mail address. The search
-// runs in the database and returns at most $limit users.
+// /observers anyway. Users are only looked up by username, never by e-mail
+// address, so the endpoint does not tell which addresses are registered. The
+// search runs in the database and returns at most $limit users.
 Route::get('users.select.api', function (Request $request) {
     $limit = 50;
     $loggedIn = $request->user('sanctum') !== null;
@@ -689,12 +690,7 @@ Route::get('users.select.api', function (Request $request) {
     $selectedUsers = collect();
     if ($selected !== []) {
         $selectedUsers = (clone $query)
-            ->where(function ($q) use ($selected, $loggedIn) {
-                $q->whereIn('username', $selected);
-                if ($loggedIn) {
-                    $q->orWhereIn('email', $selected);
-                }
-            })
+            ->whereIn('username', $selected)
             ->get();
     }
 

@@ -53,7 +53,6 @@ Paths are relative to `deepskylog/`. The Critical and High items were checked in
 
 - [ ] `AtlasController.php:463-468` sets `isPhpEnabled` and `isRemoteEnabled` in dompdf (and `isRemoteEnabled` at line 268): not exploitable now, but turn both off and narrow the chroot.
 - [ ] `AtlasController::download` checks neither ownership nor status (the token is an unguessable UUID). Add `auth` and the `user_id` check, as in `ObjectSetController` and `ObjectReportController`.
-- [ ] Hidden locations: the clearoutside link and image in `location/show.blade.php:181-188` still show the coordinates to about 1 km.
 - [ ] `users.select.api` (`routes/api.php:670`) returns the account for a given email, so it confirms which emails are registered.
 - [ ] Internal exception text is shown in the PDF job status (`QueuedPdfJob`). Log it and show a generic message.
 - [ ] OAuth tokens in `connected_accounts` are not encrypted: add `encrypted` casts.
@@ -64,6 +63,7 @@ Paths are relative to `deepskylog/`. The Critical and High items were checked in
 - [ ] `UpdateUserProfileInformation.php:25`: the rule `'string:max:1000'` is malformed.
 - [ ] `observations/create.blade.php:334`: use `@js(old(...))` in `x-data` instead of `'{{ }}'`.
 - [ ] Open the uploaded AstroPlanner file read-only (`ObservingListFileImportService::parseAstroPlanner`).
+- [ ] Hidden locations: the clearoutside link and image in `location/show.blade.php:181-188` still show the coordinates to about 1 km.
 
 #### Checked and found fine
 

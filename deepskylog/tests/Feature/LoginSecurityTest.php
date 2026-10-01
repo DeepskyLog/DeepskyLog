@@ -3,6 +3,8 @@
 use App\Models\Team;
 use App\Models\User;
 use App\Support\LegacyPassword;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use JoelButcher\Socialstream\Contracts\AuthenticatesOAuthCallback;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
@@ -132,4 +134,35 @@ it('does not link a provider account of another user', function () {
 it('requires a login to confirm linking a provider', function () {
     $this->post(route('oauth.callback.confirm', 'github'), ['result' => 'confirm'])
         ->assertRedirect(route('login'));
+});
+
+it('stores the oauth tokens of a connected account encrypted', function () {
+    $user = User::factory()->create(['email' => 'jane@example.com']);
+    $account = app(CreatesConnectedAccounts::class)->create($user, 'google', loginProviderUser('jane@example.com'));
+
+    $row = DB::table('connected_accounts')->where('id', $account->id)->first();
+    $fresh = $account->fresh();
+
+    expect($fresh->token)->toBe('user-token')
+        ->and($row->token)->not->toBe('user-token')
+        ->and(Crypt::decryptString($row->token))->toBe($fresh->token)
+        ->and($fresh->getCredentials()->getToken())->toBe($fresh->token)
+        ->and($fresh->toArray())->not->toHaveKey('token');
+});
+
+it('encrypts the oauth tokens already stored, once', function () {
+    $user = User::factory()->create();
+    DB::table('connected_accounts')->insert([
+        'user_id' => $user->id, 'provider' => 'google', 'provider_id' => 'p-1',
+        'token' => 'plain-token', 'secret' => null, 'refresh_token' => 'plain-refresh',
+    ]);
+
+    $migration = require database_path('migrations/2026_10_01_000000_encrypt_connected_account_tokens.php');
+    $migration->up();
+    $migration->up(); // already encrypted values are left alone
+
+    $row = DB::table('connected_accounts')->where('provider_id', 'p-1')->first();
+    expect(Crypt::decryptString($row->token))->toBe('plain-token')
+        ->and(Crypt::decryptString($row->refresh_token))->toBe('plain-refresh')
+        ->and($row->secret)->toBeNull();
 });

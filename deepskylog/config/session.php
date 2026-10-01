@@ -172,8 +172,9 @@ return [
     */
 
     // Accept boolean-like env values (true/false strings). Use FILTER_VALIDATE_BOOLEAN
-    // to correctly interpret 'false' as boolean false.
-    'secure' => filter_var(env('SESSION_SECURE_COOKIE', false), FILTER_VALIDATE_BOOLEAN),
+    // to correctly interpret 'false' as boolean false. Without a setting the
+    // cookie is HTTPS only in production.
+    'secure' => filter_var(env('SESSION_SECURE_COOKIE', env('APP_ENV') === 'production'), FILTER_VALIDATE_BOOLEAN),
 
     /*
     |--------------------------------------------------------------------------

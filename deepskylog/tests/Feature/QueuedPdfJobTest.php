@@ -11,6 +11,27 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
+ * A PDF job whose rendering throws with internal details in the message.
+ */
+class FailingPdfJob extends QueuedPdfJob
+{
+    protected static function prefix(): string
+    {
+        return 'failing';
+    }
+
+    protected static function directory(): string
+    {
+        return 'failing';
+    }
+
+    protected function renderPdf(User $user, callable $progress): string
+    {
+        throw new RuntimeException('Cannot open /secret/path/db.sqlite');
+    }
+}
+
+/**
  * A PDF job that records who auth() says is logged in while it renders.
  */
 class AuthRecordingPdfJob extends QueuedPdfJob
@@ -45,7 +66,32 @@ it('marks the pdf failed when the queue gives up on the job', function () {
     $status = Cache::get(GenerateObjectSetsPdf::statusKey($token));
     expect($status['state'])->toBe('failed')
         ->and($status['filename'])->toBe('m-31.pdf')
-        ->and($status['detail'])->toContain('attempted too many times');
+        ->and($status['detail'])->not->toContain('attempted too many times');
+});
+
+it('does not show the exception text when rendering fails', function () {
+    $user = User::factory()->create();
+    $token = (string) Str::uuid();
+    Cache::put(FailingPdfJob::statusKey($token), ['state' => 'queued', 'user_id' => $user->id], now()->addHour());
+
+    (new FailingPdfJob($token, $user->id, []))->handle();
+
+    $status = Cache::get(FailingPdfJob::statusKey($token));
+    expect($status['state'])->toBe('failed')
+        ->and(json_encode($status))->not->toContain('/secret/path');
+});
+
+it('only lets the observer who asked for an atlas download it', function () {
+    Storage::fake('local');
+    $owner = User::factory()->create();
+    $other = User::factory()->create();
+    $token = (string) Str::uuid();
+    Cache::put(GenerateAtlasPdf::statusKey($token), ['state' => 'complete', 'user_id' => $owner->id, 'filename' => 'a.pdf'], now()->addHour());
+    Storage::disk('local')->put(GenerateAtlasPdf::path($token), '%PDF');
+
+    $this->get(route('downloads.dsl-atlas.download', $token))->assertRedirect(route('login'));
+    $this->actingAs($other)->get(route('downloads.dsl-atlas.download', $token))->assertNotFound();
+    $this->actingAs($owner)->get(route('downloads.dsl-atlas.download', $token))->assertOk();
 });
 
 it('leaves a finished or forgotten pdf alone when the job is failed afterwards', function () {

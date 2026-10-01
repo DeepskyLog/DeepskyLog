@@ -74,16 +74,14 @@ class AtlasController extends Controller
     {
         abort_unless((bool) preg_match('/^[0-9a-f-]{36}$/i', $token), 404);
 
-        $path = GenerateAtlasPdf::path($token);
-        abort_unless(
-            Storage::disk('local')->exists($path),
-            404
-        );
-
-        // The job records the descriptive name it generated under; fall back
-        // to the defaults if the status entry has expired out of the cache.
         $status = Cache::get(GenerateAtlasPdf::statusKey($token));
-        $filename = is_array($status) && is_string($status['filename'] ?? null) && $status['filename'] !== ''
+        abort_unless(is_array($status) && (int) ($status['user_id'] ?? 0) === (int) $request->user()->id, 404);
+
+        $path = GenerateAtlasPdf::path($token);
+        abort_unless(Storage::disk('local')->exists($path), 404);
+
+        // The job records the descriptive name it generated under.
+        $filename = is_string($status['filename'] ?? null) && $status['filename'] !== ''
             ? $status['filename']
             : self::filenameFor('detail', 'A4', 'landscape');
 
@@ -289,11 +287,13 @@ class AtlasController extends Controller
 
             // PDF generation
             // Prefer using Dompdf directly for single-page generation so we
-            // can explicitly enable HTML5 parser and remote file access.
+            // can explicitly enable the HTML5 parser. The chart is inlined as
+            // a data URI, so Dompdf needs neither remote nor local files.
             if (class_exists('Dompdf\\Dompdf')) {
                 $options = new \Dompdf\Options();
                 $options->set('isHtml5ParserEnabled', true);
-                $options->set('isRemoteEnabled', true);
+                $options->set('isRemoteEnabled', false);
+                $options->set('isPhpEnabled', false);
 
                 $dompdf = new \Dompdf\Dompdf($options);
                 $dompdf->loadHtml($html);
@@ -487,14 +487,12 @@ class AtlasController extends Controller
         // depend on any local browser binary being installed.
         if (class_exists('Dompdf\\Dompdf')) {
             $options = new \Dompdf\Options();
-            // enable HTML5 parser and remote resources
             $options->set('isHtml5ParserEnabled', true);
-            $options->set('isRemoteEnabled', true);
-            // allow local file access when we inline temporary SVG files
-            $options->set('isPhpEnabled', true);
+            $options->set('isRemoteEnabled', false);
+            $options->set('isPhpEnabled', false);
             // Pages are referenced as file:// URIs under the temp directory,
             // which Dompdf refuses to read unless it is inside the chroot.
-            $options->set('chroot', array_unique([sys_get_temp_dir(), base_path(), storage_path()]));
+            $options->set('chroot', [sys_get_temp_dir()]);
 
             $dompdf = new \Dompdf\Dompdf($options);
             $dompdf->loadHtml($html);

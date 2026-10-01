@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Throwable;
 
 /**
@@ -237,10 +236,9 @@ abstract class QueuedPdfJob implements ShouldQueue
             $this->updateStatus('complete', ['path' => $path]);
             $this->removeReplacedPdfs();
         } catch (Throwable $exception) {
-            $this->updateStatus('failed', [
-                'error' => 'PDF generation failed.',
-                'detail' => Str::limit(get_class($exception) . ': ' . $exception->getMessage(), 500),
-            ]);
+            // The exception text can name files, queries or settings, so it
+            // goes to the log and the observer only gets a generic message.
+            $this->updateStatus('failed', ['error' => 'PDF generation failed.']);
 
             try {
                 report($exception);
@@ -268,11 +266,11 @@ abstract class QueuedPdfJob implements ShouldQueue
             return;
         }
 
+        // The queue logs the exception in failed_jobs; the observer is only
+        // told that the PDF was not finished.
         $this->updateStatus('failed', [
             'error' => 'PDF generation failed.',
-            'detail' => $exception === null
-                ? 'The worker stopped before the PDF was finished.'
-                : Str::limit(get_class($exception) . ': ' . $exception->getMessage(), 500),
+            'detail' => 'The worker stopped before the PDF was finished.',
         ]);
     }
 

@@ -135,7 +135,10 @@ it('lists all users to logged-in users, searched in the database', function () {
     // A search term with LIKE wildcards matches them literally.
     expect($this->getJson(route('users.select.api', ['search' => '%']))->json())->toBe([]);
 
-    $this->getJson(route('users.select.api', ['selected' => $alice->email]))
+    // Users are not looked up by e-mail address, which would tell which
+    // addresses are registered.
+    expect($this->getJson(route('users.select.api', ['selected' => $alice->email]))->json())->toBe([]);
+    $this->getJson(route('users.select.api', ['selected' => 'alice_a']))
         ->assertExactJson([['id' => 'alice_a', 'name' => 'Alice Andromeda']]);
 
     expect($this->getJson(route('users.select.api', ['selected' => 'bob_b', 'search' => 'alice']))->json('*.id'))

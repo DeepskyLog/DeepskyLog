@@ -22,6 +22,12 @@ trait HasOAuth2Tokens
     {
         return Attribute::make(
             get: function ($token) {
+                // An accessor takes the place of the cast, so decrypt (or
+                // otherwise cast) the stored token here.
+                if ($token !== null && $this->hasCast('token')) {
+                    $token = $this->castAttribute('token', $token);
+                }
+
                 if (! Socialstream::refreshesOAuthTokens()) {
                     return $token;
                 }
