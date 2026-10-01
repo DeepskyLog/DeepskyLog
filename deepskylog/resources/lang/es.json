@@ -1851,5 +1851,6 @@
     "This set has :count charts and photos; at most :max fit in one PDF.": "Este conjunto tiene :count cartas y fotos; en un PDF caben como máximo :max.",
     "You already have :count PDFs waiting or being made. Wait until one of them is ready.": "Ya tienes :count PDF en espera o en preparación. Espera hasta que uno de ellos esté listo.",
     "You have asked for too many PDFs. Try again in :minutes minutes.": "Has solicitado demasiados PDF. Inténtalo de nuevo dentro de :minutes minutos.",
-    "A whole atlas is generated in the background; use the queue.": "Un atlas completo se genera en segundo plano; usa la cola."
+    "A whole atlas is generated in the background; use the queue.": "Un atlas completo se genera en segundo plano; usa la cola.",
+    "read": "lectura"
 }

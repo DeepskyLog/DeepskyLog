@@ -1851,5 +1851,6 @@
     "This set has :count charts and photos; at most :max fit in one PDF.": "Deze set heeft :count kaarten en foto's; er passen er hoogstens :max in één PDF.",
     "You already have :count PDFs waiting or being made. Wait until one of them is ready.": "Je hebt al :count PDF's die wachten of gemaakt worden. Wacht tot er een klaar is.",
     "You have asked for too many PDFs. Try again in :minutes minutes.": "Je hebt te veel PDF's aangevraagd. Probeer het over :minutes minuten opnieuw.",
-    "A whole atlas is generated in the background; use the queue.": "Een volledige atlas wordt op de achtergrond gemaakt; gebruik de wachtrij."
+    "A whole atlas is generated in the background; use the queue.": "Een volledige atlas wordt op de achtergrond gemaakt; gebruik de wachtrij.",
+    "read": "lezen"
 }

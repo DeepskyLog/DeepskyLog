@@ -37,7 +37,7 @@
     - [ ] After changing `.env`: `php artisan config:clear` (or `php artisan config:cache` if the server uses a cached config).
     - [ ] After the update: `php artisan responsecache:clear`, so no page cached without a locale is still served.
 - [ ] Release new version of pyDeepskyLog
-  - [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
+  - [ ] Ready to be released, make sure to check if everything still works with the PiFinder.
 
 
 ### For later

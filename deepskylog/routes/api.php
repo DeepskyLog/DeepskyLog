@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\MeController;
 use App\Http\Controllers\EyepieceController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\InstrumentController;
@@ -44,6 +45,7 @@ use App\Http\Controllers\SearchController;
 | users.select.api (the observation search is open to guests; guests only
 | get observers with observations) and the documented
 | /api/{instrument,eyepieces,lenses,filters}/{userid} stay public.
+| /api/v1/me/... is the token API for programs (App\Http\Controllers\Api\MeController).
 |
 */
 
@@ -1274,6 +1276,25 @@ Route::get('/instrument/{userid}', [InstrumentController::class, 'show_from_user
 Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);
 Route::get('/lenses/{userid}', [LensController::class, 'show_from_user']);
 Route::get('/filters/{userid}', [FilterController::class, 'show_from_user']);
+
+// Read-only API on the data of the authenticated observer (pydeepskylog and
+// other programs): a personal access token with the 'read' ability, made on
+// /user/api-tokens and sent as "Authorization: Bearer <token>".
+Route::prefix('v1/me')->middleware(['auth:sanctum', 'abilities:read'])->name('api.me.')->group(function () {
+    Route::get('/', [MeController::class, 'profile'])->name('profile');
+    Route::get('locations', [MeController::class, 'locations'])->name('locations');
+    Route::get('instruments', [MeController::class, 'instruments'])->name('instruments');
+    Route::get('eyepieces', [MeController::class, 'eyepieces'])->name('eyepieces');
+    Route::get('lenses', [MeController::class, 'lenses'])->name('lenses');
+    Route::get('filters', [MeController::class, 'filters'])->name('filters');
+    Route::get('instrument-sets', [MeController::class, 'instrumentSets'])->name('instrument-sets');
+    Route::get('observations', [MeController::class, 'observations'])->name('observations');
+    Route::get('observations/{id}', [MeController::class, 'observation'])->whereNumber('id')->name('observation');
+    Route::get('sessions', [MeController::class, 'sessions'])->name('sessions');
+    Route::get('sessions/{id}', [MeController::class, 'session'])->whereNumber('id')->name('session');
+    Route::get('observing-lists', [MeController::class, 'observingLists'])->name('observing-lists');
+    Route::get('observing-lists/{id}', [MeController::class, 'observingList'])->whereNumber('id')->name('observing-list');
+});
 
 // Persist Aladin preview defaults for the authenticated user
 Route::middleware('auth:sanctum')->post('user/aladin-defaults', function (Request $request) {

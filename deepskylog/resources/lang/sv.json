@@ -1848,5 +1848,6 @@
     "This set has :count charts and photos; at most :max fit in one PDF.": "Den här uppsättningen har :count kartor och foton; högst :max ryms i en PDF.",
     "You already have :count PDFs waiting or being made. Wait until one of them is ready.": "Du har redan :count PDF:er som väntar eller skapas. Vänta tills en av dem är klar.",
     "You have asked for too many PDFs. Try again in :minutes minutes.": "Du har begärt för många PDF:er. Försök igen om :minutes minuter.",
-    "A whole atlas is generated in the background; use the queue.": "En hel atlas skapas i bakgrunden; använd kön."
+    "A whole atlas is generated in the background; use the queue.": "En hel atlas skapas i bakgrunden; använd kön.",
+    "read": "läsa"
 }
