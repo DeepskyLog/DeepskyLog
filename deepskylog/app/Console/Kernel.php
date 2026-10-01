@@ -24,6 +24,11 @@ class Kernel extends ConsoleKernel
         // sessions written without one (imports, the old site).
         $schedule->command('sessions:backfill-slugs')->hourly();
 
+        // The privacy policy: accounts that recorded nothing within 24 months
+        // after registration are warned a month and a week before, and then
+        // deleted. Daily, so the warnings go out on time.
+        $schedule->command('users:prune-inactive --apply')->dailyAt('03:30')->withoutOverlapping();
+
         $schedule->command('astronomy:updateCometPhotometry')->weeklyOn(2, '4:30');
         // Incremental search index reindex (one-run nightly; safe for production)
         $schedule->command('search:reindex --incremental')

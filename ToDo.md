@@ -9,6 +9,7 @@
   - [ ] Not logged in:
     - [ ] Home page
     - [X] Object detail page
+    - [X] Privacy page
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4
 - [ ] Translations

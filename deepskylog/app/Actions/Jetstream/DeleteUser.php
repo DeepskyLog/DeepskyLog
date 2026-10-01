@@ -12,7 +12,7 @@ class DeleteUser implements DeletesUsers
     /**
      * The team deleter implementation.
      *
-     * @var \Laravel\Jetstream\Contracts\DeletesTeams
+     * @var DeletesTeams
      */
     protected $deletesTeams;
 
@@ -43,6 +43,17 @@ class DeleteUser implements DeletesUsers
             $user->instrumentSets->each->delete();
             foreach (['experience_audits', 'experiences', 'achievement_user', 'challenge_user'] as $table) {
                 DB::table($table)->where('user_id', $user->id)->delete();
+            }
+            // Personal rows without a foreign key, or one that would only set
+            // the user to null
+            foreach (['user_object_metrics', 'user_table_settings', 'sessions'] as $table) {
+                DB::table($table)->where('user_id', $user->id)->delete();
+            }
+            // The inbox: messages to the user, and what they read or deleted
+            // of the broadcasts. Sent messages stay in the inbox of others.
+            DB::table('messages')->where('receiver', $user->username)->delete();
+            foreach (['messages_read', 'messages_deleted'] as $table) {
+                DB::table($table)->where('receiver', $user->username)->delete();
             }
             $user->delete();
         });

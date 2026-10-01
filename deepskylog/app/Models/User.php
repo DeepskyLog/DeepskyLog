@@ -79,6 +79,8 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'inactivity_deletion_at' => 'datetime',
+        'inactivity_final_warning_at' => 'datetime',
         'about' => PurifiedHtml::class,
     ];
 

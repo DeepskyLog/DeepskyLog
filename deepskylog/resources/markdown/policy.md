@@ -9,6 +9,8 @@ parties.
 
 In case the registered user has not recorded any information in DeepskyLog within 24 months after registration, his
 account will be made obsolete and personal information deleted from the database.
+Before the account is deleted, two warnings are sent to the registered email address: one month and one week before
+the deletion. Recording any information, for example an observation, an instrument or a location, keeps the account.
 
 In case of questions or concerns regarding your personal data, do not hesitate to contact us at
 deepskylog@groups.io.
