@@ -5,10 +5,10 @@ namespace App\Livewire;
 use App\Models\Instrument;
 use App\Models\InstrumentMake;
 use App\Models\InstrumentType;
+use App\Support\UploadedPhoto;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -181,12 +181,7 @@ class CreateInstrument extends Component
 
         $photoPath = null;
         if ($this->photo) {
-            $upload_name = Str::slug(
-                Auth()->user()->slug.' '.$make.' '.$this->name,
-                '-'
-            ).'.'.$this->photo->extension();
-            // Make a slug from the upload_name
-            $photoPath = $this->photo->storePubliclyAs('photos/instruments', $upload_name, 'public');
+            $photoPath = UploadedPhoto::store($this->photo, 'photos/instruments', $this->instrument);
         }
 
         // Check if aperture and focal length are set in inches

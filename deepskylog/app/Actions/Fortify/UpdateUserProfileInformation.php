@@ -23,7 +23,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id), OAuthEmail::notGeneratedRule($user->email)],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
             'country' => ['string'],
-            'about' => ['string:max:1000', 'nullable'],
+            'about' => ['nullable', 'string', 'max:1000'],
             'fstOffset' => ['numeric', 'min:-5.0', 'max:5.0'],
         ])->validateWithBag('updateProfileInformation');
 

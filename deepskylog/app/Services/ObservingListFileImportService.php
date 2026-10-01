@@ -189,7 +189,11 @@ class ObservingListFileImportService
                 throw new \RuntimeException('File does not exist or is not readable');
             }
 
-            $db = new \PDO('sqlite:' . $filePath);
+            // The file comes from the user: open it read-only, so nothing in
+            // it (a trigger, a view) can write to it or to an attached file.
+            $db = new \PDO('sqlite:' . $filePath, null, null, [
+                \PDO::SQLITE_ATTR_OPEN_FLAGS => \PDO::SQLITE_OPEN_READONLY,
+            ]);
             $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
             // Check if Objects table exists

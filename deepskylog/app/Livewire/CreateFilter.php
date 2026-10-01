@@ -4,8 +4,8 @@ namespace App\Livewire;
 
 use App\Models\Filter;
 use App\Models\FilterMake;
+use App\Support\UploadedPhoto;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -96,12 +96,7 @@ class CreateFilter extends Component
 
         $photoPath = null;
         if ($this->photo) {
-            $upload_name = Str::slug(
-                Auth()->user()->slug.' '.$make.' '.$this->name,
-                '-'
-            ).'.'.$this->photo->extension();
-            // Make a slug from the upload_name
-            $photoPath = $this->photo->storePubliclyAs('photos/filter', $upload_name, 'public');
+            $photoPath = UploadedPhoto::store($this->photo, 'photos/filter', $this->filter);
         }
 
         $data['make_id'] = $make;

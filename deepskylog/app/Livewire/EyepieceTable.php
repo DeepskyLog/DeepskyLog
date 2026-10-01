@@ -143,12 +143,6 @@ final class EyepieceTable extends PowerGridComponent
         ];
     }
 
-    #[On('edit')]
-    public function edit($rowId): void
-    {
-        $this->js('alert('.$rowId.')');
-    }
-
     public function actionsFromView($row): View
     {
         return view('actions.eyepiece', ['row' => $row]);

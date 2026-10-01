@@ -3,8 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\InstrumentSet;
+use App\Support\UploadedPhoto;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -101,8 +101,7 @@ class CreateInstrumentSet extends Component
         ]);
 
         if ($this->photo) {
-            $upload_name = Str::slug(Auth()->user()->slug.' '.$this->name, '-').'.'.$this->photo->extension();
-            $photoPath = $this->photo->storePubliclyAs('photos/instrumentset', $upload_name, 'public');
+            $photoPath = UploadedPhoto::store($this->photo, 'photos/instrumentset', $this->set);
             $data['picture'] = $photoPath;
         }
 

@@ -5,10 +5,10 @@ namespace App\Livewire;
 use App\Models\Eyepiece;
 use App\Models\EyepieceMake;
 use App\Models\EyepieceType;
+use App\Support\UploadedPhoto;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -181,12 +181,7 @@ class CreateEyepiece extends Component
 
         $photoPath = null;
         if ($this->photo) {
-            $upload_name = Str::slug(
-                Auth()->user()->slug.' '.$this->name,
-                '-'
-            ).'.'.$this->photo->extension();
-            // Make a slug from the upload_name
-            $photoPath = $this->photo->storePubliclyAs('photos/eyepieces', $upload_name, 'public');
+            $photoPath = UploadedPhoto::store($this->photo, 'photos/eyepieces', $this->eyepiece);
         }
 
         if ($this->field_stop_mm == '') {

@@ -628,7 +628,7 @@ Route::get('observation_languages.index', function (Request $request) {
     }
 
     // Get the languages
-    foreach (Languages::lookup(['bg', 'hr', 'cs', 'da', 'nl', 'en', 'eo', 'fi', 'fr', 'de', 'el', 'is', 'it', 'no', 'pl', 'pt', 'es', 'sv'], 'mixed') as $key => $language) {
+    foreach (Languages::lookup(config('app.observation_languages'), 'mixed') as $key => $language) {
         if ($request->search == '' || Str::contains(Str::lower($language), Str::lower($request->search))) {
             $allLanguages[] = [
                 'id' => $key,

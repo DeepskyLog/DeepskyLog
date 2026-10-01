@@ -113,6 +113,11 @@ return [
         'Swedish' => 'sv',
     ],
 
+    // The languages an observer can write observations in.
+    'observation_languages' => [
+        'bg', 'hr', 'cs', 'da', 'nl', 'en', 'eo', 'fi', 'fr', 'de', 'el', 'is', 'it', 'no', 'pl', 'pt', 'es', 'sv',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Faker Locale

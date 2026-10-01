@@ -4,6 +4,7 @@ namespace App\Livewire\Profile;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class UpdateUserLanguageInformation extends Component
@@ -16,12 +17,20 @@ class UpdateUserLanguageInformation extends Component
 
     public $sendMail;
 
-    protected $rules = [
-        'observationlanguage' => 'string',
-        'language' => 'string',
-        'translate' => 'boolean',
-        'sendMail' => 'boolean',
-    ];
+    protected function rules(): array
+    {
+        return [
+            // The current value stays valid, so an observer with a language
+            // that is no longer offered can still save the other settings.
+            'observationlanguage' => ['required', 'string', Rule::in([
+                ...config('app.observation_languages'),
+                auth()->user()->observationlanguage,
+            ])],
+            'language' => ['required', 'string', Rule::in(array_values(config('app.available_locales')))],
+            'translate' => 'boolean',
+            'sendMail' => 'boolean',
+        ];
+    }
 
     /**
      * Sets the database values.
@@ -41,6 +50,8 @@ class UpdateUserLanguageInformation extends Component
      */
     public function updateLanguageInformation(): void
     {
+        $this->validate();
+
         auth()->user()->forceFill([
             'observationlanguage' => $this->observationlanguage,
             'language' => $this->language,

@@ -3,13 +3,13 @@
 namespace App\Livewire;
 
 use App\Models\Location;
+use App\Support\UploadedPhoto;
 use deepskylog\AstronomyLibrary\Magnitude;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -131,12 +131,7 @@ class CreateLocation extends Component
         // If a photo was uploaded, store it now.
         // dd($this->photo);
         if ($this->photo) {
-            $upload_name = Str::slug(
-                Auth()->user()->slug.' '.$this->name,
-                '-'
-            ).'.'.$this->photo->extension();
-            // Make a slug from the upload_name
-            $photoPath = $this->photo->storePubliclyAs('photos/locations', $upload_name, 'public');
+            $photoPath = UploadedPhoto::store($this->photo, 'photos/locations', $this->location);
 
             $picture = $photoPath;
         }
