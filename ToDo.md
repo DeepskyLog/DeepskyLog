@@ -5,7 +5,6 @@
 ## Next steps
 
 - [ ] Test! 
-  - [ ] Test for security problems
   - [ ] Test manually when logged in and logged out, as database expert and as administrator
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4
@@ -40,22 +39,6 @@
 - [ ] Release new version of pyDeepskyLog
   - [ ] Should add a method to get the locations of a user, but only if authentication is implemented.
 
-### Security review (2026-09-30)
-
-Paths are relative to `deepskylog/`. The Critical and High items were checked in the code and the server config; no exploit was tried on a running site.
-
-#### Medium
-
-- [x] Deleting user 1 deletes the three system teams (`app/Actions/Jetstream/DeleteUser.php:60-62`; user 1 owns them in `GroupSeeder`). Skip the system teams in `deleteTeams()`.
-- [x] Other users' equipment can be referenced: `CreateInstrumentSet` (`instruments.*`, `locations.*`), `ObservationsController::store` and `Profile/UpdateUserObservingInformation` (`stdlocation`, `stdtelescope`, …) accept ids without checking the owner. Use `Rule::exists(...)->where('user_id', auth()->id())`.
-
-#### Low / hardening
-
-- [ ] Hidden locations: the clearoutside link and image in `location/show.blade.php:181-188` still show the coordinates to about 1 km.
-
-#### Checked and found fine
-
-No SQL or command injection, no `unserialize`/`eval` on user data, no open redirects, no XXE in the XML imports, no secrets in git (`.env` was never tracked), `composer audit` and `npm audit` clean, no CSRF exclusions, the response cache does not serve per-user pages, observing lists / observations / sessions / messages / object editing are authorized, object-set and report downloads check the owner, exports are throttled and capped.
 
 ### For later
 

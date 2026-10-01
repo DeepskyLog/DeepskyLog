@@ -240,3 +240,26 @@ it('only removes users without anything of their own', function () {
     expect(User::whereIn('id', [$withSketch->id, $withMonthSketch->id, $withLocation->id, $withInstrument->id, $admin->id])->count())->toBe(5)
         ->and(User::find($empty->id))->toBeNull();
 });
+
+it('shows a hidden location to everyone, but its coordinates only to the owner', function () {
+    $owner = User::factory()->create();
+    $location = LocationFactory::new()->create([
+        'user_id' => $owner->id, 'observer' => $owner->username, 'hidden' => true,
+    ]);
+    $url = route('location.show', [$owner->slug, $location->slug]);
+    $hidden = ['clearoutside.com', 'location-map', '>Latitude<'];
+
+    $this->get($url)->assertOk()->assertSee($location->name)->assertDontSee($hidden, false);
+    $this->actingAs(User::factory()->create())->get($url)->assertOk()->assertDontSee($hidden, false);
+    $this->actingAs($owner)->get($url)->assertOk()->assertSee($hidden, false);
+});
+
+it('shows the coordinates of a public location to everyone', function () {
+    $owner = User::factory()->create();
+    $location = LocationFactory::new()->create([
+        'user_id' => $owner->id, 'observer' => $owner->username, 'hidden' => false,
+    ]);
+
+    $this->get(route('location.show', [$owner->slug, $location->slug]))
+        ->assertOk()->assertSee(['clearoutside.com', 'location-map', '>Latitude<'], false);
+});
