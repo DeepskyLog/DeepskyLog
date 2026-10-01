@@ -1,32 +1,29 @@
-document.addEventListener("DOMContentLoaded", () => {
-    let socialButtons = document.querySelectorAll('.social-button');
-
-    socialButtons.forEach((button) => {
-        button.addEventListener('click', socialButtonClickHandler)
-    })
-});
+// Delegated, so the buttons of cards that Livewire renders later work as well.
+document.addEventListener('click', socialButtonClickHandler);
 
 function socialButtonClickHandler(e) {
     const popupWidth = 780;
     const popupHeight = 550;
 
-    let el = identifyTargetElement(e, provideMissingTargetElementHandler(e));
-    if (el === undefined) return;
+    const el = e.target.closest ? e.target.closest('a.social-button') : null;
+    if (!el) return;
 
     if (el.id === 'clip') {
         e.preventDefault();
         e.stopImmediatePropagation();
-        if (window.clipboardData && window.clipboardData.setData) {
-            clipboardData.setData("Text", el.href);
-        } else {
-            let textArea = document.createElement("textarea");
-            textArea.value = el.href;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand("copy");  // Security exception may be thrown by some browsers.
-            textArea.remove();
-        }
+        copyToClipboard(el.href);
         return;
+    }
+
+    // Facebook only takes the link and fills the post with the page preview; it ignores (and its
+    // policy forbids) text passed along. Copy the text so the observer can paste it into the post.
+    if (isFacebookShare(el.href)) {
+        const text = el.dataset.shareText || new URL(el.href).searchParams.get('quote') || '';
+        if (text.trim() !== '') {
+            copyToClipboard(text);
+            showShareNotice(document.querySelector('meta[name="share-notice"]')?.content
+                || 'The text has been copied: paste it into your Facebook post.');
+        }
     }
 
     const windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
@@ -47,30 +44,48 @@ function socialButtonClickHandler(e) {
     }
 }
 
-function identifyTargetElement(e, cb) {
-    let buttonClassName = 'social-button';
-
-    if (
-        e.target.parentElement &&
-        e.target.parentElement.className.indexOf(buttonClassName) !== -1
-    ) {
-        return e.target.parentElement;
+function isFacebookShare(href) {
+    try {
+        const url = new URL(href);
+        return /(^|\.)facebook\.com$/.test(url.hostname) && url.pathname.startsWith('/sharer');
+    } catch (_) {
+        return false;
     }
-
-    if (
-        e.target.className.indexOf(buttonClassName) !== -1
-    ) {
-        return e.target;
-    }
-
-    typeof cb === 'function' && cb(buttonClassName)
 }
 
-// this function can be modified to handle a missing target element
-// don't remove it because it is used in the socialButtonClickHandler
-function provideMissingTargetElementHandler(e) {
-    // returns a function with an enclosing e variable (contains a triggered event)
-    // accepts a name argument (contains a classname used to identify a target element)
-    return (name) => {
+function copyToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).catch(() => copyWithTextarea(text));
+        return;
     }
+    copyWithTextarea(text);
+}
+
+function copyWithTextarea(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.opacity = '0';
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+        document.execCommand('copy');  // Security exception may be thrown by some browsers.
+    } catch (_) {
+    }
+    textArea.remove();
+}
+
+function showShareNotice(message) {
+    let notice = document.getElementById('share-notice');
+    if (!notice) {
+        notice = document.createElement('div');
+        notice.id = 'share-notice';
+        notice.setAttribute('role', 'status');
+        notice.className = 'fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-gray-800 px-4 py-2 text-sm text-white shadow-lg ring-1 ring-gray-600';
+        document.body.appendChild(notice);
+    }
+    notice.textContent = message;
+    notice.hidden = false;
+    clearTimeout(notice._hideTimer);
+    notice._hideTimer = setTimeout(() => { notice.hidden = true; }, 6000);
 }

@@ -26,7 +26,7 @@
 
                                     <div class="text-center">
                                         {!!
-                                            ShareButtons::page("", $share, [
+                                            ShareButtons::page($observation->detailUrl() ?? url("/"), $share, [
                                                 "title" => __("Share this sketch"),
                                                 "class" => "text-gray-500 hover:text-gray-700",
                                                 "rel" => "nofollow noopener noreferrer",
@@ -49,7 +49,7 @@
 
                                     <div class="text-center">
                                         {!!
-                                            ShareButtons::page("", $share, [
+                                            ShareButtons::page($observation->detailUrl() ?? url("/"), $share, [
                                                 "title" => __("Share this sketch"),
                                                 "class" => "text-gray-500 hover:text-gray-700",
                                                 "rel" => "nofollow noopener noreferrer",

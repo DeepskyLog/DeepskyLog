@@ -145,18 +145,33 @@
                     @endphp
                     @push('head')
                         @php
-                            $ogTitle = __("Look at this sketch of ") . $objectDisplayName . __(" by ") . ($user?->name ?? $obs->observerid ?? '');
+                            // Facebook fills the post with this preview only: it ignores any text passed to the sharer.
+                            $ogHasSketch = (bool) ($obs->hasDrawing ?? $obs->has_drawing ?? false);
+                            $ogTitle = ($ogHasSketch ? __("Look at this sketch of ") : __("Look at this observation of "))
+                                . $objectDisplayName . __(" by ") . ($user?->name ?? $obs->observerid ?? '');
+                            // Old rows hold entity-encoded markup; the space before each tag keeps paragraphs apart.
+                            $ogDescription = html_entity_decode((string) ($obs->description ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                            $ogDescription = html_entity_decode(strip_tags(str_replace('<', ' <', $ogDescription)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                            $ogDescription = trim(preg_replace('/\s+/u', ' ', $ogDescription));
+                            $ogDescription = $ogDescription !== ''
+                                ? \Illuminate\Support\Str::limit($ogDescription, 200)
+                                : __('Observations and sketches of deep-sky objects, comets, the Moon, the Sun and the planets on DeepskyLog.');
                             $ogUrl = url()->current();
-                            $ogImageAbsolute = str_starts_with($drawingPath, 'http') ? $drawingPath : url($drawingPath);
+                            $ogImageAbsolute = $ogHasSketch
+                                ? (str_starts_with($drawingPath, 'http') ? $drawingPath : url($drawingPath))
+                                : url('/images/logo2.png');
                         @endphp
                         <meta property="og:type" content="article" />
                         <meta property="og:title" content="{{ $ogTitle }}" />
+                        <meta property="og:description" content="{{ $ogDescription }}" />
                         <meta property="og:url" content="{{ $ogUrl }}" />
                         <meta property="og:image" content="{{ $ogImageAbsolute }}" />
                         <meta property="og:image:alt" content="{{ $objectDisplayName }}" />
                         <meta property="og:site_name" content="DeepskyLog" />
-                        <meta name="twitter:card" content="summary_large_image" />
+                        <meta name="description" content="{{ $ogDescription }}" />
+                        <meta name="twitter:card" content="{{ $ogHasSketch ? 'summary_large_image' : 'summary' }}" />
                         <meta name="twitter:title" content="{{ $ogTitle }}" />
+                        <meta name="twitter:description" content="{{ $ogDescription }}" />
                         <meta name="twitter:image" content="{{ $ogImageAbsolute }}" />
                         <meta name="twitter:image:alt" content="{{ $objectDisplayName }}" />
                     @endpush
@@ -376,7 +391,7 @@
                             </span>
                             {{-- Share buttons --}}
                             <div id="social-buttons" class="flex items-center gap-1 ml-auto">
-                                <a href="{{ $detailFacebook }}" class="social-button hover" rel="follow" title="{{ __('Share on Facebook') }}"><span class="fab fa-facebook-square"></span></a>
+                                <a href="{{ $detailFacebook }}" class="social-button hover" data-share-text="{{ $detailShareDesc . "\n\n" . $detailShareTags }}" rel="follow" title="{{ __('Share on Facebook') }}"><span class="fab fa-facebook-square"></span></a>
                                 <a href="{{ $detailTwitter }}" class="social-button hover" rel="follow" title="{{ __('Share on X') }}"><span class="fab fa-square-x-twitter"></span></a>
                                 <a href="{{ $detailShareUrl }}" class="social-button hover" id="clip" title="{{ __('Copy link') }}" rel="nofollow noopener noreferrer"><span class="fas fa-share"></span></a>
                                 <a href="{{ $detailMailto }}" class="social-button hover" rel="nofollow" title="{{ __('Share by email') }}"><span class="fas fa-envelope"></span></a>

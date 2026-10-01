@@ -4,6 +4,32 @@
         // Compute session parameter for route generation: use slug if available, otherwise fall back to id
         $sessionParam = trim($session->slug ?: '') ?: ($session->id ?? null);
     @endphp
+    @push('head')
+        @php
+            // Facebook fills the post with this preview only: it ignores any text passed to the sharer.
+            $ogTitle = __('Observations from :session by :owner', [
+                'session' => html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                'owner' => $user->name,
+            ]);
+            $ogDescription = html_entity_decode((string) ($session->comments ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $ogDescription = trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags(str_replace('<', ' <', $ogDescription)), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+            $ogDescription = $ogDescription !== ''
+                ? \Illuminate\Support\Str::limit($ogDescription, 200)
+                : trans_choice(':count observation on DeepskyLog|:count observations on DeepskyLog', (int) $totalObservations, ['count' => (int) $totalObservations]);
+            $ogImage = !empty($image) ? (str_starts_with($image, 'http') ? $image : url($image)) : url('/images/logo2.png');
+        @endphp
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="{{ $ogTitle }}" />
+        <meta property="og:description" content="{{ $ogDescription }}" />
+        <meta property="og:url" content="{{ url()->current() }}" />
+        <meta property="og:image" content="{{ $ogImage }}" />
+        <meta property="og:site_name" content="DeepskyLog" />
+        <meta name="description" content="{{ $ogDescription }}" />
+        <meta name="twitter:card" content="{{ !empty($image) ? 'summary_large_image' : 'summary' }}" />
+        <meta name="twitter:title" content="{{ $ogTitle }}" />
+        <meta name="twitter:description" content="{{ $ogDescription }}" />
+        <meta name="twitter:image" content="{{ $ogImage }}" />
+    @endpush
     <div>
     <div class="mx-auto max-w-full bg-gray-900 px-4 py-6 sm:px-4 lg:px-6">
         <header class="mb-6">

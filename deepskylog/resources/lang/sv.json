@@ -1157,6 +1157,7 @@
     "Observation not found for editing": "Observationen som ska redigeras hittades inte",
     "Observations": "Observationer",
     "observations": "observationer",
+    "Observations and sketches of deep-sky objects, comets, the Moon, the Sun and the planets on DeepskyLog.": "Observationer och skisser av djuprymdsobjekt, kometer, månen, solen och planeterna på DeepskyLog.",
     "Observation saved": "Observationen har sparats",
     "Observations by :owner": "Observationer av :owner",
     "Observations from :session by :owner": "Observationer från :session av :owner",
@@ -1637,6 +1638,7 @@
     "These people have been invited to your team and have been sent an invitation email. They may join the team by accepting the email invitation.": "Dessa personer har bjudits in till ditt team och har skickats en inbjudan via e-post. De kan gå med i teamet genom att acceptera e-postinbjudan.",
     "The sketch failed to upload.": "Det gick inte att ladda upp skissen.",
     "The team's name and owner information.": "Teamets namn och ägarinformation.",
+    "The text has been copied: paste it into your Facebook post.": "Texten har kopierats: klistra in den i ditt Facebook-inlägg.",
     "The uploaded file is empty or could not be read.": "Den uppladdade filen är tom eller kunde inte läsas.",
     "The uploaded file must be an image.": "Den uppladdade filen måste vara en bild.",
     "The uploaded image may not be larger than :max kilobytes.": "Den uppladdade bilden får inte vara större än :max kilobyte.",
@@ -1857,5 +1859,6 @@
     "{0} No observations were updated.|{1} Updated 1 observation to its primary object name.|[2,*] Updated :count observations to their primary object names.": "{0} Inga observationer uppdaterades.|{1} 1 observation uppdaterades till objektets huvudnamn.|[2,*] :count observationer uppdaterades till objektens huvudnamn.",
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} Inga föräldralösa objektnamn hittades.|{1} 1 föräldralöst objektnamn hittades.|[2,*] :count föräldralösa objektnamn hittades.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Inga föräldralösa objektnamn togs bort.|{1} 1 föräldralöst objektnamn togs bort.|[2,*] :count föräldralösa objektnamn togs bort.",
-    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Inga okända observationsmål hittades.|{1} 1 okänt observationsmål hittades.|[2,*] :count okända observationsmål hittades."
+    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Inga okända observationsmål hittades.|{1} 1 okänt observationsmål hittades.|[2,*] :count okända observationsmål hittades.",
+    ":count observation on DeepskyLog|:count observations on DeepskyLog": ":count observation på DeepskyLog|:count observationer på DeepskyLog"
 }

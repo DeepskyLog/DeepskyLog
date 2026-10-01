@@ -15,6 +15,7 @@
             <meta property="og:title" content="{{ $ogTitle }}" />
             <meta property="og:description" content="{{ $ogDescription }}" />
             <meta property="og:url" content="{{ url()->current() }}" />
+            <meta property="og:image" content="{{ url('/images/logo2.png') }}" />
             <meta property="og:site_name" content="DeepskyLog" />
             <meta name="twitter:card" content="summary" />
             <meta name="twitter:title" content="{{ $ogTitle }}" />

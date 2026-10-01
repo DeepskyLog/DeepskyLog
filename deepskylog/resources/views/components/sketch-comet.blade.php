@@ -220,7 +220,7 @@
                 $whatsappHref = "https://wa.me/?text=" . rawurlencode($shareText);
                 $mailtoHref   = "mailto:?subject=" . rawurlencode($shareDesc) . "&body=" . rawurlencode($shareText);
             @endphp
-            <a href="{{ $facebookHref }}" class="social-button hover" rel="follow"><span class="fab fa-facebook-square"></span></a>
+            <a href="{{ $facebookHref }}" class="social-button hover" data-share-text="{{ $shareDesc . "\n\n" . $shareTags }}" rel="follow"><span class="fab fa-facebook-square"></span></a>
             <a href="{{ $twitterHref }}" class="social-button hover" rel="follow"><span class="fab fa-square-x-twitter"></span></a>
             <a href="{{ $shareUrl }}" class="social-button hover" id="clip" title="{{ __("Copy link") }}" rel="nofollow noopener noreferrer"><span class="fas fa-share"></span></a>
             <a href="{{ $mailtoHref }}" class="social-button hover" rel="nofollow"><span class="fas fa-envelope"></span></a>

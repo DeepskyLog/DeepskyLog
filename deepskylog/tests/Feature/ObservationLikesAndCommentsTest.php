@@ -160,3 +160,15 @@ it('moves old likes and comments to the observation id', function () {
     $migration->up();
     expect(DB::table('observation_likes')->count())->toBe(6);
 });
+
+it('gives Facebook a preview of the observation, because it ignores the text of the share link', function () {
+    $owner = User::factory()->create();
+    socialTestObservation($owner, ['description' => '<p>Bright core</p><p>&amp; faint arms</p>']);
+
+    $this->get(route('observations.detail', socialTestDetailParams($owner)))
+        ->assertOk()
+        ->assertSee('<meta property="og:title" content="Look at this observation of M 65 by '.e($owner->name).'" />', false)
+        ->assertSee('<meta property="og:description" content="Bright core &amp; faint arms" />', false)
+        ->assertSee('<meta property="og:image" content="'.url('/images/logo2.png').'" />', false)
+        ->assertSee('data-share-text="Look at this observation of M 65', false);
+});

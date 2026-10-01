@@ -1160,6 +1160,7 @@
     "Observation not found for editing": "Observation à modifier introuvable",
     "Observations": "Observations",
     "observations": "observations",
+    "Observations and sketches of deep-sky objects, comets, the Moon, the Sun and the planets on DeepskyLog.": "Observations et dessins d'objets du ciel profond, de comètes, de la Lune, du Soleil et des planètes sur DeepskyLog.",
     "Observation saved": "Observation enregistrée",
     "Observations by :owner": "Observations de :owner",
     "Observations from :session by :owner": "Observations de :session par :owner",
@@ -1640,6 +1641,7 @@
     "These people have been invited to your team and have been sent an invitation email. They may join the team by accepting the email invitation.": "Ces personnes ont été invitées dans votre équipe et ont reçu un e-mail d'invitation. Ils peuvent rejoindre l'équipe en acceptant l'invitation par e-mail.",
     "The sketch failed to upload.": "L'envoi du croquis a échoué.",
     "The team's name and owner information.": "Le nom de l'équipe et les informations sur le propriétaire.",
+    "The text has been copied: paste it into your Facebook post.": "Le texte a été copié : collez-le dans votre publication Facebook.",
     "The uploaded file is empty or could not be read.": "Le fichier envoyé est vide ou illisible.",
     "The uploaded file must be an image.": "Le fichier envoyé doit être une image.",
     "The uploaded image may not be larger than :max kilobytes.": "L'image envoyée ne doit pas dépasser :max kilo-octets.",
@@ -1860,5 +1862,6 @@
     "{0} No observations were updated.|{1} Updated 1 observation to its primary object name.|[2,*] Updated :count observations to their primary object names.": "{0} Aucune observation n'a été mise à jour.|{1} 1 observation mise à jour avec le nom principal de son objet.|[2,*] :count observations mises à jour avec le nom principal de leur objet.",
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} Aucun nom d'objet orphelin trouvé.|{1} 1 nom d'objet orphelin trouvé.|[2,*] :count noms d'objets orphelins trouvés.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Aucun nom d'objet orphelin n'a été supprimé.|{1} 1 nom d'objet orphelin supprimé.|[2,*] :count noms d'objets orphelins supprimés.",
-    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Aucune cible d'observation inconnue trouvée.|{1} 1 cible d'observation inconnue trouvée.|[2,*] :count cibles d'observation inconnues trouvées."
+    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Aucune cible d'observation inconnue trouvée.|{1} 1 cible d'observation inconnue trouvée.|[2,*] :count cibles d'observation inconnues trouvées.",
+    ":count observation on DeepskyLog|:count observations on DeepskyLog": ":count observation sur DeepskyLog|:count observations sur DeepskyLog"
 }
