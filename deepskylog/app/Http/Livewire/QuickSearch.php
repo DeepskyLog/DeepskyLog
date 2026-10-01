@@ -18,6 +18,10 @@ class QuickSearch extends Component
     // should redirect to the advanced search form instead of running a normal
     // submit. This is used by the left aside ephemeris/quick-search include.
     public $redirectToAdvancedWhenEmpty = false;
+    // When true, the component also offers "Search observations" and (for
+    // logged-in observers) "New observation" for the typed name, below the
+    // suggestions as well, which would otherwise cover those buttons.
+    public $observationActions = false;
     // Cache resolved type names for short codes (avoid repeated DB lookups)
     protected $cachedTypeNames = [];
 
@@ -791,6 +795,26 @@ class QuickSearch extends Component
             return redirect()->route('observation.create', ['slug' => $slug]);
         }
         return redirect()->route('object.show', ['slug' => $slug]);
+    }
+
+    public function searchObservations()
+    {
+        $q = trim($this->query ?? '');
+
+        return redirect()->route('observations.search', $q !== '' ? ['q' => $q] : []);
+    }
+
+    public function newObservation()
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
+        $q = trim($this->query ?? '');
+
+        return $q === ''
+            ? redirect()->route('observation.add.select')
+            : redirect()->route('observation.create', ['slug' => $q]);
     }
 
     public function submit()

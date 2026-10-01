@@ -175,7 +175,7 @@ final class ObservationSearchTable extends PowerGridComponent
             ]);
 
         if ($this->objectName !== '') {
-            self::whereTargetNameStartsWith($query, $this->objectName);
+            self::whereTargetNameMatches($query, $this->objectName);
         }
 
         $this->applyAdvancedFilters($query);
@@ -184,18 +184,37 @@ final class ObservationSearchTable extends PowerGridComponent
     }
 
     /**
-     * Observations whose target name starts with the name, ignoring case and
-     * spaces ("m51" finds M 51 and M 51A), on the indexed stored column
-     * `target_name_normalized` (LOWER(REPLACE(target_name, ' ', ''))). A
-     * prefix match can use the index; '%name%' on target_name scanned all
-     * observations. Wildcards in the name still work, as before: '%' lists
-     * everything, '%51' finds the names containing 51.
+     * Observations of the object with the name, ignoring case and spaces
+     * ("m51" finds M 51 and M 51A, "c/2020 f3" finds C/2020 F3 (NEOWISE)),
+     * on the indexed stored column `target_name_normalized`
+     * (LOWER(REPLACE(target_name, ' ', ''))). A number at the end of the
+     * name has to match whole: "M 2" does not find M 27, M 29 or M 2-9.
+     * The prefix match can use the index; '%name%' on target_name scanned
+     * all observations. With a wildcard ('*' or '%') the name is a LIKE
+     * pattern instead: '%' lists everything, 'M 2*' finds M 2, M 27, ...,
+     * '*51*' the names containing 51.
      */
-    public static function whereTargetNameStartsWith(Builder $query, string $name): void
+    public static function whereTargetNameMatches(Builder $query, string $name): void
     {
-        $needle = mb_strtolower(str_replace(' ', '', trim($name)));
+        $needle = str_replace('*', '%', mb_strtolower(str_replace(' ', '', trim($name))));
 
-        $query->where('observations.target_name_normalized', 'LIKE', $needle . '%');
+        if (str_contains($needle, '%')) {
+            $query->where('observations.target_name_normalized', 'LIKE', $needle);
+
+            return;
+        }
+
+        if (!preg_match('/\d$/', $needle)) {
+            $query->where('observations.target_name_normalized', 'LIKE', $needle . '%');
+
+            return;
+        }
+
+        $query->where('observations.target_name_normalized', 'LIKE', $needle . '%')
+            ->whereRaw(
+                "SUBSTR(observations.target_name_normalized, ?, 1) NOT IN ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-')",
+                [mb_strlen($needle) + 1]
+            );
     }
 
     private function hydrateAdvancedFilters(array $filters): void

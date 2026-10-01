@@ -8,6 +8,7 @@
   - [ ] Test manually when logged in and logged out, as database expert and as administrator
   - [ ] Not logged in:
     - [ ] Home page
+      - [X] Quick search
     - [X] Object detail page
     - [X] Privacy page
 - [ ] Update to laravel 13.
