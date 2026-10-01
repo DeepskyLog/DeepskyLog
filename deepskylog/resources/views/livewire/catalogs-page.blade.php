@@ -31,7 +31,7 @@
                                 role="option"
                                 aria-selected="false"
                                 data-value="{{ $cat }}"
-                                @click.prevent="$wire.selectCatalog('{{ $cat }}'); open=false"
+                                @click.prevent="$wire.selectCatalog($el.dataset.value); open=false"
                                 @mouseenter="active = {{ $i }}"
                                 x-show="query === '' || ($el.dataset.value && $el.dataset.value.toLowerCase().includes(query.toLowerCase()))"
                                 x-bind:aria-hidden="!(query === '' || ($el.dataset.value && $el.dataset.value.toLowerCase().includes(query.toLowerCase())))"

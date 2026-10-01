@@ -107,7 +107,7 @@
 
                             <div class="flex items-center justify-start gap-0">
                                 <span class="text-gray-400">{{ __('Observations') }}</span>
-                                <a href="{{ url('/observations/object/' . $objSlug) }}"
+                                <a href="{{ route('observations.object', ['slug' => $objSlug]) }}"
                                     class="text-white font-medium ml-2 hover:underline">{{ $totalObs ?? 0 }}</a>
                             </div>
 
@@ -763,8 +763,8 @@ try {
                                         @endphp
                                         <div class="flex items-center gap-3 mb-3">
                                             <label class="text-sm text-gray-300">{{ __('Radius:') }}</label>
-                                            <select
-                                                onchange="(function(v){try{v=parseInt(v,10); if(window.Livewire && typeof Livewire.dispatch==='function'){ Livewire.dispatch('nearbyRadiusChanged', [v]); } else if(window.Livewire && typeof Livewire.dispatchTo==='function'){ Livewire.dispatchTo('nearby-objects-table','nearbyRadiusChanged', [v]); } else if(window.Livewire && typeof Livewire.emit==='function'){ Livewire.emit('nearbyRadiusChanged', [v]); } }catch(e){} })(this.value)"
+                                            <select id="nearby-radius-select"
+                                                onchange="nearbyRadiusChanged(this.value)"
                                                 class="text-sm rounded bg-gray-700 text-gray-100 p-1 border-gray-600"
                                                 style="background-color: #374151; color: #f3f4f6;">
                                                 <option value="5" style="background-color: #374151; color: #f3f4f6;"
@@ -780,10 +780,54 @@ try {
                                                 <option value="120" style="background-color: #374151; color: #f3f4f6;"
                                                     {{ $nearbyRadiusSelected === 120 ? 'selected' : '' }}>2°</option>
                                             </select>
+                                            <script>
+                                                // The export links, the object set and report links and the
+                                                // "add all" form carry the radius they were rendered with: follow
+                                                // the select, and tell the nearby table.
+                                                function nearbyRadiusChanged(value) {
+                                                    const radius = parseInt(value, 10);
+                                                    if (!(radius > 0)) {
+                                                        return;
+                                                    }
+                                                    const controls = document.getElementById('nearby-radius-controls');
+                                                    if (controls) {
+                                                        controls.querySelectorAll('a[href]').forEach(function (link) {
+                                                            const url = new URL(link.href, window.location.href);
+                                                            if (url.searchParams.has('radius')) {
+                                                                url.searchParams.set('radius', radius);
+                                                                link.href = url.toString();
+                                                            }
+                                                        });
+                                                        controls.querySelectorAll('input[name="radius_arc_min"]').forEach(function (input) {
+                                                            input.value = radius;
+                                                        });
+                                                    }
+                                                    if (window.Livewire && typeof Livewire.dispatch === 'function') {
+                                                        Livewire.dispatch('nearbyRadiusChanged', [radius]);
+                                                    }
+                                                }
+
+                                                // Going back in the browser reuses the cached page, rendered
+                                                // with the original radius, but restores the radius last chosen
+                                                // in the select: apply that radius so everything agrees again.
+                                                // The browser restores the select only after DOMContentLoaded
+                                                // (and so after Livewire has started), hence pageshow. A page
+                                                // from the back/forward cache kept its state and needs nothing.
+                                                window.addEventListener('pageshow', function (event) {
+                                                    if (event.persisted) {
+                                                        return;
+                                                    }
+                                                    const select = document.getElementById('nearby-radius-select');
+                                                    const rendered = select && Array.from(select.options).find(o => o.defaultSelected);
+                                                    if (rendered && select.value !== rendered.value) {
+                                                        nearbyRadiusChanged(select.value);
+                                                    }
+                                                }, { once: true });
+                                            </script>
                                             <div class="text-xs text-gray-400 ml-2">
                                                 {{ __('Choose radius to search nearby objects.') }}</div>
                                             <!-- Export names (PDF) button: dispatches to the nearby-objects-table Livewire component -->
-                                            <div class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
+                                            <div id="nearby-radius-controls" class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
                                                 @php
                                                     $canModifyActiveList = false;
                                                     if (auth()->check()) {
@@ -1166,6 +1210,7 @@ try {
                             <div class="bg-gray-800 p-3 rounded shadow text-gray-100">
                                 <h4 class="font-semibold mb-2 text-white">{{ __('Quick links') }}</h4>
                                 <ul class="space-y-2 text-sm">
+                                        @auth
                                         <li>
                                             @if (!empty($canonicalSlug))
                                                 <a href="{{ route('observation.create', ['slug' => $canonicalSlug]) }}"
@@ -1175,9 +1220,10 @@ try {
                                                     class="text-gray-300 hover:underline">{{ __('Create observation') }}</a>
                                             @endif
                                         </li>
+                                        @endauth
                                         <li>
                                             @if (!empty($canonicalSlug))
-                                                <a href="{{ url('/observations/' . $canonicalSlug) }}"
+                                                <a href="{{ route('observations.object', ['slug' => $canonicalSlug]) }}"
                                                     class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
                                             @else
                                                 <a href="{{ route('observations.index') }}"

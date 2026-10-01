@@ -2,6 +2,7 @@
     <h4 class="font-semibold mb-2 text-white">{{ __('Quick links') }}</h4>
     @php $isCometLocal = strtolower(trim((string) ($session->source_type_raw ?? '')) ) === 'comet'; @endphp
     <ul class="space-y-2 text-sm">
+        @auth
         <li>
             @if (!empty($canonicalSlug))
                 <a href="{{ route('observation.create', ['slug' => $canonicalSlug]) }}"
@@ -11,6 +12,7 @@
                     class="text-gray-300 hover:underline">{{ __('Create observation') }}</a>
             @endif
         </li>
+        @endauth
         <li>
             @if (!empty($canonicalSlug))
                 @if ($isCometLocal)

@@ -880,6 +880,16 @@ class NearbyObjectsTable extends PowerGridComponent
                     return 0;
                 }
             })
+            // The Seen column: the number of observations, linking to them when there are any.
+            ->add('seen_link', function ($row) {
+                $total = intval($row->total_observations ?? 0);
+                $slug = \Illuminate\Support\Str::slug($row->name ?? '');
+                if ($total <= 0 || $slug === '') {
+                    return e($total);
+                }
+
+                return '<a class="hover:underline" href="' . e(route('observations.object', ['slug' => $slug])) . '">' . e($total) . '</a>';
+            })
             ->add('your_last_seen_date', function ($row) {
                 try {
                     $d = $row->your_last_seen_date ?? null;
@@ -1732,7 +1742,9 @@ class NearbyObjectsTable extends PowerGridComponent
             // Use DB-backed field names for sorting. The fields() mapper
             // provides display renderers (see 'seen' and 'last_seen') while
             // these columns use concrete aliases that exist in the SQL.
-            Column::make(__('Seen'), 'total_observations')->sortable()->bodyAttribute('class', 'text-center'),
+            Column::make(__('Seen'), 'seen_link', 'total_observations')->sortable()->bodyAttribute('class', 'text-center')->visibleInExport(false),
+            // Export-only plain count (no link)
+            Column::make(__('Seen'), 'total_observations')->hidden()->visibleInExport(true),
             // The following columns are sensitive to user-specific context (per-user metrics or ephemerides)
             // and are shown only when an authenticated user is present. See below where we append them
             // when $authUser is available.

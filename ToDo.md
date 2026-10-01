@@ -6,6 +6,9 @@
 
 - [ ] Test! 
   - [ ] Test manually when logged in and logged out, as database expert and as administrator
+  - [ ] Not logged in:
+    - [ ] Home page
+    - [X] Object detail page
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4
 - [ ] Translations

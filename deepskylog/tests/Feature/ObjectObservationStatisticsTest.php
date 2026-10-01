@@ -361,3 +361,12 @@ it('shows and sorts on the statistics in the nearby objects table', function () 
         ->and($rows->pluck('seen')->map(fn($v) => (int) $v)->all())->toBe([2, 1])
         ->and($rows->pluck('last_seen')->all())->toBe(['20240401', '20230101']);
 });
+
+it('links the seen count of the nearby objects table to the observations of the object', function () {
+    $seen = (new NearbyObjectsTable())->fields()->fields['seen_link'];
+
+    expect($seen((object) ['name' => 'NGC 7001', 'total_observations' => 2]))
+        ->toBe('<a class="hover:underline" href="' . route('observations.object', ['slug' => 'ngc-7001']) . '">2</a>')
+        ->and($seen((object) ['name' => 'NGC 7002', 'total_observations' => 0]))->toBe('0')
+        ->and($seen((object) ['name' => 'NGC 7003']))->toBe('0');
+});
