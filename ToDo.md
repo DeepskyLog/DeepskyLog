@@ -46,8 +46,8 @@ Paths are relative to `deepskylog/`. The Critical and High items were checked in
 
 #### Medium
 
-- [ ] Deleting user 1 deletes the three system teams (`app/Actions/Jetstream/DeleteUser.php:60-62`; user 1 owns them in `GroupSeeder`). Skip the system teams in `deleteTeams()`.
-- [ ] Other users' equipment can be referenced: `CreateInstrumentSet` (`instruments.*`, `locations.*`), `ObservationsController::store` and `Profile/UpdateUserObservingInformation` (`stdlocation`, `stdtelescope`, …) accept ids without checking the owner. Use `Rule::exists(...)->where('user_id', auth()->id())`.
+- [x] Deleting user 1 deletes the three system teams (`app/Actions/Jetstream/DeleteUser.php:60-62`; user 1 owns them in `GroupSeeder`). Skip the system teams in `deleteTeams()`.
+- [x] Other users' equipment can be referenced: `CreateInstrumentSet` (`instruments.*`, `locations.*`), `ObservationsController::store` and `Profile/UpdateUserObservingInformation` (`stdlocation`, `stdtelescope`, …) accept ids without checking the owner. Use `Rule::exists(...)->where('user_id', auth()->id())`.
 
 #### Low / hardening
 

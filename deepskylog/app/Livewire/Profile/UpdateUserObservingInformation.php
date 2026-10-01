@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Profile;
 
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class UpdateUserObservingInformation extends Component
@@ -27,15 +28,23 @@ class UpdateUserObservingInformation extends Component
 
     public $stdlens;
 
-    protected $rules = [
-        'stdlocation' => 'nullable|numeric',
-        'stdtelescope' => 'nullable|numeric',
-        'stdinstrumentset' => 'nullable|numeric',
-        'standardAtlasCode' => 'required|string|exists:atlases,code',
-        'showInches' => 'boolean',
-        'stdeyepiece' => 'nullable|numeric',
-        'stdlens' => 'nullable|numeric',
-    ];
+    /**
+     * The defaults must be the user's own equipment and locations.
+     */
+    protected function rules(): array
+    {
+        $owned = fn (string $table) => Rule::exists($table, 'id')->where('user_id', auth()->id());
+
+        return [
+            'stdlocation' => ['nullable', 'integer', $owned('locations')],
+            'stdtelescope' => ['nullable', 'integer', $owned('instruments')],
+            'stdinstrumentset' => ['nullable', 'integer', $owned('instrument_sets')],
+            'standardAtlasCode' => 'required|string|exists:atlases,code',
+            'showInches' => 'boolean',
+            'stdeyepiece' => ['nullable', 'integer', $owned('eyepieces')],
+            'stdlens' => ['nullable', 'integer', $owned('lenses')],
+        ];
+    }
 
     /**
      * Sets the database values.

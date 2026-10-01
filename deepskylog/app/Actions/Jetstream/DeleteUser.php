@@ -2,6 +2,7 @@
 
 namespace App\Actions\Jetstream;
 
+use App\Models\Team;
 use Illuminate\Support\Facades\DB;
 use Laravel\Jetstream\Contracts\DeletesTeams;
 use Laravel\Jetstream\Contracts\DeletesUsers;
@@ -57,8 +58,12 @@ class DeleteUser implements DeletesUsers
     {
         $user->teams()->detach();
 
-        $user->ownedTeams->each(function ($team) {
-            $this->deletesTeams->delete($team);
-        });
+        // The system teams (owned by user 1 in GroupSeeder) hold every
+        // user's role and must survive the deletion of their owner.
+        $user->ownedTeams
+            ->reject(fn ($team) => in_array((int) $team->id, [Team::OBSERVERS, Team::ADMINISTRATORS, Team::DATABASE_EXPERTS], true))
+            ->each(function ($team) {
+                $this->deletesTeams->delete($team);
+            });
     }
 }

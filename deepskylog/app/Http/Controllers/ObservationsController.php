@@ -25,6 +25,7 @@ use deepskylog\AstronomyLibrary\Time;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
 
@@ -2219,6 +2220,18 @@ class ObservationsController extends Controller
             }
         }
 
+        // The equipment and location must belong to the observer: the
+        // logged in user, or the owner of the observation being edited
+        // (an administrator may edit someone else's observation).
+        $equipmentOwnerId = $user->id;
+        $editing = Observation::find($request->input('edit_unified_id'));
+        if ($editing) {
+            $equipmentOwnerId = $editing->observer_user_id
+                ?? User::where('username', $editing->observer_username)->value('id')
+                ?? $user->id;
+        }
+        $owned = fn (string $table) => Rule::exists($table, 'id')->where('user_id', $equipmentOwnerId);
+
         $validated = $request->validate([
             'target_table' => 'required|string',
             'target_slug' => 'required|string',
@@ -2226,11 +2239,11 @@ class ObservationsController extends Controller
             'observed_time' => 'nullable|string',
             'description' => 'nullable|string',
             'language' => 'nullable|string',
-            'instrument_id' => 'nullable|integer',
-            'eyepiece_id' => 'nullable|integer',
-            'lens_id' => 'nullable|integer',
-            'filter_id' => 'nullable|integer',
-            'location_id' => 'nullable|integer',
+            'instrument_id' => ['nullable', 'integer', $owned('instruments')],
+            'eyepiece_id' => ['nullable', 'integer', $owned('eyepieces')],
+            'lens_id' => ['nullable', 'integer', $owned('lenses')],
+            'filter_id' => ['nullable', 'integer', $owned('filters')],
+            'location_id' => ['nullable', 'integer', $owned('locations')],
             'magnification' => 'nullable|string|max:32',
             'seeing' => 'nullable|integer|between:1,5',
             'transparency' => 'nullable|integer|between:1,5',
