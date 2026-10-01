@@ -60,8 +60,8 @@ class LegacyObservationsSeeder extends Seeder
                         'target_key' => $this->nullableString($row->objectname ?? null, 191),
                         'target_name' => $this->nullableString($row->objectname ?? null, 255),
                         'seeing' => $this->nullableInt($row->seeing ?? null),
-                        'limiting_magnitude' => $this->nullableFloat($row->limmag ?? null),
-                        'sqm' => $this->nullableFloat($row->SQM ?? null),
+                        'limiting_magnitude' => $this->skyValue($row->limmag ?? null),
+                        'sqm' => $this->skyValue($row->SQM ?? null),
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);
@@ -211,6 +211,16 @@ class LegacyObservationsSeeder extends Seeder
         }
 
         return $int;
+    }
+
+    /**
+     * A limiting magnitude or SQM; the old site stored a missing value as -1 or 0.
+     */
+    private function skyValue(mixed $value): ?float
+    {
+        $float = $this->nullableFloat($value);
+
+        return $float !== null && $float > 0 ? $float : null;
     }
 
     private function nullableFloat(mixed $value, array $nullSentinels = []): ?float
