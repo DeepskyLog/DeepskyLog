@@ -12,7 +12,11 @@
     - [X] Object detail page
     - [X] Privacy page
     - [X] Sketch of the week and month
-    - [ ] All observations page
+    - [X] All observations page
+    - [X] All drawings page
+    - [X] Observers page
+    - [X] Popular objects page
+    - [ ] Popular observations page
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4
 - [ ] Translations

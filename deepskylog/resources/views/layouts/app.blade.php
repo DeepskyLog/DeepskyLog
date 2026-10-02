@@ -354,8 +354,8 @@
                     <x-socialstream-icons.instagram class="h-5 w-5" />
                 </a>
 
-                <a href="https://twitter.com/DeepskyLog" class="px-2 pt-0.5">
-                    <x-socialstream-icons.twitter class="h-5 w-5" />
+                <a href="https://x.com/DeepskyLog" class="px-2 pt-0.5" title="X">
+                    <x-socialstream-icons.x class="h-5 w-5" />
                 </a>
 
                 <a href="https://www.youtube.com/channel/UC66H7w2Fl9q3krRy_tHRK5g" class="px-2">

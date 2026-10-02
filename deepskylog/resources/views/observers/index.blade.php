@@ -30,11 +30,40 @@
                         this.$refs.source.value = option.key;
                         this.$nextTick(() => this.$refs.submitForm.submit());
                     },
+                    observerSearchRequest: null,
                     submitObserverSearch() {
                         clearTimeout(this.observerSearchTimer);
-                        this.observerSearchTimer = setTimeout(() => {
-                            this.$refs.submitForm.submit();
-                        }, 300);
+                        this.observerSearchTimer = setTimeout(() => this.refreshObserverResults(), 300);
+                    },
+                    // Replace only the results, so the name field keeps its focus while typing.
+                    async refreshObserverResults() {
+                        const params = new URLSearchParams(new FormData(this.$refs.submitForm));
+                        if (!params.get('observer')) {
+                            params.delete('observer');
+                        }
+                        const url = this.$refs.submitForm.action + '?' + params.toString();
+
+                        this.observerSearchRequest?.abort();
+                        this.observerSearchRequest = new AbortController();
+
+                        try {
+                            const response = await fetch(url, {
+                                signal: this.observerSearchRequest.signal,
+                                headers: { 'Accept': 'text/html' },
+                            });
+                            const page = new DOMParser().parseFromString(await response.text(), 'text/html');
+                            const results = page.getElementById('observers-results');
+                            if (!response.ok || !results) {
+                                window.location.href = url;
+                                return;
+                            }
+                            document.getElementById('observers-results').replaceWith(results);
+                            history.replaceState(null, '', url);
+                        } catch (error) {
+                            if (error.name !== 'AbortError') {
+                                window.location.href = url;
+                            }
+                        }
                     }
                 }"
                 @click.outside="open = false"
@@ -119,7 +148,7 @@
 
     <div class="py-6">
         <div class="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
-            <div class="overflow-hidden rounded-xl border border-gray-700 bg-gray-900 shadow-xl">
+            <div id="observers-results" class="overflow-hidden rounded-xl border border-gray-700 bg-gray-900 shadow-xl">
                 <div class="overflow-x-auto">
                     @php
                         $sortableColumns = [

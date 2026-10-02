@@ -1,6 +1,8 @@
 <?php
 
+use App\Livewire\PopularObjectsTable;
 use App\Models\Observation;
+use Livewire\Livewire;
 use Illuminate\Support\Facades\DB;
 
 function insertPopularTestObject(string $name, string $slug): void
@@ -112,10 +114,12 @@ it('renders popular objects ordered by observation count', function () {
 
     $response->assertOk();
     $response->assertSee('Popular objects');
-    $response->assertSeeInOrder(['M 31', 'NGC 7000'], false);
-    $response->assertSee(route('object.show', ['slug' => 'm-31']), false);
-    $response->assertSee(route('observations.object', ['slug' => 'm-31']), false);
-    $response->assertSee('2 observations');
+    $response->assertSeeLivewire(PopularObjectsTable::class);
+
+    Livewire::test(PopularObjectsTable::class)
+        ->assertSeeInOrder(['M 31', 'NGC 7000'])
+        ->assertSeeHtml(route('object.show', ['slug' => 'm-31']))
+        ->assertSeeHtml(route('observations.object', ['slug' => 'm-31']) . '" class="font-semibold text-sky-300 hover:text-sky-200 hover:underline">2</a>');
 });
 
 it('switches popular objects to drawing counts', function () {
@@ -177,13 +181,12 @@ it('switches popular objects to drawing counts', function () {
         ],
     ]);
 
-    $response = $this->get(route('objects.popular', ['mode' => 'drawings']));
+    $this->get(route('objects.popular', ['mode' => 'drawings']))->assertOk();
 
-    $response->assertOk();
-    $response->assertSeeInOrder(['NGC 7000', 'M 31'], false);
-    $response->assertSee(route('observations.drawings.show', ['slug' => 'ngc-7000']), false);
-    $response->assertSee('2 drawings');
-    $response->assertDontSee('3 drawings');
+    Livewire::test(PopularObjectsTable::class, ['mode' => 'drawings'])
+        ->assertSeeInOrder(['NGC 7000', 'M 31'])
+        ->assertSeeHtml(route('observations.drawings.show', ['slug' => 'ngc-7000']) . '" class="font-semibold text-sky-300 hover:text-sky-200 hover:underline">2</a>')
+        ->assertSeeHtml(route('observations.drawings.show', ['slug' => 'm-31']) . '" class="font-semibold text-sky-300 hover:text-sky-200 hover:underline">1</a>');
 });
 
 it('uses comet object routes for popular comet objects', function () {
@@ -220,9 +223,44 @@ it('uses comet object routes for popular comet objects', function () {
         ],
     ]);
 
-    $response = $this->get(route('objects.popular'));
+    Livewire::test(PopularObjectsTable::class)
+        ->assertSeeHtml(route('object.show', ['slug' => 'c-2023-a1']))
+        ->assertSeeHtml(route('observations.comet.object', ['object' => 'c-2023-a1']));
+});
 
-    $response->assertOk();
-    $response->assertSee(route('object.show', ['slug' => 'c-2023-a1']), false);
-    $response->assertSee(route('observations.comet.object', ['object' => 'c-2023-a1']), false);
+it('searches and sorts the popular objects without the ranking in the snapshot', function () {
+    insertPopularTestObject('M 31', 'm-31');
+    insertPopularTestObject('NGC 7000', 'ngc-7000');
+
+    $observation = fn (string $name, string $slug) => [
+        'observer_username' => 'observer-a',
+        'observed_on' => '2026-05-20',
+        'target_type' => 'deepsky',
+        'target_table' => 'objects',
+        'target_key' => $slug,
+        'target_name' => $name,
+        'has_drawing' => false,
+        'language' => 'en',
+        'legacy_source' => null,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ];
+    Observation::query()->insert([
+        $observation('M 31', 'm-31'),
+        $observation('M 31', 'm-31'),
+        $observation('NGC 7000', 'ngc-7000'),
+    ]);
+
+    $table = Livewire::test(PopularObjectsTable::class);
+    expect($table->get('filtered'))->toBe([]);
+
+    // Searching keeps the rank among all objects.
+    $table->set('search', 'ngc')
+        ->assertSee('NGC 7000')
+        ->assertDontSeeHtml(route('object.show', ['slug' => 'm-31']))
+        ->assertSeeHtml('>2</');
+
+    $table->set('search', '')
+        ->call('sortBy', 'count')
+        ->assertSeeInOrder(['NGC 7000', 'M 31']);
 });

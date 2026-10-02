@@ -229,25 +229,26 @@ it('shows the old counts of the statistics page while they are counted again aft
     expect($total())->toBe(3);
 });
 
-it('caches the ranking of the popular objects per page', function () {
+it('caches the ranking of the popular objects', function () {
     $observer = User::factory()->create();
     insertCachingTestObject('Popular Galaxy', 0.71, 41.27);
     insertCachingTestObservation($observer->username, 'Popular Galaxy');
     insertCachingTestObservation($observer->username, 'Popular Galaxy');
     insertCachingTestObservation($observer->username, 'Other Galaxy');
-    $page = fn (array $query = []) => $this->get(route('objects.popular', $query))->assertOk()->viewData('popularObjects');
+    $rows = fn () => app(\App\Services\PopularObjectsRanking::class)->rows('observations');
 
-    $first = $page();
-    expect($first->total())->toBe(2)
-        ->and($first->items()[0]->name)->toBe('Popular Galaxy')
-        ->and($first->items()[0]->count)->toBe(2)
-        ->and($first->items()[0]->object_url)->toBe(route('object.show', ['slug' => 'popular-galaxy']));
+    $first = $rows();
+    expect($first)->toHaveCount(2)
+        ->and($first[0]['name'])->toBe('Popular Galaxy')
+        ->and($first[0]['count'])->toBe(2)
+        ->and($first[0]['slug'])->toBe('popular-galaxy');
 
     insertCachingTestObservation($observer->username, 'Other Galaxy');
     insertCachingTestObservation($observer->username, 'Other Galaxy');
-    expect($page()->items()[0]->name)->toBe('Popular Galaxy')
-        ->and($page(['page' => 5])->items())->toBe([])
-        ->and(cache()->has('popular_objects:observations:page:5'))->toBeFalse();
+    expect($rows()[0]['name'])->toBe('Popular Galaxy');
+
+    $this->travel(2)->days();
+    expect($rows()[0]['name'])->toBe('Other Galaxy');
 });
 
 it('caches the observer ranking', function () {
