@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Location;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class LocationController extends Controller
 {
@@ -44,6 +45,7 @@ class LocationController extends Controller
     {
         $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
         $location = Location::where('slug', $location_slug)->where('user_id', $user_id)->firstOrFail();
+        abort_unless($location->canBeEditedBy(Auth::user()), 403);
 
         return view(
             'location.create',

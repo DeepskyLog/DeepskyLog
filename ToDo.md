@@ -7,10 +7,12 @@
 - [ ] Test! 
   - [ ] Test manually when logged in and logged out, as database expert and as administrator
   - [ ] Not logged in:
-    - [ ] Home page
+    - [X] Home page
       - [X] Quick search
     - [X] Object detail page
     - [X] Privacy page
+    - [X] Sketch of the week and month
+    - [ ] All observations page
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4
 - [ ] Translations

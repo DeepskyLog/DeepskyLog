@@ -32,7 +32,6 @@ class EyepieceController extends Controller
     {
         $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
         $eyepiece = Eyepiece::where('slug', $eyepiece_slug)->where('user_id', $user_id)->firstOrFail();
-        abort_unless($eyepiece->canBeEditedBy(Auth::user()), 403);
 
         // Check if there is an image for this eyepiece
         if ($eyepiece->picture != null) {
@@ -51,6 +50,7 @@ class EyepieceController extends Controller
     {
         $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
         $eyepiece = Eyepiece::where('slug', $eyepiece_slug)->where('user_id', $user_id)->firstOrFail();
+        abort_unless($eyepiece->canBeEditedBy(Auth::user()), 403);
 
         return view(
             'eyepiece.create',

@@ -1239,7 +1239,9 @@ try {
                                                 class="text-gray-300 hover:underline">{{ __('All drawings') }}</a>
                                         @endif
                                     </li>
-                                    @if (!empty($canonicalSlug) || !empty($session->slug))
+                                    {{-- The charts are only useful for deep-sky objects --}}
+                                    @if ((!empty($canonicalSlug) || !empty($session->slug))
+                                        && !in_array($session->source_type_raw ?? '', ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun'], true))
                                         @php $chartSlugMain = $canonicalSlug ?? $session->slug; @endphp
                                         <li>
                                             <div class="flex items-center gap-2">

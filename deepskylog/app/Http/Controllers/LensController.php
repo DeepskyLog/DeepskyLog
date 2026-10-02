@@ -31,7 +31,6 @@ class LensController extends Controller
     {
         $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
         $lens = Lens::where('slug', $lens_slug)->where('user_id', $user_id)->firstOrFail();
-        abort_unless($lens->canBeEditedBy(Auth::user()), 403);
 
         // Check if there is an image for this lens
         if ($lens->picture != null) {
@@ -50,6 +49,7 @@ class LensController extends Controller
     {
         $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
         $lens = Lens::where('slug', $lens_slug)->where('user_id', $user_id)->firstOrFail();
+        abort_unless($lens->canBeEditedBy(Auth::user()), 403);
 
         return view(
             'lens.create',

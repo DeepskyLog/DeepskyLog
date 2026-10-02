@@ -31,7 +31,6 @@ class FilterController extends Controller
     {
         $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
         $filter = Filter::where('slug', $filter_slug)->where('user_id', $user_id)->firstOrFail();
-        abort_unless($filter->canBeEditedBy(Auth::user()), 403);
 
         // Check if there is an image for this filter
         if ($filter->picture != null) {
@@ -50,6 +49,7 @@ class FilterController extends Controller
     {
         $user_id = User::where('slug', $user_slug)->firstOrFail()->id;
         $filter = Filter::where('slug', $filter_slug)->where('user_id', $user_id)->firstOrFail();
+        abort_unless($filter->canBeEditedBy(Auth::user()), 403);
 
         return view(
             'filter.create',

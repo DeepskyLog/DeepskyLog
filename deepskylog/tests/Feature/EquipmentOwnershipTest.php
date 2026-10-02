@@ -23,6 +23,7 @@ use Livewire\Livewire;
 
 // Equipment, locations and instrument sets can only be changed by their owner
 // or an administrator: the edit page, the form and its save() all check it.
+// Anyone may look at them.
 dataset('owned records', [
     'instrument' => [InstrumentFactory::class, 'instrument', CreateInstrument::class, 'instrument'],
     'eyepiece' => [EyepieceFactory::class, 'eyepiece', CreateEyepiece::class, 'eyepiece'],
@@ -60,6 +61,26 @@ it('lets the owner open the edit page', function (string $factory, string $route
     $this->actingAs($owner)
         ->get("/{$route}/{$owner->slug}/{$record->slug}/edit")
         ->assertOk();
+})->with('owned records');
+
+// The detail pages are public: observations link to them for guests too.
+it('shows the record to guests and other users', function (string $factory, string $route) {
+    $owner = User::factory()->create();
+    $record = createOwnedBy($factory, $owner);
+
+    $this->get("/{$route}/{$owner->slug}/{$record->slug}")->assertOk();
+
+    $this->actingAs(User::factory()->create())
+        ->get("/{$route}/{$owner->slug}/{$record->slug}")
+        ->assertOk();
+})->with('owned records');
+
+it('sends guests away from the edit page', function (string $factory, string $route) {
+    $owner = User::factory()->create();
+    $record = createOwnedBy($factory, $owner);
+
+    $this->get("/{$route}/{$owner->slug}/{$record->slug}/edit")
+        ->assertRedirect('/login');
 })->with('owned records');
 
 it('forbids another user to mount the form with the record', function (string $factory, string $route, string $component, string $property) {
