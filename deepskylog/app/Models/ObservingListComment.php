@@ -37,10 +37,14 @@ class ObservingListComment extends Model
 
     /**
      * Check if a user can delete this comment.
-     * Allowed for: comment author, list owner, or admin.
+     * Allowed for: comment author, list owner, or admin; never for a guest.
      */
-    public function canBeDeletedBy(User $user): bool
+    public function canBeDeletedBy(?User $user): bool
     {
+        if ($user === null) {
+            return false;
+        }
+
         return $user->id === $this->user_id
             || $user->id === $this->list->owner_user_id
             || $user->isAdministrator();

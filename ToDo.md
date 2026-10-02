@@ -16,7 +16,10 @@
     - [X] All drawings page
     - [X] Observers page
     - [X] Popular objects page
-    - [ ] Popular observations page
+    - [X] Popular observations page
+    - [X] Popular sessions page
+    - [X] Statistics
+    - [X] Observing lists
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4
 - [ ] Translations

@@ -6,6 +6,7 @@ use App\Helpers\HomepagePagination;
 use App\Jobs\TranslateObservationDescriptions;
 use App\Models\Location;
 use App\Models\Observation;
+use App\Models\ObservationLike;
 use App\Models\ObservationSession;
 use App\Models\User;
 use App\Services\Observations\ObservationCardData;
@@ -917,6 +918,26 @@ class SessionController extends Controller
                 ->toArray();
         }
 
+        // Like counts of the sessions on this page, and which of them the viewer liked
+        $likeCounts = [];
+        $likedIds = [];
+        if (!empty($sessionIds)) {
+            $likeCounts = ObservationLike::where('observation_type', ObservationLike::TYPE_SESSION)
+                ->whereIn('observation_id', $sessionIds)
+                ->select('observation_id', DBFacade::raw('count(*) as cnt'))
+                ->groupBy('observation_id')
+                ->pluck('cnt', 'observation_id')
+                ->toArray();
+            if (Auth::check()) {
+                $likedIds = ObservationLike::where('observation_type', ObservationLike::TYPE_SESSION)
+                    ->whereIn('observation_id', $sessionIds)
+                    ->where('user_id', Auth::id())
+                    ->pluck('observation_id')
+                    ->flip()
+                    ->all();
+            }
+        }
+
         $shouldTranslate = Auth::check() && Auth::user()->translate;
         $lang = $shouldTranslate ? (Auth::user()->language ?? config('app.locale')) : null;
 
@@ -953,7 +974,7 @@ class SessionController extends Controller
             }
         }
 
-        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang, $observerUsers, $storageSessionMap, $publicSessionMap) {
+        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $likeCounts, $likedIds, $shouldTranslate, $lang, $observerUsers, $storageSessionMap, $publicSessionMap) {
             if (empty($session->observer)) {
                 $session->observer = isset($observerUsers[$session->observerid]) ? $observerUsers[$session->observerid] : (object) ['name' => $session->observerid, 'slug' => null];
             }
@@ -983,6 +1004,8 @@ class SessionController extends Controller
             $session->location_name = $loc ? ($loc->name ?? null) : null;
             $session->preview = $image;
             $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
+            $session->likes_count = (int) ($likeCounts[$session->id] ?? 0);
+            $session->liked = isset($likedIds[$session->id]);
 
             // Prepare translated preview text (comments) for homepage
             $rawComments = html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');

@@ -254,23 +254,39 @@
                                                 optional($session->observer)->slug ?? ($session->observerid ?? null);
                                             $sessionParam = $session->slug ?? ($session->id ?? null);
                                         @endphp
-                                        @if ($sessionUser && $sessionParam)
-                                            <a
-                                                href="{{ route('session.show', [$sessionUser, $sessionParam]) }}"
-                                                class="text-blue-500 hover:underline"
-                                                >{{
+                                        <div class="flex items-center gap-3">
+                                            <button
+                                                type="button"
+                                                data-observation-type="{{ \App\Models\ObservationLike::TYPE_SESSION }}"
+                                                data-observation-id="{{ $session->id }}"
+                                                class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white"
+                                                aria-label="{{ __("Like") }}"
+                                            >
+                                                <span class="like-icon">{!!
+                                                    $session->liked ?? false
+                                                        ? "❤️"
+                                                        : "👍"
+                                                !!}</span>
+                                                <span class="like-count">{{ $session->likes_count ?? 0 }}</span>
+                                            </button>
+                                            @if ($sessionUser && $sessionParam)
+                                                <a
+                                                    href="{{ route('session.show', [$sessionUser, $sessionParam]) }}"
+                                                    class="text-blue-500 hover:underline"
+                                                    >{{
+                                                        __(
+                                                            "Read more",
+                                                        )
+                                                    }}</a
+                                                >
+                                            @else
+                                                <span class="text-blue-500">{{
                                                     __(
                                                         "Read more",
                                                     )
-                                                }}</a
-                                            >
-                                        @else
-                                            <span class="text-blue-500">{{
-                                                __(
-                                                    "Read more",
-                                                )
-                                            }}</span>
-                                        @endif
+                                                }}</span>
+                                            @endif
+                                        </div>
                                     </div>
                                 </article>
                             @endforeach
