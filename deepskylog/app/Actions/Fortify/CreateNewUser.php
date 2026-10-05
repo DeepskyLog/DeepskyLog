@@ -16,6 +16,8 @@ class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
 
+    public const USERNAME_PATTERN = '/^[\pL\pN][\pL\pN _.\-]*$/u';
+
     /**
      * Create a newly registered user.
      *
@@ -25,10 +27,17 @@ class CreateNewUser implements CreatesNewUsers
     {
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', 'unique:users'],
+            // Letters, digits, spaces (many old usernames are full names) and
+            // _ . -, so no @: login treats anything that looks like an email
+            // address as one, and such a username could never be used to log in.
+            'username' => ['required', 'string', 'max:30', 'regex:'.self::USERNAME_PATTERN, 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users', OAuthEmail::notGeneratedRule()],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
+        ], [
+            'username.regex' => __('The username may only contain letters, digits, spaces, dots, hyphens and underscores, and has to start with a letter or a digit.'),
+            'terms.accepted' => __('You have to accept the privacy policy to register.'),
+            'terms.required' => __('You have to accept the privacy policy to register.'),
         ])->validate();
 
         return DB::transaction(function () use ($input) {

@@ -160,7 +160,7 @@ class ObservationObserver
      * after drawings are created/updated/deleted. We target the common sketch/obs types
      * and the first few pages to avoid brute-forcing the entire cache.
      */
-    private function forgetHomepageCaches(): void
+    public static function forgetHomepageCaches(): void
     {
         $types = ['all', 'deepsky', 'comet', 'solarsystem'];
         for ($page = 1; $page <= 3; $page++) {

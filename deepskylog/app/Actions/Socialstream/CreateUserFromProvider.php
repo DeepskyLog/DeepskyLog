@@ -98,9 +98,9 @@ class CreateUserFromProvider implements CreatesUserFromProvider
             ?: Str::before((string) $providerUser->getEmail(), '@');
 
         // Letters and digits only (e.g. "deep.sky" becomes "DeepSky"), leaving
-        // room for the number within the column's 255 characters.
+        // room for the number within the 30 characters of a registered username.
         $words = trim((string) preg_replace('/[^\pL\pN]+/u', ' ', (string) $name));
-        $base = Str::limit(Str::studly($words), 240, '') ?: 'Observer';
+        $base = Str::limit(Str::studly($words), 25, '') ?: 'Observer';
 
         $username = $base;
         for ($suffix = 2; User::where('username', $username)->exists(); $suffix++) {

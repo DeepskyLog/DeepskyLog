@@ -32,7 +32,6 @@
                     name="username"
                     :value="old('username')"
                     required
-                    autofocus
                     autocomplete="username"
                 />
             </div>
