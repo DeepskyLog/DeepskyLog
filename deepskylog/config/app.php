@@ -56,7 +56,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'asset_url' => env('ASSET_URL', '/'),
+    'asset_url' => env('ASSET_URL'),
 
     // Host name used for generated e-mail addresses of social logins without
     // one ({id}@{provider}.{domain}); defaults to the host of APP_URL.
