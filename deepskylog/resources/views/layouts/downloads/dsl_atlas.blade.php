@@ -277,6 +277,7 @@
                 </div>
             </x-card>
             
+            @auth
             <br />
 
             <x-card title="Create a custom DeepskyLog atlas">
@@ -332,6 +333,7 @@
                     </form>
                 </div>
             </x-card>
+            @endauth
         </div>
     </div>
 </x-app-layout>

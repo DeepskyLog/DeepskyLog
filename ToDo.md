@@ -20,6 +20,13 @@
     - [X] Popular sessions page
     - [X] Statistics
     - [X] Observing lists
+    - [X] Catalogs
+    - [X] Search objects
+    - [X] Search observations
+    - [X] Image catalogs
+    - [X] Atlases
+    - [ ] Log in
+    - [ ] Register
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4
 - [ ] Translations
