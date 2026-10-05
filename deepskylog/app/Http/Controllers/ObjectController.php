@@ -2640,10 +2640,7 @@ class ObjectController extends Controller
         } catch (\Throwable $_) {
         }
         if (empty($value)) {
-            try {
-                $value = session()->get(EphemerisDate::SESSION_KEY);
-            } catch (\Throwable $_) {
-            }
+            $value = EphemerisDate::chosen($tz);
         }
 
         return EphemerisDate::parse(is_string($value) ? $value : null, $tz);

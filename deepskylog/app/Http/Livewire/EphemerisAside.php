@@ -28,23 +28,20 @@ class EphemerisAside extends Component
     public $moon_set = null;
 
     protected $listeners = [
-        'setEphemerisDate' => 'setDateFromEvent'
+        'setEphemerisDate' => 'setDateFromEvent',
+        'dsl-timezone-detected' => 'timezoneDetected',
     ];
 
     public function mount()
     {
         // Keep the date chosen earlier in this session, so every page, object
-        // set and report uses the same date; else today at the location.
-        $this->date = EphemerisDate::current($this->timezone());
+        // set and report uses the same date; else today for the observer (in
+        // the browser's timezone for guests).
+        $this->date = EphemerisDate::current();
         $this->recalculate();
-        // Persist canonical aside date in session so other server-rendered
-        // components can read it during initial render and compute matching
-        // ephemerides without waiting for Livewire hydration events.
-        try {
-            session()->put(EphemerisDate::SESSION_KEY, $this->date);
-        } catch (\Throwable $_) {
-            // ignore session failures
-        }
+        // Nothing is stored here: storing today's date made it stick for the
+        // whole session. Server-rendered components get the same date from
+        // EphemerisDate::current().
         // Broadcast initial date so other Livewire components (tables, previews)
         // receive the same ephemeris date on first render.
         try {
@@ -61,8 +58,32 @@ class EphemerisAside extends Component
 
     public function setDateFromEvent($d)
     {
-        $this->date = $d ?: EphemerisDate::today($this->timezone());
+        $this->date = $d ?: EphemerisDate::today();
         $this->dateChanged();
+    }
+
+    /**
+     * The layout's script has just stored the browser's timezone in a cookie
+     * (first visit, or a new timezone): without a chosen date, move to today
+     * in that timezone.
+     */
+    public function timezoneDetected(): void
+    {
+        if (EphemerisDate::chosen() !== null) {
+            return;
+        }
+
+        $today = EphemerisDate::today();
+        if ($today === $this->date) {
+            return;
+        }
+
+        $this->date = $today;
+        $this->recalculate();
+        try {
+            $this->dispatch('ephemerisDateChanged', date: $this->date);
+        } catch (\Throwable $_) {
+        }
     }
 
     /**
@@ -75,11 +96,7 @@ class EphemerisAside extends Component
     protected function dateChanged(): void
     {
         $this->recalculate();
-        try {
-            session()->put(EphemerisDate::SESSION_KEY, $this->date);
-        } catch (\Throwable $_) {
-            // ignore session failures
-        }
+        EphemerisDate::choose($this->date);
         try {
             $this->dispatch('ephemerisDateChanged', date: $this->date);
         } catch (\Throwable $_) {
@@ -229,8 +246,7 @@ class EphemerisAside extends Component
     }
 
     /**
-     * The location of location(), looked up once per request: mount() needs
-     * it for the timezone and again for the ephemerides.
+     * The location of location(), looked up once per request.
      */
     protected ?Location $resolvedLocation = null;
 
@@ -251,11 +267,6 @@ class EphemerisAside extends Component
         }
 
         return $this->resolvedLocation;
-    }
-
-    protected function timezone(): string
-    {
-        return EphemerisDate::timezone($this->location());
     }
 
     public function render()

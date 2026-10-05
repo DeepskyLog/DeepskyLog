@@ -8,20 +8,69 @@ use Illuminate\Support\Facades\DB;
 uses(RefreshDatabase::class);
 
 it('ephemeris aside sets date on mount', function () {
-    $date = Carbon::now()->toDateString();
+    $date = \App\Support\EphemerisDate::today();
 
     Livewire::test(\App\Http\Livewire\EphemerisAside::class)
         ->assertSet('date', $date);
 });
 
 it('ephemeris aside keeps the date of the session on mount', function () {
-    session()->put('dsl_ephemeris_date', '2026-12-24');
+    \App\Support\EphemerisDate::choose('2026-12-24');
 
     Livewire::test(\App\Http\Livewire\EphemerisAside::class)
         ->assertSet('date', '2026-12-24')
         ->assertDispatched('ephemerisDateChanged', date: '2026-12-24');
 
     expect(session('dsl_ephemeris_date'))->toBe('2026-12-24');
+});
+
+it('ephemeris aside does not store today in the session on mount', function () {
+    Livewire::test(\App\Http\Livewire\EphemerisAside::class);
+
+    expect(session()->has('dsl_ephemeris_date'))->toBeFalse();
+});
+
+it('ephemeris aside moves to the next day once the chosen date expires', function () {
+    Carbon::setTestNow(Carbon::create(2026, 10, 5, 22, 0, 0, config('app.timezone')));
+    Livewire::test(\App\Http\Livewire\EphemerisAside::class)->set('date', '2026-10-10');
+
+    Carbon::setTestNow(Carbon::create(2026, 10, 6, 11, 0, 0, config('app.timezone')));
+    Livewire::test(\App\Http\Livewire\EphemerisAside::class)->assertSet('date', '2026-10-10');
+
+    Carbon::setTestNow(Carbon::create(2026, 10, 6, 13, 0, 0, config('app.timezone')));
+    Livewire::test(\App\Http\Livewire\EphemerisAside::class)->assertSet('date', '2026-10-06');
+    expect(session()->has('dsl_ephemeris_date'))->toBeFalse();
+
+    Carbon::setTestNow();
+});
+
+it('gives guests today in the timezone of their browser, else in UTC', function () {
+    // 10:17 UTC is 12:17 in Brussels: past noon there, not yet in UTC
+    Carbon::setTestNow(Carbon::create(2026, 10, 5, 10, 17, 0, 'UTC'));
+    expect(\App\Support\EphemerisDate::timezone())->toBe('UTC')
+        ->and(\App\Support\EphemerisDate::today())->toBe('2026-10-04');
+
+    request()->cookies->set('dsl_tz', 'Europe/Brussels');
+    expect(\App\Support\EphemerisDate::timezone())->toBe('Europe/Brussels')
+        ->and(\App\Support\EphemerisDate::today())->toBe('2026-10-05');
+
+    request()->cookies->set('dsl_tz', 'Not/AZone');
+    expect(\App\Support\EphemerisDate::timezone())->toBe('UTC');
+
+    Carbon::setTestNow();
+});
+
+it('ephemeris aside moves to today in the browser timezone once it is known', function () {
+    Carbon::setTestNow(Carbon::create(2026, 10, 5, 10, 17, 0, 'UTC'));
+    $component = Livewire::test(\App\Http\Livewire\EphemerisAside::class)->assertSet('date', '2026-10-04');
+
+    request()->cookies->set('dsl_tz', 'Europe/Brussels');
+    $component->dispatch('dsl-timezone-detected')
+        ->assertSet('date', '2026-10-05')
+        ->assertDispatched('ephemerisDateChanged', date: '2026-10-05');
+    expect(session()->has('dsl_ephemeris_date'))->toBeFalse();
+
+    Carbon::setTestNow();
 });
 
 it('ephemeris aside stores a date set by an event in the session', function () {
@@ -43,7 +92,7 @@ it('search results table sets ephemerisDate when handler called', function () {
 
 it('ephemeris aside broadcasts the date on mount', function () {
     Livewire::test(\App\Http\Livewire\EphemerisAside::class)
-        ->assertDispatched('ephemerisDateChanged', date: Carbon::now()->toDateString());
+        ->assertDispatched('ephemerisDateChanged', date: \App\Support\EphemerisDate::today());
 });
 
 it('ephemeris aside broadcasts the date once when the date changes', function () {
@@ -119,6 +168,17 @@ it('gives guests the oldest active location, and users their standard location',
 
     $user = \App\Models\User::factory()->create(['stdlocation' => $newest]);
     expect(\App\Models\Location::forEphemerides($user)?->id)->toBe($newest);
+});
+
+it('skips locations without real coordinates for the ephemerides', function () {
+    $placeholder = ephemerisTestLocation('-----');
+    DB::table('locations')->where('id', $placeholder)->update(['latitude' => -999, 'longitude' => -999, 'timezone' => 'UTC']);
+    $valid = ephemerisTestLocation('Leuven');
+
+    expect(\App\Models\Location::forEphemerides()?->id)->toBe($valid);
+
+    $user = \App\Models\User::factory()->create(['stdlocation' => $placeholder]);
+    expect(\App\Models\Location::forEphemerides($user)?->id)->toBe($valid);
 });
 
 it('object ephemerides polls the cache key the queued job writes, and stops polling', function () {

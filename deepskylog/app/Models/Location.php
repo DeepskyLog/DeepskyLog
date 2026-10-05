@@ -104,14 +104,27 @@ class Location extends Model
      * the user, else (for guests) the oldest active location. Every location
      * belongs to an observer, so there is no site-wide one; ordering on the id
      * gives every component (and the queue jobs) the same location.
+     * Locations without real coordinates (the old site's placeholders have
+     * -999) are skipped: they give nonsense ephemerides and a UTC timezone.
      */
     public static function forEphemerides(?User $user = null): ?self
     {
-        if ($user && $user->standardLocation) {
-            return $user->standardLocation;
+        $standard = $user?->standardLocation;
+        if ($standard && $standard->hasValidCoordinates()) {
+            return $standard;
         }
 
-        return self::where('active', true)->orderBy('id')->first();
+        return self::where('active', true)
+            ->whereBetween('latitude', [-90, 90])
+            ->whereBetween('longitude', [-180, 180])
+            ->orderBy('id')
+            ->first();
+    }
+
+    public function hasValidCoordinates(): bool
+    {
+        return is_numeric($this->latitude) && is_numeric($this->longitude)
+            && abs((float) $this->latitude) <= 90 && abs((float) $this->longitude) <= 180;
     }
 
     public function first_observation_date(): array

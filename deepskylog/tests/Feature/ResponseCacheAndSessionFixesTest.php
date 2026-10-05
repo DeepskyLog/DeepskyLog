@@ -57,7 +57,7 @@ it('uses the response cache for guests with a session cookie', function () {
     config(['responsecache.enabled' => true]);
     $profile = app(TeamAwareCacheProfile::class);
 
-    $request = responseCacheGuestRequest('/observers', ['locale' => 'nl', EphemerisDate::SESSION_KEY => '2026-09-30']);
+    $request = responseCacheGuestRequest('/observers', ['locale' => 'nl', EphemerisDate::SESSION_KEY => '2026-09-30', EphemerisDate::SESSION_UNTIL_KEY => now()->addDay()->toIso8601String()]);
     $request->cookies->set(config('session.cookie'), 'some-session-id');
 
     expect($profile->enabled($request))->toBeTrue()
@@ -99,9 +99,9 @@ it('keys the response cache on the ephemeris date', function () {
     $hasher = app(TeamAwareHasher::class);
     $request = Request::create('/observers');
 
-    session()->put(EphemerisDate::SESSION_KEY, '2026-01-01');
+    EphemerisDate::choose('2026-01-01');
     $january = $hasher->getHashFor($request);
-    session()->put(EphemerisDate::SESSION_KEY, '2026-02-01');
+    EphemerisDate::choose('2026-02-01');
 
     expect($hasher->getHashFor($request))->not->toBe($january);
 });

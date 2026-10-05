@@ -12,6 +12,24 @@
 
     <title>{{ config('app.name', 'DeepskyLog') }}</title>
     <script>
+        // Keep the browser's timezone in a cookie: "today" in the ephemeris
+        // aside of guests is today in their timezone (EphemerisDate). On the
+        // first visit, or after a change, the aside recalculates once.
+        (function() {
+            try {
+                var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                if (!tz) return;
+                var m = document.cookie.match(/(?:^|;\s*)dsl_tz=([^;]*)/);
+                if (m && decodeURIComponent(m[1]) === tz) return;
+                document.cookie = 'dsl_tz=' + encodeURIComponent(tz) + ';path=/;max-age=31536000;SameSite=Lax'
+                    + (location.protocol === 'https:' ? ';Secure' : '');
+                document.addEventListener('livewire:initialized', function() {
+                    window.Livewire.dispatch('dsl-timezone-detected');
+                });
+            } catch (e) {}
+        })();
+    </script>
+    <script>
         (function() {
             try {
                 if (!(location && location.search && String(location.search).indexOf('dsl_debug=1') !== -1)) return;

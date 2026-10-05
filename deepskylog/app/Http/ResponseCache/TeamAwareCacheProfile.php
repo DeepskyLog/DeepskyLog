@@ -22,7 +22,7 @@ class TeamAwareCacheProfile extends CacheAllSuccessfulGetRequests
      * other key (flash data, persisted table filters, ...)
      * keeps the request out of the cache.
      */
-    private const NEUTRAL_SESSION_KEYS = ['_token', '_previous', '_flash', 'url', 'locale', EphemerisDate::SESSION_KEY];
+    private const NEUTRAL_SESSION_KEYS = ['_token', '_previous', '_flash', 'url', 'locale', EphemerisDate::SESSION_KEY, EphemerisDate::SESSION_UNTIL_KEY];
 
     /**
      * Checked before a cached page is served and before one is stored, so

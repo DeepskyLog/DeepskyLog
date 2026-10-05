@@ -980,13 +980,7 @@ class SearchResultsTable extends PowerGridComponent
             if (!empty($this->ephemerisDate)) {
                 $useDateString = (string) $this->ephemerisDate;
             } else {
-                try {
-                    $sess = session()->get('dsl_ephemeris_date');
-                    if (!empty($sess))
-                        $useDateString = (string) $sess;
-                } catch (\Throwable $_) {
-                    $useDateString = null;
-                }
+                $useDateString = \App\Support\EphemerisDate::chosen(\App\Support\EphemerisDate::timezone($userLocation));
             }
 
             if (empty($useDateString)) {
