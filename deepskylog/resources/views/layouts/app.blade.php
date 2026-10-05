@@ -333,6 +333,18 @@
                                 </div>
                             </div>
                         @endif
+                        {{-- Jetstream/Socialstream banner (e.g. linking a connected account) --}}
+                        @if (session('flash.banner'))
+                            <div class="px-4 sm:px-6 lg:px-8 pt-4">
+                                <div @class([
+                                    'p-4 border rounded-md text-sm',
+                                    'bg-green-800 border-green-600 text-green-100' => session('flash.bannerStyle', 'success') === 'success',
+                                    'bg-red-800 border-red-600 text-red-100' => session('flash.bannerStyle') !== 'success',
+                                ])>
+                                    {{ session('flash.banner') }}
+                                </div>
+                            </div>
+                        @endif
 
                         @if (isset($slot))
                             {{ $slot }}
