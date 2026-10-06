@@ -472,7 +472,6 @@ Route::get('instrument.select.api', function (Request $request) {
                 $allInstruments[] = [
                     'id' => $inst->id,
                     'name' => $inst->fullName(),
-                    'description' => $inst->description,
                 ];
             }
         }
@@ -492,7 +491,6 @@ Route::get('instrument.select.api', function (Request $request) {
                 $allInstruments[] = [
                     'id' => $inst->id,
                     'name' => $inst->fullName(),
-                    'description' => $inst->description,
                 ];
             }
         }
@@ -520,7 +518,6 @@ Route::get('instrument.select.api', function (Request $request) {
                         $allInstruments[] = [
                             'id' => $instrument->id,
                             'name' => $instrument->fullName(),
-                            'description' => $instrument->description,
                         ];
                     }
                 }
@@ -544,7 +541,6 @@ Route::get('instrument.select.api', function (Request $request) {
             $allInstruments[] = [
                 'id' => $instrument->id,
                 'name' => $instrument->fullName(),
-                'description' => $instrument->description,
             ];
         }
     }
@@ -979,7 +975,6 @@ Route::get('eyepiece.select.api', function (Request $request) {
                 $allEyepieces[] = [
                     'id' => $ep->id,
                     'name' => $ep->fullName(),
-                    'description' => $ep->description,
                 ];
             }
         }
@@ -999,7 +994,6 @@ Route::get('eyepiece.select.api', function (Request $request) {
                 $allEyepieces[] = [
                     'id' => $ep->id,
                     'name' => $ep->fullName(),
-                    'description' => $ep->description,
                 ];
             }
         }
@@ -1020,7 +1014,6 @@ Route::get('eyepiece.select.api', function (Request $request) {
                         $allEyepieces[] = [
                             'id' => $eyepiece->id,
                             'name' => $eyepiece->fullName(),
-                            'description' => $eyepiece->description,
                         ];
                     }
                 }
@@ -1051,7 +1044,6 @@ Route::get('eyepiece.select.api', function (Request $request) {
             $allEyepieces[] = [
                 'id' => $eyepiece->id,
                 'name' => $eyepiece->fullName(),
-                'description' => $eyepiece->description,
             ];
         }
     }
@@ -1099,7 +1091,6 @@ Route::get('lens.select.api', function (Request $request) {
                 $allLenses[] = [
                     'id' => $lns->id,
                     'name' => $lns->fullName(),
-                    'description' => $lns->description,
                 ];
             }
         }
@@ -1119,7 +1110,6 @@ Route::get('lens.select.api', function (Request $request) {
                 $allLenses[] = [
                     'id' => $lns->id,
                     'name' => $lns->fullName(),
-                    'description' => $lns->description,
                 ];
             }
         }
@@ -1145,7 +1135,6 @@ Route::get('lens.select.api', function (Request $request) {
                         $allLenses[] = [
                             'id' => $lens->id,
                             'name' => $lens->fullName(),
-                            'description' => $lens->description,
                         ];
                     }
                 }
@@ -1169,7 +1158,6 @@ Route::get('lens.select.api', function (Request $request) {
             $allLenses[] = [
                 'id' => $lens->id,
                 'name' => $lens->fullName(),
-                'description' => $lens->description,
             ];
         }
     }
@@ -1217,7 +1205,6 @@ Route::get('filter.select.api', function (Request $request) {
                 $allFilters[] = [
                     'id' => $filter->id,
                     'name' => $filter->fullName(),
-                    'description' => $filter->description,
                 ];
             }
         }
@@ -1237,7 +1224,6 @@ Route::get('filter.select.api', function (Request $request) {
                 $allFilters[] = [
                     'id' => $filter->id,
                     'name' => $filter->fullName(),
-                    'description' => $filter->description,
                 ];
             }
         }
@@ -1254,7 +1240,6 @@ Route::get('filter.select.api', function (Request $request) {
             $allFilters[] = [
                 'id' => $filter->id,
                 'name' => $filter->fullName(),
-                'description' => $filter->description,
             ];
         }
     }

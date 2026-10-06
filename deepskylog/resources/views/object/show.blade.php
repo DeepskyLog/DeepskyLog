@@ -500,12 +500,6 @@
 
                                     {{-- (Observation/drawing stats moved to header) --}}
 
-                                    {{-- Ephemerides: date, rise/transit/set, best time, maximum altitude, altitude graph provided by astronomy library --}}
-                                    {{-- Date selector moved to global aside Livewire component --}}
-                                    {{-- Ephemerides rows are rendered by a Livewire component so they can update live when the aside date changes --}}
-                                    {{-- Render ephemerides for all visitors (not auth-only) so planet event rows are visible for Mercury/Venus. --}}
-                                    @livewire('object-ephemerides', ['objectId' => (string) ($session->id ?? ''), 'initial' => $ephemerides ?? null, 'objectName' => $session->name ?? null, 'sourceTypeRaw' => $session->source_type_raw ?? null])
-
                                     @auth
                                         @php
                                             // Check if user should see contrast reserve and optimum detection magnification
@@ -513,6 +507,8 @@
                                         @endphp
                                         
                                         @if ($showContrastInfo)
+                                        {{-- Contrast reserve and optimum detection magnification sit above the ephemerides,
+                                             whose Livewire component also draws the altitude and year graphs --}}
                                         {{-- Live-updating contrast reserve and optimum detection magnification via Livewire --}}
                                         {{-- Embed the Livewire component directly so it can render <tr> rows inside this table --}}
                                         @php
@@ -587,11 +583,22 @@ try {
                                                     ],
                                                 ])
                                             @else
-                                                <div class="text-sm text-gray-400">{{ __('Aladin preview disabled — configure a default instrument set or select instrument/eyepiece to enable.') }}</div>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="2" class="text-sm text-gray-400">{{ __('Aladin preview disabled — configure a default instrument set or select instrument/eyepiece to enable.') }}</td>
+                                                    </tr>
+                                                </tbody>
                                             @endif
                                         @endif
                                         @endif
                                     @endauth
+
+                                    {{-- Ephemerides: date, rise/transit/set, best time, maximum altitude, altitude graph provided by astronomy library --}}
+                                    {{-- Date selector moved to global aside Livewire component --}}
+                                    {{-- Ephemerides rows are rendered by a Livewire component so they can update live when the aside date changes --}}
+                                    {{-- Render ephemerides for all visitors (not auth-only) so planet event rows are visible for Mercury/Venus. --}}
+                                    @livewire('object-ephemerides', ['objectId' => (string) ($session->id ?? ''), 'initial' => $ephemerides ?? null, 'objectName' => $session->name ?? null, 'sourceTypeRaw' => $session->source_type_raw ?? null])
+
 
                                     {{-- Comet altitude, year and light curve graphs below all rows of the table --}}
                                     @if ($__isCometLocal)

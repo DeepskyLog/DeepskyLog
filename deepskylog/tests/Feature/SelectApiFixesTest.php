@@ -76,6 +76,22 @@ it('returns the full name of eyepieces', function () {
         ->and(collect($all)->firstWhere('id', $eyepiece->id)['name'])->toBe($eyepiece->fullName());
 });
 
+it('leaves the description out of the eyepiece options', function () {
+    $user = User::factory()->create();
+    $eyepiece = EyepieceFactory::new()->create([
+        'user_id' => $user->id,
+        'observer' => $user->username,
+        'description' => '<p>Bought second-hand</p>',
+    ]);
+    $this->actingAs($user);
+
+    // WireUI's select prints an option's description under its name
+    foreach ([['selected' => $eyepiece->id], []] as $query) {
+        $option = collect($this->getJson(route('eyepiece.select.api', $query))->json())->firstWhere('id', $eyepiece->id);
+        expect($option)->not->toHaveKey('description');
+    }
+});
+
 it('links the mobile admin menu to the eyepiece types page', function () {
     expect(file_get_contents(resource_path('views/components/menu/admin-responsive-dropdown.blade.php')))
         ->toContain('href="/admin/eyepiece-types"')
