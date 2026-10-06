@@ -34,9 +34,10 @@
                 'ephemerides' => $ephemerides ?? null,
                 'sourceTypeRaw' => $session->source_type_raw ?? null,
             ],
+            'part' => $part ?? 'all',
         ];
     @endphp
     @unless ($suppressLivewire ?? false)
-        @livewire('comet-details', $cdOptions)
+        @livewire('comet-details', $cdOptions, key('comet-details-' . ($part ?? 'all') . '-' . ($session->id ?? '')))
     @endunless
 @endif

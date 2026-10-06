@@ -19,6 +19,8 @@ class CometDetails extends Component
     public $magnitudes = [];
     public $ephemerides = null;
     public $sourceTypeRaw = null;
+    // 'rows' (constellation, predicted magnitude), 'graphs' (altitude, year and light curve) or 'all'
+    public $part = 'all';
     // Track the current aside-selected date (Y-m-d) to ignore out-of-order payloads
     public $asideDate = null;
     // Timestamp of last-applied ephemerides payload to avoid out-of-order updates
@@ -33,9 +35,10 @@ class CometDetails extends Component
     ];
 
 
-    public function mount($objectId = null, $initial = null)
+    public function mount($objectId = null, $initial = null, $part = 'all')
     {
         $this->objectId = $objectId;
+        $this->part = in_array($part, ['rows', 'graphs'], true) ? $part : 'all';
         if (is_array($initial)) {
             if (isset($initial['magnitudes'])) $this->magnitudes = $initial['magnitudes'];
             if (isset($initial['ephemerides'])) $this->ephemerides = $initial['ephemerides'];
@@ -198,14 +201,15 @@ class CometDetails extends Component
                 }
             }
 
-            if (! $hasAlt) {
+            $withGraphs = $this->part !== 'rows';
+            if ($withGraphs && ! $hasAlt) {
                 try {
                     $alt = $target->altitudeGraph($geo, $date);
                     if ($alt) $this->ephemerides['altitude_graph'] = $alt;
                 } catch (\Throwable $_) {
                 }
             }
-            if (! $hasYear) {
+            if ($withGraphs && ! $hasYear) {
                 try {
                     $yg = $target->yearGraph($geo, $date);
                     if ($yg) $this->ephemerides['year_graph'] = $yg;
@@ -291,7 +295,7 @@ class CometDetails extends Component
         $e = is_array($this->ephemerides) ? $this->ephemerides : [];
 
         return view('livewire.comet-details', [
-            'lightCurve' => CometLightCurveChart::svg($e['predicted_magnitudes'] ?? [], is_array($this->magnitudes) ? $this->magnitudes : [], $e['date'] ?? null),
+            'lightCurve' => $this->part === 'rows' ? null : CometLightCurveChart::svg($e['predicted_magnitudes'] ?? [], is_array($this->magnitudes) ? $this->magnitudes : [], $e['date'] ?? null),
         ]);
     }
 }

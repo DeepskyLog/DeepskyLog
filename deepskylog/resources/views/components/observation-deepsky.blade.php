@@ -444,7 +444,7 @@
 
             @auth
                 <a
-                    href="{{ route('messages.create', ['to' => $user->username ?? '', 'subject' => 'About your observation of ' . $objectname]) }}"
+                    href="{{ route('messages.create', ['to' => $user->username ?? '', 'subject' => __('About your observation of :object', ['object' => $objectname]), 'about' => $detailHref]) }}"
                     class="inline-flex items-center px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white align-middle"
                     aria-label="{{ __('Send message about this sketch') }}"
                 >

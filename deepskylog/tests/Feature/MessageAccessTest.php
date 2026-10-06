@@ -106,3 +106,32 @@ it('does not count a broadcast for the administrator who sent it', function () {
     expect(Message::getNumberOfUnreadMails($this->alice->username))->toBe(0)
         ->and(Message::getNumberOfUnreadMails($this->bob->username))->toBe(1);
 });
+
+it('starts a new message with a link to the page it is about', function () {
+    $about = url('/observations/someone/2026-01-01/m31');
+
+    $this->actingAs($this->alice)
+        ->get(route('messages.create', ['to' => $this->bob->username, 'about' => $about]))
+        ->assertOk()
+        ->assertSee(e('<a href="'.e($about).'">'), false);
+});
+
+it('ignores an about link to another site', function () {
+    $this->actingAs($this->alice)
+        ->get(route('messages.create', ['to' => $this->bob->username, 'about' => 'https://evil.example/phish']))
+        ->assertOk()
+        ->assertDontSee('evil.example', false);
+});
+
+it('makes the relative links of a message absolute in the notification mail', function () {
+    $base = 'https://www.deepskylog.org/messages/create';
+    $html = '<p><a href="../observation/wim/2026-05-12/copernicus?x=1&amp;y=2">obs</a> '
+        .'<a href="/object/m31">m31</a> <a href="https://example.org/a">ext</a> '
+        .'<a href="mailto:a@b.c">mail</a></p>';
+
+    expect(App\Mail\MessageReceived::absoluteLinks($html, $base))->toBe(
+        '<p><a href="https://www.deepskylog.org/observation/wim/2026-05-12/copernicus?x=1&amp;y=2">obs</a> '
+        .'<a href="https://www.deepskylog.org/object/m31">m31</a> <a href="https://example.org/a">ext</a> '
+        .'<a href="mailto:a@b.c">mail</a></p>'
+    );
+});

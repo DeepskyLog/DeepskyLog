@@ -286,7 +286,7 @@
 
         @auth
             <a
-                href="{{ route('messages.create', ['to' => $observer_username ?? $observer_name, 'subject' => $messageSubject]) }}"
+                href="{{ route('messages.create', ['to' => $observer_username ?? $observer_name, 'subject' => $messageSubject, 'about' => $detailUrl ?? $objectUrl]) }}"
                 class="inline-flex items-center p-2 rounded bg-blue-600 hover:bg-blue-700 text-white"
                 aria-label="{{ __('Send message about this sketch') }}"
             >

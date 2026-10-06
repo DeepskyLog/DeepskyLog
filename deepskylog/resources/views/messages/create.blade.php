@@ -75,7 +75,7 @@
             <div class="mb-2">
                 <label for="message" class="block text-sm font-medium text-gray-300">{{ __('Message') }}</label>
                 <div class="mt-1">
-                    <textarea id="message" name="message" class="w-full h-48 mt-1 block p-2 bg-gray-800 text-gray-100 rounded">{{ old('message', request()->query('message', '')) }}</textarea>
+                    <textarea id="message" name="message" class="w-full h-48 mt-1 block p-2 bg-gray-800 text-gray-100 rounded">{{ old('message', request()->query('message', $aboutUrl ? '<p>'.e(__('About:')).' <a href="'.e($aboutUrl).'">'.e($aboutUrl).'</a></p><p></p>' : '')) }}</textarea>
                 </div>
                 <p class="text-sm text-gray-400 mt-2">{!! __('Note: recipients can disable email notifications in their :link; if they have, this message will only appear in the DeepskyLog message inbox.', ['link' => '<a href="'.url('/user/profile').'" class="underline hover:text-white">'.__('profile settings').'</a>']) !!}</p>
             </div>
@@ -176,6 +176,10 @@
                         quickbars_selection_toolbar: 'bold italic',
                         skin: 'oxide-dark',
                         content_css: 'dark',
+                        // Keep links as written: TinyMCE makes them relative to
+                        // /messages/create by default ('../observation/…'),
+                        // which breaks them in the notification email.
+                        convert_urls: false,
                         setup: function (editor) {
                             editor.on('init', function () {
                                 if (window.replyPrefillHtml) {

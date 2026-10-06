@@ -250,9 +250,35 @@ class MessagesController extends Controller
         return view('messages.show', compact('message', 'senderUser'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('messages.create');
+        return view('messages.create', [
+            'aboutUrl' => $this->aboutUrl($request->query('about')),
+        ]);
+    }
+
+    /**
+     * The page a message is about (an observation, sketch, session…), passed
+     * as ?about= by the message buttons so the body can start with a link to
+     * it. Only links to this site are taken, so a crafted link cannot put
+     * someone else's URL in the message.
+     */
+    private function aboutUrl(mixed $url): ?string
+    {
+        if (! is_string($url) || ! filter_var($url, FILTER_VALIDATE_URL)) {
+            return null;
+        }
+
+        $parts = parse_url($url);
+        $site = parse_url(url('/'));
+
+        if (! in_array($parts['scheme'] ?? '', ['http', 'https'], true)
+            || strcasecmp($parts['host'] ?? '', $site['host'] ?? '') !== 0
+            || ($parts['port'] ?? null) !== ($site['port'] ?? null)) {
+            return null;
+        }
+
+        return $url;
     }
 
     public function store(Request $request)

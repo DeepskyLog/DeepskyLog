@@ -6,7 +6,7 @@
 
 - [ ] Test! 
   - [ ] Test manually when logged in and logged out, as database expert and as administrator
-  - [ ] Not logged in:
+  - [X] Not logged in:
     - [X] Home page
       - [X] Quick search
     - [X] Object detail page
@@ -25,8 +25,29 @@
     - [X] Search observations
     - [X] Image catalogs
     - [X] Atlases
-    - [ ] Log in
-    - [ ] Register
+    - [X] Log in
+    - [X] Register
+  - [ ] Logged in:
+    - [X] Home page
+      - [X] Send DSL message
+      - [X] Quick search
+    - [ ] Object detail page
+    - [ ] Privacy page
+    - [ ] Sketch of the week and month
+    - [ ] All observations page
+    - [ ] All drawings page
+    - [ ] Observers page
+    - [ ] Popular objects page
+    - [ ] Popular observations page
+    - [ ] Popular sessions page
+    - [ ] Statistics
+    - [ ] Observing lists
+    - [ ] Catalogs
+    - [ ] Search objects
+    - [ ] Search observations
+    - [ ] Image catalogs
+    - [ ] Atlases
+    - [ ] Log out
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4
 - [ ] Translations

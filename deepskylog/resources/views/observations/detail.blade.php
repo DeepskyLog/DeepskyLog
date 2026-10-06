@@ -1218,13 +1218,13 @@
                             @php
                                 $msgSubject =
                                     $observationType === "deepsky"
-                                        ? "About your observation of " . ($obs->objectname ?? "")
-                                        : "About your observation of " . ($cometName ?? "");
+                                        ? __("About your observation of :object", ["object" => $obs->objectname ?? ""])
+                                        : __("About your observation of :object", ["object" => $cometName ?? ""]);
                                 $toUser = $user?->username ?? "";
                             @endphp
                             @if ($toUser)
                                 <a
-                                    href="{{ route('messages.create', ['to' => $toUser, 'subject' => $msgSubject]) }}"
+                                    href="{{ route('messages.create', ['to' => $toUser, 'subject' => $msgSubject, 'about' => url()->current()]) }}"
                                     class="inline-flex items-center px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

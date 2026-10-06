@@ -341,7 +341,7 @@
                                     {{-- comet magnitude chart moved below the altitude/year graphs --}}
                                     @php $__isCometLocal = strtolower(trim((string) ($session->source_type_raw ?? '')) ) === 'comet'; @endphp
                                     @if ($__isCometLocal)
-                                        @includeWhen(true, 'object.partials.comet-details', ['session' => $session, 'comet_magnitudes' => $comet_magnitudes ?? null, 'ephemerides' => $ephemerides ?? null, 'suppressLivewire' => false])
+                                        @includeWhen(true, 'object.partials.comet-details', ['session' => $session, 'comet_magnitudes' => $comet_magnitudes ?? null, 'ephemerides' => $ephemerides ?? null, 'suppressLivewire' => false, 'part' => 'rows'])
                                     @endif
 
                                     @php
@@ -593,6 +593,10 @@ try {
                                         @endif
                                     @endauth
 
+                                    {{-- Comet altitude, year and light curve graphs below all rows of the table --}}
+                                    @if ($__isCometLocal)
+                                        @include('object.partials.comet-details', ['session' => $session, 'comet_magnitudes' => $comet_magnitudes ?? null, 'ephemerides' => $ephemerides ?? null, 'suppressLivewire' => false, 'part' => 'graphs'])
+                                    @endif
                                 </table>
 
                                 {{-- Comet magnitude chart: show under Optimum detection magnification --}}
