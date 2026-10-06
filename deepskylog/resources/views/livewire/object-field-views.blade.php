@@ -11,10 +11,10 @@
     <div class="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <label class="block">
             <span class="text-gray-400">{{ __('Instrument set') }}</span>
-            <select wire:model.live="set" class="{{ $selectClass }}">
+            <select wire:model.live="instrumentSet" class="{{ $selectClass }}">
                 <option value="all">{{ __('All equipment') }}</option>
                 @foreach ($choices['sets'] as $item)
-                    <option value="{{ $item->id }}" @selected((string) $item->id === (string) $set)>{{ html_entity_decode($item->name) }}</option>
+                    <option value="{{ $item->id }}" @selected((string) $item->id === (string) $instrumentSet)>{{ html_entity_decode($item->name) }}</option>
                 @endforeach
             </select>
         </label>
@@ -144,6 +144,29 @@
                     <p class="text-gray-400">
                         {{ __('Field of view: :fov', ['fov' => $view['fov']]) }} · {{ __('Limiting magnitude: :mag', ['mag' => number_format($view['limit'], 1)]) }}
                     </p>
+                    @if (array_key_exists('contrast', $view))
+                        @php
+                            $crCategory = $view['contrast']['category'] ?? null;
+                            $crClass = match ($crCategory) {
+                                'very_easy' => 'text-green-400',
+                                'easy' => 'text-green-600',
+                                'quite_difficult' => 'text-orange-400',
+                                'difficult' => 'text-orange-600',
+                                'questionable' => 'text-gray-300',
+                                'not_visible' => 'text-gray-500',
+                                default => 'text-gray-400',
+                            };
+                        @endphp
+                        <p class="{{ $crClass }}">
+                            @if ($view['contrast'] === null)
+                                {{ __('Contrast reserve: unknown (the object has no magnitude or size)') }}
+                            @elseif ($view['contrast']['value'] === null)
+                                {{ __('Contrast reserve: :category', ['category' => __('contrast.reserve.category.not_visible')]) }}
+                            @else
+                                {{ __('contrast.reserve.summary', ['value' => number_format($view['contrast']['value'], 2), 'category' => __('contrast.reserve.category.'.$crCategory)]) }}
+                            @endif
+                        </p>
+                    @endif
                     <div class="dsl-field-view mt-2">{!! $view['svg'] !!}</div>
                 @else
                     <p class="mt-4 text-gray-300">{{ $view['message'] }}</p>
@@ -155,6 +178,7 @@
     <div class="mt-4 space-y-1 text-xs text-gray-400">
         <p>{{ __('The naked-eye view shows 90° of the sky around the object, with the zenith up and the ground below the horizon. The dashed circles show the field of the finder in the naked-eye view and the field of the telescope in the finder view.') }}</p>
         <p>{{ __('The finder and telescope views are turned as the mount turns them (zenith up for an alt-azimuth mount, north up for an equatorial one) and mirrored as set for the instrument. The arrows in the corner point north (N) and east (E).') }}</p>
+        <p>{{ __('The contrast reserve is that of the object at the magnification of the view, under the sky of the location (its SQM, else its limiting magnitude), with the object dimmed by the extinction at its altitude.') }}</p>
         <p>{{ __('The limiting magnitudes follow from the limiting magnitude or SQM of the location, the aperture and magnification of the instrument, and the extinction at the altitude of the object. Stars of the naked-eye view fade towards the horizon.') }}</p>
     </div>
 </div>

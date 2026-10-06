@@ -22,8 +22,9 @@ class ObjectFieldViews extends Component
     #[Locked]
     public string $objectName = '';
 
-    #[Url]
-    public ?string $set = null;
+    /** Not called $set: in JavaScript $wire.set is the method that sets a property. */
+    #[Url(as: 'set')]
+    public ?string $instrumentSet = null;
 
     #[Url]
     public ?string $instrument = null;
@@ -65,7 +66,7 @@ class ObjectFieldViews extends Component
     /**
      * Another instrument set brings its own equipment and locations.
      */
-    public function updatedSet(): void
+    public function updatedInstrumentSet(): void
     {
         $this->instrument = null;
         $this->eyepiece   = null;
@@ -118,7 +119,7 @@ class ObjectFieldViews extends Component
         $object = DeepskyObject::where('name', $this->objectName)->firstOrFail();
 
         $options = [
-            'set'        => $this->set,
+            'set'        => $this->instrumentSet,
             'night'      => $this->night,
             'instrument' => $this->instrument,
             'eyepiece'   => $this->eyepiece,
@@ -134,8 +135,8 @@ class ObjectFieldViews extends Component
         }
 
         // Show what was chosen for the empty fields.
-        if ($this->set !== 'all') {
-            $this->set = $result['set'] ? (string) $result['set']->id : null;
+        if ($this->instrumentSet !== 'all') {
+            $this->instrumentSet = $result['set'] ? (string) $result['set']->id : null;
         }
         $this->instrument = $result['instrument'] ? (string) $result['instrument']->id : null;
         $this->eyepiece   = $result['eyepiece'] ? (string) $result['eyepiece']->id : null;
@@ -147,7 +148,7 @@ class ObjectFieldViews extends Component
         $datetime = $result['moment']->format('Y-m-d\TH:i');
 
         $pdfQuery = array_filter([
-            'set'        => $this->set,
+            'set'        => $this->instrumentSet,
             'instrument' => $this->instrument,
             'eyepiece'   => $this->eyepiece,
             'lens'       => $this->lens,

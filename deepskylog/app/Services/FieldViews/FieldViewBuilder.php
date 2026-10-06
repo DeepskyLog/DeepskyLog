@@ -9,13 +9,13 @@ use App\Models\InstrumentSet;
 use App\Models\Lens;
 use App\Models\Location;
 use App\Models\User;
-use App\Models\UserObjectMetric;
+use App\Services\ContrastReserveCalculator;
 use App\Services\TelescopicLimitingMagnitude;
 use App\Support\EphemerisDate;
 use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
-use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
+use deepskylog\AstronomyLibrary\Magnitude;
 use deepskylog\AstronomyLibrary\Time;
 use Illuminate\Support\Collection;
 
@@ -59,7 +59,7 @@ class FieldViewBuilder
      *     ids of the observer's instrument set ('all' for all equipment), equipment and location;
      *     the local date and time ('Y-m-d\TH:i'), or else the night ('Y-m-d' of its evening) in
      *     which the object is shown at its highest. What is missing or not the observer's is taken
-     *     from the defaults: the standard instrument set, telescope and location, and the night
+     *     from the defaults: a set with the standard telescope, that telescope, the standard location, and the night
      *     of the ephemeris date.
      */
     public function build(User $user, DeepskyObject $object, array $options = [], string $theme = 'dark', int $size = 600): array
@@ -142,6 +142,16 @@ class FieldViewBuilder
         // Dimming by the atmosphere at the altitude of the object.
         $extinction = $altitude !== null && $altitude > 0 ? FieldViewRenderer::extinction($altitude) : 0.0;
 
+        // The contrast reserve: the SQM of the location as on the object
+        // page, else that of the limiting magnitude used; the object dimmed
+        // by the extinction, and not seen below the horizon.
+        $sqm      = $location?->getSqm();
+        $sqm      = is_numeric($sqm) && (float) $sqm > 0 ? (float) $sqm : Magnitude::nelmToSqm($nelm);
+        $visible  = $altitude === null || $altitude  > 0;
+        $contrast = fn (Instrument $scope, mixed $magnification) => $visible
+            ? $this->contrastReserve($object, $sqm, $extinction, (float) $scope->aperture_mm, $magnification)
+            : ['value' => null, 'category' => 'not_visible'];
+
         $target = [
             'name'  => $object->name,
             'ra'    => $raDeg,
@@ -170,7 +180,7 @@ class FieldViewBuilder
                 $telescopeFov = $instrument->fixedFieldOfViewDeg();
             } else {
                 $eyepiece = $this->pick($choices['eyepieces'], $options['eyepiece'] ?? null, null, false)
-                    ?? $this->defaultEyepiece($user, $object, $instrument, $lens, $location, $choices['eyepieces']);
+                    ?? $this->defaultEyepiece($object, $instrument, $lens, $location, $choices['eyepieces']);
                 $telescopeFov = $eyepiece ? $instrument->eyepieceFieldOfViewDeg($eyepiece, $lens) : null;
             }
             $magnification = $instrument->magnificationFor($eyepiece, $lens);
@@ -212,6 +222,7 @@ class FieldViewBuilder
                 'subtitle' => html_entity_decode($finder->fullName()).($finder->fixedMagnification ? ' · '.(int) $finder->fixedMagnification.'x' : ''),
                 'fov'      => self::formatAngle($finderFov).($finder->hasEstimatedFieldOfView() ? ' ('.__('estimated').')' : ''),
                 'limit'    => $finderLimit,
+                'contrast' => $contrast($finder, $finder->fixedMagnification),
                 'svg'      => $this->renderer->render($base + [
                     'radius_deg'    => $finderFov / 2,
                     'star_limit'    => $finderLimit,
@@ -251,6 +262,7 @@ class FieldViewBuilder
                 'subtitle' => $subtitle,
                 'fov'      => self::formatAngle($telescopeFov),
                 'limit'    => $telescopeLimit,
+                'contrast' => $contrast($instrument, $magnification),
                 'svg'      => $this->renderer->render($base + [
                     'radius_deg'    => $telescopeFov / 2,
                     'star_limit'    => $telescopeLimit,
@@ -291,6 +303,33 @@ class FieldViewBuilder
             'views'       => $views,
             'warnings'    => $warnings,
         ];
+    }
+
+    /**
+     * The contrast reserve of the object at the magnification, with its
+     * category; null when the object has no surface brightness (no
+     * magnitude or size) or the magnification is unknown.
+     *
+     * @return array{value: ?float, category: string}|null
+     */
+    private function contrastReserve(DeepskyObject $object, float $sqm, float $extinction, float $aperture, mixed $magnification): ?array
+    {
+        if ($aperture <= 0 || ! is_numeric($magnification) || (float) $magnification <= 0
+                           || ! is_numeric($object->mag) || (float) $object->mag >= 99) {
+            return null;
+        }
+
+        try {
+            $target = ContrastReserveCalculator::target($object->diam1, $object->diam2, (float) $object->mag + $extinction);
+            $sbobj  = $target->calculateSBObj();
+            $value  = $sbobj === null ? null : $target->calculateContrastReserve($sbobj, $sqm, $aperture, (float) $magnification);
+        } catch (\Throwable) {
+            return null;
+        }
+
+        return is_numeric($value)
+            ? ['value' => round((float) $value, 2) + 0.0, 'category' => ContrastReserveCalculator::category($value)]
+            : null;
     }
 
     /**
@@ -348,8 +387,10 @@ class FieldViewBuilder
     }
 
     /**
-     * The chosen instrument set of the observer; 'all' for none, and
-     * without a choice their standard set.
+     * The chosen instrument set of the observer; 'all' for none. Without a
+     * choice it is a set with their standard telescope: the standard set
+     * when that has it, else the first set that has it, else all equipment.
+     * Without a standard telescope it is the standard set.
      */
     private function instrumentSet(User $user, mixed $id): ?InstrumentSet
     {
@@ -357,9 +398,19 @@ class FieldViewBuilder
             return null;
         }
 
-        $id = is_numeric($id) ? (int) $id : $user->stdinstrumentset;
+        $sets = InstrumentSet::where('user_id', $user->id)->where('active', 1);
+        if (is_numeric($id)) {
+            return $sets->find((int) $id);
+        }
 
-        return $id ? InstrumentSet::where('user_id', $user->id)->where('active', 1)->find($id) : null;
+        if (! $user->stdtelescope) {
+            return $user->stdinstrumentset ? $sets->find($user->stdinstrumentset) : null;
+        }
+
+        return $sets->whereHas('instruments', fn ($query) => $query->where('instruments.id', $user->stdtelescope))
+            ->orderByRaw('id = ? desc', [(int) $user->stdinstrumentset])
+            ->orderBy('name')
+            ->first();
     }
 
     /**
@@ -464,12 +515,12 @@ class FieldViewBuilder
     }
 
     /**
-     * The eyepiece that gives the magnification closest to the optimum
-     * detection magnification of the object: the one stored for this
-     * equipment and location, else calculated with the astronomy library.
+     * The eyepiece that gives the optimum detection magnification of the
+     * object among the eyepieces that can be chosen, at which the whole
+     * object fits in the field (ContrastReserveCalculator::bestMagnification()).
      * Without one, the eyepiece with the lowest magnification.
      */
-    private function defaultEyepiece(User $user, DeepskyObject $object, Instrument $instrument, ?Lens $lens, ?Location $location, Collection $eyepieces): ?Eyepiece
+    private function defaultEyepiece(DeepskyObject $object, Instrument $instrument, ?Lens $lens, ?Location $location, Collection $eyepieces): ?Eyepiece
     {
         $usable = $eyepieces
             ->filter(fn (Eyepiece $eyepiece) => $instrument->magnificationFor($eyepiece, $lens) && $instrument->eyepieceFieldOfViewDeg($eyepiece, $lens))
@@ -480,22 +531,19 @@ class FieldViewBuilder
 
         $magnifications = $usable->mapWithKeys(fn (Eyepiece $eyepiece) => [$eyepiece->id => $instrument->magnificationFor($eyepiece, $lens)]);
 
-        $best = UserObjectMetric::where('user_id', $user->id)
-            ->where('instrument_id', $instrument->id)
-            ->where('location_id', $location?->id)
-            ->where('lens_id', $lens?->id)
-            ->where('object_name', $object->name)
-            ->value('optimum_detection_magnification');
-
-        if (! $best && $location && (float) $object->mag > 0 && (float) $object->mag < 99 && (float) $object->diam1 > 0) {
+        $best = null;
+        if ($location && is_numeric($object->mag) && (float) $object->mag < 99 && (float) $object->diam1 > 0) {
             try {
-                $target = new AstroTarget();
-                $target->setDiameter((float) $object->diam1, (float) ($object->diam2 ?: $object->diam1));
-                $target->setMagnitude((float) $object->mag);
-                $sqm   = $location->getSqm();
-                $sbobj = $target->calculateSBObj();
-                if ($sqm !== null && $sbobj !== null) {
-                    $best = $target->calculateBestMagnification($sbobj, (float) $sqm, (float) $instrument->aperture_mm, array_values(array_unique($magnifications->all())));
+                $target = ContrastReserveCalculator::target($object->diam1, $object->diam2, $object->mag);
+                $sqm    = $location->getSqm();
+                $sbobj  = $target->calculateSBObj();
+                if (is_numeric($sqm) && $sbobj !== null) {
+                    $fields = [];
+                    foreach ($usable as $eyepiece) {
+                        $magnification          = $magnifications[$eyepiece->id];
+                        $fields[$magnification] = max($fields[$magnification] ?? 0.0, $instrument->eyepieceFieldOfViewDeg($eyepiece, $lens));
+                    }
+                    $best = ContrastReserveCalculator::bestMagnification($target, $sbobj, (float) $sqm, (float) $instrument->aperture_mm, array_keys($fields), $fields);
                 }
             } catch (\Throwable) {
                 $best = null;

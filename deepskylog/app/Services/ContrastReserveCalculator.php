@@ -25,11 +25,11 @@ class ContrastReserveCalculator
      * The categories, from the lowest contrast reserve above which they apply.
      */
     private const CATEGORIES = [
-        'very_easy' => 1.0,
-        'easy' => 0.5,
+        'very_easy'       => 1.0,
+        'easy'            => 0.5,
         'quite_difficult' => 0.35,
-        'difficult' => 0.1,
-        'questionable' => -0.2,
+        'difficult'       => 0.1,
+        'questionable'    => -0.2,
     ];
 
     /**
@@ -70,8 +70,8 @@ class ContrastReserveCalculator
     public static function target(mixed $diam1, mixed $diam2, mixed $magnitude): AstroTarget
     {
         $target = new AstroTarget();
-        $d1 = is_numeric($diam1) && (float) $diam1 > 0 ? (float) $diam1 : null;
-        $d2 = is_numeric($diam2) && (float) $diam2 > 0 ? (float) $diam2 : null;
+        $d1     = is_numeric($diam1) && (float) $diam1 > 0 ? (float) $diam1 : null;
+        $d2     = is_numeric($diam2) && (float) $diam2 > 0 ? (float) $diam2 : null;
         $d1 ??= $d2;
         $d2 ??= $d1;
         if ($d1 !== null) {
@@ -101,7 +101,7 @@ class ContrastReserveCalculator
             ->values()
             ->all();
 
-        $set = $user->standardInstrumentSet;
+        $set     = $user->standardInstrumentSet;
         $fromSet = $set ? $usable($set->eyepieces) : [];
 
         return $fromSet ?: $usable(Eyepiece::where('user_id', $user->id)->where('active', 1)->get());
@@ -136,6 +136,97 @@ class ContrastReserveCalculator
     }
 
     /**
+     * The optimum detection magnification: of the magnifications whose
+     * field of view holds the whole object (its major axis), the one with
+     * the highest contrast reserve. When none holds it, the one with the
+     * widest field. The library alone would choose the highest
+     * magnification for a large object, at which only a part of it is seen.
+     *
+     * @param  list<int|float>  $magnifications
+     * @param  array<int, float>  $fields  true field of view (degrees) per magnification; else estimated
+     */
+    public static function bestMagnification(AstroTarget $target, float $sbobj, ?float $sqm, ?float $aperture, array $magnifications, array $fields = []): ?int
+    {
+        $magnifications = array_values(array_unique(array_filter(array_map('intval', $magnifications), fn (int $m) => $m > 0)));
+        if (! $magnifications) {
+            return null;
+        }
+
+        $field = fn (int $m) => (float) ($fields[$m] ?? Instrument::FIXED_MAGNIFICATION_APPARENT_FOV / $m);
+        $size  = max(array_map('floatval', $target->getDiameter())) / 3600.0;
+        if ($size > 0) {
+            $fitting = array_values(array_filter($magnifications, fn (int $m) => $field($m) >= $size));
+            if (! $fitting) {
+                usort($magnifications, fn (int $a, int $b) => $field($b) <=> $field($a));
+                $fitting = [$magnifications[0]];
+            }
+            $magnifications = $fitting;
+        }
+
+        $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $magnifications);
+
+        return $best ? (int) $best : null;
+    }
+
+    /**
+     * The true field of view (degrees) at each magnification: the widest
+     * of the eyepieces giving it, from their field stop or apparent field;
+     * the field of an instrument with a fixed magnification; else (no
+     * eyepieces, or without a field) none, so that it is estimated.
+     *
+     * @param  array<int, iterable<Eyepiece>>  $magnifications  magnification => eyepieces
+     * @return array<int, float>
+     */
+    public static function fields(Instrument $instrument, array $magnifications, float $lensFactor = 1.0): array
+    {
+        $fields = [];
+        foreach ($magnifications as $magnification => $eyepieces) {
+            $magnification = (int) $magnification;
+            if ($magnification <= 0) {
+                continue;
+            }
+            $widest = (float) $instrument->fixedMagnification > 0 ? $instrument->fixedFieldOfViewDeg() : null;
+            foreach ($eyepieces as $eyepiece) {
+                $fov = null;
+                if ((float) $eyepiece->field_stop_mm > 0 && (float) $instrument->focal_length_mm > 0) {
+                    $fov = (float) $eyepiece->field_stop_mm / ((float) $instrument->focal_length_mm * $lensFactor) * 57.2958;
+                } elseif ((float) $eyepiece->apparentFOV > 10) {
+                    $fov = (float) $eyepiece->apparentFOV / $magnification;
+                }
+                if ($fov !== null && ($widest === null || $fov > $widest)) {
+                    $widest = $fov;
+                }
+            }
+            if ($widest !== null) {
+                $fields[$magnification] = $widest;
+            }
+        }
+
+        return $fields;
+    }
+
+    /**
+     * The magnifications the eyepieces give with the instrument, with the
+     * eyepieces giving each, for fields().
+     *
+     * @param  iterable<Eyepiece>  $eyepieces
+     * @return array<int, list<Eyepiece>>
+     */
+    public static function eyepieceMagnifications(Instrument $instrument, iterable $eyepieces, float $lensFactor = 1.0): array
+    {
+        $magnifications = [];
+        if ((float) $instrument->focal_length_mm > 0) {
+            foreach ($eyepieces as $eyepiece) {
+                if ((float) $eyepiece->focal_length_mm > 0) {
+                    $magnifications[(int) round((float) $instrument->focal_length_mm / (float) $eyepiece->focal_length_mm * $lensFactor)][] = $eyepiece;
+                }
+            }
+        }
+
+        return $magnifications;
+    }
+
+    /**
      * The contrast reserve of the target with the instrument at the location,
      * at the best of the observer's magnifications.
      *
@@ -146,9 +237,9 @@ class ContrastReserveCalculator
     {
         $result = ['contrast_reserve' => null, 'category' => null, 'magnification' => null, 'eyepieces' => [], 'sqm' => null];
 
-        $sqm = $location->getSqm();
+        $sqm           = $location->getSqm();
         $result['sqm'] = is_numeric($sqm) ? (float) $sqm : null;
-        $aperture = (float) $instrument->aperture_mm;
+        $aperture      = (float) $instrument->aperture_mm;
         if ($result['sqm'] === null || $aperture <= 0) {
             return $result;
         }
@@ -164,19 +255,19 @@ class ContrastReserveCalculator
         }
 
         $magnifications ??= self::magnifications($instrument, $user, $lensFactor);
-        $best = $target->calculateBestMagnification($sbobj, $result['sqm'], $aperture, array_keys($magnifications));
+        $best = self::bestMagnification($target, $sbobj, $result['sqm'], $aperture, array_keys($magnifications), self::fields($instrument, $magnifications, $lensFactor));
         if (! $best) {
             return $result;
         }
-        $best = (int) $best;
+        $best     = (int) $best;
         $contrast = $target->calculateContrastReserve($sbobj, $result['sqm'], $aperture, $best);
 
         return [
             'contrast_reserve' => is_numeric($contrast) ? (float) $contrast : null,
-            'category' => self::category($contrast),
-            'magnification' => $best,
-            'eyepieces' => $magnifications[$best] ?? [],
-            'sqm' => $result['sqm'],
+            'category'         => self::category($contrast),
+            'magnification'    => $best,
+            'eyepieces'        => $magnifications[$best] ?? [],
+            'sqm'              => $result['sqm'],
         ];
     }
 }

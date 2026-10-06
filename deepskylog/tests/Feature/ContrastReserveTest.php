@@ -16,12 +16,12 @@ use Illuminate\Support\Facades\Schema;
 function insertContrastReserveObject(string $name = 'M 31'): void
 {
     DB::table('objects')->insert([
-        'name' => $name, 'slug' => \Illuminate\Support\Str::slug($name), 'type' => 'GALXY', 'con' => 'AND',
-        'ra' => 0.712313, 'decl' => 41.26917, 'mag' => 8.4, 'subr' => 12.0, 'pa' => 35, 'urano' => 0,
-        'urano_new' => 0, 'sky' => 0, 'millenium' => '', 'diam1' => 600.0, 'diam2' => 240.0,
-        'datasource' => null, 'taki' => '', 'SBObj' => 0.0, 'description' => '', 'psa' => '',
-        'torresB' => '', 'torresBC' => '', 'torresC' => '', 'milleniumbase' => '0', 'DSLDL' => '0',
-        'DSLDP' => '0', 'DSLLL' => '0', 'DSLLP' => '0', 'DSLOL' => '0', 'DSLOP' => '0',
+        'name'          => $name, 'slug' => \Illuminate\Support\Str::slug($name), 'type' => 'GALXY', 'con' => 'AND',
+        'ra'            => 0.712313, 'decl' => 41.26917, 'mag' => 8.4, 'subr' => 12.0, 'pa' => 35, 'urano' => 0,
+        'urano_new'     => 0, 'sky' => 0, 'millenium' => '', 'diam1' => 600.0, 'diam2' => 240.0,
+        'datasource'    => null, 'taki' => '', 'SBObj' => 0.0, 'description' => '', 'psa' => '',
+        'torresB'       => '', 'torresBC' => '', 'torresC' => '', 'milleniumbase' => '0', 'DSLDL' => '0',
+        'DSLDP'         => '0', 'DSLLL' => '0', 'DSLLP' => '0', 'DSLOL' => '0', 'DSLOP' => '0',
         'DeepskyHunter' => '0', 'Interstellarum' => '0', 'timestamp' => now(),
     ]);
 }
@@ -31,14 +31,14 @@ function insertContrastReserveObject(string $name = 'M 31'): void
  */
 function contrastReserveEquipment(array $instrument = []): array
 {
-    $user = User::factory()->create();
+    $user       = User::factory()->create();
     $instrument = InstrumentFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'aperture_mm' => 200, 'focal_length_mm' => 1200, ...$instrument]);
-    $location = LocationFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'skyBackground' => 21.0]);
-    $lens = LensFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'factor' => 2.0]);
+    $location   = LocationFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'skyBackground' => 21.0]);
+    $lens       = LensFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'factor' => 2.0]);
     foreach ([24.0, 12.0] as $focal) {
         Eyepiece::query()->create([
-            'user_id' => $user->id, 'make_id' => DB::table('eyepiece_makes')->value('id'),
-            'type_id' => DB::table('eyepiece_types')->value('id'), 'name' => "Eyepiece {$focal}", 'focal_length_mm' => $focal,
+            'user_id'     => $user->id, 'make_id' => DB::table('eyepiece_makes')->value('id'),
+            'type_id'     => DB::table('eyepiece_types')->value('id'), 'name' => "Eyepiece {$focal}", 'focal_length_mm' => $focal,
             'apparentFOV' => 68, 'active' => true, 'observer' => '', 'observations' => 0, 'slug' => "eyepiece-{$focal}-{$user->id}",
         ]);
     }
@@ -70,7 +70,7 @@ it('does not apply the lens to a fixed magnification', function () {
 });
 
 it('falls back to generic magnifications without eyepieces', function () {
-    $user = User::factory()->create();
+    $user       = User::factory()->create();
     $instrument = InstrumentFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username]);
 
     expect(array_keys(ContrastReserveCalculator::magnifications($instrument, $user)))->toBe(ContrastReserveCalculator::GENERIC_MAGNIFICATIONS);
@@ -82,7 +82,7 @@ it('stores the same values as the preview calculates', function () {
 
     (new ComputeContrastReserveForObject($user->id, $instrument->id, $location->id, 'M 31', $lens->id))->handle();
 
-    $metric = UserObjectMetric::where('object_name', 'M 31')->sole();
+    $metric   = UserObjectMetric::where('object_name', 'M 31')->sole();
     $expected = ContrastReserveCalculator::calculate(ContrastReserveCalculator::target(600.0, 240.0, 8.4), $instrument, $location, $user, 2.0);
 
     expect($metric->lens_id)->toBe($lens->id)
@@ -159,4 +159,36 @@ it('recomputes the metrics with the new lens when the lens of the standard teles
         fn ($job) => $job->userId === $user->id && $job->instrumentId === $instrument->id && $job->lensId === $lens->id
     );
     expect($user->fresh()->standardLensId())->toBe($lens->id);
+});
+
+it('chooses the optimum detection magnification among the magnifications whose field holds the whole object', function () {
+    // A small, bright object: the best contrast reserve, at whatever field.
+    $small   = ContrastReserveCalculator::target(60, 60, 9.0);
+    $sbSmall = $small->calculateSBObj();
+    $all     = $small->calculateBestMagnification($sbSmall, 21.5, 400, [50, 100, 300]);
+    expect(ContrastReserveCalculator::bestMagnification($small, $sbSmall, 21.5, 400, [50, 100, 300]))->toBe((int) $all);
+
+    // A large object (3°): the library alone takes a magnification at which
+    // only a part of it is seen; no field holds it, so the widest is used.
+    $large   = ContrastReserveCalculator::target(10800, 3600, 3.4);
+    $sbLarge = $large->calculateSBObj();
+    expect((int) $large->calculateBestMagnification($sbLarge, 21.5, 400, [50, 100, 300]))->toBeGreaterThan(50)
+        ->and(ContrastReserveCalculator::bestMagnification($large, $sbLarge, 21.5, 400, [50, 100, 300]))->toBe(50)
+        // A known field counts: a 100° eyepiece at 30x holds 3.3°.
+        ->and(ContrastReserveCalculator::bestMagnification($large, $sbLarge, 21.5, 400, [30, 50, 300], [30 => 100 / 30]))->toBe(30);
+});
+
+it('takes the field of view at each magnification from the widest eyepiece giving it', function () {
+    [, $instrument] = contrastReserveEquipment();
+    $wide           = new Eyepiece(['focal_length_mm' => 24, 'apparentFOV' => 82]);
+    $narrow         = new Eyepiece(['focal_length_mm' => 24, 'apparentFOV' => 52]);
+    $stop           = new Eyepiece(['focal_length_mm' => 12, 'apparentFOV' => 60, 'field_stop_mm' => 12.0]);
+
+    $magnifications = ContrastReserveCalculator::eyepieceMagnifications($instrument, [$narrow, $wide, $stop]);
+    $fields         = ContrastReserveCalculator::fields($instrument, $magnifications);
+
+    expect(array_keys($magnifications))->toBe([50, 100])
+        ->and($fields[50])->toBe(82 / 50)
+        // From the field stop: 12 / 1200 rad.
+        ->and(round($fields[100], 3))->toBe(round(12 / 1200 * 57.2958, 3));
 });

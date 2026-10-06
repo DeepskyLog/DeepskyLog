@@ -1096,11 +1096,13 @@ class NearbyObjectsTable extends PowerGridComponent
                     $possibleMags = [];
                     if (!empty($userInstrument?->focal_length_mm)) {
                         $epFocals = [];
+                        $epModels = [];
                         if (!empty($this->previewEyepieceId)) {
                             try {
                                 $ep = $this->previewEyepieceModel ?? \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
                                 if ($ep && !empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
                                     $epFocals[] = floatval($ep->focal_length_mm);
+                                    $epModels[] = $ep;
                                 }
                             } catch (\Throwable $_) { /* ignore */
                             }
@@ -1131,6 +1133,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                         try {
                                             if ($sep->active && !empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
                                                 $epFocals[] = floatval($sep->focal_length_mm);
+                                                $epModels[] = $sep;
                                             }
                                         } catch (\Throwable $_) {
                                             continue;
@@ -1159,6 +1162,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                         if (!empty($usedWith) && in_array(intval($userInstrument->id), array_map('intval', (array) $usedWith))) {
                                             $foundInstrumentSpecific = true;
                                             $epFocals[] = floatval($ep->focal_length_mm);
+                                            $epModels[] = $ep;
                                         }
                                     } catch (\Throwable $_) {
                                         continue;
@@ -1169,6 +1173,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                         try {
                                             if (!empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
                                                 $epFocals[] = floatval($ep->focal_length_mm);
+                                                $epModels[] = $ep;
                                             }
                                         } catch (\Throwable $_) {
                                             continue;
@@ -1190,7 +1195,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
                     if (!empty($possibleMags) && isset($target) && isset($sbobj) && isset($sqm) && isset($aperture)) {
                         try {
-                            $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
+                            $best = \App\Services\ContrastReserveCalculator::bestMagnification($target, $sbobj, $sqm, $aperture, $possibleMags, isset($epModels) ? \App\Services\ContrastReserveCalculator::fields($userInstrument, \App\Services\ContrastReserveCalculator::eyepieceMagnifications($userInstrument, $epModels, $lensFactor ?? 1.0), $lensFactor ?? 1.0) : []);
                             if ($best) {
                                 return (int) $best . 'x';
                             }
@@ -2942,11 +2947,13 @@ class NearbyObjectsTable extends PowerGridComponent
             $possibleMags = [];
             if (!empty($userInstrument?->focal_length_mm)) {
                 $epFocals = [];
+                $epModels = [];
                 if (!empty($this->previewEyepieceId)) {
                     try {
                         $ep = $this->previewEyepieceModel ?? \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
                         if ($ep && !empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
                             $epFocals[] = floatval($ep->focal_length_mm);
+                            $epModels[] = $ep;
                         }
                     } catch (\Throwable $_) { /* ignore */
                     }
@@ -2977,6 +2984,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                 try {
                                     if ($sep->active && !empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
                                         $epFocals[] = floatval($sep->focal_length_mm);
+                                        $epModels[] = $sep;
                                     }
                                 } catch (\Throwable $_) {
                                     continue;
@@ -2994,6 +3002,7 @@ class NearbyObjectsTable extends PowerGridComponent
                             try {
                                 if (!empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
                                     $epFocals[] = floatval($ep->focal_length_mm);
+                                    $epModels[] = $ep;
                                 }
                             } catch (\Throwable $_) {
                                 continue;
@@ -3014,7 +3023,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
             if (!empty($possibleMags) && isset($target) && isset($sbobj) && isset($sqm) && isset($aperture)) {
                 try {
-                    $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
+                    $best = \App\Services\ContrastReserveCalculator::bestMagnification($target, $sbobj, $sqm, $aperture, $possibleMags, isset($epModels) ? \App\Services\ContrastReserveCalculator::fields($userInstrument, \App\Services\ContrastReserveCalculator::eyepieceMagnifications($userInstrument, $epModels, $lensFactor ?? 1.0), $lensFactor ?? 1.0) : []);
                     if ($best) {
                         return (int) $best . 'x';
                     }

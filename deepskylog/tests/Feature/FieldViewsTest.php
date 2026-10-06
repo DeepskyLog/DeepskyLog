@@ -121,6 +121,33 @@ it('builds the naked-eye, finder and telescope views', function () {
         ->and($result['views']['telescope']['svg'])->toContain('<circle');
 });
 
+it('gives the contrast reserve at the magnification of the finder and the telescope, dimmed by the extinction', function () {
+    fieldViewObject();
+    [$user]  = fieldViewObserver();
+    $object  = App\Models\DeepskyObject::where('name', 'M 13')->first();
+    $builder = app(FieldViewBuilder::class);
+
+    $high      = $builder->build($user, $object, ['datetime' => '2026-07-01T23:30']);
+    $finder    = $high['views']['finder']['contrast'];
+    $telescope = $high['views']['telescope']['contrast'];
+    expect($finder['value'])->toBeFloat()
+        ->and($telescope['value'])->toBeFloat()
+        ->and($telescope['category'])->toBe(App\Services\ContrastReserveCalculator::category($telescope['value']))
+        ->and($high['views'])->not->toHaveKey('naked_eye.contrast');
+
+    // Lower in the sky, the object is fainter; below the horizon not visible.
+    $low = $builder->build($user, $object, ['datetime' => '2026-07-02T04:30']);
+    expect($low['altitude'])->toBeGreaterThan(0)->toBeLessThan($high['altitude'] - 20)
+        ->and($low['views']['telescope']['contrast']['value'])->toBeLessThan($telescope['value']);
+    $below = $builder->build($user, $object, ['datetime' => '2026-07-02T12:00']);
+    expect($below['altitude'])->toBeLessThan(0)
+        ->and($below['views']['telescope']['contrast'])->toBe(['value' => null, 'category' => 'not_visible']);
+
+    Livewire::actingAs($user)->test(ObjectFieldViews::class, ['object' => $object])
+        ->set('datetime', '2026-07-01T23:30')
+        ->assertSee(number_format($telescope['value'], 2).' — ');
+});
+
 it('shows the field views page and the pdf to the observer', function () {
     fieldViewObject();
     [$user] = fieldViewObserver();
@@ -218,6 +245,35 @@ it('only offers the equipment of the chosen instrument set, with the finders mou
         ->and($builder->build($user->fresh(), $object, ['set' => 'all'])['choices']['eyepieces'])->toHaveCount(2);
 });
 
+it('opens with a set that has the standard telescope', function () {
+    fieldViewObject();
+    [$user, $telescope] = fieldViewObserver();
+    $refractor          = InstrumentFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'name' => 'Refractor', 'aperture_mm' => 80, 'focal_length_mm' => 500]);
+
+    $refractorSet = App\Models\InstrumentSet::create(['user_id' => $user->id, 'name' => 'A refractor set', 'active' => true]);
+    $refractorSet->instruments()->attach($refractor->id);
+    $dobsonSet = App\Models\InstrumentSet::create(['user_id' => $user->id, 'name' => 'Dobson set', 'active' => true]);
+    $dobsonSet->instruments()->attach($telescope->id);
+
+    $object  = App\Models\DeepskyObject::where('name', 'M 13')->first();
+    $builder = app(FieldViewBuilder::class);
+
+    // The standard set does not have the standard telescope: the set that has it is chosen.
+    $user->forceFill(['stdinstrumentset' => $refractorSet->id])->save();
+    $result = $builder->build($user->fresh(), $object, ['datetime' => '2026-07-01T23:30']);
+    expect($result['set']->id)->toBe($dobsonSet->id)
+        ->and($result['instrument']->id)->toBe($telescope->id);
+
+    // No set has it: all equipment.
+    $dobsonSet->instruments()->detach();
+    $result = $builder->build($user->fresh(), $object, ['datetime' => '2026-07-01T23:30']);
+    expect($result['set'])->toBeNull()
+        ->and($result['instrument']->id)->toBe($telescope->id);
+
+    // A chosen set is kept.
+    expect($builder->build($user->fresh(), $object, ['set' => $refractorSet->id, 'datetime' => '2026-07-01T23:30'])['instrument']->id)->toBe($refractor->id);
+});
+
 it('shows the object at its highest during the night unless a time is chosen', function () {
     fieldViewObject();
     [$user]  = fieldViewObserver();
@@ -253,8 +309,8 @@ it('switches between the current time, a chosen time and the highest point on th
         ->assertSet('night', '2026-07-01')
         ->assertSee('highest during the night of 2026-07-01');
 
-    $component->set('set', 'all')
-        ->assertSet('set', 'all')
+    $component->set('instrumentSet', 'all')
+        ->assertSet('instrumentSet', 'all')
         ->assertSet('instrument', (string) $telescope->id);
 });
 

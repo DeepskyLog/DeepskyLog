@@ -893,7 +893,7 @@ class ObjectController extends Controller
                             }
                         }
 
-                        $mag = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possible);
+                        $mag = \App\Services\ContrastReserveCalculator::bestMagnification($target, $sbobj, $sqm, $aperture, $possible, ($instSet && $userInstrument ? \App\Services\ContrastReserveCalculator::fields($userInstrument, \App\Services\ContrastReserveCalculator::eyepieceMagnifications($userInstrument, collect($instSet->eyepieces)->where('active', true), $lensFactor), $lensFactor) : []));
                     }
 
                     if ($sbobj !== null && $sqm !== null && $aperture && $mag) {
@@ -927,6 +927,7 @@ class ObjectController extends Controller
                         // Compute optimum detection magnification using available eyepieces
                         try {
                             $eyepieceFocals = [];
+                            $eyepieceModels = [];
                             // Prepare an array to store eyepiece display info
                             $eyepiecesForDisplay = [];
                             // Map magnification => eyepieces that produce it
@@ -992,6 +993,7 @@ class ObjectController extends Controller
                                             $usedSetEyepieces = true;
                                             $ef = $ep->focal_length_mm;
                                             $eyepieceFocals[] = $ef;
+                                            $eyepieceModels[] = $ep;
                                             // Attempt to include slugs so the view can link to eyepiece pages
                                             $userSlug = $epUserSlugMap[$ep->user_id] ?? null;
                                             // Build display name; if a default lens is set, append the lens name
@@ -1035,6 +1037,7 @@ class ObjectController extends Controller
                                         if (!empty($ep->focal_length_mm)) {
                                             $ef = $ep->focal_length_mm;
                                             $eyepieceFocals[] = $ef;
+                                            $eyepieceModels[] = $ep;
                                         } else {
                                             $ef = null;
                                         }
@@ -1099,7 +1102,7 @@ class ObjectController extends Controller
                                 $possibleMags = $possibleUsedForContrast;
                             }
                             if (!empty($possibleMags) && $sbobj !== null && $sqm !== null && $aperture) {
-                                $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
+                                $best = \App\Services\ContrastReserveCalculator::bestMagnification($target, $sbobj, $sqm, $aperture, $possibleMags, $userInstrument ? \App\Services\ContrastReserveCalculator::fields($userInstrument, \App\Services\ContrastReserveCalculator::eyepieceMagnifications($userInstrument, $eyepieceModels, $lensFactor), $lensFactor) : []);
                                 $session->optimum_detection_magnification = $best ? (int) $best : null;
                             } else {
                                 $session->optimum_detection_magnification = null;
@@ -2089,7 +2092,7 @@ class ObjectController extends Controller
                                                 }
                                             }
 
-                                            $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possible);
+                                            $best = \App\Services\ContrastReserveCalculator::bestMagnification($target, $sbobj, $sqm, $aperture, $possible, ($instSet && $userInstrument ? \App\Services\ContrastReserveCalculator::fields($userInstrument, \App\Services\ContrastReserveCalculator::eyepieceMagnifications($userInstrument, collect($instSet->eyepieces)->where('active', true), $lensFactor), $lensFactor) : []));
                                             $session->optimum_detection_magnification = $best ? (int) $best : null;
 
                                             if (!empty($session->optimum_detection_magnification)) {
