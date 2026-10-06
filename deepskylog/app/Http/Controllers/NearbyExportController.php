@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Livewire\NearbyObjectsTable;
 use App\Models\DeepskyObject;
 use App\Services\StarChartService;
+use App\Support\SvgRasterizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -259,7 +260,7 @@ class NearbyExportController extends Controller
             // Rasterize SVG → PNG using ImageMagick (same approach as AtlasController)
             $imageDataUri = null;
             if ($tmpSvgPath !== null) {
-                $imageDataUri = $this->rasterizeSvg($tmpSvgPath, $widthPx, $heightPx, $pageDpi);
+                $imageDataUri = SvgRasterizer::fileToDataUri($tmpSvgPath, $widthPx, $heightPx, $pageDpi);
             }
 
             if ($imageDataUri !== null) {
@@ -558,37 +559,5 @@ class NearbyExportController extends Controller
             Log::error('NearbyExportController::apd failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate AstroPlanner APD export'));
         }
-    }
-
-    private function rasterizeSvg(string $svgPath, int $widthPx, int $heightPx, int $dpi = 144): ?string
-    {
-        $pngPath = $svgPath . '.png';
-
-        $candidates = [];
-        $rsvg = trim((string) shell_exec('command -v rsvg-convert 2>/dev/null'));
-        if ($rsvg !== '') {
-            $candidates[] = escapeshellcmd($rsvg) . ' -w ' . $widthPx . ' -h ' . $heightPx . ' ' . escapeshellarg($svgPath) . ' -o ' . escapeshellarg($pngPath);
-        }
-        foreach (['magick', 'convert'] as $bin) {
-            $path = trim((string) shell_exec('command -v ' . $bin . ' 2>/dev/null'));
-            if ($path !== '') {
-                $candidates[] = escapeshellcmd($path) . ' -background white -flatten -density ' . $dpi . ' -resize ' . $widthPx . 'x' . $heightPx . ' ' . escapeshellarg($svgPath) . ' ' . escapeshellarg($pngPath);
-            }
-        }
-
-        foreach ($candidates as $cmd) {
-            @unlink($pngPath);
-            exec($cmd . ' 2>&1', $out, $code);
-            if ($code === 0 && is_file($pngPath)) {
-                $bytes = file_get_contents($pngPath);
-                @unlink($pngPath);
-                if ($bytes !== false && $bytes !== '') {
-                    return 'data:image/png;base64,' . base64_encode($bytes);
-                }
-            }
-        }
-
-        @unlink($pngPath);
-        return null;
     }
 }

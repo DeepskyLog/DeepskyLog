@@ -195,7 +195,7 @@ class ObjectReportDataBuilder
             return [];
         }
 
-        $lensId = $user->stdlens ?: null;
+        $lensId = $user->standardLensId();
         $result = [];
 
         foreach (array_chunk($names, 500) as $chunk) {

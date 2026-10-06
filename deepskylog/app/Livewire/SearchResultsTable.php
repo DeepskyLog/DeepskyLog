@@ -288,13 +288,13 @@ class SearchResultsTable extends PowerGridComponent
         }
 
         // Attach per-user cached metrics (contrast reserve / best mag) when possible
-        // Strict policy: only use the user's stdtelescope and stdlens fields. If absent, do not join metrics.
+        // Strict policy: only use the user's stdtelescope and its lens. If absent, do not join metrics.
         try {
             $authUser = Auth::user();
             if ($authUser && $authUser->standardLocation) {
                 $locId = $authUser->standardLocation->id ?? null;
                 $instrId = $authUser->stdtelescope ?? null; // use stdtelescope only
-                $stdLens = $authUser->stdlens ?? null; // use stdlens only
+                $stdLens = $authUser->standardLensId(); // the lens of the standard telescope
 
                 if ($instrId && $locId) {
                     if (!empty($stdLens)) {

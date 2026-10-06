@@ -7,7 +7,6 @@ use App\Models\Team;
 use App\Models\User;
 use Database\Factories\EyepieceFactory;
 use Database\Factories\InstrumentFactory;
-use Database\Factories\LensFactory;
 use Database\Factories\LocationFactory;
 use Database\Seeders\GroupSeeder;
 use Laravel\Jetstream\Contracts\DeletesUsers;
@@ -90,14 +89,12 @@ it('does not accept the equipment of another user as default', function () {
         ->set('stdtelescope', ownedEquipment(InstrumentFactory::new(), $other)->id)
         ->set('stdinstrumentset', InstrumentSet::factory()->create(['user_id' => $other->id])->id)
         ->set('stdeyepiece', ownedEquipment(EyepieceFactory::new(), $other)->id)
-        ->set('stdlens', ownedEquipment(LensFactory::new(), $other)->id)
         ->call('updateObservingInformation')
         ->assertHasErrors([
             'stdlocation' => 'exists',
             'stdtelescope' => 'exists',
             'stdinstrumentset' => 'exists',
             'stdeyepiece' => 'exists',
-            'stdlens' => 'exists',
         ]);
 
     expect($user->fresh()->stdtelescope)->toBeNull();

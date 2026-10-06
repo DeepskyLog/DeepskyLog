@@ -620,6 +620,13 @@ Route::get('/object/{slug}/nearby-names.pdf', [App\Http\Controllers\NearbyExport
 Route::get('/object/{slug}/nearby-table.pdf', [App\Http\Controllers\NearbyExportController::class, 'tablePdf'])
     ->name('object.nearby.table.pdf')->middleware(['auth', 'doNotCacheResponse', 'throttle:exports']);
 
+// The object with the naked eye, in the finder and in the telescope
+// (App\Livewire\ObjectFieldViews), and the same views as a PDF.
+Route::get('/object/{slug}/field-views', [App\Http\Controllers\ObjectFieldViewController::class, 'show'])
+    ->name('object.field-views')->middleware(['auth', 'doNotCacheResponse']);
+Route::get('/object/{slug}/field-views.pdf', [App\Http\Controllers\ObjectFieldViewController::class, 'pdf'])
+    ->name('object.field-views.pdf')->middleware(['auth', 'doNotCacheResponse', 'throttle:exports']);
+
 // Nearby star chart PDF export
 Route::get('/object/{slug}/nearby-chart.pdf', [App\Http\Controllers\NearbyExportController::class, 'chartPdf'])
     ->name('object.nearby.chart.pdf')->middleware(['auth', 'doNotCacheResponse', 'throttle:exports']);

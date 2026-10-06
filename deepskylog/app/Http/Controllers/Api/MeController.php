@@ -46,7 +46,8 @@ class MeController extends Controller
             'standard_location_id' => $user->stdlocation ?: null,
             'standard_instrument_id' => $user->stdtelescope ?: null,
             'standard_eyepiece_id' => $user->stdeyepiece ?: null,
-            'standard_lens_id' => $user->stdlens ?: null,
+            // The lens of the standard telescope, which replaced the standard lens of the observer.
+            'standard_lens_id' => $user->standardLensId(),
             'standard_instrument_set_id' => $user->stdinstrumentset ?: null,
             'active_observing_list_id' => $user->active_observing_list_id ?: null,
             'show_inches' => (bool) $user->showInches,

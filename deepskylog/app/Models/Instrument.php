@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\PurifiedHtml;
+use App\Jobs\EnqueueComputeCRForUser;
 use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
 use App\Models\Traits\OwnedByUser;
@@ -30,6 +31,9 @@ class Instrument extends Model
         'mount_type_id',
         'focal_length_mm',
         'fixedMagnification',
+        'field_of_view_deg',
+        'finder_id',
+        'lens_id',
         'active',
         'observer',
         'flip_image',
@@ -44,6 +48,12 @@ class Instrument extends Model
     ];
 
     protected $with = ['instrument_make', 'mount_type', 'instrument_type'];
+
+    /**
+     * Apparent field, in degrees, assumed for the eyepiece of a finder or
+     * binoculars whose true field of view is not entered.
+     */
+    public const FIXED_MAGNIFICATION_APPARENT_FOV = 50.0;
 
     public function sluggable(): array
     {
@@ -80,6 +90,39 @@ class Instrument extends Model
     public function instrument_type(): BelongsTo
     {
         return $this->belongsTo('App\Models\InstrumentType');
+    }
+
+    /**
+     * The lens that is always used with this telescope (a coma corrector, a
+     * Barlow): the default lens of observations and field views.
+     */
+    public function lens(): BelongsTo
+    {
+        return $this->belongsTo(Lens::class, 'lens_id');
+    }
+
+    /**
+     * The contrast reserve and best magnification of the observers with
+     * this as their standard telescope are computed with its lens.
+     */
+    protected static function booted(): void
+    {
+        static::updated(function (self $instrument) {
+            if (! $instrument->wasChanged('lens_id')) {
+                return;
+            }
+
+            User::where('stdtelescope', $instrument->id)->get(['id', 'stdtelescope', 'stdlocation'])
+                ->each(fn (User $user) => EnqueueComputeCRForUser::dispatch($user->id, $instrument->id, $user->stdlocation, $instrument->lens_id));
+        });
+    }
+
+    /**
+     * The finderscope mounted on this telescope.
+     */
+    public function finder(): BelongsTo
+    {
+        return $this->belongsTo(Instrument::class, 'finder_id');
     }
 
     public function first_observation_date(): array
@@ -257,17 +300,8 @@ class Instrument extends Model
 
     public function field_of_view(Eyepiece $eyepiece, ?Lens $lens = null): string
     {
-        $focal_length = $this->effective_focal_length($lens);
-        if ($focal_length <= 0) {
-            return __('Unknown');
-        }
-
-        if ($eyepiece->field_stop_mm > 0) {
-            $tfov = $eyepiece->field_stop_mm / $focal_length * 57.2958;
-        } elseif ($eyepiece->apparentFOV > 10 && $eyepiece->focal_length_mm > 0) {
-            // Calculate the true field of view
-            $tfov = $eyepiece->apparentFOV / ($focal_length / $eyepiece->focal_length_mm);
-        } else {
+        $tfov = $this->eyepieceFieldOfViewDeg($eyepiece, $lens);
+        if ($tfov === null) {
             return __('Unknown');
         }
 
@@ -275,6 +309,70 @@ class Instrument extends Model
         $minutes = (int) round($tfov * 60);
 
         return sprintf("%d° %02d'", intdiv($minutes, 60), $minutes % 60);
+    }
+
+    /**
+     * The true field of view in degrees, or null when it cannot be
+     * determined. An instrument with a fixed magnification (binoculars,
+     * finders) has its own field: the one entered for it, else an estimate
+     * from the magnification.
+     */
+    public function trueFieldOfViewDeg(?Eyepiece $eyepiece, ?Lens $lens = null): ?float
+    {
+        if ((float) $this->fixedMagnification > 0) {
+            return $this->fixedFieldOfViewDeg();
+        }
+
+        return $eyepiece ? $this->eyepieceFieldOfViewDeg($eyepiece, $lens) : null;
+    }
+
+    /**
+     * The true field of view in degrees of the eyepiece in this instrument:
+     * from its field stop, else from its apparent field.
+     */
+    public function eyepieceFieldOfViewDeg(Eyepiece $eyepiece, ?Lens $lens = null): ?float
+    {
+        $focal_length = $this->effective_focal_length($lens);
+        if ($focal_length <= 0) {
+            return null;
+        }
+
+        if ($eyepiece->field_stop_mm > 0) {
+            return $eyepiece->field_stop_mm / $focal_length * 57.2958;
+        }
+
+        if ($eyepiece->apparentFOV > 10 && $eyepiece->focal_length_mm > 0) {
+            return $eyepiece->apparentFOV / ($focal_length / $eyepiece->focal_length_mm);
+        }
+
+        return null;
+    }
+
+    /**
+     * The field of view of an instrument with a fixed magnification: the one
+     * entered for it, else the field of an ordinary eyepiece of
+     * FIXED_MAGNIFICATION_APPARENT_FOV degrees at that magnification.
+     */
+    public function fixedFieldOfViewDeg(): ?float
+    {
+        if ((float) $this->field_of_view_deg > 0) {
+            return (float) $this->field_of_view_deg;
+        }
+
+        if ((float) $this->fixedMagnification > 0) {
+            return self::FIXED_MAGNIFICATION_APPARENT_FOV / (float) $this->fixedMagnification;
+        }
+
+        return null;
+    }
+
+    /**
+     * Whether the field of view of this fixed-magnification instrument is
+     * estimated rather than entered.
+     */
+    public function hasEstimatedFieldOfView(): bool
+    {
+        return (float) $this->fixedMagnification > 0 && ! ((float) $this->field_of_view_deg > 0);
     }
 
     public function exit_pupil(Eyepiece $eyepiece, ?Lens $lens = null): string

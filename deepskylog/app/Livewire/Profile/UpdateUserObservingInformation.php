@@ -26,8 +26,6 @@ class UpdateUserObservingInformation extends Component
     // New defaults for Aladin preview
     public $stdeyepiece;
 
-    public $stdlens;
-
     /**
      * The defaults must be the user's own equipment and locations.
      */
@@ -42,7 +40,6 @@ class UpdateUserObservingInformation extends Component
             'standardAtlasCode' => 'required|string|exists:atlases,code',
             'showInches' => 'boolean',
             'stdeyepiece' => ['nullable', 'integer', $owned('eyepieces')],
-            'stdlens' => ['nullable', 'integer', $owned('lenses')],
         ];
     }
 
@@ -57,7 +54,6 @@ class UpdateUserObservingInformation extends Component
         $this->standardAtlasCode = auth()->user()->standardAtlasCode ?: self::DEFAULT_ATLAS_CODE;
         $this->showInches = boolval(auth()->user()->showInches);
         $this->stdeyepiece = auth()->user()->stdeyepiece ?? null;
-        $this->stdlens = auth()->user()->stdlens ?? null;
     }
 
     /**
@@ -66,7 +62,7 @@ class UpdateUserObservingInformation extends Component
     public function updateObservingInformation(): void
     {
         // An unset select sends an empty string, which is not numeric.
-        foreach (['stdlocation', 'stdtelescope', 'stdinstrumentset', 'stdeyepiece', 'stdlens'] as $field) {
+        foreach (['stdlocation', 'stdtelescope', 'stdinstrumentset', 'stdeyepiece'] as $field) {
             if ($this->{$field} === '') {
                 $this->{$field} = null;
             }
@@ -80,13 +76,12 @@ class UpdateUserObservingInformation extends Component
         $this->validate();
 
         // Saved at once, so that the recompute of the contrast reserve that a
-        // changed default instrument, location or lens queues (User::booted()) runs once.
+        // changed default instrument or location queues (User::booted()) runs once.
         auth()->user()->forceFill([
             'stdlocation' => $this->stdlocation ?: null,
             'stdtelescope' => $this->stdtelescope ?: null,
             'stdinstrumentset' => $this->stdinstrumentset ?: null,
             'stdeyepiece' => $this->stdeyepiece ?: null,
-            'stdlens' => $this->stdlens ?: null,
             'standardAtlasCode' => $this->standardAtlasCode,
             'showInches' => $this->showInches,
         ])->save();

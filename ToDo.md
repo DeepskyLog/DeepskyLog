@@ -85,7 +85,6 @@
 
 ### For later
 
-- [ ] When printing a map for an object, create three pages, one with the naked eye, one with the finderscope and one with the telescope.  Magnitudes of the stars should be calculated for the given location.
 - [ ] Add a wizard to create an observing list.
 
 ### Done
@@ -135,3 +134,4 @@
 - [X] DeepskyLog atlases can be created.  They are updated to have a nicer layout.
 - [X] Object sets can be created.  They are updated to have a nicer layout.  This was broken in the old version of DeepskyLog but is working again in the new version.
 - [X] Reports of lists of objects can be created with your own layout.  The layouts of the old version of DeepskyLog are imported.  This was broken in the old version of DeepskyLog but is working again in the new version.
+- [X] For every object, the user can show the field views: where to find the object with the naked eye, binoculars, and telescopes. 

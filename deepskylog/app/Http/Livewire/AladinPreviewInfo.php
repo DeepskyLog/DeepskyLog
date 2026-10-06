@@ -423,7 +423,7 @@ class AladinPreviewInfo extends Component
                 }
             } else {
                 // No lens specified in payload: fall back to user's default lens/preferences
-                $defaultLensId = $authUser?->stdlens ?? null;
+                $defaultLensId = $authUser?->standardLensId();
                 try {
                     if (!$defaultLensId && Schema::hasColumn('users', 'preferences') && is_array($authUser?->preferences) && isset($authUser->preferences['aladin_default_lens'])) {
                         $defaultLensId = $authUser->preferences['aladin_default_lens'];

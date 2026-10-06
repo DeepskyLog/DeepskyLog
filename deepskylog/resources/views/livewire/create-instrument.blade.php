@@ -248,6 +248,19 @@
                                 value="{{ old('fixedMagnification') }}"
                             />
 
+                            {{-- The true field of view of a finder or binoculars, which have no eyepiece to calculate it from --}}
+                            <x-input
+                                name="field_of_view_deg"
+                                label="{!! __('True field of view of the instrument with a fixed magnification (in degrees)') !!}"
+                                hint="{{ __('Leave empty to estimate it as 50° divided by the magnification.') }}"
+                                type="number"
+                                wire:model="field_of_view_deg"
+                                class="mt-1 block w-full"
+                                step="0.1"
+                                min="0.1"
+                                max="60"
+                            />
+
                             {{-- Add the obstruction of the instrument--}}
                             <x-input
                                 name="obstruction_perc"
@@ -265,6 +278,26 @@
                                       label="{!! __('Select the mount type of the instrument') !!}"
                                       wire:model="mount_type_id"
                                       :async-data="route('mount_types.api')"
+                                      option-label="name"
+                                      option-value="id"
+                            />
+
+                            {{-- The finderscope mounted on this instrument --}}
+                            <x-select class="mt-2"
+                                      label="{{ __('Finderscope mounted on this instrument') }}"
+                                      placeholder="{{ __('No finderscope') }}"
+                                      wire:model="finder_id"
+                                      :options="$finders"
+                                      option-label="name"
+                                      option-value="id"
+                            />
+
+                            {{-- The lens that is always used with this instrument --}}
+                            <x-select class="mt-2"
+                                      label="{{ __('Lens that is always used with this instrument (for example a coma corrector)') }}"
+                                      placeholder="{{ __('No lens') }}"
+                                      wire:model="lens_id"
+                                      :options="$lenses"
                                       option-label="name"
                                       option-value="id"
                             />

@@ -444,6 +444,20 @@ Route::get('instrumentset.select.api', function (Request $request) {
 
 // Instrument select helper that correctly returns any selected instruments (supports arrays)
 Route::get('instrument.select.api', function (Request $request) {
+    // The observer's own instruments carry the lens that is always used with
+    // them, which the observation form then selects with the instrument.
+    $lensNames = \App\Models\Lens::with('lens_make')->where('user_id', auth()->id())->get()
+        ->mapWithKeys(fn ($lens) => [$lens->id => html_entity_decode($lens->fullName())]);
+    $option = function (Instrument $instrument) use ($lensNames) {
+        $option = ['id' => $instrument->id, 'name' => $instrument->fullName()];
+        if ((int) $instrument->user_id === (int) auth()->id()) {
+            $lensId = $instrument->lens_id && isset($lensNames[$instrument->lens_id]) ? (int) $instrument->lens_id : null;
+            $option['lens_id'] = $lensId;
+            $option['lens_name'] = $lensId ? $lensNames[$lensId] : null;
+        }
+
+        return $option;
+    };
 
     $allInstruments = [];
 
@@ -469,10 +483,7 @@ Route::get('instrument.select.api', function (Request $request) {
         foreach ($selected as $sel) {
             $inst = Instrument::where('id', $sel)->first();
             if ($inst) {
-                $allInstruments[] = [
-                    'id' => $inst->id,
-                    'name' => $inst->fullName(),
-                ];
+                $allInstruments[] = $option($inst);
             }
         }
 
@@ -488,10 +499,7 @@ Route::get('instrument.select.api', function (Request $request) {
         foreach ($selected as $sel) {
             $inst = Instrument::where('id', $sel)->first();
             if ($inst) {
-                $allInstruments[] = [
-                    'id' => $inst->id,
-                    'name' => $inst->fullName(),
-                ];
+                $allInstruments[] = $option($inst);
             }
         }
     }
@@ -515,10 +523,7 @@ Route::get('instrument.select.api', function (Request $request) {
                 })->values();
                 foreach ($setInstruments as $instrument) {
                     if ($request->search == '' || Str::contains(Str::lower($instrument->fullName()), Str::lower($request->search))) {
-                        $allInstruments[] = [
-                            'id' => $instrument->id,
-                            'name' => $instrument->fullName(),
-                        ];
+                        $allInstruments[] = $option($instrument);
                     }
                 }
                 // Remove duplicates while preserving order
@@ -538,10 +543,7 @@ Route::get('instrument.select.api', function (Request $request) {
 
     foreach ($instruments as $instrument) {
         if ($request->search == '' || Str::contains(Str::lower($instrument->fullName()), Str::lower($request->search))) {
-            $allInstruments[] = [
-                'id' => $instrument->id,
-                'name' => $instrument->fullName(),
-            ];
+            $allInstruments[] = $option($instrument);
         }
     }
 
@@ -1326,27 +1328,23 @@ Route::middleware('auth:sanctum')->post('user/aladin-defaults', function (Reques
             }
         }
 
-        // Lens
+        // Lens: the lens of the telescope saved as default (the observer has
+        // no standard lens of their own; a telescope has the lens that is
+        // always used with it).
+        $lens = null;
         if (!empty($data['lens_id']) && $data['lens_id'] != 0) {
-            $ln = \App\Models\Lens::where('id', $data['lens_id'])->where('observer', $user->username)->first();
-            if (!$ln)
+            $lens = \App\Models\Lens::where('id', $data['lens_id'])->where('user_id', $user->id)->first();
+            if (!$lens)
                 return response()->json(['error' => 'Invalid lens'], 422);
-            if (Schema::hasColumn('users', 'stdlens')) {
-                $user->stdlens = $ln->id;
-            } else if (Schema::hasColumn('users', 'preferences')) {
-                $prefs = $user->preferences ?? [];
-                $prefs['aladin_default_lens'] = $ln->id;
-                $user->preferences = $prefs;
-            }
-        } else {
-            if (Schema::hasColumn('users', 'stdlens')) {
-                $user->stdlens = null;
-            }
-            if (Schema::hasColumn('users', 'preferences')) {
-                $prefs = $user->preferences ?? [];
-                unset($prefs['aladin_default_lens']);
-                $user->preferences = $prefs;
-            }
+        }
+        if (Schema::hasColumn('users', 'preferences')) {
+            $prefs = $user->preferences ?? [];
+            unset($prefs['aladin_default_lens']);
+            $user->preferences = $prefs;
+        }
+        $telescope = $user->stdtelescope ? \App\Models\Instrument::where('id', $user->stdtelescope)->where('user_id', $user->id)->first() : null;
+        if ($telescope && (int) $telescope->lens_id !== (int) $lens?->id) {
+            $telescope->update(['lens_id' => $lens?->id]);
         }
 
         $user->save();

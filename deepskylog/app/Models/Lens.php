@@ -19,6 +19,15 @@ class Lens extends Model
     use HasUniqueSlugPerUser;
     use OwnedByUser;
 
+    /**
+     * A deleted lens is no longer the lens of a telescope (the foreign key
+     * does this too, but not every database enforces it).
+     */
+    protected static function booted(): void
+    {
+        static::deleting(fn (self $lens) => Instrument::where('lens_id', $lens->id)->update(['lens_id' => null]));
+    }
+
     protected $fillable = [
         'user_id',
         'name',
@@ -93,14 +102,6 @@ class Lens extends Model
     public function last_observation_date(): array
     {
         return $this->last_observation_date_generic('lensid');
-    }
-
-    /**
-     * The users column that holds this as the user's default.
-     */
-    public function standardUserColumn(): ?string
-    {
-        return 'stdlens';
     }
 
     /**

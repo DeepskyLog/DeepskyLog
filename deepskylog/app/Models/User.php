@@ -111,7 +111,6 @@ class User extends Authenticatable implements MustVerifyEmail
             'current_connected_account_id',
             'active_observing_list_id',
             'stdeyepiece',
-            'stdlens',
             'stdinstrumentset',
             'observationlanguage',
             'standardAtlasCode',
@@ -839,6 +838,24 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * The lens that is always used with the standard telescope (a coma
+     * corrector, a Barlow), which the contrast reserve and best
+     * magnification are computed with.
+     */
+    public function standardLensId(): ?int
+    {
+        if (! $this->stdtelescope) {
+            return null;
+        }
+
+        $lensId = $this->relationLoaded('standardInstrument')
+            ? $this->standardInstrument?->lens_id
+            : Instrument::whereKey($this->stdtelescope)->value('lens_id');
+
+        return $lensId ? (int) $lensId : null;
+    }
+
+    /**
      * Establishes a relationship between the User model and the Instruments model.
      *
      * This method defines a one-to-one relationship between the User model and the Instruments model.
@@ -1012,12 +1029,13 @@ class User extends Authenticatable implements MustVerifyEmail
         static::updated(function (self $user) {
             try {
                 // Field names used in the database: stdtelescope (instrument) and stdlocation
-                // The metrics are stored per lens as well, so a new default lens needs them too
-                if ($user->wasChanged(['stdtelescope', 'stdlocation', 'stdlens'])) {
+                // The metrics are stored per lens as well: the lens of the standard
+                // telescope (Instrument recomputes them when that lens changes)
+                if ($user->wasChanged(['stdtelescope', 'stdlocation'])) {
                     $instrId = $user->stdtelescope ?? null;
                     $locId = $user->stdlocation ?? null;
-                    $lensId = $user->stdlens ?? null;
-                    Log::info('User: standard instrument/location/lens changed - enqueuing metrics recompute', ['user_id' => $user->id, 'stdtelescope' => $instrId, 'stdlocation' => $locId, 'stdlens' => $lensId]);
+                    $lensId = $user->standardLensId();
+                    Log::info('User: standard instrument/location changed - enqueuing metrics recompute', ['user_id' => $user->id, 'stdtelescope' => $instrId, 'stdlocation' => $locId, 'lens' => $lensId]);
 
                     // Enqueue the job so it runs asynchronously (and itself will dispatch per-object jobs)
                     EnqueueComputeCRForUser::dispatch($user->id, $instrId, $locId, $lensId);

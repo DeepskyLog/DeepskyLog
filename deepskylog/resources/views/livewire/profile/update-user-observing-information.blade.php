@@ -104,17 +104,6 @@
                 option-value="id"
             />
         </div>
-
-        {{-- Default lens --}}
-        <div class="col-span-6 sm:col-span-5">
-            <x-select
-                label="{{ __('Default lens') }}"
-                wire:model.live="stdlens"
-                :async-data="route('lens.select.api', ['instrument_set' => $stdinstrumentset ?? ''])"
-                option-label="name"
-                option-value="id"
-            />
-        </div>
     </x-slot>
 
     <x-slot name="actions">

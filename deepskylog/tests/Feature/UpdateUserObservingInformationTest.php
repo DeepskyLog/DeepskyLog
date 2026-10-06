@@ -24,7 +24,6 @@ it('saves the observing settings when the selects are cleared to an empty string
         ->set('stdlocation', '')
         ->set('stdtelescope', '')
         ->set('stdeyepiece', '')
-        ->set('stdlens', '')
         ->call('updateObservingInformation')
         ->assertHasNoErrors()
         ->assertDispatched('saved');

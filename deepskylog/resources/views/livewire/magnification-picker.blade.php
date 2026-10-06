@@ -8,7 +8,7 @@
                 option-value="id"
                 placeholder="{{ __('Select instrument') }}"
                 class="w-full"
-                x-on:selected="document.getElementById('aladin-instrument-hidden').value = $event.detail.value; window.dslComputeMagnification($event.detail.value, document.getElementById('aladin-eyepiece-hidden').value, document.getElementById('aladin-lens-hidden').value)"
+                x-on:selected="document.getElementById('aladin-instrument-hidden').value = $event.detail.value; window.dslApplyInstrumentLens($event.detail); window.dslComputeMagnification($event.detail.value, document.getElementById('aladin-eyepiece-hidden').value, document.getElementById('aladin-lens-hidden').value)"
                 x-on:clear="document.getElementById('aladin-instrument-hidden').value = ''; window.dslComputeMagnification('', document.getElementById('aladin-eyepiece-hidden').value, document.getElementById('aladin-lens-hidden').value)"
                 value="{{ $instrument_id ?? '' }}"
             >
@@ -122,6 +122,37 @@
                 }
             })
             .catch(function() {});
+    };
+
+    // ── The lens follows the instrument: an instrument that is always used
+    //    with a lens (a coma corrector) selects it, one without clears it ──
+    window.dslApplyInstrumentLens = function(option) {
+        // Only the observer's own instruments say which lens they use.
+        if (!option || !Object.prototype.hasOwnProperty.call(option, 'lens_id')) return;
+
+        var hidden = document.getElementById('aladin-lens-hidden');
+        if (hidden) {
+            hidden.value = option.lens_id ? String(option.lens_id) : '';
+            hidden.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        var wrapper = document.querySelector('[data-dsl-field="lens"]');
+        var alpineEl = wrapper ? wrapper.querySelector('[x-data]') : null;
+        if (!alpineEl) return;
+        var data = null;
+        try {
+            if (window.Alpine && typeof window.Alpine.$data === 'function') {
+                data = window.Alpine.$data(alpineEl);
+            }
+        } catch (e) {}
+        if (!data && alpineEl._x_dataStack) {
+            data = alpineEl._x_dataStack[0];
+        }
+        if (!data) return;
+
+        data.selected = option.lens_id
+            ? { label: option.lens_name || String(option.lens_id), value: option.lens_id, isSelected: true }
+            : undefined;
     };
 
     // ── Preselect: set Alpine internal state so WireUI shows label + clear (×) ─

@@ -127,8 +127,9 @@ it('queues the metrics per chunk of objects when the standard equipment changes'
     [$user, $instrument, $location, $lens] = contrastReserveEquipment();
     \Illuminate\Support\Facades\Queue::fake();
 
-    $user->forceFill(['stdtelescope' => $instrument->id, 'stdlocation' => $location->id, 'stdlens' => $lens->id])->save();
-    \Illuminate\Support\Facades\Queue::assertPushed(\App\Jobs\EnqueueComputeCRForUser::class, 1);
+    $instrument->forceFill(['lens_id' => $lens->id])->saveQuietly();
+    $user->forceFill(['stdtelescope' => $instrument->id, 'stdlocation' => $location->id])->save();
+    \Illuminate\Support\Facades\Queue::assertPushed(\App\Jobs\EnqueueComputeCRForUser::class, fn ($job) => $job->lensId === $lens->id);
 
     (new \App\Jobs\EnqueueComputeCRForUser($user->id, $instrument->id, $location->id, $lens->id))->handle();
     \Illuminate\Support\Facades\Queue::assertPushed(
@@ -145,3 +146,17 @@ it('lets the queue retry a failing contrast reserve job', function () {
 
     (new ComputeContrastReserveForObject($user->id, $instrument->id, $location->id, 'M 31'))->handle();
 })->throws(\Illuminate\Database\QueryException::class);
+
+it('recomputes the metrics with the new lens when the lens of the standard telescope changes', function () {
+    [$user, $instrument, $location, $lens] = contrastReserveEquipment();
+    $user->forceFill(['stdtelescope' => $instrument->id, 'stdlocation' => $location->id])->saveQuietly();
+    \Illuminate\Support\Facades\Queue::fake();
+
+    $instrument->update(['lens_id' => $lens->id]);
+
+    \Illuminate\Support\Facades\Queue::assertPushed(
+        \App\Jobs\EnqueueComputeCRForUser::class,
+        fn ($job) => $job->userId === $user->id && $job->instrumentId === $instrument->id && $job->lensId === $lens->id
+    );
+    expect($user->fresh()->standardLensId())->toBe($lens->id);
+});

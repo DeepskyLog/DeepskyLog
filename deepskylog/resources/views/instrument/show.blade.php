@@ -63,6 +63,36 @@
                             </tr>
                         @endif
 
+                        @if ((float) $instrument->fixedMagnification > 0)
+                            <tr>
+                                <td>{{ __("Field of view") }}</td>
+                                <td>
+                                    {{ \App\Services\FieldViews\FieldViewBuilder::formatAngle($instrument->fixedFieldOfViewDeg()) }}
+                                    @if ($instrument->hasEstimatedFieldOfView())
+                                        ({{ __('estimated') }})
+                                    @endif
+                                </td>
+                            </tr>
+                        @endif
+
+                        @if ($instrument->lens)
+                            <tr>
+                                <td>{{ __("Lens") }}</td>
+                                <td>
+                                    <a href="{{ url('/lens/' . $instrument->lens->user->slug . '/' . $instrument->lens->slug) }}">{{ html_entity_decode($instrument->lens->name) }}</a>
+                                </td>
+                            </tr>
+                        @endif
+
+                        @if ($instrument->finder)
+                            <tr>
+                                <td>{{ __("Finderscope") }}</td>
+                                <td>
+                                    <a href="{{ url('/instrument/' . $instrument->finder->user->slug . '/' . $instrument->finder->slug) }}">{{ html_entity_decode($instrument->finder->fullName()) }}</a>
+                                </td>
+                            </tr>
+                        @endif
+
                         @if ($instrument->obstruction_perc)
                             <tr>
                                 <td>{{ __("Central obstruction") }}</td>

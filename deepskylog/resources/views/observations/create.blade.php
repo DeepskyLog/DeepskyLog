@@ -322,10 +322,18 @@
                             />
                             <input type="hidden" id="filter_hidden" name="filter_id" value="{{ old('filter_id', $prefill['filter_id'] ?? '') }}" />
                         </div>
+                        @php
+                            $pickerInstrumentId = old('instrument_id', $prefill['instrument_id'] ?? (auth()->check() ? (auth()->user()->stdinstrument ?? auth()->user()->stdtelescope ?? '') : ''));
+                            // An observation being copied or edited keeps its own lens (also none);
+                            // a new one starts with the lens that is always used with the instrument.
+                            $pickerLensId = array_key_exists('lens_id', $prefill ?? [])
+                                ? ($prefill['lens_id'] ?? '')
+                                : ($pickerInstrumentId ? \App\Models\Instrument::where('user_id', auth()->id())->whereKey($pickerInstrumentId)->value('lens_id') : '');
+                        @endphp
                         @livewire('magnification-picker', [
-                            'instrument_id' => old('instrument_id', $prefill['instrument_id'] ?? (auth()->check() ? (auth()->user()->stdinstrument ?? auth()->user()->stdtelescope ?? '') : '')),
+                            'instrument_id' => $pickerInstrumentId,
                             'eyepiece_id' => old('eyepiece_id', $prefill['eyepiece_id'] ?? (auth()->check() ? auth()->user()->stdeyepiece : '')),
-                            'lens_id' => old('lens_id', $prefill['lens_id'] ?? (auth()->check() ? auth()->user()->stdlens : '')),
+                            'lens_id' => old('lens_id', $pickerLensId ?? ''),
                             'manual_magnification' => old('magnification', $prefill['magnification'] ?? null),
                             'instrumentSetId' => $instrumentSet ? $instrumentSet->id : null
                         ])

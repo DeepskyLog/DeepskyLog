@@ -822,7 +822,7 @@ class ObjectController extends Controller
                     }
 
                     // Determine if the user has a default lens configured and load it.
-                    $defaultLensId = $authUser?->stdlens ?? null;
+                    $defaultLensId = $authUser?->standardLensId();
                     try {
                         if (!$defaultLensId && Schema::hasColumn('users', 'preferences') && is_array($authUser?->preferences) && isset($authUser->preferences['aladin_default_lens'])) {
                             $defaultLensId = $authUser->preferences['aladin_default_lens'];
@@ -2034,7 +2034,7 @@ class ObjectController extends Controller
                                         $aperture = $userInstrument->aperture_mm ?? null;
 
                                         // Lens factor / default lens handling similar to deepsky branch
-                                        $defaultLensId = $authUser?->stdlens ?? null;
+                                        $defaultLensId = $authUser?->standardLensId();
                                         try {
                                             if (!$defaultLensId && Schema::hasColumn('users', 'preferences') && is_array($authUser?->preferences) && isset($authUser->preferences['aladin_default_lens'])) {
                                                 $defaultLensId = $authUser->preferences['aladin_default_lens'];
@@ -2325,8 +2325,8 @@ class ObjectController extends Controller
                     } elseif (Schema::hasColumn('users', 'preferences') && is_array($authUser->preferences) && isset($authUser->preferences['aladin_default_eyepiece'])) {
                         $selectedEyepieceId = $authUser->preferences['aladin_default_eyepiece'];
                     }
-                    if (Schema::hasColumn('users', 'stdlens') && $authUser->stdlens) {
-                        $selectedLensId = $authUser->stdlens;
+                    if ($authUser->standardLensId()) {
+                        $selectedLensId = $authUser->standardLensId();
                     } elseif (Schema::hasColumn('users', 'preferences') && is_array($authUser->preferences) && isset($authUser->preferences['aladin_default_lens'])) {
                         $selectedLensId = $authUser->preferences['aladin_default_lens'];
                     }

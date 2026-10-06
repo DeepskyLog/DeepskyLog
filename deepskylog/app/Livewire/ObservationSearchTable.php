@@ -655,7 +655,7 @@ final class ObservationSearchTable extends PowerGridComponent
         $authUser = Auth::user();
         $locationId = $authUser?->standardLocation?->id ?? null;
         $instrumentId = $authUser?->stdtelescope ?? null;
-        $lensId = $authUser?->stdlens ?? null;
+        $lensId = $authUser?->standardLensId();
 
         if (!$authUser || !$locationId || !$instrumentId) {
             $query->whereRaw('1 = 0');

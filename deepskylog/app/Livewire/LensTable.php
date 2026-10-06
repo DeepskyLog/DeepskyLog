@@ -134,17 +134,7 @@ class LensTable extends PowerGridComponent
     public function clickToDelete(int $id): void
     {
         // Delete the model, not a query, so it detaches itself from instrument
-        // sets and is cleared as the default of its user.
+        // sets and is cleared as the lens of its telescopes.
         Lens::where('id', $id)->where('user_id', Auth::id())->first()?->delete();
-    }
-
-    #[On('clickToMakeDefault')]
-    public function clickToMakeDefault(int $id): void
-    {
-        if (Lens::where('id', $id)->where('user_id', Auth::id())->exists()) {
-            auth()->user()->forceFill([
-                'stdlens' => $id,
-            ])->save();
-        }
     }
 }

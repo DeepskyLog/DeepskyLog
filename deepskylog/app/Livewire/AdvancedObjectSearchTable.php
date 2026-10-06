@@ -719,7 +719,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             if ($authUser && $authUser->standardLocation) {
                 $locId = $authUser->standardLocation->id ?? null;
                 $instrId = $authUser->stdtelescope ?? null;
-                $stdLens = $authUser->stdlens ?? null;
+                $stdLens = $authUser->standardLensId();
 
                 if ($instrId && $locId) {
                     if (!empty($stdLens)) {
