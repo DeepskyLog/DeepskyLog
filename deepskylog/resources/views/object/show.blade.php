@@ -1255,20 +1255,22 @@ try {
                                         && !in_array($session->source_type_raw ?? '', ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun'], true))
                                         @php $chartSlugMain = $canonicalSlug ?? $session->slug; @endphp
                                         <li>
-                                            <div class="flex items-center gap-2">
-                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'overview']) }}" target="_blank" rel="nofollow noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
+                                            <div class="flex flex-wrap items-center gap-2">
+                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'overview']) }}" target="_blank" rel="nofollow noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium whitespace-nowrap rounded bg-gray-700 hover:bg-gray-600 text-white">
                                                     {{ __('Overview chart') }}
                                                 </a>
-                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'lookup']) }}" target="_blank" rel="nofollow noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
+                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'lookup']) }}" target="_blank" rel="nofollow noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium whitespace-nowrap rounded bg-gray-700 hover:bg-gray-600 text-white">
                                                     {{ __('Lookup chart') }}
                                                 </a>
-                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'detail']) }}" target="_blank" rel="nofollow noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
+                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'detail']) }}" target="_blank" rel="nofollow noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium whitespace-nowrap rounded bg-gray-700 hover:bg-gray-600 text-white">
                                                     {{ __('Detail chart') }}
                                                 </a>
-                                                <a href="{{ route('object.field-views', ['slug' => $chartSlugMain]) }}" rel="nofollow" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
-                                                    {{ __('Naked eye, finder and telescope') }}
-                                                </a>
                                             </div>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('object.field-views', ['slug' => $chartSlugMain]) }}" rel="nofollow" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
+                                                {{ __('Naked eye, finder and telescope') }}
+                                            </a>
                                         </li>
                                     @endif
                                     @auth
