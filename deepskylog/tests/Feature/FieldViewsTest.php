@@ -118,7 +118,11 @@ it('builds the naked-eye, finder and telescope views', function () {
         // 1200 / 25 = 48x, 52° / 48 = 1.1°.
         ->and($result['views']['telescope']['fov'])->toBe('1.1°')
         ->and($result['views']['telescope']['limit'])->toBeGreaterThan($result['views']['finder']['limit'])
-        ->and($result['views']['telescope']['svg'])->toContain('<circle');
+        ->and($result['views']['telescope']['svg'])->toContain('<circle')
+        // The name of the object on each view.
+        ->and($result['views']['naked_eye']['svg'])->toContain('>M 13</text>')
+        ->and($result['views']['finder']['svg'])->toContain('>M 13</text>')
+        ->and($result['views']['telescope']['svg'])->toContain('>M 13</text>');
 });
 
 it('gives the contrast reserve at the magnification of the finder and the telescope, dimmed by the extinction', function () {
@@ -146,6 +150,23 @@ it('gives the contrast reserve at the magnification of the finder and the telesc
     Livewire::actingAs($user)->test(ObjectFieldViews::class, ['object' => $object])
         ->set('datetime', '2026-07-01T23:30')
         ->assertSee(number_format($telescope['value'], 2).' — ');
+});
+
+it('draws the outline of the object from the database instead of its symbol', function () {
+    fieldViewObject();
+    [$user] = fieldViewObserver();
+    // A square of 0.4° around M 13.
+    foreach ([[250.0, 36.26], [250.5, 36.26], [250.5, 36.66], [250.0, 36.66]] as $i => [$ra, $dec]) {
+        DB::table('object_contours')->insert(['object_name' => 'M 13', 'contour_index' => 0, 'point_index' => $i, 'ra_degrees' => $ra, 'decl_degrees' => $dec]);
+    }
+
+    $object = App\Models\DeepskyObject::where('name', 'M 13')->first();
+    $result = app(FieldViewBuilder::class)->build($user, $object, ['datetime' => '2026-07-01T23:30']);
+
+    // The outline in the target colour, closed; no circle of the globular cluster.
+    expect($result['views']['telescope']['svg'])->toMatch('/<path d="M[^"]+Z" fill="none" stroke="#f87171"/')
+        ->and($result['views']['telescope']['svg'])->not->toContain('<g fill="none" stroke="#f87171" stroke-width="1.6"><circle')
+        ->and($result['views']['telescope']['svg'])->toContain('>M 13</text>');
 });
 
 it('shows the field views page and the pdf to the observer', function () {

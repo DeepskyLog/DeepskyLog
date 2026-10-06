@@ -447,10 +447,13 @@ class FieldViewRenderer
 
         [$north, $east] = $this->localAxes();
 
+        $rows     = $query->get();
+        $contours = $this->contours($rows->pluck('name')->all());
+
         $out    = [];
         $labels = [];
         $count  = 0;
-        foreach ($query->get() as $object) {
+        foreach ($rows as $object) {
             if (strtoupper($object->name) === $targetName) {
                 continue;
             }
@@ -463,7 +466,11 @@ class FieldViewRenderer
                 continue;
             }
 
-            $out[] = $this->objectSymbol($point, (string) $object->type, (float) $object->diam1, (float) $object->diam2, (float) $object->pa, $north, $east, $s);
+            // The outline of the database where there is one, else the symbol.
+            $contour = $this->contourPath($contours[strtoupper(trim((string) $object->name))] ?? [], $point[0], $point[1]);
+            $out[]   = $contour !== null && $contour['extent'] >= 4 * $s
+                ? '<path d="'.$contour['d'].'" stroke-linejoin="round"/>'
+                : $this->objectSymbol($point, (string) $object->type, (float) $object->diam1, (float) $object->diam2, (float) $object->pa, $north, $east, $s);
             if ($this->view['object_labels']) {
                 $labels[] = sprintf('<text x="%s" y="%s" font-size="%s" fill="%s">%s</text>', $this->f($point[0] + 7 * $s), $this->f($point[1] - 6 * $s), $this->f(18 * $s), $this->colors['object'], e($object->name));
             }
@@ -517,11 +524,9 @@ class FieldViewRenderer
         }
 
         if (in_array($type, self::GALAXY_TYPES, true)) {
-            $angle = 0.0;
-            if ($pa >= 0 && $pa < 360) {
-                $axis  = [cos(deg2rad($pa)) * $north[0] + sin(deg2rad($pa)) * $east[0], cos(deg2rad($pa)) * $north[1] + sin(deg2rad($pa)) * $east[1]];
-                $angle = rad2deg(atan2($axis[1], $axis[0]));
-            } else {
+            $angle = $this->screenAngle($pa, $north, $east);
+            if ($angle === null) {
+                $angle = 0.0;
                 $minor = $major;
             }
 
@@ -544,6 +549,20 @@ class FieldViewRenderer
 
         // Nebulae and the rest: a rounded square of the size of the object.
         return sprintf('<rect x="%s" y="%s" width="%s" height="%s" rx="%s"/>', $this->f($x - $major), $this->f($y - $major), $this->f(2 * $major), $this->f(2 * $major), $this->f($major / 3));
+    }
+
+    /**
+     * The direction on screen (degrees, as SVG rotates) of a position angle,
+     * or null without a position angle.
+     */
+    private function screenAngle(float $pa, array $north, array $east): ?float
+    {
+        if ($pa < 0 || $pa >= 360) {
+            return null;
+        }
+        $axis = [cos(deg2rad($pa)) * $north[0] + sin(deg2rad($pa)) * $east[0], cos(deg2rad($pa)) * $north[1] + sin(deg2rad($pa)) * $east[1]];
+
+        return rad2deg(atan2($axis[1], $axis[0]));
     }
 
     private function constellationLines(float $s): string
@@ -771,7 +790,7 @@ class FieldViewRenderer
             if ($radius <= 0 || $radius >= (float) $this->view['radius_deg']) {
                 continue;
             }
-            $r = 2.0 * tan(deg2rad($radius) / 2.0) * $this->scale;
+            $r = $this->overlayRadius($radius);
             $out .= sprintf('<circle cx="%s" cy="%s" r="%s" fill="none" stroke="%s" stroke-width="%s" stroke-dasharray="%s"/>', $this->f($this->centerX), $this->f($this->centerY), $this->f($r), $this->colors['overlay'], $this->f(1.4 * $s), $this->f(6 * $s));
             if (! empty($overlay['label'])) {
                 $out .= sprintf('<text x="%s" y="%s" font-size="%s" fill="%s" text-anchor="middle">%s</text>', $this->f($this->centerX), $this->f($this->centerY - $r - 5 * $s), $this->f(18 * $s), $this->colors['overlay'], e($overlay['label']));
@@ -795,24 +814,50 @@ class FieldViewRenderer
         [$x, $y] = $point;
         $color   = $this->colors['target'];
 
-        // The outline of the object where it is large enough, else a reticle.
+        // The outline of the object where it is large enough, else a reticle;
+        // both when the outline is larger than the field.
         $pixelsPerArcsec = $this->scale                    * deg2rad(1.0 / 3600.0);
         $size            = (float) ($target['diam1'] ?? 0) * $pixelsPerArcsec / 2;
-        if ($size >= 6 * $s) {
+        $inner           = 6                               * $s;
+        $outer           = 16                              * $s;
+        $out             = '';
+        // Below the overlay circles around the object too.
+        $below = max($outer, $this->outerOverlayRadius());
+
+        // The outline of the database (object_contours), as on the charts.
+        $contours = $this->contours([(string) ($target['name'] ?? '')]);
+        $contour  = $this->contourPath($contours[strtoupper(trim((string) ($target['name'] ?? '')))] ?? [], $x, $y);
+        if ($contour !== null && $contour['extent'] >= 6 * $s) {
+            $out   = '<path d="'.$contour['d'].'" fill="none" stroke="'.$color.'" stroke-width="'.$this->f(1.6 * $s).'" stroke-linejoin="round"/>';
+            $below = max($contour['below'], $this->outerOverlayRadius());
+            if ($y + $below + 30 * $s <= $this->centerY + $this->plotRadius) {
+                return $out.$this->targetLabel($target, $x, $y + $below + 22 * $s, $s);
+            }
+            $below = max($outer, $this->outerOverlayRadius());
+        } elseif ($size >= 6 * $s) {
             // An ellipse for a galaxy with a position angle, else a circle.
             $isGalaxy       = in_array((string) ($target['type'] ?? ''), self::GALAXY_TYPES, true);
             $type           = $isGalaxy ? 'GALXY' : 'OUTLINE';
             [$north, $east] = $this->localAxes();
-
-            return '<g fill="none" stroke="'.$color.'" stroke-width="'.$this->f(1.6 * $s).'">'
+            $out            = '<g fill="none" stroke="'.$color.'" stroke-width="'.$this->f(1.6 * $s).'">'
                 .$this->objectSymbol($point, $type, (float) $target['diam1'], (float) ($target['diam2'] ?? 0), (float) ($target['pa'] ?? 999), $north, $east, $s)
                 .'</g>';
+
+            // How far the outline reaches below the centre.
+            $below = $size;
+            $angle = $isGalaxy ? $this->screenAngle((float) ($target['pa'] ?? 999), $north, $east) : null;
+            if ($angle !== null) {
+                $minor = min($size, max(2.5 * $s, (float) ($target['diam2'] ?? 0) > 0 ? (float) $target['diam2'] * $pixelsPerArcsec / 2 : $size));
+                $below = sqrt(($size * sin(deg2rad($angle))) ** 2 + ($minor * cos(deg2rad($angle))) ** 2);
+            }
+            $below = max($below, $this->outerOverlayRadius());
+            if ($y + $below + 30 * $s <= $this->centerY + $this->plotRadius) {
+                return $out.$this->targetLabel($target, $x, $y + $below + 22 * $s, $s);
+            }
+            $below = max($outer, $this->outerOverlayRadius());
         }
 
-        $inner = 6  * $s;
-        $outer = 16 * $s;
-
-        return sprintf(
+        return $out.sprintf(
             '<g stroke="%s" stroke-width="%s" fill="none"><path d="M%s %sH%sM%s %sH%sM%s %sV%sM%s %sV%s"/></g>',
             $color,
             $this->f(2 * $s),
@@ -828,7 +873,104 @@ class FieldViewRenderer
             $this->f($x),
             $this->f($y + $inner),
             $this->f($y + $outer),
-        );
+        ).$this->targetLabel($target, $x, $y + $below + 22 * $s, $s);
+    }
+
+    /**
+     * The outlines of the objects (object_contours, also drawn on the
+     * charts): per upper-case name, the contours as lists of [ra, dec] in
+     * degrees.
+     *
+     * @param  list<string>  $names
+     * @return array<string, list<list<array{0: float, 1: float}>>>
+     */
+    private function contours(array $names): array
+    {
+        $names = array_values(array_unique(array_filter(array_map(fn ($name) => trim((string) $name), $names), fn (string $name) => $name !== '')));
+        if (! $names || ! Schema::hasTable('object_contours')) {
+            return [];
+        }
+
+        $contours = [];
+        foreach (array_chunk($names, 500) as $chunk) {
+            $rows = DB::table('object_contours')
+                ->select(['object_name', 'contour_index', 'ra_degrees', 'decl_degrees'])
+                ->whereIn('object_name', $chunk)
+                ->orderBy('object_name')->orderBy('contour_index')->orderBy('point_index')
+                ->get();
+            foreach ($rows as $row) {
+                $contours[strtoupper(trim($row->object_name))][(int) $row->contour_index][] = [(float) $row->ra_degrees, (float) $row->decl_degrees];
+            }
+        }
+
+        return array_map('array_values', $contours);
+    }
+
+    /**
+     * The closed SVG path of the contours of an object, with how far they
+     * reach from the point ($x, $y) and below it; null without contours or
+     * when a point cannot be projected.
+     *
+     * @param  list<list<array{0: float, 1: float}>>  $contours
+     * @return array{d: string, extent: float, below: float}|null
+     */
+    private function contourPath(array $contours, float $x, float $y): ?array
+    {
+        $d      = '';
+        $extent = 0.0;
+        $below  = 0.0;
+        foreach ($contours as $points) {
+            if (count($points) < 3) {
+                continue;
+            }
+            $path = [];
+            foreach ($points as [$ra, $dec]) {
+                $point = $this->project($ra, $dec);
+                if ($point === null) {
+                    return null;
+                }
+                $path[] = $this->f($point[0]).' '.$this->f($point[1]);
+                $extent = max($extent, hypot($point[0] - $x, $point[1] - $y));
+                $below  = max($below, $point[1] - $y);
+            }
+            $d .= 'M'.implode('L', $path).'Z';
+        }
+
+        return $d === '' ? null : ['d' => $d, 'extent' => $extent, 'below' => $below];
+    }
+
+    /** Radius in pixels of an overlay circle of the given radius in degrees. */
+    private function overlayRadius(float $radiusDeg): float
+    {
+        return 2.0 * tan(deg2rad($radiusDeg) / 2.0) * $this->scale;
+    }
+
+    /** Radius in pixels of the largest overlay circle drawn, 0 without one. */
+    private function outerOverlayRadius(): float
+    {
+        $largest = 0.0;
+        foreach ($this->view['overlays'] as $overlay) {
+            $radius = (float) ($overlay['radius_deg'] ?? 0);
+            if ($radius > 0 && $radius < (float) $this->view['radius_deg']) {
+                $largest = max($largest, $this->overlayRadius($radius));
+            }
+        }
+
+        return $largest;
+    }
+
+    /**
+     * The name of the target, centred on the baseline given (below the
+     * object, clear of the overlay labels above it).
+     */
+    private function targetLabel(array $target, float $x, float $y, float $s): string
+    {
+        $name = trim((string) ($target['name'] ?? ''));
+        if ($name === '') {
+            return '';
+        }
+
+        return sprintf('<text x="%s" y="%s" font-size="%s" font-weight="bold" fill="%s" text-anchor="middle">%s</text>', $this->f($x), $this->f($y), $this->f(20 * $s), $this->colors['target'], e($name));
     }
 
     private function f(float $value): string
