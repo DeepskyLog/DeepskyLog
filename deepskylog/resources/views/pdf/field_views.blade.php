@@ -12,39 +12,35 @@
         table.views td { vertical-align: top; padding: 0 2mm; }
         .title { font-size: 11pt; font-weight: bold; }
         .sub { color: #4b5563; min-height: 9mm; }
-        img { width: 85mm; height: 85mm; }
+        .side .title { font-size: 13pt; margin-bottom: 2mm; }
+        .side .sub { font-size: 10pt; line-height: 1.5; }
+        img.pair { width: 130mm; height: 130mm; }
+        img.large { width: 172mm; height: 172mm; }
         .message { margin-top: 10mm; color: #4b5563; }
         .warnings { margin-top: 4mm; color: #92400e; }
+        table.telescope { width: 273mm; border-collapse: collapse; }
+        table.telescope td { vertical-align: top; padding: 0; }
+        table.telescope td.image { width: 176mm; }
+        table.telescope td.side { width: 97mm; }
+        .page-break { page-break-before: always; }
     </style>
 </head>
 <body>
-    <h1>{{ __('Field views of :object', ['object' => $result['object']->name]) }}</h1>
-    <div class="meta">
-        {{ $result['moment']->format('Y-m-d H:i') }} ({{ $result['timezone'] }})
-        @if ($result['location']) · {{ html_entity_decode($result['location']->name) }} @endif
-        · {{ __('Limiting magnitude of the sky: :nelm', ['nelm' => number_format($result['nelm'], 1)]) }}
-    </div>
+    @php
+        $telescope = $panels['telescope'] ?? null;
+        $others = array_diff_key($panels, ['telescope' => true]);
+    @endphp
+    @include('pdf.partials.field_view_header')
+
+    {{-- The naked eye and finder views side by side --}}
     <table class="views">
         <tr>
-            @foreach ($panels as $panel)
+            @foreach ($others as $panel)
                 <td>
                     <div class="title">{{ $panel['title'] }}</div>
-                    <div class="sub">
-                        @if (! empty($panel['subtitle'])){{ $panel['subtitle'] }}<br />@endif
-                        @isset($panel['fov'])
-                            {{ __('Field of view: :fov', ['fov' => $panel['fov']]) }} · {{ __('Limiting magnitude: :mag', ['mag' => number_format($panel['limit'], 1)]) }}
-                            @if (! empty($panel['contrast']))
-                                <br />
-                                @if ($panel['contrast']['value'] === null)
-                                    {{ __('Contrast reserve: :category', ['category' => __('contrast.reserve.category.not_visible')]) }}
-                                @else
-                                    {{ __('contrast.reserve.summary', ['value' => number_format($panel['contrast']['value'], 2), 'category' => __('contrast.reserve.category.'.$panel['contrast']['category'])]) }}
-                                @endif
-                            @endif
-                        @endisset
-                    </div>
+                    <div class="sub">@include('pdf.partials.field_view_details', ['panel' => $panel])</div>
                     @isset($panel['image'])
-                        <img src="{{ $panel['image'] }}" alt="{{ $panel['title'] }}" />
+                        <img class="pair" src="{{ $panel['image'] }}" alt="{{ $panel['title'] }}" />
                     @else
                         <div class="message">{{ $panel['message'] }}</div>
                     @endisset
@@ -52,12 +48,32 @@
             @endforeach
         </tr>
     </table>
-    @if ($result['warnings'])
-        <div class="warnings">
-            @foreach ($result['warnings'] as $warning)
-                <div>{{ $warning }}</div>
-            @endforeach
-        </div>
+
+    {{-- The telescope view on a page of its own --}}
+    @if ($telescope)
+        <div class="page-break"></div>
+        @isset($telescope['image'])
+            <table class="telescope">
+                <tr>
+                    <td class="image">
+                        <img class="large" src="{{ $telescope['image'] }}" alt="{{ $telescope['title'] }}" />
+                    </td>
+                    <td class="side">
+                        @include('pdf.partials.field_view_header')
+                        <div class="title">{{ $telescope['title'] }}</div>
+                        <div class="sub">@include('pdf.partials.field_view_details', ['panel' => $telescope])</div>
+                        @include('pdf.partials.field_view_warnings')
+                    </td>
+                </tr>
+            </table>
+        @else
+            <div class="title">{{ $telescope['title'] }}</div>
+            <div class="sub">@include('pdf.partials.field_view_details', ['panel' => $telescope])</div>
+            <div class="message">{{ $telescope['message'] }}</div>
+            @include('pdf.partials.field_view_warnings')
+        @endisset
+    @else
+        @include('pdf.partials.field_view_warnings')
     @endif
 </body>
 </html>

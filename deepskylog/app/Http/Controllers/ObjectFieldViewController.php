@@ -31,8 +31,10 @@ class ObjectFieldViewController extends Controller
     {
         $object = $this->object($slug);
 
-        // Square views of 85 mm on A4 landscape, drawn at 144 dpi.
-        $sizePx = 480;
+        // Square views of up to 172 mm on A4 landscape (the naked eye and
+        // finder views side by side, the telescope view on a page of its
+        // own), drawn at about 144 dpi.
+        $sizePx = 960;
         $result = $builder->build($request->user(), $object, $request->only(self::OPTIONS), 'light', $sizePx);
 
         $panels = [];
