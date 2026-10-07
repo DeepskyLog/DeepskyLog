@@ -21,6 +21,9 @@ use Illuminate\Support\Facades\Schema;
  * - radius_deg: half the field of view
  * - star_limit: faintest star drawn (at the zenith when extinction is on)
  * - object_limit: faintest deep-sky object drawn; null draws only the target
+ * - unknown_magnitudes: also draw objects without a magnitude that are large
+ *   enough to see (a telescope's field); objects larger than the field are
+ *   never drawn
  * - target: ['name', 'ra', 'dec' (degrees), 'type', 'diam1', 'diam2' (arcseconds), 'pa']
  * - lst, latitude: local sidereal time and latitude, in degrees; null when
  *   the time and place are unknown
@@ -111,20 +114,21 @@ class FieldViewRenderer
     public function render(array $view): string
     {
         $this->view = $view + [
-            'object_limit'   => null,
-            'lst'            => null,
-            'latitude'       => null,
-            'up'             => 'north',
-            'flip'           => false,
-            'flop'           => false,
-            'horizon'        => false,
-            'extinction'     => false,
-            'constellations' => false,
-            'star_names'     => false,
-            'object_labels'  => false,
-            'overlays'       => [],
-            'theme'          => 'dark',
-            'size'           => 600,
+            'object_limit'       => null,
+            'unknown_magnitudes' => false,
+            'lst'                => null,
+            'latitude'           => null,
+            'up'                 => 'north',
+            'flip'               => false,
+            'flop'               => false,
+            'horizon'            => false,
+            'extinction'         => false,
+            'constellations'     => false,
+            'star_names'         => false,
+            'object_labels'      => false,
+            'overlays'           => [],
+            'theme'              => 'dark',
+            'size'               => 600,
         ];
         $this->colors = self::THEMES[$this->view['theme']] ?? self::THEMES['dark'];
 
@@ -438,9 +442,12 @@ class FieldViewRenderer
             ->select(['name', 'type', 'ra', 'decl', 'mag', 'diam1', 'diam2', 'pa'])
             ->whereBetween('decl', [max(-90.0, $dec - $radius), min(90.0, $dec + $radius)])
             ->whereNotIn('type', ['DS', 'AA1STAR', 'NONEX', ''])
-            ->where(fn ($q) => $q->where('mag', '<=', $limit)
+            // An object larger than the whole field (an asterism such as the Northern Cross) is not in it.
+            ->where('diam1', '<=', $radius * 2 * 3600)
+            // A magnitude of 0 is a placeholder of the old site, as unknown as 99.9.
+            ->where(fn ($q) => $q->where(fn ($q) => $q->where('mag', '<=', $limit)->where('mag', '<>', 0))
                 // Objects without a magnitude only in a telescope's field, where they are large enough to see.
-                ->orWhere(fn ($q) => $q->where('mag', '>=', 99)->where('diam1', '>=', $radius * 3600 * 0.05)))
+                ->when($this->view['unknown_magnitudes'], fn ($q) => $q->orWhere(fn ($q) => $q->where(fn ($q) => $q->where('mag', '>=', 99)->orWhere('mag', 0))->where('diam1', '>=', $radius * 3600 * 0.05))))
             ->orderBy('mag')
             ->limit(self::MAX_OBJECTS * 2);
         $this->whereRaWindow($query, 'ra', 15.0, $ra, $dec, $radius);

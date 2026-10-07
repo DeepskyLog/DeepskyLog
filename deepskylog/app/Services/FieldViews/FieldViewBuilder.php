@@ -264,13 +264,14 @@ class FieldViewBuilder
                 'limit'    => $telescopeLimit,
                 'contrast' => $contrast($instrument, $magnification),
                 'svg'      => $this->renderer->render($base + [
-                    'radius_deg'    => $telescopeFov / 2,
-                    'star_limit'    => $telescopeLimit,
-                    'object_limit'  => $telescopeLimit - self::OBJECT_LIMIT_OFFSET,
-                    'up'            => $up,
-                    'flip'          => (bool) $instrument->flip_image,
-                    'flop'          => (bool) $instrument->flop_image,
-                    'object_labels' => true,
+                    'radius_deg'         => $telescopeFov / 2,
+                    'star_limit'         => $telescopeLimit,
+                    'object_limit'       => $telescopeLimit - self::OBJECT_LIMIT_OFFSET,
+                    'unknown_magnitudes' => true,
+                    'up'                 => $up,
+                    'flip'               => (bool) $instrument->flip_image,
+                    'flop'               => (bool) $instrument->flop_image,
+                    'object_labels'      => true,
                 ]),
             ];
         } else {

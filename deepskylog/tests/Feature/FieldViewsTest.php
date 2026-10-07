@@ -2,12 +2,15 @@
 
 use App\Livewire\CreateInstrument;
 use App\Livewire\ObjectFieldViews;
+use App\Models\DeepskyObject;
 use App\Models\Eyepiece;
 use App\Models\Instrument;
+use App\Models\InstrumentSet;
 use App\Models\InstrumentType;
 use App\Models\Location;
 use App\Models\MountType;
 use App\Models\User;
+use App\Services\ContrastReserveCalculator;
 use App\Services\FieldViews\FieldViewBuilder;
 use App\Services\FieldViews\FieldViewRenderer;
 use Database\Factories\EyepieceFactory;
@@ -15,6 +18,7 @@ use Database\Factories\InstrumentFactory;
 use Database\Factories\LensFactory;
 use Database\Factories\LocationFactory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Livewire\Livewire;
 
 function fieldViewObject(): void
@@ -101,7 +105,7 @@ it('builds the naked-eye, finder and telescope views', function () {
         'ra_hours'   => 16.69, 'ra_degrees' => 250.35, 'decl_degrees' => 36.5, 'vmag_int' => 700, 'vmag' => 7.0,
     ]);
 
-    $object = App\Models\DeepskyObject::where('name', 'M 13')->first();
+    $object = DeepskyObject::where('name', 'M 13')->first();
     $result = app(FieldViewBuilder::class)->build($user, $object, ['datetime' => '2026-07-01T23:30']);
 
     expect($result['instrument']->id)->toBe($telescope->id)
@@ -128,7 +132,7 @@ it('builds the naked-eye, finder and telescope views', function () {
 it('gives the contrast reserve at the magnification of the finder and the telescope, dimmed by the extinction', function () {
     fieldViewObject();
     [$user]  = fieldViewObserver();
-    $object  = App\Models\DeepskyObject::where('name', 'M 13')->first();
+    $object  = DeepskyObject::where('name', 'M 13')->first();
     $builder = app(FieldViewBuilder::class);
 
     $high      = $builder->build($user, $object, ['datetime' => '2026-07-01T23:30']);
@@ -136,7 +140,7 @@ it('gives the contrast reserve at the magnification of the finder and the telesc
     $telescope = $high['views']['telescope']['contrast'];
     expect($finder['value'])->toBeFloat()
         ->and($telescope['value'])->toBeFloat()
-        ->and($telescope['category'])->toBe(App\Services\ContrastReserveCalculator::category($telescope['value']))
+        ->and($telescope['category'])->toBe(ContrastReserveCalculator::category($telescope['value']))
         ->and($high['views'])->not->toHaveKey('naked_eye.contrast');
 
     // Lower in the sky, the object is fainter; below the horizon not visible.
@@ -160,13 +164,39 @@ it('draws the outline of the object from the database instead of its symbol', fu
         DB::table('object_contours')->insert(['object_name' => 'M 13', 'contour_index' => 0, 'point_index' => $i, 'ra_degrees' => $ra, 'decl_degrees' => $dec]);
     }
 
-    $object = App\Models\DeepskyObject::where('name', 'M 13')->first();
+    $object = DeepskyObject::where('name', 'M 13')->first();
     $result = app(FieldViewBuilder::class)->build($user, $object, ['datetime' => '2026-07-01T23:30']);
 
     // The outline in the target colour, closed; no circle of the globular cluster.
     expect($result['views']['telescope']['svg'])->toMatch('/<path d="M[^"]+Z" fill="none" stroke="#f87171"/')
         ->and($result['views']['telescope']['svg'])->not->toContain('<g fill="none" stroke="#f87171" stroke-width="1.6"><circle')
         ->and($result['views']['telescope']['svg'])->toContain('>M 13</text>');
+});
+
+it('draws objects without a magnitude only in the telescope, and never placeholders or objects larger than the field', function () {
+    fieldViewObject();
+    [$user] = fieldViewObserver();
+    $base   = DB::table('objects')->where('name', 'M 13')->first();
+    $add    = fn (string $name, float $mag, float $diam, float $raOffset) => DB::table('objects')->insert(
+        ['name' => $name, 'slug' => Str::slug($name), 'type' => 'OPNCL', 'mag' => $mag, 'diam1' => $diam, 'diam2' => $diam, 'ra' => $base->ra + $raOffset]
+        + collect((array) $base)->except(['id', 'name', 'name_normalized', 'slug', 'type', 'mag', 'diam1', 'diam2', 'ra'])->all()
+    );
+    // About 0.04° from M 13: inside both the finder and the telescope field.
+    $add('Bright Cl', 5.0, 300.0, 0.002);
+    $add('Unknown Cl', 99.9, 600.0, -0.002);
+    $add('Zero Cl', 0.0, 600.0, 0.003);
+    $add('Huge Ast', 1.0, 43200.0, -0.003);
+
+    $object = DeepskyObject::where('name', 'M 13')->first();
+    $views  = app(FieldViewBuilder::class)->build($user, $object, ['datetime' => '2026-07-01T23:30'])['views'];
+
+    expect($views['finder']['svg'])->toContain('>Bright Cl</text>')
+        ->not->toContain('>Unknown Cl</text>')
+        ->not->toContain('>Zero Cl</text>')
+        ->not->toContain('>Huge Ast</text>')
+        ->and($views['telescope']['svg'])->toContain('>Unknown Cl</text>')
+        ->toContain('>Zero Cl</text>')
+        ->not->toContain('>Huge Ast</text>');
 });
 
 it('shows the field views page and the pdf to the observer', function () {
@@ -202,7 +232,7 @@ it('couples the finder chosen on the page to the telescope', function () {
     $other = InstrumentFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'fixedMagnification' => 6, 'name' => '6x30']);
 
     Livewire::actingAs($user)
-        ->test(ObjectFieldViews::class, ['object' => App\Models\DeepskyObject::where('name', 'M 13')->first()])
+        ->test(ObjectFieldViews::class, ['object' => DeepskyObject::where('name', 'M 13')->first()])
         ->set('instrument', (string) $telescope->id)
         ->set('finder', (string) $other->id)
         ->call('coupleFinder');
@@ -243,11 +273,11 @@ it('only offers the equipment of the chosen instrument set, with the finders mou
     $otherScope                                        = InstrumentFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'name' => 'Refractor', 'aperture_mm' => 80, 'focal_length_mm' => 500]);
     $otherEyepiece                                     = EyepieceFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'focal_length_mm' => 10, 'apparentFOV' => 60]);
 
-    $set = App\Models\InstrumentSet::create(['user_id' => $user->id, 'name' => 'Dobson set', 'active' => true]);
+    $set = InstrumentSet::create(['user_id' => $user->id, 'name' => 'Dobson set', 'active' => true]);
     $set->instruments()->attach($telescope->id);
     $set->eyepieces()->attach($eyepiece->id);
 
-    $object  = App\Models\DeepskyObject::where('name', 'M 13')->first();
+    $object  = DeepskyObject::where('name', 'M 13')->first();
     $builder = app(FieldViewBuilder::class);
 
     $inSet = $builder->build($user, $object, ['set' => $set->id, 'instrument' => $otherScope->id, 'eyepiece' => $otherEyepiece->id, 'datetime' => '2026-07-01T23:30']);
@@ -271,12 +301,12 @@ it('opens with a set that has the standard telescope', function () {
     [$user, $telescope] = fieldViewObserver();
     $refractor          = InstrumentFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'name' => 'Refractor', 'aperture_mm' => 80, 'focal_length_mm' => 500]);
 
-    $refractorSet = App\Models\InstrumentSet::create(['user_id' => $user->id, 'name' => 'A refractor set', 'active' => true]);
+    $refractorSet = InstrumentSet::create(['user_id' => $user->id, 'name' => 'A refractor set', 'active' => true]);
     $refractorSet->instruments()->attach($refractor->id);
-    $dobsonSet = App\Models\InstrumentSet::create(['user_id' => $user->id, 'name' => 'Dobson set', 'active' => true]);
+    $dobsonSet = InstrumentSet::create(['user_id' => $user->id, 'name' => 'Dobson set', 'active' => true]);
     $dobsonSet->instruments()->attach($telescope->id);
 
-    $object  = App\Models\DeepskyObject::where('name', 'M 13')->first();
+    $object  = DeepskyObject::where('name', 'M 13')->first();
     $builder = app(FieldViewBuilder::class);
 
     // The standard set does not have the standard telescope: the set that has it is chosen.
@@ -298,7 +328,7 @@ it('opens with a set that has the standard telescope', function () {
 it('shows the object at its highest during the night unless a time is chosen', function () {
     fieldViewObject();
     [$user]  = fieldViewObserver();
-    $object  = App\Models\DeepskyObject::where('name', 'M 13')->first();
+    $object  = DeepskyObject::where('name', 'M 13')->first();
     $builder = app(FieldViewBuilder::class);
 
     // In Brussels early in July it only gets nautically dark; M 13 transits
@@ -319,7 +349,7 @@ it('shows the object at its highest during the night unless a time is chosen', f
 it('switches between the current time, a chosen time and the highest point on the page', function () {
     fieldViewObject();
     [$user, $telescope] = fieldViewObserver();
-    $object             = App\Models\DeepskyObject::where('name', 'M 13')->first();
+    $object             = DeepskyObject::where('name', 'M 13')->first();
 
     $component = Livewire::actingAs($user)->test(ObjectFieldViews::class, ['object' => $object])
         ->call('now');
@@ -341,7 +371,7 @@ it('uses the lens that is always used with the telescope, unless no lens is chos
     $paracorr                               = LensFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'name' => 'Paracorr', 'factor' => 1.15]);
     $telescope->update(['lens_id' => $paracorr->id]);
 
-    $object  = App\Models\DeepskyObject::where('name', 'M 13')->first();
+    $object  = DeepskyObject::where('name', 'M 13')->first();
     $builder = app(FieldViewBuilder::class);
 
     $result = $builder->build($user, $object, ['datetime' => '2026-07-01T23:30']);
@@ -352,7 +382,7 @@ it('uses the lens that is always used with the telescope, unless no lens is chos
     expect($builder->build($user, $object, ['lens' => 'none', 'datetime' => '2026-07-01T23:30'])['lens'])->toBeNull();
 
     // In an instrument set without the lens, the lens of its telescope is still offered.
-    $set = App\Models\InstrumentSet::create(['user_id' => $user->id, 'name' => 'Set', 'active' => true]);
+    $set = InstrumentSet::create(['user_id' => $user->id, 'name' => 'Set', 'active' => true]);
     $set->instruments()->attach($telescope->id);
     expect($builder->build($user, $object, ['set' => $set->id])['lens']?->id)->toBe($paracorr->id);
 
