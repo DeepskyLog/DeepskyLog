@@ -540,11 +540,14 @@
             var defaults = parseBase64JsonAttr(container, 'data-aladin') || {};
 
             // determine selected ids: prefer incoming detail when present (even if null), then hidden inputs, then server-selected attributes
-            function pickSelected(detailObj, key, hiddenId, dataAttr, defaultVal) {
+            // emptyMeansNone: an empty hidden input is an explicit "none" (a cleared
+            // lens), not a reason to fall back to the server-selected default.
+            function pickSelected(detailObj, key, hiddenId, dataAttr, defaultVal, emptyMeansNone) {
                 try {
                     if (detailObj && Object.prototype.hasOwnProperty.call(detailObj, key)) return detailObj[key];
                     var h = document.getElementById(hiddenId);
                     if (h && typeof h.value !== 'undefined' && String(h.value).trim() !== '') return h.value;
+                    if (h && emptyMeansNone) return null;
                     var a = container.getAttribute(dataAttr);
                     if (a && String(a).trim() !== '') return a;
                     if (typeof defaultVal !== 'undefined') return defaultVal;
@@ -554,7 +557,7 @@
 
             var instId = pickSelected(detail, 'instrument', 'aladin-instrument-hidden', 'data-selected-instrument', (defaults.instrument && defaults.instrument.id) || null);
             var epId = pickSelected(detail, 'eyepiece', 'aladin-eyepiece-hidden', 'data-selected-eyepiece', (defaults.eyepiece && defaults.eyepiece.id) || null);
-            var lensId = pickSelected(detail, 'lens', 'aladin-lens-hidden', 'data-selected-lens', null);
+            var lensId = pickSelected(detail, 'lens', 'aladin-lens-hidden', 'data-selected-lens', null, true);
 
             var instMeta = (defaults.instrument && (String(defaults.instrument.id) === String(instId) ? defaults.instrument : null)) || findById(avail.instruments || [], instId) || defaults.instrument || null;
             var epMeta = (defaults.eyepiece && (String(defaults.eyepiece.id) === String(epId) ? defaults.eyepiece : null)) || findById(avail.eyepieces || [], epId) || defaults.eyepiece || null;

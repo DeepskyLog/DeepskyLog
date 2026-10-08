@@ -69,7 +69,9 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (e) { }
     }, true);
 
-    document.addEventListener('clear', function (ev) {
+    // WireUI fires 'un-selected' (not 'clear') when the selected option is
+    // clicked again to deselect it; treat both as clearing the field.
+    function onCleared(ev) {
         try {
             var el = ev && ev.target ? ev.target : null;
             var wrapper = el ? el.closest('[data-dsl-field]') : null;
@@ -79,5 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
             else if (field === 'eyepiece') handleClear('aladin-eyepiece-hidden', { eyepiece: null });
             else if (field === 'lens') handleClear('aladin-lens-hidden', { lens: null });
         } catch (e) { }
-    }, true);
+    }
+    document.addEventListener('clear', onCleared, true);
+    document.addEventListener('un-selected', onCleared, true);
 });

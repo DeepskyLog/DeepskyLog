@@ -35,6 +35,24 @@ it('saves the observing settings when the selects are cleared to an empty string
     expect($user->stdtelescope)->toBeNull();
 });
 
+it('saves the observing settings when the "No standard ..." options with id 0 are chosen', function () {
+    $this->actingAs($user = User::factory()->create()->fresh());
+
+    Livewire::test(UpdateUserObservingInformation::class)
+        ->set('stdinstrumentset', 0)
+        ->set('stdlocation', '0')
+        ->set('stdtelescope', 0)
+        ->call('updateObservingInformation')
+        ->assertHasNoErrors()
+        ->assertDispatched('saved');
+
+    $user = $user->fresh();
+
+    expect($user->stdinstrumentset)->toBeNull();
+    expect($user->stdlocation)->toBeNull();
+    expect($user->stdtelescope)->toBeNull();
+});
+
 it('falls back to the default atlas instead of writing a null atlas code', function () {
     $this->actingAs($user = User::factory()->create()->fresh());
 

@@ -61,9 +61,10 @@ class UpdateUserObservingInformation extends Component
      */
     public function updateObservingInformation(): void
     {
-        // An unset select sends an empty string, which is not numeric.
+        // An unset select sends an empty string, which is not numeric, and the
+        // "No standard ..." options of the selects have id 0, which exists nowhere.
         foreach (['stdlocation', 'stdtelescope', 'stdinstrumentset', 'stdeyepiece'] as $field) {
-            if ($this->{$field} === '') {
+            if ($this->{$field} === '' || (string) $this->{$field} === '0') {
                 $this->{$field} = null;
             }
         }

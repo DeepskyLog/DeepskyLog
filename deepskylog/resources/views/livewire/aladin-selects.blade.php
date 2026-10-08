@@ -1,6 +1,7 @@
 <div>
-    <script src="<?php echo e(asset('js/aladin-selects.js')); ?>"></script>
-    <script src="<?php echo e(asset('js/aladin-inline.js')); ?>"></script>
+    {{-- Versioned by modification time, so a browser does not keep running an old copy --}}
+    <script src="{{ asset('js/aladin-selects.js') }}?v={{ @filemtime(public_path('js/aladin-selects.js')) }}"></script>
+    <script src="{{ asset('js/aladin-inline.js') }}?v={{ @filemtime(public_path('js/aladin-inline.js')) }}"></script>
 
     <div class="flex flex-col gap-2">
         <div class="flex items-center gap-3">
