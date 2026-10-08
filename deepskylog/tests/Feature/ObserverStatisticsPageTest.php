@@ -251,3 +251,77 @@ it('includes owned and subscribed observing lists in the source selector for aut
     expect($data['selectedSource']['key'])->toBe('list:' . $list->id);
     expect(collect($data['sourceOptions'])->pluck('label')->implode(' '))->toContain('Messier shortlist');
 });
+it('shows the drawing status on the observer catalog grid', function () {
+    insertObserverStatsObject('M 31', 'm-31');
+    insertObserverStatsObject('M 32', 'm-32');
+    insertObserverStatsObjectName('M 31', 'M', '31', 'm-31');
+    insertObserverStatsObjectName('M 32', 'M', '32', 'm-32');
+
+    $observer = User::factory()->create(['name' => 'Drawing Observer', 'username' => 'drawing-observer', 'slug' => 'drawing-observer']);
+    insertObserverStatsObservation($observer->username, 'M 31', 'm-31');
+    insertObserverStatsObservation($observer->username, 'M 32', 'm-32', true);
+
+    $this->get(route('observer.catalog', ['observer' => $observer->slug, 'source' => 'catalog:m']))
+        ->assertOk()
+        ->assertViewHas('observedCount', 2);
+
+    $response = $this->get(route('observer.catalog', ['observer' => $observer->slug, 'source' => 'catalog:m', 'mode' => 'drawn']));
+
+    $response->assertOk();
+    $response->assertViewHas('mode', 'drawn');
+    $response->assertViewHas('observedCount', 1);
+    $response->assertSee(route('object.show', ['slug' => 'm-31']), false);
+    $response->assertSee(route('observations.user.object', ['observer' => $observer->slug, 'object' => 'm-32']), false);
+});
+
+it('only offers guests no observing list from the catalog grid', function () {
+    insertObserverStatsObject('M 31', 'm-31');
+    insertObserverStatsObjectName('M 31', 'M', '31', 'm-31');
+
+    $observer = User::factory()->create(['username' => 'guest-view', 'slug' => 'guest-view']);
+
+    $this->get(route('observer.catalog', ['observer' => $observer->slug, 'source' => 'catalog:m']))
+        ->assertOk()
+        ->assertDontSee(route('observer.catalog.list', ['observer' => $observer->slug]), false);
+
+    $this->post(route('observer.catalog.list', ['observer' => $observer->slug]), ['source' => 'catalog:m'])
+        ->assertRedirect(route('login'));
+
+    expect(ObservingList::count())->toBe(0);
+});
+
+it('creates an observing list with the catalog objects not seen or not drawn yet', function () {
+    foreach (['31', '32', '33'] as $index) {
+        insertObserverStatsObject('Tst ' . $index, 'tst-' . $index);
+        insertObserverStatsObjectName('Tst ' . $index, 'Tst', $index, 'tst-' . $index);
+    }
+
+    Team::forceCreate(['user_id' => 1, 'name' => 'Observers', 'personal_team' => false]);
+    $viewer = User::factory()->withPersonalTeam()->create(['name' => 'List Maker', 'username' => 'list-maker', 'slug' => 'list-maker']);
+    $viewer->forceFill(['current_team_id' => Team::where('name', 'Observers')->value('id')])->save();
+    insertObserverStatsObservation($viewer->username, 'Tst 31', 'tst-31', true);
+    insertObserverStatsObservation($viewer->username, 'Tst 32', 'tst-32');
+
+    $this->actingAs($viewer)
+        ->get(route('observer.catalog', ['observer' => $viewer->slug, 'source' => 'catalog:tst']))
+        ->assertSee(route('observer.catalog.list', ['observer' => $viewer->slug]), false);
+
+    $this->actingAs($viewer)
+        ->post(route('observer.catalog.list', ['observer' => $viewer->slug]), ['source' => 'catalog:tst'])
+        ->assertRedirect();
+
+    $list = ObservingList::where('owner_user_id', $viewer->id)->sole();
+    expect($list->name)->toBe('Tst - not seen yet')
+        ->and($list->public)->toBeFalse()
+        ->and($list->items()->orderBy('sort_order')->pluck('object_name')->all())->toBe(['Tst 33']);
+
+    $this->actingAs($viewer)
+        ->post(route('observer.catalog.list', ['observer' => $viewer->slug]), ['source' => 'catalog:tst', 'mode' => 'drawn'])
+        ->assertRedirect();
+    $this->actingAs($viewer)
+        ->post(route('observer.catalog.list', ['observer' => $viewer->slug]), ['source' => 'catalog:tst', 'mode' => 'drawn'])
+        ->assertRedirect();
+
+    $drawn = ObservingList::where('owner_user_id', $viewer->id)->where('name', 'Tst - not drawn yet (2)')->sole();
+    expect($drawn->items()->orderBy('sort_order')->pluck('object_name')->all())->toBe(['Tst 32', 'Tst 33']);
+});

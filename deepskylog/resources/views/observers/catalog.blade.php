@@ -1,10 +1,28 @@
+@php
+    $drawnMode = $mode === 'drawn';
+    $totalCount = $sourceObjects->count();
+    $percentage = number_format($totalCount > 0 ? ($observedCount / $totalCount) * 100 : 0, 1);
+    $openCount = $totalCount - $observedCount;
+    $observerKey = $user->slug ?: $user->username;
+    $modeUrl = fn(string $newMode) => route('observer.catalog', array_filter([
+        'observer' => $observerKey,
+        'source' => $selectedSource['key'],
+        'include_subobjects' => $includeSubobjects ? 1 : null,
+        'mode' => $newMode === 'drawn' ? 'drawn' : null,
+    ]));
+@endphp
+
 <x-app-layout>
     <x-slot name="header">
         <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div>
                 <h2 class="font-semibold text-xl text-gray-200 leading-tight">{{ $user->name }}</h2>
                 <p class="mt-1 text-sm text-gray-400">
-                    {{ __('Observed :source objects: :observed / :total (:percentage%)', ['source' => $selectedSource['short_label'], 'observed' => $observedCount, 'total' => $sourceObjects->count(), 'percentage' => number_format($sourceObjects->count() > 0 ? ($observedCount / $sourceObjects->count()) * 100 : 0, 1)]) }}
+                    @if ($drawnMode)
+                        {{ __('Drawn :source objects: :observed / :total (:percentage%)', ['source' => $selectedSource['short_label'], 'observed' => $observedCount, 'total' => $totalCount, 'percentage' => $percentage]) }}
+                    @else
+                        {{ __('Observed :source objects: :observed / :total (:percentage%)', ['source' => $selectedSource['short_label'], 'observed' => $observedCount, 'total' => $totalCount, 'percentage' => $percentage]) }}
+                    @endif
                 </p>
             </div>
 
@@ -36,6 +54,9 @@
                 class="flex flex-col gap-3 sm:flex-row sm:items-center"
             >
                 <input type="hidden" name="source" x-ref="source" :value="selected">
+                @if ($drawnMode)
+                    <input type="hidden" name="mode" value="drawn">
+                @endif
 
                 <div class="flex items-center gap-3">
                     <label for="observer-catalog-source-search" class="text-sm text-gray-300 whitespace-nowrap">{{ __('Catalog or list') }}</label>
@@ -120,24 +141,65 @@
                             <div class="space-y-2">
                                 <div class="text-lg font-semibold text-white">{{ $user->name }}</div>
                                 <div class="text-sm text-gray-400">{{ __('Observer progress for :source', ['source' => $selectedSource['short_label']]) }}</div>
-                                <div class="text-sm text-gray-300">{{ __('Observed objects: :observed / :total (:percentage%)', ['observed' => $observedCount, 'total' => $sourceObjects->count(), 'percentage' => number_format($sourceObjects->count() > 0 ? ($observedCount / $sourceObjects->count()) * 100 : 0, 1)]) }}</div>
+                                <div class="text-sm text-gray-300">
+                                    @if ($drawnMode)
+                                        {{ __('Drawn objects: :observed / :total (:percentage%)', ['observed' => $observedCount, 'total' => $totalCount, 'percentage' => $percentage]) }}
+                                    @else
+                                        {{ __('Observed objects: :observed / :total (:percentage%)', ['observed' => $observedCount, 'total' => $totalCount, 'percentage' => $percentage]) }}
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap items-center gap-3">
+                                <div class="inline-flex overflow-hidden rounded-md border border-gray-600 text-sm" role="group" aria-label="{{ __('Show the status of') }}">
+                                    <a
+                                        href="{{ $modeUrl('observed') }}"
+                                        @if (!$drawnMode) aria-current="page" @endif
+                                        class="px-3 py-1.5 {{ $drawnMode ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-blue-600 text-white' }}"
+                                    >{{ __('Observations') }}</a>
+                                    <a
+                                        href="{{ $modeUrl('drawn') }}"
+                                        @if ($drawnMode) aria-current="page" @endif
+                                        class="border-l border-gray-600 px-3 py-1.5 {{ $drawnMode ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700' }}"
+                                    >{{ __('Drawings') }}</a>
+                                </div>
+
+                                @auth
+                                    @if ($openCount > 0)
+                                        @can('create', \App\Models\ObservingList::class)
+                                            <form method="POST" action="{{ route('observer.catalog.list', ['observer' => $observerKey]) }}">
+                                                @csrf
+                                                <input type="hidden" name="source" value="{{ $selectedSource['key'] }}">
+                                                @if ($includeSubobjects)
+                                                    <input type="hidden" name="include_subobjects" value="1">
+                                                @endif
+                                                @if ($drawnMode)
+                                                    <input type="hidden" name="mode" value="drawn">
+                                                @endif
+                                                <button type="submit" class="rounded-md border border-emerald-500/60 bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                                    {{ $drawnMode ? __('Create observing list with the :count objects not drawn yet', ['count' => $openCount]) : __('Create observing list with the :count objects not seen yet', ['count' => $openCount]) }}
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    @endif
+                                @endauth
                             </div>
 
                             <div class="flex flex-wrap items-center gap-3 text-sm">
                                 <span class="rounded-full border border-emerald-400/40 bg-emerald-500/15 px-3 py-1.5 font-medium text-emerald-200">
-                                    {{ __('Observed') }}
+                                    {{ $drawnMode ? __('Drawn') : __('Observed') }}
                                 </span>
                                 <span class="rounded-full border border-rose-400/40 bg-rose-500/15 px-3 py-1.5 font-medium text-rose-200">
-                                    {{ __('Not observed yet') }}
+                                    {{ $drawnMode ? __('Not drawn yet') : __('Not observed yet') }}
                                 </span>
                                 <span class="text-gray-400">{{ __('Green tiles open this observer\'s observations. Red tiles open the object page.') }}</span>
                             </div>
                         </div>
 
                         <div class="rounded-2xl border border-gray-700 bg-gray-950/70 px-5 py-4 xl:min-w-80">
-                            <div class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">{{ __('Observed :source objects', ['source' => $selectedSource['short_label']]) }}</div>
-                            <div class="mt-2 text-2xl font-semibold text-white">{{ $observedCount }} / {{ $sourceObjects->count() }}</div>
-                            <div class="mt-1 text-sm text-gray-400">{{ __('Completion: :percentage%', ['percentage' => number_format($sourceObjects->count() > 0 ? ($observedCount / $sourceObjects->count()) * 100 : 0, 1)]) }}</div>
+                            <div class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">{{ $drawnMode ? __('Drawn :source objects', ['source' => $selectedSource['short_label']]) : __('Observed :source objects', ['source' => $selectedSource['short_label']]) }}</div>
+                            <div class="mt-2 text-2xl font-semibold text-white">{{ $observedCount }} / {{ $totalCount }}</div>
+                            <div class="mt-1 text-sm text-gray-400">{{ __('Completion: :percentage%', ['percentage' => $percentage]) }}</div>
                         </div>
                     </div>
                 </div>
@@ -169,7 +231,7 @@
                                     >
                                         <span class="text-base font-bold tracking-tight">{{ $object['display_name'] }}</span>
                                         <span class="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] {{ $object['observed'] ? 'text-emerald-950/75' : 'text-white/80' }}">
-                                            {{ $object['observed'] ? __('Seen') : __('Open object') }}
+                                            {{ $object['observed'] ? ($drawnMode ? __('Drawn') : __('Seen')) : __('Open object') }}
                                         </span>
                                     </a>
                                 @endforeach

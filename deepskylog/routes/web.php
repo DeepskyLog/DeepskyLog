@@ -99,6 +99,8 @@ Route::post('/admin/check-objects/repair-observation-objectnames', [App\Http\Con
     ->middleware('auth')
     ->name('admin.objects.check.repair-observation-objectnames');
 Route::get('/observers/{observer}/catalog', [App\Http\Controllers\ObserverController::class, 'catalog'])->name('observer.catalog');
+Route::post('/observers/{observer}/catalog/observing-list', [App\Http\Controllers\ObserverController::class, 'createCatalogList'])
+    ->name('observer.catalog.list')->middleware(['auth', 'verified', 'doNotCacheResponse']);
 Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@show')->name('observer.show');
 
 // RSS feeds

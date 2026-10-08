@@ -624,6 +624,8 @@ class SessionController extends Controller
                 ->toArray();
         }
 
+        [$likeCounts, $likedIds] = $this->sessionLikes($sessionIds);
+
         $shouldTranslate = Auth::check() && Auth::user()->translate;
         $lang = $shouldTranslate ? (Auth::user()->language ?? config('app.locale')) : null;
 
@@ -634,7 +636,7 @@ class SessionController extends Controller
             $observerUsers = User::whereIn('username', $observerUsernames)->get()->keyBy('username');
         }
 
-        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang, $observerUsers) {
+        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang, $observerUsers, $likeCounts, $likedIds) {
             if (empty($session->observer)) {
                 $session->observer = isset($observerUsers[$session->observerid]) ? $observerUsers[$session->observerid] : (object) ['name' => $session->observerid, 'slug' => null];
             }
@@ -645,6 +647,8 @@ class SessionController extends Controller
             $session->location_name = $loc ? ($loc->name ?? null) : null;
             $session->preview = $this->resolveSessionImage($session, $loc);
             $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
+            $session->likes_count = (int) ($likeCounts[$session->id] ?? 0);
+            $session->liked = isset($likedIds[$session->id]);
 
             // Prepare translated preview text (comments) for homepage
             $rawComments = html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
@@ -671,6 +675,37 @@ class SessionController extends Controller
         $sessions->setCollection($collection);
 
         return $this->noCacheResponse(response()->view('session.all-sessions', compact('sessions')));
+    }
+
+    /**
+     * Like counts of the given sessions, and which of them the viewer liked.
+     *
+     * @return array{0: array<int, int>, 1: array<int, int>} counts keyed by session id, and the liked session ids as keys
+     */
+    private function sessionLikes(array $sessionIds): array
+    {
+        if (empty($sessionIds)) {
+            return [[], []];
+        }
+
+        $likeCounts = ObservationLike::where('observation_type', ObservationLike::TYPE_SESSION)
+            ->whereIn('observation_id', $sessionIds)
+            ->select('observation_id', DBFacade::raw('count(*) as cnt'))
+            ->groupBy('observation_id')
+            ->pluck('cnt', 'observation_id')
+            ->toArray();
+
+        $likedIds = [];
+        if (Auth::check()) {
+            $likedIds = ObservationLike::where('observation_type', ObservationLike::TYPE_SESSION)
+                ->whereIn('observation_id', $sessionIds)
+                ->where('user_id', Auth::id())
+                ->pluck('observation_id')
+                ->flip()
+                ->all();
+        }
+
+        return [$likeCounts, $likedIds];
     }
 
     /**
@@ -918,25 +953,7 @@ class SessionController extends Controller
                 ->toArray();
         }
 
-        // Like counts of the sessions on this page, and which of them the viewer liked
-        $likeCounts = [];
-        $likedIds = [];
-        if (!empty($sessionIds)) {
-            $likeCounts = ObservationLike::where('observation_type', ObservationLike::TYPE_SESSION)
-                ->whereIn('observation_id', $sessionIds)
-                ->select('observation_id', DBFacade::raw('count(*) as cnt'))
-                ->groupBy('observation_id')
-                ->pluck('cnt', 'observation_id')
-                ->toArray();
-            if (Auth::check()) {
-                $likedIds = ObservationLike::where('observation_type', ObservationLike::TYPE_SESSION)
-                    ->whereIn('observation_id', $sessionIds)
-                    ->where('user_id', Auth::id())
-                    ->pluck('observation_id')
-                    ->flip()
-                    ->all();
-            }
-        }
+        [$likeCounts, $likedIds] = $this->sessionLikes($sessionIds);
 
         $shouldTranslate = Auth::check() && Auth::user()->translate;
         $lang = $shouldTranslate ? (Auth::user()->language ?? config('app.locale')) : null;

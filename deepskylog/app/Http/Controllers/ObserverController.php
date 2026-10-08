@@ -10,6 +10,7 @@ use App\Jobs\ComputeObserverStats;
 use App\Models\Observation;
 use App\Models\ObservingList;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -523,11 +524,89 @@ class ObserverController extends Controller
     public function catalog(Request $request, string $observer): View
     {
         $user = User::where('slug', $observer)->orWhere('username', $observer)->firstOrFail();
+        $grid = $this->catalogGrid($request, $user);
+
+        return view('observers.catalog', [
+            'user' => $user,
+            ...$grid,
+            'observedCount' => $grid['sourceObjects']->where('observed', true)->count(),
+        ]);
+    }
+
+    /**
+     * Make an observing list of the logged-in observer with the objects of
+     * the catalog page that are red: not seen yet by the observer of the page,
+     * or not drawn yet in the drawing mode.
+     */
+    public function createCatalogList(Request $request, string $observer): RedirectResponse
+    {
+        $this->authorize('create', ObservingList::class);
+
+        $user = User::where('slug', $observer)->orWhere('username', $observer)->firstOrFail();
+        $grid = $this->catalogGrid($request, $user);
+        $viewer = $request->user();
+
+        $objectNames = $grid['sourceObjects']
+            ->reject(fn(array $object) => $object['observed'])
+            ->pluck('object_name')
+            ->filter(fn($name) => $name !== '')
+            ->unique()
+            ->values();
+
+        $back = route('observer.catalog', [
+            'observer' => $user->slug ?: $user->username,
+            'source' => $grid['selectedSource']['key'],
+            'include_subobjects' => $grid['includeSubobjects'] ? 1 : null,
+            'mode' => $grid['mode'] === 'drawn' ? 'drawn' : null,
+        ]);
+
+        if ($objectNames->isEmpty()) {
+            return redirect($back)->with('error', $grid['mode'] === 'drawn'
+                ? __('All objects of this catalog or list are drawn already.')
+                : __('All objects of this catalog or list are seen already.'));
+        }
+
+        $list = DB::transaction(function () use ($grid, $user, $viewer, $objectNames) {
+            $list = ObservingList::create([
+                'owner_user_id' => $viewer->id,
+                'name' => $this->uniqueCatalogListName($viewer, $this->catalogListName($grid, $user, $viewer)),
+                'public' => false,
+            ]);
+
+            $now = now();
+            foreach ($objectNames->chunk(500) as $chunk) {
+                DB::table('observing_list_items')->insert($chunk->map(fn(string $name, int $index) => [
+                    'observing_list_id' => $list->id,
+                    'object_name' => $name,
+                    'sort_order' => $index + 1,
+                    'source_mode' => 'manual',
+                    'added_by_user_id' => $viewer->id,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ])->values()->all());
+            }
+
+            return $list;
+        });
+
+        return redirect()->route('observing-list.show', $list)
+            ->with('success', __('Observing list created with :count object(s).', ['count' => $objectNames->count()]));
+    }
+
+    /**
+     * The objects of the selected catalog or list with their status for the
+     * observer: seen, or drawn when the mode is "drawn".
+     *
+     * @return array{selectedSource: array, sourceOptions: Collection, sourceObjects: Collection, includeSubobjects: bool, mode: string}
+     */
+    private function catalogGrid(Request $request, User $user): array
+    {
         $sourceOptions = $this->observerSourceOptions($request->user());
-        $selectedSource = $this->resolveObserverSource((string) $request->query('source', ''), $request->user(), $sourceOptions);
+        $selectedSource = $this->resolveObserverSource((string) $request->input('source', ''), $request->user(), $sourceOptions);
         $includeSubobjects = $request->boolean('include_subobjects');
+        $mode = $request->input('mode') === 'drawn' ? 'drawn' : 'observed';
         $sourceObjects = $this->sourceObjects($selectedSource);
-        $observedLookup = $this->observedObjectLookup($user, $sourceObjects, $includeSubobjects);
+        $observedLookup = $this->observedObjectLookup($user, $sourceObjects, $includeSubobjects, $mode === 'drawn');
 
         $sourceObjects = $sourceObjects->values()->map(function (array $object, int $index) use ($user, $observedLookup) {
             $slug = $object['slug'] ?: Str::slug((string) ($object['display_name'] ?: $object['object_name']), '-');
@@ -543,14 +622,45 @@ class ObserverController extends Controller
             return $object;
         });
 
-        return view('observers.catalog', [
-            'user' => $user,
+        return [
             'selectedSource' => $selectedSource,
             'sourceOptions' => $sourceOptions,
             'sourceObjects' => $sourceObjects,
             'includeSubobjects' => $includeSubobjects,
-            'observedCount' => $sourceObjects->where('observed', true)->count(),
-        ]);
+            'mode' => $mode,
+        ];
+    }
+
+    private function catalogListName(array $grid, User $user, User $viewer): string
+    {
+        $source = Str::limit((string) $grid['selectedSource']['short_label'], 150, '…');
+        $drawn = $grid['mode'] === 'drawn';
+
+        if ($user->is($viewer)) {
+            return $drawn
+                ? __(':source - not drawn yet', ['source' => $source])
+                : __(':source - not seen yet', ['source' => $source]);
+        }
+
+        $observer = Str::limit(html_entity_decode((string) $user->name, ENT_QUOTES | ENT_HTML5, 'UTF-8'), 80, '…');
+
+        return $drawn
+            ? __(':source - not drawn yet by :observer', ['source' => $source, 'observer' => $observer])
+            : __(':source - not seen yet by :observer', ['source' => $source, 'observer' => $observer]);
+    }
+
+    /**
+     * The lists of an observer have unique names: add " (2)", " (3)", ... to
+     * a name that is taken.
+     */
+    private function uniqueCatalogListName(User $owner, string $name): string
+    {
+        $candidate = $name;
+        for ($suffix = 2; ObservingList::where('owner_user_id', $owner->id)->where('name', $candidate)->exists(); $suffix++) {
+            $candidate = $name . ' (' . $suffix . ')';
+        }
+
+        return $candidate;
     }
 
     /**
@@ -923,7 +1033,7 @@ class ObserverController extends Controller
         return '1-' . Str::lower($catalogIndex !== '' ? $catalogIndex : $fallback);
     }
 
-    private function observedObjectLookup(User $user, Collection $sourceObjects, bool $includeSubobjects): array
+    private function observedObjectLookup(User $user, Collection $sourceObjects, bool $includeSubobjects, bool $drawingsOnly = false): array
     {
         $objectNames = $sourceObjects->pluck('object_name')->filter()->unique()->values();
 
@@ -931,18 +1041,21 @@ class ObserverController extends Controller
             return [];
         }
 
-        $observedNames = DB::table('observations as observations')
+        $seenNames = fn(array $names) => DB::table('observations as observations')
             ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
             ->where('observations.observer_username', $user->username)
             ->where('observations.target_type', 'deepsky')
             ->where(function ($query) {
                 $query->whereNull('details.visibility')
-                    ->orWhere('details.visibility', '!=', 7);
+                    ->orWhere('details.visibility', '!=', Observation::VISIBILITY_NOT_SEEN);
             })
-            ->whereIn('observations.target_name', $objectNames->all())
+            ->when($drawingsOnly, fn($query) => $query->where('observations.has_drawing', true))
+            ->whereIn('observations.target_name', $names)
             ->pluck('observations.target_name')
             ->mapWithKeys(fn($name) => [(string) $name => true])
             ->all();
+
+        $observedNames = $seenNames($objectNames->all());
 
         if (!$includeSubobjects) {
             return $observedNames;
@@ -964,18 +1077,7 @@ class ObserverController extends Controller
             return $observedNames;
         }
 
-        $observedPartNames = DB::table('observations as observations')
-            ->leftJoin('deepsky_observation_details as details', 'details.observation_id', '=', 'observations.id')
-            ->where('observations.observer_username', $user->username)
-            ->where('observations.target_type', 'deepsky')
-            ->where(function ($query) {
-                $query->whereNull('details.visibility')
-                    ->orWhere('details.visibility', '!=', 7);
-            })
-            ->whereIn('observations.target_name', $partObjectNames->all())
-            ->pluck('observations.target_name')
-            ->mapWithKeys(fn($name) => [(string) $name => true])
-            ->all();
+        $observedPartNames = $seenNames($partObjectNames->all());
 
         foreach ($partOfRelations as $parentName => $children) {
             if (isset($observedNames[$parentName])) {
