@@ -4,6 +4,7 @@ use App\Livewire\ObservationSearchTable;
 use App\Models\Eyepiece;
 use App\Models\Observation;
 use App\Models\User;
+use Database\Factories\InstrumentFactory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Spatie\ResponseCache\Events\ClearingResponseCache;
@@ -104,6 +105,7 @@ it('clears the response cache when only the observation details change', functio
     $payload = [
         'edit_unified_id' => $observation->id, 'target_table' => 'objects', 'target_slug' => 'm-65',
         'observed_on' => '2026-03-01', 'visibility' => 2,
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $user->id])->id, 'description' => 'Seen.',
     ];
     $this->actingAs($user)->post(route('observation.store'), $payload)->assertSessionHasNoErrors();
 

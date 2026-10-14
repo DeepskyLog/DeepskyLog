@@ -35,6 +35,17 @@ class Html
         return self::purifier()->purify($html);
     }
 
+    /**
+     * Whether the text shows nothing: empty, or only markup, entities and
+     * (non-breaking) spaces, such as the <p>&nbsp;</p> of an empty editor.
+     */
+    public static function isBlank(?string $html): bool
+    {
+        $text = html_entity_decode(strip_tags(html_entity_decode((string) $html, ENT_QUOTES | ENT_HTML5, 'UTF-8')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        return trim(str_replace("\u{00A0}", ' ', $text)) === '';
+    }
+
     private static function purifier(): HTMLPurifier
     {
         if (self::$purifier === null) {

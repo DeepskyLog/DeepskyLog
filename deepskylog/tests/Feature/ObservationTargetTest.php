@@ -4,6 +4,7 @@ use App\Models\DeepskyObject;
 use App\Models\Observation;
 use App\Models\User;
 use App\Services\ObjectSetDataBuilder;
+use Database\Factories\InstrumentFactory;
 use Illuminate\Support\Facades\DB;
 
 function insertTargetTestObject(string $name, string $slug): void
@@ -98,6 +99,8 @@ it('stores a deep-sky observation picked by an alias under the canonical object 
         'target_table' => 'objectnames',
         'target_slug' => 'ngc-3623',
         'observed_on' => '2026-03-01',
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $user->id])->id,
+        'description' => 'Seen.',
     ])->assertSessionHasNoErrors();
 
     $observation = Observation::latest('id')->first();
@@ -115,6 +118,8 @@ it('stores a comet observation under the id of the comet', function () {
         'target_table' => 'cometobjects',
         'target_slug' => 'c2022-a2-panstarrs',
         'observed_on' => '2026-03-01',
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $user->id])->id,
+        'description' => 'Seen.',
     ])->assertSessionHasNoErrors();
 
     $observation = Observation::latest('id')->first();
@@ -131,6 +136,8 @@ it('rejects an observation of an object that does not exist', function () {
         'target_table' => 'objects',
         'target_slug' => 'no-such-object',
         'observed_on' => '2026-03-01',
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $user->id])->id,
+        'description' => 'Seen.',
     ])->assertSessionHasErrors('target_slug');
 
     expect(Observation::count())->toBe(0);

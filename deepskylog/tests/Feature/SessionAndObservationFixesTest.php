@@ -7,6 +7,7 @@ use App\Models\Location;
 use App\Models\Observation;
 use App\Models\ObservationSession;
 use App\Models\User;
+use Database\Factories\InstrumentFactory;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
@@ -175,6 +176,8 @@ it('stores the sqm and limiting magnitude of an observation and prefills them wh
     fixesTestM65();
 
     $this->actingAs($user)->post(route('observation.store'), [
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $user->id])->id,
+        'description' => 'Seen.',
         'target_table' => 'objects',
         'target_slug' => 'm-65',
         'observed_on' => '2026-03-01',
@@ -188,6 +191,8 @@ it('stores the sqm and limiting magnitude of an observation and prefills them wh
         ->and((float) $observation->getRawOriginal('limiting_magnitude'))->toBe(6.2);
 
     $this->actingAs($user)->post(route('observation.store'), [
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $user->id])->id,
+        'description' => 'Seen.',
         'target_table' => 'objects',
         'target_slug' => 'm-65',
         'observed_on' => '2026-03-01',
@@ -216,6 +221,8 @@ it('stores the time entered in the time zone of the location in UT and shows it 
     fixesTestM65();
 
     $this->actingAs($user)->post(route('observation.store'), [
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $user->id])->id,
+        'description' => 'Seen.',
         'target_table' => 'objects',
         'target_slug' => 'm-65',
         'observed_on' => '2026-03-02',

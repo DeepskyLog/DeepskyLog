@@ -1,7 +1,7 @@
 <div class="col-span-1 md:col-span-2">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div data-dsl-field="instrument">
-            <label class="block text-xs text-gray-400 mb-1">{{ __('Instrument') }}</label>
+            <label class="block text-xs text-gray-400 mb-1">{{ __('Instrument') }} <span class="text-red-400">*</span></label>
             <x-select
                 :async-data="route('instrument.select.api', ['instrument_set' => $instrumentSetId ?? '', 'selected' => $instrument_id ?? ''])"
                 option-label="name"

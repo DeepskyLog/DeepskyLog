@@ -9,6 +9,7 @@ use App\Models\Lens;
 use App\Models\Location;
 use App\Models\Observation;
 use App\Models\User;
+use App\Support\Html;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -24,6 +25,9 @@ class OalObservationImporter
     use SavesImportedObservations;
 
     private const OAL_TARGET_METADATA_PREFIX = 'DeepskyLog:';
+
+    /** The instrument type `Naked Eye` (instrument_types.id). */
+    private const NAKED_EYE_TYPE = 1;
 
     private User $user;
     private OalSchemaValidator $validator;
@@ -204,6 +208,42 @@ class OalObservationImporter
             $canonicalName = $targetNameRaw;
         }
 
+        // ── Result / description ──────────────────────────────────────────────
+
+        $description = '';
+        $language = 'en';
+
+        $resultNode = $obs->result ?? null;
+        if ($resultNode) {
+            // OAL may have multiple <result> nodes; use the first with a description
+            if ($resultNode->count() > 1) {
+                foreach ($resultNode as $r) {
+                    $desc = trim((string) ($r->description ?? ''));
+                    if (!empty($desc)) {
+                        $description = $desc;
+                        $lang = trim((string) ($r->attributes()['lang'] ?? ''));
+                        if (!empty($lang)) {
+                            $language = strtolower(substr($lang, 0, 10));
+                        }
+                        break;
+                    }
+                }
+            } else {
+                $description = trim((string) ($resultNode->description ?? ''));
+                $lang = trim((string) ($resultNode->attributes()['lang'] ?? ''));
+                if (!empty($lang)) {
+                    $language = strtolower(substr($lang, 0, 10));
+                }
+            }
+        }
+
+        if (Html::isBlank($description)) {
+            $result->addError("Observation {$row}: Description is empty, skipping.", '', $row);
+            $result->skipped++;
+
+            return;
+        }
+
         // ── Resolve site → location ───────────────────────────────────────────
 
         $siteRef = trim((string) ($obs->site ?? ''));
@@ -225,14 +265,14 @@ class OalObservationImporter
 
         $scopeRef = trim((string) ($obs->scope ?? ''));
         $scopeNode = !empty($scopeRef) ? $this->withDefaultNamespace($scopes[$scopeRef] ?? null) : null;
-        $instrumentId = null;
 
-        if ($scopeNode) {
-            $instrumentId = $this->resolveOrCreateInstrumentFromOal($scopeNode, $result, $row);
-            if ($instrumentId === null) {
-                $result->skipped++;
-                return;
-            }
+        // OAL leaves out the scope of an observation with the naked eye
+        $instrumentId = $scopeNode
+            ? $this->resolveOrCreateInstrumentFromOal($scopeNode, $result, $row)
+            : $this->resolveOrCreateNakedEyeInstrument($result, $row);
+        if ($instrumentId === null) {
+            $result->skipped++;
+            return;
         }
 
         // ── Resolve eyepiece ──────────────────────────────────────────────────
@@ -285,35 +325,6 @@ class OalObservationImporter
         $sqm = $sqmNode ? $this->parseFloat((string) $sqmNode) : null;
 
         $limitingMagnitude = $faintStar;
-
-        // ── Result / description ──────────────────────────────────────────────
-
-        $description = '';
-        $language = 'en';
-
-        $resultNode = $obs->result ?? null;
-        if ($resultNode) {
-            // OAL may have multiple <result> nodes; use the first with a description
-            if ($resultNode->count() > 1) {
-                foreach ($resultNode as $r) {
-                    $desc = trim((string) ($r->description ?? ''));
-                    if (!empty($desc)) {
-                        $description = $desc;
-                        $lang = trim((string) ($r->attributes()['lang'] ?? ''));
-                        if (!empty($lang)) {
-                            $language = strtolower(substr($lang, 0, 10));
-                        }
-                        break;
-                    }
-                }
-            } else {
-                $description = trim((string) ($resultNode->description ?? ''));
-                $lang = trim((string) ($resultNode->attributes()['lang'] ?? ''));
-                if (!empty($lang)) {
-                    $language = strtolower(substr($lang, 0, 10));
-                }
-            }
-        }
 
         // ── Save or update observation ──────────────────────────────────────────
 
@@ -511,6 +522,48 @@ class OalObservationImporter
                 'make_id' => 1,
                 'instrument_type_id' => $instrumentTypeId,
                 'mount_type_id' => 3,
+                'active' => true,
+            ]);
+
+            $result->newInstruments[$name] = $inst->slug;
+            $result->addInfo("Observation {$row}: Created new instrument '{$name}' (id={$inst->id}).", '', $row);
+
+            return $inst->id;
+        } catch (\Throwable $e) {
+            $result->addError("Observation {$row}: Could not create instrument '{$name}': {$e->getMessage()}", '', $row);
+
+            return null;
+        }
+    }
+
+    /**
+     * The observer's naked-eye instrument, created when there is none.
+     */
+    private function resolveOrCreateNakedEyeInstrument(ImportResult $result, int $row): ?int
+    {
+        $inst = Instrument::where('user_id', $this->user->id)
+            ->where('instrument_type_id', self::NAKED_EYE_TYPE)
+            ->orderByDesc('active')
+            ->orderBy('id')
+            ->first();
+
+        if ($inst) {
+            return $inst->id;
+        }
+
+        $name = 'Naked eye';
+
+        try {
+            $inst = Instrument::create([
+                'user_id' => $this->user->id,
+                'name' => $name,
+                'observer' => $this->user->username,
+                'aperture_mm' => 7,
+                'make_id' => 1,
+                'instrument_type_id' => self::NAKED_EYE_TYPE,
+                'focal_length_mm' => 1,
+                'fixedMagnification' => 1,
+                'mount_type_id' => 1,
                 'active' => true,
             ]);
 

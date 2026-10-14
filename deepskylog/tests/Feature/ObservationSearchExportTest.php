@@ -776,6 +776,7 @@ it('exports and imports solar system targets in oal with preserved target classe
             'target_name' => 'OAL Planet Test',
             'has_drawing' => false,
             'legacy_source' => null,
+            'description' => 'Seen.',
         ],
         [
             'observer_username' => $sourceUser->username,
@@ -787,6 +788,7 @@ it('exports and imports solar system targets in oal with preserved target classe
             'target_name' => 'OAL Moon Test',
             'has_drawing' => false,
             'legacy_source' => null,
+            'description' => 'Seen.',
         ],
         [
             'observer_username' => $sourceUser->username,
@@ -798,6 +800,7 @@ it('exports and imports solar system targets in oal with preserved target classe
             'target_name' => 'OAL Asteroid Test',
             'has_drawing' => false,
             'legacy_source' => null,
+            'description' => 'Seen.',
         ],
         [
             'observer_username' => $sourceUser->username,
@@ -809,6 +812,7 @@ it('exports and imports solar system targets in oal with preserved target classe
             'target_name' => 'OAL Crater Test',
             'has_drawing' => false,
             'legacy_source' => null,
+            'description' => 'Seen.',
         ],
         [
             'observer_username' => $sourceUser->username,
@@ -820,6 +824,7 @@ it('exports and imports solar system targets in oal with preserved target classe
             'target_name' => 'OAL Comet Test',
             'has_drawing' => false,
             'legacy_source' => null,
+            'description' => 'Seen.',
         ],
     ]);
 

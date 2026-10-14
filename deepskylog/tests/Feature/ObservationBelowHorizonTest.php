@@ -4,6 +4,7 @@ use App\Models\Observation;
 use App\Models\User;
 use App\Services\Import\CsvObservationImporter;
 use App\Services\Import\OalObservationImporter;
+use Database\Factories\InstrumentFactory;
 use Database\Factories\LocationFactory;
 use Illuminate\Support\Facades\DB;
 
@@ -74,10 +75,13 @@ beforeEach(function () {
         'longitude' => 4.70,
         'timezone' => 'Europe/Brussels',
     ]);
+    InstrumentFactory::new()->create(['observer' => '', 'user_id' => $this->user->id, 'name' => 'Test Scope']);
 });
 
 it('refuses an observation of an object below the horizon at the time given', function () {
     $this->actingAs($this->user)->post(route('observation.store'), [
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $this->user->id])->id,
+        'description' => 'Seen.',
         'target_table' => 'objects',
         'target_slug' => 'southern-test-galaxy',
         'observed_on' => '2026-03-01',
@@ -90,6 +94,8 @@ it('refuses an observation of an object below the horizon at the time given', fu
 
 it('refuses an observation without a time of an object that never rises there', function () {
     $response = $this->actingAs($this->user)->post(route('observation.store'), [
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $this->user->id])->id,
+        'description' => 'Seen.',
         'target_table' => 'objects',
         'target_slug' => 'southern-test-galaxy',
         'observed_on' => '2026-03-01',
@@ -103,6 +109,8 @@ it('refuses an observation without a time of an object that never rises there', 
 
 it('saves an observation below the horizon when the observer confirms it', function () {
     $this->actingAs($this->user)->post(route('observation.store'), [
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $this->user->id])->id,
+        'description' => 'Seen.',
         'target_table' => 'objects',
         'target_slug' => 'southern-test-galaxy',
         'observed_on' => '2026-03-01',
@@ -116,6 +124,8 @@ it('saves an observation below the horizon when the observer confirms it', funct
 
 it('saves an observation of an object above the horizon', function () {
     $this->actingAs($this->user)->post(route('observation.store'), [
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $this->user->id])->id,
+        'description' => 'Seen.',
         'target_table' => 'objects',
         'target_slug' => 'northern-test-galaxy',
         'observed_on' => '2026-03-01',
@@ -128,6 +138,8 @@ it('saves an observation of an object above the horizon', function () {
 
 it('does not check an observation without a location', function () {
     $this->actingAs($this->user)->post(route('observation.store'), [
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $this->user->id])->id,
+        'description' => 'Seen.',
         'target_table' => 'objects',
         'target_slug' => 'southern-test-galaxy',
         'observed_on' => '2026-03-01',
@@ -138,7 +150,7 @@ it('does not check an observation without a location', function () {
 });
 
 it('skips a csv row of an object below the horizon, and imports it when asked', function () {
-    $row = "Southern Test Galaxy;A;01-03-2026;22:00;Leuven;;;;;;;;;en;faint\n";
+    $row = "Southern Test Galaxy;A;01-03-2026;22:00;Leuven;Test Scope;;;;;;;;en;faint\n";
 
     $result = (new CsvObservationImporter($this->user))->import($row);
     expect($result->imported)->toBe(0)
@@ -155,7 +167,7 @@ it('skips a csv row of an object below the horizon, and imports it when asked', 
 });
 
 it('imports a csv row of an object above the horizon', function () {
-    $result = (new CsvObservationImporter($this->user))->import("Northern Test Galaxy;A;01-03-2026;22:00;Leuven;;;;;;;;;en;bright\n");
+    $result = (new CsvObservationImporter($this->user))->import("Northern Test Galaxy;A;01-03-2026;22:00;Leuven;Test Scope;;;;;;;;en;bright\n");
 
     expect($result->imported)->toBe(1)->and($result->errors)->toBe(0);
 });
@@ -180,7 +192,7 @@ it('checks an oal observation at midnight UT as one without a time', function ()
 });
 
 it('passes the import below the horizon option from the import form', function () {
-    $file = \Illuminate\Http\UploadedFile::fake()->createWithContent('obs.csv', "Southern Test Galaxy;A;01-03-2026;22:00;Leuven;;;;;;;;;en;faint\n");
+    $file = \Illuminate\Http\UploadedFile::fake()->createWithContent('obs.csv', "Southern Test Galaxy;A;01-03-2026;22:00;Leuven;Test Scope;;;;;;;;en;faint\n");
 
     $this->actingAs($this->user)->post(route('observation.import.process'), [
         'format' => 'csv',

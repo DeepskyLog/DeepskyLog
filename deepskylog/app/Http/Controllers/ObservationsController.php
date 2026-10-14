@@ -19,6 +19,7 @@ use App\Models\ObservationComment;
 use App\Services\ObservationSearchQuery;
 use App\Services\Observations\ObservationCardData;
 use App\Services\Observations\TargetAltitude;
+use App\Support\Html;
 use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Targets\Moon as AstroMoon;
@@ -2275,9 +2276,14 @@ class ObservationsController extends Controller
             'target_slug' => 'required|string',
             'observed_on' => 'required|date',
             'observed_time' => 'nullable|string',
-            'description' => 'nullable|string',
+            // An empty editor sends markup without text, which `required` lets through
+            'description' => ['required', 'string', function (string $attribute, mixed $value, \Closure $fail) {
+                if (Html::isBlank($value)) {
+                    $fail(__('Please describe what you saw.'));
+                }
+            }],
             'language' => 'nullable|string',
-            'instrument_id' => ['nullable', 'integer', $owned('instruments')],
+            'instrument_id' => ['required', 'integer', $owned('instruments')],
             'eyepiece_id' => ['nullable', 'integer', $owned('eyepieces')],
             'lens_id' => ['nullable', 'integer', $owned('lenses')],
             'filter_id' => ['nullable', 'integer', $owned('filters')],
@@ -2315,6 +2321,9 @@ class ObservationsController extends Controller
             'comet_coma' => 'nullable|integer',
             'comet_tail_length' => 'nullable|integer',
             'comet_position_angle' => 'nullable|integer|between:0,360',
+        ], [
+            'instrument_id.required' => __('Please choose the instrument you used. For an observation with the naked eye, add an instrument of the type Naked Eye.'),
+            'description.required' => __('Please describe what you saw.'),
         ]);
 
         // Support updating an existing unified observation when `edit_unified_id` is provided.

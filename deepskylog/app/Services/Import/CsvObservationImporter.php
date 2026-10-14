@@ -9,6 +9,7 @@ use App\Models\Lens;
 use App\Models\Location;
 use App\Models\Observation;
 use App\Models\User;
+use App\Support\Html;
 use App\Support\SpreadsheetCell;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,7 @@ use Illuminate\Support\Str;
  *  3  Date (DD-MM-YYYY)
  *  4  UT time (HH:MM)
  *  5  Location name
- *  6  Instrument name
+ *  6  Instrument name (required; "Naked eye" for a naked-eye observation)
  *  7  Eyepiece name (optional)
  *  8  Filter name (optional)
  *  9  Lens/Barlow name (optional)
@@ -32,7 +33,7 @@ use Illuminate\Support\Str;
  * 12  SQM value (float, 0 = not measured)
  * 13  Object visibility (1–7; 1=very easy … 7=not seen)
  * 14  Language (ISO 2-letter code, e.g. nl, en)
- * 15  Description
+ * 15  Description (required)
  */
 class CsvObservationImporter
 {
@@ -113,6 +114,18 @@ class CsvObservationImporter
                 continue;
             }
 
+            if (empty($instrumentName)) {
+                $result->addError("Row {$rowNumber}: Instrument is empty, skipping row. Use your naked-eye instrument for an observation with the naked eye.", $line, $rowNumber);
+                $result->skipped++;
+                continue;
+            }
+
+            if (Html::isBlank($description)) {
+                $result->addError("Row {$rowNumber}: Description is empty, skipping row.", $line, $rowNumber);
+                $result->skipped++;
+                continue;
+            }
+
             // ─── Parse date ────────────────────────────────────────────────────
 
             $observedOn = $this->parseDate($dateStr);
@@ -159,22 +172,19 @@ class CsvObservationImporter
                 $locationId = $loc->id;
             }
 
-            // ─── Resolve instrument (must exist) ──────────────────────────────
+            // ─── Resolve instrument (required, must exist) ────────────────────
 
-            $instrumentId = null;
-            if (!empty($instrumentName)) {
-                $inst = $this->findInstrument($instrumentName);
-                if ($inst === null) {
-                    $result->addError(
-                        "Row {$rowNumber}: Instrument '{$instrumentName}' not found for your account. Add it first in DeepskyLog, then re-import.",
-                        $line,
-                        $rowNumber
-                    );
-                    $result->skipped++;
-                    continue;
-                }
-                $instrumentId = $inst->id;
+            $inst = $this->findInstrument($instrumentName);
+            if ($inst === null) {
+                $result->addError(
+                    "Row {$rowNumber}: Instrument '{$instrumentName}' not found for your account. Add it first in DeepskyLog, then re-import.",
+                    $line,
+                    $rowNumber
+                );
+                $result->skipped++;
+                continue;
             }
+            $instrumentId = $inst->id;
 
             // ─── Resolve eyepiece (must exist if provided) ────────────────────
 

@@ -19,7 +19,7 @@
                 @endif
 
                 <p class="text-gray-300 mb-6">
-                    {{ __('Upload a CSV or OAL (OpenAstronomyLog) XML file to import your observations. Observations will be added to your account. Equipment (locations, instruments, eyepieces, filters, lenses) will be matched by name; unrecognised items will be created automatically as inactive entries.') }}
+                    {{ __('Upload a CSV or OAL (OpenAstronomyLog) XML file to import your observations. Observations will be added to your account. Equipment (locations, instruments, eyepieces, filters, lenses) is matched by name. In a CSV file, it must already exist in your account; an OAL file creates the items that are not found. Every observation needs an instrument (use a naked-eye instrument for observations with the naked eye) and a description.') }}
                 </p>
 
                 <form method="POST" action="{{ route('observation.import.process') }}" enctype="multipart/form-data">
@@ -40,7 +40,7 @@
                                     <span class="block text-gray-100 font-medium">CSV</span>
                                     <span class="block text-gray-400 text-xs mt-0.5">
                                         {{ __('Semicolon-delimited, no header line.') }}<br>
-                                        <code class="text-gray-500 text-xs">Object; Observer; Date(DD-MM-YYYY); Time(HH:MM); Location; Instrument; Eyepiece; Filter; Lens; Seeing(1–5); LimMag; SQM; Visibility(1–5); Language; Description</code>
+                                        <code class="text-gray-500 text-xs">Object; Observer; Date(DD-MM-YYYY); Time(HH:MM); Location; Instrument; Eyepiece; Filter; Lens; Seeing(1–5); LimMag; SQM; Visibility(1–7); Language; Description</code>
                                     </span>
                                 </span>
                             </label>
@@ -124,8 +124,8 @@
                                 <tr><td class="py-1 pr-4">2</td><td class="py-1 pr-4">{{ __('Observer') }}</td><td></td><td class="py-1">{{ __('Informational only; logged-in user is the owner') }}</td></tr>
                                 <tr><td class="py-1 pr-4">3</td><td class="py-1 pr-4">{{ __('Date') }}</td><td class="py-1 pr-4">✓</td><td class="py-1">DD-MM-YYYY</td></tr>
                                 <tr><td class="py-1 pr-4">4</td><td class="py-1 pr-4">{{ __('UT Time') }}</td><td></td><td class="py-1">HH:MM</td></tr>
-                                <tr><td class="py-1 pr-4">5</td><td class="py-1 pr-4">{{ __('Location') }}</td><td></td><td class="py-1">{{ __('Matched by name; created if not found') }}</td></tr>
-                                <tr><td class="py-1 pr-4">6</td><td class="py-1 pr-4">{{ __('Instrument') }}</td><td></td><td class="py-1">{{ __('Must exist in your account') }}</td></tr>
+                                <tr><td class="py-1 pr-4">5</td><td class="py-1 pr-4">{{ __('Location') }}</td><td></td><td class="py-1">{{ __('Must exist in your account (optional)') }}</td></tr>
+                                <tr><td class="py-1 pr-4">6</td><td class="py-1 pr-4">{{ __('Instrument') }}</td><td class="py-1 pr-4">✓</td><td class="py-1">{{ __('Must exist in your account; your naked-eye instrument for observations with the naked eye') }}</td></tr>
                                 <tr><td class="py-1 pr-4">7</td><td class="py-1 pr-4">{{ __('Eyepiece') }}</td><td></td><td class="py-1">{{ __('Must exist in your account (optional)') }}</td></tr>
                                 <tr><td class="py-1 pr-4">8</td><td class="py-1 pr-4">{{ __('Filter') }}</td><td></td><td class="py-1">{{ __('Must exist in your account (optional)') }}</td></tr>
                                 <tr><td class="py-1 pr-4">9</td><td class="py-1 pr-4">{{ __('Lens / Barlow') }}</td><td></td><td class="py-1">{{ __('Must exist in your account (optional)') }}</td></tr>
@@ -134,7 +134,7 @@
                                 <tr><td class="py-1 pr-4">12</td><td class="py-1 pr-4">{{ __('SQM') }}</td><td></td><td class="py-1">{{ __('Float; 0 = not measured') }}</td></tr>
                                 <tr><td class="py-1 pr-4">13</td><td class="py-1 pr-4">{{ __('Visibility') }}</td><td></td><td class="py-1">{{ __('1–7') }}</td></tr>
                                 <tr><td class="py-1 pr-4">14</td><td class="py-1 pr-4">{{ __('Language') }}</td><td></td><td class="py-1">{{ __('ISO code, e.g. nl, en, de') }}</td></tr>
-                                <tr><td class="py-1 pr-4">15</td><td class="py-1 pr-4">{{ __('Description') }}</td><td></td><td class="py-1">{{ __('Free text') }}</td></tr>
+                                <tr><td class="py-1 pr-4">15</td><td class="py-1 pr-4">{{ __('Description') }}</td><td class="py-1 pr-4">✓</td><td class="py-1">{{ __('Free text') }}</td></tr>
                             </tbody>
                         </table>
                     </div>

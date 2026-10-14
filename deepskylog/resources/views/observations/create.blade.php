@@ -397,7 +397,7 @@
                     </div>
 
                     <div class="mt-4" x-data="{ observation_language: @js(old('language', auth()->check() ? auth()->user()->observationlanguage : '')) }">
-                        <label class="block text-xs text-gray-400 mb-1">{{ __('Description') }}</label>
+                        <label class="block text-xs text-gray-400 mb-1">{{ __('Description') }} <span class="text-red-400">*</span></label>
                         <textarea id="description" name="description" rows="6" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100">{{ old('description') }}</textarea>
                     </div>
 

@@ -9,6 +9,7 @@ use App\Models\Observation;
 use App\Models\User;
 use App\Services\Import\CsvObservationImporter;
 use App\Services\Import\OalObservationImporter;
+use Database\Factories\InstrumentFactory;
 use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 
@@ -56,13 +57,13 @@ function editFixesObservation(User $observer, array $extra = []): Observation
     return Observation::query()->create(array_merge([
         'observer_username' => $observer->username, 'observer_user_id' => $observer->id, 'observed_on' => '2026-03-01',
         'language' => 'en', 'target_type' => 'deepsky', 'target_table' => 'objects', 'target_key' => 'M 65',
-        'target_name' => 'M 65', 'has_drawing' => false,
+        'target_name' => 'M 65', 'has_drawing' => false, 'description' => 'Seen.',
     ], $extra));
 }
 
 function editFixesCsvRow(string $date, string $time, string $description): string
 {
-    return "M 65;Observer;{$date};{$time};;;;;;3;;;;en;{$description}\n";
+    return "M 65;Observer;{$date};{$time};;Edit Fixes Scope;;;;3;;;;en;{$description}\n";
 }
 
 it('updates the legacy date and time when a migrated observation is edited', function () {
@@ -74,6 +75,8 @@ it('updates the legacy date and time when a migrated observation is edited', fun
     ]);
 
     $this->actingAs($user)->post(route('observation.store'), [
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $user->id])->id,
+        'description' => 'Seen.',
         'edit_unified_id' => $observation->id, 'target_table' => 'objects', 'target_slug' => 'm-65',
         'observed_on' => '2010-02-05', 'observed_time' => '22:45',
     ])->assertSessionHasNoErrors();
@@ -85,6 +88,8 @@ it('updates the legacy date and time when a migrated observation is edited', fun
         ->and($observation->time)->toBe(2245);
 
     $this->actingAs($user)->post(route('observation.store'), [
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $user->id])->id,
+        'description' => 'Seen.',
         'edit_unified_id' => $observation->id, 'target_table' => 'objects', 'target_slug' => 'm-65',
         'observed_on' => '2010-02-06',
     ])->assertSessionHasNoErrors();
@@ -101,6 +106,8 @@ it('does not touch the legacy columns of observations made in this version', fun
     $observation = editFixesObservation($user, ['observed_time' => '21:30:00']);
 
     $this->actingAs($user)->post(route('observation.store'), [
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $user->id])->id,
+        'description' => 'Seen.',
         'edit_unified_id' => $observation->id, 'target_table' => 'objects', 'target_slug' => 'm-65',
         'observed_on' => '2026-03-02', 'observed_time' => '22:00',
     ])->assertSessionHasNoErrors();
@@ -113,6 +120,7 @@ it('does not touch the legacy columns of observations made in this version', fun
 it('only lets a csv row without a time replace an observation without a time', function () {
     $user = User::factory()->create(['username' => 'csvdup']);
     editFixesM65();
+    editFixesInstrument($user);
     $timed = editFixesObservation($user, ['observed_time' => '21:30:00', 'description' => 'timed']);
 
     $result = (new CsvObservationImporter($user))->import(editFixesCsvRow('01-03-2026', '', 'no time'));
@@ -130,6 +138,7 @@ it('only lets a csv row without a time replace an observation without a time', f
 it('keeps the drawing and does not duplicate migrated observations when re-importing', function () {
     $user = User::factory()->create(['username' => 'csvlegacy']);
     editFixesM65();
+    editFixesInstrument($user);
     $legacy = editFixesObservation($user, [
         'observed_time' => '21:30:00', 'legacy_date_int' => 20260301, 'legacy_time_int' => 2130,
         'legacy_source' => 'deepsky', 'legacy_id' => 7, 'has_drawing' => true, 'description' => 'old',
@@ -215,7 +224,7 @@ it('exports an observation without a time with an empty time in the csv', functi
 
     Livewire::test(\App\Livewire\ObservationSearchTable::class, ['objectName' => 'M 65'])
         ->call('exportToCsv')
-        ->assertFileDownloaded('export.csv', "\xEF\xBB\xBF\"M 65\";\"Csv Observer\";01-03-2026;;;;;;;;0;0;;en;\n");
+        ->assertFileDownloaded('export.csv', "\xEF\xBB\xBF\"M 65\";\"Csv Observer\";01-03-2026;;;;;;;;0;0;;en;Seen.\n");
 });
 
 it('keeps the stored magnification in the picker and computes it otherwise', function () {
@@ -257,6 +266,8 @@ it('stores the magnification with the observation and prefills it when editing',
     editFixesM65();
 
     $this->actingAs($user)->post(route('observation.store'), [
+        'instrument_id' => InstrumentFactory::new()->create(['observer' => '', 'user_id' => $user->id])->id,
+        'description' => 'Seen.',
         'target_table' => 'objects', 'target_slug' => 'm-65', 'observed_on' => '2026-03-01', 'observed_time' => '21:00',
         'magnification' => '150x',
     ])->assertSessionHasNoErrors();
