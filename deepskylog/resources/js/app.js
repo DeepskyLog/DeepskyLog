@@ -1,6 +1,7 @@
 import "./bootstrap";
 import "./share-buttons.js";
 import "./toggle-list-item.js";
+import "./wireui-multiselect-search.js";
 import "../css/toast.css";
 
 import "./../../vendor/power-components/livewire-powergrid/dist/powergrid";

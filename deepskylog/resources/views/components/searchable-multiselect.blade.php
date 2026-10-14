@@ -32,6 +32,8 @@
             const idx = arr.indexOf(s);
             if (idx === -1) arr.push(s); else arr.splice(idx, 1);
             this.selected = arr;
+            this.search = '';
+            this.$refs.searchInput?.focus();
         },
         remove(id) {
             const s = String(id);
@@ -64,6 +66,7 @@
             </span>
         </template>
         <input
+            x-ref="searchInput"
             x-model="search"
             @click.stop="open = true"
             @focus="open = true"
