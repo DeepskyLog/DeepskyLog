@@ -3,7 +3,7 @@
     <p class="mt-1 text-sm text-gray-400">{{ __('Select a catalog to view object counts by constellation, types and objects list.') }}</p>
 
     <div class="mt-6">
-        <div x-data="{ open: @entangle('open'), active: -1, query: @entangle('search') }" @keydown.escape="open=false" class="relative">
+        <div x-data="{ open: @entangle('open'), active: -1, query: @entangle('search') }" @keydown.escape="open=false" @click.outside="open = false" class="relative">
             <label class="block text-sm font-medium text-gray-400 mb-1">{{ __('Catalog') }}</label>
             <input
                 x-ref="input"
@@ -19,7 +19,7 @@
                 class="block w-full rounded border border-gray-600 bg-gray-900 text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
-            <div x-show="open" x-cloak @click.away="open = false" class="absolute z-20 mt-1 w-full bg-gray-900 border border-gray-700 rounded max-h-64 overflow-auto">
+            <div x-show="open" x-cloak class="absolute z-20 mt-1 w-full bg-gray-900 border border-gray-700 rounded max-h-64 overflow-auto">
                 <ul x-ref="list" role="listbox" class="py-1">
                     <div wire:loading wire:target="search" class="px-3 py-2 text-sm text-gray-400">{{ __('Searching...') }}</div>
 

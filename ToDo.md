@@ -22,7 +22,7 @@
     - [X] Popular sessions page
     - [X] Statistics
     - [X] Observing lists
-    - [ ] Catalogs
+    - [X] Catalogs
     - [ ] Search objects
     - [ ] Search observations
     - [ ] Image catalogs
