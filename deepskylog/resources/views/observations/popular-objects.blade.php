@@ -25,7 +25,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="max-w-screen mx-auto sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-gray-900 shadow-sm sm:rounded-lg p-4">
                 <p class="mb-4 text-sm text-gray-400">
                     {{ $mode === 'drawings'

@@ -36,8 +36,6 @@ final class PopularObservationsTable extends PowerGridComponent
                 ->showPerPage(25)
                 ->showRecordCount(),
 
-            PowerGrid::responsive()->fixedColumns('name'),
-
             PowerGrid::exportable()
                 ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),

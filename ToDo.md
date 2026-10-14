@@ -16,10 +16,10 @@
     - [X] Sketch of the week and month
     - [X] All observations page
     - [X] All drawings page
-    - [ ] Observers page
-    - [ ] Popular objects page
-    - [ ] Popular observations page
-    - [ ] Popular sessions page
+    - [X] Observers page
+    - [X] Popular objects page
+    - [X] Popular observations page
+    - [X] Popular sessions page
     - [ ] Statistics
     - [ ] Observing lists
     - [ ] Catalogs

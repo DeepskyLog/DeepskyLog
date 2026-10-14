@@ -55,8 +55,6 @@ final class PopularObjectsTable extends PowerGridComponent
                 ->showPerPage(25)
                 ->showRecordCount(),
 
-            PowerGrid::responsive()->fixedColumns('name_link'),
-
             PowerGrid::exportable('popular-objects')
                 ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
