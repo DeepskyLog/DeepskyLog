@@ -163,9 +163,12 @@
         }
 
         /* Also clip overflow at the card level to guard against any other
-           source of page-level horizontal overflow on the search page. */
+           source of page-level horizontal overflow on the search page.
+           `clip`, not `hidden`: `hidden` turns overflow-y into `auto`, which
+           cut off the top of select popovers that open upwards (the search
+           field of the observer select on the advanced observation search). */
         .dsl-search-card {
-            overflow-x: hidden;
+            overflow-x: clip;
         }
 
         /* Tighten footer/filter area inside the card */

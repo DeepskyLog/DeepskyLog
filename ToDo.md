@@ -23,8 +23,10 @@
     - [X] Statistics
     - [X] Observing lists
     - [X] Catalogs
-    - [ ] Search objects
-    - [ ] Search observations
+    - [X] Search objects
+    - [X] Search observations
+    - [ ] Add
+      - [ ] Add observation
     - [ ] Image catalogs
     - [ ] Atlases
     - [ ] Log out
