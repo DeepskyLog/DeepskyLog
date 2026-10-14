@@ -190,3 +190,44 @@ it('passes the import below the horizon option from the import form', function (
 
     expect(Observation::count())->toBe(1);
 });
+
+it('shows the altitude of the object at the time of the observation on its detail page', function () {
+    Observation::create([
+        'observer_username' => $this->user->username, 'observer_user_id' => $this->user->id,
+        'observed_on' => '2026-03-01', 'observed_time' => '22:00:00', 'location_id' => $this->location->id,
+        'target_type' => 'deepsky', 'target_table' => 'objects', 'target_key' => 'Northern Test Galaxy', 'target_name' => 'Northern Test Galaxy',
+    ]);
+
+    // At declination 85° the galaxy stands between 45.9° and 55.9° above Leuven.
+    $this->get(route('observations.detail', ['observer' => $this->user->slug, 'date' => '2026-03-01', 'object' => 'northern-test-galaxy']))
+        ->assertOk()
+        ->assertViewHas('objectAltitude', fn ($a) => $a['at_time'] === true && $a['degrees'] > 45.8 && $a['degrees'] < 56.0)
+        ->assertSee('Altitude of the object during observation');
+});
+
+it('shows the highest altitude of the object on the date of an observation without a time', function () {
+    Observation::create([
+        'observer_username' => $this->user->username, 'observer_user_id' => $this->user->id,
+        'observed_on' => '2026-03-01', 'location_id' => $this->location->id,
+        'target_type' => 'deepsky', 'target_table' => 'objects', 'target_key' => 'Northern Test Galaxy', 'target_name' => 'Northern Test Galaxy',
+    ]);
+
+    $this->get(route('observations.detail', ['observer' => $this->user->slug, 'date' => '2026-03-01', 'object' => 'northern-test-galaxy']))
+        ->assertOk()
+        ->assertViewHas('objectAltitude', ['degrees' => 55.9, 'at_time' => false])
+        ->assertSee('Highest altitude of the object on this date')
+        ->assertSee('55.9');
+});
+
+it('shows no altitude of the object for an observation without a location', function () {
+    Observation::create([
+        'observer_username' => $this->user->username, 'observer_user_id' => $this->user->id,
+        'observed_on' => '2026-03-01', 'observed_time' => '22:00:00',
+        'target_type' => 'deepsky', 'target_table' => 'objects', 'target_key' => 'Northern Test Galaxy', 'target_name' => 'Northern Test Galaxy',
+    ]);
+
+    $this->get(route('observations.detail', ['observer' => $this->user->slug, 'date' => '2026-03-01', 'object' => 'northern-test-galaxy']))
+        ->assertOk()
+        ->assertViewHas('objectAltitude', null)
+        ->assertDontSee('Altitude of the object during observation');
+});

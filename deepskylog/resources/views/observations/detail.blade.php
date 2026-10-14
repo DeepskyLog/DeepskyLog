@@ -1168,6 +1168,26 @@
                                         </div>
                                     </dd>
                                 </div>
+
+                                @if (!empty($objectAltitude))
+                                    <div>
+                                        <dt
+                                            class="text-xs uppercase tracking-wide text-gray-400"
+                                        >
+                                            {{ $objectAltitude['at_time'] ? __('Altitude of the object during observation') : __('Highest altitude of the object on this date') }}
+                                        </dt>
+                                        <dd class="mt-1 text-sm">
+                                            <div class="font-semibold text-gray-100">
+                                                {{ number_format($objectAltitude['degrees'], 1) }}&deg;
+                                            </div>
+                                            @if ($objectAltitude['degrees'] >= 0)
+                                                <div class="text-emerald-300">{{ __('Above the horizon') }}</div>
+                                            @else
+                                                <div class="text-amber-300">{{ __('Not above the horizon') }}</div>
+                                            @endif
+                                        </dd>
+                                    </div>
+                                @endif
                             </div>
                         @endif
 

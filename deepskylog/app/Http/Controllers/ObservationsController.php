@@ -144,6 +144,7 @@ class ObservationsController extends Controller
             $preloadedData = $this->preloadDeepskyData(collect([$selected]));
         }
         $moonContext = $this->buildMoonContext($selected, $preloadedData['preloaded_locations']->get($selected->locationid) ?? null);
+        $objectAltitude = $this->buildObjectAltitude($selectedUnified, $preloadedData['preloaded_locations']->get($selected->locationid) ?? null, $moonContext);
 
         $lens = null;
         if (!empty($selected->lensid) && $selected->lensid > 0) {
@@ -161,6 +162,7 @@ class ObservationsController extends Controller
             'unified_observation_id' => $selectedUnified->id,
             'drawing_filename' => $selectedUnified->drawing_filename,
             'moonContext' => $moonContext,
+            'objectAltitude' => $objectAltitude,
         ], $preloadedData, $socialData));
     }
 
@@ -1589,6 +1591,37 @@ class ObservationsController extends Controller
         }
 
         return $context;
+    }
+
+    /**
+     * The altitude of the observed object above the horizon of the location:
+     * at the moment of the observation, or, without a time, the highest it
+     * reaches on that date. Null without a location or known coordinates.
+     *
+     * @return array{degrees: float, at_time: bool}|null
+     */
+    private function buildObjectAltitude(Observation $observation, ?Location $location, ?array $moonContext): ?array
+    {
+        $observedAt = $moonContext['observed_at'] ?? null;
+        if (!$observedAt instanceof Carbon || !$location) {
+            return null;
+        }
+
+        $target = [
+            'type' => (string) $observation->target_type,
+            'table' => (string) $observation->target_table,
+            'key' => (string) $observation->target_key,
+            'name' => (string) $observation->target_name,
+        ];
+        $atTime = (bool) ($moonContext['has_specific_time'] ?? false);
+        $altitude = TargetAltitude::forObservation(
+            $target,
+            $location,
+            $observedAt->copy()->utc()->toDateString(),
+            $atTime ? $observedAt->copy()->utc()->format('H:i:s') : null,
+        );
+
+        return $altitude === null ? null : ['degrees' => round($altitude, 1), 'at_time' => $atTime];
     }
 
     /**
