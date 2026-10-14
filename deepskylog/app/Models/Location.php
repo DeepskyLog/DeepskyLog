@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Magnitude;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Session;
@@ -62,6 +63,15 @@ class Location extends Model
                 UserObjectMetric::where('location_id', $location->id)->delete();
             }
         });
+    }
+
+    /**
+     * Stores the canonical name of the country (the name of the countries
+     * table), so that one country is not counted under two names.
+     */
+    protected function country(): Attribute
+    {
+        return Attribute::make(set: fn (?string $value) => Country::canonicalName($value));
     }
 
     /**

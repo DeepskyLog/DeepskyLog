@@ -534,15 +534,11 @@ class StatisticsController extends Controller
             return [];
         }
 
-        $countryModels = Country::whereIn('country', $countryNames->all())
-            ->get()
-            ->keyBy('country');
-
         $labels = [];
         foreach ($countryNames as $country) {
-            $countryModel = $countryModels->get($country);
-            $labels[$country] = $countryModel && !empty($countryModel->code)
-                ? (Countries::getOne($countryModel->code, app()->getLocale()) ?? $countryModel->country)
+            $code = Country::codeFor($country);
+            $labels[$country] = $code !== null
+                ? (Countries::getOne($code, app()->getLocale()) ?? $country)
                 : $country;
         }
 

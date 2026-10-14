@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Country;
 use App\Models\Location;
 use Countries;
 use Illuminate\Database\Eloquent\Builder;
@@ -66,21 +67,16 @@ final class LocationTable extends PowerGridComponent
             ->add('name')
             ->add('active')
             ->add('country', function ($location) {
-                // Get the country code, based on the country name in English
-                $c = Countries::getList();
-                // Switch key and value
-                $c = array_flip($c);
-
-                // If the country ends with something between brackets, remove that part
-                $country = preg_replace('/\s*\(.*\)\s*/', '', (string) $location->country);
+                $country = (string) $location->country;
+                $code = Country::codeFor($country);
 
                 // Unknown or empty countries (e.g. 'Unknown' after a failed lookup) are shown as is
-                if (! isset($c[$country])) {
-                    return ($country === '' || $country === 'Unknown') ? __('Unknown') : $country;
+                if ($code === null) {
+                    return ($country === '' || $country === 'Unknown') ? __('Unknown') : e($country);
                 }
 
                 // Translate country using the current language
-                return Countries::getOne($c[$country], app()->getLocale());
+                return Countries::getOne($code, app()->getLocale());
             })
             ->add('elevation', function ($location) {
                 // Convert the elevation to feet if it is set

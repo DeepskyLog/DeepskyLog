@@ -20,7 +20,7 @@
     - [X] Popular objects page
     - [X] Popular observations page
     - [X] Popular sessions page
-    - [ ] Statistics
+    - [X] Statistics
     - [ ] Observing lists
     - [ ] Catalogs
     - [ ] Search objects

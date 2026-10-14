@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Country;
 use App\Models\Location;
 use App\Support\UploadedPhoto;
 use deepskylog\AstronomyLibrary\Magnitude;
@@ -110,7 +111,7 @@ class CreateLocation extends Component
 
         $photoPath = null;
 
-        $this->country = preg_replace('/\s*\(.*\)\s*/', '', $this->country);
+        $this->country = Country::canonicalName($this->country);
 
         // Validate first to ensure uploaded file is acceptable before any processing.
         // The form values are validated, not the stored ones: -999 (no value) and
