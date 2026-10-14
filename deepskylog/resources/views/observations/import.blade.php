@@ -76,6 +76,21 @@
                         </p>
                     </div>
 
+                    {{-- Objects below the horizon --}}
+                    <div class="mb-8">
+                        <label class="flex items-start space-x-3 cursor-pointer">
+                            <input type="checkbox" name="import_below_horizon" value="1"
+                                   class="mt-1 rounded text-indigo-500 bg-gray-700 border-gray-600 focus:ring-indigo-500"
+                                   {{ old('import_below_horizon') ? 'checked' : '' }}>
+                            <span>
+                                <span class="block text-gray-100 font-medium">{{ __('Also import observations of objects below the horizon') }}</span>
+                                <span class="block text-gray-400 text-xs mt-0.5">
+                                    {{ __('Observations of an object that was below the horizon of the location at the date and time given are skipped, as the date, the time or the location is probably wrong. Tick this to import them anyway.') }}
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+
                     {{-- Submit --}}
                     <div class="flex items-center space-x-4">
                         <button type="submit"

@@ -10,6 +10,7 @@ import "./../../vendor/power-components/livewire-powergrid/dist/tailwind.css";
 //@formatter:off
 import flatpickr from "flatpickr";
 flatpickr.l10ns.default.firstDayOfWeek = 1;
+window.flatpickr = flatpickr;
 //@formatter:on
 
 import L from 'leaflet';

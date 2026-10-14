@@ -2,11 +2,13 @@
 
 namespace App\Services\Import;
 
+use App\Models\Location;
 use App\Models\Observation;
 use App\Models\User;
+use App\Services\Observations\TargetAltitude;
 
 /**
- * Duplicate check and saving shared by the CSV and OAL importers.
+ * Duplicate check, horizon check and saving shared by the CSV and OAL importers.
  *
  * @property User $user
  */
@@ -25,6 +27,79 @@ trait SavesImportedObservations
         'has_drawing',
         'legacy_source',
     ];
+
+    /** Whether observations of an object below the horizon are imported (with a warning). */
+    private bool $importBelowHorizon = false;
+
+    /** @var array<int, Location|null> */
+    private array $horizonLocations = [];
+
+    /**
+     * Import observations of an object below the horizon of their location
+     * too, instead of skipping them.
+     */
+    public function importBelowHorizon(bool $import = true): static
+    {
+        $this->importBelowHorizon = $import;
+
+        return $this;
+    }
+
+    /**
+     * Why the observation cannot be right, or null: the object stood below the
+     * horizon of the location at that moment (UT), or, without a time, never
+     * rises there on that date.
+     */
+    private function belowHorizonReason(array $fields, ?string $observedTime): ?string
+    {
+        $locationId = $fields['location_id'] ?? null;
+        if (empty($locationId)) {
+            return null;
+        }
+        if (!array_key_exists($locationId, $this->horizonLocations)) {
+            $this->horizonLocations[$locationId] = Location::find($locationId);
+        }
+        $location = $this->horizonLocations[$locationId];
+
+        $target = [
+            'type' => (string) $fields['target_type'],
+            'table' => (string) $fields['target_table'],
+            'key' => (string) $fields['target_key'],
+            'name' => (string) $fields['target_name'],
+        ];
+        $altitude = TargetAltitude::forObservation($target, $location, (string) $fields['observed_on'], $observedTime);
+        if ($altitude === null || $altitude >= -TargetAltitude::TOLERANCE) {
+            return null;
+        }
+
+        return $observedTime !== null
+            ? sprintf("'%s' was %.1f° below the horizon of %s on %s at %s UT.", $target['name'], abs($altitude), $location->name, $fields['observed_on'], substr($observedTime, 0, 5))
+            : sprintf("'%s' does not rise above the horizon of %s on %s.", $target['name'], $location->name, $fields['observed_on']);
+    }
+
+    /**
+     * Apply the horizon check to an observation about to be saved: true when
+     * it is to be skipped (reported as an error), false when it is saved (with
+     * a warning when it is below the horizon but imported anyway).
+     */
+    private function skipBelowHorizon(array $fields, ?string $observedTime, ImportResult $result, string $label, string $context, int $row): bool
+    {
+        $reason = $this->belowHorizonReason($fields, $observedTime);
+        if ($reason === null) {
+            return false;
+        }
+
+        if ($this->importBelowHorizon) {
+            $result->addWarning("{$label}: {$reason} Imported anyway.", $context, $row);
+
+            return false;
+        }
+
+        $result->addError("{$label}: {$reason} Check the date, the time and the location, skipping. Tick \"Also import observations of objects below the horizon\" to import it anyway.", $context, $row);
+        $result->skipped++;
+
+        return true;
+    }
 
     /**
      * The observation of this user of the same object at the same moment, or

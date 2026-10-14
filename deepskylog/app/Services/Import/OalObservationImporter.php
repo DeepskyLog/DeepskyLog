@@ -340,6 +340,12 @@ class OalObservationImporter
             'legacy_source' => null,
         ];
 
+        // OAL requires a time: an observation without one is exported at
+        // midnight UT, so that is checked as an observation without a time.
+        if ($this->skipBelowHorizon($fields, $observedTime === '00:00:00' ? null : $observedTime, $result, "Observation {$row}", '', $row)) {
+            return;
+        }
+
         // Updates the observation when it is already there
         [$observation, $updated] = $this->saveImportedObservation($fields, $observedTime);
         $result->imported++;

@@ -30,6 +30,7 @@ class ObservationImportController extends Controller
                 'mimes:csv,txt,xml,application/xml,text/xml,text/plain,text/csv',
             ],
             'format' => ['required', 'in:csv,oal'],
+            'import_below_horizon' => ['nullable', 'boolean'],
         ]);
 
         $file = $request->file('import_file');
@@ -42,13 +43,8 @@ class ObservationImportController extends Controller
         $user = $request->user();
         $format = $request->input('format');
 
-        if ($format === 'csv') {
-            $importer = new CsvObservationImporter($user);
-            $result = $importer->import($content);
-        } else {
-            $importer = new OalObservationImporter($user);
-            $result = $importer->import($content);
-        }
+        $importer = $format === 'csv' ? new CsvObservationImporter($user) : new OalObservationImporter($user);
+        $result = $importer->importBelowHorizon($request->boolean('import_below_horizon'))->import($content);
 
         return view('observations.import-result', [
             'result' => $result,

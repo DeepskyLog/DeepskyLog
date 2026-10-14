@@ -82,16 +82,31 @@
                 {{-- debug block removed --}}
 
                 @if(isset($instrumentSets) && $instrumentSets->isNotEmpty())
-                    <form method="GET" action="{{ route('observation.create') }}" class="mb-4">
-                        <input type="hidden" name="slug" value="{{ $slug }}">
+                    {{-- Changing the set sends the form as it is filled in, so the page comes back with the entries kept --}}
+                    <div class="mb-4">
                         <label class="block text-xs text-gray-400 mb-1">{{ __('Instrument set') }}</label>
-                        <select name="instrument_set" onchange="this.form.submit()" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100">
+                        <select onchange="window.dslSwitchInstrumentSet(this.value)" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100">
                             <option value="">{{ __('All gear') }}</option>
                             @foreach($instrumentSets as $set)
                                 <option value="{{ $set->id }}" @if(isset($instrumentSet) && $instrumentSet && $instrumentSet->id == $set->id) selected @endif>{{ $set->name }}</option>
                             @endforeach
                         </select>
-                    </form>
+                    </div>
+                    <script>
+                        window.dslSwitchInstrumentSet = function (setId) {
+                            var form = document.querySelector('form[method="POST"][enctype="multipart/form-data"]');
+                            if (!form) return;
+                            if (typeof tinymce !== 'undefined') tinymce.triggerSave();
+                            // A chosen sketch cannot come back with the page, so it is not sent.
+                            form.querySelectorAll('input[type=file]').forEach(function (input) { input.disabled = true; });
+                            var field = document.createElement('input');
+                            field.type = 'hidden';
+                            field.name = 'switch_instrument_set';
+                            field.value = setId;
+                            form.appendChild(field);
+                            form.submit();
+                        };
+                    </script>
                 @endif
 
                 <form method="POST" action="{{ route('observation.store') }}" enctype="multipart/form-data">
@@ -186,11 +201,53 @@
                                 {{ __('Time') }}
                                 <span class="text-xs text-gray-400">({{ $showInches ? 'hh:mm AM/PM' : '24h' }}, {{ __('local time at the location') }})</span>
                             </label>
-                            @if($showInches)
-                                <x-time-picker name="observed_time" without-seconds="true" value="{{ old('observed_time', '') }}" class="w-full" />
-                            @else
-                                <x-time-picker name="observed_time" military-time="true" without-seconds="true" value="{{ old('observed_time', '') }}" class="w-full" />
-                            @endif
+                            @php
+                                $observedTime24 = '';
+                                if (!empty($oldObservedTime)) {
+                                    try {
+                                        $observedTime24 = \Carbon\Carbon::parse($oldObservedTime)->format('H:i');
+                                    } catch (\Throwable $_) {
+                                    }
+                                }
+                            @endphp
+                            {{-- The scroll wheel of WireUI on touch screens, a Flatpickr field to type in elsewhere; the disabled fieldset is not sent --}}
+                            <fieldset id="observed_time_touch" disabled hidden>
+                                @if($showInches)
+                                    <x-time-picker name="observed_time" without-seconds="true" value="{{ old('observed_time', '') }}" class="w-full" />
+                                @else
+                                    <x-time-picker name="observed_time" military-time="true" without-seconds="true" value="{{ old('observed_time', '') }}" class="w-full" />
+                                @endif
+                            </fieldset>
+                            <fieldset id="observed_time_desktop">
+                                <input type="text" id="observed_time_input" name="observed_time" value="{{ $observedTime24 }}"
+                                    placeholder="{{ $showInches ? 'hh:mm AM' : 'hh:mm' }}" autocomplete="off"
+                                    class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100" />
+                            </fieldset>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    var touch = document.getElementById('observed_time_touch');
+                                    var desktop = document.getElementById('observed_time_desktop');
+                                    if (window.matchMedia('(pointer: coarse)').matches || typeof window.flatpickr !== 'function') {
+                                        desktop.disabled = true;
+                                        desktop.hidden = true;
+                                        touch.disabled = false;
+                                        touch.hidden = false;
+                                        return;
+                                    }
+                                    var showInches = @json((bool) $showInches);
+                                    window.flatpickr(document.getElementById('observed_time_input'), {
+                                        enableTime: true,
+                                        noCalendar: true,
+                                        allowInput: true,
+                                        dateFormat: 'H:i',
+                                        altInput: showInches,
+                                        altFormat: 'h:i K',
+                                        altInputClass: 'w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100',
+                                        time_24hr: !showInches,
+                                        minuteIncrement: 1,
+                                    });
+                                });
+                            </script>
                         </div>
                     <div data-dsl-field="location">
                         <label class="block text-xs text-gray-400 mb-1">{{ __('Location') }}</label>
@@ -366,6 +423,16 @@
 
                     @if(!empty($resolved['type']) && view()->exists('observations.partials._form_'.$resolved['type']))
                         @include('observations.partials._form_'.$resolved['type'])
+                    @endif
+
+                    @if ($errors->has('below_horizon'))
+                        <div class="mt-4 p-3 rounded bg-yellow-900 text-yellow-100 text-sm">
+                            <p>{{ $errors->first('below_horizon') }}</p>
+                            <label class="mt-2 inline-flex items-center gap-2">
+                                <input type="checkbox" name="confirm_below_horizon" value="1" class="rounded" />
+                                {{ __('The observation is correct, save it anyway') }}
+                            </label>
+                        </div>
                     @endif
 
                     <div class="mt-4">

@@ -275,6 +275,10 @@ class CsvObservationImporter
                     'legacy_source' => null,
                 ];
 
+                if ($this->skipBelowHorizon($fields, $observedTime, $result, "Row {$rowNumber}", $line, $rowNumber)) {
+                    continue;
+                }
+
                 // Updates the observation when it is already there
                 [$obs, $updated] = $this->saveImportedObservation($fields, $observedTime);
                 $obsId = $obs->id;

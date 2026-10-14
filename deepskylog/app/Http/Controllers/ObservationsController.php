@@ -18,6 +18,7 @@ use App\Models\ObservationLike;
 use App\Models\ObservationComment;
 use App\Services\ObservationSearchQuery;
 use App\Services\Observations\ObservationCardData;
+use App\Services\Observations\TargetAltitude;
 use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Targets\Moon as AstroMoon;
@@ -2150,6 +2151,10 @@ class ObservationsController extends Controller
             abort(403);
         }
 
+        if ($request->has('switch_instrument_set')) {
+            return $this->switchInstrumentSet($request, $user);
+        }
+
         // Debug logging to aid diagnosing upload issues
         try {
             \Log::debug('ObservationsController::store: incoming', [
@@ -2323,6 +2328,20 @@ class ObservationsController extends Controller
             $obs->legacy_time_int = $obs->observed_time !== null
                 ? (int) str_replace(':', '', substr($obs->observed_time, 0, 5))
                 : -9999;
+        }
+        // An object below the horizon of the location at that moment (without
+        // a time: one that never rises there) points to a wrong date, time,
+        // location or object; the observer can confirm it is right after all.
+        if (!$request->boolean('confirm_below_horizon')) {
+            $location = !empty($validated['location_id']) ? Location::find($validated['location_id']) : null;
+            $altitude = TargetAltitude::forObservation($target, $location, (string) $obs->observed_on, $obs->observed_time);
+            if ($altitude !== null && $altitude < -TargetAltitude::TOLERANCE) {
+                $message = $obs->observed_time !== null
+                    ? __(':object was :altitude° below the horizon of :location at this date and time. Check the date, the time (in the time zone of the location) and the location, or confirm that the observation is correct.', ['object' => $target['name'], 'altitude' => number_format(abs($altitude), 1), 'location' => $location->name])
+                    : __(':object does not rise above the horizon of :location on this date. Check the date and the location, or confirm that the observation is correct.', ['object' => $target['name'], 'location' => $location->name]);
+
+                return redirect()->back()->withInput()->withErrors(['below_horizon' => $message]);
+            }
         }
         $obs->description = $validated['description'] ?? null;
         // Accept either a plain language id or an object-like string (e.g. "{label:'English',value:'en',}")
@@ -2628,6 +2647,42 @@ class ObservationsController extends Controller
         session()->flashInput($prefill);
 
         return redirect()->route('observation.create', ['slug' => $slug]);
+    }
+
+    /**
+     * Reopen the observation form with another instrument set, keeping what was
+     * filled in. Equipment that is not in the chosen set is dropped, so those
+     * fields fall back to their defaults and the magnification is computed again.
+     */
+    private function switchInstrumentSet(Request $request, $user)
+    {
+        $setId = (string) $request->input('switch_instrument_set', '');
+        $set = $setId !== ''
+            ? \App\Models\InstrumentSet::where('user_id', $user->id)->whereKey($setId)->first()
+            : null;
+
+        $input = $request->except(['_token', 'switch_instrument_set', 'sketch']);
+
+        if ($set) {
+            $equipment = [
+                'instrument_id' => $set->instruments(),
+                'eyepiece_id' => $set->eyepieces(),
+                'lens_id' => $set->lenses(),
+            ];
+            foreach ($equipment as $field => $relation) {
+                $id = $input[$field] ?? null;
+                if (!empty($id) && !$relation->whereKey($id)->exists()) {
+                    unset($input[$field], $input['magnification']);
+                }
+            }
+        }
+
+        session()->flashInput($input);
+
+        return redirect()->route('observation.create', array_filter([
+            'slug' => (string) $request->input('target_slug', ''),
+            'instrument_set' => $set?->id,
+        ]));
     }
 
     /**
