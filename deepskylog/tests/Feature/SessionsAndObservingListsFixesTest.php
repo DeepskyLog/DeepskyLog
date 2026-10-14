@@ -253,3 +253,27 @@ it('renames and merges wrongly stored list items', function () {
         ->and(DB::table('observing_list_items')->where('id', $kept)->value('item_description'))->toBe("Kept note\n\nAlias note")
         ->and(DB::table('observing_list_items')->where('id', $renamed)->value('object_name'))->toBe('M 31');
 });
+
+it('searches the discover page on list name, description, owner and object', function () {
+    sloObject('M 31', ['NGC 224', 'Andromeda Galaxy']);
+    $alice = User::factory()->create(['name' => 'Alice Stargazer']);
+    $bob = User::factory()->create(['name' => 'Bob Observer']);
+    sloList($alice, 'Spring galaxies');
+    $autumn = sloList($bob, 'Autumn highlights');
+    $autumn->items()->create(['object_name' => 'M 31', 'added_by_user_id' => $bob->id]);
+    ObservingList::create(['owner_user_id' => $bob->id, 'name' => 'Faint fuzzies', 'description' => 'Hickson groups for big dobs', 'public' => true]);
+    sloList($bob, 'Secret galaxies', false);
+
+    $discover = fn (string $q) => $this->get(route('observing-lists.discover', ['q' => $q]))->assertOk();
+
+    $discover('galax')->assertSee('Spring galaxies')->assertDontSee('Autumn highlights')->assertDontSee('Secret galaxies');
+    $discover('hickson')->assertSee('Faint fuzzies')->assertDontSee('Spring galaxies');
+    $discover('stargazer')->assertSee('Spring galaxies')->assertDontSee('Faint fuzzies');
+    // An object under any of its names finds the lists containing it.
+    $discover('Andromeda Galaxy')->assertSee('Autumn highlights')->assertDontSee('Spring galaxies');
+    $discover('NGC 224')->assertSee('Autumn highlights');
+    $discover('nothing like this')->assertSee('No public observing lists match your search.');
+
+    // The sort tabs keep the search.
+    $discover('galax')->assertSee(route('observing-lists.discover', ['sort' => 'popular', 'q' => 'galax']));
+});

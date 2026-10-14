@@ -97,6 +97,23 @@ class ObservingListController extends Controller
             $query->where('owner_user_id', '<>', $user->id);
         }
 
+        // Search on the name, description and owner of the list, and on the
+        // objects in it (under the canonical name the items are stored as).
+        $search = trim((string) $request->query('q', ''));
+        if ($search !== '') {
+            $like = '%'.$search.'%';
+            $objectNames = array_unique(array_filter([
+                $search,
+                app(ObservingListItemNameResolver::class)->resolve($search),
+            ]));
+            $query->where(function ($q) use ($like, $objectNames) {
+                $q->where('name', 'like', $like)
+                    ->orWhere('description', 'like', $like)
+                    ->orWhereHas('owner', fn ($owner) => $owner->where('name', 'like', $like))
+                    ->orWhereHas('items', fn ($items) => $items->whereIn('object_name', $objectNames));
+            });
+        }
+
         if ($sortBy === 'popular') {
             // Equal likes: the most commented list first
             $query->orderBy('likes_count', 'desc')
@@ -107,7 +124,7 @@ class ObservingListController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $publicLists = $query->paginate(15);
+        $publicLists = $query->paginate(15)->withQueryString();
 
         // Mark which lists user is already subscribed to (only if logged in)
         $subscribedIds = [];
@@ -122,6 +139,7 @@ class ObservingListController extends Controller
             'publicLists' => $publicLists,
             'subscribedIds' => $subscribedIds,
             'sortBy' => $sortBy,
+            'search' => $search,
         ]);
     }
 

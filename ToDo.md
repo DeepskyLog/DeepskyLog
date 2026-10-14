@@ -21,7 +21,7 @@
     - [X] Popular observations page
     - [X] Popular sessions page
     - [X] Statistics
-    - [ ] Observing lists
+    - [X] Observing lists
     - [ ] Catalogs
     - [ ] Search objects
     - [ ] Search observations

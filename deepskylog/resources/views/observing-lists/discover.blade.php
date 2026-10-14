@@ -24,14 +24,40 @@
     <div class="py-6">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
 
+            {{-- Search --}}
+            <div class="p-4 mb-6 bg-gray-800 border border-gray-700 rounded-md">
+                <form method="GET" action="{{ route('observing-lists.discover') }}" class="flex flex-col sm:flex-row gap-3 sm:items-center">
+                    <input type="hidden" name="sort" value="{{ $sortBy }}">
+                    <label for="discover-search" class="text-sm text-gray-300 sm:whitespace-nowrap">{{ __('Search observing lists') }}</label>
+                    <input
+                        id="discover-search"
+                        name="q"
+                        type="text"
+                        value="{{ $search }}"
+                        placeholder="{{ __('Search on name, observer or object') }}"
+                        class="flex-1 bg-gray-900 border border-gray-600 rounded-md text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                    <div class="flex items-center gap-2">
+                        <button type="submit" class="inline-flex items-center px-3 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500">
+                            {{ __('Search') }}
+                        </button>
+                        @if ($search !== '')
+                            <a href="{{ route('observing-lists.discover', ['sort' => $sortBy]) }}" class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
+                                {{ __('Clear') }}
+                            </a>
+                        @endif
+                    </div>
+                </form>
+            </div>
+
             {{-- Sort tabs --}}
             <div class="flex items-center gap-1 mb-6 border-b border-gray-700 pb-0">
-                <a href="{{ route('observing-lists.discover', ['sort' => 'newest']) }}"
+                <a href="{{ route('observing-lists.discover', array_filter(['sort' => 'newest', 'q' => $search])) }}"
                    class="px-4 py-2 text-sm font-medium border-b-2 -mb-px
                        {{ $sortBy === 'newest' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500' }}">
                     {{ __('Newest') }}
                 </a>
-                <a href="{{ route('observing-lists.discover', ['sort' => 'popular']) }}"
+                <a href="{{ route('observing-lists.discover', array_filter(['sort' => 'popular', 'q' => $search])) }}"
                    class="px-4 py-2 text-sm font-medium border-b-2 -mb-px
                        {{ $sortBy === 'popular' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500' }}">
                     {{ __('Most popular') }}
@@ -40,7 +66,11 @@
 
             @if ($publicLists->isEmpty())
                 <div class="text-gray-400 text-sm py-8 text-center">
-                    {{ __('No public observing lists found.') }}
+                    @if ($search !== '')
+                        {{ __('No public observing lists match your search.') }}
+                    @else
+                        {{ __('No public observing lists found.') }}
+                    @endif
                 </div>
             @else
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
