@@ -33,6 +33,10 @@ class Lists
         foreach ($this->getObserverIdVariants($observerId) as $variant) {
             $parts[] = $column . ' = "' . addslashes($variant) . '"';
         }
+        // No observer (e.g. anonymous visitor): match nothing instead of producing "()".
+        if (empty($parts)) {
+            return '(1 = 0)';
+        }
         return '(' . implode(' OR ', $parts) . ')';
     }
 
@@ -41,6 +45,10 @@ class Lists
         $parts = array();
         foreach ($this->getObserverIdVariants($username) as $variant) {
             $parts[] = $column . ' = "' . addslashes($variant) . '"';
+        }
+        // No observer (e.g. anonymous visitor): match nothing instead of producing "()".
+        if (empty($parts)) {
+            return '(1 = 0)';
         }
         return '(' . implode(' OR ', $parts) . ')';
     }
