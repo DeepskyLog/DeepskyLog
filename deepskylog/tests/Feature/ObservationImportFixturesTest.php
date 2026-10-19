@@ -51,8 +51,8 @@ function importFixtureSolarSystem(): void
         ['name' => 'Moon', 'slug' => 'moon', 'planet_id' => $planetIds['Earth'], 'body_type' => 'moon', 'created_at' => $now, 'updated_at' => $now],
         ['name' => 'Io', 'slug' => 'io', 'planet_id' => $planetIds['Jupiter'], 'body_type' => 'moon', 'created_at' => $now, 'updated_at' => $now],
     ]);
-    foreach (['Moon' => 'other', 'Copernicus' => 'crater', 'Tycho' => 'crater'] as $feature => $type) {
-        DB::table('lunar_features')->insert(['name' => $feature, 'slug' => strtolower($feature), 'feature_type' => $type, 'created_at' => $now, 'updated_at' => $now]);
+    foreach (['Copernicus', 'Tycho'] as $feature) {
+        DB::table('lunar_features')->insert(['name' => $feature, 'slug' => strtolower($feature), 'feature_type' => 'crater', 'created_at' => $now, 'updated_at' => $now]);
     }
     DB::table('cometobjects')->insert(['name' => '12P/Pons-Brooks', 'slug' => '12ppons-brooks', 'icqname' => '', 'timestamp' => $now]);
     DB::table('comets_orbital_elements')->insert([
@@ -350,8 +350,7 @@ it('stores comets, moons and lunar features under their own table', function (st
 })->with([
     'csv' => ['csv/valid-solar-system.csv', [
         ['cometobjects'],
-        // A name only: "Moon" is the lunar feature, as on the observation form.
-        ['lunar_features', 'moon', 'lunar', 'Moon'],
+        ['moons', 'moon', 'lunar', 'Moon'],
         ['lunar_features', 'copernicus', 'lunar', 'Copernicus'],
         ['lunar_features', 'tycho', 'lunar', 'Tycho'],
         ['moons', 'io', 'lunar', 'Io'],
@@ -359,7 +358,6 @@ it('stores comets, moons and lunar features under their own table', function (st
     ]],
     'oal' => ['oal/valid-solar-system.xml', [
         ['cometobjects'],
-        // oal:MoonTargetType: the Moon of the moons table.
         ['moons', 'moon', 'lunar', 'Moon'],
         ['lunar_features', 'copernicus', 'lunar', 'Copernicus'],
         ['lunar_features', 'tycho', 'lunar', 'Tycho'],
@@ -370,12 +368,12 @@ it('stores comets, moons and lunar features under their own table', function (st
         ['cometobjects'],
         ['planets', 'sun', 'planet', 'Sun'],
         ['planets', 'jupiter', 'planet', 'Jupiter'],
-        ['lunar_features', 'moon', 'lunar', 'Moon'],
+        ['moons', 'moon', 'lunar', 'Moon'],
         ['lunar_features', 'copernicus', 'lunar', 'Copernicus'],
         ['moons', 'io', 'lunar', 'Io'],
         ['asteroids', 'vesta', 'solarsystem', 'Vesta'],
     ]],
-    'oal, all types' => ['oal/valid-all-types.xml', array_replace($allTypes, [4 => ['moons', 'moon', 'lunar', 'Moon']])],
+    'oal, all types' => ['oal/valid-all-types.xml', $allTypes],
 ]);
 
 it('reads an oal file in latin-1', function () {

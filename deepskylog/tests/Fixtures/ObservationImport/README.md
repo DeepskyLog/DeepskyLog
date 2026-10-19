@@ -44,9 +44,9 @@ import from the MPC), so by hand the Vesta observation is skipped as not found
 until Vesta is in that table; the automated test adds it.
 
 A name is looked up among the deep-sky objects first, then the Sun and planets,
-lunar features, the moons of the planets, asteroids and comets. So `Moon` in a
-CSV file is the lunar feature Moon (as on the observation form), while an OAL
-`oal:MoonTargetType` named `Moon` is the Moon of the moons table.
+lunar features, the moons (the Moon and the moons of the planets), asteroids
+and comets. `Moon` is stored as the Moon of the moons table, from a CSV file and
+from an OAL file alike.
 
 Importing a file again updates the observations it imported before instead of
 adding them a second time. Delete the observations to start over.
