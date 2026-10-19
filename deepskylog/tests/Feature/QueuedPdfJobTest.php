@@ -9,52 +9,8 @@ use Illuminate\Queue\MaxAttemptsExceededException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
-/**
- * A PDF job whose rendering throws with internal details in the message.
- */
-class FailingPdfJob extends QueuedPdfJob
-{
-    protected static function prefix(): string
-    {
-        return 'failing';
-    }
-
-    protected static function directory(): string
-    {
-        return 'failing';
-    }
-
-    protected function renderPdf(User $user, callable $progress): string
-    {
-        throw new RuntimeException('Cannot open /secret/path/db.sqlite');
-    }
-}
-
-/**
- * A PDF job that records who auth() says is logged in while it renders.
- */
-class AuthRecordingPdfJob extends QueuedPdfJob
-{
-    public static ?int $renderedAs = null;
-
-    protected static function prefix(): string
-    {
-        return 'auth_recording';
-    }
-
-    protected static function directory(): string
-    {
-        return 'auth-recording';
-    }
-
-    protected function renderPdf(User $user, callable $progress): string
-    {
-        self::$renderedAs = auth()->id();
-
-        return '%PDF-1.4';
-    }
-}
+use Tests\Support\AuthRecordingPdfJob;
+use Tests\Support\FailingPdfJob;
 
 it('marks the pdf failed when the queue gives up on the job', function () {
     $user = User::factory()->create();

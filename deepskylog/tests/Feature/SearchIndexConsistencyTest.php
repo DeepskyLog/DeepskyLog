@@ -11,6 +11,7 @@ use App\Services\ObjectSearchIndex;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
+use Tests\Support\CreateLocationWithoutLookups;
 
 // Search index, quick search and the object/location forms (functionality review 2026-09-28).
 
@@ -73,21 +74,6 @@ function searchIdxRows(): array
         ->get()
         ->map(fn ($r) => $r->source_table . '|' . $r->source_type . '|' . $r->name . '|' . $r->source_pk)
         ->all();
-}
-
-// The location form looks the elevation, country and time zone up online.
-class CreateLocationWithoutLookups extends CreateLocation
-{
-    public function updateElevation($latitude, $longitude): void
-    {
-        $this->elevation = 10;
-    }
-
-    public function updateCountry($latitude, $longitude): void
-    {
-        $this->country = 'Belgium';
-        $this->timezone = 'Europe/Brussels';
-    }
 }
 
 beforeEach(function () {

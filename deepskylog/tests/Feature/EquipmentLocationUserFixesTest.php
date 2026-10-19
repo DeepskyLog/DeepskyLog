@@ -14,22 +14,7 @@ use Database\Factories\LocationFactory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
-
-// The location form looks the elevation, country and time zone up online.
-class CreateLocationCountingLookups extends CreateLocation
-{
-    public static int $lookups = 0;
-
-    public function updateElevation($latitude, $longitude): void
-    {
-        self::$lookups++;
-    }
-
-    public function updateCountry($latitude, $longitude): void
-    {
-        self::$lookups++;
-    }
-}
+use Tests\Support\CreateLocationCountingLookups;
 
 it('detaches an instrument from its sets and clears the default when it is deleted', function () {
     $user = User::factory()->create();
