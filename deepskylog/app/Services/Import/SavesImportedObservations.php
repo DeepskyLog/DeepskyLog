@@ -6,9 +6,13 @@ use App\Models\Location;
 use App\Models\Observation;
 use App\Models\User;
 use App\Services\Observations\TargetAltitude;
+use App\Services\ObservingListItemNameResolver;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
- * Duplicate check, horizon check and saving shared by the CSV and OAL importers.
+ * Object lookup, duplicate check, horizon check and saving shared by the CSV
+ * and OAL importers.
  *
  * @property User $user
  */
@@ -28,6 +32,13 @@ trait SavesImportedObservations
         'legacy_source',
     ];
 
+    /**
+     * The tables a target name is looked up in, in this order: deep-sky
+     * objects first, then the Sun and planets, lunar features (including
+     * "Moon"), the moons of the planets, asteroids and comets.
+     */
+    private const TARGET_TABLES = ['objects', 'planets', 'lunar_features', 'moons', 'asteroids', 'cometobjects'];
+
     /** Whether observations of an object below the horizon are imported (with a warning). */
     private bool $importBelowHorizon = false;
 
@@ -43,6 +54,42 @@ trait SavesImportedObservations
         $this->importBelowHorizon = $import;
 
         return $this;
+    }
+
+    /**
+     * The spellings of a name to look up: as written (in lower case), as a
+     * slug, without spaces and hyphens, without leading zeros, and the
+     * catalogue variants.
+     *
+     * @return list<string>
+     */
+    private function objectNameCandidates(string $name): array
+    {
+        $lower = mb_strtolower(trim($name));
+        $slug = Str::slug($name, '-');
+        $compact = str_replace([' ', '-'], '', $lower);
+        $noZeros = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower) ?? $lower;
+
+        return array_values(array_unique(array_filter([$lower, $slug, $compact, $noZeros, str_replace('-', '', $slug), ...$this->catalogueVariants($name)])));
+    }
+
+    /**
+     * The spellings of a catalogue designation as DeepskyLog stores it ("M31",
+     * "NGC0224", "N1275" are "M 31", "NGC 224", "NGC 1275"), in lower case and
+     * as slugs, to look up next to the name as written.
+     *
+     * @return list<string>
+     */
+    private function catalogueVariants(string $name): array
+    {
+        $resolver = app(ObservingListItemNameResolver::class);
+        $variants = [];
+        foreach ($resolver->variants($resolver->clean($name)) as $variant) {
+            $variants[] = mb_strtolower($variant);
+            $variants[] = Str::slug($variant, '-');
+        }
+
+        return $variants;
     }
 
     /**
@@ -155,5 +202,134 @@ trait SavesImportedObservations
         }
 
         return [Observation::create($fields), false];
+    }
+
+    /**
+     * @param  list<string>  $candidates
+     * @return array{string, string, string, string}|null
+     */
+    private function resolveObjectInTable(string $table, array $candidates): ?array
+    {
+        return match ($table) {
+            'objects' => $this->resolveDeepSkyObject($candidates),
+            'planets' => $this->resolveNamedTarget('planets', $candidates, ['name', 'designation'], fn(object $row): array => [
+                'planets',
+                $this->targetKeyFromRow($row),
+                'planet',
+                (string) $row->name,
+            ]),
+            'moons' => $this->resolveNamedTarget('moons', $candidates, ['name', 'designation'], fn(object $row): array => [
+                'moons',
+                $this->targetKeyFromRow($row),
+                'lunar',
+                (string) $row->name,
+            ]),
+            'lunar_features' => $this->resolveNamedTarget('lunar_features', $candidates, ['name'], fn(object $row): array => [
+                'lunar_features',
+                $this->targetKeyFromRow($row),
+                'lunar',
+                (string) $row->name,
+            ]),
+            'asteroids' => $this->resolveNamedTarget('asteroids', $candidates, ['name', 'designation'], fn(object $row): array => [
+                'asteroids',
+                $this->targetKeyFromRow($row),
+                'solarsystem',
+                (string) $row->name,
+            ]),
+            // Comets are stored by id (see App\Models\Observation).
+            'cometobjects' => $this->resolveNamedTarget('cometobjects', $candidates, ['name'], fn(object $row): array => [
+                'cometobjects',
+                (string) $row->id,
+                'comet',
+                (string) $row->name,
+            ]),
+            default => null,
+        };
+    }
+
+    /**
+     * @param  list<string>  $candidates
+     * @return array{string, string, string, string}|null
+     */
+    private function resolveDeepSkyObject(array $candidates): ?array
+    {
+        foreach ($candidates as $cand) {
+            $on = DB::table('objectnames')->where('slug', $cand)->first();
+            if ($on) {
+                return ['objects', (string) $on->objectname, 'deepsky', (string) $on->objectname];
+            }
+        }
+        foreach ($candidates as $cand) {
+            $on = DB::table('objectnames')->where('objectname', $cand)->orWhere('altname', $cand)->first();
+            if ($on) {
+                return ['objects', (string) $on->objectname, 'deepsky', (string) $on->objectname];
+            }
+        }
+        foreach ($candidates as $cand) {
+            $o = DB::table('objects')->where('slug', $cand)->first();
+            if ($o) {
+                return ['objects', (string) $o->name, 'deepsky', (string) $o->name];
+            }
+        }
+        foreach ($candidates as $cand) {
+            $o = DB::table('objects')->where('name', $cand)->first();
+            if ($o) {
+                return ['objects', (string) $o->name, 'deepsky', (string) $o->name];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param  list<string>  $candidates
+     * @param  list<string>  $nameColumns
+     * @param  callable(object): array{string, string, string, string}  $mapper
+     * @return array{string, string, string, string}|null
+     */
+    private function resolveNamedTarget(string $table, array $candidates, array $nameColumns, callable $mapper): ?array
+    {
+        foreach ($candidates as $cand) {
+            try {
+                $row = DB::table($table)->where('slug', $cand)->first();
+            } catch (\Throwable $_) {
+                $row = null;
+            }
+
+            if ($row) {
+                return $mapper($row);
+            }
+        }
+
+        foreach ($nameColumns as $column) {
+            foreach ($candidates as $cand) {
+                try {
+                    $row = DB::table($table)->where($column, $cand)->first();
+                } catch (\Throwable $_) {
+                    $row = null;
+                }
+
+                if ($row) {
+                    return $mapper($row);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private function targetKeyFromRow(object $row): string
+    {
+        $slug = trim((string) ($row->slug ?? ''));
+        if ($slug !== '') {
+            return $slug;
+        }
+
+        $name = trim((string) ($row->name ?? ''));
+        if ($name !== '') {
+            return $name;
+        }
+
+        return (string) ($row->id ?? '');
     }
 }

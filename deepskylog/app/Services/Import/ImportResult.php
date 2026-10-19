@@ -31,6 +31,9 @@ class ImportResult
     /** @var array<string, int> name => lens_id of newly created lenses */
     public array $newLenses = [];
 
+    /** @var array<string, string> name => slug of deep-sky objects created from OAL targets */
+    public array $newObjects = [];
+
     /**
      * Brief summaries of successfully imported observations.
      * Each entry: ['row' => int, 'object' => string, 'date' => string]

@@ -11,9 +11,7 @@ use App\Models\Observation;
 use App\Models\User;
 use App\Support\Html;
 use App\Support\SpreadsheetCell;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 /**
  * Imports observations from a semicolon-delimited CSV file.
@@ -144,15 +142,13 @@ class CsvObservationImporter
             [$targetTable, $targetKey, $targetType, $canonicalName] = $this->resolveObject($objectName);
 
             if ($targetTable === null) {
-                $result->addWarning(
-                    "Object '{$objectName}' not found in the database. Observation will be saved with the original object name.",
+                $result->addError(
+                    "Row {$rowNumber}: Object '{$objectName}' not found in the database, skipping row. Check the name of the object.",
                     $line,
                     $rowNumber
                 );
-                $targetTable = 'objects';
-                $targetKey = $objectName;
-                $targetType = 'deepsky';
-                $canonicalName = $objectName;
+                $result->skipped++;
+                continue;
             }
 
             // ─── Resolve location (must exist) ────────────────────────────────
@@ -317,7 +313,7 @@ class CsvObservationImporter
 
                 // Write deepsky visibility to detail table (for deepsky objects only)
                 if ($visibility !== null && in_array($targetTable, ['objects', 'objectnames'])) {
-                    \Illuminate\Support\Facades\DB::table('deepsky_observation_details')->updateOrInsert(
+                    DB::table('deepsky_observation_details')->updateOrInsert(
                         ['observation_id' => $obsId],
                         ['visibility' => $visibility]
                     );
@@ -354,29 +350,17 @@ class CsvObservationImporter
             return null;
         }
 
-        // Try DD-MM-YYYY (most common in CSV spec)
+        // DD-MM-YYYY (most common in CSV spec) or YYYY-MM-DD. Checked with
+        // checkdate(): Carbon would roll 31-13-2026 over to 31-01-2027.
         if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $value, $m)) {
-            try {
-                $dt = Carbon::createFromFormat('d-m-Y', sprintf('%02d-%02d-%04d', $m[1], $m[2], $m[3]));
-                if ($dt) {
-                    return $dt->format('Y-m-d');
-                }
-            } catch (\Throwable $_) {
-            }
+            [$day, $month, $year] = [(int) $m[1], (int) $m[2], (int) $m[3]];
+        } elseif (preg_match('/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $value, $m)) {
+            [$year, $month, $day] = [(int) $m[1], (int) $m[2], (int) $m[3]];
+        } else {
+            return null;
         }
 
-        // Try YYYY-MM-DD
-        if (preg_match('/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $value)) {
-            try {
-                $dt = Carbon::parse($value);
-                if ($dt) {
-                    return $dt->format('Y-m-d');
-                }
-            } catch (\Throwable $_) {
-            }
-        }
-
-        return null;
+        return checkdate($month, $day, $year) ? sprintf('%04d-%02d-%02d', $year, $month, $day) : null;
     }
 
     /** Parse HH:MM into HH:MM:00 string, or null. */
@@ -412,48 +396,11 @@ class CsvObservationImporter
      */
     private function lookUpObject(string $name): array
     {
-        $lower = mb_strtolower(trim($name));
-        $slug = Str::slug($name, '-');
-        $compact = str_replace([' ', '-'], '', $lower);
-        $noZeros = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower) ?? $lower;
-        $candidates = array_values(array_unique(array_filter([$lower, $slug, $compact, $noZeros, str_replace('-', '', $slug)])));
-
-        // objectnames first (legacy names stored differently)
-        foreach ($candidates as $cand) {
-            $on = DB::table('objectnames')->where('slug', $cand)->first();
-            if ($on) {
-                return ['objects', $on->objectname, 'deepsky', $on->objectname];
-            }
-        }
-        foreach ($candidates as $cand) {
-            $on = DB::table('objectnames')->where('objectname', $cand)->orWhere('altname', $cand)->first();
-            if ($on) {
-                return ['objects', $on->objectname, 'deepsky', $on->objectname];
-            }
-        }
-
-        // objects table
-        foreach ($candidates as $cand) {
-            $o = DB::table('objects')->where('slug', $cand)->first();
-            if ($o) {
-                return ['objects', $o->name, 'deepsky', $o->name];
-            }
-        }
-        foreach ($candidates as $cand) {
-            $o = DB::table('objects')->where('name', $cand)->first();
-            if ($o) {
-                return ['objects', $o->name, 'deepsky', $o->name];
-            }
-        }
-
-        // comets
-        foreach ($candidates as $cand) {
-            try {
-                $co = DB::table('cometobjects')->where('name', $cand)->orWhere('slug', $cand)->first();
-                if ($co) {
-                    return ['cometobjects', (string) $co->id, 'comet', $co->name];
-                }
-            } catch (\Throwable $_) {
+        $candidates = $this->objectNameCandidates($name);
+        foreach (self::TARGET_TABLES as $table) {
+            $resolved = $this->resolveObjectInTable($table, $candidates);
+            if ($resolved !== null) {
+                return $resolved;
             }
         }
 

@@ -1677,7 +1677,8 @@ class ObservationSearchExportController extends Controller
         }
 
         $positionNode = $document->createElement('position');
-        $this->appendOalTextNode($document, $positionNode, 'ra', $metadata['ra'], ['unit' => 'deg']);
+        // The tables store RA in hours, OAL wants an angle.
+        $this->appendOalTextNode($document, $positionNode, 'ra', fmod((float) $metadata['ra'] * 15.0, 360.0), ['unit' => 'deg']);
         $this->appendOalTextNode($document, $positionNode, 'dec', $metadata['decl'], ['unit' => 'deg']);
         $targetNode->appendChild($positionNode);
     }
@@ -1695,12 +1696,13 @@ class ObservationSearchExportController extends Controller
             return;
         }
 
-        if (is_numeric($metadata['diam1'] ?? null) && (float) $metadata['diam1'] > 0) {
-            $this->appendOalTextNode($document, $targetNode, 'smallDiameter', $metadata['diam1'], ['unit' => 'arcsec']);
+        // diam1 is the major axis, diam2 the minor one.
+        if (is_numeric($metadata['diam2'] ?? null) && (float) $metadata['diam2'] > 0) {
+            $this->appendOalTextNode($document, $targetNode, 'smallDiameter', $metadata['diam2'], ['unit' => 'arcsec']);
         }
 
-        if (is_numeric($metadata['diam2'] ?? null) && (float) $metadata['diam2'] > 0) {
-            $this->appendOalTextNode($document, $targetNode, 'largeDiameter', $metadata['diam2'], ['unit' => 'arcsec']);
+        if (is_numeric($metadata['diam1'] ?? null) && (float) $metadata['diam1'] > 0) {
+            $this->appendOalTextNode($document, $targetNode, 'largeDiameter', $metadata['diam1'], ['unit' => 'arcsec']);
         }
 
         if (is_numeric($metadata['mag'] ?? null)) {

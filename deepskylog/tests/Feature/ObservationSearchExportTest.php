@@ -550,7 +550,7 @@ it('exports observation search in valid oal xml and round-trips through the impo
             'slug' => 'ngc2392',
             'type' => 'PLNNB',
             'con' => 'GEM',
-            'ra' => 112.294,
+            'ra' => 7.48627,
             'decl' => 20.911,
             'mag' => 8.6,
             'subr' => 0,
@@ -585,7 +585,7 @@ it('exports observation search in valid oal xml and round-trips through the impo
             'slug' => 'm42',
             'type' => 'BRTNB',
             'con' => 'ORI',
-            'ra' => 83.822,
+            'ra' => 5.58813,
             'decl' => -5.391,
             'mag' => 4.0,
             'subr' => 0,
@@ -678,6 +678,13 @@ it('exports observation search in valid oal xml and round-trips through the impo
     expect($content)->toContain('xsi:type="oal:deepSkyPN"');
     expect($content)->toContain('<position>');
     expect($content)->toContain('<ra unit="deg">');
+    // objects.ra is in hours, OAL wants degrees; diam1 is the major axis.
+    $xpath = new DOMXPath($document);
+    $m42 = $xpath->query('//target[name="M 42"]')->item(0);
+    expect((float) $xpath->evaluate('string(position/ra)', $m42))->toEqualWithDelta(83.822, 0.001)
+        ->and((float) $xpath->evaluate('string(position/dec)', $m42))->toEqualWithDelta(-5.391, 0.001)
+        ->and((float) $xpath->evaluate('string(largeDiameter)', $m42))->toBe(5100.0)
+        ->and((float) $xpath->evaluate('string(smallDiameter)', $m42))->toBe(3900.0);
     expect($content)->toContain('<observation id="observation-');
     expect($content)->toContain('<begin>2026-05-01T21:15:00+00:00</begin>');
     expect($content)->not->toContain('<faintestStar>-1</faintestStar>');

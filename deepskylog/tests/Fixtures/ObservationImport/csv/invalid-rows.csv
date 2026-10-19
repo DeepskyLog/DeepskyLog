@@ -1,0 +1,12 @@
+;Example Observer;12-09-2026;21:30;Example Site;Example Dobson 250;;;;;;;;en;Row 1: no object name.
+M 31;Example Observer;12-09-2026;21:30;Example Site;;;;;;;;;en;Row 2: no instrument.
+M 31;Example Observer;12-09-2026;21:30;Example Site;Example Dobson 250;;;;;;;;en;
+M 31;Example Observer;12-09-2026;21:30;Example Site;Example Dobson 250;;;;;;;;en;"<p>&nbsp;</p>"
+M 31;Example Observer;2026/09/12;21:30;Example Site;Example Dobson 250;;;;;;;;en;Row 5: a date in neither DD-MM-YYYY nor YYYY-MM-DD.
+M 31;Example Observer;12-09-2026;21:30;Example Unknown Site;Example Dobson 250;;;;;;;;en;Row 6: a location that is not in the account.
+M 31;Example Observer;12-09-2026;21:30;Example Site;Example Unknown Scope;;;;;;;;en;Row 7: an instrument that is not in the account.
+M 31;Example Observer;12-09-2026;21:30;Example Site;Example Dobson 250;Example Unknown Eyepiece;;;;;;;en;Row 8: an eyepiece that is not in the account.
+M 31;Example Observer;12-09-2026;21:30;Example Site;Example Dobson 250;;Example Unknown Filter;;;;;;en;Row 9: a filter that is not in the account.
+M 31;Example Observer;12-09-2026;21:30;Example Site;Example Dobson 250;;;Example Unknown Lens;;;;;en;Row 10: a lens that is not in the account.
+M 42;Example Observer;21-06-2026;23:00;Example Site;Example Dobson 250;;;;;;;;en;Row 11: M 42 is far below the horizon of Example Site at this moment.
+NGC 104;Example Observer;01-08-2026;;Example Site;Example Dobson 250;;;;;;;;en;Row 12: 47 Tucanae never rises at Example Site.

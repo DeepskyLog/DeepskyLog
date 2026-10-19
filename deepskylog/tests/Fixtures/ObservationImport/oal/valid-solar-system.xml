@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oal:observations xmlns:oal="http://groups.google.com/group/openastronomylog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://groups.google.com/group/openastronomylog oal21.xsd">
+  <observers>
+    <observer id="observer-1"><name>Example</name><surname>Observer</surname></observer>
+  </observers>
+  <sites>
+    <site id="site-1"><name>Example Site</name><longitude unit="deg">4.70</longitude><latitude unit="deg">50.88</latitude><elevation>30</elevation><timezone>60</timezone></site>
+  </sites>
+  <sessions/>
+  <targets>
+    <target id="target-comet" xsi:type="oal:CometTargetType"><datasource>DeepskyLog</datasource><name>12P/Pons-Brooks</name></target>
+    <target id="target-moon" xsi:type="oal:MoonTargetType"><datasource>DeepskyLog</datasource><name>Moon</name></target>
+    <!-- a lunar feature as DeepskyLog exports it: no type, the DeepskyLog table and key in the notes -->
+    <target id="target-copernicus"><datasource>DeepskyLog</datasource><name>Copernicus</name><notes>DeepskyLog:target_table=lunar_features;target_key=copernicus;target_type=lunar</notes></target>
+    <!-- a lunar feature as another program may write it: a moon target -->
+    <target id="target-tycho" xsi:type="oal:MoonTargetType"><datasource>Example program</datasource><name>Tycho</name></target>
+    <target id="target-io" xsi:type="oal:MoonTargetType"><datasource>DeepskyLog</datasource><name>Io</name></target>
+  </targets>
+  <scopes>
+    <scope id="scope-1" xsi:type="oal:scopeType"><model>Example Dobson 250</model><aperture>250</aperture><focalLength>1200</focalLength></scope>
+  </scopes>
+  <eyepieces>
+    <eyepiece id="eyepiece-1"><model>Example 10mm</model><focalLength>10</focalLength><apparentFOV unit="deg">82</apparentFOV></eyepiece>
+  </eyepieces>
+  <lenses>
+    <lens id="lens-1"><model>Example Barlow 2x</model><factor>2</factor></lens>
+  </lenses>
+  <filters/><imagers/>
+  <!-- 1: a comet -->
+  <observation id="observation-1">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-comet</target>
+    <begin>2024-03-20T19:30:00Z</begin>
+    <scope>scope-1</scope>
+    <eyepiece>eyepiece-1</eyepiece>
+    <result lang="en"><description>Comet low in the west, with a faint tail.</description></result>
+  </observation>
+  <!-- 2: the Moon with the naked eye (no scope) -->
+  <observation id="observation-2">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-moon</target>
+    <begin>2026-09-25T23:00:00+02:00</begin>
+    <result lang="en"><description>The almost full Moon rising in the east.</description></result>
+  </observation>
+  <!-- 3: a lunar feature exported by DeepskyLog -->
+  <observation id="observation-3">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-copernicus</target>
+    <begin>2026-09-25T21:15:00Z</begin>
+    <scope>scope-1</scope>
+    <eyepiece>eyepiece-1</eyepiece>
+    <result lang="en"><description>Terraced walls and central peaks.</description></result>
+  </observation>
+  <!-- 4: a lunar feature written as a moon target -->
+  <observation id="observation-4">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-tycho</target>
+    <begin>2026-09-25T21:30:00Z</begin>
+    <scope>scope-1</scope>
+    <eyepiece>eyepiece-1</eyepiece>
+    <result lang="en"><description>Bright rays across the southern highlands.</description></result>
+  </observation>
+  <!-- 5: a moon of Jupiter -->
+  <observation id="observation-5">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-io</target>
+    <begin>2026-01-10T23:00:00Z</begin>
+    <scope>scope-1</scope>
+    <eyepiece>eyepiece-1</eyepiece>
+    <lens>lens-1</lens>
+    <result lang="en"><description>Io close to Jupiter, a tiny disk at 240x.</description></result>
+  </observation>
+</oal:observations>

@@ -9,6 +9,7 @@ use App\Models\Lens;
 use App\Models\Location;
 use App\Models\Observation;
 use App\Models\User;
+use App\Services\DeepskyObjectCreator;
 use App\Support\Html;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +26,28 @@ class OalObservationImporter
     use SavesImportedObservations;
 
     private const OAL_TARGET_METADATA_PREFIX = 'DeepskyLog:';
+
+    /**
+     * The deepskytypes code of an object created from an OAL deep-sky target,
+     * by xsi:type. deepSkyNA (not available) and deepSkySC (star cloud) have
+     * no DeepskyLog type, so such a target is not created.
+     */
+    private const DEEPSKY_TYPES = [
+        'deepskyas' => 'ASTER',
+        'deepskycg' => 'GALCL',
+        'deepskydn' => 'DRKNB',
+        'deepskyds' => 'DS',
+        'deepskyms' => 'DS',
+        'deepskygc' => 'GLOCL',
+        'deepskygn' => 'BRTNB',
+        'deepskygx' => 'GALXY',
+        'deepskyoc' => 'OPNCL',
+        'deepskypn' => 'PLNNB',
+        'deepskyqs' => 'QUASR',
+    ];
+
+    /** 2.5 log10(3600): mag/arcsec² minus this is mag/arcmin² (the unit of objects.subr). */
+    private const ARCSEC2_TO_ARCMIN2 = 8.8907;
 
     /** The instrument type `Naked Eye` (instrument_types.id). */
     private const NAKED_EYE_TYPE = 1;
@@ -197,11 +220,20 @@ class OalObservationImporter
         [$targetTable, $targetKey, $targetType, $canonicalName] = $this->resolveObject($targetNameRaw, $targetTypeHint, $targetMetadata);
 
         if ($targetTable === null) {
-            $result->addWarning(
-                "Observation {$row}: Target '{$targetNameRaw}' not found in database. Saving with original name.",
-                '',
-                $row
-            );
+            [$targetTable, $targetKey, $targetType, $canonicalName] = $this->resolveAliases($targetNode, $targetTypeHint);
+        }
+
+        // A target that is not in the database is added when the file defines
+        // it: a deep-sky type and a position. It is created with the
+        // observation, below, so a skipped observation adds no object.
+        $newObject = null;
+        if ($targetTable === null) {
+            $newObject = $this->oalObjectValues($targetNode, $targetNameRaw, $targetTypeHint, $result, $row);
+            if ($newObject === null) {
+                $result->skipped++;
+
+                return;
+            }
             $targetTable = 'objects';
             $targetKey = $targetNameRaw;
             $targetType = 'deepsky';
@@ -351,14 +383,45 @@ class OalObservationImporter
             'legacy_source' => null,
         ];
 
-        // OAL requires a time: an observation without one is exported at
-        // midnight UT, so that is checked as an observation without a time.
-        if ($this->skipBelowHorizon($fields, $observedTime === '00:00:00' ? null : $observedTime, $result, "Observation {$row}", '', $row)) {
-            return;
+        if ($newObject !== null) {
+            DB::beginTransaction();
         }
 
-        // Updates the observation when it is already there
-        [$observation, $updated] = $this->saveImportedObservation($fields, $observedTime);
+        try {
+            if ($newObject !== null) {
+                // The horizon check reads the position of the new object
+                $object = app(DeepskyObjectCreator::class)->create($newObject);
+            }
+
+            // OAL requires a time: an observation without one is exported at
+            // midnight UT, so that is checked as an observation without a time.
+            if ($this->skipBelowHorizon($fields, $observedTime === '00:00:00' ? null : $observedTime, $result, "Observation {$row}", '', $row)) {
+                if ($newObject !== null) {
+                    DB::rollBack();
+                }
+
+                return;
+            }
+
+            // Updates the observation when it is already there
+            [$observation, $updated] = $this->saveImportedObservation($fields, $observedTime);
+
+            if ($newObject !== null) {
+                DB::commit();
+            }
+        } catch (\Throwable $e) {
+            if ($newObject !== null) {
+                DB::rollBack();
+            }
+
+            throw $e;
+        }
+
+        if ($newObject !== null) {
+            $this->resolvedObjects[$this->objectCacheKey($targetNameRaw, $targetTypeHint, $targetMetadata)] = ['objects', $object->name, 'deepsky', $object->name];
+            $result->newObjects[$object->name] = $object->slug;
+            $result->addInfo("Observation {$row}: Added '{$object->name}' to the DeepskyLog database from the target in the file.", '', $row);
+        }
         $result->imported++;
         $result->importedObservations[] = [
             'row' => $row,
@@ -474,6 +537,8 @@ class OalObservationImporter
         $vendor = trim((string) ($node->vendor ?? ''));
         $name = trim("{$vendor} {$model}");
         if (empty($name)) {
+            $result->addError("Observation {$row}: The scope has no model or vendor, skipping.", '', $row);
+
             return null;
         }
 
@@ -584,6 +649,8 @@ class OalObservationImporter
         $vendor = trim((string) ($node->vendor ?? ''));
         $name = trim("{$vendor} {$model}");
         if (empty($name)) {
+            $result->addError("Observation {$row}: The eyepiece has no model or vendor, skipping.", '', $row);
+
             return null;
         }
 
@@ -634,6 +701,8 @@ class OalObservationImporter
         $vendor = trim((string) ($node->vendor ?? ''));
         $name = trim("{$vendor} {$model}");
         if (empty($name)) {
+            $result->addError("Observation {$row}: The lens has no model or vendor, skipping.", '', $row);
+
             return null;
         }
 
@@ -679,6 +748,8 @@ class OalObservationImporter
         $vendor = trim((string) ($node->vendor ?? ''));
         $name = trim("{$vendor} {$model}");
         if (empty($name)) {
+            $result->addError("Observation {$row}: The filter has no model or vendor, skipping.", '', $row);
+
             return null;
         }
 
@@ -724,9 +795,98 @@ class OalObservationImporter
      */
     private function resolveObject(string $name, ?string $targetTypeHint = null, array $targetMetadata = []): array
     {
-        $key = serialize([$name, $targetTypeHint, $targetMetadata]);
+        return $this->resolvedObjects[$this->objectCacheKey($name, $targetTypeHint, $targetMetadata)]
+            ??= $this->lookUpObject($name, $targetTypeHint, $targetMetadata);
+    }
 
-        return $this->resolvedObjects[$key] ??= $this->lookUpObject($name, $targetTypeHint, $targetMetadata);
+    private function objectCacheKey(string $name, ?string $targetTypeHint, array $targetMetadata): string
+    {
+        return serialize([$name, $targetTypeHint, $targetMetadata]);
+    }
+
+    /**
+     * The first of the target's <alias> names that is in the database.
+     *
+     * @return array{string|null, string|null, string|null, string|null}
+     */
+    private function resolveAliases(\SimpleXMLElement $targetNode, ?string $targetTypeHint): array
+    {
+        foreach ($targetNode->alias ?? [] as $alias) {
+            $alias = trim((string) $alias);
+            if ($alias === '') {
+                continue;
+            }
+            $resolved = $this->resolveObject($alias, $targetTypeHint);
+            if ($resolved[0] !== null) {
+                return $resolved;
+            }
+        }
+
+        return [null, null, null, null];
+    }
+
+    /**
+     * The columns of a new deep-sky object from an OAL target that is not in
+     * the database (for DeepskyObjectCreator), or null, with the error added,
+     * when the file does not define it well enough: it needs a deep-sky type
+     * DeepskyLog has and a position.
+     *
+     * @return array<string, mixed>|null
+     */
+    private function oalObjectValues(\SimpleXMLElement $targetNode, string $name, ?string $targetTypeHint, ImportResult $result, int $row): ?array
+    {
+        $notFound = "Observation {$row}: Target '{$name}' is not in the DeepskyLog database";
+
+        $type = self::DEEPSKY_TYPES[$targetTypeHint ?? ''] ?? null;
+        if ($type === null) {
+            $result->addError(
+                $targetTypeHint !== null && str_starts_with($targetTypeHint, 'deepsky')
+                    ? "{$notFound}, and its type in the file (oal:{$targetTypeHint}) has no DeepskyLog object type, skipping."
+                    : "{$notFound}, and the file does not define it as a deep-sky object, skipping.",
+                '',
+                $row
+            );
+
+            return null;
+        }
+
+        $position = $targetNode->position ?? null;
+        $raDegrees = $position ? $this->parseOalAngle($position->ra ?? null) : null;
+        $declDegrees = $position ? $this->parseOalAngle($position->dec ?? null) : null;
+        if ($raDegrees === null || $declDegrees === null || $raDegrees < 0 || $raDegrees >= 360 || abs($declDegrees) > 90) {
+            $result->addError("{$notFound}, and the file gives no valid position for it, skipping.", '', $row);
+
+            return null;
+        }
+
+        // The diameters in arcminutes, the larger one first (as objects.diam1)
+        $small = $this->parseOalAngle($targetNode->smallDiameter ?? null);
+        $large = $this->parseOalAngle($targetNode->largeDiameter ?? null);
+        $diameters = array_values(array_filter([$small, $large], fn (?float $d) => $d !== null && $d > 0));
+        rsort($diameters);
+
+        $subr = null;
+        $surfBr = $targetNode->surfBr ?? null;
+        if ($surfBr !== null && ($value = $this->parseFloat((string) $surfBr)) !== null) {
+            $subr = (string) ($surfBr->attributes()['unit'] ?? '') === 'mags-per-squarearcsec'
+                ? $value - self::ARCSEC2_TO_ARCMIN2
+                : $value;
+        }
+
+        $pa = $this->parseInt((string) ($targetNode->pa ?? ''), 0, 359);
+
+        return [
+            'name' => $name,
+            'type' => $type,
+            'ra' => $raDegrees / 15.0,
+            'decl' => $declDegrees,
+            'mag' => $this->parseFloat((string) ($targetNode->visMag ?? '')),
+            'subr' => $subr,
+            'diam1' => isset($diameters[0]) ? $diameters[0] * 60.0 : null,
+            'diam2' => isset($diameters[1]) ? $diameters[1] * 60.0 : null,
+            'pa' => $pa,
+            'datasource' => mb_substr('OAL import by ' . $this->user->username, 0, 50),
+        ];
     }
 
     /**
@@ -734,16 +894,10 @@ class OalObservationImporter
      */
     private function lookUpObject(string $name, ?string $targetTypeHint, array $targetMetadata): array
     {
-        $lower = mb_strtolower(trim($name));
-        $slug = Str::slug($name, '-');
-        $compact = str_replace([' ', '-'], '', $lower);
-        $noZeros = preg_replace('/(?<=\D)0+(?=\d+)/', '', $lower) ?? $lower;
+        $candidates = $this->objectNameCandidates($name);
         $metadataKey = trim((string) ($targetMetadata['target_key'] ?? ''));
         if ($metadataKey !== '') {
-            $metadataLower = mb_strtolower($metadataKey);
-            $candidates = array_values(array_unique(array_filter([$lower, $slug, $compact, $noZeros, str_replace('-', '', $slug), $metadataLower, Str::slug($metadataKey, '-')])));
-        } else {
-            $candidates = array_values(array_unique(array_filter([$lower, $slug, $compact, $noZeros, str_replace('-', '', $slug)])));
+            $candidates = array_values(array_unique([...$candidates, mb_strtolower($metadataKey), Str::slug($metadataKey, '-')]));
         }
 
         $preferredTables = [];
@@ -763,7 +917,7 @@ class OalObservationImporter
             }
         }
 
-        foreach (['objects', 'planets', 'lunar_features', 'moons', 'asteroids', 'cometobjects'] as $table) {
+        foreach (self::TARGET_TABLES as $table) {
             if (in_array($table, $preferredTables, true)) {
                 continue;
             }
@@ -783,7 +937,7 @@ class OalObservationImporter
             return null;
         }
 
-        $attributes = $targetNode->attributes('http://www.w3.org/2001/XMLSchema-instance', true);
+        $attributes = $targetNode->attributes('http://www.w3.org/2001/XMLSchema-instance');
         $type = trim((string) ($attributes['type'] ?? ''));
         if ($type === '') {
             return null;
@@ -834,135 +988,6 @@ class OalObservationImporter
         };
     }
 
-    /**
-     * @param  list<string>  $candidates
-     * @return array{string, string, string, string}|null
-     */
-    private function resolveObjectInTable(string $table, array $candidates): ?array
-    {
-        return match ($table) {
-            'objects' => $this->resolveDeepSkyObject($candidates),
-            'planets' => $this->resolveNamedTarget('planets', $candidates, ['name', 'designation'], fn(object $row): array => [
-                'planets',
-                $this->targetKeyFromRow($row),
-                'planet',
-                (string) $row->name,
-            ]),
-            'moons' => $this->resolveNamedTarget('moons', $candidates, ['name', 'designation'], fn(object $row): array => [
-                'moons',
-                $this->targetKeyFromRow($row),
-                'lunar',
-                (string) $row->name,
-            ]),
-            'lunar_features' => $this->resolveNamedTarget('lunar_features', $candidates, ['name'], fn(object $row): array => [
-                'lunar_features',
-                $this->targetKeyFromRow($row),
-                'lunar',
-                (string) $row->name,
-            ]),
-            'asteroids' => $this->resolveNamedTarget('asteroids', $candidates, ['name', 'designation'], fn(object $row): array => [
-                'asteroids',
-                $this->targetKeyFromRow($row),
-                'solarsystem',
-                (string) $row->name,
-            ]),
-            // Comets are stored by id (see App\Models\Observation).
-            'cometobjects' => $this->resolveNamedTarget('cometobjects', $candidates, ['name'], fn(object $row): array => [
-                'cometobjects',
-                (string) $row->id,
-                'comet',
-                (string) $row->name,
-            ]),
-            default => null,
-        };
-    }
-
-    /**
-     * @param  list<string>  $candidates
-     * @return array{string, string, string, string}|null
-     */
-    private function resolveDeepSkyObject(array $candidates): ?array
-    {
-        foreach ($candidates as $cand) {
-            $on = DB::table('objectnames')->where('slug', $cand)->first();
-            if ($on) {
-                return ['objects', (string) $on->objectname, 'deepsky', (string) $on->objectname];
-            }
-        }
-        foreach ($candidates as $cand) {
-            $on = DB::table('objectnames')->where('objectname', $cand)->orWhere('altname', $cand)->first();
-            if ($on) {
-                return ['objects', (string) $on->objectname, 'deepsky', (string) $on->objectname];
-            }
-        }
-        foreach ($candidates as $cand) {
-            $o = DB::table('objects')->where('slug', $cand)->first();
-            if ($o) {
-                return ['objects', (string) $o->name, 'deepsky', (string) $o->name];
-            }
-        }
-        foreach ($candidates as $cand) {
-            $o = DB::table('objects')->where('name', $cand)->first();
-            if ($o) {
-                return ['objects', (string) $o->name, 'deepsky', (string) $o->name];
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param  list<string>  $candidates
-     * @param  list<string>  $nameColumns
-     * @param  callable(object): array{string, string, string, string}  $mapper
-     * @return array{string, string, string, string}|null
-     */
-    private function resolveNamedTarget(string $table, array $candidates, array $nameColumns, callable $mapper): ?array
-    {
-        foreach ($candidates as $cand) {
-            try {
-                $row = DB::table($table)->where('slug', $cand)->first();
-            } catch (\Throwable $_) {
-                $row = null;
-            }
-
-            if ($row) {
-                return $mapper($row);
-            }
-        }
-
-        foreach ($nameColumns as $column) {
-            foreach ($candidates as $cand) {
-                try {
-                    $row = DB::table($table)->where($column, $cand)->first();
-                } catch (\Throwable $_) {
-                    $row = null;
-                }
-
-                if ($row) {
-                    return $mapper($row);
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private function targetKeyFromRow(object $row): string
-    {
-        $slug = trim((string) ($row->slug ?? ''));
-        if ($slug !== '') {
-            return $slug;
-        }
-
-        $name = trim((string) ($row->name ?? ''));
-        if ($name !== '') {
-            return $name;
-        }
-
-        return (string) ($row->id ?? '');
-    }
-
     // ── Numeric helpers ────────────────────────────────────────────────────────
 
     private function parseInt(string $value, int $min, int $max): ?int
@@ -987,8 +1012,8 @@ class OalObservationImporter
     }
 
     /**
-     * Parse an OAL angle element. The element may carry a unit attribute
-     * ('deg' | 'rad'). OAL typically uses degrees.
+     * Parse an OAL angle element into degrees. The element carries a unit
+     * attribute ('arcsec' | 'arcmin' | 'deg' | 'rad'), degrees when missing.
      */
     private function parseOalAngle(?\SimpleXMLElement $node): ?float
     {
@@ -1002,7 +1027,12 @@ class OalObservationImporter
             return null;
         }
 
-        return $unit === 'rad' ? rad2deg($val) : $val;
+        return match ($unit) {
+            'rad' => rad2deg($val),
+            'arcmin' => $val / 60.0,
+            'arcsec' => $val / 3600.0,
+            default => $val,
+        };
     }
 
     private function withDefaultNamespace(?\SimpleXMLElement $node): ?\SimpleXMLElement

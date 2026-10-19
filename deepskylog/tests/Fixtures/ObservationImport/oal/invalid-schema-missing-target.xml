@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oal:observations xmlns:oal="http://groups.google.com/group/openastronomylog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://groups.google.com/group/openastronomylog oal21.xsd">
+  <observers>
+    <observer id="observer-1"><name>Example</name><surname>Observer</surname></observer>
+  </observers>
+  <sites>
+    <site id="site-1"><name>Example Site</name><longitude unit="deg">4.70</longitude><latitude unit="deg">50.88</latitude><elevation>30</elevation><timezone>60</timezone></site>
+  </sites>
+  <sessions/>
+  <targets/><scopes/><eyepieces/><lenses/><filters/><imagers/>
+  <observation id="observation-1">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <begin>2026-09-12T21:30:00Z</begin>
+    <result lang="en"><description>No target element: the whole file is rejected.</description></result>
+  </observation>
+</oal:observations>

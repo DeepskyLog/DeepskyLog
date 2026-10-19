@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oal:observations xmlns:oal="http://groups.google.com/group/openastronomylog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://groups.google.com/group/openastronomylog oal21.xsd">
+  <observers>
+    <observer id="observer-1"><name>Example</name><surname>Observer</surname></observer>
+  </observers>
+  <sites>
+    <site id="site-1"><name>Example Site</name><longitude unit="deg">4.70</longitude><latitude unit="deg">50.88</latitude><elevation>30</elevation><timezone>60</timezone></site>
+  </sites>
+  <sessions/>
+  <targets>
+    <target id="target-new" xsi:type="oal:deepSkyGN">
+      <datasource>Example catalogue</datasource>
+      <name>Example Nebula 123</name>
+      <position><ra unit="deg">83.82</ra><dec unit="deg">-5.39</dec></position>
+      <constellation>Ori</constellation>
+      <smallDiameter unit="arcmin">5</smallDiameter>
+      <largeDiameter unit="arcmin">10</largeDiameter>
+      <visMag>8.5</visMag>
+      <surfBr unit="mags-per-squarearcsec">21.0</surfBr>
+      <pa>45</pa>
+    </target>
+    <target id="target-alias" xsi:type="oal:deepSkyGX">
+      <datasource>Example catalogue</datasource>
+      <name>Andromeda Galaxy</name>
+      <alias>M31</alias>
+    </target>
+  </targets>
+  <scopes>
+    <scope id="scope-1" xsi:type="oal:scopeType"><model>Example Dobson 250</model><aperture>250</aperture><focalLength>1200</focalLength></scope>
+  </scopes>
+  <eyepieces/><lenses/><filters/><imagers/>
+  <!-- 1: a target that is not in the database, with a type and a position: the object is added -->
+  <observation id="observation-1">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-new</target>
+    <begin>2026-01-15T21:00:00Z</begin>
+    <scope>scope-1</scope>
+    <result lang="en"><description>A faint nebula next to M 42.</description></result>
+  </observation>
+  <!-- 2: the same target again: the object added for observation 1 is used -->
+  <observation id="observation-2">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-new</target>
+    <begin>2026-01-16T21:30:00Z</begin>
+    <scope>scope-1</scope>
+    <result lang="en"><description>Seen again the next night.</description></result>
+  </observation>
+  <!-- 3: a name DeepskyLog does not know, with an alias it does know (M 31) -->
+  <observation id="observation-3">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-alias</target>
+    <begin>2026-09-12T21:30:00Z</begin>
+    <scope>scope-1</scope>
+    <result lang="en"><description>Found through its alias.</description></result>
+  </observation>
+</oal:observations>

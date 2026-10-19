@@ -26,6 +26,7 @@ use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 use deepskylog\AstronomyLibrary\Time;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use App\Services\CometCoordinates;
+use App\Services\DeepskyObjectCreator;
 use App\Services\ObjectSearchIndex;
 use App\Support\EphemerisDate;
 use Illuminate\Support\Facades\Cache;
@@ -2835,89 +2836,6 @@ class ObjectController extends Controller
     }
 
     /**
-     * The constellation and the atlas pages of a position (RA in hours, declination
-     * in degrees), keyed by their objects column. Empty when the calculation fails.
-     */
-    private function coordinateDerivedFields(float $raHours, float $declDegrees, string $context): array
-    {
-        $fields = [];
-        try {
-            $coords = new EquatorialCoordinates($raHours, $declDegrees);
-            $fields['con'] = $coords->getConstellation();
-
-            foreach ([
-                'urano',
-                'urano_new',
-                'sky',
-                'taki',
-                'psa',
-                'torresB',
-                'torresBC',
-                'torresC',
-                'milleniumbase',
-                'DSLDL',
-                'DSLDP',
-                'DSLLL',
-                'DSLLP',
-                'DSLOL',
-                'DSLOP',
-                'DeepskyHunter',
-                'Interstellarum'
-            ] as $atlasKey) {
-                $fields[$atlasKey] = $coords->calculateAtlasPage($atlasKey);
-            }
-
-            // Millenium Star Atlas full ref: page/volume (I=0-8h, II=8-16h, III=16-24h)
-            $milVol = $raHours <= 8 ? 'I' : ($raHours <= 16 ? 'II' : 'III');
-            $fields['millenium'] = $fields['milleniumbase'] . '/' . $milVol;
-        } catch (\Throwable $e) {
-            Log::warning('Constellation/atlas calculation failed during ' . $context, ['error' => $e->getMessage()]);
-
-            return [];
-        }
-
-        return $fields;
-    }
-
-    /**
-     * SBObj from the magnitude and the diameters in arcseconds: mag + 2.5 * log10(π * diam1 * diam2 / 4),
-     * with diam2 = diam1 for a circular object. Null without a magnitude or a diameter.
-     */
-    private static function surfaceBrightness($mag, $diam1, $diam2): ?float
-    {
-        if ($mag === null || $mag == 99.9 || !($diam1 > 0)) {
-            return null;
-        }
-        $effectiveDiam2 = ($diam2 > 0) ? $diam2 : $diam1;
-
-        return $mag + 2.5 * log10(M_PI * $diam1 * $effectiveDiam2 / 4);
-    }
-
-    /**
-     * The brightness and size columns of an object from the create or edit form, with the
-     * sentinels of the legacy data for a missing value: mag and subr 99.9, pa 999, SBObj -999
-     * and diameter 0. A magnitude or position angle of 0 is a real value. The form gives the
-     * diameters in arcminutes, the objects table stores arcseconds.
-     */
-    private static function measurementColumns(array $validated): array
-    {
-        $given = fn(string $key) => isset($validated[$key]) && $validated[$key] !== '';
-
-        $mag = $given('mag') ? (float) $validated['mag'] : 99.9;
-        $diam1 = $given('diam1') ? $validated['diam1'] * 60.0 : 0;
-        $diam2 = $given('diam2') ? $validated['diam2'] * 60.0 : 0;
-
-        return [
-            'mag' => $mag,
-            'subr' => $given('subr') ? (float) $validated['subr'] : 99.9,
-            'diam1' => $diam1,
-            'diam2' => $diam2,
-            'pa' => $given('pa') ? (int) $validated['pa'] : 999,
-            'SBObj' => self::surfaceBrightness($mag, $diam1, $diam2) ?? -999,
-        ];
-    }
-
-    /**
      * RA in hours from a SIMBAD VOTable cell: RA_d is decimal degrees, RA is sexagesimal hours.
      */
     private static function simbadRaHours(string $fieldName, string $value): ?float
@@ -3089,7 +3007,7 @@ class ObjectController extends Controller
         $renamed = $originalName !== $validated['name'];
 
         // Auto-recalculate constellation and all atlas pages from the new coordinates.
-        $atlasData = $this->coordinateDerivedFields($raHours, $declDegrees, 'object update');
+        $atlasData = DeepskyObjectCreator::coordinateDerivedFields($raHours, $declDegrees, 'object update');
         $newCon = $atlasData['con'] ?? ($validated['con'] ?? $object->con);
         unset($atlasData['con']);
 
@@ -3103,7 +3021,7 @@ class ObjectController extends Controller
             'description' => $validated['description'] ?? $object->description,
             'datasource' => $validated['datasource'] ?? $object->datasource,
             'timestamp' => now(),
-        ], self::measurementColumns($validated), $atlasData));
+        ], DeepskyObjectCreator::measurementColumns($validated), $atlasData));
 
         // A renamed object gets the slug of its new name, unless another object has it
         if ($renamed) {
@@ -3814,118 +3732,14 @@ class ObjectController extends Controller
                 $validated['decl'] = $decDeg;
         }
 
-        // Auto-calculate constellation and atlas pages from RA/Dec
-        if (!empty($validated['ra']) && !empty($validated['decl'])) {
-            $validated = array_merge($validated, $this->coordinateDerivedFields((float) $validated['ra'], (float) $validated['decl'], 'object creation'));
-        }
-
-        // Magnitudes, diameters (arcminutes → arcseconds), position angle and SBObj
-        $validated = array_merge($validated, self::measurementColumns($validated));
-
-        // Create a DeepskyObject record — only pass columns that exist in the objects table.
-        // Provide empty/zero defaults for legacy NOT NULL columns that have no DB default.
+        // Constellation, atlas pages, magnitudes, diameters (arcminutes → arcseconds),
+        // position angle and SBObj, the objectnames entry and the search index
         try {
-            $defaults = [
-                'ra' => 0.0,
-                'decl' => 0.0,
-                'type' => '',
-                'con' => '',
-                'mag' => 99.9,
-                'subr' => 99.9,
-                'pa' => 999,
-                'diam1' => 0.0,
-                'diam2' => 0.0,
-                'urano' => 0,
-                'urano_new' => 0,
-                'sky' => 0,
-                'millenium' => '',
-                'taki' => '',
-                'SBObj' => -999,
-                'description' => '',
-                'psa' => '',
-                'torresB' => '',
-                'torresBC' => '',
-                'torresC' => '',
-                'milleniumbase' => '',
-                'DSLDL' => '',
-                'DSLDP' => '',
-                'DSLLL' => '',
-                'DSLLP' => '',
-                'DSLOL' => '',
-                'DSLOP' => '',
-                'DeepskyHunter' => '',
-                'Interstellarum' => '',
-            ];
-            $userValues = array_filter(array_intersect_key($validated, array_flip([
-                'name',
-                'type',
-                'con',
-                'ra',
-                'decl',
-                'mag',
-                'subr',
-                'pa',
-                'diam1',
-                'diam2',
-                'SBObj',
-                'urano',
-                'urano_new',
-                'sky',
-                'millenium',
-                'taki',
-                'psa',
-                'torresB',
-                'torresBC',
-                'torresC',
-                'milleniumbase',
-                'DSLDL',
-                'DSLDP',
-                'DSLLL',
-                'DSLLP',
-                'DSLOL',
-                'DSLOP',
-                'DeepskyHunter',
-                'Interstellarum',
-            ])), fn($v) => $v !== null && $v !== '');
-            $objectData = array_merge($defaults, $userValues);
-            $objectData['name'] = $validated['name'];
-            $objectData['slug'] = \Illuminate\Support\Str::slug($validated['name'], '-');
-            $objectData['timestamp'] = now();
-            $obj = DeepskyObject::create($objectData);
+            $obj = app(DeepskyObjectCreator::class)->create($validated);
         } catch (\Exception $e) {
             Log::error('Failed to create object', ['error' => $e->getMessage(), 'data' => $validated]);
             return redirect()->back()->withInput()->with('error', __('Failed to create object: :msg', ['msg' => $e->getMessage()]));
         }
-
-        // Insert a primary entry into objectnames so the catalog appears in the dropdown
-        // on the create page and so object lookups via objectnames.slug work correctly.
-        try {
-            $objName = $objectData['name'];
-            $objSlug = $objectData['slug'];
-
-            // Extract catalog code and catindex from the name (e.g. "Wdm 1" → "Wdm", "1")
-            [$catalogCode, $catindex] = \App\Models\ObjectName::splitCatalogDesignation($objName);
-
-            // Only insert if there is no existing entry for this object name
-            $exists = DB::table('objectnames')->where('objectname', $objName)->exists();
-            if (!$exists) {
-                DB::table('objectnames')->insert([
-                    'objectname' => $objName,
-                    'catalog' => $catalogCode,
-                    'catindex' => $catindex,
-                    'altname' => $objName,
-                    'slug' => $objSlug,
-                    'timestamp' => now(),
-                ]);
-            }
-        } catch (\Throwable $e) {
-            Log::warning('Failed to insert objectnames entry for new object', [
-                'error' => $e->getMessage(),
-                'name' => $objectData['name'] ?? null,
-            ]);
-        }
-
-        ObjectSearchIndex::syncObject($obj->name);
 
         return redirect()->route('object.show', ['slug' => $obj->slug ?? $obj->name])->with('success', __('Object added successfully.'));
     }
@@ -4261,10 +4075,10 @@ class ObjectController extends Controller
 
             // Keep the columns derived from the position and the brightness in step
             if (isset($updates['ra']) || isset($updates['decl'])) {
-                $object->fill($this->coordinateDerivedFields((float) $object->ra, (float) $object->decl, 'SIMBAD update'));
+                $object->fill(DeepskyObjectCreator::coordinateDerivedFields((float) $object->ra, (float) $object->decl, 'SIMBAD update'));
             }
             if (isset($updates['mag']) || isset($updates['diam1']) || isset($updates['diam2'])) {
-                $object->SBObj = self::surfaceBrightness($object->mag, $object->diam1, $object->diam2) ?? -999;
+                $object->SBObj = DeepskyObjectCreator::surfaceBrightness($object->mag, $object->diam1, $object->diam2) ?? -999;
             }
             $object->timestamp = now();
             $object->save();

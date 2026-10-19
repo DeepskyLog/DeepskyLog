@@ -1,0 +1,6 @@
+M 31;Example Observer;12-09-2026;21:30;Example Site;Example Dobson 250;Example 10mm;;;2;6.2;20,85;2;en;Bright core, dust lane visible with averted vision.
+M 13;Example Observer;04-07-2026;22:00;Example Site;Example Dobson 250;Example 10mm;;Example Barlow 2x;3;6.0;20.5;1;en;Resolved to the core at 240x.
+M042;Example Observer;2026-01-15;21:00;Example Site;Example Dobson 250;Example 10mm;Example UHC;;2;5.8;;1;nl;<p>De vleugels van de nevel zijn <strong>zeer uitgebreid</strong> met het UHC-filter.</p>
+M81;Example Observer;20-03-2026;20:15:30;Example Site;Example Dobson 250;;;;;;;2;en;Bright oval with a stellar nucleus.
+M 45;Example Observer;10-10-2026;23:00;Example Site;Naked eye;;;;;6.3;;1;en;Seven stars counted with the naked eye.
+m 31;Example Observer;13-09-2026;;;example dobson 250;;;;;;;;;Seen without a time or a location, object and instrument in lower case.

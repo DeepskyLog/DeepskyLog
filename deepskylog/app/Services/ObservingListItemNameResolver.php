@@ -118,10 +118,11 @@ class ObservingListItemNameResolver
      * The spellings to try for a name, most literal first: catalogue
      * designations are stored with a space ("M 31", "NGC 7000"), but are
      * often written without one or with leading zeros ("M31", "NGC0224").
+     * The observation importers look these up too.
      *
      * @return list<string>
      */
-    private function variants(string $name): array
+    public function variants(string $name): array
     {
         $variants = [$name];
 

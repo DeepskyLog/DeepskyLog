@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oal:observations xmlns:oal="http://groups.google.com/group/openastronomylog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://groups.google.com/group/openastronomylog oal21.xsd">
+  <observers>
+    <observer id="observer-1"><name>Example</name><surname>Observer</surname></observer>
+  </observers>
+  <sites>
+    <site id="site-1"><name>Example Site</name><longitude unit="deg">4.70</longitude><latitude unit="deg">50.88</latitude><elevation>30</elevation><timezone>60</timezone></site>
+  </sites>
+  <sessions/>
+  <targets>
+    <target id="target-m31" xsi:type="oal:deepSkyGX"><datasource>DeepskyLog</datasource><name>M 31</name></target>
+    <target id="target-m42" xsi:type="oal:deepSkyGN"><datasource>DeepskyLog</datasource><name>M 42</name></target>
+    <target id="target-ngc104" xsi:type="oal:deepSkyGC"><datasource>DeepskyLog</datasource><name>NGC 104</name></target>
+  </targets>
+  <scopes>
+    <scope id="scope-1" xsi:type="oal:scopeType"><model>Example Dobson 250</model><aperture>250</aperture><focalLength>1200</focalLength></scope>
+    <scope id="scope-2" xsi:type="oal:scopeType"><model></model><aperture>80</aperture><focalLength>400</focalLength></scope>
+  </scopes>
+  <eyepieces/><lenses/><filters/><imagers/>
+  <!-- 1: a description of only white space -->
+  <observation id="observation-1">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:30:00Z</begin>
+    <scope>scope-1</scope>
+    <result lang="en"><description>   </description></result>
+  </observation>
+  <!-- 2: M 42 far below the horizon of Example Site -->
+  <observation id="observation-2">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m42</target>
+    <begin>2026-06-21T23:00:00Z</begin>
+    <scope>scope-1</scope>
+    <result lang="en"><description>M 42 is far below the horizon of Example Site at this moment.</description></result>
+  </observation>
+  <!-- 3: 47 Tucanae never rises at Example Site (midnight UT counts as no time) -->
+  <observation id="observation-3">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-ngc104</target>
+    <begin>2026-08-01T00:00:00Z</begin>
+    <scope>scope-1</scope>
+    <result lang="en"><description>47 Tucanae never rises at Example Site.</description></result>
+  </observation>
+  <!-- 4: a scope without a name (an empty model and no vendor) -->
+  <observation id="observation-4">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:30:00Z</begin>
+    <scope>scope-2</scope>
+    <result lang="en"><description>The scope has no name.</description></result>
+  </observation>
+</oal:observations>

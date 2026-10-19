@@ -1,0 +1,4 @@
+M 31;Example Observer;12-09-2026;21:30;Example Site;Example Dobson 250;;;;2;;;2;en;Row 1: imported.
+M 31;Example Observer;12-09-2026;21:45;Example Site;Example Unknown Scope;;;;;;;;en;Row 2: skipped, unknown instrument.
+M 13;Example Observer;04-07-2026;22:00;Example Site;Example Dobson 250;;;;3;;;1;en;Row 3: imported.
+M 13;Example Observer;31-13-2026;22:00;Example Site;Example Dobson 250;;;;;;;;en;Row 4: skipped, month 13.

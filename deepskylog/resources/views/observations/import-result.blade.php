@@ -26,6 +26,23 @@
                     </div>
                 </div>
 
+                {{-- New objects created from OAL targets --}}
+                @if (count($result->newObjects) > 0)
+                    <div class="rounded-lg bg-blue-950 border border-blue-800 p-4 mb-4">
+                        <h4 class="text-blue-300 font-semibold mb-3">{{ __('New objects added') }}</h4>
+                        <p class="text-blue-400 text-sm mb-3">
+                            {{ __('These objects were not in the DeepskyLog database and were added from the targets in the file. Please check their details.') }}
+                        </p>
+                        <ul class="mt-1 space-y-0.5">
+                            @foreach ($result->newObjects as $name => $slug)
+                                <li class="text-sm text-blue-300">
+                                    <a href="{{ route('object.show', ['slug' => $slug]) }}" class="underline hover:text-white">{{ $name }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 {{-- New equipment created --}}
                 @php
                     $hasNewEquipment = count($result->newLocations)
