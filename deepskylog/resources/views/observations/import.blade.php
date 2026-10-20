@@ -25,37 +25,30 @@
                 <form method="POST" action="{{ route('observation.import.process') }}" enctype="multipart/form-data">
                     @csrf
 
-                    {{-- Format selection --}}
+                    {{-- Supported formats: recognised from the content of the file --}}
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                        <p class="block text-sm font-medium text-gray-300 mb-1">
                             {{ __('File format') }}
-                        </label>
+                        </p>
+                        <p class="text-gray-400 text-xs mb-3">
+                            {{ __('A CSV file and an OAL file can be imported; DeepskyLog recognises the format from the content of the file.') }}
+                        </p>
                         <div class="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-8">
 
-                            <label class="flex items-start space-x-3 cursor-pointer">
-                                <input type="radio" name="format" value="csv"
-                                       class="mt-1 text-indigo-500 bg-gray-700 border-gray-600 focus:ring-indigo-500"
-                                       {{ old('format', 'csv') === 'csv' ? 'checked' : '' }}>
-                                <span>
-                                    <span class="block text-gray-100 font-medium">CSV</span>
-                                    <span class="block text-gray-400 text-xs mt-0.5">
-                                        {{ __('Semicolon-delimited, no header line.') }}<br>
-                                        <code class="text-gray-500 text-xs">Object; Observer; Date(DD-MM-YYYY); Time(HH:MM); Location; Instrument; Eyepiece; Filter; Lens; Seeing(1–5); LimMag; SQM; Visibility(1–7); Language; Description</code>
-                                    </span>
+                            <div>
+                                <span class="block text-gray-100 font-medium">CSV</span>
+                                <span class="block text-gray-400 text-xs mt-0.5">
+                                    {{ __('Semicolon-delimited, no header line.') }}<br>
+                                    <code class="text-gray-500 text-xs">Object; Observer; Date(DD-MM-YYYY); Time(HH:MM); Location; Instrument; Eyepiece; Filter; Lens; Seeing(1–5); LimMag; SQM; Visibility(1–7); Language; Description</code>
                                 </span>
-                            </label>
+                            </div>
 
-                            <label class="flex items-start space-x-3 cursor-pointer">
-                                <input type="radio" name="format" value="oal"
-                                       class="mt-1 text-indigo-500 bg-gray-700 border-gray-600 focus:ring-indigo-500"
-                                       {{ old('format') === 'oal' ? 'checked' : '' }}>
-                                <span>
-                                    <span class="block text-gray-100 font-medium">OAL 2.1 (OpenAstronomyLog XML)</span>
-                                    <span class="block text-gray-400 text-xs mt-0.5">
-                                        {{ __('Standard XML format exported by AstroPlanner, SkySafari, and other astronomy software.') }}
-                                    </span>
+                            <div>
+                                <span class="block text-gray-100 font-medium">OAL 2.1 (OpenAstronomyLog XML)</span>
+                                <span class="block text-gray-400 text-xs mt-0.5">
+                                    {{ __('Standard XML format exported by AstroPlanner, SkySafari, and other astronomy software.') }}
                                 </span>
-                            </label>
+                            </div>
 
                         </div>
                     </div>

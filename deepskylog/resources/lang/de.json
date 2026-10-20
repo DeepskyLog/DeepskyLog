@@ -68,6 +68,7 @@
     "Account not found, please register to create an account.": "Konto nicht gefunden. Bitte registrieren Sie sich, um ein Konto anzulegen.",
     "Account removed.": "Konto entfernt.",
     "A compact sketch form that folds in half so you can do two sketches on one piece of paper. This format allows you to sketch on top of a book like your PSA.": "Ein kompaktes Skizzenformular, das sich in der Mitte falten lässt, sodass Sie zwei Skizzen auf einem Blatt Papier anfertigen können. Dieses Format ermöglicht es, über einem Buch wie Ihrem PSA zu skizzieren.",
+    "A CSV file and an OAL file can be imported; DeepskyLog recognises the format from the content of the file.": "Eine CSV-Datei und eine OAL-Datei können importiert werden; DeepskyLog erkennt das Format am Inhalt der Datei.",
     "Actions": "Aktionen",
     "Active": "Aktiv",
     "Active list": "Aktive Liste",

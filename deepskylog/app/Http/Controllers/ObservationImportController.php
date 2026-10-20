@@ -29,7 +29,6 @@ class ObservationImportController extends Controller
                 'max:51200', // 50 MB
                 'mimes:csv,txt,xml,application/xml,text/xml,text/plain,text/csv',
             ],
-            'format' => ['required', 'in:csv,oal'],
             'import_below_horizon' => ['nullable', 'boolean'],
         ]);
 
@@ -41,7 +40,7 @@ class ObservationImportController extends Controller
         }
 
         $user = $request->user();
-        $format = $request->input('format');
+        $format = self::detectFormat($content);
 
         $importer = $format === 'csv' ? new CsvObservationImporter($user) : new OalObservationImporter($user);
         $result = $importer->importBelowHorizon($request->boolean('import_below_horizon'))->import($content);
@@ -51,5 +50,17 @@ class ObservationImportController extends Controller
             'format' => $format,
             'userSlug' => Auth::user()->slug,
         ]);
+    }
+
+    /**
+     * The format of an uploaded file: an OAL file is XML, so after a byte
+     * order mark and white space it starts with "<" (the XML declaration or
+     * the root element); a CSV row starts with the name of an object.
+     */
+    public static function detectFormat(string $content): string
+    {
+        $start = ltrim((string) preg_replace('/^\xEF\xBB\xBF/', '', $content));
+
+        return str_starts_with($start, '<') ? 'oal' : 'csv';
     }
 }

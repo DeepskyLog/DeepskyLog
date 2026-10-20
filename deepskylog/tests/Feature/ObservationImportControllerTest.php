@@ -39,9 +39,7 @@ it('shows schema validation errors for invalid oal uploads through the import co
 XML;
 
     $upload = UploadedFile::fake()->createWithContent('invalid-oal.xml', $xml);
-    $request = Request::create('/observation/import', 'POST', [
-        'format' => 'oal',
-    ], [], [
+    $request = Request::create('/observation/import', 'POST', [], [], [
         'import_file' => $upload,
     ]);
     $request->setLaravelSession(app('session')->driver());

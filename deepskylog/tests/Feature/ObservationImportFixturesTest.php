@@ -393,13 +393,44 @@ it('imports the observations below the horizon with a warning when asked to', fu
         ->and(Fixtures::messages($result, 'warning')[0])->toContain('Imported anyway.');
 })->with(['csv/below-horizon.csv', 'oal/below-horizon.xml']);
 
-it('accepts the example file as an upload', function (string $file) {
-    $format = str_starts_with($file, 'csv/') ? 'csv' : 'oal';
+it('accepts the example file as an upload and recognises its format', function (string $file) {
     $upload = UploadedFile::fake()->createWithContent(basename($file), Fixtures::content($file));
 
+    // No format is sent: it is recognised from the content of the file.
     $this->actingAs($this->user)
-        ->post(route('observation.import.process'), ['format' => $format, 'import_file' => $upload])
+        ->post(route('observation.import.process'), ['import_file' => $upload])
         ->assertOk()
         ->assertViewIs('observations.import-result')
+        ->assertViewHas('format', str_starts_with($file, 'csv/') ? 'csv' : 'oal')
         ->assertSee('Import Results');
 })->with(array_keys(importFixtureExpectations()));
+
+it('recognises the format of a file from its content', function (string $content, string $format) {
+    expect(App\Http\Controllers\ObservationImportController::detectFormat($content))->toBe($format);
+})->with([
+    'xml declaration' => ['<?xml version="1.0"?><oal:observations/>', 'oal'],
+    'root element' => ['<oal:observations version="2.1"/>', 'oal'],
+    'byte order mark and white space' => ["\xEF\xBB\xBF\n  <?xml version=\"1.0\"?>", 'oal'],
+    'csv row' => ['M 31;Observer;12-09-2026;21:30;;Scope;;;;;;;;en;Seen.', 'csv'],
+    'quoted csv with a byte order mark' => ["\xEF\xBB\xBF\"M 31\";\"Observer\"", 'csv'],
+]);
+
+it('goes by the content of a file, not by its name', function () {
+    $upload = UploadedFile::fake()->createWithContent('observations.xml', Fixtures::content('csv/valid-all-types.csv'));
+
+    $this->actingAs($this->user)
+        ->post(route('observation.import.process'), ['import_file' => $upload])
+        ->assertOk()
+        ->assertViewHas('format', 'csv')
+        ->assertViewHas('result', fn ($result) => $result->imported === 8);
+});
+
+it('describes both formats on the import page without asking for one', function () {
+    $this->actingAs($this->user)
+        ->get(route('observation.import'))
+        ->assertOk()
+        ->assertDontSee('name="format"', false)
+        ->assertSee('Semicolon-delimited, no header line.')
+        ->assertSee('OAL 2.1 (OpenAstronomyLog XML)')
+        ->assertSee('DeepskyLog recognises the format from the content of the file.');
+});
