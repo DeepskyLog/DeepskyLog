@@ -77,7 +77,7 @@ test('the team cannot be switched without a CSRF token', function () {
 test('nobody can create a team', function () {
     $user = $this->createUserAndAssignToTeam('Observers');
     $this->addUserToTeam($user, 'Administrators');
-    $this->actingAs($user)->post(route('current-team.switch', $this->getTeamFromString('Administrators')->id));
+    $user->switchTeam($this->getTeamFromString('Administrators'));
 
     $this->actingAs($user->fresh())
         ->get(route('teams.create'))
@@ -99,4 +99,40 @@ test('a user created from a social provider joins the Observers team without a t
 
     expect($user->fresh()->currentTeam->name)->toBe('Observers');
     expect(Team::count())->toBe(3);
+});
+
+test('switching to a team that may not see the previous page goes to the home page', function () {
+    $user = $this->createUserAndAssignToTeam('Observers');
+    $this->addUserToTeam($user, 'Administrators');
+    $administrators = $this->getTeamFromString('Administrators');
+    $observers = $this->getTeamFromString('Observers');
+    $user->switchTeam($administrators);
+
+    $this->actingAs($user->fresh())
+        ->from(route('observers.admin'))
+        ->post(route('current-team.switch', $observers->id))
+        ->assertRedirect(route('observers.admin'));
+
+    $this->get(route('observers.admin'))->assertRedirect('/');
+});
+
+test('switching teams keeps the previous page when the new team may see it', function () {
+    $user = $this->createUserAndAssignToTeam('Observers');
+    $this->addUserToTeam($user, 'Administrators');
+    $administrators = $this->getTeamFromString('Administrators');
+
+    $this->actingAs($user)
+        ->from(route('observers.admin'))
+        ->post(route('current-team.switch', $administrators->id))
+        ->assertRedirect(route('observers.admin'));
+
+    $this->get(route('observers.admin'))->assertOk();
+});
+
+test('a forbidden page without a team switch still answers 403', function () {
+    $user = $this->createUserAndAssignToTeam('Observers');
+
+    $this->actingAs($user)
+        ->get(route('observers.admin'))
+        ->assertForbidden();
 });

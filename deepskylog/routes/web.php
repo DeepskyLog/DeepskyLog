@@ -42,7 +42,9 @@ Route::middleware([
         }
 
         // Redirect back to the referring page so the header renders the updated team immediately.
-        return redirect()->back(303);
+        // The flash lets App\Exceptions\Handler send the user to the home page instead
+        // when the new team may no longer see that page.
+        return redirect()->back(303)->with('team_switched', true);
     })->name('current-team.update');
 
     // Switches the current team from the navigation/dropdowns and redirects back.
@@ -55,7 +57,7 @@ Route::middleware([
             abort(403);
         }
 
-        return redirect()->back();
+        return redirect()->back()->with('team_switched', true);
     })->name('current-team.switch');
 });
 
