@@ -49,7 +49,11 @@ and comets. `Moon` is stored as the Moon of the moons table, from a CSV file and
 from an OAL file alike.
 
 Importing a file again updates the observations it imported before instead of
-adding them a second time. Delete the observations to start over.
+adding them a second time: an observation of the same object at the same UT
+moment (or on the same date, both without a time) with the same instrument.
+An observation with another instrument is another observation; one without an
+instrument (from the old site) is updated and gets the instrument of the file.
+Delete the observations to start over.
 
 ## CSV files (`csv/`)
 
@@ -66,6 +70,7 @@ eyepiece; filter; lens; seeing (1–5); limiting magnitude; SQM; visibility
 | `invalid-rows.csv`           | 0        | 12      | One error per row, in this order: no object; no instrument; no description; a description of only `<p>&nbsp;</p>`; date `2026/09/12`; unknown location; unknown instrument; unknown eyepiece; unknown filter; unknown lens; M 42 44.4° below the horizon; NGC 104 never rises. |
 | `mixed.csv`                  | 2        | 2       | Rows 1 and 3 imported; row 2 an unknown instrument, row 4 the date `31-13-2026`.              |
 | `valid-all-types.csv`        | 8        | 0       | One observation of each kind of target: a deep-sky object (M 31), a comet (12P/Pons-Brooks), the Sun, a planet (Jupiter), the Moon (naked eye), a lunar feature (Copernicus), a moon of a planet (Io) and an asteroid (Vesta). |
+| `valid-same-moment.csv`      | 4        | 0       | M 31 at the same moment through the Dobson and with the naked eye, and the same without a time the next night: four observations, also after importing the file again. |
 | `valid-solar-system.csv`     | 6        | 0       | No errors. A comet (12P/Pons-Brooks, also in lower case without a time), the Moon with the naked eye, the lunar features Copernicus and Tycho, and Io (a moon of Jupiter). |
 | `invalid-solar-system.csv`   | 0        | 4       | An unknown comet; an unknown lunar feature; the Moon 19.2° below the horizon; 12P/Pons-Brooks 7.6° below the horizon. |
 | `below-horizon.csv`          | 0        | 2       | M 42 below the horizon at that moment; NGC 104 never rising on that date. With *Also import observations of objects below the horizon* ticked: both imported, each with a warning. |
@@ -81,6 +86,7 @@ They have the `.xml` extension because the upload field only offers `.csv`,
 |----------------------------------------|---------:|--------:|----------------------------------------------------------------------------------------|
 | `valid-observations.xml`               | 5        | 0       | No errors or warnings. A begin with an offset (`+02:00`, stored as 21:30 UT), with `Z` and without an offset; eyepiece, lens, filter; a deep-sky result with a rating; two results of which the first is empty (the Dutch one is used); naked eye (no scope); a new site and a new scope, which are created; target names without a space (`m13`, `M81`, stored as `M 13` and `M 81`). |
 | `valid-all-types.xml`                  | 8        | 0       | As `valid-all-types.csv`, with the OAL target type of each kind: `deepSkyGX`, `CometTargetType`, `SunTargetType`, `PlanetTargetType`, `MoonTargetType` (Moon and Io), a lunar feature as DeepskyLog exports it, and `MinorPlanetTargetType`. |
+| `valid-same-moment.xml`                | 4        | 0       | As `valid-same-moment.csv`: through the Dobson and with the naked eye (no scope), at 21:30 UT (once written in local time) and at midnight UT. |
 | `valid-solar-system.xml`               | 5        | 0       | No errors. A `CometTargetType`; the Moon as a `MoonTargetType` with the naked eye; Copernicus as DeepskyLog exports a lunar feature (no type, the table and key in `<notes>`); Tycho as a `MoonTargetType`, as other programs may write a lunar feature; Io. |
 | `invalid-solar-system.xml`             | 0        | 3       | An unknown lunar feature (a `MoonTargetType` is never added as an object); the Moon below the horizon; 12P/Pons-Brooks below the horizon. |
 | `valid-latin1.xml`                     | 1        | 0       | No errors. Encoded in ISO-8859-1, with accents in the French description.               |
@@ -93,3 +99,29 @@ They have the `.xml` extension because the upload field only offers `.csv`,
 | `invalid-schema-unknown-reference.xml` | 0        | 0       | A schema validation error: `<scope>` refers to an id that is not in the file.          |
 | `invalid-observations.xml`             | 0        | 4       | Schema-valid, but each observation is skipped with an error: a description of only spaces; M 42 below the horizon; NGC 104 never rises (a begin at midnight UT counts as no time); a scope without a model or vendor. |
 | `below-horizon.xml`                    | 0        | 2       | As `below-horizon.csv`, including the checkbox.                                        |
+
+## Round trips
+
+`tests/Feature/ObservationImportExportRoundTripTest.php` imports these files,
+exports the observations again (the CSV export of the observation search, and
+`/observations/search/export.oal.xml`) and compares them:
+
+- file → database → file in the same format: the exported file holds the same
+  observations as the original;
+- database → file → database: the export imported into another account (CSV
+  or OAL, and from one format into the other) gives the same observations, and
+  imported into the same account it changes nothing.
+
+The files are compared by observation, not as text: the order, the quoting,
+the ids, the observer and the target details an export adds differ. Two
+differences are expected:
+
+- an SQM the file leaves out is derived from the limiting magnitude when the
+  observation is saved, so the export has one;
+- OAL requires a time, so an observation without a time is exported at
+  midnight UT; another account imports it as an observation at 00:00 UT (the
+  same account matches it to the observation without a time).
+
+To compare by hand: import a file into an empty account, export the
+observations on the observation search page, and compare the observations (not
+the text), keeping these differences in mind.

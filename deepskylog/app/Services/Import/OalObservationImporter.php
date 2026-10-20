@@ -11,6 +11,7 @@ use App\Models\Observation;
 use App\Models\User;
 use App\Services\DeepskyObjectCreator;
 use App\Support\Html;
+use App\Support\Timezones;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -244,6 +245,9 @@ class OalObservationImporter
 
         $description = '';
         $language = 'en';
+        // The rating of a deep-sky result (findingsDeepSkyType) is the
+        // visibility, on the same scale; 99 (unknown) is left out.
+        $visibility = null;
 
         $resultNode = $obs->result ?? null;
         if ($resultNode) {
@@ -257,6 +261,7 @@ class OalObservationImporter
                         if (!empty($lang)) {
                             $language = strtolower(substr($lang, 0, 10));
                         }
+                        $visibility = $this->parseInt((string) ($r->rating ?? ''), 1, 7);
                         break;
                     }
                 }
@@ -266,6 +271,7 @@ class OalObservationImporter
                 if (!empty($lang)) {
                     $language = strtolower(substr($lang, 0, 10));
                 }
+                $visibility = $this->parseInt((string) ($resultNode->rating ?? ''), 1, 7);
             }
         }
 
@@ -417,6 +423,15 @@ class OalObservationImporter
             throw $e;
         }
 
+        if ($visibility !== null && $targetTable === 'objects') {
+            DB::table('deepsky_observation_details')->updateOrInsert(
+                ['observation_id' => $observation->id],
+                ['visibility' => $visibility]
+            );
+            // Written without model events.
+            Observation::clearResponseCache();
+        }
+
         if ($newObject !== null) {
             $this->resolvedObjects[$this->objectCacheKey($targetNameRaw, $targetTypeHint, $targetMetadata)] = ['objects', $object->name, 'deepsky', $object->name];
             $result->newObjects[$object->name] = $object->slug;
@@ -499,9 +514,12 @@ class OalObservationImporter
         $latitude = $this->parseOalAngle($node->latitude ?? null);
         $longitude = $this->parseOalAngle($node->longitude ?? null);
         $elevation = isset($node->elevation) ? $this->parseFloat((string) $node->elevation) : null;
-        $timezone = trim((string) ($node->timezone ?? config('app.timezone', 'UTC')));
-        if (empty($timezone)) {
-            $timezone = config('app.timezone', 'UTC');
+        // OAL gives the offset in minutes from UT; a location needs a zone name.
+        $timezone = trim((string) ($node->timezone ?? ''));
+        if (!Timezones::isIdentifier($timezone)) {
+            $timezone = preg_match('/^[+-]?\d+$/', $timezone) === 1
+                ? Timezones::fromOffset((int) $timezone, $latitude, $longitude)
+                : Timezones::orUtc(config('app.timezone', 'UTC'));
         }
 
         try {

@@ -6,120 +6,19 @@ use App\Models\Instrument;
 use App\Models\Lens;
 use App\Models\Location;
 use App\Models\Observation;
-use App\Models\User;
-use App\Services\Import\CsvObservationImporter;
-use App\Services\Import\ImportResult;
-use App\Services\Import\OalObservationImporter;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Tests\Support\ObservationImportFixtures as Fixtures;
 
 /*
  * Runs the example files of tests/Fixtures/ObservationImport (described in its
  * README.md) through the CSV and OAL importers.
  */
 
-function importFixture(string $path): string
-{
-    return file_get_contents(base_path('tests/Fixtures/ObservationImport/'.$path));
-}
-
-function importFixtureObject(string $name, string $slug, string $type, float $ra, float $decl): void
-{
-    DB::table('objects')->insert([
-        'name' => $name, 'slug' => $slug, 'type' => $type, 'con' => 'AND', 'ra' => $ra, 'decl' => $decl,
-        'mag' => 5.0, 'subr' => 12.0, 'pa' => 0, 'urano' => 0, 'urano_new' => 0, 'sky' => 0, 'millenium' => '',
-        'diam1' => 60.0, 'diam2' => 60.0, 'datasource' => null, 'taki' => '', 'SBObj' => 0.0, 'description' => '',
-        'psa' => '', 'torresB' => '', 'torresBC' => '', 'torresC' => '', 'milleniumbase' => '0', 'DSLDL' => '0',
-        'DSLDP' => '0', 'DSLLL' => '0', 'DSLLP' => '0', 'DSLOL' => '0', 'DSLOP' => '0', 'DeepskyHunter' => '0',
-        'Interstellarum' => '0', 'timestamp' => now(),
-    ]);
-}
-
-/**
- * The Solar System targets of the solar-system and all-types files, with the
- * orbital elements of 12P/Pons-Brooks (MPC), so its horizon check is real.
- */
-function importFixtureSolarSystem(): void
-{
-    $now = now();
-    foreach (['Sun' => 'star', 'Earth' => 'planet', 'Jupiter' => 'planet'] as $planet => $type) {
-        DB::table('planets')->insert(['name' => $planet, 'slug' => strtolower($planet), 'body_type' => $type, 'created_at' => $now, 'updated_at' => $now]);
-    }
-    DB::table('asteroids')->insert(['name' => 'Vesta', 'slug' => 'vesta', 'designation' => '4', 'body_type' => 'asteroid', 'created_at' => $now, 'updated_at' => $now]);
-    $planetIds = DB::table('planets')->pluck('id', 'name');
-    DB::table('moons')->insert([
-        ['name' => 'Moon', 'slug' => 'moon', 'planet_id' => $planetIds['Earth'], 'body_type' => 'moon', 'created_at' => $now, 'updated_at' => $now],
-        ['name' => 'Io', 'slug' => 'io', 'planet_id' => $planetIds['Jupiter'], 'body_type' => 'moon', 'created_at' => $now, 'updated_at' => $now],
-    ]);
-    foreach (['Copernicus', 'Tycho'] as $feature) {
-        DB::table('lunar_features')->insert(['name' => $feature, 'slug' => strtolower($feature), 'feature_type' => 'crater', 'created_at' => $now, 'updated_at' => $now]);
-    }
-    DB::table('cometobjects')->insert(['name' => '12P/Pons-Brooks', 'slug' => '12ppons-brooks', 'icqname' => '', 'timestamp' => $now]);
-    DB::table('comets_orbital_elements')->insert([
-        'name' => '12P/Pons-Brooks', 'epoch' => 2461307.5, 'q' => 0.781885, 'e' => 0.954746, 'i' => 74.1494,
-        'w' => 199.0345, 'node' => 255.8673, 'Tp' => 20240421.2023, 'H' => 5, 'n' => 13.5, 'ref' => 'MPC191593',
-    ]);
-}
-
-/**
- * @return list<string>
- */
-function importMessages(ImportResult $result, string $type): array
-{
-    return array_values(array_map(
-        fn (array $entry) => $entry['message'],
-        array_filter($result->log, fn (array $entry) => $entry['type'] === $type),
-    ));
-}
-
 beforeEach(function () {
-    importFixtureObject('M 31', 'm-31', 'GALXY', 0.7123, 41.2692);
-    importFixtureObject('M 13', 'm-13', 'GLOCL', 16.6949, 36.4613);
-    importFixtureObject('M 42', 'm-42', 'BRTNB', 5.5881, -5.3911);
-    importFixtureObject('M 45', 'm-45', 'OPNCL', 3.7833, 24.1167);
-    importFixtureObject('M 81', 'm-81', 'GALXY', 9.9259, 69.0653);
-    importFixtureObject('NGC 104', 'ngc-104', 'GLOCL', 0.4014, -72.0814);
-    importFixtureSolarSystem();
-
-    // The equipment and location the CSV files name (see README.md).
-    $this->user = User::factory()->create(['username' => 'example-observer']);
-    $owner = ['user_id' => $this->user->id, 'observer' => $this->user->username, 'active' => true];
-
-    Location::query()->create($owner + [
-        'name' => 'Example Site', 'slug' => 'example-site', 'latitude' => 50.88, 'longitude' => 4.70, 'elevation' => 30,
-        'timezone' => 'Europe/Brussels', 'limitingMagnitude' => -999, 'skyBackground' => -999, 'country' => 'Belgium',
-        'observations' => 0,
-    ]);
-    Instrument::query()->create($owner + [
-        'name' => 'Example Dobson 250', 'make_id' => DB::table('instrument_makes')->value('id'), 'aperture_mm' => 250,
-        'focal_length_mm' => 1200, 'instrument_type_id' => 4, 'mount_type_id' => DB::table('mount_types')->value('id'),
-    ]);
-    Instrument::query()->create($owner + [
-        'name' => 'Naked eye', 'make_id' => DB::table('instrument_makes')->value('id'), 'aperture_mm' => 7,
-        'focal_length_mm' => 1, 'fixedMagnification' => 1, 'instrument_type_id' => 1,
-        'mount_type_id' => DB::table('mount_types')->value('id'),
-    ]);
-    Eyepiece::query()->create($owner + [
-        'name' => 'Example 10mm', 'slug' => 'example-10mm', 'make_id' => DB::table('eyepiece_makes')->value('id'),
-        'type_id' => DB::table('eyepiece_types')->value('id'), 'focal_length_mm' => 10, 'apparentFOV' => 82,
-        'observations' => 0,
-    ]);
-    Filter::query()->create($owner + [
-        'name' => 'Example UHC', 'make_id' => DB::table('filter_makes')->value('id'),
-        'type_id' => DB::table('filter_types')->value('id'), 'color_id' => DB::table('filter_colors')->value('id'),
-    ]);
-    Lens::query()->create($owner + [
-        'name' => 'Example Barlow 2x', 'slug' => 'example-barlow-2x', 'make_id' => DB::table('lens_makes')->value('id'),
-        'factor' => 2.0, 'observations' => 0,
-    ]);
+    Fixtures::seedTargets();
+    $this->user = Fixtures::createObserver(['username' => 'example-observer']);
 });
-
-function runImportFixture(User $user, string $file, bool $belowHorizon = false): ImportResult
-{
-    $importer = str_starts_with($file, 'csv/') ? new CsvObservationImporter($user) : new OalObservationImporter($user);
-
-    return $importer->importBelowHorizon($belowHorizon)->import(importFixture($file));
-}
 
 /*
  * Per file: the observations imported, the rows skipped, and the errors and
@@ -155,6 +54,7 @@ function importFixtureExpectations(): array
         ], []],
         'csv/valid-solar-system.csv' => ['csv/valid-solar-system.csv', 6, 0, [], []],
         'csv/valid-all-types.csv' => ['csv/valid-all-types.csv', 8, 0, [], []],
+        'csv/valid-same-moment.csv' => ['csv/valid-same-moment.csv', 4, 0, [], []],
         'csv/invalid-solar-system.csv' => ['csv/invalid-solar-system.csv', 0, 4, [
             "Row 1: Object 'C/2099 Z1 (Example)' not found in the database",
             "Row 2: Object 'Example Crater' not found in the database",
@@ -164,6 +64,7 @@ function importFixtureExpectations(): array
         'oal/valid-observations.xml' => ['oal/valid-observations.xml', 5, 0, [], []],
         'oal/valid-solar-system.xml' => ['oal/valid-solar-system.xml', 5, 0, [], []],
         'oal/valid-all-types.xml' => ['oal/valid-all-types.xml', 8, 0, [], []],
+        'oal/valid-same-moment.xml' => ['oal/valid-same-moment.xml', 4, 0, [], []],
         'oal/invalid-solar-system.xml' => ['oal/invalid-solar-system.xml', 0, 3, [
             "Observation 1: Target 'Example Crater' is not in the DeepskyLog database, and the file does not define it as a deep-sky object, skipping.",
             "Observation 2: 'Moon' was 19.2° below the horizon of Example Site on 2026-09-25 at 06:00 UT.",
@@ -207,14 +108,14 @@ function importFixtureExpectations(): array
 dataset('import fixtures', fn () => importFixtureExpectations());
 
 it('imports the example file with the expected outcome', function (string $file, int $imported, int $skipped, array $errors, array $warnings) {
-    $result = runImportFixture($this->user, $file);
+    $result = Fixtures::import($this->user, $file);
 
     expect($result->imported)->toBe($imported)
         ->and($result->skipped)->toBe($skipped)
         ->and(Observation::query()->where('observer_user_id', $this->user->id)->count())->toBe($imported);
 
     foreach ([[$errors, 'error'], [$warnings, 'warning']] as [$expected, $type]) {
-        $messages = importMessages($result, $type);
+        $messages = Fixtures::messages($result, $type);
         expect($messages)->toHaveCount(count($expected));
         foreach ($expected as $i => $part) {
             expect($messages[$i])->toContain($part);
@@ -223,16 +124,13 @@ it('imports the example file with the expected outcome', function (string $file,
 })->with('import fixtures');
 
 it('covers every example file', function () {
-    $files = collect(glob(base_path('tests/Fixtures/ObservationImport/*/*.{csv,xml}'), GLOB_BRACE))
-        ->map(fn (string $path) => basename(dirname($path)).'/'.basename($path))
-        ->sort()->values()->all();
     $covered = collect(importFixtureExpectations())->keys()->sort()->values()->all();
 
-    expect($covered)->toBe($files);
+    expect($covered)->toBe(Fixtures::files());
 });
 
 it('stores the fields of the valid csv file', function () {
-    runImportFixture($this->user, 'csv/valid-observations.csv');
+    Fixtures::import($this->user, 'csv/valid-observations.csv');
 
     $observations = Observation::query()->orderBy('id')->get();
     $site = Location::query()->where('name', 'Example Site')->value('id');
@@ -267,7 +165,7 @@ it('stores the fields of the valid csv file', function () {
 });
 
 it('reads the quoted fields and the byte order mark of a csv export', function () {
-    runImportFixture($this->user, 'csv/valid-export-format.csv');
+    Fixtures::import($this->user, 'csv/valid-export-format.csv');
 
     $observation = Observation::query()->orderBy('id')->first();
     expect($observation->target_name)->toBe('M 31')
@@ -275,7 +173,7 @@ it('reads the quoted fields and the byte order mark of a csv export', function (
 });
 
 it('stores the fields of the valid oal file and creates the missing site and scope', function () {
-    $result = runImportFixture($this->user, 'oal/valid-observations.xml');
+    $result = Fixtures::import($this->user, 'oal/valid-observations.xml');
 
     expect(array_keys($result->newLocations))->toBe(['Example Remote Site'])
         ->and(array_keys($result->newInstruments))->toBe(['Example Refractor 102'])
@@ -297,11 +195,13 @@ it('stores the fields of the valid oal file and creates the missing site and sco
         ->and($m42->description)->toContain('zeer uitgebreid');
     expect($m45->instrument_id)->toBe(Instrument::query()->where('name', 'Naked eye')->value('id'));
     expect($m81->target_name)->toBe('M 81')
-        ->and($m81->location_id)->toBe(Location::query()->where('name', 'Example Remote Site')->value('id'));
+        ->and($m81->location_id)->toBe(Location::query()->where('name', 'Example Remote Site')->value('id'))
+        // <timezone>60</timezone> at 46° N, 7.5° E
+        ->and(Location::query()->where('name', 'Example Remote Site')->value('timezone'))->toBe('Europe/Zurich');
 });
 
 it('adds a target the oal file defines but the database does not have', function () {
-    $result = runImportFixture($this->user, 'oal/valid-new-targets.xml');
+    $result = Fixtures::import($this->user, 'oal/valid-new-targets.xml');
 
     expect($result->newObjects)->toBe(['Example Nebula 123' => 'example-nebula-123']);
 
@@ -328,7 +228,7 @@ it('adds a target the oal file defines but the database does not have', function
 });
 
 it('adds no object for an observation that is skipped', function () {
-    runImportFixture($this->user, 'oal/invalid-unknown-targets.xml');
+    Fixtures::import($this->user, 'oal/invalid-unknown-targets.xml');
 
     expect(DB::table('objects')->where('name', 'like', 'Example%')->exists())->toBeFalse()
         ->and(DB::table('objectnames')->where('objectname', 'like', 'Example%')->exists())->toBeFalse()
@@ -336,7 +236,7 @@ it('adds no object for an observation that is skipped', function () {
 });
 
 it('stores comets, moons and lunar features under their own table', function (string $file, array $expected) {
-    runImportFixture($this->user, $file);
+    Fixtures::import($this->user, $file);
 
     $comet = (string) DB::table('cometobjects')->where('name', '12P/Pons-Brooks')->value('id');
     $targets = Observation::query()->orderBy('id')->get()
@@ -377,40 +277,87 @@ it('stores comets, moons and lunar features under their own table', function (st
 ]);
 
 it('reads an oal file in latin-1', function () {
-    runImportFixture($this->user, 'oal/valid-latin1.xml');
+    Fixtures::import($this->user, 'oal/valid-latin1.xml');
 
     expect(Observation::query()->value('description'))->toBe('Très belle galaxie, bras spiraux à peine visibles. Noyau étoilé.');
 });
 
-it('updates the observations instead of duplicating them when a valid file is imported again', function (string $file, int $count) {
-    runImportFixture($this->user, $file);
-    $again = runImportFixture($this->user, $file);
+it('adds nothing when a file is imported again', function (string $file, bool $belowHorizon) {
+    $first = Fixtures::import($this->user, $file, $belowHorizon);
+    $count = Observation::query()->count();
+    $objects = DB::table('objects')->count();
+    $again = Fixtures::import($this->user, $file, $belowHorizon);
 
-    expect($again->imported)->toBe($count)
+    expect($count)->toBe($first->imported)
+        ->and($again->imported)->toBe($first->imported)
         ->and(collect($again->importedObservations)->every(fn (array $row) => $row['updated']))->toBeTrue()
-        ->and(Observation::query()->count())->toBe($count);
+        ->and(Observation::query()->count())->toBe($count)
+        // A target the first import added is found the second time.
+        ->and(DB::table('objects')->count())->toBe($objects);
+})->with(fn () => collect(array_keys(importFixtureExpectations()))
+    ->filter(fn (string $file) => str_contains($file, '/valid-'))
+    ->map(fn (string $file) => [$file, false])
+    ->merge([['csv/below-horizon.csv', true], ['oal/below-horizon.xml', true]])
+    ->mapWithKeys(fn (array $case) => [$case[0].($case[1] ? ', below the horizon too' : '') => $case])
+    ->all());
+
+it('keeps observations of the same moment with another instrument apart', function (string $file) {
+    Fixtures::import($this->user, $file);
+
+    $instruments = Observation::query()->orderBy('id')->get()
+        ->map(fn (Observation $o) => Instrument::query()->whereKey($o->instrument_id)->value('name'))
+        ->all();
+    expect($instruments)->toBe(['Example Dobson 250', 'Naked eye', 'Example Dobson 250', 'Naked eye']);
+})->with(['csv/valid-same-moment.csv', 'oal/valid-same-moment.xml']);
+
+it('gives an observation without an instrument the instrument of the file', function (string $file) {
+    $owner = ['observer_username' => $this->user->username, 'observer_user_id' => $this->user->id, 'language' => 'en',
+        'target_type' => 'deepsky', 'target_table' => 'objects', 'target_key' => 'M 31', 'target_name' => 'M 31',
+        'has_drawing' => false, 'observed_on' => '2026-09-12', 'observed_time' => '21:30:00'];
+    $withoutInstrument = Observation::query()->create($owner + ['description' => 'Migrated, without an instrument.']);
+    $binoculars = Instrument::query()->create([
+        'user_id' => $this->user->id, 'observer' => $this->user->username, 'active' => true, 'name' => 'Example Binoculars',
+        'make_id' => DB::table('instrument_makes')->value('id'), 'aperture_mm' => 50, 'fixedMagnification' => 10,
+        'instrument_type_id' => 2, 'mount_type_id' => DB::table('mount_types')->value('id'),
+    ]);
+    $otherInstrument = Observation::query()->create($owner + ['instrument_id' => $binoculars->id, 'description' => 'Through binoculars.']);
+
+    Fixtures::import($this->user, $file);
+
+    // The file has M 31 at that moment through the Dobson and with the naked
+    // eye: the first fills in the observation without an instrument, the
+    // second is new, and the one through binoculars is left alone.
+    expect($withoutInstrument->fresh()->instrument_id)->toBe(Instrument::query()->where('user_id', $this->user->id)->where('name', 'Example Dobson 250')->value('id'))
+        ->and($otherInstrument->fresh()->description)->toBe('Through binoculars.')
+        ->and(Observation::query()->where('observed_on', '2026-09-12')->count())->toBe(3);
+})->with(['csv/valid-same-moment.csv', 'oal/valid-same-moment.xml']);
+
+it('adds nothing when the same observations come from a csv and an oal file', function (string $first, string $second) {
+    Fixtures::import($this->user, $first);
+    $again = Fixtures::import($this->user, $second);
+
+    // The two files hold the same eight observations, with the times in UT
+    // (CSV) and in UT or local time with an offset (OAL).
+    expect($again->imported)->toBe(8)
+        ->and(collect($again->importedObservations)->every(fn (array $row) => $row['updated']))->toBeTrue()
+        ->and(Observation::query()->count())->toBe(8);
 })->with([
-    ['csv/valid-observations.csv', 6],
-    ['oal/valid-observations.xml', 5],
-    ['oal/valid-new-targets.xml', 3],
-    ['csv/valid-solar-system.csv', 6],
-    ['oal/valid-solar-system.xml', 5],
-    ['csv/valid-all-types.csv', 8],
-    ['oal/valid-all-types.xml', 8],
+    'csv, then oal' => ['csv/valid-all-types.csv', 'oal/valid-all-types.xml'],
+    'oal, then csv' => ['oal/valid-all-types.xml', 'csv/valid-all-types.csv'],
 ]);
 
 it('imports the observations below the horizon with a warning when asked to', function (string $file) {
-    $result = runImportFixture($this->user, $file, belowHorizon: true);
+    $result = Fixtures::import($this->user, $file, belowHorizon: true);
 
     expect($result->imported)->toBe(2)
         ->and($result->errors)->toBe(0)
-        ->and(importMessages($result, 'warning'))->toHaveCount(2)
-        ->and(importMessages($result, 'warning')[0])->toContain('Imported anyway.');
+        ->and(Fixtures::messages($result, 'warning'))->toHaveCount(2)
+        ->and(Fixtures::messages($result, 'warning')[0])->toContain('Imported anyway.');
 })->with(['csv/below-horizon.csv', 'oal/below-horizon.xml']);
 
 it('accepts the example file as an upload', function (string $file) {
     $format = str_starts_with($file, 'csv/') ? 'csv' : 'oal';
-    $upload = UploadedFile::fake()->createWithContent(basename($file), importFixture($file));
+    $upload = UploadedFile::fake()->createWithContent(basename($file), Fixtures::content($file));
 
     $this->actingAs($this->user)
         ->post(route('observation.import.process'), ['format' => $format, 'import_file' => $upload])

@@ -149,17 +149,22 @@ trait SavesImportedObservations
     }
 
     /**
-     * The observation of this user of the same object at the same moment, or
-     * null. Migrated observations count too, so re-importing an export does not
-     * duplicate them.
+     * The observation of this user of the same object at the same moment with
+     * the same instrument, or null. Migrated observations count too, so
+     * re-importing an export does not duplicate them.
      *
      * With a time, only an observation at that UT time matches; midnight UT
      * also matches an observation without a time, because that is how an OAL
      * export writes one (OAL requires a time). Without a time, only an
      * observation without a time matches: migrated ones have observed_time
      * 23:59:00 and legacy_time_int -9999.
+     *
+     * An observation with another instrument is another observation (the
+     * object seen with the naked eye and through the telescope). One without
+     * an instrument matches too, after one with the same instrument: it gets
+     * the instrument of the file.
      */
-    private function findExistingObservation(string $targetType, string $targetKey, string $observedOn, ?string $observedTime): ?Observation
+    private function findExistingObservation(string $targetType, string $targetKey, string $observedOn, ?string $observedTime, ?int $instrumentId): ?Observation
     {
         $base = fn() => Observation::query()
             ->where(fn($q) => $q->where('observer_user_id', $this->user->id)
@@ -172,12 +177,21 @@ trait SavesImportedObservations
         $withoutTime = fn($q) => $q->where(fn($q) => $q->whereNull('observed_time')
             ->orWhere(fn($q) => $q->where('legacy_time_int', '<', 0)->where('observed_time', 'like', '23:59%')));
 
-        if ($observedTime === null) {
-            return $base()->where($withoutTime)->first();
+        $moments = match (true) {
+            $observedTime === null => [$withoutTime],
+            $observedTime === '00:00:00' => [fn($q) => $q->where('observed_time', $observedTime), $withoutTime],
+            default => [fn($q) => $q->where('observed_time', $observedTime)],
+        };
+
+        foreach ($moments as $moment) {
+            $existing = ($instrumentId !== null ? $base()->where($moment)->where('instrument_id', $instrumentId)->first() : null)
+                ?? $base()->where($moment)->whereNull('instrument_id')->first();
+            if ($existing !== null) {
+                return $existing;
+            }
         }
 
-        return $base()->where('observed_time', $observedTime)->first()
-            ?? ($observedTime === '00:00:00' ? $base()->where($withoutTime)->first() : null);
+        return null;
     }
 
     /**
@@ -193,6 +207,7 @@ trait SavesImportedObservations
             (string) $fields['target_key'],
             (string) $fields['observed_on'],
             $observedTime,
+            isset($fields['instrument_id']) ? (int) $fields['instrument_id'] : null,
         );
 
         if ($existing) {

@@ -1010,15 +1010,23 @@ final class ObservationSearchTable extends PowerGridComponent
     }
 
     /**
-     * UT time as HH:MM, or empty when the time is unknown (migrated
-     * observations without a time have observed_time 23:59:00 and
+     * UT time as HH:MM, or HH:MM:SS when it has seconds (so that importing the
+     * file again finds the observation), or empty when the time is unknown
+     * (migrated observations without a time have observed_time 23:59:00 and
      * legacy_time_int -9999).
      */
     private function formatImportTime(Observation $observation): string
     {
         $time = $observation->time;
+        if ($time === null) {
+            return '';
+        }
 
-        return $time === null ? '' : sprintf('%02d:%02d', intdiv($time, 100), $time % 100);
+        $seconds = preg_match('/^\d{1,2}:\d{2}:(\d{2})/', (string) $observation->observed_time, $m) === 1 ? (int) $m[1] : 0;
+
+        return $seconds === 0
+            ? sprintf('%02d:%02d', intdiv($time, 100), $time % 100)
+            : sprintf('%02d:%02d:%02d', intdiv($time, 100), $time % 100, $seconds);
     }
 
     private function nullableInteger(mixed $value): string

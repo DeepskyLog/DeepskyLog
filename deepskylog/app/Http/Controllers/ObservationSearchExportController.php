@@ -22,9 +22,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Support\Timezones;
 
 class ObservationSearchExportController extends Controller
 {
+    /** The instrument type `Naked Eye` (instrument_types.id). */
+    private const NAKED_EYE_INSTRUMENT_TYPE = 1;
+
     private const OAL_NS = 'http://groups.google.com/group/openastronomylog';
     private const XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance';
     private const OAL_SCHEMA_LOCATION = 'http://groups.google.com/group/openastronomylog oal21.xsd';
@@ -669,8 +673,10 @@ class ObservationSearchExportController extends Controller
             $locations->put($sessionContext['site']->id, $sessionContext['site']);
         }
 
+        // OAL leaves out the scope of an observation with the naked eye.
         $instruments = Instrument::query()
             ->whereIn('id', $observations->pluck('instrument_id')->filter()->unique()->all())
+            ->where(fn($query) => $query->whereNull('instrument_type_id')->orWhere('instrument_type_id', '<>', self::NAKED_EYE_INSTRUMENT_TYPE))
             ->get(['id', 'name', 'aperture_mm', 'focal_length_mm'])
             ->keyBy('id');
 
@@ -678,6 +684,13 @@ class ObservationSearchExportController extends Controller
             ->whereIn('id', $observations->pluck('eyepiece_id')->filter()->unique()->all())
             ->get(['id', 'name', 'focal_length_mm', 'max_focal_length_mm', 'apparentFOV'])
             ->keyBy('id');
+
+        // The visibility of a deep-sky observation is the rating of the Deep Sky
+        // Liste in OAL: the same scale, 1 (very simple) to 7 (not seen).
+        $visibilities = DB::table('deepsky_observation_details')
+            ->whereIn('observation_id', $observations->pluck('id')->all())
+            ->whereBetween('visibility', [1, 7])
+            ->pluck('visibility', 'observation_id');
 
         $lenses = Lens::query()
             ->whereIn('id', $observations->pluck('lens_id')->filter()->unique()->all())
@@ -903,6 +916,11 @@ class ObservationSearchExportController extends Controller
             $descriptionNode = $document->createElement('description');
             $descriptionNode->appendChild($document->createTextNode($this->xmlSafeText(html_entity_decode(strip_tags($description), ENT_QUOTES | ENT_HTML5, 'UTF-8'))));
             $resultNode->appendChild($descriptionNode);
+            $visibility = $observation->target_table === 'objects' ? $visibilities->get($observation->id) : null;
+            if ($visibility !== null) {
+                $resultNode->setAttributeNS(self::XSI_NS, 'xsi:type', 'oal:findingsDeepSkyType');
+                $this->appendOalTextNode($document, $resultNode, 'rating', (int) $visibility);
+            }
             $observationNode->appendChild($resultNode);
 
             $root->appendChild($observationNode);
@@ -1244,7 +1262,7 @@ class ObservationSearchExportController extends Controller
         $seconds = preg_match('/^\d{1,2}:\d{2}:(\d{2})/', (string) $observation->observed_time, $m) === 1 ? (int) $m[1] : 0;
         $moment = $moment->setTime(intdiv($time, 100), $time % 100, $seconds);
         try {
-            return $moment->setTimezone(trim((string) $timezone) !== '' ? trim((string) $timezone) : 'UTC');
+            return $moment->setTimezone(Timezones::orUtc($timezone));
         } catch (\Throwable $_) {
             return $moment;
         }
@@ -1512,7 +1530,7 @@ class ObservationSearchExportController extends Controller
 
     private function formatOalDateTime(mixed $value, ?string $timezone = null): string
     {
-        $tz = trim((string) ($timezone ?: 'UTC')) ?: 'UTC';
+        $tz = Timezones::orUtc($timezone);
 
         if ($value instanceof \DateTimeInterface) {
             return CarbonImmutable::instance($value)->setTimezone($tz)->format('Y-m-d\TH:i:sP');
@@ -1721,13 +1739,12 @@ class ObservationSearchExportController extends Controller
 
     private function oalTimezoneOffsetMinutes(?string $timezone): int
     {
-        $timezone = trim((string) $timezone);
-        if ($timezone === '') {
+        if (!Timezones::isIdentifier($timezone)) {
             return 0;
         }
 
         try {
-            $dateTimeZone = new \DateTimeZone($timezone);
+            $dateTimeZone = new \DateTimeZone(trim((string) $timezone));
             $reference = new \DateTimeImmutable('first day of january ' . now()->year, $dateTimeZone);
 
             return (int) round($dateTimeZone->getOffset($reference) / 60);
