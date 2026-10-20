@@ -5,6 +5,7 @@ use App\Models\EyepieceType;
 use App\Models\Observation;
 use App\Models\User;
 use Database\Factories\EyepieceFactory;
+use Database\Factories\LocationFactory;
 use Illuminate\Support\Facades\Auth;
 
 it('ignores a selected make, type or color that does not exist', function (string $route) {
@@ -184,4 +185,15 @@ it('accepts the session of a logged-in user on the site pages', function () {
         ->withHeader('Referer', config('app.url').'/profile')
         ->getJson(route('countries.index', ['lang' => 'en']))
         ->assertOk();
+});
+
+it('searches the locations of the location select by name', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+    $kalmthout = LocationFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'name' => 'Kalmthoutse Heide', 'active' => 1]);
+    $ardennes = LocationFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'name' => 'Ardennes', 'active' => 1]);
+
+    $ids = collect($this->getJson(route('location.select.api', ['search' => 'kalm']))->assertOk()->json())->pluck('id');
+
+    expect($ids->all())->toContain($kalmthout->id)->not->toContain($ardennes->id);
 });

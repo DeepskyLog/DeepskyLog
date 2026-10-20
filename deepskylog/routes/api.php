@@ -243,7 +243,7 @@ Route::get('location.select.api', function (Request $request) {
     });
 
     foreach ($locations as $location) {
-        if ($request->search == '' || Str::contains(Str::lower($location->fullName()), Str::lower($request->search))) {
+        if ($request->search == '' || Str::contains(Str::lower(html_entity_decode($location->name)), Str::lower($request->search))) {
             $allLocations[] = [
                 'id' => $location->id,
                 'name' => $location->name,
