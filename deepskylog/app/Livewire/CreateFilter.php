@@ -3,7 +3,9 @@
 namespace App\Livewire;
 
 use App\Models\Filter;
+use App\Models\FilterColor;
 use App\Models\FilterMake;
+use App\Models\FilterType;
 use App\Support\UploadedPhoto;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Validate;
@@ -35,6 +37,8 @@ class CreateFilter extends Component
 
     public $description;
 
+    public $proposed_name;
+
     public function mount(): void
     {
         if ($this->filter) {
@@ -59,6 +63,44 @@ class CreateFilter extends Component
         }
 
         return view('livewire.create-filter', ['update' => false]);
+    }
+
+    public function updated($property): void
+    {
+        if (in_array($property, ['filter_make', 'filter_new_make', 'type_id', 'color_id', 'wratten', 'schott'])) {
+            $this->updateProposedName();
+        }
+    }
+
+    public function updateProposedName(): void
+    {
+        if ($this->filter_make == null || $this->filter_make == 1) {
+            $make = trim((string) $this->filter_new_make);
+        } else {
+            $make = FilterMake::find($this->filter_make)?->name;
+        }
+
+        // A color filter is named after its color and Wratten or Schott number, other filters after their type
+        $parts = [$make];
+        if ($this->type_id == 7) {
+            if ($this->color_id && $this->color_id != 1) {
+                $parts[] = FilterColor::find($this->color_id)?->name;
+            }
+            if (trim((string) $this->wratten) != '') {
+                $parts[] = 'Wratten '.trim($this->wratten);
+            } elseif (trim((string) $this->schott) != '') {
+                $parts[] = 'Schott '.trim($this->schott);
+            }
+        } elseif ($this->type_id && $this->type_id != 1) {
+            $parts[] = FilterType::find($this->type_id)?->name;
+        }
+
+        $this->proposed_name = implode(' ', array_filter($parts));
+
+        // Only put the proposed name in the name field if a new filter is being created
+        if (! $this->filter) {
+            $this->name = $this->proposed_name;
+        }
     }
 
     public function save()

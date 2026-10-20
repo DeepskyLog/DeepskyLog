@@ -29,6 +29,14 @@
       - [X] Add observation -> Moon, Lunar features, Sun, Planets, Deep sky object
       - [X] Add observation using CSV / OAL
       - [X] Sessions
+      - [X] Instruments
+      - [X] Eyepieces
+      - [ ] Lenses
+      - [X] Filters
+      - [X] Locations
+      - [ ] Instrument sets
+      - [ ] Object
+      - [ ] Comet
     - [ ] Image catalogs
     - [ ] Atlases
     - [ ] Log out

@@ -147,8 +147,7 @@
                         <div class="col-span-6 sm:col-span-5">
                             <x-select
                                 label="{{ __('Select the make of the filter, if the make is not in the list, add a new make in the next field.') }}"
-                                wire:model="filter_make"
-                                x-on:selected="updateMake($event.detail.value)"
+                                wire:model.live="filter_make"
                                 :async-data="route('filter_makes.api')"
                                 option-label="name"
                                 option-value="id"
@@ -159,7 +158,7 @@
                                 name="filter_new_make"
                                 label="{!! __('Only add a make for the filter here if the correct make is not available in the dropdown above.') !!}"
                                 type="text"
-                                wire:model="filter_new_make"
+                                wire:model.live.debounce.500ms="filter_new_make"
                                 class="mt-1 block w-full"
                                 value=""
                                 id="filter_new_make"
@@ -168,7 +167,7 @@
                             {{-- Enter the name of the filter--}}
                             <x-input
                                 name="name"
-                                label="{!! __('Name of the filter') !!}"
+                                :label="__('Name of the filter - proposal: ') . $proposed_name"
                                 type="text"
                                 wire:model="name"
                                 class="mt-1 block w-full"
@@ -188,8 +187,7 @@
                                     <div class="col-span-6 sm:col-span-5">
                                         <x-select
                                             label="{{ __('Select the color of the filter.') }}"
-                                            wire:model="color_id"
-                                            x-on:selected="updateType($event.detail.value)"
+                                            wire:model.live="color_id"
                                             :async-data="route('filter_colors.api')"
                                             option-label="name"
                                             option-value="id"
@@ -200,7 +198,7 @@
                                             label="{{ __('Wratten') }}"
                                             type="text"
                                             class="mt-1 block w-full"
-                                            wire:model="wratten"
+                                            wire:model.live.debounce.500ms="wratten"
                                             maxlength="5"
                                             value="{{ old('wratten') }}"
                                         />
@@ -210,7 +208,7 @@
                                             label="{{ __('Schott') }}"
                                             type="text"
                                             class="mt-1 block w-full"
-                                            wire:model="schott"
+                                            wire:model.live.debounce.500ms="schott"
                                             maxlength="5"
                                             value="{{ old('schott') }}"
                                         />

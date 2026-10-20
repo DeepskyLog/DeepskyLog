@@ -726,7 +726,7 @@ Route::get('instrument_makes.api', function (Request $request) {
             ];
         }
     }
-    $makes = InstrumentMake::get();
+    $makes = InstrumentMake::orderBy('name')->get();
     foreach ($makes as $make) {
         if ($request->search == '' || Str::contains(Str::lower($make->name), Str::lower($request->search))) {
             $allMakes[] = [
@@ -802,7 +802,7 @@ Route::get('eyepiece_makes.api', function (Request $request) {
             ];
         }
     }
-    $makes = EyepieceMake::get();
+    $makes = EyepieceMake::orderBy('name')->get();
     foreach ($makes as $make) {
         if ($request->search == '' || Str::contains(Str::lower($make->name), Str::lower($request->search))) {
             $allMakes[] = [
@@ -833,8 +833,8 @@ Route::get('eyepiece_type.api', function (Request $request) {
     ];
     // Limit to the types of the given make; without a make, all types
     $types = $request->exists('make')
-        ? EyepieceType::where('eyepiece_makes_id', $request->make)->get()
-        : EyepieceType::get();
+        ? EyepieceType::where('eyepiece_makes_id', $request->make)->orderBy('name')->get()
+        : EyepieceType::orderBy('name')->get();
     foreach ($types as $type) {
         if ($request->search == '' || Str::contains(Str::lower($type->name), Str::lower($request->search))) {
             $allTypes[] = [
@@ -859,7 +859,7 @@ Route::get('lens_makes.api', function (Request $request) {
             ];
         }
     }
-    $makes = LensMake::get();
+    $makes = LensMake::orderBy('name')->get();
     foreach ($makes as $make) {
         if ($request->search == '' || Str::contains(Str::lower($make->name), Str::lower($request->search))) {
             $allMakes[] = [
@@ -884,7 +884,7 @@ Route::get('filter_makes.api', function (Request $request) {
             ];
         }
     }
-    $makes = FilterMake::get();
+    $makes = FilterMake::orderBy('name')->get();
     foreach ($makes as $make) {
         if ($request->search == '' || Str::contains(Str::lower($make->name), Str::lower($request->search))) {
             $allMakes[] = [

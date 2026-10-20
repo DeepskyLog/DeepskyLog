@@ -1,4 +1,4 @@
-@php use App\Models\Instrument;use App\MOdels\Lens; @endphp
+@php use App\Models\Instrument;use App\Models\Lens; @endphp
 <x-app-layout>
     <div>
         <div class="mx-auto max-w-screen bg-gray-900 px-2 py-10 sm:px-6 lg:px-8">
