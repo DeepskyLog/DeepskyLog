@@ -8,8 +8,10 @@ use App\Models\Instrument;
 use App\Models\Lens;
 use App\Models\Location;
 use App\Models\Observation;
+use App\Models\ObservationSession;
 use App\Models\User;
 use App\Services\DeepskyObjectCreator;
+use App\Services\SessionObservationLinker;
 use App\Support\Html;
 use App\Support\Timezones;
 use Carbon\Carbon;
@@ -66,6 +68,23 @@ class OalObservationImporter
      * @var array<string, array{string|null, string|null, string|null, string|null}>
      */
     private array $resolvedObjects = [];
+
+    /**
+     * The sessions created or updated by this import, by id: their
+     * observations are linked once the observations are in.
+     *
+     * @var array<int, ObservationSession>
+     */
+    private array $importedSessions = [];
+
+    /**
+     * The ids of the <session> elements of the file. The schema means to check
+     * the session of an observation against them, but its keyref selects the
+     * wrong elements, so the importer does.
+     *
+     * @var array<string, true>
+     */
+    private array $sessionIds = [];
 
     public function __construct(User $user, ?OalSchemaValidator $validator = null)
     {
@@ -127,6 +146,21 @@ class OalObservationImporter
         $lenses = $this->indexById($xml->lenses->lens ?? []);
         $filters = $this->indexById($xml->filters->filter ?? []);
         $targets = $this->indexById($xml->targets->target ?? []);
+        $observers = $this->indexById($xml->observers->observer ?? []);
+
+        // ── Sessions ───────────────────────────────────────────────────────────
+
+        $sessionNumber = 0;
+        foreach ($xml->sessions->session ?? [] as $sessionNode) {
+            $sessionNumber++;
+            $this->sessionIds[trim((string) ($sessionNode->attributes()['id'] ?? ''))] = true;
+
+            try {
+                $this->importSession($sessionNode, $sites, $observers, $result, $sessionNumber);
+            } catch (\Throwable $e) {
+                $result->addError("Session {$sessionNumber}: Unexpected error — {$e->getMessage()}");
+            }
+        }
 
         // ── Process each <observation> ─────────────────────────────────────────
 
@@ -134,6 +168,7 @@ class OalObservationImporter
 
         if (count($obsNodes) === 0) {
             $result->addWarning('No <observation> elements found in the file.');
+            $this->linkImportedSessions();
 
             return $result;
         }
@@ -148,6 +183,8 @@ class OalObservationImporter
                 $result->addError("Observation {$rowNumber}: Unexpected error — {$e->getMessage()}", '', $rowNumber);
             }
         }
+
+        $this->linkImportedSessions();
 
         $result->addInfo(
             "OAL import complete. Imported: {$result->imported}, Skipped: {$result->skipped}, Errors: {$result->errors}.",
@@ -280,6 +317,12 @@ class OalObservationImporter
             $result->skipped++;
 
             return;
+        }
+
+        // A session is linked by its dates, not by this reference.
+        $sessionRef = trim((string) ($obs->session ?? ''));
+        if ($sessionRef !== '' && !isset($this->sessionIds[$sessionRef])) {
+            $result->addWarning("Observation {$row}: Refers to session '{$sessionRef}', which is not in the file.", '', $row);
         }
 
         // ── Resolve site → location ───────────────────────────────────────────
@@ -455,6 +498,136 @@ class OalObservationImporter
     }
 
     /**
+     * Import one <session> as a session of the user, or update the session of
+     * the user with the same begin and end date. OAL gives a session no name,
+     * so a new one is named after its site and date. Co-observers are not
+     * added: that sends them an invitation and a copy of the session, which
+     * the observer does on the session page.
+     *
+     * @param  array<string, \SimpleXMLElement>  $sites
+     * @param  array<string, \SimpleXMLElement>  $observers
+     */
+    private function importSession(\SimpleXMLElement $sessionNode, array $sites, array $observers, ImportResult $result, int $number): void
+    {
+        $label = "Session {$number}";
+        $lang = strtolower(substr(trim((string) ($sessionNode->attributes()['lang'] ?? '')), 0, 10));
+        $node = $this->withDefaultNamespace($sessionNode);
+
+        $siteRef = trim((string) ($node->site ?? ''));
+        $siteNode = $siteRef !== '' ? $this->withDefaultNamespace($sites[$siteRef] ?? null) : null;
+        $siteName = $siteNode ? trim((string) ($siteNode->name ?? '')) : '';
+        if ($siteName === '') {
+            $result->addError("{$label}: Cannot resolve its site (ref='{$siteRef}'), skipping.");
+
+            return;
+        }
+
+        $locationId = $this->resolveOrCreateLocationFromOal($siteNode, $siteName, $result, 0, $label);
+        if ($locationId === null) {
+            return;
+        }
+        $location = Location::find($locationId);
+
+        $begin = $this->parseOalSessionMoment((string) ($node->begin ?? ''), $location->timezone);
+        $end = $this->parseOalSessionMoment((string) ($node->end ?? ''), $location->timezone);
+        if ($begin === null || $end === null) {
+            $result->addError("{$label}: Cannot parse its begin or end, skipping.");
+
+            return;
+        }
+        if ($end < $begin) {
+            $result->addError("{$label}: It ends ({$end}) before it begins ({$begin}), skipping.");
+
+            return;
+        }
+
+        $texts = [];
+        foreach (['weather', 'equipment', 'comments'] as $field) {
+            $text = trim((string) ($node->{$field} ?? ''));
+            if ($text !== '') {
+                // OAL holds plain text; the session shows HTML.
+                $texts[$field] = nl2br(e($text), false);
+            }
+        }
+
+        $existing = ObservationSession::query()
+            ->where('observerid', $this->user->username)
+            ->whereDate('begindate', substr($begin, 0, 10))
+            ->whereDate('enddate', substr($end, 0, 10))
+            ->orderBy('id')
+            ->first();
+
+        if ($existing) {
+            $existing->update([
+                'locationid' => $locationId,
+                'begindate' => $begin,
+                'enddate' => $end,
+                ...$texts,
+                ...($lang !== '' ? ['language' => $lang] : []),
+            ]);
+            $session = $existing;
+            $result->addSuccess("{$label}: Updated existing session '{$session->name}'.");
+        } else {
+            $session = ObservationSession::create([
+                'name' => mb_substr(__('Session at :site on :date', ['site' => $siteName, 'date' => substr($begin, 0, 10)]), 0, 200),
+                'observerid' => $this->user->username,
+                'locationid' => $locationId,
+                'begindate' => $begin,
+                'enddate' => $end,
+                'weather' => $texts['weather'] ?? '',
+                'equipment' => $texts['equipment'] ?? '',
+                'comments' => $texts['comments'] ?? null,
+                'language' => $lang !== '' ? $lang : ObservationSession::languageOf($this->user),
+                'active' => 1,
+            ]);
+            $result->addSuccess("{$label}: Imported session '{$session->name}'.");
+        }
+
+        $this->importedSessions[$session->id] = $session;
+        $result->sessions[$session->id] = ['name' => $session->name, 'slug' => $session->slug, 'new' => $existing === null];
+
+        $coObservers = [];
+        foreach ($node->coObserver ?? [] as $ref) {
+            $observer = $this->withDefaultNamespace($observers[trim((string) $ref)] ?? null);
+            $name = $observer ? trim(trim((string) ($observer->name ?? '')) . ' ' . trim((string) ($observer->surname ?? ''))) : '';
+            $coObservers[] = $name !== '' ? $name : trim((string) $ref);
+        }
+        if ($coObservers !== []) {
+            $result->addInfo("{$label}: The co-observers in the file (" . implode(', ', $coObservers) . ') are not added to the session. Add them on the session page to invite them.');
+        }
+    }
+
+    /**
+     * An OAL session begin or end as the local time at the site
+     * ('Y-m-d H:i:s'), which is how a session stores it. A value without an
+     * offset is taken as UT, as for observations.
+     */
+    private function parseOalSessionMoment(string $value, ?string $timezone): ?string
+    {
+        $value = trim($value);
+        if ($value === '') {
+            return null;
+        }
+
+        try {
+            return Carbon::parse($value, 'UTC')->setTimezone(Timezones::orUtc($timezone))->format('Y-m-d H:i:s');
+        } catch (\Throwable $_) {
+            return null;
+        }
+    }
+
+    /**
+     * Link the observations of the imported sessions: a session holds the
+     * observations of its participants between its begin and end date.
+     */
+    private function linkImportedSessions(): void
+    {
+        foreach ($this->importedSessions as $session) {
+            SessionObservationLinker::syncSession($session);
+        }
+    }
+
+    /**
      * Parse an OAL ISO 8601 date/time string into ['Y-m-d', 'H:i:s'|null].
      *
      * @return array{string|null, string|null}
@@ -500,8 +673,10 @@ class OalObservationImporter
 
     // ── Equipment resolution helpers ──────────────────────────────────────────
 
-    private function resolveOrCreateLocationFromOal(\SimpleXMLElement $node, string $name, ImportResult $result, int $row): ?int
+    private function resolveOrCreateLocationFromOal(\SimpleXMLElement $node, string $name, ImportResult $result, int $row, ?string $label = null): ?int
     {
+        $label ??= "Observation {$row}";
+
         $loc = Location::where('user_id', $this->user->id)
             ->where('name', $name)
             ->first();
@@ -539,11 +714,11 @@ class OalObservationImporter
             ]);
 
             $result->newLocations[$name] = $loc->slug;
-            $result->addInfo("Observation {$row}: Created new location '{$name}' (id={$loc->id}) from OAL site data.", '', $row);
+            $result->addInfo("{$label}: Created new location '{$name}' (id={$loc->id}) from OAL site data.", '', $row);
 
             return $loc->id;
         } catch (\Throwable $e) {
-            $result->addError("Observation {$row}: Could not create location '{$name}': {$e->getMessage()}", '', $row);
+            $result->addError("{$label}: Could not create location '{$name}': {$e->getMessage()}", '', $row);
 
             return null;
         }

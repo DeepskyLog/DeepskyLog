@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oal:observations xmlns:oal="http://groups.google.com/group/openastronomylog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://groups.google.com/group/openastronomylog oal21.xsd">
+  <observers>
+    <observer id="observer-1"><name>Example</name><surname>Observer</surname></observer>
+  </observers>
+  <sites>
+    <site id="site-1"><name>Example Site</name><longitude unit="deg">4.70</longitude><latitude unit="deg">50.88</latitude><elevation>30</elevation><timezone>60</timezone></site>
+  </sites>
+  <sessions/>
+  <targets>
+    <target id="target-m31" xsi:type="oal:deepSkyGX"><datasource>DeepskyLog</datasource><name>M 31</name></target>
+  </targets>
+  <scopes/><eyepieces/><lenses/><filters/><imagers/>
+  <observation id="observation-1">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <session>session-does-not-exist</session>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:30:00Z</begin>
+    <result lang="en"><description>The session refers to an id that is not in the file: imported with a warning.</description></result>
+  </observation>
+</oal:observations>

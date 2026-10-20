@@ -47,6 +47,7 @@
                                 <span class="block text-gray-100 font-medium">OAL 2.1 (OpenAstronomyLog XML)</span>
                                 <span class="block text-gray-400 text-xs mt-0.5">
                                     {{ __('Standard XML format exported by AstroPlanner, SkySafari, and other astronomy software.') }}
+                                    {{ __('The sessions in the file are imported too.') }}
                                 </span>
                             </div>
 

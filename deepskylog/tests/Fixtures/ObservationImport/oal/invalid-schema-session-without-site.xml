@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oal:observations xmlns:oal="http://groups.google.com/group/openastronomylog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://groups.google.com/group/openastronomylog oal21.xsd">
+  <observers>
+    <observer id="observer-1"><name>Example</name><surname>Observer</surname></observer>
+  </observers>
+  <sites>
+    <site id="site-1"><name>Example Site</name><longitude unit="deg">4.70</longitude><latitude unit="deg">50.88</latitude><elevation>30</elevation><timezone>60</timezone></site>
+  </sites>
+  <sessions>
+    <session id="session-1">
+      <begin>2026-09-12T21:00:00+02:00</begin>
+      <end>2026-09-13T02:30:00+02:00</end>
+      <weather>A session needs a site: the whole file is rejected.</weather>
+    </session>
+  </sessions>
+  <targets>
+    <target id="target-m31" xsi:type="oal:deepSkyGX"><datasource>DeepskyLog</datasource><name>M 31</name></target>
+  </targets>
+  <scopes/><eyepieces/><lenses/><filters/><imagers/>
+  <observation id="observation-1">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:30:00Z</begin>
+    <result lang="en"><description>Bright core.</description></result>
+  </observation>
+</oal:observations>

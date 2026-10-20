@@ -43,6 +43,26 @@
                     </div>
                 @endif
 
+                {{-- Sessions from the OAL file --}}
+                @if (count($result->sessions) > 0)
+                    <div class="rounded-lg bg-blue-950 border border-blue-800 p-4 mb-4">
+                        <h4 class="text-blue-300 font-semibold mb-3">{{ __('Sessions') }}</h4>
+                        <p class="text-blue-400 text-sm mb-3">
+                            {{ __('These sessions were imported from the file. A session holds your observations between its begin and end date. Please check their names and add the other observers.') }}
+                        </p>
+                        <ul class="mt-1 space-y-0.5">
+                            @foreach ($result->sessions as $session)
+                                <li class="text-sm text-blue-300">
+                                    <a href="{{ route('session.show', [$userSlug, $session['slug']]) }}" class="underline hover:text-white">{{ html_entity_decode($session['name'], ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                                    @unless ($session['new'])
+                                        <span class="text-blue-500">({{ __('updated') }})</span>
+                                    @endunless
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 {{-- New equipment created --}}
                 @php
                     $hasNewEquipment = count($result->newLocations)

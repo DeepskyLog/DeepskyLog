@@ -100,6 +100,29 @@ They have the `.xml` extension because the upload field only offers `.csv`,
 | `invalid-schema-unknown-reference.xml` | 0        | 0       | A schema validation error: `<scope>` refers to an id that is not in the file.          |
 | `invalid-observations.xml`             | 0        | 4       | Schema-valid, but each observation is skipped with an error: a description of only spaces; M 42 below the horizon; NGC 104 never rises (a begin at midnight UT counts as no time); a scope without a model or vendor. |
 | `below-horizon.xml`                    | 0        | 2       | As `below-horizon.csv`, including the checkbox.                                        |
+| `valid-sessions.xml`                   | 4        | 0       | No errors or warnings. Two sessions, both created: one at Example Site with a begin and end in local time (`+02:00`, stored as 21:00 to 02:30 the next day), a co-observer (not added; an info message gives the name), Dutch weather, equipment (two lines) and comments; one at `Example Remote Site` (created) in UT (stored as 20:00 to 00:00, the local time) without texts. The first holds M 31 and M 45 (after midnight local time), the second M 81; M 42 is in no session. |
+| `valid-sessions-only.xml`              | 0        | 0       | A warning: no `<observation>` elements. The session is imported all the same.           |
+| `invalid-sessions.xml`                 | 1        | 0       | Two errors, each session skipped: one ends before it begins; one refers to a site that is not in the file. The observation of the first is imported, in no session. |
+| `invalid-schema-session-without-site.xml` | 0     | 0       | A schema validation error: the session has no `<site>`.                                 |
+| `warning-unknown-session.xml`          | 1        | 0       | A warning: the observation refers to a session that is not in the file. The schema means to reject this, but its keyref for sessions selects the wrong elements. |
+
+## Sessions
+
+A `<session>` of an OAL file is imported as a session of the observer, named
+"Session at <site> on <date>" (OAL gives a session no name; rename it on the
+session page). Its begin and end are stored as the local time at its site, as
+the session form stores them. A session of the observer with the same begin
+and end date is updated instead, so importing `valid-sessions.xml` again
+changes nothing. Co-observers are not added: that sends them an invitation and
+a copy of the session, so the observer adds them on the session page.
+
+As every session in DeepskyLog, an imported session holds the observations of
+its observers between its begin and end date, not the observations the file
+links to it: importing `valid-sessions-only.xml` into an account with
+observations on 12 or 13 September 2026 links those. The `<session>` of an
+observation is only checked against the sessions of the file.
+
+Delete the sessions after testing by hand.
 
 ## Round trips
 
@@ -112,6 +135,9 @@ exports the observations again (the CSV export of the observation search, and
 - database → file → database: the export imported into another account (CSV
   or OAL, and from one format into the other) gives the same observations, and
   imported into the same account it changes nothing.
+
+The sessions of an OAL export (of a session, or of the observation search) are
+compared in `tests/Feature/OalSessionImportExportTest.php`.
 
 The files are compared by observation, not as text: the order, the quoting,
 the ids, the observer and the target details an export adds differ. Two

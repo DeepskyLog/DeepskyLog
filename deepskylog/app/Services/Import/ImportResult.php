@@ -34,6 +34,9 @@ class ImportResult
     /** @var array<string, string> name => slug of deep-sky objects created from OAL targets */
     public array $newObjects = [];
 
+    /** @var array<int, array{name: string, slug: string, new: bool}> session id => the sessions imported from an OAL file */
+    public array $sessions = [];
+
     /**
      * Brief summaries of successfully imported observations.
      * Each entry: ['row' => int, 'object' => string, 'date' => string]

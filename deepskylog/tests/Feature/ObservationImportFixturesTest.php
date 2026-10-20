@@ -6,6 +6,7 @@ use App\Models\Instrument;
 use App\Models\Lens;
 use App\Models\Location;
 use App\Models\Observation;
+use App\Models\ObservationSession;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Tests\Support\ObservationImportFixtures as Fixtures;
@@ -100,6 +101,18 @@ function importFixtureExpectations(): array
             "Observation 3: 'NGC 104' does not rise above the horizon",
             'Observation 4: The scope has no model or vendor',
         ], []],
+        'oal/valid-sessions.xml' => ['oal/valid-sessions.xml', 4, 0, [], []],
+        'oal/valid-sessions-only.xml' => ['oal/valid-sessions-only.xml', 0, 0, [], ['No <observation> elements found']],
+        'oal/invalid-sessions.xml' => ['oal/invalid-sessions.xml', 1, 0, [
+            'Session 1: It ends (2026-09-12 21:00:00) before it begins (2026-09-13 02:30:00), skipping.',
+            "Session 2: Cannot resolve its site (ref='site-does-not-exist'), skipping.",
+        ], []],
+        'oal/invalid-schema-session-without-site.xml' => ['oal/invalid-schema-session-without-site.xml', 0, 0, [
+            "OAL 2.1 schema validation error: line 13: Element 'weather': This element is not expected. Expected is ( site ).",
+        ], []],
+        'oal/warning-unknown-session.xml' => ['oal/warning-unknown-session.xml', 1, 0, [], [
+            "Observation 1: Refers to session 'session-does-not-exist', which is not in the file.",
+        ]],
         'oal/below-horizon.xml' => ['oal/below-horizon.xml', 0, 2, [
             "Observation 1: 'M 42' was 44.4° below the horizon",
             "Observation 2: 'NGC 104' does not rise above the horizon",
@@ -172,6 +185,42 @@ it('reads the quoted fields and the byte order mark of a csv export', function (
     $observation = Observation::query()->orderBy('id')->first();
     expect($observation->target_name)->toBe('M 31')
         ->and($observation->description)->toBe('Bright core; a "dust lane" with averted vision.');
+});
+
+it('stores the sessions of the oal file and links their observations', function () {
+    $result = Fixtures::import($this->user, 'oal/valid-sessions.xml');
+
+    [$night, $remote] = ObservationSession::query()->where('observerid', $this->user->username)->orderBy('begindate', 'desc')->get()->all();
+    $linked = fn (ObservationSession $session) => Observation::query()
+        ->whereIn('id', DB::table('sessionObservations')->where('sessionid', $session->id)->pluck('observationid'))
+        ->orderBy('id')->pluck('target_name')->all();
+
+    // The local time at the site: Brussels and the remote site are at UT+2 in
+    // September and UT+1 in March.
+    expect($night->name)->toBe('Session at Example Site on 2026-09-12')
+        ->and($night->begindate->format('Y-m-d H:i:s'))->toBe('2026-09-12 21:00:00')
+        ->and($night->enddate->format('Y-m-d H:i:s'))->toBe('2026-09-13 02:30:00')
+        ->and((int) $night->locationid)->toBe(Location::query()->where('name', 'Example Site')->value('id'))
+        ->and($night->language)->toBe('nl')
+        ->and($night->weather)->toBe('Helder &amp; koud, rond middernacht wat dauw.')
+        ->and($night->equipment)->toContain('Dobson van 250 mm<br')
+        ->and($night->comments)->toBe('Mooie nacht, SQM tot 21.1.')
+        ->and($night->otherObservers())->toBe([])
+        ->and($linked($night))->toBe(['M 31', 'M 45']);
+    expect($remote->name)->toBe('Session at Example Remote Site on 2026-03-20')
+        ->and($remote->begindate->format('Y-m-d H:i:s'))->toBe('2026-03-20 20:00:00')
+        ->and($remote->enddate->format('Y-m-d H:i:s'))->toBe('2026-03-21 00:00:00')
+        ->and($remote->weather)->toBe('')
+        ->and($remote->language)->toBe(ObservationSession::languageOf($this->user))
+        ->and($linked($remote))->toBe(['M 81']);
+    expect(array_keys($result->newLocations))->toBe(['Example Remote Site'])
+        ->and(collect($result->sessions)->pluck('new')->all())->toBe([true, true])
+        ->and(implode("\n", Fixtures::messages($result, 'info')))->toContain('Session 1: The co-observers in the file (Example Companion) are not added');
+
+    // Importing the file again updates both sessions.
+    $again = Fixtures::import($this->user, 'oal/valid-sessions.xml');
+    expect(ObservationSession::query()->where('observerid', $this->user->username)->count())->toBe(2)
+        ->and(collect($again->sessions)->pluck('new')->all())->toBe([false, false]);
 });
 
 it('stores the fields of the valid oal file and creates the missing site and scope', function () {

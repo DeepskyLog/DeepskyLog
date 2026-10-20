@@ -381,7 +381,9 @@ class ObservationSearchExportController extends Controller
 
         try {
             $query = trim((string) $request->query('q', ''));
-            $content = $this->buildOalXml($this->resolveMatchingObservations($request));
+            $observations = $this->resolveMatchingObservations($request);
+            [$sessions, $sessionOfObservation] = $this->oalSessionsOf($observations);
+            $content = $this->buildOalXml($observations, $sessions, $sessionOfObservation);
             $validator->assertValid($content);
 
             return response($content, 200, [
@@ -405,7 +407,11 @@ class ObservationSearchExportController extends Controller
         [$session, $observations, $sessionContext] = $this->resolveSessionExportPayload($userSlug, $sessionSlug);
 
         try {
-            $content = $this->buildOalXml($observations, $sessionContext);
+            $sessions = $sessionContext !== null && !empty($sessionContext['site_id']) ? [$sessionContext] : [];
+            $sessionOfObservation = $sessions === []
+                ? []
+                : $observations->mapWithKeys(fn(Observation $observation) => [$observation->id => $sessionContext['id']])->all();
+            $content = $this->buildOalXml($observations, $sessions, $sessionOfObservation);
             $validator->assertValid($content);
 
             $filename = Str::slug((string) ($session->slug ?: $session->name ?: 'session-' . $session->id)) ?: ('session-' . $session->id);
@@ -576,9 +582,93 @@ class ObservationSearchExportController extends Controller
     }
 
     /**
+     * The sessions of the exported observations, for an OAL file: the OAL
+     * contexts of the sessions (only those with a site, which OAL requires)
+     * and the OAL id of the session of each observation. An observation is in
+     * every session of its observer and in the copies of the other
+     * participants, but OAL gives it one session: that of its own observer,
+     * else the oldest. Drafts are only exported for whoever may edit them.
+     *
+     * @param  Collection<int, Observation>  $observations
+     * @return array{0: list<array<string, mixed>>, 1: array<int, string>}
+     */
+    private function oalSessionsOf(Collection $observations): array
+    {
+        $links = collect();
+        foreach ($observations->pluck('id')->chunk(1000) as $chunk) {
+            $links = $links->concat(DB::table('sessionObservations')
+                ->whereIn('observationid', $chunk->all())
+                ->get(['sessionid', 'observationid']));
+        }
+        if ($links->isEmpty()) {
+            return [[], []];
+        }
+
+        $viewer = Auth::user();
+        $sessions = collect();
+        foreach ($links->pluck('sessionid')->unique()->chunk(1000) as $chunk) {
+            $sessions = $sessions->concat(ObservationSession::query()->whereIn('id', $chunk->all())->get());
+        }
+        $sessions = $sessions
+            ->filter(fn(ObservationSession $session) => (int) $session->active === 1 || $session->canBeEditedBy($viewer))
+            ->keyBy('id');
+
+        $byId = $observations->keyBy('id');
+        $sessionOf = [];
+        foreach ($links->sortBy('sessionid') as $link) {
+            $session = $sessions->get((int) $link->sessionid);
+            $observation = $byId->get((int) $link->observationid);
+            if ($session === null || $observation === null) {
+                continue;
+            }
+            $current = $sessionOf[$observation->id] ?? null;
+            if ($current === null || ($current->observerid !== $observation->observer_username && $session->observerid === $observation->observer_username)) {
+                $sessionOf[$observation->id] = $session;
+            }
+        }
+
+        $used = collect($sessionOf)->unique('id')->values();
+        ObservationSession::preloadOtherObservers($used);
+
+        // A session without a location gets the location of its first observation.
+        $firstLocation = [];
+        foreach ($sessionOf as $observationId => $session) {
+            $firstLocation[$session->id] ??= $byId->get($observationId)->location_id;
+        }
+        $locations = Location::query()
+            ->whereIn('id', $used->pluck('locationid')->merge(array_values($firstLocation))->filter()->unique()->all())
+            ->get()
+            ->keyBy('id');
+
+        $users = User::query()
+            ->whereIn('username', $used->flatMap(fn(ObservationSession $session) => [$session->observerid, ...$session->otherObservers()])->filter()->unique()->all())
+            ->get(['id', 'name', 'username'])
+            ->keyBy('username');
+
+        $contexts = [];
+        foreach ($used as $session) {
+            $site = $locations->get((int) $session->locationid) ?? $locations->get((int) ($firstLocation[$session->id] ?? 0));
+            $context = $this->buildOalSessionContext($session, $site, $users);
+            if (!empty($context['site_id'])) {
+                $contexts[$session->id] = $context;
+            }
+        }
+
+        $sessionOfObservation = [];
+        foreach ($sessionOf as $observationId => $session) {
+            if (isset($contexts[$session->id])) {
+                $sessionOfObservation[$observationId] = $contexts[$session->id]['id'];
+            }
+        }
+
+        return [array_values($contexts), $sessionOfObservation];
+    }
+
+    /**
+     * @param  Collection<string, User>|null  $users  the participants by username, when already loaded
      * @return array{id: string, begin: string, end: string, site_id: string|null, site: ?Location, language: string|null, weather: string|null, equipment: string|null, comments: string|null, observers: array<int, array{id: string, name: string}>, co_observer_ids: array<int, string>}|null
      */
-    private function buildOalSessionContext(ObservationSession $session, ?Location $site): ?array
+    private function buildOalSessionContext(ObservationSession $session, ?Location $site, ?Collection $users = null): ?array
     {
         $begin = $this->formatOalDateTime($session->begindate, $site?->timezone);
         $endSource = $session->enddate ?? $session->begindate;
@@ -591,7 +681,7 @@ class ObservationSearchExportController extends Controller
             ->unique()
             ->values();
 
-        $participantUsers = User::query()
+        $participantUsers = $users ?? User::query()
             ->whereIn('username', $participantUsernames->all())
             ->get(['id', 'name', 'username'])
             ->keyBy('username');
@@ -660,9 +750,10 @@ class ObservationSearchExportController extends Controller
     }
 
     /**
-     * @param  array{id: string, begin: string, end: string, site_id: string|null, site: ?Location, language: string|null, weather: string|null, equipment: string|null, comments: string|null, observers: array<int, array{id: string, name: string}>, co_observer_ids: array<int, string>}|null  $sessionContext
+     * @param  list<array{id: string, begin: string, end: string, site_id: string, site: ?Location, language: string|null, weather: string|null, equipment: string|null, comments: string|null, observers: array<int, array{id: string, name: string}>, co_observer_ids: array<int, string>}>  $sessions  the sessions to write, each with a site
+     * @param  array<int, string>  $sessionOfObservation  the OAL session id by observation id
      */
-    private function buildOalXml(Collection $observations, ?array $sessionContext = null): string
+    private function buildOalXml(Collection $observations, array $sessions = [], array $sessionOfObservation = []): string
     {
         $observations = $observations->values();
 
@@ -676,8 +767,10 @@ class ObservationSearchExportController extends Controller
             ->get(['id', 'name', 'latitude', 'longitude', 'elevation', 'timezone'])
             ->keyBy('id');
 
-        if (($sessionContext['site'] ?? null) instanceof Location && !$locations->has($sessionContext['site']->id)) {
-            $locations->put($sessionContext['site']->id, $sessionContext['site']);
+        foreach ($sessions as $sessionContext) {
+            if ($sessionContext['site'] instanceof Location && !$locations->has($sessionContext['site']->id)) {
+                $locations->put($sessionContext['site']->id, $sessionContext['site']);
+            }
         }
 
         // OAL leaves out the scope of an observation with the naked eye.
@@ -756,8 +849,10 @@ class ObservationSearchExportController extends Controller
             ];
         }
 
-        foreach (($sessionContext['observers'] ?? []) as $observerDefinition) {
-            $observerDefinitions[$observerDefinition['id']] = $observerDefinition;
+        foreach ($sessions as $sessionContext) {
+            foreach ($sessionContext['observers'] as $observerDefinition) {
+                $observerDefinitions[$observerDefinition['id']] = $observerDefinition;
+            }
         }
 
         foreach ($observerDefinitions as $observerId => $observerDefinition) {
@@ -785,7 +880,7 @@ class ObservationSearchExportController extends Controller
         $root->appendChild($sitesNode);
 
         $sessionsNode = $document->createElement('sessions');
-        if ($sessionContext !== null && !empty($sessionContext['site_id'])) {
+        foreach ($sessions as $sessionContext) {
             $sessionNode = $document->createElement('session');
             $sessionNode->setAttribute('id', $sessionContext['id']);
             if (!empty($sessionContext['language'])) {
@@ -898,9 +993,7 @@ class ObservationSearchExportController extends Controller
             if ($observation->location_id && $locations->has($observation->location_id)) {
                 $this->appendOalTextNode($document, $observationNode, 'site', 'site-' . $observation->location_id);
             }
-            if ($sessionContext !== null && !empty($sessionContext['site_id'])) {
-                $this->appendOalTextNode($document, $observationNode, 'session', $sessionContext['id']);
-            }
+            $this->appendOalTextNode($document, $observationNode, 'session', $sessionOfObservation[$observation->id] ?? null);
             $this->appendOalTextNode($document, $observationNode, 'target', $this->oalTargetId($observation, $catalog));
             $this->appendOalTextNode(
                 $document,
@@ -1584,8 +1677,10 @@ class ObservationSearchExportController extends Controller
     {
         $tz = Timezones::orUtc($timezone);
 
+        // Session dates hold the local time at the site, as the text below is
+        // read: the cast gives them in UTC, so only the clock time is kept.
         if ($value instanceof \DateTimeInterface) {
-            return CarbonImmutable::instance($value)->setTimezone($tz)->format('Y-m-d\TH:i:sP');
+            return CarbonImmutable::parse($value->format('Y-m-d H:i:s'), $tz)->format('Y-m-d\TH:i:sP');
         }
 
         $text = trim((string) $value);
