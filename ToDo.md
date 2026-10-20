@@ -25,8 +25,9 @@
     - [X] Search observations
     - [X] Add
     - [X] Downloads
-    - [ ] Groups menu
+    - [X] Groups menu
     - [ ] Observer menu
+      - [ ] My Observing lists
     - [ ] Post menu
     - [ ] As Database expert
     - [ ] As administrator

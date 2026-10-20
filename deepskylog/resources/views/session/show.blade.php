@@ -23,7 +23,7 @@
         <meta property="og:type" content="article" />
         <meta property="og:title" content="{{ $ogTitle }}" />
         <meta property="og:description" content="{{ $ogDescription }}" />
-        <meta property="og:url" content="{{ url()->current() }}" />
+        <meta property="og:url" content="{{ url(route('session.show', [$user->slug, $sessionParam])) }}" />
         <meta property="og:image" content="{{ $ogImage }}" />
         @if (!empty($ogPreview['width']) && !empty($ogPreview['height']))
             <meta property="og:image:width" content="{{ $ogPreview['width'] }}" />
@@ -50,9 +50,6 @@
             </p>
 
             <div class="mt-3 flex items-center gap-3">
-                {{-- Share buttons using ShareButtons facade configured in app --}}
-                {!! \ShareButtons::page(url()->current(), __('Observations from :session by :owner', ['session' => html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8'), 'owner' => $user->name])) !!}
-
                 <a href="{{ route('session.export.oal', [$user->slug, $sessionParam]) }}"
                    class="inline-flex items-center rounded-md border border-indigo-400/50 bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white shadow-[0_0_0_1px_rgba(255,255,255,0.08)] transition hover:bg-indigo-500"
                    target="_blank"
@@ -278,20 +275,27 @@
                 <div class="mt-3 text-right">
                     <div class="flex items-center justify-end gap-3">
                         {{-- Share buttons for session (same options as sketches) --}}
-                        <div>
-                            {!!
-                                ShareButtons::page(url(route('session.show', [$user->slug, $sessionParam])), __('Look at this session :session by :owner', ['session' => $session->name, 'owner' => $user->name]), [
-                                    'title' => __('Share this session'),
-                                    'class' => 'text-gray-500 hover:text-gray-700',
-                                    'rel' => 'nofollow noopener noreferrer',
-                                ])
-                                    ->facebook(['class' => 'hover', 'rel' => 'follow'])
-                                    ->twitter(['class' => 'hover', 'rel' => 'follow'])
-                                    ->copylink()
-                                    ->mailto(['class' => 'hover', 'rel' => 'nofollow'])
-                                    ->whatsapp()
-                                    ->render()
-                            !!}
+                        @php
+                            $shareUrl = url(route('session.show', [$user->slug, $sessionParam]));
+                            $shareName = html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                            $shareDesc = __('Look at this session :session by :owner', ['session' => $shareName, 'owner' => $user->name]);
+                            $shareTags = '#astronomy #deepsky #deepskylog';
+                            $shareText = $shareDesc . "\n\n" . $shareUrl . "\n\n" . $shareTags;
+                            $twitterHref = 'https://twitter.com/intent/tweet?text=' . rawurlencode($shareText);
+                            $facebookHref = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($shareUrl);
+                            $whatsappHref = 'https://wa.me/?text=' . rawurlencode($shareText);
+                            $mailtoHref = 'mailto:?subject=' . rawurlencode($shareDesc) . '&body=' . rawurlencode($shareDesc . "\n\n" . $shareUrl);
+                        @endphp
+                        <div id="social-buttons" data-share data-share-image="{{ $image ?? '' }}" data-share-title="{{ $shareDesc }}" data-share-text="{{ $shareDesc . "\n\n" . $shareTags }}" data-share-url="{{ $shareUrl }}"
+                             data-share-image-notice="{{ __('The picture has been copied: paste it (Ctrl+V) into your post on X.') }}"
+                             data-share-image-mail-notice="{{ __('The picture has been copied: paste it (Ctrl+V) into your mail.') }}"
+                             data-share-retry-notice="{{ __('The picture is ready: tap the share button again.') }}">
+                            <a href="{{ $facebookHref }}" class="social-button hover" data-share-text="{{ $shareDesc . "\n\n" . $shareTags }}" title="{{ __('Share on Facebook') }}" rel="follow"><span class="fab fa-facebook-square"></span></a>
+                            <a href="{{ $twitterHref }}" class="social-button hover" title="{{ __('Share on X') }}" rel="follow"><span class="fab fa-square-x-twitter"></span></a>
+                            <a href="{{ $shareUrl }}" class="social-button hover" id="clip" title="{{ __('Copy link') }}" rel="nofollow noopener noreferrer"><span class="fas fa-share"></span></a>
+                            <a href="{{ $mailtoHref }}" class="social-button hover" title="{{ __('Share by email') }}" rel="nofollow"><span class="fas fa-envelope"></span></a>
+                            <a href="{{ $whatsappHref }}" class="social-button hover" title="{{ __('Share on WhatsApp') }}" target="_blank" rel="nofollow"><span class="fab fa-square-whatsapp"></span></a>
+                            <a href="{{ $shareUrl }}" class="social-button native-share hover" title="{{ __('Share…') }}" rel="nofollow"><span class="fas fa-share-nodes"></span></a>
                         </div>
 
                         @php
@@ -306,7 +310,7 @@
 
                         {{-- Message about session (link to internal messaging) --}}
                         @auth
-                        <a href="{{ route('messages.create', ['to' => $user->username ?? $user->name, 'subject' => __('About your session :session', ['session' => $session->name]), 'about' => url()->current()]) }}" class="inline-flex items-center p-2 rounded bg-blue-600 hover:bg-blue-700 text-white" aria-label="{{ __('Send message about this session') }}">
+                        <a href="{{ route('messages.create', ['to' => $user->username ?? $user->name, 'subject' => __('About your session :session', ['session' => $shareName]), 'about' => url()->current()]) }}" class="inline-flex items-center p-2 rounded bg-blue-600 hover:bg-blue-700 text-white" aria-label="{{ __('Send message about this session') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path d="M2.94 6.94A2 2 0 014.828 6h10.344a2 2 0 011.888.94L10 11.586 2.94 6.94z" />
                                 <path d="M18 8.118V13a2 2 0 01-2 2H4a2 2 0 01-2-2V8.118l7.293 4.377a1 1 0 001.414 0L18 8.118z" />

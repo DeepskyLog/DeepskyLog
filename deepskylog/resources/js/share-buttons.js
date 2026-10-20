@@ -24,9 +24,6 @@ if (typeof navigator.share === 'function') {
 });
 
 function socialButtonClickHandler(e) {
-    const popupWidth = 780;
-    const popupHeight = 550;
-
     const el = e.target.closest ? e.target.closest('a.social-button') : null;
     // A button with a handler of its own (the copy link button of an observing list) is left alone.
     if (!el || e.defaultPrevented) return;
@@ -46,13 +43,17 @@ function socialButtonClickHandler(e) {
     }
 
     // Facebook only takes the link and fills the post with the page preview; it ignores (and its
-    // policy forbids) text passed along. Copy the text so the observer can paste it into the post.
+    // policy forbids) text passed along. Copy the text so the observer can paste it into the post,
+    // and say so in a dialog before Facebook opens: a notice on the page would be hidden behind the
+    // Facebook window (or tab, on a phone).
     if (isFacebookShare(el.href)) {
         const text = el.dataset.shareText || new URL(el.href).searchParams.get('quote') || '';
         if (text.trim() !== '') {
+            e.preventDefault();
+            e.stopImmediatePropagation();
             copyToClipboard(text);
-            showShareNotice(document.querySelector('meta[name="share-notice"]')?.content
-                || 'The text has been copied: paste it into your Facebook post.');
+            showFacebookDialog(el.href);
+            return;
         }
     }
 
@@ -70,22 +71,66 @@ function socialButtonClickHandler(e) {
     // (its links have target="_blank"), where its page hands the text to the app or WhatsApp Web.
     if (el.protocol === 'mailto:' || isWhatsAppShare(el.href)) return;
 
+    if (openSharePopup(el.href)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+    }
+}
+
+function openSharePopup(href) {
+    const popupWidth = 780;
+    const popupHeight = 550;
+
     const windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
     const vPosition = Math.floor((windowWidth - popupWidth) / 2),
         hPosition = Math.floor((windowHeight - popupHeight) / 2);
 
-    const popup = window.open(el.href, 'social',
+    const popup = window.open(href, 'social',
         'width=' + popupWidth + ',height=' + popupHeight +
         ',left=' + vPosition + ',top=' + hPosition +
         ',location=0,menubar=0,toolbar=0,status=0,scrollbars=1,resizable=1');
 
-    if (popup) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        popup.focus();
+    if (popup) popup.focus();
+    return popup;
+}
+
+// The dialog that tells the text has been copied; its button opens Facebook with a click of its
+// own, so the popup is not blocked.
+function showFacebookDialog(href) {
+    let dialog = document.getElementById('share-facebook-dialog');
+    if (!dialog) {
+        dialog = document.createElement('dialog');
+        dialog.id = 'share-facebook-dialog';
+        dialog.className = 'm-auto max-w-sm rounded-lg bg-gray-800 p-5 text-sm text-white shadow-lg ring-1 ring-gray-600 backdrop:bg-black/60';
+        dialog.innerHTML = '<p class="mb-4"></p>'
+            + '<div class="flex justify-end gap-2">'
+            + '<button type="button" value="cancel" class="rounded px-3 py-1.5 text-gray-300 hover:bg-gray-700"></button>'
+            + '<button type="button" value="open" class="rounded bg-blue-600 px-3 py-1.5 font-medium text-white hover:bg-blue-700"></button>'
+            + '</div>';
+        dialog.querySelector('p').textContent = document.querySelector('meta[name="share-notice"]')?.content
+            || 'The text has been copied: paste it into your Facebook post.';
+        dialog.querySelector('button[value="cancel"]').textContent = document.querySelector('meta[name="share-cancel"]')?.content
+            || 'Cancel';
+        dialog.querySelector('button[value="open"]').textContent = document.querySelector('meta[name="share-facebook-open"]')?.content
+            || 'Open Facebook';
+        dialog.querySelector('button[value="cancel"]').addEventListener('click', () => dialog.close());
+        dialog.querySelector('button[value="open"]').addEventListener('click', () => {
+            dialog.close();
+            if (!openSharePopup(dialog.dataset.href)) {
+                window.location.assign(dialog.dataset.href);
+            }
+        });
+        // A click on the backdrop closes the dialog.
+        dialog.addEventListener('click', (event) => {
+            if (event.target === dialog) dialog.close();
+        });
+        document.body.appendChild(dialog);
     }
+    dialog.dataset.href = href;
+    dialog.showModal();
+    dialog.querySelector('button[value="open"]').focus();
 }
 
 function isFacebookShare(href) {
@@ -106,14 +151,17 @@ function isXShare(href) {
     }
 }
 
-// The notice shown when the sketch has been copied for this button; null for buttons that do not copy it.
+// The notice shown when the sketch has been copied for this button (the share block may word it for its
+// own image, a session picture); null for buttons that do not copy it.
 function imageNoticeFor(el) {
     if (isXShare(el.href)) {
-        return document.querySelector('meta[name="share-image-notice"]')?.content
+        return shareContainer(el)?.dataset.shareImageNotice
+            || document.querySelector('meta[name="share-image-notice"]')?.content
             || 'The sketch has been copied: paste it (Ctrl+V) into your post on X.';
     }
     if (el.protocol === 'mailto:') {
-        return document.querySelector('meta[name="share-image-mail-notice"]')?.content
+        return shareContainer(el)?.dataset.shareImageMailNotice
+            || document.querySelector('meta[name="share-image-mail-notice"]')?.content
             || 'The sketch has been copied: paste it (Ctrl+V) into your mail.';
     }
     return null;
@@ -235,7 +283,8 @@ async function nativeShare(el) {
         // Waiting for the image can take longer than the browser lets a click count (Safari): the
         // image is there now, so a second tap works.
         if (error?.name === 'NotAllowedError' && data.files) {
-            showShareNotice(document.querySelector('meta[name="share-retry-notice"]')?.content
+            showShareNotice(container?.dataset.shareRetryNotice
+                || document.querySelector('meta[name="share-retry-notice"]')?.content
                 || 'The sketch is ready: tap the share button again.');
         }
     }
