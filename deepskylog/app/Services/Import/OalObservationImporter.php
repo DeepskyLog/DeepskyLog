@@ -553,47 +553,46 @@ class OalObservationImporter
     {
         $model = trim((string) ($node->model ?? ''));
         $vendor = trim((string) ($node->vendor ?? ''));
-        $name = trim("{$vendor} {$model}");
+        // "vendor model", unless the model already starts with the vendor
+        // (vendor Celestron, model "Celestron C8").
+        $name = $vendor !== '' && mb_stripos($model, $vendor) === 0 ? $model : trim("{$vendor} {$model}");
         if (empty($name)) {
             $result->addError("Observation {$row}: The scope has no model or vendor, skipping.", '', $row);
 
             return null;
         }
 
-        $inst = Instrument::where('user_id', $this->user->id)
-            ->where('name', $name)
-            ->first();
-
-        if ($inst) {
-            return $inst->id;
+        // Binoculars and finders (fixedMagnificationOpticsType) have a
+        // magnification instead of a focal length.
+        $magnification = isset($node->magnification) ? $this->parseFloat((string) $node->magnification) : null;
+        $instrumentTypeId = $this->oalScopeType((string) ($node->type ?? ''), $magnification !== null);
+        if ($instrumentTypeId === self::NAKED_EYE_TYPE) {
+            return $this->resolveOrCreateNakedEyeInstrument($result, $row);
         }
 
-        // Also try model alone
-        if (!empty($model)) {
-            $inst = Instrument::where('user_id', $this->user->id)
-                ->where('name', $model)
-                ->first();
-            if ($inst) {
-                return $inst->id;
-            }
+        // The aperture column holds whole millimetres.
+        $aperture = isset($node->aperture) ? $this->parseFloat((string) $node->aperture) : null;
+        $apertureMm = $aperture !== null ? max(1, (int) round($aperture)) : null;
+
+        // An instrument with the name and about the aperture (or no aperture in
+        // the file) is the scope; one with another aperture is another scope,
+        // which is added under a name with its aperture.
+        $sizedName = $apertureMm !== null ? "{$name} ({$apertureMm} mm)" : null;
+        $existing = Instrument::where('user_id', $this->user->id)
+            ->whereIn('name', array_values(array_unique(array_filter([$name, $model, $sizedName]))))
+            ->orderBy('id')
+            ->get();
+        $match = $existing->first(fn (Instrument $inst) => $apertureMm === null || abs((int) $inst->aperture_mm - $apertureMm) <= 1);
+        if ($match) {
+            return $match->id;
+        }
+        if ($existing->isNotEmpty()) {
+            $name = $sizedName;
         }
 
-        $apertureMm = isset($node->aperture) ? $this->parseFloat((string) $node->aperture) : null;
         $focalLengthMm = isset($node->focalLength) ? $this->parseFloat((string) $node->focalLength) : null;
-
-        // Map OAL scope type attribute to instrument_type_id (fallback: 6 = Other)
-        $oalType = strtolower(trim((string) ($node->attributes()['type'] ?? $node->type ?? '')));
-        $typeMap = [
-            'refractor' => 3,
-            'reflector' => 4,
-            'binoculars' => 2,
-            'cassegrain' => 7,
-            'sct' => 10,
-            'kutter' => 8,
-            'maksutov' => 9,
-            'finderscope' => 5,
-        ];
-        $instrumentTypeId = $typeMap[$oalType] ?? 6;
+        $trueField = $this->parseOalAngle($node->trueField ?? null);
+        $makeId = $vendor !== '' ? DB::table('instrument_makes')->where('name', $vendor)->value('id') : null;
 
         try {
             $inst = Instrument::create([
@@ -601,8 +600,11 @@ class OalObservationImporter
                 'name' => $name,
                 'observer' => $this->user->username,
                 'aperture_mm' => $apertureMm ?? 200,
-                'focal_length_mm' => $focalLengthMm,
-                'make_id' => 1,
+                'focal_length_mm' => $magnification === null ? $focalLengthMm : null,
+                'fixedMagnification' => $magnification !== null ? max(1, (int) round($magnification)) : null,
+                'field_of_view_deg' => $magnification !== null && $trueField !== null && $trueField > 0 ? $trueField : null,
+                // The unknown make and mount (empty names); OAL has no mount.
+                'make_id' => $makeId ?? 1,
                 'instrument_type_id' => $instrumentTypeId,
                 'mount_type_id' => 3,
                 'active' => true,
@@ -617,6 +619,32 @@ class OalObservationImporter
 
             return null;
         }
+    }
+
+    /**
+     * The instrument_types id of an OAL scope type: the letters of the Deep Sky
+     * Liste the schema recommends (A naked eye, B binoculars, N Newton,
+     * R refractor, C Cassegrain, S Schmidt-Cassegrain, K Kutter, M Maksutov),
+     * or a name. Unknown or missing: binoculars for fixed-magnification optics,
+     * else Other.
+     */
+    private function oalScopeType(string $type, bool $fixedMagnification): int
+    {
+        $type = strtolower(trim($type));
+        $types = [
+            'a' => 1, 'naked eye' => 1,
+            'b' => 2, 'binoculars' => 2, 'binocular' => 2,
+            'r' => 3, 'refractor' => 3,
+            'n' => 4, 'newton' => 4, 'newtonian' => 4, 'reflector' => 4, 'dobson' => 4,
+            'finder' => 5, 'finderscope' => 5,
+            'other' => 6,
+            'c' => 7, 'cassegrain' => 7,
+            'k' => 8, 'kutter' => 8, 'schiefspiegler' => 8,
+            'm' => 9, 'maksutov' => 9,
+            's' => 10, 'sct' => 10, 'schmidt-cassegrain' => 10, 'schmidt cassegrain' => 10,
+        ];
+
+        return $types[$type] ?? ($fixedMagnification ? 2 : 6);
     }
 
     /**
@@ -855,12 +883,27 @@ class OalObservationImporter
     {
         $notFound = "Observation {$row}: Target '{$name}' is not in the DeepskyLog database";
 
+        // Only a deep-sky object is added from the file; a Solar System target
+        // has to be in the database.
+        $solarSystem = [
+            'comettargettype' => 'Comet',
+            'moontargettype' => 'Moon or lunar feature',
+            'planettargettype' => 'Planet',
+            'minorplanettargettype' => 'Asteroid',
+            'suntargettype' => 'Sun',
+        ];
+        if (isset($solarSystem[$targetTypeHint ?? ''])) {
+            $result->addError("Observation {$row}: {$solarSystem[$targetTypeHint]} '{$name}' is not in the DeepskyLog database, skipping.", '', $row);
+
+            return null;
+        }
+
         $type = self::DEEPSKY_TYPES[$targetTypeHint ?? ''] ?? null;
         if ($type === null) {
             $result->addError(
                 $targetTypeHint !== null && str_starts_with($targetTypeHint, 'deepsky')
                     ? "{$notFound}, and its type in the file (oal:{$targetTypeHint}) has no DeepskyLog object type, skipping."
-                    : "{$notFound}, and the file does not define it as a deep-sky object, skipping.",
+                    : "{$notFound}, skipping. A deep-sky object is added when the file gives its deep-sky type and position.",
                 '',
                 $row
             );

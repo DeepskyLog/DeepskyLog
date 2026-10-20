@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oal:observations xmlns:oal="http://groups.google.com/group/openastronomylog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://groups.google.com/group/openastronomylog oal21.xsd">
+  <observers>
+    <observer id="observer-1"><name>Example</name><surname>Observer</surname></observer>
+  </observers>
+  <sites>
+    <site id="site-1"><name>Example Site</name><longitude unit="deg">4.70</longitude><latitude unit="deg">50.88</latitude><elevation>30</elevation><timezone>60</timezone></site>
+  </sites>
+  <sessions/>
+  <targets>
+    <target id="target-m31" xsi:type="oal:deepSkyGX"><datasource>DeepskyLog</datasource><name>M 31</name></target>
+  </targets>
+  <scopes>
+    <!-- binoculars: a magnification and a true field instead of a focal length; the vendor is a known make -->
+    <scope id="scope-binoculars" xsi:type="oal:fixedMagnificationOpticsType"><model>SkyMaster 10x50</model><type>B</type><vendor>Celestron</vendor><aperture>50</aperture><magnification>10</magnification><trueField unit="deg">6.5</trueField></scope>
+    <!-- fixed-magnification optics without a type: binoculars -->
+    <scope id="scope-finder" xsi:type="oal:fixedMagnificationOpticsType"><model>Example Finder 8x50</model><aperture>50</aperture><magnification>8</magnification></scope>
+    <scope id="scope-newton" xsi:type="oal:scopeType"><model>Skyliner 200P</model><type>N</type><vendor>SkyWatcher</vendor><aperture>200</aperture><focalLength>1200</focalLength></scope>
+    <!-- an aperture with decimals: rounded to whole millimetres -->
+    <scope id="scope-refractor" xsi:type="oal:scopeType"><model>Example Refractor 102</model><type>R</type><aperture>102.6</aperture><focalLength>714</focalLength></scope>
+    <scope id="scope-cassegrain" xsi:type="oal:scopeType"><model>Example Cassegrain</model><type>C</type><aperture>250</aperture><focalLength>3000</focalLength></scope>
+    <scope id="scope-sct" xsi:type="oal:scopeType"><model>Example SCT 8</model><type>S</type><aperture>203</aperture><focalLength>2032</focalLength></scope>
+    <scope id="scope-maksutov" xsi:type="oal:scopeType"><model>Example Maksutov</model><type>M</type><aperture>127</aperture><focalLength>1500</focalLength></scope>
+    <scope id="scope-kutter" xsi:type="oal:scopeType"><model>Example Kutter</model><type>K</type><aperture>110</aperture><focalLength>2000</focalLength></scope>
+    <!-- type A: the naked eye -->
+    <scope id="scope-eye" xsi:type="oal:fixedMagnificationOpticsType"><model>Eye</model><type>A</type><aperture>7</aperture><magnification>1</magnification></scope>
+    <!-- the name of an instrument in the account, but another aperture: another scope -->
+    <scope id="scope-other-dobson" xsi:type="oal:scopeType"><model>Example Dobson 250</model><type>N</type><aperture>300</aperture><focalLength>1500</focalLength></scope>
+    <!-- the vendor again at the start of the model: named "Meade LX200 10", not "Meade Meade LX200 10" -->
+    <scope id="scope-meade" xsi:type="oal:scopeType"><model>Meade LX200 10</model><type>S</type><vendor>Meade</vendor><aperture>254</aperture><focalLength>2500</focalLength></scope>
+  </scopes>
+  <eyepieces/><lenses/><filters/><imagers/>
+  <observation id="observation-1">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:05:00Z</begin>
+    <scope>scope-binoculars</scope>
+    <result lang="en"><description>M 31 through the binoculars.</description></result>
+  </observation>
+  <observation id="observation-2">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:10:00Z</begin>
+    <scope>scope-finder</scope>
+    <result lang="en"><description>M 31 through the finder.</description></result>
+  </observation>
+  <observation id="observation-3">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:15:00Z</begin>
+    <scope>scope-newton</scope>
+    <result lang="en"><description>M 31 through the newton.</description></result>
+  </observation>
+  <observation id="observation-4">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:20:00Z</begin>
+    <scope>scope-refractor</scope>
+    <result lang="en"><description>M 31 through the refractor.</description></result>
+  </observation>
+  <observation id="observation-5">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:25:00Z</begin>
+    <scope>scope-cassegrain</scope>
+    <result lang="en"><description>M 31 through the cassegrain.</description></result>
+  </observation>
+  <observation id="observation-6">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:30:00Z</begin>
+    <scope>scope-sct</scope>
+    <result lang="en"><description>M 31 through the sct.</description></result>
+  </observation>
+  <observation id="observation-7">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:35:00Z</begin>
+    <scope>scope-maksutov</scope>
+    <result lang="en"><description>M 31 through the maksutov.</description></result>
+  </observation>
+  <observation id="observation-8">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:40:00Z</begin>
+    <scope>scope-kutter</scope>
+    <result lang="en"><description>M 31 through the kutter.</description></result>
+  </observation>
+  <observation id="observation-9">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:45:00Z</begin>
+    <scope>scope-eye</scope>
+    <result lang="en"><description>M 31 through the eye.</description></result>
+  </observation>
+  <observation id="observation-10">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:50:00Z</begin>
+    <scope>scope-other-dobson</scope>
+    <result lang="en"><description>M 31 through the other-dobson.</description></result>
+  </observation>
+  <observation id="observation-11">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T22:00:00Z</begin>
+    <scope>scope-meade</scope>
+    <result lang="en"><description>M 31 through the meade.</description></result>
+  </observation>
+</oal:observations>

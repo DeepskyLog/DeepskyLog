@@ -29,6 +29,13 @@ class ObservationSearchExportController extends Controller
     /** The instrument type `Naked Eye` (instrument_types.id). */
     private const NAKED_EYE_INSTRUMENT_TYPE = 1;
 
+    /**
+     * The OAL scope type of an instrument type (instrument_types.id): the
+     * letters of the Deep Sky Liste the schema recommends. Finderscopes and
+     * Other have none, so they are written without a type.
+     */
+    private const OAL_SCOPE_TYPES = [1 => 'A', 2 => 'B', 3 => 'R', 4 => 'N', 7 => 'C', 8 => 'K', 9 => 'M', 10 => 'S'];
+
     private const OAL_NS = 'http://groups.google.com/group/openastronomylog';
     private const XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance';
     private const OAL_SCHEMA_LOCATION = 'http://groups.google.com/group/openastronomylog oal21.xsd';
@@ -677,8 +684,13 @@ class ObservationSearchExportController extends Controller
         $instruments = Instrument::query()
             ->whereIn('id', $observations->pluck('instrument_id')->filter()->unique()->all())
             ->where(fn($query) => $query->whereNull('instrument_type_id')->orWhere('instrument_type_id', '<>', self::NAKED_EYE_INSTRUMENT_TYPE))
-            ->get(['id', 'name', 'aperture_mm', 'focal_length_mm'])
+            ->get(['id', 'name', 'make_id', 'aperture_mm', 'focal_length_mm', 'fixedMagnification', 'field_of_view_deg', 'instrument_type_id'])
             ->keyBy('id');
+
+        // The makes, the longest name first (a name starts with "Orion Optics"
+        // before it starts with "Orion"); id 1 is the unknown make, without a name.
+        $makes = DB::table('instrument_makes')->where('name', '<>', '')->pluck('name', 'id')
+            ->sortByDesc(fn (string $make) => mb_strlen($make));
 
         $eyepieces = Eyepiece::query()
             ->whereIn('id', $observations->pluck('eyepiece_id')->filter()->unique()->all())
@@ -812,13 +824,24 @@ class ObservationSearchExportController extends Controller
 
         $scopesNode = $document->createElement('scopes');
         foreach ($instruments as $instrument) {
+            // Binoculars and finders have a magnification, not a focal length.
+            $fixedMagnification = (int) ($instrument->fixedMagnification ?? 0) > 0;
             $scopeNode = $document->createElement('scope');
             $scopeNode->setAttribute('id', 'scope-' . $instrument->id);
-            $scopeNode->setAttributeNS(self::XSI_NS, 'xsi:type', 'oal:scopeType');
-            $this->appendOalTextNode($document, $scopeNode, 'model', $instrument->name);
-            $this->appendOalTextNode($document, $scopeNode, 'type', 'R');
+            $scopeNode->setAttributeNS(self::XSI_NS, 'xsi:type', $fixedMagnification ? 'oal:fixedMagnificationOpticsType' : 'oal:scopeType');
+            [$vendor, $model] = $this->oalVendorAndModel((string) $instrument->name, $makes->get($instrument->make_id), $makes->all());
+            $this->appendOalTextNode($document, $scopeNode, 'model', $model);
+            $this->appendOalTextNode($document, $scopeNode, 'type', self::OAL_SCOPE_TYPES[(int) $instrument->instrument_type_id] ?? null);
+            $this->appendOalTextNode($document, $scopeNode, 'vendor', $vendor);
             $this->appendOalTextNode($document, $scopeNode, 'aperture', max(1, (float) ($instrument->aperture_mm ?? 1)));
-            $this->appendOalTextNode($document, $scopeNode, 'focalLength', max(1, (float) ($instrument->focal_length_mm ?? 1)));
+            if ($fixedMagnification) {
+                $this->appendOalTextNode($document, $scopeNode, 'magnification', (int) $instrument->fixedMagnification);
+                if ((float) ($instrument->field_of_view_deg ?? 0) > 0) {
+                    $this->appendOalTextNode($document, $scopeNode, 'trueField', (float) $instrument->field_of_view_deg, ['unit' => 'deg']);
+                }
+            } else {
+                $this->appendOalTextNode($document, $scopeNode, 'focalLength', max(1, (float) ($instrument->focal_length_mm ?? 1)));
+            }
             $scopesNode->appendChild($scopeNode);
         }
         $root->appendChild($scopesNode);
@@ -927,6 +950,35 @@ class ObservationSearchExportController extends Controller
         }
 
         return $document->saveXML();
+    }
+
+    /**
+     * The OAL vendor and model of an instrument: the vendor is its make, or
+     * else the known make its name starts with (most instruments have no make,
+     * but a name such as "SkyWatcher Skyliner 200P"); the model is the name
+     * without that make. An import puts them together as "vendor model" again.
+     *
+     * @param  array<int, string>  $makes  longest name first
+     * @return array{string|null, string}
+     */
+    private function oalVendorAndModel(string $name, ?string $make, array $makes): array
+    {
+        $name = trim($name);
+        $startsWith = fn (string $vendor) => preg_match('/^' . preg_quote($vendor, '/') . '\s+(\S.*)$/iu', $name, $m) === 1 ? trim($m[1]) : null;
+
+        if ($make !== null && trim($make) !== '') {
+            return [trim($make), $startsWith(trim($make)) ?? $name];
+        }
+
+        foreach ($makes as $vendor) {
+            $model = $startsWith($vendor);
+            if ($model !== null) {
+                // The make as the name writes it ("Skywatcher" or "SkyWatcher").
+                return [mb_substr($name, 0, mb_strlen($vendor)), $model];
+            }
+        }
+
+        return [null, $name];
     }
 
     private function skylistIdentity(Observation $observation, string $catalog): string

@@ -26,7 +26,8 @@
     - [X] Search objects
     - [X] Search observations
     - [ ] Add
-      - [ ] Add observation
+      - [ ] Add observation -> Moon, Lunar features, Sun, Planets, Deep sky object
+      - [ ] Add observation using CSV / OAL
     - [ ] Image catalogs
     - [ ] Atlases
     - [ ] Log out

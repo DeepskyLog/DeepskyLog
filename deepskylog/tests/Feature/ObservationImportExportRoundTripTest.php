@@ -69,7 +69,12 @@ function roundTripObservations(User $user): array
                 'target' => [$o->target_table, $o->target_key, $o->target_type],
                 'location' => $location === null ? null : [$location->name, $location->timezone, (float) $location->latitude, (float) $location->longitude],
                 // The naked eye is an instrument of its own in every account.
-                'instrument' => $instrument === null ? null : ((int) $instrument->instrument_type_id === 1 ? 'naked eye' : $instrument->name),
+                'instrument' => $instrument === null ? null : ((int) $instrument->instrument_type_id === 1 ? 'naked eye' : [
+                    $instrument->name, (int) $instrument->instrument_type_id, (int) $instrument->aperture_mm,
+                    $instrument->focal_length_mm === null ? null : (float) $instrument->focal_length_mm,
+                    $instrument->fixedMagnification === null ? null : (int) $instrument->fixedMagnification,
+                    $instrument->field_of_view_deg === null ? null : (float) $instrument->field_of_view_deg,
+                ]),
                 'eyepiece' => $name(Eyepiece::class, $o->eyepiece_id),
                 'filter' => $name(Filter::class, $o->filter_id),
                 'lens' => $name(Lens::class, $o->lens_id),
@@ -212,6 +217,7 @@ it('imports an export into another account as the same observations', function (
     'oal to oal, all types' => ['oal/valid-all-types.xml', 'oal'],
     'oal to oal, deep-sky' => ['oal/valid-observations.xml', 'oal'],
     'oal to oal, new objects' => ['oal/valid-new-targets.xml', 'oal'],
+    'oal to oal, scopes' => ['oal/valid-scopes.xml', 'oal'],
     'csv to oal, all types' => ['csv/valid-all-types.csv', 'oal'],
     'csv to oal, deep-sky' => ['csv/valid-observations.csv', 'oal'],
     'oal to csv, all types' => ['oal/valid-all-types.xml', 'csv'],
@@ -234,3 +240,58 @@ it('changes nothing when an export is imported into the same account', function 
     'csv, all types' => ['csv/valid-all-types.csv', 'csv'],
     'oal, all types' => ['oal/valid-all-types.xml', 'oal'],
 ]);
+
+it('exports the make of an instrument as the oal vendor and imports it again', function () {
+    $make = fn (string $name) => DB::table('instrument_makes')->where('name', $name)->value('id');
+    $scope = fn (string $name, int $makeId) => Instrument::query()->create([
+        'user_id' => $this->user->id, 'observer' => $this->user->username, 'active' => true, 'name' => $name,
+        'make_id' => $makeId, 'aperture_mm' => 200, 'focal_length_mm' => 1200, 'instrument_type_id' => 4,
+        'mount_type_id' => DB::table('mount_types')->value('id'),
+    ]);
+    $scopes = [
+        // No make, but a name that starts with one: the usual case.
+        $scope('SkyWatcher Skyliner 200P', 1),
+        // A make the name starts with too.
+        $scope('Celestron C8', $make('Celestron')),
+        // A make the name does not start with.
+        $scope("18'' Classic", $make('Obsession')),
+        // Neither.
+        $scope('Home-made Dobson', 1),
+    ];
+    foreach ($scopes as $i => $instrument) {
+        Observation::query()->create([
+            'observer_username' => $this->user->username, 'observer_user_id' => $this->user->id, 'language' => 'en',
+            'target_type' => 'deepsky', 'target_table' => 'objects', 'target_key' => 'M 31', 'target_name' => 'M 31',
+            'has_drawing' => false, 'observed_on' => '2026-09-12', 'observed_time' => sprintf('21:%02d:00', $i),
+            'instrument_id' => $instrument->id, 'description' => 'Seen.',
+        ]);
+    }
+
+    $content = roundTripExport($this->user, 'oal');
+    $document = new DOMDocument();
+    $document->loadXML($content);
+    $xpath = new DOMXPath($document);
+    $written = collect($xpath->query('//scopes/scope'))
+        ->map(fn (DOMElement $node) => [$xpath->evaluate('string(vendor)', $node) ?: null, $xpath->evaluate('string(model)', $node)])
+        ->all();
+    expect($written)->toBe([
+        ['SkyWatcher', 'Skyliner 200P'],
+        ['Celestron', 'C8'],
+        ['Obsession', "18'' Classic"],
+        [null, 'Home-made Dobson'],
+    ]);
+
+    $other = User::factory()->create(['username' => 'round-trip-target']);
+    Fixtures::import($other, 'oal', content: $content);
+
+    $imported = Instrument::query()->where('user_id', $other->id)->orderBy('id')->get()
+        ->map(fn (Instrument $i) => [$i->name, DB::table('instrument_makes')->where('id', $i->make_id)->value('name')])
+        ->all();
+    expect($imported)->toBe([
+        ['SkyWatcher Skyliner 200P', 'SkyWatcher'],
+        ['Celestron C8', 'Celestron'],
+        // The only name that changes: the make is put in front.
+        ["Obsession 18'' Classic", 'Obsession'],
+        ['Home-made Dobson', ''],
+    ]);
+});

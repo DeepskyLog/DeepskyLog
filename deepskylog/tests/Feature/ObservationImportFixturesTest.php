@@ -65,18 +65,20 @@ function importFixtureExpectations(): array
         'oal/valid-solar-system.xml' => ['oal/valid-solar-system.xml', 5, 0, [], []],
         'oal/valid-all-types.xml' => ['oal/valid-all-types.xml', 8, 0, [], []],
         'oal/valid-same-moment.xml' => ['oal/valid-same-moment.xml', 4, 0, [], []],
+        'oal/valid-scopes.xml' => ['oal/valid-scopes.xml', 11, 0, [], []],
         'oal/invalid-solar-system.xml' => ['oal/invalid-solar-system.xml', 0, 3, [
-            "Observation 1: Target 'Example Crater' is not in the DeepskyLog database, and the file does not define it as a deep-sky object, skipping.",
+            "Observation 1: Moon or lunar feature 'Example Crater' is not in the DeepskyLog database, skipping.",
             "Observation 2: 'Moon' was 19.2° below the horizon of Example Site on 2026-09-25 at 06:00 UT.",
             "Observation 3: '12P/Pons-Brooks' was 7.6° below the horizon of Example Site on 2024-03-20 at 23:30 UT.",
         ], []],
         'oal/valid-latin1.xml' => ['oal/valid-latin1.xml', 1, 0, [], []],
         'oal/valid-new-targets.xml' => ['oal/valid-new-targets.xml', 3, 0, [], []],
-        'oal/invalid-unknown-targets.xml' => ['oal/invalid-unknown-targets.xml', 0, 4, [
+        'oal/invalid-unknown-targets.xml' => ['oal/invalid-unknown-targets.xml', 0, 5, [
             "Observation 1: Target 'Example Unknown Nebula 123' is not in the DeepskyLog database, and the file gives no valid position for it, skipping.",
             "Observation 2: Target 'Example Unknown Object 5' is not in the DeepskyLog database, and its type in the file (oal:deepskyna) has no DeepskyLog object type, skipping.",
-            "Observation 3: Target 'C/2099 Z1 (Example)' is not in the DeepskyLog database, and the file does not define it as a deep-sky object, skipping.",
+            "Observation 3: Comet 'C/2099 Z1 (Example)' is not in the DeepskyLog database, skipping.",
             "Observation 4: 'Example Southern Galaxy' was 56.7° below the horizon of Example Site",
+            "Observation 5: Target 'Example Untyped Object' is not in the DeepskyLog database, skipping. A deep-sky object is added when the file gives its deep-sky type and position.",
         ], []],
         'oal/warning-no-observations.xml' => ['oal/warning-no-observations.xml', 0, 0, [], ['No <observation> elements found']],
         'oal/invalid-not-well-formed.xml' => ['oal/invalid-not-well-formed.xml', 0, 0, [
@@ -300,6 +302,42 @@ it('adds nothing when a file is imported again', function (string $file, bool $b
     ->merge([['csv/below-horizon.csv', true], ['oal/below-horizon.xml', true]])
     ->mapWithKeys(fn (array $case) => [$case[0].($case[1] ? ', below the horizon too' : '') => $case])
     ->all());
+
+it('creates the scopes of an oal file with their type, size and magnification', function () {
+    $result = Fixtures::import($this->user, 'oal/valid-scopes.xml');
+
+    $instrument = fn (string $name) => Instrument::query()->where('user_id', $this->user->id)->where('name', $name)->first();
+    $columns = fn (?Instrument $i) => $i === null ? null : [
+        'type' => (int) $i->instrument_type_id, 'aperture' => (int) $i->aperture_mm,
+        'focal_length' => $i->focal_length_mm === null ? null : (float) $i->focal_length_mm,
+        'magnification' => $i->fixedMagnification === null ? null : (int) $i->fixedMagnification,
+        'true_field' => $i->field_of_view_deg === null ? null : (float) $i->field_of_view_deg,
+        'make' => DB::table('instrument_makes')->where('id', $i->make_id)->value('name'),
+    ];
+
+    expect($columns($instrument('Celestron SkyMaster 10x50')))->toBe(['type' => 2, 'aperture' => 50, 'focal_length' => null, 'magnification' => 10, 'true_field' => 6.5, 'make' => 'Celestron'])
+        ->and($columns($instrument('Example Finder 8x50')))->toBe(['type' => 2, 'aperture' => 50, 'focal_length' => null, 'magnification' => 8, 'true_field' => null, 'make' => ''])
+        ->and($columns($instrument('SkyWatcher Skyliner 200P')))->toBe(['type' => 4, 'aperture' => 200, 'focal_length' => 1200.0, 'magnification' => null, 'true_field' => null, 'make' => 'SkyWatcher'])
+        ->and($columns($instrument('Example Refractor 102'))['aperture'])->toBe(103)
+        ->and($columns($instrument('Example Refractor 102'))['type'])->toBe(3)
+        ->and($columns($instrument('Example Cassegrain'))['type'])->toBe(7)
+        ->and($columns($instrument('Example SCT 8'))['type'])->toBe(10)
+        ->and($columns($instrument('Example Maksutov'))['type'])->toBe(9)
+        ->and($columns($instrument('Example Kutter'))['type'])->toBe(8)
+        // The account's Example Dobson 250 has 250 mm: the 300 mm one is another.
+        ->and($columns($instrument('Example Dobson 250 (300 mm)'))['aperture'])->toBe(300)
+        ->and((int) $instrument('Example Dobson 250')->aperture_mm)->toBe(250)
+        // Type A is the naked eye: the account's naked-eye instrument.
+        ->and($instrument('Eye'))->toBeNull()
+        ->and(Observation::query()->where('observed_time', '21:45:00')->value('instrument_id'))->toBe($instrument('Naked eye')->id)
+        ->and($columns($instrument('Meade LX200 10'))['make'])->toBe('Meade')
+        ->and(array_keys($result->newInstruments))->toHaveCount(10);
+
+    // Imported again, every scope is found.
+    $count = Instrument::query()->count();
+    expect(Fixtures::import($this->user, 'oal/valid-scopes.xml')->newInstruments)->toBe([])
+        ->and(Instrument::query()->count())->toBe($count);
+});
 
 it('keeps observations of the same moment with another instrument apart', function (string $file) {
     Fixtures::import($this->user, $file);
