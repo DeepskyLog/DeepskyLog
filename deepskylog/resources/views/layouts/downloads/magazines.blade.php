@@ -37,7 +37,7 @@
                 <div class="flex-justify-center flex">
                     <div class="px-5">
                         <a
-                            href="https://www.astrosurf.com/cielextreme/archives-ce.html"
+                            href="http://www.astrosurf.com/cielextreme/archives-ce.html"
                         >
                             <img
                                 src="/images/CielExtreme.png"

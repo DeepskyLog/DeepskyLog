@@ -8,7 +8,7 @@
                 </button>
             </x-slot>
 
-            <x-menu.item icon="question-mark-circle" href="mailto:deepskylog@groups.io">{{ __('Ask a question') }}</x-menu.item>
+            <x-menu.item icon="question-mark-circle" href="https://groups.io/g/deepskylog/post">{{ __('Ask a question') }}</x-menu.item>
             <x-menu.item icon="at-symbol" href="https://groups.io/g/deepskylog">{!! __('Subscribe to mailing list') !!}</x-menu.item>
             <x-menu.item icon="banknotes" href="/sponsors">{{ __('Sponsor DeepskyLog') }}</x-menu.item>
             <x-menu.item icon="bolt" href="https://github.com/DeepskyLog/DeepskyLog/issues">{{ __('Report issue') }}</x-menu.item>

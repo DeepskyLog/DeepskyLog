@@ -11,7 +11,7 @@
         <div class="mt-3 space-y-1">
             <x-dropdown.item
                 icon="question-mark-circle"
-                href="mailto:deepskylog@groups.io"
+                href="https://groups.io/g/deepskylog/post"
                 label="{{ __('Ask a question') }}"
             />
             <x-dropdown.item

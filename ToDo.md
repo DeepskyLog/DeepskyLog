@@ -1,7 +1,5 @@
 # ToDos
 
-- [ ] See GitHub: <https://github.com/DeepskyLog/DeepskyLog/issues>
-
 ## Next steps
 
 - [ ] Test! 
@@ -25,21 +23,14 @@
     - [X] Catalogs
     - [X] Search objects
     - [X] Search observations
-    - [ ] Add
-      - [X] Add observation -> Moon, Lunar features, Sun, Planets, Deep sky object
-      - [X] Add observation using CSV / OAL
-      - [X] Sessions
-      - [X] Instruments
-      - [X] Eyepieces
-      - [X] Lenses
-      - [X] Filters
-      - [X] Locations
-      - [ ] Instrument sets
-      - [ ] Object
-      - [ ] Comet
-    - [ ] Image catalogs
-    - [ ] Atlases
-    - [ ] Log out
+    - [X] Add
+    - [X] Downloads
+    - [ ] Groups menu
+    - [ ] Observer menu
+    - [ ] Post menu
+    - [ ] As Database expert
+    - [ ] As administrator
+- [ ] GitHub issues
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4
 - [ ] Translations
