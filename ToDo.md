@@ -31,7 +31,7 @@
       - [X] Sessions
       - [X] Instruments
       - [X] Eyepieces
-      - [ ] Lenses
+      - [X] Lenses
       - [X] Filters
       - [X] Locations
       - [ ] Instrument sets

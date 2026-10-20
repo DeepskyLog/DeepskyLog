@@ -26,6 +26,8 @@ class CreateLens extends Component
 
     public $description;
 
+    public $proposed_name;
+
     #[Validate('image')]
     public $photo;
 
@@ -50,6 +52,52 @@ class CreateLens extends Component
         }
 
         return view('livewire.create-lens', ['update' => false]);
+    }
+
+    public function updated($property): void
+    {
+        if (in_array($property, ['lens_make', 'lens_new_make', 'factor'])) {
+            $this->updateProposedName();
+        }
+    }
+
+    public function updateProposedName(): void
+    {
+        if ($this->lens_make == null || $this->lens_make == 1) {
+            $make = trim((string) $this->lens_new_make);
+        } else {
+            $make = LensMake::find($this->lens_make)?->name;
+        }
+
+        $parts = [$make];
+        if (is_numeric($this->factor) && $this->factor > 0) {
+            $factor = (float) $this->factor;
+            $parts[] = rtrim(rtrim(number_format($factor, 2, '.', ''), '0'), '.').'x';
+            $parts[] = self::kind($factor);
+        }
+
+        $this->proposed_name = implode(' ', array_filter($parts));
+
+        // Only put the proposed name in the name field if a new lens is being created
+        if (! $this->lens) {
+            $this->name = $this->proposed_name;
+        }
+    }
+
+    /**
+     * The kind of lens a factor suggests. Coma correctors magnify a little
+     * (the Tele Vue Paracorr 1.15x), Barlow lenses start at 1.5x.
+     */
+    public static function kind(float $factor): string
+    {
+        if ($factor < 1) {
+            return 'Focal reducer';
+        }
+        if ($factor < 1.5) {
+            return 'Coma corrector';
+        }
+
+        return 'Barlow';
     }
 
     public function save()
