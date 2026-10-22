@@ -23,29 +23,7 @@
                 <x-input-error for="name" class="mt-2" />
             </div>
 
-            <!-- Token Permissions -->
-            @if (Laravel\Jetstream\Jetstream::hasPermissions())
-                <div class="col-span-6">
-                    <x-label
-                        for="permissions"
-                        value="{{ __('Permissions') }}"
-                    />
-
-                    <div class="mt-2 grid grid-cols-1 gap-4 md:grid-cols-2">
-                        @foreach (Laravel\Jetstream\Jetstream::$permissions as $permission)
-                            <label class="flex items-center">
-                                <x-checkbox
-                                    wire:model.live="createApiTokenForm.permissions"
-                                    :value="$permission"
-                                />
-                                <span class="ml-2 text-sm text-gray-600">
-                                    {{ __($permission) }}
-                                </span>
-                            </label>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
+            {{-- No permission checkboxes: 'read' is the only permission and a token without it is useless, so every token gets it (Jetstream::defaultApiTokenPermissions()). --}}
         </x-slot>
 
         <x-slot name="actions">
@@ -88,15 +66,6 @@
                                             {{ __("Last used") }}
                                             {{ $token->last_used_at->diffForHumans() }}
                                         </div>
-                                    @endif
-
-                                    @if (Laravel\Jetstream\Jetstream::hasPermissions())
-                                        <button
-                                            class="ml-6 cursor-pointer text-sm text-gray-400 underline"
-                                            wire:click="manageApiTokenPermissions({{ $token->id }})"
-                                        >
-                                            {{ __("Permissions") }}
-                                        </button>
                                     @endif
 
                                     <button
@@ -145,44 +114,6 @@
                 wire:click="$set('displayingToken', false)"
                 wire:loading.attr="disabled"
             />
-        </x-slot>
-    </x-modal-card>
-
-    <!-- API Token Permissions Modal -->
-    <x-modal-card
-        blur
-        title="{!! __('API Token Permissions') !!}"
-        wire:model.live="managingApiTokenPermissions"
-    >
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-            @foreach (Laravel\Jetstream\Jetstream::$permissions as $permission)
-                <label class="flex items-center">
-                    <x-checkbox
-                        wire:model.live="updateApiTokenForm.permissions"
-                        :value="$permission"
-                    />
-                    <span class="ml-2 text-sm text-gray-600">
-                        {{ __($permission) }}
-                    </span>
-                </label>
-            @endforeach
-        </div>
-
-        <x-slot name="footer">
-            <x-button
-                type="submit"
-                label="{{ __('Cancel') }}"
-                wire:click="$set('managingApiTokenPermissions', false)"
-                wire:loading.attr="disabled"
-            />
-
-            <x-button
-                class="ml-3"
-                wire:click="updateApiToken"
-                wire:loading.attr="disabled"
-            >
-                {{ __("Save") }}
-            </x-button>
         </x-slot>
     </x-modal-card>
 

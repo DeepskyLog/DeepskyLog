@@ -8,7 +8,9 @@ use App\Models\ObservingListItem;
 use App\Models\User;
 use Database\Factories\LocationFactory;
 use Illuminate\Support\Facades\DB;
+use Laravel\Jetstream\Http\Livewire\ApiTokenManager;
 use Laravel\Sanctum\Sanctum;
+use Livewire\Livewire;
 
 function meApiObservation(User $user, array $attributes = []): Observation
 {
@@ -178,4 +180,17 @@ it('shows the page on which observers make their API tokens', function () {
         ->get(route('api-tokens.index'))
         ->assertOk()
         ->assertSee(__('API Tokens'));
+});
+
+it('gives every token made on the page the read permission, without permission checkboxes', function () {
+    $user = User::factory()->withPersonalTeam()->create();
+    $this->actingAs($user);
+
+    Livewire::test(ApiTokenManager::class)
+        ->assertDontSee(__('Permissions'))
+        ->set('createApiTokenForm.name', 'pydeepskylog')
+        ->call('createApiToken')
+        ->assertHasNoErrors();
+
+    expect($user->fresh()->tokens()->sole()->abilities)->toBe(['read']);
 });
