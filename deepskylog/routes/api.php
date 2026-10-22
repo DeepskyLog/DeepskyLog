@@ -588,12 +588,19 @@ Route::get('atlas.index', function (Request $request) {
 
 Route::get('ui_languages.index', function (Request $request) {
     $allLanguages = [];
-    // Show the selected option
+    // Show the selected option: the one asked for (WireUI sends it as
+    // selected[0]), else the observer's own.
     if ($request->exists('selected')) {
-        $allLanguages[] = [
-            'id' => auth()->user()->language,
-            'name' => Languages::lookup([auth()->user()->language], 'mixed')->values()[0],
-        ];
+        $sel = $request->input('selected');
+        $sel = trim((string) (is_array($sel) ? (reset($sel) ?: '') : $sel));
+        $sel = $sel !== '' ? $sel : (string) auth()->user()->language;
+        $name = $sel !== '' ? Languages::lookup([$sel], 'mixed')->first() : null;
+        if ($name !== null) {
+            $allLanguages[] = [
+                'id' => $sel,
+                'name' => $name,
+            ];
+        }
     }
 
     // Get the languages
@@ -613,16 +620,19 @@ Route::get('ui_languages.index', function (Request $request) {
 // Make a list of all possible languages for the observations in DeepskyLog.
 Route::get('observation_languages.index', function (Request $request) {
     $allLanguages = [];
-    // Show the selected option (use provided value, fallback to auth user)
+    // Show the selected option: the one asked for (WireUI sends it as
+    // selected[0]), else the observer's own.
     if ($request->exists('selected')) {
-        $sel = $request->selected;
-        if (empty($sel) && auth()->check()) {
-            $sel = auth()->user()->observationlanguage;
+        $sel = $request->input('selected');
+        $sel = trim((string) (is_array($sel) ? (reset($sel) ?: '') : $sel));
+        if ($sel === '' && auth()->check()) {
+            $sel = (string) auth()->user()->observationlanguage;
         }
-        if (!empty($sel)) {
+        $name = $sel !== '' ? Languages::lookup([$sel], 'mixed')->first() : null;
+        if ($name !== null) {
             $allLanguages[] = [
                 'id' => $sel,
-                'name' => Languages::lookup([$sel], 'mixed')->values()[0],
+                'name' => $name,
             ];
         }
     }

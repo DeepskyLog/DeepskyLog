@@ -34,6 +34,21 @@ it('returns the selected make first', function () {
         ->toBe(['id' => $make->id, 'name' => 'Televue']);
 });
 
+it('returns the language WireUI asks for first', function (string $route) {
+    $this->actingAs(User::factory()->create());
+
+    expect($this->getJson(route($route).'?selected[0]=nl')->assertOk()->json('0'))
+        ->toBe(['id' => 'nl', 'name' => 'Nederlands']);
+})->with(['ui_languages.index', 'observation_languages.index']);
+
+it('ignores a selected language that does not exist', function () {
+    $this->actingAs(User::factory()->create());
+
+    $this->getJson(route('observation_languages.index').'?selected[0]=zz')
+        ->assertOk()
+        ->assertJsonMissing(['id' => 'zz']);
+});
+
 it('does not fail when the standard atlas of the user does not exist', function () {
     $user = User::factory()->create();
     $user->forceFill(['standardAtlasCode' => 'no-such-atlas'])->save();
