@@ -9,6 +9,8 @@
         <span class="flex-shrink-0">
             <x-icon :name="$icon" class="h-4 w-4 mr-2 text-gray-300" />
         </span>
+    @elseif (isset($svg))
+        <span class="flex-shrink-0 inline-flex mr-2 text-gray-300">{{ $svg }}</span>
     @endif
 
     @if ($label)

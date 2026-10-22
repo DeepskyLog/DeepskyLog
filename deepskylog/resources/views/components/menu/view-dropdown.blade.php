@@ -16,8 +16,7 @@
 
             @if (!Auth::guest() && Auth::user()->isObserver())
                 <x-menu.item href="{{ route('session.all') }}">
-                    <x-outline.session-icon class="h-4 w-4 mr-2 text-gray-300" />
-                    {{ __('All sessions') }}
+                    <x-slot:svg><x-outline.session-icon class="h-4 w-4" /></x-slot:svg>{{ __('All sessions') }}
                 </x-menu.item>
 
                 {{-- Instrument/eyepiece/filter/lens links moved to the user menu --}}
@@ -29,17 +28,14 @@
             <x-menu.item separator icon="user-group" href="{{ route('observers.index') }}">{{ __('Observers') }}</x-menu.item>
 
             <x-menu.item href="{{ route('objects.popular') }}">
-                <x-outline.popular-objects-icon class="h-4 w-4 mr-2 ml-0 text-gray-300" />
-                {{ __('Popular objects') }}
+                <x-slot:svg><x-outline.popular-objects-icon class="h-4 w-4" /></x-slot:svg>{{ __('Popular objects') }}
             </x-menu.item>
             <x-menu.item href="/popular-observations">
-                <x-outline.popular-objects-icon class="h-4 w-4 mr-2 text-gray-300" />
-                {{ __('Popular observations') }}
+                <x-slot:svg><x-outline.popular-objects-icon class="h-4 w-4" /></x-slot:svg>{{ __('Popular observations') }}
             </x-menu.item>
 
             <x-menu.item href="/popular-sessions">
-                <x-outline.session-icon class="h-4 w-4 mr-2 text-gray-300" />
-                {{ __('Popular sessions') }}
+                <x-slot:svg><x-outline.session-icon class="h-4 w-4" /></x-slot:svg>{{ __('Popular sessions') }}
             </x-menu.item>
 
             <x-menu.item icon="chart-bar-square" href="{{ route('statistics.index') }}">{{ __('Statistics') }}</x-menu.item>

@@ -16,35 +16,29 @@
                 {{-- observing list placeholder (kept commented) --}}
 
                 <x-menu.item href="{{ route('session.create') }}">
-                    <x-outline.session-icon class="h-4 w-4 mr-2 text-gray-300 inline-block align-middle" />
-                    {{ __('Session') }}
+                    <x-slot:svg><x-outline.session-icon class="h-4 w-4" /></x-slot:svg>{{ __('Session') }}
                 </x-menu.item>
 
                 <x-menu.item separator href="{{ route('instrument.create') }}">
-                    <x-outline.telescope-icon class="h-4 w-4 mr-2 text-gray-300 inline-block align-middle" />
-                    {{ __('Instruments') }}
+                    <x-slot:svg><x-outline.telescope-icon class="h-4 w-4" /></x-slot:svg>{{ __('Instruments') }}
                 </x-menu.item>
 
                 <x-menu.item icon="globe-europe-africa" href="{{ route('location.create') }}">{{ __('Locations') }}</x-menu.item>
 
                 <x-menu.item href="{{ route('eyepiece.create') }}">
-                    <x-outline.eyepiece-icon class="h-4 w-4 mr-2 text-gray-300 inline-block align-middle" />
-                    {{ __('Eyepieces') }}
+                    <x-slot:svg><x-outline.eyepiece-icon class="h-4 w-4" /></x-slot:svg>{{ __('Eyepieces') }}
                 </x-menu.item>
 
                 <x-menu.item href="/filter/create">
-                    <x-outline.filter-icon class="h-4 w-4 mr-2 text-gray-300 inline-block align-middle" />
-                    {{ __('Filters') }}
+                    <x-slot:svg><x-outline.filter-icon class="h-4 w-4" /></x-slot:svg>{{ __('Filters') }}
                 </x-menu.item>
 
                 <x-menu.item href="/lens/create">
-                    <x-outline.barlow-icon class="h-4 w-4 mr-2 text-gray-300 inline-block align-middle" />
-                    {{ __('Lenses') }}
+                    <x-slot:svg><x-outline.barlow-icon class="h-4 w-4" /></x-slot:svg>{{ __('Lenses') }}
                 </x-menu.item>
 
                 <x-menu.item href="{{ route('instrumentset.create') }}">
-                    <x-outline.instrument-set-icon class="h-4 w-4 mr-2 text-gray-300 inline-block align-middle" />
-                    {{ __('Instrument sets') }}
+                    <x-slot:svg><x-outline.instrument-set-icon class="h-4 w-4" /></x-slot:svg>{{ __('Instrument sets') }}
                 </x-menu.item>
 
                 <x-menu.item separator icon="plus-circle" href="{{ route('object.create') }}">{{ __('Object') }}</x-menu.item>
