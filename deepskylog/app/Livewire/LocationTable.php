@@ -54,7 +54,43 @@ final class LocationTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Location::query()->where('user_id', Auth::id());
+        // SQM, NELM and Bortle are shown as computed by Location::getSqm(), getNelm()
+        // and getBortle() (the missing value derived from the other one, with the
+        // formulas and thresholds of the astronomy library's Magnitude class). They
+        // are computed in SQL as well, in a derived table that keeps the name
+        // `locations`, so that sorting, searching and exporting use the shown values.
+        // The FLOAT columns are cast to DECIMAL so that MariaDB compares e.g. 19.1
+        // to the thresholds as PHP does, not as 19.100000381.
+        $sqm = 'CAST(skyBackground AS DECIMAL(6,3))';
+        $nelm = 'CAST(limitingMagnitude AS DECIMAL(6,3))';
+        $sqmFromNelm = "21.58 - 5 * LOG10(POWER(10, 1.586 - {$nelm} / 5.0) - 1)";
+        $nelmFromSqm = "7.93 - 5 * LOG10(1 + POWER(10, 4.316 - {$sqm} / 5.0))";
+        $fstOffset = (float) (Auth::user()->fstOffset ?? 0);
+
+        $locations = Location::query()
+            ->select('locations.*')
+            ->selectRaw("CASE
+                WHEN {$sqm} > 0 THEN {$sqm}
+                WHEN {$nelm} >= 7.93 THEN 22
+                WHEN {$nelm} > 0 THEN ROUND(CASE WHEN {$sqmFromNelm} > 22 THEN 22 ELSE {$sqmFromNelm} END, 2)
+            END AS sqm")
+            ->selectRaw("CASE
+                WHEN {$nelm} > 0 THEN ROUND({$nelm} - ?, 2)
+                WHEN {$sqm} > 0 THEN ROUND(CASE WHEN {$nelmFromSqm} < 2.5 THEN 2.5 ELSE {$nelmFromSqm} END - ?, 1)
+            END AS nelm", [$fstOffset, $fstOffset])
+            ->selectRaw("CASE
+                WHEN {$sqm} > 0 THEN CASE
+                    WHEN {$sqm} <= 17.5 THEN 9 WHEN {$sqm} <= 18.0 THEN 8 WHEN {$sqm} <= 18.5 THEN 7
+                    WHEN {$sqm} <= 19.1 THEN 6 WHEN {$sqm} <= 20.4 THEN 5 WHEN {$sqm} <= 21.3 THEN 4
+                    WHEN {$sqm} <= 21.5 THEN 3 WHEN {$sqm} <= 21.7 THEN 2 ELSE 1 END
+                WHEN {$nelm} > 0 THEN CASE
+                    WHEN {$nelm} < 3.6 THEN 9 WHEN {$nelm} < 3.9 THEN 8 WHEN {$nelm} < 4.4 THEN 7
+                    WHEN {$nelm} < 4.9 THEN 6 WHEN {$nelm} < 5.8 THEN 5 WHEN {$nelm} < 6.3 THEN 4
+                    WHEN {$nelm} < 6.4 THEN 3 WHEN {$nelm} < 6.5 THEN 2 ELSE 1 END
+            END AS bortle")
+            ->where('user_id', Auth::id());
+
+        return Location::query()->fromSub($locations, 'locations');
     }
 
     public function fields(): PowerGridFields
@@ -144,15 +180,16 @@ final class LocationTable extends PowerGridComponent
                 ->searchable()
                 ->sortable(),
 
-            Column::make('SQM', 'skyBackground')
+            Column::make('SQM', 'skyBackground', 'sqm')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('NELM', 'limitingMagnitude')
+            Column::make('NELM', 'limitingMagnitude', 'nelm')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Bortle', 'bortle'),
+            Column::make('Bortle', 'bortle', 'bortle')
+                ->sortable(),
 
             Column::make(__('Weather'), 'weather')
                 ->visibleInExport(false),
