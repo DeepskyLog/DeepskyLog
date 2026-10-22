@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\SortsEmptyLast;
 use App\Models\Eyepiece;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -17,6 +18,7 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class EyepieceTable extends PowerGridComponent
 {
+    use SortsEmptyLast;
     use WithExport;
 
     public bool $multiSort = false;
@@ -52,7 +54,14 @@ final class EyepieceTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Eyepiece::query()->where('user_id', Auth::id());
+        // The make and type columns are searchable and sortable, so their tables
+        // are joined here: PowerGrid qualifies a column with the table of the
+        // query's base model unless the column carries its own table prefix.
+        return Eyepiece::query()
+            ->select('eyepieces.*')
+            ->leftJoin('eyepiece_makes', 'eyepiece_makes.id', '=', 'eyepieces.make_id')
+            ->leftJoin('eyepiece_types', 'eyepiece_types.id', '=', 'eyepieces.type_id')
+            ->where('eyepieces.user_id', Auth::id());
     }
 
     public function fields(): PowerGridFields
@@ -91,8 +100,12 @@ final class EyepieceTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Make', 'make_str'),
-            Column::make('Type', 'type_str'),
+            Column::make('Make', 'make_str', 'eyepiece_makes.name')
+                ->searchable()
+                ->sortUsing($this->sortEmptyLast('eyepiece_makes.name')),
+            Column::make('Type', 'type_str', 'eyepiece_types.name')
+                ->searchable()
+                ->sortUsing($this->sortEmptyLast('eyepiece_types.name')),
 
             Column::make('Name', 'name_link', 'name')
                 ->visibleInExport(false)
@@ -115,15 +128,15 @@ final class EyepieceTable extends PowerGridComponent
                 ->searchable(),
 
             Column::make('ApparentFOV', 'apparentFOV')
-                ->sortable()
+                ->sortUsing($this->sortEmptyLast('eyepieces.apparentFOV', 'eyepieces.apparentFOV IS NULL'))
                 ->searchable(),
 
             Column::make('Max focal length', 'max_focal_length_mm')
-                ->sortable()
+                ->sortUsing($this->sortEmptyLast('eyepieces.max_focal_length_mm', 'eyepieces.max_focal_length_mm IS NULL OR eyepieces.max_focal_length_mm <= 0'))
                 ->searchable(),
 
             Column::make('Field stop', 'field_stop_mm')
-                ->sortable()
+                ->sortUsing($this->sortEmptyLast('eyepieces.field_stop_mm', 'eyepieces.field_stop_mm IS NULL OR eyepieces.field_stop_mm <= 0'))
                 ->searchable(),
 
             Column::make('Observations', 'observations')

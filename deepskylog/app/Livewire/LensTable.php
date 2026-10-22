@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\SortsEmptyLast;
 use App\Models\Lens;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -19,6 +20,7 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 #[Lazy]
 class LensTable extends PowerGridComponent
 {
+    use SortsEmptyLast;
     use WithExport;
 
     public bool $multiSort = false;
@@ -83,7 +85,8 @@ class LensTable extends PowerGridComponent
     {
         return [
             Column::make(__('Make'), 'makestr', 'lens_makes.name')
-                ->searchable(),
+                ->searchable()
+                ->sortUsing($this->sortEmptyLast('lens_makes.name')),
 
             Column::make('Name', 'name_link', 'name')
                 ->visibleInExport(false)
@@ -102,7 +105,7 @@ class LensTable extends PowerGridComponent
                 ->sortable(),
 
             Column::make('Factor', 'factor')
-                ->sortable()
+                ->sortUsing($this->sortEmptyLast('lenses.factor', 'lenses.factor IS NULL'))
                 ->searchable(),
 
             Column::make(__('# obs'), 'observations')

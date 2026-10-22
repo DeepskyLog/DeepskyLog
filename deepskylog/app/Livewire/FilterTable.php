@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\SortsEmptyLast;
 use App\Models\Filter as DSL_Filter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -17,6 +18,7 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class FilterTable extends PowerGridComponent
 {
+    use SortsEmptyLast;
     use WithExport;
 
     public bool $multiSort = false;
@@ -88,7 +90,8 @@ final class FilterTable extends PowerGridComponent
     {
         return [
             Column::make(__('Make'), 'makestr', 'filter_makes.name')
-                ->searchable(),
+                ->searchable()
+                ->sortUsing($this->sortEmptyLast('filter_makes.name')),
 
             Column::make('Name', 'name_link', 'name')
                 ->visibleInExport(false)
@@ -101,10 +104,12 @@ final class FilterTable extends PowerGridComponent
                 ->visibleInExport(true),
 
             Column::make(__('Type'), 'typestr', 'filter_types.name')
-                ->searchable(),
+                ->searchable()
+                ->sortUsing($this->sortEmptyLast('filter_types.name')),
 
             Column::make(__('Color'), 'colorstr', 'filter_colors.name')
-                ->searchable(),
+                ->searchable()
+                ->sortUsing($this->sortEmptyLast('filter_colors.name')),
 
             Column::add()
                 ->title(__('Active'))
@@ -113,11 +118,11 @@ final class FilterTable extends PowerGridComponent
                 ->sortable(),
 
             Column::make('Wratten', 'wratten')
-                ->sortable()
+                ->sortUsing($this->sortEmptyLast('filters.wratten'))
                 ->searchable(),
 
             Column::make('Schott', 'schott')
-                ->sortable()
+                ->sortUsing($this->sortEmptyLast('filters.schott'))
                 ->searchable(),
 
             Column::make(__('# obs'), 'observations')

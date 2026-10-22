@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\SortsEmptyLast;
 use App\Models\Instrument;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -19,11 +20,15 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 #[Lazy]
 class InstrumentTable extends PowerGridComponent
 {
+    use SortsEmptyLast;
     use WithExport;
 
     public bool $multiSort = false;
 
     public string $tableName = 'instrument-table';
+
+    // Instrument types used without a mount: their Mount cell stays empty.
+    private const TYPES_WITHOUT_MOUNT = ['Naked Eye', 'Binoculars', 'Finderscope'];
 
     public function boot(): void
     {
@@ -106,7 +111,7 @@ class InstrumentTable extends PowerGridComponent
                 }
             })
             ->add('mount', function ($instrument) {
-                if ($instrument->instrument_type->name == 'Naked Eye' || $instrument->instrument_type->name == 'Binoculars' || $instrument->instrument_type->name == 'Finderscope') {
+                if (in_array($instrument->instrument_type->name, self::TYPES_WITHOUT_MOUNT, true)) {
                     return '';
                 } else {
                     return e(html_entity_decode((string) $instrument->mount_type->name));
@@ -119,7 +124,8 @@ class InstrumentTable extends PowerGridComponent
     {
         return [
             Column::make(__('Make'), 'makestr', 'instrument_makes.name')
-                ->searchable(),
+                ->searchable()
+                ->sortUsing($this->sortEmptyLast('instrument_makes.name')),
 
             Column::make('Name', 'name_link', 'name')
                 ->visibleInExport(false)
@@ -138,7 +144,8 @@ class InstrumentTable extends PowerGridComponent
                 ->sortable(),
 
             Column::make(__('Type'), 'instrument_type_name', 'instrument_types.name')
-                ->searchable(),
+                ->searchable()
+                ->sortUsing($this->sortEmptyLast('instrument_types.name')),
 
             Column::make(__('Aperture'), 'aperture_mm')
                 ->searchable()
@@ -146,22 +153,28 @@ class InstrumentTable extends PowerGridComponent
 
             Column::make(__('Focal Length'), 'focal_length', 'focal_length_mm')
                 ->searchable()
-                ->sortable(),
+                ->sortUsing($this->sortEmptyLast('instruments.focal_length_mm', 'instruments.focal_length_mm IS NULL OR instruments.focal_length_mm <= 1')),
 
             Column::make(__('Fixed X'), 'fixedMagnification')
                 ->searchable()
-                ->sortable(),
+                ->sortUsing($this->sortEmptyLast('instruments.fixedMagnification', 'instruments.fixedMagnification IS NULL')),
 
             Column::make(__('F/D'), 'focal_ratio', 'fd')
                 ->searchable()
-                ->sortable(),
+                ->sortUsing($this->sortEmptyLast('instruments.fd', 'instruments.fd IS NULL OR instruments.fd <= 1')),
 
             Column::make(__('Obstr. (%)'), 'obstruction_perc')
                 ->searchable()
-                ->sortable(),
+                ->sortUsing($this->sortEmptyLast('instruments.obstruction_perc', 'instruments.obstruction_perc IS NULL')),
 
             Column::make(__('Mount'), 'mount', 'mount_types.name')
-                ->searchable(),
+                ->searchable()
+                ->sortUsing($this->sortEmptyLast(
+                    'mount_types.name',
+                    "mount_types.name IS NULL OR mount_types.name = '' OR instrument_types.name IN ("
+                        .implode(', ', array_fill(0, count(self::TYPES_WITHOUT_MOUNT), '?')).')',
+                    self::TYPES_WITHOUT_MOUNT
+                )),
 
             Column::make(__('Flip'), 'flip_image')
                 ->sortable(),
