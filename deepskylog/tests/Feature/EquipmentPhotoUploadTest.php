@@ -19,8 +19,8 @@ it('stores an equipment photo with the extension of its content', function () {
 
     Livewire::actingAs($user)
         ->test(CreateLens::class)
-        ->set('name', 'Barlow')
         ->set('factor', 2)
+        ->set('name', 'Barlow')
         ->set('photo', UploadedFile::fake()->createWithContent('photo.fcgi', $png)->mimeType('image/png'))
         ->call('save')
         ->assertHasNoErrors();
@@ -38,8 +38,8 @@ it('does not store an equipment photo that is not an image', function () {
 
     Livewire::actingAs($user)
         ->test(CreateLens::class)
-        ->set('name', 'Barlow')
         ->set('factor', 2)
+        ->set('name', 'Barlow')
         ->set('photo', UploadedFile::fake()->createWithContent('photo.png', '<script>alert(1)</script>')->mimeType('text/html'))
         ->call('save');
 

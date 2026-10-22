@@ -15,16 +15,17 @@ function lensPhoto(): UploadedFile
 }
 
 it('gives equipment photos of different observers different names', function () {
+    // The factor fills in a proposed name: set it first, so the names below stay.
     Storage::fake('public');
     // Slug names collided here: "john" + "doe xyz" and "john-doe" + "xyz".
     $john = User::factory()->create(['slug' => 'john']);
     $johnDoe = User::factory()->create(['slug' => 'john-doe']);
 
     Livewire::actingAs($john)->test(CreateLens::class)
-        ->set('name', 'doe xyz')->set('factor', 2)->set('photo', lensPhoto())
+        ->set('factor', 2)->set('name', 'doe xyz')->set('photo', lensPhoto())
         ->call('save')->assertHasNoErrors();
     Livewire::actingAs($johnDoe)->test(CreateLens::class)
-        ->set('name', 'xyz')->set('factor', 2)->set('photo', lensPhoto())
+        ->set('factor', 2)->set('name', 'xyz')->set('photo', lensPhoto())
         ->call('save')->assertHasNoErrors();
 
     $pictures = Lens::pluck('picture');
@@ -38,7 +39,7 @@ it('removes the old equipment photo when it is replaced', function () {
     $user = User::factory()->create();
 
     Livewire::actingAs($user)->test(CreateLens::class)
-        ->set('name', 'Barlow')->set('factor', 2)->set('photo', lensPhoto())
+        ->set('factor', 2)->set('name', 'Barlow')->set('photo', lensPhoto())
         ->call('save');
     $lens = Lens::where('name', 'Barlow')->firstOrFail();
     $old = $lens->picture;

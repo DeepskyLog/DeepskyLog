@@ -109,7 +109,7 @@ class ObservingListFileImportService
      */
     protected function parseArgoNavisOrTxt(UploadedFile $file): array
     {
-        $content = file_get_contents($file->getRealPath());
+        $content = $this->readText($file);
         $lines = array_filter(array_map('trim', explode("\n", $content)));
         $objectNames = [];
 
@@ -135,6 +135,17 @@ class ObservingListFileImportService
     }
 
     /**
+     * The contents of a text file, without the UTF-8 byte order mark that
+     * Excel and Notepad write: it would stick to the first object's name.
+     */
+    protected function readText(UploadedFile $file): string
+    {
+        $content = (string) file_get_contents($file->getRealPath());
+
+        return str_starts_with($content, "\xEF\xBB\xBF") ? substr($content, 3) : $content;
+    }
+
+    /**
      * Parse SkySafari .skylist format.
      * Format: key=value pairs with SkyObject blocks
      *
@@ -143,7 +154,7 @@ class ObservingListFileImportService
      */
     protected function parseSkySafari(UploadedFile $file): array
     {
-        $content = file_get_contents($file->getRealPath());
+        $content = $this->readText($file);
         $objectNames = [];
 
         // Remove version line and split by objects
@@ -243,7 +254,7 @@ class ObservingListFileImportService
     protected function parseCsv(UploadedFile $file): array
     {
         $objectNames = [];
-        $content = file_get_contents($file->getRealPath());
+        $content = $this->readText($file);
         $lines = array_filter(array_map('trim', explode("\n", $content)));
 
         foreach ($lines as $line) {
