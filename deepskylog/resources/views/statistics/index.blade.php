@@ -10,7 +10,12 @@
                         <p class="mt-1 text-sm text-gray-400">
                             @if ($selectedCountryLabel)
                                 {{ __('Country') }}: {{ $selectedCountryLabel }}
-                            @else
+                            @endif
+                            @if ($selectedResidenceLabel)
+                                @if ($selectedCountryLabel) · @endif
+                                {{ __('Country of residence') }}: {{ $selectedResidenceLabel }}
+                            @endif
+                            @if (!$selectedCountryLabel && !$selectedResidenceLabel)
                                 {{ __('All') }}
                             @endif
                         </p>
@@ -31,6 +36,20 @@
                             </select>
                         </div>
 
+                        <div>
+                            <label for="residence" class="mb-1 block text-sm font-medium text-gray-300">{{ __('Country of residence') }}</label>
+                            <select
+                                id="residence"
+                                name="residence"
+                                class="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-white shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:min-w-56"
+                            >
+                                <option value="">{{ __('All') }}</option>
+                                @foreach ($residenceOptions as $code => $label)
+                                    <option value="{{ $code }}" @selected($selectedResidence === $code)>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <button
                             type="submit"
                             class="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500"
@@ -38,9 +57,10 @@
                             {{ __('Show') }}
                         </button>
 
-                        @if ($selectedCountry)
+                        @if ($selectedCountry || $selectedResidence)
+                            {{-- An empty country, so a logged-in observer does not get their own country again. --}}
                             <a
-                                href="{{ route('statistics.index') }}"
+                                href="{{ route('statistics.index', ['country' => '']) }}"
                                 class="inline-flex items-center justify-center rounded-md border border-gray-600 px-4 py-2 text-sm font-medium text-gray-200 transition hover:bg-gray-800"
                             >
                                 {{ __('Reset') }}
@@ -90,6 +110,10 @@
             <div>
                 {!! $countriesChart->container() !!}
             </div>
+
+            <div>
+                {!! $residencesChart->container() !!}
+            </div>
         </div>
     </div>
 
@@ -97,9 +121,11 @@
     <script src="{{ $observationsPerMonthChart->cdn() }}"></script>
     <script src="{{ $objectTypesChart->cdn() }}"></script>
     <script src="{{ $countriesChart->cdn() }}"></script>
+    <script src="{{ $residencesChart->cdn() }}"></script>
 
     {{ $observationsPerYearChart->script() }}
     {{ $observationsPerMonthChart->script() }}
     {{ $objectTypesChart->script() }}
     {{ $countriesChart->script() }}
+    {{ $residencesChart->script() }}
 @endsection

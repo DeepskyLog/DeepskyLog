@@ -9,7 +9,8 @@ use Illuminate\Support\Str;
 
 /**
  * The objects ranked by their number of observations (or drawings), as shown
- * on /popular-objects.
+ * on /popular-objects: of all observers, or of the observers living in one
+ * country (ObserverCountries::options()).
  */
 class PopularObjectsRanking
 {
@@ -30,21 +31,26 @@ class PopularObjectsRanking
      *
      * @return list<array{id: int, rank: int, name: string, kind: string, count: int, slug: string}>
      */
-    public function rows(string $mode): array
+    public function rows(string $mode, ?string $country = null): array
     {
         if (!in_array($mode, self::MODES, true)) {
             $mode = 'observations';
         }
+        $country = ObserverCountries::isOption($country) ? strtoupper($country) : null;
 
-        return Cache::flexible("popular_objects:{$mode}:ranking", self::CACHE_SECONDS, fn() => $this->compute($mode));
+        return Cache::flexible(
+            "popular_objects:{$mode}:ranking" . ($country ? ":{$country}" : ''),
+            self::CACHE_SECONDS,
+            fn() => $this->compute($mode, $country)
+        );
     }
 
     /**
      * @return list<array{id: int, rank: int, name: string, kind: string, count: int, slug: string}>
      */
-    private function compute(string $mode): array
+    private function compute(string $mode, ?string $country): array
     {
-        $groups = $this->groupedQuery($mode)
+        $groups = $this->groupedQuery($mode, $country)
             ->orderByDesc('total_count')
             ->orderBy('object_name')
             ->get();
@@ -90,9 +96,13 @@ class PopularObjectsRanking
      * follows from target_type, so grouping on target_type and target_name
      * uses their index instead of a temporary table of all observations.
      */
-    private function groupedQuery(string $mode): Builder
+    private function groupedQuery(string $mode, ?string $country): Builder
     {
         return DB::table('observations')
+            ->when($country, fn(Builder $query) => $query->whereIn(
+                'observer_username',
+                DB::table('users')->where('country', $country)->select('username')
+            ))
             ->whereNotNull('target_name')
             ->where('target_name', '!=', '')
             ->whereIn('target_type', ['deepsky', 'comet', 'planet'])

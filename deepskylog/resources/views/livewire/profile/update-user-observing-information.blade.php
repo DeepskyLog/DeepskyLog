@@ -92,6 +92,14 @@
                 id="showInches"
                 wire:model.live="showInches"
             />
+            @if ($suggestInches)
+                <div class="mt-1 text-sm text-gray-400">
+                    {{ __('Observers in :country usually give the diameter in inches.', ['country' => $countryLabel]) }}
+                    <button type="button" class="text-sky-400 hover:underline" wire:click="$set('showInches', true)">
+                        {{ __('Use inches') }}
+                    </button>
+                </div>
+            @endif
         </div>
 
         {{-- Default eyepiece --}}

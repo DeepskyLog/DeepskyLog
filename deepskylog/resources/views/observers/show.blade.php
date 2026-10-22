@@ -192,11 +192,22 @@
                             <tr>
                                 <td>{{ __('Country of residence') }}</td>
                                 <td>
-                                    @if ($user->country != '')
-                                        {{ Countries::getOne($user->country, app()->getLocale()) }}
-                                    @endif
+                                    {{ $countryLabel }}
                                 </td>
                             </tr>
+
+                            <!-- Countries observed in -->
+                            @if ($observedCountries['countries'] > 0)
+                                <tr>
+                                    <td>{{ __('Countries observed in') }}</td>
+                                    <td>
+                                        {{ $observedCountries['countries'] }}
+                                        @if ($observedCountries['abroad_percentage'] !== null)
+                                            ({{ __(':percentage% of the observations abroad', ['percentage' => number_format($observedCountries['abroad_percentage'], 1)]) }})
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endif
                         </table>
                     </div>
                 </div>
@@ -531,6 +542,20 @@
                                 <td class="px-4">{{ ($categoryRanks[$category]['rank'] ?? 0) ?: '-' }} / {{ $categoryRanks[$category]['observers'] ?? 0 }}</td>
                             @endforeach
                         </tr>
+
+                        @if ($countryRanks)
+                            <tr>
+                                <td class="pr-8">{{ __('Rank in :country', ['country' => $countryLabel]) }}</td>
+                                <td class="px-4">
+                                    <a href="{{ route('observers.index', ['country' => $user->country]) }}" class="hover:underline">
+                                        {{ $countryRanks['all']['rank'] ?: '-' }} / {{ $countryRanks['all']['observers'] }}
+                                    </a>
+                                </td>
+                                @foreach (['deepsky', 'comet', 'double', 'sun', 'moon', 'planets'] as $category)
+                                    <td class="px-4">{{ ($countryRanks[$category]['rank'] ?? 0) ?: '-' }} / {{ $countryRanks[$category]['observers'] ?? 0 }}</td>
+                                @endforeach
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
                 </div>

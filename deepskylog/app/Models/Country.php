@@ -65,6 +65,23 @@ class Country extends Model
             ?? null;
     }
 
+    /**
+     * The canonical name (as stored in locations.country) of an ISO code,
+     * such as the country of residence of an observer; the English name of
+     * the country list for a code that is not in the table.
+     */
+    public static function nameForCode(?string $code): ?string
+    {
+        self::loadNames();
+
+        $code = strtoupper(trim((string) $code));
+        if ($code === '') {
+            return null;
+        }
+
+        return self::$names[$code] ?? (Countries::getList('en')[$code] ?? null);
+    }
+
     private static function withoutBrackets(string $name): string
     {
         return trim(preg_replace('/\s*\(.*\)\s*/', ' ', $name));

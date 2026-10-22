@@ -37,12 +37,26 @@
                         placeholder="{{ __('Search on name, observer or object') }}"
                         class="flex-1 bg-gray-900 border border-gray-600 rounded-md text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
+                    @if (count($countryOptions) > 0)
+                        <label for="discover-country" class="text-sm text-gray-300 sm:whitespace-nowrap">{{ __('Observers from') }}</label>
+                        <select
+                            id="discover-country"
+                            name="country"
+                            onchange="this.form.submit()"
+                            class="bg-gray-900 border border-gray-600 rounded-md text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="">{{ __('All countries') }}</option>
+                            @foreach ($countryOptions as $code => $label)
+                                <option value="{{ $code }}" @selected($country === $code)>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    @endif
                     <div class="flex items-center gap-2">
                         <button type="submit" class="inline-flex items-center px-3 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500">
                             {{ __('Search') }}
                         </button>
                         @if ($search !== '')
-                            <a href="{{ route('observing-lists.discover', ['sort' => $sortBy]) }}" class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
+                            <a href="{{ route('observing-lists.discover', array_filter(['sort' => $sortBy, 'country' => $country])) }}" class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
                                 {{ __('Clear') }}
                             </a>
                         @endif
@@ -52,12 +66,12 @@
 
             {{-- Sort tabs --}}
             <div class="flex items-center gap-1 mb-6 border-b border-gray-700 pb-0">
-                <a href="{{ route('observing-lists.discover', array_filter(['sort' => 'newest', 'q' => $search])) }}"
+                <a href="{{ route('observing-lists.discover', array_filter(['sort' => 'newest', 'q' => $search, 'country' => $country])) }}"
                    class="px-4 py-2 text-sm font-medium border-b-2 -mb-px
                        {{ $sortBy === 'newest' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500' }}">
                     {{ __('Newest') }}
                 </a>
-                <a href="{{ route('observing-lists.discover', array_filter(['sort' => 'popular', 'q' => $search])) }}"
+                <a href="{{ route('observing-lists.discover', array_filter(['sort' => 'popular', 'q' => $search, 'country' => $country])) }}"
                    class="px-4 py-2 text-sm font-medium border-b-2 -mb-px
                        {{ $sortBy === 'popular' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500' }}">
                     {{ __('Most popular') }}
@@ -66,7 +80,7 @@
 
             @if ($publicLists->isEmpty())
                 <div class="text-gray-400 text-sm py-8 text-center">
-                    @if ($search !== '')
+                    @if ($search !== '' || $country)
                         {{ __('No public observing lists match your search.') }}
                     @else
                         {{ __('No public observing lists found.') }}

@@ -28,7 +28,7 @@
 
                     <div class="mb-4">
                         @php
-                            $usersAsyncRoute = ! empty($otherObservers) ? route('users.select.api', ['selected' => $otherObservers]) : route('users.select.api');
+                            $usersAsyncRoute = ! empty($otherObservers) ? route('users.select.api', ['selected' => $otherObservers, 'compatriots_first' => 1]) : route('users.select.api', ['compatriots_first' => 1]);
                             $selectedUsers = ! empty($otherObservers) ? \App\Models\User::whereIn('username', $otherObservers)->get() : collect();
                         @endphp
                         <x-select
@@ -44,7 +44,10 @@
                                 <x-select.option label="{{ $su->name }}" value="{{ $su->username }}" />
                             @endforeach
                         </x-select>
-                        <div class="text-xs text-gray-400 mt-1">{{ __('Select additional observers who participated in this session (optional).') }}</div>
+                        <div class="text-xs text-gray-400 mt-1">{{ __('Select additional observers who participated in this session (optional).') }}
+                            @if (auth()->user()?->country)
+                                {{ __('Observers from your country are listed first.') }}
+                            @endif</div>
                     </div>
 
                     <div class="mb-4">

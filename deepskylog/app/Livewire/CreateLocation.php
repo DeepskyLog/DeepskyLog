@@ -93,6 +93,10 @@ class CreateLocation extends Component
                 $this->updatedNelm($this->nelm);
             }
             // Frontend initialization of the map is handled client-side via Livewire hooks
+        } else {
+            // The country of residence, until the reverse geocoder answers;
+            // also what is kept when the lookup fails.
+            $this->country = Country::nameForCode(Auth::user()->country);
         }
     }
 
@@ -231,7 +235,8 @@ class CreateLocation extends Component
 
     /**
      * Looks the country and time zone up. On a failure the current values are
-     * kept ('Unknown' and 'UTC' when there are none).
+     * kept (for a new location the observer's country of residence), 'Unknown'
+     * and 'UTC' when there are none.
      */
     public function updateCountry($latitude, $longitude): void
     {

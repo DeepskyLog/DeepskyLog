@@ -29,6 +29,10 @@ class Kernel extends ConsoleKernel
         // deleted. Daily, so the warnings go out on time.
         $schedule->command('users:prune-inactive --apply')->dailyAt('03:30')->withoutOverlapping();
 
+        // The country of residence of new observers, from their first
+        // locations, so the national rankings and filters include them.
+        $schedule->command('users:fill-country --apply')->dailyAt('03:45')->withoutOverlapping();
+
         $schedule->command('astronomy:updateCometPhotometry')->weeklyOn(2, '4:30');
         // Incremental search index reindex (one-run nightly; safe for production)
         $schedule->command('search:reindex --incremental')

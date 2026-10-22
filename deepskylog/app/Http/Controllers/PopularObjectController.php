@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ObserverCountries;
 use App\Services\PopularObjectsRanking;
 use Illuminate\Http\Request;
 
@@ -14,6 +15,13 @@ class PopularObjectController extends Controller
             $mode = 'observations';
         }
 
-        return view('observations.popular-objects', ['mode' => $mode]);
+        $countryOptions = ObserverCountries::options();
+        $country = strtoupper(trim((string) $request->query('country', '')));
+
+        return view('observations.popular-objects', [
+            'mode' => $mode,
+            'countryOptions' => $countryOptions,
+            'country' => array_key_exists($country, $countryOptions) ? $country : null,
+        ]);
     }
 }

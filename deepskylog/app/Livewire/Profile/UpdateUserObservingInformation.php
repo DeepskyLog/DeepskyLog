@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Profile;
 
+use App\Services\ObserverCountries;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 
@@ -92,6 +93,10 @@ class UpdateUserObservingInformation extends Component
 
     public function render()
     {
-        return view('livewire.profile.update-user-observing-information');
+        return view('livewire.profile.update-user-observing-information', [
+            // Observers of a country that measures in inches are offered the switch.
+            'suggestInches' => ! $this->showInches && ObserverCountries::usesInches(auth()->user()->country),
+            'countryLabel' => ObserverCountries::label(auth()->user()->country),
+        ]);
     }
 }

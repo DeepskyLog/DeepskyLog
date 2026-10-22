@@ -62,12 +62,19 @@ Route::get('objects/simbad-lookup', [ObjectController::class, 'simbadLookupByNam
 
 Route::get('countries.index', function (Request $request) {
     $allCountries = [];
-    // Show the selected option
+    // Show the selected option: the one asked for (WireUI sends it as
+    // selected[0], also after the profile page suggested a country), else
+    // the observer's own.
     if ($request->exists('selected')) {
-        $allCountries[] = [
-            'id' => auth()->user()->country,
-            'name' => Countries::getOne(auth()->user()->country, $request->lang),
-        ];
+        $selected = $request->input('selected');
+        $selected = strtoupper(trim((string) (is_array($selected) ? (reset($selected) ?: '') : $selected)));
+        $selected = $selected !== '' ? $selected : (string) auth()->user()->country;
+        if (array_key_exists($selected, Countries::getList('en'))) {
+            $allCountries[] = [
+                'id' => $selected,
+                'name' => Countries::getOne($selected, $request->lang),
+            ];
+        }
     }
 
     foreach (Countries::getList($request->lang) as $code => $name) {
@@ -677,7 +684,9 @@ Route::get('addUserToTeam.index', function (Request $request) {
 // guests, so guests only get observers with observations, who are listed on
 // /observers anyway. Users are only looked up by username, never by e-mail
 // address, so the endpoint does not tell which addresses are registered. The
-// search runs in the database and returns at most $limit users.
+// search runs in the database and returns at most $limit users. With
+// compatriots_first, the observers living in the country of the logged-in
+// user come first (the co-observers of a session).
 Route::get('users.select.api', function (Request $request) {
     $limit = 50;
     $loggedIn = $request->user('sanctum') !== null;
@@ -715,6 +724,10 @@ Route::get('users.select.api', function (Request $request) {
     if ($search !== '') {
         $like = '%' . addcslashes($search, '%_\\') . '%';
         $query->where(fn ($q) => $q->where('name', 'like', $like)->orWhere('username', 'like', $like));
+    }
+    $country = (string) ($request->user('sanctum')?->country ?? '');
+    if ($request->boolean('compatriots_first') && $country !== '') {
+        $query->orderByRaw('CASE WHEN country = ? THEN 0 ELSE 1 END', [$country]);
     }
     $users = $query->orderBy('name')->limit($limit)->get();
 

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Livewire\Concerns\LimitsExportRows;
+use App\Services\ObserverCountries;
 use App\Services\PopularObjectsRanking;
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
@@ -25,6 +26,9 @@ final class PopularObjectsTable extends PowerGridComponent
 
     public string $mode = 'observations';
 
+    /** The country of residence of the observers counted, null for all. */
+    public ?string $country = null;
+
     public string $sortField = 'rank';
 
     public string $sortDirection = 'asc';
@@ -38,6 +42,9 @@ final class PopularObjectsTable extends PowerGridComponent
     {
         if (!in_array($this->mode, PopularObjectsRanking::MODES, true)) {
             $this->mode = 'observations';
+        }
+        if (!ObserverCountries::isOption($this->country)) {
+            $this->country = null;
         }
 
         parent::mount();
@@ -63,7 +70,7 @@ final class PopularObjectsTable extends PowerGridComponent
 
     public function datasource(): Collection
     {
-        return collect(app(PopularObjectsRanking::class)->rows($this->mode));
+        return collect(app(PopularObjectsRanking::class)->rows($this->mode, $this->country));
     }
 
     /**

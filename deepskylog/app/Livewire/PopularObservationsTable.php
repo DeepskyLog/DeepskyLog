@@ -4,9 +4,11 @@ namespace App\Livewire;
 
 use App\Livewire\Concerns\LimitsExportRows;
 use App\Models\ObservationLike;
+use App\Services\ObserverCountries;
 use App\Services\Observations\ObservationCardData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
@@ -18,6 +20,18 @@ final class PopularObservationsTable extends PowerGridComponent
     use LimitsExportRows;
 
     public string $tableName = 'popular-observations';
+
+    /** The country of residence of the observers of the observations, null for all. */
+    public ?string $country = null;
+
+    public function mount(): void
+    {
+        if (!ObserverCountries::isOption($this->country)) {
+            $this->country = null;
+        }
+
+        parent::mount();
+    }
 
     public function boot(): void
     {
@@ -52,6 +66,13 @@ final class PopularObservationsTable extends PowerGridComponent
             . ', (SELECT o.target_name FROM observations o WHERE o.id = observation_id) as objectname_sort'
         )
             ->where('observation_type', ObservationLike::TYPE_OBSERVATION)
+            ->when($this->country, fn($query) => $query->whereIn(
+                'observation_id',
+                DB::table('observations')
+                    ->join('users', 'users.username', '=', 'observations.observer_username')
+                    ->where('users.country', $this->country)
+                    ->select('observations.id')
+            ))
             ->groupBy('observation_type', 'observation_id')
             ->orderByDesc('likes');
 

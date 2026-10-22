@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Instrument;
 use App\Models\Location;
 use App\Services\ActiveObservingListService;
+use App\Services\ObserverCountries;
 use App\Services\ObservingListFileImportService;
 use App\Services\ObservingListItemNameResolver;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -114,6 +115,14 @@ class ObservingListController extends Controller
             });
         }
 
+        // The lists of observers living in one country.
+        $countryOptions = ObserverCountries::options();
+        $country = strtoupper(trim((string) $request->query('country', '')));
+        $country = array_key_exists($country, $countryOptions) ? $country : null;
+        if ($country !== null) {
+            $query->whereHas('owner', fn ($owner) => $owner->where('country', $country));
+        }
+
         if ($sortBy === 'popular') {
             // Equal likes: the most commented list first
             $query->orderBy('likes_count', 'desc')
@@ -140,6 +149,8 @@ class ObservingListController extends Controller
             'subscribedIds' => $subscribedIds,
             'sortBy' => $sortBy,
             'search' => $search,
+            'countryOptions' => $countryOptions,
+            'country' => $country,
         ]);
     }
 

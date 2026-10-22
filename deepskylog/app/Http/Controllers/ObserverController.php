@@ -7,9 +7,11 @@ use App\Charts\ObjectTypesChart;
 use App\Charts\ObservationsPerMonthChart;
 use App\Charts\ObservationsPerYearChart;
 use App\Jobs\ComputeObserverStats;
+use App\Models\Country;
 use App\Models\Observation;
 use App\Models\ObservingList;
 use App\Models\User;
+use App\Services\ObserverCountries;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -40,8 +42,17 @@ class ObserverController extends Controller
         $currentSort = $this->resolveObserverSort((string) $request->query('sort', 'rank'));
         $currentDirection = $this->resolveObserverSortDirection((string) $request->query('direction', 'asc'));
         $observerSearch = trim((string) $request->query('observer', ''));
+        $countryOptions = ObserverCountries::options();
+        $selectedCountry = strtoupper(trim((string) $request->query('country', '')));
+        $selectedCountry = array_key_exists($selectedCountry, $countryOptions) ? $selectedCountry : null;
         $sourceObjectTotal = $this->sourceObjectTotal($selectedSource);
-        $observerRows = collect(Cache::flexible('observers:ranking', self::RANKING_CACHE_SECONDS, fn() => $this->observerRankingRows()));
+        $observerRows = collect(Cache::flexible('observers:ranking:country', self::RANKING_CACHE_SECONDS, fn() => $this->observerRankingRows()));
+
+        // A country ranks its own observers: before ranking, so that the
+        // ranks are the national ones.
+        if ($selectedCountry !== null) {
+            $observerRows = $observerRows->filter(fn($row) => strtoupper((string) ($row->country ?? '')) === $selectedCountry);
+        }
 
         $sourceCounts = $this->sourceObserverCounts($selectedSource);
 
@@ -93,6 +104,8 @@ class ObserverController extends Controller
             'currentSort' => $currentSort,
             'currentDirection' => $currentDirection,
             'observerSearch' => $observerSearch,
+            'countryOptions' => $countryOptions,
+            'selectedCountry' => $selectedCountry,
         ]);
     }
 
@@ -483,9 +496,47 @@ class ObserverController extends Controller
             'rank' => $user->getRank(),
             'rankedObserverCount' => User::rankedObserverCount(),
             'categoryRanks' => $user->getCategoryRanks(),
+            'countryRanks' => $user->getCountryRanks(),
+            'countryLabel' => ObserverCountries::label($user->country),
+            'observedCountries' => $this->observedCountries($user),
             'catalogCounts' => $this->catalogCounts($user, ['M', 'Caldwell', 'H400', 'H400-II']),
         ]);
 
+    }
+
+    /**
+     * The number of countries the observer observed in (from the locations of
+     * the observations) and the share of the observations made outside the
+     * country of residence, null when that is not set or no observation has
+     * a location in a known country.
+     *
+     * @return array{countries: int, abroad_percentage: ?float}
+     */
+    private function observedCountries(User $user): array
+    {
+        $perCountry = [];
+        DB::table('observations')
+            ->join('locations', 'observations.location_id', '=', 'locations.id')
+            ->where('observations.observer_username', $user->username)
+            ->groupBy('locations.country')
+            ->selectRaw('locations.country, COUNT(*) as count')
+            ->get()
+            ->each(function ($row) use (&$perCountry) {
+                $code = Country::codeFor($row->country);
+                if ($code !== null) {
+                    $perCountry[$code] = ($perCountry[$code] ?? 0) + (int) $row->count;
+                }
+            });
+
+        $total = array_sum($perCountry);
+        $home = strtoupper((string) $user->country);
+
+        return [
+            'countries' => count($perCountry),
+            'abroad_percentage' => $total > 0 && $home !== ''
+                ? round(100 * ($total - ($perCountry[$home] ?? 0)) / $total, 1)
+                : null,
+        ];
     }
 
     /**
@@ -721,7 +772,7 @@ class ObserverController extends Controller
 
         return DB::table('users')
             ->joinSub($counts, 'counts', 'counts.observer_username', '=', 'users.username')
-            ->select('users.id', 'users.name', 'users.username', 'users.slug')
+            ->select('users.id', 'users.name', 'users.username', 'users.slug', 'users.country')
             ->addSelect('counts.observations_count', 'counts.drawings_count', 'counts.observations_last_year', 'counts.drawings_last_year')
             ->orderByDesc('counts.observations_count')
             ->orderBy('users.name')

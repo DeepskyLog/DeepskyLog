@@ -24,6 +24,7 @@ use Illuminate\Validation\ValidationException;
 use App\Models\Observation;
 use App\Jobs\ComputeObserverStats;
 use App\Jobs\EnqueueComputeCRForUser;
+use App\Services\ObserverCountries;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -838,6 +839,45 @@ class User extends Authenticatable implements MustVerifyEmail
             $ranks[$category] = [
                 'rank' => $own > 0 ? 1 + count(array_filter($counts, fn(int $count) => $count > $own)) : 0,
                 'observers' => count($counts),
+            ];
+        }
+
+        return $ranks;
+    }
+
+    /**
+     * The ranks of getRank() and getCategoryRanks() among the observers of
+     * the user's country of residence, under 'all' and the categories. Null
+     * when the country is not set or has fewer observers than
+     * ObserverCountries::MIN_OBSERVERS.
+     *
+     * @return array<string, array{rank: int, observers: int}>|null
+     */
+    public function getCountryRanks(): ?array
+    {
+        if (!ObserverCountries::isOption($this->country)) {
+            return null;
+        }
+
+        $compatriots = array_flip(self::query()->where('country', $this->country)->pluck('username')->all());
+
+        $own = Observation::where('observer_username', $this->username)->count();
+        $counts = self::observationCounts()->where('users.country', $this->country);
+        $ranks = [
+            'all' => [
+                'rank' => $own > 0
+                    ? 1 + DB::query()->fromSub((clone $counts)->havingRaw('COUNT(*) > ?', [$own]), 'counts')->count()
+                    : 0,
+                'observers' => DB::query()->fromSub($counts, 'counts')->count(),
+            ],
+        ];
+
+        foreach (self::categoryObservationCounts() as $category => $categoryCounts) {
+            $categoryCounts = array_intersect_key($categoryCounts, $compatriots);
+            $own = $categoryCounts[$this->username] ?? 0;
+            $ranks[$category] = [
+                'rank' => $own > 0 ? 1 + count(array_filter($categoryCounts, fn(int $count) => $count > $own)) : 0,
+                'observers' => count($categoryCounts),
             ];
         }
 

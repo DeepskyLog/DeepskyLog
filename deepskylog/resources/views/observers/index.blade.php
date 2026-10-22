@@ -74,7 +74,7 @@
                 <input type="hidden" name="direction" value="{{ $currentDirection }}">
                 <input type="hidden" name="source" x-ref="source" :value="selected">
 
-                <div class="grid gap-3 md:grid-cols-[minmax(18rem,24rem)_minmax(14rem,18rem)] md:items-end">
+                <div class="grid gap-3 md:grid-cols-[minmax(18rem,24rem)_minmax(12rem,16rem)_minmax(14rem,18rem)] md:items-end">
                     <div class="grid gap-2">
                         <label for="observer-source-search" class="text-sm text-gray-300 whitespace-nowrap">{{ __('Catalog or list') }}</label>
                         <div class="relative">
@@ -127,6 +127,21 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="grid gap-2">
+                        <label for="observer-country" class="text-sm text-gray-300 whitespace-nowrap">{{ __('Country of residence') }}</label>
+                        <select
+                            id="observer-country"
+                            name="country"
+                            @change="$refs.submitForm.submit()"
+                            class="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-gray-100 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="">{{ __('All countries') }}</option>
+                            @foreach ($countryOptions as $code => $label)
+                                <option value="{{ $code }}" @selected($selectedCountry === $code)>{{ $label }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <div class="grid gap-2">
