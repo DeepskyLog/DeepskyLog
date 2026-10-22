@@ -15,9 +15,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Observation;
+use App\Jobs\ComputeObserverStats;
 use App\Jobs\EnqueueComputeCRForUser;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
@@ -782,6 +784,63 @@ class User extends Authenticatable implements MustVerifyEmail
             self::observationCounts()->havingRaw('COUNT(*) > ?', [$own]),
             'counts'
         )->count();
+    }
+
+    /**
+     * The rank of the user per category of the observer page (deep-sky,
+     * comet, double, sun, moon, planets; see
+     * ComputeObserverStats::categoryQueries()), counted as in getRank(),
+     * with the number of observers that have a rank in the category. The
+     * rank is 0 when the user has no observations in it.
+     *
+     * @return array<string, array{rank: int, observers: int}>
+     */
+    public function getCategoryRanks(): array
+    {
+        $ranks = [];
+        foreach (self::categoryObservationCounts() as $category => $counts) {
+            $own = $counts[$this->username] ?? 0;
+            $ranks[$category] = [
+                'rank' => $own > 0 ? 1 + count(array_filter($counts, fn(int $count) => $count > $own)) : 0,
+                'observers' => count($counts),
+            ];
+        }
+
+        return $ranks;
+    }
+
+    /**
+     * The number of observations of each observer per category, without the
+     * observers that have none, shared by all observer pages: fresh for an
+     * hour, for a day after that recomputed after the response.
+     *
+     * @return array<string, array<string, int>>
+     */
+    private static function categoryObservationCounts(): array
+    {
+        return Cache::flexible('observers:category_ranking', [3600, 86400], function () {
+            $counts = [];
+            foreach (ComputeObserverStats::categoryQueries() as $category => $query) {
+                if ($category === 'all') {
+                    continue;
+                }
+                $counts[$category] = $query()
+                    ->join('users', 'users.username', '=', 'observations.observer_username')
+                    ->groupBy('users.id', 'users.username')
+                    ->selectRaw('users.username, COUNT(*) as observations_count')
+                    ->pluck('observations_count', 'username')
+                    ->map(fn($count) => (int) $count)
+                    ->all();
+            }
+
+            // As on the observer page, the deep-sky counts leave out the double stars.
+            foreach ($counts['double'] as $username => $doubles) {
+                $counts['deepsky'][$username] = ($counts['deepsky'][$username] ?? 0) - $doubles;
+            }
+            $counts['deepsky'] = array_filter($counts['deepsky'], fn(int $count) => $count > 0);
+
+            return $counts;
+        });
     }
 
     /**

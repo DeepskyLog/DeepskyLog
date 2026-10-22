@@ -269,19 +269,8 @@ class ComputeObserverStats implements ShouldQueue
      */
     private static function categoryCounts(string $prefix, ?\Closure $scope = null): array
     {
-        $doubleStars = fn ($q) => $q->select('name_normalized')->from('objects')->where('type', 'DS');
-        $categories = [
-            'double' => fn () => DB::table('observations')->where('target_table', 'objects')->whereIn('target_name_normalized', $doubleStars),
-            'deepsky' => fn () => Observation::deepsky(),
-            'all' => fn () => Observation::query(),
-            'comet' => fn () => Observation::comets(),
-            'planets' => fn () => DB::table('observations')->where('target_table', 'planets')->where('target_key', '!=', 'sun'),
-            'sun' => fn () => DB::table('observations')->where('target_table', 'planets')->where('target_key', 'sun'),
-            'moon' => fn () => DB::table('observations')->whereIn('target_table', ['moons', 'lunar_features']),
-        ];
-
         $counts = [];
-        foreach ($categories as $category => $query) {
+        foreach (self::categoryQueries() as $category => $query) {
             $base = fn () => $scope ? $scope($query()) : $query();
             $key = $category.$prefix;
 
@@ -297,6 +286,28 @@ class ComputeObserverStats implements ShouldQueue
         }
 
         return $counts;
+    }
+
+    /**
+     * The observations of each category of the observer page, as a closure
+     * that returns a fresh query. The deep-sky observations include the
+     * double stars, which the counts subtract.
+     *
+     * @return array<string, \Closure>
+     */
+    public static function categoryQueries(): array
+    {
+        $doubleStars = fn ($q) => $q->select('name_normalized')->from('objects')->where('type', 'DS');
+
+        return [
+            'double' => fn () => DB::table('observations')->where('target_table', 'objects')->whereIn('target_name_normalized', $doubleStars),
+            'deepsky' => fn () => Observation::deepsky(),
+            'all' => fn () => Observation::query(),
+            'comet' => fn () => Observation::comets(),
+            'planets' => fn () => DB::table('observations')->where('target_table', 'planets')->where('target_key', '!=', 'sun'),
+            'sun' => fn () => DB::table('observations')->where('target_table', 'planets')->where('target_key', 'sun'),
+            'moon' => fn () => DB::table('observations')->whereIn('target_table', ['moons', 'lunar_features']),
+        ];
     }
 
     /**

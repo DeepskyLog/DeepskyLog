@@ -527,7 +527,9 @@
                         <tr>
                             <td class="pr-8">{{ __('Rank') }}</td>
                             <td class="px-4">{{ $rank ?: '-' }} / {{ $rankedObserverCount }} </td>
-                            <td class="px-4"></td>
+                            @foreach (['deepsky', 'comet', 'double', 'sun', 'moon', 'planets'] as $category)
+                                <td class="px-4">{{ ($categoryRanks[$category]['rank'] ?? 0) ?: '-' }} / {{ $categoryRanks[$category]['observers'] ?? 0 }}</td>
+                            @endforeach
                         </tr>
                     </tbody>
                 </table>

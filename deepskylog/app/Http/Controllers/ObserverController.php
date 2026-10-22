@@ -482,6 +482,7 @@ class ObserverController extends Controller
             'username' => $username,
             'rank' => $user->getRank(),
             'rankedObserverCount' => User::rankedObserverCount(),
+            'categoryRanks' => $user->getCategoryRanks(),
             'catalogCounts' => $this->catalogCounts($user, ['M', 'Caldwell', 'H400', 'H400-II']),
         ]);
 

@@ -127,6 +127,35 @@ it('ranks observers by all their observations, the same way on /observers and th
         ->and($rows('Erin'))->toBe([[$erin->username, 2, 3, 2]]);
 });
 
+it('ranks observers per category on the observer page', function () {
+    $alice = User::factory()->create(['name' => 'Alice', 'username' => 'alice-category']);
+    $bob = User::factory()->create(['name' => 'Bob', 'username' => 'bob-category']);
+    $carol = User::factory()->create(['name' => 'Carol', 'username' => 'carol-category']);
+
+    DB::table('objects')->insert(collect(['name' => 'STF 1', 'slug' => 'stf-1', 'type' => 'DS', 'con' => 'AND', 'ra' => 0, 'decl' => 0, 'mag' => 4.0, 'subr' => 0, 'urano' => 0, 'urano_new' => 0, 'sky' => 0, 'diam1' => 0, 'diam2' => 0, 'SBObj' => 0, 'timestamp' => now()])
+        ->merge(array_fill_keys(['millenium', 'taki', 'description', 'psa', 'torresB', 'torresBC', 'torresC', 'milleniumbase'], ''))
+        ->merge(array_fill_keys(['DSLDL', 'DSLDP', 'DSLLL', 'DSLLP', 'DSLOL', 'DSLOP', 'DeepskyHunter', 'Interstellarum'], '0'))
+        ->all());
+
+    foreach (['M 1', 'M 2', 'M 3'] as $object) {
+        insertRankObservation($bob->username, $object);
+    }
+    // Alice has more deep-sky observations, but two are of a double star
+    foreach (['M 1', 'M 2', 'STF 1', 'STF 1'] as $object) {
+        insertRankObservation($alice->username, $object);
+    }
+    insertRankObservation($carol->username, 'STF 1');
+    insertRankObservation($carol->username, '12', type: 'comet');
+
+    $ranks = fn(User $user) => collect($user->getCategoryRanks())->map(fn($rank) => [$rank['rank'], $rank['observers']])->all();
+
+    expect($ranks($bob))->toMatchArray(['deepsky' => [1, 2], 'double' => [0, 2], 'comet' => [0, 1], 'planets' => [0, 0]])
+        ->and($ranks($alice))->toMatchArray(['deepsky' => [2, 2], 'double' => [1, 2], 'comet' => [0, 1]])
+        ->and($ranks($carol))->toMatchArray(['deepsky' => [0, 2], 'double' => [2, 2], 'comet' => [1, 1]]);
+
+    $this->get(route('observer.show', $carol->slug))->assertOk()->assertViewHas('categoryRanks');
+});
+
 it('does not show 60 minutes in the field of view', function () {
     $instrument = new Instrument(['focal_length_mm' => 1000, 'aperture_mm' => 200]);
     $eyepiece = new Eyepiece(['focal_length_mm' => 10, 'apparentFOV' => 99.97, 'field_stop_mm' => 0]);
