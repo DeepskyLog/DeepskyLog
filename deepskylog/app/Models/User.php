@@ -13,11 +13,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use App\Models\Observation;
 use App\Jobs\ComputeObserverStats;
 use App\Jobs\EnqueueComputeCRForUser;
@@ -159,6 +162,38 @@ class User extends Authenticatable implements MustVerifyEmail
         return filter_var($this->profile_photo_path, FILTER_VALIDATE_URL)
             ? Attribute::get(fn() => $this->profile_photo_path)
             : $this->getPhotoUrl();
+    }
+
+    /**
+     * Overrides the method from HasProfilePhoto. Livewire returns the path of an upload
+     * even when the disk could not write the file ('throw' => false), so the path is only
+     * saved, and the previous photo deleted, once the file is really there.
+     *
+     * @param  UploadedFile  $photo  The uploaded photo
+     * @param  string  $storagePath  The directory on the profile photo disk
+     *
+     * @throws ValidationException When the photo could not be stored
+     */
+    public function updateProfilePhoto(UploadedFile $photo, $storagePath = 'profile-photos'): void
+    {
+        $disk = Storage::disk($this->profilePhotoDisk());
+        $path = $photo->storePublicly($storagePath, ['disk' => $this->profilePhotoDisk()]);
+
+        if (! $path || ! $disk->exists($path)) {
+            Log::error('Profile photo could not be stored', ['user' => $this->id, 'path' => $path]);
+
+            throw ValidationException::withMessages([
+                'photo' => __('The photo could not be saved. Please try again later.'),
+            ])->errorBag('updateProfileInformation');
+        }
+
+        $previous = $this->profile_photo_path;
+
+        $this->forceFill(['profile_photo_path' => $path])->save();
+
+        if ($previous && ! filter_var($previous, FILTER_VALIDATE_URL)) {
+            $disk->delete($previous);
+        }
     }
 
     /**
