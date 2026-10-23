@@ -8,6 +8,7 @@ use App\Models\Location;
 use App\Models\Observation;
 use App\Models\ObservationLike;
 use App\Models\ObservationSession;
+use App\Models\ObservingList;
 use App\Models\User;
 use App\Services\Observations\ObservationCardData;
 use Illuminate\Http\Request;
@@ -1048,7 +1049,17 @@ class SessionController extends Controller
 
         $sessions->setCollection($collection);
 
-        return $this->noCacheResponse(response()->view('welcome', compact('sessions')));
+        // The newest public observing lists with objects, refreshed every 5 minutes as the sketches
+        $observingLists = Cache::remember('welcome_observing_lists', 300, fn () => ObservingList::where('public', true)
+            ->has('items')
+            ->with('owner:id,name,slug')
+            ->withCount(['items', 'subscriptions'])
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->limit(6)
+            ->get());
+
+        return $this->noCacheResponse(response()->view('welcome', compact('sessions', 'observingLists')));
     }
 
     /**

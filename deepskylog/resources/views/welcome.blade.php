@@ -455,5 +455,48 @@
                 </x-card>
             </div>
         </div>
+
+        {{-- Newest public observing lists --}}
+        @if (!empty($observingLists) && $observingLists->isNotEmpty())
+            <div class="pt-4">
+                <h2 class="ml-3 mt-3 text-xl font-semibold leading-tight">
+                    {{ __("Newest observing lists") }}
+                </h2>
+                <div class="mt-2">
+                    <x-card>
+                        <div class="grid grid-cols-1 gap-4 px-5 md:grid-cols-2 lg:grid-cols-3">
+                            @foreach ($observingLists as $list)
+                                <article class="flex flex-col rounded-lg border border-gray-700 bg-gray-800 p-4">
+                                    <div class="flex-1">
+                                        <h4 class="mb-1 text-base font-bold text-white">
+                                            <a href="{{ route("observing-list.show", $list) }}" class="hover:underline">{{ html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, "UTF-8") }}</a>
+                                        </h4>
+                                        <p class="mb-2 text-xs text-gray-500">
+                                            @if ($list->owner)
+                                                {{ __("by") }}
+                                                <a href="{{ route("observer.show", $list->owner->slug) }}" class="text-gray-300 hover:underline">{{ html_entity_decode($list->owner->name, ENT_QUOTES | ENT_HTML5, "UTF-8") }}</a>
+                                                &bull;
+                                            @endif
+                                            {{ $list->created_at?->diffForHumans() }}
+                                        </p>
+                                        @if ($list->description)
+                                            <p class="mb-3 text-sm text-gray-400">{{ Str::limit(html_entity_decode(strip_tags($list->description), ENT_QUOTES | ENT_HTML5, "UTF-8"), 150) }}</p>
+                                        @endif
+                                    </div>
+                                    <div class="flex items-center gap-4 text-xs text-gray-400">
+                                        <span>{{ $list->items_count }} {{ __("objects") }}</span>
+                                        <span title="{{ __("Likes") }}">&#9829; {{ $list->likes_count }}</span>
+                                        <span>{{ $list->subscriptions_count }} {{ __("subscribers") }}</span>
+                                    </div>
+                                </article>
+                            @endforeach
+                        </div>
+                        <div class="mt-4 px-5">
+                            <a href="{{ route("observing-lists.discover") }}" class="text-sm text-blue-400 hover:underline">{{ __("Discover all public observing lists") }}</a>
+                        </div>
+                    </x-card>
+                </div>
+            </div>
+        @endif
     </div>
 </x-app-layout>

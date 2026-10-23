@@ -69,3 +69,39 @@ it('shows a like button with the like count on the all sessions page', function 
         ->assertOk()
         ->assertSeeInOrder(['data-observation-type="session"', '👍', '<span class="like-count">2</span>'], false);
 });
+
+it('shows the newest public observing lists with objects', function () {
+    $owner = \App\Models\User::factory()->create(['name' => 'List Maker']);
+    $make = function (string $name, bool $public = true, bool $withObject = true, string $created = '2026-10-01') use ($owner) {
+        $list = \App\Models\ObservingList::create(['owner_user_id' => $owner->id, 'name' => $name, 'public' => $public]);
+        $list->forceFill(['created_at' => $created])->save();
+        if ($withObject) {
+            $list->items()->create(['object_name' => 'M 31', 'added_by_user_id' => $owner->id]);
+        }
+
+        return $list;
+    };
+    foreach (range(1, 6) as $day) {
+        $make("Old list {$day}", created: "2026-09-0{$day}");
+    }
+    $make('Newest list', created: '2026-10-20');
+    $make('Private list', public: false, created: '2026-10-21');
+    $make('Empty list', withObject: false, created: '2026-10-22');
+
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('Newest observing lists')
+        ->assertSeeInOrder(['Newest list', 'Old list 6', 'Old list 2'])
+        ->assertSee('List Maker')
+        ->assertSee(route('observing-lists.discover'))
+        // Six lists: the oldest drops out
+        ->assertDontSee('Old list 1')
+        ->assertDontSee('Private list')
+        ->assertDontSee('Empty list');
+});
+
+it('shows no observing lists section without public lists', function () {
+    $this->get('/')
+        ->assertOk()
+        ->assertDontSee('Newest observing lists');
+});
