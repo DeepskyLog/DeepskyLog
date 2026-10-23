@@ -703,9 +703,10 @@ Route::get('/statistics', [App\Http\Controllers\StatisticsController::class, 'in
 Route::get('/messages', [App\Http\Controllers\MessagesController::class, 'index'])
     ->name('messages.index')
     ->middleware(['auth', 'doNotCacheResponse']);
+// Verified, as sending is: otherwise the text is lost when Send redirects to the verification notice.
 Route::get('/messages/create', [App\Http\Controllers\MessagesController::class, 'create'])
     ->name('messages.create')
-    ->middleware(['auth', 'doNotCacheResponse']);
+    ->middleware(['auth', 'verified', 'doNotCacheResponse']);
 Route::post('/messages', [App\Http\Controllers\MessagesController::class, 'store'])
     ->name('messages.store')
     ->middleware(['auth', 'verified', 'throttle:messages']);
@@ -734,6 +735,20 @@ Route::get('/messages/{id}/reply-data', [App\Http\Controllers\MessagesController
 // Delete a message (mark deleted in legacy messagesDeleted table)
 Route::post('/messages/{id}/delete', [App\Http\Controllers\MessagesController::class, 'destroy'])
     ->name('messages.destroy')
+    ->middleware(['auth', 'doNotCacheResponse']);
+// Delete, mark read or mark unread the messages selected in the inbox
+Route::post('/messages/bulk', [App\Http\Controllers\MessagesController::class, 'bulk'])
+    ->name('messages.bulk')
+    ->middleware(['auth', 'doNotCacheResponse']);
+Route::post('/messages/{id}/unread', [App\Http\Controllers\MessagesController::class, 'markUnread'])
+    ->name('messages.markUnread')
+    ->middleware(['auth', 'doNotCacheResponse']);
+// Block and unblock an observer: they can't send the user messages
+Route::post('/messages/blocks', [App\Http\Controllers\MessagesController::class, 'block'])
+    ->name('messages.block')
+    ->middleware(['auth', 'doNotCacheResponse']);
+Route::post('/messages/blocks/{userId}/delete', [App\Http\Controllers\MessagesController::class, 'unblock'])
+    ->name('messages.unblock')
     ->middleware(['auth', 'doNotCacheResponse']);
 // Bulk-delete grouped sent message (delete all per-recipient rows matching content of the representative id)
 Route::post('/messages/{id}/delete-group', [App\Http\Controllers\MessagesController::class, 'bulkDestroy'])

@@ -14,7 +14,7 @@ class Message extends Model
 
     private const UNREAD_VERSION_KEY = 'unread_mails_version';
 
-    protected $fillable = ['id', 'sender', 'receiver', 'subject', 'message', 'date'];
+    protected $fillable = ['id', 'sender', 'receiver', 'subject', 'message', 'date', 'reply_to_id'];
 
     // allow mass-assignment of id during seeding
     public $incrementing = true;

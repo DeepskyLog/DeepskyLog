@@ -3,10 +3,17 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class MessageReceived extends Mailable
+/**
+ * The notification mail of a DeepskyLog message. Queued, so a broadcast to
+ * every observer doesn't keep the request waiting; send it with the locale of
+ * the recipient (->locale($user->language)), as the worker doesn't know the
+ * language of the request.
+ */
+class MessageReceived extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -22,11 +29,15 @@ class MessageReceived extends Mailable
     /** @var string|null */
     public $recipientName;
 
+    /** @var string|null The page of the message on DeepskyLog. */
+    public $url;
+
     /**
      * Create a new message instance.
      */
-    public function __construct(string $sender, ?string $subject, string $messageHtml, ?string $recipientName = null)
+    public function __construct(string $sender, ?string $subject, string $messageHtml, ?string $recipientName = null, ?string $url = null)
     {
+        $this->url = $url;
         $this->sender = $sender;
         $this->subject = $subject;
         $this->messageHtml = self::absoluteLinks($messageHtml);
@@ -100,6 +111,7 @@ class MessageReceived extends Mailable
                 'subject' => $this->subject,
                 'messageHtml' => $this->messageHtml,
                 'recipientName' => $this->recipientName,
+                'url' => $this->url ?? url('/messages'),
             ]);
     }
 }
