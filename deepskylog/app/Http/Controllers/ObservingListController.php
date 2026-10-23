@@ -48,8 +48,17 @@ class ObservingListController extends Controller
             ->withCount('items')
             ->orderBy('created_at', 'desc');
 
+        // Search on the name of the list and on the objects in it (under the
+        // canonical name the items are stored as), as on the discover page.
+        $objectNames = $search === '' ? [] : array_unique(array_filter([
+            $search,
+            app(ObservingListItemNameResolver::class)->resolve($search),
+        ]));
         if ($search !== '') {
-            $ownedListsQuery->where('name', 'like', '%' . $search . '%');
+            $ownedListsQuery->where(function ($q) use ($search, $objectNames) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhereHas('items', fn ($items) => $items->whereIn('object_name', $objectNames));
+            });
         }
 
         $ownedLists = $ownedListsQuery
@@ -63,7 +72,10 @@ class ObservingListController extends Controller
             ->orderBy('observing_list_subscriptions.created_at', 'desc');
 
         if ($search !== '') {
-            $subscribedListsQuery->where('observing_lists.name', 'like', '%' . $search . '%');
+            $subscribedListsQuery->where(function ($q) use ($search, $objectNames) {
+                $q->where('observing_lists.name', 'like', '%' . $search . '%')
+                    ->orWhereHas('items', fn ($items) => $items->whereIn('object_name', $objectNames));
+            });
         }
 
         $subscribedLists = $subscribedListsQuery

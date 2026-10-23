@@ -1399,6 +1399,9 @@ try {
                                     @endif
                                 </ul>
                             </div>
+                            @if (!empty($session->name))
+                                @livewire('object-observing-lists', ['objectName' => $session->name], key('object-lists-' . $session->name))
+                            @endif
                             {{-- Aladin Lite preview --}}
                                 @php
                                     // Hide sky preview for administrators and database experts

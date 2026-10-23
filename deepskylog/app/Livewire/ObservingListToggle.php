@@ -138,6 +138,9 @@ class ObservingListToggle extends Component
 
         $this->noteReplaced = false;
         $this->refresh();
+
+        // The lists on the object page that contain it.
+        $this->dispatch('observing-list-item-toggled');
     }
 
     /**

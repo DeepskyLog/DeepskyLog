@@ -32,16 +32,16 @@
     <div class="py-6">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 space-y-8">
 
-            {{-- Name search --}}
+            {{-- Search on the name or the objects --}}
             <div class="p-4 bg-gray-800 border border-gray-700 rounded-md">
                 <form method="GET" action="{{ route('observing-lists.index') }}" class="flex flex-col sm:flex-row gap-3 sm:items-center">
-                    <label for="list-search" class="text-sm text-gray-300 sm:whitespace-nowrap">{{ __('Search list name') }}</label>
+                    <label for="list-search" class="text-sm text-gray-300 sm:whitespace-nowrap">{{ __('Search observing lists') }}</label>
                     <input
                         id="list-search"
                         name="q"
                         type="text"
                         value="{{ $search ?? '' }}"
-                        placeholder="{{ __('Type part of a list name...') }}"
+                        placeholder="{{ __('Search on name or object') }}"
                         class="flex-1 bg-gray-900 border border-gray-600 rounded-md text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                     <div class="flex items-center gap-2">
