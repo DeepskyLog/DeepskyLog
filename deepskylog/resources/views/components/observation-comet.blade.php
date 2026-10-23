@@ -53,11 +53,6 @@
             ];
         }
 
-        $tr = null;
-        if (auth()->check() && auth()->user()->translate) {
-            $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(auth()->user()->language);
-        }
-
         // Resolve drawing filename and public URL for unified and legacy comet observations
         $resolvedDrawing = null;
         if ($isUnified) {
@@ -234,25 +229,13 @@
                     @endif
 
                     <div class="w-full min-w-0 flex-1 break-words">
-                        @if ($tr)
+                        @if (auth()->check() && auth()->user()->translate && !empty($observation->description))
                             @php
-                                $cacheKey =
-                                    "observation_comet_translation:" .
-                                    $observation->id .
-                                    ":" .
-                                    auth()->user()->language;
-                                $translated = \Illuminate\Support\Facades\Cache::remember(
-                                    $cacheKey,
-                                    60 * 24 * 30,
-                                    function () use ($observation, $tr) {
-                                        try {
-                                            return $tr->translate(
-                                                html_entity_decode($observation->description),
-                                            );
-                                        } catch (\Throwable $e) {
-                                            return null;
-                                        }
-                                    },
+                                // The cached translation, else the description (translated after the response)
+                                $translated = \App\Services\Observations\DescriptionTranslations::get(
+                                    (int) $observation->id,
+                                    auth()->user()->language,
+                                    \App\Jobs\TranslateObservationDescriptions::COMET,
                                 );
                             @endphp
                             {!! \App\Support\Html::purify($translated ?? $observation->description, true) !!}

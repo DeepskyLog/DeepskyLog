@@ -157,16 +157,6 @@
                 @endif
             </div>
             <div class="mt-2">
-                @php
-                    // Create a single translator instance for the whole page when the
-                    // authenticated user has translations enabled. This avoids
-                    // instantiating a translator for every observation component which
-                    // can cause large memory allocations.
-                    $tr = null;
-                    if (auth()->check() && auth()->user()->translate) {
-                        $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(auth()->user()->language);
-                    }
-                @endphp
                 @if (!empty($isImagesOnly) && $isImagesOnly)
                     <x-card>
                         <div class="flex flex-wrap px-5">
@@ -213,7 +203,6 @@
                                 @foreach ($deepsky as $observation)
                                     <x-observation-deepsky
                                         :observation="$observation"
-                                        :translator="$tr"
                                     />
                                 @endforeach
                             </div>
@@ -259,7 +248,6 @@
                                 @foreach ($deepsky as $observation)
                                     <x-observation-deepsky 
                                         :observation="$observation" 
-                                        :translator="$tr"
                                     />
                                 @endforeach
                             </div>

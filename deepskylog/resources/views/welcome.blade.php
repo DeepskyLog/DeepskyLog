@@ -434,13 +434,6 @@
 
                 // Observers, objects, equipment, likes, ... of all cards in grouped queries.
                 \App\Services\Observations\ObservationCardData::instance()->preload($observations);
-
-                $tr = null;
-                if (auth()->check() && auth()->user()->translate) {
-                    $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(
-                        auth()->user()->language,
-                    );
-                }
             @endphp
 
             <div class="mt-2">
@@ -454,7 +447,6 @@
                             @else
                                 <x-observation-deepsky
                                     :observation="$observation"
-                                    :translator="$tr"
                                 />
                             @endif
                         @endforeach

@@ -1,7 +1,6 @@
 @props ([
     "observation",
     "unified_observation" => null,  // deprecated alias, kept for backward compat
-    "translator" => null,
     "preloaded_user" => null,
     "preloaded_object" => null,
     "preloaded_location" => null,
@@ -75,11 +74,6 @@
         $eyepiece   = $preloaded_eyepiece   ?? ($eyepieceid > 0 ? $cards->eyepiece($eyepieceid) : null);
         $filter     = $preloaded_filter     ?? ($filterid > 0   ? $cards->filter($filterid)     : null);
         $lens       = $preloaded_lens       ?? ($lensid > 0     ? $cards->lens($lensid)         : null);
-
-        $tr = $translator ?? null;
-        if ($tr === null && auth()->check() && auth()->user()->translate) {
-            $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(auth()->user()->language);
-        }
 
         // Resolve drawing filename and public URL for unified and legacy observations
         $resolvedDrawing = null;
@@ -363,25 +357,10 @@
                         auth()->user()->translate &&
                         ($obs_language ?? "nl") !== auth()->user()->language)
                         @php
-                            $cacheKey =
-                                "observation_deepsky_translation:" .
-                                $obs_id .
-                                ":" .
-                                auth()->user()->language;
-                            $translated = Cache::remember($cacheKey, now()->addDays(30), function () use (
-                                $description,
-                                $tr,
-                            ) {
-                                if ($tr === null || empty($description)) {
-                                    return null;
-                                }
-
-                                try {
-                                    return $tr->translate(html_entity_decode($description));
-                                } catch (\Throwable $e) {
-                                    return null;
-                                }
-                            });
+                            // The cached translation, else the description (translated after the response)
+                            $translated = empty($description) || !$obs_id
+                                ? null
+                                : \App\Services\Observations\DescriptionTranslations::get((int) $obs_id, auth()->user()->language);
                         @endphp
                         {!! \App\Support\Html::purify($translated ?? $description, true) !!}
                     @else

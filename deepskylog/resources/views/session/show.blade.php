@@ -211,18 +211,12 @@
 
                 <section>
                     <h3 class="text-lg font-semibold text-white">{{ __('Observations by :owner', ['owner' => $selectedObserverName ?? $user->name]) }}</h3>
-                    @php
-                        $tr = null;
-                        if (auth()->check() && auth()->user()->translate) {
-                            $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(auth()->user()->language);
-                        }
-                    @endphp
                     @if($observations->count() > 0)
                         @foreach($observations as $observation)
                             @if($observation->target_type === \App\Models\Observation::TYPE_COMET)
                                 <x-observation-comet :observation="$observation" />
                             @else
-                                <x-observation-deepsky :observation="$observation" :translator="$tr" />
+                                <x-observation-deepsky :observation="$observation" />
                             @endif
                         @endforeach
 

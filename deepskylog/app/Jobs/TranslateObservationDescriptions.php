@@ -12,9 +12,18 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
+/**
+ * Translates the descriptions of observations into a language and caches
+ * them for 30 days, under the key the deep-sky or comet cards read
+ * (App\Services\Observations\DescriptionTranslations).
+ */
 class TranslateObservationDescriptions implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public const DEEPSKY = 'deepsky';
+
+    public const COMET = 'comet';
 
     /**
      * Number of seconds the job can run before timing out.
@@ -24,7 +33,13 @@ class TranslateObservationDescriptions implements ShouldQueue
     public function __construct(
         public readonly array $observationIds,
         public readonly string $language,
+        public readonly string $kind = self::DEEPSKY,
     ) {
+    }
+
+    public static function cacheKey(string $kind, int $observationId, string $language): string
+    {
+        return 'observation_' . $kind . '_translation:' . $observationId . ':' . $language;
     }
 
     public function handle(): void
@@ -36,7 +51,7 @@ class TranslateObservationDescriptions implements ShouldQueue
         $tr = new GoogleTranslate($this->language, null, ['timeout' => 10.0]);
 
         foreach ($this->observationIds as $id) {
-            $cacheKey = 'observation_deepsky_translation:' . $id . ':' . $this->language;
+            $cacheKey = self::cacheKey($this->kind, (int) $id, $this->language);
 
             if (Cache::has($cacheKey)) {
                 continue; // Already translated
