@@ -19,7 +19,7 @@ class ListingPagination
 {
     public const MAX_PAGES = 100;
 
-    public const QUERY_PARAMS = ['obs_type', 'sort', 'images'];
+    public const QUERY_PARAMS = ['obs_type', 'sort', 'images', 'following'];
 
     /**
      * The listing parameters of the current request, to append to links.

@@ -107,11 +107,20 @@ Route::get('/observers/{observer}/catalog', [App\Http\Controllers\ObserverContro
 Route::post('/observers/{observer}/catalog/observing-list', [App\Http\Controllers\ObserverController::class, 'createCatalogList'])
     ->name('observer.catalog.list')->middleware(['auth', 'verified', 'doNotCacheResponse']);
 Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@show')->name('observer.show');
+Route::post('/observers/{observer}/follow', [App\Http\Controllers\FollowController::class, 'follow'])
+    ->name('observer.follow')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::post('/observers/{observer}/unfollow', [App\Http\Controllers\FollowController::class, 'unfollow'])
+    ->name('observer.unfollow')->middleware(['auth', 'verified', 'doNotCacheResponse']);
 
 // RSS feeds
 Route::get('/feed/observations', [App\Http\Controllers\RssFeedController::class, 'observations'])->name('feed.observations');
 Route::get('/feed/drawings', [App\Http\Controllers\RssFeedController::class, 'drawings'])->name('feed.drawings');
 Route::get('/feed/observing-lists', [App\Http\Controllers\RssFeedController::class, 'observingLists'])->name('feed.observing-lists');
+// The personal feed of the observers someone follows, by its secret token
+Route::post('/feed/following/regenerate', [App\Http\Controllers\FollowController::class, 'regenerateFeedToken'])
+    ->name('feed.following.regenerate')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::get('/feed/following/{token}', [App\Http\Controllers\RssFeedController::class, 'following'])
+    ->name('feed.following')->middleware('doNotCacheResponse');
 
 // Drawings
 Route::get('/drawings', 'App\Http\Controllers\DrawingController@index')->name('drawings.index');

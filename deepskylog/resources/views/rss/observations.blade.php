@@ -2,12 +2,13 @@
 
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
     <channel>
-        <title>{{ config('app.name', 'DeepskyLog') }} – Latest Observations</title>
-        <link>{{ url('/observations') }}</link>
-        <description>The latest observations added to DeepskyLog.</description>
+        {{-- $channel is set for the personal feed of the observers someone follows --}}
+        <title>{{ config('app.name', 'DeepskyLog') }} – {{ $channel['title'] ?? 'Latest Observations' }}</title>
+        <link>{{ $channel['link'] ?? url('/observations') }}</link>
+        <description>{{ $channel['description'] ?? 'The latest observations added to DeepskyLog.' }}</description>
         <language>en</language>
         <lastBuildDate>{{ $feedUpdated->toRfc2822String() }}</lastBuildDate>
-        <atom:link href="{{ url('/feed/observations') }}" rel="self" type="application/rss+xml" />
+        <atom:link href="{{ $channel['self'] ?? url('/feed/observations') }}" rel="self" type="application/rss+xml" />
 
         @foreach ($observations as $obs)
         @php

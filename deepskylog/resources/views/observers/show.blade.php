@@ -14,6 +14,38 @@
                     <h2 class="mt-4 bg-gray-900 text-xl font-semibold leading-tight">
                         {{ $user->name }}
                     </h2>
+                    <div class="mb-2 mt-1 flex flex-wrap items-center gap-2 text-sm text-gray-400">
+                        <span>{{ trans_choice(':count follower|:count followers', $followersCount, ['count' => $followersCount]) }}</span>
+                        @auth
+                            @if ($isFollowing)
+                                <form method="POST" action="{{ route('observer.unfollow', ['observer' => $user->slug]) }}">
+                                    @csrf
+                                    <x-button type="submit" xs gray icon="user-minus" label="{{ __('Unfollow') }}" />
+                                </form>
+                            @elseif ($canFollow)
+                                <form method="POST" action="{{ route('observer.follow', ['observer' => $user->slug]) }}">
+                                    @csrf
+                                    <x-button type="submit" xs primary icon="user-plus" label="{{ __('Follow') }}" />
+                                </form>
+                            @endif
+                        @endauth
+                    </div>
+                    @if ($followerList !== null)
+                        {{-- Only on one's own page: who follows you, and whom you follow --}}
+                        @foreach ([[__('Your followers'), $followerList], [__('Observers you follow'), $followingList]] as [$followLabel, $followUsers])
+                            @if ($followUsers->isNotEmpty())
+                                <div class="mb-2 text-sm">
+                                    <span class="text-gray-400">{{ $followLabel }}:</span>
+                                    @foreach ($followUsers as $followUser)
+                                        <a class="hover:underline" href="{{ route('observer.show', ['observer' => $followUser->slug]) }}">{{ $followUser->name }}</a>@if (!$loop->last), @endif
+                                    @endforeach
+                                </div>
+                            @endif
+                        @endforeach
+                        @if ($followingList->isNotEmpty())
+                            <a class="mb-2 inline-block text-sm hover:underline" href="{{ url('/observations?following=1') }}">{{ __('Observations of the observers you follow') }}</a>
+                        @endif
+                    @endif
                     <div class="mx-left">
                         {{ __('DeepskyLog observer since ') }}
                           {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $user->created_at)->format('Y') }}

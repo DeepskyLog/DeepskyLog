@@ -17,6 +17,8 @@ class UpdateUserLanguageInformation extends Component
 
     public $sendMail;
 
+    public $followDigest;
+
     protected function rules(): array
     {
         return [
@@ -29,6 +31,7 @@ class UpdateUserLanguageInformation extends Component
             'language' => ['required', 'string', Rule::in(array_values(config('app.available_locales')))],
             'translate' => 'boolean',
             'sendMail' => 'boolean',
+            'followDigest' => 'boolean',
         ];
     }
 
@@ -43,6 +46,7 @@ class UpdateUserLanguageInformation extends Component
         $this->language = auth()->user()->language;
         $this->translate = boolval(auth()->user()->translate);
         $this->sendMail = boolval(auth()->user()->sendMail);
+        $this->followDigest = boolval(auth()->user()->follow_digest);
     }
 
     /**
@@ -57,6 +61,7 @@ class UpdateUserLanguageInformation extends Component
             'language' => $this->language,
             'translate' => $this->translate,
             'sendMail' => $this->sendMail,
+            'follow_digest' => $this->followDigest,
         ])->save();
 
         App::setLocale($this->language);

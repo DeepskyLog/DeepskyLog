@@ -9,6 +9,7 @@ use App\Models\MessageDeleted;
 use App\Models\MessageRead;
 use App\Models\Team;
 use App\Models\User;
+use App\Models\UserFollow;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -917,6 +918,8 @@ class MessagesController extends Controller
         }
 
         MessageBlock::firstOrCreate(['user_id' => $user->id, 'blocked_user_id' => $blocked->id]);
+        // A blocked observer no longer follows the user either
+        UserFollow::where('follower_id', $blocked->id)->where('followed_id', $user->id)->get()->each->delete();
 
         return redirect()->back()->with('success', __(':name can no longer send you messages', ['name' => $blocked->name]));
     }

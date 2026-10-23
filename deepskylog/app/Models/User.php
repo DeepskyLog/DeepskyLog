@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Models\Observation;
 use App\Jobs\ComputeObserverStats;
@@ -76,6 +77,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',
+        'follow_feed_token',
     ];
 
     /**
@@ -87,6 +89,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'inactivity_deletion_at' => 'datetime',
         'inactivity_final_warning_at' => 'datetime',
+        'follow_digest' => 'boolean',
+        'follow_digest_sent_at' => 'datetime',
         'about' => PurifiedHtml::class,
     ];
 
@@ -134,6 +138,9 @@ class User extends Authenticatable implements MustVerifyEmail
             'lookupFoV',
             'detailFoV',
             'sendMail',
+            'follow_digest',
+            'follow_digest_sent_at',
+            'follow_feed_token',
             'showInches',
             'version',
         ];
@@ -1111,6 +1118,68 @@ class User extends Authenticatable implements MustVerifyEmail
     public function instrumentSets(): HasMany
     {
         return $this->hasMany(related: InstrumentSet::class);
+    }
+
+    /**
+     * The observers this user follows.
+     */
+    public function following(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'follower_id', 'followed_id')->withTimestamps();
+    }
+
+    /**
+     * The observers following this user.
+     */
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'followed_id', 'follower_id')->withTimestamps();
+    }
+
+    public function isFollowing(User $observer): bool
+    {
+        return UserFollow::where('follower_id', $this->id)->where('followed_id', $observer->id)->exists();
+    }
+
+    /**
+     * Whether this user may follow the observer: not themselves, and not an
+     * observer who blocked them.
+     */
+    public function canFollow(User $observer): bool
+    {
+        return (int) $observer->id !== (int) $this->id && !MessageBlock::blocks($observer, $this);
+    }
+
+    /**
+     * The observations of the observers this user follows.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<Observation>
+     */
+    public function followedObservations(): \Illuminate\Database\Eloquent\Builder
+    {
+        return Observation::query()->whereIn('observer_username', $this->following()->select('users.username'));
+    }
+
+    /**
+     * The secret token of the personal RSS feed of the observers this user
+     * follows, made the first time it is asked for.
+     */
+    public function followFeedToken(): string
+    {
+        if (empty($this->follow_feed_token)) {
+            $this->regenerateFollowFeedToken();
+        }
+
+        return $this->follow_feed_token;
+    }
+
+    /**
+     * Give the personal RSS feed a new token, so the old feed URL stops
+     * working.
+     */
+    public function regenerateFollowFeedToken(): void
+    {
+        $this->forceFill(['follow_feed_token' => Str::random(48)])->save();
     }
 
     /**

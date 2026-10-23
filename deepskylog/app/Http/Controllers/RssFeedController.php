@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Observation;
 use App\Models\ObservingList;
+use App\Models\User;
 use App\Services\Observations\ObservationCardData;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
@@ -51,9 +52,36 @@ class RssFeedController extends Controller
         });
     }
 
-    private function renderObservations(bool $drawingsOnly): string
+    /**
+     * Personal RSS feed of the latest observations of the observers a user
+     * follows. The URL holds the user's secret token instead of a login, so
+     * feed readers can poll it.
+     */
+    public function following(string $token): Response
     {
-        $observations = Observation::with(['instrument.instrument_make', 'eyepiece', 'observerUser'])
+        $user = User::where('follow_feed_token', $token)->firstOrFail();
+
+        return $this->feed(self::followingKey($user), fn() => $this->renderObservations(false, $user));
+    }
+
+    /**
+     * Forget the cached personal feed, after the user followed or unfollowed
+     * someone.
+     */
+    public static function forgetFollowingFeed(User $user): void
+    {
+        Cache::forget(self::followingKey($user));
+    }
+
+    private static function followingKey(User $user): string
+    {
+        return 'rss:following:' . $user->id;
+    }
+
+    private function renderObservations(bool $drawingsOnly, ?User $follower = null): string
+    {
+        $observations = ($follower ? $follower->followedObservations() : Observation::query())
+            ->with(['instrument.instrument_make', 'eyepiece', 'observerUser'])
             ->when($drawingsOnly, fn($query) => $query->where('has_drawing', true))
             ->orderBy('created_at', 'desc')
             ->limit(50)
@@ -65,7 +93,16 @@ class RssFeedController extends Controller
 
         $feedUpdated = $observations->first()?->created_at ?? now();
 
-        return view('rss.observations', compact('observations', 'feedUpdated', 'cards'))->render();
+        $channel = $follower
+            ? [
+                'title' => 'Observers followed by ' . $follower->name,
+                'link' => url('/observations?following=1'),
+                'description' => 'The latest observations of the observers ' . $follower->name . ' follows on DeepskyLog.',
+                'self' => route('feed.following', ['token' => $follower->follow_feed_token]),
+            ]
+            : null;
+
+        return view('rss.observations', compact('observations', 'feedUpdated', 'cards', 'channel'))->render();
     }
 
     private function feed(string $cacheKey, \Closure $render): Response

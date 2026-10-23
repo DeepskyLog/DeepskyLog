@@ -38,7 +38,9 @@
                                 {{ __('Drawings of ' . $user->name) }}
                             @endif
                         @else
-                            @if ($user == '')
+                            @if ($user == '' && !empty($following))
+                                {{ __('Observations of the observers you follow') }}
+                            @elseif ($user == '')
                                 {{ __('Observations') }}
                             @else
                                 {{ __('Observations of ' . $user->name) }}
@@ -80,6 +82,19 @@
                                class="rounded px-3 py-1 text-sm font-medium {{ $isActive ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200 hover:bg-gray-600' }}"
                             >{{ $typeLabel }}</a>
                         @endforeach
+                        @auth
+                            {{-- Only the observers the user follows, keeping the type filter --}}
+                            @php
+                                $followingParams = \App\Helpers\ListingPagination::query(['following']);
+                                if (empty($following)) {
+                                    $followingParams['following'] = 1;
+                                }
+                                $followingUrl = url('/observations') . ($followingParams ? '?' . http_build_query($followingParams) : '');
+                            @endphp
+                            <a href="{{ $followingUrl }}"
+                               class="rounded px-3 py-1 text-sm font-medium {{ !empty($following) ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200 hover:bg-gray-600' }}"
+                            >{{ __('Observers I follow') }}</a>
+                        @endauth
                     @else
                         {{-- Non-global pages: keep the deepsky/comet toggle buttons --}}
                         @if ($mode !== 'deepsky' && !($mode === 'comet' && !empty($objectFilter)))
@@ -130,7 +145,8 @@
                     </div>
                 @endif
                 @if ($user == '' && empty($objectFilter) && empty($drawingsOnly) && !$isDrawingsPath)
-                    <a href="{{ route('feed.observations') }}"
+                    {{-- The personal feed of the followed observers holds a secret token instead of a login --}}
+                    <a href="{{ !empty($following) ? route('feed.following', ['token' => auth()->user()->followFeedToken()]) : route('feed.observations') }}"
                        title="{{ __('Subscribe to RSS feed') }}"
                        class="inline-flex items-center px-3 py-2 rounded bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold">
                         <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -222,8 +238,19 @@
                         @endif
                     </x-card>
                 @else
+                    @if (!empty($following))
+                        <div class="mb-3 flex flex-wrap items-center gap-2 text-sm text-gray-400">
+                            <span>{{ __('The RSS feed of the observers you follow has a private address: anyone who knows it can read the feed.') }}</span>
+                            <form method="POST" action="{{ route('feed.following.regenerate') }}">
+                                @csrf
+                                <button type="submit" class="underline hover:text-gray-200">{{ __('Give the feed a new address') }}</button>
+                            </form>
+                        </div>
+                    @endif
                     <x-card>
-                        @if ($deepsky->isEmpty())
+                        @if ($deepsky->isEmpty() && !empty($following) && empty($followingCount))
+                            <div class="text-center text-gray-300">{{ __('You do not follow any observers yet. Use the Follow button on the page of an observer.') }}</div>
+                        @elseif ($deepsky->isEmpty())
                             <div class="text-center text-gray-300">{{ __('No observations yet.') }}</div>
                         @else
                             <h3 class="mb-3 text-lg font-semibold text-gray-200">{{ __('All observations') }}

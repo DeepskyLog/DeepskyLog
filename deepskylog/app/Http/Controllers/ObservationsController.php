@@ -324,7 +324,13 @@ class ObservationsController extends Controller
 
         $sort = request()->query('sort', 'observed');
 
-        $query = Observation::query();
+        // ?following=1: only the observers the logged-in user follows
+        $following = request()->boolean('following');
+        if ($following && !auth()->check()) {
+            return redirect()->guest(route('login'));
+        }
+
+        $query = $following ? auth()->user()->followedObservations() : Observation::query();
         if ($obsType === 'all') {
             $query->whereIn('target_type', ['deepsky', 'comet', 'planet', 'solarsystem', 'lunar']);
         } elseif ($obsType === 'solarsystem') {
@@ -349,6 +355,8 @@ class ObservationsController extends Controller
             'comet' => collect(),
             'mode' => 'deepsky',
             'obsType' => $obsType,
+            'following' => $following,
+            'followingCount' => $following ? auth()->user()->following()->count() : null,
         ]);
     }
 

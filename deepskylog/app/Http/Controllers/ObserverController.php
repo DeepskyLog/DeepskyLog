@@ -399,7 +399,19 @@ class ObserverController extends Controller
             return $session;
         });
 
-        return view('observers.show', [
+        // Following (issue #966): the follow button for other observers, the
+        // lists of followers and followed observers on one's own page.
+        $viewer = request()->user();
+        $ownPage = $viewer && (int) $viewer->id === (int) $user->id;
+        $follow = [
+            'followersCount' => $user->followers()->count(),
+            'isFollowing' => $viewer && !$ownPage && $viewer->isFollowing($user),
+            'canFollow' => $viewer && $viewer->canFollow($user),
+            'followerList' => $ownPage ? $user->followers()->orderBy('name')->get(['users.id', 'name', 'slug']) : null,
+            'followingList' => $ownPage ? $user->following()->orderBy('name')->get(['users.id', 'name', 'slug']) : null,
+        ];
+
+        return view('observers.show', $follow + [
             'user' => $user,
             'sessions' => $sessions,
             'observations' => $observationsOld,
