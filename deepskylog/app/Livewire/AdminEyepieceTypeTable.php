@@ -61,7 +61,9 @@ final class AdminEyepieceTypeTable extends PowerGridComponent
                 ->searchable(),
 
             Column::make('Eyepiece make', 'eyepiece_make'),
-            Column::make('Number of Eyepieces', 'number_of_eyepieces'),
+            Column::make('Number of Eyepieces', 'number_of_eyepieces')
+                ->sortable()
+                ->sortUsing(fn ($query, string $direction) => $query->orderBy('eyepieces_count', $direction)),
 
             // Add update time
             Column::make('Created at', 'created_at')

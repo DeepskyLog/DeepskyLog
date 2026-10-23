@@ -61,7 +61,9 @@ final class AdminFilterTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Number of Filters', 'number_of_filters'),
+            Column::make('Number of Filters', 'number_of_filters')
+                ->sortable()
+                ->sortUsing(fn ($query, string $direction) => $query->orderBy('filters_count', $direction)),
 
             Column::action('Action'),
         ];

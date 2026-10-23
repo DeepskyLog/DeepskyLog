@@ -55,7 +55,9 @@ final class AdminInstrumentTable extends PowerGridComponent
             Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Number of Instruments', 'number_of_instruments'),
+            Column::make('Number of Instruments', 'number_of_instruments')
+                ->sortable()
+                ->sortUsing(fn ($query, string $direction) => $query->orderBy('instruments_count', $direction)),
 
             Column::action('Action'),
         ];

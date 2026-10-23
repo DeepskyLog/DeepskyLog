@@ -61,7 +61,9 @@ final class AdminLensTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Number of Lenses', 'number_of_lenses'),
+            Column::make('Number of Lenses', 'number_of_lenses')
+                ->sortable()
+                ->sortUsing(fn ($query, string $direction) => $query->orderBy('lenses_count', $direction)),
 
             Column::action('Action'),
         ];
