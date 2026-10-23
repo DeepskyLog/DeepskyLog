@@ -5,10 +5,29 @@
         <div class="bg-gray-900 p-4 rounded shadow text-gray-100">
             @if (empty($resolved['type']))
                 <div class="text-yellow-200 mb-4">{{ __('No object found for') }} '{{ $slug }}'.</div>
-                <a href="{{ route('observation.add.select') }}" class="bg-gray-700 px-3 py-2 rounded">{{ __('New observation') }}</a>
+                @if (old('edit_url'))
+                    {{-- Editing an observation of an object that is not in the database: move it to another one --}}
+                    <p class="mb-3 text-sm text-gray-300">{{ __('Choose the object this observation belongs to.') }}</p>
+                    @if (! empty($objectChoices))
+                        <div class="mb-3 flex flex-wrap gap-2">
+                            @foreach ($objectChoices as $choiceName => $choiceSlug)
+                                <a href="{{ old('edit_url') }}?object={{ urlencode($choiceSlug) }}" class="rounded bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700">{{ $choiceName }}</a>
+                            @endforeach
+                        </div>
+                    @endif
+                    <form method="GET" action="{{ old('edit_url') }}" class="flex flex-wrap items-center gap-2">
+                        <input type="text" name="object" required placeholder="{{ __('Object name') }}" class="rounded border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-gray-100">
+                        <button type="submit" class="rounded bg-gray-700 px-3 py-2 text-sm hover:bg-gray-600">{{ __('Use this object') }}</button>
+                    </form>
+                @else
+                    <a href="{{ route('observation.add.select') }}" class="bg-gray-700 px-3 py-2 rounded">{{ __('New observation') }}</a>
+                @endif
             @else
                 <div class="mb-4">
                     <strong>{{ __('Object') }}:</strong> {{ $resolved['record']->name ?? $slug }}
+                    @if (old('edit_previous_object'))
+                        <span class="ml-2 text-sm text-amber-300">{{ __('(was :name)', ['name' => old('edit_previous_object')]) }}</span>
+                    @endif
                 </div>
                 @php
                     $isSun = false;

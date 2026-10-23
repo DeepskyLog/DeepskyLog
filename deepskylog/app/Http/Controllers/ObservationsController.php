@@ -12,6 +12,7 @@ use App\Models\Eyepiece;
 use App\Models\Filter;
 use App\Models\Lens;
 use App\Models\Constellation;
+use App\Models\DeepskyObject;
 use App\Models\SketchOfTheWeek;
 use App\Models\SketchOfTheMonth;
 use App\Models\ObservationLike;
@@ -2161,6 +2162,9 @@ class ObservationsController extends Controller
             return view('observations.create', [
                 'resolved' => $resolved,
                 'slug' => $slug,
+                // Editing an observation of an object that is not in the
+                // database: the objects it may have been split into
+                'objectChoices' => empty($resolved['type']) && $request->old('edit_url') ? DeepskyObject::componentsOf($slug) : [],
                 'objectSummary' => $objectSummary,
                 'instrumentSets' => $instrumentSets,
                 'instrumentSet' => $instrumentSet,
@@ -2613,6 +2617,17 @@ class ObservationsController extends Controller
         $slug = $selectedUnified->target_key ?? $selectedUnified->target_name ?? null;
         if ($selectedUnified->target_type === Observation::TYPE_DEEPSKY) {
             $slug = DB::table('objects')->where('name', $selectedUnified->target_key)->value('slug') ?? $slug;
+
+            // ?object= moves the observation to another object, e.g. when its
+            // own is not in the database (the form then offers the choice)
+            $chosen = Observation::canonicalDeepskyName($request->query('object'));
+            if ($chosen !== null && $chosen !== $selectedUnified->target_key) {
+                $slug = DB::table('objects')->where('name', $chosen)->value('slug') ?: $chosen;
+                $prefill['edit_previous_object'] = $selectedUnified->target_name;
+            } elseif ($chosen === null && filled($request->query('object'))) {
+                session()->flash('error', __('No object found for') . " '" . $request->query('object') . "'.");
+            }
+            $prefill['edit_url'] = $request->url();
         } elseif ($selectedUnified->target_type === Observation::TYPE_COMET) {
             $slug = DB::table('cometobjects')->where('id', (int) $selectedUnified->target_key)->value('slug') ?? $slug;
         }

@@ -530,3 +530,29 @@ test('unknown targets link to their observations and to the objects they may sta
         ->assertSee(route('object.show', ['slug' => 'ic-2554b']), false)
         ->assertSee($row['observations'][0]['url'], false);
 });
+
+test('an observation of an unknown object can be moved to another object from its edit page', function () {
+    $admin = $this->createUserAndAssignToTeam('Administrators');
+    $observer = \App\Models\User::factory()->create(['id' => 3]);
+
+    DB::table('objects')->insert([checkObjectRow('IC 2554A'), checkObjectRow('IC 2554B')]);
+    $id = DB::table('observations')->insertGetId(checkObservationRow($observer, 'IC 2554'));
+    $editUrl = route('observations.edit', ['observer' => $observer->slug, 'date' => '2026-03-01', 'object' => 'ic-2554', 'index' => 1]);
+
+    $this->actingAs($admin)->get($editUrl)->assertRedirect(route('observation.create', ['slug' => 'IC 2554']));
+    $this->get(route('observation.create', ['slug' => 'IC 2554']))
+        ->assertOk()
+        ->assertSee('Choose the object this observation belongs to.')
+        ->assertSee($editUrl . '?object=ic-2554a', false)
+        ->assertSee($editUrl . '?object=ic-2554b', false);
+
+    $this->get($editUrl . '?object=ic-2554b')->assertRedirect(route('observation.create', ['slug' => 'ic-2554b']));
+    $this->get(route('observation.create', ['slug' => 'ic-2554b']))
+        ->assertOk()
+        ->assertSee('IC 2554B')
+        ->assertSee('(was IC 2554)')
+        ->assertSee('name="edit_unified_id" value="' . $id . '"', false);
+
+    // A name that matches no object says so
+    $this->get($editUrl . '?object=Nothing 1')->assertSessionHas('error', "No object found for 'Nothing 1'.");
+});
