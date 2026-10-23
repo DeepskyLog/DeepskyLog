@@ -483,3 +483,29 @@ it('describes both formats on the import page without asking for one', function 
         ->assertSee('OAL 2.1 (OpenAstronomyLog XML)')
         ->assertSee('DeepskyLog recognises the format from the content of the file.');
 });
+
+// Issue #316: the administrators and database experts did not know that an
+// import added objects.
+it('tells the administrators and database experts which objects an import added', function () {
+    \Illuminate\Support\Facades\Mail::fake();
+
+    $admin = App\Models\User::factory()->create(['username' => 'admin-1', 'sendMail' => 1]);
+    $this->addUserToTeam($admin, 'Administrators');
+    $expert = App\Models\User::factory()->create(['username' => 'expert-1', 'sendMail' => 0]);
+    $this->addUserToTeam($expert, 'Database Experts');
+    $observer = App\Models\User::factory()->create(['username' => 'other-observer']);
+
+    $upload = UploadedFile::fake()->createWithContent('new.xml', Fixtures::content('oal/valid-new-targets.xml'));
+    $this->actingAs($this->user)
+        ->post(route('observation.import.process'), ['import_file' => $upload])
+        ->assertOk();
+
+    $messages = App\Models\Message::query()->where('sender', 'example-observer')->get();
+    expect($messages->pluck('receiver')->sort()->values()->all())->toBe(['admin-1', 'expert-1'])
+        ->and($messages->first()->message)->toContain('Example Nebula 123')
+        ->and($messages->first()->message)->toContain('/object/example-nebula-123');
+
+    // A mail only to who wants the messages by mail.
+    \Illuminate\Support\Facades\Mail::assertQueued(App\Mail\MessageReceived::class, 1);
+    \Illuminate\Support\Facades\Mail::assertQueued(App\Mail\MessageReceived::class, fn ($mail) => $mail->hasTo($admin->email));
+});

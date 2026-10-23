@@ -43,6 +43,10 @@ class AdvancedObjectSearch extends Component
     public string $subrMin = '';
     public string $subrMax = '';
 
+    // ── Also show objects with an unknown magnitude / surface brightness ──
+    public bool $magUnknown = false;
+    public bool $subrUnknown = false;
+
     // ── Diameter 1 (arcmin) ───────────────────────────────────────────────
     public string $diam1Min = '';
     public string $diam1Max = '';
@@ -248,6 +252,8 @@ class AdvancedObjectSearch extends Component
         $this->magMax = (string) ($filters['mag_max'] ?? '');
         $this->subrMin = (string) ($filters['subr_min'] ?? '');
         $this->subrMax = (string) ($filters['subr_max'] ?? '');
+        $this->magUnknown = (bool) ($filters['mag_unknown'] ?? false);
+        $this->subrUnknown = (bool) ($filters['subr_unknown'] ?? false);
         $this->diam1Min = (string) ($filters['diam1_min'] ?? '');
         $this->diam1Max = (string) ($filters['diam1_max'] ?? '');
         $this->diam2Min = (string) ($filters['diam2_min'] ?? '');
@@ -361,8 +367,8 @@ class AdvancedObjectSearch extends Component
             'objectCategories' => $this->objectCategories = [],
             'catalogsInclude' => $this->catalogsInclude = [],
             'catalogsExclude' => $this->catalogsExclude = [],
-            'magnitude' => [$this->magMin, $this->magMax] = ['', ''],
-            'surfaceBrightness' => [$this->subrMin, $this->subrMax] = ['', ''],
+            'magnitude' => [$this->magMin, $this->magMax, $this->magUnknown] = ['', '', false],
+            'surfaceBrightness' => [$this->subrMin, $this->subrMax, $this->subrUnknown] = ['', '', false],
             'diam1' => [$this->diam1Min, $this->diam1Max] = ['', ''],
             'diam2' => [$this->diam2Min, $this->diam2Max] = ['', ''],
             'ratio' => [$this->ratioMin, $this->ratioMax] = ['', ''],
@@ -480,12 +486,16 @@ class AdvancedObjectSearch extends Component
                 $params['mag_min'] = $this->magMin;
             if ($this->magMax !== '')
                 $params['mag_max'] = $this->magMax;
+            if ($this->magUnknown)
+                $params['mag_unknown'] = 1;
         }
         if (in_array('surfaceBrightness', $this->activeFilters)) {
             if ($this->subrMin !== '')
                 $params['subr_min'] = $this->subrMin;
             if ($this->subrMax !== '')
                 $params['subr_max'] = $this->subrMax;
+            if ($this->subrUnknown)
+                $params['subr_unknown'] = 1;
         }
         if (in_array('diam1', $this->activeFilters)) {
             if ($this->diam1Min !== '')

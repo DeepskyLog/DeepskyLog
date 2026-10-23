@@ -2,6 +2,9 @@
     <div>
         <div class="max-w-screen mx-auto bg-gray-900 px-2 py-10 sm:px-6 lg:px-8">
             <x-card title="DeepskyLog Image Catalogs">
+                <p class="mt-2 rounded border border-yellow-700 bg-yellow-900/30 px-3 py-2 text-sm text-yellow-100">
+                    {!! __('These catalogs are made in advance and are large PDF files: even the catalog of a small constellation is tens of megabytes, so a download can take a while. For a catalog of only the objects you want, use the <a class="font-bold hover:underline" href=":url">object sets</a>.', ['url' => route('object-sets.index')]) !!}
+                </p>
                 <div class="mt-4">
                     <table class="table">
                         <tr><th class="catalog">{!! __("Catalogs sorted by name") !!}</th></tr>

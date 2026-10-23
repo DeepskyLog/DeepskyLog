@@ -76,3 +76,14 @@ it('sorts popular lists with the same number of likes on the number of comments'
         ->assertOk()
         ->assertSeeInOrder(['Most liked', 'Many comments', 'Few comments', 'Not liked']);
 });
+
+// Issue #447: the comments above the objects pushed the list itself down the
+// page. The objects now come first.
+it('shows the objects of a list above its comments', function () {
+    $owner = User::factory()->create();
+    $list = ObservingList::create(['owner_user_id' => $owner->id, 'name' => 'Autumn list', 'public' => true]);
+
+    $this->get(route('observing-list.show', ['list' => $list]))
+        ->assertOk()
+        ->assertSeeInOrder(['This list has no objects yet.', 'No comments yet.']);
+});

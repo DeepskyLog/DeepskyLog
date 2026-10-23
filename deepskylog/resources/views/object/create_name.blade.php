@@ -36,6 +36,11 @@
                 @endforeach
             </select>
             <p class="mt-1 text-xs text-gray-500">{{ __('e.g. NGC, IC, M, …') }}</p>
+            @unless(Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
+                <p class="mt-1 text-xs text-gray-500">
+                    {!! __('Is the catalog of your object not in the list? Ask the :linkDeepskyLog team:close_link to add it.', ['link' => '<a class="font-bold hover:underline" href="mailto:deepskylog@groups.io">', 'close_link' => '</a>']) !!}
+                </p>
+            @endunless
         </div>
 
         {{-- Catalog number --}}

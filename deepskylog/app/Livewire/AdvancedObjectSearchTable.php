@@ -44,6 +44,9 @@ class AdvancedObjectSearchTable extends PowerGridComponent
     public string $magMax = '';
     public string $subrMin = '';
     public string $subrMax = '';
+    // Also match objects whose magnitude / surface brightness is unknown.
+    public bool $magUnknown = false;
+    public bool $subrUnknown = false;
     public string $diam1Min = '';
     public string $diam1Max = '';
     public string $diam2Min = '';
@@ -100,6 +103,8 @@ class AdvancedObjectSearchTable extends PowerGridComponent
         $this->magMax = (string) ($filters['mag_max'] ?? '');
         $this->subrMin = (string) ($filters['subr_min'] ?? '');
         $this->subrMax = (string) ($filters['subr_max'] ?? '');
+        $this->magUnknown = (bool) ($filters['mag_unknown'] ?? false);
+        $this->subrUnknown = (bool) ($filters['subr_unknown'] ?? false);
         $this->diam1Min = (string) ($filters['diam1_min'] ?? '');
         $this->diam1Max = (string) ($filters['diam1_max'] ?? '');
         $this->diam2Min = (string) ($filters['diam2_min'] ?? '');
@@ -286,18 +291,8 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             if (!empty($this->constellations)) {
                 $objQ->whereIn('con', array_map('strval', $this->constellations));
             }
-            if ($this->magMin !== '' && is_numeric($this->magMin)) {
-                $objQ->where('mag', '>=', floatval($this->magMin));
-            }
-            if ($this->magMax !== '' && is_numeric($this->magMax)) {
-                $objQ->where('mag', '<=', floatval($this->magMax));
-            }
-            if ($this->subrMin !== '' && is_numeric($this->subrMin)) {
-                $objQ->where('subr', '>=', floatval($this->subrMin));
-            }
-            if ($this->subrMax !== '' && is_numeric($this->subrMax)) {
-                $objQ->where('subr', '<=', floatval($this->subrMax));
-            }
+            $this->applyBrightnessRange($objQ, 'mag', $this->magMin, $this->magMax, $this->magUnknown);
+            $this->applyBrightnessRange($objQ, 'subr', $this->subrMin, $this->subrMax, $this->subrUnknown);
             // Diameters are entered in arcmin; the objects table stores arcsec.
             if ($this->diam1Min !== '' && is_numeric($this->diam1Min)) {
                 $objQ->where('diam1', '>=', floatval($this->diam1Min) * 60);
@@ -520,21 +515,9 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             }
         }
 
-        // ── Magnitude filter ──────────────────────────────────────────────────
-        if ($this->magMin !== '' && is_numeric($this->magMin)) {
-            $query->where('objects.mag', '>=', floatval($this->magMin));
-        }
-        if ($this->magMax !== '' && is_numeric($this->magMax)) {
-            $query->where('objects.mag', '<=', floatval($this->magMax));
-        }
-
-        // ── Surface brightness filter ─────────────────────────────────────────
-        if ($this->subrMin !== '' && is_numeric($this->subrMin)) {
-            $query->where('objects.subr', '>=', floatval($this->subrMin));
-        }
-        if ($this->subrMax !== '' && is_numeric($this->subrMax)) {
-            $query->where('objects.subr', '<=', floatval($this->subrMax));
-        }
+        // ── Magnitude and surface brightness filters ──────────────────────────
+        $this->applyBrightnessRange($query, 'objects.mag', $this->magMin, $this->magMax, $this->magUnknown);
+        $this->applyBrightnessRange($query, 'objects.subr', $this->subrMin, $this->subrMax, $this->subrUnknown);
 
         // ── Diameter 1 filter (entered in arcmin, stored in arcsec) ───────────
         if ($this->diam1Min !== '' && is_numeric($this->diam1Min)) {
@@ -1062,6 +1045,37 @@ class AdvancedObjectSearchTable extends PowerGridComponent
      *
      * @return array{pages: array<int>, ranges: array<array{0:int,1:int}>}
      */
+    /**
+     * Limit a magnitude or surface brightness column to [min, max]. An unknown
+     * value (NULL or the placeholder 99.9) never matches the range, so a
+     * minimum no longer lets the placeholder through; with $includeUnknown
+     * the objects with an unknown value are added to the results.
+     */
+    private function applyBrightnessRange($query, string $column, string $min, string $max, bool $includeUnknown): void
+    {
+        $hasMin = $min !== '' && is_numeric($min);
+        $hasMax = $max !== '' && is_numeric($max);
+        if (! $hasMin && ! $hasMax) {
+            return;
+        }
+
+        $query->where(function ($q) use ($column, $min, $max, $hasMin, $hasMax, $includeUnknown) {
+            $q->where(function ($known) use ($column, $min, $max, $hasMin, $hasMax) {
+                $known->whereNotNull($column)->where($column, '<', 99.0);
+                if ($hasMin) {
+                    $known->where($column, '>=', floatval($min));
+                }
+                if ($hasMax) {
+                    $known->where($column, '<=', floatval($max));
+                }
+            });
+
+            if ($includeUnknown) {
+                $q->orWhereNull($column)->orWhere($column, '>=', 99.0);
+            }
+        });
+    }
+
     private function parseAtlasPageSpec(string $spec): array
     {
         $pages = [];

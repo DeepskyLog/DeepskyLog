@@ -81,6 +81,11 @@
                             <input type="number" wire:model.blur="magMax" step="0.1" placeholder="{{ __('Max') }}"
                                 class="w-28 bg-gray-900 text-gray-100 text-sm border border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                         </div>
+                        <label class="mt-2 inline-flex items-center gap-2 text-xs text-gray-400">
+                            <input type="checkbox" wire:model="magUnknown"
+                                class="rounded border-gray-600 bg-gray-900 text-indigo-500 focus:ring-indigo-500">
+                            {{ __('Also show objects with an unknown magnitude') }}
+                        </label>
 
                     @elseif($filterType === 'surfaceBrightness')
                         <label class="block text-xs text-gray-400 mb-1">{{ __('Surface brightness (min / max)') }}</label>
@@ -91,6 +96,11 @@
                             <input type="number" wire:model.blur="subrMax" step="0.1" placeholder="{{ __('Max') }}"
                                 class="w-28 bg-gray-900 text-gray-100 text-sm border border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                         </div>
+                        <label class="mt-2 inline-flex items-center gap-2 text-xs text-gray-400">
+                            <input type="checkbox" wire:model="subrUnknown"
+                                class="rounded border-gray-600 bg-gray-900 text-indigo-500 focus:ring-indigo-500">
+                            {{ __('Also show objects with an unknown surface brightness') }}
+                        </label>
 
                     @elseif($filterType === 'diam1')
                         <label class="block text-xs text-gray-400 mb-1">{{ __('Diameter 1 (arcmin) — min / max') }}</label>

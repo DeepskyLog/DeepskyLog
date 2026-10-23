@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Livewire\AdvancedObjectSearchTable;
 use App\Livewire\SearchResultsTable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Pipelines\Sorting;
 
 class SearchExportController extends Controller
 {
@@ -430,6 +432,9 @@ class SearchExportController extends Controller
         $component = $this->makeSearchComponent($request);
 
         $query = $component->datasource();
+        if ($query) {
+            $this->applyTableSort($component, $query);
+        }
         if ($query && $max !== null) {
             // The one row too many tells tooManyObjects() to refuse.
             $query->limit($max + 1);
@@ -456,6 +461,26 @@ class SearchExportController extends Controller
             ->with('error', __('This search matches more than :max objects, the most that can be exported in this format. Please narrow down your search.', [
                 'max' => number_format($max),
             ]));
+    }
+
+    /**
+     * Sort the export as the observer sorted the table: the sort the table
+     * persisted in the session, else its default sort, applied through the
+     * table's own column sort callbacks as PowerGrid does.
+     */
+    private function applyTableSort(SearchResultsTable|AdvancedObjectSearchTable $component, Builder $query): void
+    {
+        try {
+            // Restore the sort only: the persisted filters belong to the table
+            // on screen, the export takes its filters from the request.
+            $persisted = $component->persist;
+            $component->persist(['sorting'], $component->persistPrefix);
+            (fn () => $this->restoreState())->call($component);
+            $component->persist($persisted, $component->persistPrefix);
+        } catch (\Throwable $_) {
+        }
+
+        (new Sorting($component))->handle($query, fn ($sorted) => $sorted);
     }
 
     private function makeSearchComponent(Request $request): SearchResultsTable|AdvancedObjectSearchTable

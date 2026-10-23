@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\NotifyImportedObjects;
 use App\Services\Import\CsvObservationImporter;
 use App\Services\Import\OalObservationImporter;
 use Illuminate\Http\Request;
@@ -44,6 +45,11 @@ class ObservationImportController extends Controller
 
         $importer = $format === 'csv' ? new CsvObservationImporter($user) : new OalObservationImporter($user);
         $result = $importer->importBelowHorizon($request->boolean('import_below_horizon'))->import($content);
+
+        // The administrators and database experts check the objects an import added.
+        if ($result->newObjects !== []) {
+            NotifyImportedObjects::dispatch($user->username, $result->newObjects);
+        }
 
         return view('observations.import-result', [
             'result' => $result,

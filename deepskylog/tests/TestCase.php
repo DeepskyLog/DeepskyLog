@@ -33,6 +33,24 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * Give the SQLite test database the REGEXP_REPLACE() of MariaDB, which
+     * the natural sort on object names uses.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $connection = $this->app['db']->connection();
+        if ($connection->getDriverName() === 'sqlite') {
+            $connection->getPdo()->sqliteCreateFunction(
+                'REGEXP_REPLACE',
+                fn ($value, $pattern, $replacement) => preg_replace('/'.$pattern.'/u', $replacement, (string) $value),
+                3
+            );
+        }
+    }
+
+    /**
      * Create a user and assign it to the specified team.
      *
      * @param  string  $teamName  The name of the team to assign the user to.

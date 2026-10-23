@@ -213,65 +213,6 @@
 
             <div class="grid grid-cols-1 gap-6">
 
-                {{-- Comments section --}}
-                <section>
-                    <h2 class="text-lg font-semibold text-white mb-3">{{ __('Comments') }}</h2>
-
-                    @if ($comments->isEmpty())
-                        <p class="text-gray-400 text-sm mb-4">{{ __('No comments yet.') }}</p>
-                    @else
-                        <div class="space-y-3 mb-4">
-                            @foreach ($comments as $comment)
-                                <div class="bg-gray-800 p-3 rounded-lg border border-gray-700">
-                                    <div class="flex items-center justify-between mb-1">
-                                        <span class="text-xs font-medium text-gray-300">{{ $comment->user->name }}</span>
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-xs text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
-                                            @if ($comment->canBeDeletedBy(auth()->user()))
-                                                <form method="POST"
-                                                      action="{{ route('observing-list.comments.destroy', [$list, $comment->id]) }}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="text-gray-600 hover:text-red-400" title="{{ __('Delete') }}">
-                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                                        </svg>
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <p class="text-sm text-gray-300">{{ $comment->body }}</p>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-
-                    {{-- Add comment form --}}
-                    @auth
-                        @if (auth()->user()->can('comment', $list))
-                            <form method="POST" action="{{ route('observing-list.comments.store', $list) }}">
-                                @csrf
-                                <textarea
-                                    name="body"
-                                    rows="3"
-                                    required
-                                    maxlength="2000"
-                                    placeholder="{{ __('Add a comment…') }}"
-                                    class="w-full bg-gray-800 border border-gray-600 rounded-md text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                                ></textarea>
-                                @error('body')
-                                    <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                                <button type="submit"
-                                    class="mt-2 text-xs px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded font-semibold">
-                                    {{ __('Post comment') }}
-                                </button>
-                            </form>
-                        @endif
-                    @endauth
-                </section>
-
                 {{-- Items list --}}
                 <section>
                     @php
@@ -343,6 +284,65 @@
                             @livewire('observing-list-notes', ['listId' => $list->id], key('observing-list-notes-' . $list->id))
                         @endauth
                     @endif
+                </section>
+
+                {{-- Comments section --}}
+                <section>
+                    <h2 class="text-lg font-semibold text-white mb-3">{{ __('Comments') }}</h2>
+
+                    @if ($comments->isEmpty())
+                        <p class="text-gray-400 text-sm mb-4">{{ __('No comments yet.') }}</p>
+                    @else
+                        <div class="space-y-3 mb-4">
+                            @foreach ($comments as $comment)
+                                <div class="bg-gray-800 p-3 rounded-lg border border-gray-700">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-xs font-medium text-gray-300">{{ $comment->user->name }}</span>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
+                                            @if ($comment->canBeDeletedBy(auth()->user()))
+                                                <form method="POST"
+                                                      action="{{ route('observing-list.comments.destroy', [$list, $comment->id]) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-gray-600 hover:text-red-400" title="{{ __('Delete') }}">
+                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-gray-300">{{ $comment->body }}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    {{-- Add comment form --}}
+                    @auth
+                        @if (auth()->user()->can('comment', $list))
+                            <form method="POST" action="{{ route('observing-list.comments.store', $list) }}">
+                                @csrf
+                                <textarea
+                                    name="body"
+                                    rows="3"
+                                    required
+                                    maxlength="2000"
+                                    placeholder="{{ __('Add a comment…') }}"
+                                    class="w-full bg-gray-800 border border-gray-600 rounded-md text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                                ></textarea>
+                                @error('body')
+                                    <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                                <button type="submit"
+                                    class="mt-2 text-xs px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded font-semibold">
+                                    {{ __('Post comment') }}
+                                </button>
+                            </form>
+                        @endif
+                    @endauth
                 </section>
 
             </div>

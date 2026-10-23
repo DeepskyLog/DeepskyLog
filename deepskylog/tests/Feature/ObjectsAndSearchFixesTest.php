@@ -188,3 +188,90 @@ it('exports search results for Argo Navis, SkySafari and AstroPlanner without le
     expect($apd)->toStartWith('SQLite format 3')
         ->and(array_diff(glob(sys_get_temp_dir() . '/dsl_apd_*') ?: [], $before))->toBe([]);
 });
+
+// Issue #570: the exports came out in the database's order, not in the
+// order the observer sorted the search results on.
+it('exports the search results in the order of the table', function () {
+    foreach (['NGC 10' => 12.0, 'NGC 2' => 8.0, 'NGC 100' => 10.0] as $name => $mag) {
+        DB::table('objects')->insert(array_merge(fixesObjectRow($name, 1.0, 10.0), ['mag' => $mag]));
+        DB::table('search_index')->insert([
+            'name' => $name,
+            'name_normalized' => strtolower($name),
+            'source_table' => 'objects',
+            'source_pk' => \Illuminate\Support\Str::slug($name),
+            'display_name' => $name,
+            'source_type' => 'object',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
+    $order = fn (string $argo) => collect(explode("\n", trim($argo)))
+        ->map(fn ($line) => explode('|', $line)[0])
+        ->all();
+
+    // By default in the natural order of the names.
+    expect($order($this->get(route('search.argo', ['name_text' => 'NGC']))->assertOk()->streamedContent()))
+        ->toBe(['DSL NGC 2', 'DSL NGC 10', 'DSL NGC 100']);
+
+    // After sorting the table on magnitude, the brightest last.
+    $this->withSession(['pg:advanced-search-results-table' => json_encode([
+        'sortField' => 'objects.mag',
+        'sortDirection' => 'desc',
+        'sortArray' => [],
+        'multiSort' => false,
+    ])]);
+
+    expect($order($this->get(route('search.argo', ['name_text' => 'NGC']))->assertOk()->streamedContent()))
+        ->toBe(['DSL NGC 10', 'DSL NGC 100', 'DSL NGC 2']);
+});
+
+// Issue #622: an unknown magnitude (99.9) matched every minimum but no
+// maximum. It now never matches the range, and can be asked for.
+it('treats an unknown magnitude the same for a minimum and a maximum, and can include it', function () {
+    foreach (['NGC 1' => 8.0, 'NGC 2' => 99.9, 'NGC 3' => 12.0] as $name => $mag) {
+        DB::table('objects')->insert(array_merge(fixesObjectRow($name, 1.0, 10.0), ['mag' => $mag]));
+        DB::table('search_index')->insert([
+            'name' => $name,
+            'name_normalized' => strtolower($name),
+            'source_table' => 'objects',
+            'source_pk' => \Illuminate\Support\Str::slug($name),
+            'display_name' => $name,
+            'source_type' => 'object',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
+    // A guest may only make three exports a minute.
+    $this->actingAs(User::factory()->create());
+
+    $names = fn (array $params) => collect(explode("\n", trim($this->get(route('search.argo', ['name_text' => 'NGC'] + $params))->assertOk()->streamedContent())))
+        ->map(fn ($line) => explode('|', $line)[0])
+        ->all();
+
+    expect($names(['mag_min' => 10]))->toBe(['DSL NGC 3'])
+        ->and($names(['mag_max' => 10]))->toBe(['DSL NGC 1'])
+        ->and($names(['mag_min' => 10, 'mag_unknown' => 1]))->toBe(['DSL NGC 2', 'DSL NGC 3'])
+        ->and($names(['mag_max' => 10, 'mag_unknown' => 1]))->toBe(['DSL NGC 1', 'DSL NGC 2']);
+});
+
+// Issue #328: an observer did not know what to do when the catalog of an
+// object is not in the list of catalogs.
+it('tells an observer whom to ask for a catalog that is not in the list', function () {
+    $observer = $this->createUserAndAssignToTeam('Observers');
+
+    $this->actingAs($observer)
+        ->get(route('object.create'))
+        ->assertOk()
+        ->assertSee('Is the catalog of your object not in the list?')
+        ->assertSee('mailto:deepskylog@groups.io', false);
+});
+
+// Issue #401: the image catalogs are large files made in advance.
+it('warns that the image catalogs are large files', function () {
+    $this->get('/downloads/dsl-image-catalogs')
+        ->assertOk()
+        ->assertSee('tens of megabytes')
+        ->assertSee(route('object-sets.index'), false);
+});
