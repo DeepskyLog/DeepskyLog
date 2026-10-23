@@ -411,3 +411,13 @@ it('filters observation results by observing status and contrast reserve', funct
     expect($results)->toHaveCount(1);
     expect($results->pluck('target_name')->all())->toBe(['NGC 2392']);
 });
+// Issue #698: the chosen sort was lost when the observer opened a result and
+// came back to the search.
+it('keeps the sort of the observation search when the table is opened again', function () {
+    Livewire::test(ObservationSearchTable::class)
+        ->call('sortBy', 'instruments.aperture_mm', 'desc');
+
+    Livewire::test(ObservationSearchTable::class)
+        ->assertSet('sortField', 'instruments.aperture_mm')
+        ->assertSet('sortDirection', 'desc');
+});

@@ -193,7 +193,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
 
     public function setUp(): array
     {
-        $this->persist(['columns', 'filters']);
+        $this->persist(['columns', 'filters', 'sorting']);
 
         return [
             PowerGrid::header()->showSearchInput()->showToggleColumns(),

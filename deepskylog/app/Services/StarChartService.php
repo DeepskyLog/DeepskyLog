@@ -599,8 +599,19 @@ class StarChartService
         // where the declination band alone matches several hundred rows and
         // no right ascension predicate applies. loadStars() already leaves
         // atlas charts uncapped in the same way.
+        //
+        // Elsewhere the cap keeps the brightest objects: without an order the
+        // database returned an arbitrary 200 of a crowded field such as the
+        // Virgo cluster, which could leave out M104 or the target itself.
+        // Unknown magnitudes (NULL or 99.9) go last, the target first.
         if (! $atlasMode) {
-            $query->limit(200);
+            if ($target->exists && $target->name !== null && $target->name !== '') {
+                $query->orderByRaw('CASE WHEN name = ? THEN 0 ELSE 1 END', [$target->name]);
+            }
+            $query->orderByRaw('CASE WHEN mag IS NULL OR mag >= 99.9 THEN 1 ELSE 0 END')
+                ->orderBy('mag')
+                ->orderBy('name')
+                ->limit(200);
         }
 
         $objects = $query->get()

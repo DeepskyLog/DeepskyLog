@@ -120,7 +120,7 @@ final class ObservationSearchTable extends PowerGridComponent
 
     public function setUp(): array
     {
-        $this->persist(['columns', 'filters']);
+        $this->persist(['columns', 'filters', 'sorting']);
 
         return [
             PowerGrid::header()
