@@ -8,6 +8,7 @@ use App\Models\SearchIndex;
 use App\Models\Atlas;
 use App\Services\ActiveObservingListService;
 use App\Services\ObjectObservationStatistics;
+use App\Services\ObservationComparison;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\Paginator;
@@ -71,6 +72,12 @@ class AdvancedObjectSearchTable extends PowerGridComponent
     public string $atlasPageSpec = '';
     public string $atlasPageMin = '';
     public string $atlasPageMax = '';
+    // Compare my observations (see ObservationComparison)
+    public string $compareBy = '';
+    public string $compareSeen = '';
+    public string $compareNotSeen = '';
+    public string $compareSqm = '';
+    public string $compareSkyDirection = ObservationComparison::SKY_POOR_NOT_DARK;
 
     // ── CR / best-mag dedup flags ─────────────────────────────────────────
     public bool $bestMagUpsertedThisLoad = false;
@@ -136,6 +143,14 @@ class AdvancedObjectSearchTable extends PowerGridComponent
         $this->atlasPageSpec = (string) ($filters['atlas_page_spec'] ?? '');
         $this->atlasPageMin = (string) ($filters['atlas_page_min'] ?? '');
         $this->atlasPageMax = (string) ($filters['atlas_page_max'] ?? '');
+        $this->compareBy = (string) ($filters['compare_by'] ?? '');
+        $this->compareSeen = (string) ($filters['compare_seen'] ?? '');
+        $this->compareNotSeen = (string) ($filters['compare_not_seen'] ?? '');
+        $this->compareSqm = (string) ($filters['compare_sqm'] ?? '');
+        $direction = (string) ($filters['compare_sky_direction'] ?? '');
+        $this->compareSkyDirection = in_array($direction, ObservationComparison::SKY_DIRECTIONS, true)
+            ? $direction
+            : ObservationComparison::SKY_POOR_NOT_DARK;
     }
 
     #[On('advanced-add-all-to-active-list')]
@@ -358,6 +373,19 @@ class AdvancedObjectSearchTable extends PowerGridComponent
                     $q->where('catindex', $number);
                 }
             });
+        }
+
+        // ── Compare my observations (deep-sky objects only) ─────────────────
+        if ($this->compareBy !== '') {
+            ObservationComparison::restrict(
+                $rows,
+                Auth::user()?->username,
+                $this->compareBy,
+                $this->compareSeen,
+                $this->compareNotSeen,
+                $this->compareSqm,
+                $this->compareSkyDirection
+            );
         }
 
         // ── Apply observing list pre-filter to $rows (before GROUP BY) ────────

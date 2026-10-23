@@ -256,6 +256,53 @@
                                                     class="flex-1 bg-gray-900 text-gray-100 text-sm border border-gray-600 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                                             </div>
                                             <p class="mt-1 text-xs text-gray-500">{{ __('Examples: 1, 1,3,4, 1-3, 1-3,6-9. Leave empty to include all pages from selected atlas.') }}</p>
+
+                    @elseif($filterType === 'compareObservations')
+                        <label class="block text-xs text-gray-400 mb-1">{{ __('Seen with one instrument or location, not yet with another') }}</label>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <select wire:model.live="compareBy"
+                                class="w-48 bg-gray-900 text-gray-100 text-sm border border-gray-600 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                @foreach($compareByOptions as $value => $label)
+                                    <option value="{{ $value }}">{{ __($label) }}</option>
+                                @endforeach
+                            </select>
+
+                            @if($compareBy === 'sky')
+                                <select wire:model="compareSkyDirection"
+                                    class="flex-1 min-w-64 bg-gray-900 text-gray-100 text-sm border border-gray-600 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    @foreach($compareSkyDirectionOptions as $value => $label)
+                                        <option value="{{ $value }}">{{ __($label) }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="text-xs text-gray-400">{{ __('Limit (SQM)') }}</span>
+                                <input type="number" wire:model.blur="compareSqm" step="0.1" min="10" max="22" placeholder="21.0"
+                                    class="w-28 bg-gray-900 text-gray-100 text-sm border border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            @else
+                                @php($compareOptions = $compareBy === 'location' ? $myLocations : $myInstruments)
+                                <span class="text-xs text-gray-400">{{ __('Seen with') }}</span>
+                                <select wire:model="compareSeen"
+                                    class="flex-1 min-w-48 bg-gray-900 text-gray-100 text-sm border border-gray-600 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    <option value="">{{ __('Select…') }}</option>
+                                    @foreach($compareOptions as $id => $name)
+                                        <option value="{{ $id }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="text-xs text-gray-400">{{ __('but not yet with') }}</span>
+                                <select wire:model="compareNotSeen"
+                                    class="flex-1 min-w-48 bg-gray-900 text-gray-100 text-sm border border-gray-600 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    <option value="">{{ __('Select…') }}</option>
+                                    @foreach($compareOptions as $id => $name)
+                                        <option value="{{ $id }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            @endif
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">
+                            @if($compareBy === 'sky')
+                                {{ __('The sky of an observation is its SQM or limiting magnitude, else that of its location. Observations without either are left out.') }}
+                            @endif
+                            {{ __('Deep-sky objects only, from your own observations. Observations in which the object was not seen do not count.') }}
+                        </p>
                     @endif
                 </div>
             </div>
