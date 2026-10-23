@@ -275,3 +275,42 @@ it('warns that the image catalogs are large files', function () {
         ->assertSee('tens of megabytes')
         ->assertSee(route('object-sets.index'), false);
 });
+
+// Issue #669: a search of NGC objects that excludes the Herschel 400 and
+// Herschel 400-II catalogs still listed the Herschel objects.
+it('leaves the objects of an excluded catalog out of a catalog search', function () {
+    $this->actingAs(User::factory()->create());
+
+    $names = ['NGC 1' => [], 'NGC 2' => ['H400' => '5'], 'NGC 3' => ['H400-II' => '7']];
+    foreach ($names as $name => $alternatives) {
+        DB::table('objects')->insert(fixesObjectRow($name, 1.0, 10.0));
+        DB::table('search_index')->insert([
+            'name' => $name,
+            'name_normalized' => strtolower($name),
+            'source_table' => 'objects',
+            'source_pk' => \Illuminate\Support\Str::slug($name),
+            'display_name' => $name,
+            'source_type' => 'object',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        foreach (['NGC' => trim(strstr($name, ' '))] + $alternatives as $catalog => $index) {
+            DB::table('objectnames')->insert([
+                'objectname' => $name,
+                'catalog' => $catalog,
+                'catindex' => $index,
+                'altname' => $catalog.' '.$index,
+                'slug' => \Illuminate\Support\Str::slug($catalog.' '.$index),
+                'timestamp' => now(),
+            ]);
+        }
+    }
+
+    $found = fn (array $params) => collect(explode("\n", trim($this->get(route('search.argo', $params))->assertOk()->streamedContent())))
+        ->map(fn ($line) => explode('|', $line)[0])
+        ->all();
+
+    expect($found(['catalogs_include' => ['NGC']]))->toBe(['DSL NGC 1', 'DSL NGC 2', 'DSL NGC 3'])
+        ->and($found(['catalogs_include' => ['NGC'], 'catalogs_exclude' => ['H400']]))->toBe(['DSL NGC 1', 'DSL NGC 3'])
+        ->and($found(['catalogs_include' => ['NGC'], 'catalogs_exclude' => ['H400', 'H400-II']]))->toBe(['DSL NGC 1']);
+});
