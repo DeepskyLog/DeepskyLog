@@ -135,13 +135,9 @@ class ObservingListController extends Controller
         }
 
         if ($sortBy === 'popular') {
-            // Equal likes: the most commented list first
-            $query->orderBy('likes_count', 'desc')
-                ->orderBy('comments_count', 'desc')
-                ->orderBy('created_at', 'desc')
-                ->orderBy('id', 'desc');
+            $query->orderByPopularity();
         } else {
-            $query->orderBy('created_at', 'desc');
+            $query->withCount('subscriptions')->orderBy('created_at', 'desc');
         }
 
         $publicLists = $query->paginate(15)->withQueryString();

@@ -122,6 +122,25 @@ class ObservingList extends Model
     }
 
     /**
+     * The order of the most popular lists: on their likes and subscribers
+     * together, then (a subscription says more than a like) on the
+     * subscribers, then on the comments, the newest list first. Adds
+     * subscriptions_count.
+     */
+    public function scopeOrderByPopularity($query)
+    {
+        $subscribers = '(SELECT COUNT(*) FROM observing_list_subscriptions'
+            .' WHERE observing_list_subscriptions.observing_list_id = observing_lists.id)';
+
+        return $query->withCount('subscriptions')
+            ->orderByRaw("(observing_lists.likes_count + {$subscribers}) desc")
+            ->orderByRaw("{$subscribers} desc")
+            ->orderBy('observing_lists.comments_count', 'desc')
+            ->orderBy('observing_lists.created_at', 'desc')
+            ->orderBy('observing_lists.id', 'desc');
+    }
+
+    /**
      * Check if a user is subscribed to this list.
      */
     public function isSubscribedBy(User $user): bool

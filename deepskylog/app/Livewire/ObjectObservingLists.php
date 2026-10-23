@@ -82,10 +82,7 @@ class ObjectObservingLists extends Component
 
         // The order of the popular lists on the discover page.
         $public = $publicTotal === 0 ? collect() : $public->with('owner:id,name,slug')
-            ->orderBy('likes_count', 'desc')
-            ->orderBy('comments_count', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->orderBy('id', 'desc')
+            ->orderByPopularity()
             ->limit(self::MAX_PUBLIC)
             ->get();
 
