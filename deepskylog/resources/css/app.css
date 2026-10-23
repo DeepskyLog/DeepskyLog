@@ -21,6 +21,14 @@
 @source '../../vendor/power-components/livewire-powergrid/src/Themes/Tailwind.php';
 @source '../../vendor/power-components/livewire-powergrid/resources/views/**/*.php';
 
+/* Always reserve the space of the vertical scrollbar. The responsive PowerGrid
+	 tables show all columns, then hide those that do not fit, whenever their
+	 width changes; when that made the scrollbar appear and disappear, the
+	 width changed with it and the table flickered without end. */
+html {
+	scrollbar-gutter: stable;
+}
+
 /* Restore basic list markers and alignment inside message .prose containers.
 	 Some resets remove list markers globally; these rules narrowly re-enable
 	 markers and alignment inside .prose/.prose-invert so message HTML displays

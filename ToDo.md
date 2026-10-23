@@ -2,38 +2,9 @@
 
 ## Next steps
 
-- [ ] Test! 
-  - [ ] Test manually when logged in and logged out, as database expert and as administrator
-  - [X] Not logged in:
-  - [ ] Logged in:
-    - [X] Home page
-      - [X] Send DSL message
-      - [X] Quick search
-    - [X] Object detail page
-    - [X] Privacy page
-    - [X] Sketch of the week and month
-    - [X] All observations page
-    - [X] All drawings page
-    - [X] Observers page
-    - [X] Popular objects page
-    - [X] Popular observations page
-    - [X] Popular sessions page
-    - [X] Statistics
-    - [X] Observing lists
-    - [X] Catalogs
-    - [X] Search objects
-    - [X] Search observations
-    - [X] Add
-    - [X] Downloads
-    - [X] Groups menu
-    - [ ] Observer menu
-      - [ ] My Observing lists
-    - [ ] Post menu
-    - [ ] As Database expert
-    - [ ] As administrator
 - [ ] GitHub issues
 - [ ] Update to laravel 13.
-  - [ ] Only needs PHP 8.4
+  - [ ] Only needs PHP 8.4 -> Ubuntu 26.04 LTS.
 - [ ] Translations
 - [ ] On real server:
   - [ ] php artisan db:seed --class=BackfillSessionObservationIdsSeeder
