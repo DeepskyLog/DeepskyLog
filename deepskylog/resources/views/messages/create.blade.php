@@ -1,5 +1,6 @@
 <x-app-layout>
-    @php $isBroadcast = request()->query('receiver') === 'all'; @endphp
+    {{-- Only administrators may send a message to all observers; others get the normal form. --}}
+    @php $isBroadcast = request()->query('receiver') === 'all' && auth()->user()?->can('broadcast', \App\Models\User::class); @endphp
     <x-slot name="header">{{ $isBroadcast ? __('Broadcast message') : __('New message') }}</x-slot>
 
     <div class="py-6">

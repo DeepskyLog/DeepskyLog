@@ -131,6 +131,24 @@ it('only lets administrators broadcast', function () {
     expect(Message::where('receiver', 'all')->exists())->toBeFalse();
 });
 
+it('shows the broadcast form only to administrators', function () {
+    $admin = $this->createUserAndAssignToTeam('Administrators');
+    $broadcastForm = 'action="' . route('messages.broadcast') . '"';
+
+    $this->actingAs($admin)
+        ->get(route('messages.create', ['receiver' => 'all']))
+        ->assertOk()
+        ->assertSee($broadcastForm, false)
+        ->assertSee('name="receiver" value="all"', false);
+
+    $observer = User::factory()->create();
+    $this->actingAs($observer)
+        ->get(route('messages.create', ['receiver' => 'all']))
+        ->assertOk()
+        ->assertDontSee($broadcastForm, false)
+        ->assertSee('action="' . route('messages.store') . '"', false);
+});
+
 it('does not count your own broadcasts as unread', function () {
     $admin = User::factory()->create(['username' => 'bcadmin']);
     Message::create(['sender' => 'bcadmin', 'receiver' => 'all', 'subject' => 'News', 'message' => 'News', 'date' => now()]);
