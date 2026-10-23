@@ -2057,5 +2057,19 @@
     "{0} No observations were updated.|{1} Updated 1 observation to its primary object name.|[2,*] Updated :count observations to their primary object names.": "{0} Er zijn geen waarnemingen bijgewerkt.|{1} 1 waarneming bijgewerkt naar de primaire objectnaam.|[2,*] :count waarnemingen bijgewerkt naar hun primaire objectnaam.",
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} Geen verweesde objectnamen gevonden.|{1} 1 verweesde objectnaam gevonden.|[2,*] :count verweesde objectnamen gevonden.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Er zijn geen verweesde objectnamen verwijderd.|{1} 1 verweesde objectnaam verwijderd.|[2,*] :count verweesde objectnamen verwijderd.",
-    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Geen onbekende waarnemingsdoelen gevonden.|{1} 1 onbekend waarnemingsdoel gevonden.|[2,*] :count onbekende waarnemingsdoelen gevonden."
+    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Geen onbekende waarnemingsdoelen gevonden.|{1} 1 onbekend waarnemingsdoel gevonden.|[2,*] :count onbekende waarnemingsdoelen gevonden.",
+    "Sunday": "Zondag",
+    "Sketch of the week on Sunday": "Schets van de week op zondag",
+    "Sketch of the week from :date on": "Schets van de week vanaf :date",
+    "Choose a Sunday, today or later, that has no sketch of the week yet.": "Kies een zondag, vandaag of later, die nog geen schets van de week heeft.",
+    "Only drawings that are no sketch of the week yet": "Enkel tekeningen die nog geen schets van de week zijn",
+    "Sketch of the month on": "Schets van de maand op",
+    "DeepskyLog sketches of the week of :month": "DeepskyLog schetsen van de week van :month",
+    "There are no sketches of the week in this month to choose from.": "Er zijn in deze maand geen schetsen van de week om uit te kiezen.",
+    "Choose as sketch of the month": "Kies als schets van de maand",
+    "Choose the sketch of the month": "Kies de schets van de maand",
+    "The sketch of the month is shown from the 8th of the month on, and is chosen from the DeepskyLog sketches of the week of the month before.": "De schets van de maand wordt getoond vanaf de 8e van de maand, en wordt gekozen uit de DeepskyLog schetsen van de week van de maand ervoor.",
+    "Sketch of the month from :date on": "Schets van de maand vanaf :date",
+    "Choose the 8th of a month, today or later, that has no sketch of the month yet.": "Kies de 8e van een maand, vandaag of later, die nog geen schets van de maand heeft.",
+    "The sketch of the month has to be one of the sketches of the week of the month before.": "De schets van de maand moet een van de schetsen van de week van de maand ervoor zijn."
 }

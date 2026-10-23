@@ -54,8 +54,8 @@
                         <div class="flex flex-wrap">
                             <x-sketch
                                 :sketch="
-                                    Cache::remember('welcome_sketch_week', 3600, function () {
-        return SketchOfTheWeek::orderBy('date', 'desc')->first();
+                                    Cache::remember('welcome_sketch_week:' . today()->toDateString(), 3600, function () {
+        return SketchOfTheWeek::published()->orderBy('date', 'desc')->first();
     })
                                 "
                             />
@@ -77,8 +77,8 @@
                         <div class="flex flex-wrap">
                             <x-sketch
                                 :sketch="
-                                    Cache::remember('welcome_sketch_month', 3600, function () {
-        return SketchOfTheMonth::orderBy('date', 'desc')->first();
+                                    Cache::remember('welcome_sketch_month:' . today()->toDateString(), 3600, function () {
+        return SketchOfTheMonth::published()->orderBy('date', 'desc')->first();
     })
                                 "
                             />

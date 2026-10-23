@@ -62,8 +62,8 @@ class updateAchievementsCommand extends Command
             $this->userAchievementsMap[$ua->user_id][$ua->achievement_id] = true;
         }
 
-        // Get all DeepskyLog sketches of the week
-        $sketches = SketchOfTheWeek::all();
+        // Get all DeepskyLog sketches of the week whose Sunday has come
+        $sketches = SketchOfTheWeek::published()->get();
 
         // Preload unified observations and users for sketches to avoid N+1 queries
         $sketchObsIds = $sketches->pluck('observation_id')->all();
@@ -91,7 +91,7 @@ class updateAchievementsCommand extends Command
         }
 
         // Get all DeepskyLog sketches of the month
-        $sketches = SketchOfTheMonth::all();
+        $sketches = SketchOfTheMonth::published()->get();
 
         // Preload unified observations and users for sketches to avoid N+1 queries
         $sketchObsIds = $sketches->pluck('observation_id')->all();

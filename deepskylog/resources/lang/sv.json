@@ -2054,5 +2054,19 @@
     "{0} No observations were updated.|{1} Updated 1 observation to its primary object name.|[2,*] Updated :count observations to their primary object names.": "{0} Inga observationer uppdaterades.|{1} 1 observation uppdaterades till objektets huvudnamn.|[2,*] :count observationer uppdaterades till objektens huvudnamn.",
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} Inga föräldralösa objektnamn hittades.|{1} 1 föräldralöst objektnamn hittades.|[2,*] :count föräldralösa objektnamn hittades.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Inga föräldralösa objektnamn togs bort.|{1} 1 föräldralöst objektnamn togs bort.|[2,*] :count föräldralösa objektnamn togs bort.",
-    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Inga okända observationsmål hittades.|{1} 1 okänt observationsmål hittades.|[2,*] :count okända observationsmål hittades."
+    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Inga okända observationsmål hittades.|{1} 1 okänt observationsmål hittades.|[2,*] :count okända observationsmål hittades.",
+    "Sunday": "Söndag",
+    "Sketch of the week on Sunday": "Veckans skiss på söndag",
+    "Sketch of the week from :date on": "Veckans skiss från och med :date",
+    "Choose a Sunday, today or later, that has no sketch of the week yet.": "Välj en söndag, i dag eller senare, som ännu inte har någon veckans skiss.",
+    "Only drawings that are no sketch of the week yet": "Endast teckningar som ännu inte är veckans skiss",
+    "Sketch of the month on": "Månadens skiss den",
+    "DeepskyLog sketches of the week of :month": "DeepskyLogs veckans skisser i :month",
+    "There are no sketches of the week in this month to choose from.": "Det finns inga veckans skisser att välja bland den här månaden.",
+    "Choose as sketch of the month": "Välj som månadens skiss",
+    "Choose the sketch of the month": "Välj månadens skiss",
+    "The sketch of the month is shown from the 8th of the month on, and is chosen from the DeepskyLog sketches of the week of the month before.": "Månadens skiss visas från och med den 8:e i månaden och väljs bland DeepskyLogs veckans skisser från månaden innan.",
+    "Sketch of the month from :date on": "Månadens skiss från och med :date",
+    "Choose the 8th of a month, today or later, that has no sketch of the month yet.": "Välj den 8:e i en månad, i dag eller senare, som ännu inte har någon månadens skiss.",
+    "The sketch of the month has to be one of the sketches of the week of the month before.": "Månadens skiss måste vara en av veckans skisser från månaden innan."
 }

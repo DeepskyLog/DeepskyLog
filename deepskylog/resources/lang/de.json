@@ -2054,5 +2054,19 @@
     "{0} No observations were updated.|{1} Updated 1 observation to its primary object name.|[2,*] Updated :count observations to their primary object names.": "{0} Es wurden keine Beobachtungen aktualisiert.|{1} 1 Beobachtung auf den Hauptnamen ihres Objekts aktualisiert.|[2,*] :count Beobachtungen auf die Hauptnamen ihrer Objekte aktualisiert.",
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} Keine verwaisten Objektnamen gefunden.|{1} 1 verwaister Objektname gefunden.|[2,*] :count verwaiste Objektnamen gefunden.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} Es wurden keine verwaisten Objektnamen entfernt.|{1} 1 verwaister Objektname entfernt.|[2,*] :count verwaiste Objektnamen entfernt.",
-    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Keine unbekannten Beobachtungsziele gefunden.|{1} 1 unbekanntes Beobachtungsziel gefunden.|[2,*] :count unbekannte Beobachtungsziele gefunden."
+    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} Keine unbekannten Beobachtungsziele gefunden.|{1} 1 unbekanntes Beobachtungsziel gefunden.|[2,*] :count unbekannte Beobachtungsziele gefunden.",
+    "Sunday": "Sonntag",
+    "Sketch of the week on Sunday": "Skizze der Woche am Sonntag",
+    "Sketch of the week from :date on": "Skizze der Woche ab :date",
+    "Choose a Sunday, today or later, that has no sketch of the week yet.": "Wählen Sie einen Sonntag, heute oder später, der noch keine Skizze der Woche hat.",
+    "Only drawings that are no sketch of the week yet": "Nur Zeichnungen, die noch keine Skizze der Woche sind",
+    "Sketch of the month on": "Skizze des Monats am",
+    "DeepskyLog sketches of the week of :month": "DeepskyLog-Skizzen der Woche von :month",
+    "There are no sketches of the week in this month to choose from.": "In diesem Monat gibt es keine Skizzen der Woche zur Auswahl.",
+    "Choose as sketch of the month": "Als Skizze des Monats wählen",
+    "Choose the sketch of the month": "Skizze des Monats wählen",
+    "The sketch of the month is shown from the 8th of the month on, and is chosen from the DeepskyLog sketches of the week of the month before.": "Die Skizze des Monats wird ab dem 8. des Monats gezeigt und aus den DeepskyLog-Skizzen der Woche des Vormonats gewählt.",
+    "Sketch of the month from :date on": "Skizze des Monats ab :date",
+    "Choose the 8th of a month, today or later, that has no sketch of the month yet.": "Wählen Sie den 8. eines Monats, heute oder später, der noch keine Skizze des Monats hat.",
+    "The sketch of the month has to be one of the sketches of the week of the month before.": "Die Skizze des Monats muss eine der Skizzen der Woche des Vormonats sein."
 }

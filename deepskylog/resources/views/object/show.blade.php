@@ -1171,7 +1171,7 @@ try {
                 ->toArray();
 
             if (!empty($cometObsIds)) {
-                $objectSketches = \App\Models\SketchOfTheWeek::whereIn('observation_id', $cometObsIds)
+                $objectSketches = \App\Models\SketchOfTheWeek::published()->whereIn('observation_id', $cometObsIds)
                     ->orderByDesc('date')
                     ->get();
             }
@@ -1180,7 +1180,7 @@ try {
         // For deepsky objects, match the observations of the object.
         $objName = $session->name ?? '';
         if (!empty($objName)) {
-            $objectSketches = \App\Models\SketchOfTheWeek::whereIn(
+            $objectSketches = \App\Models\SketchOfTheWeek::published()->whereIn(
                 'observation_id',
                 \App\Models\Observation::ofDeepskyObject($objName)->select('id')
             )

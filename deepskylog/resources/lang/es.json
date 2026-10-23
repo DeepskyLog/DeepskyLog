@@ -2057,5 +2057,19 @@
     "{0} No observations were updated.|{1} Updated 1 observation to its primary object name.|[2,*] Updated :count observations to their primary object names.": "{0} No se ha actualizado ninguna observación.|{1} Se ha actualizado 1 observación al nombre principal de su objeto.|[2,*] Se han actualizado :count observaciones al nombre principal de su objeto.",
     "{0} No orphan object names found.|{1} 1 orphan object name found.|[2,*] :count orphan object names found.": "{0} No se han encontrado nombres de objetos huérfanos.|{1} Se ha encontrado 1 nombre de objeto huérfano.|[2,*] Se han encontrado :count nombres de objetos huérfanos.",
     "{0} No orphan object names were removed.|{1} Removed 1 orphan object name.|[2,*] Removed :count orphan object names.": "{0} No se ha eliminado ningún nombre de objeto huérfano.|{1} Se ha eliminado 1 nombre de objeto huérfano.|[2,*] Se han eliminado :count nombres de objetos huérfanos.",
-    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} No se han encontrado objetivos de observación desconocidos.|{1} Se ha encontrado 1 objetivo de observación desconocido.|[2,*] Se han encontrado :count objetivos de observación desconocidos."
+    "{0} No unknown observation targets found.|{1} 1 unknown observation target found.|[2,*] :count unknown observation targets found.": "{0} No se han encontrado objetivos de observación desconocidos.|{1} Se ha encontrado 1 objetivo de observación desconocido.|[2,*] Se han encontrado :count objetivos de observación desconocidos.",
+    "Sunday": "Domingo",
+    "Sketch of the week on Sunday": "Boceto de la semana el domingo",
+    "Sketch of the week from :date on": "Boceto de la semana a partir del :date",
+    "Choose a Sunday, today or later, that has no sketch of the week yet.": "Elija un domingo, hoy o más tarde, que aún no tenga boceto de la semana.",
+    "Only drawings that are no sketch of the week yet": "Solo dibujos que aún no son boceto de la semana",
+    "Sketch of the month on": "Boceto del mes el",
+    "DeepskyLog sketches of the week of :month": "Bocetos de la semana de DeepskyLog de :month",
+    "There are no sketches of the week in this month to choose from.": "No hay bocetos de la semana en este mes entre los que elegir.",
+    "Choose as sketch of the month": "Elegir como boceto del mes",
+    "Choose the sketch of the month": "Elegir el boceto del mes",
+    "The sketch of the month is shown from the 8th of the month on, and is chosen from the DeepskyLog sketches of the week of the month before.": "El boceto del mes se muestra a partir del día 8 del mes y se elige entre los bocetos de la semana de DeepskyLog del mes anterior.",
+    "Sketch of the month from :date on": "Boceto del mes a partir del :date",
+    "Choose the 8th of a month, today or later, that has no sketch of the month yet.": "Elija el día 8 de un mes, hoy o más tarde, que aún no tenga boceto del mes.",
+    "The sketch of the month has to be one of the sketches of the week of the month before.": "El boceto del mes tiene que ser uno de los bocetos de la semana del mes anterior."
 }

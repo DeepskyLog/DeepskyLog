@@ -192,8 +192,8 @@ Route::get('/sketch-of-the-week', function () {
     return view(
         'sketch-of-the-week-month',
         [
-            'sketches' => SketchOfTheWeek::orderBy('date', 'desc')->paginate(20),
-            'week_month' => __('Week')
+            'sketches' => SketchOfTheWeek::published()->orderBy('date', 'desc')->paginate(20),
+            'week_month' => 'Week'
         ]
     );
 })->name('sketch-of-the-week');
@@ -201,8 +201,8 @@ Route::get('/sketch-of-the-month', function () {
     return view(
         'sketch-of-the-week-month',
         [
-            'sketches' => SketchOfTheMonth::orderBy('date', 'desc')->paginate(20),
-            'week_month' => __('Month')
+            'sketches' => SketchOfTheMonth::published()->orderBy('date', 'desc')->paginate(20),
+            'week_month' => 'Month'
         ]
     );
 })->name('sketch-of-the-month');

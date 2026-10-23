@@ -34,6 +34,16 @@ class SketchOfTheMonthController extends Controller
             throw ValidationException::withMessages(['observation_id' => 'This observation is already a sketch of the month']);
         }
 
+        // The sketch of the month is chosen for the 8th of a month without one, from the
+        // sketches of the week of the month before
+        $date = Carbon::parse($request['date'])->startOfDay();
+        if (! SketchOfTheMonth::isFreeDate($date)) {
+            throw ValidationException::withMessages(['date' => __('Choose the 8th of a month, today or later, that has no sketch of the month yet.')]);
+        }
+        if (! SketchOfTheMonth::candidates($date)->contains('observation_id', (int) $request['observation_id'])) {
+            throw ValidationException::withMessages(['observation_id' => __('The sketch of the month has to be one of the sketches of the week of the month before.')]);
+        }
+
         $observation = Observation::findOrFail((int) $request['observation_id']);
         if (!$observation->has_drawing) {
             throw ValidationException::withMessages(['observation_id' => 'This observation does not have a sketch']);
@@ -87,7 +97,7 @@ More information can be found here:
 
         $sketch = new SketchOfTheMonth;
         $sketch->observation_id = (int) $request['observation_id'];
-        $sketch->date = $request->date;
+        $sketch->date = $date->toDateString();
         $sketch->user_id = $userId;
 
         $sketch->save();
@@ -123,7 +133,7 @@ More information can be found here:
             'legacy_observation_id' => (int) $observation->legacy_id,
             'is_comet' => $observation->target_type === \App\Models\Observation::TYPE_COMET,
             'drawing_src' => $drawingSrc,
-            'date' => $request->date,
+            'date' => $date->toDateString(),
             'week_month' => 'month',
         ]);
     }

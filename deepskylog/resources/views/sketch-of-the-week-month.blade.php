@@ -10,6 +10,17 @@
                     {{ __("DeepskyLog Sketch of the Month") }}
                 @endif
             </h2>
+            @if ($week_month != "Week")
+                @can('add_sketch', \App\Models\User::class)
+                    <div class="mt-2">
+                        <a
+                            href="{{ route("sketch-of-the-month.create") }}"
+                            class="inline-block rounded bg-amber-600 px-3 py-2 text-sm text-white hover:bg-amber-500"
+                            >{{ __("Choose the sketch of the month") }}</a
+                        >
+                    </div>
+                @endcan
+            @endif
             <div class="mt-2">
                 <x-card>
                     <div class="flex flex-wrap px-5">

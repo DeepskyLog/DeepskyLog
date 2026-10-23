@@ -21,7 +21,7 @@ it('shares the sketch of the week post as it is, without a second link or the po
     $link = rawurlencode($observation->detailUrl());
 
     $response = $this->actingAs($admin)
-        ->post(route('sketch-of-the-week.store'), ['observation_id' => $observation->id, 'date' => '2026-03-02'])
+        ->post(route('sketch-of-the-week.store'), ['observation_id' => $observation->id, 'date' => today()->next(\Carbon\Carbon::SUNDAY)->toDateString()])
         ->assertOk();
 
     $html = $response->getContent();

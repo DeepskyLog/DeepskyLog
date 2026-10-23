@@ -179,7 +179,7 @@
                         <meta name="twitter:image" content="{{ $ogImageAbsolute }}" />
                         <meta name="twitter:image:alt" content="{{ $objectDisplayName }}" />
                     @endpush
-                    @if (!empty($sketchOfTheWeek))
+                    @if (!empty($sketchOfTheWeek) && $sketchOfTheWeek->isPublished())
                         <div
                             class="mb-4 flex items-center gap-3 rounded-lg border border-yellow-400 bg-yellow-900/30 px-5 py-3"
                         >
@@ -215,7 +215,7 @@
                         </div>
                     @endif
 
-                    @if (!empty($sketchOfTheMonth))
+                    @if (!empty($sketchOfTheMonth) && $sketchOfTheMonth->isPublished())
                         <div
                             class="mb-4 flex items-center gap-3 rounded-lg border border-amber-400 bg-amber-900/30 px-5 py-3"
                         >
@@ -1367,33 +1367,52 @@
 
                                 @if ($unifiedId && ($obs->hasDrawing ?? $obs->has_drawing ?? false))
                                     @if (empty($sketchOfTheWeek))
-                                        <form method="POST" action="{{ route('sketch-of-the-week.store') }}" class="mb-2">
+                                        @php
+                                            $freeSundays = \App\Models\SketchOfTheWeek::freeSundays();
+                                        @endphp
+                                        <form method="POST" action="{{ route('sketch-of-the-week.store') }}" class="mb-2 space-y-2">
                                             @csrf
                                             <input type="hidden" name="observation_id" value="{{ $unifiedId }}" />
-                                            <input type="hidden" name="date" value="{{ \Carbon\Carbon::now()->toDateString() }}" />
+                                            <label for="sketch-of-the-week-date" class="block text-xs text-gray-400">{{ __('Sketch of the week on Sunday') }}</label>
+                                            <select id="sketch-of-the-week-date" name="date" required class="w-full rounded border border-gray-700 bg-gray-800 px-2 py-1 text-sm text-gray-100">
+                                                @foreach ($freeSundays as $sunday)
+                                                    <option value="{{ $sunday->toDateString() }}" @selected(old('date') === $sunday->toDateString())>{{ $sunday->translatedFormat('l j F Y') }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('date')
+                                                <p class="text-xs text-red-500">{{ $message }}</p>
+                                            @enderror
                                             <button type="submit" class="w-full text-left px-3 py-2 bg-yellow-600 hover:bg-yellow-500 text-white rounded text-sm">{{ __('Add as sketch of the week') }}</button>
                                         </form>
-                                    @elseif (auth()->user()->isAdministrator())
-                                        <form method="POST" action="{{ route('sketch-of-the-week.destroy', $sketchOfTheWeek->id) }}" class="mb-2">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="w-full text-left px-3 py-2 bg-red-700 hover:bg-red-600 text-white rounded text-sm">{{ __('Remove as sketch of the week') }}</button>
-                                        </form>
+                                    @else
+                                        @unless ($sketchOfTheWeek->isPublished())
+                                            <p class="mb-2 text-xs text-gray-400">{{ __('Sketch of the week from :date on', ['date' => $sketchOfTheWeek->date->translatedFormat('l j F Y')]) }}</p>
+                                        @endunless
+                                        @if (auth()->user()->isAdministrator())
+                                            <form method="POST" action="{{ route('sketch-of-the-week.destroy', $sketchOfTheWeek->id) }}" class="mb-2">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="w-full text-left px-3 py-2 bg-red-700 hover:bg-red-600 text-white rounded text-sm">{{ __('Remove as sketch of the week') }}</button>
+                                            </form>
+                                        @endif
                                     @endif
 
                                     @if (empty($sketchOfTheMonth))
-                                        <form method="POST" action="{{ route('sketch-of-the-month.store') }}">
-                                            @csrf
-                                            <input type="hidden" name="observation_id" value="{{ $unifiedId }}" />
-                                            <input type="hidden" name="date" value="{{ \Carbon\Carbon::now()->toDateString() }}" />
-                                            <button type="submit" class="w-full text-left px-3 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-sm">{{ __('Add as sketch of the month') }}</button>
-                                        </form>
-                                    @elseif (auth()->user()->isAdministrator())
-                                        <form method="POST" action="{{ route('sketch-of-the-month.destroy', $sketchOfTheMonth->id) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="w-full text-left px-3 py-2 bg-red-700 hover:bg-red-600 text-white rounded text-sm">{{ __('Remove as sketch of the month') }}</button>
-                                        </form>
+                                        {{-- The sketch of the month is chosen from the sketches of the week of a month. --}}
+                                        @if (!empty($sketchOfTheWeek))
+                                            <a href="{{ route('sketch-of-the-month.create') }}" class="block w-full text-left px-3 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-sm">{{ __('Choose the sketch of the month') }}</a>
+                                        @endif
+                                    @else
+                                        @unless ($sketchOfTheMonth->isPublished())
+                                            <p class="mb-2 text-xs text-gray-400">{{ __('Sketch of the month from :date on', ['date' => $sketchOfTheMonth->date->translatedFormat('j F Y')]) }}</p>
+                                        @endunless
+                                        @if (auth()->user()->isAdministrator())
+                                            <form method="POST" action="{{ route('sketch-of-the-month.destroy', $sketchOfTheMonth->id) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="w-full text-left px-3 py-2 bg-red-700 hover:bg-red-600 text-white rounded text-sm">{{ __('Remove as sketch of the month') }}</button>
+                                            </form>
+                                        @endif
                                     @endif
                                 @endif
                             </div>

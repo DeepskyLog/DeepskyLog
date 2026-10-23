@@ -7,6 +7,7 @@ use App\Models\Observation;
 use App\Models\Target;
 use App\Models\SketchOfTheWeek;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -31,6 +32,11 @@ class SketchOfTheWeekController extends Controller
         // Check if the observation is already a sketch of the week
         if (SketchOfTheWeek::where('observation_id', $request['observation_id'])->exists()) {
             throw ValidationException::withMessages(['observation_id' => 'This observation is already a sketch of the week']);
+        }
+
+        // A sketch of the week starts on a Sunday, today or later, that has none yet
+        if (! SketchOfTheWeek::isFreeSunday(Carbon::parse($request['date'])->startOfDay())) {
+            throw ValidationException::withMessages(['date' => __('Choose a Sunday, today or later, that has no sketch of the week yet.')]);
         }
 
         $observation = Observation::findOrFail((int) $request['observation_id']);
@@ -80,7 +86,7 @@ More information can be found here:
 
         $sketch = new SketchOfTheWeek;
         $sketch->observation_id = (int) $request['observation_id'];
-        $sketch->date = $request->date;
+        $sketch->date = Carbon::parse($request['date'])->toDateString();
         $sketch->user_id = $userId;
 
         $sketch->save();
@@ -116,7 +122,7 @@ More information can be found here:
             'legacy_observation_id' => (int) $observation->legacy_id,
             'is_comet' => $observation->target_type === \App\Models\Observation::TYPE_COMET,
             'drawing_src' => $drawingSrc,
-            'date' => $request->date,
+            'date' => Carbon::parse($request['date'])->toDateString(),
             'week_month' => 'week',
         ]);
     }

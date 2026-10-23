@@ -502,6 +502,19 @@ final class ObservationSearchTable extends PowerGridComponent
             $query->where('observations.has_drawing', true);
         } elseif ($this->drawingState === 'without') {
             $query->where('observations.has_drawing', false);
+        } elseif ($this->drawingState === 'not_sketch_of_the_week') {
+            // Sketches chosen for a later Sunday only count for those who choose them,
+            // so the search does not give the choice away before that Sunday.
+            $canChoose = auth()->user()?->can('add_sketch', User::class) ?? false;
+            $query->where('observations.has_drawing', true)
+                ->whereNotExists(function ($subQuery) use ($canChoose) {
+                    $subQuery->selectRaw('1')
+                        ->from('sketch_of_the_week')
+                        ->whereColumn('sketch_of_the_week.observation_id', 'observations.id');
+                    if (! $canChoose) {
+                        $subQuery->whereDate('sketch_of_the_week.date', '<=', today()->toDateString());
+                    }
+                });
         }
         if ($this->observationDescription !== '') {
             $query->whereRaw("COALESCE(observations.description, '') LIKE ?", ['%' . mb_strtolower($this->observationDescription) . '%']);

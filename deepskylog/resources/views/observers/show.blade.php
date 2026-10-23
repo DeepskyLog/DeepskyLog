@@ -264,10 +264,10 @@
                                     }
                                     // If no numeric suffix exists, compute sketch-of-the-week/month counts from DB
                                     if (!$count && preg_match('/sketch.*week/i', $raw)) {
-                                        $count = \App\Models\SketchOfTheWeek::where('user_id', $user->id)->count();
+                                        $count = \App\Models\SketchOfTheWeek::published()->where('user_id', $user->id)->count();
                                     }
                                     if (!$count && preg_match('/sketch.*month/i', $raw)) {
-                                        $count = \App\Models\SketchOfTheMonth::where('user_id', $user->id)->count();
+                                        $count = \App\Models\SketchOfTheMonth::published()->where('user_id', $user->id)->count();
                                     }
 
                                     $isDrawing = preg_match('/\bDrawings?\b/i', $raw);
@@ -676,7 +676,11 @@
                 </div>
             @endif
 
-            @if ($user->sketchOfTheWeek->count() > 0)
+            @php
+                // A sketch of the week chosen for a later Sunday is not shown yet.
+                $publishedSketchesOfTheWeek = $user->sketchOfTheWeek->filter->isPublished();
+            @endphp
+            @if ($publishedSketchesOfTheWeek->isNotEmpty())
                 <div class="mt-6">
                     <x-card>
                         <h2 class="mb-2 mt-2 text-xl px-5 font-bold">
@@ -685,10 +689,10 @@
                         <div class="px-5 flex flex-wrap">
                             @php
                                 // The observations of the cards and their observers, likes, ... in grouped queries.
-                                (new \Illuminate\Database\Eloquent\Collection($user->sketchOfTheWeek->all()))->loadMissing(['observation', 'user']);
-                                \App\Services\Observations\ObservationCardData::instance()->preload($user->sketchOfTheWeek->pluck('observation'));
+                                (new \Illuminate\Database\Eloquent\Collection($publishedSketchesOfTheWeek->all()))->loadMissing(['observation', 'user']);
+                                \App\Services\Observations\ObservationCardData::instance()->preload($publishedSketchesOfTheWeek->pluck('observation'));
                             @endphp
-                            @foreach ($user->sketchOfTheWeek as $sketch)
+                            @foreach ($publishedSketchesOfTheWeek as $sketch)
                                 <div class="max-w-xl mt-3 pr-3">
                                     <x-sketch :sketch="$sketch" />
                                 </div>
@@ -698,7 +702,11 @@
                 </div>
             @endif
 
-            @if ($user->sketchOfTheMonth->count() > 0)
+            @php
+                // A sketch of the month chosen for a later month is not shown yet.
+                $publishedSketchesOfTheMonth = $user->sketchOfTheMonth->filter->isPublished();
+            @endphp
+            @if ($publishedSketchesOfTheMonth->isNotEmpty())
                 <div class="mt-6">
                     <x-card>
                         <h2 class="mb-2 mt-2 text-xl px-5 font-bold">
@@ -707,10 +715,10 @@
                         <div class="px-5 flex flex-wrap">
                             @php
                                 // The observations of the cards and their observers, likes, ... in grouped queries.
-                                (new \Illuminate\Database\Eloquent\Collection($user->sketchOfTheMonth->all()))->loadMissing(['observation', 'user']);
-                                \App\Services\Observations\ObservationCardData::instance()->preload($user->sketchOfTheMonth->pluck('observation'));
+                                (new \Illuminate\Database\Eloquent\Collection($publishedSketchesOfTheMonth->all()))->loadMissing(['observation', 'user']);
+                                \App\Services\Observations\ObservationCardData::instance()->preload($publishedSketchesOfTheMonth->pluck('observation'));
                             @endphp
-                            @foreach ($user->sketchOfTheMonth as $sketch)
+                            @foreach ($publishedSketchesOfTheMonth as $sketch)
                                 <div class="max-w-xl mt-3 pr-3">
                                     {{-- Show the correct drawing --}}
                                     <x-sketch :sketch="$sketch" />

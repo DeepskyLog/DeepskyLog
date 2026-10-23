@@ -42,13 +42,31 @@
                             @enderror
                         </div>
                         <div class="col-span-4 mb-4 mt-4 sm:col-span-3">
-                            <x-datetime-picker
-                                without-time="true"
+                            <label
+                                for="date"
+                                class="block text-sm font-medium text-gray-300"
+                                >{{ __("Sunday") }}</label
+                            >
+                            <select
+                                id="date"
                                 name="date"
-                                label="{{ __('Date') }}"
                                 required
-                                value="{{old('date') }}"
-                            />
+                                class="mt-1 w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100"
+                            >
+                                @foreach (\App\Models\SketchOfTheWeek::freeSundays() as $sunday)
+                                    <option
+                                        value="{{ $sunday->toDateString() }}"
+                                        @selected(old("date") === $sunday->toDateString())
+                                    >
+                                        {{ $sunday->translatedFormat("l j F Y") }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error ("date")
+                                <p class="mt-1 text-xs text-red-500">
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
 
                         <x-button
