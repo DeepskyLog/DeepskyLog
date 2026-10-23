@@ -264,6 +264,47 @@ class Instrument extends Model
         return substr($to_return, 0, -2);
     }
 
+    /**
+     * The locations this instrument was used at, for the map on the
+     * instrument page: name, link, position and the number of observations
+     * with the instrument there. Hidden locations are left out unless
+     * $viewer owns them or is an administrator, as on the location page,
+     * and so are locations without real coordinates.
+     *
+     * @return list<array{name: string, url: string, latitude: float, longitude: float, observations: int}>
+     */
+    public function usedLocationsForMap(?User $viewer): array
+    {
+        $counts = Observation::where('instrument_id', $this->id)
+            ->whereNotNull('location_id')
+            ->groupBy('location_id')
+            ->selectRaw('location_id, COUNT(*) as observations')
+            ->pluck('observations', 'location_id');
+
+        if ($counts->isEmpty()) {
+            return [];
+        }
+
+        $isAdmin = (bool) $viewer?->isAdministrator();
+
+        return Location::with('user:id,slug')
+            ->whereIn('id', $counts->keys())
+            ->orderBy('name')
+            ->get()
+            // getAttribute(): in a model, $location->hidden is Model::$hidden
+            ->filter(fn (Location $location) => $location->user && $location->hasValidCoordinates()
+                && (!$location->getAttribute('hidden') || $isAdmin || ($viewer && (int) $location->user_id === (int) $viewer->id)))
+            ->map(fn (Location $location) => [
+                'name' => html_entity_decode((string) $location->name, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                'url' => '/location/'.$location->user->slug.'/'.$location->slug,
+                'latitude' => (float) $location->latitude,
+                'longitude' => (float) $location->longitude,
+                'observations' => (int) $counts[$location->id],
+            ])
+            ->values()
+            ->all();
+    }
+
     public function get_used_locations(): Collection
     {
         return Observation::where('instrument_id', $this->id)->groupby('location_id')->distinct()->pluck('location_id');

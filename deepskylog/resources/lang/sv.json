@@ -32,6 +32,7 @@
     ":count object(s) added to :list.": ":count objekt har lagts till i :list.",
     ":count object(s) imported, :skipped skipped.": ":count objekt importerade, :skipped överhoppade.",
     ":count object|:count objects": ":count objekt|:count objekt",
+    ":count observation(s) with this instrument": ":count observation(er) med detta instrument",
     ":count observation is linked to this object.|:count observations are linked to this object.": ":count observation är kopplad till det här objektet.|:count observationer är kopplade till det här objektet.",
     ":count observation on DeepskyLog|:count observations on DeepskyLog": ":count observation på DeepskyLog|:count observationer på DeepskyLog",
     ":count observer you follow added new observations.|:count observers you follow added new observations.": ":count observatör du följer har lagt till nya observationer.|:count observatörer du följer har lagt till nya observationer.",

@@ -164,8 +164,17 @@
                                 <tr>
                                     <td>{{ __("Observed in the following locations") }}</td>
                                     <td>{!! $instrument->get_used_locations_as_string() !!}</td>
-                                    {{--                                    <td>ADD GOOGLE MAPS PAGE</td>--}}
                                 </tr>
+                                @php($mapLocations = $instrument->usedLocationsForMap(Auth::user()))
+                                @if (!empty($mapLocations))
+                                    <tr>
+                                        <td colspan="2">
+                                            <div id="instrument-locations-map" class="w-full mt-2 rounded overflow-hidden" style="height: 20rem; z-index:1;"
+                                                 data-locations='@json($mapLocations)'
+                                                 data-label="{{ __(':count observation(s) with this instrument') }}"></div>
+                                        </td>
+                                    </tr>
+                                @endif
 
                             @endif
                         @endauth
@@ -272,4 +281,41 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var mapEl = document.getElementById('instrument-locations-map');
+                if (!mapEl) return;
+
+                var locations = JSON.parse(mapEl.getAttribute('data-locations') || '[]');
+                var label = mapEl.getAttribute('data-label') || '';
+
+                function escapeHtml(str) {
+                    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+                }
+
+                var map = L.map('instrument-locations-map', { fullscreenControl: true });
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                var bounds = [];
+                locations.forEach(function (loc) {
+                    var coords = [loc.latitude, loc.longitude];
+                    bounds.push(coords);
+                    L.marker(coords).addTo(map).bindPopup(
+                        '<a href="' + escapeHtml(loc.url) + '"><strong>' + escapeHtml(loc.name) + '</strong></a><br>'
+                        + escapeHtml(label.replace(':count', loc.observations))
+                    );
+                });
+
+                if (bounds.length === 1) {
+                    map.setView(bounds[0], 10);
+                } else {
+                    map.fitBounds(bounds, { padding: [30, 30], maxZoom: 10 });
+                }
+            });
+        </script>
+    @endpush
 </x-app-layout>
