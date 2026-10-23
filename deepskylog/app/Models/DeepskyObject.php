@@ -144,6 +144,30 @@ class DeepskyObject extends Model
     }
 
     /**
+     * The objects whose name is this name plus one letter, such as IC 2554A
+     * and IC 2554B for IC 2554: the components an object was split into, as
+     * name => slug.
+     *
+     * @return array<string, string>
+     */
+    public static function componentsOf(string $name): array
+    {
+        $name = trim($name);
+        if ($name === '') {
+            return [];
+        }
+
+        // Wildcards in the name only widen the match, the filter makes it exact
+        return \Illuminate\Support\Facades\DB::table('objects')
+            ->where('name', 'like', $name . '_')
+            ->orderBy('name')
+            ->get(['name', 'slug'])
+            ->filter(fn($object) => preg_match('/^' . preg_quote($name, '/') . '[A-Za-z]$/iu', $object->name) === 1)
+            ->mapWithKeys(fn($object) => [$object->name => $object->slug ?: \Illuminate\Support\Str::slug($object->name)])
+            ->all();
+    }
+
+    /**
      * Parse Declination in various formats to decimal degrees.
      * Accepts: decimal degrees or D M S (with optional sign), returns degrees.
      */

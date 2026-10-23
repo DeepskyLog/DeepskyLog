@@ -85,6 +85,9 @@ Route::get('/admin/check-objects', [App\Http\Controllers\AdminObjectCheckControl
 Route::post('/admin/check-objects/orphan-objectnames', [App\Http\Controllers\AdminObjectCheckController::class, 'destroyOrphanObjectNames'])
     ->middleware('auth')
     ->name('admin.objects.check.cleanup');
+Route::post('/admin/check-objects/check-constellations', [App\Http\Controllers\AdminObjectCheckController::class, 'checkConstellations'])
+    ->middleware('auth')
+    ->name('admin.objects.check.constellations');
 Route::post('/admin/check-objects/repair-constellations', [App\Http\Controllers\AdminObjectCheckController::class, 'repairConstellations'])
     ->middleware('auth')
     ->name('admin.objects.check.repair');

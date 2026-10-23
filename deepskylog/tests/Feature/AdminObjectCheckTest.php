@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
+beforeEach(fn () => Storage::fake('local'));
 
 test('check objects page requires administrator privileges', function () {
     $user = $this->createUserAndAssignToTeam('Observers');
@@ -206,6 +209,15 @@ test('administrator can repair constellation mismatches', function () {
         'name' => 'M 31',
         'con' => 'AND',
     ]);
+
+    // The page lists the corrected object as corrected, not as still wrong
+    $this->get(route('admin.objects.check'))
+        ->assertOk()
+        ->assertSee('Corrected 1 constellation mismatch.')
+        ->assertSee('Correct: 1.')
+        ->assertSee('have been corrected')
+        ->assertSee('Corrected to')
+        ->assertDontSee('Repair all constellation mismatches');
 });
 
 test('administrator can export constellation mismatches', function () {
@@ -246,8 +258,19 @@ test('administrator can export constellation mismatches', function () {
         'timestamp' => now(),
     ]);
 
-    $response = $this->actingAs($user)
-        ->get(route('admin.objects.check.export-constellations'));
+    $this->actingAs($user)
+        ->post(route('admin.objects.check.constellations'))
+        ->assertRedirect(route('admin.objects.check'));
+
+    // The check didn't touch the object
+    $this->assertDatabaseHas('objects', ['name' => 'M 31', 'con' => 'WRONG']);
+
+    $this->get(route('admin.objects.check'))
+        ->assertOk()
+        ->assertSee('1 mismatch')
+        ->assertSee('Repair');
+
+    $response = $this->get(route('admin.objects.check.export-constellations'));
 
     $response->assertOk()
         ->assertHeader('Content-Type', 'text/csv; charset=utf-8');
@@ -404,4 +427,106 @@ test('observations stored under an alias are reported, exported and repaired', f
 
     expect(DB::table('observations')->where('target_key', 'M 31')->where('target_name', 'M 31')->where('target_table', 'objects')->count())->toBe(2)
         ->and(DB::table('observations')->where('target_key', 'Ghost 1')->count())->toBe(1);
+});
+
+function checkObjectRow(string $name): array
+{
+    return [
+        'name' => $name,
+        'slug' => \Illuminate\Support\Str::slug($name),
+        'type' => 'GALXY',
+        'con' => 'AND',
+        'ra' => 0.712,
+        'decl' => 41.269,
+        'mag' => 9.0,
+        'subr' => 13.0,
+        'pa' => 999,
+        'urano' => 0,
+        'urano_new' => 0,
+        'sky' => 0,
+        'millenium' => '',
+        'diam1' => 0.0,
+        'diam2' => 0.0,
+        'datasource' => null,
+        'taki' => '',
+        'SBObj' => 0.0,
+        'description' => '',
+        'psa' => '',
+        'torresB' => '',
+        'torresBC' => '',
+        'torresC' => '',
+        'milleniumbase' => '0',
+        'DSLDL' => '0',
+        'DSLDP' => '0',
+        'DSLLL' => '0',
+        'DSLLP' => '0',
+        'DSLOL' => '0',
+        'DSLOP' => '0',
+        'DeepskyHunter' => '0',
+        'Interstellarum' => '0',
+        'timestamp' => now(),
+    ];
+}
+
+function checkObservationRow(\App\Models\User $user, string $name, string $date = '2026-03-01'): array
+{
+    return [
+        'observer_username' => $user->username,
+        'observer_user_id' => $user->id,
+        'observed_on' => $date,
+        'target_type' => 'deepsky',
+        'target_table' => 'objects',
+        'target_key' => $name,
+        'target_name' => $name,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ];
+}
+
+test('observations of a name that differs only in spaces are repaired', function () {
+    $user = $this->createUserAndAssignToTeam('Administrators');
+
+    // "AB 12" and "A B12" both compact to "AB12": that spelling is left alone
+    DB::table('objects')->insert([checkObjectRow('NGC 1741B'), checkObjectRow('AB 12'), checkObjectRow('A B12')]);
+    DB::table('observations')->insert([
+        checkObservationRow($user, 'NGC1741B'),
+        checkObservationRow($user, 'NGC  1741B', '2026-03-02'),
+        checkObservationRow($user, 'AB12'),
+    ]);
+
+    $report = app(\App\Services\AdminObjectCheckService::class)->buildReport()['unknown_observations'];
+    expect($report['alias_count'])->toBe(2)
+        ->and($report['alias_observation_total'])->toBe(2)
+        ->and($report['count'])->toBe(1);
+
+    $this->actingAs($user)
+        ->post(route('admin.objects.check.repair-observation-objectnames'))
+        ->assertRedirect(route('admin.objects.check'));
+
+    expect(DB::table('observations')->where('target_key', 'NGC 1741B')->count())->toBe(2)
+        ->and(DB::table('observations')->where('target_key', 'AB12')->count())->toBe(1);
+});
+
+test('unknown targets link to their observations and to the objects they may stand for', function () {
+    $user = $this->createUserAndAssignToTeam('Administrators');
+
+    DB::table('objects')->insert([checkObjectRow('IC 2554A'), checkObjectRow('IC 2554B'), checkObjectRow('IC 25540')]);
+    DB::table('observations')->insert(checkObservationRow($user, 'IC 2554'));
+
+    $row = collect(app(\App\Services\AdminObjectCheckService::class)->buildReport()['unknown_observations']['examples'])
+        ->firstWhere('objectname', 'IC 2554');
+
+    expect($row['status'])->toBe('unknown')
+        ->and(collect($row['candidates'])->pluck('name')->all())->toBe(['IC 2554A', 'IC 2554B'])
+        ->and($row['candidates'][0]['url'])->toBe(route('object.show', ['slug' => 'ic-2554a']))
+        ->and($row['observations'])->toHaveCount(1)
+        ->and($row['observations'][0]['date'])->toBe('2026-03-01')
+        ->and($row['observations'][0]['url'])->toContain('/observation/');
+
+    $this->actingAs($user)
+        ->get(route('admin.objects.check'))
+        ->assertOk()
+        ->assertSee('Possibly:')
+        ->assertSee(route('object.show', ['slug' => 'ic-2554b']), false)
+        ->assertSee($row['observations'][0]['url'], false);
 });

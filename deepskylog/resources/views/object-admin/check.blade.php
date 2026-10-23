@@ -17,39 +17,76 @@
             </x-card>
         @endif
 
+        @php
+            $check = $constellationCheck;
+            $checkState = $check['state'] ?? null;
+            $checkComplete = $checkState === 'complete';
+        @endphp
         <x-card>
             <div class="flex items-start justify-between gap-4">
                 <div>
                     <h3 class="text-lg font-semibold text-white">{{ __('Objects constellation') }}</h3>
                     <p class="mt-1 text-sm text-gray-300">
-                        {{ __('Checked :checked of :total objects. Correct: :correct. Skipped: :skipped.', ['checked' => $report['constellation_check']['checked'], 'total' => $report['constellation_check']['total'], 'correct' => $report['constellation_check']['correct'], 'skipped' => $report['constellation_check']['skipped']]) }}
+                        @if ($constellationCheckInProgress && $checkState === 'queued')
+                            {{ __('The check of all objects is waiting for the queue worker (queued :time).', ['time' => \Illuminate\Support\Carbon::parse($check['queued_at'])->diffForHumans()]) }}
+                        @elseif ($constellationCheckInProgress)
+                            {{ __('Checking all objects: :checked of :total done.', ['checked' => $check['checked'], 'total' => $check['total']]) }}
+                        @elseif ($checkComplete)
+                            {{ __('Checked :checked of :total objects. Correct: :correct. Skipped: :skipped.', ['checked' => $check['checked'], 'total' => $check['total'], 'correct' => $check['checked'] - $check['skipped'] - $check['mismatch_count'] + $check['repaired'], 'skipped' => $check['skipped']]) }}
+                            {{ __('Last checked :time.', ['time' => \Illuminate\Support\Carbon::parse($check['finished_at'])->diffForHumans()]) }}
+                        @elseif ($checkState !== null)
+                            <span class="text-red-400">{{ __('The last constellation check did not finish.') }}</span>
+                        @else
+                            {{ __('The constellations of the objects have not been checked yet.') }}
+                        @endif
                     </p>
-                    @if ($report['constellation_check']['note'])
+                    @if ($constellationCheckInProgress)
                         <p class="mt-2 text-xs text-amber-400">
-                            {{ $report['constellation_check']['note'] }}
+                            {{ __('The check takes a few minutes and needs a worker on the long-running queue (php artisan queue:work database-long). This page reloads by itself.') }}
                         </p>
                     @endif
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="rounded bg-gray-800 px-3 py-1 text-sm text-gray-200">
-                        {{ trans_choice('{0} No mismatches|{1} 1 mismatch|[2,*] :count mismatches', $report['constellation_check']['mismatch_count'], ['count' => $report['constellation_check']['mismatch_count']]) }}
-                    </span>
-                    @if ($report['constellation_check']['mismatch_count'] > 0)
-                        <form method="POST" action="{{ route('admin.objects.check.repair') }}" class="inline">
-                            @csrf
-                            <x-button type="submit" class="whitespace-nowrap" onclick="return confirm('{{ __('Repair all constellation mismatches? This will update the constellation field for affected objects.') }}')">{{ __('Repair') }}</x-button>
-                        </form>
-                        <a href="{{ route('admin.objects.check.export-constellations') }}" class="inline-flex items-center rounded bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700">
-                            {{ __('Export') }}
-                        </a>
+                    @if ($checkComplete)
+                        <span class="rounded bg-gray-800 px-3 py-1 text-sm text-gray-200">
+                            @if ($check['repair'])
+                                {{ trans_choice('{0} No constellation mismatches were corrected.|{1} Corrected 1 constellation mismatch.|[2,*] Corrected :count constellation mismatches.', $check['repaired'], ['count' => $check['repaired']]) }}
+                            @else
+                                {{ trans_choice('{0} No mismatches|{1} 1 mismatch|[2,*] :count mismatches', $check['mismatch_count'], ['count' => $check['mismatch_count']]) }}
+                            @endif
+                        </span>
                     @endif
+                    @unless ($constellationCheckInProgress)
+                        <form method="POST" action="{{ route('admin.objects.check.constellations') }}" class="inline">
+                            @csrf
+                            <x-button type="submit" class="whitespace-nowrap">{{ $checkComplete ? __('Check again') : __('Check all objects') }}</x-button>
+                        </form>
+                        @if ($checkComplete && ! $check['repair'] && $check['mismatch_count'] > 0)
+                            <form method="POST" action="{{ route('admin.objects.check.repair') }}" class="inline">
+                                @csrf
+                                <x-button type="submit" class="whitespace-nowrap" onclick="return confirm('{{ __('Repair all constellation mismatches? This will update the constellation field for affected objects.') }}')">{{ __('Repair') }}</x-button>
+                            </form>
+                        @endif
+                        @if ($checkComplete && $check['mismatch_count'] > 0)
+                            <a href="{{ route('admin.objects.check.export-constellations') }}" class="inline-flex items-center rounded bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700">
+                                {{ __('Export') }}
+                            </a>
+                        @endif
+                    @endunless
                 </div>
             </div>
 
-            @if ($report['constellation_check']['mismatch_count'] > 0)
-                @if ($report['constellation_check']['mismatch_count'] > $report['constellation_check']['display_limit'])
+            @if ($constellationCheckInProgress)
+                <script>
+                    setTimeout(() => window.location.reload(), 10000);
+                </script>
+            @elseif ($checkComplete && $check['mismatch_count'] > 0)
+                @if ($check['repair'])
+                    <p class="mt-4 text-sm text-green-300">{{ __('These objects had the wrong constellation and have been corrected.') }}</p>
+                @endif
+                @if ($check['mismatch_count'] > $check['display_limit'])
                     <p class="mt-4 text-sm text-amber-300">
-                        {{ __('Showing the first :limit mismatches.', ['limit' => $report['constellation_check']['display_limit']]) }}
+                        {{ __('Showing the first :limit mismatches.', ['limit' => $check['display_limit']]) }}
                     </p>
                 @endif
 
@@ -58,14 +95,14 @@
                         <thead class="bg-gray-800 text-left text-xs uppercase tracking-wide text-gray-400">
                             <tr>
                                 <th class="px-3 py-2">{{ __('Object') }}</th>
-                                <th class="px-3 py-2">{{ __('Stored') }}</th>
-                                <th class="px-3 py-2">{{ __('Expected') }}</th>
+                                <th class="px-3 py-2">{{ $check['repair'] ? __('Before') : __('Stored') }}</th>
+                                <th class="px-3 py-2">{{ $check['repair'] ? __('Corrected to') : __('Expected') }}</th>
                                 <th class="px-3 py-2">{{ __('RA') }}</th>
                                 <th class="px-3 py-2">{{ __('Declination') }}</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-800">
-                            @foreach ($report['constellation_check']['examples'] as $row)
+                            @foreach ($check['examples'] as $row)
                                 <tr>
                                     <td class="px-3 py-2">{{ $row['name'] }}</td>
                                     <td class="px-3 py-2">
@@ -87,7 +124,7 @@
                         </tbody>
                     </table>
                 </div>
-            @else
+            @elseif ($checkComplete)
                 <p class="mt-4 text-sm text-green-300">{{ __('All checked objects have the expected constellation.') }}</p>
             @endif
         </x-card>
@@ -199,13 +236,25 @@
                                         <th class="px-3 py-2">{{ __('Primary object name') }}</th>
                                         <th class="px-3 py-2">{{ __('Status') }}</th>
                                         <th class="px-3 py-2">{{ __('Observation count') }}</th>
+                                        <th class="px-3 py-2">{{ __('Observations') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-800">
                                     @foreach ($report['unknown_observations']['examples'] as $row)
                                         <tr>
                                             <td class="px-3 py-2">{{ $row['objectname'] }}</td>
-                                            <td class="px-3 py-2">{{ $row['primary_name'] ?: '—' }}</td>
+                                            <td class="px-3 py-2">
+                                                @if ($row['primary_name'])
+                                                    {{ $row['primary_name'] }}
+                                                @elseif (! empty($row['candidates']))
+                                                    <span class="text-gray-400">{{ __('Possibly:') }}</span>
+                                                    @foreach ($row['candidates'] as $candidate)
+                                                        <a href="{{ $candidate['url'] }}" class="text-blue-400 hover:underline">{{ $candidate['name'] }}</a>@if (! $loop->last), @endif
+                                                    @endforeach
+                                                @else
+                                                    —
+                                                @endif
+                                            </td>
                                             <td class="px-3 py-2">
                                                 @if ($row['status'] === 'alias')
                                                     <span class="text-green-300">{{ __('Alias (fixable)') }}</span>
@@ -214,6 +263,20 @@
                                                 @endif
                                             </td>
                                             <td class="px-3 py-2">{{ $row['observation_count'] }}</td>
+                                            <td class="px-3 py-2">
+                                                @foreach ($row['observations'] ?? [] as $observation)
+                                                    <div>
+                                                        @if ($observation['url'])
+                                                            <a href="{{ $observation['url'] }}" class="text-blue-400 hover:underline">{{ $observation['observer'] }}, {{ $observation['date'] }}</a>
+                                                        @else
+                                                            {{ $observation['observer'] }}, {{ $observation['date'] ?? '—' }}
+                                                        @endif
+                                                    </div>
+                                                @endforeach
+                                                @if (count($row['observations'] ?? []) < $row['observation_count'] && ! empty($row['observations']))
+                                                    <div class="text-gray-400">{{ __('and :count more', ['count' => $row['observation_count'] - count($row['observations'])]) }}</div>
+                                                @endif
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

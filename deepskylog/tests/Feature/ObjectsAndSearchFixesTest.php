@@ -46,7 +46,9 @@ function fixesObjectRow(string $name, float $ra, float $decl, string $con = 'AND
     ];
 }
 
-it('exports the constellation mismatches of all objects, not only of the preview sample', function () {
+it('checks the constellations of all objects on the queue', function () {
+    Illuminate\Support\Facades\Storage::fake('local');
+
     $rows = [];
     for ($i = 0; $i < 500; $i++) {
         $rows[] = fixesObjectRow(sprintf('A %03d', $i), 0.712, 41.269);
@@ -59,9 +61,39 @@ it('exports the constellation mismatches of all objects, not only of the preview
 
     $service = app(AdminObjectCheckService::class);
 
-    expect($service->buildReport()['constellation_check'])
-        ->toMatchArray(['total' => 501, 'checked' => 500, 'correct' => 500, 'skipped' => 0, 'mismatch_count' => 0])
-        ->and($service->exportConstellationMismatches())->toContain('"Z 1","ORI"');
+    expect($service->constellationCheckStatus())->toBeNull()
+        ->and($service->exportConstellationMismatches())->toBeNull();
+
+    // The sync queue of the tests runs the job right away
+    expect($service->queueConstellationCheck(false))->toBeTrue()
+        ->and($service->constellationCheckStatus())
+        ->toMatchArray(['state' => 'complete', 'repair' => false, 'total' => 501, 'checked' => 501, 'skipped' => 0, 'mismatch_count' => 1, 'repaired' => 0])
+        ->and($service->constellationCheckStatus()['examples'])->toHaveCount(1)
+        ->and($service->exportConstellationMismatches())->toContain('"Z 1","ORI"')
+        ->and(DB::table('objects')->where('name', 'Z 1')->value('con'))->toBe('ORI');
+
+    expect($service->queueConstellationCheck(true))->toBeTrue()
+        ->and($service->constellationCheckStatus())->toMatchArray(['state' => 'complete', 'repair' => true, 'mismatch_count' => 1, 'repaired' => 1])
+        ->and(DB::table('objects')->where('name', 'Z 1')->value('con'))->toBe('AND');
+});
+
+it('does not queue a second constellation check while one is in progress', function () {
+    Illuminate\Support\Facades\Queue::fake();
+    $service = app(AdminObjectCheckService::class);
+
+    expect($service->queueConstellationCheck(false))->toBeTrue()
+        ->and($service->constellationCheckInProgress())->toBeTrue()
+        ->and($service->queueConstellationCheck(true))->toBeFalse();
+
+    Illuminate\Support\Facades\Queue::assertPushed(App\Jobs\CheckObjectConstellations::class, 1);
+
+    // A check that stopped reporting is taken to have died with its worker
+    $this->travel(2)->hours();
+    expect($service->constellationCheckInProgress())->toBeFalse()
+        ->and($service->queueConstellationCheck(false))->toBeTrue();
+
+    (new App\Jobs\CheckObjectConstellations)->failed(new RuntimeException('killed'));
+    expect($service->constellationCheckStatus()['state'])->toBe('failed');
 });
 
 it('finds nearby objects across 0 h and with the RA range widened by 1/cos(dec)', function () {
