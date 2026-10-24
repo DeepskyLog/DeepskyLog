@@ -390,7 +390,8 @@ class ObservationsController extends Controller
             return $row ? ['type' => Observation::TYPE_COMET, 'table' => 'cometobjects', 'key' => (string) $row->id, 'name' => $row->name] : null;
         }
 
-        $types = ['planets' => 'planet', 'moons' => 'lunar', 'lunar_features' => 'lunar'];
+        // Asteroids are 'solarsystem', as the imports store them
+        $types = ['planets' => 'planet', 'moons' => 'lunar', 'lunar_features' => 'lunar', 'asteroids' => 'solarsystem'];
         if (!isset($types[$table])) {
             return null;
         }
@@ -1263,7 +1264,7 @@ class ObservationsController extends Controller
      */
     private function resolveSolarSystemTarget(array $candidates): ?array
     {
-        foreach (['planets', 'lunar_features', 'moons'] as $table) {
+        foreach (['planets', 'lunar_features', 'moons', 'asteroids'] as $table) {
             $record = null;
             foreach ($candidates as $cand) {
                 try {
@@ -2157,6 +2158,36 @@ class ObservationsController extends Controller
                                 'type_label' => null,
                                 'constellation' => null,
                             ];
+                        } else {
+                            // Asteroids
+                            $asteroid = null;
+                            foreach ($candidates as $cand) {
+                                $asteroid = DB::table('asteroids')->where('slug', $cand)->first()
+                                    ?? DB::table('asteroids')->where('name', $cand)->first();
+                                if ($asteroid) {
+                                    break;
+                                }
+                            }
+
+                            if ($asteroid) {
+                                $resolved['type'] = 'asteroid';
+                                $resolved['table'] = 'asteroids';
+                                $resolved['record'] = $asteroid;
+
+                                $asteroidObservations = fn () => Observation::where('target_table', 'asteroids')->where('target_key', $asteroid->slug);
+                                $mine = fn ($q) => $q->where('observer_username', $user->username);
+
+                                $objectSummary = [
+                                    'object_slug' => $asteroid->slug ?? $slug,
+                                    'total_observations' => $asteroidObservations()->count(),
+                                    'your_observations' => $user ? $mine($asteroidObservations())->count() : 0,
+                                    'total_drawings' => $asteroidObservations()->where('has_drawing', 1)->count(),
+                                    'your_drawings' => $user ? $mine($asteroidObservations())->where('has_drawing', 1)->count() : 0,
+                                    'type_raw' => null,
+                                    'type_label' => __('Asteroid'),
+                                    'constellation' => null,
+                                ];
+                            }
                         }
                     }
                 }

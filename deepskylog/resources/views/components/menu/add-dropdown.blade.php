@@ -43,9 +43,11 @@
 
                 <x-menu.item separator icon="plus-circle" href="{{ route('object.create') }}">{{ __('Object') }}</x-menu.item>
                 <x-menu.item icon="plus-circle" href="{{ route('object.create.comet') }}">{{ __('Comet') }}</x-menu.item>
+                <x-menu.item icon="plus-circle" href="{{ route('object.create.asteroid') }}">{{ __('Asteroid') }}</x-menu.item>
                 @else
                 <x-menu.item icon="plus-circle" href="{{ route('object.create') }}">{{ __('Object') }}</x-menu.item>
                 <x-menu.item icon="plus-circle" href="{{ route('object.create.comet') }}">{{ __('Comet') }}</x-menu.item>
+                <x-menu.item icon="plus-circle" href="{{ route('object.create.asteroid') }}">{{ __('Asteroid') }}</x-menu.item>
                 @endunless
 
             </x-menu.dropdown>

@@ -19,7 +19,7 @@ class ObjectTypesChart
      * Builds a pie chart of observations per object type for a given user.
      *
      * Deep sky observations (target_table 'objects') are joined to the 'objects' table on the normalized name and
-     * grouped by object type. Comets, planets, the sun, and the moon with its lunar features each get one slice.
+     * grouped by object type. Comets, planets, the sun, the moon with its lunar features, and asteroids each get one slice.
      * Slices smaller than 1% of the total are grouped into 'Rest'.
      *
      * @param  User  $user  The user for whom the chart is to be built.
@@ -101,6 +101,18 @@ class ObjectTypesChart
         if ($moonCount > 0) {
             $observations[] = $moonCount;
             $names[] = __('Moon');
+        }
+
+        // Asteroids
+        $asteroidCount = (int) DB::table('observations')
+            ->where('target_table', 'asteroids')
+            ->where(function ($q) use ($user) {
+                $q->where('observer_user_id', $user->id)
+                    ->orWhere('observer_username', $user->username);
+            })->count();
+        if ($asteroidCount > 0) {
+            $observations[] = $asteroidCount;
+            $names[] = __('Asteroids');
         }
 
         // Group small slices (<1% of total) into 'Rest'

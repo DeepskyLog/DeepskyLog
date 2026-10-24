@@ -13,7 +13,7 @@ use marineusde\LarapexCharts\Options\XAxisOption;
  * Class ObservationsPerMonthChart
  *
  * This class is responsible for building a bar chart that represents the number of observations per month.
- * The chart includes deep sky, comet, double star, planet, sun and moon observations.
+ * The chart includes deep sky, comet, double star, planet, sun, moon and asteroid observations.
  */
 class ObservationsPerMonthChart
 {
@@ -45,6 +45,8 @@ class ObservationsPerMonthChart
             $planets = array_map('intval', $pm['planets'] ?? array_fill(0, 12, 0));
             $sun = array_map('intval', $pm['sun'] ?? array_fill(0, 12, 0));
             $moon = array_map('intval', $pm['moon'] ?? array_fill(0, 12, 0));
+            // (absent from statistics cached before the asteroids were added)
+            $asteroids = array_map('intval', $pm['asteroids'] ?? array_fill(0, 12, 0));
 
             $chart = (new OriginalBarChart)
                 ->setTitle(__('Number of observations per month: ') . $user->name)
@@ -60,7 +62,8 @@ class ObservationsPerMonthChart
                 ->addData(__('Double stars'), $double)
                 ->addData(__('Planets'), $planets)
                 ->addData(__('Sun'), $sun)
-                ->addData(__('Moon'), $moon);
+                ->addData(__('Moon'), $moon)
+                ->addData(__('Asteroids'), $asteroids);
 
             return $chart;
         }
@@ -100,6 +103,12 @@ class ObservationsPerMonthChart
             ->groupByRaw('MONTH(observed_on)')
             ->get();
 
+        $asteroidsGrouped = Observation::selectRaw('MONTH(observed_on) as month, count(*) as cnt')
+            ->where('observer_username', $user->username)
+            ->where('target_table', 'asteroids')
+            ->groupByRaw('MONTH(observed_on)')
+            ->get();
+
         $months = range(1, 12);
         $deepsky = array_fill(0, 12, 0);
         $comets = array_fill(0, 12, 0);
@@ -107,6 +116,7 @@ class ObservationsPerMonthChart
         $planets = array_fill(0, 12, 0);
         $sun = array_fill(0, 12, 0);
         $moon = array_fill(0, 12, 0);
+        $asteroids = array_fill(0, 12, 0);
 
         foreach ($deepskyGrouped as $r) {
             $deepsky[$r->month - 1] = (int) $r->cnt;
@@ -126,6 +136,9 @@ class ObservationsPerMonthChart
         foreach ($moonGrouped as $r) {
             $moon[$r->month - 1] = (int) $r->cnt;
         }
+        foreach ($asteroidsGrouped as $r) {
+            $asteroids[$r->month - 1] = (int) $r->cnt;
+        }
 
         $chart = (new OriginalBarChart)
             ->setTitle(__('Number of observations per month: ') . $user->name)
@@ -142,7 +155,8 @@ class ObservationsPerMonthChart
             ->addData(__('Double stars'), $double)
             ->addData(__('Planets'), $planets)
             ->addData(__('Sun'), $sun)
-            ->addData(__('Moon'), $moon);
+            ->addData(__('Moon'), $moon)
+            ->addData(__('Asteroids'), $asteroids);
 
         return $chart;
     }

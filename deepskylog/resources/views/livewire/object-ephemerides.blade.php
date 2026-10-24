@@ -281,7 +281,6 @@ $decStr =
                 'saturn',
                 'uranus',
                 'neptune',
-                'pluto',
                 'sun',
                 'moon',
             ];
@@ -289,7 +288,7 @@ $decStr =
                 ($sourceTypeRaw ?? '') === 'planet' || ($planetKeyLocal && in_array($planetKeyLocal, $knownPlanets));
         @endphp
 
-        @if ($isPlanetLocal && !empty($e['year_magnitude_graph']))
+        @if (($isPlanetLocal || ($sourceTypeRaw ?? '') === 'asteroid') && !empty($e['year_magnitude_graph']))
             <tr>
                 <td colspan="2" class="pr-4 font-medium pt-4">{{ __('Magnitude during the year') }}</td>
             </tr>

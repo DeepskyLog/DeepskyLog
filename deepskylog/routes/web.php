@@ -543,6 +543,13 @@ Route::get('/object/create/comet', [App\Http\Controllers\ObjectController::class
 Route::post('/object/create/comet', [App\Http\Controllers\ObjectController::class, 'storeComet'])
     ->name('object.store.comet')->middleware(['auth', 'doNotCacheResponse']);
 
+// Add asteroid via create wizard: select from asteroids_orbital_elements and persist to asteroids
+Route::get('/object/create/asteroid', [App\Http\Controllers\ObjectController::class, 'createAsteroid'])
+    ->name('object.create.asteroid')->middleware(['auth', 'doNotCacheResponse']);
+
+Route::post('/object/create/asteroid', [App\Http\Controllers\ObjectController::class, 'storeAsteroid'])
+    ->name('object.store.asteroid')->middleware(['auth', 'doNotCacheResponse']);
+
 Route::post('/object/check-name', [App\Http\Controllers\ObjectController::class, 'checkName'])
     ->name('object.checkName')->middleware(['auth', 'doNotCacheResponse']);
 

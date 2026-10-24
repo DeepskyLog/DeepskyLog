@@ -81,6 +81,10 @@
                class="inline-flex items-center bg-indigo-700 text-white px-5 py-2 rounded hover:bg-indigo-600 font-medium">
                 {{ __('Add comet instead') }}
             </a>
+            <a href="{{ route('object.create.asteroid') }}"
+               class="inline-flex items-center bg-indigo-700 text-white px-5 py-2 rounded hover:bg-indigo-600 font-medium">
+                {{ __('Add asteroid instead') }}
+            </a>
         </div>
     </form>
 </div>

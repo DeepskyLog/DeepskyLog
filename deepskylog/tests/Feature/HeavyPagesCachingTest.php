@@ -207,7 +207,7 @@ it('caches the counts of the statistics page', function () {
     insertCachingTestObservation($observer->username, 'M 32');
     expect($total())->toBe(1);
 
-    cache()->forget('statistics:counts:all');
+    cache()->forget('statistics:counts:v2:all');
     expect($total())->toBe(2);
 });
 

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
 use App\Models\Target;
 use App\Models\CometObject;
+use App\Models\Asteroid;
+use App\Services\AsteroidCoordinates;
 use App\Services\CometCoordinates;
 use App\Support\EphemerisDate;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
@@ -253,8 +255,14 @@ class ObjectEphemerides extends Component
 			// supplied in the payload (preSuppliedRaDeg/preSuppliedDecDeg).
 			$obj = null;
 			try {
-				// (debug removed)
-				if (is_numeric((string) $useObjectId)) {
+				// Asteroids: their ids overlap with those of the other tables
+				$hintedType = $payloadArr['sourceTypeRaw'] ?? $this->sourceTypeRaw ?? null;
+				if (is_string($hintedType) && mb_strtolower($hintedType) === 'asteroid') {
+					$obj = is_numeric((string) $useObjectId)
+						? Asteroid::find((int) $useObjectId)
+						: Asteroid::where('slug', (string) $useObjectId)->orWhere('name', (string) $useObjectId)->first();
+				}
+				if (empty($obj) && is_numeric((string) $useObjectId)) {
 					// Prefer Eloquent model find which respects model settings
 					try {
 						$foundModel = Target::find((int) $useObjectId);
@@ -367,7 +375,12 @@ class ObjectEphemerides extends Component
 			// same identifier) stores them under
 			$cacheKey = null;
 			try {
-				$cacheKey = \App\Jobs\ComputeEphemerides::cacheKey((string) $useObjectId, $date->toIso8601String(), $userLocation->id ?? null);
+				// Asteroids are calculated in the request (about a millisecond):
+				// the job and its cache key know objects by an id that an
+				// asteroid shares with an object of another table
+				$cacheKey = $obj instanceof Asteroid
+					? null
+					: \App\Jobs\ComputeEphemerides::cacheKey((string) $useObjectId, $date->toIso8601String(), $userLocation->id ?? null);
 			} catch (\Throwable $_) {
 				$cacheKey = null;
 			}
@@ -411,6 +424,7 @@ class ObjectEphemerides extends Component
 			$computedDiam2 = null;
 			$computedMag = null;
 			$comet = null;
+			$asteroid = null;
 
 			// Allow callers to request heavy ephemerides computation (comet/orbital
 			// element work). By default we defer these expensive calculations so
@@ -466,7 +480,6 @@ class ObjectEphemerides extends Component
 						'saturn' => 'Saturn',
 						'uranus' => 'Uranus',
 						'neptune' => 'Neptune',
-						'pluto' => 'Pluto',
 						'sun' => 'Sun',
 						'moon' => 'Moon',
 					];
@@ -476,7 +489,7 @@ class ObjectEphemerides extends Component
 				}
 
 				if ($isPlanet && is_string($planetName)) {
-					$map = ['mercury' => 'Mercury', 'venus' => 'Venus', 'earth' => 'Earth', 'mars' => 'Mars', 'jupiter' => 'Jupiter', 'saturn' => 'Saturn', 'uranus' => 'Uranus', 'neptune' => 'Neptune', 'pluto' => 'Pluto', 'sun' => 'Sun', 'moon' => 'Moon'];
+					$map = ['mercury' => 'Mercury', 'venus' => 'Venus', 'earth' => 'Earth', 'mars' => 'Mars', 'jupiter' => 'Jupiter', 'saturn' => 'Saturn', 'uranus' => 'Uranus', 'neptune' => 'Neptune', 'sun' => 'Sun', 'moon' => 'Moon'];
 					$key = preg_replace('/[^a-z]/', '', mb_strtolower($planetName));
 					if (isset($map[$key])) {
 						$fqcn = "\\deepskylog\\AstronomyLibrary\\Targets\\{$map[$key]}";
@@ -739,6 +752,27 @@ class ObjectEphemerides extends Component
 
 			// planet events logging removed
 
+			// Asteroids: calculate the position and magnitude from the orbital elements
+			if ($obj instanceof Asteroid) {
+				$raDeg = null;
+				$decDeg = null;
+				try {
+					$asteroid = AsteroidCoordinates::target(AsteroidCoordinates::orbitalElements($obj->number) ?? (object) []);
+					if ($asteroid) {
+						$coords = AsteroidCoordinates::calculate($asteroid, $date, $geo_coords, (float) ($userLocation->elevation ?? 0.0));
+						$raDeg = $coords->getRA()->getCoordinate() * 15.0;
+						$decDeg = $coords->getDeclination()->getCoordinate();
+						$computedMag = AsteroidCoordinates::magnitude($asteroid, $date);
+					}
+				} catch (\Throwable $_) {
+					// ignore asteroid calc failures
+				}
+				if ($raDeg === null || $decDeg === null) {
+					$this->ephemerides = null;
+					return;
+				}
+			}
+
 			if ($raDeg === null || $decDeg === null) {
 				// Comets: calculate the position from the orbital elements
 				try {
@@ -879,7 +913,15 @@ class ObjectEphemerides extends Component
 				// yearMagnitudeGraph is implemented in the AstronomyLibrary Target
 				// and returns an embedded image. Prefer using the concrete planet
 				// target instance when available (it implements magnitude(date)).
-				if (isset($planet) && $planet) {
+				// Asteroids: the H-G magnitude of each day of the year
+				if (!empty($asteroid)) {
+					try {
+						$yearMagGraph = $asteroid->yearMagnitudeGraph($geo_coords, $date);
+					} catch (\Throwable $_) {
+						$yearMagGraph = null;
+					}
+				}
+				if (empty($yearMagGraph) && isset($planet) && $planet) {
 					try {
 						$yearMagGraph = $planet->yearMagnitudeGraph($geo_coords, $date);
 					} catch (\Throwable $_) {
@@ -915,14 +957,14 @@ class ObjectEphemerides extends Component
 						$yearDiamGraph = null;
 					}
 				}
-				if (empty($yearDiamGraph)) {
+				// Without a diameter the library draws "No diameter data
+				// available": no graph then (asteroids)
+				$knownDiameter = is_numeric($computedDiam1 ?? null) && (float) $computedDiam1 > 0
+					? [(float) $computedDiam1, (float) ($computedDiam2 ?? $computedDiam1)]
+					: (is_numeric($obj->diam1 ?? null) && (float) $obj->diam1 > 0 ? [(float) $obj->diam1, (float) ($obj->diam2 ?? $obj->diam1)] : null);
+				if (empty($yearDiamGraph) && $knownDiameter !== null) {
 					try {
-						// Ensure generic target has diameter values
-						if (isset($computedDiam1) && $computedDiam1 !== null) {
-							$target->setDiameter($computedDiam1, $computedDiam2 ?? $computedDiam1);
-						} elseif (isset($obj) && isset($obj->diam1)) {
-							$target->setDiameter($obj->diam1, $obj->diam2 ?? $obj->diam1);
-						}
+						$target->setDiameter(...$knownDiameter);
 						$yearDiamGraph = $target->yearDiameterGraph($geo_coords, $date);
 					} catch (\Throwable $_) {
 						$yearDiamGraph = null;
@@ -1056,6 +1098,10 @@ class ObjectEphemerides extends Component
 			if (!empty($comet)) {
 				$this->ephemerides['mag'] = $computedMag;
 				$this->ephemerides['predicted_magnitudes'] = CometCoordinates::lightCurve($comet, $date->copy()->subDays(180), $date->copy()->addDays(180));
+			}
+			if (!empty($asteroid)) {
+				$this->ephemerides['mag'] = $computedMag;
+				$this->ephemerides['predicted_magnitudes'] = AsteroidCoordinates::lightCurve($asteroid, $date->copy()->subDays(180), $date->copy()->addDays(180));
 			}
 
 			// Ensure the small `object-constellation` preview receives the computed

@@ -43,8 +43,6 @@ class FieldViewBuilder
     private const OBJECT_LIMIT_OFFSET = 1.0;
 
     /** Instrument types with mirrors, which transmit less light. */
-    private const MIRROR_TYPES = ['Reflector', 'Cassegrain', 'Kutter', 'Maksutov', 'Schmidt Cassegrain'];
-
     public function __construct(private FieldViewRenderer $renderer)
     {
     }
@@ -216,7 +214,7 @@ class FieldViewBuilder
 
         // In the finder
         if ($finder && $finderFov) {
-            $finderLimit     = round(TelescopicLimitingMagnitude::calculate($nelm, (float) $finder->aperture_mm, (float) $finder->fixedMagnification, (float) $finder->obstruction_perc, $this->hasMirrors($finder)) - $extinction, 1);
+            $finderLimit     = round(TelescopicLimitingMagnitude::calculate($nelm, (float) $finder->aperture_mm, (float) $finder->fixedMagnification, (float) $finder->obstruction_perc, $finder->hasMirrors()) - $extinction, 1);
             $views['finder'] = [
                 'title'    => __('Finder'),
                 'subtitle' => html_entity_decode($finder->fullName()).($finder->fixedMagnification ? ' · '.(int) $finder->fixedMagnification.'x' : ''),
@@ -245,7 +243,7 @@ class FieldViewBuilder
 
         // In the telescope
         if ($instrument && $telescopeFov) {
-            $telescopeLimit = round(TelescopicLimitingMagnitude::calculate($nelm, (float) $instrument->aperture_mm, $magnification ? (float) $magnification : null, (float) $instrument->obstruction_perc, $this->hasMirrors($instrument)) - $extinction, 1);
+            $telescopeLimit = round(TelescopicLimitingMagnitude::calculate($nelm, (float) $instrument->aperture_mm, $magnification ? (float) $magnification : null, (float) $instrument->obstruction_perc, $instrument->hasMirrors()) - $extinction, 1);
             $subtitle       = html_entity_decode($instrument->fullName());
             if ($eyepiece) {
                 $subtitle .= ' · '.html_entity_decode($eyepiece->fullName());
@@ -563,11 +561,6 @@ class FieldViewBuilder
     private function isEquatorial(Instrument $instrument): bool
     {
         return $instrument->mount_type?->name === 'Equatorial';
-    }
-
-    private function hasMirrors(Instrument $instrument): bool
-    {
-        return in_array($instrument->instrument_type?->name, self::MIRROR_TYPES, true);
     }
 
     private function direction(float $azimuth): string

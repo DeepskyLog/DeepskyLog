@@ -23,7 +23,6 @@ class DatabaseSeeder extends Seeder
                 \Database\Seeders\PlanetsSeeder::class,
                 \Database\Seeders\MoonsSeeder::class,
                 \Database\Seeders\LunarFeaturesSeeder::class,
-                \Database\Seeders\ObjectNameTranslationsSeeder::class,
                 \Database\Seeders\PopulateObjectSlugsSeeder::class,
                 \Database\Seeders\BackfillPlanetSlugsSeeder::class,
                 \Database\Seeders\BackfillMoonSlugsSeeder::class,

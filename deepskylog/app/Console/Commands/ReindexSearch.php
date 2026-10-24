@@ -215,16 +215,8 @@ class ReindexSearch extends Command
         $this->clearSource('asteroids', $incremental);
         $rows = [];
         foreach (DB::table('asteroids')->select(['id', 'name', 'designation', 'body_type'])->cursor() as $a) {
-            $rows[] = [
-                'name' => $a->name,
-                'name_normalized' => mb_strtolower($a->name),
-                'source_table' => 'asteroids',
-                'source_pk' => (string) $a->id,
-                'display_name' => $a->name,
-                'source_type' => $a->body_type ?? 'asteroid',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ];
+            // The name ("(4) Vesta") and the designation ("Vesta") as alias
+            array_push($rows, ...\App\Models\Asteroid::searchIndexRows($a, (string) $now));
             if (count($rows) >= 1000) {
                 DB::table('search_index')->insert($rows);
                 $rows = [];

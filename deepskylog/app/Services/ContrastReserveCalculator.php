@@ -227,6 +227,55 @@ class ContrastReserveCalculator
     }
 
     /**
+     * The contrast reserve of a point source, such as an asteroid, which
+     * Clark's model of calculate() cannot handle (it needs a size): the
+     * margin of its brightness above the faintest star visible in the
+     * instrument, in the same log10 units as the contrast reserve,
+     * 0.4 (limit - magnitude), so the categories mean the same. The limit
+     * (TelescopicLimitingMagnitude) comes from the naked-eye limit of the
+     * location and grows with the magnification as the sky darkens; the best
+     * magnification is the lowest with the largest margin.
+     *
+     * @param  array<int, list<Eyepiece>>|null  $magnifications  from magnifications(), when already known
+     * @return array{contrast_reserve: ?float, category: ?string, magnification: ?int, eyepieces: list<Eyepiece>, sqm: ?float}
+     */
+    public static function pointSource(float $magnitude, Instrument $instrument, Location $location, ?User $user, float $lensFactor = 1.0, ?array $magnifications = null): array
+    {
+        $sqm    = $location->getSqm();
+        $result = ['contrast_reserve' => null, 'category' => null, 'magnification' => null, 'eyepieces' => [], 'sqm' => is_numeric($sqm) ? (float) $sqm : null];
+
+        $nelm     = $location->getNelm((float) ($user?->fstOffset ?? 0));
+        $aperture = (float) $instrument->aperture_mm;
+        if (! is_numeric($nelm) || $aperture <= 0 || $magnitude >= 99.0) {
+            return $result;
+        }
+
+        $magnifications ??= self::magnifications($instrument, $user, $lensFactor);
+        $magnificationList = array_keys($magnifications);
+        sort($magnificationList);
+        $best = null;
+        foreach ($magnificationList as $magnification) {
+            $limit   = TelescopicLimitingMagnitude::calculate((float) $nelm, $aperture, (float) $magnification, (float) $instrument->obstruction_perc, $instrument->hasMirrors());
+            $reserve = 0.4 * ($limit - $magnitude);
+            // the lowest magnification wins a tie: the limit stops growing at small exit pupils
+            if ($best === null || $reserve > $best[1] + 1e-9) {
+                $best = [(int) $magnification, $reserve];
+            }
+        }
+        if ($best === null) {
+            return $result;
+        }
+
+        return [
+            'contrast_reserve' => $best[1],
+            'category'         => self::category($best[1]),
+            'magnification'    => $best[0],
+            'eyepieces'        => $magnifications[$best[0]] ?? [],
+            'sqm'              => $result['sqm'],
+        ];
+    }
+
+    /**
      * The contrast reserve of the target with the instrument at the location,
      * at the best of the observer's magnifications.
      *

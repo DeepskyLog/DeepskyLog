@@ -16,12 +16,14 @@ class BackfillPlanetSlugsSeeder extends Seeder
             return;
         }
 
-        DB::table('planets')->orderBy('name')->chunk(100, function ($rows) {
+        // Only the rows without a slug: observations refer to the slug, so an
+        // existing one must never change (chunkById, as the filled rows drop out)
+        DB::table('planets')->where(fn ($q) => $q->whereNull('slug')->orWhere('slug', ''))->chunkById(100, function ($rows) {
             foreach ($rows as $r) {
                 $base = Str::slug((string) $r->name, '-');
                 $slug = $base;
                 $i = 1;
-                while (DB::table('planets')->where('slug', $slug)->exists()) {
+                while (DB::table('planets')->where('slug', $slug)->where('id', '!=', $r->id)->exists()) {
                     $slug = $base . '-' . $i;
                     $i++;
                 }

@@ -223,7 +223,7 @@ class SearchExportController extends Controller
                 return $refused;
             }
 
-            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
+            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Moon', 'Sun']);
 
             $blocks = $rows->map(function ($r) use ($planetNames) {
                 $catalog = trim((string) ($r->display_name ?? $r->name ?? ''));

@@ -7,6 +7,7 @@ use App\Models\Planet;
 use App\Models\LunarFeature;
 use App\Models\Moon;
 use App\Models\Asteroid;
+use App\Services\AsteroidCoordinates;
 use App\Models\SearchIndex;
 use App\Models\User;
 // objectnames legacy table accessed via DB facade
@@ -310,7 +311,9 @@ class ObjectController extends Controller
 
                 // asteroids
                 if (!$record && Schema::hasColumn('asteroids', 'slug')) {
-                    $a = DB::table('asteroids')->where('slug', $slug)->first();
+                    $a = DB::table('asteroids')->where('slug', $slug)->first()
+                        // also by the designation: /object/pluto, /object/1982-uc3
+                        ?? DB::table('asteroids')->where('designation', str_replace('-', ' ', $slug))->orderBy('number')->first();
                     if ($a) {
                         $record = Asteroid::where('id', $a->id)->first();
                         if ($record) {
@@ -1294,7 +1297,7 @@ class ObjectController extends Controller
         // observations are stored the same way (see App\Models\Observation).
         try {
             $objectObservations = null;
-            $solarSystemTables = ['planet' => 'planets', 'sun' => 'planets', 'moon' => 'moons', 'lunar_feature' => 'lunar_features'];
+            $solarSystemTables = ['planet' => 'planets', 'sun' => 'planets', 'moon' => 'moons', 'lunar_feature' => 'lunar_features', 'asteroid' => 'asteroids'];
             if ($sourceTypeRaw === 'comet' && isset($record->id) && is_numeric($record->id)) {
                 $objectObservations = fn() => \App\Models\Observation::ofComet((int) $record->id);
             } elseif ($sourceTypeRaw === 'object' && !empty($session->name)) {
@@ -1630,7 +1633,6 @@ class ObjectController extends Controller
                         'saturn' => 'Saturn',
                         'uranus' => 'Uranus',
                         'neptune' => 'Neptune',
-                        'pluto' => 'Pluto',
                     ];
                     if (isset($map[$key])) {
                         $className = $map[$key];
@@ -2464,6 +2466,50 @@ class ObjectController extends Controller
                 if ($coords) {
                     $session->ra = DeepskyObject::formatRa($coords->getRA()->getCoordinate());
                     $session->decl = DeepskyObject::formatDec($coords->getDeclination()->getCoordinate());
+                }
+            }
+        } catch (\Throwable $_) {
+            // ignore: the page is shown without coordinates
+        }
+
+        // Asteroids: the same, from their orbital elements
+        try {
+            if ($type === 'asteroid' && $record instanceof Asteroid) {
+                $asteroidTarget = AsteroidCoordinates::target(AsteroidCoordinates::orbitalElements($record->number) ?? (object) []);
+                if ($asteroidTarget) {
+                    $userLocation = Auth::user()?->standardLocation ?? null;
+                    $geo_coords = $userLocation
+                        ? new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude)
+                        : new GeographicalCoordinates(0.0, 0.0);
+                    $asteroidDate = $this->getCanonicalEphemerisDate();
+                    $coords = AsteroidCoordinates::calculate($asteroidTarget, $asteroidDate, $geo_coords, (float) ($userLocation->elevation ?? 0.0));
+                    $session->ra = DeepskyObject::formatRa($coords->getRA()->getCoordinate());
+                    $session->decl = DeepskyObject::formatDec($coords->getDeclination()->getCoordinate());
+                    // The predicted magnitude (H-G system) for the date
+                    $asteroidMag = AsteroidCoordinates::magnitude($asteroidTarget, $asteroidDate);
+                    $session->mag = $asteroidMag !== null ? round($asteroidMag, 1) : null;
+
+                    // The contrast reserve of a point source, with the standard
+                    // telescope (and its lens) at the standard location
+                    $authUser = Auth::user();
+                    $instrument = $authUser?->standardInstrument;
+                    if ($asteroidMag !== null && $instrument && $userLocation) {
+                        $lens = \App\Models\Lens::find($authUser->standardLensId());
+                        $cr = \App\Services\ContrastReserveCalculator::pointSource($asteroidMag, $instrument, $userLocation, $authUser, \App\Services\ContrastReserveCalculator::lensFactor($lens));
+                        if ($cr['magnification']) {
+                            $session->contrast_reserve = round($cr['contrast_reserve'], 2);
+                            $session->contrast_reserve_category = $cr['category'];
+                            $session->contrast_used_location = $userLocation->name;
+                            $session->contrast_used_instrument = $instrument->fullName();
+                            $session->optimum_detection_magnification = $cr['magnification'];
+                            $session->optimum_eyepieces = collect($cr['eyepieces'])->map(fn ($ep) => [
+                                'name' => $ep->fullName().($lens ? ' ('.$lens->fullName().')' : ''),
+                                'focal' => (float) $ep->focal_length_mm,
+                                'slug' => $ep->slug,
+                                'user_slug' => $authUser->slug,
+                            ])->all();
+                        }
+                    }
                 }
             }
         } catch (\Throwable $_) {
@@ -3486,6 +3532,42 @@ class ObjectController extends Controller
         }
 
         return redirect()->route('object.show', ['slug' => $row->id])->with('success', __('Comet added.'));
+    }
+
+    /**
+     * Search the orbital elements of the numbered asteroids by number, name or
+     * designation, to add one that is not in DeepskyLog yet.
+     */
+    public function createAsteroid(Request $request)
+    {
+        $q = trim((string) $request->input('q', ''));
+        $asteroids = AsteroidCoordinates::search($q);
+        // The ones already in DeepskyLog link to their page instead
+        $existing = $asteroids->isEmpty() ? collect() : Asteroid::whereIn('number', $asteroids->pluck('number'))->get()->keyBy('number');
+
+        return view('object.create_asteroid', compact('q', 'asteroids', 'existing'));
+    }
+
+    /**
+     * Add the asteroid with this number from its orbital elements, unless it
+     * is in DeepskyLog already, and show its page.
+     */
+    public function storeAsteroid(Request $request)
+    {
+        $request->validate([
+            'number' => 'required|integer|min:1',
+        ]);
+
+        $elements = AsteroidCoordinates::orbitalElements((int) $request->input('number'));
+        if ($elements === null) {
+            return redirect()->back()->with('error', __('No orbital elements found for this asteroid.'));
+        }
+
+        $wasThere = Asteroid::where('number', (int) $elements->number)->exists();
+        $asteroid = Asteroid::addFromElements($elements);
+
+        return redirect()->route('object.show', ['slug' => $asteroid->slug])
+            ->with('success', $wasThere ? __('Asteroid already exists.') : __('Asteroid added.'));
     }
 
     /**

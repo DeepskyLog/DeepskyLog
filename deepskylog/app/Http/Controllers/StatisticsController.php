@@ -28,7 +28,7 @@ class StatisticsController extends Controller
      */
     private const CACHE_SECONDS = [3600, 86400];
 
-    private const CATEGORIES = ['deepsky', 'comets', 'double', 'planets', 'sun', 'moon'];
+    private const CATEGORIES = ['deepsky', 'comets', 'double', 'planets', 'sun', 'moon', 'asteroids'];
 
     /**
      * The observations can be limited to a country they were made in
@@ -67,8 +67,9 @@ class StatisticsController extends Controller
 
         // Only numbers are cached; the labels and charts are built per request,
         // in the language of the visitor.
+        // (v2: with the asteroids; counts cached before lack that category)
         $counts = Cache::flexible(
-            'statistics:counts:' . ($selectedCountry ?? 'all') . ($selectedResidence ? ':residence:' . $selectedResidence : ''),
+            'statistics:counts:v2:' . ($selectedCountry ?? 'all') . ($selectedResidence ? ':residence:' . $selectedResidence : ''),
             self::CACHE_SECONDS,
             fn() => $this->counts($selectedCountry, $selectedResidence)
         );
@@ -162,6 +163,7 @@ class StatisticsController extends Controller
             'planets' => "observations.target_table = 'planets' AND observations.target_key != 'sun'",
             'sun' => "observations.target_table = 'planets' AND observations.target_key = 'sun'",
             'moon' => "observations.target_table IN ('moons', 'lunar_features')",
+            'asteroids' => "observations.target_table = 'asteroids'",
         ];
     }
 
@@ -190,6 +192,7 @@ class StatisticsController extends Controller
             'planets' => __('Planets'),
             'sun' => __('Sun'),
             'moon' => __('Moon'),
+            'asteroids' => __('Asteroids'),
         ];
     }
 
@@ -241,7 +244,7 @@ class StatisticsController extends Controller
             [['total'], fn(Builder $query) => $query],
             [['deepsky', 'double'], fn(Builder $query) => $this->joinDoubleStars($query->where('observations.target_type', Observation::TYPE_DEEPSKY))],
             [['comets'], fn(Builder $query) => $query->where('observations.target_type', Observation::TYPE_COMET)],
-            [['planets', 'sun', 'moon'], fn(Builder $query) => $query->whereIn('observations.target_table', ['planets', 'moons', 'lunar_features'])],
+            [['planets', 'sun', 'moon', 'asteroids'], fn(Builder $query) => $query->whereIn('observations.target_table', ['planets', 'moons', 'lunar_features', 'asteroids'])],
         ];
 
         $values = [];
@@ -372,6 +375,7 @@ class StatisticsController extends Controller
             'planets' => $observations['planets'],
             'sun' => $observations['sun'],
             'moon' => $observations['moon'],
+            'asteroids' => $observations['asteroids'],
         ];
     }
 
@@ -421,7 +425,7 @@ class StatisticsController extends Controller
     private function buildObservationsPerYearChart(array $counts, string $context): OriginalLineChart
     {
         $xAxis = range($counts['first_year'], $counts['last_year']);
-        ['deepsky' => $deepsky, 'comets' => $comets, 'double' => $double, 'planets' => $planets, 'sun' => $sun, 'moon' => $moon] = $counts['series'];
+        ['deepsky' => $deepsky, 'comets' => $comets, 'double' => $double, 'planets' => $planets, 'sun' => $sun, 'moon' => $moon, 'asteroids' => $asteroids] = $counts['series'];
 
         $total = [];
         for ($index = 0; $index < count($xAxis); $index++) {
@@ -430,7 +434,8 @@ class StatisticsController extends Controller
                 + ($double[$index] ?? 0)
                 + ($planets[$index] ?? 0)
                 + ($sun[$index] ?? 0)
-                + ($moon[$index] ?? 0);
+                + ($moon[$index] ?? 0)
+                + ($asteroids[$index] ?? 0);
         }
 
         $chart = (new OriginalLineChart)
@@ -443,6 +448,7 @@ class StatisticsController extends Controller
             ->addData(__('Planets'), $planets)
             ->addData(__('Sun'), $sun)
             ->addData(__('Moon'), $moon)
+            ->addData(__('Asteroids'), $asteroids)
             ->setXAxisOption(new XAxisOption($xAxis))
             ->setTheme('dark')
             ->setFontColor('#bbbbbb')
@@ -453,7 +459,7 @@ class StatisticsController extends Controller
 
     private function buildObservationsPerMonthChart(array $counts, string $context): OriginalBarChart
     {
-        ['deepsky' => $deepsky, 'comets' => $comets, 'double' => $double, 'planets' => $planets, 'sun' => $sun, 'moon' => $moon] = $counts;
+        ['deepsky' => $deepsky, 'comets' => $comets, 'double' => $double, 'planets' => $planets, 'sun' => $sun, 'moon' => $moon, 'asteroids' => $asteroids] = $counts;
 
         return (new OriginalBarChart)
             ->setTitle(__('Number of observations per month: ') . $context)
@@ -481,7 +487,8 @@ class StatisticsController extends Controller
             ->addData(__('Double stars'), $double)
             ->addData(__('Planets'), $planets)
             ->addData(__('Sun'), $sun)
-            ->addData(__('Moon'), $moon);
+            ->addData(__('Moon'), $moon)
+            ->addData(__('Asteroids'), $asteroids);
     }
 
     private function buildObjectTypesChart(array $counts, string $context): OriginalPieChart
@@ -505,6 +512,7 @@ class StatisticsController extends Controller
             __('Planets') => $counts['planets'],
             __('Sun') => $counts['sun'],
             __('Moon') => $counts['moon'],
+            __('Asteroids') => $counts['asteroids'],
         ];
 
         foreach ($extraTypes as $label => $count) {

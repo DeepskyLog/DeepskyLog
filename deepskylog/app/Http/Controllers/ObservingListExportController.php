@@ -123,7 +123,7 @@ class ObservingListExportController extends Controller
                 'AA4STAR' => 'ASTERISM',
                 'AA8STAR' => 'ASTERISM',
             ];
-            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
+            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Moon', 'Sun']);
 
             $lines = $rows->map(function ($row) use ($typeMap, $planetNames) {
                 $name = 'DSL ' . ($row->display_name ?? $row->name ?? '');
@@ -180,7 +180,7 @@ class ObservingListExportController extends Controller
         try {
             [, $rows] = $this->resolveRows($list);
 
-            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
+            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Moon', 'Sun']);
 
             $blocks = $rows->map(function ($row) use ($planetNames) {
                 $catalog = trim((string) ($row->display_name ?? $row->name ?? ''));

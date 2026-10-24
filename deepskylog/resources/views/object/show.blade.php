@@ -580,6 +580,7 @@ try {
                                                         'contrast_used_instrument' => $initialCRInstr,
                                                         'optimum_detection_magnification' => $initialOptMag,
                                                         'optimum_eyepieces' => $initialOptEps,
+                                                        'object_type' => $session->source_type_raw ?? null,
                                                     ],
                                                 ])
                                             @else

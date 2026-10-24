@@ -77,6 +77,11 @@
                     href="{{ route('object.create.comet') }}"
                     label="{{ __('Comet') }}"
                 />
+                <x-dropdown.item
+                    icon="plus-circle"
+                    href="{{ route('object.create.asteroid') }}"
+                    label="{{ __('Asteroid') }}"
+                />
                 @else
                 <x-dropdown.item
                     icon="plus-circle"
@@ -87,6 +92,11 @@
                     icon="plus-circle"
                     href="{{ route('object.create.comet') }}"
                     label="{{ __('Comet') }}"
+                />
+                <x-dropdown.item
+                    icon="plus-circle"
+                    href="{{ route('object.create.asteroid') }}"
+                    label="{{ __('Asteroid') }}"
                 />
                 @endunless
             </div>

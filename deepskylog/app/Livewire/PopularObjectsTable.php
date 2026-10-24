@@ -138,6 +138,7 @@ final class PopularObjectsTable extends PowerGridComponent
         return match ($kind) {
             'comet' => __('Comet'),
             'planet' => __('Planet'),
+            'asteroid' => __('Asteroid'),
             default => __('Deep-sky'),
         };
     }

@@ -476,6 +476,13 @@ class ObserverController extends Controller
             'planetsTotalDrawingsLastYear' => $planetsTotalDrawingsLastYear,
             'planetsYourUnique' => $planetsYourUnique,
             'planetsTotalUnique' => $planetsTotalUnique,
+            // Asteroids: metric => [the observer's, all observers'] (0 in
+            // statistics cached before the asteroids were added)
+            'asteroidCounts' => collect(['Observations', 'ObservationsLastYear', 'Drawings', 'DrawingsLastYear', 'Unique'])
+                ->mapWithKeys(fn (string $metric) => [$metric => [
+                    (int) ($stats['asteroidsYour'.$metric] ?? 0),
+                    (int) ($stats['asteroidsTotal'.$metric] ?? 0),
+                ]])->all(),
             // Sun
             'sunYourObservations' => $sunYourObservations,
             'sunTotalObservations' => $sunTotalObservations,

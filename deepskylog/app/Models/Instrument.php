@@ -55,6 +55,14 @@ class Instrument extends Model
      */
     public const FIXED_MAGNIFICATION_APPARENT_FOV = 50.0;
 
+    /** The instrument types with mirrors, which transmit less light than lenses. */
+    public const MIRROR_TYPES = ['Reflector', 'Cassegrain', 'Kutter', 'Maksutov', 'Schmidt Cassegrain'];
+
+    public function hasMirrors(): bool
+    {
+        return in_array($this->instrument_type?->name, self::MIRROR_TYPES, true);
+    }
+
     public function sluggable(): array
     {
         return [

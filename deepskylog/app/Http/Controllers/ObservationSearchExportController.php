@@ -116,7 +116,7 @@ class ObservationSearchExportController extends Controller
         try {
             $query = trim((string) $request->query('q', ''));
             $observations = $this->resolveMatchingObservations($request);
-            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
+            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Moon', 'Sun']);
 
             $locations = Location::query()
                 ->whereIn('id', $observations->pluck('location_id')->filter()->unique()->all())
@@ -721,7 +721,7 @@ class ObservationSearchExportController extends Controller
 
     private function resolveObservedTargets(Request $request): Collection
     {
-        $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
+        $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Moon', 'Sun']);
 
         $targets = [];
 

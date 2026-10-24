@@ -20,7 +20,7 @@ class PlanetsSeeder extends Seeder
             ['name' => 'Saturn', 'designation' => null, 'body_type' => 'planet', 'created_at'=>$now,'updated_at'=>$now],
             ['name' => 'Uranus', 'designation' => null, 'body_type' => 'planet', 'created_at'=>$now,'updated_at'=>$now],
             ['name' => 'Neptune', 'designation' => null, 'body_type' => 'planet', 'created_at'=>$now,'updated_at'=>$now],
-            ['name' => 'Pluto', 'designation' => null, 'body_type' => 'dwarf planet', 'created_at'=>$now,'updated_at'=>$now],
+            // Pluto is the asteroid (134340) Pluto, added from its orbital elements
         ];
         DB::table('planets')->insertOrIgnore($planets);
     }

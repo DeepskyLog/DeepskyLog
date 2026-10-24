@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use App\Models\Asteroid;
+use App\Services\AsteroidCoordinates;
 use App\Services\ContrastReserveCalculator;
 use App\Support\EphemerisDate;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
@@ -242,7 +244,11 @@ class AladinPreviewInfo extends Component
                 }
             }
             // component-mounted id is $this->objectId
-            if ($useObjectId) {
+            // Asteroids: their ids overlap with those of the deep-sky objects
+            $isAsteroid = $this->object_type === 'asteroid';
+            if ($useObjectId && $isAsteroid) {
+                $obj = is_numeric((string) $useObjectId) ? Asteroid::find((int) $useObjectId) : Asteroid::where('slug', (string) $useObjectId)->first();
+            } elseif ($useObjectId) {
                 try {
                     if (is_numeric((string) $useObjectId)) {
                         $obj = \App\Models\DeepskyObject::where('id', $useObjectId)->first();
@@ -288,7 +294,7 @@ class AladinPreviewInfo extends Component
             try {
                 $userId = Auth::id() ?? 'guest';
                 $incomingObj = $payloadObjectId ?: $this->objectId ?: 'none';
-                $cacheKey = "aladin_preview_last_dispatch:{$userId}:{$incomingObj}";
+                $cacheKey = "aladin_preview_last_dispatch:{$userId}:" . ($isAsteroid ? 'asteroid:' : '') . $incomingObj;
                 $fingerprintPayload = is_array($payload) ? $payload : (is_object($payload) ? (array) $payload : []);
                 unset($fingerprintPayload['_ts']);
                 $fingerprint = md5(serialize($fingerprintPayload));
@@ -540,7 +546,7 @@ class AladinPreviewInfo extends Component
                 if (!$isPlanet) {
                     try {
                         $pname = trim(strtolower($obj->name ?? ''));
-                        $map = ['mercury' => 'Mercury', 'venus' => 'Venus', 'earth' => 'Earth', 'mars' => 'Mars', 'jupiter' => 'Jupiter', 'saturn' => 'Saturn', 'uranus' => 'Uranus', 'neptune' => 'Neptune', 'pluto' => 'Pluto', 'sun' => 'Sun', 'moon' => 'Moon'];
+                        $map = ['mercury' => 'Mercury', 'venus' => 'Venus', 'earth' => 'Earth', 'mars' => 'Mars', 'jupiter' => 'Jupiter', 'saturn' => 'Saturn', 'uranus' => 'Uranus', 'neptune' => 'Neptune', 'sun' => 'Sun', 'moon' => 'Moon'];
                         $key = preg_replace('/[^a-z]/', '', $pname);
                         if ($key && isset($map[$key])) {
                             $isPlanet = true;
@@ -554,7 +560,7 @@ class AladinPreviewInfo extends Component
                     // If we detected planet via raw type but didn't set class, still try by name
                     try {
                         $pname = trim(strtolower($obj->name ?? ''));
-                        $map = ['mercury' => 'Mercury', 'venus' => 'Venus', 'earth' => 'Earth', 'mars' => 'Mars', 'jupiter' => 'Jupiter', 'saturn' => 'Saturn', 'uranus' => 'Uranus', 'neptune' => 'Neptune', 'pluto' => 'Pluto', 'sun' => 'Sun', 'moon' => 'Moon'];
+                        $map = ['mercury' => 'Mercury', 'venus' => 'Venus', 'earth' => 'Earth', 'mars' => 'Mars', 'jupiter' => 'Jupiter', 'saturn' => 'Saturn', 'uranus' => 'Uranus', 'neptune' => 'Neptune', 'sun' => 'Sun', 'moon' => 'Moon'];
                         $key = preg_replace('/[^a-z]/', '', $pname);
                         if ($key && isset($map[$key])) {
                             $planetClass = "\\deepskylog\\AstronomyLibrary\\Targets\\" . $map[$key];
@@ -680,7 +686,22 @@ class AladinPreviewInfo extends Component
             // Contrast reserve at the best of the observer's magnifications, as
             // for the stored metrics of the tables (ContrastReserveCalculator)
             $crResult = null;
-            if ($sbobj !== null && $sqm !== null && $aperture && $userInstrument) {
+            if ($isAsteroid && $obj instanceof Asteroid && $userInstrument) {
+                // A point source: its predicted magnitude against the limiting
+                // magnitude of the instrument
+                try {
+                    $asteroidMag = is_numeric($computedMag) ? (float) $computedMag : null;
+                    if ($asteroidMag === null && ($asteroidTarget = AsteroidCoordinates::target(AsteroidCoordinates::orbitalElements($obj->number) ?? (object) []))) {
+                        $asteroidMag = AsteroidCoordinates::magnitude($asteroidTarget, $date);
+                    }
+                    if ($asteroidMag !== null) {
+                        $this->object_mag = round($asteroidMag, 2);
+                        $crResult = ContrastReserveCalculator::pointSource($asteroidMag, $userInstrument, $userLocation, $authUser, $lensFactor);
+                    }
+                } catch (\Throwable $_) {
+                    $crResult = null;
+                }
+            } elseif ($sbobj !== null && $sqm !== null && $aperture && $userInstrument) {
                 try {
                     $crT0 = microtime(true);
                     $crResult = ContrastReserveCalculator::calculate($target, $userInstrument, $userLocation, $authUser, $lensFactor);

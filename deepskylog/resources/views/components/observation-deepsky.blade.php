@@ -170,7 +170,7 @@
             $objectLongType = $object ? $object->long_type() : null;
             $objectTypeLabel = $objectLongType
                 ? Str::lower(__($objectLongType))
-                : __("object");
+                : (($obsUnified?->target_table ?? null) === "asteroids" ? __("asteroid") : __("object"));
         @endphp
         {!!
             __(" observed :object", [
@@ -184,10 +184,12 @@
             ])
         !!}
 
-        {{
-            __(" in ") .
-                $constellation
-        }}
+        @if (filled($constellation))
+            {{
+                __(" in ") .
+                    $constellation
+            }}
+        @endif
 
         {{ __(" on ") }} {{
             Carbon::create(

@@ -56,7 +56,7 @@ class PopularObjectsRanking
             ->get();
 
         $slugs = [];
-        foreach (['deepsky', 'comet', 'planet'] as $kind) {
+        foreach (['deepsky', 'comet', 'planet', 'asteroid'] as $kind) {
             $ofKind = $groups->where('object_kind', $kind);
             if ($ofKind->isNotEmpty()) {
                 $slugs[$kind] = $this->resolveSlugs(
@@ -105,10 +105,12 @@ class PopularObjectsRanking
             ))
             ->whereNotNull('target_name')
             ->where('target_name', '!=', '')
-            ->whereIn('target_type', ['deepsky', 'comet', 'planet'])
+            // Asteroids are 'solarsystem' (see SavesImportedObservations)
+            ->whereIn('target_type', ['deepsky', 'comet', 'planet', 'solarsystem'])
+            ->where(fn(Builder $query) => $query->where('target_type', '<>', 'solarsystem')->orWhere('target_table', 'asteroids'))
             ->when($mode === 'drawings', fn(Builder $query) => $query->where('has_drawing', 1))
             ->selectRaw('target_name as object_name')
-            ->selectRaw("CASE WHEN target_type = 'comet' THEN 'comet' WHEN target_type = 'planet' THEN 'planet' ELSE 'deepsky' END as object_kind")
+            ->selectRaw("CASE WHEN target_type = 'comet' THEN 'comet' WHEN target_type = 'planet' THEN 'planet' WHEN target_type = 'solarsystem' THEN 'asteroid' ELSE 'deepsky' END as object_kind")
             ->selectRaw('MIN(target_key) as sample_target_key')
             ->selectRaw('COUNT(*) as total_count')
             ->groupBy('target_type', 'target_name');
@@ -117,7 +119,7 @@ class PopularObjectsRanking
     /**
      * The slugs of the objects of one kind, by name and by target key: deep-sky
      * objects through their (alternative) names in objectnames, else objects;
-     * comets and planets through their own table, by name, slug or id.
+     * comets, planets and asteroids through their own table, by name, slug or id.
      *
      * @param  list<string>  $names
      * @param  list<string>  $keys
@@ -159,7 +161,11 @@ class PopularObjectsRanking
                 return ['name' => $byName, 'key' => $byKey];
             }
 
-            $table = $kind === 'comet' ? 'cometobjects' : 'planets';
+            $table = match ($kind) {
+                'comet' => 'cometobjects',
+                'asteroid' => 'asteroids',
+                default => 'planets',
+            };
 
             foreach (array_chunk(array_values(array_unique($names)), self::CHUNK) as $chunk) {
                 DB::table($table)->whereIn('name', $chunk)->get(['name', 'slug'])

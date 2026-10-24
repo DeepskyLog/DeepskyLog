@@ -40,11 +40,13 @@ class ObservationsPerYearChart
             $planets_observations = array_map('intval', $py['planets'] ?? []);
             $sun_observations = array_map('intval', $py['sun'] ?? []);
             $moon_observations = array_map('intval', $py['moon'] ?? []);
+            // (absent from statistics cached before the asteroids were added)
+            $asteroid_observations = array_map('intval', $py['asteroids'] ?? []);
 
             $observations = [];
             $n = count($x_axis);
             for ($i = 0; $i < $n; $i++) {
-                $observations[] = ($deepsky_observations[$i] ?? 0) + ($comet_observations[$i] ?? 0) + ($double_observations[$i] ?? 0) + ($planets_observations[$i] ?? 0) + ($sun_observations[$i] ?? 0) + ($moon_observations[$i] ?? 0);
+                $observations[] = ($deepsky_observations[$i] ?? 0) + ($comet_observations[$i] ?? 0) + ($double_observations[$i] ?? 0) + ($planets_observations[$i] ?? 0) + ($sun_observations[$i] ?? 0) + ($moon_observations[$i] ?? 0) + ($asteroid_observations[$i] ?? 0);
             }
 
             $chart = (new OriginalLineChart)
@@ -69,6 +71,9 @@ class ObservationsPerYearChart
             }
             if (!empty($moon_observations)) {
                 $chart->addData(__('Moon'), $moon_observations);
+            }
+            if (!empty($asteroid_observations)) {
+                $chart->addData(__('Asteroids'), $asteroid_observations);
             }
 
             return $chart;
@@ -130,12 +135,20 @@ class ObservationsPerYearChart
             ->groupByRaw('YEAR(observed_on)')
             ->get();
 
+        $asteroidYearGrouped = DB::table('observations')
+            ->selectRaw('YEAR(observed_on) as year, count(*) as cnt')
+            ->where('observer_username', $user->username)
+            ->where('target_table', 'asteroids')
+            ->groupByRaw('YEAR(observed_on)')
+            ->get();
+
         $deepsky_observations = $mapToYears($deepskyYearGrouped, $firstYear, $lastYear);
         $comet_observations = $mapToYears($cometYearGrouped, $firstYear, $lastYear);
         $double_observations = $mapToYears($doubleYearGrouped, $firstYear, $lastYear);
         $planets_observations = $mapToYears($planetsYearGrouped, $firstYear, $lastYear);
         $sun_observations = $mapToYears($sunYearGrouped, $firstYear, $lastYear);
         $moon_observations = $mapToYears($moonYearGrouped, $firstYear, $lastYear);
+        $asteroid_observations = $mapToYears($asteroidYearGrouped, $firstYear, $lastYear);
 
         $x_axis = range($firstYear, $lastYear);
         $n = count($x_axis);
@@ -146,7 +159,8 @@ class ObservationsPerYearChart
                 + ($double_observations[$i] ?? 0)
                 + ($planets_observations[$i] ?? 0)
                 + ($sun_observations[$i] ?? 0)
-                + ($moon_observations[$i] ?? 0);
+                + ($moon_observations[$i] ?? 0)
+                + ($asteroid_observations[$i] ?? 0);
         }
 
         $chart = (new OriginalLineChart)
@@ -172,6 +186,9 @@ class ObservationsPerYearChart
         }
         if (!empty($moon_observations)) {
             $chart->addData(__('Moon'), $moon_observations);
+        }
+        if (!empty($asteroid_observations)) {
+            $chart->addData(__('Asteroids'), $asteroid_observations);
         }
 
         return $chart;

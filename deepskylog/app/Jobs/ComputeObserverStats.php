@@ -116,12 +116,20 @@ class ComputeObserverStats implements ShouldQueue
                 ->groupByRaw($month)
                 ->get();
 
+            $asteroidsGrouped = DB::table('observations')
+                ->selectRaw($month . ' as month, count(*) as cnt')
+                ->where('target_table', 'asteroids')
+                ->where($observerWhere)
+                ->groupByRaw($month)
+                ->get();
+
             $deepskyMonths = $mapToMonths($deepskyGrouped);
             $doubleMonths = $mapToMonths($doubleGrouped);
             $cometMonths = $mapToMonths($cometGrouped);
             $planetsMonths = $mapToMonths($planetsGrouped);
             $sunMonths = $mapToMonths($sunGrouped);
             $moonMonths = $mapToMonths($moonGrouped);
+            $asteroidsMonths = $mapToMonths($asteroidsGrouped);
 
             for ($i = 0; $i < 12; $i++) {
                 $deepskyMonths[$i] = max(0, $deepskyMonths[$i] - $doubleMonths[$i]);
@@ -196,12 +204,20 @@ class ComputeObserverStats implements ShouldQueue
                 ->groupByRaw($year)
                 ->get();
 
+            $asteroidsYearGrouped = DB::table('observations')
+                ->selectRaw($year . ' as year, count(*) as cnt')
+                ->where('target_table', 'asteroids')
+                ->where($observerWhere)
+                ->groupByRaw($year)
+                ->get();
+
             $deepskyYears = $mapToYears($deepskyYearGrouped, $firstYear, $lastYear);
             $doubleYears = $mapToYears($doubleYearGrouped, $firstYear, $lastYear);
             $cometYears = $mapToYears($cometYearGrouped, $firstYear, $lastYear);
             $planetsYears = $mapToYears($planetsYearGrouped, $firstYear, $lastYear);
             $sunYears = $mapToYears($sunYearGrouped, $firstYear, $lastYear);
             $moonYears = $mapToYears($moonYearGrouped, $firstYear, $lastYear);
+            $asteroidsYears = $mapToYears($asteroidsYearGrouped, $firstYear, $lastYear);
 
             for ($i = 0; $i < count($deepskyYears); $i++) {
                 $deepskyYears[$i] = max(0, $deepskyYears[$i] - $doubleYears[$i]);
@@ -214,6 +230,7 @@ class ComputeObserverStats implements ShouldQueue
                 'planets' => $planetsMonths,
                 'sun' => $sunMonths,
                 'moon' => $moonMonths,
+                'asteroids' => $asteroidsMonths,
             ];
 
             $stats['perYear'] = [
@@ -224,6 +241,7 @@ class ComputeObserverStats implements ShouldQueue
                 'planets' => $planetsYears,
                 'sun' => $sunYears,
                 'moon' => $moonYears,
+                'asteroids' => $asteroidsYears,
             ];
 
             // Compute whether user has any liked observations — use a JOIN to avoid loading IDs into PHP
@@ -307,6 +325,7 @@ class ComputeObserverStats implements ShouldQueue
             'planets' => fn () => DB::table('observations')->where('target_table', 'planets')->where('target_key', '!=', 'sun'),
             'sun' => fn () => DB::table('observations')->where('target_table', 'planets')->where('target_key', 'sun'),
             'moon' => fn () => DB::table('observations')->whereIn('target_table', ['moons', 'lunar_features']),
+            'asteroids' => fn () => DB::table('observations')->where('target_table', 'asteroids'),
         ];
     }
 

@@ -442,6 +442,7 @@
                             <th class="px-4">{{ __('Sun') }}</th>
                             <th class="px-4">{{ __('Moon') }}</th>
                             <th class="px-4">{{ __('Planets') }}</th>
+                            <th class="px-4">{{ __('Asteroids') }}</th>
                         </tr>
                     </thead>
 
@@ -457,6 +458,7 @@
                             <td class="px-4">{{ $sunYourObservations ?? 0 }} / {{ $sunTotalObservations ?? 0 }}</td>
                             <td class="px-4">{{ $moonYourObservations ?? 0 }} / {{ $moonTotalObservations ?? 0 }}</td>
                             <td class="px-4">{{ $planetsYourObservations ?? 0 }} / {{ $planetsTotalObservations ?? 0 }}</td>
+                            <td class="px-4">{{ $asteroidCounts['Observations'][0] }} / {{ $asteroidCounts['Observations'][1] }}</td>
                         </tr>
 
                         <tr>
@@ -470,6 +472,7 @@
                             <td class="px-4">{{ $sunYourObservationsLastYear ?? 0 }} / {{ $sunTotalObservationsLastYear ?? 0 }}</td>
                             <td class="px-4">{{ $moonYourObservationsLastYear ?? 0 }} / {{ $moonTotalObservationsLastYear ?? 0 }}</td>
                             <td class="px-4">{{ $planetsYourObservationsLastYear ?? 0 }} / {{ $planetsTotalObservationsLastYear ?? 0 }}</td>
+                            <td class="px-4">{{ $asteroidCounts['ObservationsLastYear'][0] }} / {{ $asteroidCounts['ObservationsLastYear'][1] }}</td>
                         </tr>
 
                         <tr>
@@ -484,6 +487,7 @@
                             <td class="px-4">{{ $sunYourDrawings ?? 0 }} / {{ $sunTotalDrawings ?? 0 }}</td>
                             <td class="px-4">{{ $moonYourDrawings ?? 0 }} / {{ $moonTotalDrawings ?? 0 }}</td>
                             <td class="px-4">{{ $planetsYourDrawings ?? 0 }} / {{ $planetsTotalDrawings ?? 0 }}</td>
+                            <td class="px-4">{{ $asteroidCounts['Drawings'][0] }} / {{ $asteroidCounts['Drawings'][1] }}</td>
                         </tr>
 
                         <tr>
@@ -497,6 +501,7 @@
                             <td class="px-4">{{ $sunYourDrawingsLastYear ?? 0 }} / {{ $sunTotalDrawingsLastYear ?? 0 }}</td>
                             <td class="px-4">{{ $moonYourDrawingsLastYear ?? 0 }} / {{ $moonTotalDrawingsLastYear ?? 0 }}</td>
                             <td class="px-4">{{ $planetsYourDrawingsLastYear ?? 0 }} / {{ $planetsTotalDrawingsLastYear ?? 0 }}</td>
+                            <td class="px-4">{{ $asteroidCounts['DrawingsLastYear'][0] }} / {{ $asteroidCounts['DrawingsLastYear'][1] }}</td>
                         </tr>
 
                         <tr>
@@ -509,6 +514,7 @@
                             <td class="px-4">{{ $sunYourUnique ?? 0 }} / {{ $sunTotalUnique ?? 0 }}</td>
                             <td class="px-4">{{ $moonYourUnique ?? 0 }} / {{ $moonTotalUnique ?? 0 }}</td>
                             <td class="px-4">{{ $planetsYourUnique ?? 0 }} / {{ $planetsTotalUnique ?? 0 }}</td>
+                            <td class="px-4">{{ $asteroidCounts['Unique'][0] }} / {{ $asteroidCounts['Unique'][1] }}</td>
                         </tr>
 
                         <tr>
