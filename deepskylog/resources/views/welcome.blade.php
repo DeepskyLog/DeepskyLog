@@ -39,6 +39,10 @@
             @endguest
         </x-card>
 
+        @if (! empty($tonightsBest))
+            <x-tonights-best :best="$tonightsBest" />
+        @endif
+
         {{-- Latest sketch of the month / week --}}
         <div class="flex flex-col sm:flex-row sm:gap-4">
             <div class="mt-4 rounded-xl">

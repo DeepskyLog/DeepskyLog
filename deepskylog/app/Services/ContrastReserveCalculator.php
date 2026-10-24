@@ -280,13 +280,14 @@ class ContrastReserveCalculator
      * at the best of the observer's magnifications.
      *
      * @param  array<int, list<Eyepiece>>|null  $magnifications  from magnifications(), when already known
+     * @param  float|null  $sqm  the sky brightness to use instead of the location's (a sky lit by the Moon)
      * @return array{contrast_reserve: ?float, category: ?string, magnification: ?int, eyepieces: list<Eyepiece>, sqm: ?float}
      */
-    public static function calculate(AstroTarget $target, Instrument $instrument, Location $location, ?User $user, float $lensFactor = 1.0, ?array $magnifications = null): array
+    public static function calculate(AstroTarget $target, Instrument $instrument, Location $location, ?User $user, float $lensFactor = 1.0, ?array $magnifications = null, ?float $sqm = null): array
     {
         $result = ['contrast_reserve' => null, 'category' => null, 'magnification' => null, 'eyepieces' => [], 'sqm' => null];
 
-        $sqm           = $location->getSqm();
+        $sqm         ??= $location->getSqm();
         $result['sqm'] = is_numeric($sqm) ? (float) $sqm : null;
         $aperture      = (float) $instrument->aperture_mm;
         if ($result['sqm'] === null || $aperture <= 0) {

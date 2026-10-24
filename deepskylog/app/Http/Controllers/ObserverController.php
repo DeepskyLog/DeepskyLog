@@ -637,28 +637,7 @@ class ObserverController extends Controller
                 : __('All objects of this catalog or list are seen already.'));
         }
 
-        $list = DB::transaction(function () use ($grid, $user, $viewer, $objectNames) {
-            $list = ObservingList::create([
-                'owner_user_id' => $viewer->id,
-                'name' => $this->uniqueCatalogListName($viewer, $this->catalogListName($grid, $user, $viewer)),
-                'public' => false,
-            ]);
-
-            $now = now();
-            foreach ($objectNames->chunk(500) as $chunk) {
-                DB::table('observing_list_items')->insert($chunk->map(fn(string $name, int $index) => [
-                    'observing_list_id' => $list->id,
-                    'object_name' => $name,
-                    'sort_order' => $index + 1,
-                    'source_mode' => 'manual',
-                    'added_by_user_id' => $viewer->id,
-                    'created_at' => $now,
-                    'updated_at' => $now,
-                ])->values()->all());
-            }
-
-            return $list;
-        });
+        $list = ObservingList::createWithObjects($viewer, $this->catalogListName($grid, $user, $viewer), $objectNames);
 
         return redirect()->route('observing-list.show', $list)
             ->with('success', __('Observing list created with :count object(s).', ['count' => $objectNames->count()]));
@@ -718,20 +697,6 @@ class ObserverController extends Controller
         return $drawn
             ? __(':source - not drawn yet by :observer', ['source' => $source, 'observer' => $observer])
             : __(':source - not seen yet by :observer', ['source' => $source, 'observer' => $observer]);
-    }
-
-    /**
-     * The lists of an observer have unique names: add " (2)", " (3)", ... to
-     * a name that is taken.
-     */
-    private function uniqueCatalogListName(User $owner, string $name): string
-    {
-        $candidate = $name;
-        for ($suffix = 2; ObservingList::where('owner_user_id', $owner->id)->where('name', $candidate)->exists(); $suffix++) {
-            $candidate = $name . ' (' . $suffix . ')';
-        }
-
-        return $candidate;
     }
 
     /**

@@ -41,11 +41,6 @@
 - [ ] Release new version of pyDeepskyLog
   - [ ] Ready to be released, make sure to check if everything still works with the PiFinder.
 
-
-### For later
-
-- [ ] Add a wizard to create an observing list.
-
 ### Done
 
 - [x] Add privacy policy
@@ -79,7 +74,7 @@
 - [x] Rework message system
 - [x] Totally reworked the sessions. They are now more blog-like
 - [x] New objects detail page
-- [x] Added planets, lunar features, sun, moon
+- [x] Added planets, lunar features, sun, moon, asteroids
 - [x] Add a page to edit objects. More user-friendly than before, with a button to fetch data from Simbad.
 - [x] Add a page to add a new object, with the same user-friendly form and Simbad fetching.
 - [x] Add a page to show the catalog of objects, with filters and search.
@@ -93,4 +88,6 @@
 - [X] DeepskyLog atlases can be created.  They are updated to have a nicer layout.
 - [X] Object sets can be created.  They are updated to have a nicer layout.  This was broken in the old version of DeepskyLog but is working again in the new version.
 - [X] Reports of lists of objects can be created with your own layout.  The layouts of the old version of DeepskyLog are imported.  This was broken in the old version of DeepskyLog but is working again in the new version.
-- [X] For every object, the user can show the field views: where to find the object with the naked eye, binoculars, and telescopes. 
+- [X] For every object, the user can show the field views: where to find the object with the naked eye, binoculars, and telescopes
+- [X] Add a wizard to create an observing list.
+ 

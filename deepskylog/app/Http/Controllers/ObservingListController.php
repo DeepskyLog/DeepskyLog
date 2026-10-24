@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ObservingList;
+use App\Services\TonightsBest;
 use App\Models\ObservingListComment;
 use App\Models\ObservingListItem;
 use App\Models\Observation;
@@ -237,6 +238,24 @@ class ObservingListController extends Controller
 
         return redirect()->route('observing-list.show', $list)
             ->with('success', __('Observing list created.'));
+    }
+
+    /**
+     * Make an observing list of the deep-sky objects of Tonight's best on the
+     * home page, as the observer sees it (the same cached list).
+     */
+    public function storeTonight(Request $request): RedirectResponse
+    {
+        $this->authorize('create', ObservingList::class);
+
+        $result = TonightsBest::for($request->user());
+        $list = $result ? TonightsBest::createList($request->user(), $result) : null;
+        if (!$list) {
+            return redirect('/')->with('error', __('There are no deep-sky objects for tonight to put on a list.'));
+        }
+
+        return redirect()->route('observing-list.show', $list)
+            ->with('success', __('Observing list created with :count object(s).', ['count' => $list->items()->count()]));
     }
 
     /**

@@ -810,6 +810,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('observing-list.create');
     Route::post('/observing-lists', [App\Http\Controllers\ObservingListController::class, 'store'])
         ->name('observing-list.store');
+    Route::post('/observing-lists/tonight', [App\Http\Controllers\ObservingListController::class, 'storeTonight'])
+        ->name('observing-list.store-tonight');
+    Route::view('/observing-lists/night', 'observing-lists.night')
+        ->name('observing-list.night')->middleware('doNotCacheResponse');
 
     // Edit / update / delete an observing list
     Route::get('/observing-list/{list}/edit', [App\Http\Controllers\ObservingListController::class, 'edit'])

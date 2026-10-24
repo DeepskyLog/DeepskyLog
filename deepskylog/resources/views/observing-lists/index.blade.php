@@ -8,6 +8,10 @@
                     {{ __('Discover public lists') }}
                 </a>
                 @can('create', \App\Models\ObservingList::class)
+                    <a href="{{ route('observing-list.night') }}"
+                       class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
+                        {{ __('New list for a night') }}
+                    </a>
                     <a href="{{ route('observing-list.create') }}"
                        class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500">
                         {{ __('New list') }}

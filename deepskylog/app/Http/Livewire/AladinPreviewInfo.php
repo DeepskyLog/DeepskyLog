@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Asteroid;
 use App\Services\AsteroidCoordinates;
 use App\Services\ContrastReserveCalculator;
+use App\Services\MoonlitContrastReserve;
 use App\Support\EphemerisDate;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
@@ -28,6 +29,8 @@ class AladinPreviewInfo extends Component
     public $contrast_used_sqm;
     public $contrast_used_nelm;
     public $contrast_used_instrument;
+    /** The contrast reserve with the Moon in the night of the date (MoonlitContrastReserve), or null. */
+    public $moonlit = null;
     public $optimum_detection_magnification;
     public $optimum_eyepieces = [];
     // Raw object type passed from the page (e.g. 'comet', 'planet', etc.)
@@ -745,6 +748,24 @@ class AladinPreviewInfo extends Component
                 $this->contrast_reserve_category = null;
                 $this->contrast_used_location = null;
                 $this->contrast_used_instrument = null;
+            }
+
+            // The contrast reserve in the night of the date, with the sky lit
+            // by the Moon, for deep-sky objects (planets and asteroids move,
+            // and the stored metrics are for a dark sky).
+            $this->moonlit = null;
+            if ($this->contrast_reserve !== null && empty($isPlanet) && !$isAsteroid && is_numeric($obj->ra ?? null) && is_numeric($obj->decl ?? null)) {
+                try {
+                    $timezone = EphemerisDate::timezone($userLocation);
+                    $this->moonlit = MoonlitContrastReserve::for($target, (float) $obj->ra * 15.0, (float) $obj->decl, $userInstrument, $userLocation, $authUser,
+                        $date->copy()->timezone($timezone)->toDateString(), $timezone, $lensFactor) ?? ['contrast_reserve' => null, 'category' => null];
+                    if (is_numeric($this->moonlit['contrast_reserve'])) {
+                        $this->moonlit['contrast_reserve'] = round($this->moonlit['contrast_reserve'], 2);
+                    }
+                } catch (\Throwable $e) {
+                    report($e);
+                    $this->moonlit = null;
+                }
             }
 
             // log intermediate debug values for easier diagnosis

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class ObservingList extends Model
 {
@@ -205,6 +206,55 @@ class ObservingList extends Model
     {
         $comment->delete();
         $this->decrement('comments_count');
+    }
+
+    /**
+     * The lists of an observer have unique names: add " (2)", " (3)", ... to
+     * a name that is taken.
+     */
+    public static function uniqueName(User $owner, string $name): string
+    {
+        $candidate = $name;
+        for ($suffix = 2; self::where('owner_user_id', $owner->id)->where('name', $candidate)->exists(); $suffix++) {
+            $candidate = $name . ' (' . $suffix . ')';
+        }
+
+        return $candidate;
+    }
+
+    /**
+     * Create a list of the observer with these objects (objects.name), in
+     * this order. The name is made unique.
+     *
+     * @param  iterable<string>  $objectNames
+     */
+    public static function createWithObjects(User $owner, string $name, iterable $objectNames, ?string $description = null, bool $public = false): self
+    {
+        $names = collect($objectNames)->map(fn ($name) => (string) $name)->filter(fn (string $name) => $name !== '')->unique()->values();
+
+        return DB::transaction(function () use ($owner, $name, $names, $description, $public) {
+            $list = self::create([
+                'owner_user_id' => $owner->id,
+                'name' => self::uniqueName($owner, $name),
+                'description' => $description,
+                'public' => $public,
+            ]);
+
+            $now = now();
+            foreach ($names->chunk(500) as $chunk) {
+                DB::table('observing_list_items')->insert($chunk->map(fn (string $objectName, int $index) => [
+                    'observing_list_id' => $list->id,
+                    'object_name' => $objectName,
+                    'sort_order' => $index + 1,
+                    'source_mode' => 'manual',
+                    'added_by_user_id' => $owner->id,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ])->values()->all());
+            }
+
+            return $list;
+        });
     }
 
     /**

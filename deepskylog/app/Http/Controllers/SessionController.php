@@ -11,6 +11,7 @@ use App\Models\ObservationSession;
 use App\Models\ObservingList;
 use App\Models\User;
 use App\Services\Observations\ObservationCardData;
+use App\Services\TonightsBest;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -1059,7 +1060,15 @@ class SessionController extends Controller
             ->limit(6)
             ->get());
 
-        return $this->noCacheResponse(response()->view('welcome', compact('sessions', 'observingLists')));
+        // The objects worth observing tonight, for the observer's telescope or, for guests, the most observed ones
+        try {
+            $tonightsBest = TonightsBest::for(Auth::user());
+        } catch (\Throwable $e) {
+            report($e);
+            $tonightsBest = null;
+        }
+
+        return $this->noCacheResponse(response()->view('welcome', compact('sessions', 'observingLists', 'tonightsBest')));
     }
 
     /**

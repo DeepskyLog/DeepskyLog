@@ -153,6 +153,37 @@
             </td>
         </tr>
     @endunless
+    @if ($moonlit !== null)
+        {{-- The contrast reserve above is for a dark sky; this one for the sky of the night of the date (MoonlitContrastReserve) --}}
+        <tr>
+            <td class="pr-4 font-medium">{{ __('Contrast reserve with the Moon') }}</td>
+            <td>
+                @if ($moonlit['contrast_reserve'] === null)
+                    <span class="text-gray-400">{{ __('The object does not get high enough in the dark hours of this night.') }}</span>
+                @else
+                    @php
+                        $moonClass = match ($moonlit['category']) {
+                            'very_easy' => 'text-green-400',
+                            'easy' => 'text-green-700',
+                            'quite_difficult' => 'text-orange-400',
+                            'difficult' => 'text-orange-700',
+                            'questionable' => 'text-gray-300',
+                            'not_visible' => 'text-gray-600',
+                            default => 'text-white',
+                        };
+                    @endphp
+                    <span class="{{ $moonClass }} font-medium" title="{{ __('contrast.reserve.category.' . $moonlit['category']) }}">{{ $moonlit['contrast_reserve'] }}</span>
+                    <span class="text-xs text-gray-400">
+                        @if ($moonlit['moon_up'])
+                            {{ __('at :time (altitude :altitude°), the sky lit by the Moon (:fraction% illuminated) to :sqm mag/arcsec²', ['time' => $moonlit['time'], 'altitude' => $moonlit['altitude'], 'fraction' => (int) round($moonlit['moon_fraction'] * 100), 'sqm' => number_format($moonlit['sqm'], 2)]) }}
+                        @else
+                            {{ __('at :time (altitude :altitude°), with the Moon below the horizon', ['time' => $moonlit['time'], 'altitude' => $moonlit['altitude']]) }}
+                        @endif
+                    </span>
+                @endif
+            </td>
+        </tr>
+    @endif
     {{-- The RA/Dec, Magnitude and Diameter rows were removed from this preview
          area because those values are shown at the top of the page. --}}
     @unless ($isComet || $isMoon)
