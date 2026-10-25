@@ -543,6 +543,26 @@
                                     </dd>
                                 </div>
 
+                                {{-- The observations of the other objects seen in the same field --}}
+                                @if (! empty($sameFieldObservations) && $sameFieldObservations->isNotEmpty())
+                                    <div>
+                                        <dt
+                                            class="text-xs uppercase tracking-wide text-gray-400"
+                                        >
+                                            {{ __("Seen in the same field as") }}
+                                        </dt>
+                                        <dd class="mt-1 font-semibold">
+                                            @foreach ($sameFieldObservations as $sameFieldObservation)
+                                                <a
+                                                    href="{{ $sameFieldObservation->detailUrl() }}"
+                                                    class="hover:underline text-blue-300"
+                                                    >{{ $sameFieldObservation->target_name }}</a
+                                                >@if (! $loop->last), @endif
+                                            @endforeach
+                                        </dd>
+                                    </div>
+                                @endif
+
                                 {{-- Constellation --}}
                                 @if ($constellation)
                                     <div>

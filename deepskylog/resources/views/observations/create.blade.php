@@ -420,6 +420,46 @@
                         <textarea id="description" name="description" rows="6" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100">{{ old('description') }}</textarea>
                     </div>
 
+                    @if ($resolved['type'] === 'deepsky' && ! old('edit_unified_id') && auth()->check())
+                        {{-- The other objects seen in the same field get an observation of their own
+                             with the same date, equipment, conditions and description (#831) --}}
+                        @php
+                            $oldAlsoSeen = array_map('mb_strtolower', (array) old('also_seen', []));
+                            $oldAlsoSeenMore = json_decode((string) old('also_seen_more', ''), true);
+                            $oldAlsoSeenMore = is_array($oldAlsoSeenMore) ? array_values(array_filter($oldAlsoSeenMore, 'is_string')) : [];
+                        @endphp
+                        <div class="mt-4">
+                            <label class="block text-xs text-gray-400 mb-1">{{ __('Also seen in the same field') }}</label>
+                            <p class="text-xs text-gray-400 mb-2">{{ __('Each object you choose gets an observation of its own, with the same date, equipment, conditions and description. The drawing and the details of the object stay with this observation.') }}</p>
+                            @if (! empty($sameFieldObjects))
+                                <div class="mb-2 flex flex-wrap gap-x-4 gap-y-1">
+                                    @foreach ($sameFieldObjects as $sameFieldObject)
+                                        <label class="inline-flex items-center gap-2 text-sm">
+                                            <input type="checkbox" name="also_seen[]" value="{{ $sameFieldObject['name'] }}" class="rounded" @checked(in_array(mb_strtolower($sameFieldObject['name']), $oldAlsoSeen, true)) />
+                                            {{ $sameFieldObject['name'] }}
+                                            <span class="text-xs text-gray-400">{{ $sameFieldObject['type'] }}, {{ number_format($sameFieldObject['separation'], 1) }}'</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            @endif
+                            <div x-data="{ alsoSeenMore: @js($oldAlsoSeenMore) }">
+                                <x-select
+                                    name="also_seen_more"
+                                    async-data="{{ route('api.objects.search', $oldAlsoSeenMore !== [] ? ['selected' => $oldAlsoSeenMore] : []) }}"
+                                    x-model="alsoSeenMore"
+                                    option-label="label"
+                                    option-value="value"
+                                    multiselect
+                                    placeholder="{{ __('Other objects') }}"
+                                    class="w-full"
+                                />
+                            </div>
+                            @error('also_seen')
+                                <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @endif
+
                     <div class="mt-4">
                         <label class="block text-xs text-gray-400 mb-1">{{ __('Standard language for this observation') }}</label>
                         <x-select

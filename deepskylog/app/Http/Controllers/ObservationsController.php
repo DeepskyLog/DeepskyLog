@@ -19,6 +19,7 @@ use App\Models\ObservationLike;
 use App\Models\ObservationComment;
 use App\Services\ObservationSearchQuery;
 use App\Services\Observations\ObservationCardData;
+use App\Services\Observations\SameFieldObjects;
 use App\Services\Observations\TargetAltitude;
 use App\Support\Html;
 use Carbon\Carbon;
@@ -26,6 +27,7 @@ use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Targets\Moon as AstroMoon;
 use deepskylog\AstronomyLibrary\Time;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -165,6 +167,8 @@ class ObservationsController extends Controller
             'drawing_filename' => $selectedUnified->drawing_filename,
             'moonContext' => $moonContext,
             'objectAltitude' => $objectAltitude,
+            // The observations of the other objects seen in the same field
+            'sameFieldObservations' => $selectedUnified->seenInSameField(),
         ], $preloadedData, $socialData));
     }
 
@@ -2198,6 +2202,21 @@ class ObservationsController extends Controller
             } catch (\Throwable $_) {
             }
 
+            // A new deep-sky observation can be stored for the other objects
+            // seen in the same field as well: suggest those within the field
+            // of the equipment the form starts with.
+            $sameFieldObjects = [];
+            if ($user && $resolved['type'] === 'deepsky' && !$request->old('edit_unified_id')) {
+                $targetName = Observation::canonicalDeepskyName((string) ($resolved['record']->name ?? $slug));
+                if ($targetName !== null) {
+                    $sameFieldObjects = SameFieldObjects::suggest($targetName, SameFieldObjects::fieldOf(
+                        (int) ($prefill['instrument_id'] ?? $user->stdtelescope) ?: null,
+                        (int) ($prefill['eyepiece_id'] ?? $user->stdeyepiece) ?: null,
+                        (int) (array_key_exists('lens_id', $prefill) ? $prefill['lens_id'] : $user->standardLensId()) ?: null,
+                    ));
+                }
+            }
+
             return view('observations.create', [
                 'resolved' => $resolved,
                 'slug' => $slug,
@@ -2209,6 +2228,7 @@ class ObservationsController extends Controller
                 'instrumentSet' => $instrumentSet,
                 'locations' => $locations,
                 'prefill' => $prefill,
+                'sameFieldObjects' => $sameFieldObjects,
                 // Provide server upload limits to the form so the UI can show helpful guidance
                 'php_upload_max_filesize' => ini_get('upload_max_filesize'),
                 'php_post_max_size' => ini_get('post_max_size'),
@@ -2364,6 +2384,11 @@ class ObservationsController extends Controller
             'comet_coma' => 'nullable|integer',
             'comet_tail_length' => 'nullable|integer',
             'comet_position_angle' => 'nullable|integer|between:0,360',
+            // The other objects seen in the same field (#831): the suggested ones
+            // ticked, and those chosen in the multiselect (a JSON list)
+            'also_seen' => 'nullable|array|max:' . SameFieldObjects::MAX,
+            'also_seen.*' => 'string|max:255',
+            'also_seen_more' => 'nullable|string|max:10000',
         ], [
             'instrument_id.required' => __('Please choose the instrument you used. For an observation with the naked eye, add an instrument of the type Naked Eye.'),
             'description.required' => __('Please describe what you saw.'),
@@ -2392,6 +2417,13 @@ class ObservationsController extends Controller
         $target = $this->resolveObservationTarget((string) $validated['target_table'], (string) $validated['target_slug']);
         if ($target === null) {
             return redirect()->back()->withInput()->withErrors(['target_slug' => __('No object found for') . " '" . $validated['target_slug'] . "'."]);
+        }
+        $alsoSeen = [];
+        if (empty($editId) && $target['type'] === Observation::TYPE_DEEPSKY) {
+            $alsoSeen = $this->sameFieldTargets($validated, $target['name']);
+            if (is_string($alsoSeen)) {
+                return redirect()->back()->withInput()->withErrors(['also_seen' => $alsoSeen]);
+            }
         }
         $obs->target_type = $target['type'];
         $obs->target_table = $target['table'];
@@ -2564,6 +2596,10 @@ class ObservationsController extends Controller
             }
         }
 
+        if ($alsoSeen !== []) {
+            $this->storeSameFieldObservations($obs, $alsoSeen, $magnification);
+        }
+
         // The detail rows are written without model events, so an edit that
         // only changes them would otherwise leave the cached pages stale.
         Observation::clearResponseCache();
@@ -2572,13 +2608,82 @@ class ObservationsController extends Controller
         try {
             $detailUrl = $this->buildObservationDetailUrlForUnified((int) $obs->id);
             if ($detailUrl) {
-                return redirect($detailUrl)->with('success', __('Observation saved'));
+                return redirect($detailUrl)->with('success', $alsoSeen === []
+                    ? __('Observation saved')
+                    : __(':count observations saved', ['count' => count($alsoSeen) + 1]));
             }
         } catch (\Throwable $_) {
             // fallback below
         }
 
         return redirect()->route('observations.show', ['observer' => $user->slug])->with('success', __('Observation saved'));
+    }
+
+    /**
+     * The canonical names of the other objects seen in the same field, without
+     * the object of the observation itself, or the error message when one
+     * of them is not in the database.
+     *
+     * @return list<string>|string
+     */
+    private function sameFieldTargets(array $validated, string $targetName): array|string
+    {
+        $more = json_decode((string) ($validated['also_seen_more'] ?? ''), true);
+        $names = array_merge($validated['also_seen'] ?? [], is_array($more) ? $more : []);
+
+        $targets = [];
+        foreach ($names as $name) {
+            if (!is_string($name) || trim($name) === '') {
+                continue;
+            }
+            $canonical = Observation::canonicalDeepskyName($name);
+            if ($canonical === null) {
+                return __('No object found for') . " '" . $name . "'.";
+            }
+            if (mb_strtolower($canonical) !== mb_strtolower($targetName)) {
+                $targets[mb_strtolower($canonical)] = $canonical;
+            }
+        }
+
+        if (count($targets) > SameFieldObjects::MAX) {
+            return __('You can add at most :max objects seen in the same field.', ['max' => SameFieldObjects::MAX]);
+        }
+
+        return array_values($targets);
+    }
+
+    /**
+     * Store an observation of each of the other objects seen in the same
+     * field, with the date, time, equipment, conditions and description of
+     * the observation $main. The drawing and the details of the object
+     * (visibility, diameters, ...) stay with $main.
+     *
+     * @param  list<string>  $names
+     */
+    private function storeSameFieldObservations(Observation $main, array $names, ?string $magnification): void
+    {
+        $shared = Arr::only($main->getAttributes(), [
+            'observer_username', 'observer_user_id', 'instrument_id', 'location_id', 'eyepiece_id',
+            'filter_id', 'lens_id', 'observed_on', 'observed_time', 'description', 'language',
+            'seeing', 'transparency', 'limiting_magnitude', 'sqm',
+        ]);
+
+        DB::transaction(function () use ($main, $names, $magnification, $shared) {
+            foreach ($names as $name) {
+                $copy = Observation::create(array_merge($shared, [
+                    'target_type' => Observation::TYPE_DEEPSKY,
+                    'target_table' => 'objects',
+                    'target_key' => $name,
+                    'target_name' => $name,
+                    'has_drawing' => 0,
+                    'seen_with_observation_id' => $main->id,
+                ]));
+                DB::table('deepsky_observation_details')->insert([
+                    'observation_id' => $copy->id,
+                    'magnification' => $magnification,
+                ]);
+            }
+        });
     }
 
     /**

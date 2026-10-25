@@ -53,6 +53,7 @@ class Observation extends Model
         'transparency',
         'limiting_magnitude',
         'sqm',
+        'seen_with_observation_id',
     ];
 
     /**
@@ -268,6 +269,23 @@ class Observation extends Model
             ->search(fn($candidate) => (int) $candidate->id === (int) $this->id);
 
         return $position === false ? 1 : $position + 1;
+    }
+
+    /**
+     * The other observations of the objects seen in the same field, entered
+     * together with this one: they share the id of the observation entered
+     * with the form (seen_with_observation_id, null on that one itself).
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, self>
+     */
+    public function seenInSameField(): \Illuminate\Database\Eloquent\Collection
+    {
+        $group = $this->seen_with_observation_id ?? $this->id;
+
+        return static::where(fn ($q) => $q->whereKey($group)->orWhere('seen_with_observation_id', $group))
+            ->whereKeyNot($this->id)
+            ->orderBy('target_name')
+            ->get();
     }
 
     /**
