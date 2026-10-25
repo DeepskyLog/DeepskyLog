@@ -60,6 +60,10 @@ class ObservingListFileImportService
                 case 'csv':
                     $objectNames = $this->parseCsv($file);
                     break;
+                case 'xml':
+                case 'oal':
+                    $objectNames = $this->parseOal($file);
+                    break;
                 default:
                     $this->errors[] = __('Unsupported file format: :format', ['format' => $extension]);
                     return [
@@ -268,6 +272,68 @@ class ObservingListFileImportService
         }
 
         return $objectNames;
+    }
+
+    /**
+     * Parse an OAL file (#114): the names of its <target> elements, as the
+     * list export writes them and Eye&Telescope exports an observing plan. The
+     * other sections, and the observations of a logbook export, are ignored.
+     * A target whose name DeepskyLog doesn't know is taken by the first of its
+     * <alias> names it does know.
+     *
+     * @return array  Array of object names
+     */
+    protected function parseOal(UploadedFile $file): array
+    {
+        $previous = libxml_use_internal_errors(true);
+        $document = new \DOMDocument();
+        $loaded = $document->loadXML($this->readText($file), LIBXML_NONET);
+        $error = libxml_get_errors()[0] ?? null;
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+
+        if (!$loaded || $document->documentElement?->localName !== 'observations') {
+            $this->errors[] = $loaded
+                ? __('Not an OAL file: it has no <observations> element.')
+                : __('Not a valid OAL file: :error (line :line)', ['error' => trim((string) $error?->message), 'line' => $error?->line]);
+
+            return [];
+        }
+
+        // OAL files put their sections in no namespace, or in the default one.
+        $xpath = new \DOMXPath($document);
+        $targets = [];
+        foreach ($xpath->query("/*/*[local-name()='targets']/*[local-name()='target']") as $target) {
+            $names = [];
+            foreach ($xpath->query("*[local-name()='name' or local-name()='alias']", $target) as $node) {
+                $name = trim($node->textContent);
+                if ($name === '') {
+                    continue;
+                }
+                // The name first, whatever the order in the file.
+                if ($node->localName === 'name') {
+                    array_unshift($names, $name);
+                } else {
+                    $names[] = $name;
+                }
+            }
+            if ($names !== []) {
+                $targets[] = $names;
+            }
+        }
+
+        $resolver = app(ObservingListItemNameResolver::class);
+        $resolved = $resolver->resolveMany(array_merge([], ...$targets));
+
+        return array_map(function (array $names) use ($resolver, $resolved): string {
+            foreach ($names as $name) {
+                if (($resolved[$resolver->clean($name)] ?? null) !== null) {
+                    return $name;
+                }
+            }
+
+            return $names[0];
+        }, $targets);
     }
 
     /**

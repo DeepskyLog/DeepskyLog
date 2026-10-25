@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Livewire\AdvancedObjectSearchTable;
 use App\Models\ObservingList;
+use App\Services\Import\OalSchemaValidator;
+use App\Services\Oal\OalWriter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -293,6 +296,84 @@ class ObservingListExportController extends Controller
             Log::error('ObservingListExportController::apd failed', ['list_id' => $list->id ?? null, 'error' => (string) $ex]);
 
             return redirect()->back()->with('error', __('Failed to generate AstroPlanner APD export'));
+        }
+    }
+
+    /**
+     * The list as an OAL document (#114): the objects as <target> elements,
+     * the other sections empty, as Eye&Telescope writes an observing plan.
+     * The list import reads it back.
+     */
+    public function oal(Request $request, ObservingList $list, OalSchemaValidator $validator)
+    {
+        $this->authorize('view', $list);
+
+        try {
+            [, $rows] = $this->resolveRows($list);
+
+            $names = $rows->filter(fn ($row) => ($row->source_table ?? '') === 'objects')
+                ->map(fn ($row) => $row->obj_name ?? $row->name)->filter()->unique()->values()->all();
+            $constellations = [];
+            foreach (array_chunk($names, 500) as $chunk) {
+                $constellations += DB::table('objects')->whereIn('name', $chunk)->pluck('con', 'name')->all();
+            }
+
+            [$document, $root] = OalWriter::document();
+            foreach (['observers', 'sites', 'sessions'] as $section) {
+                $root->appendChild($document->createElement($section));
+            }
+
+            $targetsNode = $document->createElement('targets');
+            $written = [];
+            foreach ($rows as $row) {
+                $table = strtolower(trim((string) ($row->source_table ?? '')));
+                $catalog = trim((string) ($table === 'objects' ? ($row->obj_name ?? $row->name) : ($row->name ?? $row->display_name)));
+                $id = 'target-' . substr(sha1($table . '|' . $catalog), 0, 12);
+                if ($catalog === '' || isset($written[$id])) {
+                    continue;
+                }
+                $written[$id] = true;
+
+                $metadata = [];
+                if ($table === 'objects') {
+                    $con = trim((string) ($constellations[$catalog] ?? ''));
+                    $metadata = [
+                        'ra' => is_numeric($row->obj_ra ?? null) ? (float) $row->obj_ra : null,
+                        'decl' => is_numeric($row->obj_decl ?? null) ? (float) $row->obj_decl : null,
+                        'mag' => is_numeric($row->mag) && (float) $row->mag !== 99.9 ? (float) $row->mag : null,
+                        'diam1' => is_numeric($row->diam1) && (float) $row->diam1 > 0 ? (float) $row->diam1 : null,
+                        'diam2' => is_numeric($row->diam2) && (float) $row->diam2 > 0 ? (float) $row->diam2 : null,
+                        'pa' => is_numeric($row->pa) && (int) round((float) $row->pa) !== 999 ? (int) round((float) $row->pa) : null,
+                        'con' => $con !== '' ? Str::upper($con) : null,
+                        'type_code' => trim((string) ($row->obj_type ?? '')),
+                    ];
+                }
+
+                $targetsNode->appendChild(OalWriter::target($document, $id, [
+                    'catalog' => $catalog,
+                    'target_table' => $table,
+                    'target_type' => strtolower(trim((string) ($row->source_type ?? ''))),
+                    'target_key' => trim((string) ($row->source_pk ?? '')),
+                    'metadata' => $metadata,
+                ]));
+            }
+            $root->appendChild($targetsNode);
+
+            foreach (['scopes', 'eyepieces', 'lenses', 'filters', 'imagers'] as $section) {
+                $root->appendChild($document->createElement($section));
+            }
+
+            $content = $document->saveXML();
+            $validator->assertValid($content);
+
+            return response($content, 200, [
+                'Content-Type' => 'application/xml; charset=UTF-8',
+                'Content-Disposition' => 'attachment; filename="' . $this->buildExportFilename($list, 'xml') . '"',
+            ]);
+        } catch (\Throwable $ex) {
+            Log::error('ObservingListExportController::oal failed', ['list_id' => $list->id ?? null, 'error' => (string) $ex]);
+
+            return redirect()->back()->with('error', __('Failed to generate OAL export'));
         }
     }
 

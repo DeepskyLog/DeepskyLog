@@ -33,6 +33,7 @@
                         <li>• {{ __('SkyTools (.txt)') }}</li>
                         <li>• {{ __('AstroPlanner (.apd)') }}</li>
                         <li>• {{ __('CSV (object name in first column)') }}</li>
+                        <li>• {{ __('OAL (.xml)') }}</li>
                     </ul>
                 </div>
 
@@ -48,7 +49,7 @@
                                 type="file" 
                                 id="import_file"
                                 name="file"
-                                accept=".argo,.txt,.skylist,.apd,.csv"
+                                accept=".argo,.txt,.skylist,.apd,.csv,.xml,.oal"
                                 required
                                 class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer"
                             />

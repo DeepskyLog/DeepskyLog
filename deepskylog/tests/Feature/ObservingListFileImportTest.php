@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\DB;
  * The "Import objects" form of an observing list page
  * (POST /observing-list/{list}/import, ObservingListFileImportService):
  * deep-sky objects, comets, planets and lunar features in every format the
- * form accepts (.txt, .argo, .skylist, .apd, .csv).
+ * form accepts (.txt, .argo, .skylist, .apd, .csv, OAL .xml), and the OAL
+ * export of a list (#114), which the import reads back.
  */
 
 function olfiIndex(string $name, string $table, string $pk, string $type): void
@@ -232,6 +233,110 @@ it('ignores the byte order mark of a UTF-8 file', function (string $filename, st
     'skylist' => ['list.skylist', "SkySafariObservingListVersion=3.0\nSkyObject=BeginObject\n   CatalogNumber=M 31\nEndObject=SkyObject\n\nSkyObject=BeginObject\n   CatalogNumber=Mars\nEndObject=SkyObject\n"],
 ]);
 
+/** An OAL document with only targets, as Eye&Telescope exports a plan. */
+function olfiOal(string $targets, bool $defaultNamespace = false): string
+{
+    $root = $defaultNamespace
+        ? '<observations xmlns="http://groups.google.com/group/openastronomylog" version="2.1">'
+        : '<oal:observations xmlns:oal="http://groups.google.com/group/openastronomylog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1">';
+    $end = $defaultNamespace ? '</observations>' : '</oal:observations>';
+
+    return '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $root
+        . '<observers/><sites/><sessions/><targets>' . $targets . '</targets>'
+        . '<scopes/><eyepieces/><lenses/><filters/><imagers/>' . $end . "\n";
+}
+
+it('imports the targets of an OAL file, by an alias when DeepskyLog does not know the name', function () {
+    $content = olfiOal(
+        '<target id="t1" xsi:type="oal:deepSkyGX"><datasource>E&amp;T</datasource><name>M31</name></target>'
+        . '<target id="t2" xsi:type="oal:deepSkyGN"><name>NGC7000</name></target>'
+        . '<target id="t3" xsi:type="oal:deepSkyDN"><name>Pferdekopfnebel</name><alias>Barnard 33</alias></target>'
+        . '<target id="t4" xsi:type="oal:CometTargetType"><name>1P/Halley</name></target>'
+        . '<target id="t5" xsi:type="oal:PlanetTargetType"><name>Jupiter</name></target>'
+        . '<target id="t6"><alias>Kopernikus</alias><name>Copernicus</name></target>'
+        . '<target id="t7" xsi:type="oal:deepSkyGX"><name>Not an object</name><alias>Nor this</alias></target>'
+    );
+
+    olfiImport($this, $this->owner, $this->list, UploadedFile::fake()->createWithContent('plan.xml', $content))
+        ->assertSessionHas('warning', fn ($message) => str_starts_with($message, '6 object(s) imported, 1 skipped.')
+            && str_contains($message, 'Unknown objects: Not an object'));
+
+    expect(olfiItems($this->list))->toBe(['1P/Halley', 'B 33', 'Copernicus', 'Jupiter', 'M 31', 'NGC 7000']);
+});
+
+it('imports an OAL file with its sections in the default namespace, and with the .oal extension', function () {
+    $content = olfiOal('<target id="a"><name>NGC 1275</name></target><target id="b"><name>Saturn</name></target>', true);
+
+    olfiImport($this, $this->owner, $this->list, UploadedFile::fake()->createWithContent('plan.oal', "\xEF\xBB\xBF" . $content))
+        ->assertSessionHas('success', '2 object(s) imported, 0 skipped.');
+
+    expect(olfiItems($this->list))->toBe(['NGC 1275', 'Saturn']);
+});
+
+it('imports only the targets of an OAL logbook with observations', function () {
+    $content = str_replace('<imagers/>', '<imagers/><observation id="o1"><observer>x</observer><target>t1</target>'
+        . '<begin>2024-01-01T20:00:00Z</begin><result><description>Nice</description></result></observation>',
+        olfiOal('<target id="t1"><name>M 31</name></target>'));
+
+    olfiImport($this, $this->owner, $this->list, UploadedFile::fake()->createWithContent('logbook.xml', $content))
+        ->assertSessionHas('success', '1 object(s) imported, 0 skipped.');
+
+    expect(olfiItems($this->list))->toBe(['M 31'])
+        ->and(DB::table('observations')->count())->toBe(0);
+});
+
+it('reports an XML file that is not well-formed or not OAL', function (string $content, string $error) {
+    olfiImport($this, $this->owner, $this->list, UploadedFile::fake()->createWithContent('list.xml', $content))
+        ->assertSessionHas('warning', fn ($message) => str_contains($message, $error));
+
+    expect($this->list->items()->count())->toBe(0);
+})->with([
+    'broken' => ['<observations><targets><target><name>M 31</name></targets>', 'Not a valid OAL file'],
+    'other XML' => ['<objects><object><name>M 31</name></object></objects>', 'Not an OAL file'],
+]);
+
+it('exports a list as a valid OAL file that imports into the same list', function () {
+    foreach (['M 31', 'NGC 7000', 'B 33', '1P/Halley', 'Jupiter', 'Copernicus'] as $name) {
+        $this->list->items()->create(['object_name' => $name, 'source_mode' => 'manual', 'added_by_user_id' => $this->owner->id]);
+    }
+
+    $response = $this->actingAs($this->owner)->get(route('observing-list.export.oal', $this->list))
+        ->assertOk()
+        ->assertHeader('Content-Type', 'application/xml; charset=UTF-8')
+        ->assertHeader('Content-Disposition', 'attachment; filename="Test_list.xml"');
+    $content = $response->getContent();
+
+    expect(app(\App\Services\Import\OalSchemaValidator::class)->validate($content))->toBe([]);
+
+    $xml = simplexml_load_string($content);
+    $targets = collect($xml->xpath('//target'))->keyBy(fn ($target) => (string) $target->name);
+    expect($targets->keys()->sort()->values()->all())->toBe(['1P/Halley', 'B 33', 'Copernicus', 'Jupiter', 'M 31', 'NGC 7000'])
+        ->and($xml->xpath('//observation'))->toBe([]);
+
+    $m31 = $targets['M 31'];
+    expect((string) $m31->attributes('http://www.w3.org/2001/XMLSchema-instance')['type'])->toBe('oal:deepSkyGX')
+        ->and((float) $m31->position->ra)->toEqualWithDelta(0.71 * 15, 1e-6)
+        ->and((float) $m31->position->dec)->toEqualWithDelta(41.27, 1e-6)
+        ->and((string) $m31->constellation)->toBe('AND')
+        ->and((float) $m31->largeDiameter)->toBe(10000.0)
+        ->and((int) $m31->pa)->toBe(35)
+        ->and((string) $targets['1P/Halley']->attributes('http://www.w3.org/2001/XMLSchema-instance')['type'])->toBe('oal:CometTargetType')
+        ->and((string) $targets['Jupiter']->attributes('http://www.w3.org/2001/XMLSchema-instance')['type'])->toBe('oal:PlanetTargetType');
+
+    $copy = ObservingList::create(['owner_user_id' => $this->owner->id, 'name' => 'Copy', 'public' => true]);
+    olfiImport($this, $this->owner, $copy, UploadedFile::fake()->createWithContent('Test_list.xml', $content))
+        ->assertSessionHas('success', '6 object(s) imported, 0 skipped.');
+
+    expect(olfiItems($copy))->toBe(olfiItems($this->list));
+});
+
+it('only exports a private list as OAL for its owner', function () {
+    $this->list->update(['public' => false]);
+
+    $this->actingAs(User::factory()->create())->get(route('observing-list.export.oal', $this->list))
+        ->assertForbidden();
+});
+
 it('stores names in any letter case under the canonical name', function () {
     $content = "m 31\nngc 1275\nc/2020 f3 (neowise)\n1p/halley\njupiter\nSATURN\ncopernicus\nMARE IMBRIUM\n";
 
@@ -303,7 +408,7 @@ it('reports an AstroPlanner file without an Objects table', function () {
 });
 
 it('rejects a file in an unsupported format', function () {
-    olfiImport($this, $this->owner, $this->list, UploadedFile::fake()->createWithContent('list.xml', "<objects><object>M 31</object></objects>"))
+    olfiImport($this, $this->owner, $this->list, UploadedFile::fake()->createWithContent('list.pdf', "%PDF-1.4\nM 31\n"))
         ->assertSessionHasErrors('file')
         ->assertSessionHas('error');
 

@@ -13,6 +13,7 @@ use App\Models\SearchIndex;
 use App\Models\User;
 use App\Models\Observation;
 use App\Services\Import\OalSchemaValidator;
+use App\Services\Oal\OalWriter;
 use App\Services\ObservationSearchQuery;
 use App\Services\Observations\ObservationPdfDataBuilder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -36,11 +37,6 @@ class ObservationSearchExportController extends Controller
      * Other have none, so they are written without a type.
      */
     private const OAL_SCOPE_TYPES = [1 => 'A', 2 => 'B', 3 => 'R', 4 => 'N', 7 => 'C', 8 => 'K', 9 => 'M', 10 => 'S'];
-
-    private const OAL_NS = 'http://groups.google.com/group/openastronomylog';
-    private const XSI_NS = 'http://www.w3.org/2001/XMLSchema-instance';
-    private const OAL_SCHEMA_LOCATION = 'http://groups.google.com/group/openastronomylog oal21.xsd';
-    private const OAL_TARGET_METADATA_PREFIX = 'DeepskyLog:';
 
     /**
      * The most observations each export builds in one web request; larger
@@ -832,14 +828,7 @@ class ObservationSearchExportController extends Controller
             ];
         }
 
-        $document = new \DOMDocument('1.0', 'UTF-8');
-        $document->formatOutput = true;
-
-        $root = $document->createElementNS(self::OAL_NS, 'oal:observations');
-        $root->setAttribute('version', '2.1');
-        $root->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', self::XSI_NS);
-        $root->setAttributeNS(self::XSI_NS, 'xsi:schemaLocation', self::OAL_SCHEMA_LOCATION);
-        $document->appendChild($root);
+        [$document, $root] = OalWriter::document();
 
         $observersNode = $document->createElement('observers');
         $observerDefinitions = [];
@@ -865,8 +854,8 @@ class ObservationSearchExportController extends Controller
 
             $observerNode = $document->createElement('observer');
             $observerNode->setAttribute('id', $observerId);
-            $this->appendOalTextNode($document, $observerNode, 'name', $firstName);
-            $this->appendOalTextNode($document, $observerNode, 'surname', $surname);
+            OalWriter::appendTextNode($document, $observerNode, 'name', $firstName);
+            OalWriter::appendTextNode($document, $observerNode, 'surname', $surname);
             $observersNode->appendChild($observerNode);
         }
         $root->appendChild($observersNode);
@@ -875,11 +864,11 @@ class ObservationSearchExportController extends Controller
         foreach ($locations as $location) {
             $siteNode = $document->createElement('site');
             $siteNode->setAttribute('id', 'site-' . $location->id);
-            $this->appendOalTextNode($document, $siteNode, 'name', $location->name);
-            $this->appendOalTextNode($document, $siteNode, 'longitude', $location->longitude ?? 0, ['unit' => 'deg']);
-            $this->appendOalTextNode($document, $siteNode, 'latitude', $location->latitude ?? 0, ['unit' => 'deg']);
-            $this->appendOalTextNode($document, $siteNode, 'elevation', $location->elevation ?? 0);
-            $this->appendOalTextNode($document, $siteNode, 'timezone', $this->oalTimezoneOffsetMinutes($location->timezone));
+            OalWriter::appendTextNode($document, $siteNode, 'name', $location->name);
+            OalWriter::appendTextNode($document, $siteNode, 'longitude', $location->longitude ?? 0, ['unit' => 'deg']);
+            OalWriter::appendTextNode($document, $siteNode, 'latitude', $location->latitude ?? 0, ['unit' => 'deg']);
+            OalWriter::appendTextNode($document, $siteNode, 'elevation', $location->elevation ?? 0);
+            OalWriter::appendTextNode($document, $siteNode, 'timezone', $this->oalTimezoneOffsetMinutes($location->timezone));
             $sitesNode->appendChild($siteNode);
         }
         $root->appendChild($sitesNode);
@@ -891,34 +880,22 @@ class ObservationSearchExportController extends Controller
             if (!empty($sessionContext['language'])) {
                 $sessionNode->setAttribute('lang', $sessionContext['language']);
             }
-            $this->appendOalTextNode($document, $sessionNode, 'begin', $sessionContext['begin']);
-            $this->appendOalTextNode($document, $sessionNode, 'end', $sessionContext['end']);
-            $this->appendOalTextNode($document, $sessionNode, 'site', $sessionContext['site_id']);
+            OalWriter::appendTextNode($document, $sessionNode, 'begin', $sessionContext['begin']);
+            OalWriter::appendTextNode($document, $sessionNode, 'end', $sessionContext['end']);
+            OalWriter::appendTextNode($document, $sessionNode, 'site', $sessionContext['site_id']);
             foreach ($sessionContext['co_observer_ids'] as $coObserverId) {
-                $this->appendOalTextNode($document, $sessionNode, 'coObserver', $coObserverId);
+                OalWriter::appendTextNode($document, $sessionNode, 'coObserver', $coObserverId);
             }
-            $this->appendOalTextNode($document, $sessionNode, 'weather', $sessionContext['weather']);
-            $this->appendOalTextNode($document, $sessionNode, 'equipment', $sessionContext['equipment']);
-            $this->appendOalTextNode($document, $sessionNode, 'comments', $sessionContext['comments']);
+            OalWriter::appendTextNode($document, $sessionNode, 'weather', $sessionContext['weather']);
+            OalWriter::appendTextNode($document, $sessionNode, 'equipment', $sessionContext['equipment']);
+            OalWriter::appendTextNode($document, $sessionNode, 'comments', $sessionContext['comments']);
             $sessionsNode->appendChild($sessionNode);
         }
         $root->appendChild($sessionsNode);
 
         $targetsNode = $document->createElement('targets');
         foreach ($targetRefs as $targetId => $targetData) {
-            $targetNode = $document->createElement('target');
-            $targetNode->setAttribute('id', $targetId);
-            $targetType = $this->oalTargetXsiType($targetData);
-            if ($targetType !== null) {
-                $targetNode->setAttributeNS(self::XSI_NS, 'xsi:type', $targetType);
-            }
-            $this->appendOalTextNode($document, $targetNode, 'datasource', 'DeepskyLog');
-            $this->appendOalTextNode($document, $targetNode, 'name', $targetData['catalog']);
-            $this->appendOalTargetPosition($document, $targetNode, $targetData['metadata'] ?? []);
-            $this->appendOalTextNode($document, $targetNode, 'constellation', $targetData['metadata']['con'] ?? null);
-            $this->appendOalTextNode($document, $targetNode, 'notes', $this->oalTargetMetadata($targetData));
-            $this->appendOalDeepSkyTargetDetails($document, $targetNode, $targetType, $targetData['metadata'] ?? []);
-            $targetsNode->appendChild($targetNode);
+            $targetsNode->appendChild(OalWriter::target($document, $targetId, $targetData));
         }
         $root->appendChild($targetsNode);
 
@@ -928,19 +905,19 @@ class ObservationSearchExportController extends Controller
             $fixedMagnification = (int) ($instrument->fixedMagnification ?? 0) > 0;
             $scopeNode = $document->createElement('scope');
             $scopeNode->setAttribute('id', 'scope-' . $instrument->id);
-            $scopeNode->setAttributeNS(self::XSI_NS, 'xsi:type', $fixedMagnification ? 'oal:fixedMagnificationOpticsType' : 'oal:scopeType');
+            $scopeNode->setAttributeNS(OalWriter::XSI_NS, 'xsi:type', $fixedMagnification ? 'oal:fixedMagnificationOpticsType' : 'oal:scopeType');
             [$vendor, $model] = $this->oalVendorAndModel((string) $instrument->name, $makes->get($instrument->make_id), $makes->all());
-            $this->appendOalTextNode($document, $scopeNode, 'model', $model);
-            $this->appendOalTextNode($document, $scopeNode, 'type', self::OAL_SCOPE_TYPES[(int) $instrument->instrument_type_id] ?? null);
-            $this->appendOalTextNode($document, $scopeNode, 'vendor', $vendor);
-            $this->appendOalTextNode($document, $scopeNode, 'aperture', max(1, (float) ($instrument->aperture_mm ?? 1)));
+            OalWriter::appendTextNode($document, $scopeNode, 'model', $model);
+            OalWriter::appendTextNode($document, $scopeNode, 'type', self::OAL_SCOPE_TYPES[(int) $instrument->instrument_type_id] ?? null);
+            OalWriter::appendTextNode($document, $scopeNode, 'vendor', $vendor);
+            OalWriter::appendTextNode($document, $scopeNode, 'aperture', max(1, (float) ($instrument->aperture_mm ?? 1)));
             if ($fixedMagnification) {
-                $this->appendOalTextNode($document, $scopeNode, 'magnification', (int) $instrument->fixedMagnification);
+                OalWriter::appendTextNode($document, $scopeNode, 'magnification', (int) $instrument->fixedMagnification);
                 if ((float) ($instrument->field_of_view_deg ?? 0) > 0) {
-                    $this->appendOalTextNode($document, $scopeNode, 'trueField', (float) $instrument->field_of_view_deg, ['unit' => 'deg']);
+                    OalWriter::appendTextNode($document, $scopeNode, 'trueField', (float) $instrument->field_of_view_deg, ['unit' => 'deg']);
                 }
             } else {
-                $this->appendOalTextNode($document, $scopeNode, 'focalLength', max(1, (float) ($instrument->focal_length_mm ?? 1)));
+                OalWriter::appendTextNode($document, $scopeNode, 'focalLength', max(1, (float) ($instrument->focal_length_mm ?? 1)));
             }
             $scopesNode->appendChild($scopeNode);
         }
@@ -950,13 +927,13 @@ class ObservationSearchExportController extends Controller
         foreach ($eyepieces as $eyepiece) {
             $eyepieceNode = $document->createElement('eyepiece');
             $eyepieceNode->setAttribute('id', 'eyepiece-' . $eyepiece->id);
-            $this->appendOalTextNode($document, $eyepieceNode, 'model', $eyepiece->name);
-            $this->appendOalTextNode($document, $eyepieceNode, 'focalLength', max(1, (float) ($eyepiece->focal_length_mm ?? 1)));
+            OalWriter::appendTextNode($document, $eyepieceNode, 'model', $eyepiece->name);
+            OalWriter::appendTextNode($document, $eyepieceNode, 'focalLength', max(1, (float) ($eyepiece->focal_length_mm ?? 1)));
             if (is_numeric($eyepiece->max_focal_length_mm) && (float) $eyepiece->max_focal_length_mm > 0) {
-                $this->appendOalTextNode($document, $eyepieceNode, 'maxFocalLength', $eyepiece->max_focal_length_mm);
+                OalWriter::appendTextNode($document, $eyepieceNode, 'maxFocalLength', $eyepiece->max_focal_length_mm);
             }
             if (is_numeric($eyepiece->apparentFOV) && (float) $eyepiece->apparentFOV > 0) {
-                $this->appendOalTextNode($document, $eyepieceNode, 'apparentFOV', $eyepiece->apparentFOV, ['unit' => 'deg']);
+                OalWriter::appendTextNode($document, $eyepieceNode, 'apparentFOV', $eyepiece->apparentFOV, ['unit' => 'deg']);
             }
             $eyepiecesNode->appendChild($eyepieceNode);
         }
@@ -966,8 +943,8 @@ class ObservationSearchExportController extends Controller
         foreach ($lenses as $lens) {
             $lensNode = $document->createElement('lens');
             $lensNode->setAttribute('id', 'lens-' . $lens->id);
-            $this->appendOalTextNode($document, $lensNode, 'model', $lens->name);
-            $this->appendOalTextNode($document, $lensNode, 'factor', max(0.01, (float) ($lens->factor ?? 1)));
+            OalWriter::appendTextNode($document, $lensNode, 'model', $lens->name);
+            OalWriter::appendTextNode($document, $lensNode, 'factor', max(0.01, (float) ($lens->factor ?? 1)));
             $lensesNode->appendChild($lensNode);
         }
         $root->appendChild($lensesNode);
@@ -976,8 +953,8 @@ class ObservationSearchExportController extends Controller
         foreach ($filters as $filter) {
             $filterNode = $document->createElement('filter');
             $filterNode->setAttribute('id', 'filter-' . $filter->id);
-            $this->appendOalTextNode($document, $filterNode, 'model', $filter->name);
-            $this->appendOalTextNode($document, $filterNode, 'type', 'other');
+            OalWriter::appendTextNode($document, $filterNode, 'model', $filter->name);
+            OalWriter::appendTextNode($document, $filterNode, 'type', 'other');
             $filtersNode->appendChild($filterNode);
         }
         $root->appendChild($filtersNode);
@@ -993,39 +970,39 @@ class ObservationSearchExportController extends Controller
 
             $observationNode = $document->createElement('observation');
             $observationNode->setAttribute('id', 'observation-' . $observation->id);
-            $this->appendOalTextNode($document, $observationNode, 'observer', $this->oalObserverId($observation));
+            OalWriter::appendTextNode($document, $observationNode, 'observer', $this->oalObserverId($observation));
 
             if ($observation->location_id && $locations->has($observation->location_id)) {
-                $this->appendOalTextNode($document, $observationNode, 'site', 'site-' . $observation->location_id);
+                OalWriter::appendTextNode($document, $observationNode, 'site', 'site-' . $observation->location_id);
             }
-            $this->appendOalTextNode($document, $observationNode, 'session', $sessionOfObservation[$observation->id] ?? null);
-            $this->appendOalTextNode($document, $observationNode, 'target', $this->oalTargetId($observation, $catalog));
-            $this->appendOalTextNode(
+            OalWriter::appendTextNode($document, $observationNode, 'session', $sessionOfObservation[$observation->id] ?? null);
+            OalWriter::appendTextNode($document, $observationNode, 'target', $this->oalTargetId($observation, $catalog));
+            OalWriter::appendTextNode(
                 $document,
                 $observationNode,
                 'begin',
                 $this->formatOalBegin($observation, $locations->get($observation->location_id)?->timezone)
             );
             if (is_numeric($observation->limiting_magnitude) && (float) $observation->limiting_magnitude > 0) {
-                $this->appendOalTextNode($document, $observationNode, 'faintestStar', (string) $observation->limiting_magnitude);
+                OalWriter::appendTextNode($document, $observationNode, 'faintestStar', (string) $observation->limiting_magnitude);
             }
             if (is_numeric($observation->sqm) && (float) $observation->sqm > 0) {
-                $this->appendOalTextNode($document, $observationNode, 'sky-quality', (string) $observation->sqm, ['unit' => 'mags-per-squarearcsec']);
+                OalWriter::appendTextNode($document, $observationNode, 'sky-quality', (string) $observation->sqm, ['unit' => 'mags-per-squarearcsec']);
             }
             if ($observation->seeing !== null) {
-                $this->appendOalTextNode($document, $observationNode, 'seeing', max(1, min(5, (int) $observation->seeing)));
+                OalWriter::appendTextNode($document, $observationNode, 'seeing', max(1, min(5, (int) $observation->seeing)));
             }
             if ($observation->instrument_id && $instruments->has($observation->instrument_id)) {
-                $this->appendOalTextNode($document, $observationNode, 'scope', 'scope-' . $observation->instrument_id);
+                OalWriter::appendTextNode($document, $observationNode, 'scope', 'scope-' . $observation->instrument_id);
             }
             if ($observation->eyepiece_id && $eyepieces->has($observation->eyepiece_id)) {
-                $this->appendOalTextNode($document, $observationNode, 'eyepiece', 'eyepiece-' . $observation->eyepiece_id);
+                OalWriter::appendTextNode($document, $observationNode, 'eyepiece', 'eyepiece-' . $observation->eyepiece_id);
             }
             if ($observation->lens_id && $lenses->has($observation->lens_id)) {
-                $this->appendOalTextNode($document, $observationNode, 'lens', 'lens-' . $observation->lens_id);
+                OalWriter::appendTextNode($document, $observationNode, 'lens', 'lens-' . $observation->lens_id);
             }
             if ($observation->filter_id && $filters->has($observation->filter_id)) {
-                $this->appendOalTextNode($document, $observationNode, 'filter', 'filter-' . $observation->filter_id);
+                OalWriter::appendTextNode($document, $observationNode, 'filter', 'filter-' . $observation->filter_id);
             }
 
             $description = trim((string) ($observation->description ?? ''));
@@ -1035,15 +1012,15 @@ class ObservationSearchExportController extends Controller
                 $resultNode->setAttribute('lang', strtolower(substr($language, 0, 10)));
             }
             $descriptionNode = $document->createElement('description');
-            $descriptionNode->appendChild($document->createTextNode($this->xmlSafeText(html_entity_decode(strip_tags($description), ENT_QUOTES | ENT_HTML5, 'UTF-8'))));
+            $descriptionNode->appendChild($document->createTextNode(OalWriter::xmlSafeText(html_entity_decode(strip_tags($description), ENT_QUOTES | ENT_HTML5, 'UTF-8'))));
             $resultNode->appendChild($descriptionNode);
             $visibility = $observation->target_table === 'objects' ? $visibilities->get($observation->id) : null;
             if ($visibility !== null) {
-                $resultNode->setAttributeNS(self::XSI_NS, 'xsi:type', 'oal:findingsDeepSkyType');
-                $this->appendOalTextNode($document, $resultNode, 'rating', (int) $visibility);
+                $resultNode->setAttributeNS(OalWriter::XSI_NS, 'xsi:type', 'oal:findingsDeepSkyType');
+                OalWriter::appendTextNode($document, $resultNode, 'rating', (int) $visibility);
             }
             $observationNode->appendChild($resultNode);
-            $this->appendOalTextNode($document, $observationNode, 'image', $images[$observation->id] ?? null);
+            OalWriter::appendTextNode($document, $observationNode, 'image', $images[$observation->id] ?? null);
 
             $root->appendChild($observationNode);
         }
@@ -1725,39 +1702,6 @@ class ObservationSearchExportController extends Controller
         return $text !== '' ? substr($text, 0, 10) : null;
     }
 
-    /**
-     * Remove the characters XML 1.0 does not allow (control characters other
-     * than tab, newline and carriage return, which some legacy observation
-     * descriptions contain); the OAL file is otherwise not well-formed.
-     */
-    private function xmlSafeText(string $text): string
-    {
-        $clean = preg_replace('/[^\x{9}\x{A}\x{D}\x{20}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '', $text);
-
-        // preg_replace() returns null on invalid UTF-8: repair the encoding first.
-        return $clean ?? (string) preg_replace('/[^\x{9}\x{A}\x{D}\x{20}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '', mb_convert_encoding($text, 'UTF-8', 'UTF-8'));
-    }
-
-    private function appendOalTextNode(\DOMDocument $document, \DOMElement $parent, string $name, mixed $value, array $attributes = []): void
-    {
-        if ($value === null) {
-            return;
-        }
-
-        $text = trim($this->xmlSafeText((string) $value));
-        if ($text === '') {
-            return;
-        }
-
-        $node = $document->createElement($name);
-        foreach ($attributes as $attribute => $attributeValue) {
-            $node->setAttribute($attribute, $this->xmlSafeText((string) $attributeValue));
-        }
-
-        $node->appendChild($document->createTextNode($text));
-        $parent->appendChild($node);
-    }
-
     private function oalObserverId(Observation $observation): string
     {
         if ($observation->observer_user_id) {
@@ -1772,55 +1716,6 @@ class ObservationSearchExportController extends Controller
         return 'target-' . substr(sha1($this->skylistIdentity($observation, $catalog)), 0, 12);
     }
 
-    /**
-     * @param  array{catalog: string, target_table: string, target_type: string, target_key: string, metadata?: array<string, mixed>}  $targetData
-     */
-    private function oalTargetXsiType(array $targetData): ?string
-    {
-        $targetTable = $targetData['target_table'];
-        $catalog = strtolower(trim($targetData['catalog']));
-        $typeCode = Str::upper(trim((string) ($targetData['metadata']['type_code'] ?? '')));
-
-        return match (true) {
-            $targetTable === 'cometobjects' => 'oal:CometTargetType',
-            $targetTable === 'asteroids' => 'oal:MinorPlanetTargetType',
-            $targetTable === 'moons' => 'oal:MoonTargetType',
-            $targetTable === 'planets' && $catalog === 'sun' => 'oal:SunTargetType',
-            $targetTable === 'planets' => 'oal:PlanetTargetType',
-            $targetTable === 'objects' && in_array($typeCode, ['AA1STAR', 'DS'], true) => 'oal:deepSkyDS',
-            $targetTable === 'objects' && $typeCode === 'ASTER' => 'oal:deepSkyAS',
-            $targetTable === 'objects' && $typeCode === 'GALCL' => 'oal:deepSkyCG',
-            $targetTable === 'objects' && $typeCode === 'DRKNB' => 'oal:deepSkyDN',
-            $targetTable === 'objects' && $typeCode === 'GLOCL' => 'oal:deepSkyGC',
-            $targetTable === 'objects' && $typeCode === 'PLNNB' => 'oal:deepSkyPN',
-            $targetTable === 'objects' && in_array($typeCode, ['BRTNB', 'CLANB', 'EMINB', 'ENRNN', 'ENSTR', 'GXADN', 'HII', 'SNREM'], true) => 'oal:deepSkyGN',
-            $targetTable === 'objects' && $typeCode === 'GALXY' => 'oal:deepSkyGX',
-            $targetTable === 'objects' && $typeCode === 'OPNCL' => 'oal:deepSkyOC',
-            $targetTable === 'objects' && $typeCode === 'QUASR' => 'oal:deepSkyQS',
-            $targetTable === 'objects' && in_array($typeCode, ['STARC'], true) => 'oal:deepSkySC',
-            $targetTable === 'objects' => 'oal:deepSkyNA',
-            default => null,
-        };
-    }
-
-    /**
-     * @param  array{catalog: string, target_table: string, target_type: string, target_key: string}  $targetData
-     */
-    private function oalTargetMetadata(array $targetData): ?string
-    {
-        if ($targetData['target_table'] !== 'lunar_features') {
-            return null;
-        }
-
-        return sprintf(
-            '%starget_table=%s;target_key=%s;target_type=%s',
-            self::OAL_TARGET_METADATA_PREFIX,
-            $targetData['target_table'],
-            $targetData['target_key'],
-            $targetData['target_type'] !== '' ? $targetData['target_type'] : 'lunar'
-        );
-    }
-
     private function splitObserverName(string $name): array
     {
         $name = trim($name);
@@ -1833,56 +1728,6 @@ class ObservationSearchExportController extends Controller
         $surname = trim(implode(' ', $parts));
 
         return [$first, $surname !== '' ? $surname : $first];
-    }
-
-    /**
-     * @param  array<string, mixed>  $metadata
-     */
-    private function appendOalTargetPosition(
-        \DOMDocument $document,
-        \DOMElement $targetNode,
-        array $metadata
-    ): void {
-        if (!is_numeric($metadata['ra'] ?? null) || !is_numeric($metadata['decl'] ?? null)) {
-            return;
-        }
-
-        $positionNode = $document->createElement('position');
-        // The tables store RA in hours, OAL wants an angle.
-        $this->appendOalTextNode($document, $positionNode, 'ra', fmod((float) $metadata['ra'] * 15.0, 360.0), ['unit' => 'deg']);
-        $this->appendOalTextNode($document, $positionNode, 'dec', $metadata['decl'], ['unit' => 'deg']);
-        $targetNode->appendChild($positionNode);
-    }
-
-    /**
-     * @param  array<string, mixed>  $metadata
-     */
-    private function appendOalDeepSkyTargetDetails(
-        \DOMDocument $document,
-        \DOMElement $targetNode,
-        ?string $targetType,
-        array $metadata
-    ): void {
-        if ($targetType === null || !str_starts_with($targetType, 'oal:deepSky')) {
-            return;
-        }
-
-        // diam1 is the major axis, diam2 the minor one.
-        if (is_numeric($metadata['diam2'] ?? null) && (float) $metadata['diam2'] > 0) {
-            $this->appendOalTextNode($document, $targetNode, 'smallDiameter', $metadata['diam2'], ['unit' => 'arcsec']);
-        }
-
-        if (is_numeric($metadata['diam1'] ?? null) && (float) $metadata['diam1'] > 0) {
-            $this->appendOalTextNode($document, $targetNode, 'largeDiameter', $metadata['diam1'], ['unit' => 'arcsec']);
-        }
-
-        if (is_numeric($metadata['mag'] ?? null)) {
-            $this->appendOalTextNode($document, $targetNode, 'visMag', $metadata['mag']);
-        }
-
-        if ($targetType === 'oal:deepSkyGX' && is_numeric($metadata['pa'] ?? null)) {
-            $this->appendOalTextNode($document, $targetNode, 'pa', $metadata['pa']);
-        }
     }
 
     private function normalizeOalCatalogName(string $catalog): string

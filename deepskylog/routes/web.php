@@ -625,6 +625,8 @@ Route::get('/observing-list/{list}/export/stxt.txt', [App\Http\Controllers\Obser
     ->name('observing-list.export.stxt')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
 Route::get('/observing-list/{list}/export/apd.apd', [App\Http\Controllers\ObservingListExportController::class, 'apd'])
     ->name('observing-list.export.apd')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
+Route::get('/observing-list/{list}/export/oal.xml', [App\Http\Controllers\ObservingListExportController::class, 'oal'])
+    ->name('observing-list.export.oal')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
 
 // Catalogs overview page
 Route::get('/catalogs', [App\Http\Controllers\CatalogController::class, 'index'])
