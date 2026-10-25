@@ -1,4 +1,5 @@
-<div x-data="{ open: {{ $errors->has('file') ? 'true' : 'false' }} }" x-cloak>
+<div x-data="{ open: {{ $errors->has('file') ? 'true' : 'false' }} }" x-cloak
+    @open-list-import.window="open = true">
     {{-- Import button --}}
     <button @click="open = true"
         class="inline-flex items-center gap-2 px-3 py-1.5 bg-green-700 hover:bg-green-600 text-white rounded text-xs font-semibold transition">

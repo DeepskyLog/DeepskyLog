@@ -227,6 +227,7 @@ class ObservingListController extends Controller
             'name' => ['required', 'string', 'max:255', $this->uniqueListNameRule()],
             'description' => ['nullable', 'string', 'max:5000'],
             'public' => ['boolean'],
+            'make_active' => ['boolean'],
         ]);
 
         $list = ObservingList::create([
@@ -235,6 +236,12 @@ class ObservingListController extends Controller
             'description' => $validated['description'] ?? null,
             'public' => $request->boolean('public'),
         ]);
+
+        // The "Add to" buttons of the object pages and search results add to
+        // the active list, so a new list is usually filled as the active one.
+        if ($request->boolean('make_active')) {
+            $this->activeListService->setActiveList($request->user(), $list);
+        }
 
         return redirect()->route('observing-list.show', $list)
             ->with('success', __('Observing list created.'));

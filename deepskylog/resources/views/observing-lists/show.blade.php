@@ -230,12 +230,84 @@
                         $exportOalBase = route('observing-list.export.oal', $list);
                     @endphp
 
-                    <div class="flex items-center justify-between mb-3">
+                    <div class="flex flex-wrap items-start justify-between gap-3 mb-3">
                         <h2 class="text-lg font-semibold text-white">{{ __('Objects') }}</h2>
+
+                        {{-- Add one object by name (owner) --}}
+                        @auth
+                            @can('addItem', $list)
+                                <form method="POST" action="{{ route('observing-list.items.store', $list) }}"
+                                      class="flex flex-wrap items-start gap-2">
+                                    @csrf
+                                    <div>
+                                        <label for="add-object-name" class="sr-only">{{ __('Object name') }}</label>
+                                        <input type="text" id="add-object-name" name="object_name" maxlength="255" required
+                                               value="{{ old('object_name') }}"
+                                               placeholder="{{ __('e.g. M 31, NGC 224') }}"
+                                               class="w-56 bg-gray-800 border border-gray-600 rounded-md text-gray-100 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('object_name') border-red-500 @enderror">
+                                        @error('object_name')
+                                            <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <button type="submit"
+                                        class="inline-flex items-center px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded text-sm font-semibold">
+                                        {{ __('Add object') }}
+                                    </button>
+                                </form>
+                            @endcan
+                        @endauth
                     </div>
 
                     @if ($items->isEmpty())
-                        <p class="text-gray-400 text-sm">{{ __('This list has no objects yet.') }}</p>
+                        @if ($isOwner)
+                            {{-- How to fill a list (#378) --}}
+                            <div class="rounded-lg border border-gray-700 bg-gray-800 p-5 text-sm text-gray-300">
+                                <h3 class="text-base font-semibold text-white mb-1">{{ __('How to add objects to this list') }}</h3>
+                                <p class="text-gray-400 mb-4">{{ __('An observing list holds the objects you want to observe. Your observations stay in your observation log.') }}</p>
+
+                                <ol class="space-y-4 list-inside" style="list-style-type: decimal">
+                                    <li>
+                                        <span class="font-medium text-gray-100">{{ __('Type the name of an object') }}</span>
+                                        {{ __('in the field above, for instance M 31, NGC 7000 or Jupiter.') }}
+                                    </li>
+                                    <li>
+                                        <span class="font-medium text-gray-100">{{ __('Add objects while you browse.') }}</span>
+                                        {{ __('Make this your active list: every object page then has a button to add the object to it, and the search results and the nearby objects of an object page can add all their objects at once.') }}
+                                        <div class="mt-2 flex flex-wrap items-center gap-2">
+                                            @if ($isActive)
+                                                <span class="inline-flex items-center px-3 py-1.5 bg-blue-700 text-blue-100 rounded text-xs font-semibold">
+                                                    {{ __('This is your active list.') }}
+                                                </span>
+                                            @else
+                                                <form method="POST" action="{{ route('observing-list.set-active', $list) }}">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="inline-flex items-center px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded text-xs font-semibold">
+                                                        {{ __('Make this my active list') }}
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            <a href="{{ route('search.advanced') }}"
+                                               class="inline-flex items-center px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded text-xs font-semibold">
+                                                {{ __('Search objects') }}
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span class="font-medium text-gray-100">{{ __('Import a file') }}</span>
+                                        {{ __('from Argo Navis, SkySafari, SkyTools or AstroPlanner, a CSV file with the object names in the first column, or an OAL file.') }}
+                                        <div class="mt-2">
+                                            <button type="button" x-data @click="$dispatch('open-list-import')"
+                                                class="inline-flex items-center px-3 py-1.5 bg-green-700 hover:bg-green-600 text-white rounded text-xs font-semibold">
+                                                {{ __('Import objects') }}
+                                            </button>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </div>
+                        @else
+                            <p class="text-gray-400 text-sm">{{ __('This list has no objects yet.') }}</p>
+                        @endif
                     @else
                         <div class="bg-gray-800 rounded-lg p-4 dsl-search-card">
                             <div class="mb-3 flex items-center gap-3 flex-wrap">
