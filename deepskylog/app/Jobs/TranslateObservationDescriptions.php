@@ -130,6 +130,7 @@ class TranslateObservationDescriptions implements ShouldQueue
 
         return ObservationTranslation::whereIn('observation_id', $others)
             ->where('language', $this->language)
+            ->where('by_observer', false)
             ->whereNotNull('description')
             ->value('description');
     }

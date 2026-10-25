@@ -55,6 +55,7 @@ class Observation extends Model
         'limiting_magnitude',
         'sqm',
         'seen_with_observation_id',
+        'observer_class',
     ];
 
     /**
@@ -138,6 +139,28 @@ class Observation extends Model
      * deepsky_observation_details.visibility of an object that was definitely not seen.
      */
     public const VISIBILITY_NOT_SEEN = 7;
+
+    /**
+     * The classes an observer gives their own observations (#321), best first:
+     * A a top observation that got a lot of time and attention, B a good one,
+     * C a record that the object was seen. observer_class is null when the
+     * observation is not graded.
+     */
+    public const OBSERVER_CLASSES = ['A', 'B', 'C'];
+
+    /**
+     * The explanation of each class, to translate with __().
+     *
+     * @return array<string, string>
+     */
+    public static function observerClassDescriptions(): array
+    {
+        return [
+            'A' => 'Top observation: a lot of time and attention went into it',
+            'B' => 'Good observation, but not perfect',
+            'C' => 'Record that the object was seen',
+        ];
+    }
 
     /**
      * The target an observation counts for when counting different objects:

@@ -17,6 +17,7 @@ use App\Models\SketchOfTheWeek;
 use App\Models\SketchOfTheMonth;
 use App\Models\ObservationLike;
 use App\Models\ObservationComment;
+use App\Models\ObservationTranslation;
 use App\Services\ObservationSearchQuery;
 use App\Services\Observations\ObservationCardData;
 use App\Services\Observations\SameFieldObjects;
@@ -2356,6 +2357,10 @@ class ObservationsController extends Controller
             'transparency' => 'nullable|integer|between:1,5',
             'sqm' => 'nullable|numeric|between:10,23',
             'limiting_magnitude' => 'nullable|numeric|between:0,8',
+            'observer_class' => ['nullable', Rule::in(Observation::OBSERVER_CLASSES)],
+            // The description written by the observer in other languages of the site (#321), by language
+            'translations' => 'nullable|array',
+            'translations.*' => 'nullable|string|max:65000',
             // Keep a reasonable validator cap (in kilobytes). Note: PHP limits may be lower than this.
             'sketch' => 'nullable|file|image|max:5120',
             // Deepsky-specific detail fields (optional)
@@ -2513,6 +2518,7 @@ class ObservationsController extends Controller
         $obs->transparency = $validated['transparency'] ?? null;
         $obs->sqm = isset($validated['sqm']) && $validated['sqm'] !== '' ? round((float) $validated['sqm'], 2) : null;
         $obs->limiting_magnitude = isset($validated['limiting_magnitude']) && $validated['limiting_magnitude'] !== '' ? round((float) $validated['limiting_magnitude'], 2) : null;
+        $obs->observer_class = $validated['observer_class'] ?? null;
 
         // Handle optional sketch upload
         if ($request->hasFile('sketch') && $request->file('sketch')->isValid()) {
@@ -2600,6 +2606,17 @@ class ObservationsController extends Controller
             $this->storeSameFieldObservations($obs, $alsoSeen, $magnification);
         }
 
+        // The description in other languages goes with the description, also
+        // to the objects seen in the same field
+        if (array_key_exists('translations', $validated)) {
+            $translations = (array) ($validated['translations'] ?? []);
+            ObservationTranslation::syncByObserver($obs, $translations);
+            if ($alsoSeen !== []) {
+                Observation::where('seen_with_observation_id', $obs->id)->get()
+                    ->each(fn (Observation $copy) => ObservationTranslation::syncByObserver($copy, $translations));
+            }
+        }
+
         // The detail rows are written without model events, so an edit that
         // only changes them would otherwise leave the cached pages stale.
         Observation::clearResponseCache();
@@ -2665,7 +2682,7 @@ class ObservationsController extends Controller
         $shared = Arr::only($main->getAttributes(), [
             'observer_username', 'observer_user_id', 'instrument_id', 'location_id', 'eyepiece_id',
             'filter_id', 'lens_id', 'observed_on', 'observed_time', 'description', 'language',
-            'seeing', 'transparency', 'limiting_magnitude', 'sqm',
+            'seeing', 'transparency', 'limiting_magnitude', 'sqm', 'observer_class',
         ]);
 
         DB::transaction(function () use ($main, $names, $magnification, $shared) {
@@ -2744,6 +2761,8 @@ class ObservationsController extends Controller
         $prefill['magnification'] = $selectedUnified->magnification ?? null;
         $prefill['seeing'] = $selectedUnified->seeing ?? null;
         $prefill['transparency'] = $selectedUnified->transparency ?? null;
+        $prefill['observer_class'] = $selectedUnified->observer_class ?? null;
+        $prefill['translations'] = ObservationTranslation::byObserverFor((int) $selectedUnified->id);
         // Migrated observations use -1 (SQM) and 0 (limiting magnitude) for
         // "not given"; only prefill values the form accepts.
         $sqm = $selectedUnified->getRawOriginal('sqm');

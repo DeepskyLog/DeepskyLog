@@ -784,6 +784,17 @@
                                     </div>
                                 @endif
 
+                                {{-- The observer's own class of the observation (#321) --}}
+                                @if (in_array($obs->observer_class, \App\Models\Observation::OBSERVER_CLASSES, true))
+                                    <div>
+                                        <dt class="text-xs uppercase tracking-wide text-gray-400">{{ __("Class") }}</dt>
+                                        <dd class="mt-1 font-semibold">
+                                            <x-observation-class :value="$obs->observer_class" />
+                                            <span class="block text-xs font-normal text-gray-400">{{ __(\App\Models\Observation::observerClassDescriptions()[$obs->observer_class]) }}</span>
+                                        </dd>
+                                    </div>
+                                @endif
+
                                 {{-- Visibility --}}
                                 @if (!empty($obs->visibility) && $obs->visibility > 0)
                                     <div>
@@ -1216,6 +1227,36 @@
                                 >
                                     <x-observation-description :observation="$obs" :now="true" />
                                 </div>
+                                {{-- The description the observer wrote in other languages (#321) --}}
+                                @php
+                                    $ownTranslations = \App\Models\ObservationTranslation::byObserverFor((int) $obs->id);
+                                    $ownTranslationNames = [];
+                                    foreach (array_keys($ownTranslations) as $code) {
+                                        try {
+                                            $ownTranslationNames[$code] = \Languages::lookup([$code], app()->getLocale())[$code] ?? $code;
+                                        } catch (\Throwable $e) {
+                                            $ownTranslationNames[$code] = $code;
+                                        }
+                                    }
+                                @endphp
+                                @if ($ownTranslations !== [])
+                                    <div class="mt-2 text-xs text-gray-400" x-data="{ shown: null }">
+                                        {{ __("Also written by the observer in:") }}
+                                        @foreach ($ownTranslationNames as $code => $languageName)
+                                            <button
+                                                type="button"
+                                                class="ml-1 underline hover:text-gray-200"
+                                                x-bind:class="shown === @js($code) ? 'text-gray-100' : ''"
+                                                x-on:click="shown = shown === @js($code) ? null : @js($code)"
+                                            >{{ $languageName }}</button>
+                                        @endforeach
+                                        @foreach ($ownTranslations as $code => $text)
+                                            <div x-show="shown === @js($code)" x-cloak lang="{{ $code }}" class="mt-2 rounded-md bg-gray-900 px-4 py-4 text-sm leading-relaxed text-gray-100">
+                                                {!! \App\Support\Html::purify($text, true) !!}
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
                             </div>
                         @endif
                     </div>

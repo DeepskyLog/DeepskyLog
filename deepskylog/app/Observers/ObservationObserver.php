@@ -126,13 +126,11 @@ class ObservationObserver
                 Location::where('id', $new)->increment('observations');
         }
 
-        // If drawing-related fields changed, invalidate homepage caches so sketches/observations lists refresh
-        if ($obs->wasChanged('target_type') || $obs->wasChanged('target_name') || $obs->wasChanged('has_drawing')) {
-            $oldHas = (bool) $obs->getOriginal('has_drawing');
-            $newHas = (bool) $obs->has_drawing;
-            if ($oldHas || $newHas) {
-                $this->forgetHomepageCaches();
-            }
+        // The homepage caches the observations themselves, so any edit (the
+        // class, the description, the conditions, the drawing, ...) has to
+        // refresh its lists of observations and sketches.
+        if (array_diff(array_keys($obs->getChanges()), ['updated_at']) !== []) {
+            $this->forgetHomepageCaches();
         }
     }
 

@@ -45,7 +45,7 @@
                                 <span class="block text-gray-100 font-medium">CSV</span>
                                 <span class="block text-gray-400 text-xs mt-0.5">
                                     {{ __('Semicolon-delimited, no header line.') }}<br>
-                                    <code class="text-gray-500 text-xs">Object; Observer; Date(DD-MM-YYYY); Time(HH:MM); Location; Instrument; Eyepiece; Filter; Lens; Seeing(1–5); LimMag; SQM; Visibility(1–7); Language; Description; Drawing</code>
+                                    <code class="text-gray-500 text-xs">Object; Observer; Date(DD-MM-YYYY); Time(HH:MM); Location; Instrument; Eyepiece; Filter; Lens; Seeing(1–5); LimMag; SQM; Visibility(1–7); Language; Description; Drawing; Class(A–C)</code>
                                 </span>
                             </div>
 
@@ -161,6 +161,7 @@
                                 <tr><td class="py-1 pr-4">14</td><td class="py-1 pr-4">{{ __('Language') }}</td><td></td><td class="py-1">{{ __('ISO code, e.g. nl, en, de') }}</td></tr>
                                 <tr><td class="py-1 pr-4">15</td><td class="py-1 pr-4">{{ __('Description') }}</td><td class="py-1 pr-4">✓</td><td class="py-1">{{ __('Free text') }}</td></tr>
                                 <tr><td class="py-1 pr-4">16</td><td class="py-1 pr-4">{{ __('Drawing') }}</td><td></td><td class="py-1">{{ __('File name of the drawing, uploaded with the file or in the zip file') }}</td></tr>
+                                <tr><td class="py-1 pr-4">17</td><td class="py-1 pr-4">{{ __('Class') }}</td><td></td><td class="py-1">{{ __('A, B or C: your own grade of the observation (A = top observation, B = good, C = record that the object was seen)') }}</td></tr>
                             </tbody>
                         </table>
                     </div>

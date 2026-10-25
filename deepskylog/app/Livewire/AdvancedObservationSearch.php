@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Support\SchemaColumns;
+use App\Models\Observation;
 use App\Models\SavedObservationSearch;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -77,6 +78,7 @@ class AdvancedObservationSearch extends Component
     public string $apertureMax = '';
     public string $seeingMax = '';
     public string $transparencyMax = '';
+    public array $observerClasses = [];
     public string $visibilityMin = '';
     public string $visibilityMax = '';
     public string $latitudeMin = '';
@@ -271,6 +273,7 @@ class AdvancedObservationSearch extends Component
         $this->apertureMax = (string) ($filters['aperture_max'] ?? '');
         $this->seeingMax = (string) ($filters['seeing_max'] ?? '');
         $this->transparencyMax = (string) ($filters['transparency_max'] ?? '');
+        $this->observerClasses = array_values(array_intersect(Observation::OBSERVER_CLASSES, array_map('strval', (array) ($filters['observer_classes'] ?? []))));
         $this->visibilityMin = (string) ($filters['visibility_min'] ?? '');
         $this->visibilityMax = (string) ($filters['visibility_max'] ?? '');
         $this->latitudeMin = $this->normalizeLatitudeValue($filters['latitude_min'] ?? '');
@@ -330,6 +333,8 @@ class AdvancedObservationSearch extends Component
                 $active[] = 'seeing';
             if ($this->transparencyMax !== '')
                 $active[] = 'transparency';
+            if (!empty($this->observerClasses))
+                $active[] = 'observerClass';
             if ($this->visibilityMin !== '' || $this->visibilityMax !== '')
                 $active[] = 'visibility';
             if ($this->latitudeMin !== '' || $this->latitudeMax !== '')
@@ -436,6 +441,7 @@ class AdvancedObservationSearch extends Component
             'aperture' => [$this->apertureMin, $this->apertureMax] = ['', ''],
             'seeing' => $this->seeingMax = '',
             'transparency' => $this->transparencyMax = '',
+            'observerClass' => $this->observerClasses = [],
             'visibility' => [$this->visibilityMin, $this->visibilityMax] = ['', ''],
             'latitude' => [$this->latitudeMin, $this->latitudeMax] = ['', ''],
             'drawing' => $this->drawingState = 'all',
@@ -471,6 +477,7 @@ class AdvancedObservationSearch extends Component
             'aperture',
             'seeing',
             'transparency',
+            'observerClass',
             'visibility',
             'latitude',
             'drawing',
@@ -505,6 +512,7 @@ class AdvancedObservationSearch extends Component
             'aperture' => __('Instrument diameter'),
             'seeing' => __('Worst seeing'),
             'transparency' => __('Worst transparency'),
+            'observerClass' => __('Class of the observation'),
             'visibility' => __('Best / worst visibility'),
             'latitude' => __('Observation latitude'),
             'drawing' => __('Drawing'),
@@ -648,6 +656,11 @@ class AdvancedObservationSearch extends Component
             $params['seeing_max'] = $this->seeingMax;
         if (in_array('transparency', $this->activeFilters, true) && $this->transparencyMax !== '')
             $params['transparency_max'] = $this->transparencyMax;
+        if (in_array('observerClass', $this->activeFilters, true)) {
+            $classes = array_values(array_intersect(Observation::OBSERVER_CLASSES, $this->observerClasses));
+            if (!empty($classes))
+                $params['observer_classes'] = $classes;
+        }
         if (in_array('visibility', $this->activeFilters, true)) {
             if ($this->visibilityMin !== '')
                 $params['visibility_min'] = $this->visibilityMin;

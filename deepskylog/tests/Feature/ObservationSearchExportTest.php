@@ -126,7 +126,7 @@ it('exports observation search csv in import format', function () {
         'visibility' => 3,
     ]);
 
-    $expected = "\xEF\xBB\xBF\"NGC 2392\";\"Alice Observer\";01-05-2026;21:15;\"Test Site\";\"Test Scope\";\"Test Eyepiece\";\"Test Filter\";\"Test Lens\";2;6.5;21.35;3;nl;\"Schimmer länger gehalten werden,<br />Line two\"\n";
+    $expected = "\xEF\xBB\xBF\"NGC 2392\";\"Alice Observer\";01-05-2026;21:15;\"Test Site\";\"Test Scope\";\"Test Eyepiece\";\"Test Filter\";\"Test Lens\";2;6.5;21.35;3;nl;\"Schimmer länger gehalten werden,<br />Line two\";;\n";
 
     Livewire::test(ObservationSearchTable::class, ['objectName' => 'NGC 2392'])
         ->call('exportToCsv')

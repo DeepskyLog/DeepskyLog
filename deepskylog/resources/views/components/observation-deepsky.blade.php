@@ -159,6 +159,7 @@
                 )
             }}</span>
         @endif
+        <x-observation-class :value="$obsUnified?->observer_class" class="ml-1 align-middle" />
         @php
             $slug =
                 $object?->slug ??

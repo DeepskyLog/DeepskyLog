@@ -358,6 +358,7 @@ class MeController extends Controller
                 'transparency' => $observation->transparency,
                 'limiting_magnitude' => $observation->limiting_magnitude !== null ? (float) $observation->limiting_magnitude : null,
                 'sqm' => $observation->getRawOriginal('sqm') !== null ? (float) $observation->getRawOriginal('sqm') : null,
+                'class' => $observation->observer_class,
                 'language' => $observation->language,
                 'description' => Html::purify($observation->description, true),
                 'has_drawing' => (bool) $observation->has_drawing,

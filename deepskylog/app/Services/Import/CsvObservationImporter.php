@@ -35,6 +35,9 @@ use Illuminate\Support\Facades\DB;
  * 16  Drawing (optional): the file name of the drawing, uploaded with the
  *     file or in a zip file with it. Only read when it ends in an image
  *     extension, as a description with unquoted semicolons runs on into it.
+ * 17  Class (optional, #321): A, B or C, the observer's own grade of the
+ *     observation. Only read when it is one of these, for the same reason;
+ *     without it an imported observation keeps the class it has.
  */
 class CsvObservationImporter
 {
@@ -107,6 +110,7 @@ class CsvObservationImporter
                 $description,
             ] = array_slice($fields, 0, 15);
             $drawingName = $fields[15] ?? '';
+            $observerClass = strtoupper($fields[16] ?? '');
 
             // ─── Validate required fields ──────────────────────────────────────
 
@@ -284,6 +288,9 @@ class CsvObservationImporter
                     'has_drawing' => false,
                     'legacy_source' => null,
                 ];
+                if (in_array($observerClass, Observation::OBSERVER_CLASSES, true)) {
+                    $fields['observer_class'] = $observerClass;
+                }
 
                 if ($this->skipBelowHorizon($fields, $observedTime, $result, "Row {$rowNumber}", $line, $rowNumber)) {
                     continue;

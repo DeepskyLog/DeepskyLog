@@ -278,6 +278,17 @@
                             @endfor
                         </select>
 
+                    @elseif($filterType === 'observerClass')
+                        <label class="block text-xs text-gray-400 mb-1">{{ __('Class of the observation') }}</label>
+                        <div class="flex flex-wrap gap-x-4 gap-y-1">
+                            @foreach(\App\Models\Observation::observerClassDescriptions() as $observerClass => $observerClassDescription)
+                                <label class="inline-flex items-center gap-2 text-sm text-gray-200" title="{{ __($observerClassDescription) }}">
+                                    <input type="checkbox" wire:model="observerClasses" value="{{ $observerClass }}" class="rounded" />
+                                    {{ __('Class :class', ['class' => $observerClass]) }}
+                                </label>
+                            @endforeach
+                        </div>
+
                     @elseif($filterType === 'visibility')
                         <label class="block text-xs text-gray-400 mb-1">{{ __('Visibility (best / worst)') }}</label>
                         <div class="flex items-center gap-2">

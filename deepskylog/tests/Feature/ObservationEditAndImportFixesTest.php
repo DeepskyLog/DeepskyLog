@@ -224,7 +224,7 @@ it('exports an observation without a time with an empty time in the csv', functi
 
     Livewire::test(\App\Livewire\ObservationSearchTable::class, ['objectName' => 'M 65'])
         ->call('exportToCsv')
-        ->assertFileDownloaded('export.csv', "\xEF\xBB\xBF\"M 65\";\"Csv Observer\";01-03-2026;;;;;;;;0;0;;en;Seen.\n");
+        ->assertFileDownloaded('export.csv', "\xEF\xBB\xBF\"M 65\";\"Csv Observer\";01-03-2026;;;;;;;;0;0;;en;Seen.;;\n");
 });
 
 it('keeps the stored magnification in the picker and computes it otherwise', function () {

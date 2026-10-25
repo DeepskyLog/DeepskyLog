@@ -1,8 +1,10 @@
 {{--
     The description of an observation, translated into the language of the
     viewer when there is a translation (#310): the site language for guests,
-    their own language for observers who turned on translations. The original
-    stays one click away.
+    their own language for observers who turned on translations. A
+    description the observer wrote in the viewer's language (#321) is shown
+    instead, to every viewer who reads the site in that language. The
+    original stays one click away.
 --}}
 @props ([
     "observation",
@@ -11,6 +13,7 @@
 ])
 @php
     $translation = \App\Services\Observations\DescriptionTranslations::forViewer($observation, $now);
+    $byObserver = $translation !== null && \App\Services\Observations\DescriptionTranslations::byObserver($observation);
     $languageName = null;
     if ($translation !== null && !empty($observation->language)) {
         try {
@@ -30,7 +33,11 @@
             {!! \App\Support\Html::purify($observation->description, true) !!}
         </div>
         <p class="mt-2 text-xs text-gray-400">
-            {{ $languageName ? __("Translated by Google · original language: :language", ["language" => $languageName]) : __("Translated by Google") }}
+            @if ($byObserver)
+                {{ $languageName ? __("Translated by the observer · original language: :language", ["language" => $languageName]) : __("Translated by the observer") }}
+            @else
+                {{ $languageName ? __("Translated by Google · original language: :language", ["language" => $languageName]) : __("Translated by Google") }}
+            @endif
             &middot;
             <button
                 type="button"

@@ -21,6 +21,11 @@ use Illuminate\Support\Facades\Cache;
  * shows the description and queues the missing translation; all
  * observations queued on a page are translated by one job after the
  * response, and the next view of the page shows them.
+ *
+ * A description the observer wrote themselves in another language (#321,
+ * by_observer) is shown instead of Google's translation, to everybody who
+ * reads the site in that language: guests, and observers whose language it
+ * is, also when they did not turn on translations.
  */
 class DescriptionTranslations
 {
@@ -43,6 +48,13 @@ class DescriptionTranslations
      */
     private array $loaded = [];
 
+    /**
+     * The loaded translations the observer wrote, per language, then observation id.
+     *
+     * @var array<string, array<int, true>>
+     */
+    private array $byObserver = [];
+
     private static function instance(): self
     {
         return app(self::class);
@@ -61,6 +73,19 @@ class DescriptionTranslations
         return in_array($language, self::siteLanguages(), true) ? $language : null;
     }
 
+    /**
+     * The language the current viewer reads the site in, which a description
+     * the observer wrote in that language is shown in: the site language for
+     * a guest, their own language for an observer.
+     */
+    public static function readingLanguage(): ?string
+    {
+        $user = Auth::user();
+        $language = $user ? $user->language : app()->getLocale();
+
+        return in_array($language, self::siteLanguages(), true) ? $language : null;
+    }
+
     /** @return list<string> */
     public static function siteLanguages(): array
     {
@@ -75,12 +100,13 @@ class DescriptionTranslations
      */
     public static function preload(iterable $observationIds): void
     {
-        $language = self::language();
+        $language = self::readingLanguage();
         if ($language === null) {
             return;
         }
 
-        $loaded = &self::instance()->loaded;
+        $instance = self::instance();
+        $loaded = &$instance->loaded;
         $ids = collect($observationIds)->map(fn ($id) => (int) $id)
             ->reject(fn ($id) => $id === 0 || array_key_exists($id, $loaded[$language] ?? []))
             ->unique()->values();
@@ -89,10 +115,13 @@ class DescriptionTranslations
         }
 
         $rows = ObservationTranslation::whereIn('observation_id', $ids)->where('language', $language)
-            ->pluck('description', 'observation_id');
+            ->get(['observation_id', 'description', 'by_observer'])->keyBy('observation_id');
         foreach ($ids as $id) {
             // A missing row is remembered as false: not translated yet
-            $loaded[$language][$id] = $rows->has($id) ? $rows->get($id) : false;
+            $loaded[$language][$id] = $rows->has($id) ? $rows->get($id)->description : false;
+            if ($rows->get($id)?->by_observer) {
+                $instance->byObserver[$language][$id] = true;
+            }
         }
     }
 
@@ -105,14 +134,23 @@ class DescriptionTranslations
      */
     public static function forViewer(Observation $observation, bool $now = false): ?string
     {
-        $language = self::language();
-        if ($language === null || $observation->language === $language
+        $reading = self::readingLanguage();
+        if ($reading === null || $observation->language === $reading
             || trim(strip_tags((string) $observation->description)) === '') {
             return null;
         }
 
         $loaded = &self::instance()->loaded;
         self::preload([$observation->id]);
+        if (self::byObserver($observation)) {
+            return $loaded[$reading][$observation->id];
+        }
+
+        // Google's translations only for those who read translated
+        $language = self::language();
+        if ($language === null) {
+            return null;
+        }
         $translation = $loaded[$language][$observation->id];
         if ($translation !== false) {
             return $translation;
@@ -136,6 +174,17 @@ class DescriptionTranslations
     }
 
     /**
+     * Whether the description the current viewer reads in their language was
+     * written by the observer, not translated by Google.
+     */
+    public static function byObserver(Observation $observation): bool
+    {
+        $language = self::readingLanguage();
+
+        return $language !== null && isset(self::instance()->byObserver[$language][$observation->id]);
+    }
+
+    /**
      * Queue the observation for translation after the response, unless it was
      * queued recently.
      */
@@ -149,13 +198,18 @@ class DescriptionTranslations
         }
     }
 
-    /** Forget the translations of an observation whose description or language changed. */
+    /**
+     * Forget Google's translations of an observation whose description or
+     * language changed. The descriptions the observer wrote stay: they edit
+     * them with the observation.
+     */
     public static function forget(Observation $observation): void
     {
-        ObservationTranslation::where('observation_id', $observation->id)->delete();
-        $loaded = &self::instance()->loaded;
+        ObservationTranslation::where('observation_id', $observation->id)->where('by_observer', false)->delete();
+        $instance = self::instance();
+        $loaded = &$instance->loaded;
         foreach (self::siteLanguages() as $language) {
-            unset($loaded[$language][$observation->id]);
+            unset($loaded[$language][$observation->id], $instance->byObserver[$language][$observation->id]);
             Cache::forget("observation_translation_queued:{$observation->id}:{$language}");
         }
     }

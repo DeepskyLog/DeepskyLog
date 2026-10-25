@@ -420,6 +420,62 @@
                         <textarea id="description" name="description" rows="6" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100">{{ old('description') }}</textarea>
                     </div>
 
+                    {{-- The description written by the observer in other languages of the site (#321),
+                         shown instead of Google's translation to those who read the site in that language --}}
+                    @php
+                        $mainLanguage = old('language', auth()->check() ? auth()->user()->observationlanguage : '');
+                        $oldTranslations = array_filter((array) old('translations', []), fn ($text) => ! \App\Support\Html::isBlank($text));
+                        $translationLanguages = [];
+                        foreach (array_values(config('app.available_locales', [])) as $code) {
+                            if ($code !== $mainLanguage) {
+                                try {
+                                    $translationLanguages[$code] = \Languages::lookup([$code], app()->getLocale())[$code] ?? $code;
+                                } catch (\Throwable $e) {
+                                    $translationLanguages[$code] = $code;
+                                }
+                            }
+                        }
+                    @endphp
+                    <details id="observation-translations" class="mt-4 rounded border border-gray-700 px-3 py-2" @if ($oldTranslations !== []) open @endif>
+                        <summary class="cursor-pointer text-sm text-gray-300">
+                            {{ __('Description in other languages') }}
+                            @if ($oldTranslations !== [])
+                                <span class="text-xs text-gray-400">({{ implode(', ', array_intersect_key($translationLanguages, $oldTranslations)) }})</span>
+                            @endif
+                        </summary>
+                        <p class="mt-2 text-xs text-gray-400">{{ __('Optional, for instance for your best observations. Readers of DeepskyLog in that language see your own text instead of the translation by Google. Leave a language empty to let Google translate it.') }}</p>
+                        @foreach ($translationLanguages as $code => $languageName)
+                            <div class="mt-3">
+                                <label for="translation_{{ $code }}" class="block text-xs text-gray-400 mb-1">{{ $languageName }}</label>
+                                <textarea id="translation_{{ $code }}" name="translations[{{ $code }}]" rows="4" class="observation-translation w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100">{{ old('translations.' . $code) }}</textarea>
+                            </div>
+                        @endforeach
+                        @error('translations.*')
+                            <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </details>
+
+                    {{-- The observer's own grade of the observation (#321) --}}
+                    <fieldset class="mt-4">
+                        <legend class="block text-xs text-gray-400 mb-1">{{ __('Class of this observation') }}</legend>
+                        <div class="flex flex-col gap-1">
+                            @foreach (\App\Models\Observation::observerClassDescriptions() as $observerClass => $observerClassDescription)
+                                <label class="inline-flex items-center gap-2 text-sm">
+                                    <input type="radio" name="observer_class" value="{{ $observerClass }}" @checked(old('observer_class') === $observerClass) />
+                                    <x-observation-class :value="$observerClass" />
+                                    {{ __($observerClassDescription) }}
+                                </label>
+                            @endforeach
+                            <label class="inline-flex items-center gap-2 text-sm">
+                                <input type="radio" name="observer_class" value="" @checked(! in_array(old('observer_class'), \App\Models\Observation::OBSERVER_CLASSES, true)) />
+                                {{ __('Not graded') }}
+                            </label>
+                        </div>
+                        @error('observer_class')
+                            <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </fieldset>
+
                     @if ($resolved['type'] === 'deepsky' && ! old('edit_unified_id') && auth()->check())
                         {{-- The other objects seen in the same field get an observation of their own
                              with the same date, equipment, conditions and description (#831) --}}
@@ -539,8 +595,40 @@
             });
         }
 
+        // The descriptions in other languages get their editors when their section is first opened
+        function initializeTranslationEditors() {
+            var section = document.getElementById('observation-translations');
+            if (typeof tinymce === 'undefined' || !section || section.dataset.editors) return;
+            section.dataset.editors = '1';
+            tinymce.init({
+                selector: 'textarea.observation-translation',
+                plugins: 'lists emoticons quickbars wordcount',
+                toolbar: 'undo redo | bold italic | bullist numlist | emoticons',
+                menubar: false,
+                license_key: 'gpl',
+                height: 220,
+                quickbars_insert_toolbar: false,
+                quickbars_image_toolbar: false,
+                quickbars_selection_toolbar: 'bold italic',
+                skin: 'oxide-dark',
+                content_css: 'dark',
+                setup: function (editor) {
+                    editor.on('change', function () {
+                        editor.save();
+                    });
+                }
+            });
+        }
+        var translationSection = document.getElementById('observation-translations');
+        if (translationSection) {
+            translationSection.addEventListener('toggle', function () {
+                if (translationSection.open) initializeTranslationEditors();
+            });
+        }
+
         if (typeof tinymce !== 'undefined' && document.querySelector('#description')) {
             initializeTinyMCE();
+            if (translationSection && translationSection.open) initializeTranslationEditors();
         } else {
             var retryCount = 0;
             var retryMax = 20;
@@ -548,6 +636,7 @@
                 retryCount++;
                 if (typeof tinymce !== 'undefined' && document.querySelector('#description')) {
                     initializeTinyMCE();
+                    if (translationSection && translationSection.open) initializeTranslationEditors();
                     clearInterval(retryInterval);
                 } else if (retryCount >= retryMax) {
                     clearInterval(retryInterval);

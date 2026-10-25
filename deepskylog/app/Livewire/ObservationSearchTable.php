@@ -47,6 +47,8 @@ final class ObservationSearchTable extends PowerGridComponent
         'Visibility',
         'Language',
         'Description',
+        'Drawing',
+        'Class',
     ];
 
     public string $tableName = 'observation-search-table';
@@ -94,6 +96,7 @@ final class ObservationSearchTable extends PowerGridComponent
     public string $apertureMax = '';
     public string $seeingMax = '';
     public string $transparencyMax = '';
+    public array $observerClasses = [];
     public string $visibilityMin = '';
     public string $visibilityMax = '';
     public string $latitudeMin = '';
@@ -351,6 +354,7 @@ final class ObservationSearchTable extends PowerGridComponent
         $this->apertureMax = (string) ($filters['aperture_max'] ?? '');
         $this->seeingMax = (string) ($filters['seeing_max'] ?? '');
         $this->transparencyMax = (string) ($filters['transparency_max'] ?? '');
+        $this->observerClasses = array_values(array_intersect(Observation::OBSERVER_CLASSES, array_map('strval', (array) ($filters['observer_classes'] ?? []))));
         $this->visibilityMin = (string) ($filters['visibility_min'] ?? '');
         $this->visibilityMax = (string) ($filters['visibility_max'] ?? '');
         $this->latitudeMin = (string) ($filters['latitude_min'] ?? '');
@@ -572,6 +576,9 @@ final class ObservationSearchTable extends PowerGridComponent
         if ($this->transparencyMax !== '' && is_numeric($this->transparencyMax)) {
             $query->whereNotNull('observations.transparency')
                 ->where('observations.transparency', '<=', (int) $this->transparencyMax);
+        }
+        if (!empty($this->observerClasses)) {
+            $query->whereIn('observations.observer_class', $this->observerClasses);
         }
         if ($this->visibilityMin !== '' && is_numeric($this->visibilityMin)) {
             $query->whereNotNull('deepsky_observation_details.visibility')
@@ -1111,6 +1118,10 @@ final class ObservationSearchTable extends PowerGridComponent
                     $this->nullableInteger($visibilities->get($observation->id)),
                     $this->exportLanguage($observation->language),
                     $this->exportDescription($observation->description),
+                    // The drawing is only in the zip export; the class (#321) is
+                    // the 17th column of the import format
+                    '',
+                    (string) ($observation->observer_class ?? ''),
                 ];
             })
             ->filter()
