@@ -73,3 +73,25 @@ it('does not copy unknown query parameters into the links of an observer list', 
         ->assertSee('deepsky=2', false)
         ->assertDontSee('foo=bar', false);
 });
+
+it('paginates observations with a deferred join in the requested order', function () {
+    $user = User::factory()->create();
+    foreach (['2026-01-01', '2026-03-01', '2026-02-01'] as $date) {
+        Observation::create([
+            'observer_username' => $user->username,
+            'observer_user_id' => $user->id,
+            'observed_on' => $date,
+            'description' => 'Seen',
+        ]);
+    }
+
+    $page = Observation::orderByDesc('observed_on')->deferredPaginate(2, 'observations', 1);
+
+    expect($page->total())->toBe(3)
+        ->and($page->lastPage())->toBe(2)
+        ->and($page->getCollection()->map(fn ($o) => $o->observed_on instanceof \DateTimeInterface ? $o->observed_on->format('Y-m-d') : substr($o->observed_on, 0, 10))->all())
+        ->toBe(['2026-03-01', '2026-02-01']);
+
+    $second = Observation::orderByDesc('observed_on')->deferredPaginate(2, 'observations', 2);
+    expect($second->getCollection())->toHaveCount(1);
+});

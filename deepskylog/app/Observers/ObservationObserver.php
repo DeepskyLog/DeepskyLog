@@ -184,21 +184,16 @@ class ObservationObserver
     }
 
     /**
-     * Forget a small set of cached homepage sketch/observation pages so the UI refreshes
-     * after drawings are created/updated/deleted. We target the common sketch/obs types
-     * and the first few pages to avoid brute-forcing the entire cache.
+     * Forget the cached newest observations and sketches of the home page, so
+     * it shows a new, changed or deleted observation at once.
      */
     public static function forgetHomepageCaches(): void
     {
-        $types = ['all', 'deepsky', 'comet', 'solarsystem'];
-        for ($page = 1; $page <= 3; $page++) {
-            foreach ($types as $type) {
-                try {
-                    Cache::forget("welcome_sketches_page_{$type}_{$page}");
-                    Cache::forget("welcome_observations_page_{$type}_{$page}");
-                } catch (\Throwable $_) {
-                    // ignore cache failures
-                }
+        foreach (['welcome_observations', 'welcome_sketches'] as $key) {
+            try {
+                Cache::forget($key);
+            } catch (\Throwable $_) {
+                // ignore cache failures
             }
         }
     }

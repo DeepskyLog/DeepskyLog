@@ -105,3 +105,75 @@ it('shows no observing lists section without public lists', function () {
         ->assertOk()
         ->assertDontSee('Newest observing lists');
 });
+
+function welcomeObservation(\App\Models\User $observer, string $object, string $date, array $extra = []): \App\Models\Observation
+{
+    return \App\Models\Observation::query()->create(array_merge([
+        'observer_username' => $observer->username, 'observer_user_id' => $observer->id, 'observed_on' => $date,
+        'target_type' => 'deepsky', 'target_table' => 'objects', 'target_key' => $object, 'target_name' => $object,
+        'has_drawing' => false, 'description' => "<p>A fine view of {$object}.</p>",
+    ], $extra));
+}
+
+it('sends the old paginated home page urls to the page itself', function () {
+    $this->get('/?observations=3')->assertRedirect('/')->assertStatus(301);
+    $this->get('/?sketches=2&sketch_type=comet')->assertStatus(301);
+    $this->get('/?sessions=2')->assertStatus(301);
+    $this->actingAs(\App\Models\User::factory()->create())
+        ->get('/dashboard?obs_type=deepsky')->assertRedirect(route('dashboard'));
+});
+
+it('shows the newest observations and sketches as a short preview with links to the full pages', function () {
+    $observer = \App\Models\User::factory()->create(['name' => 'Preview Observer']);
+    foreach (range(1, 9) as $day) {
+        welcomeObservation($observer, "NGC {$day}", sprintf('2026-10-%02d', $day));
+    }
+    welcomeObservation($observer, 'M 51', '2026-10-20', ['has_drawing' => true, 'drawing_filename' => 'drawings/m51.jpg']);
+
+    $this->get('/')
+        ->assertOk()
+        ->assertSeeInOrder(['Newest observations', 'M 51', 'NGC 9', 'NGC 3', 'All observations'])
+        // Eight observations: the oldest two drop out
+        ->assertDontSee('NGC 2</a>', false)
+        ->assertDontSee('NGC 1</a>', false)
+        ->assertSee('A fine view of M 51.')
+        ->assertSee('Preview Observer')
+        ->assertSee(route('observations.index'))
+        ->assertSee('Newest sketches')
+        ->assertSee('/images/drawings/m51.jpg', false)
+        ->assertSee(route('drawings.index'))
+        ->assertDontSee('20 newest observations');
+});
+
+it('shows the sketches of the week and month together', function () {
+    $observer = \App\Models\User::factory()->create();
+    $week = welcomeObservation($observer, 'M 27', '2026-09-01', ['has_drawing' => true, 'drawing_filename' => 'drawings/m27.jpg']);
+    $month = welcomeObservation($observer, 'M 57', '2026-08-01', ['has_drawing' => true, 'drawing_filename' => 'drawings/m57.jpg']);
+    \App\Models\SketchOfTheWeek::query()->forceCreate(['observation_id' => $week->id, 'user_id' => $observer->id, 'date' => now()->subDay()->toDateString()]);
+    \App\Models\SketchOfTheMonth::query()->forceCreate(['observation_id' => $month->id, 'user_id' => $observer->id, 'date' => now()->subDay()->toDateString()]);
+
+    $this->get('/')
+        ->assertOk()
+        ->assertSeeInOrder(['Featured sketches', 'Sketch of the Week', 'm27.jpg', 'Sketch of the Month', 'm57.jpg'], false)
+        ->assertSee(route('sketch-of-the-week'))
+        ->assertSee(route('sketch-of-the-month'));
+});
+
+it('shows the three newest sessions on the home page', function () {
+    $owner = \App\Models\User::factory()->create();
+    foreach (range(1, 4) as $day) {
+        \App\Models\ObservationSession::create(['name' => "Night {$day}", 'observerid' => $owner->username,
+            'begindate' => "2026-09-0{$day} 20:00:00", 'enddate' => "2026-09-0{$day} 23:00:00", 'locationid' => 0, 'active' => 1]);
+    }
+
+    $this->get('/')
+        ->assertOk()
+        ->assertSeeInOrder(['Newest sessions', 'Night 4', 'Night 3', 'Night 2', 'All sessions'])
+        ->assertDontSee('Night 1')
+        ->assertSee(route('session.all'));
+});
+
+it('shows the guest introduction only to guests', function () {
+    $this->get('/')->assertOk()->assertSee('More about DeepskyLog');
+    $this->actingAs(\App\Models\User::factory()->create())->get('/')->assertOk()->assertDontSee('More about DeepskyLog');
+});

@@ -1,510 +1,270 @@
-@php use App\Models\SketchOfTheWeek; @endphp
-@php use App\Models\SketchOfTheMonth; @endphp
-@php use App\Models\User; @endphp
-@php use App\Models\ObservationSession; @endphp
-@php use Illuminate\Support\Facades\Cache; @endphp
 <x-app-layout>
-    <div class="max-w-screen mx-auto bg-gray-900 px-2 py-10 sm:px-6 lg:px-8">
-        <x-card>
-            <div
-                class="flex justify-center py-4 dark:bg-gray-800 sm:items-center sm:pt-0"
-            >
-                <x-application-logo class="block h-12 w-auto" />
-            </div>
-            @guest
-                <div>
-                    {{ __("Welcome to DeepskyLog!") }}
-                    {!! __(
-                        "DeepskyLog is an extended, comprehensive and free database for deepsky objects and has been developed by the Deepsky section of the Astronomical Society of Belgium (:linkVereniging Voor Sterrenkunde (VVS):close_link).",
-                        ["link" => "<a href='https://www.vvs.be'>", "close_link" => "</a>"]
-                    ) !!}
-                    {{ __("The database is open for consultation and already contains tens of thousands observations and thousands of sketches and drawings made by amateur astronomers around the world.") }}
-                    <br />
-                    {!! __(
-                        "To start recording your observations and share your observations with other observers, you are kindly requested to :register_linkregister:close_link to DeepskyLog. Your personal data will be handled in accordance with our :privacy_linkprivacy policy:close_link.",
-                        [
-                            "register_link" => "<a href='" . route("register") . "'>",
-                            "privacy_link" => "<a href='" . route("privacy") . "'>",
-                            "close_link" => "</a>",
-                        ]
-                    ) !!}
-                    <br />
-                    {{ __("You can consult and create observing lists with different deepsky objects and see suggestions for objects visible in your instrument and from your observation sites. You can create your own file with maps and DSS images of the objects and have access to an interactive and detailed free star atlas. You can also consult the observations and sketches of other observers and share your own observations and sketches with the community.") }}
-                    <br />
-                    {!! __(
-                        "Please contact the :linkDeepskyLog developers:close_link if you encounter problems or have questions.",
-                        ["link" => '<a href="mailto:deepskylog@groups.io">', "close_link" => "</a>"]
-                    ) !!}
-                </div>
-            @endguest
-        </x-card>
-
-        @if (! empty($news) && $news->isNotEmpty())
-            <x-news :items="$news" :location="$newsLocation" />
-        @endif
-
-        @if (! empty($tonightsBest))
-            <x-tonights-best :best="$tonightsBest" />
-        @endif
-
-        {{-- Latest sketch of the month / week --}}
-        <div class="flex flex-col sm:flex-row sm:gap-4">
-            <div class="mt-4 rounded-xl">
-                <h2 class="mb-3 ml-3 mt-3 text-xl font-semibold leading-tight">
-                    {{
-                        __(
-                            "DeepskyLog Sketch of the Week",
-                        )
-                    }}
-                </h2>
-                <x-card>
-                    <div class="flex justify-center">
-                        <div class="flex flex-wrap">
-                            <x-sketch
-                                :sketch="
-                                    Cache::remember('welcome_sketch_week:' . today()->toDateString(), 3600, function () {
-        return SketchOfTheWeek::published()->orderBy('date', 'desc')->first();
-    })
-                                "
-                            />
-                        </div>
+    <div class="mx-auto max-w-screen bg-gray-900 px-2 py-6 sm:px-6 lg:px-8">
+        @guest
+            <x-card>
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+                    <x-application-logo
+                        class="block h-12 w-auto flex-shrink-0"
+                    />
+                    <div class="min-w-0 flex-1 space-y-2 text-sm">
+                        <p>
+                            <strong>{{
+                                __(
+                                    "Welcome to DeepskyLog!",
+                                )
+                            }}</strong>
+                            {!!
+                                __(
+                                    "DeepskyLog is an extended, comprehensive and free database for deepsky objects and has been developed by the Deepsky section of the Astronomical Society of Belgium (:linkVereniging Voor Sterrenkunde (VVS):close_link).",
+                                    ["link" => "<a href='https://www.vvs.be'>", "close_link" => "</a>"],
+                                )
+                            !!}
+                        </p>
+                        <p>
+                            {!!
+                                __(
+                                    "To start recording your observations and share your observations with other observers, you are kindly requested to :register_linkregister:close_link to DeepskyLog. Your personal data will be handled in accordance with our :privacy_linkprivacy policy:close_link.",
+                                    [
+                                        "register_link" => "<a href='" . route("register") . "'>",
+                                        "privacy_link" => "<a href='" . route("privacy") . "'>",
+                                        "close_link" => "</a>",
+                                    ],
+                                )
+                            !!}
+                        </p>
+                        <details>
+                            <summary
+                                class="cursor-pointer text-gray-400 select-none hover:text-gray-200"
+                            >
+                                {{
+                                    __(
+                                        "More about DeepskyLog",
+                                    )
+                                }}
+                            </summary>
+                            <div class="mt-2 space-y-2">
+                                <p>{{ __("The database is open for consultation and already contains tens of thousands observations and thousands of sketches and drawings made by amateur astronomers around the world.") }}</p>
+                                <p>{{ __("You can consult and create observing lists with different deepsky objects and see suggestions for objects visible in your instrument and from your observation sites. You can create your own file with maps and DSS images of the objects and have access to an interactive and detailed free star atlas. You can also consult the observations and sketches of other observers and share your own observations and sketches with the community.") }}</p>
+                                <p>
+                                    {!!
+                                        __(
+                                            "Please contact the :linkDeepskyLog developers:close_link if you encounter problems or have questions.",
+                                            [
+                                                "link" => '<a href="mailto:deepskylog@groups.io">',
+                                                "close_link" => "</a>",
+                                            ],
+                                        )
+                                    !!}
+                                </p>
+                            </div>
+                        </details>
                     </div>
-                </x-card>
-            </div>
-
-            <div class="mt-4 rounded-xl">
-                <h2 class="mb-3 ml-3 mt-3 text-xl font-semibold leading-tight">
-                    {{
-                        __(
-                            "DeepskyLog Sketch of the Month",
-                        )
-                    }}
-                </h2>
-                <x-card>
-                    <div class="flex justify-center">
-                        <div class="flex flex-wrap">
-                            <x-sketch
-                                :sketch="
-                                    Cache::remember('welcome_sketch_month:' . today()->toDateString(), 3600, function () {
-        return SketchOfTheMonth::published()->orderBy('date', 'desc')->first();
-    })
-                                "
-                            />
-                        </div>
-                    </div>
-                </x-card>
-            </div>
-        </div>
-
-        {{-- Five newest active sessions --}}
-        @isset ($sessions)
-            <div class="pt-4">
-                <h2 class="ml-3 mt-3 text-xl font-semibold leading-tight">
-                    {{
-                        __(
-                            "Newest sessions",
-                        )
-                    }}
-                </h2>
-                @php
-                    // $sessions is prepared in the homepage route (SessionController::homepage)
-                @endphp
-
-                <div class="mt-2">
-                    <x-card>
-                        <div
-                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2"
+                    <div class="flex flex-shrink-0 gap-2 sm:flex-col">
+                        <a
+                            href="{{ route("register") }}"
+                            class="rounded-md bg-blue-600 px-4 py-2 text-center text-sm font-semibold text-white hover:bg-blue-500"
+                            >{{ __("Register") }}</a
                         >
-                            @foreach ($sessions as $session)
-                                @php
-                                    // Use a slightly lighter background for each session card (no borders)
-                                    if ($loop->iteration === 1) {
-                                        $bgClass = "bg-gray-700";
-                                    } elseif ($loop->iteration === 2) {
-                                        $bgClass = "bg-gray-700";
-                                    } elseif ($loop->iteration === 3) {
-                                        $bgClass = "bg-gray-700";
-                                    } elseif ($loop->iteration === 4) {
-                                        $bgClass = "bg-gray-700";
-                                    } else {
-                                        $bgClass = "bg-gray-700";
-                                    }
-                                @endphp
-                                <article class="{{ $bgClass }} p-4 rounded">
-                                    @if (!empty($session->preview))
-                                        <div class="mb-3">
-                                            @php
-                                                $sessionUser =
-                                                    optional($session->observer)->slug ?? ($session->observerid ?? null);
-                                                $sessionParam = $session->slug ?? ($session->id ?? null);
-                                            @endphp
-                                            @if ($sessionUser && $sessionParam)
-                                                <a
-                                                    href="{{ route('session.show', [$sessionUser, $sessionParam]) }}"
-                                                >
-                                                    <img
-                                                        src="{{ $session->preview }}"
-                                                        alt="{{ html_entity_decode($session->name ?? __('Session'), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}"
-                                                        class="w-full h-40 object-cover rounded"
-                                                    />
-                                                </a>
-                                            @else
-                                                <img
-                                                    src="{{ $session->preview }}"
-                                                    alt="{{ html_entity_decode($session->name ?? __('Session'), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}"
-                                                    class="w-full h-40 object-cover rounded"
-                                                />
-                                            @endif
-                                        </div>
-                                    @endif
+                        <a
+                            href="{{ route("login") }}"
+                            class="rounded-md bg-gray-700 px-4 py-2 text-center text-sm font-semibold text-gray-100 hover:bg-gray-600"
+                            >{{ __("Log in") }}</a
+                        >
+                    </div>
+                </div>
+            </x-card>
+        @endguest
 
-                                    <h3
-                                        class="text-lg font-bold text-white mb-2"
+        {{--
+            Two columns on large screens: tonight's best and the newest observations, sketches
+            and sessions on the left, the news, the featured sketches and the newest lists on the
+            right. On smaller screens the columns are `contents`, so the boxes form one column
+            in the order of their order-* classes.
+        --}}
+        <div
+            class="mt-6 flex flex-col gap-6 lg:grid lg:grid-cols-3 lg:items-start"
+        >
+            <div class="contents lg:col-span-2 lg:flex lg:flex-col lg:gap-6">
+                @if (!empty($tonightsBest))
+                    <x-tonights-best
+                        :best="$tonightsBest"
+                        class="order-2 lg:order-none"
+                    />
+                @endif
+
+                @if ($observations->isNotEmpty())
+                    <x-home-section
+                        :title="__('Newest observations')"
+                        class="order-4 lg:order-none"
+                    >
+                        <ul class="divide-y divide-gray-700 px-2">
+                            @foreach ($observations as $observation)
+                                <x-observation-row
+                                    :observation="$observation"
+                                />
+                            @endforeach
+                        </ul>
+                        <x-slot name="footer">
+                            <a
+                                href="{{ route("observations.index") }}"
+                                class="text-blue-400 hover:underline"
+                                >{{ __("All observations") }} &rarr;</a
+                            >
+                        </x-slot>
+                    </x-home-section>
+                @endif
+
+                @if ($sketches->isNotEmpty())
+                    <x-home-section
+                        :title="__('Newest sketches')"
+                        class="order-5 lg:order-none"
+                    >
+                        <div class="grid grid-cols-2 gap-3 px-2 sm:grid-cols-4">
+                            @foreach ($sketches as $sketch)
+                                <x-sketch-thumbnail :observation="$sketch" />
+                            @endforeach
+                        </div>
+                        <x-slot name="footer">
+                            <a
+                                href="{{ route("drawings.index") }}"
+                                class="text-blue-400 hover:underline"
+                                >{{ __("All drawings") }} &rarr;</a
+                            >
+                        </x-slot>
+                    </x-home-section>
+                @endif
+
+                @if ($sessions->isNotEmpty())
+                    <x-home-section
+                        :title="__('Newest sessions')"
+                        class="order-6 lg:order-none"
+                    >
+                        <div class="grid grid-cols-1 gap-4 px-2 md:grid-cols-3">
+                            @foreach ($sessions as $session)
+                                <x-session-card :session="$session" />
+                            @endforeach
+                        </div>
+                        <x-slot name="footer">
+                            <a
+                                href="{{ route("session.all") }}"
+                                class="text-blue-400 hover:underline"
+                                >{{ __("All sessions") }} &rarr;</a
+                            >
+                        </x-slot>
+                    </x-home-section>
+                @endif
+            </div>
+
+            <div class="contents lg:flex lg:flex-col lg:gap-6">
+                @if ($news->isNotEmpty())
+                    <x-news
+                        :items="$news"
+                        :location="$newsLocation"
+                        class="order-1 lg:order-none"
+                    />
+                @endif
+
+                @if ($sketchOfTheWeek?->observation || $sketchOfTheMonth?->observation)
+                    <x-home-section
+                        :title="__('Featured sketches')"
+                        class="order-3 lg:order-none"
+                    >
+                        <div class="grid grid-cols-2 gap-3 px-2">
+                            @foreach ([
+                                    [
+                                        $sketchOfTheWeek,
+                                        __("Sketch of the Week"),
+                                        route("sketch-of-the-week")
+                                    ],
+                                    [
+                                        $sketchOfTheMonth,
+                                        __("Sketch of the Month"),
+                                        route("sketch-of-the-month")
+                                    ]
+                                ]
+                                as [$featured, $label, $href])
+                                @if ($featured?->observation)
+                                    <div class="min-w-0">
+                                        <a
+                                            href="{{ $href }}"
+                                            class="mb-1 block truncate text-xs font-semibold text-gray-400 uppercase hover:underline"
+                                            >{{ $label }}</a
+                                        >
+                                        <x-sketch-thumbnail
+                                            :observation="$featured->observation"
+                                        />
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </x-home-section>
+                @endif
+
+                @if ($observingLists->isNotEmpty())
+                    <x-home-section
+                        :title="__('Newest observing lists')"
+                        class="order-7 lg:order-none"
+                    >
+                        <ul class="divide-y divide-gray-700 px-2">
+                            @foreach ($observingLists as $list)
+                                <li class="py-2 text-sm">
+                                    <a
+                                        href="{{ route("observing-list.show", $list) }}"
+                                        class="font-semibold text-white hover:underline"
+                                        >{{
+                                            html_entity_decode(
+                                                $list->name,
+                                                ENT_QUOTES | ENT_HTML5,
+                                                "UTF-8",
+                                            )
+                                        }}</a
                                     >
-                                        @php
-                                            // Ensure both route parameters exist before building the URL to avoid missing parameter errors
-                                            $sessionUser =
-                                                optional($session->observer)->slug ?? ($session->observerid ?? null);
-                                            $sessionParam = $session->slug ?? ($session->id ?? null);
-                                        @endphp
-                                        @if ($sessionUser && $sessionParam)
+                                    <p class="text-xs text-gray-400">
+                                        @if ($list->owner)
+                                            {{ __("by") }}
                                             <a
-                                                href="{{ route('session.show', [$sessionUser, $sessionParam]) }}"
-                                                class="hover:underline"
+                                                href="{{ route("observer.show", $list->owner->slug) }}"
+                                                class="text-gray-300 hover:underline"
                                                 >{{
                                                     html_entity_decode(
-                                                        $session->name ?? __("Session :id", ["id" => $session->id]),
+                                                        $list->owner->name,
                                                         ENT_QUOTES | ENT_HTML5,
                                                         "UTF-8",
                                                     )
                                                 }}</a
                                             >
-                                        @else
-                                            <span class="hover:underline">{{
-                                                html_entity_decode(
-                                                    $session->name ?? __("Session :id", ["id" => $session->id]),
-                                                    ENT_QUOTES | ENT_HTML5,
-                                                    "UTF-8",
-                                                )
-                                            }}</span>
+                                            &middot;
                                         @endif
-                                    </h3>
-
-                                    <div class="text-sm text-gray-400 mb-2">
-                                        <span
-                                            class="mr-2 font-medium text-gray-200"
-                                            >{{ __("Owner") }}:</span
+                                        {{ $list->created_at?->diffForHumans() }}
+                                    </p>
+                                    <p class="text-xs text-gray-500">
+                                        {{ $list->items_count }} {{ __("objects") }} &middot;
+                                        <span title="{{ __("Likes") }}"
+                                            >&#9829; {{ $list->likes_count }}</span
                                         >
-                                        @if ($session->observer)
-                                            <a
-                                                href="{{ route('observer.show', optional($session->observer)->slug ?? $session->observerid) }}"
-                                                class="text-gray-400 hover:underline"
-                                                >{{
-                                                    optional($session->observer)->name ??
-                                                        $session->observerid
-                                                }}</a
-                                            >
-                                        @else
-                                            <span
-                                                class="text-gray-400"
-                                                >{{ $session->observerid }}</span
-                                            >
-                                        @endif
-                                    </div>
-
-                                    <div class="text-sm text-gray-400 mb-3">
-                                        <span>{{
-                                            $session->begindate
-                                                ? \Carbon\Carbon::parse($session->begindate)->translatedFormat("j M Y")
-                                                : __("Unknown")
-                                        }}</span>
-                                        <span class="mx-2">&ndash;</span>
-                                        <span>{{
-                                            $session->enddate
-                                                ? \Carbon\Carbon::parse($session->enddate)->translatedFormat("j M Y")
-                                                : __("Unknown")
-                                        }}</span>
-                                    </div>
-
-                                    <div class="text-sm text-gray-400 mb-2">
-                                        <span
-                                            class="mr-2 font-medium text-gray-200"
-                                            >{{ __("Location") }}:</span
-                                        >
-                                        <span class="text-gray-400">{{
-                                            $session->location_name ??
-                                                __("Unknown")
-                                        }}</span>
-                                    </div>
-
-                                    @if (isset($session->observation_count))
-                                        <div class="text-sm text-gray-300 mb-2">
-                                            {{ __("Observations") }}:
-                                            <strong
-                                                class="text-white"
-                                                >{{ $session->observation_count }}</strong
-                                            >
-                                        </div>
-                                    @endif
-
-                                    <p class="text-sm text-gray-300 mb-3">{{ $session->preview_text ?? \Illuminate\Support\Str::limit(strip_tags(html_entity_decode($session->comments ?? "", ENT_QUOTES | ENT_HTML5, "UTF-8")), 180) }}</p>
-                                    <div
-                                        class="flex items-center justify-between text-sm"
-                                    >
-                                        <div class="text-gray-400">
-                                            {{ __("Observers") }}: {{
-                                                $session->otherObserversCount() ??
-                                                    1
-                                            }}
-                                        </div>
-                                        @php
-                                            $sessionUser =
-                                                optional($session->observer)->slug ?? ($session->observerid ?? null);
-                                            $sessionParam = $session->slug ?? ($session->id ?? null);
-                                        @endphp
-                                        <div class="flex items-center gap-3">
-                                            <button
-                                                type="button"
-                                                data-observation-type="{{ \App\Models\ObservationLike::TYPE_SESSION }}"
-                                                data-observation-id="{{ $session->id }}"
-                                                class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white"
-                                                aria-label="{{ __("Like") }}"
-                                            >
-                                                <span class="like-icon">{!!
-                                                    $session->liked ?? false
-                                                        ? "❤️"
-                                                        : "👍"
-                                                !!}</span>
-                                                <span class="like-count">{{ $session->likes_count ?? 0 }}</span>
-                                            </button>
-                                            @if ($sessionUser && $sessionParam)
-                                                <a
-                                                    href="{{ route('session.show', [$sessionUser, $sessionParam]) }}"
-                                                    class="text-blue-500 hover:underline"
-                                                    >{{
-                                                        __(
-                                                            "Read more",
-                                                        )
-                                                    }}</a
-                                                >
-                                            @else
-                                                <span class="text-blue-500">{{
-                                                    __(
-                                                        "Read more",
-                                                    )
-                                                }}</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </article>
+                                        &middot; {{ $list->subscriptions_count }} {{
+                                            __(
+                                                "subscribers",
+                                            )
+                                        }}
+                                    </p>
+                                </li>
                             @endforeach
-                        </div>
-                        <div class="mt-4">{{ $sessions->links() }}</div>
-                    </x-card>
-                </div>
-            </div>
-        @endisset
-
-        {{-- Latest sketches from the unified observations table --}}
-        <div class="pt-4">
-            <h2 class="ml-3 mt-3 text-xl font-semibold leading-tight">
-                {{ __("20 newest sketches") }}
-            </h2>
-            @php
-                $sketchType = request()->get("sketch_type", "all");
-                $allowedSketchTypes = ["all", "deepsky", "comet", "solarsystem"];
-                if (!in_array($sketchType, $allowedSketchTypes)) {
-                    $sketchType = "all";
-                }
-            @endphp
-            <div class="ml-3 mt-2 flex flex-wrap gap-2">
-                @foreach (["all" => __("All"), "deepsky" => __("Deep-sky"), "comet" => __("Comets"), "solarsystem" => __("Solar system")] as $typeKey => $typeLabel)
-                    @php
-                        $params = array_merge(request()->except(["sketch_type", "sketches"]), $typeKey !== "all" ? ["sketch_type" => $typeKey] : []);
-                        $url = url("/") . ($params ? "?" . http_build_query($params) : "");
-                        $isActive = ($sketchType ?? 'all') === $typeKey;
-                    @endphp
-                    <a href="{{ $url }}"
-                       class="rounded px-3 py-1 text-sm font-medium {{ $isActive ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200 hover:bg-gray-600' }}"
-                    >{{ $typeLabel }}</a>
-                @endforeach
-            </div>
-            @php
-                $page = request()->get("sketches", 1);
-                $cacheKey = "welcome_sketches_page_" . $sketchType . "_" . $page;
-                $sketches = \App\Helpers\HomepagePagination::cap(Cache::remember($cacheKey, 300, function () use ($page, $sketchType) {
-                    $query = \App\Models\Observation::query()
-                        ->where("has_drawing", true);
-                    if ($sketchType === "all") {
-                        // include both legacy 'solarsystem' and normalized 'planet' and 'lunar'
-                        $query->whereIn("target_type", ["deepsky", "comet", "planet", "solarsystem", "lunar"]);
-                    } else {
-                        if ($sketchType === 'solarsystem') {
-                            $query->whereIn("target_type", ["planet", "solarsystem", "lunar"]);
-                        } else {
-                            $query->where("target_type", $sketchType);
-                        }
-                    }
-                    return $query
-                        ->orderByDesc("observed_on")
-                        ->orderByDesc("id")
-                        ->deferredPaginate(20, "sketches", (int) $page);
-                }));
-
-                // Observers, objects, likes, ... of all cards in grouped queries.
-                $cards = \App\Services\Observations\ObservationCardData::instance()->preload($sketches);
-            @endphp
-
-            <div class="mt-2">
-                <x-card>
-                    <div class="flex flex-wrap px-5">
-                        @foreach ($sketches as $sketch)
-                            @php
-                                $observerUser = $cards->user($sketch->observer_username);
-                                $observer_name = $observerUser?->name ?? $sketch->observer_username;
-                                $observation_date = optional($sketch->observed_on)?->format("Y-m-d");
-                            @endphp
-                            @if ($sketch->target_type === "comet")
-                                <div class="flex flex-col pr-4">
-                                    <x-sketch-comet
-                                        :observation_id="$sketch->id"
-                                        :unified_observation="$sketch"
-                                        :observer_name="$observer_name"
-                                        :observer_username="$sketch->observer_username"
-                                        :observer_slug="$observerUser?->slug"
-                                        :observation_date="$observation_date"
-                                        :preloaded_comet="$cards->comet($sketch->target_key)"
-                                    />
-                                </div>
-                            @else
-                                <div class="flex flex-col pr-4">
-                                    <x-sketch-deepsky
-                                        :observation_id="$sketch->id"
-                                        :unified_observation="$sketch"
-                                        :observer_name="$observer_name"
-                                        :observer_username="$sketch->observer_username"
-                                        :observer_slug="$observerUser?->slug"
-                                        :observation_date="$observation_date"
-                                    />
-                                </div>
-                            @endif
-                        @endforeach
-                    </div>
-                    {{ $sketches->links() }}
-                </x-card>
+                        </ul>
+                        <x-slot name="footer">
+                            <a
+                                href="{{ route("observing-lists.discover") }}"
+                                class="text-blue-400 hover:underline"
+                                >{{
+                                    __(
+                                        "Discover all public observing lists",
+                                    )
+                                }} &rarr;</a
+                            >
+                        </x-slot>
+                    </x-home-section>
+                @endif
             </div>
         </div>
-
-        {{-- Latest observations from the unified observations table --}}
-        <div class="pt-4">
-            <h2 class="ml-3 mt-3 text-xl font-semibold leading-tight">
-                {{ __("20 newest observations") }}
-            </h2>
-            @php
-                $obsType = request()->get("obs_type", "all");
-                $allowedObsTypes = ["all", "deepsky", "comet", "solarsystem"];
-                if (!in_array($obsType, $allowedObsTypes)) {
-                    $obsType = "all";
-                }
-            @endphp
-            <div class="ml-3 mt-2 flex flex-wrap gap-2">
-                @foreach (["all" => __("All"), "deepsky" => __("Deep-sky"), "comet" => __("Comets"), "solarsystem" => __("Solar system")] as $typeKey => $typeLabel)
-                    @php
-                        $params = array_merge(request()->except(["obs_type", "observations"]), $typeKey !== "all" ? ["obs_type" => $typeKey] : []);
-                        $url = url("/") . ($params ? "?" . http_build_query($params) : "");
-                        $isActive = $obsType === $typeKey;
-                    @endphp
-                    <a href="{{ $url }}"
-                       class="rounded px-3 py-1 text-sm font-medium {{ $isActive ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200 hover:bg-gray-600' }}"
-                    >{{ $typeLabel }}</a>
-                @endforeach
-            </div>
-            @php
-                $page = request()->get("observations", 1);
-                $cacheKey = "welcome_observations_page_" . $obsType . "_" . $page;
-                $observations = \App\Helpers\HomepagePagination::cap(Cache::remember($cacheKey, 300, function () use ($page, $obsType) {
-                    $query = \App\Models\Observation::query();
-                    if ($obsType === "all") {
-                        // include both legacy 'solarsystem' and normalized 'planet' and 'lunar'
-                        $query->whereIn("target_type", ["deepsky", "comet", "planet", "solarsystem", "lunar"]);
-                    } else {
-                        if ($obsType === 'solarsystem') {
-                            $query->whereIn("target_type", ["planet", "solarsystem", "lunar"]);
-                        } else {
-                            $query->where("target_type", $obsType);
-                        }
-                    }
-                    return $query
-                        ->orderByDesc("observed_on")
-                        ->orderByDesc("id")
-                        ->deferredPaginate(20, "observations", (int) $page);
-                }));
-
-                // Observers, objects, equipment, likes, ... of all cards in grouped queries.
-                \App\Services\Observations\ObservationCardData::instance()->preload($observations);
-            @endphp
-
-            <div class="mt-2">
-                <x-card>
-                    <div class="grid-cols-1 px-5">
-                        @foreach ($observations as $observation)
-                            @if ($observation->target_type === "comet")
-                                <x-observation-comet
-                                    :observation="$observation"
-                                />
-                            @else
-                                <x-observation-deepsky
-                                    :observation="$observation"
-                                />
-                            @endif
-                        @endforeach
-                    </div>
-                    {{ $observations->links() }}
-                </x-card>
-            </div>
-        </div>
-
-        {{-- Newest public observing lists --}}
-        @if (!empty($observingLists) && $observingLists->isNotEmpty())
-            <div class="pt-4">
-                <h2 class="ml-3 mt-3 text-xl font-semibold leading-tight">
-                    {{ __("Newest observing lists") }}
-                </h2>
-                <div class="mt-2">
-                    <x-card>
-                        <div class="grid grid-cols-1 gap-4 px-5 md:grid-cols-2 lg:grid-cols-3">
-                            @foreach ($observingLists as $list)
-                                <article class="flex flex-col rounded-lg border border-gray-700 bg-gray-800 p-4">
-                                    <div class="flex-1">
-                                        <h4 class="mb-1 text-base font-bold text-white">
-                                            <a href="{{ route("observing-list.show", $list) }}" class="hover:underline">{{ html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, "UTF-8") }}</a>
-                                        </h4>
-                                        <p class="mb-2 text-xs text-gray-500">
-                                            @if ($list->owner)
-                                                {{ __("by") }}
-                                                <a href="{{ route("observer.show", $list->owner->slug) }}" class="text-gray-300 hover:underline">{{ html_entity_decode($list->owner->name, ENT_QUOTES | ENT_HTML5, "UTF-8") }}</a>
-                                                &bull;
-                                            @endif
-                                            {{ $list->created_at?->diffForHumans() }}
-                                        </p>
-                                        @if ($list->description)
-                                            <p class="mb-3 text-sm text-gray-400">{{ Str::limit(html_entity_decode(strip_tags($list->description), ENT_QUOTES | ENT_HTML5, "UTF-8"), 150) }}</p>
-                                        @endif
-                                    </div>
-                                    <div class="flex items-center gap-4 text-xs text-gray-400">
-                                        <span>{{ $list->items_count }} {{ __("objects") }}</span>
-                                        <span title="{{ __("Likes") }}">&#9829; {{ $list->likes_count }}</span>
-                                        <span>{{ $list->subscriptions_count }} {{ __("subscribers") }}</span>
-                                    </div>
-                                </article>
-                            @endforeach
-                        </div>
-                        <div class="mt-4 px-5">
-                            <a href="{{ route("observing-lists.discover") }}" class="text-sm text-blue-400 hover:underline">{{ __("Discover all public observing lists") }}</a>
-                        </div>
-                    </x-card>
-                </div>
-            </div>
-        @endif
     </div>
 </x-app-layout>
