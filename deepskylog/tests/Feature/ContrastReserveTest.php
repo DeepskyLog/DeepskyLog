@@ -252,3 +252,13 @@ it('drops the stored metrics when the latitude of the location changes', functio
 
     expect(UserObjectMetric::count())->toBe(0);
 });
+
+it('reads a magnitude of 0 or 99.9 as unknown', function () {
+    expect(ContrastReserveCalculator::target(66, 36, 0)->getMagnitude())->toBeNull()
+        ->and(ContrastReserveCalculator::target(66, 36, 99.9)->getMagnitude())->toBeNull()
+        ->and(ContrastReserveCalculator::target(66, 36, 14.2)->getMagnitude())->toBe(14.2);
+
+    // Without a magnitude there is no surface brightness, so no contrast reserve.
+    [$user, $instrument, $location] = contrastReserveEquipment();
+    expect(ContrastReserveCalculator::calculate(ContrastReserveCalculator::target(66, 36, 0), $instrument, $location, $user)['contrast_reserve'])->toBeNull();
+});

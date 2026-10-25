@@ -191,7 +191,8 @@ class TonightsBest
         $instrument = $user ? self::instrument($user, $location) : null;
         $lensId     = $instrument ? $user->standardLensId() : null;
 
-        $key = 'tonights_best:'.md5(json_encode([
+        // v2: a magnitude of 0 is unknown (ContrastReserveCalculator::target())
+        $key = 'tonights_best:v2:'.md5(json_encode([
             $user?->id, $instrument?->id, $location->id, (float) $location->latitude, (float) $location->longitude, $lensId, $night, $timezone, $options,
             // a new observation changes what the observer has seen
             $user ? DB::table('observations')->where('observer_username', $user->username)->max('id') : null,

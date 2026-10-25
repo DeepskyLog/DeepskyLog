@@ -65,7 +65,9 @@ class ContrastReserveCalculator
 
     /**
      * A target with the diameters and the magnitude of an object; one
-     * diameter makes a round object, a magnitude of 99.9 is unknown.
+     * diameter makes a round object, a magnitude of 99.9 or 0 is unknown
+     * (0 is what the old site stored for a missing magnitude: AND IV, PGC
+     * 12203; read as a magnitude, the object would be very easy to see).
      */
     public static function target(mixed $diam1, mixed $diam2, mixed $magnitude): AstroTarget
     {
@@ -77,7 +79,7 @@ class ContrastReserveCalculator
         if ($d1 !== null) {
             $target->setDiameter($d1, $d2);
         }
-        if (is_numeric($magnitude) && (float) $magnitude != 99.9) {
+        if (is_numeric($magnitude) && (float) $magnitude != 99.9 && (float) $magnitude != 0.0) {
             $target->setMagnitude((float) $magnitude);
         }
 

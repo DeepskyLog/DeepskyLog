@@ -315,7 +315,7 @@ class FieldViewBuilder
     private function contrastReserve(DeepskyObject $object, float $sqm, float $extinction, float $aperture, mixed $magnification): ?array
     {
         if ($aperture <= 0 || ! is_numeric($magnification) || (float) $magnification <= 0
-                           || ! is_numeric($object->mag) || (float) $object->mag >= 99) {
+                           || ! is_numeric($object->mag) || (float) $object->mag >= 99 || (float) $object->mag == 0.0) {
             return null;
         }
 
