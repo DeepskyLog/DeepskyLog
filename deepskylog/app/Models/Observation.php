@@ -17,6 +17,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Observation extends Model
@@ -312,6 +313,34 @@ class Observation extends Model
         }
 
         return route('observations.detail', $params);
+    }
+
+    /**
+     * URL of the drawing, or null without one: a drawing uploaded on this site
+     * is on the public disk under drawing_filename, one of the old site under
+     * public/images (drawing_filename, or {drawings,cometdrawings}/{legacy_id}.jpg).
+     */
+    public function drawingUrl(): ?string
+    {
+        if (! $this->has_drawing) {
+            return null;
+        }
+
+        $filename = ltrim((string) ($this->drawing_filename ?? ''), '/');
+        if ($filename !== '') {
+            try {
+                if (Storage::disk('public')->exists($filename)) {
+                    return Storage::disk('public')->url($filename);
+                }
+            } catch (\Throwable $_) {
+            }
+
+            return '/images/' . $filename;
+        }
+
+        $folder = $this->legacy_source === 'comet' ? 'cometdrawings' : 'drawings';
+
+        return '/images/' . $folder . '/' . (int) $this->legacy_id . '.jpg';
     }
 
     // ─── Legacy field aliases (backward compatibility) ─────────────────────────

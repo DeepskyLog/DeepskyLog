@@ -1091,7 +1091,7 @@ class SessionController extends Controller
      * @param  \App\Models\Location|null  $location
      * @return string|null
      */
-    protected function resolveSessionImage($session, $location = null)
+    public static function resolveSessionImage($session, $location = null)
     {
         $image = null;
 

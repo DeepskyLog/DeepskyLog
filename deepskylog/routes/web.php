@@ -144,6 +144,8 @@ Route::get('/observers/{observer}/catalog', [App\Http\Controllers\ObserverContro
 Route::post('/observers/{observer}/catalog/observing-list', [App\Http\Controllers\ObserverController::class, 'createCatalogList'])
     ->name('observer.catalog.list')->middleware(['auth', 'verified', 'doNotCacheResponse']);
 Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@show')->name('observer.show');
+// The blog of an observer (#964): sessions, observations and public lists in one timeline
+Route::get('/observers/{observer}/blog', [App\Http\Controllers\ObserverBlogController::class, 'show'])->name('observer.blog');
 Route::post('/observers/{observer}/follow', [App\Http\Controllers\FollowController::class, 'follow'])
     ->name('observer.follow')->middleware(['auth', 'verified', 'doNotCacheResponse']);
 Route::post('/observers/{observer}/unfollow', [App\Http\Controllers\FollowController::class, 'unfollow'])
@@ -154,6 +156,7 @@ Route::get('/feed/observations', [App\Http\Controllers\RssFeedController::class,
 Route::get('/feed/drawings', [App\Http\Controllers\RssFeedController::class, 'drawings'])->name('feed.drawings');
 Route::get('/feed/observing-lists', [App\Http\Controllers\RssFeedController::class, 'observingLists'])->name('feed.observing-lists');
 Route::get('/feed/news', [App\Http\Controllers\RssFeedController::class, 'news'])->name('feed.news');
+Route::get('/feed/observer/{observer}', [App\Http\Controllers\RssFeedController::class, 'observer'])->name('feed.observer');
 // The personal feed of the observers someone follows, by its secret token
 Route::post('/feed/following/regenerate', [App\Http\Controllers\FollowController::class, 'regenerateFeedToken'])
     ->name('feed.following.regenerate')->middleware(['auth', 'verified', 'doNotCacheResponse']);

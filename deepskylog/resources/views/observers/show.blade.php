@@ -608,6 +608,10 @@
                     {{ __('All drawings of ') . $user->name }}
                 </x-button>
 
+                <x-button gray icon="newspaper" class="mb-2" href="{{ route('observer.blog', ['observer' => $user->slug]) }}">
+                    {{ __('Blog of :name', ['name' => $user->name]) }}
+                </x-button>
+
                   @if (\App\Models\ObservationSession::where('observerid', $user->username)->where('active', 1)->exists())
                     <x-button gray icon="calendar" class="mb-2"
                         href="{{ route('session.user', [$user->slug ?? $user->username]) }}">

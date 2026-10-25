@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Location;
 use App\Models\NewsItem;
 use App\Models\Observation;
 use App\Models\ObservingList;
+use App\Models\SketchOfTheMonth;
+use App\Models\SketchOfTheWeek;
 use App\Models\User;
 use App\Services\Observations\ObservationCardData;
+use App\Services\ObserverBlog;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
@@ -19,11 +23,16 @@ class RssFeedController extends Controller
     private const CACHE_SECONDS = 900;
 
     /**
+     * The items in the feed of an observer.
+     */
+    private const OBSERVER_ITEMS = 50;
+
+    /**
      * RSS feed for the latest observations.
      */
     public function observations(): Response
     {
-        return $this->feed('rss:observations', fn() => $this->renderObservations(false));
+        return $this->feed('rss:observations', fn () => $this->renderObservations(false));
     }
 
     /**
@@ -31,7 +40,7 @@ class RssFeedController extends Controller
      */
     public function drawings(): Response
     {
-        return $this->feed('rss:drawings', fn() => $this->renderObservations(true));
+        return $this->feed('rss:drawings', fn () => $this->renderObservations(true));
     }
 
     /**
@@ -60,7 +69,7 @@ class RssFeedController extends Controller
     public function news(): Response
     {
         return $this->feed('rss:news', function () {
-            $items = NewsItem::published()->orderByDesc('published_at')->orderByDesc('id')->limit(30)->get();
+            $items       = NewsItem::published()->orderByDesc('published_at')->orderByDesc('id')->limit(30)->get();
             $feedUpdated = $items->first()?->published_at ?? now();
 
             // The feed is cached for everybody: always in English.
@@ -75,6 +84,70 @@ class RssFeedController extends Controller
     }
 
     /**
+     * RSS feed of the blog of an observer (#964): their latest sessions,
+     * observations, sketches of the week/month and public observing lists,
+     * in English.
+     */
+    public function observer(string $observer): Response
+    {
+        $user = User::where('slug', $observer)->firstOrFail();
+
+        return $this->feed(self::observerKey($user), function () use ($user) {
+            $sessions = (new ObserverBlog($user))->sessionsQuery()
+                ->with('observer')
+                ->whereNotNull('begindate')
+                ->orderByDesc('begindate')
+                ->limit(self::OBSERVER_ITEMS)
+                ->get();
+            $locations = Location::whereIn('id', $sessions->pluck('locationid')->filter()->unique())->get()->keyBy('id');
+            foreach ($sessions as $session) {
+                $location               = $locations->get($session->locationid);
+                $session->location_name = $location?->name;
+                $session->preview       = SessionController::resolveSessionImage($session, $location);
+            }
+
+            $observations = Observation::where('observer_username', $user->username)
+                ->with(['instrument.instrument_make', 'eyepiece', 'observerUser'])
+                ->orderByDesc('created_at')
+                ->limit(self::OBSERVER_ITEMS)
+                ->get();
+            $cards = ObservationCardData::instance()->preload($observations);
+
+            $lists = ObservingList::with(['owner', 'items'])
+                ->withCount('items')
+                ->where('owner_user_id', $user->id)
+                ->where('public', true)
+                ->orderByDesc('created_at')
+                ->limit(self::OBSERVER_ITEMS)
+                ->get();
+
+            $blog     = new ObserverBlog($user);
+            $sketches = $blog->sketches(SketchOfTheWeek::class, 'week')[0]
+                ->concat($blog->sketches(SketchOfTheMonth::class, 'month')[0]);
+
+            $items = collect()
+                ->concat($sketches->map(fn (array $sketch) => ['sketch', $sketch, $sketch['date']]))
+                ->concat($sessions->map(fn ($session) => ['session', $session, $session->enddate ?? $session->begindate]))
+                ->concat($observations->map(fn ($observation) => ['observation', $observation, $observation->created_at]))
+                ->concat($lists->map(fn ($list) => ['list', $list, $list->created_at]))
+                ->filter(fn (array $item) => $item[2] !== null)
+                ->sortByDesc(fn (array $item) => $item[2]->getTimestamp())
+                ->take(self::OBSERVER_ITEMS)
+                ->values();
+
+            $feedUpdated = $items->first()[2] ?? now();
+            $observer    = $user;
+
+            return view('rss.observer', compact('items', 'feedUpdated', 'cards', 'observer'))->render();
+        });
+    }
+
+    private static function observerKey(User $user): string
+    {
+        return 'rss:observer:' . $user->id;
+    }
+
+    /**
      * Personal RSS feed of the latest observations of the observers a user
      * follows. The URL holds the user's secret token instead of a login, so
      * feed readers can poll it.
@@ -83,7 +156,7 @@ class RssFeedController extends Controller
     {
         $user = User::where('follow_feed_token', $token)->firstOrFail();
 
-        return $this->feed(self::followingKey($user), fn() => $this->renderObservations(false, $user));
+        return $this->feed(self::followingKey($user), fn () => $this->renderObservations(false, $user));
     }
 
     /**
@@ -104,7 +177,7 @@ class RssFeedController extends Controller
     {
         $observations = ($follower ? $follower->followedObservations() : Observation::query())
             ->with(['instrument.instrument_make', 'eyepiece', 'observerUser'])
-            ->when($drawingsOnly, fn($query) => $query->where('has_drawing', true))
+            ->when($drawingsOnly, fn ($query) => $query->where('has_drawing', true))
             ->orderBy('created_at', 'desc')
             ->limit(50)
             ->get();
@@ -117,10 +190,10 @@ class RssFeedController extends Controller
 
         $channel = $follower
             ? [
-                'title' => 'Observers followed by ' . $follower->name,
-                'link' => url('/observations?following=1'),
+                'title'       => 'Observers followed by ' . $follower->name,
+                'link'        => url('/observations?following=1'),
                 'description' => 'The latest observations of the observers ' . $follower->name . ' follows on DeepskyLog.',
-                'self' => route('feed.following', ['token' => $follower->follow_feed_token]),
+                'self'        => route('feed.following', ['token' => $follower->follow_feed_token]),
             ]
             : null;
 
