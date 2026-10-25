@@ -42,6 +42,7 @@ class AdminObjectCheckService
     public function buildReport(): array
     {
         return [
+            'incomplete_objects' => $this->buildIncompleteObjectsCheck(),
             'orphan_objectnames' => $this->buildOrphanObjectNamesCheck(),
             'unknown_observations' => $this->buildUnknownObservationsCheck(),
         ];
@@ -321,6 +322,51 @@ class AdminObjectCheckService
         }
 
         return $updated;
+    }
+
+    /**
+     * The deep-sky objects without a name, a type DeepskyLog knows or a
+     * position. The objects table stores a missing type as '' and a missing
+     * position as 0h 0°, which no real object has.
+     */
+    private function buildIncompleteObjectsCheck(): array
+    {
+        $query = DB::table('objects')
+            ->leftJoin('deepskytypes', 'objects.type', '=', 'deepskytypes.code')
+            ->where(fn ($q) => $q->where('objects.name', '')
+                ->orWhereNull('deepskytypes.code')
+                ->orWhereNull('objects.ra')
+                ->orWhereNull('objects.decl')
+                ->orWhere(fn ($q) => $q->where('objects.ra', 0)->where('objects.decl', 0)));
+
+        $examples = (clone $query)
+            ->select('objects.name', 'objects.slug', 'objects.type', 'objects.ra', 'objects.decl', 'objects.datasource', 'deepskytypes.code as known_type')
+            ->orderBy('objects.name')
+            ->limit(self::DISPLAY_LIMIT)
+            ->get()
+            ->map(function ($object) {
+                $problems = [];
+                if (trim((string) $object->name) === '') {
+                    $problems[] = __('no name');
+                }
+                if (trim((string) $object->type) === '') {
+                    $problems[] = __('no type');
+                } elseif ($object->known_type === null) {
+                    $problems[] = __('unknown type :type', ['type' => $object->type]);
+                }
+                if ($object->ra === null || $object->decl === null || ((float) $object->ra === 0.0 && (float) $object->decl === 0.0)) {
+                    $problems[] = __('no position');
+                }
+                $object->problems = $problems;
+
+                return $object;
+            });
+
+        return [
+            'count' => (clone $query)->count(),
+            'examples' => $examples,
+            'display_limit' => self::DISPLAY_LIMIT,
+        ];
     }
 
     private function buildOrphanObjectNamesCheck(): array

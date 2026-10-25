@@ -175,3 +175,26 @@ it('puts the exact name first in the create wizard and sorts the candidates', fu
         ->assertOk()
         ->assertSeeInOrder(['Pal 11', 'NGC 11', 'Pal 12', 'Pal 8']);
 });
+
+it('does not create an object without a valid position or a type', function (array $fields, string $error) {
+    storeMeasurementTestObject($this, $fields)->assertSessionHasErrors($error);
+
+    expect(DB::table('objects')->where('name', 'Wdm 1')->exists())->toBeFalse();
+})->with([
+    'no right ascension' => [['ra' => ''], 'ra'],
+    'no declination' => [['decl' => ''], 'decl'],
+    'no type' => [['type' => ''], 'type'],
+    'unreadable right ascension' => [['ra' => 'north'], 'ra'],
+    'declination beyond the pole' => [['decl' => '95'], 'decl'],
+]);
+
+it('refuses to create an object without a name, a type or a position', function (array $values) {
+    app(\App\Services\DeepskyObjectCreator::class)->create(array_merge(['name' => 'Wdm 1', 'type' => 'GALXY', 'ra' => 11.3, 'decl' => 13.1], $values));
+})->with([
+    [['name' => '']],
+    [['type' => null]],
+    [['ra' => '']],
+    [['decl' => null]],
+    [['ra' => 24.5]],
+    [['decl' => -91]],
+])->throws(InvalidArgumentException::class);

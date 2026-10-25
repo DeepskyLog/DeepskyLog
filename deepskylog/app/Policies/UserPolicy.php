@@ -48,6 +48,15 @@ class UserPolicy
     }
 
     /**
+     * Administrators and database experts import objects from a CSV file and
+     * compare the objects with it on /admin/objects/import.
+     */
+    public function import_objects(User $user): bool
+    {
+        return $user->isAdministrator() || $user->isDatabaseExpert();
+    }
+
+    /**
      * Only administrators may send a message to all observers.
      */
     public function broadcast(User $user): bool

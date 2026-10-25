@@ -67,12 +67,23 @@ class DeepskyObjectCreator
      * them). The constellation, atlas pages and SBObj are calculated.
      *
      * @param  array<string, mixed>  $values
+     *
+     * @throws \InvalidArgumentException without a name, a type or a valid position
      */
     public function create(array $values): DeepskyObject
     {
-        if (isset($values['ra'], $values['decl']) && $values['ra'] !== '' && $values['decl'] !== '') {
-            $values = array_merge($values, self::coordinateDerivedFields((float) $values['ra'], (float) $values['decl'], 'object creation'));
+        // The objects table would store a missing type as '' and a missing position as 0h 0°
+        foreach (['name', 'type', 'ra', 'decl'] as $key) {
+            if (! isset($values[$key]) || trim((string) $values[$key]) === '') {
+                throw new \InvalidArgumentException("A deep-sky object needs a {$key}.");
+            }
         }
+        if (! is_numeric($values['ra']) || $values['ra'] < 0 || $values['ra'] >= 24
+            || ! is_numeric($values['decl']) || abs($values['decl']) > 90) {
+            throw new \InvalidArgumentException("Invalid position {$values['ra']} {$values['decl']} of {$values['name']}.");
+        }
+
+        $values = array_merge($values, self::coordinateDerivedFields((float) $values['ra'], (float) $values['decl'], 'object creation'));
         $values = array_merge($values, self::measurementColumns($values));
 
         $objectData = array_merge(self::DEFAULTS, array_filter(

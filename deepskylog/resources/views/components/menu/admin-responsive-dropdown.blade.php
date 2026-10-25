@@ -39,6 +39,12 @@
                             href="{{ route('admin.complete-catalogs') }}"
                             label="{{ __('Complete catalogs') }}"
                         />
+
+                        <x-dropdown.item
+                            icon="arrow-up-tray"
+                            href="{{ route('admin.objects.import') }}"
+                            label="{{ __('Import objects') }}"
+                        />
                     @endif
 
                     @if (Auth::user()->isAdministrator())

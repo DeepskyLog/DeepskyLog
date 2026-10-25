@@ -107,6 +107,18 @@ Route::view('/admin/complete-catalogs', 'admin.complete-catalogs')
     ->middleware(['auth', 'doNotCacheResponse'])
     ->can('manage_catalogs', User::class)
     ->name('admin.complete-catalogs');
+Route::view('/admin/objects/import', 'admin.object-import')
+    ->middleware(['auth', 'doNotCacheResponse'])
+    ->can('import_objects', User::class)
+    ->name('admin.objects.import');
+Route::post('/admin/objects/import', [App\Http\Controllers\ObjectImportController::class, 'check'])
+    ->middleware(['auth', 'doNotCacheResponse'])
+    ->can('import_objects', User::class)
+    ->name('admin.objects.import.check');
+Route::get('/admin/objects/import/{token}/report', [App\Http\Controllers\ObjectImportController::class, 'report'])
+    ->middleware(['auth', 'doNotCacheResponse'])
+    ->can('import_objects', User::class)
+    ->name('admin.objects.import.report');
 Route::get('/observers/{observer}/catalog', [App\Http\Controllers\ObserverController::class, 'catalog'])->name('observer.catalog');
 Route::post('/observers/{observer}/catalog/observing-list', [App\Http\Controllers\ObserverController::class, 'createCatalogList'])
     ->name('observer.catalog.list')->middleware(['auth', 'verified', 'doNotCacheResponse']);

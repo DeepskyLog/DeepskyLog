@@ -5,7 +5,7 @@
                 {{ __('Check Objects') }}
             </h2>
             <p class="mt-2 text-sm text-gray-300">
-                {{ __('Checks object constellations, orphan object names, and observations that still reference unknown objects.') }}
+                {{ __('Checks object constellations, incomplete objects, orphan object names, and observations that still reference unknown objects.') }}
             </p>
         </div>
     </div>
@@ -128,6 +128,57 @@
                 <p class="mt-4 text-sm text-green-300">{{ __('All checked objects have the expected constellation.') }}</p>
             @endif
         </x-card>
+
+        @isset($report['incomplete_objects'])
+            <x-card>
+                <h3 class="text-lg font-semibold text-white">{{ __('Incomplete objects') }}</h3>
+                <p class="mt-1 text-sm text-gray-300">
+                    {{ __('A deep-sky object needs a name, a type and a position.') }}
+                    {{ trans_choice('{0} No incomplete objects found.|{1} 1 incomplete object found.|[2,*] :count incomplete objects found.', $report['incomplete_objects']['count'], ['count' => $report['incomplete_objects']['count']]) }}
+                </p>
+
+                @if ($report['incomplete_objects']['count'] > 0)
+                    @if ($report['incomplete_objects']['count'] > $report['incomplete_objects']['display_limit'])
+                        <p class="mt-4 text-sm text-amber-300">
+                            {{ __('Showing the first :limit incomplete objects.', ['limit' => $report['incomplete_objects']['display_limit']]) }}
+                        </p>
+                    @endif
+
+                    <div class="mt-4 overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-700 text-sm text-gray-200">
+                            <thead class="bg-gray-800 text-left text-xs uppercase tracking-wide text-gray-400">
+                                <tr>
+                                    <th class="px-3 py-2">{{ __('Object') }}</th>
+                                    <th class="px-3 py-2">{{ __('Problem') }}</th>
+                                    <th class="px-3 py-2">{{ __('Type') }}</th>
+                                    <th class="px-3 py-2">{{ __('RA') }}</th>
+                                    <th class="px-3 py-2">{{ __('Decl') }}</th>
+                                    <th class="px-3 py-2">{{ __('Data source') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800">
+                                @foreach ($report['incomplete_objects']['examples'] as $row)
+                                    <tr>
+                                        <td class="px-3 py-2">
+                                            @if ($row->slug)
+                                                <a href="{{ route('object.edit', $row->slug) }}" class="text-blue-400 hover:underline">{{ $row->name !== '' ? $row->name : '—' }}</a>
+                                            @else
+                                                {{ $row->name !== '' ? $row->name : '—' }}
+                                            @endif
+                                        </td>
+                                        <td class="px-3 py-2 text-amber-300">{{ implode(', ', $row->problems) }}</td>
+                                        <td class="px-3 py-2">{{ $row->type !== '' ? $row->type : '—' }}</td>
+                                        <td class="px-3 py-2">{{ $row->ra ?? '—' }}</td>
+                                        <td class="px-3 py-2">{{ $row->decl ?? '—' }}</td>
+                                        <td class="px-3 py-2">{{ $row->datasource ?: '—' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
+            </x-card>
+        @endisset
 
         <x-card>
             <div class="flex items-start justify-between gap-4">

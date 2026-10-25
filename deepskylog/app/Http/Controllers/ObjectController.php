@@ -3819,8 +3819,8 @@ class ObjectController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
-            'ra' => 'nullable|string',
-            'decl' => 'nullable|string',
+            'ra' => 'required|string',
+            'decl' => 'required|string',
             'type' => 'required|string|exists:deepskytypes,code',
             'mag' => 'nullable|numeric',
             'subr' => 'nullable|numeric',
@@ -3835,17 +3835,17 @@ class ObjectController extends Controller
                 ->withErrors(['catalog' => $this->completeCatalogMessage($validated['name'], $catalog)]);
         }
 
-        // Convert RA to decimal hours (DB stores hours, not degrees)
-        if (!empty($validated['ra'])) {
-            $raDeg = DeepskyObject::raToDecimal($validated['ra']);
-            if ($raDeg !== null)
-                $validated['ra'] = $raDeg / 15.0;
+        // A deep-sky object always has a position: RA in decimal hours (DB stores hours, not degrees)
+        $raDeg = DeepskyObject::raToDecimal($validated['ra']);
+        $decDeg = DeepskyObject::decToDecimal($validated['decl']);
+        if ($raDeg === null || $raDeg < 0 || $raDeg >= 360 || $decDeg === null || abs($decDeg) > 90) {
+            return back()->withInput()->withErrors(array_filter([
+                'ra' => $raDeg === null || $raDeg < 0 || $raDeg >= 360 ? __('Invalid right ascension :value.', ['value' => $validated['ra']]) : null,
+                'decl' => $decDeg === null || abs($decDeg) > 90 ? __('Invalid declination :value.', ['value' => $validated['decl']]) : null,
+            ]));
         }
-        if (!empty($validated['decl'])) {
-            $decDeg = DeepskyObject::decToDecimal($validated['decl']);
-            if ($decDeg !== null)
-                $validated['decl'] = $decDeg;
-        }
+        $validated['ra'] = $raDeg / 15.0;
+        $validated['decl'] = $decDeg;
 
         // Constellation, atlas pages, magnitudes, diameters (arcminutes → arcseconds),
         // position angle and SBObj, the objectnames entry and the search index

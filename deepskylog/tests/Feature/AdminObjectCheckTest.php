@@ -556,3 +556,30 @@ test('an observation of an unknown object can be moved to another object from it
     // A name that matches no object says so
     $this->get($editUrl . '?object=Nothing 1')->assertSessionHas('error', "No object found for 'Nothing 1'.");
 });
+
+test('objects without a type, with an unknown type or without a position are listed', function () {
+    $admin = $this->createUserAndAssignToTeam('Administrators');
+    DB::table('deepskytypes')->insertOrIgnore(['code' => 'GALXY', 'name' => 'Galaxy']);
+
+    DB::table('objects')->insert([
+        checkObjectRow('NGC 1'),
+        array_merge(checkObjectRow('Bochum 2026'), ['type' => '']),
+        array_merge(checkObjectRow('PA Test Object'), ['type' => 'G', 'ra' => 0, 'decl' => 0]),
+        // A position on one axis only is a real position
+        array_merge(checkObjectRow('NGC 2'), ['ra' => 0]),
+    ]);
+
+    $report = app(\App\Services\AdminObjectCheckService::class)->buildReport()['incomplete_objects'];
+    expect($report['count'])->toBe(2)
+        ->and($report['examples']->pluck('problems', 'name')->all())->toBe([
+            'Bochum 2026' => ['no type'],
+            'PA Test Object' => ['unknown type G', 'no position'],
+        ]);
+
+    $this->actingAs($admin)
+        ->get(route('admin.objects.check'))
+        ->assertOk()
+        ->assertSee('2 incomplete objects found.')
+        ->assertSee(route('object.edit', 'pa-test-object'), false)
+        ->assertSee('unknown type G, no position');
+});

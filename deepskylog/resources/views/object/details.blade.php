@@ -33,6 +33,7 @@
                     {{ $ra ?? '—' }}
                 </div>
                 <input type="hidden" name="ra" value="{{ old('ra', $ra ?? '') }}" />
+                @error('ra') <div class="text-sm text-red-400 mt-1">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label class="block text-sm text-gray-400">{{ __('Decl') }}</label>
@@ -40,6 +41,7 @@
                     {{ $decl ?? '—' }}
                 </div>
                 <input type="hidden" name="decl" value="{{ old('decl', $decl ?? '') }}" />
+                @error('decl') <div class="text-sm text-red-400 mt-1">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label class="block text-sm text-gray-400">{{ __('Constellation') }}</label>
