@@ -40,7 +40,12 @@ class GenerateAtlasPdf extends QueuedPdfJob
         return 'downloads.dsl-atlas.download';
     }
 
-    protected function renderPdf(User $user, callable $progress): string
+    /**
+     * A whole atlas is a PDF of a few hundred MB: it goes from the response
+     * to the file in chunks, rather than through a string or two the size
+     * of the PDF.
+     */
+    protected function writeTo(string $path, User $user, callable $progress): void
     {
         $request = Request::create('/downloads/dsl-atlas/generate', 'POST', $this->parameters);
         $request->setUserResolver(fn () => $user);
@@ -56,19 +61,37 @@ class GenerateAtlasPdf extends QueuedPdfJob
                 'total_pages' => $totalPages,
             ])
         );
-        ob_start();
-        $response->sendContent();
-        $content = ob_get_clean();
         $contentType = strtolower((string) $response->headers->get('Content-Type'));
 
-        if (! is_string($content) || $content === '' || $response->getStatusCode() >= 400 || ! str_contains($contentType, 'application/pdf')) {
+        if ($response->getStatusCode() >= 400 || ! str_contains($contentType, 'application/pdf')) {
+            throw new \RuntimeException('Atlas PDF generation returned no PDF content.');
+        }
+
+        $handle = fopen($path, 'wb');
+        if ($handle === false) {
+            throw new \RuntimeException('Could not write the PDF.');
+        }
+
+        $written = 0;
+        ob_start(function (string $buffer) use ($handle, &$written) {
+            $written += (int) fwrite($handle, $buffer);
+
+            return '';
+        }, 1024 * 1024);
+
+        try {
+            $response->sendContent();
+        } finally {
+            ob_end_clean();
+            fclose($handle);
+        }
+
+        if ($written === 0) {
             throw new \RuntimeException('Atlas PDF generation returned no PDF content.');
         }
 
         // The status keeps the name, so download() can offer the file under it.
         $progress(['filename' => $this->filenameFrom($response)]);
-
-        return $content;
     }
 
     /**

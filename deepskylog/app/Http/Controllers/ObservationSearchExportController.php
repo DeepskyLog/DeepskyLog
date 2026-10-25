@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Support\MemoryLimit;
 use App\Support\Timezones;
 
 class ObservationSearchExportController extends Controller
@@ -70,7 +71,7 @@ class ObservationSearchExportController extends Controller
         }
 
         // Building the entries already needs more than the default 128 MB.
-        @ini_set('memory_limit', '512M');
+        MemoryLimit::atLeast('512M');
         @set_time_limit(180);
 
         try {
@@ -452,7 +453,7 @@ class ObservationSearchExportController extends Controller
 
     private function renderPdf(string $html, string $filename, string $orientation)
     {
-        @ini_set('memory_limit', '512M');
+        MemoryLimit::atLeast('512M');
         @set_time_limit(180);
 
         if (class_exists('\\Barryvdh\\DomPDF\\Facade\\Pdf')) {

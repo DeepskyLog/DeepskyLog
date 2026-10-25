@@ -266,8 +266,8 @@ class ObjectSets extends Component
             ->filter()
             ->values();
 
-        // The observer sees them finish here and needs no message.
-        GenerateObjectSetsPdf::watch($jobs);
+        // The observer sees the result here and needs no message about it.
+        GenerateObjectSetsPdf::markSeen($jobs);
 
         return view('livewire.object-sets', [
             'jobs' => $jobs,

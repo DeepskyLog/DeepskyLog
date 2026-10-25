@@ -218,8 +218,8 @@ class ObjectReport extends Component
             ->filter()
             ->values();
 
-        // The observer sees them finish here and needs no message.
-        GenerateObjectReportPdf::watch($jobs);
+        // The observer sees the result here and needs no message about it.
+        GenerateObjectReportPdf::markSeen($jobs);
 
         $defaults = ReportLayout::defaults()->orderBy('name')->get(['id', 'name']);
         $current = $this->currentLayout();

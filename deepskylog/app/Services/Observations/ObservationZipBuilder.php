@@ -6,6 +6,7 @@ use App\Http\Controllers\ObservationSearchExportController;
 use App\Models\Observation;
 use App\Models\User;
 use App\Services\ObservationSearchQuery;
+use App\Support\MemoryLimit;
 use App\Support\SpreadsheetCell;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
@@ -173,7 +174,7 @@ class ObservationZipBuilder
     public function write(string $path, array $source, callable $progress): array
     {
         // 25,000 observations take about 250 MB as OAL.
-        @ini_set('memory_limit', '1024M');
+        MemoryLimit::atLeast('1024M');
 
         $observations = self::query($source)->orderBy('observations.observed_on')->orderBy('observations.id')->get();
         if (($refusal = self::refusal(['observations' => $observations->count(), 'drawings' => $observations->where('has_drawing', true)->count()])) !== null) {

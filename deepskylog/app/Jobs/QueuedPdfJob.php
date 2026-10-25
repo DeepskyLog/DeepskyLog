@@ -2,8 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Mail\MessageReceived;
-use App\Models\Message;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,7 +13,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
@@ -30,8 +27,9 @@ use Throwable;
  * Each observer's recent PDFs of a kind are listed in the cache as well, so
  * the page that queued them can show them again when the observer returns;
  * /downloads/mine lists those of all kinds (jobsFor()). When a PDF is ready
- * or failed, the observer gets a DeepskyLog message about it, unless a page
- * showing its status was open (watch()).
+ * or failed, the observer gets a DeepskyLog message about it
+ * (NotifyQueuedPdfFinished), unless a page showed them the result first
+ * (markSeen()).
  *
  * These jobs run for up to hours, so they go to the long-running connection
  * of config/queue.php, whose retry_after outlasts them: on the default
@@ -59,11 +57,11 @@ abstract class QueuedPdfJob implements ShouldQueue
     public const RECENT = 20;
 
     /**
-     * A page that shows the status of a PDF marks it as watched for this
-     * long, and polls more often: the observer sees it finish there, so no
-     * message is sent. A tab in the background polls less often.
+     * The message that a PDF is ready or failed waits this long, so that a
+     * page polling its status (every 3 s) can show the result first, which
+     * makes the message unnecessary (markSeen()).
      */
-    public const WATCH_SECONDS = 20;
+    public const NOTIFY_DELAY_SECONDS = 15;
 
     /** @var array<int, class-string<QueuedPdfJob>> */
     public const KINDS = [GenerateAtlasPdf::class, GenerateObjectSetsPdf::class, GenerateObjectReportPdf::class, GenerateObservationsZip::class];
@@ -244,23 +242,29 @@ abstract class QueuedPdfJob implements ShouldQueue
     }
 
     /**
-     * Mark the PDFs that are waiting or being made as watched: a page shows
-     * their status, so the observer needs no message when they finish.
+     * Mark the finished and failed PDFs a page shows the observer as seen:
+     * they know, so they need no message about it.
      *
      * @param  iterable<array<string, mixed>>  $jobs  statuses with their token
      */
-    public static function watch(iterable $jobs): void
+    public static function markSeen(iterable $jobs): void
     {
         foreach ($jobs as $job) {
-            if (in_array($job['state'] ?? '', ['queued', 'processing'], true) && is_string($job['token'] ?? null)) {
-                Cache::put(self::watchKey($job['token']), true, self::WATCH_SECONDS);
+            if (in_array($job['state'] ?? '', ['complete', 'failed'], true) && is_string($job['token'] ?? null)) {
+                Cache::add(self::seenKey($job['token']), true, now()->addHours(self::KEEP_HOURS));
             }
         }
     }
 
-    private static function watchKey(string $token): string
+    /** Whether a page showed the observer that the PDF is ready or failed. */
+    public static function seen(string $token): bool
     {
-        return 'pdf_watched:' . $token;
+        return Cache::has(self::seenKey($token));
+    }
+
+    private static function seenKey(string $token): string
+    {
+        return 'pdf_seen:' . $token;
     }
 
     /**
@@ -369,6 +373,7 @@ abstract class QueuedPdfJob implements ShouldQueue
         }
 
         $this->updateStatus('processing');
+        $this->failWhenTheWorkerDies();
 
         App::setLocale($this->locale);
         Carbon::setLocale($this->locale);
@@ -453,6 +458,31 @@ abstract class QueuedPdfJob implements ShouldQueue
     }
 
     /**
+     * A fatal error -- out of memory, say -- ends the worker without
+     * reaching handle()'s catch, and the queue only gives up on the job
+     * after retry_after, hours later: until then the observer would see
+     * the PDF "being made". PHP still runs the shutdown functions, so mark
+     * it failed there.
+     */
+    private function failWhenTheWorkerDies(): void
+    {
+        register_shutdown_function(function () {
+            $error = error_get_last();
+            if ($error === null || ! in_array($error['type'], [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR], true)) {
+                return;
+            }
+
+            // The memory that ran out is needed to write the status.
+            @ini_set('memory_limit', '-1');
+
+            try {
+                $this->failed(null);
+            } catch (Throwable $_) {
+            }
+        });
+    }
+
+    /**
      * Keep the PDF in the observer's list as long as the PDF itself: the
      * list was stored when it was queued, maybe hours ago.
      */
@@ -466,55 +496,14 @@ abstract class QueuedPdfJob implements ShouldQueue
     }
 
     /**
-     * Tell the observer in a DeepskyLog message (and a mail, if they want
-     * those) that the PDF is ready or failed, in the language they asked
-     * for it in. Not when a page showing its status is open: they see it
-     * there.
+     * Tell the observer that the PDF is ready or failed, a little later,
+     * unless a page shows it to them first.
      */
     private function notifyObserver(bool $ready): void
     {
         try {
-            $status = Cache::get(static::statusKey($this->token));
-            $user = User::find($this->userId);
-            if (! is_array($status) || $user === null || Cache::has(self::watchKey($this->token))) {
-                return;
-            }
-
-            $locale = $this->locale;
-            $label = trim((string) ($status['label'] ?? '')) ?: (string) ($status['filename'] ?? '');
-            $name = static::kindLabel($locale) . ($label !== '' ? ' - ' . $label : '');
-            $overview = '<a href="' . e(route('downloads.mine')) . '">' . e(__('Your PDFs and zip files', [], $locale)) . '</a>';
-
-            if ($ready) {
-                $subject = __('Your file is ready: :name', ['name' => $name], $locale);
-                $body = '<p>' . e(__('The file ":name" you asked for is ready. You can download it until :date.', [
-                    'name' => $name,
-                    'date' => static::expiresAt($status)?->locale($locale)->isoFormat('LLL') ?? '',
-                ], $locale)) . '</p><p>';
-                if (($url = static::downloadUrl($this->token)) !== null) {
-                    $body .= '<a href="' . e($url) . '">' . e(__('Download', [], $locale)) . '</a> - ';
-                }
-                $body .= $overview . '</p>';
-            } else {
-                $subject = __('Your file could not be made: :name', ['name' => $name], $locale);
-                $body = '<p>' . e(__('The file ":name" you asked for could not be made. You can ask for it again; if that fails too, please contact the administrators.', ['name' => $name], $locale))
-                    . '</p><p>' . $overview . '</p>';
-            }
-
-            $body = Message::sanitizeHtml($body);
-            $message = Message::create([
-                'sender' => 'deepskylog',
-                'receiver' => $user->username,
-                'subject' => Message::sanitizeHtml($subject),
-                'message' => $body,
-                'date' => now(),
-            ]);
-
-            if ($user->sendMail) {
-                Mail::to($user->email)
-                    ->locale($locale)
-                    ->send(new MessageReceived('DeepskyLog', $subject, $body, $user->name, route('messages.show', $message->id)));
-            }
+            NotifyQueuedPdfFinished::dispatch(static::class, $this->token, $this->userId, $this->locale, $ready)
+                ->delay(now()->addSeconds(self::NOTIFY_DELAY_SECONDS));
         } catch (Throwable $exception) {
             // The PDF is there; only the message about it failed.
             try {

@@ -107,8 +107,8 @@ class ObservationZips extends Component
             ->filter()
             ->values();
 
-        // The observer sees them finish here and needs no message.
-        GenerateObservationsZip::watch($jobs);
+        // The observer sees the result here and needs no message about it.
+        GenerateObservationsZip::markSeen($jobs);
 
         $counts = $this->selectedCounts();
 

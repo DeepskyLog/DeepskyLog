@@ -21,8 +21,8 @@ class MyDownloads extends Component
     {
         $jobs = QueuedPdfJob::jobsFor((int) auth()->id());
 
-        // The observer sees them finish here and needs no message.
-        QueuedPdfJob::watch($jobs);
+        // The observer sees the result here and needs no message about it.
+        QueuedPdfJob::markSeen($jobs);
 
         return view('livewire.my-downloads', [
             'jobs' => $jobs,

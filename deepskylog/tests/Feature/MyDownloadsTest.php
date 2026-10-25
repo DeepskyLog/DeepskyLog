@@ -3,6 +3,7 @@
 use App\Jobs\GenerateAtlasPdf;
 use App\Jobs\GenerateObjectSetsPdf;
 use App\Jobs\GenerateObservationsZip;
+use App\Jobs\NotifyQueuedPdfFinished;
 use App\Jobs\QueuedPdfJob;
 use App\Livewire\MyDownloads;
 use App\Mail\MessageReceived;
@@ -10,6 +11,7 @@ use App\Models\Message;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
@@ -35,7 +37,7 @@ function listPdf(string $kind, User $user, string $state, array $extra = []): st
     return $token;
 }
 
-it('sends a message when a pdf nobody is watching is ready', function () {
+it('sends a message when a pdf is ready', function () {
     Storage::fake('local');
     Mail::fake();
     $user = User::factory()->create(['sendMail' => true]);
@@ -54,16 +56,27 @@ it('sends a message when a pdf nobody is watching is ready', function () {
     Mail::assertQueued(MessageReceived::class);
 });
 
-it('sends no message when a page shows the pdf finish', function () {
+it('sends the message a little later, and not when a page showed the result meanwhile', function () {
     Storage::fake('local');
+    Queue::fake([NotifyQueuedPdfFinished::class]);
     $user = User::factory()->create();
-    $token = (string) Str::uuid();
-    Cache::put(AuthRecordingPdfJob::statusKey($token), ['state' => 'processing', 'user_id' => $user->id], now()->addHour());
+    $shown = (string) Str::uuid();
+    $missed = (string) Str::uuid();
 
-    QueuedPdfJob::watch([['token' => $token, 'state' => 'processing']]);
-    (new AuthRecordingPdfJob($token, $user->id, []))->handle();
+    foreach ([$shown, $missed] as $token) {
+        Cache::put(AuthRecordingPdfJob::statusKey($token), ['state' => 'queued', 'user_id' => $user->id], now()->addHour());
+        (new AuthRecordingPdfJob($token, $user->id, []))->handle();
+    }
 
-    expect(Message::where('receiver', $user->username)->exists())->toBeFalse();
+    // The observer still has the page open: its next poll shows the first.
+    QueuedPdfJob::markSeen([['token' => $shown] + Cache::get(AuthRecordingPdfJob::statusKey($shown))]);
+
+    Queue::assertPushed(NotifyQueuedPdfFinished::class, 2);
+    Queue::assertPushed(NotifyQueuedPdfFinished::class, fn ($job) => $job->delay !== null);
+    collect(Queue::pushed(NotifyQueuedPdfFinished::class))->each(fn ($job) => $job->handle());
+
+    expect(Message::where('receiver', $user->username)->count())->toBe(1)
+        ->and(Message::where('receiver', $user->username)->sole()->message)->toContain(route('downloads.mine'));
 });
 
 it('sends one message when a pdf fails', function () {
@@ -121,11 +134,13 @@ it('removes a finished or waiting pdf, but not one being made', function () {
         ->and(Cache::get(GenerateObjectSetsPdf::recentKey($user->id)))->toBe([$busy]);
 });
 
-it('marks the pdfs it shows as watched', function () {
+it('marks the finished pdfs it shows as seen', function () {
     $user = User::factory()->create();
-    $token = listPdf(GenerateObjectSetsPdf::class, $user, 'queued');
+    $done = listPdf(GenerateObjectSetsPdf::class, $user, 'complete');
+    $waiting = listPdf(GenerateObjectSetsPdf::class, $user, 'queued');
 
     Livewire::actingAs($user)->test(MyDownloads::class);
 
-    expect(Cache::has('pdf_watched:' . $token))->toBeTrue();
+    expect(QueuedPdfJob::seen($done))->toBeTrue()
+        ->and(QueuedPdfJob::seen($waiting))->toBeFalse();
 });

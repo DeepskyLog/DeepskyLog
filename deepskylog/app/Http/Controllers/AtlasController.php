@@ -68,8 +68,8 @@ class AtlasController extends Controller
         $status = Cache::get(GenerateAtlasPdf::statusKey($token));
         abort_unless($status && (int) ($status['user_id'] ?? 0) === (int) $request->user()->id, 404);
 
-        // The page polling this shows the atlas finish: no message needed.
-        GenerateAtlasPdf::watch([['token' => $token] + $status]);
+        // The page polling this shows the result: no message needed.
+        GenerateAtlasPdf::markSeen([['token' => $token] + $status]);
 
         return response()->json($status);
     }
@@ -526,6 +526,9 @@ class AtlasController extends Controller
             $dompdf->setPaper([0, 0, ($pw / 25.4) * 72.0, ($ph / 25.4) * 72.0]);
             $dompdf->render();
             $output = $dompdf->output();
+            // A whole atlas is a PDF of a few hundred MB, which dompdf holds
+            // as well: let it go before the PDF is passed on.
+            unset($dompdf, $html);
 
             foreach ($tempFiles as $f) {
                 try {
