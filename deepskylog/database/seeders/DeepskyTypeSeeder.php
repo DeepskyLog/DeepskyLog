@@ -15,16 +15,12 @@ class DeepskyTypeSeeder extends Seeder
         $data = [
             // Authoritative mapping from legacy snippet + additional legacy codes discovered in the codebase
             ['code' => 'OPNCL', 'name' => 'Open cluster'],
-            ['code' => 'CLANB', 'name' => 'Cluster / Nebula'],
             ['code' => 'GLOCL', 'name' => 'Globular cluster'],
             ['code' => 'GALXY', 'name' => 'Galaxy'],
             ['code' => 'PLNNB', 'name' => 'Planetary nebula'],
             ['code' => 'EMINB', 'name' => 'Emission nebula'],
             ['code' => 'REFNB', 'name' => 'Reflection nebula'],
             ['code' => 'HII',   'name' => 'H-II region'],
-            ['code' => 'RNHII', 'name' => 'H-II region (nebula complex)'],
-            ['code' => 'ENRNN', 'name' => 'Nebula (extended)'],
-            ['code' => 'ENSTR', 'name' => 'Nebula / Star complex'],
             ['code' => 'SNREM', 'name' => 'Supernova remnant'],
             ['code' => 'WRNEB', 'name' => 'Wolf-Rayet nebula / weird nebula'],
             ['code' => 'QUASR', 'name' => 'Quasar / Active nucleus'],
@@ -39,7 +35,6 @@ class DeepskyTypeSeeder extends Seeder
             ['code' => 'GACAN', 'name' => 'Cluster with nebulosity in galaxy'],
             ['code' => 'SNOVA', 'name' => 'Supernova'],
             ['code' => 'GXADN', 'name' => 'Diffuse nebula in galaxy'],
-            ['code' => 'STNEB', 'name' => 'Star + Nebula complex'],
         ];
 
         // Use upsert to be idempotent if seeder is re-run

@@ -425,7 +425,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
-     * name matches the observation object name, is of type "OPNCL" or "CLANB",
+     * name matches the observation object name, is of type "OPNCL",
      * and belongs to the current user. The count of these distinct object names is
      * returned as the total number of open cluster observations for the current user.
      *
@@ -437,8 +437,7 @@ class User extends Authenticatable implements MustVerifyEmail
                                                             where objects.name = observations.target_name
                                                                 and objects.type = ? and observations.observer_username = ?';
 
-        $total = count(DB::select($query, ['OPNCL', $this->username]));
-        return $total + count(DB::select($query, ['CLANB', $this->username]));
+        return count(DB::select($query, ['OPNCL', $this->username]));
     }
 
     /**
@@ -446,8 +445,8 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
-     * name matches the observation object name, has a drawing, is of type "OPNCL" or
-     * "CLANB", and belongs to the current user. The count of these distinct object
+     * name matches the observation object name, has a drawing, is of type "OPNCL",
+     * and belongs to the current user. The count of these distinct object
      * names is returned as the total number of open cluster drawings for the current
      * user.
      *
@@ -459,8 +458,7 @@ class User extends Authenticatable implements MustVerifyEmail
                                                             where objects.name = observations.target_name and observations.has_drawing = 1
                                                                 and objects.type = ? and observations.observer_username = ?';
 
-        $total = count(DB::select($query, ['OPNCL', $this->username]));
-        return $total + count(DB::select($query, ['CLANB', $this->username]));
+        return count(DB::select($query, ['OPNCL', $this->username]));
     }
 
     /**
@@ -583,8 +581,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name and belongs to one of the following
-     * object types: "EMINB", "ENRNN", "ENSTR", "REFNB", "RNHII", "HII", "SNREM",
-     * or "WRNEB". The count of these distinct object names is returned as the total
+     * object types: "EMINB", "REFNB", "HII", "SNREM" or "WRNEB". The count of these distinct object names is returned as the total
      * number of nebula observations for the current user.
      *
      * @return int The total number of nebula observations for the current user.
@@ -593,10 +590,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $objectTypes = [
             'EMINB',
-            'ENRNN',
-            'ENSTR',
             'REFNB',
-            'RNHII',
             'HII',
             'SNREM',
             'WRNEB',
@@ -622,8 +616,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, has a drawing, and belongs to one of
-     * the following object types: "EMINB", "ENRNN", "ENSTR", "REFNB", "RNHII",
-     * "HII", or "SNREM". The count of these distinct object names is returned as
+     * the following object types: "EMINB", "REFNB", "HII", "SNREM" or "WRNEB". The count of these distinct object names is returned as
      * the total count of nebula drawings for the current user.
      *
      * @return int The count of nebula drawings for the current user.
@@ -632,10 +625,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $objectTypes = [
             'EMINB',
-            'ENRNN',
-            'ENSTR',
             'REFNB',
-            'RNHII',
             'HII',
             'SNREM',
             'WRNEB',

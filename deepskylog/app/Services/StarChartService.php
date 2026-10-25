@@ -25,7 +25,7 @@ class StarChartService
     private const LEGEND_MAGNITUDES = [6.5, 7.0, 8.0, 8.5, 9.0, 9.5, 10.0, 11.5, 12.0];
 
     /** Object types shown in the top legend. */
-    private const LEGEND_OBJECT_TYPES = ['GALXY', 'PLNNB', 'GLOCL', 'OPNCL', 'DRKNB', 'SNREM', 'CLANB', 'GALCL', 'QUASR'];
+    private const LEGEND_OBJECT_TYPES = ['GALXY', 'PLNNB', 'GLOCL', 'OPNCL', 'DRKNB', 'SNREM', 'EMINB', 'GALCL', 'QUASR'];
 
     /** Width of one digit as a fraction of the font size, for sizing boxes. */
     private const DIGIT_WIDTH_RATIO = 0.62;
@@ -283,7 +283,7 @@ class StarChartService
             'GALXY' => __('Galaxy, galaxy cluster'),
             'GLOCL' => __('Globular cluster'),
             'OPNCL' => __('Open cluster, asterism'),
-            'CLANB' => __('Cluster with nebulosity, diffuse nebula'),
+            'EMINB' => __('Bright nebula'),
             'PLNNB' => __('Planetary nebula'),
             'DRKNB' => __('Dark nebula'),
             'SNREM' => __('Supernova remnant'),
@@ -2076,7 +2076,7 @@ class StarChartService
                 '2 2'
             ),
             'PLNNB' => $this->renderPlnnbSymbol($x, $y, $majorRadiusPx, $minorRadiusPx, $positionAngleDeg, $arcMinToPx, $chartRect),
-            'CLANB', 'EMINB', 'HII', 'RNHII', 'REFNB', 'BRTNB', 'WRNEB', 'STNEB', 'ENRNN' => $this->renderNebSymbol($x, $y, $majorRadiusPx, $minorRadiusPx, $positionAngleDeg, $chartRect),
+            'EMINB', 'HII', 'REFNB', 'BRTNB', 'WRNEB' => $this->renderNebSymbol($x, $y, $majorRadiusPx, $minorRadiusPx, $positionAngleDeg, $chartRect),
             'SNREM' => $this->renderSupernovaRemnantSymbol($x, $y, $diam1ArcMin, $diam2ArcMin, $positionAngleDeg, $arcMinToPx, $chartRect),
             'QUASR' => $this->renderClippedCross($x, $y, 5.0, $chartRect),
             default => ($majorRadiusPx !== null)
@@ -2107,7 +2107,6 @@ class StarChartService
         return match ($code) {
             'G', 'GALAXY', 'GXADN', 'GACAN' => 'GALXY',
             'AA1STAR', 'SNOVA' => $code,
-            'HII', 'RNHII', 'EMINB', 'REFNB', 'BRTNB', 'WRNEB', 'STNEB', 'ENRNN' => $code,
             default => $code,
         };
     }
@@ -2584,7 +2583,7 @@ class StarChartService
             'OPNCL' => sprintf('<circle cx="%0.2f" cy="%0.2f" r="4.5" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2 2" />', $x, $y),
             'DRKNB' => sprintf('<rect x="%0.2f" y="%0.2f" width="9" height="9" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="2 2" />', $x - 4.5, $y - 4.5),
             'SNREM' => sprintf('<rect x="%0.2f" y="%0.2f" width="11" height="7.6" fill="none" stroke="#666" stroke-width="1.1" />', $x - 5.5, $y - 3.8),
-            'CLANB' => sprintf('<rect x="%0.2f" y="%0.2f" width="9" height="9" fill="none" stroke="#666" stroke-width="1" /><circle cx="%0.2f" cy="%0.2f" r="4.5" fill="none" stroke="#666" stroke-width="1" />', $x - 4.5, $y - 4.5, $x, $y),
+            'EMINB' => $this->renderNebSymbol($x, $y, 6.0, 3.8, null),
             'GALCL' => sprintf('<polygon points="%0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f" fill="none" stroke="#666" stroke-width="1" />', $x, $y - 4.5, $x + 4.5, $y, $x, $y + 4.5, $x - 4.5, $y),
             'QUASR' => sprintf('<line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" /><line x1="%0.2f" y1="%0.2f" x2="%0.2f" y2="%0.2f" stroke="#666" stroke-width="1" />', $x - 4.5, $y, $x + 4.5, $y, $x, $y - 4.5, $x, $y + 4.5),
             default => sprintf('<polygon points="%0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f %0.2f,%0.2f" fill="none" stroke="#666" stroke-width="1" />', $x, $y - 4.5, $x + 4.5, $y, $x, $y + 4.5, $x - 4.5, $y),

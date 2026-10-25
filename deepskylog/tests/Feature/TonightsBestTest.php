@@ -151,7 +151,7 @@ it('makes a personal list of mostly new objects with only a few seen ones', func
     Queue::fake();
     tbAutumnSky();
     // Of other types than the new objects, so the variety of types does not keep them out.
-    foreach (['BRTNB', 'EMINB', 'REFNB', 'HII', 'SNREM', 'ASTER', 'GALCL', 'CLANB', 'DRKNB', 'ENRNN', 'ENSTR', 'STNEB'] as $i => $type) {
+    foreach (['BRTNB', 'EMINB', 'REFNB', 'HII', 'SNREM', 'ASTER', 'GALCL', 'WRNEB', 'DRKNB', 'GXADN', 'GACAN', 'GXAGC'] as $i => $type) {
         tbObject('Seen Galaxy '.($i + 1), 0.6 + $i / 10, 40.0, $type, 2001 + $i);
     }
     tbObject('Not Yet Computed', 1.1, 38.0, 'GALXY', 50);

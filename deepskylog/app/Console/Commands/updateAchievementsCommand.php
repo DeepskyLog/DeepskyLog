@@ -814,7 +814,7 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of open clusters seen
-                $total = ($this->getTypeObserved($user->username, 'OPNCL') ?? 0) + ($this->getTypeObserved($user->username, 'CLANB') ?? 0);
+                $total = $this->getTypeObserved($user->username, 'OPNCL') ?? 0;
 
                 $achievement10 = $this->getAchievement('Open Cluster 1');
                 $achievement9 = $this->getAchievement('Open Clusters 5');
@@ -853,7 +853,7 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of open clusters drawn
-                $total = ($this->getTypeDrawings($user->username, 'OPNCL') ?? 0) + ($this->getTypeDrawings($user->username, 'CLANB') ?? 0);
+                $total = $this->getTypeDrawings($user->username, 'OPNCL') ?? 0;
 
                 $achievement10 = $this->getAchievement('Open Cluster 1 Drawing');
                 $achievement9 = $this->getAchievement('Open Clusters 5 Drawings');
@@ -1126,7 +1126,7 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of nebulae seen
-                $nebulaTypes = ['EMINB', 'ENRNN', 'ENSTR', 'REFNB', 'RNHII', 'HII', 'SNREM', 'WRNEB'];
+                $nebulaTypes = ['EMINB', 'REFNB', 'HII', 'SNREM', 'WRNEB'];
                 $total = 0;
                 foreach ($nebulaTypes as $t) {
                     $total += $this->getTypeObserved($user->username, $t) ?? 0;
@@ -1169,7 +1169,7 @@ class updateAchievementsCommand extends Command
                 );
 
                 // Calculate number of nebulae drawn
-                $nebulaTypes = ['EMINB', 'ENRNN', 'ENSTR', 'REFNB', 'RNHII', 'HII', 'SNREM', 'WRNEB'];
+                $nebulaTypes = ['EMINB', 'REFNB', 'HII', 'SNREM', 'WRNEB'];
                 $total = 0;
                 foreach ($nebulaTypes as $t) {
                     $total += $this->getTypeDrawings($user->username, $t) ?? 0;

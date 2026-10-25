@@ -28,10 +28,10 @@ class NightListWizard extends Component
      */
     public const TYPE_GROUPS = [
         'galaxies'           => ['GALXY', 'GALCL', 'GXADN', 'GXAGC', 'GACAN'],
-        'open_clusters'      => ['OPNCL', 'CLANB'],
+        'open_clusters'      => ['OPNCL'],
         'globular_clusters'  => ['GLOCL'],
         'planetary_nebulae'  => ['PLNNB'],
-        'nebulae'            => ['BRTNB', 'EMINB', 'ENRNN', 'ENSTR', 'HII', 'REFNB', 'RNHII', 'STNEB', 'WRNEB'],
+        'nebulae'            => ['BRTNB', 'EMINB', 'HII', 'REFNB', 'WRNEB'],
         'dark_nebulae'       => ['DRKNB'],
         'supernova_remnants' => ['SNREM'],
         'asterisms'          => ['ASTER'],

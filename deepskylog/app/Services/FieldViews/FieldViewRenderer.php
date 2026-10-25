@@ -523,7 +523,7 @@ class FieldViewRenderer
             return sprintf('<ellipse cx="%1$s" cy="%2$s" rx="%3$s" ry="%4$s" transform="rotate(%5$s %1$s %2$s)"/>', $this->f($x), $this->f($y), $this->f($major), $this->f(min($major, $minor)), $this->f($angle));
         }
 
-        if (in_array($type, ['OPNCL', 'ASTER', 'CLANB'], true)) {
+        if (in_array($type, ['OPNCL', 'ASTER'], true)) {
             return sprintf('<circle cx="%s" cy="%s" r="%s" stroke-dasharray="%s"/>', $this->f($x), $this->f($y), $this->f($major), $this->f(3 * $s));
         }
 

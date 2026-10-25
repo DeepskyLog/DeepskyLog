@@ -115,7 +115,7 @@ class OalWriter
             $targetTable === 'objects' && $typeCode === 'DRKNB' => 'oal:deepSkyDN',
             $targetTable === 'objects' && $typeCode === 'GLOCL' => 'oal:deepSkyGC',
             $targetTable === 'objects' && $typeCode === 'PLNNB' => 'oal:deepSkyPN',
-            $targetTable === 'objects' && in_array($typeCode, ['BRTNB', 'CLANB', 'EMINB', 'ENRNN', 'ENSTR', 'GXADN', 'HII', 'SNREM'], true) => 'oal:deepSkyGN',
+            $targetTable === 'objects' && in_array($typeCode, ['BRTNB', 'EMINB', 'GXADN', 'HII', 'SNREM'], true) => 'oal:deepSkyGN',
             $targetTable === 'objects' && $typeCode === 'GALXY' => 'oal:deepSkyGX',
             $targetTable === 'objects' && $typeCode === 'OPNCL' => 'oal:deepSkyOC',
             $targetTable === 'objects' && $typeCode === 'QUASR' => 'oal:deepSkyQS',
