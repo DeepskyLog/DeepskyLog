@@ -51,6 +51,13 @@
                             href="{{ route('admin.object-reviews') }}"
                             label="{{ __('Object reviews') }}"
                         />
+
+                        <x-dropdown.item
+                            icon="newspaper"
+                            separator
+                            href="{{ route('admin.news') }}"
+                            label="{{ __('Manage the news') }}"
+                        />
                     @endif
 
                     @if (Auth::user()->isAdministrator())

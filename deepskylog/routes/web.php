@@ -107,6 +107,23 @@ Route::view('/admin/complete-catalogs', 'admin.complete-catalogs')
     ->middleware(['auth', 'doNotCacheResponse'])
     ->can('manage_catalogs', User::class)
     ->name('admin.complete-catalogs');
+// The news of the home page (#960)
+Route::get('/admin/news', [App\Http\Controllers\NewsController::class, 'admin'])
+    ->middleware(['auth', 'doNotCacheResponse'])->can('manage_news', User::class)->name('admin.news');
+Route::get('/admin/news/create', [App\Http\Controllers\NewsController::class, 'create'])
+    ->middleware(['auth', 'doNotCacheResponse'])->can('manage_news', User::class)->name('admin.news.create');
+Route::post('/admin/news', [App\Http\Controllers\NewsController::class, 'store'])
+    ->middleware(['auth', 'doNotCacheResponse'])->can('manage_news', User::class)->name('admin.news.store');
+Route::get('/admin/news/{newsItem}/edit', [App\Http\Controllers\NewsController::class, 'edit'])
+    ->middleware(['auth', 'doNotCacheResponse'])->can('manage_news', User::class)->name('admin.news.edit');
+Route::put('/admin/news/{newsItem}', [App\Http\Controllers\NewsController::class, 'update'])
+    ->middleware(['auth', 'doNotCacheResponse'])->can('manage_news', User::class)->name('admin.news.update');
+Route::delete('/admin/news/{newsItem}', [App\Http\Controllers\NewsController::class, 'destroy'])
+    ->middleware(['auth', 'doNotCacheResponse'])->can('manage_news', User::class)->name('admin.news.destroy');
+Route::post('/admin/news/{newsItem}/hidden', [App\Http\Controllers\NewsController::class, 'toggleHidden'])
+    ->middleware(['auth', 'doNotCacheResponse'])->can('manage_news', User::class)->name('admin.news.hidden');
+Route::get('/news', [App\Http\Controllers\NewsController::class, 'index'])->name('news.index')->middleware('doNotCacheResponse');
+Route::get('/news/{newsItem}', [App\Http\Controllers\NewsController::class, 'show'])->name('news.show')->middleware('doNotCacheResponse');
 Route::view('/admin/object-reviews', 'admin.object-reviews')
     ->middleware(['auth', 'doNotCacheResponse'])
     ->can('review_objects', User::class)
@@ -136,6 +153,7 @@ Route::post('/observers/{observer}/unfollow', [App\Http\Controllers\FollowContro
 Route::get('/feed/observations', [App\Http\Controllers\RssFeedController::class, 'observations'])->name('feed.observations');
 Route::get('/feed/drawings', [App\Http\Controllers\RssFeedController::class, 'drawings'])->name('feed.drawings');
 Route::get('/feed/observing-lists', [App\Http\Controllers\RssFeedController::class, 'observingLists'])->name('feed.observing-lists');
+Route::get('/feed/news', [App\Http\Controllers\RssFeedController::class, 'news'])->name('feed.news');
 // The personal feed of the observers someone follows, by its secret token
 Route::post('/feed/following/regenerate', [App\Http\Controllers\FollowController::class, 'regenerateFeedToken'])
     ->name('feed.following.regenerate')->middleware(['auth', 'verified', 'doNotCacheResponse']);

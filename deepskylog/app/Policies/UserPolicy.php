@@ -66,6 +66,15 @@ class UserPolicy
     }
 
     /**
+     * Administrators and database experts write the news of the home page
+     * (#960) and hide the automatic items on /admin/news.
+     */
+    public function manage_news(User $user): bool
+    {
+        return $user->isAdministrator() || $user->isDatabaseExpert();
+    }
+
+    /**
      * Only administrators may send a message to all observers.
      */
     public function broadcast(User $user): bool

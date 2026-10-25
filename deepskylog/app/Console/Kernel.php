@@ -37,6 +37,10 @@ class Kernel extends ConsoleKernel
         // someone follows, for those who asked for it on the profile page.
         $schedule->command('follows:send-digest --apply')->dailyAt('07:00')->withoutOverlapping();
 
+        // The news items of the coming eclipses, conjunctions, ... (#960),
+        // published a week before the event.
+        $schedule->command('news:astronomical-events --apply')->dailyAt('02:30')->withoutOverlapping();
+
         // The descriptions of new observations translated into the languages
         // of the site for the guests (#310), and the older ones gradually,
         // newest first, a few at a time to stay under Google's rate limit.

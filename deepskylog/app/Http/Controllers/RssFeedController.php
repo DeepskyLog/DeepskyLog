@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NewsItem;
 use App\Models\Observation;
 use App\Models\ObservingList;
 use App\Models\User;
@@ -49,6 +50,27 @@ class RssFeedController extends Controller
             $feedUpdated = $lists->first()?->created_at ?? now();
 
             return view('rss.observing-lists', compact('lists', 'feedUpdated'))->render();
+        });
+    }
+
+    /**
+     * RSS feed of the news (#960): the written items and the coming
+     * astronomical events, in English with the moments in UT.
+     */
+    public function news(): Response
+    {
+        return $this->feed('rss:news', function () {
+            $items = NewsItem::published()->orderByDesc('published_at')->orderByDesc('id')->limit(30)->get();
+            $feedUpdated = $items->first()?->published_at ?? now();
+
+            // The feed is cached for everybody: always in English.
+            $locale = app()->getLocale();
+            app()->setLocale('en');
+            try {
+                return view('rss.news', compact('items', 'feedUpdated'))->render();
+            } finally {
+                app()->setLocale($locale);
+            }
         });
     }
 

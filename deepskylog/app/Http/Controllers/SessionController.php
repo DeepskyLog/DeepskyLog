@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\HomepagePagination;
 use App\Models\Location;
+use App\Models\NewsItem;
 use App\Models\Observation;
 use App\Models\ObservationLike;
 use App\Models\ObservationSession;
@@ -20,6 +21,9 @@ use Illuminate\Support\Str;
 
 class SessionController extends Controller
 {
+    /** The number of news items on the home page. */
+    private const HOMEPAGE_NEWS = 5;
+
     public function show(string $user_slug, string $session_slug)
     {
         $user = User::where('slug', $user_slug)->firstOrFail();
@@ -1052,7 +1056,17 @@ class SessionController extends Controller
             $tonightsBest = null;
         }
 
-        return $this->noCacheResponse(response()->view('welcome', compact('sessions', 'observingLists', 'tonightsBest')));
+        // The current news (#960), with the local circumstances of the events for the observer's location
+        try {
+            $news = NewsItem::current()->with('author:id,name')->orderByDesc('published_at')->orderByDesc('id')->limit(self::HOMEPAGE_NEWS)->get();
+            $newsLocation = $news->contains(fn (NewsItem $item) => $item->isAutomatic()) ? Location::forEphemerides(Auth::user()) : null;
+        } catch (\Throwable $e) {
+            report($e);
+            $news = collect();
+            $newsLocation = null;
+        }
+
+        return $this->noCacheResponse(response()->view('welcome', compact('sessions', 'observingLists', 'tonightsBest', 'news', 'newsLocation')));
     }
 
     /**

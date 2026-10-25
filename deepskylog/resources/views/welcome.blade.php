@@ -39,6 +39,10 @@
             @endguest
         </x-card>
 
+        @if (! empty($news) && $news->isNotEmpty())
+            <x-news :items="$news" :location="$newsLocation" />
+        @endif
+
         @if (! empty($tonightsBest))
             <x-tonights-best :best="$tonightsBest" />
         @endif
