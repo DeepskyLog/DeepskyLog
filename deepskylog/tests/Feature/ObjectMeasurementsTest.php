@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 // Missing magnitudes, diameters and position angles are stored with the sentinels of the
 // legacy data (mag and subr 99.9, pa 999, SBObj -999), by the create wizard and the edit form alike.
@@ -157,4 +158,20 @@ it('finds an existing object by its alias in the create wizard', function () {
         ->assertSee('M 65')
         ->assertSee('(NGC 3623)', false)
         ->assertSee(route('object.show', 'm-65'), false);
+});
+
+it('puts the exact name first in the create wizard and sorts the candidates', function () {
+    foreach (['NGC 11' => 20.0, 'Pal 8' => 1.0, 'Pal 11' => 10.0, 'Pal 12' => 5.0] as $name => $ra) {
+        insertMeasurementTestObject($name, Str::slug($name));
+        DB::table('objects')->where('name', $name)->update(['ra' => $ra]);
+    }
+    $admin = $this->createUserAndAssignToTeam('Administrators');
+
+    $this->actingAs($admin)->get(route('object.nameSearch', ['catalog' => 'Pal', 'number' => '11']))
+        ->assertOk()
+        ->assertSeeInOrder(['Pal 11', 'NGC 11', 'Pal 8', 'Pal 12']);
+
+    $this->actingAs($admin)->get(route('object.nameSearch', ['catalog' => 'Pal', 'number' => '11', 'sort' => 'ra', 'direction' => 'desc']))
+        ->assertOk()
+        ->assertSeeInOrder(['Pal 11', 'NGC 11', 'Pal 12', 'Pal 8']);
 });

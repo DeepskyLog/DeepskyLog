@@ -3607,6 +3607,9 @@ class ObjectController extends Controller
         return redirect()->route('object.nameSearch', $request->only(['catalog', 'number', 'name']));
     }
 
+    /** Columns the candidates of nameSearch() can be sorted on. */
+    private const NAME_SEARCH_SORTS = ['name', 'ra', 'decl', 'type'];
+
     /**
      * GET: show paginated similar-name candidates.
      *
@@ -3663,30 +3666,50 @@ class ObjectController extends Controller
                     if ($catalog !== '') {
                         $q->orWhere(function ($q2) use ($catalog, $catindex) {
                             $q2->where('objectnames.catalog', $catalog)
-                                ->whereBetween('objectnames.catindex', [$catindex - 3, $catindex + 3]);
+                                ->whereRaw('objectnames.catindex + 0 BETWEEN ? AND ?', [$catindex - 3, $catindex + 3]);
                         });
                     }
-                })
-                ->orderBy('objectnames.catalog')
-                ->orderBy('objectnames.catindex')
-                ->paginate(25)
-                ->withQueryString();
+                });
         } elseif ($name !== '') {
             $q = mb_strtolower($name);
             $candidates = (clone $base)
                 ->where(function ($qb) use ($q) {
                     $qb->where('objectnames.objectname', 'like', "%{$q}%")
                         ->orWhere('objectnames.altname', 'like', "%{$q}%");
-                })
-                ->orderBy('objectnames.catalog')
-                ->orderBy('objectnames.catindex')
+                });
+        } else {
+            $candidates = null;
+        }
+
+        $sort = in_array($request->input('sort'), self::NAME_SEARCH_SORTS, true) ? $request->input('sort') : 'name';
+        $direction = $request->input('direction') === 'desc' ? 'desc' : 'asc';
+
+        if ($candidates !== null) {
+            // The name asked for stays at the top, whatever the sort
+            $candidates->orderByRaw(
+                'CASE WHEN objectnames.altname = ? OR objectnames.objectname = ? THEN 0 ELSE 1 END',
+                [$name, $name]
+            );
+
+            match ($sort) {
+                'ra' => $candidates->orderBy('objects.ra', $direction),
+                'decl' => $candidates->orderBy('objects.decl', $direction),
+                'type' => $candidates->orderBy('type_label', $direction),
+                default => null,
+            };
+
+            // catindex is a string: + 0 sorts 8 before 11
+            $candidates = $candidates
+                ->orderBy('objectnames.catalog', $sort === 'name' ? $direction : 'asc')
+                ->orderByRaw('objectnames.catindex + 0 ' . ($sort === 'name' ? $direction : 'asc'))
+                ->orderBy('objectnames.catindex', $sort === 'name' ? $direction : 'asc')
                 ->paginate(25)
                 ->withQueryString();
         } else {
             $candidates = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 25);
         }
 
-        return view('object.name_check', compact('name', 'candidates', 'completeCatalog'));
+        return view('object.name_check', compact('name', 'candidates', 'completeCatalog', 'sort', 'direction'));
     }
 
     /**
