@@ -2,6 +2,7 @@
 
 namespace App\Services\Import;
 
+use App\Models\CompleteCatalog;
 use App\Models\Eyepiece;
 use App\Models\Filter;
 use App\Models\Instrument;
@@ -1076,6 +1077,12 @@ class OalObservationImporter
         ];
         if (isset($solarSystem[$targetTypeHint ?? ''])) {
             $result->addError("Observation {$row}: {$solarSystem[$targetTypeHint]} '{$name}' is not in the DeepskyLog database, skipping.", '', $row);
+
+            return null;
+        }
+
+        if (($catalog = CompleteCatalog::refusedCatalog($name, $this->user)) !== null) {
+            $result->addError("{$notFound}, although the {$catalog} catalog is complete in DeepskyLog: check the name of the object, skipping.", '', $row);
 
             return null;
         }

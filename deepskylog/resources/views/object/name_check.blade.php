@@ -7,6 +7,12 @@
 
     <p class="text-sm text-gray-400 mt-2">{{ __('Please confirm that the object is not listed below') }}</p>
 
+    @if ($completeCatalog)
+        <div class="mt-4 p-3 rounded bg-yellow-900 text-yellow-100 text-sm">
+            {{ __('The :catalog catalog is complete: all its objects are already in DeepskyLog. Only add :name if it is missing by mistake.', ['catalog' => $completeCatalog, 'name' => $name]) }}
+        </div>
+    @endif
+
     <div class="mt-4 bg-gray-800 p-4 rounded">
         @if($candidates->isEmpty())
             <div class="text-gray-300">{{ __('No similar names found.') }}</div>

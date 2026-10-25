@@ -39,6 +39,15 @@ class UserPolicy
     }
 
     /**
+     * Administrators and database experts manage the complete catalogs, to
+     * which observers can't add objects.
+     */
+    public function manage_catalogs(User $user): bool
+    {
+        return $user->isAdministrator() || $user->isDatabaseExpert();
+    }
+
+    /**
      * Only administrators may send a message to all observers.
      */
     public function broadcast(User $user): bool

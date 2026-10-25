@@ -103,6 +103,10 @@ Route::get('/admin/check-objects/export/observation-alias-mappings', [App\Http\C
 Route::post('/admin/check-objects/repair-observation-objectnames', [App\Http\Controllers\AdminObjectCheckController::class, 'repairObservationObjectNames'])
     ->middleware('auth')
     ->name('admin.objects.check.repair-observation-objectnames');
+Route::view('/admin/complete-catalogs', 'admin.complete-catalogs')
+    ->middleware(['auth', 'doNotCacheResponse'])
+    ->can('manage_catalogs', User::class)
+    ->name('admin.complete-catalogs');
 Route::get('/observers/{observer}/catalog', [App\Http\Controllers\ObserverController::class, 'catalog'])->name('observer.catalog');
 Route::post('/observers/{observer}/catalog/observing-list', [App\Http\Controllers\ObserverController::class, 'createCatalogList'])
     ->name('observer.catalog.list')->middleware(['auth', 'verified', 'doNotCacheResponse']);

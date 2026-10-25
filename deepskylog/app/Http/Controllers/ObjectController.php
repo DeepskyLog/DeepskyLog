@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use App\Models\Atlas;
+use App\Models\CompleteCatalog;
 use App\Models\DeepskyObject;
 use App\Models\DeepskyType;
 use App\Models\Constellation as ConstellationModel;
@@ -3411,7 +3412,29 @@ class ObjectController extends Controller
             ->orderBy('catalog')
             ->pluck('catalog');
 
-        return view('object.create_name', compact('catalogs'));
+        // Observers can't add objects to a complete catalog
+        $completeCatalogs = CompleteCatalog::codes();
+        $user = $request->user();
+        if (!$user->isAdministrator() && !$user->isDatabaseExpert()) {
+            $complete = array_map('mb_strtolower', $completeCatalogs);
+            $catalogs = $catalogs->reject(fn ($code) => in_array(mb_strtolower($code), $complete, true))->values();
+        }
+
+        return view('object.create_name', compact('catalogs', 'completeCatalogs'));
+    }
+
+    /**
+     * Why an observer can't add an object with this name to a complete catalog:
+     * the object it already is, else that the catalog is complete.
+     */
+    private function completeCatalogMessage(string $name, string $catalog): string
+    {
+        $existing = DB::table('objectnames')->where('altname', $name)->value('objectname');
+        if ($existing !== null) {
+            return __(':name is already in DeepskyLog as :object.', ['name' => $name, 'object' => $existing]);
+        }
+
+        return __('The :catalog catalog is complete: all its objects are already in DeepskyLog. Check the name of the object.', ['catalog' => $catalog]);
     }
 
     /**
@@ -3607,6 +3630,13 @@ class ObjectController extends Controller
             $name = '';
         }
 
+        $completeCatalog = $name !== '' ? CompleteCatalog::catalogOf($name) : null;
+        if ($completeCatalog !== null && CompleteCatalog::refusedCatalog($name, $request->user()) !== null) {
+            return redirect()->route('object.create')
+                ->withInput($request->only(['catalog', 'number']))
+                ->withErrors(['catalog' => $this->completeCatalogMessage($name, $completeCatalog)]);
+        }
+
         // Base query: objectnames → objects → target_types (for human-readable type label).
         // Joined on the object name: an alias has its own slug, not the one of its object.
         $base = DB::table('objectnames')
@@ -3656,7 +3686,7 @@ class ObjectController extends Controller
             $candidates = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 25);
         }
 
-        return view('object.name_check', compact('name', 'candidates'));
+        return view('object.name_check', compact('name', 'candidates', 'completeCatalog'));
     }
 
     /**
@@ -3801,6 +3831,11 @@ class ObjectController extends Controller
             'pa' => 'nullable|integer',
             'catalog' => 'nullable|string',
         ]);
+
+        if (($catalog = CompleteCatalog::refusedCatalog($validated['name'], $request->user())) !== null) {
+            return redirect()->route('object.create')
+                ->withErrors(['catalog' => $this->completeCatalogMessage($validated['name'], $catalog)]);
+        }
 
         // Convert RA to decimal hours (DB stores hours, not degrees)
         if (!empty($validated['ra'])) {

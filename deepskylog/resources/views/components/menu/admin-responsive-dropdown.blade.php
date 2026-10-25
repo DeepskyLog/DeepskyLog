@@ -33,6 +33,12 @@
                             href="{{ route('admin.objects.check') }}"
                             label="{{ __('Check Objects') }}"
                         />
+
+                        <x-dropdown.item
+                            icon="lock-closed"
+                            href="{{ route('admin.complete-catalogs') }}"
+                            label="{{ __('Complete catalogs') }}"
+                        />
                     @endif
 
                     @if (Auth::user()->isAdministrator())
