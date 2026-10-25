@@ -12,6 +12,7 @@ use App\Models\Observation;
 use App\Models\ObservationSession;
 use App\Models\User;
 use App\Services\DeepskyObjectCreator;
+use App\Services\NearbyObjects;
 use App\Services\SessionObservationLinker;
 use App\Support\Html;
 use App\Support\Timezones;
@@ -56,6 +57,17 @@ class OalObservationImporter
     /** The instrument type `Naked Eye` (instrument_types.id). */
     private const NAKED_EYE_TYPE = 1;
 
+    /** The objects near a new target are looked up within this radius in degrees, or the target's diameter, up to the largest radius. */
+    private const NEARBY_RADIUS = 10 / 60;
+
+    private const MAX_NEARBY_RADIUS = 1.0;
+
+    /** The most objects shown near a new target. */
+    private const MAX_NEARBY = 5;
+
+    /** An object of the same type within this distance in arcminutes (or overlapping) is probably the new target. */
+    private const SAME_OBJECT_DISTANCE = 2.0;
+
     private User $user;
     private OalSchemaValidator $validator;
 
@@ -87,6 +99,14 @@ class OalObservationImporter
      */
     private array $sessionIds = [];
 
+    /**
+     * What to do with the targets that are not in the database, by name; null
+     * to add them all (see withObjectChoices()).
+     *
+     * @var array<string, array{action: string, object?: string}>|null
+     */
+    private ?array $objectChoices = null;
+
     public function __construct(User $user, ?OalSchemaValidator $validator = null)
     {
         $this->user = $user;
@@ -101,43 +121,10 @@ class OalObservationImporter
         $result = new ImportResult();
         $result->addInfo('Starting OAL XML import.', '', 0);
 
-        // ── Normalise encoding to UTF-8 ────────────────────────────────────────
-        // OAL files produced by older tools (e.g. Cartes du Ciel) are often
-        // saved in Latin-1/ISO-8859-1 even when the XML declaration says UTF-8.
-        if (!mb_check_encoding($xmlContent, 'UTF-8')) {
-            $xmlContent = mb_convert_encoding($xmlContent, 'UTF-8', 'ISO-8859-1');
-            // Fix the encoding declaration so libxml doesn't re-interpret the bytes.
-            $xmlContent = preg_replace('/encoding=["\'][^"\']*["\']/', 'encoding="UTF-8"', $xmlContent, 1) ?? $xmlContent;
-        }
-
-        $schemaErrors = $this->validator->validate($xmlContent);
-        if ($schemaErrors !== []) {
-            foreach ($schemaErrors as $error) {
-                $result->addError('OAL 2.1 schema validation error: ' . $error);
-            }
-
+        $xml = $this->parse($xmlContent, $result);
+        if ($xml === null) {
             return $result;
         }
-
-        // ── Parse XML ──────────────────────────────────────────────────────────
-
-        libxml_use_internal_errors(true);
-        $xml = simplexml_load_string($xmlContent);
-
-        if ($xml === false) {
-            $errors = libxml_get_errors();
-            foreach ($errors as $err) {
-                $result->addError("XML parse error on line {$err->line}: " . trim($err->message));
-            }
-            libxml_clear_errors();
-
-            return $result;
-        }
-
-        libxml_clear_errors();
-
-        $this->defaultNamespace = $xml->getNamespaces(true)[''] ?? null;
-        $xml = $this->withDefaultNamespace($xml);
 
         // ── Build lookup maps from the header sections ─────────────────────────
 
@@ -197,6 +184,160 @@ class OalObservationImporter
         return $result;
     }
 
+    /**
+     * What to do with the targets of the file that are not in the database
+     * (#221), by their name in the file: add the object the file defines
+     * (`new`), skip their observations (`skip`), or import them as an object
+     * that is in the database (`object`, with its name). The observations of
+     * a target without a choice are skipped. Without choices, every target
+     * the file defines is added.
+     *
+     * @param  array<string, array{action: string, object?: string}>  $choices
+     */
+    public function withObjectChoices(array $choices): self
+    {
+        $this->objectChoices = $choices;
+
+        return $this;
+    }
+
+    /**
+     * The targets of the observations in the file that are not in the
+     * database, but that the file defines well enough to add them as a
+     * deep-sky object, with the objects near their position: the observer
+     * chooses between them before the file is imported (#221). Empty when the
+     * file is not valid, which the import reports.
+     *
+     * @return list<array{name: string, type: string, type_label: string, ra: float, decl: float, diameter: float|null, observations: int, nearby: list<array{name: string, slug: string, type: string, type_label: string, diameter: float|null, separation: float}>, suggestion: string|null}>
+     *               diameter (the major axis) and separation in arcminutes; suggestion the name of the nearby object that is probably the target
+     */
+    public function newTargets(string $xmlContent): array
+    {
+        $xml = $this->parse($xmlContent, new ImportResult());
+        if ($xml === null) {
+            return [];
+        }
+
+        $targets = $this->indexById($xml->targets->target ?? []);
+        $found = [];
+        foreach ($xml->observation ?? [] as $obs) {
+            [$targetNode, $name, $hint, $metadata] = $this->targetOf($this->withDefaultNamespace($obs), $targets);
+            if ($name === '') {
+                continue;
+            }
+            if (isset($found[$name])) {
+                $found[$name]['observations']++;
+
+                continue;
+            }
+            if ($this->resolveObject($name, $hint, $metadata)[0] !== null || $this->resolveAliases($targetNode, $hint)[0] !== null) {
+                continue;
+            }
+
+            $values = $this->oalObjectValues($targetNode, $name, $hint, new ImportResult(), 0);
+            if ($values !== null) {
+                $found[$name] = ['values' => $values, 'observations' => 1];
+            }
+        }
+
+        $labels = DB::table('target_types')->whereIn('id', array_column(array_column($found, 'values'), 'type'))->pluck('type', 'id');
+
+        $newTargets = [];
+        foreach ($found as $name => ['values' => $values, 'observations' => $observations]) {
+            $diameter = $values['diam1'];
+            $radius = min(self::MAX_NEARBY_RADIUS, max(self::NEARBY_RADIUS, ($diameter ?? 0) / 60));
+            $nearby = NearbyObjects::within($values['ra'], $values['decl'], $radius, self::MAX_NEARBY);
+
+            $newTargets[] = [
+                'name' => $name,
+                'type' => $values['type'],
+                'type_label' => (string) ($labels[$values['type']] ?? $values['type']),
+                'ra' => $values['ra'],
+                'decl' => $values['decl'],
+                'diameter' => $diameter,
+                'observations' => $observations,
+                'nearby' => $nearby,
+                'suggestion' => $this->suggestedObject($values['type'], $diameter, $nearby),
+            ];
+        }
+
+        return $newTargets;
+    }
+
+    /**
+     * The name of an object that is in the database and that a name refers
+     * to, or null.
+     */
+    public function findObject(string $name): ?string
+    {
+        return $this->resolveObject(trim($name))[3];
+    }
+
+    /**
+     * The nearest object of the same type as a new target that overlaps it,
+     * or lies within SAME_OBJECT_DISTANCE: probably the same object under
+     * another name.
+     *
+     * @param  list<array{name: string, type: string, diameter: float|null, separation: float}>  $nearby
+     */
+    private function suggestedObject(string $type, ?float $diameter, array $nearby): ?string
+    {
+        foreach ($nearby as $object) {
+            $distance = max(self::SAME_OBJECT_DISTANCE, ($diameter ?? 0) / 2, ($object['diameter'] ?? 0) / 2);
+            if ($object['type'] === $type && $object['separation'] <= $distance) {
+                return $object['name'];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Parse an OAL file: as UTF-8, valid against the OAL 2.1 schema, in the
+     * default namespace. Null, with the errors added, when it is not valid.
+     */
+    private function parse(string $xmlContent, ImportResult $result): ?\SimpleXMLElement
+    {
+        // ── Normalise encoding to UTF-8 ────────────────────────────────────────
+        // OAL files produced by older tools (e.g. Cartes du Ciel) are often
+        // saved in Latin-1/ISO-8859-1 even when the XML declaration says UTF-8.
+        if (!mb_check_encoding($xmlContent, 'UTF-8')) {
+            $xmlContent = mb_convert_encoding($xmlContent, 'UTF-8', 'ISO-8859-1');
+            // Fix the encoding declaration so libxml doesn't re-interpret the bytes.
+            $xmlContent = preg_replace('/encoding=["\'][^"\']*["\']/', 'encoding="UTF-8"', $xmlContent, 1) ?? $xmlContent;
+        }
+
+        $schemaErrors = $this->validator->validate($xmlContent);
+        if ($schemaErrors !== []) {
+            foreach ($schemaErrors as $error) {
+                $result->addError('OAL 2.1 schema validation error: ' . $error);
+            }
+
+            return null;
+        }
+
+        // ── Parse XML ──────────────────────────────────────────────────────────
+
+        libxml_use_internal_errors(true);
+        $xml = simplexml_load_string($xmlContent);
+
+        if ($xml === false) {
+            $errors = libxml_get_errors();
+            foreach ($errors as $err) {
+                $result->addError("XML parse error on line {$err->line}: " . trim($err->message));
+            }
+            libxml_clear_errors();
+
+            return null;
+        }
+
+        libxml_clear_errors();
+
+        $this->defaultNamespace = $xml->getNamespaces(true)[''] ?? null;
+
+        return $this->withDefaultNamespace($xml);
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // Private helpers
     // ─────────────────────────────────────────────────────────────────────────
@@ -244,13 +385,10 @@ class OalObservationImporter
 
         // ── Resolve target ────────────────────────────────────────────────────
 
-        $targetRef = trim((string) ($obs->target ?? ''));
-        $targetNode = !empty($targetRef) ? $this->withDefaultNamespace($targets[$targetRef] ?? null) : null;
-        $targetNameRaw = $targetNode ? trim((string) ($targetNode->name ?? $targetNode->designation ?? '')) : '';
-        $targetTypeHint = $this->extractOalTargetTypeHint($targetNode);
-        $targetMetadata = $this->extractOalTargetMetadata($targetNode);
+        [$targetNode, $targetNameRaw, $targetTypeHint, $targetMetadata] = $this->targetOf($obs, $targets);
 
         if (empty($targetNameRaw)) {
+            $targetRef = trim((string) ($obs->target ?? ''));
             $result->addError("Observation {$row}: Cannot resolve target (ref='{$targetRef}'), skipping.", '', $row);
             $result->skipped++;
 
@@ -263,13 +401,36 @@ class OalObservationImporter
             [$targetTable, $targetKey, $targetType, $canonicalName] = $this->resolveAliases($targetNode, $targetTypeHint);
         }
 
-        // A target that is not in the database is added when the file defines
-        // it: a deep-sky type and a position. It is created with the
-        // observation, below, so a skipped observation adds no object.
+        // A target that is not in the database is imported as the observer
+        // chose (#221): as an object that is in the database, skipped, or
+        // added when the file defines it: a deep-sky type and a position. It
+        // is created with the observation, below, so a skipped observation
+        // adds no object.
         $newObject = null;
-        if ($targetTable === null) {
+        $choice = $this->objectChoices === null ? ['action' => 'new'] : ($this->objectChoices[$targetNameRaw] ?? null);
+        if ($targetTable === null && ($choice['action'] ?? null) === 'object') {
+            [$targetTable, $targetKey, $targetType, $canonicalName] = $this->resolveObject($choice['object'] ?? '');
+            if ($targetTable === null) {
+                $result->addError("Observation {$row}: '{$choice['object']}', chosen for target '{$targetNameRaw}', is not in the DeepskyLog database, skipping.", '', $row);
+                $result->skipped++;
+
+                return;
+            }
+            $result->addInfo("Observation {$row}: Imported target '{$targetNameRaw}' as '{$canonicalName}', as chosen.", '', $row);
+        } elseif ($targetTable === null && ($choice['action'] ?? null) === 'skip') {
+            $result->addWarning("Observation {$row}: Skipped the observation of target '{$targetNameRaw}', as chosen.", '', $row);
+            $result->skipped++;
+
+            return;
+        } elseif ($targetTable === null) {
             $newObject = $this->oalObjectValues($targetNode, $targetNameRaw, $targetTypeHint, $result, $row);
             if ($newObject === null) {
+                $result->skipped++;
+
+                return;
+            }
+            if ($choice === null) {
+                $result->addError("Observation {$row}: Target '{$targetNameRaw}' is not in the DeepskyLog database and nothing was chosen for it, skipping.", '', $row);
                 $result->skipped++;
 
                 return;
@@ -1031,6 +1192,27 @@ class OalObservationImporter
     private function objectCacheKey(string $name, ?string $targetTypeHint, array $targetMetadata): string
     {
         return serialize([$name, $targetTypeHint, $targetMetadata]);
+    }
+
+    /**
+     * The target of an observation: its element in the file, its name, its
+     * type hint and the DeepskyLog metadata of an exported file. The name is
+     * empty when the observation refers to no target with a name.
+     *
+     * @param  array<string, \SimpleXMLElement>  $targets
+     * @return array{0: \SimpleXMLElement|null, 1: string, 2: string|null, 3: array<string, string>}
+     */
+    private function targetOf(\SimpleXMLElement $obs, array $targets): array
+    {
+        $targetRef = trim((string) ($obs->target ?? ''));
+        $targetNode = $targetRef !== '' ? $this->withDefaultNamespace($targets[$targetRef] ?? null) : null;
+
+        return [
+            $targetNode,
+            $targetNode ? trim((string) ($targetNode->name ?? $targetNode->designation ?? '')) : '',
+            $this->extractOalTargetTypeHint($targetNode),
+            $this->extractOalTargetMetadata($targetNode),
+        ];
     }
 
     /**

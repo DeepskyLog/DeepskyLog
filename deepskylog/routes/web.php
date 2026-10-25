@@ -141,6 +141,9 @@ Route::post('/observation', [App\Http\Controllers\ObservationsController::class,
 // Import observations (CSV / OAL XML)
 Route::get('/observation/import', [App\Http\Controllers\ObservationImportController::class, 'showForm'])->name('observation.import')->middleware('auth');
 Route::post('/observation/import', [App\Http\Controllers\ObservationImportController::class, 'import'])->name('observation.import.process')->middleware('auth');
+Route::get('/observation/import/{token}/objects', [App\Http\Controllers\ObservationImportController::class, 'objects'])->name('observation.import.objects')->middleware('auth')->where('token', '[A-Za-z0-9]{40}');
+Route::post('/observation/import/{token}/objects', [App\Http\Controllers\ObservationImportController::class, 'importWithObjects'])->name('observation.import.objects.store')->middleware('auth')->where('token', '[A-Za-z0-9]{40}');
+Route::delete('/observation/import/{token}', [App\Http\Controllers\ObservationImportController::class, 'cancel'])->name('observation.import.cancel')->middleware('auth')->where('token', '[A-Za-z0-9]{40}');
 // Observations (deepsky + comet)
 Route::get('/observations', 'App\Http\Controllers\ObservationsController@index')->name('observations.index');
 Route::get('/observations/search', [App\Http\Controllers\ObservationsController::class, 'search'])->name('observations.search');

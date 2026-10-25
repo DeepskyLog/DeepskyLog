@@ -443,12 +443,20 @@ it('imports the observations below the horizon with a warning when asked to', fu
 })->with(['csv/below-horizon.csv', 'oal/below-horizon.xml']);
 
 it('accepts the example file as an upload and recognises its format', function (string $file) {
+    Illuminate\Support\Facades\Storage::fake('local');
     $upload = UploadedFile::fake()->createWithContent(basename($file), Fixtures::content($file));
 
     // No format is sent: it is recognised from the content of the file.
-    $this->actingAs($this->user)
-        ->post(route('observation.import.process'), ['import_file' => $upload])
-        ->assertOk()
+    $response = $this->actingAs($this->user)->post(route('observation.import.process'), ['import_file' => $upload]);
+
+    // The observer first chooses what to do with the targets that are not in the database (#221).
+    if (str_starts_with($file, 'oal/') && (new App\Services\Import\OalObservationImporter($this->user))->newTargets(Fixtures::content($file)) !== []) {
+        $response->assertRedirectContains('/objects');
+
+        return;
+    }
+
+    $response->assertOk()
         ->assertViewIs('observations.import-result')
         ->assertViewHas('format', str_starts_with($file, 'csv/') ? 'csv' : 'oal')
         ->assertSee('Import Results');
@@ -495,9 +503,14 @@ it('tells the administrators and database experts which objects an import added'
     $this->addUserToTeam($expert, 'Database Experts');
     $observer = App\Models\User::factory()->create(['username' => 'other-observer']);
 
+    Illuminate\Support\Facades\Storage::fake('local');
     $upload = UploadedFile::fake()->createWithContent('new.xml', Fixtures::content('oal/valid-new-targets.xml'));
-    $this->actingAs($this->user)
+    $location = $this->actingAs($this->user)
         ->post(route('observation.import.process'), ['import_file' => $upload])
+        ->assertRedirect()
+        ->headers->get('Location');
+    $this->actingAs($this->user)
+        ->post(rtrim($location, '/'), ['choice' => ['new']])
         ->assertOk();
 
     $messages = App\Models\Message::query()->where('sender', 'example-observer')->get();

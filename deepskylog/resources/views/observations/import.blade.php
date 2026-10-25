@@ -18,6 +18,12 @@
                     </div>
                 @endif
 
+                @if (session('status'))
+                    <div class="mb-6 rounded-lg bg-blue-950 border border-blue-800 p-4 text-sm text-blue-300">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
                 <p class="text-gray-300 mb-6">
                     {{ __('Upload a CSV or OAL (OpenAstronomyLog) XML file to import your observations. Observations will be added to your account. Equipment (locations, instruments, eyepieces, filters, lenses) is matched by name. In a CSV file, it must already exist in your account; an OAL file creates the items that are not found. Every observation needs an instrument (use a naked-eye instrument for observations with the naked eye) and a description.') }}
                 </p>
@@ -48,6 +54,7 @@
                                 <span class="block text-gray-400 text-xs mt-0.5">
                                     {{ __('Standard XML format exported by AstroPlanner, SkySafari, and other astronomy software.') }}
                                     {{ __('The sessions in the file are imported too.') }}
+                                    {{ __('When the file holds objects that are not in DeepskyLog, you first choose for each of them whether it is an object DeepskyLog has, a new object, or not to import it.') }}
                                 </span>
                             </div>
 

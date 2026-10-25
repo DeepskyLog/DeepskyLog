@@ -3,17 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\NotifyImportedObjects;
+use App\Models\User;
 use App\Services\Import\CsvObservationImporter;
 use App\Services\Import\ImportDrawings;
 use App\Services\Import\OalObservationImporter;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ObservationImportController extends Controller
 {
     /** The most drawings uploaded next to the file (PHP's max_file_uploads is 20 by default). */
     public const MAX_LOOSE_DRAWINGS = 19;
+
+    /** How long an upload is kept while the observer chooses what to do with its new targets. */
+    public const KEEP_HOURS = 24;
+
+    /** Where the uploads are kept, on the local disk. */
+    public const DIRECTORY = 'observation-imports';
+
+    private const CACHE_PREFIX = 'observation_import:';
 
     /**
      * Show the import form.
@@ -69,8 +80,131 @@ class ObservationImportController extends Controller
         $user = $request->user();
         $format = self::detectFormat($content);
 
+        // The observer chooses what to do with the targets of an OAL file that
+        // are not in the database before anything is imported (#221). A CSV
+        // file never adds objects.
+        if ($format === 'oal' && ($targets = (new OalObservationImporter($user))->newTargets($content)) !== []) {
+            unset($drawings);
+            $token = $this->keep($request, $isZip, $targets);
+
+            return redirect()->route('observation.import.objects', $token);
+        }
+
+        return $this->run($user, $format, $content, $drawings, $request->boolean('import_below_horizon'));
+    }
+
+    /**
+     * The targets of a kept upload that are not in the database, with the
+     * objects near them, to choose what to do with them.
+     */
+    public function objects(Request $request, string $token)
+    {
+        $pending = $this->pending($request, $token);
+
+        return view('observations.import-objects', [
+            'token' => $token,
+            'fileName' => $pending['file_name'],
+            'targets' => $pending['targets'],
+        ]);
+    }
+
+    /**
+     * Import a kept upload with the choices for its new targets.
+     */
+    public function importWithObjects(Request $request, string $token)
+    {
+        $pending = $this->pending($request, $token);
+        $targets = $pending['targets'];
+        $user = $request->user();
+
+        $request->validate([
+            'choice' => ['required', 'array'],
+            'choice.*' => ['required', 'string'],
+            'other' => ['nullable', 'array'],
+            'other.*' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $importer = new OalObservationImporter($user);
+        $choices = [];
+        $errors = [];
+        foreach ($targets as $i => $target) {
+            $choice = (string) $request->input("choice.{$i}", '');
+            $nearby = array_column($target['nearby'], 'name');
+
+            if ($choice === 'new' || $choice === 'skip') {
+                $choices[$target['name']] = ['action' => $choice];
+            } elseif (str_starts_with($choice, 'object:') && in_array($object = substr($choice, 7), $nearby, true)) {
+                $choices[$target['name']] = ['action' => 'object', 'object' => $object];
+            } elseif ($choice === 'other') {
+                $other = trim((string) $request->input("other.{$i}", ''));
+                $object = $other !== '' ? $importer->findObject($other) : null;
+                if ($object === null) {
+                    $errors["other.{$i}"] = $other === ''
+                        ? __('Give the name of the object :target is, or choose another option.', ['target' => $target['name']])
+                        : __(':name is not in the DeepskyLog database.', ['name' => $other]);
+                } else {
+                    $choices[$target['name']] = ['action' => 'object', 'object' => $object];
+                }
+            } else {
+                $errors["choice.{$i}"] = __('Choose what to do with :target.', ['target' => $target['name']]);
+            }
+        }
+
+        if ($errors !== []) {
+            return back()->withErrors($errors)->withInput();
+        }
+
+        $directory = self::DIRECTORY . '/' . $token;
+        $disk = Storage::disk('local');
+
+        if ($pending['is_zip']) {
+            try {
+                [$drawings, $content] = ImportDrawings::fromZip($disk->path("{$directory}/import"));
+            } catch (\RuntimeException $e) {
+                $this->forget($token);
+
+                return redirect()->route('observation.import')->withErrors(['import_file' => $e->getMessage()]);
+            }
+        } else {
+            $content = (string) $disk->get("{$directory}/import");
+            $drawings = ImportDrawings::fromUploads(array_map(
+                fn (int $i, string $name) => new UploadedFile($disk->path("{$directory}/drawings/{$i}"), $name, null, null, true),
+                array_keys($pending['drawings']),
+                $pending['drawings'],
+            ));
+        }
+
+        $response = $this->run($user, 'oal', $content, $drawings, $pending['below_horizon'], $choices);
+
+        unset($drawings);
+        $this->forget($token);
+
+        return $response;
+    }
+
+    /**
+     * Throw away a kept upload.
+     */
+    public function cancel(Request $request, string $token)
+    {
+        $this->pending($request, $token);
+        $this->forget($token);
+
+        return redirect()->route('observation.import')->with('status', __('The import was cancelled.'));
+    }
+
+    /**
+     * Run the importer and show the result.
+     *
+     * @param  array<string, array{action: string, object?: string}>|null  $choices
+     */
+    private function run(User $user, string $format, string $content, ImportDrawings $drawings, bool $belowHorizon, ?array $choices = null)
+    {
         $importer = $format === 'csv' ? new CsvObservationImporter($user) : new OalObservationImporter($user);
-        $result = $importer->importBelowHorizon($request->boolean('import_below_horizon'))
+        if ($choices !== null) {
+            $importer->withObjectChoices($choices);
+        }
+        $result = $importer->importBelowHorizon($belowHorizon)
             ->withDrawings($drawings)
             ->import($content);
 
@@ -82,8 +216,70 @@ class ObservationImportController extends Controller
         return view('observations.import-result', [
             'result' => $result,
             'format' => $format,
-            'userSlug' => Auth::user()->slug,
+            'userSlug' => $user->slug,
         ]);
+    }
+
+    /**
+     * Keep the uploaded files until the observer has chosen what to do with
+     * the new targets, at most KEEP_HOURS, and return the token they are
+     * kept under. Uploads kept longer are removed.
+     *
+     * @param  list<array<string, mixed>>  $targets
+     */
+    private function keep(Request $request, bool $isZip, array $targets): string
+    {
+        $disk = Storage::disk('local');
+        foreach ($disk->directories(self::DIRECTORY) as $old) {
+            if (@filemtime($disk->path($old)) < now()->subHours(self::KEEP_HOURS)->getTimestamp()) {
+                $disk->deleteDirectory($old);
+            }
+        }
+
+        $token = Str::random(40);
+        $directory = $disk->path(self::DIRECTORY . '/' . $token);
+        $file = $request->file('import_file');
+        $fileName = $file->getClientOriginalName();
+        $file->move($directory, 'import');
+
+        $drawings = [];
+        foreach (array_values($request->file('drawings', [])) as $i => $drawing) {
+            $drawings[$i] = $drawing->getClientOriginalName();
+            $drawing->move("{$directory}/drawings", (string) $i);
+        }
+
+        Cache::put(self::CACHE_PREFIX . $token, [
+            'user_id' => $request->user()->id,
+            'file_name' => $fileName,
+            'is_zip' => $isZip,
+            'drawings' => $drawings,
+            'below_horizon' => $request->boolean('import_below_horizon'),
+            'targets' => $targets,
+        ], now()->addHours(self::KEEP_HOURS));
+
+        return $token;
+    }
+
+    /**
+     * The kept upload of a token, if it is the observer's.
+     *
+     * @return array{user_id: int, file_name: string, is_zip: bool, drawings: array<int, string>, below_horizon: bool, targets: list<array<string, mixed>>}
+     */
+    private function pending(Request $request, string $token): array
+    {
+        $pending = Cache::get(self::CACHE_PREFIX . $token);
+        if (! is_array($pending) || $pending['user_id'] !== $request->user()->id
+            || ! Storage::disk('local')->exists(self::DIRECTORY . "/{$token}/import")) {
+            abort(404);
+        }
+
+        return $pending;
+    }
+
+    private function forget(string $token): void
+    {
+        Cache::forget(self::CACHE_PREFIX . $token);
+        Storage::disk('local')->deleteDirectory(self::DIRECTORY . '/' . $token);
     }
 
     /**

@@ -29,6 +29,7 @@ use deepskylog\AstronomyLibrary\Time;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use App\Services\CometCoordinates;
 use App\Services\DeepskyObjectCreator;
+use App\Services\NearbyObjects;
 use App\Services\ObjectSearchIndex;
 use App\Support\EphemerisDate;
 use Illuminate\Support\Facades\Cache;
@@ -3766,20 +3767,8 @@ class ObjectController extends Controller
         // DB stores RA in decimal hours (0–24); raToDecimal() returns degrees (0–360).
         // Convert to hours so the whereBetween comparison is in the same unit as the DB.
         $raHours = fmod(fmod($raDeg / 15.0, 24.0) + 24.0, 24.0);
-        $decRadius = 0.5; // degrees
 
-        // An hour of RA spans 15 cos(dec) degrees, so the RA range widens towards the poles.
-        // The declination of the box edge closest to the pole gives the widest range needed.
-        $edgeDec = min(90.0, abs($decDeg) + $decRadius);
-        $cosEdgeDec = cos(deg2rad($edgeDec));
-        $raRadius = $cosEdgeDec > 1e-6 ? $decRadius / (15.0 * $cosEdgeDec) : 12.0; // hours
-
-        // Squared angular distance in degrees, with the RA difference taken the short way around 0/24 h
-        $raDiff = '(CASE WHEN ABS(objects.ra - ?) > 12 THEN 24 - ABS(objects.ra - ?) ELSE ABS(objects.ra - ?) END) * ?';
-        $raScale = 15.0 * cos(deg2rad($decDeg));
-        $distanceBindings = [$raHours, $raHours, $raHours, $raScale];
-
-        $nearby = DB::table('objects')
+        $nearby = NearbyObjects::query($raHours, $decDeg, 0.5)
             ->leftJoin('target_types', 'objects.type', '=', 'target_types.id')
             ->select(
                 'objects.name',
@@ -3788,23 +3777,6 @@ class ObjectController extends Controller
                 'objects.decl',
                 'objects.type',
                 'target_types.type as type_label'
-            )
-            ->when($raRadius < 12.0, function ($query) use ($raHours, $raRadius) {
-                $min = $raHours - $raRadius;
-                $max = $raHours + $raRadius;
-
-                if ($min < 0.0) {
-                    $query->where(fn($q) => $q->where('objects.ra', '>=', $min + 24.0)->orWhere('objects.ra', '<=', $max));
-                } elseif ($max > 24.0) {
-                    $query->where(fn($q) => $q->where('objects.ra', '>=', $min)->orWhere('objects.ra', '<=', $max - 24.0));
-                } else {
-                    $query->whereBetween('objects.ra', [$min, $max]);
-                }
-            })
-            ->whereBetween('objects.decl', [$decDeg - $decRadius, $decDeg + $decRadius])
-            ->orderByRaw(
-                "($raDiff) * ($raDiff) + (objects.decl - ?) * (objects.decl - ?)",
-                [...$distanceBindings, ...$distanceBindings, $decDeg, $decDeg]
             )
             ->paginate(25)
             ->withQueryString();
