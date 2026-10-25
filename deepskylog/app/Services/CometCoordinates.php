@@ -180,7 +180,7 @@ class CometCoordinates
         $valid = [];
         foreach ($parts as $part) {
             $H = $number($part['H'] ?? null, -20.0, 35.0);
-            $K = $number($part['K'] ?? null, -20.0, 60.0);
+            $K = $number($part['K'] ?? null, -20.0, 150.0);
             if ($H === null || $K === null) {
                 continue;
             }
@@ -202,8 +202,11 @@ class CometCoordinates
      * m = H + 5 log(delta) + n log(r) + phase_coeff * alpha, with `n` the
      * coefficient of log r as on aerith.net and in JPL's K1.
      *
-     * Values outside a plausible range are ignored: older imports stored the
-     * mean motion or a julian day in `n`.
+     * Values outside a plausible range are ignored: older imports stored a
+     * julian day in `n`. Without a plausible `n` there is no photometry: H
+     * only means something with its own coefficient, and a default one gives
+     * absurd magnitudes for the steep curves of aerith.net
+     * (m1 = -14.5 + 5 log d + 100 log r would become -3 for a faint comet).
      */
     public static function photometry(object $elements): ?array
     {
@@ -213,12 +216,12 @@ class CometCoordinates
             return is_numeric($v) && $v >= $min && $v <= $max ? (float) $v : null;
         };
         $H = $value('H', -20.0, 35.0);
-        if ($H === null) {
+        $n = $value('n', -20.0, 150.0);
+        if ($H === null || $n === null) {
             return null;
         }
 
-        // 10 is the usual coefficient of log r when it is not known
-        return [$H, $value('n', 1.0, 60.0) ?? 10.0, $value('phase_coeff', 0.0, 0.1), $value('n_pre', 1.0, 60.0), $value('n_post', 1.0, 60.0)];
+        return [$H, $n, $value('phase_coeff', 0.0, 0.1), $value('n_pre', 1.0, 60.0), $value('n_post', 1.0, 60.0)];
     }
 
     /**

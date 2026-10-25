@@ -97,9 +97,12 @@ it('calculates the position of a comet without asking JPL Horizons', function ()
 
 it('ignores implausible photometric parameters', function () {
     expect(CometCoordinates::photometry((object) ['H' => 5.0, 'n' => 15.0]))->toBe([5.0, 15.0, null, null, null])
-        // The mean motion and a julian day ended up in `n` with older imports
-        ->and(CometCoordinates::photometry((object) ['H' => 14.5, 'n' => 0.1287])[1])->toBe(10.0)
-        ->and(CometCoordinates::photometry((object) ['H' => 13.6, 'n' => 2451720.5])[1])->toBe(10.0)
+        // A steep curve of aerith.net, for a comet that fades fast after its perihelion
+        ->and(CometCoordinates::photometry((object) ['H' => -14.5, 'n' => 100.0])[1])->toBe(100.0)
+        // H without its own coefficient of log r (a julian day ended up in `n`
+        // with older imports) gives no magnitude rather than an absurd one
+        ->and(CometCoordinates::photometry((object) ['H' => 13.6, 'n' => 2451720.5]))->toBeNull()
+        ->and(CometCoordinates::photometry((object) ['H' => -8.8, 'n' => null]))->toBeNull()
         // The slope parameter G of the H-G system is not a phase coefficient
         ->and(CometCoordinates::photometry((object) ['H' => 9.0, 'n' => 5.0, 'phase_coeff' => 0.15])[2])->toBeNull()
         ->and(CometCoordinates::photometry((object) ['H' => null, 'n' => 10.0]))->toBeNull();
