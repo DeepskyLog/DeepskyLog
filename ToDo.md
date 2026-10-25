@@ -2,7 +2,6 @@
 
 ## Next steps
 
-- [ ] GitHub issues
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4 -> Ubuntu 26.04 LTS.
 - [ ] Translations
@@ -92,4 +91,7 @@
 - [X] Reports of lists of objects can be created with your own layout.  The layouts of the old version of DeepskyLog are imported.  This was broken in the old version of DeepskyLog but is working again in the new version.
 - [X] For every object, the user can show the field views: where to find the object with the naked eye, binoculars, and telescopes
 - [X] Add a wizard to create an observing list.
+- [X] Organize star parties.  Users can subscribe to them, and the organizer can send a mail to all subscribers.
+- [X] New section on the home page
+- [X] Personal blog page for every user. 
  
