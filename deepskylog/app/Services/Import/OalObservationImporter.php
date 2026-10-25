@@ -185,6 +185,7 @@ class OalObservationImporter
         }
 
         $this->linkImportedSessions();
+        $this->reportDrawings($result);
 
         $result->addInfo(
             "OAL import complete. Imported: {$result->imported}, Skipped: {$result->skipped}, Errors: {$result->errors}.",
@@ -495,6 +496,12 @@ class OalObservationImporter
             '',
             $row
         );
+
+        $images = [];
+        foreach ($obs->image ?? [] as $image) {
+            $images[] = (string) $image;
+        }
+        $this->attachImportedDrawing($observation, $images, $result, "Observation {$row}", '', $row);
     }
 
     /**

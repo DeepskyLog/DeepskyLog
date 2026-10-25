@@ -32,6 +32,9 @@ use Illuminate\Support\Facades\DB;
  * 13  Object visibility (1–7; 1=very easy … 7=not seen)
  * 14  Language (ISO 2-letter code, e.g. nl, en)
  * 15  Description (required)
+ * 16  Drawing (optional): the file name of the drawing, uploaded with the
+ *     file or in a zip file with it. Only read when it ends in an image
+ *     extension, as a description with unquoted semicolons runs on into it.
  */
 class CsvObservationImporter
 {
@@ -103,6 +106,7 @@ class CsvObservationImporter
                 $language,
                 $description,
             ] = array_slice($fields, 0, 15);
+            $drawingName = $fields[15] ?? '';
 
             // ─── Validate required fields ──────────────────────────────────────
 
@@ -311,6 +315,10 @@ class CsvObservationImporter
                     );
                 }
 
+                if (self::isDrawingName($drawingName)) {
+                    $this->attachImportedDrawing($obs, [$drawingName], $result, "Row {$rowNumber}", $line, $rowNumber);
+                }
+
                 // Write deepsky visibility to detail table (for deepsky objects only)
                 if ($visibility !== null && in_array($targetTable, ['objects', 'objectnames'])) {
                     DB::table('deepsky_observation_details')->updateOrInsert(
@@ -329,6 +337,8 @@ class CsvObservationImporter
             }
         }
 
+        $this->reportDrawings($result);
+
         $result->addInfo(
             "CSV import complete. Imported: {$result->imported}, Skipped: {$result->skipped}, Errors: {$result->errors}.",
             '',
@@ -341,6 +351,17 @@ class CsvObservationImporter
     // ─────────────────────────────────────────────────────────────────────────
     // Helpers
     // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Whether the 16th column names a drawing: a file name with an image
+     * extension, not the rest of a description.
+     */
+    private static function isDrawingName(string $value): bool
+    {
+        $extension = strtolower(pathinfo($value, PATHINFO_EXTENSION));
+
+        return $value !== '' && strlen($value) <= 255 && in_array($extension, ImportDrawings::IMAGE_EXTENSIONS, true);
+    }
 
     /** Parse DD-MM-YYYY (or YYYY-MM-DD) into YYYY-MM-DD string. */
     private function parseDate(string $value): ?string

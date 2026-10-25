@@ -39,7 +39,7 @@
                                 <span class="block text-gray-100 font-medium">CSV</span>
                                 <span class="block text-gray-400 text-xs mt-0.5">
                                     {{ __('Semicolon-delimited, no header line.') }}<br>
-                                    <code class="text-gray-500 text-xs">Object; Observer; Date(DD-MM-YYYY); Time(HH:MM); Location; Instrument; Eyepiece; Filter; Lens; Seeing(1–5); LimMag; SQM; Visibility(1–7); Language; Description</code>
+                                    <code class="text-gray-500 text-xs">Object; Observer; Date(DD-MM-YYYY); Time(HH:MM); Location; Instrument; Eyepiece; Filter; Lens; Seeing(1–5); LimMag; SQM; Visibility(1–7); Language; Description; Drawing</code>
                                 </span>
                             </div>
 
@@ -51,6 +51,13 @@
                                 </span>
                             </div>
 
+                            <div>
+                                <span class="block text-gray-100 font-medium">{{ __('Zip file') }}</span>
+                                <span class="block text-gray-400 text-xs mt-0.5">
+                                    {{ __('One CSV or OAL file with the drawings of its observations, such as the zip file of your observations with their drawings that DeepskyLog makes.') }}
+                                </span>
+                            </div>
+
                         </div>
                     </div>
 
@@ -59,14 +66,31 @@
                         <label for="import_file" class="block text-sm font-medium text-gray-300 mb-2">
                             {{ __('File') }}
                         </label>
-                        <input id="import_file" type="file" name="import_file" accept=".csv,.txt,.xml"
+                        <input id="import_file" type="file" name="import_file" accept=".csv,.txt,.xml,.zip"
                                class="block w-full text-sm text-gray-300 bg-gray-800 border border-gray-600 rounded-lg cursor-pointer
                                       focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
                                       file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0
                                       file:text-sm file:font-semibold file:bg-indigo-700 file:text-white
                                       hover:file:bg-indigo-600 p-1">
                         <p class="mt-1 text-xs text-gray-500">
-                            {{ __('Accepted formats: .csv, .txt, .xml — Maximum 50 MB') }}
+                            {{ __('Accepted formats: .csv, .txt, .xml — Maximum 50 MB') }}<br>
+                            {{ __('A zip file holding one of them and its drawings: maximum 1 GB') }}
+                        </p>
+                    </div>
+
+                    {{-- Drawings next to a CSV or OAL file --}}
+                    <div class="mb-8">
+                        <label for="drawings" class="block text-sm font-medium text-gray-300 mb-2">
+                            {{ __('Drawings') }}
+                        </label>
+                        <input id="drawings" type="file" name="drawings[]" multiple accept=".jpg,.jpeg,.png,.gif,.webp"
+                               class="block w-full text-sm text-gray-300 bg-gray-800 border border-gray-600 rounded-lg cursor-pointer
+                                      focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                                      file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0
+                                      file:text-sm file:font-semibold file:bg-indigo-700 file:text-white
+                                      hover:file:bg-indigo-600 p-1">
+                        <p class="mt-1 text-xs text-gray-500">
+                            {{ __('Optional. An observation in an OAL file names its drawing in its image element, a row of a CSV file in a 16th column. JPEG, PNG, GIF or WebP, at most 20 MB each and :max files: put more drawings in a zip file with the CSV or OAL file. An observation that already has a drawing keeps it.', ['max' => \App\Http\Controllers\ObservationImportController::MAX_LOOSE_DRAWINGS]) }}
                         </p>
                     </div>
 
@@ -129,6 +153,7 @@
                                 <tr><td class="py-1 pr-4">13</td><td class="py-1 pr-4">{{ __('Visibility') }}</td><td></td><td class="py-1">{{ __('1–7') }}</td></tr>
                                 <tr><td class="py-1 pr-4">14</td><td class="py-1 pr-4">{{ __('Language') }}</td><td></td><td class="py-1">{{ __('ISO code, e.g. nl, en, de') }}</td></tr>
                                 <tr><td class="py-1 pr-4">15</td><td class="py-1 pr-4">{{ __('Description') }}</td><td class="py-1 pr-4">✓</td><td class="py-1">{{ __('Free text') }}</td></tr>
+                                <tr><td class="py-1 pr-4">16</td><td class="py-1 pr-4">{{ __('Drawing') }}</td><td></td><td class="py-1">{{ __('File name of the drawing, uploaded with the file or in the zip file') }}</td></tr>
                             </tbody>
                         </table>
                     </div>

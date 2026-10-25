@@ -13,6 +13,12 @@ class ImportResult
 
     public int $errors = 0;
 
+    /** How many drawings were added to the imported observations. */
+    public int $drawings = 0;
+
+    /** @var list<string> the names of the uploaded drawings no imported observation named */
+    public array $unusedDrawings = [];
+
     /** @var array<int, array{type: string, message: string, context: string}> */
     public array $log = [];
 

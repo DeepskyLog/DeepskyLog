@@ -21,7 +21,8 @@ trait SavesImportedObservations
     /**
      * Fields that an import does not change on an observation that is already
      * there: who made it and when (they are what matched), where a migrated
-     * row came from, and whether it has a drawing (imports carry none).
+     * row came from, and whether it has a drawing (attachImportedDrawing()
+     * adds one, but never replaces one).
      */
     private const KEPT_ON_UPDATE = [
         'observer_username',
@@ -45,6 +46,9 @@ trait SavesImportedObservations
     /** @var array<int, Location|null> */
     private array $horizonLocations = [];
 
+    /** The drawings uploaded with the file. */
+    private ?ImportDrawings $drawings = null;
+
     /**
      * Import observations of an object below the horizon of their location
      * too, instead of skipping them.
@@ -54,6 +58,91 @@ trait SavesImportedObservations
         $this->importBelowHorizon = $import;
 
         return $this;
+    }
+
+    /**
+     * The drawings uploaded with the file, which the observations name.
+     */
+    public function withDrawings(ImportDrawings $drawings): static
+    {
+        $this->drawings = $drawings;
+
+        return $this;
+    }
+
+    /**
+     * Give a saved observation the drawing its file names. An observation
+     * that has a drawing keeps it, so importing a file again does not add
+     * its drawings twice.
+     *
+     * @param  list<string>  $references  the drawings the observation names; only the first that is found is imported
+     */
+    private function attachImportedDrawing(Observation $observation, array $references, ImportResult $result, string $label, string $context, int $row): void
+    {
+        $references = array_values(array_filter(array_map('trim', $references), fn (string $reference) => $reference !== ''));
+        if ($references === []) {
+            return;
+        }
+
+        $this->drawings ??= ImportDrawings::none();
+
+        if ($observation->has_drawing) {
+            // Counted, so the drawing is not reported as unused.
+            foreach ($references as $reference) {
+                $this->drawings->markUsed($reference);
+            }
+            if (! $this->drawings->isEmpty()) {
+                $result->addInfo("{$label}: The observation already has a drawing, kept it.", $context, $row);
+            }
+
+            return;
+        }
+
+        foreach ($references as $reference) {
+            [$stored, $problem] = $this->drawings->store($reference);
+
+            if ($stored !== null) {
+                $observation->forceFill(['has_drawing' => true, 'drawing_filename' => $stored])->save();
+                $result->drawings++;
+                $result->addSuccess("{$label}: Added drawing '{$reference}'.", $context, $row);
+
+                // Only one drawing per observation.
+                foreach (array_slice($references, array_search($reference, $references, true) + 1) as $other) {
+                    $this->drawings->markUsed($other);
+                    $result->addWarning("{$label}: An observation has one drawing, did not import '{$other}'.", $context, $row);
+                }
+
+                return;
+            }
+
+            if ($problem !== null) {
+                $result->addWarning("{$label}: {$problem}", $context, $row);
+            }
+        }
+    }
+
+    /**
+     * Report the drawings no observation named, or that the file names
+     * drawings while none were uploaded.
+     */
+    private function reportDrawings(ImportResult $result): void
+    {
+        if ($this->drawings === null) {
+            return;
+        }
+
+        if ($this->drawings->isEmpty()) {
+            if ($this->drawings->references() > 0) {
+                $result->addInfo("The file names {$this->drawings->references()} drawings. Upload them with the file, or the file and the drawings in a zip file, to import them.");
+            }
+
+            return;
+        }
+
+        $result->unusedDrawings = $this->drawings->unused();
+        if ($result->unusedDrawings !== []) {
+            $result->addWarning(count($result->unusedDrawings) . ' uploaded drawings are not named by an imported observation and were not imported.');
+        }
     }
 
     /**

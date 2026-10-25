@@ -26,6 +26,29 @@
                     </div>
                 </div>
 
+                {{-- Drawings uploaded with the file --}}
+                @if ($result->drawings > 0 || count($result->unusedDrawings) > 0)
+                    <div class="rounded-lg bg-blue-950 border border-blue-800 p-4 mb-4">
+                        <h4 class="text-blue-300 font-semibold mb-3">{{ __('Drawings') }}</h4>
+                        <p class="text-blue-400 text-sm">
+                            {{ trans_choice('{0} No drawings were added to the observations.|{1} 1 drawing was added to an observation.|[2,*] :count drawings were added to the observations.', $result->drawings, ['count' => $result->drawings]) }}
+                        </p>
+                        @if (count($result->unusedDrawings) > 0)
+                            <p class="text-blue-400 text-sm mt-3 mb-1">
+                                {{ __('These uploaded drawings are not named by an imported observation and were not imported:') }}
+                            </p>
+                            <ul class="space-y-0.5">
+                                @foreach (array_slice($result->unusedDrawings, 0, 50) as $name)
+                                    <li class="text-sm text-blue-300">{{ $name }}</li>
+                                @endforeach
+                                @if (count($result->unusedDrawings) > 50)
+                                    <li class="text-sm text-blue-500">{{ __('and :count more', ['count' => count($result->unusedDrawings) - 50]) }}</li>
+                                @endif
+                            </ul>
+                        @endif
+                    </div>
+                @endif
+
                 {{-- New objects created from OAL targets --}}
                 @if (count($result->newObjects) > 0)
                     <div class="rounded-lg bg-blue-950 border border-blue-800 p-4 mb-4">
