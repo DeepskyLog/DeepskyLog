@@ -102,6 +102,23 @@ final class ObservationSearchTable extends PowerGridComponent
     public string $observationDescription = '';
     public array $languages = [];
 
+    /**
+     * Whether the logged-in observer has seen (false) or drawn (true) the
+     * objects of the rows, keyed by different_object_key; filled per page by
+     * loadSeenStatus().
+     *
+     * @var array<string, bool>
+     */
+    private array $seenStatus = [];
+
+    /**
+     * The slugs of the comets of the rows, keyed by comet id (target_key);
+     * filled per page by loadSeenStatus().
+     *
+     * @var array<string, string>
+     */
+    private array $cometSlugs = [];
+
     public function mount(string $objectName = '', array $filters = []): void
     {
         parent::mount();
@@ -165,6 +182,9 @@ final class ObservationSearchTable extends PowerGridComponent
                 'observations.transparency',
                 'observations.description',
                 'observations.target_table',
+                'observations.different_object_key',
+                'observations.target_key',
+                DB::raw('objects.slug as object_slug'),
                 DB::raw('objects.con as constellation_abbr'),
                 DB::raw('constellations.name as constellation'),
                 DB::raw('COALESCE(users.name, observations.observer_username) as observer_display'),
@@ -180,7 +200,76 @@ final class ObservationSearchTable extends PowerGridComponent
 
         $this->applyAdvancedFilters($query);
 
+        if (Auth::check()) {
+            $query->afterQuery(fn($rows) => $this->loadSeenStatus($rows));
+        }
+
         return $query;
+    }
+
+    /**
+     * Which objects of these rows the logged-in observer has seen and drawn,
+     * in one query on the index (observer_username, different_object_key),
+     * and the slugs of their comets for the links to the observer's own
+     * observations.
+     */
+    private function loadSeenStatus($rows): void
+    {
+        $cometIds = collect($rows)->where('target_table', 'cometobjects')->pluck('target_key')
+            ->filter()->unique()->reject(fn($id) => array_key_exists($id, $this->cometSlugs));
+        if ($cometIds->isNotEmpty()) {
+            $this->cometSlugs += DB::table('cometobjects')->whereIn('id', $cometIds->all())
+                ->pluck('slug', 'id')->mapWithKeys(fn($slug, $id) => [(string) $id => $slug])->all();
+        }
+
+        $keys = collect($rows)->pluck('different_object_key')->filter()->unique()
+            ->reject(fn($key) => array_key_exists($key, $this->seenStatus))
+            ->values();
+        if ($keys->isEmpty()) {
+            return;
+        }
+
+        DB::table('observations')
+            ->where('observer_username', Auth::user()->username)
+            ->whereIn('different_object_key', $keys->all())
+            ->groupBy('different_object_key')
+            ->selectRaw('different_object_key, MAX(CASE WHEN has_drawing = 1 THEN 1 ELSE 0 END) as drawn')
+            ->get()
+            ->each(function ($row) {
+                $this->seenStatus[$row->different_object_key] = (bool) $row->drawn;
+            });
+    }
+
+    /**
+     * The page with the logged-in observer's own observations (or drawings)
+     * of the row's object; null for kinds of objects without such a page.
+     */
+    private function ownObservationsUrl(object $row, bool $drawings): ?string
+    {
+        $observer = Auth::user()?->slug;
+        if (empty($observer)) {
+            return null;
+        }
+
+        if ($row->target_table === 'objects') {
+            $slug = $row->object_slug ?: Str::slug((string) $row->target_name);
+
+            return $slug === '' ? null : route(
+                $drawings ? 'observations.drawings.user.object' : 'observations.user.object',
+                ['observer' => $observer, 'object' => $slug]
+            );
+        }
+
+        if ($row->target_table === 'cometobjects') {
+            $slug = $this->cometSlugs[(string) $row->target_key] ?? null;
+
+            return empty($slug) ? null : route(
+                $drawings ? 'cometdrawings.user.object' : 'observations.comet.user.object',
+                ['observer' => $observer, 'object' => $slug]
+            );
+        }
+
+        return null;
     }
 
     /**
@@ -794,20 +883,38 @@ final class ObservationSearchTable extends PowerGridComponent
                     $drawingUrl = '/images/' . $subfolder . '/' . $row->legacy_id . '.jpg';
                 }
 
+                // A link to the drawing, which the page's lightbox
+                // (x-observation-drawing-modal) shows instead when it has one.
                 $title = e(__('View drawing'));
-                $drawingUrl = e($drawingUrl);
-                return '<button type="button"'
-                    . ' onclick="(function(){'
-                    . 'var m=document.getElementById(\'obs-drawing-modal\');'
+                return '<a href="' . e($drawingUrl) . '" target="_blank" rel="noopener"'
+                    . ' onclick="var m=document.getElementById(\'obs-drawing-modal\');'
                     . 'var img=document.getElementById(\'obs-drawing-img\');'
-                    . 'if(img){img.src=\'' . $drawingUrl . '\';}'
-                    . 'if(m){m.classList.remove(\'hidden\');}'
-                    . '})()"'
+                    . 'if(!m||!img){return true;}'
+                    . 'img.src=this.href;m.classList.remove(\'hidden\');return false;"'
                     . ' title="' . $title . '"'
                     . ' class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-500 cursor-pointer hover:bg-amber-400 focus:outline-none" aria-label="' . $title . '">'
                     . '<svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-white" viewBox="0 0 20 20" fill="currentColor">'
                     . '<path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>'
-                    . '</svg></button>';
+                    . '</svg></a>';
+            })
+            ->add('seen_indicator', function (object $row) {
+                $drawn = $this->seenStatus[$row->different_object_key ?? ''] ?? null;
+                if ($drawn === null) {
+                    return '<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gray-600" title="' . e(__('You have not seen this object')) . '" aria-label="' . e(__('You have not seen this object')) . '"></span>';
+                }
+
+                $title = e($drawn ? __('You have seen and drawn this object') : __('You have seen this object'));
+                $icon = $drawn
+                    ? '<path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>'
+                    : '<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>';
+                $badge = '<svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-white" viewBox="0 0 20 20" fill="currentColor">' . $icon . '</svg>';
+
+                $url = $this->ownObservationsUrl($row, $drawn);
+                if ($url === null) {
+                    return '<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-600" title="' . $title . '" aria-label="' . $title . '">' . $badge . '</span>';
+                }
+
+                return '<a href="' . e($url) . '" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-600 hover:bg-green-500" title="' . $title . '" aria-label="' . $title . '">' . $badge . '</a>';
             })
             ->add('observer_display')
             ->add('observer_name_link', function (object $row) {
@@ -841,10 +948,15 @@ final class ObservationSearchTable extends PowerGridComponent
 
     public function columns(): array
     {
-        return [
+        return array_values(array_filter([
             Column::make(__('Drawing'), 'drawing_indicator', 'observations.has_drawing')
                 ->visibleInExport(false)
                 ->sortable(),
+
+            // Whether the logged-in observer has seen the object (#522).
+            Auth::check()
+                ? Column::make(__('Seen by me'), 'seen_indicator')->visibleInExport(false)
+                : null,
 
             Column::make(__('Object'), 'target_name_link', 'observations.target_name')
                 ->sortable()
@@ -863,7 +975,7 @@ final class ObservationSearchTable extends PowerGridComponent
 
             Column::make(__('Date'), 'date_formatted', 'observations.observed_on')
                 ->sortable(),
-        ];
+        ]));
     }
 
     public function exportToCsv(bool $selected = false): BinaryFileResponse|bool

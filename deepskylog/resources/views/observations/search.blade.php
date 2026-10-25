@@ -127,17 +127,5 @@
         </div>
     </div>
 
-    {{-- Drawing lightbox modal --}}
-    <div id="obs-drawing-modal"
-         class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80"
-         onclick="if(event.target===this){this.classList.add('hidden');document.getElementById('obs-drawing-img').src='';}">
-        <div class="relative max-w-3xl w-full mx-4">
-            <button type="button"
-                    onclick="document.getElementById('obs-drawing-modal').classList.add('hidden');document.getElementById('obs-drawing-img').src='';"
-                    class="absolute -top-8 right-0 text-white text-2xl leading-none hover:text-gray-300 focus:outline-none"
-                    aria-label="{{ __('Close') }}">&#x2715;</button>
-            <img id="obs-drawing-img" src="" alt="{{ __('Drawing') }}"
-                 class="max-h-[80vh] w-auto mx-auto rounded shadow-lg" />
-        </div>
-    </div>
+    <x-observation-drawing-modal />
 </x-app-layout>

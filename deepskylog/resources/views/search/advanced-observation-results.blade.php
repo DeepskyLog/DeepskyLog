@@ -108,4 +108,6 @@
             </div>
         </div>
     </div>
+
+    <x-observation-drawing-modal />
 @endsection
