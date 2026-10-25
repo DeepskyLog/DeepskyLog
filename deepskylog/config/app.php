@@ -113,6 +113,16 @@ return [
         'Swedish' => 'sv',
     ],
 
+    // Translate the descriptions of the observations into the languages of
+    // the site (#310) with Google Translate: for guests (in the language of
+    // the site) and for observers who turned on translations. Off in the
+    // tests, so a saved observation never calls Google.
+    'translate_observations' => (bool) env('TRANSLATE_OBSERVATIONS', true),
+
+    // How many observations the scheduled observations:translate-descriptions
+    // queues for translation per run (every ten minutes), newest first.
+    'translations_per_run' => (int) env('TRANSLATIONS_PER_RUN', 20),
+
     // The languages an observer can write observations in.
     'observation_languages' => [
         'bg', 'hr', 'cs', 'da', 'nl', 'en', 'eo', 'fi', 'fr', 'de', 'el', 'is', 'it', 'no', 'pl', 'pt', 'es', 'sv',

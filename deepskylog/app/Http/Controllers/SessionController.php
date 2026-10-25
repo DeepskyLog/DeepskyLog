@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\HomepagePagination;
-use App\Jobs\TranslateObservationDescriptions;
 use App\Models\Location;
 use App\Models\Observation;
 use App\Models\ObservationLike;
@@ -196,21 +195,6 @@ class SessionController extends Controller
         // Prepare translations for session fields (weather, equipment, comments) if user requested
         $shouldTranslate = Auth::check() && Auth::user()->translate;
         $lang = $shouldTranslate ? (Auth::user()->language ?? config('app.locale')) : null;
-
-        // Dispatch background job to pre-warm translation cache for deep-sky observations on this page.
-        // The blade component uses Cache::get() (non-blocking), so this job populates cache asynchronously.
-        if ($shouldTranslate && $lang && isset($itemsForCurrentPage)) {
-            $deepIds = $itemsForCurrentPage
-                ->filter(fn($obs) => isset($obs->objectname))
-                ->filter(fn($obs) => ($obs->language ?? 'nl') !== $lang)  // skip when languages already match
-                ->filter(fn($obs) => !Cache::has('observation_deepsky_translation:' . $obs->id . ':' . $lang))
-                ->pluck('id')
-                ->values()
-                ->all();
-            if (!empty($deepIds)) {
-                TranslateObservationDescriptions::dispatch($deepIds, $lang);
-            }
-        }
 
         // Only translate session fields when the user's language actually differs from the session's language.
         // When they match (e.g. both English), serve the original HTML to preserve TinyMCE formatting.

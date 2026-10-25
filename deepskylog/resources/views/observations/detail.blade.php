@@ -28,14 +28,6 @@
                     : route("observations.show", $user->slug);
         }
 
-        // Translation
-        $tr = null;
-        if (auth()->check() && auth()->user()->translate) {
-            $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(
-                auth()->user()->language,
-            );
-        }
-
         if ($observationType === "deepsky") {
             $object = ($preloaded_objects ?? collect())->get($obs->objectname);
             // If not found by name, try by slug (handles slug-stored target_name)
@@ -1222,31 +1214,7 @@
                                 <div
                                     class="rounded-md bg-gray-900 px-4 py-4 text-sm leading-relaxed"
                                 >
-                                    @if ($tr)
-                                        @php
-                                            $cacheKey =
-                                                "obs_detail_translation:" .
-                                                $observationType .
-                                                ":" .
-                                                $obs->id .
-                                                ":" .
-                                                auth()->user()->language;
-                                            $translatedDesc = \Illuminate\Support\Facades\Cache::remember(
-                                                $cacheKey,
-                                                60 * 24 * 30,
-                                                function () use ($obs, $tr) {
-                                                    try {
-                                                        return $tr->translate(html_entity_decode($obs->description));
-                                                    } catch (\Throwable $e) {
-                                                        return null;
-                                                    }
-                                                },
-                                            );
-                                        @endphp
-                                        {!! \App\Support\Html::purify($translatedDesc ?? $obs->description, true) !!}
-                                    @else
-                                        {!! \App\Support\Html::purify($obs->description, true) !!}
-                                    @endif
+                                    <x-observation-description :observation="$obs" :now="true" />
                                 </div>
                             </div>
                         @endif

@@ -24,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Data of the observation cards, kept for one request (or queue job).
         $this->app->scoped(\App\Services\Observations\ObservationCardData::class);
+        $this->app->scoped(\App\Services\Observations\DescriptionTranslations::class);
 
         // Replace the ShareButtons presenter with a custom mediator to change URL encoding
         $this->app->singleton(ShareButtons::class, function ($app) {

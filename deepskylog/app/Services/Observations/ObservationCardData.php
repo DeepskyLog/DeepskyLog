@@ -86,6 +86,7 @@ class ObservationCardData
         $this->preloadModels(Filter::class, $observations->pluck('filter_id'));
         $this->preloadModels(Lens::class, $observations->pluck('lens_id'));
         $this->preloadLikes($observations->pluck('id'));
+        DescriptionTranslations::preload($observations->pluck('id'));
         $this->preloadSameDay($observations);
         Observation::preloadMagnifications($observations);
 

@@ -37,6 +37,11 @@ class Kernel extends ConsoleKernel
         // someone follows, for those who asked for it on the profile page.
         $schedule->command('follows:send-digest --apply')->dailyAt('07:00')->withoutOverlapping();
 
+        // The descriptions of new observations translated into the languages
+        // of the site for the guests (#310), and the older ones gradually,
+        // newest first, a few at a time to stay under Google's rate limit.
+        $schedule->command('observations:translate-descriptions --apply')->everyTenMinutes()->withoutOverlapping();
+
         $schedule->command('astronomy:updateCometPhotometry')->weeklyOn(2, '4:30');
         // Incremental search index reindex (one-run nightly; safe for production)
         $schedule->command('search:reindex --incremental')

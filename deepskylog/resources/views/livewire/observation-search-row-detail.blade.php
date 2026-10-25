@@ -18,12 +18,6 @@
     $lens   = $obs->lens_id   ? Lens::find($obs->lens_id) : null;
     $location = $obs->location_id ? Location::find($obs->location_id) : null;
 
-    // Translation
-    $tr = null;
-    if (auth()->check() && auth()->user()->translate) {
-        $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(auth()->user()->language);
-    }
-
     // Drawing URL
     $drawingUrl = null;
     if ($obs->has_drawing) {
@@ -196,25 +190,7 @@
         <div class="mt-4 border-t border-gray-700 pt-3">
             <div class="text-xs uppercase tracking-wide text-gray-400 mb-1">{{ __('Notes') }}</div>
             <div class="text-sm leading-relaxed">
-                @if($tr)
-                    @php
-                        $cacheKey = 'obs_row_detail_translation:' . $obs->id . ':' . auth()->user()->language;
-                        $translatedDesc = \Illuminate\Support\Facades\Cache::remember(
-                            $cacheKey,
-                            60 * 24 * 30,
-                            function () use ($obs, $tr) {
-                                try {
-                                    return $tr->translate(html_entity_decode($obs->description));
-                                } catch (\Throwable $e) {
-                                    return null;
-                                }
-                            }
-                        );
-                    @endphp
-                    {!! \App\Support\Html::purify($translatedDesc ?? $obs->description, true) !!}
-                @else
-                    {!! \App\Support\Html::purify($obs->description, true) !!}
-                @endif
+                <x-observation-description :observation="$obs" :now="true" />
             </div>
         </div>
     @endif

@@ -8,7 +8,9 @@ use App\Models\Eyepiece;
 use App\Models\Lens;
 use App\Models\Filter;
 use App\Models\Location;
+use App\Jobs\TranslateObservationDescriptions;
 use App\Services\ObjectObservationStatistics;
+use App\Services\Observations\DescriptionTranslations;
 use App\Services\SessionObservationLinker;
 use Illuminate\Support\Facades\Cache;
 
@@ -75,6 +77,10 @@ class ObservationObserver
             $this->refreshObjectStatistics($obs);
         }
 
+        if ($obs->wasChanged(['description', 'language'])) {
+            $this->retranslate($obs);
+        }
+
         if ($obs->wasChanged('instrument_id')) {
             $old = $obs->getOriginal('instrument_id');
             $new = $obs->instrument_id;
@@ -127,6 +133,30 @@ class ObservationObserver
             if ($oldHas || $newHas) {
                 $this->forgetHomepageCaches();
             }
+        }
+    }
+
+    /**
+     * Replace the translations of an edited description (#310). New
+     * observations are translated by the scheduled
+     * observations:translate-descriptions, newest first; an edited old one
+     * would wait there behind all untranslated newer ones, so it is queued
+     * here.
+     */
+    private function retranslate(Observation $obs): void
+    {
+        try {
+            DescriptionTranslations::forget($obs);
+            if (!config('app.translate_observations') || trim(strip_tags((string) $obs->description)) === '') {
+                return;
+            }
+            foreach (DescriptionTranslations::siteLanguages() as $language) {
+                if ($language !== $obs->language) {
+                    TranslateObservationDescriptions::dispatch([$obs->id], $language)->afterCommit();
+                }
+            }
+        } catch (\Throwable $e) {
+            report($e);
         }
     }
 

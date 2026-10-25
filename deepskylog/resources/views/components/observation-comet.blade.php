@@ -229,16 +229,8 @@
                     @endif
 
                     <div class="w-full min-w-0 flex-1 break-words">
-                        @if (auth()->check() && auth()->user()->translate && !empty($observation->description))
-                            @php
-                                // The cached translation, else the description (translated after the response)
-                                $translated = \App\Services\Observations\DescriptionTranslations::get(
-                                    (int) $observation->id,
-                                    auth()->user()->language,
-                                    \App\Jobs\TranslateObservationDescriptions::COMET,
-                                );
-                            @endphp
-                            {!! \App\Support\Html::purify($translated ?? $observation->description, true) !!}
+                        @if ($isUnified)
+                            <x-observation-description :observation="$observation" />
                         @else
                             {!! \App\Support\Html::purify($observation->description, true) !!}
                         @endif
