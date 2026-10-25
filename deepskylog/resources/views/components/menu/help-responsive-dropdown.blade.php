@@ -30,6 +30,11 @@
                 label="{{ __('Report issue') }}"
             />
             <x-dropdown.item
+                icon="book-open"
+                href="https://github.com/DeepskyLog/DeepskyLog/wiki/Deep-sky-Catalogues"
+                label="{{ __('Deep-sky catalogs') }}"
+            />
+            <x-dropdown.item
                 icon="rss"
                 href="https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog"
                 label="{{ __('New in DeepskyLog') }}"

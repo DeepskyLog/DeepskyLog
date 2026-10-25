@@ -1,6 +1,9 @@
 <div class="p-6 max-w-6xl">
     <h1 class="text-2xl font-semibold text-gray-200">{{ __('Catalogs') }}</h1>
     <p class="mt-1 text-sm text-gray-400">{{ __('Select a catalog to view object counts by constellation, types and objects list.') }}</p>
+    <p class="mt-1 text-sm text-gray-400">
+        <a href="https://github.com/DeepskyLog/DeepskyLog/wiki/Deep-sky-Catalogues" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">{{ __('What are these catalogs? Read about the deep-sky catalogs in the DeepskyLog wiki.') }}</a>
+    </p>
 
     <div class="mt-6">
         <div x-data="{ open: @entangle('open'), active: -1, query: @entangle('search') }" @keydown.escape="open=false" @click.outside="open = false" class="relative">

@@ -12,6 +12,7 @@
             <x-menu.item icon="at-symbol" href="https://groups.io/g/deepskylog">{!! __('Subscribe to mailing list') !!}</x-menu.item>
             <x-menu.item icon="banknotes" href="/sponsors">{{ __('Sponsor DeepskyLog') }}</x-menu.item>
             <x-menu.item icon="bolt" href="https://github.com/DeepskyLog/DeepskyLog/issues">{{ __('Report issue') }}</x-menu.item>
+            <x-menu.item icon="book-open" href="https://github.com/DeepskyLog/DeepskyLog/wiki/Deep-sky-Catalogues">{{ __('Deep-sky catalogs') }}</x-menu.item>
             <x-menu.item icon="rss" href="https://github.com/DeepskyLog/DeepskyLog/wiki/What's-New-in-DeepskyLog">{{ __('New in DeepskyLog') }}</x-menu.item>
         </x-menu.dropdown>
     </div>
