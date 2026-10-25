@@ -164,6 +164,12 @@ it('updates the search index, the slug and the observations when an object is re
         'decl' => '13.0922',
         'type' => 'GALXY',
         'alternative_names' => 'NGC 3623, UGC 6328',
+        // The test database has no names in these catalogs yet
+        'name_catalogs' => [
+            ['name' => 'Messier 65', 'choice' => 'new'],
+            ['name' => 'NGC 3623', 'choice' => 'new'],
+            ['name' => 'UGC 6328', 'choice' => 'new'],
+        ],
     ])->assertSessionHasNoErrors();
 
     $object = DB::table('objects')->where('name', 'Messier 65')->first();

@@ -30,6 +30,7 @@ use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use App\Services\CometCoordinates;
 use App\Services\DeepskyObjectCreator;
 use App\Services\NearbyObjects;
+use App\Services\ObjectNameCatalogs;
 use App\Services\ObjectSearchIndex;
 use App\Services\StarChartService;
 use App\Support\EphemerisDate;
@@ -2941,7 +2942,10 @@ class ObjectController extends Controller
         // Get SIMBAD-compatible name for external link
         $simbadName = $this->translateObjectNameForSimbad($object->name);
 
-        return view('object.edit', compact('object', 'constellations', 'types', 'alternativeNames', 'partOfObjects', 'containsObjects', 'simbadName'));
+        // The form asks about new names of a catalog DeepskyLog does not have (#526)
+        $knownCatalogs = app(ObjectNameCatalogs::class)->known();
+
+        return view('object.edit', compact('object', 'constellations', 'types', 'alternativeNames', 'partOfObjects', 'containsObjects', 'simbadName', 'knownCatalogs'));
     }
 
     /**
@@ -3069,7 +3073,32 @@ class ObjectController extends Controller
             'contains.*' => 'string|max:255',
             'review_status' => 'nullable|string|in:'.implode(',', DeepskyObject::REVIEW_STATUSES),
             'review_note' => 'nullable|string|max:255',
+            'name_catalogs' => 'nullable|array',
+            'name_catalogs.*.name' => 'required|string',
+            'name_catalogs.*.choice' => 'required|in:'.ObjectNameCatalogs::NEW_CATALOG.','.ObjectNameCatalogs::NO_CATALOG,
         ]);
+
+        // A new name whose catalog DeepskyLog does not have yet starts a new
+        // catalog, or is a name without a catalog: the form says which (#526)
+        // (read before the names of this object are rewritten below)
+        $catalogs = app(ObjectNameCatalogs::class);
+        $catalogs->known();
+        $catalogChoices = collect($validated['name_catalogs'] ?? [])->pluck('choice', 'name');
+        $savedNames = DB::table('objectnames')->where('objectname', $object->name)->pluck('altname')->push($object->name)->all();
+        $newNames = $request->has('alternative_names')
+            ? array_filter(array_map('trim', explode(',', (string) ($validated['alternative_names'] ?? ''))))
+            : [];
+        $newNames[] = $validated['name'];
+        $unresolved = collect($newNames)
+            ->unique()
+            ->reject(fn (string $name) => in_array($name, $savedNames, true) || $catalogChoices->has($name))
+            ->filter(fn (string $name) => $catalogs->newCatalogOf($name) !== null)
+            ->values();
+        if ($unresolved->isNotEmpty()) {
+            return back()->withErrors([
+                'alternative_names' => __('These names would start a new catalog: :names. Choose for each whether it is a new catalog or a name without a catalog.', ['names' => $unresolved->implode(', ')]),
+            ])->withInput();
+        }
 
         // Parse RA and Decl (support both decimal and sexagesimal formats)
         $raHours = $this->parseRaInput($validated['ra']);
@@ -3180,7 +3209,7 @@ class ObjectController extends Controller
                             $catalog = (string) $previous->catalog;
                             $catindex = (string) $previous->catindex;
                         } else {
-                            [$catalog, $catindex] = \App\Models\ObjectName::splitCatalogDesignation($altName);
+                            [$catalog, $catindex] = $catalogs->split($altName, $catalogChoices->get($altName));
                         }
 
                         $slug = \App\Models\ObjectName::slugFor($altName);
@@ -3267,7 +3296,7 @@ class ObjectController extends Controller
             ->where('altname', $object->name)
             ->exists();
         if (!$canonicalExists) {
-            [$cat, $catIdx] = \App\Models\ObjectName::splitCatalogDesignation($object->name);
+            [$cat, $catIdx] = $catalogs->split($object->name, $catalogChoices->get($object->name));
             // Only insert if the slug is not already claimed by a different object
             $slugTaken = DB::table('objectnames')
                 ->where('slug', $canonicalSlug)

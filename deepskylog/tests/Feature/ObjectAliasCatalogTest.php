@@ -76,6 +76,11 @@ it('stores the catalog and catindex of new aliases when an object is edited', fu
         'diam1' => '10',
         'diam2' => '3',
         'alternative_names' => 'M 65, H400 12, vdB-Ha 5',
+        // The test database has no H400 or vdB-Ha names yet
+        'name_catalogs' => [
+            ['name' => 'H400 12', 'choice' => 'new'],
+            ['name' => 'vdB-Ha 5', 'choice' => 'new'],
+        ],
     ])->assertSessionHasNoErrors();
 
     expect(aliasCatalog('M 65'))->toBe(['M', '65'])

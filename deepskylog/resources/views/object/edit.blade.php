@@ -63,6 +63,30 @@
                                                 rows="3">{{ old('alternative_names', $alternativeNames->implode(', ')) }}</x-textarea>
                                     <p class="text-sm text-gray-400">{{ __('Separate multiple names with commas') }}</p>
 
+                                    {{-- A new name of a catalog DeepskyLog does not have yet: a new catalog, or a name without a catalog (#526) --}}
+                                    <div x-data="newCatalogs(@js($knownCatalogs), @js($alternativeNames->concat([$object->name])->values()), @js(collect(old('name_catalogs', []))->pluck('choice', 'name')))"
+                                         class="space-y-2">
+                                        <template x-for="(item, index) in unknown" :key="item.name">
+                                            <div class="rounded-lg border border-yellow-700 bg-yellow-900/30 p-3 text-sm">
+                                                <p class="text-yellow-200">
+                                                    <span class="font-semibold" x-text="item.name"></span>:
+                                                    <span x-text="@js(__(':catalog is not a catalog in DeepskyLog yet.')).replace(':catalog', item.catalog)"></span>
+                                                </p>
+                                                <input type="hidden" :name="`name_catalogs[${index}][name]`" :value="item.name" />
+                                                <label class="mt-2 flex items-center gap-2 text-gray-200">
+                                                    <input type="radio" value="new" required x-model="choices[item.name]"
+                                                           :name="`name_catalogs[${index}][choice]`" />
+                                                    <span x-text="@js(__('Add the new catalog :catalog')).replace(':catalog', item.catalog)"></span>
+                                                </label>
+                                                <label class="mt-1 flex items-center gap-2 text-gray-200">
+                                                    <input type="radio" value="none" required x-model="choices[item.name]"
+                                                           :name="`name_catalogs[${index}][choice]`" />
+                                                    <span>{{ __('Not a catalog name (a name such as Leo T or Coma Berenices Dwarf)') }}</span>
+                                                </label>
+                                            </div>
+                                        </template>
+                                    </div>
+
                                     <div>
                                         <label for="type" class="block text-sm font-medium text-gray-300 mb-1">{{ __('Object Type') }} <span class="text-red-500">*</span></label>
                                         <select name="type" id="type" required
@@ -511,6 +535,41 @@
     <script defer src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js"></script>
     <script>
         document.addEventListener('alpine:init', () => {
+            // New names whose catalog DeepskyLog does not have yet, from the name and
+            // the alternative names; the names the object already has keep their catalog.
+            Alpine.data('newCatalogs', (known, savedNames, initialChoices) => ({
+                unknown: [],
+                choices: Object.assign({}, initialChoices),
+
+                init() {
+                    ['name', 'alternative_names'].forEach((id) => {
+                        document.getElementById(id)?.addEventListener('input', () => this.update());
+                    });
+                    this.update();
+                },
+
+                // The catalog of a name, as ObjectName::splitCatalogDesignation() takes it
+                catalogOf(name) {
+                    const match = name.match(/^(\S*[A-Za-z]\S*)\s+(\S.*)$/u);
+                    return match ? match[1] : '';
+                },
+
+                update() {
+                    const names = (document.getElementById('alternative_names')?.value || '').split(',')
+                        .map((name) => name.trim());
+                    names.push((document.getElementById('name')?.value || '').trim());
+                    const seen = new Set();
+                    this.unknown = names.filter((name) => {
+                        if (name === '' || seen.has(name) || savedNames.includes(name)) {
+                            return false;
+                        }
+                        seen.add(name);
+                        const catalog = this.catalogOf(name);
+                        return catalog !== '' && !(catalog.toLowerCase() in known);
+                    }).map((name) => ({ name: name, catalog: this.catalogOf(name) }));
+                },
+            }));
+
             Alpine.data('objectSearch', (initialSelected, fieldName) => ({
                 selected: Array.isArray(initialSelected) ? [...initialSelected] : [],
                 search: '',
