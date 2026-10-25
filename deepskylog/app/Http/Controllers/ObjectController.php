@@ -807,10 +807,22 @@ class ObjectController extends Controller
                         $target->setDiameter($diam1, $diam2);
                     }
 
-                    // set magnitude
+                    // set magnitude, dimmed by the atmosphere at the highest
+                    // altitude of the object (ContrastReserveCalculator)
                     $m = ($record->mag && $record->mag != 99.9) ? $record->mag : null;
+                    $highest = \App\Services\ContrastReserveCalculator::highestAltitude($record->decl, $userLocation);
+                    $extinction = \App\Services\ContrastReserveCalculator::extinction($highest);
+                    if ($highest !== null && ! is_infinite($extinction)) {
+                        $session->contrast_used_altitude = (int) round($highest);
+                        $session->contrast_used_extinction = round($extinction, 2);
+                    }
+                    if (is_infinite($extinction)) {
+                        // never rises at the location
+                        $m = null;
+                        $session->contrast_reserve_category = 'not_visible';
+                    }
                     if ($m !== null) {
-                        $target->setMagnitude($m);
+                        $target->setMagnitude($m + $extinction);
                     }
 
                     // compute SBObj using library helper
@@ -2036,8 +2048,12 @@ class ObjectController extends Controller
                                         if ($d1)
                                             $target->setDiameter($d1, $d2 ?? $d1);
                                         $mval = is_numeric($session->mag) ? $session->mag : null;
+                                        // dimmed by the atmosphere at the highest altitude of the planet
+                                        $extinction = \App\Services\ContrastReserveCalculator::extinction(\App\Services\ContrastReserveCalculator::highestAltitude($decDeg ?? null, $userLocation));
+                                        if (is_infinite($extinction))
+                                            $mval = null;
                                         if ($mval !== null)
-                                            $target->setMagnitude($mval);
+                                            $target->setMagnitude($mval + $extinction);
 
                                         $sbobj = $target->calculateSBObj();
                                         $sqm = $userLocation->getSqm();
@@ -2499,7 +2515,8 @@ class ObjectController extends Controller
                     $instrument = $authUser?->standardInstrument;
                     if ($asteroidMag !== null && $instrument && $userLocation) {
                         $lens = \App\Models\Lens::find($authUser->standardLensId());
-                        $cr = \App\Services\ContrastReserveCalculator::pointSource($asteroidMag, $instrument, $userLocation, $authUser, \App\Services\ContrastReserveCalculator::lensFactor($lens));
+                        $cr = \App\Services\ContrastReserveCalculator::pointSource($asteroidMag, $instrument, $userLocation, $authUser, \App\Services\ContrastReserveCalculator::lensFactor($lens), null,
+                            \App\Services\ContrastReserveCalculator::highestAltitude($coords->getDeclination()->getCoordinate(), $userLocation));
                         if ($cr['magnification']) {
                             $session->contrast_reserve = round($cr['contrast_reserve'], 2);
                             $session->contrast_reserve_category = $cr['category'];

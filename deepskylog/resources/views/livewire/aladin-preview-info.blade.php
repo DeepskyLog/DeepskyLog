@@ -98,7 +98,9 @@
                 </div>
             </td>
             <td>
-                @if ($contrast_reserve === null)
+                @if ($contrast_reserve === null && $contrast_reserve_category === 'not_visible')
+                    <span class="text-gray-600" title="{{ __('The object never rises above the horizon at this location.') }}">{{ __('contrast.reserve.category.not_visible') }}</span>
+                @elseif ($contrast_reserve === null)
                     {{ __('Unknown') }}
                 @else
                     @php
@@ -147,6 +149,11 @@
                             </div>
                             <div class="text-xs text-gray-300"><strong>{{ __('Instrument') }}:</strong>
                                 {{ $contrast_used_instrument ?? __('Unknown') }}</div>
+                            @if ($contrast_used_altitude !== null && $contrast_used_extinction !== null)
+                                <div class="text-xs text-gray-300 mt-1">
+                                    {{ __('Highest altitude :altitude°, dimmed :extinction mag by the atmosphere', ['altitude' => $contrast_used_altitude, 'extinction' => number_format($contrast_used_extinction, 2)]) }}
+                                </div>
+                            @endif
                         </div>
                     </div>
                 @endif

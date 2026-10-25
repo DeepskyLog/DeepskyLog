@@ -85,6 +85,20 @@ class ContrastReserveCalculator
     }
 
     /**
+     * The highest altitude of an object at the location, when it crosses the
+     * meridian: the altitude the contrast reserve is calculated at, with the
+     * extinction there. Null when the declination or latitude is unknown.
+     */
+    public static function highestAltitude(mixed $decDeg, Location $location): ?float
+    {
+        if (! is_numeric($decDeg) || ! is_numeric($location->latitude)) {
+            return null;
+        }
+
+        return AtmosphericExtinction::highestAltitude((float) $decDeg, (float) $location->latitude);
+    }
+
+    /**
      * The eyepieces the magnifications are taken from: the active eyepieces of
      * the observer's standard instrument set, else all active eyepieces of the
      * observer.
@@ -234,15 +248,24 @@ class ContrastReserveCalculator
      * 0.4 (limit - magnitude), so the categories mean the same. The limit
      * (TelescopicLimitingMagnitude) comes from the naked-eye limit of the
      * location and grows with the magnification as the sky darkens; the best
-     * magnification is the lowest with the largest margin.
+     * magnification is the lowest with the largest margin. At an altitude,
+     * the object is dimmed by the extinction there (extinction()).
      *
      * @param  array<int, list<Eyepiece>>|null  $magnifications  from magnifications(), when already known
-     * @return array{contrast_reserve: ?float, category: ?string, magnification: ?int, eyepieces: list<Eyepiece>, sqm: ?float}
+     * @param  float|null  $altitude  the altitude (degrees) the object is seen at; null for the zenith
+     * @return array{contrast_reserve: ?float, category: ?string, magnification: ?int, eyepieces: list<Eyepiece>, sqm: ?float, extinction: ?float}
      */
-    public static function pointSource(float $magnitude, Instrument $instrument, Location $location, ?User $user, float $lensFactor = 1.0, ?array $magnifications = null): array
+    public static function pointSource(float $magnitude, Instrument $instrument, Location $location, ?User $user, float $lensFactor = 1.0, ?array $magnifications = null, ?float $altitude = null): array
     {
         $sqm    = $location->getSqm();
-        $result = ['contrast_reserve' => null, 'category' => null, 'magnification' => null, 'eyepieces' => [], 'sqm' => is_numeric($sqm) ? (float) $sqm : null];
+        $result = ['contrast_reserve' => null, 'category' => null, 'magnification' => null, 'eyepieces' => [], 'sqm' => is_numeric($sqm) ? (float) $sqm : null, 'extinction' => null];
+
+        $extinction = self::extinction($altitude);
+        if (is_infinite($extinction)) {
+            return [...$result, 'category' => 'not_visible'];
+        }
+        $result['extinction'] = $altitude === null ? null : $extinction;
+        $magnitude += $extinction;
 
         $nelm     = $location->getNelm((float) ($user?->fstOffset ?? 0));
         $aperture = (float) $instrument->aperture_mm;
@@ -272,26 +295,44 @@ class ContrastReserveCalculator
             'magnification'    => $best[0],
             'eyepieces'        => $magnifications[$best[0]] ?? [],
             'sqm'              => $result['sqm'],
+            'extinction'       => $result['extinction'],
         ];
     }
 
     /**
      * The contrast reserve of the target with the instrument at the location,
-     * at the best of the observer's magnifications.
+     * at the best of the observer's magnifications. At an altitude, the
+     * object is dimmed by the extinction there (extinction()): the stored
+     * metrics use the highest altitude of the object (highestAltitude()), so
+     * an object low in the south of the observer's sky gets a lower contrast
+     * reserve than one passing overhead. An object that is below the horizon
+     * is not visible, without a contrast reserve.
      *
      * @param  array<int, list<Eyepiece>>|null  $magnifications  from magnifications(), when already known
      * @param  float|null  $sqm  the sky brightness to use instead of the location's (a sky lit by the Moon)
-     * @return array{contrast_reserve: ?float, category: ?string, magnification: ?int, eyepieces: list<Eyepiece>, sqm: ?float}
+     * @param  float|null  $altitude  the altitude (degrees) the object is seen at; null for the zenith
+     * @return array{contrast_reserve: ?float, category: ?string, magnification: ?int, eyepieces: list<Eyepiece>, sqm: ?float, extinction: ?float}
      */
-    public static function calculate(AstroTarget $target, Instrument $instrument, Location $location, ?User $user, float $lensFactor = 1.0, ?array $magnifications = null, ?float $sqm = null): array
+    public static function calculate(AstroTarget $target, Instrument $instrument, Location $location, ?User $user, float $lensFactor = 1.0, ?array $magnifications = null, ?float $sqm = null, ?float $altitude = null): array
     {
-        $result = ['contrast_reserve' => null, 'category' => null, 'magnification' => null, 'eyepieces' => [], 'sqm' => null];
+        $result = ['contrast_reserve' => null, 'category' => null, 'magnification' => null, 'eyepieces' => [], 'sqm' => null, 'extinction' => null];
 
         $sqm         ??= $location->getSqm();
         $result['sqm'] = is_numeric($sqm) ? (float) $sqm : null;
         $aperture      = (float) $instrument->aperture_mm;
         if ($result['sqm'] === null || $aperture <= 0) {
             return $result;
+        }
+
+        $extinction = self::extinction($altitude);
+        if (is_infinite($extinction)) {
+            return [...$result, 'category' => 'not_visible'];
+        }
+        $result['extinction'] = $altitude === null ? null : $extinction;
+        if ($extinction > 0 && $target->getMagnitude() !== null) {
+            // the caller's target stays as it is
+            $target = clone $target;
+            $target->setMagnitude($target->getMagnitude() + $extinction);
         }
 
         try {
@@ -318,6 +359,16 @@ class ContrastReserveCalculator
             'magnification'    => $best,
             'eyepieces'        => $magnifications[$best] ?? [],
             'sqm'              => $result['sqm'],
+            'extinction'       => $result['extinction'],
         ];
+    }
+
+    /**
+     * Magnitudes the object loses at the altitude (AtmosphericExtinction),
+     * 0 without an altitude, INF below the horizon.
+     */
+    public static function extinction(?float $altitude): float
+    {
+        return $altitude === null ? 0.0 : AtmosphericExtinction::magnitudes($altitude);
     }
 }

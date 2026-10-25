@@ -2,6 +2,7 @@
 
 namespace App\Services\FieldViews;
 
+use App\Services\AtmosphericExtinction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -38,9 +39,6 @@ use Illuminate\Support\Facades\Schema;
  */
 class FieldViewRenderer
 {
-    /** Atmospheric extinction in the visual, magnitudes per airmass. */
-    public const EXTINCTION_COEFFICIENT = 0.25;
-
     /** Stars brighter than this get their Bayer letter in views with star names. */
     private const STAR_NAME_MAGNITUDE = 3.0;
 
@@ -242,21 +240,6 @@ class FieldViewRenderer
         return rad2deg(asin(max(-1.0, min(1.0, sin($lat) * sin($dec) + cos($lat) * cos($dec) * cos($hourAngle)))));
     }
 
-    /**
-     * Magnitudes a star loses at this altitude, against the zenith (Kasten
-     * and Young's air mass). Below the horizon a star is never seen.
-     */
-    public static function extinction(float $altDeg): float
-    {
-        if ($altDeg <= 0) {
-            return INF;
-        }
-
-        $airmass = 1.0 / (sin(deg2rad($altDeg)) + 0.50572 * pow($altDeg + 6.07995, -1.6364));
-
-        return self::EXTINCTION_COEFFICIENT * ($airmass - 1.0);
-    }
-
     private function hasTime(): bool
     {
         return $this->view['lst'] !== null && $this->view['latitude'] !== null;
@@ -316,7 +299,7 @@ class FieldViewRenderer
         foreach ($this->loadStars($radius * 1.02, $limit) as $star) {
             $magnitude = (float) $star->vmag;
             if ($extinction) {
-                $magnitude += self::extinction(self::altitude((float) $star->ra_degrees, (float) $star->decl_degrees, (float) $this->view['lst'], (float) $this->view['latitude']));
+                $magnitude += AtmosphericExtinction::magnitudes(self::altitude((float) $star->ra_degrees, (float) $star->decl_degrees, (float) $this->view['lst'], (float) $this->view['latitude']));
                 if ($magnitude > $limit) {
                     continue;
                 }

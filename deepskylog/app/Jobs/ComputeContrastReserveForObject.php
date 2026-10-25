@@ -100,7 +100,10 @@ class ComputeContrastReserveForObject implements ShouldQueue
                 $user,
                 // the lens only changes the magnifications
                 $magnifications === null ? ContrastReserveCalculator::lensFactor($lensId) : 1.0,
-                $magnifications
+                $magnifications,
+                null,
+                // dimmed by the atmosphere at the highest altitude the object reaches
+                ContrastReserveCalculator::highestAltitude($obj->decl, $location)
             );
         }
 

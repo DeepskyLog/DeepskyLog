@@ -48,7 +48,7 @@ class MoonlitContrastReserve
             return null;
         }
 
-        $result = ContrastReserveCalculator::calculate($target, $instrument, $location, $user, $lensFactor, $magnifications, $best['sqm']);
+        $result = ContrastReserveCalculator::calculate($target, $instrument, $location, $user, $lensFactor, $magnifications, $best['sqm'], $best['altitude']);
         $upAt   = $moon->upBetween();
 
         return [

@@ -661,7 +661,8 @@ class TonightsBest
                     $this->user,
                     1.0,
                     $magnifications,
-                    $object['sqm']
+                    $object['sqm'],
+                    $object['altitude']
                 )['contrast_reserve'];
                 if ($reserve === null) {
                     continue;

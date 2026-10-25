@@ -9,6 +9,7 @@ use App\Models\InstrumentSet;
 use App\Models\Lens;
 use App\Models\Location;
 use App\Models\User;
+use App\Services\AtmosphericExtinction;
 use App\Services\ContrastReserveCalculator;
 use App\Services\TelescopicLimitingMagnitude;
 use App\Support\EphemerisDate;
@@ -138,7 +139,7 @@ class FieldViewBuilder
         }
 
         // Dimming by the atmosphere at the altitude of the object.
-        $extinction = $altitude !== null && $altitude > 0 ? FieldViewRenderer::extinction($altitude) : 0.0;
+        $extinction = $altitude !== null && $altitude > 0 ? AtmosphericExtinction::magnitudes($altitude) : 0.0;
 
         // The contrast reserve: the SQM of the location as on the object
         // page, else that of the limiting magnitude used; the object dimmed

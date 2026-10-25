@@ -54,12 +54,13 @@ class Location extends Model
     ];
 
     /**
-     * Delete cached metrics when location sky conditions change.
+     * Delete cached metrics when location sky conditions change, or the
+     * latitude, which sets how high the objects get (the extinction).
      */
     protected static function booted()
     {
         static::updated(function (self $location) {
-            if ($location->wasChanged('skyBackground') || $location->wasChanged('limitingMagnitude')) {
+            if ($location->wasChanged('skyBackground') || $location->wasChanged('limitingMagnitude') || $location->wasChanged('latitude')) {
                 UserObjectMetric::where('location_id', $location->id)->delete();
             }
         });

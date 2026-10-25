@@ -520,6 +520,8 @@ $initialCR = $session->contrast_reserve ?? null;
 $initialCRCat = $session->contrast_reserve_category ?? null;
 $initialCRLoc = $session->contrast_used_location ?? null;
 $initialCRInstr = $session->contrast_used_instrument ?? null;
+$initialCRAlt = $session->contrast_used_altitude ?? null;
+$initialCRExt = $session->contrast_used_extinction ?? null;
 $initialOptMag = $session->optimum_detection_magnification ?? null;
 $initialOptEps = $session->optimum_eyepieces ?? [];
 try {
@@ -578,6 +580,8 @@ try {
                                                         'contrast_reserve_category' => $initialCRCat,
                                                         'contrast_used_location' => $initialCRLoc,
                                                         'contrast_used_instrument' => $initialCRInstr,
+                                                        'contrast_used_altitude' => $initialCRAlt,
+                                                        'contrast_used_extinction' => $initialCRExt,
                                                         'optimum_detection_magnification' => $initialOptMag,
                                                         'optimum_eyepieces' => $initialOptEps,
                                                         'object_type' => $session->source_type_raw ?? null,

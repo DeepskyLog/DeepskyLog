@@ -6,6 +6,7 @@ use App\Models\Instrument;
 use App\Models\Location;
 use App\Models\User;
 use App\Models\UserObjectMetric;
+use App\Services\AtmosphericExtinction;
 use App\Services\ContrastReserveCalculator;
 use Database\Factories\InstrumentFactory;
 use Database\Factories\LensFactory;
@@ -33,7 +34,7 @@ function contrastReserveEquipment(array $instrument = []): array
 {
     $user       = User::factory()->create();
     $instrument = InstrumentFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'aperture_mm' => 200, 'focal_length_mm' => 1200, ...$instrument]);
-    $location   = LocationFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'skyBackground' => 21.0]);
+    $location   = LocationFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'skyBackground' => 21.0, 'latitude' => 51.0]);
     $lens       = LensFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'factor' => 2.0]);
     foreach ([24.0, 12.0] as $focal) {
         Eyepiece::query()->create([
@@ -83,7 +84,8 @@ it('stores the same values as the preview calculates', function () {
     (new ComputeContrastReserveForObject($user->id, $instrument->id, $location->id, 'M 31', $lens->id))->handle();
 
     $metric   = UserObjectMetric::where('object_name', 'M 31')->sole();
-    $expected = ContrastReserveCalculator::calculate(ContrastReserveCalculator::target(600.0, 240.0, 8.4), $instrument, $location, $user, 2.0);
+    $expected = ContrastReserveCalculator::calculate(ContrastReserveCalculator::target(600.0, 240.0, 8.4), $instrument, $location, $user, 2.0,
+        altitude: ContrastReserveCalculator::highestAltitude(41.26917, $location));
 
     expect($metric->lens_id)->toBe($lens->id)
         ->and((float) $metric->contrast_reserve)->toEqualWithDelta($expected['contrast_reserve'], 1e-6)
@@ -191,4 +193,62 @@ it('takes the field of view at each magnification from the widest eyepiece givin
         ->and($fields[50])->toBe(82 / 50)
         // From the field stop: 12 / 1200 rad.
         ->and(round($fields[100], 3))->toBe(round(12 / 1200 * 57.2958, 3));
+});
+
+it('computes the air mass and the extinction against the zenith', function () {
+    expect(AtmosphericExtinction::airmass(90.0))->toEqualWithDelta(1.0, 1e-3)
+        ->and(AtmosphericExtinction::airmass(30.0))->toEqualWithDelta(2.0, 0.01)
+        ->and(AtmosphericExtinction::magnitudes(90.0))->toEqualWithDelta(0.0, 1e-3)
+        ->and(AtmosphericExtinction::magnitudes(30.0))->toEqualWithDelta(0.25, 0.005)
+        ->and(AtmosphericExtinction::magnitudes(0.0))->toBe(INF)
+        ->and(AtmosphericExtinction::highestAltitude(41.0, 51.0))->toEqualWithDelta(80.0, 1e-9)
+        ->and(AtmosphericExtinction::highestAltitude(-30.0, 51.0))->toEqualWithDelta(9.0, 1e-9)
+        ->and(AtmosphericExtinction::highestAltitude(-50.0, 51.0))->toBeLessThan(0.0);
+});
+
+it('dims the object by the extinction at its highest altitude', function () {
+    [$user, $instrument, $location] = contrastReserveEquipment();
+    $target = ContrastReserveCalculator::target(600.0, 240.0, 8.4);
+
+    $zenith = ContrastReserveCalculator::calculate($target, $instrument, $location, $user);
+    $high   = ContrastReserveCalculator::calculate($target, $instrument, $location, $user, altitude: 80.0);
+    $low    = ContrastReserveCalculator::calculate($target, $instrument, $location, $user, altitude: 9.0);
+    $below  = ContrastReserveCalculator::calculate($target, $instrument, $location, $user, altitude: -5.0);
+
+    expect($zenith['extinction'])->toBeNull()
+        ->and($high['extinction'])->toBeLessThan(0.01)
+        ->and($low['extinction'])->toBeGreaterThan(1.0)
+        ->and($high['contrast_reserve'])->toBeLessThan($zenith['contrast_reserve'])
+        ->and($low['contrast_reserve'])->toBeLessThan($high['contrast_reserve'] - 0.3)
+        ->and($below)->toMatchArray(['contrast_reserve' => null, 'category' => 'not_visible', 'magnification' => null])
+        // the caller's target keeps its magnitude
+        ->and($target->getMagnitude())->toBe(8.4);
+
+    $point = ContrastReserveCalculator::pointSource(10.0, $instrument, $location, $user);
+    $lowPoint = ContrastReserveCalculator::pointSource(10.0, $instrument, $location, $user, altitude: 9.0);
+    expect($lowPoint['contrast_reserve'])->toEqualWithDelta($point['contrast_reserve'] - 0.4 * $lowPoint['extinction'], 1e-9)
+        ->and(ContrastReserveCalculator::pointSource(10.0, $instrument, $location, $user, altitude: -5.0)['category'])->toBe('not_visible');
+});
+
+it('stores an object that never rises at the location as not visible', function () {
+    insertContrastReserveObject();
+    DB::table('objects')->where('name', 'M 31')->update(['decl' => -70.0]);
+    [$user, $instrument, $location] = contrastReserveEquipment();
+
+    (new ComputeContrastReserveForObject($user->id, $instrument->id, $location->id, 'M 31'))->handle();
+
+    $metric = UserObjectMetric::where('object_name', 'M 31')->sole();
+    expect($metric->contrast_reserve)->toBeNull()
+        ->and($metric->contrast_reserve_category)->toBe('not_visible');
+});
+
+it('drops the stored metrics when the latitude of the location changes', function () {
+    insertContrastReserveObject();
+    [$user, $instrument, $location] = contrastReserveEquipment();
+    (new ComputeContrastReserveForObject($user->id, $instrument->id, $location->id, 'M 31'))->handle();
+    expect(UserObjectMetric::count())->toBe(1);
+
+    $location->update(['latitude' => (float) $location->latitude + 5.0]);
+
+    expect(UserObjectMetric::count())->toBe(0);
 });

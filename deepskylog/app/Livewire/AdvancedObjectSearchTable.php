@@ -946,6 +946,10 @@ class AdvancedObjectSearchTable extends PowerGridComponent
                     }
                     $cached = $row->computed_contrast_reserve ?? null;
                     $metricExists = $row->metric_exists ?? null;
+                    if ($metricExists !== null && $cached === null && ($row->computed_contrast_reserve_category ?? null) === 'not_visible') {
+                        // the object never rises at the location (ContrastReserveCalculator)
+                        return '<span class="text-gray-600" title="' . e(__('The object never rises above the horizon at this location.')) . '">' . e(__('contrast.reserve.category.not_visible')) . '</span>';
+                    }
                     if ($metricExists !== null && $cached === null) {
                         return '<span title="' . e(__('Contrast reserve unavailable for this object')) . '">-</span>';
                     }

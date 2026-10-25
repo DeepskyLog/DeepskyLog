@@ -29,6 +29,9 @@ class AladinPreviewInfo extends Component
     public $contrast_used_sqm;
     public $contrast_used_nelm;
     public $contrast_used_instrument;
+    /** The highest altitude of the object (degrees) and the magnitudes the atmosphere dims it there. */
+    public $contrast_used_altitude;
+    public $contrast_used_extinction;
     /** The contrast reserve with the Moon in the night of the date (MoonlitContrastReserve), or null. */
     public $moonlit = null;
     public $optimum_detection_magnification;
@@ -65,6 +68,8 @@ class AladinPreviewInfo extends Component
         $this->contrast_used_sqm = $initial['contrast_used_sqm'] ?? null;
         $this->contrast_used_nelm = $initial['contrast_used_nelm'] ?? null;
         $this->contrast_used_instrument = $initial['contrast_used_instrument'] ?? null;
+        $this->contrast_used_altitude = $initial['contrast_used_altitude'] ?? null;
+        $this->contrast_used_extinction = $initial['contrast_used_extinction'] ?? null;
         $this->optimum_detection_magnification = $initial['optimum_detection_magnification'] ?? null;
         $this->optimum_eyepieces = $initial['optimum_eyepieces'] ?? [];
         // accept object_type so blade can decide when to hide comet-only rows
@@ -687,8 +692,24 @@ class AladinPreviewInfo extends Component
             $debug_aperture = $aperture;
 
             // Contrast reserve at the best of the observer's magnifications, as
-            // for the stored metrics of the tables (ContrastReserveCalculator)
+            // for the stored metrics of the tables (ContrastReserveCalculator),
+            // dimmed by the atmosphere at the highest altitude of the object:
+            // the declination for the date (ObjectEphemerides, a planet), else
+            // the stored one.
             $crResult = null;
+            $crDecl = null;
+            if (is_numeric($payloadArr['decDeg'] ?? null)) {
+                $crDecl = (float) $payloadArr['decDeg'];
+            } elseif ($computedCoords) {
+                try {
+                    $crDecl = $computedCoords->getDeclination()->getCoordinate();
+                } catch (\Throwable $_) {
+                    $crDecl = null;
+                }
+            } elseif (is_numeric($obj->decl ?? null)) {
+                $crDecl = (float) $obj->decl;
+            }
+            $crAltitude = ContrastReserveCalculator::highestAltitude($crDecl, $userLocation);
             if ($isAsteroid && $obj instanceof Asteroid && $userInstrument) {
                 // A point source: its predicted magnitude against the limiting
                 // magnitude of the instrument
@@ -699,7 +720,7 @@ class AladinPreviewInfo extends Component
                     }
                     if ($asteroidMag !== null) {
                         $this->object_mag = round($asteroidMag, 2);
-                        $crResult = ContrastReserveCalculator::pointSource($asteroidMag, $userInstrument, $userLocation, $authUser, $lensFactor);
+                        $crResult = ContrastReserveCalculator::pointSource($asteroidMag, $userInstrument, $userLocation, $authUser, $lensFactor, null, $crAltitude);
                     }
                 } catch (\Throwable $_) {
                     $crResult = null;
@@ -707,7 +728,7 @@ class AladinPreviewInfo extends Component
             } elseif ($sbobj !== null && $sqm !== null && $aperture && $userInstrument) {
                 try {
                     $crT0 = microtime(true);
-                    $crResult = ContrastReserveCalculator::calculate($target, $userInstrument, $userLocation, $authUser, $lensFactor);
+                    $crResult = ContrastReserveCalculator::calculate($target, $userInstrument, $userLocation, $authUser, $lensFactor, null, null, $crAltitude);
                     $crElapsed = round((microtime(true) - $crT0) * 1000, 2);
                     try {
                         \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calculateContrastReserve elapsed', ['elapsed_ms' => $crElapsed, 'objectId' => $obj->id ?? null]);
@@ -729,6 +750,8 @@ class AladinPreviewInfo extends Component
                 $this->contrast_reserve_category = $crResult['category'];
                 $this->contrast_used_location = $userLocation?->name ?? null;
                 $this->contrast_used_instrument = $userInstrument?->fullName() ?? ($userInstrument?->name ?? null);
+                $this->contrast_used_altitude = $crAltitude !== null ? (int) round($crAltitude) : null;
+                $this->contrast_used_extinction = is_numeric($crResult['extinction'] ?? null) ? round($crResult['extinction'], 2) : null;
                 // expose SQM and NELM used for the calculation when available
                 try {
                     $this->contrast_used_sqm = is_numeric($sqm) ? round($sqm, 2) : null;
@@ -745,9 +768,12 @@ class AladinPreviewInfo extends Component
                 }
             } else {
                 $this->contrast_reserve = null;
-                $this->contrast_reserve_category = null;
+                // not_visible for an object that never rises at the location
+                $this->contrast_reserve_category = $crResult['category'] ?? null;
                 $this->contrast_used_location = null;
                 $this->contrast_used_instrument = null;
+                $this->contrast_used_altitude = null;
+                $this->contrast_used_extinction = null;
             }
 
             // The contrast reserve in the night of the date, with the sky lit

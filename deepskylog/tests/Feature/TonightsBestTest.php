@@ -311,14 +311,14 @@ it('gives the contrast reserve of an object with the Moon of the night', functio
     $user = tbObserver();
     $target = \App\Services\ContrastReserveCalculator::target(180.0, 60.0, 4.0);
     $reserve = fn (string $night) => \App\Services\MoonlitContrastReserve::for($target, 0.7 * 15.0, 41.0, $user->standardInstrument, $user->standardLocation, $user, $night, 'Europe/Brussels');
-    $dark = \App\Services\ContrastReserveCalculator::calculate($target, $user->standardInstrument, $user->standardLocation, $user)['contrast_reserve'];
-
     $newMoon = $reserve(TB_NEW_MOON);
     $fullMoon = $reserve(TB_FULL_MOON);
+    $dark = \App\Services\ContrastReserveCalculator::calculate($target, $user->standardInstrument, $user->standardLocation, $user, altitude: $newMoon['altitude'])['contrast_reserve'];
 
-    // Without the Moon it is the contrast reserve of the dark sky.
+    // Without the Moon it is the contrast reserve of the dark sky, at the
+    // altitude of the object then (the altitude is rounded).
     expect($newMoon['moon_up'])->toBeFalse()
-        ->and($newMoon['contrast_reserve'])->toEqualWithDelta($dark, 1e-6)
+        ->and($newMoon['contrast_reserve'])->toEqualWithDelta($dark, 0.005)
         ->and($fullMoon['moon_up'])->toBeTrue()
         ->and($fullMoon['sqm'])->toBeLessThan(20.0)
         ->and($fullMoon['contrast_reserve'])->toBeLessThan($dark - 0.3);
