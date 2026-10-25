@@ -3,12 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class ObjectName extends Model
 {
-    protected $table = 'objectnames';
+    protected $table   = 'objectnames';
     protected $guarded = [];
     public $timestamps = false;
+
+    /**
+     * The slug of an alternative name. Σ is spelled out ('Σ 1' gives
+     * 'sigma-1', 'OΣΣ 1' 'o-sigma-sigma-1'), as Str::slug() would make it an
+     * 's' and 'Σ 1' would take the slug of 'S 1'.
+     */
+    public static function slugFor(string $name): string
+    {
+        return Str::slug(str_replace(['Σ', 'σ'], ' sigma ', $name));
+    }
 
     /**
      * Split a name into catalog and catindex at the first space: 'H400 12' gives

@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use App\Services\StruveSigmaNames;
 
 class QuickSearch extends Component
 {
@@ -34,6 +35,17 @@ class QuickSearch extends Component
         $this->fetchSuggestions();
     }
 
+    /**
+     * The query, with a traditional name of a Struve double star written out
+     * (Sigma 1, Struve 1, O Struve 1) replaced by its designation (STF 1).
+     */
+    protected function searchedQuery(): string
+    {
+        $query = trim($this->query ?? '');
+
+        return StruveSigmaNames::designation($query) ?? $query;
+    }
+
     protected function normalizeWildcard(string $q): string
     {
         $q = trim($q);
@@ -47,8 +59,8 @@ class QuickSearch extends Component
 
     public function fetchSuggestions()
     {
-        $original = trim($this->query);
-        $q = $this->normalizeWildcard($this->query);
+        $original = $this->searchedQuery();
+        $q = $this->normalizeWildcard($original);
         // Determine wildcard positioning. We support three modes:
         // - prefix (default): matches at start (e.g. `M *` -> `M %`)
         // - suffix (leading wildcard only): matches at end (e.g. `* 1` -> `% 1`)
@@ -819,7 +831,7 @@ class QuickSearch extends Component
 
     public function submit()
     {
-        $original = trim($this->query ?? '');
+        $original = $this->searchedQuery();
         if ($original === '') {
             return redirect()->route('search.results', ['q' => $this->query]);
         }
@@ -840,7 +852,8 @@ class QuickSearch extends Component
                 $alias = DB::table('objectnames')
                     ->where('altname', $qLower)
                     ->orWhere('objectname', $qLower)
-                    ->orWhereRaw("LOWER(REPLACE(altname, ' ', '')) = ?", [$qNoSpaceLower])
+                    // altname_compact: the indexed name without spaces and dashes
+                    ->orWhere('altname_compact', str_replace([' ', '-'], '', preg_replace('/\s+/', '', $original)))
                     ->first();
                 if ($alias && !empty($alias->objectname)) {
                     $obj = DB::table('objects')->where('name', $alias->objectname)->first();

@@ -11,6 +11,8 @@ class SearchController extends Controller
     public function search(Request $request)
     {
         $q = trim($request->get('q', ''));
+        // Sigma 1, Struve 1: the Struve double star STF 1
+        $q = \App\Services\StruveSigmaNames::designation($q) ?? $q;
         if ($q === '') {
             return response()->json([]);
         }

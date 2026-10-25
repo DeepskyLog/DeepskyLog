@@ -126,6 +126,11 @@ class ObservingListItemNameResolver
     {
         $variants = [$name];
 
+        // Struve double stars: "Σ1", "Sigma 1", "Struve 1", "O Struve 1" (STF 1, STT 1).
+        if (($struve = StruveSigmaNames::designation($name)) !== null) {
+            $variants[] = $struve;
+        }
+
         // Sharpless: "Sh2-091", "Sh 2 - 91" are stored as "Sh 2-91".
         if (preg_match('/^sh\s*2\s*-\s*0*(\d+)$/i', $name, $m)) {
             $variants[] = 'Sh 2-' . $m[1];

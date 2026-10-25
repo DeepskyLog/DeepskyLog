@@ -3143,7 +3143,7 @@ class ObjectController extends Controller
                             [$catalog, $catindex] = \App\Models\ObjectName::splitCatalogDesignation($altName);
                         }
 
-                        $slug = \Illuminate\Support\Str::slug($altName);
+                        $slug = \App\Models\ObjectName::slugFor($altName);
 
                         // Check if this slug exists for another object
                         $existingEntry = DB::table('objectnames')->where('slug', $slug)->first();
@@ -3244,6 +3244,9 @@ class ObjectController extends Controller
                 ]);
             }
         }
+
+        // An STF, STT, ... name gets its Σ name (#480)
+        \App\Services\StruveSigmaNames::addFor([$object->name]);
 
         ObjectSearchIndex::syncObject($object->name, [$originalName, $originalSlug]);
 

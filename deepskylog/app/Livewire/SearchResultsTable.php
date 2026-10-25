@@ -162,6 +162,8 @@ class SearchResultsTable extends PowerGridComponent
     private function likePattern(): string
     {
         $q = trim($this->q);
+        // Sigma 1, Struve 1: the Struve double star STF 1
+        $q = \App\Services\StruveSigmaNames::designation($q) ?? $q;
         // Accept both '*' and '%' as user wildcards and normalize to '*'
         if (strpos($q, '*') !== false || strpos($q, '%') !== false) {
             $trimQ = str_replace('%', '*', $q);

@@ -85,6 +85,8 @@ class DeepskyObjectCreator
         $object = DeepskyObject::create($objectData);
 
         $this->addObjectName($object);
+        // STF 1 is also Σ 1 (#480)
+        StruveSigmaNames::addFor([$object->name]);
         ObjectSearchIndex::syncObject($object->name);
 
         return $object;
