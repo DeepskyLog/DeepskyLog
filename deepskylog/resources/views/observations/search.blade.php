@@ -31,33 +31,7 @@
         </div>
 
         {{-- Results table --}}
-        <div class="overflow-hidden bg-gray-900 shadow-sm sm:rounded-lg p-4"
-             x-data="{
-                 compareMode: false,
-                 toggleCompare() {
-                     this.compareMode = !this.compareMode;
-                     if (this.compareMode) {
-                         window.dispatchEvent(new CustomEvent('pg-toggle-detail-observation-search-table-hidden-all'));
-
-                         requestAnimationFrame(() => {
-                             document.querySelectorAll('td[x-data]').forEach(td => {
-                                 const xd = td.getAttribute('x-data');
-                                 if (xd && xd.includes('pg-toggle-detail-observation-search-table-')) {
-                                     const toggle = td.querySelector('div.cursor-pointer');
-                                     if (toggle instanceof HTMLElement) {
-                                         toggle.click();
-                                     }
-                                 }
-                             });
-                         });
-                     } else {
-                         // Collapse all — Livewire event reaches #[On('...hidden-all')],
-                         // DOM event reaches the Alpine x-on listener in the toggle TD
-                         Livewire.dispatch('pg-toggle-detail-observation-search-table-hidden-all');
-                         window.dispatchEvent(new CustomEvent('pg-toggle-detail-observation-search-table-hidden-all'));
-                     }
-                 }
-             }">
+        <div class="overflow-hidden bg-gray-900 shadow-sm sm:rounded-lg p-4">
             @php
                 $exportPdfUrl = route('observations.search.pdf', array_filter([
                     'q' => $q !== '' ? $q : null,
@@ -114,14 +88,7 @@
                         {{ auth()->user()?->hasAdministratorPrivileges() ? __('Zip file with drawings') : __('Zip file with my drawings') }}
                     </x-menu.item>
                 </x-menu.dropdown>
-                <button type="button"
-                        @click="toggleCompare()"
-                        :class="compareMode
-                            ? 'bg-amber-600 hover:bg-amber-500 text-white'
-                            : 'bg-indigo-600 hover:bg-indigo-500 text-white'"
-                        class="px-4 py-1.5 rounded text-sm font-medium transition-colors">
-                    <span x-text="compareMode ? '{{ __('Collapse all') }}' : '{{ __('Compare') }}'"></span>
-                </button>
+                <x-expand-all-details table="observation-search-table" />
             </div>
             @livewire('observation-search-table', ['objectName' => $q, 'filters' => []], key('observation-search-table-search-page'))
         </div>

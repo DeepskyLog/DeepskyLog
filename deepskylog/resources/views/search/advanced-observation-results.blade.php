@@ -4,31 +4,7 @@
 
 @section('content')
     <div class="w-full mt-6 px-2">
-        <div class="p-4 pb-2 w-full bg-gray-800 rounded-lg dsl-search-card"
-             x-data="{
-                 compareMode: false,
-                 toggleCompare() {
-                     this.compareMode = !this.compareMode;
-                     if (this.compareMode) {
-                         window.dispatchEvent(new CustomEvent('pg-toggle-detail-observation-search-table-hidden-all'));
-
-                         requestAnimationFrame(() => {
-                             document.querySelectorAll('td[x-data]').forEach(td => {
-                                 const xd = td.getAttribute('x-data');
-                                 if (xd && xd.includes('pg-toggle-detail-observation-search-table-')) {
-                                     const toggle = td.querySelector('div.cursor-pointer');
-                                     if (toggle instanceof HTMLElement) {
-                                         toggle.click();
-                                     }
-                                 }
-                             });
-                         });
-                     } else {
-                         Livewire.dispatch('pg-toggle-detail-observation-search-table-hidden-all');
-                         window.dispatchEvent(new CustomEvent('pg-toggle-detail-observation-search-table-hidden-all'));
-                     }
-                 }
-             }">
+        <div class="p-4 pb-2 w-full bg-gray-800 rounded-lg dsl-search-card">
             @php
                 $exportParams = collect($filters ?? [])->reject(function ($value) {
                     if (is_array($value)) {
@@ -92,14 +68,7 @@
                             {{ auth()->user()?->hasAdministratorPrivileges() ? __('Zip file with drawings') : __('Zip file with my drawings') }}
                         </x-menu.item>
                     </x-menu.dropdown>
-                    <button type="button"
-                            @click="toggleCompare()"
-                            :class="compareMode
-                                ? 'bg-amber-600 hover:bg-amber-500 text-white'
-                                : 'bg-indigo-600 hover:bg-indigo-500 text-white'"
-                            class="px-4 py-1.5 rounded text-sm font-medium transition-colors">
-                        <span x-text="compareMode ? '{{ __('Collapse all') }}' : '{{ __('Compare') }}'"></span>
-                    </button>
+                    <x-expand-all-details table="observation-search-table" />
                 </div>
             </div>
 
