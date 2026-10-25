@@ -85,7 +85,9 @@ class DeleteUser implements DeletesUsers
             // Personal rows without a foreign key, or one that would only set
             // the user to null; the cascading ones (comments, likes, saved
             // searches, report layouts, streaks, blocks, follows in both
-            // directions) go with the user row
+            // directions, the starparties they organise with their
+            // participants and invitations, their answers to those of
+            // others) go with the user row
             foreach (['user_object_metrics', 'user_table_settings', 'sessions', 'observation_comments', 'observation_likes'] as $table) {
                 DB::table($table)->where('user_id', $user->id)->delete();
             }

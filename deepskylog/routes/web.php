@@ -151,7 +151,34 @@ Route::post('/observers/{observer}/follow', [App\Http\Controllers\FollowControll
 Route::post('/observers/{observer}/unfollow', [App\Http\Controllers\FollowController::class, 'unfollow'])
     ->name('observer.unfollow')->middleware(['auth', 'verified', 'doNotCacheResponse']);
 
+// Starparties (#315): organised by observers, public or for the invited observers only
+Route::middleware('doNotCacheResponse')->group(function () {
+    Route::get('/star-parties', [App\Http\Controllers\StarPartyController::class, 'index'])->name('star-parties.index');
+    Route::get('/star-parties/invitation/{token}', [App\Http\Controllers\StarPartyController::class, 'invitation'])
+        ->name('star-parties.invitation')->middleware('throttle:30,1');
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('/star-parties/create', [App\Http\Controllers\StarPartyController::class, 'create'])->name('star-parties.create');
+        Route::post('/star-parties', [App\Http\Controllers\StarPartyController::class, 'store'])->name('star-parties.store');
+        Route::get('/star-parties/{starParty}/edit', [App\Http\Controllers\StarPartyController::class, 'edit'])->name('star-parties.edit');
+        Route::put('/star-parties/{starParty}', [App\Http\Controllers\StarPartyController::class, 'update'])->name('star-parties.update');
+        Route::delete('/star-parties/{starParty}', [App\Http\Controllers\StarPartyController::class, 'destroy'])->name('star-parties.destroy');
+        Route::post('/star-parties/{starParty}/cancel', [App\Http\Controllers\StarPartyController::class, 'cancel'])->name('star-parties.cancel');
+        Route::post('/star-parties/{starParty}/answer', [App\Http\Controllers\StarPartyController::class, 'answer'])->name('star-parties.answer');
+        Route::post('/star-parties/{starParty}/invite', [App\Http\Controllers\StarPartyController::class, 'invite'])
+            ->name('star-parties.invite')->middleware('throttle:messages');
+        Route::delete('/star-parties/{starParty}/participants/{participant}', [App\Http\Controllers\StarPartyController::class, 'removeParticipant'])
+            ->name('star-parties.participants.destroy');
+        Route::delete('/star-parties/{starParty}/invitations/{invitation}', [App\Http\Controllers\StarPartyController::class, 'revokeInvitation'])
+            ->name('star-parties.invitations.destroy');
+        Route::post('/star-parties/{starParty}/observing-list', [App\Http\Controllers\StarPartyController::class, 'storeList'])
+            ->name('star-parties.observing-list');
+    });
+    Route::get('/star-parties/{starParty}/calendar.ics', [App\Http\Controllers\StarPartyController::class, 'calendar'])->name('star-parties.calendar');
+    Route::get('/star-parties/{starParty}', [App\Http\Controllers\StarPartyController::class, 'show'])->name('star-parties.show');
+});
+
 // RSS feeds
+Route::get('/feed/star-parties', [App\Http\Controllers\RssFeedController::class, 'starParties'])->name('feed.star-parties');
 Route::get('/feed/observations', [App\Http\Controllers\RssFeedController::class, 'observations'])->name('feed.observations');
 Route::get('/feed/drawings', [App\Http\Controllers\RssFeedController::class, 'drawings'])->name('feed.drawings');
 Route::get('/feed/observing-lists', [App\Http\Controllers\RssFeedController::class, 'observingLists'])->name('feed.observing-lists');

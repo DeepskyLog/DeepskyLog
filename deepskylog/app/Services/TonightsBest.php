@@ -39,7 +39,8 @@ use Illuminate\Support\Str;
  * reserve recalculated with that sky and its best moment the darkest one.
  * Guests (and observers without that equipment) get the most observed
  * objects that are well placed at the location of the ephemerides. Both get
- * the planets and the bright comets as well, unless left out.
+ * the planets and the bright comets as well, unless left out. The deep-sky
+ * objects are spread over the hours chosen (pick()).
  *
  * The list is cached per observer, equipment, night and options; for an
  * observer until they record a new observation.
@@ -89,6 +90,12 @@ class TonightsBest
     /** Catalog errors, never on a list. */
     private const NONEXISTENT_TYPE = 'NONEX';
 
+    /** The objects are spread over parts of the night of about this many hours, */
+    private const SLICE_HOURS = 2.0;
+
+    /** and at most this many parts. */
+    private const MAX_SLICES = 5;
+
     /** Below this many personal deep-sky objects, popular ones fill the list. */
     private const MIN_PERSONAL = 10;
 
@@ -131,11 +138,13 @@ class TonightsBest
      *
      * The deep-sky objects are of the types given, else of all types but the
      * EXCLUDED_TYPES; 'count' is their number, the planets and comets
-     * (SOLAR_SYSTEM_COUNT at most) come on top.
+     * (SOLAR_SYSTEM_COUNT at most) come on top. 'exclude' holds deep-sky
+     * objects (objects.name) to leave out: those of the earlier nights of a
+     * starparty, so each night gets a list of its own.
      *
      * @return array{night: ?string, period: string, from: ?string, until: ?string, types: list<string>,
      *     sources: list<string>, sources_only: bool, seen: string, difficulty: string, count: int,
-     *     deepsky: bool, planets: bool, comets: bool}
+     *     deepsky: bool, planets: bool, comets: bool, exclude: list<string>}
      */
     public static function options(array $options = []): array
     {
@@ -156,21 +165,23 @@ class TonightsBest
             'deepsky'      => (bool) ($options['deepsky'] ?? true),
             'planets'      => (bool) ($options['planets'] ?? true),
             'comets'       => (bool) ($options['comets'] ?? true),
+            'exclude'      => array_values(array_unique(array_filter(array_map('strval', (array) ($options['exclude'] ?? [])), fn (string $name) => $name !== ''))),
         ];
     }
 
     /**
      * The list for the observer (null for a guest), or null when there is no
-     * location to calculate it for.
+     * location to calculate it for: the location given (the site of a
+     * starparty, which need not be stored), else that of the ephemerides.
      *
      * @param  array<string, mixed>  $options  see options()
      * @return array{mode: string, night: string, location: ?string, instrument: ?string, latitude: float,
      *     dark: ?array{from: string, until: string, twilight: string}, period: ?array{from: string, until: string},
      *     moon: ?array{fraction: float, from: string, until: string}, objects: list<array<string, mixed>>, pending: bool}|null
      */
-    public static function for(?User $user, array $options = []): ?array
+    public static function for(?User $user, array $options = [], ?Location $location = null): ?array
     {
-        $location = Location::forEphemerides($user);
+        $location ??= Location::forEphemerides($user);
         if (! $location || ! $location->hasValidCoordinates()) {
             return null;
         }
@@ -181,7 +192,7 @@ class TonightsBest
         $lensId     = $instrument ? $user->standardLensId() : null;
 
         $key = 'tonights_best:'.md5(json_encode([
-            $user?->id, $instrument?->id, $location->id, $lensId, $night, $timezone, $options,
+            $user?->id, $instrument?->id, $location->id, (float) $location->latitude, (float) $location->longitude, $lensId, $night, $timezone, $options,
             // a new observation changes what the observer has seen
             $user ? DB::table('observations')->where('observer_username', $user->username)->max('id') : null,
         ]));
@@ -248,7 +259,7 @@ class TonightsBest
     {
         $instrument = $user->standardInstrument;
 
-        return $instrument && (int) $user->stdlocation === (int) $location->id && (float) $instrument->aperture_mm > 0
+        return $instrument && $location->exists && (int) $user->stdlocation === (int) $location->id && (float) $instrument->aperture_mm > 0
             ? $instrument
             : null;
     }
@@ -269,6 +280,9 @@ class TonightsBest
     /** @var array<string, true> the objects of the chosen catalogs and lists */
     private array $priority = [];
 
+    /** @var array<string, true> the objects to leave out (options 'exclude') */
+    private array $excluded = [];
+
     private bool $pending = false;
 
     private function __construct(
@@ -283,6 +297,7 @@ class TonightsBest
         $this->dark    = NightWindow::for((float) $location->latitude, (float) $location->longitude, $night, $timezone);
         $sqm           = $location->getSqm();
         $this->darkSqm = is_numeric($sqm) && (float) $sqm > 0 ? (float) $sqm : Magnitude::nelmToSqm(FieldViewBuilder::DEFAULT_NELM);
+        $this->excluded = array_fill_keys($options['exclude'], true);
     }
 
     private function build(): array
@@ -496,12 +511,12 @@ class TonightsBest
     }
 
     /**
-     * Whether the object may be on the list: with sources_only, only the
-     * objects of the chosen sources.
+     * Whether the object may be on the list: not one to leave out, and with
+     * sources_only, only the objects of the chosen sources.
      */
     private function allowed(string $name): bool
     {
-        return ! $this->options['sources_only'] || isset($this->priority[$name]);
+        return ! isset($this->excluded[$name]) && (! $this->options['sources_only'] || isset($this->priority[$name]));
     }
 
     /**
@@ -701,10 +716,15 @@ class TonightsBest
     }
 
     /**
-     * Up to $count objects of the list, in order, leaving out the ones
-     * already chosen and the types that have their share already: MAX_PER_TYPE
-     * of DEEPSKY_COUNT objects, no limit when only one type was chosen or
-     * for the objects of the chosen sources.
+     * Up to $count objects of the list, leaving out the ones already chosen
+     * and the types that have their share already: MAX_PER_TYPE of
+     * DEEPSKY_COUNT objects, no limit when only one type was chosen or for
+     * the objects of the chosen sources.
+     *
+     * The objects are spread over the hours chosen: each next one comes from
+     * the part of the night (slice()) with the fewest objects so far, the
+     * first of the list there. Without this, the most observed objects that
+     * stand highest at the start of the dark hours would fill the list.
      *
      * @param  list<array<string, mixed>>  $objects
      * @param  list<array<string, mixed>>  $chosen
@@ -717,10 +737,30 @@ class TonightsBest
             : max(self::MAX_PER_TYPE, (int) ceil($this->options['count'] * self::MAX_PER_TYPE / self::DEEPSKY_COUNT));
         $names  = array_flip(array_column($chosen, 'name'));
         $types  = array_count_values(array_column($chosen, 'type_code'));
-        $picked = [];
+        $filled = array_fill(0, $this->slices(), 0);
+        foreach ($chosen as $object) {
+            $filled[$this->slice($object['timestamp'])]++;
+        }
+
+        // The objects of each part of the night, in the order of the list.
+        $queues = [];
         foreach ($objects as $object) {
-            if (count($picked) >= $count) {
-                break;
+            if (! isset($names[$object['name']])) {
+                $queues[$this->slice($object['timestamp'])][] = $object;
+            }
+        }
+
+        $picked = [];
+        while (count($picked) < $count && $queues !== []) {
+            $slice = null;
+            foreach (array_keys($queues) as $candidate) {
+                if ($slice === null || $filled[$candidate] < $filled[$slice]) {
+                    $slice = $candidate;
+                }
+            }
+            $object = array_shift($queues[$slice]);
+            if ($queues[$slice] === []) {
+                unset($queues[$slice]);
             }
             // the objects of the chosen sources do not count for the variety
             if (isset($names[$object['name']]) || (! ($object['priority'] ?? false) && ($types[$object['type_code']] ?? 0) >= $perType)) {
@@ -729,9 +769,30 @@ class TonightsBest
             $picked[]                    = $object;
             $names[$object['name']]      = true;
             $types[$object['type_code']] = ($types[$object['type_code']] ?? 0) + 1;
+            $filled[$slice]++;
         }
 
         return $picked;
+    }
+
+    /**
+     * The number of parts the hours chosen are cut in to spread the objects:
+     * about SLICE_HOURS each, at most MAX_SLICES.
+     */
+    private function slices(): int
+    {
+        $hours = ($this->window->end - $this->window->start) / 3600.0;
+
+        return max(1, min(self::MAX_SLICES, (int) round($hours / self::SLICE_HOURS)));
+    }
+
+    /** The part of the hours chosen a moment (timestamp) falls in. */
+    private function slice(int $timestamp): int
+    {
+        $slices = $this->slices();
+        $length = max(1, $this->window->end - $this->window->start) / $slices;
+
+        return max(0, min($slices - 1, (int) floor(($timestamp - $this->window->start) / $length)));
     }
 
     /**

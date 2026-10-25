@@ -1304,6 +1304,7 @@ Route::prefix('v1/me')->middleware(['auth:sanctum', 'abilities:read'])->name('ap
     Route::get('sessions/{id}', [MeController::class, 'session'])->whereNumber('id')->name('session');
     Route::get('observing-lists', [MeController::class, 'observingLists'])->name('observing-lists');
     Route::get('observing-lists/{id}', [MeController::class, 'observingList'])->whereNumber('id')->name('observing-list');
+    Route::get('star-parties', [MeController::class, 'starParties'])->name('star-parties');
 });
 
 // Persist Aladin preview defaults for the authenticated user

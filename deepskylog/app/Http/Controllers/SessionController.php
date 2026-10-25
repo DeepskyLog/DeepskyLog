@@ -10,6 +10,7 @@ use App\Models\ObservationSession;
 use App\Models\ObservingList;
 use App\Models\SketchOfTheMonth;
 use App\Models\SketchOfTheWeek;
+use App\Models\StarParty;
 use App\Models\User;
 use App\Services\Observations\ObservationCardData;
 use App\Services\TonightsBest;
@@ -29,6 +30,11 @@ class SessionController extends Controller
     private const HOMEPAGE_SESSIONS = 3;
 
     private const HOMEPAGE_OBSERVATIONS = 8;
+
+    /** The starparties on the home page: those starting within this many days. */
+    private const HOMEPAGE_STAR_PARTY_DAYS = 60;
+
+    private const HOMEPAGE_STAR_PARTIES = 4;
 
     private const HOMEPAGE_SKETCHES = 8;
 
@@ -318,7 +324,13 @@ class SessionController extends Controller
         // Provide the selected observer username and display name to the view so it can highlight the active observer in the sidebar
         $selectedObserverUsername = $targetObserver;
 
-        return $this->noCacheResponse(response()->view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName')));
+        // The starparties (#315) the session took place at: the night it
+        // started in (before noon belongs to the night before) at the site.
+        $starParties = $session->begindate
+            ? StarParty::atSiteOn($location, $session->begindate->copy()->subHours(12)->toDateString(), $session->observerid, Auth::user())
+            : collect();
+
+        return $this->noCacheResponse(response()->view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'starParties')));
     }
 
     /**
@@ -591,7 +603,7 @@ class SessionController extends Controller
      * @param  Collection<int, ObservationSession>  $collection
      * @return Collection<int, ObservationSession>
      */
-    private function prepareSessionCards(Collection $collection): Collection
+    public function prepareSessionCards(Collection $collection): Collection
     {
         ObservationSession::preloadOtherObservers($collection);
 
@@ -965,6 +977,23 @@ class SessionController extends Controller
             $newsLocation = null;
         }
 
+        // The starparties of the coming weeks (#315) the observer may see
+        try {
+            $starParties = StarParty::visibleTo(Auth::user())
+                ->upcoming()
+                ->where('start_date', '<=', today()->addDays(self::HOMEPAGE_STAR_PARTY_DAYS)->toDateString())
+                ->with('participants')
+                ->orderBy('start_date')
+                ->orderBy('id')
+                ->limit(self::HOMEPAGE_STAR_PARTIES)
+                ->get()
+                ->reject(fn (StarParty $party) => $party->isPast())
+                ->values();
+        } catch (\Throwable $e) {
+            report($e);
+            $starParties = collect();
+        }
+
         return $this->noCacheResponse(response()->view('welcome', compact(
             'sessions',
             'observations',
@@ -975,6 +1004,7 @@ class SessionController extends Controller
             'tonightsBest',
             'news',
             'newsLocation',
+            'starParties',
         )));
     }
 

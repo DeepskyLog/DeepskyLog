@@ -393,3 +393,31 @@ it('shows the location and telescope the wizard chooses for', function () {
         ->assertDontSee($user->standardLocation->name)
         ->assertSee('No standard telescope at this location');
 });
+
+it('spreads the objects over the night instead of taking the most observed evening ones', function () {
+    DB::table('deepskytypes')->insertOrIgnore([['code' => 'OPNCL', 'name' => 'Open cluster'], ['code' => 'GALXY', 'name' => 'Galaxy'], ['code' => 'GLOCL', 'name' => 'Globular cluster']]);
+    // Highest at the start of the dark hours of a November night at 51° N, and much observed
+    foreach (['GALXY', 'OPNCL', 'GLOCL', 'GALXY', 'OPNCL', 'GLOCL', 'GALXY', 'OPNCL'] as $i => $type) {
+        tbObject("Evening {$i}", 21.0 + $i * 0.1, 40.0, $type, 1000 - $i);
+    }
+    // Highest before dawn, and observed less
+    foreach (['GALXY', 'OPNCL', 'GLOCL'] as $i => $type) {
+        tbObject("Morning {$i}", 8.5 + $i * 0.2, 30.0, $type, 50 - $i);
+    }
+    LocationFactory::new()->create(['latitude' => 50.85, 'longitude' => 4.35, 'timezone' => 'Europe/Brussels', 'observer' => 'someone']);
+
+    $names = collect(TonightsBest::for(null, ['night' => TB_NEW_MOON, 'count' => 6, 'planets' => false, 'comets' => false])['objects'])->pluck('name');
+
+    expect($names)->toHaveCount(6)
+        ->and($names->filter(fn ($name) => str_starts_with($name, 'Morning'))->count())->toBe(3)
+        ->and($names)->toContain('Evening 0', 'Evening 1', 'Evening 2');
+});
+
+it('leaves out the objects asked to', function () {
+    tbAutumnSky();
+    LocationFactory::new()->create(['latitude' => 50.85, 'longitude' => 4.35, 'timezone' => 'Europe/Brussels', 'observer' => 'someone']);
+
+    $names = collect(TonightsBest::for(null, ['night' => TB_NEW_MOON, 'exclude' => ['Autumn Galaxy 1', 'Autumn Nebula']])['objects'])->pluck('name');
+
+    expect($names)->toContain('Autumn Galaxy 2')->not->toContain('Autumn Galaxy 1', 'Autumn Nebula');
+});

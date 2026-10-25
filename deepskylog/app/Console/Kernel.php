@@ -37,6 +37,10 @@ class Kernel extends ConsoleKernel
         // someone follows, for those who asked for it on the profile page.
         $schedule->command('follows:send-digest --apply')->dailyAt('07:00')->withoutOverlapping();
 
+        // The reminder of the starparties (#315) that start in the coming
+        // days, to the observers who come.
+        $schedule->command('star-parties:send-reminders --apply')->dailyAt('08:00')->withoutOverlapping();
+
         // The news items of the coming eclipses, conjunctions, ... (#960),
         // published a week before the event.
         $schedule->command('news:astronomical-events --apply')->dailyAt('02:30')->withoutOverlapping();

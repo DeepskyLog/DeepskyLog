@@ -35,6 +35,11 @@
                 href="/drawings"
                 label="{{ __('All drawings') }}"
             />
+            <x-dropdown.item
+                icon="calendar-days"
+                href="{{ route('star-parties.index') }}"
+                label="{{ __('Starparties') }}"
+            />
 
             <x-dropdown.item
                 separator

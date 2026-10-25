@@ -7,6 +7,8 @@ use App\Models\Location;
 use App\Models\Observation;
 use App\Models\ObservationSession;
 use App\Models\ObservingList;
+use App\Models\StarParty;
+use App\Models\StarPartyParticipant;
 use App\Models\User;
 use App\Support\Html;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -235,6 +237,45 @@ class MeController extends Controller
             'observation_count' => $observationIds->count(),
             'observation_ids' => $observationIds->values(),
         ]);
+    }
+
+    /**
+     * The starparties (#315) the user organises or was invited to, with
+     * their answer (going, maybe, declined, invited), the first night first.
+     */
+    public function starParties(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $parties = StarParty::query()
+            ->where(fn ($q) => $q->where('user_id', $user->id)
+                ->orWhereIn('id', StarPartyParticipant::select('star_party_id')->where('user_id', $user->id)))
+            ->with(['organiser:id,username', 'participants'])
+            ->orderBy('start_date')->orderBy('id')
+            ->get()
+            ->map(fn (StarParty $party) => [
+                'id' => $party->id,
+                'name' => html_entity_decode($party->name, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                'url' => route('star-parties.show', $party),
+                'first_night' => $party->start_date->toDateString(),
+                'last_night' => $party->end_date->toDateString(),
+                'visibility' => $party->visibility,
+                'cancelled' => $party->isCancelled(),
+                'organiser' => $party->organiser?->username,
+                'status' => $party->statusOf($user),
+                'going_count' => $party->goingCount(),
+                'max_participants' => $party->max_participants,
+                'site' => [
+                    'name' => $party->location_name,
+                    'latitude' => $party->latitude,
+                    'longitude' => $party->longitude,
+                    'elevation' => $party->elevation,
+                    'timezone' => $party->timezone,
+                    'country' => $party->country,
+                ],
+            ]);
+
+        return response()->json($parties->values());
     }
 
     /**

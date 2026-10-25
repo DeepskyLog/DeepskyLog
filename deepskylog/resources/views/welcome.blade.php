@@ -164,6 +164,13 @@
                     />
                 @endif
 
+                @if ($starParties->isNotEmpty())
+                    <x-star-parties
+                        :parties="$starParties"
+                        class="order-2 lg:order-none"
+                    />
+                @endif
+
                 @if ($sketchOfTheWeek?->observation || $sketchOfTheMonth?->observation)
                     <x-home-section
                         :title="__('Featured sketches')"

@@ -170,6 +170,14 @@
                     @endif
                 </div>
 
+                @foreach ($starParties ?? [] as $starParty)
+                    <p class="mb-3 rounded bg-gray-800 px-3 py-2 text-sm text-gray-200">
+                        {{ __('This session took place at the starparty') }}
+                        <a href="{{ route('star-parties.show', $starParty) }}" class="text-blue-400 hover:underline">{{ html_entity_decode($starParty->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                        ({{ $starParty->dateRange() }}).
+                    </p>
+                @endforeach
+
                 @if ($location)
                     <div id="session-location-map" class="w-full h-64 rounded mb-4"
                          data-lat="{{ $location->latitude }}"

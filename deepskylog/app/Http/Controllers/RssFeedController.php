@@ -8,6 +8,7 @@ use App\Models\Observation;
 use App\Models\ObservingList;
 use App\Models\SketchOfTheMonth;
 use App\Models\SketchOfTheWeek;
+use App\Models\StarParty;
 use App\Models\User;
 use App\Services\Observations\ObservationCardData;
 use App\Services\ObserverBlog;
@@ -77,6 +78,31 @@ class RssFeedController extends Controller
             app()->setLocale('en');
             try {
                 return view('rss.news', compact('items', 'feedUpdated'))->render();
+            } finally {
+                app()->setLocale($locale);
+            }
+        });
+    }
+
+    /**
+     * RSS feed of the public starparties (#315) that have not ended yet, the
+     * newest announced first, in English.
+     */
+    public function starParties(): Response
+    {
+        return $this->feed('rss:star-parties', function () {
+            $parties = StarParty::where('visibility', StarParty::PUBLIC)
+                ->upcoming()
+                ->with('organiser:id,name')
+                ->orderByDesc('created_at')
+                ->limit(50)
+                ->get();
+            $feedUpdated = $parties->max('updated_at') ?? now();
+
+            $locale = app()->getLocale();
+            app()->setLocale('en');
+            try {
+                return view('rss.star-parties', compact('parties', 'feedUpdated'))->render();
             } finally {
                 app()->setLocale($locale);
             }

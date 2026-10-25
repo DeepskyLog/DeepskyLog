@@ -19,6 +19,8 @@
                     <x-slot:svg><x-outline.session-icon class="h-4 w-4" /></x-slot:svg>{{ __('Session') }}
                 </x-menu.item>
 
+                <x-menu.item icon="calendar-days" href="{{ route('star-parties.create') }}">{{ __('Starparty') }}</x-menu.item>
+
                 <x-menu.item separator href="{{ route('instrument.create') }}">
                     <x-slot:svg><x-outline.telescope-icon class="h-4 w-4" /></x-slot:svg>{{ __('Instruments') }}
                 </x-menu.item>

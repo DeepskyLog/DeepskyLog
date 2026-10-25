@@ -33,6 +33,11 @@
                     <x-outline.session-icon class="h-4 w-4 mr-2 text-gray-300 inline-block align-middle" />
                     {{ __('Session') }}
                 </x-dropdown.item>
+                <x-dropdown.item
+                    icon="calendar-days"
+                    href="{{ route('star-parties.create') }}"
+                    label="{{ __('Starparty') }}"
+                />
 
 
                 <x-dropdown.item separator href="{{ route('instrument.create') }}">

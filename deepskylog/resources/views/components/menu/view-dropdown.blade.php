@@ -25,6 +25,8 @@
 
             <x-menu.item icon="pencil-square" href="/drawings">{{ __('All drawings') }}</x-menu.item>
 
+            <x-menu.item icon="calendar-days" href="{{ route('star-parties.index') }}">{{ __('Starparties') }}</x-menu.item>
+
             <x-menu.item separator icon="user-group" href="{{ route('observers.index') }}">{{ __('Observers') }}</x-menu.item>
 
             <x-menu.item href="{{ route('objects.popular') }}">

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Mail\InactiveAccountWarning;
+use App\Models\StarPartyParticipant;
 use App\Models\Team;
 use App\Models\User;
 use Carbon\CarbonInterface;
@@ -60,6 +61,7 @@ class PruneInactiveUsers extends Command
         'saved_object_searches' => 'user_id',
         'saved_observation_searches' => 'user_id',
         'report_layouts' => 'user_id',
+        'star_parties' => 'user_id',
         'sessions' => 'user_id',
     ];
 
@@ -207,6 +209,10 @@ class PruneInactiveUsers extends Command
         foreach (self::RECORDS_BY_USERNAME as $table => $column) {
             $query->whereNotExists(fn ($q) => $q->from($table)->whereColumn("{$table}.{$column}", 'users.username'));
         }
+        // An answer to a starparty, not an invitation the observer did not answer.
+        $query->whereNotExists(fn ($q) => $q->from('star_party_participants')
+            ->whereColumn('star_party_participants.user_id', 'users.id')
+            ->where('star_party_participants.status', '<>', StarPartyParticipant::INVITED));
 
         return $query;
     }
