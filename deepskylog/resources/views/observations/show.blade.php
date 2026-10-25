@@ -121,6 +121,12 @@
                     $sortIdUrl = url()->current() . '?' . http_build_query(array_merge($listingQuery, ['sort' => 'id']));
                 @endphp
                 <div class="flex flex-wrap items-center gap-2">
+                    @if ($user instanceof \App\Models\User && auth()->user()?->is($user) && empty($objectFilter) && empty($drawingsOnly) && !$isDrawingsPath)
+                        <a href="{{ route('observations.zip', ['observer' => $user->slug]) }}"
+                            class="inline-flex items-center px-3 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-500">
+                            {{ __('Download as zip file') }}
+                        </a>
+                    @endif
                     <a href="{{ $sortObservedUrl }}"
                         class="inline-flex items-center px-3 py-2 rounded {{ $currentSort === 'observed' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-600' }}">
                         {{ __('Sort: Observed') }}

@@ -225,3 +225,20 @@ it('offers the zip in the export menu of the observation search', function () {
         ->assertSee(route('observations.zip', ['q' => 'M 31']), false)
         ->assertSee(__('Zip file with my drawings'));
 });
+
+it('offers the zip of all their observations on the observer\'s own observations page', function () {
+    zipObservation($this->observer, 'M 31', '2024-01-12');
+    $zipUrl = route('observations.zip', ['observer' => 'zip-owner']);
+
+    $this->actingAs($this->observer)->get(route('observations.show', 'zip-owner'))
+        ->assertOk()
+        ->assertSee($zipUrl, false);
+
+    $this->actingAs($this->observer)->get(route('observations.user.object', ['zip-owner', 'm-31']))
+        ->assertOk()
+        ->assertDontSee($zipUrl, false);
+
+    $this->actingAs(Fixtures::createObserver(['username' => 'other-observer']))->get(route('observations.show', 'zip-owner'))
+        ->assertOk()
+        ->assertDontSee($zipUrl, false);
+});
