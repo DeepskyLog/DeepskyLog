@@ -298,6 +298,81 @@
                                 </div>
                             </div>
 
+                            {{-- Review (#526): listed on /admin/object-reviews --}}
+                            <div class="mt-8 pt-6 border-t border-gray-700">
+                                <h3 class="text-xl font-semibold text-white mb-1">{{ __('Review') }}</h3>
+                                <p class="text-sm text-gray-400 mb-4">
+                                    @if ($object->review_status !== null && $object->reviewed_at !== null)
+                                        {{ __('Set to :status by :observer on :date.', [
+                                            'status' => \App\Models\DeepskyObject::reviewStatusLabel($object->review_status),
+                                            'observer' => html_entity_decode($object->reviewer?->name ?? __('an unknown observer')),
+                                            'date' => $object->reviewed_at->isoFormat('LL'),
+                                        ]) }}
+                                    @elseif ($object->review_status !== null)
+                                        {{ __('Added to DeepskyLog and not checked yet.') }}
+                                    @else
+                                        {{ __('Nobody has reviewed this object yet.') }}
+                                    @endif
+                                    <a href="{{ route('admin.object-reviews') }}" class="text-blue-400 hover:text-blue-300">{{ __('All reviews') }}</a>
+                                </p>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label for="review_status" class="block text-sm font-medium text-gray-300 mb-1">{{ __('Review status') }}</label>
+                                        <select name="review_status" id="review_status"
+                                                class="mt-1 block w-full rounded-lg border-gray-600 bg-gray-800 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 focus:ring-2 px-4 py-2">
+                                            @foreach (array_merge([''], \App\Models\DeepskyObject::REVIEW_STATUSES) as $status)
+                                                <option value="{{ $status }}" @selected(old('review_status', $object->review_status ?? '') === $status)>
+                                                    {{ \App\Models\DeepskyObject::reviewStatusLabel($status === '' ? null : $status) }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <x-input name="review_note" label="{{ __('Review note') }}" type="text"
+                                                 class="mt-1 block w-full" maxlength="255" id="review_note"
+                                                 value="{{ old('review_note', $object->review_note) }}"
+                                                 placeholder="{{ __('What needs attention, or what was checked') }}" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Preview (#526): the chart and the DSS image of the values in the form --}}
+                            @php
+                                $savedPreview = [
+                                    'ra' => is_numeric($object->ra) ? ((float) $object->ra > 24 ? (float) $object->ra / 15.0 : (float) $object->ra) : null,
+                                    'decl' => is_numeric($object->decl) ? (float) $object->decl : null,
+                                    'diam1' => (float) $object->diam1 / 60.0,
+                                    'diam2' => (float) $object->diam2 / 60.0,
+                                    'pa' => $object->pa !== null && (int) $object->pa !== 999 ? (float) $object->pa : null,
+                                ];
+                            @endphp
+                            <div class="mt-8 pt-6 border-t border-gray-700">
+                                <h3 class="text-xl font-semibold text-white mb-1">{{ __('Preview') }}</h3>
+                                <p class="text-sm text-gray-400 mb-4">
+                                    {{ __('The object as the form describes it, updated while you type. On the photo the form is drawn in red and the saved position and size in yellow.') }}
+                                </p>
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                    <div>
+                                        <div class="relative rounded bg-white overflow-hidden" style="aspect-ratio: 1120 / 780;">
+                                            <img id="preview-chart" alt="{{ __('Star chart') }}" class="w-full h-full"
+                                                 data-url="{{ route('object.edit.preview-chart', ['slug' => $object->slug ?? $object->name]) }}" />
+                                            <div id="preview-chart-loading"
+                                                 class="hidden absolute top-2 left-2 rounded bg-gray-900 px-2 py-1 text-xs text-gray-200">
+                                                {{ __('Loading...') }}
+                                            </div>
+                                        </div>
+                                        <p id="preview-chart-error" class="hidden mt-1 text-sm text-red-300">
+                                            {{ __('No chart: check the right ascension and declination.') }}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <div id="preview-aladin" class="w-full rounded bg-black" style="aspect-ratio: 1120 / 780;"
+                                             data-saved='@json($savedPreview)'></div>
+                                        <p class="mt-1 text-xs text-gray-400">{{ __('DSS2 colour image, from Aladin Lite (CDS).') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             {{-- Action Buttons --}}
                             <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-700">
                                 <div class="flex space-x-4">
@@ -431,6 +506,9 @@
     </div>
 
     @push('scripts')
+    <link rel="stylesheet" href="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script defer src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js"></script>
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('objectSearch', (initialSelected, fieldName) => ({
@@ -479,38 +557,39 @@
             }));
         });
         
+        // Parse sexagesimal format (hh mm ss.sss) to decimal hours
+        function parseSexagesimalRA(input) {
+            const match = input.trim().match(/^(\d+)\s+(\d+)\s+([\d.]+)$/);
+            if (match) {
+                const hours = parseFloat(match[1]);
+                const minutes = parseFloat(match[2]);
+                const seconds = parseFloat(match[3]);
+                return hours + (minutes / 60.0) + (seconds / 3600.0);
+            }
+            return null;
+        }
+
+        // Parse sexagesimal format (dd mm ss.sss) to decimal degrees
+        function parseSexagesimalDecl(input) {
+            const match = input.trim().match(/^([+-]?\d+)\s+(\d+)\s+([\d.]+)$/);
+            if (match) {
+                const degrees = parseFloat(match[1]);
+                const minutes = parseFloat(match[2]);
+                const seconds = parseFloat(match[3]);
+                // Also -00 30 00
+                const sign = match[1].startsWith('-') ? -1 : 1;
+                const absDegrees = Math.abs(degrees);
+                return sign * (absDegrees + (minutes / 60.0) + (seconds / 3600.0));
+            }
+            return null;
+        }
+
         // Auto-calculate constellation from coordinates
         document.addEventListener('DOMContentLoaded', function() {
             const raInput = document.getElementById('ra');
             const declInput = document.getElementById('decl');
             const conSelect = document.getElementById('con');
             let updateTimeout = null;
-            
-            // Parse sexagesimal format (hh mm ss.sss) to decimal hours
-            function parseSexagesimalRA(input) {
-                const match = input.trim().match(/^(\d+)\s+(\d+)\s+([\d.]+)$/);
-                if (match) {
-                    const hours = parseFloat(match[1]);
-                    const minutes = parseFloat(match[2]);
-                    const seconds = parseFloat(match[3]);
-                    return hours + (minutes / 60.0) + (seconds / 3600.0);
-                }
-                return null;
-            }
-            
-            // Parse sexagesimal format (dd mm ss.sss) to decimal degrees
-            function parseSexagesimalDecl(input) {
-                const match = input.trim().match(/^([+-]?\d+)\s+(\d+)\s+([\d.]+)$/);
-                if (match) {
-                    const degrees = parseFloat(match[1]);
-                    const minutes = parseFloat(match[2]);
-                    const seconds = parseFloat(match[3]);
-                    const sign = degrees < 0 ? -1 : 1;
-                    const absDegrees = Math.abs(degrees);
-                    return sign * (absDegrees + (minutes / 60.0) + (seconds / 3600.0));
-                }
-                return null;
-            }
             
             async function updateConstellation() {
                 let ra = raInput.value;
@@ -585,6 +664,184 @@
                 raInput.addEventListener('change', updateConstellation);
                 declInput.addEventListener('change', updateConstellation);
             }
+        });
+
+        // Preview (#526): the star chart and the DSS image of the values in the
+        // form. The chart is drawn by the server with the form's values; the
+        // photo gets the outline of the form (red) and of the saved object (yellow).
+        document.addEventListener('DOMContentLoaded', function() {
+            const chartImg = document.getElementById('preview-chart');
+            const aladinDiv = document.getElementById('preview-aladin');
+            if (!chartImg || !aladinDiv) {
+                return;
+            }
+            const loadingEl = document.getElementById('preview-chart-loading');
+            const errorEl = document.getElementById('preview-chart-error');
+            const saved = JSON.parse(aladinDiv.dataset.saved || '{}');
+            const fields = ['ra', 'decl', 'type', 'mag', 'diam1', 'diam2', 'pa'];
+            let aladin = null;
+            let savedOverlay = null;
+            let formOverlay = null;
+            let timer = null;
+            let lastQuery = null;
+
+            function formValue(id) {
+                const el = document.getElementById(id);
+                return el ? el.value.trim() : '';
+            }
+
+            // RA in hours and declination in degrees, as the server parses them
+            function formPosition() {
+                const raText = formValue('ra');
+                const declText = formValue('decl');
+                let ra = parseSexagesimalRA(raText);
+                if (ra === null && raText !== '' && !isNaN(Number(raText))) {
+                    ra = Number(raText) > 24 ? Number(raText) / 15.0 : Number(raText);
+                }
+                let decl = parseSexagesimalDecl(declText);
+                if (decl === null && declText !== '' && !isNaN(Number(declText))) {
+                    decl = Number(declText);
+                }
+                if (ra === null || decl === null || ra < 0 || ra >= 24 || Math.abs(decl) > 90) {
+                    return null;
+                }
+                return { ra: ra, decl: decl };
+            }
+
+            function number(id) {
+                const v = formValue(id);
+                return v !== '' && !isNaN(Number(v)) ? Number(v) : null;
+            }
+
+            // Same field as the chart: radius 1.5 times the major axis, 10' to 180'
+            function radiusArcMin(diam1, diam2) {
+                return Math.min(180, Math.max(10, 1.5 * Math.max(diam1 || 0, diam2 || 0)));
+            }
+
+            // Outline of an object of diam1 x diam2 arcminutes at position angle pa
+            // (north through east), as RA/Dec points in degrees; a cross without a size.
+            function outline(raHours, decl, diam1, diam2, pa) {
+                const ra = raHours * 15.0;
+                const cosDec = Math.max(0.01, Math.cos(decl * Math.PI / 180));
+                const point = (north, east) => [ra + east / cosDec, decl + north];
+                const a = (diam1 || 0) / 120.0;
+                const b = (diam2 || diam1 || 0) / 120.0;
+                if (a <= 0) {
+                    const c = 0.5 / 60.0;
+                    return [[point(-c, 0), point(c, 0)], [point(0, -c), point(0, c)]];
+                }
+                const theta = (pa === null ? 0 : pa) * Math.PI / 180;
+                const points = [];
+                for (let i = 0; i <= 72; i++) {
+                    const t = i * 2 * Math.PI / 72;
+                    const major = a * Math.cos(t);
+                    const minor = b * Math.sin(t);
+                    points.push(point(major * Math.cos(theta) - minor * Math.sin(theta),
+                        major * Math.sin(theta) + minor * Math.cos(theta)));
+                }
+                return [points];
+            }
+
+            // Aladin Lite v2 strokes all lines of an overlay at once, in the
+            // colour of the last one (white unless given), at the overlay's width
+            function drawOutline(overlay, lines, color) {
+                lines.forEach(function(line) {
+                    overlay.add(A.polyline(line, { color: color }));
+                });
+            }
+
+            function updateAladin(pos) {
+                if (typeof A === 'undefined' || typeof A.aladin !== 'function') {
+                    return;
+                }
+                const diam1 = number('diam1');
+                const diam2 = number('diam2');
+                const fov = 2 * radiusArcMin(diam1, diam2) / 60.0 * 1120 / 780;
+                if (!aladin) {
+                    aladin = A.aladin('#preview-aladin', {
+                        survey: 'P/DSS2/color',
+                        fov: fov,
+                        target: (pos.ra * 15).toFixed(6) + ' ' + pos.decl.toFixed(6),
+                        showReticle: false,
+                        showLayersControl: false,
+                        showGotoControl: false,
+                        showFullscreenControl: true,
+                    });
+                    // Wider, so it stays visible under an unchanged red outline
+                    savedOverlay = A.graphicOverlay({ name: 'saved', color: '#facc15', lineWidth: 5 });
+                    formOverlay = A.graphicOverlay({ name: 'form', color: '#ef4444', lineWidth: 2 });
+                    aladin.addOverlay(savedOverlay);
+                    aladin.addOverlay(formOverlay);
+                } else {
+                    aladin.gotoRaDec(pos.ra * 15, pos.decl);
+                    aladin.setFoV(fov);
+                }
+                savedOverlay.removeAll();
+                formOverlay.removeAll();
+                if (saved.ra !== null && saved.decl !== null) {
+                    drawOutline(savedOverlay, outline(saved.ra, saved.decl, saved.diam1, saved.diam2, saved.pa), '#facc15');
+                }
+                drawOutline(formOverlay, outline(pos.ra, pos.decl, diam1, diam2, number('pa')), '#ef4444');
+            }
+
+            function updateChart() {
+                const query = new URLSearchParams();
+                fields.forEach(function(id) {
+                    query.set(id, formValue(id));
+                });
+                const text = query.toString();
+                if (text === lastQuery) {
+                    return;
+                }
+                lastQuery = text;
+                loadingEl.classList.remove('hidden');
+                chartImg.src = chartImg.dataset.url + '?' + text;
+            }
+
+            function update() {
+                const pos = formPosition();
+                if (!pos) {
+                    errorEl.classList.remove('hidden');
+                    return;
+                }
+                errorEl.classList.add('hidden');
+                updateChart();
+                try {
+                    updateAladin(pos);
+                } catch (e) {
+                    console.warn('Aladin preview failed', e);
+                }
+            }
+
+            chartImg.addEventListener('load', function() {
+                loadingEl.classList.add('hidden');
+            });
+            chartImg.addEventListener('error', function() {
+                loadingEl.classList.add('hidden');
+                errorEl.classList.remove('hidden');
+            });
+
+            fields.forEach(function(id) {
+                const el = document.getElementById(id);
+                if (!el) {
+                    return;
+                }
+                ['input', 'change'].forEach(function(event) {
+                    el.addEventListener(event, function() {
+                        clearTimeout(timer);
+                        timer = setTimeout(update, 700);
+                    });
+                });
+            });
+
+            // Aladin Lite is loaded with defer: wait for it before the first draw
+            (function start(attempts) {
+                if ((typeof A === 'undefined' || typeof A.aladin !== 'function') && attempts < 100) {
+                    setTimeout(function() { start(attempts + 1); }, 100);
+                    return;
+                }
+                update();
+            })(0);
         });
 
         // SIMBAD Data Fetching and Applying
@@ -716,6 +973,8 @@
             // Visual feedback
             const inputEl = document.getElementById(field) || document.getElementById(field === 'decl' ? 'decl' : field);
             if (inputEl) {
+                // Let the preview follow the new value
+                inputEl.dispatchEvent(new Event('change', { bubbles: true }));
                 inputEl.style.backgroundColor = '#10b981';
                 setTimeout(() => {
                     inputEl.style.backgroundColor = '';

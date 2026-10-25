@@ -20,6 +20,8 @@
                         <x-menu.item icon="lock-closed" href="{{ route('admin.complete-catalogs') }}">{{ __('Complete catalogs') }}</x-menu.item>
 
                         <x-menu.item icon="arrow-up-tray" href="{{ route('admin.objects.import') }}">{{ __('Import objects') }}</x-menu.item>
+
+                        <x-menu.item icon="clipboard-document-check" href="{{ route('admin.object-reviews') }}">{{ __('Object reviews') }}</x-menu.item>
                     @endif
 
                     @if (Auth::user()->isAdministrator())

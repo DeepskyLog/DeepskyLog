@@ -45,6 +45,12 @@
                             href="{{ route('admin.objects.import') }}"
                             label="{{ __('Import objects') }}"
                         />
+
+                        <x-dropdown.item
+                            icon="clipboard-document-check"
+                            href="{{ route('admin.object-reviews') }}"
+                            label="{{ __('Object reviews') }}"
+                        />
                     @endif
 
                     @if (Auth::user()->isAdministrator())

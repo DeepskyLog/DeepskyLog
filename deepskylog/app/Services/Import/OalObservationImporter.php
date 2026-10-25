@@ -3,6 +3,7 @@
 namespace App\Services\Import;
 
 use App\Models\CompleteCatalog;
+use App\Models\DeepskyObject;
 use App\Models\Eyepiece;
 use App\Models\Filter;
 use App\Models\Instrument;
@@ -602,7 +603,12 @@ class OalObservationImporter
         try {
             if ($newObject !== null) {
                 // The horizon check reads the position of the new object
-                $object = app(DeepskyObjectCreator::class)->create($newObject);
+                // An object defined by an observer's file is checked by an
+                // administrator or database expert (#526)
+                $object = app(DeepskyObjectCreator::class)->create($newObject + [
+                    'review_status' => DeepskyObject::REVIEW_ATTENTION,
+                    'review_note' => "Added by the OAL observation import of {$this->user->username}",
+                ]);
             }
 
             // OAL requires a time: an observation without one is exported at

@@ -57,6 +57,15 @@ class UserPolicy
     }
 
     /**
+     * Administrators and database experts review the objects (#526) on their
+     * edit page and list them by review status on /admin/object-reviews.
+     */
+    public function review_objects(User $user): bool
+    {
+        return $user->isAdministrator() || $user->isDatabaseExpert();
+    }
+
+    /**
      * Only administrators may send a message to all observers.
      */
     public function broadcast(User $user): bool

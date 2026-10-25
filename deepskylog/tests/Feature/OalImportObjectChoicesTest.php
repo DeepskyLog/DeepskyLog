@@ -125,6 +125,12 @@ it('adds a new target as a new object when chosen', function () {
     expect($result->newObjects)->toBe(['Example Nebula 123' => 'example-nebula-123'])
         ->and($result->imported)->toBe(3)
         ->and(exampleTargets())->toBe(1);
+
+    // To be checked by an administrator or database expert (#526)
+    $object = DB::table('objects')->where('name', 'Example Nebula 123')->first();
+    expect($object->review_status)->toBe('attention')
+        ->and($object->review_note)->toBe("Added by the OAL observation import of {$this->user->username}")
+        ->and($object->reviewed_by)->toBeNull();
 });
 
 it('skips the observations of a new target when chosen', function () {

@@ -107,6 +107,10 @@ Route::view('/admin/complete-catalogs', 'admin.complete-catalogs')
     ->middleware(['auth', 'doNotCacheResponse'])
     ->can('manage_catalogs', User::class)
     ->name('admin.complete-catalogs');
+Route::view('/admin/object-reviews', 'admin.object-reviews')
+    ->middleware(['auth', 'doNotCacheResponse'])
+    ->can('review_objects', User::class)
+    ->name('admin.object-reviews');
 Route::view('/admin/objects/import', 'admin.object-import')
     ->middleware(['auth', 'doNotCacheResponse'])
     ->can('import_objects', User::class)
@@ -654,6 +658,10 @@ Route::get('/catalogs', [App\Http\Controllers\CatalogController::class, 'index']
 // Edit object (only for admins and database experts)
 Route::get('/object/{slug}/edit', [App\Http\Controllers\ObjectController::class, 'edit'])
     ->name('object.edit')->middleware(['auth', 'doNotCacheResponse']);
+
+// Star chart of the object as the edit form has it (only for admins and database experts)
+Route::get('/object/{slug}/edit/preview-chart', [App\Http\Controllers\ObjectController::class, 'editPreviewChart'])
+    ->name('object.edit.preview-chart')->middleware(['auth', 'doNotCacheResponse']);
 
 // Update object (only for admins and database experts)
 Route::put('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'update'])

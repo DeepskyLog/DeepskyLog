@@ -533,6 +533,13 @@ class StarChartService
             ->select(['name', 'slug', 'type', 'ra', 'decl', 'mag', 'diam1', 'diam2', 'pa'])
             ->whereBetween('decl', [$declMin, $declMax]);
 
+        // A target with unsaved changes (the preview of the object edit form)
+        // is drawn where the form puts it instead of from its stored row.
+        $editedTarget = $target->exists && $target->isDirty(['ra', 'decl', 'diam1', 'diam2', 'pa', 'type', 'mag']);
+        if ($editedTarget) {
+            $query->where('name', '!=', $target->getOriginal('name'));
+        }
+
         // Stars listed in the object catalogues are left to the star layer,
         // which plots them already. Carrying them here only crowded the chart
         // with a second dot and a STF/STT/HJ or HD catalogue label. A chart
@@ -614,7 +621,12 @@ class StarChartService
                 ->limit(200);
         }
 
-        $objects = $query->get()
+        $rows = $query->get();
+        if ($editedTarget) {
+            $rows->prepend($target);
+        }
+
+        $objects = $rows
             ->map(function (DeepskyObject $object) use ($target, $atlasMode, $minProjX, $maxProjX, $minProjY, $maxProjY) {
                 $raDegrees = DeepskyObject::raToDecimal($object->ra);
                 $rawPa = $object->pa === null ? null : (float) $object->pa;

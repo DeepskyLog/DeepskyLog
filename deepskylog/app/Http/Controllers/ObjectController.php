@@ -31,6 +31,7 @@ use App\Services\CometCoordinates;
 use App\Services\DeepskyObjectCreator;
 use App\Services\NearbyObjects;
 use App\Services\ObjectSearchIndex;
+use App\Services\StarChartService;
 use App\Support\EphemerisDate;
 use Illuminate\Support\Facades\Cache;
 
@@ -2815,9 +2816,12 @@ class ObjectController extends Controller
      * Show the form for editing a deepsky object.
      * Only accessible by Administrators and Database Experts.
      */
-    public function edit(string $slug)
+    /**
+     * The deep-sky object of the edit page and its form: the slug may also be
+     * an alternative name or slug in objectnames, or the object's name.
+     */
+    private function objectForEdit(string $slug): DeepskyObject
     {
-        // Find the object using similar logic to show()
         $record = null;
 
         // Try objectnames table first (for aliases)
@@ -2845,8 +2849,65 @@ class ObjectController extends Controller
             abort(404, 'Object not found');
         }
 
-        // Convert to DeepskyObject model instance
-        $object = DeepskyObject::where('name', $record->name)->firstOrFail();
+        return DeepskyObject::where('name', $record->name)->firstOrFail();
+    }
+
+    /** Largest radius of the chart on the edit page, for the largest objects. */
+    private const EDIT_PREVIEW_MAX_RADIUS_ARCMIN = 180.0;
+
+    /**
+     * Star chart of the object as the edit form has it (#526): the position,
+     * type, magnitude and size in the query string are applied to the object
+     * without saving it, so the chart shows where the form would put it
+     * among the stars and the other objects.
+     */
+    public function editPreviewChart(Request $request, StarChartService $starChartService, string $slug)
+    {
+        $object = $this->objectForEdit($slug);
+        $this->authorize('edit', $object);
+
+        $validated = $request->validate([
+            'ra' => 'required|string',
+            'decl' => 'required|string',
+            'type' => 'nullable|string|exists:deepskytypes,code',
+            'mag' => 'nullable|numeric',
+            'diam1' => 'nullable|numeric|min:0',
+            'diam2' => 'nullable|numeric|min:0',
+            'pa' => 'nullable|numeric',
+        ]);
+
+        $raHours = $this->parseRaInput($validated['ra']);
+        $declDegrees = $this->parseDeclInput($validated['decl']);
+        if ($raHours === null || $declDegrees === null || $raHours < 0 || $raHours >= 24 || abs($declDegrees) > 90) {
+            abort(422, 'Invalid coordinates');
+        }
+
+        $columns = DeepskyObjectCreator::measurementColumns($validated);
+        $object->fill([
+            'ra' => $raHours,
+            'decl' => $declDegrees,
+            'type' => $validated['type'] ?? $object->type,
+            'mag' => $columns['mag'],
+            'diam1' => $columns['diam1'],
+            'diam2' => $columns['diam2'],
+            'pa' => $columns['pa'],
+        ]);
+
+        // A field a few times the object's size, at least 20' across
+        $majorArcMin = max($columns['diam1'], $columns['diam2']) / 60.0;
+        $radiusArcMin = min(self::EDIT_PREVIEW_MAX_RADIUS_ARCMIN, max(10.0, 1.5 * $majorArcMin));
+
+        $chart = $starChartService->build($object, $raHours * 15.0, $declDegrees, $radiusArcMin);
+
+        return response($chart['svg'], 200, [
+            'Content-Type' => 'image/svg+xml',
+            'Cache-Control' => 'no-store',
+        ]);
+    }
+
+    public function edit(string $slug)
+    {
+        $object = $this->objectForEdit($slug);
 
         // Authorize
         $this->authorize('edit', $object);
@@ -2953,8 +3014,8 @@ class ObjectController extends Controller
             $minutes = floatval($matches[2]);
             $seconds = floatval($matches[3]);
 
-            // Handle negative values
-            $sign = $degrees < 0 ? -1 : 1;
+            // Handle negative values, also -00 30 00
+            $sign = str_starts_with($matches[1], '-') ? -1 : 1;
             $absDegrees = abs($degrees);
 
             // Convert to decimal degrees
@@ -2964,7 +3025,7 @@ class ObjectController extends Controller
         }
 
         // Decimal format (already in degrees)
-        return floatval($input);
+        return is_numeric($input) ? floatval($input) : null;
     }
 
     /**
@@ -2973,36 +3034,7 @@ class ObjectController extends Controller
      */
     public function update(Request $request, string $slug)
     {
-        // Find the object using similar logic to show()
-        $record = null;
-
-        // Try objectnames table first (for aliases)
-        $on = DB::table('objectnames')
-            ->where('slug', $slug)
-            ->orWhere('objectname', $slug)
-            ->orWhere('altname', $slug)
-            ->first();
-
-        if ($on) {
-            $record = DB::table('objects')->where('name', $on->objectname)->first();
-        }
-
-        // Try direct slug match on objects table
-        if (!$record) {
-            $record = DB::table('objects')->where('slug', $slug)->first();
-        }
-
-        // Try direct name match
-        if (!$record) {
-            $record = DB::table('objects')->where('name', $slug)->first();
-        }
-
-        if (!$record) {
-            abort(404, 'Object not found');
-        }
-
-        // Convert to DeepskyObject model instance
-        $object = DeepskyObject::where('name', $record->name)->firstOrFail();
+        $object = $this->objectForEdit($slug);
 
         // Authorize
         $this->authorize('update', $object);
@@ -3035,6 +3067,8 @@ class ObjectController extends Controller
             'part_of.*' => 'string|max:255',
             'contains' => 'nullable|array',
             'contains.*' => 'string|max:255',
+            'review_status' => 'nullable|string|in:'.implode(',', DeepskyObject::REVIEW_STATUSES),
+            'review_note' => 'nullable|string|max:255',
         ]);
 
         // Parse RA and Decl (support both decimal and sexagesimal formats)
@@ -3070,6 +3104,11 @@ class ObjectController extends Controller
             'datasource' => $validated['datasource'] ?? $object->datasource,
             'timestamp' => now(),
         ], DeepskyObjectCreator::measurementColumns($validated), $atlasData));
+
+        // The review of the object (#526), when the form has it
+        if ($request->has('review_status')) {
+            $object->setReview($validated['review_status'] ?? null, $validated['review_note'] ?? null, Auth::id());
+        }
 
         // A renamed object gets the slug of its new name, unless another object has it
         if ($renamed) {

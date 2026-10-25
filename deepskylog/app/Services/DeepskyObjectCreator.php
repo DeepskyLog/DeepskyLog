@@ -93,6 +93,14 @@ class DeepskyObjectCreator
         $objectData['name'] = $values['name'];
         $objectData['slug'] = Str::slug($values['name'], '-');
         $objectData['timestamp'] = now();
+        // Listed on /admin/object-reviews until someone checks it (#526);
+        // the caller may ask for another status and give a note
+        $objectData['review_status'] = in_array($values['review_status'] ?? null, DeepskyObject::REVIEW_STATUSES, true)
+            ? $values['review_status']
+            : DeepskyObject::REVIEW_NEW;
+        $objectData['review_note'] = isset($values['review_note']) && trim($values['review_note']) !== ''
+            ? mb_substr(trim($values['review_note']), 0, 255)
+            : null;
         $object = DeepskyObject::create($objectData);
 
         $this->addObjectName($object);
