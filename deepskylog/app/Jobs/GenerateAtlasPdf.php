@@ -30,6 +30,16 @@ class GenerateAtlasPdf extends QueuedPdfJob
         return 'atlas';
     }
 
+    public static function kindLabel(?string $locale = null): string
+    {
+        return __('Atlas', [], $locale);
+    }
+
+    protected static function downloadRoute(): ?string
+    {
+        return 'downloads.dsl-atlas.download';
+    }
+
     protected function renderPdf(User $user, callable $progress): string
     {
         $request = Request::create('/downloads/dsl-atlas/generate', 'POST', $this->parameters);

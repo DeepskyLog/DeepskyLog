@@ -41,6 +41,7 @@ class AtlasController extends Controller
         Cache::put(GenerateAtlasPdf::statusKey($token), [
             'state' => 'queued',
             'user_id' => $user->id,
+            'label' => self::labelFor($parameters),
             'created_at' => now()->toIso8601String(),
         ], now()->addHours(GenerateAtlasPdf::KEEP_HOURS));
 
@@ -67,6 +68,9 @@ class AtlasController extends Controller
         $status = Cache::get(GenerateAtlasPdf::statusKey($token));
         abort_unless($status && (int) ($status['user_id'] ?? 0) === (int) $request->user()->id, 404);
 
+        // The page polling this shows the atlas finish: no message needed.
+        GenerateAtlasPdf::watch([['token' => $token] + $status]);
+
         return response()->json($status);
     }
 
@@ -88,6 +92,29 @@ class AtlasController extends Controller
         return Response::download(Storage::disk('local')->path($path), $filename, [
             'Content-Type' => 'application/pdf',
         ]);
+    }
+
+    /**
+     * How a queued atlas is shown on /downloads/mine and in the message that
+     * it is ready, e.g. "Detail, A4, Landscape, Whole atlas".
+     *
+     * @param  array<string, mixed>  $parameters
+     */
+    private static function labelFor(array $parameters): string
+    {
+        $whole = strtolower(trim((string) ($parameters['scope'] ?? 'single'))) === 'whole';
+        $center = trim((string) ($parameters['slug'] ?? ''));
+        if (! $whole && $center === '' && trim((string) ($parameters['ra'] ?? '')) !== '') {
+            $center = 'RA ' . trim((string) $parameters['ra']) . ', Dec ' . trim((string) ($parameters['dec'] ?? ''));
+        }
+
+        return Str::limit(implode(', ', array_filter([
+            __(ucfirst(strtolower(trim((string) ($parameters['type'] ?? 'detail'))))),
+            strtoupper(trim((string) ($parameters['paper'] ?? 'A4'))),
+            __(ucfirst(strtolower(trim((string) ($parameters['orientation'] ?? 'landscape'))))),
+            $whole ? __('Whole atlas') : __('Single page'),
+            $whole ? '' : $center,
+        ])), 120);
     }
 
     /**

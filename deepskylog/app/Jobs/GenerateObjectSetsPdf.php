@@ -28,6 +28,16 @@ class GenerateObjectSetsPdf extends QueuedPdfJob
         return 'object-sets';
     }
 
+    public static function kindLabel(?string $locale = null): string
+    {
+        return __('Object sets', [], $locale);
+    }
+
+    protected static function downloadRoute(): ?string
+    {
+        return 'object-sets.download';
+    }
+
     protected function renderPdf(User $user, callable $progress): string
     {
         return app(ObjectSetPdfService::class)->render(

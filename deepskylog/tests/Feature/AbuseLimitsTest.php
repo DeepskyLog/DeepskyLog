@@ -117,7 +117,7 @@ it('limits how many pdfs an observer asks for in an hour', function () {
         GenerateObjectSetsPdf::recordQueued($user->id);
     }
 
-    expect(GenerateAtlasPdf::refusal($user->id))->toContain('too many PDFs');
+    expect(GenerateAtlasPdf::refusal($user->id))->toContain('too many PDFs or zip files');
 });
 
 it('skips a pdf that was forgotten for a newer one while it waited', function () {

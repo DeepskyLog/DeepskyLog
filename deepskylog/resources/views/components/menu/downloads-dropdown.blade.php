@@ -13,6 +13,9 @@
             <x-menu.item icon="clipboard" href="/downloads/forms">{{ __('Forms') }}</x-menu.item>
 
             <x-menu.item icon="book-open" href="/downloads/magazines">{{ __('Deep-sky magazines') }}</x-menu.item>
+            @auth
+                <x-menu.item icon="document-arrow-down" href="{{ route('downloads.mine') }}">{{ __('Your PDFs and zip files') }}</x-menu.item>
+            @endauth
         </x-menu.dropdown>
     </div>
 </div>

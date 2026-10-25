@@ -36,6 +36,16 @@ class GenerateObjectReportPdf extends QueuedPdfJob
         return 'object-reports';
     }
 
+    public static function kindLabel(?string $locale = null): string
+    {
+        return __('Object report', [], $locale);
+    }
+
+    protected static function downloadRoute(): ?string
+    {
+        return 'object-report.download';
+    }
+
     protected function renderPdf(User $user, callable $progress): string
     {
         $layout = ReportLayoutCatalog::normalize($this->parameters['layout'] ?? []);

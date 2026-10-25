@@ -6,6 +6,7 @@ use App\Livewire\ObservationSearchTable;
 use App\Models\Observation;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -19,6 +20,26 @@ use Illuminate\Support\Facades\DB;
  */
 class ObservationSearchQuery
 {
+    /**
+     * The advanced search filters of a request: its query parameters other
+     * than the search term, without the empty ones.
+     *
+     * @param  array<int, string>  $except  further parameters that are no filter
+     * @return array<string, mixed>
+     */
+    public static function filtersFrom(Request $request, array $except = []): array
+    {
+        return array_filter($request->except(array_merge(['_token', 'page', 'q'], $except)), function ($value): bool {
+            if (is_array($value)) {
+                return collect($value)
+                    ->flatten()
+                    ->contains(fn($item): bool => trim((string) $item) !== '');
+            }
+
+            return trim((string) $value) !== '';
+        });
+    }
+
     /**
      * The matching observations, one row per observation.
      */

@@ -158,6 +158,14 @@ Route::get('/observations/search/export.apd', [App\Http\Controllers\ObservationS
 Route::get('/observations/search/export.oal.xml', [App\Http\Controllers\ObservationSearchExportController::class, 'oal'])
     ->name('observations.search.oal')
     ->middleware(['doNotCacheResponse', 'throttle:exports']);
+// Zip files of observations with their drawings, made by a queue worker
+// (App\Jobs\GenerateObservationsZip).
+Route::get('/observations/zip', [App\Http\Controllers\ObservationZipController::class, 'index'])
+    ->name('observations.zip')
+    ->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::get('/observations/zip/download/{token}', [App\Http\Controllers\ObservationZipController::class, 'download'])
+    ->name('observations.zip.download')
+    ->middleware(['auth', 'doNotCacheResponse']);
 Route::get('/observation/{observer}/{date}/{object}/{index?}', [App\Http\Controllers\ObservationsController::class, 'detail'])
     ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
     ->where('index', '[0-9]+')
@@ -231,6 +239,9 @@ Route::view('/downloads/magazines', 'layouts.downloads.magazines');
 Route::view('/downloads/dsl-image-catalogs', 'layouts.downloads.dsl_image_catalogs');
 Route::view('/downloads/image-catalogs', 'layouts.downloads.image_catalogs');
 Route::view('/downloads/atlases', 'layouts.downloads.atlases');
+// The observer's PDFs and zip files of all kinds, made by the queue workers
+// (App\Jobs\QueuedPdfJob).
+Route::view('/downloads/mine', 'downloads.mine')->middleware(['auth', 'doNotCacheResponse'])->name('downloads.mine');
 Route::get('/downloads/dsl-atlas', [App\Http\Controllers\AtlasController::class, 'index']);
 Route::post('/downloads/dsl-atlas/generate', [App\Http\Controllers\AtlasController::class, 'generate'])->middleware(['auth', 'throttle:exports'])->name('downloads.dsl-atlas.generate');
 Route::post('/downloads/dsl-atlas/queue', [App\Http\Controllers\AtlasController::class, 'queue'])->middleware(['auth', 'throttle:exports'])->name('downloads.dsl-atlas.queue');

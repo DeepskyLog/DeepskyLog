@@ -329,6 +329,10 @@
                             <button type="submit" name="scope" value="whole" class="inline-flex items-center px-3 py-1 rounded bg-secondary-700 hover:bg-secondary-600 text-sm">{{ __('Create whole atlas') }}</button>
                         </div>
                         <p id="custom-atlas-status" class="mt-3 text-sm text-gray-300" role="status"></p>
+                        <p class="mt-3 text-xs text-gray-400">
+                            {{ __('You can leave this page: you get a message when a file is ready or failed.') }}
+                            <a href="{{ route('downloads.mine') }}" class="text-indigo-400 hover:text-indigo-300">{{ __('All your PDFs and zip files') }}</a>
+                        </p>
                         <p class="mt-3 text-xs text-gray-400">{{ __('Leave slug empty and supply RA/Dec to center a custom page. Whole atlas generation may take a while.') }}</p>
                     </form>
                 </div>

@@ -44,6 +44,7 @@
                 $exportSkylistUrl = route('observations.search.skylist', $exportParams);
                 $exportObsUrl = route('observations.search.obs', $exportParams);
                 $exportOalUrl = route('observations.search.oal', $exportParams);
+                $exportZipUrl = route('observations.zip', $exportParams);
                 $extractObjectsUrl = route('observations.search.objects', $exportParams);
             @endphp
             <div class="mb-3 flex items-center gap-3 flex-wrap">
@@ -84,8 +85,11 @@
                         <x-menu.item href="{{ $exportObsUrl }}" target="_blank" rel="nofollow noopener noreferrer">
                             {{ __('Export AstroPlanner (.obs)') }}
                         </x-menu.item>
-                        <x-menu.item href="{{ $exportOalUrl }}" target="_blank" rel="nofollow noopener noreferrer" data-last>
+                        <x-menu.item href="{{ $exportOalUrl }}" target="_blank" rel="nofollow noopener noreferrer">
                             {{ __('Export OAL') }}
+                        </x-menu.item>
+                        <x-menu.item href="{{ $exportZipUrl }}" rel="nofollow" data-last>
+                            {{ auth()->user()?->hasAdministratorPrivileges() ? __('Zip file with drawings') : __('Zip file with my drawings') }}
                         </x-menu.item>
                     </x-menu.dropdown>
                     <button type="button"

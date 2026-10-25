@@ -266,6 +266,9 @@ class ObjectSets extends Component
             ->filter()
             ->values();
 
+        // The observer sees them finish here and needs no message.
+        GenerateObjectSetsPdf::watch($jobs);
+
         return view('livewire.object-sets', [
             'jobs' => $jobs,
             'pending' => $jobs->contains(fn (array $job) => in_array($job['state'] ?? '', ['queued', 'processing'], true)),

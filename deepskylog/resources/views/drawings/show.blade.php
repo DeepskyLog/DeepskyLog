@@ -21,6 +21,11 @@
                             </svg>
                             RSS
                         </a>
+                    @elseif (auth()->check() && auth()->user()->is($user))
+                        <a href="{{ route('observations.zip', ['observer' => $user->slug, 'drawings_only' => 1]) }}"
+                           class="inline-flex items-center rounded bg-indigo-600 px-3 py-1 text-sm font-medium text-white hover:bg-indigo-500">
+                            {{ __('Download as zip file') }}
+                        </a>
                     @endif
                     @php
                         $activeObsType = $obsType ?? 'all';

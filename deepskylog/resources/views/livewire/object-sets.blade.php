@@ -62,7 +62,11 @@
         {{-- Generated sets --}}
         @if ($jobs->isNotEmpty())
             <div class="mb-4 rounded-md bg-gray-800 p-3">
-                <h2 class="mb-2 font-semibold text-white">{{ __('Your object sets') }}</h2>
+                <div class="mb-2 flex flex-wrap items-center gap-3">
+                    <h2 class="font-semibold text-white">{{ __('Your object sets') }}</h2>
+                    <a href="{{ route('downloads.mine') }}" class="ml-auto text-xs text-indigo-400 hover:text-indigo-300">{{ __('All your PDFs and zip files') }}</a>
+                </div>
+                <p class="mb-1 text-xs text-gray-400">{{ __('You can leave this page: you get a message when a file is ready or failed.') }}</p>
                 <ul class="divide-y divide-gray-700">
                     @foreach ($jobs as $job)
                         <li class="flex flex-wrap items-center gap-3 py-1.5" wire:key="job-{{ $job['token'] }}">

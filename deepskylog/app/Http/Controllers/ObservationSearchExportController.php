@@ -434,6 +434,22 @@ class ObservationSearchExportController extends Controller
         }
     }
 
+    /**
+     * The OAL document of observations whose drawings are files next to it,
+     * named in the observations' image elements: the observations.xml of the
+     * zip GenerateObservationsZip makes.
+     *
+     * @param  array<int, string>  $images  observation id => path of its drawing, relative to the document
+     */
+    public function oalWithImages(Collection $observations, array $images): string
+    {
+        [$sessions, $sessionOfObservation] = $this->oalSessionsOf($observations);
+        $content = $this->buildOalXml($observations, $sessions, $sessionOfObservation, $images);
+        app(OalSchemaValidator::class)->assertValid($content);
+
+        return $content;
+    }
+
     private function renderPdf(string $html, string $filename, string $orientation)
     {
         @ini_set('memory_limit', '512M');
@@ -468,7 +484,7 @@ class ObservationSearchExportController extends Controller
     {
         return app(ObservationSearchQuery::class)->observations(
             trim((string) $request->query('q', '')),
-            $this->extractObservationFilters($request)
+            ObservationSearchQuery::filtersFrom($request)
         );
     }
 
@@ -497,21 +513,6 @@ class ObservationSearchExportController extends Controller
                 'max' => number_format($max),
                 'format' => self::EXPORT_FORMAT_NAMES[$format],
             ]));
-    }
-
-    private function extractObservationFilters(Request $request): array
-    {
-        $filters = $request->except(['_token', 'page', 'q']);
-
-        return array_filter($filters, function ($value): bool {
-            if (is_array($value)) {
-                return collect($value)
-                    ->flatten()
-                    ->contains(fn($item): bool => trim((string) $item) !== '');
-            }
-
-            return trim((string) $value) !== '';
-        });
     }
 
     /**
@@ -753,7 +754,10 @@ class ObservationSearchExportController extends Controller
      * @param  list<array{id: string, begin: string, end: string, site_id: string, site: ?Location, language: string|null, weather: string|null, equipment: string|null, comments: string|null, observers: array<int, array{id: string, name: string}>, co_observer_ids: array<int, string>}>  $sessions  the sessions to write, each with a site
      * @param  array<int, string>  $sessionOfObservation  the OAL session id by observation id
      */
-    private function buildOalXml(Collection $observations, array $sessions = [], array $sessionOfObservation = []): string
+    /**
+     * @param  array<int, string>  $images  observation id => path of its drawing, written as its image
+     */
+    private function buildOalXml(Collection $observations, array $sessions = [], array $sessionOfObservation = [], array $images = []): string
     {
         $observations = $observations->values();
 
@@ -1038,6 +1042,7 @@ class ObservationSearchExportController extends Controller
                 $this->appendOalTextNode($document, $resultNode, 'rating', (int) $visibility);
             }
             $observationNode->appendChild($resultNode);
+            $this->appendOalTextNode($document, $observationNode, 'image', $images[$observation->id] ?? null);
 
             $root->appendChild($observationNode);
         }
