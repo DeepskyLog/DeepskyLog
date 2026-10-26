@@ -19,6 +19,8 @@ class UpdateUserLanguageInformation extends Component
 
     public $followDigest;
 
+    public $clearNightAlert;
+
     protected function rules(): array
     {
         return [
@@ -32,6 +34,7 @@ class UpdateUserLanguageInformation extends Component
             'translate' => 'boolean',
             'sendMail' => 'boolean',
             'followDigest' => 'boolean',
+            'clearNightAlert' => 'boolean',
         ];
     }
 
@@ -47,6 +50,7 @@ class UpdateUserLanguageInformation extends Component
         $this->translate = boolval(auth()->user()->translate);
         $this->sendMail = boolval(auth()->user()->sendMail);
         $this->followDigest = boolval(auth()->user()->follow_digest);
+        $this->clearNightAlert = boolval(auth()->user()->clear_night_alert);
     }
 
     /**
@@ -62,6 +66,7 @@ class UpdateUserLanguageInformation extends Component
             'translate' => $this->translate,
             'sendMail' => $this->sendMail,
             'follow_digest' => $this->followDigest,
+            'clear_night_alert' => $this->clearNightAlert,
         ])->save();
 
         App::setLocale($this->language);

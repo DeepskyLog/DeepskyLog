@@ -183,9 +183,18 @@
                             <tr>
                                 <td>{{ __('Weather Prospects') }}</td>
                                 <td>
-                                    <a href="https://clearoutside.com/forecast/{{ round($location->latitude, 2) }}/{{ round($location->longitude, 2) }}">
-                                        <img alt="Weather forecast" src="https://clearoutside.com/forecast_image_small/{{ round($location->latitude, 2) }}/{{ round($location->longitude, 2) }}/forecast.png" />
-                                    </a>
+                                    {{-- The cloud forecast of the coming nights; ClearOutside until Open-Meteo answered --}}
+                                    @if (!empty($nightForecast))
+                                        <x-night-forecast-nights
+                                            :nights="$nightForecast"
+                                            :list-links="auth()->check() && auth()->user()->stdlocation == $location->id"
+                                            class="py-2"
+                                        />
+                                    @else
+                                        <a href="https://clearoutside.com/forecast/{{ round($location->latitude, 2) }}/{{ round($location->longitude, 2) }}">
+                                            <img alt="Weather forecast" src="https://clearoutside.com/forecast_image_small/{{ round($location->latitude, 2) }}/{{ round($location->longitude, 2) }}/forecast.png" />
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endif

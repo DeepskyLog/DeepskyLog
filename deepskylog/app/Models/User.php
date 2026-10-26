@@ -91,6 +91,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'inactivity_final_warning_at' => 'datetime',
         'follow_digest' => 'boolean',
         'follow_digest_sent_at' => 'datetime',
+        'clear_night_alert' => 'boolean',
+        'clear_night_alert_night' => 'date',
         'about' => PurifiedHtml::class,
     ];
 
@@ -141,6 +143,8 @@ class User extends Authenticatable implements MustVerifyEmail
             'follow_digest',
             'follow_digest_sent_at',
             'follow_feed_token',
+            'clear_night_alert',
+            'clear_night_alert_night',
             'showInches',
             'version',
         ];

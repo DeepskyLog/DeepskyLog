@@ -92,6 +92,14 @@
                     />
                 @endif
 
+                @if (!empty($nightForecast))
+                    <x-night-forecast
+                        :nights="$nightForecast"
+                        :location="$forecastLocation"
+                        class="order-3 lg:order-none"
+                    />
+                @endif
+
                 @if ($observations->isNotEmpty())
                     <x-home-section
                         :title="__('Newest observations')"

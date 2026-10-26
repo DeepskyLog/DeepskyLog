@@ -14,6 +14,7 @@ use App\Models\StarParty;
 use App\Models\User;
 use App\Services\Observations\ObservationCardData;
 use App\Services\TonightsBest;
+use App\Services\Weather\NightForecast;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -967,6 +968,17 @@ class SessionController extends Controller
             $tonightsBest = null;
         }
 
+        // The cloud forecast of the coming nights at the observer's standard location, if Open-Meteo answered already
+        $nightForecast = null;
+        $forecastLocation = Auth::user()?->standardLocation;
+        if ($forecastLocation && $forecastLocation->hasValidCoordinates()) {
+            try {
+                $nightForecast = NightForecast::forLocation($forecastLocation, fetch: false);
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
+
         // The current news (#960), with the local circumstances of the events for the observer's location
         try {
             $news = NewsItem::current()->with('author:id,name')->orderByDesc('published_at')->orderByDesc('id')->limit(self::HOMEPAGE_NEWS)->get();
@@ -1002,6 +1014,8 @@ class SessionController extends Controller
             'sketchOfTheMonth',
             'observingLists',
             'tonightsBest',
+            'nightForecast',
+            'forecastLocation',
             'news',
             'newsLocation',
             'starParties',

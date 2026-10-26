@@ -18,6 +18,7 @@ use App\Services\StarParties\StarPartyCalendar;
 use App\Services\StarParties\StarPartyNights;
 use App\Services\StarParties\StarPartyNotifier;
 use App\Services\TonightsBest;
+use App\Services\Weather\NightForecast;
 use App\Support\EphemerisDate;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -139,8 +140,11 @@ class StarPartyController extends Controller
         $starParty->load(['organiser', 'participants.user:id,name,slug,username,profile_photo_path']);
 
         $nights = [];
+        $forecast = [];
         try {
             $nights = StarPartyNights::for($starParty);
+            // The cloud forecast of the nights it reaches, once Open-Meteo answered
+            $forecast = NightForecast::forStarParty($starParty, fetch: false) ?? [];
         } catch (\Throwable $e) {
             report($e);
         }
@@ -173,6 +177,7 @@ class StarPartyController extends Controller
         return view('star-parties.show', [
             'party'         => $starParty,
             'nights'        => $nights,
+            'forecast'      => $forecast,
             'night'         => $night,
             'best'          => $best,
             'sessions'      => $sessions,

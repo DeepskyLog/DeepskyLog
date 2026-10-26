@@ -60,6 +60,16 @@
             />
         </div>
 
+        <!-- Message when a clear, dark night is forecast at the standard location -->
+        <div class="col-span-6 sm:col-span-5">
+            <x-toggle
+                label="{{ __('Send me a message when a clear, dark night is forecast at my standard location') }}"
+                name="clearNightAlert"
+                id="clearNightAlert"
+                wire:model.live="clearNightAlert"
+            />
+        </div>
+
     </x-slot>
 
     <x-slot name="actions">

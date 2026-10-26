@@ -75,6 +75,12 @@ class NightListWizard extends Component
     public function mount(): void
     {
         $this->night = EphemerisDate::chosen($this->timezone()) ?? EphemerisDate::today($this->timezone());
+
+        // ?night=Y-m-d, from the forecast of the coming nights and its message
+        $night = request()->query('night');
+        if (is_string($night) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $night) && checkdate((int) substr($night, 5, 2), (int) substr($night, 8, 2), (int) substr($night, 0, 4))) {
+            $this->night = $night;
+        }
     }
 
     /**

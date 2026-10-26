@@ -4,10 +4,12 @@ namespace App\Livewire;
 
 use App\Models\Country;
 use App\Models\Location;
+use App\Services\Weather\NightForecast;
 use Countries;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\View\View;
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
@@ -141,6 +143,20 @@ final class LocationTable extends PowerGridComponent
                 return $bortle !== null ? $bortle : __('Unknown');
             })
             ->add('weather', function ($location) {
+                // The verdicts of the coming nights; ClearOutside until Open-Meteo answered
+                try {
+                    $nights = NightForecast::forLocation($location, fetch: false);
+                } catch (\Throwable $e) {
+                    report($e);
+                    $nights = null;
+                }
+                if ($nights) {
+                    return Blade::render('<x-forecast-badges :nights="$nights" :href="$href" />', [
+                        'nights' => $nights,
+                        'href' => '/location/'.Auth()->user()->slug.'/'.$location->slug,
+                    ]);
+                }
+
                 return '<a href="https://clearoutside.com/forecast/'
                     .round($location->latitude, 2).'/'
                     .round($location->longitude, 2).'">

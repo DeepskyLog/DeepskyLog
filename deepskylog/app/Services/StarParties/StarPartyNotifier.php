@@ -8,6 +8,7 @@ use App\Models\MessageBlock;
 use App\Models\StarParty;
 use App\Models\StarPartyParticipant;
 use App\Models\User;
+use App\Services\Weather\NightForecast;
 use Illuminate\Support\Facades\Mail;
 
 /**
@@ -92,10 +93,17 @@ class StarPartyNotifier
         }
     }
 
-    /** The reminder before the first night, with the nights at the site. */
+    /** The reminder before the first night, with the nights at the site and their cloud forecast. */
     public static function remind(StarParty $party, User $receiver): void
     {
-        self::send($receiver, null, function (string $locale) use ($party) {
+        try {
+            $forecast = NightForecast::forStarParty($party) ?? [];
+        } catch (\Throwable $e) {
+            report($e);
+            $forecast = [];
+        }
+
+        self::send($receiver, null, function (string $locale) use ($party, $forecast) {
             $nights = '';
             foreach (StarPartyNights::for($party) as $night) {
                 $date = \Carbon\Carbon::parse($night['night'])->locale($locale)->isoFormat('dddd LL');
@@ -105,6 +113,9 @@ class StarPartyNotifier
                     $text = __('Dark :from–:until', $night['dark'], $locale);
                     $text .= ', '.($night['moon'] ? __('Moon :fraction%, up :from–:until', $night['moon'], $locale) : __('No Moon', [], $locale));
                 }
+                if (isset($forecast[$night['night']])) {
+                    $text .= '. '.__('Forecast: :forecast', ['forecast' => NightForecast::summary($forecast[$night['night']], $locale)], $locale);
+                }
                 $nights .= '<li>'.e($date).': '.e($text).'</li>';
             }
 
@@ -112,7 +123,8 @@ class StarPartyNotifier
                 __('Reminder: the starparty :party starts on :date', ['party' => $party->name, 'date' => $party->start_date->copy()->locale($locale)->isoFormat('LL')], $locale),
                 '<p>'.e(__('The starparty :party starts soon. Clear skies!', ['party' => $party->name], $locale)).'</p>'
                     .self::summary($party, $locale)
-                    .'<p>'.e(__('The nights at the site (local time):', [], $locale)).'</p><ul>'.$nights.'</ul>',
+                    .'<p>'.e(__('The nights at the site (local time):', [], $locale)).'</p><ul>'.$nights.'</ul>'
+                    .($forecast !== [] ? '<p>'.e(__('Weather data by :link', ['link' => 'Open-Meteo.com'], $locale)).'</p>' : ''),
             ];
         });
     }

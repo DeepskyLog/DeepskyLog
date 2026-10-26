@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Location;
 use App\Models\User;
+use App\Services\Weather\NightForecast;
 use Illuminate\Support\Facades\Auth;
 
 class LocationController extends Controller
@@ -35,9 +36,19 @@ class LocationController extends Controller
             $image = '/images/location.png';
         }
 
+        // The cloud forecast of the coming nights, for whoever may see the location, once Open-Meteo answered
+        $nightForecast = null;
+        if (! $location->hidden || Auth::id() === $location->user_id || Auth::user()?->isAdministrator()) {
+            try {
+                $nightForecast = NightForecast::forLocation($location, fetch: false);
+            } catch (\Throwable $e) {
+                report($e);
+            }
+        }
+
         return view(
             'location.show',
-            ['location' => $location, 'image' => $image]
+            ['location' => $location, 'image' => $image, 'nightForecast' => $nightForecast]
         );
     }
 

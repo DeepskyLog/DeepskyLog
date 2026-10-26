@@ -123,6 +123,9 @@
                                         <th class="px-2 py-1">{{ __("Dark") }}</th>
                                         <th class="px-2 py-1">{{ __("Moon") }}</th>
                                         <th class="px-2 py-1 text-right">{{ __("Dark without Moon") }}</th>
+                                        @if ($forecast !== [])
+                                            <th class="px-2 py-1">{{ __("Weather") }}</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-700">
@@ -151,11 +154,31 @@
                                                     {{ intdiv($row["moonless_minutes"], 60) }}h {{ str_pad((string) ($row["moonless_minutes"] % 60), 2, "0", STR_PAD_LEFT) }}m
                                                 @endif
                                             </td>
+                                            @if ($forecast !== [])
+                                                <td class="px-2 py-1">
+                                                    @isset ($forecast[$row["night"]])
+                                                        <x-forecast-verdict :night="$forecast[$row['night']]" />
+                                                        @if ($forecast[$row["night"]]["cloud"] !== null)
+                                                            <span class="text-xs whitespace-nowrap text-gray-400">{{ __("Clouds :percent%", ["percent" => $forecast[$row["night"]]["cloud"]]) }}</span>
+                                                        @endif
+                                                    @endisset
+                                                </td>
+                                            @endif
                                         </tr>
+                                        @if (! empty($forecast[$row["night"]]["hours"]))
+                                            <tr class="border-t-0">
+                                                <td colspan="5" class="px-2 pb-2">
+                                                    <x-forecast-hours :hours="$forecast[$row['night']]['hours']" />
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
+                        @if ($forecast !== [])
+                            <x-forecast-credit class="mt-2" />
+                        @endif
                     </section>
                 @endif
 

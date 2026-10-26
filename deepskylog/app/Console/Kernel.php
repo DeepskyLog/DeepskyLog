@@ -41,6 +41,11 @@ class Kernel extends ConsoleKernel
         // days, to the observers who come.
         $schedule->command('star-parties:send-reminders --apply')->dailyAt('08:00')->withoutOverlapping();
 
+        // The message when a clear, dark night is forecast at an observer's
+        // standard location: hourly, as noon comes at a different hour for
+        // each location.
+        $schedule->command('forecast:send-clear-night-alerts --apply')->hourlyAt(15)->withoutOverlapping();
+
         // The news items of the coming eclipses, conjunctions, ... (#960),
         // published a week before the event.
         $schedule->command('news:astronomical-events --apply')->dailyAt('02:30')->withoutOverlapping();

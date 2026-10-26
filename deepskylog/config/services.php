@@ -65,6 +65,12 @@ return [
         'key' => env('LIGHTPOLLUTIONMAP_API_KEY'),
     ],
 
+    'open_meteo' => [
+        // The cloud forecast of the coming nights (App\Services\Weather\NightForecast), free without a key
+        'url' => env('OPEN_METEO_URL', 'https://api.open-meteo.com/v1/forecast'),
+        'enabled' => (bool) env('WEATHER_FORECAST', true),
+    ],
+
     'google' => [
         // GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET are already standard
         'client_id' => env('GOOGLE_CLIENT_ID', env('GOOGLE_KEY')),
