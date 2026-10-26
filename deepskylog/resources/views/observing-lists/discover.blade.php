@@ -92,7 +92,7 @@
                         @php $subscribed = in_array($list->id, $subscribedIds); @endphp
                         <article class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col">
                             <div class="flex-1">
-                                <h4 class="font-bold text-white text-base mb-1">
+                                <h4 class="font-bold text-white text-base mb-1 break-words">
                                     <a href="{{ route('observing-list.show', $list) }}" class="hover:underline">{{ html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
                                 </h4>
                                 <p class="text-xs text-gray-500 mb-2">
