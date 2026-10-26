@@ -1115,6 +1115,14 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * The observer's observing goals.
+     */
+    public function observingGoals(): HasMany
+    {
+        return $this->hasMany(ObservingGoal::class);
+    }
+
+    /**
      * The observers this user follows.
      */
     public function following(): BelongsToMany

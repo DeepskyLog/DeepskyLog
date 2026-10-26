@@ -54,6 +54,7 @@ class PruneInactiveUsers extends Command
         'observing_list_likes' => 'user_id',
         'observing_list_subscriptions' => 'user_id',
         'user_follows' => 'follower_id',
+        'observing_goals' => 'user_id',
         'observation_comments' => 'user_id',
         'observation_likes' => 'user_id',
         'sketch_of_the_week' => 'user_id',

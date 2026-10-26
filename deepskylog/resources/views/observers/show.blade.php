@@ -274,6 +274,8 @@
                 }
             </style>
 
+            <livewire:observing-goals :observer="$user" />
+
             <x-card>
                 <h2 class="mb-2 mt-2 text-xl px-5 font-bold">
                     {{ __('DeepskyLog Trophy Gallery') }}

@@ -4,13 +4,15 @@
     <channel>
         <title>{{ config('app.name', 'DeepskyLog') }} – {{ $observer->name }}</title>
         <link>{{ route('observer.blog', ['observer' => $observer->slug]) }}</link>
-        <description>The sessions, observations, sketches of the week and month and public observing lists of {{ $observer->name }} on DeepskyLog.</description>
+        <description>The sessions, observations, sketches of the week and month, public observing lists and reached observing goals of {{ $observer->name }} on DeepskyLog.</description>
         <language>en</language>
         <lastBuildDate>{{ $feedUpdated->toRfc2822String() }}</lastBuildDate>
         <atom:link href="{{ route('feed.observer', ['observer' => $observer->slug]) }}" rel="self" type="application/rss+xml" />
 
         @foreach ($items as [$kind, $item])
-            @if ($kind === 'sketch')
+            @if ($kind === 'goal')
+                @include('rss.partials.goal-item', ['goal' => $item, 'observer' => $observer])
+            @elseif ($kind === 'sketch')
                 @include('rss.partials.sketch-item', ['sketch' => $item, 'observer' => $observer])
             @elseif ($kind === 'session')
                 @include('rss.partials.session-item', ['session' => $item])

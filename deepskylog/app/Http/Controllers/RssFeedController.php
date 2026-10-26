@@ -151,7 +151,10 @@ class RssFeedController extends Controller
             $sketches = $blog->sketches(SketchOfTheWeek::class, 'week')[0]
                 ->concat($blog->sketches(SketchOfTheMonth::class, 'month')[0]);
 
+            $goals = $blog->goals()->filter(fn ($goal) => $goal->progress()['reached_on'] !== null);
+
             $items = collect()
+                ->concat($goals->map(fn ($goal) => ['goal', $goal, $goal->progress()['reached_on']]))
                 ->concat($sketches->map(fn (array $sketch) => ['sketch', $sketch, $sketch['date']]))
                 ->concat($sessions->map(fn ($session) => ['session', $session, $session->enddate ?? $session->begindate]))
                 ->concat($observations->map(fn ($observation) => ['observation', $observation, $observation->created_at]))

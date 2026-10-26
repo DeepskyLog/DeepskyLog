@@ -2,6 +2,8 @@
 
 ## Next steps
 
+- [ ] Seasonal planner per list: for each object in an observing list, the months it is well placed from the observer's location, plus a "what's up this month" filter. Most of the year-graph logic already exists.
+- [ ] Observation reminders after a session: notes a session has but no observation records yet. This nudges people to finish logging the night.
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4 -> Ubuntu 26.04 LTS.
 - [ ] Translations
@@ -94,4 +96,6 @@
 - [X] Organize star parties.  Users can subscribe to them, and the organizer can send a mail to all subscribers.
 - [X] New section on the home page
 - [X] Personal blog page for every user. 
+- [X] Weather forecasts
+- [X] Personal observing goals: "200 Herschel objects this year", "every Messier in one season", with progress on the observer page and in the blog.
  

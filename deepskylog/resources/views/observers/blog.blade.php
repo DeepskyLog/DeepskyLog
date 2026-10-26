@@ -71,6 +71,19 @@
             </p>
         @endif
 
+        @if ($goals->isNotEmpty())
+            <section class="mb-6 rounded-lg bg-gray-800 p-4">
+                <h2 class="mb-3 text-lg font-semibold text-white">
+                    {{ __("Observing goals") }}
+                </h2>
+                <div class="space-y-4">
+                    @foreach ($goals as $goal)
+                        <x-observing-goal :goal="$goal" />
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
         <div class="space-y-6">
             @forelse ($entries as $entry)
                 @php
@@ -80,7 +93,14 @@
                         ->isoFormat("LL");
                 @endphp
 
-                @if ($entry["kind"] === "sketch")
+                @if ($entry["kind"] === "goal")
+                    <article class="rounded-lg bg-gray-800 p-4">
+                        <p class="text-xs tracking-wide text-green-400 uppercase">
+                            {{ __("Observing goal reached") }} &middot; {{ $dateLabel }}
+                        </p>
+                        <x-observing-goal :goal="$entry['goal']" class="mt-1" />
+                    </article>
+                @elseif ($entry["kind"] === "sketch")
                     @php
                         $sketch = $entry["observation"];
                         $sketchName = $decode($sketch->target_name);
