@@ -94,6 +94,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'clear_night_alert' => 'boolean',
         'clear_night_alert_night' => 'date',
         'session_reminder' => 'boolean',
+        'year_review' => 'boolean',
+        'year_review_sent_year' => 'integer',
         'about' => PurifiedHtml::class,
     ];
 
@@ -147,6 +149,8 @@ class User extends Authenticatable implements MustVerifyEmail
             'clear_night_alert',
             'clear_night_alert_night',
             'session_reminder',
+            'year_review',
+            'year_review_sent_year',
             'showInches',
             'version',
         ];

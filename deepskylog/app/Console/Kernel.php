@@ -45,6 +45,12 @@ class Kernel extends ConsoleKernel
         // observation of their observer, to finish logging the night.
         $schedule->command('sessions:send-observation-reminders --apply')->dailyAt('10:00')->withoutOverlapping();
 
+        // The message with the review of the year that just ended. Daily in
+        // the first week of January, so a failed run is made up the next day;
+        // each observer gets it once (users.year_review_sent_year).
+        $schedule->command('observers:send-year-review --apply')->dailyAt('10:30')
+            ->when(fn () => now()->month === 1 && now()->day <= 7)->withoutOverlapping();
+
         // The message when a clear, dark night is forecast at an observer's
         // standard location: hourly, as noon comes at a different hour for
         // each location.

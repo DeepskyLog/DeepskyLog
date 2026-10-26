@@ -12,6 +12,8 @@ use App\Models\StarParty;
 use App\Models\User;
 use App\Services\Observations\ObservationCardData;
 use App\Services\ObserverBlog;
+use App\Services\ObserverYear;
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 
@@ -111,8 +113,8 @@ class RssFeedController extends Controller
 
     /**
      * RSS feed of the blog of an observer (#964): their latest sessions,
-     * observations, sketches of the week/month and public observing lists,
-     * in English.
+     * observations, sketches of the week/month, public observing lists,
+     * reached goals and reviews of finished years, in English.
      */
     public function observer(string $observer): Response
     {
@@ -153,7 +155,10 @@ class RssFeedController extends Controller
 
             $goals = $blog->goals()->filter(fn ($goal) => $goal->progress()['reached_on'] !== null);
 
+            $years = ObserverYear::years($user);
+
             $items = collect()
+                ->concat($years->map(fn (int $year) => ['year', $year, Carbon::create($year, 12, 31)->endOfDay()]))
                 ->concat($goals->map(fn ($goal) => ['goal', $goal, $goal->progress()['reached_on']]))
                 ->concat($sketches->map(fn (array $sketch) => ['sketch', $sketch, $sketch['date']]))
                 ->concat($sessions->map(fn ($session) => ['session', $session, $session->enddate ?? $session->begindate]))

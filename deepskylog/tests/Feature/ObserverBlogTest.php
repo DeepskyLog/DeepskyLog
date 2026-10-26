@@ -125,7 +125,8 @@ it('puts an observation of the morning in the night before', function () {
     blogObservation($this->owner, $this->location, '2024-03-10', '22:00:00', 'M 81');
     $morning = blogObservation($this->owner, $this->location, '2024-03-11', '02:30:00', 'M 82');
 
-    $entries = (new ObserverBlog($this->owner))->page()['entries'];
+    // The review of 2024 aside
+    $entries = (new ObserverBlog($this->owner))->page()['entries']->where('kind', '!=', 'year')->values();
 
     expect($entries)->toHaveCount(1)
         ->and($entries[0]['kind'])->toBe('night')

@@ -614,6 +614,15 @@
                     {{ __('Blog of :name', ['name' => $user->name]) }}
                 </x-button>
 
+                @php
+                    $reviewYear = \App\Services\ObserverYear::years($user)->first();
+                @endphp
+                @if ($reviewYear)
+                    <x-button gray icon="sparkles" class="mb-2" href="{{ \App\Services\ObserverYear::url($user, $reviewYear) }}">
+                        {{ __('The year :year in review', ['year' => $reviewYear]) }}
+                    </x-button>
+                @endif
+
                   @if (\App\Models\ObservationSession::where('observerid', $user->username)->where('active', 1)->exists())
                     <x-button gray icon="calendar" class="mb-2"
                         href="{{ route('session.user', [$user->slug ?? $user->username]) }}">

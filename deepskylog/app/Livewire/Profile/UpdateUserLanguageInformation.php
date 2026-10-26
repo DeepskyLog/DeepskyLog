@@ -23,6 +23,8 @@ class UpdateUserLanguageInformation extends Component
 
     public $sessionReminder;
 
+    public $yearReview;
+
     protected function rules(): array
     {
         return [
@@ -38,6 +40,7 @@ class UpdateUserLanguageInformation extends Component
             'followDigest' => 'boolean',
             'clearNightAlert' => 'boolean',
             'sessionReminder' => 'boolean',
+            'yearReview' => 'boolean',
         ];
     }
 
@@ -55,6 +58,7 @@ class UpdateUserLanguageInformation extends Component
         $this->followDigest = boolval(auth()->user()->follow_digest);
         $this->clearNightAlert = boolval(auth()->user()->clear_night_alert);
         $this->sessionReminder = boolval(auth()->user()->session_reminder);
+        $this->yearReview = boolval(auth()->user()->year_review);
     }
 
     /**
@@ -72,6 +76,7 @@ class UpdateUserLanguageInformation extends Component
             'follow_digest' => $this->followDigest,
             'clear_night_alert' => $this->clearNightAlert,
             'session_reminder' => $this->sessionReminder,
+            'year_review' => $this->yearReview,
         ])->save();
 
         App::setLocale($this->language);

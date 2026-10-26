@@ -146,6 +146,9 @@ Route::post('/observers/{observer}/catalog/observing-list', [App\Http\Controller
 Route::get('/observers/{observer}', 'App\Http\Controllers\ObserverController@show')->name('observer.show');
 // The blog of an observer (#964): sessions, observations and public lists in one timeline
 Route::get('/observers/{observer}/blog', [App\Http\Controllers\ObserverBlogController::class, 'show'])->name('observer.blog');
+// The year in review of an observer: what they observed in a finished year
+Route::get('/observers/{observer}/year/{year}', [App\Http\Controllers\ObserverYearController::class, 'show'])
+    ->whereNumber('year')->name('observer.year');
 Route::post('/observers/{observer}/follow', [App\Http\Controllers\FollowController::class, 'follow'])
     ->name('observer.follow')->middleware(['auth', 'verified', 'doNotCacheResponse']);
 Route::post('/observers/{observer}/unfollow', [App\Http\Controllers\FollowController::class, 'unfollow'])

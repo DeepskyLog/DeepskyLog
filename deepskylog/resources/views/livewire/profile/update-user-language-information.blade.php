@@ -80,6 +80,16 @@
             />
         </div>
 
+        <!-- Message with the year in review, early in January -->
+        <div class="col-span-6 sm:col-span-5">
+            <x-toggle
+                label="{{ __('Send me my year in review in January') }}"
+                name="yearReview"
+                id="yearReview"
+                wire:model.live="yearReview"
+            />
+        </div>
+
     </x-slot>
 
     <x-slot name="actions">

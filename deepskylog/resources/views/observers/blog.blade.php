@@ -74,7 +74,11 @@
         @if ($goals->isNotEmpty())
             <section class="mb-6 rounded-lg bg-gray-800 p-4">
                 <h2 class="mb-3 text-lg font-semibold text-white">
-                    {{ __("Observing goals") }}
+                    {{
+                        __(
+                            "Observing goals",
+                        )
+                    }}
                 </h2>
                 <div class="space-y-4">
                     @foreach ($goals as $goal)
@@ -93,7 +97,55 @@
                         ->isoFormat("LL");
                 @endphp
 
-                @if ($entry["kind"] === "goal")
+                @if ($entry["kind"] === "year")
+                    @php
+                        $yearTotals = $entry["summary"]["totals"];
+                        $yearNew = $entry["summary"]["new_objects"]["count"];
+                    @endphp
+
+                    <article class="rounded-lg bg-gray-800 p-4">
+                        <p class="text-xs tracking-wide text-blue-400 uppercase">
+                            {{ __("Year in review") }} &middot; {{ $entry["year"] }}
+                        </p>
+                        <h2 class="mt-1 text-lg font-semibold text-white">
+                            <a
+                                href="{{ \App\Services\ObserverYear::url($user, $entry["year"]) }}"
+                                class="hover:underline"
+                                >{{
+                                    __("The year :year of :name", [
+                                        "year" => $entry["year"],
+                                        "name" => $user->name,
+                                    ])
+                                }}</a
+                            >
+                        </h2>
+                        <p class="mt-1 text-sm text-gray-300">
+                            {{
+                                trans_choice(
+                                    ":count observation|:count observations",
+                                    $yearTotals["observations"],
+                                    ["count" => $yearTotals["observations"]],
+                                )
+                            }} &middot; {{
+                                trans_choice(
+                                    ":count night|:count nights",
+                                    $yearTotals["nights"],
+                                    ["count" => $yearTotals["nights"]],
+                                )
+                            }}
+                            @if ($yearNew > 0)
+                                &middot;
+                                {{
+                                    trans_choice(
+                                        ":count object seen for the first time|:count objects seen for the first time",
+                                        $yearNew,
+                                        ["count" => $yearNew],
+                                    )
+                                }}
+                            @endif
+                        </p>
+                    </article>
+                @elseif ($entry["kind"] === "goal")
                     <article class="rounded-lg bg-gray-800 p-4">
                         <p class="text-xs tracking-wide text-green-400 uppercase">
                             {{ __("Observing goal reached") }} &middot; {{ $dateLabel }}
@@ -145,7 +197,10 @@
                             <p class="mt-1 text-sm text-gray-400">
                                 {{
                                     __("Observed on :date", [
-                                        "date" => $sketch->observed_on->copy()->locale(app()->getLocale())->isoFormat("LL"),
+                                        "date" => $sketch->observed_on
+                                            ->copy()
+                                            ->locale(app()->getLocale())
+                                            ->isoFormat("LL"),
                                     ])
                                 }} &middot;
                                 <a

@@ -22,8 +22,8 @@ use Illuminate\Support\Facades\DB;
  * The blog of an observer (#964), newest first: their sessions as articles
  * with the session's text and their observations of it, the observations
  * outside a session per night, the observing lists they made public, their
- * drawings chosen as sketch of the week or month, and the public observing
- * goals they reached.
+ * drawings chosen as sketch of the week or month, the public observing
+ * goals they reached, and the review of each finished year (ObserverYear).
  *
  * A page holds every entry from its cursor date down to the date where one
  * kind of entry runs out of fetched rows; that date is the cursor of the next
@@ -55,8 +55,9 @@ class ObserverBlog
      * The entries dated before $before (all, newest first, for null), and the
      * cursor of the next page (null on the last page).
      *
-     * Each entry is ['kind' => 'goal'|'sketch'|'session'|'night'|'list', 'date'
-     * => Carbon, ...]: a goal has 'goal', the observing goal reached that
+     * Each entry is ['kind' => 'year'|'goal'|'sketch'|'session'|'night'|'list',
+     * 'date' => Carbon, ...]: a year has 'year' and 'summary' (of
+     * ObserverYear), on the last day of the year; a goal has 'goal', the observing goal reached that
      * day, a sketch has 'sketch_of' ('week' or 'month') and
      * 'observation', a session 'session' and 'observations', a night
      * 'observations', a list 'list'.
@@ -73,15 +74,19 @@ class ObserverBlog
         [$weeks, $weekBound]       = $this->sketches(SketchOfTheWeek::class, 'week', $before);
         [$months, $monthBound]     = $this->sketches(SketchOfTheMonth::class, 'month', $before);
         $goals                     = $this->reachedGoals($before);
+        $years                     = $this->years($before);
 
         // Every entry on or after the highest bound is known.
         $bound = collect([$sessionBound, $nightBound, $listBound, $weekBound, $monthBound])->filter()->max();
 
-        $order   = ['goal' => 0, 'sketch' => 1, 'session' => 2, 'night' => 3, 'list' => 4];
-        $entries = $goals->concat($months)->concat($weeks)->concat($sessions)->concat($nights)->concat($lists)
+        $order   = ['year' => 0, 'goal' => 1, 'sketch' => 2, 'session' => 3, 'night' => 4, 'list' => 5];
+        $entries = $years->concat($goals)->concat($months)->concat($weeks)->concat($sessions)->concat($nights)->concat($lists)
             ->filter(fn (array $entry) => $bound === null || $entry['date']->gte($bound))
             ->sort(fn (array $a, array $b) => [$b['date'], $order[$a['kind']]] <=> [$a['date'], $order[$b['kind']]])
-            ->values();
+            ->values()
+            ->map(fn (array $entry) => $entry['kind'] === 'year'
+                ? $entry + ['summary' => (new ObserverYear($this->observer, $entry['year']))->summary()]
+                : $entry);
 
         $this->preload($entries);
 
@@ -357,6 +362,25 @@ class ObserverBlog
                 'kind' => 'goal',
                 'date' => $goal->progress()['reached_on']->copy()->startOfDay(),
                 'goal' => $goal,
+            ])
+            ->filter(fn (array $entry) => $before === null || $entry['date']->lt($before))
+            ->values();
+    }
+
+    /**
+     * The finished years with observations before $before, on their last
+     * day. An observer has a few dozen years at most, so all of them are
+     * fetched for every page; only those shown get their summary.
+     *
+     * @return Collection<int, array>
+     */
+    private function years(?Carbon $before): Collection
+    {
+        return ObserverYear::years($this->observer)
+            ->map(fn (int $year) => [
+                'kind' => 'year',
+                'date' => Carbon::create($year, 12, 31)->startOfDay(),
+                'year' => $year,
             ])
             ->filter(fn (array $entry) => $before === null || $entry['date']->lt($before))
             ->values();

@@ -2,7 +2,6 @@
 
 ## Next steps
 
-- [x] Observation reminders after a session: notes a session has but no observation records yet. This nudges people to finish logging the night.
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4 -> Ubuntu 26.04 LTS.
 - [ ] Translations
@@ -98,4 +97,25 @@
 - [X] Personal blog page for every user. 
 - [X] Weather forecasts
 - [X] Personal observing goals: "200 Herschel objects this year", "every Messier in one season", with progress on the observer page and in the blog.
- 
+- [x] Year in review: a public page per observer and finished year (totals against the year before, per month, new objects, best night, faintest and rarest object, catalog progress, drawings, equipment, goals), in the blog and the RSS feed, with a DeepskyLog message in the first week of January.
+- [x] Observation reminders after a session: notes a session has but no observation records yet. This nudges people to finish logging the night.
+
+1. Year in review (my recommendation)
+Each observer gets a yearly summary page, at something like /observers/{observer}/year/2026. It would show:
+
+how many nights and observations they logged, and how many objects were new to them;
+their busiest night and their deepest or faintest object;
+their first object in each catalog;
+the telescope and location they used most;
+their drawings and any sketch of the week or month;
+how their observing goals turned out;
+a month-by-month activity chart.
+In late December the site sends each observer a message with a link to their page. The page also appears in their blog and RSS feed, with the existing share buttons.
+
+Why now: it's late October, so it can be built and tested before the year ends. Almost everything it needs already exists: the observer statistics, different_object_key, ObjectSources, the goals' progress(), the blog, the message/mail path of the digests, and the share buttons. It also brings back observers who stopped logging, which is the same aim as the session reminders you just finished.
+
+2. Messier marathon planner
+This would give the best dates in March and April at the observer's location (near new Moon, with every object above the horizon at some point in the night) and the order to observe them in, with a time window for each object. It would be built on NightWindow plus rise and set times, and save the result with ObservingList::createWithObjects(). The marathon season is next March, so this could come after the year in review.
+
+3. Filter advice per object
+On the object page and the field views, it would show which of the observer's filters (UHC, OIII, H-beta) would help, and by how much. It would do this by running ContrastReserveCalculator with the filter's passband applied to emission nebulae. It's useful, but it needs filter transmission data the database doesn't hold yet, so it's more work than the other two.
