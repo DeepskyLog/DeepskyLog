@@ -2,7 +2,6 @@
 
 ## Next steps
 
-- [ ] Seasonal planner per list: for each object in an observing list, the months it is well placed from the observer's location, plus a "what's up this month" filter. Most of the year-graph logic already exists.
 - [ ] Observation reminders after a session: notes a session has but no observation records yet. This nudges people to finish logging the night.
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4 -> Ubuntu 26.04 LTS.
@@ -46,6 +45,7 @@
 
 ### Done
 
+- [x] Seasonal planner per list: for each object in an observing list, the months it is well placed from the observer's location, plus a "what's up this month" filter. Most of the year-graph logic already exists.
 - [x] Add privacy policy
 - [x] Use DeepskyLog logo in mails
 - [x] Send mail to verify mail account directly after registration

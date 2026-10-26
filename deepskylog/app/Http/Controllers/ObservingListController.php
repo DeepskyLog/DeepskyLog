@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ObservingList;
+use App\Services\SeasonalVisibility;
 use App\Services\TonightsBest;
 use App\Models\ObservingListComment;
 use App\Models\ObservingListItem;
@@ -196,7 +197,14 @@ class ObservingListController extends Controller
         $isLiked = $user ? $list->isLikedBy($user) : false;
         $isActive = $user ? $this->activeListService->isActive($user, $list) : false;
 
+        // The seasonal planner: the months the objects are well placed, and
+        // ?month= to show only those well placed in that month.
+        $seasons = SeasonalVisibility::forViewer();
+        $month = (int) request()->query('month', 0);
+
         return view('observing-lists.show', [
+            'seasons' => $seasons,
+            'wellPlacedMonth' => $seasons && $month >= 1 && $month <= 12 ? $month : 0,
             'list' => $list,
             'items' => $items,
             'comments' => $comments,

@@ -9,6 +9,7 @@ use App\Models\Atlas;
 use App\Services\ActiveObservingListService;
 use App\Services\ObjectObservationStatistics;
 use App\Services\ObservationComparison;
+use App\Services\SeasonalVisibility;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\Paginator;
@@ -78,6 +79,8 @@ class AdvancedObjectSearchTable extends PowerGridComponent
     public string $compareNotSeen = '';
     public string $compareSqm = '';
     public string $compareSkyDirection = ObservationComparison::SKY_POOR_NOT_DARK;
+    // Observing list only: the month (1–12) its objects have to be well placed in (SeasonalVisibility), 0 = any
+    public int $wellPlacedMonth = 0;
 
     // ── CR / best-mag dedup flags ─────────────────────────────────────────
     public bool $bestMagUpsertedThisLoad = false;
@@ -86,6 +89,8 @@ class AdvancedObjectSearchTable extends PowerGridComponent
     private ?bool $canModifyActiveListCached = null;
 
     private ?array $cachedEyepieces = null;
+    // [list id, SeasonalVisibility or null] of seasons(); PowerGrid's mount() asks before the list is set
+    private ?array $seasons = null;
     public int $refreshTick = 0;
 
     public function boot(): void
@@ -151,6 +156,8 @@ class AdvancedObjectSearchTable extends PowerGridComponent
         $this->compareSkyDirection = in_array($direction, ObservationComparison::SKY_DIRECTIONS, true)
             ? $direction
             : ObservationComparison::SKY_POOR_NOT_DARK;
+        $month = (int) ($filters['well_placed_month'] ?? 0);
+        $this->wellPlacedMonth = $month >= 1 && $month <= 12 ? $month : 0;
     }
 
     #[On('advanced-add-all-to-active-list')]
@@ -418,6 +425,19 @@ class AdvancedObjectSearchTable extends PowerGridComponent
                     // 'in' mode
                     if (empty($listNames)) {
                         $rows->whereRaw('1 = 0');
+                    } elseif ($this->wellPlacedMonth > 0) {
+                        // Only the deep-sky objects of the list that are well
+                        // placed in the month; the others move or have no position.
+                        $seasons = $this->seasons();
+                        $slugs = !$seasons ? [] : DB::table('objects')
+                            ->whereIn('name', $listNames)
+                            ->get(['slug', 'ra', 'decl'])
+                            ->filter(fn($o) => is_numeric($o->ra) && is_numeric($o->decl)
+                                && $seasons->isWellPlaced((float) $o->ra * 15.0, (float) $o->decl, $this->wellPlacedMonth))
+                            ->pluck('slug')
+                            ->all();
+                        $rows->where('source_table', 'objects');
+                        empty($slugs) ? $rows->whereRaw('1 = 0') : $rows->whereIn('source_pk', $slugs);
                     } else {
                         // Match by name (for all source types including comets/planets)
                         // OR by slug/source_pk (for DSO objects missing from search_index).
@@ -975,7 +995,95 @@ class AdvancedObjectSearchTable extends PowerGridComponent
                     return '-';
                 }
             })
-            ->add('atlas_page');
+            ->add('atlas_page')
+            ->add('seasons', fn($row) => $this->seasonsCell($row))
+            ->add('seasons_plain', function ($row) {
+                $months = $this->rowMonths($row);
+                if ($months === null) {
+                    return '';
+                }
+                $well = array_keys(array_filter($months, fn($m) => $m['well']));
+
+                return implode(', ', array_map(fn($m) => \Carbon\Carbon::create(2000, $m, 1)->translatedFormat('M'), $well));
+            });
+    }
+
+    /**
+     * The seasonal planner of the observing list, or null when the table
+     * shows no list or there is no location.
+     */
+    private function seasons(): ?SeasonalVisibility
+    {
+        $listId = $this->currentObservingListId();
+        if ($this->seasons === null || $this->seasons[0] !== $listId) {
+            $this->seasons = [$listId, $listId !== null ? SeasonalVisibility::forViewer() : null];
+        }
+
+        return $this->seasons[1];
+    }
+
+    /**
+     * The months of SeasonalVisibility::months() for the row's object, or null
+     * for an object that moves (planet, comet) or has no position.
+     *
+     * @return array<int, array{hours: float|null, well: bool}>|null
+     */
+    private function rowMonths($row): ?array
+    {
+        $seasons = $this->seasons();
+        if (!$seasons || ($row->source_table ?? null) !== 'objects' || !is_numeric($row->obj_ra ?? null) || !is_numeric($row->obj_decl ?? null)) {
+            return null;
+        }
+
+        return $seasons->months((float) $row->obj_ra * 15.0, (float) $row->obj_decl);
+    }
+
+    /**
+     * Twelve small cells, one per month, shaded by the hours the object stands
+     * well placed in the dark hours; the current month is outlined. An object
+     * that never reaches the altitude is yellow in the months it transits in
+     * the dark hours.
+     */
+    private function seasonsCell($row): string
+    {
+        $months = $this->rowMonths($row);
+        if ($months === null) {
+            return '<span class="text-gray-500" title="' . e(__('Planets and comets move across the sky: see their object page.')) . '">-</span>';
+        }
+
+        $seasons = $this->seasons();
+        $decl = (float) $row->obj_decl;
+        $low = $seasons->isLow($decl);
+        $html = '<span class="inline-flex gap-0.5" role="img" aria-label="' . e(__('Months well placed')) . '">';
+        foreach ($months as $month => ['hours' => $h, 'well' => $well]) {
+            $name = \Carbon\Carbon::create(2000, $month, 1)->translatedFormat('F');
+            if ($h === null) {
+                $class = 'bg-gray-900';
+                $title = __(':month: no dark hours', ['month' => $name]);
+            } elseif ($low) {
+                $class = $well ? 'bg-yellow-600' : 'bg-gray-700';
+                $title = $well
+                    ? __(':month: highest at :altitude° in the dark hours', ['month' => $name, 'altitude' => (int) round($seasons->highestAltitude($decl))])
+                    : __(':month: not at its highest (:altitude°) in the dark hours', ['month' => $name, 'altitude' => (int) round($seasons->highestAltitude($decl))]);
+            } else {
+                $class = match (true) {
+                    $h >= 6 => 'bg-green-400',
+                    $h >= 3 => 'bg-green-600',
+                    $well => 'bg-green-800',
+                    $h > 0 => 'bg-gray-600',
+                    default => 'bg-gray-700',
+                };
+                $title = __(':month: :hours h above :altitude° in the dark hours', [
+                    'month' => $name,
+                    'hours' => number_format($h, 1),
+                    'altitude' => (int) SeasonalVisibility::MIN_ALTITUDE,
+                ]);
+            }
+            $ring = $month === $seasons->currentMonth ? ' ring-1 ring-blue-400' : '';
+            $html .= '<span class="inline-block w-2 h-4 rounded-sm ' . $class . $ring . '" title="' . e($title) . '"></span>';
+        }
+
+        return $html . '</span>';
     }
 
     public function columns(): array
@@ -1053,6 +1161,14 @@ class AdvancedObjectSearchTable extends PowerGridComponent
         }
 
         $cols[] = Column::make(__('Size'), 'size')->sortable()->bodyAttribute('class', 'text-center');
+
+        if ($this->seasons()) {
+            $cols[] = Column::make(__('Months'), 'seasons')
+                ->bodyAttribute('class', 'text-center')
+                ->bodyAttribute('style', 'white-space:nowrap;')
+                ->visibleInExport(false);
+            $cols[] = Column::make(__('Months well placed'), 'seasons_plain')->hidden()->visibleInExport(true);
+        }
 
         if ($authUser && $this->showAddColumn && $this->canModifyActiveList()) {
             $cols[] = Column::make(__('Add'), 'add_to_list_action')

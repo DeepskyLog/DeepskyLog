@@ -219,6 +219,7 @@
                         $tableFilters = [
                             'observing_lists' => [(string) $list->id],
                             'observing_lists_mode' => 'in',
+                            'well_placed_month' => $wellPlacedMonth,
                         ];
                         $showAddColumn = !($list->public && !$isOwner);
                         $exportNamesBase = route('observing-list.export.names.pdf', $list);
@@ -311,6 +312,29 @@
                     @else
                         <div class="bg-gray-800 rounded-lg p-4 dsl-search-card">
                             <div class="mb-3 flex items-center gap-3 flex-wrap">
+                                @if ($seasons)
+                                    {{-- Seasonal planner: only the objects well placed in a month --}}
+                                    <form method="GET" action="{{ route('observing-list.show', $list) }}" class="flex flex-wrap items-center gap-2 text-sm">
+                                        <label for="well-placed-month" class="text-gray-300">{{ __('Well placed in') }}</label>
+                                        <select id="well-placed-month" name="month" onchange="this.form.submit()"
+                                            class="bg-gray-900 border border-gray-600 rounded-md text-gray-100 py-1 pl-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="">{{ __('Any month') }}</option>
+                                            @for ($m = 1; $m <= 12; $m++)
+                                                <option value="{{ $m }}" @selected($wellPlacedMonth === $m)>{{ \Carbon\Carbon::create(2000, $m, 1)->translatedFormat('F') }}</option>
+                                            @endfor
+                                        </select>
+                                        <noscript><button type="submit" class="px-2 py-1 bg-gray-700 rounded text-gray-200">{{ __('Show') }}</button></noscript>
+                                        @if ($wellPlacedMonth !== $seasons->currentMonth)
+                                            <a href="{{ route('observing-list.show', ['list' => $list, 'month' => $seasons->currentMonth]) }}"
+                                               class="inline-flex items-center px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded text-xs font-semibold">
+                                                {{ __("What's up this month") }}
+                                            </a>
+                                        @endif
+                                        @if ($wellPlacedMonth)
+                                            <a href="{{ route('observing-list.show', $list) }}" class="text-xs text-gray-400 hover:text-gray-200 underline">{{ __('Show all objects') }}</a>
+                                        @endif
+                                    </form>
+                                @endif
                                 <div class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
                                     @auth
                                         @include('object-sets.link', ['params' => ['source' => 'list', 'list' => $list->slug]])
@@ -350,8 +374,25 @@
                                 </div>
                             </div>
 
+                            @if ($seasons)
+                                <p class="mb-3 text-xs text-gray-400">
+                                    {{ __('Months: at least :hours hour above :altitude° in the dark hours of the 15th, from :location.', [
+                                        'hours' => (int) \App\Services\SeasonalVisibility::MIN_HOURS,
+                                        'altitude' => (int) \App\Services\SeasonalVisibility::MIN_ALTITUDE,
+                                        'location' => html_entity_decode((string) $seasons->location?->name),
+                                    ]) }}
+                                    {{ __('An object that never stays that long that high counts in the months it is at its highest in the dark hours.') }}
+                                    @if ($wellPlacedMonth)
+                                        {{ __('Planets and comets move, so this filter leaves them out.') }}
+                                    @endif
+                                    @guest
+                                        {{ __('Log in to use your standard location.') }}
+                                    @endguest
+                                </p>
+                            @endif
+
                             <div class="w-full">
-                                @livewire('advanced-object-search-table', ['filters' => $tableFilters, 'showAddColumn' => $showAddColumn], key('observing-list-table-' . $list->id))
+                                @livewire('advanced-object-search-table', ['filters' => $tableFilters, 'showAddColumn' => $showAddColumn], key('observing-list-table-' . $list->id . '-' . $wellPlacedMonth))
                             </div>
                         </div>
 
