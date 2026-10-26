@@ -167,6 +167,21 @@
                             @endif
                         </p>
                     @endif
+                    @if (! empty($view['filters']))
+                        <ul class="text-gray-400">
+                            @foreach ($view['filters'] as $advice)
+                                <li>
+                                    @if ($advice['current'])
+                                        {{ __('With :filter: :value', ['filter' => $advice['name'], 'value' => number_format($advice['current']['contrast_reserve'], 2)]) }}
+                                        <span class="{{ $advice['current']['gain'] > 0 ? 'text-green-400' : 'text-gray-500' }}">({{ $advice['current']['gain'] > 0 ? '+' : '' }}{{ number_format($advice['current']['gain'], 2) }})</span>
+                                    @else
+                                        {{ $advice['name'] }}
+                                    @endif
+                                    <span class="text-xs">· {{ __('best at :magnification (exit pupil :pupil mm): :value', ['magnification' => $advice['magnification'] . 'x' . (!empty($advice['eyepieces']) ? ', ' . implode(', ', $advice['eyepieces']) : ''), 'pupil' => number_format((float) $advice['exit_pupil'], 1), 'value' => number_format($advice['contrast_reserve'], 2)]) }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
                     <div class="dsl-field-view mt-2">{!! $view['svg'] !!}</div>
                 @else
                     <p class="mt-4 text-gray-300">{{ $view['message'] }}</p>
@@ -179,6 +194,8 @@
         <p>{{ __('The naked-eye view shows 90° of the sky around the object, with the zenith up and the ground below the horizon. The dashed circles show the field of the finder in the naked-eye view and the field of the telescope in the finder view.') }}</p>
         <p>{{ __('The finder and telescope views are turned as the mount turns them (zenith up for an alt-azimuth mount, north up for an equatorial one) and mirrored as set for the instrument. The arrows in the corner point north (N) and east (E).') }}</p>
         <p>{{ __('The contrast reserve is that of the object at the magnification of the view, under the sky of the location (its SQM, else its limiting magnitude), with the object dimmed by the extinction at its altitude.') }}</p>
+        <p>{{ __('For an emission nebula, the telescope view also gives the contrast reserve with each of your nebula filters, with the difference without a filter between brackets. Every filter of a kind (broadband, UHC, O-III, H-beta) gets the typical passband of that kind, and the nebula the typical spectrum of its type.') }}</p>
+        <p>{{ __('Each filter also gets the best magnification of the eyepieces of the instrument set with that filter. A filter darkens the image, so it often works best at a lower magnification (a larger exit pupil) than without one, up to the :pupil mm of the dark-adapted eye.', ['pupil' => (int) \App\Services\ContrastReserveCalculator::EYE_PUPIL_MM]) }}</p>
         <p>{{ __('The limiting magnitudes follow from the limiting magnitude or SQM of the location, the aperture and magnification of the instrument, and the extinction at the altitude of the object. Stars of the naked-eye view fade towards the horizon.') }}</p>
     </div>
 </div>

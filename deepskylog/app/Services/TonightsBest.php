@@ -122,7 +122,7 @@ class TonightsBest
     /** While metrics are being calculated, the list is made again soon. */
     private const PENDING_CACHE_SECONDS = 300;
 
-    private const PLANETS = [
+    public const PLANETS = [
         'mercury' => Mercury::class,
         'venus'   => Venus::class,
         'mars'    => Mars::class,
@@ -226,7 +226,11 @@ class TonightsBest
             ->mapWithKeys(fn (array $object) => [($object['list_name'] ?? $object['name']) => ['at' => $object['timestamp'] ?? null]])
             ->all();
 
-        return ObservingList::createWithObjects($owner, trim((string) $name) ?: self::listName($result), $names, self::listDescription($result), $public, $details, $timezone);
+        return ObservingList::createWithObjects($owner, trim((string) $name) ?: self::listName($result), $names, self::listDescription($result), $public, $details, [
+            'night'       => $timezone === null ? null : $result['night'],
+            'timezone'    => $timezone,
+            'location_id' => $result['location_id'] ?? null,
+        ]);
     }
 
     /**
@@ -300,26 +304,27 @@ class TonightsBest
         private string $timezone,
         private array $options,
     ) {
-        $this->dark    = NightWindow::for((float) $location->latitude, (float) $location->longitude, $night, $timezone);
-        $sqm           = $location->getSqm();
-        $this->darkSqm = is_numeric($sqm) && (float) $sqm > 0 ? (float) $sqm : Magnitude::nelmToSqm(FieldViewBuilder::DEFAULT_NELM);
+        $this->dark     = NightWindow::for((float) $location->latitude, (float) $location->longitude, $night, $timezone);
+        $sqm            = $location->getSqm();
+        $this->darkSqm  = is_numeric($sqm) && (float) $sqm > 0 ? (float) $sqm : Magnitude::nelmToSqm(FieldViewBuilder::DEFAULT_NELM);
         $this->excluded = array_fill_keys($options['exclude'], true);
     }
 
     private function build(): array
     {
         $result = [
-            'mode'       => $this->instrument ? 'personal' : 'popular',
-            'night'      => $this->night,
-            'location'   => $this->instrument ? html_entity_decode((string) $this->location->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') : null,
-            'instrument' => $this->instrument ? html_entity_decode((string) $this->instrument->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') : null,
-            'latitude'   => round((float) $this->location->latitude),
-            'timezone'   => $this->timezone,
-            'dark'       => null,
-            'period'     => null,
-            'moon'       => null,
-            'objects'    => [],
-            'pending'    => false,
+            'mode'        => $this->instrument ? 'personal' : 'popular',
+            'night'       => $this->night,
+            'location'    => $this->instrument ? html_entity_decode((string) $this->location->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') : null,
+            'instrument'  => $this->instrument ? html_entity_decode((string) $this->instrument->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') : null,
+            'latitude'    => round((float) $this->location->latitude),
+            'timezone'    => $this->timezone,
+            'location_id' => $this->location->id,
+            'dark'        => null,
+            'period'      => null,
+            'moon'        => null,
+            'objects'     => [],
+            'pending'     => false,
         ];
         if ($this->dark === null) {
             return $result;

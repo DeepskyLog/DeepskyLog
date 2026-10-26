@@ -22,6 +22,14 @@ class ContrastReserveCalculator
     public const GENERIC_MAGNIFICATIONS = [25, 50, 75, 100, 150, 200];
 
     /**
+     * The diameter (mm) of the dark-adapted pupil of the eye. At a lower
+     * magnification the exit pupil is larger than the eye pupil: the eye
+     * then takes in only part of the light of the instrument, so the sky
+     * gets no brighter (contrastAt()).
+     */
+    public const EYE_PUPIL_MM = 7.0;
+
+    /**
      * The categories, from the lowest contrast reserve above which they apply.
      */
     private const CATEGORIES = [
@@ -179,9 +187,43 @@ class ContrastReserveCalculator
             $magnifications = $fitting;
         }
 
-        $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $magnifications);
+        $best         = null;
+        $bestContrast = null;
+        foreach ($magnifications as $magnification) {
+            $contrast = self::contrastAt($target, $sbobj, $sqm, $aperture, $magnification);
+            if (is_numeric($contrast) && ($bestContrast === null || $contrast > $bestContrast)) {
+                [$best, $bestContrast] = [$magnification, (float) $contrast];
+            }
+        }
 
-        return $best ? (int) $best : null;
+        return $best;
+    }
+
+    /**
+     * The contrast reserve at a magnification (Clark's model of the
+     * library), with the light the eye takes in limited by the eye pupil:
+     * at an exit pupil larger than EYE_PUPIL_MM, the instrument works as one
+     * of the aperture that gives that exit pupil. The library would let the
+     * sky in the eyepiece get ever brighter at lower magnifications, and
+     * choose the lowest magnification for a faint nebula, the more so
+     * behind a filter.
+     */
+    public static function contrastAt(AstroTarget $target, float $sbobj, ?float $sqm, ?float $aperture, float $magnification): ?float
+    {
+        if (! $aperture || $magnification <= 0) {
+            return null;
+        }
+        $contrast = $target->calculateContrastReserve($sbobj, $sqm, min($aperture, $magnification * self::EYE_PUPIL_MM), $magnification);
+
+        return is_numeric($contrast) ? (float) $contrast : null;
+    }
+
+    /**
+     * The exit pupil (mm) of the aperture at the magnification.
+     */
+    public static function exitPupil(float $aperture, float $magnification): ?float
+    {
+        return $aperture > 0 && $magnification > 0 ? $aperture / $magnification : null;
     }
 
     /**
@@ -353,7 +395,7 @@ class ContrastReserveCalculator
             return $result;
         }
         $best     = (int) $best;
-        $contrast = $target->calculateContrastReserve($sbobj, $result['sqm'], $aperture, $best);
+        $contrast = self::contrastAt($target, $sbobj, $result['sqm'], $aperture, $best);
 
         return [
             'contrast_reserve' => is_numeric($contrast) ? (float) $contrast : null,

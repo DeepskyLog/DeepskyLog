@@ -24,10 +24,13 @@ class ObservingList extends Model
         'description',
         'public',
         'planned_timezone',
+        'planned_night',
+        'planned_location_id',
     ];
 
     protected $casts = [
         'public' => 'boolean',
+        'planned_night' => 'date',
         'comments_count' => 'integer',
         'likes_count' => 'integer',
     ];
@@ -229,23 +232,27 @@ class ObservingList extends Model
      * this order. The name is made unique. $details holds per object name a
      * note (item_description) and, for a list made for one night, the
      * moments (timestamps) to observe it and between which it stands high
-     * enough, shown in $timezone.
+     * enough. $plan gives that night (Y-m-d, its evening), the time zone the
+     * times are shown in and the location.
      *
      * @param  iterable<string>  $objectNames
      * @param  array<string, array{note?: ?string, at?: ?int, from?: ?int, until?: ?int}>  $details
+     * @param  array{night?: ?string, timezone?: ?string, location_id?: ?int}  $plan
      */
-    public static function createWithObjects(User $owner, string $name, iterable $objectNames, ?string $description = null, bool $public = false, array $details = [], ?string $timezone = null): self
+    public static function createWithObjects(User $owner, string $name, iterable $objectNames, ?string $description = null, bool $public = false, array $details = [], array $plan = []): self
     {
         $names = collect($objectNames)->map(fn ($name) => (string) $name)->filter(fn (string $name) => $name !== '')->unique()->values();
         $moment = fn (?int $timestamp) => $timestamp === null ? null : Carbon::createFromTimestamp($timestamp, 'UTC')->format('Y-m-d H:i:s');
 
-        return DB::transaction(function () use ($owner, $name, $names, $description, $public, $details, $timezone, $moment) {
+        return DB::transaction(function () use ($owner, $name, $names, $description, $public, $details, $plan, $moment) {
             $list = self::create([
                 'owner_user_id' => $owner->id,
                 'name' => self::uniqueName($owner, $name),
                 'description' => $description,
                 'public' => $public,
-                'planned_timezone' => $timezone,
+                'planned_timezone' => $plan['timezone'] ?? null,
+                'planned_night' => $plan['night'] ?? null,
+                'planned_location_id' => $plan['location_id'] ?? null,
             ]);
 
             $now = now();

@@ -256,6 +256,9 @@
                                                  placeholder="{{ __('Leave empty to remove') }}" />
                                     </div>
                                     <p class="text-xs text-gray-400 -mt-2">{{ __('Optional fields - clear to remove value') }}</p>
+                                    @if ($object->hasEstimatedMagnitude())
+                                        <p class="text-xs text-amber-300">{{ __('The magnitude is estimated from the brightness class of :source. A magnitude you enter replaces the estimate.', ['source' => $object->mag_source]) }}</p>
+                                    @endif
 
                                     {{-- SB Object is calculated automatically, not editable --}}
                                     @php

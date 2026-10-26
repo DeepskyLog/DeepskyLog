@@ -22,7 +22,7 @@
     </p>
 
     <x-card>
-        <div class="grid grid-cols-1 gap-4 px-2 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="grid grid-cols-1 gap-4 px-2 sm:grid-cols-2 lg:grid-cols-3">
             <label class="block text-sm">
                 <span
                     class="mb-1 block text-gray-400"
@@ -112,6 +112,23 @@
                     class="{{ $input }} w-28"
                 />
                 @error ("minutes")
+                    <span class="mt-1 block text-red-400">{{ $message }}</span>
+                @enderror
+            </label>
+            <label class="block text-sm">
+                <span class="mb-1 block text-gray-400">{{
+                    __(
+                        "Minutes between objects",
+                    )
+                }}</span>
+                <input
+                    type="number"
+                    wire:model.live.debounce.500ms="gap"
+                    min="0"
+                    max="15"
+                    class="{{ $input }} w-28"
+                />
+                @error ("gap")
                     <span class="mt-1 block text-red-400">{{ $message }}</span>
                 @enderror
             </label>

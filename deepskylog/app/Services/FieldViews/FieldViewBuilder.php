@@ -11,6 +11,7 @@ use App\Models\Location;
 use App\Models\User;
 use App\Services\AtmosphericExtinction;
 use App\Services\ContrastReserveCalculator;
+use App\Services\FilterAdvice;
 use App\Services\TelescopicLimitingMagnitude;
 use App\Support\EphemerisDate;
 use Carbon\Carbon;
@@ -262,6 +263,7 @@ class FieldViewBuilder
                 'fov'      => self::formatAngle($telescopeFov),
                 'limit'    => $telescopeLimit,
                 'contrast' => $contrast($instrument, $magnification),
+                'filters'  => $visible ? $this->filterAdvice($user, $set, $object, $instrument, $lens, $choices['eyepieces'], $sqm, $extinction, $magnification) : [],
                 'svg'      => $this->renderer->render($base + [
                     'radius_deg'         => $telescopeFov / 2,
                     'star_limit'         => $telescopeLimit,
@@ -322,7 +324,7 @@ class FieldViewBuilder
         try {
             $target = ContrastReserveCalculator::target($object->diam1, $object->diam2, (float) $object->mag + $extinction);
             $sbobj  = $target->calculateSBObj();
-            $value  = $sbobj === null ? null : $target->calculateContrastReserve($sbobj, $sqm, $aperture, (float) $magnification);
+            $value  = $sbobj === null ? null : ContrastReserveCalculator::contrastAt($target, $sbobj, $sqm, $aperture, (float) $magnification);
         } catch (\Throwable) {
             return null;
         }
@@ -330,6 +332,35 @@ class FieldViewBuilder
         return is_numeric($value)
             ? ['value' => round((float) $value, 2) + 0.0, 'category' => ContrastReserveCalculator::category($value)]
             : null;
+    }
+
+    /**
+     * The advice for each nebula filter of the instrument set (all
+     * equipment: all filters) on an emission nebula (FilterAdvice::advise()):
+     * the contrast reserve at the magnification of the view, and the best
+     * magnification of the eyepieces of the set with the filter
+     * (FilterAdvice::present()).
+     *
+     * @param  Collection<int, Eyepiece>  $eyepieces
+     * @return list<array<string, mixed>>
+     */
+    private function filterAdvice(User $user, ?InstrumentSet $set, DeepskyObject $object, Instrument $instrument, ?Lens $lens, Collection $eyepieces, float $sqm, float $extinction, mixed $magnification): array
+    {
+        $hasMagnitude = is_numeric($object->mag) && (float) $object->mag < 99 && (float) $object->mag != 0.0;
+        if (! $hasMagnitude || ! is_numeric($magnification) || FilterAdvice::spectrum($object->type, $object->name) === null) {
+            return [];
+        }
+        $target     = ContrastReserveCalculator::target($object->diam1, $object->diam2, (float) $object->mag + $extinction);
+        $lensFactor = ContrastReserveCalculator::lensFactor($lens);
+        $options    = (float) $instrument->fixedMagnification > 0
+            ? [(int) round((float) $instrument->fixedMagnification) => []]
+            : ContrastReserveCalculator::eyepieceMagnifications($instrument, $eyepieces->where('active', true), $lensFactor);
+        $options[(int) round((float) $magnification)] ??= [];
+
+        $fields  = ContrastReserveCalculator::fields($instrument, $options, $lensFactor);
+        $filters = FilterAdvice::filters($user, $set);
+
+        return FilterAdvice::present(FilterAdvice::advise($target, $object->type, $object->name, $filters, $instrument, $sqm, $options, $fields, (float) $magnification));
     }
 
     /**

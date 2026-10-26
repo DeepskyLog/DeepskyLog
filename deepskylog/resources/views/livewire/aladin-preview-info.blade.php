@@ -191,6 +191,70 @@
             </td>
         </tr>
     @endif
+    @if (!empty($filter_advice))
+        {{-- The contrast reserve with each of the observer's nebula filters (FilterAdvice); the
+             kind of filter and the magnifications are in a popover on hover (tap on a touch screen) --}}
+        <tr>
+            <td class="pr-4 font-medium align-top">
+                <div class="inline-flex items-center space-x-2">
+                    <span>{{ __('Contrast reserve with filters') }}</span>
+                    <div x-data="{ open: false }" class="relative inline-block" @mouseenter="open = true" @mouseleave="open = false">
+                        <button @click.prevent="open = !open" @keydown.escape="open = false" :aria-expanded="open.toString()"
+                            aria-haspopup="true" type="button" class="ml-1 text-gray-400 hover:text-gray-200 focus:outline-none"
+                            aria-label="{{ __('Contrast reserve with filters') }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-9-4a1 1 0 112 0 1 1 0 01-2 0zM9 9a1 1 0 012 0v4a1 1 0 11-2 0V9z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <div x-show="open" x-cloak @click.outside="open = false" x-transition
+                            class="absolute z-10 left-0 mt-2 w-80 p-3 bg-gray-800 text-xs font-normal text-gray-100 rounded shadow-lg"
+                            data-dsl-no-overlay-hide="true">
+                            <p>{{ __('The difference with the contrast reserve without a filter is between brackets. Every filter of a kind gets the typical passband of that kind, and the nebula the typical spectrum of its type.') }}</p>
+                            <p class="mt-2">{{ __('A filter darkens the image, so it often works best at a lower magnification (a larger exit pupil) than without one, up to the :pupil mm of the dark-adapted eye.', ['pupil' => (int) \App\Services\ContrastReserveCalculator::EYE_PUPIL_MM]) }}</p>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <ul>
+                    @foreach ($filter_advice as $advice)
+                        @php
+                            $filterClass = match ($advice['category']) {
+                                'very_easy' => 'text-green-400',
+                                'easy' => 'text-green-700',
+                                'quite_difficult' => 'text-orange-400',
+                                'difficult' => 'text-orange-700',
+                                'questionable' => 'text-gray-300',
+                                'not_visible' => 'text-gray-600',
+                                default => 'text-white',
+                            };
+                        @endphp
+                        <li x-data="{ open: false }" class="relative" style="width: fit-content; cursor: help" @mouseenter="open = true" @mouseleave="open = false"
+                            @click="if (! $event.target.closest('a')) open = !open" @click.outside="open = false">
+                            <span class="{{ $filterClass }} font-medium">{{ number_format($advice['contrast_reserve'], 2) }}</span>
+                            <span class="{{ $advice['gain'] > 0 ? 'text-green-400' : 'text-gray-400' }} text-xs">({{ $advice['gain'] > 0 ? '+' : '' }}{{ number_format($advice['gain'], 2) }})</span>
+                            @if ($advice['url'])
+                                <a href="{{ $advice['url'] }}" class="text-gray-300 hover:underline">{{ $advice['name'] }}</a>
+                            @else
+                                {{ $advice['name'] }}
+                            @endif
+                            <div x-show="open" x-cloak x-transition
+                                style="top: 100%" class="absolute z-10 left-0 mt-1 w-80 p-3 bg-gray-800 text-xs text-gray-100 rounded shadow-lg"
+                                data-dsl-no-overlay-hide="true">
+                                <div class="font-medium">{{ $advice['kind'] }}@if ($advice['category']) · {{ __('contrast.reserve.category.' . $advice['category']) }}@endif</div>
+                                <div class="mt-1">{{ __('Best at :magnification (exit pupil :pupil mm)', ['magnification' => $advice['magnification'] . 'x' . (!empty($advice['eyepieces']) ? ', ' . implode(', ', $advice['eyepieces']) : ''), 'pupil' => number_format((float) $advice['exit_pupil'], 1)]) }}</div>
+                                @if ($advice['ideal_exit_pupil'] !== null && abs($advice['ideal_exit_pupil'] - $advice['exit_pupil']) >= 0.5)
+                                    <div>{{ ucfirst(__('ideal: exit pupil :pupil mm (:magnification)', ['pupil' => number_format($advice['ideal_exit_pupil'], 1), 'magnification' => $advice['ideal_magnification'] . 'x'])) }}</div>
+                                @endif
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            </td>
+        </tr>
+    @endif
     {{-- The RA/Dec, Magnitude and Diameter rows were removed from this preview
          area because those values are shown at the top of the page. --}}
     @unless ($isComet || $isMoon)

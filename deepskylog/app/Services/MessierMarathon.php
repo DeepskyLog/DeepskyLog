@@ -25,15 +25,9 @@ use Illuminate\Support\Facades\DB;
  * (until the Sun is 6° below the horizon), as M 30 in the morning from most
  * places, is seen at the darkest moment it is that high, marked as twilight.
  *
- * The order takes $minutes per object and always observes, of the objects
- * that are up, the one that sets first (earliest deadline first, which never
- * misses an object when a schedule without misses exists). Objects that stay
- * up long would then all wait for the morning, far from where they stood
- * highest, so the order prefers the one whose transit lies longest ago
- * (SOFT_HOURS after it counts as its deadline), unless the plain order sees
- * more objects. Each object is then moved, in the same order, towards the
- * moment it stands highest, by at most half the time the objects after it
- * could still wait, so an object that just rose is not seen at the horizon.
+ * The order, with $minutes per object and $gap minutes to move to the next
+ * one, comes from NightPlanner: the one that
+ * misses the fewest objects, each moved towards the moment it stands highest.
  *
  * A night near the new Moon is one whose Moon light, the illuminated
  * fraction times the part of the night the Moon is up, is at most
@@ -62,9 +56,6 @@ class MessierMarathon
     /** The number of nights marked as best. */
     public const BEST_NIGHTS = 3;
 
-    /** An object is preferred this long after its transit. */
-    private const SOFT_HOURS = 3;
-
     /** How long the Moon of the nights of a season is kept. */
     private const CACHE_SECONDS = 7 * 86400;
 
@@ -78,13 +69,14 @@ class MessierMarathon
         public readonly string $timezone,
         public readonly float $minAltitude = self::MIN_ALTITUDE,
         public readonly int $minutes = self::MINUTES_PER_OBJECT,
+        public readonly int $gap = 0,
     ) {
         $this->objects = self::objects();
     }
 
-    public static function forLocation(Location $location, string $timezone, float $minAltitude = self::MIN_ALTITUDE, int $minutes = self::MINUTES_PER_OBJECT): self
+    public static function forLocation(Location $location, string $timezone, float $minAltitude = self::MIN_ALTITUDE, int $minutes = self::MINUTES_PER_OBJECT, int $gap = 0): self
     {
-        return new self((float) $location->latitude, (float) $location->longitude, (float) ($location->elevation ?? 0), $timezone, $minAltitude, $minutes);
+        return new self((float) $location->latitude, (float) $location->longitude, (float) ($location->elevation ?? 0), $timezone, $minAltitude, $minutes, $gap);
     }
 
     /**
@@ -261,11 +253,13 @@ class MessierMarathon
     /**
      * Make an observing list of the observer with the objects of a plan(), in
      * its order, each with the time to see it and its window, and the
-     * objects it misses at the end with the reason as note. $place is the
-     * name of the location, or null to name the latitude.
+     * objects it misses at the end with the reason as note. The location is
+     * named when it is the observer's own, else its latitude.
      */
-    public function createList(User $owner, array $plan, ?string $place, ?string $name = null, bool $public = false): ObservingList
+    public function createList(User $owner, array $plan, Location $location, ?string $name = null, bool $public = false): ObservingList
     {
+        $place = (int) $location->user_id === (int) $owner->id ? html_entity_decode((string) $location->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') : null;
+
         $details = [];
         foreach ($plan['objects'] as $object) {
             $details[$object['list_name']] = [
@@ -285,7 +279,7 @@ class MessierMarathon
             'date'     => $this->date($plan['night']),
             'location' => $place,
             'latitude' => (int) round($this->latitude),
-            'minutes'  => $this->minutes,
+            'minutes'  => $this->minutes + $this->gap,
             'altitude' => (int) round($this->minAltitude),
         ];
         $description = $place !== null
@@ -294,7 +288,11 @@ class MessierMarathon
 
         $names = array_merge(array_column($plan['objects'], 'list_name'), array_column($plan['missed'], 'list_name'));
 
-        return ObservingList::createWithObjects($owner, trim((string) $name) ?: $this->listName($plan['night']), $names, $description, $public, $details, $this->timezone);
+        return ObservingList::createWithObjects($owner, trim((string) $name) ?: $this->listName($plan['night']), $names, $description, $public, $details, [
+            'night'       => $plan['night'],
+            'timezone'    => $this->timezone,
+            'location_id' => $location->id,
+        ]);
     }
 
     /**
@@ -338,12 +336,13 @@ class MessierMarathon
         }
         $twilight = NightWindow::for($this->latitude, $this->longitude, $night, $this->timezone, ['civil']) ?? $dark;
 
-        $visibility = $this->visibility($twilight);
+        $planner    = new NightPlanner($this->latitude, $this->minAltitude, $this->minutes + $this->gap);
+        $visibility = $planner->visibility($twilight, $this->objects);
         $inDark     = array_map(fn (array $v) => [
             'intervals' => array_values(array_filter(array_map(fn (array $i) => [max($i[0], $dark->start), min($i[1], $dark->end)], $v['intervals']), fn (array $i) => $i[1] > $i[0])),
             'transits'  => $v['transits'],
         ], $visibility);
-        $schedule = $this->schedule($dark, $inDark);
+        $schedule = $planner->schedule($dark, $inDark, $this->objects);
 
         $order   = array_map(fn (array $item) => ['index' => $item[0], 'at' => $item[1], 'from' => $item[2][0], 'until' => $item[2][1], 'twilight' => false], $schedule['order']);
         $missed  = [];
@@ -375,7 +374,7 @@ class MessierMarathon
         // The twilight objects a slot apart: in the evening back from the
         // first object of the dark, the one that sets last first; in the
         // morning on from the last, the one that rises first first.
-        $slot = $this->minutes * 60;
+        $slot = ($this->minutes + $this->gap) * 60;
         usort($evening, fn (array $a, array $b) => $b['at'] <=> $a['at']);
         $next = $order[0]['at'] ?? PHP_INT_MAX;
         foreach ($evening as $item) {
@@ -459,161 +458,5 @@ class MessierMarathon
 
             return $moons;
         });
-    }
-
-    /**
-     * Per object, the parts of the window (timestamps) it stands at least
-     * $minAltitude high, and its transits in the window.
-     *
-     * @return list<array{intervals: list<array{0: int, 1: int}>, transits: list<int>}>
-     */
-    private function visibility(NightWindow $window): array
-    {
-        $span    = $window->siderealTime($window->end) - $window->lstStart;
-        $seconds = $window->end                        - $window->start;
-        $moment  = fn (float $hourAngle, float $from) => $window->start + (int) round(($hourAngle - $from) / $span * $seconds);
-        $lat     = deg2rad($this->latitude);
-
-        $visibility = [];
-        foreach ($this->objects as $object) {
-            $dec      = deg2rad($object['dec']);
-            $cosLimit = (sin(deg2rad($this->minAltitude)) - sin($lat) * sin($dec)) / max(1e-12, cos($lat) * cos($dec));
-            $from     = fmod(fmod($window->lstStart - $object['ra'], 360.0) + 360.0, 360.0);
-            $to       = $from + $span;
-
-            // The object is high enough for hour angles within the limit of a
-            // transit; the window spans less than a day, so it meets at most
-            // the transits at hour angle 0, 360 and 720.
-            $intervals = [];
-            $transits  = [];
-            if ($cosLimit < 1.0) {
-                $limit = $cosLimit <= -1.0 ? 180.0 : rad2deg(acos($cosLimit));
-                foreach ([0.0, 360.0, 720.0] as $transit) {
-                    $a = max($from, $transit - $limit);
-                    $b = min($to, $transit + $limit);
-                    if ($b <= $a) {
-                        continue;
-                    }
-                    $interval = [$moment($a, $from), $moment($b, $from)];
-                    if ($intervals !== [] && $interval[0] <= end($intervals)[1] + 1) {
-                        $intervals[count($intervals) - 1][1] = $interval[1];
-                    } else {
-                        $intervals[] = $interval;
-                    }
-                    if ($transit >= $from && $transit <= $to) {
-                        $transits[] = $moment($transit, $from);
-                    }
-                }
-            }
-
-            $visibility[] = ['intervals' => $intervals, 'transits' => $transits];
-        }
-
-        return $visibility;
-    }
-
-    /**
-     * The order with the fewest missed objects, preferring objects past their
-     * transit when that misses none more, with the objects moved towards the
-     * moment they stand highest.
-     *
-     * @return array{order: list<array{0: int, 1: int, 2: array{0: int, 1: int}}>, missed: list<int>}
-     */
-    private function schedule(NightWindow $window, array $visibility): array
-    {
-        $soft     = $this->order($window, $visibility, true);
-        $plain    = $this->order($window, $visibility, false);
-        $schedule = count($plain['missed']) < count($soft['missed']) ? $plain : $soft;
-
-        return ['order' => $this->spread($window, $schedule['order'], $visibility), 'missed' => $schedule['missed']];
-    }
-
-    /**
-     * Move each object of the order towards the moment it stands highest in
-     * its interval, keeping the order and at least half the time it could
-     * wait while every object after it is still seen within its interval.
-     *
-     * @param  list<array{0: int, 1: int, 2: array{0: int, 1: int}}>  $order
-     * @return list<array{0: int, 1: int, 2: array{0: int, 1: int}}>
-     */
-    private function spread(NightWindow $window, array $order, array $visibility): array
-    {
-        $slot   = $this->minutes * 60;
-        $latest = [];
-        for ($i = count($order) - 1; $i >= 0; $i--) {
-            $latest[$i] = min($order[$i][2][1], isset($latest[$i + 1]) ? $latest[$i + 1] - $slot : PHP_INT_MAX);
-        }
-
-        // The halfway points grow by at least a slot from one object to the
-        // next, so the moments stay a slot apart.
-        $previous = null;
-        foreach ($order as $i => [$index, $at, [$from, $until]]) {
-            $object  = $this->objects[$index];
-            $highest = $window->altitude($object['ra'], $object['dec'], $from) >= $window->altitude($object['ra'], $object['dec'], $until) ? $from : $until;
-            foreach ($visibility[$index]['transits'] as $transit) {
-                if ($transit >= $from && $transit <= $until) {
-                    $highest = $transit;
-                }
-            }
-
-            $halfway      = $at + intdiv($latest[$i] - $at, 2);
-            $order[$i][1] = max($at, $previous === null ? $at : $previous + $slot, min($highest, $halfway));
-            $previous     = $order[$i][1];
-        }
-
-        return $order;
-    }
-
-    /**
-     * @return array{order: list<array{0: int, 1: int, 2: array{0: int, 1: int}}>, missed: list<int>}
-     */
-    private function order(NightWindow $window, array $visibility, bool $soft): array
-    {
-        $remaining = array_keys(array_filter($visibility, fn (array $v) => $v['intervals'] !== []));
-        $missed    = array_keys(array_filter($visibility, fn (array $v) => $v['intervals'] === []));
-        $slot      = $this->minutes * 60;
-        $order     = [];
-        $t         = $window->start;
-
-        while ($remaining !== []) {
-            $best = null;
-            $next = null;
-            foreach ($remaining as $position => $index) {
-                foreach ($visibility[$index]['intervals'] as $interval) {
-                    if ($interval[0] > $t) {
-                        $next = min($next ?? $interval[0], $interval[0]);
-
-                        continue;
-                    }
-                    if ($interval[1] < $t) {
-                        continue;
-                    }
-                    $key = $interval[1];
-                    if ($soft) {
-                        foreach ($visibility[$index]['transits'] as $transit) {
-                            if ($transit >= $interval[0] && $transit <= $interval[1]) {
-                                $key = min($key, $transit + self::SOFT_HOURS * 3600);
-                            }
-                        }
-                    }
-                    $candidate = [$key, $interval[1], $this->objects[$index]['number']];
-                    if ($best === null || $candidate < $best['rank']) {
-                        $best = ['rank' => $candidate, 'position' => $position, 'index' => $index, 'interval' => $interval];
-                    }
-                }
-            }
-
-            if ($best !== null) {
-                $order[] = [$best['index'], $t, $best['interval']];
-                unset($remaining[$best['position']]);
-                $t += $slot;
-            } elseif ($next !== null) {
-                $t = $next;
-            } else {
-                break;
-            }
-        }
-
-        return ['order' => $order, 'missed' => array_values(array_merge($missed, $remaining))];
     }
 }

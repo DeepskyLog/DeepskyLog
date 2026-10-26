@@ -40,6 +40,25 @@ class DeepskyObject extends Model
 
     public const REVIEW_STATUSES = [self::REVIEW_NEW, self::REVIEW_CHECKED, self::REVIEW_ATTENTION];
 
+    protected static function booted(): void
+    {
+        // An edited magnitude is no longer the estimate of NebulaBrightness
+        static::saving(function (DeepskyObject $object) {
+            if ($object->exists && $object->isDirty('mag') && ! $object->isDirty('mag_source')) {
+                $object->mag_source = null;
+            }
+        });
+    }
+
+    /**
+     * Whether the magnitude is an estimate (from the brightness class of a
+     * nebula catalogue, App\Services\NebulaBrightness) rather than measured.
+     */
+    public function hasEstimatedMagnitude(): bool
+    {
+        return $this->mag_source !== null && $this->mag_source !== '';
+    }
+
     /**
      * The label of a review status, 'Not reviewed' for null.
      */

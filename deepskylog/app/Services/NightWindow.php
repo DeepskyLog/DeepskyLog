@@ -49,12 +49,22 @@ class NightWindow
                 continue;
             }
 
-            $sidereal = Time::meanSiderialTime(Carbon::createFromTimestamp($start, 'UTC'), new GeographicalCoordinates($longitude, $latitude));
-
-            return new self($start, $end, $twilight, $latitude, ($sidereal->hour + $sidereal->minute / 60 + $sidereal->second / 3600) * 15.0);
+            return self::span($latitude, $longitude, $start, $end, $twilight);
         }
 
         return null;
+    }
+
+    /**
+     * The window between two moments (timestamps) at the location, however
+     * dark the sky is then, such as the hours an observer chose; $twilight
+     * is 'hours' then.
+     */
+    public static function span(float $latitude, float $longitude, int $start, int $end, string $twilight = 'hours'): self
+    {
+        $sidereal = Time::meanSiderialTime(Carbon::createFromTimestamp($start, 'UTC'), new GeographicalCoordinates($longitude, $latitude));
+
+        return new self($start, $end, $twilight, $latitude, ($sidereal->hour + $sidereal->minute / 60 + $sidereal->second / 3600) * 15.0);
     }
 
     /**

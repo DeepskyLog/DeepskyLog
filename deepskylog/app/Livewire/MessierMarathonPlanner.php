@@ -31,6 +31,9 @@ class MessierMarathonPlanner extends Component
 
     public int $minutes = MessierMarathon::MINUTES_PER_OBJECT;
 
+    /** The minutes to move to the next object and find it. */
+    public int $gap = 0;
+
     /** The night planned (Y-m-d); empty for the best one. */
     public string $night = '';
 
@@ -77,7 +80,7 @@ class MessierMarathonPlanner extends Component
             return null;
         }
 
-        $list = $this->marathon($location)->createList($user, $plan, $this->placeName($location), Str::limit(trim($this->name), 250, ''), $this->public);
+        $list = $this->marathon($location)->createList($user, $plan, $location, Str::limit(trim($this->name), 250, ''), $this->public);
         session()->flash('success', __('Observing list created with :count object(s).', ['count' => $list->items()->count()]));
 
         return redirect()->route('observing-list.show', $list);
@@ -90,6 +93,7 @@ class MessierMarathonPlanner extends Component
             'locationId'  => ['nullable', 'integer', 'in:'.implode(',', array_keys($this->locationOptions()) ?: [0])],
             'minAltitude' => ['required', 'integer', 'min:0', 'max:30'],
             'minutes'     => ['required', 'integer', 'min:1', 'max:15'],
+            'gap'         => ['required', 'integer', 'min:0', 'max:15'],
             'night'       => ['nullable', 'date_format:Y-m-d'],
             'name'        => ['nullable', 'string', 'max:250'],
         ];
@@ -147,6 +151,7 @@ class MessierMarathonPlanner extends Component
             EphemerisDate::timezone($location),
             (float) max(0, min(30, $this->minAltitude)),
             max(1, min(15, $this->minutes)),
+            max(0, min(15, $this->gap)),
         );
     }
 

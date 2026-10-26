@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\ObservingList;
 use App\Services\SeasonalVisibility;
+use App\Services\ObservingListTimes;
 use App\Services\TonightsBest;
+use App\Support\EphemerisDate;
 use App\Models\ObservingListComment;
 use App\Models\ObservingListItem;
 use App\Models\Observation;
@@ -447,15 +449,22 @@ class ObservingListController extends Controller
 
         $longestObservationNote = $this->buildLongestObservationAutofillNote($item->object_name);
 
+        $timezone = $list->planned_timezone ?: EphemerisDate::timezone();
+
         return view('observing-lists.edit-item', [
             'list' => $list,
             'item' => $item,
             'longestObservationNote' => $longestObservationNote,
+            'plannedTime' => $item->planned_at?->copy()->setTimezone($timezone)->format('H:i'),
+            'timezone' => $timezone,
+            'defaultNight' => EphemerisDate::current($timezone),
         ]);
     }
 
     /**
-     * Update the description of an existing item.
+     * Update the description of an existing item and its time to observe it
+     * (H:i in the night of the list; the first time gives the list its
+     * night).
      */
     public function updateItem(Request $request, ObservingList $list, ObservingListItem $item): RedirectResponse
     {
@@ -471,11 +480,20 @@ class ObservingListController extends Controller
 
         $validated = $request->validate([
             'item_description' => ['nullable', 'string', 'max:2000'],
+            'planned_time' => ['nullable', 'date_format:H:i'],
+            'planned_night' => ['nullable', 'date_format:Y-m-d'],
         ]);
 
         $item->update([
             'item_description' => $validated['item_description'] ?? null,
         ]);
+
+        $time = $validated['planned_time'] ?? null;
+        $current = $item->planned_at?->copy()->setTimezone($list->planned_timezone ?: 'UTC')->format('H:i');
+        if ($time !== $current) {
+            $timezone = $list->planned_timezone ?: EphemerisDate::timezone();
+            ObservingListTimes::setTime($list, $item, $time, $validated['planned_night'] ?? EphemerisDate::current($timezone), $timezone);
+        }
 
         return redirect()->route('observing-list.show', $list)
             ->with('success', __('Note updated.'));

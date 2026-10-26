@@ -391,6 +391,11 @@
                                 </p>
                             @endif
 
+                            @auth
+                                {{-- When to observe each object in a night --}}
+                                @livewire('observing-list-times-panel', ['listId' => $list->id], key('observing-list-times-' . $list->id))
+                            @endauth
+
                             <div class="w-full">
                                 @livewire('advanced-object-search-table', ['filters' => $tableFilters, 'showAddColumn' => $showAddColumn], key('observing-list-table-' . $list->id . '-' . $wellPlacedMonth))
                             </div>

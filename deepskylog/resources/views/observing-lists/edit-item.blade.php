@@ -41,10 +41,33 @@
                         @enderror
                     </div>
 
+                    {{-- The time to observe the object, in the night the list is planned for --}}
+                    <div class="mb-6">
+                        <label for="planned_time" class="block text-sm font-medium text-gray-300 mb-1">{{ __('Time to observe (optional)') }}</label>
+                        <div class="flex flex-wrap items-center gap-3">
+                            @if (! $list->planned_night)
+                                <input type="date" id="planned_night" name="planned_night" value="{{ old('planned_night', $defaultNight) }}"
+                                       class="bg-gray-800 border border-gray-600 rounded-md text-gray-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                            @endif
+                            <input type="time" id="planned_time" name="planned_time" value="{{ old('planned_time', $plannedTime) }}"
+                                   class="bg-gray-800 border border-gray-600 rounded-md text-gray-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('planned_time') border-red-500 @enderror" />
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">
+                            @if ($list->planned_night)
+                                {{ __('In the night of :date (times in :timezone); a time before noon is in the morning after.', ['date' => $list->planned_night->locale(app()->getLocale())->isoFormat('LL'), 'timezone' => $timezone]) }}
+                            @else
+                                {{ __('The night (the date of its evening) becomes the night of the whole list; a time before noon is in the morning after.') }}
+                            @endif
+                        </p>
+                        @error('planned_time')
+                            <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <div class="flex items-center gap-3">
                         <button type="submit"
                             class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-md text-sm font-semibold">
-                            {{ __('Save note') }}
+                            {{ __('Save') }}
                         </button>
                         <a href="{{ route('observing-list.show', $list) }}"
                            class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-md text-sm">

@@ -268,7 +268,12 @@
                                                             ? __('Unknown')
                                                             : $mag;
                                                 @endphp
-                                                {{ $magDisplay }}
+                                                @if (!empty($session->mag_source) && $magDisplay !== __('Unknown'))
+                                                    ≈ {{ $magDisplay }}
+                                                    <span class="text-xs text-gray-400">({{ __('estimated from the brightness class of :source', ['source' => $session->mag_source]) }})</span>
+                                                @else
+                                                    {{ $magDisplay }}
+                                                @endif
                                             </td>
                                         </tr>
 

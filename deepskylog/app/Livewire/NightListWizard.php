@@ -108,7 +108,7 @@ class NightListWizard extends Component
         $this->until = self::time($value);
     }
 
-    private static function time(mixed $value): string
+    public static function time(mixed $value): string
     {
         $value = trim((string) $value);
         if (preg_match('/^(\d{1,2}):(\d{2})(?::\d{2})?\s*([AaPp][Mm])?$/', $value, $match)) {

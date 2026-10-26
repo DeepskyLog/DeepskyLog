@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Asteroid;
 use App\Services\AsteroidCoordinates;
 use App\Services\ContrastReserveCalculator;
+use App\Services\FilterAdvice;
 use App\Services\MoonlitContrastReserve;
 use App\Support\EphemerisDate;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
@@ -34,6 +35,8 @@ class AladinPreviewInfo extends Component
     public $contrast_used_extinction;
     /** The contrast reserve with the Moon in the night of the date (MoonlitContrastReserve), or null. */
     public $moonlit = null;
+    /** The contrast reserve with each of the observer's nebula filters (FilterAdvice::present()). */
+    public $filter_advice = [];
     public $optimum_detection_magnification;
     public $optimum_eyepieces = [];
     // Raw object type passed from the page (e.g. 'comet', 'planet', etc.)
@@ -794,6 +797,18 @@ class AladinPreviewInfo extends Component
                 }
             }
 
+            // Which of the observer's nebula filters help, for an emission
+            // nebula, under the same dark sky as the contrast reserve above.
+            $this->filter_advice = [];
+            if ($this->contrast_reserve !== null && $authUser && empty($isPlanet) && !$isAsteroid && FilterAdvice::spectrum($obj->type ?? null, $obj->name ?? null) !== null) {
+                try {
+                    $this->filter_advice = FilterAdvice::present(FilterAdvice::forObject($target, $obj->type ?? null, $obj->name ?? null, $userInstrument, $userLocation, $authUser, $lensFactor, $crAltitude));
+                } catch (\Throwable $e) {
+                    report($e);
+                    $this->filter_advice = [];
+                }
+            }
+
             // log intermediate debug values for easier diagnosis
             // Debug logging removed to reduce noise. Local debug variables computed above
 
@@ -1142,6 +1157,7 @@ class AladinPreviewInfo extends Component
             $this->contrast_reserve_category = null;
             $this->optimum_detection_magnification = null;
             $this->optimum_eyepieces = [];
+            $this->filter_advice = [];
             $this->last_error = (string) $e->getMessage();
             Log::error('AladinPreviewInfo: recalculate() failed', ['object_id' => $this->objectId, 'user_id' => Auth::id(), 'error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             try {
