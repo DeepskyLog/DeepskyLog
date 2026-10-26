@@ -106,6 +106,20 @@
                     </div>
                 </div>
             </x-card>
+
+            <br />
+            <x-card title="Atlas of the Skies (Superlight)">
+                <div class="flex-justify-center flex">
+                    <div class="px-5">
+                        <a href="https://superlight.fr/posts/sky-atlas/">
+                            <img src="/images/superlight_atlas.png" alt="Atlas of the Skies" class="w-64" />
+                        </a>
+                    </div>
+                    <div>
+                        {!! __("Atlas of the Skies by Superlight is a free atlas of 80 charts of the whole sky, all at the same scale of about 5 mm per degree, with some 50,000 stars to magnitude 8 and the Messier, NGC and IC objects. The charts also show the constellation figures, the Milky Way, the ecliptic and the paths of Uranus, Neptune, Pluto and the Voyager probes; two hemisphere maps and eight overview pages complete the 98 pages. The atlas is a single PDF made for A5 or A4: print two pages per landscape A4 sheet, or one page per sheet scaled to fit. It is released under the CC BY-NC-SA 4.0 licence.") !!}
+                    </div>
+                </div>
+            </x-card>
         </div>
     </div>
 </x-app-layout>
