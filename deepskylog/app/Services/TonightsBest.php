@@ -81,9 +81,10 @@ class TonightsBest
     public const DIFFICULTIES = ['mixed', 'easy', 'challenging'];
 
     /**
-     * Types left out unless they are chosen: stars and double stars (their
-     * contrast reserve, of a point, would top every list), point sources and
-     * supernovae of the past.
+     * Types left out unless they are chosen: stars and double stars (a
+     * point would top every list; a chosen double star is taken when the
+     * telescope splits it, doubleStars()), point sources and supernovae of
+     * the past.
      */
     public const EXCLUDED_TYPES = ['AA1STAR', 'DS', 'QUASR', 'SNOVA'];
 
@@ -103,6 +104,13 @@ class TonightsBest
     private const EASY_ABOVE = 0.5;
 
     private const VISIBLE_ABOVE = 0.1;
+
+    /**
+     * A double star has no contrast reserve: the verdict of
+     * DoubleStarResolvability stands in for it, so a chosen double star is
+     * easy or challenging like the other objects.
+     */
+    private const DOUBLE_STAR_RESERVES = ['easy' => 1.1, 'split' => 0.6, 'difficult' => 0.3];
 
     /** The objects whose contrast reserve is recalculated under the Moon. */
     private const MOON_POOL = 300;
@@ -358,7 +366,8 @@ class TonightsBest
                     ->whereIn('m.object_name', array_column($popular, 'name'))
                     ->pluck('m.object_name')
                     ->flip();
-                $popular = array_filter($popular, fn (array $object) => ! isset($judged[$object['name']]));
+                // Double stars were judged by whether the telescope splits them (doubleStars())
+                $popular = array_filter($popular, fn (array $object) => ! isset($judged[$object['name']]) && ContrastReserveCalculator::appliesTo($object['type_code']));
             }
             $deepsky = array_merge($deepsky, $this->pick(array_values($popular), $count - count($deepsky), $deepsky));
         }
@@ -424,6 +433,9 @@ class TonightsBest
                 $object['contrast_reserve'] = (float) $row->contrast_reserve;
                 $candidates[$row->name]     = $object;
             }
+        }
+        foreach ($this->doubleStars() as $name => $object) {
+            $candidates[$name] ??= $object;
         }
         $this->queueMissingMetrics();
 
@@ -568,12 +580,46 @@ class TonightsBest
     }
 
     /**
+     * The chosen double stars the standard telescope splits, with the
+     * contrast reserve of their verdict (DOUBLE_STAR_RESERVES).
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    private function doubleStars(): array
+    {
+        if (! in_array('DS', $this->options['types'], true)) {
+            return [];
+        }
+
+        $candidates = [];
+        $rows       = $this->objectQuery()
+            ->where('o.type', 'DS')
+            ->leftJoin('object_observation_stats as s', 's.object_name', '=', 'o.name')
+            ->get(['o.name', 'o.slug', 'o.type', 'o.ra', 'o.decl', 'o.mag', 'o.subr', 'o.pa', 'o.diam1', 'o.diam2', 't.name as type_name', 'c.name as constellation', 's.observations']);
+        $magnifications = ContrastReserveCalculator::magnifications($this->instrument, $this->user, ContrastReserveCalculator::lensFactor($this->lensId));
+        foreach ($rows as $row) {
+            if (isset($candidates[$row->name]) || ! $this->allowed($row->name) || ! ($object = $this->placed($row))) {
+                continue;
+            }
+            $split   = DoubleStarResolvability::forObject($row, $this->instrument, $this->location, $this->user, 1.0, $magnifications);
+            $reserve = self::DOUBLE_STAR_RESERVES[$split['verdict'] ?? ''] ?? null;
+            if ($reserve !== null) {
+                $object['contrast_reserve'] = $reserve;
+                $candidates[$row->name]     = $object;
+            }
+        }
+
+        return $candidates;
+    }
+
+    /**
      * Queue the metrics of the objects that are well placed in the hours
      * chosen but have none for this equipment yet.
      */
     private function queueMissingMetrics(): void
     {
         $missing = $this->objectQuery()
+            ->where('o.type', '<>', 'DS')
             ->leftJoin('user_object_metrics as m', fn (JoinClause $join) => $this->joinMetrics($join))
             ->whereNull('m.id')
             ->get(['o.name', 'o.ra', 'o.decl'])
@@ -680,7 +726,7 @@ class TonightsBest
             if ($object === null) {
                 continue;
             }
-            if ($object['sqm'] < $this->darkSqm - 0.05) {
+            if ($object['sqm'] < $this->darkSqm - 0.05 && ContrastReserveCalculator::appliesTo($object['type_code'])) {
                 $reserve = ContrastReserveCalculator::calculate(
                     ContrastReserveCalculator::target($object['diam1'], $object['diam2'], $object['raw_magnitude']),
                     $this->instrument,

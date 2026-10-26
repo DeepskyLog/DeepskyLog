@@ -10,12 +10,14 @@ use App\Models\ObservingList;
 use App\Services\ActiveObservingListService;
 use App\Services\ObjectObservationStatistics;
 use App\Services\ObservationComparison;
+use App\Services\DoubleStarResolvability;
 use App\Services\SeasonalVisibility;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Lazy;
@@ -82,6 +84,8 @@ class AdvancedObjectSearchTable extends PowerGridComponent
     public string $compareSkyDirection = ObservationComparison::SKY_POOR_NOT_DARK;
     // Observing list only: the month (1–12) its objects have to be well placed in (SeasonalVisibility), 0 = any
     public int $wellPlacedMonth = 0;
+    // Double stars the observer's standard telescope splits ('split') or does not split yet ('not_split'), '' = any
+    public string $doubleStars = '';
 
     // ── CR / best-mag dedup flags ─────────────────────────────────────────
     public bool $bestMagUpsertedThisLoad = false;
@@ -92,6 +96,8 @@ class AdvancedObjectSearchTable extends PowerGridComponent
     private ?array $cachedEyepieces = null;
     // [list id, SeasonalVisibility or null] of seasons(); PowerGrid's mount() asks before the list is set
     private ?array $seasons = null;
+    // The slugs of doubleStarSlugs(), once per request
+    private ?array $doubleStarSlugs = null;
     // [list id, planned times or null] of plannedTimes()
     private ?array $plannedTimes = null;
     public int $refreshTick = 0;
@@ -159,6 +165,8 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             : ObservationComparison::SKY_POOR_NOT_DARK;
         $month = (int) ($filters['well_placed_month'] ?? 0);
         $this->wellPlacedMonth = $month >= 1 && $month <= 12 ? $month : 0;
+        $doubleStars = (string) ($filters['double_stars'] ?? '');
+        $this->doubleStars = in_array($doubleStars, ['split', 'not_split'], true) ? $doubleStars : '';
 
         // PowerGrid makes the columns here, which depend on the list (Months, Time).
         parent::mount();
@@ -353,6 +361,14 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             }
 
             $preloadedObjectSlugs = $objQ->pluck('slug')->toArray();
+        }
+
+        // ── Double stars the standard telescope splits (or not yet) ─────────
+        if ($this->doubleStars !== '') {
+            $doubleSlugs = $this->doubleStarSlugs();
+            $preloadedObjectSlugs = $preloadedObjectSlugs === null
+                ? $doubleSlugs
+                : array_values(array_intersect($preloadedObjectSlugs, $doubleSlugs));
         }
 
         // The search_index rows to list, one per canonical name (see below).
@@ -1092,6 +1108,31 @@ class AdvancedObjectSearchTable extends PowerGridComponent
      * The seasonal planner of the observing list, or null when the table
      * shows no list or there is no location.
      */
+    /**
+     * The slugs of the double stars the observer's standard telescope splits
+     * at their standard location (or does not split yet), none without a
+     * standard telescope (DoubleStarResolvability::slugs()).
+     *
+     * @return list<string>
+     */
+    private function doubleStarSlugs(): array
+    {
+        if ($this->doubleStarSlugs === null) {
+            $user = Auth::user();
+            $instrument = $user?->standardInstrument;
+            $location = $user?->standardLocation;
+            $split = $this->doubleStars === 'split';
+            // About 0.15 s for all double stars: kept an hour per aperture and sky
+            $key = 'double_star_slugs:' . implode(':', [$instrument?->id, $instrument?->aperture_mm, $instrument?->obstruction_perc,
+                $location?->id, $location?->latitude, $location?->getNelm((float) ($user?->fstOffset ?? 0)), (int) $split]);
+            $this->doubleStarSlugs = $instrument
+                ? Cache::remember($key, 3600, fn () => DoubleStarResolvability::slugs($instrument, $location, $user, $split))
+                : [];
+        }
+
+        return $this->doubleStarSlugs;
+    }
+
     private function seasons(): ?SeasonalVisibility
     {
         $listId = $this->currentObservingListId();

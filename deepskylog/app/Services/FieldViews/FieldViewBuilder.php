@@ -11,6 +11,7 @@ use App\Models\Location;
 use App\Models\User;
 use App\Services\AtmosphericExtinction;
 use App\Services\ContrastReserveCalculator;
+use App\Services\DoubleStarResolvability;
 use App\Services\FilterAdvice;
 use App\Services\TelescopicLimitingMagnitude;
 use App\Support\EphemerisDate;
@@ -152,6 +153,13 @@ class FieldViewBuilder
             ? $this->contrastReserve($object, $sqm, $extinction, (float) $scope->aperture_mm, $magnification)
             : ['value' => null, 'category' => 'not_visible'];
 
+        // Whether a double star is split at the magnification of a view
+        $doubleStar = function (Instrument $scope, mixed $magnification, float $limit) use ($object, $visible) {
+            $result = $visible ? DoubleStarResolvability::atMagnification($object, (float) $scope->aperture_mm, $magnification, $limit) : null;
+
+            return $result === null ? null : DoubleStarResolvability::present($result);
+        };
+
         $target = [
             'name'  => $object->name,
             'ra'    => $raDeg,
@@ -223,6 +231,7 @@ class FieldViewBuilder
                 'fov'      => self::formatAngle($finderFov).($finder->hasEstimatedFieldOfView() ? ' ('.__('estimated').')' : ''),
                 'limit'    => $finderLimit,
                 'contrast' => $contrast($finder, $finder->fixedMagnification),
+                'double'   => $doubleStar($finder, $finder->fixedMagnification, $finderLimit),
                 'svg'      => $this->renderer->render($base + [
                     'radius_deg'    => $finderFov / 2,
                     'star_limit'    => $finderLimit,
@@ -263,6 +272,7 @@ class FieldViewBuilder
                 'fov'      => self::formatAngle($telescopeFov),
                 'limit'    => $telescopeLimit,
                 'contrast' => $contrast($instrument, $magnification),
+                'double'   => $doubleStar($instrument, $magnification, $telescopeLimit),
                 'filters'  => $visible ? $this->filterAdvice($user, $set, $object, $instrument, $lens, $choices['eyepieces'], $sqm, $extinction, $magnification) : [],
                 'svg'      => $this->renderer->render($base + [
                     'radius_deg'         => $telescopeFov / 2,
@@ -316,7 +326,7 @@ class FieldViewBuilder
      */
     private function contrastReserve(DeepskyObject $object, float $sqm, float $extinction, float $aperture, mixed $magnification): ?array
     {
-        if ($aperture <= 0 || ! is_numeric($magnification) || (float) $magnification <= 0
+        if (! ContrastReserveCalculator::appliesTo($object->type) || $aperture <= 0 || ! is_numeric($magnification) || (float) $magnification <= 0
                            || ! is_numeric($object->mag) || (float) $object->mag >= 99 || (float) $object->mag == 0.0) {
             return null;
         }

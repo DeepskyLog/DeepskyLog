@@ -303,6 +303,15 @@
                             @endif
                             {{ __('Deep-sky objects only, from your own observations. Observations in which the object was not seen do not count.') }}
                         </p>
+                    @elseif($filterType === 'doubleStars')
+                        <label class="block text-xs text-gray-400 mb-1">{{ __('Double stars my telescope splits') }}</label>
+                        <select wire:model="doubleStars"
+                            class="w-full bg-gray-900 text-gray-100 text-sm border border-gray-600 rounded px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            @foreach($doubleStarsOptions as $value => $label)
+                                <option value="{{ $value }}">{{ __($label) }}</option>
+                            @endforeach
+                        </select>
+                        <p class="mt-1 text-xs text-gray-500">{{ __('With the aperture of your standard telescope, from the separation and magnitudes of the pair (Dawes limit, wider for a fainter companion), and the companion bright enough under the sky of your standard location. Without a standard telescope nothing is found.') }}</p>
                     @endif
                 </div>
             </div>

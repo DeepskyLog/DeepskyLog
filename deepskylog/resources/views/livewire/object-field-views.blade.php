@@ -144,7 +144,7 @@
                     <p class="text-gray-400">
                         {{ __('Field of view: :fov', ['fov' => $view['fov']]) }} · {{ __('Limiting magnitude: :mag', ['mag' => number_format($view['limit'], 1)]) }}
                     </p>
-                    @if (array_key_exists('contrast', $view))
+                    @if (array_key_exists('contrast', $view) && \App\Services\ContrastReserveCalculator::appliesTo($result['object']->type))
                         @php
                             $crCategory = $view['contrast']['category'] ?? null;
                             $crClass = match ($crCategory) {
@@ -166,6 +166,28 @@
                                 {{ __('contrast.reserve.summary', ['value' => number_format($view['contrast']['value'], 2), 'category' => __('contrast.reserve.category.'.$crCategory)]) }}
                             @endif
                         </p>
+                    @endif
+                    @if (! empty($view['double']))
+                        @php
+                            $double = $view['double'];
+                            $doubleClass = match ($double['verdict']) {
+                                'easy' => 'text-green-400',
+                                'split' => 'text-green-600',
+                                'difficult' => 'text-orange-400',
+                                'companion_too_faint' => 'text-orange-600',
+                                default => 'text-gray-500',
+                            };
+                        @endphp
+                        <p class="{{ $doubleClass }}">
+                            {{ $double['label'] }}
+                            <span class="text-gray-400">· {{ __(':separation″ against a limit of :limit″', ['separation' => number_format($double['separation'], 1), 'limit' => number_format($double['limit'], 2)]) }}</span>
+                        </p>
+                        @if ($double['verdict'] !== 'not_split' && $double['magnification_too_low'])
+                            <p class="text-orange-400">{{ __('At :magnification the stars still look like one: use at least :minimum.', ['magnification' => $double['magnification'] . 'x', 'minimum' => $double['minimum_magnification'] . 'x']) }}</p>
+                        @endif
+                        @if ($double['steady_seeing'])
+                            <p class="text-orange-400">{{ __('Below 1.5″: only on a night of steady seeing.') }}</p>
+                        @endif
                     @endif
                     @if (! empty($view['filters']))
                         <ul class="text-gray-400">
@@ -196,6 +218,7 @@
         <p>{{ __('The contrast reserve is that of the object at the magnification of the view, under the sky of the location (its SQM, else its limiting magnitude), with the object dimmed by the extinction at its altitude.') }}</p>
         <p>{{ __('For an emission nebula, the telescope view also gives the contrast reserve with each of your nebula filters, with the difference without a filter between brackets. Every filter of a kind (broadband, UHC, O-III, H-beta) gets the typical passband of that kind, and the nebula the typical spectrum of its type.') }}</p>
         <p>{{ __('Each filter also gets the best magnification of the eyepieces of the instrument set with that filter. A filter darkens the image, so it often works best at a lower magnification (a larger exit pupil) than without one, up to the :pupil mm of the dark-adapted eye.', ['pupil' => (int) \App\Services\ContrastReserveCalculator::EYE_PUPIL_MM]) }}</p>
+        <p>{{ __('For a double star, the finder and telescope views say whether the pair is split: two equally bright stars down to the Dawes limit (116″ divided by the aperture in mm), a fainter companion only at a wider separation, if it is bright enough, and at a magnification at which the stars appear 4′ apart.') }}</p>
         <p>{{ __('The limiting magnitudes follow from the limiting magnitude or SQM of the location, the aperture and magnification of the instrument, and the extinction at the altitude of the object. Stars of the naked-eye view fade towards the horizon.') }}</p>
     </div>
 </div>

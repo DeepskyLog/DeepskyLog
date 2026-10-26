@@ -59,6 +59,16 @@ class ContrastReserveCalculator
     }
 
     /**
+     * Whether an object of the type has a contrast reserve: not a double
+     * star, which is a pair of points whose diam1 holds the separation
+     * (DoubleStarResolvability says whether it is split instead).
+     */
+    public static function appliesTo(?string $type): bool
+    {
+        return strtoupper(trim((string) $type)) !== 'DS';
+    }
+
+    /**
      * The factor of a lens (1 without a lens or with an invalid factor).
      */
     public static function lensFactor(Lens|int|string|null $lens): float

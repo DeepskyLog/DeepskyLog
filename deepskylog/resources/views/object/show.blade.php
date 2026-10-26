@@ -218,7 +218,14 @@
                                         </tr>
                                     @endif
                                     {{-- Static RA/Dec removed for comet pages; Livewire `comet-details` renders dynamic values. --}}
-                                    @if (isset($session->diam1) || isset($session->diam2))
+                                    @php $isDoubleStar = strtoupper((string) ($session->source_type_raw ?? '')) === 'DS'; @endphp
+                                    {{-- A double star stores the separation of the pair (arcseconds) as its diameter --}}
+                                    @if ($isDoubleStar && is_numeric($session->separation ?? null) && $session->separation > 0)
+                                        <tr>
+                                            <td class="pr-4 font-medium">{{ __('Separation') }}</td>
+                                            <td>{{ rtrim(rtrim(number_format($session->separation, 1), '0'), '.') }}″</td>
+                                        </tr>
+                                    @elseif (isset($session->diam1) || isset($session->diam2))
                                         @if ($session->diam1 > 0.0)
                                             <tr>
                                                 <td class="pr-4 font-medium">{{ __('Size') }}</td>
@@ -298,7 +305,7 @@
 
                                     @if (!empty($session->subr))
                                         <tr>
-                                            <td class="pr-4 font-medium">{{ __('Surface brightness') }}</td>
+                                            <td class="pr-4 font-medium">{{ $isDoubleStar ? __('Magnitude of the companion') : __('Surface brightness') }}</td>
                                             <td>
                                                 @php
                                                     $sb = $session->subr;

@@ -92,7 +92,7 @@ class ComputeContrastReserveForObject implements ShouldQueue
     public static function valuesFor(DeepskyObject $obj, ?User $user, ?Instrument $instrument, ?Location $location, ?int $lensId, ?array $magnifications = null): array
     {
         $result = ['contrast_reserve' => null, 'category' => null, 'magnification' => null, 'eyepieces' => []];
-        if ($instrument && $location) {
+        if ($instrument && $location && ContrastReserveCalculator::appliesTo($obj->type)) {
             $result = ContrastReserveCalculator::calculate(
                 ContrastReserveCalculator::target($obj->diam1, $obj->diam2, $obj->mag),
                 $instrument,

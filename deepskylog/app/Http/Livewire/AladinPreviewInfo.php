@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Asteroid;
 use App\Services\AsteroidCoordinates;
 use App\Services\ContrastReserveCalculator;
+use App\Services\DoubleStarResolvability;
 use App\Services\FilterAdvice;
 use App\Services\MoonlitContrastReserve;
 use App\Support\EphemerisDate;
@@ -37,6 +38,8 @@ class AladinPreviewInfo extends Component
     public $moonlit = null;
     /** The contrast reserve with each of the observer's nebula filters (FilterAdvice::present()). */
     public $filter_advice = [];
+    /** Whether the observer's telescope splits a double star, and at which magnification (DoubleStarResolvability::present()), or null. */
+    public $double_star = null;
     public $optimum_detection_magnification;
     public $optimum_eyepieces = [];
     // Raw object type passed from the page (e.g. 'comet', 'planet', etc.)
@@ -728,7 +731,7 @@ class AladinPreviewInfo extends Component
                 } catch (\Throwable $_) {
                     $crResult = null;
                 }
-            } elseif ($sbobj !== null && $sqm !== null && $aperture && $userInstrument) {
+            } elseif ($sbobj !== null && $sqm !== null && $aperture && $userInstrument && ContrastReserveCalculator::appliesTo($obj->type ?? null)) {
                 try {
                     $crT0 = microtime(true);
                     $crResult = ContrastReserveCalculator::calculate($target, $userInstrument, $userLocation, $authUser, $lensFactor, null, null, $crAltitude);
@@ -806,6 +809,18 @@ class AladinPreviewInfo extends Component
                 } catch (\Throwable $e) {
                     report($e);
                     $this->filter_advice = [];
+                }
+            }
+
+            // Whether the telescope splits a double star, under the same sky.
+            $this->double_star = null;
+            if ($obj && $userInstrument && empty($isPlanet) && !$isAsteroid) {
+                try {
+                    $doubleStar = DoubleStarResolvability::forObject($obj, $userInstrument, $userLocation, $authUser, $lensFactor);
+                    $this->double_star = $doubleStar !== null ? DoubleStarResolvability::present($doubleStar) : null;
+                } catch (\Throwable $e) {
+                    report($e);
+                    $this->double_star = null;
                 }
             }
 
@@ -1158,6 +1173,7 @@ class AladinPreviewInfo extends Component
             $this->optimum_detection_magnification = null;
             $this->optimum_eyepieces = [];
             $this->filter_advice = [];
+            $this->double_star = null;
             $this->last_error = (string) $e->getMessage();
             Log::error('AladinPreviewInfo: recalculate() failed', ['object_id' => $this->objectId, 'user_id' => Auth::id(), 'error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             try {

@@ -5,6 +5,13 @@
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4 -> Ubuntu 26.04 LTS.
 - [ ] Translations
+- [ ] Double stars to check by hand (`php artisan objects:fill-double-star-magnitudes -v` lists them):
+  - [ ] HU 559: 41″ and primary 6.4 in DeepskyLog, 0.6″ and primary 9.6 in the WDS (HU 559 BC); probably another pair.
+  - [ ] HJ 748: 4″ and primary 11.2 in DeepskyLog, 6.8″ and primary 8.37 in the WDS.
+  - [ ] STF 1156: the WDS entry lies 31′ from DeepskyLog's position, primary 7.8 against 9.5.
+  - [ ] Fox 256: the WDS entry lies 43′ from DeepskyLog's position, primary 10.9 against 8.52.
+  - [ ] Names the command cannot resolve: Nu Boo, Zeta Sco, Omega Sco and Xi Cen (two numbered stars each), 42-45 Ori and 64-65 Gem (ranges), Star Abagail, Lorenzin 18, 19 and 22, and the entries without a separation, such as Procyon and 118 Tauri.
+  - [ ] About 270 NGC/IC "double stars" are not in the WDS and mostly have no separation or magnitudes.
 - [ ] On real server:
   - [ ] php artisan db:seed --class=BackfillSessionObservationIdsSeeder
   - [ ] php artisan db:seed --class=BackfillSketchObservationIdsSeeder
@@ -27,6 +34,8 @@
   - [ ] php artisan migrate (adds `objects.mag_source`)
   - [ ] php artisan objects:repair-nebula-positions -v (dry run: check the positions it moves and the alternative names it removes), then php artisan objects:repair-nebula-positions --apply (moves the nebulae at a wrong position, checked against SIMBAD, and replaces the LBN names that belong to another nebula; on the development database: 8 moved (Ced 178, LBN 289, Sh 2-36, Sh 2-67, Sh 2-117, Sh 2-243, Sh 2-283, Sh 2-285), LBN 115 of Sh 2-115 replaced by LBN 357, LBN 601 of IC 353 removed), then php artisan responsecache:clear
   - [ ] php artisan objects:estimate-nebula-magnitudes -v (dry run: check the estimates and the names it still refuses), then php artisan objects:estimate-nebula-magnitudes --apply (gives the bright nebulae without a magnitude one estimated from the brightness class of their LBN or Sh 2 name, so they get a contrast reserve and filter advice; on the development database: 350 nebulae, among them IC 434 ≈ 6.7; only LBN 554 of Sh 2-164 is still refused, as Lynds' own declination is 3° off), then php artisan responsecache:clear
+  - [ ] php artisan migrate (deletes the stored contrast reserves of double stars, which have none now)
+  - [ ] php artisan objects:fill-double-star-magnitudes -v (dry run: check the pairs it lists to check by hand), then php artisan objects:fill-double-star-magnitudes --apply (fills in the magnitudes of the companions of the double stars from the Washington Double Star Catalog, replaces separations of another pair and wrong primary magnitudes, and moves the double stars at a wrong position; on the development database, in two runs: about 5130 companions, 22 primaries, 97 separations, 99 positions (sign errors in the declination, wrong hours), 4 to check, 290 not found, mostly NGC/IC pairs that are not in the WDS), then php artisan responsecache:clear
   - [ ] Atlas pagina's worden gezet in storage/app/atlas -> kijk of die directory 755 als permissies heeft
   - [ ] Second queue worker for the PDF jobs (atlas, object sets, object reports). They now go to the `database-long` connection (queue `long`), so without this worker they stay "waiting for a worker". See also Tips.md.
     - [ ] Update the code only when no PDF is queued or being made: a PDF job that was queued before the update cannot be run by the new code (check with `SELECT id, queue, payload FROM jobs WHERE payload LIKE '%Pdf%';`).
@@ -105,3 +114,27 @@
 - [X] Year in review
 - [X] Messier marathon planner: the best nights of March and April near the new Moon at the observer's location, and the order to see the Messier objects in, with the time window of each object (objects only high enough in the twilight marked), saved as an observing list.
 - [X] Filter advice per object
+- [X] Double star resolvability: whether the standard telescope splits a double star (Dawes limit, wider for a fainter companion, the companion bright enough) and at which magnification, on the object page, in the field views and as a filter of the object search. Double stars no longer get a contrast reserve; their companion magnitudes, separations and positions are completed and corrected from the Washington Double Star Catalog.
+
+
+Red night mode and an "at the eyepiece" view. There's no red-light theme today. Add a red-on-black toggle and a stripped-down page for an observing list that has times: the current object, the next one, the finder chart and a big "Log it" button that opens the observation form already filled in (session, time, equipment). The list times you just added would then be useful at the telescope, not only before the night.
+
+Offline lists (PWA). Dark sites often have no signal. A service worker could cache the observing list, its charts and the at-the-eyepiece page, and keep observations entered offline until the connection returns. This fits well with item 2.
+
+"What's new for me" after new equipment. When an observer adds a telescope or eyepiece, compare the stored contrast reserves of the old and new equipment and list the objects that only become visible with the new one, with a button to make that a list. ObservationComparison and the user_object_metrics table already hold most of what's needed.
+
+Community features
+
+Observing challenges. Site-wide, time-limited challenges such as "Hickson month" or "Arp galaxies this spring", with a shared progress page and a leaderboard. They would reuse ObservingGoal::progress() and ObjectSources, and get their announcements from the news items.
+
+Object-of-the-week discussion. One object a week chosen from Tonight's best, shown on the home page with everyone's observations and drawings of it from that week. It's the observation counterpart of the sketch of the week.
+
+"Observed together" at starparties. After a starparty, a combined page of what all participants saw, ranked by how many people saw each object, made into a shareable report. StarPartyActivity already collects the data.
+
+Smaller additions
+
+Sky quality history for a location. Plot the SQM and NELM values from all observations at a location over the years. This shows light pollution trends, and the location page already has a chart area.
+
+Variable stars and novae via AAVSO. Some groundwork exists, but there's no current-magnitude feed. Showing the latest AAVSO estimate on the object page for supernovae, novae and the variable stars in observing lists would make the bright-supernova news items possible too.
+
+Calendar feed of your planned list times. .ics export of an observing list that has times, or of the clear-night alerts, as starparties already have.

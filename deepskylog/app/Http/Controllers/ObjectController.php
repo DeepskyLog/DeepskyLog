@@ -1192,6 +1192,8 @@ class ObjectController extends Controller
         // An estimate from the brightness class of a nebula catalogue (NebulaBrightness)
         $session->mag_source = $record->mag_source ?? null;
 
+        // The separation of a double star, in arcseconds
+        $session->separation = isset($record->diam1) && is_numeric($record->diam1) ? (float) $record->diam1 : null;
         if (isset($record->diam1) && is_numeric($record->diam1)) {
             $session->diam1 = round($record->diam1 / 60.0, 1);
         } else {

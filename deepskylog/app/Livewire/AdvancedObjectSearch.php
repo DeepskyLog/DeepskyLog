@@ -113,6 +113,13 @@ class AdvancedObjectSearch extends Component
         ObservationComparison::SKY_DARK_NOT_POOR => 'Seen under a darker sky, not yet under a brighter one',
     ];
 
+    // ── Double stars my standard telescope splits (DoubleStarResolvability) ──
+    public string $doubleStars = 'split';
+    public array $doubleStarsOptions = [
+        'split' => 'Double stars my standard telescope splits',
+        'not_split' => 'Double stars my standard telescope does not split yet',
+    ];
+
     // ── Saved searches ────────────────────────────────────────────────────
     public string $saveName = '';
     public array $nameSearchCatalogs = [];
@@ -331,6 +338,9 @@ class AdvancedObjectSearch extends Component
             ? $direction
             : ObservationComparison::SKY_POOR_NOT_DARK;
 
+        $doubleStars = (string) ($filters['double_stars'] ?? '');
+        $this->doubleStars = array_key_exists($doubleStars, $this->doubleStarsOptions) ? $doubleStars : 'split';
+
         if (empty($active)) {
             if (!empty($this->constellations))
                 $active[] = 'constellations';
@@ -372,6 +382,8 @@ class AdvancedObjectSearch extends Component
                 $active[] = 'atlasPage';
             if ($compareBy !== '')
                 $active[] = 'compareObservations';
+            if ($doubleStars !== '')
+                $active[] = 'doubleStars';
         }
 
         $this->activeFilters = array_values(array_intersect($this->validFilterTypes(), array_unique($active)));
@@ -423,6 +435,7 @@ class AdvancedObjectSearch extends Component
             'atlasPage' => [$this->atlasCode, $this->atlasPageSpec, $this->atlasPageMin, $this->atlasPageMax] = ['', '', '', ''],
             'compareObservations' => [$this->compareBy, $this->compareSeen, $this->compareNotSeen, $this->compareSqm, $this->compareSkyDirection]
                 = [ObservationComparison::BY_INSTRUMENT, '', '', '', ObservationComparison::SKY_POOR_NOT_DARK],
+            'doubleStars' => $this->doubleStars = 'split',
             default => null,
         };
     }
@@ -453,6 +466,8 @@ class AdvancedObjectSearch extends Component
         // Comparing observations needs the observer's own observations
         if (Auth::check()) {
             $types[] = 'compareObservations';
+            // Needs the observer's standard telescope
+            $types[] = 'doubleStars';
         }
 
         return $types;
@@ -481,6 +496,7 @@ class AdvancedObjectSearch extends Component
             'descriptionText' => __('Description contains text'),
             'atlasPage' => __('Atlas page'),
             'compareObservations' => __('Seen with one instrument or location, not yet with another'),
+            'doubleStars' => __('Double stars my telescope splits'),
         ];
     }
 
@@ -627,6 +643,9 @@ class AdvancedObjectSearch extends Component
 
         if (in_array('compareObservations', $this->activeFilters)) {
             $params = array_merge($params, $this->compareParams());
+        }
+        if (in_array('doubleStars', $this->activeFilters) && array_key_exists($this->doubleStars, $this->doubleStarsOptions)) {
+            $params['double_stars'] = $this->doubleStars;
         }
 
         return $params;
