@@ -293,7 +293,10 @@ it('makes an observing list for a night with the wizard', function () {
     $list = ObservingList::where('owner_user_id', $user->id)->firstOrFail();
     expect($list->name)->toBe('Galaxies in November')
         ->and($list->public)->toBeTrue()
-        ->and($list->items()->pluck('object_name')->sort()->values()->all())->toBe(['Autumn Galaxy 1', 'Autumn Galaxy 2']);
+        ->and($list->items()->pluck('object_name')->sort()->values()->all())->toBe(['Autumn Galaxy 1', 'Autumn Galaxy 2'])
+        // with the moment to observe each object
+        ->and($list->planned_timezone)->toBe('Europe/Brussels')
+        ->and($list->items()->whereNull('planned_at')->count())->toBe(0);
 });
 
 it('validates the answers of the wizard', function () {

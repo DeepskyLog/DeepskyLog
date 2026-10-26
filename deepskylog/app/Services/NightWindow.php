@@ -31,14 +31,18 @@ class NightWindow
     /**
      * The window of the night that starts on the evening of $night (Y-m-d in
      * $timezone), or null when it does not get darker than nautical twilight.
+     * With $twilights ['nautical'] the window runs between the ends of
+     * nautical twilight (the Sun 12° below the horizon) in any case.
+     *
+     * @param  list<string>  $twilights  the twilights tried, darkest first
      */
-    public static function for(float $latitude, float $longitude, string $night, string $timezone): ?self
+    public static function for(float $latitude, float $longitude, string $night, string $timezone, array $twilights = ['astronomical', 'nautical']): ?self
     {
         $evening  = Carbon::parse($night.' 12:00', $timezone);
         $today    = date_sun_info($evening->getTimestamp(), $latitude, $longitude);
         $tomorrow = date_sun_info($evening->copy()->addDay()->getTimestamp(), $latitude, $longitude);
 
-        foreach (['astronomical', 'nautical'] as $twilight) {
+        foreach ($twilights as $twilight) {
             $start = $today[$twilight.'_twilight_end']      ?? null;
             $end   = $tomorrow[$twilight.'_twilight_begin'] ?? null;
             if (! is_int($start) || ! is_int($end) || $end <= $start) {

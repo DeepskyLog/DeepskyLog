@@ -211,8 +211,8 @@ class TonightsBest
     /**
      * Make an observing list of the observer with the objects of a result of
      * for(), in the order to observe them: the deep-sky objects, planets and
-     * comets, under the names the list tables match on (search_index.name).
-     * Null when there are none.
+     * comets, under the names the list tables match on (search_index.name),
+     * each with its moment. Null when there are none.
      */
     public static function createList(User $owner, array $result, ?string $name = null, bool $public = false): ?ObservingList
     {
@@ -220,8 +220,13 @@ class TonightsBest
         if ($names->isEmpty()) {
             return null;
         }
+        // the moment to observe each object, when the result knows its time zone
+        $timezone = $result['timezone'] ?? null;
+        $details  = $timezone === null ? [] : collect($result['objects'])
+            ->mapWithKeys(fn (array $object) => [($object['list_name'] ?? $object['name']) => ['at' => $object['timestamp'] ?? null]])
+            ->all();
 
-        return ObservingList::createWithObjects($owner, trim((string) $name) ?: self::listName($result), $names, self::listDescription($result), $public);
+        return ObservingList::createWithObjects($owner, trim((string) $name) ?: self::listName($result), $names, self::listDescription($result), $public, $details, $timezone);
     }
 
     /**
@@ -309,6 +314,7 @@ class TonightsBest
             'location'   => $this->instrument ? html_entity_decode((string) $this->location->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') : null,
             'instrument' => $this->instrument ? html_entity_decode((string) $this->instrument->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') : null,
             'latitude'   => round((float) $this->location->latitude),
+            'timezone'   => $this->timezone,
             'dark'       => null,
             'period'     => null,
             'moon'       => null,

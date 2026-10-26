@@ -905,6 +905,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('observing-list.store-tonight');
     Route::view('/observing-lists/night', 'observing-lists.night')
         ->name('observing-list.night')->middleware('doNotCacheResponse');
+    Route::view('/observing-lists/messier-marathon', 'observing-lists.messier-marathon')
+        ->name('observing-list.messier-marathon')->middleware('doNotCacheResponse');
 
     // Edit / update / delete an observing list
     Route::get('/observing-list/{list}/edit', [App\Http\Controllers\ObservingListController::class, 'edit'])

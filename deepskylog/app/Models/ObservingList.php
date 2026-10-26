@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Services\ActiveObservingListService;
 use App\Traits\ClearsResponseCache;
+use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +23,7 @@ class ObservingList extends Model
         'slug',
         'description',
         'public',
+        'planned_timezone',
     ];
 
     protected $casts = [
@@ -224,20 +226,26 @@ class ObservingList extends Model
 
     /**
      * Create a list of the observer with these objects (objects.name), in
-     * this order. The name is made unique.
+     * this order. The name is made unique. $details holds per object name a
+     * note (item_description) and, for a list made for one night, the
+     * moments (timestamps) to observe it and between which it stands high
+     * enough, shown in $timezone.
      *
      * @param  iterable<string>  $objectNames
+     * @param  array<string, array{note?: ?string, at?: ?int, from?: ?int, until?: ?int}>  $details
      */
-    public static function createWithObjects(User $owner, string $name, iterable $objectNames, ?string $description = null, bool $public = false): self
+    public static function createWithObjects(User $owner, string $name, iterable $objectNames, ?string $description = null, bool $public = false, array $details = [], ?string $timezone = null): self
     {
         $names = collect($objectNames)->map(fn ($name) => (string) $name)->filter(fn (string $name) => $name !== '')->unique()->values();
+        $moment = fn (?int $timestamp) => $timestamp === null ? null : Carbon::createFromTimestamp($timestamp, 'UTC')->format('Y-m-d H:i:s');
 
-        return DB::transaction(function () use ($owner, $name, $names, $description, $public) {
+        return DB::transaction(function () use ($owner, $name, $names, $description, $public, $details, $timezone, $moment) {
             $list = self::create([
                 'owner_user_id' => $owner->id,
                 'name' => self::uniqueName($owner, $name),
                 'description' => $description,
                 'public' => $public,
+                'planned_timezone' => $timezone,
             ]);
 
             $now = now();
@@ -245,6 +253,10 @@ class ObservingList extends Model
                 DB::table('observing_list_items')->insert($chunk->map(fn (string $objectName, int $index) => [
                     'observing_list_id' => $list->id,
                     'object_name' => $objectName,
+                    'item_description' => $details[$objectName]['note'] ?? null,
+                    'planned_at' => $moment($details[$objectName]['at'] ?? null),
+                    'planned_from' => $moment($details[$objectName]['from'] ?? null),
+                    'planned_until' => $moment($details[$objectName]['until'] ?? null),
                     'sort_order' => $index + 1,
                     'source_mode' => 'manual',
                     'added_by_user_id' => $owner->id,
@@ -255,6 +267,15 @@ class ObservingList extends Model
 
             return $list;
         });
+    }
+
+    /**
+     * Whether the list was made for one night: some of its objects have a
+     * time to observe them.
+     */
+    public function hasPlannedTimes(): bool
+    {
+        return $this->items()->whereNotNull('planned_at')->exists();
     }
 
     /**

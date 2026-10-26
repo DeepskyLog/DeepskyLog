@@ -316,11 +316,14 @@ class MeController extends Controller
                 'object_name' => $item->object_name,
                 'description' => $item->item_description,
                 'sort_order' => $item->sort_order,
+                'planned_at' => $item->planned_at?->toIso8601String(),
+                'planned_from' => $item->planned_from?->toIso8601String(),
+                'planned_until' => $item->planned_until?->toIso8601String(),
                 'source_observation_id' => $item->source_observation_id,
                 'added_at' => $item->created_at?->toIso8601String(),
             ]);
 
-        return response()->json($this->observingListRow($list, $user) + ['items' => $items->values()]);
+        return response()->json($this->observingListRow($list, $user) + ['planned_timezone' => $list->planned_timezone, 'items' => $items->values()]);
     }
 
     private function observingListRow(ObservingList $list, User $user): array

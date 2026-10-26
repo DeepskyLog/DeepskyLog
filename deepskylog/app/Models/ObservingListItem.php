@@ -20,11 +20,17 @@ class ObservingListItem extends Model
         'source_observation_id',
         'added_by_user_id',
         'sort_order',
+        'planned_at',
+        'planned_from',
+        'planned_until',
     ];
 
     protected $casts = [
         'source_mode' => 'string',
         'sort_order' => 'integer',
+        'planned_at' => 'datetime',
+        'planned_from' => 'datetime',
+        'planned_until' => 'datetime',
     ];
 
     /**

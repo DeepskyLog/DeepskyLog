@@ -6,6 +6,7 @@ use App\Support\SchemaColumns;
 use App\Livewire\Concerns\LimitsExportRows;
 use App\Models\SearchIndex;
 use App\Models\Atlas;
+use App\Models\ObservingList;
 use App\Services\ActiveObservingListService;
 use App\Services\ObjectObservationStatistics;
 use App\Services\ObservationComparison;
@@ -91,6 +92,8 @@ class AdvancedObjectSearchTable extends PowerGridComponent
     private ?array $cachedEyepieces = null;
     // [list id, SeasonalVisibility or null] of seasons(); PowerGrid's mount() asks before the list is set
     private ?array $seasons = null;
+    // [list id, planned times or null] of plannedTimes()
+    private ?array $plannedTimes = null;
     public int $refreshTick = 0;
 
     public function boot(): void
@@ -100,8 +103,6 @@ class AdvancedObjectSearchTable extends PowerGridComponent
 
     public function mount(array $filters = [], ?bool $showAddColumn = null): void
     {
-        parent::mount();
-
         if ($showAddColumn !== null) {
             $this->showAddColumn = $showAddColumn;
         }
@@ -158,6 +159,18 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             : ObservationComparison::SKY_POOR_NOT_DARK;
         $month = (int) ($filters['well_placed_month'] ?? 0);
         $this->wellPlacedMonth = $month >= 1 && $month <= 12 ? $month : 0;
+
+        // PowerGrid makes the columns here, which depend on the list (Months, Time).
+        parent::mount();
+
+        // A list made for one night is shown in the order of its times; the
+        // sorting persisted from such a list does not apply to other lists.
+        if ($this->plannedTimes() !== null) {
+            $this->sortField = 'list_planned_at';
+            $this->sortDirection = 'asc';
+        } elseif ($this->sortField === 'list_planned_at') {
+            $this->sortField = 'display_name';
+        }
     }
 
     #[On('advanced-add-all-to-active-list')]
@@ -499,6 +512,21 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             })
             ->leftJoin('deepskytypes', 'deepskytypes.code', '=', 'objects.type')
             ->leftJoin('constellations', 'constellations.id', '=', 'objects.con');
+
+        // ── The times of a list made for one night ────────────────────────────
+        if ($planned = $this->plannedTimes()) {
+            $query->leftJoin('observing_list_items as list_items', function ($join) use ($planned) {
+                $join->where('list_items.observing_list_id', '=', $planned['list_id'])
+                    ->where(function ($on) {
+                        $on->whereColumn('list_items.object_name', 'search_index.name')
+                            ->orWhereColumn('list_items.object_name', 'objects.name');
+                    });
+            })->addSelect([
+                'list_items.planned_at as list_planned_at',
+                'list_items.planned_from as list_planned_from',
+                'list_items.planned_until as list_planned_until',
+            ]);
+        }
 
         // ── Object type filter ────────────────────────────────────────────────
         if (!empty($this->objectTypes)) {
@@ -1005,7 +1033,59 @@ class AdvancedObjectSearchTable extends PowerGridComponent
                 $well = array_keys(array_filter($months, fn($m) => $m['well']));
 
                 return implode(', ', array_map(fn($m) => \Carbon\Carbon::create(2000, $m, 1)->translatedFormat('M'), $well));
+            })
+            ->add('planned_time', function ($row) {
+                $at = $this->plannedTime($row->list_planned_at ?? null);
+                if ($at === '') {
+                    return '';
+                }
+                $from = $this->plannedTime($row->list_planned_from ?? null);
+                $until = $this->plannedTime($row->list_planned_until ?? null);
+                $window = $from !== '' && $until !== ''
+                    ? '<span class="block text-xs text-gray-400" title="' . e(__('When the object stands high enough')) . '">' . e($from . '–' . $until) . '</span>'
+                    : '';
+
+                return '<span class="font-medium">' . e($at) . '</span>' . $window;
+            })
+            ->add('planned_time_plain', fn($row) => $this->plannedTime($row->list_planned_at ?? null))
+            ->add('planned_window_plain', function ($row) {
+                $from = $this->plannedTime($row->list_planned_from ?? null);
+                $until = $this->plannedTime($row->list_planned_until ?? null);
+
+                return $from !== '' && $until !== '' ? $from . '–' . $until : '';
             });
+    }
+
+    /**
+     * The list the table shows, when it was made for one night (some of its
+     * objects have a time): its id and the time zone of its times.
+     *
+     * @return array{list_id: int, timezone: string}|null
+     */
+    private function plannedTimes(): ?array
+    {
+        $listId = $this->observingListsMode === 'in' && count($this->observingLists) === 1 ? $this->currentObservingListId() : null;
+        if ($this->plannedTimes === null || $this->plannedTimes[0] !== $listId) {
+            $list = $listId !== null ? ObservingList::find($listId) : null;
+            $this->plannedTimes = [$listId, $list && $list->hasPlannedTimes()
+                ? ['list_id' => $list->id, 'timezone' => $list->planned_timezone ?: 'UTC']
+                : null];
+        }
+
+        return $this->plannedTimes[1];
+    }
+
+    /**
+     * A planned moment (UTC, as stored) as the time in the list's time zone.
+     */
+    private function plannedTime(?string $moment): string
+    {
+        $planned = $this->plannedTimes();
+        if ($planned === null || $moment === null || $moment === '') {
+            return '';
+        }
+
+        return \Carbon\Carbon::parse($moment, 'UTC')->setTimezone($planned['timezone'])->format('H:i');
     }
 
     /**
@@ -1121,6 +1201,22 @@ class AdvancedObjectSearchTable extends PowerGridComponent
                 ->bodyAttribute('style', 'white-space:normal; overflow:visible;')
                 ->headerAttribute('style', 'white-space:normal;'),
             Column::make(__('Name'), 'name_plain')->hidden()->visibleInExport(true),
+        ];
+
+        if ($planned = $this->plannedTimes()) {
+            $cols[] = Column::make(__('Time (:timezone)', ['timezone' => $planned['timezone']]), 'planned_time', 'list_planned_at')
+                ->sortUsing(function ($query, $direction) {
+                    $query->orderByRaw("list_items.planned_at IS NULL, list_items.planned_at {$direction}, list_items.sort_order {$direction}");
+                })
+                ->bodyAttribute('class', 'text-center')
+                ->bodyAttribute('style', 'white-space:nowrap;')
+                ->visibleInExport(false);
+            $cols[] = Column::make(__('Time'), 'planned_time_plain')->hidden()->visibleInExport(true);
+            $cols[] = Column::make(__('Window'), 'planned_window_plain')->hidden()->visibleInExport(true);
+        }
+
+        $cols = [
+            ...$cols,
             Column::make(__('RA'), 'ra')
                 ->sortUsing(function ($query, $direction) {
                     $query->orderByRaw("(CASE WHEN COALESCE(objects.ra, search_index.ra) > 24 THEN COALESCE(objects.ra, search_index.ra) / 15.0 ELSE COALESCE(objects.ra, search_index.ra) END) $direction");
