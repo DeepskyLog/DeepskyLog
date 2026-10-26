@@ -22,7 +22,7 @@ class AstronomicalEvents
     private const STEP = 3600;
 
     /** Degrees: the largest distance of a conjunction of two planets. */
-    public const PLANET_DISTANCE = 1.0;
+    public const PLANET_DISTANCE = 5.0;
 
     /** Degrees: the largest distance of a conjunction of the Moon and a planet. */
     public const MOON_DISTANCE = 1.0;
