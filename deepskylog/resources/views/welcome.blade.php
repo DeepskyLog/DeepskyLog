@@ -92,6 +92,13 @@
                     />
                 @endif
 
+                @if ($sessionsWithoutObservations->isNotEmpty())
+                    <x-session-reminders
+                        :sessions="$sessionsWithoutObservations"
+                        class="order-1 lg:order-none"
+                    />
+                @endif
+
                 @if (!empty($nightForecast))
                     <x-night-forecast
                         :nights="$nightForecast"

@@ -70,6 +70,16 @@
             />
         </div>
 
+        <!-- Message about a session of the last days without observations -->
+        <div class="col-span-6 sm:col-span-5">
+            <x-toggle
+                label="{{ __('Remind me of my sessions without observations') }}"
+                name="sessionReminder"
+                id="sessionReminder"
+                wire:model.live="sessionReminder"
+            />
+        </div>
+
     </x-slot>
 
     <x-slot name="actions">

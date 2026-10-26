@@ -170,6 +170,13 @@
                     @endif
                 </div>
 
+                @if ($lacksObservations ?? false)
+                    <p class="mb-3 rounded-md border border-blue-600 bg-blue-900/50 px-3 py-2 text-sm text-gray-100">
+                        {{ __('You have not added any observations to this session yet.') }}
+                        <a href="{{ \App\Services\SessionObservationReminders::addObservationUrl($session) }}" class="font-semibold text-blue-300 hover:underline">{{ __('Add observations') }}</a>
+                    </p>
+                @endif
+
                 @foreach ($starParties ?? [] as $starParty)
                     <p class="mb-3 rounded bg-gray-800 px-3 py-2 text-sm text-gray-200">
                         {{ __('This session took place at the starparty') }}

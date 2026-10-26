@@ -41,6 +41,10 @@ class Kernel extends ConsoleKernel
         // days, to the observers who come.
         $schedule->command('star-parties:send-reminders --apply')->dailyAt('08:00')->withoutOverlapping();
 
+        // The reminder of the sessions of the last days without any
+        // observation of their observer, to finish logging the night.
+        $schedule->command('sessions:send-observation-reminders --apply')->dailyAt('10:00')->withoutOverlapping();
+
         // The message when a clear, dark night is forecast at an observer's
         // standard location: hourly, as noon comes at a different hour for
         // each location.

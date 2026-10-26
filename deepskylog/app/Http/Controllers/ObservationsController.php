@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ListingPagination;
 use App\Models\Observation;
+use App\Models\ObservationSession;
 use App\Models\User;
 use App\Models\Target;
 use App\Models\Location;
@@ -1834,6 +1835,21 @@ class ObservationsController extends Controller
                 }
             } catch (\Throwable $_) {
                 $prefill = [];
+            }
+        }
+
+        // ?session= (the reminder of a session without observations): the
+        // date and location of one of the observer's own sessions.
+        if ($user && $request->query('session')) {
+            $session = ObservationSession::where('id', (int) $request->query('session'))
+                ->where('observerid', $user->username)
+                ->first();
+            $sessionDate = $session?->begindate ?? $session?->enddate;
+            if ($sessionDate) {
+                $prefill['observed_on'] = $sessionDate->format('Y-m-d');
+                if ($session->locationid && $locations->contains('id', $session->locationid)) {
+                    $prefill['location_id'] = $session->locationid;
+                }
             }
         }
 

@@ -13,6 +13,7 @@ use App\Models\SketchOfTheWeek;
 use App\Models\StarParty;
 use App\Models\User;
 use App\Services\Observations\ObservationCardData;
+use App\Services\SessionObservationReminders;
 use App\Services\TonightsBest;
 use App\Services\Weather\NightForecast;
 use Illuminate\Http\Request;
@@ -331,7 +332,11 @@ class SessionController extends Controller
             ? StarParty::atSiteOn($location, $session->begindate->copy()->subHours(12)->toDateString(), $session->observerid, Auth::user())
             : collect();
 
-        return $this->noCacheResponse(response()->view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'starParties')));
+        // The owner's own session without observations of theirs: a link to add them.
+        $lacksObservations = Auth::user()?->username === $session->observerid && $primaryCount === 0
+            && SessionObservationReminders::lacksObservations($session);
+
+        return $this->noCacheResponse(response()->view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'starParties', 'lacksObservations')));
     }
 
     /**
@@ -1006,8 +1011,17 @@ class SessionController extends Controller
             $starParties = collect();
         }
 
+        // The observer's own sessions of the last weeks without any observation of theirs
+        try {
+            $sessionsWithoutObservations = Auth::check() ? SessionObservationReminders::forUser(Auth::user()) : collect();
+        } catch (\Throwable $e) {
+            report($e);
+            $sessionsWithoutObservations = collect();
+        }
+
         return $this->noCacheResponse(response()->view('welcome', compact(
             'sessions',
+            'sessionsWithoutObservations',
             'observations',
             'sketches',
             'sketchOfTheWeek',

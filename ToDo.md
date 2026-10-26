@@ -2,7 +2,7 @@
 
 ## Next steps
 
-- [ ] Observation reminders after a session: notes a session has but no observation records yet. This nudges people to finish logging the night.
+- [x] Observation reminders after a session: notes a session has but no observation records yet. This nudges people to finish logging the night.
 - [ ] Update to laravel 13.
   - [ ] Only needs PHP 8.4 -> Ubuntu 26.04 LTS.
 - [ ] Translations

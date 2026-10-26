@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,11 @@ class QuickSearch extends Component
     // logged-in observers) "New observation" for the typed name, below the
     // suggestions as well, which would otherwise cover those buttons.
     public $observationActions = false;
+    // In add_observation mode: the session (id) whose date and location the
+    // observation form starts with, from the reminder of a session without
+    // observations.
+    #[Locked]
+    public $session = null;
     // Cache resolved type names for short codes (avoid repeated DB lookups)
     protected $cachedTypeNames = [];
 
@@ -792,7 +798,7 @@ class QuickSearch extends Component
             $slug = $this->suggestions[$this->selectedIndex]['slug'] ?? null;
             if ($slug) {
                 if ($this->mode === 'add_observation') {
-                    return redirect()->route('observation.create', ['slug' => $slug]);
+                    return redirect($this->observationFormUrl($slug));
                 }
                 return redirect()->route('object.show', ['slug' => $slug]);
             }
@@ -804,7 +810,7 @@ class QuickSearch extends Component
     public function selectSuggestion($slug)
     {
         if ($this->mode === 'add_observation') {
-            return redirect()->route('observation.create', ['slug' => $slug]);
+            return redirect($this->observationFormUrl($slug));
         }
         return redirect()->route('object.show', ['slug' => $slug]);
     }
@@ -866,7 +872,7 @@ class QuickSearch extends Component
         if (!empty($obj)) {
             $slug = $obj->slug ?? $obj->name;
             if ($this->mode === 'add_observation') {
-                return redirect()->route('observation.create', ['slug' => $slug]);
+                return redirect($this->observationFormUrl($slug));
             }
             return redirect()->route('object.show', ['slug' => $slug]);
         }
@@ -877,12 +883,20 @@ class QuickSearch extends Component
         if ($count === 1) {
             $suggSlug = $this->suggestions[0]['slug'];
             if ($this->mode === 'add_observation') {
-                return redirect()->route('observation.create', ['slug' => $suggSlug]);
+                return redirect($this->observationFormUrl($suggSlug));
             }
             return redirect()->route('object.show', ['slug' => $suggSlug]);
         }
 
         return redirect()->route('search.results', ['q' => $this->query]);
+    }
+
+    /**
+     * The form of a new observation of the object, with the session if one was given.
+     */
+    private function observationFormUrl(string $slug): string
+    {
+        return route('observation.create', array_filter(['slug' => $slug, 'session' => $this->session ? (int) $this->session : null]));
     }
 
     public function render()
