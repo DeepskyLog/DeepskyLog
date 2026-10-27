@@ -26,6 +26,8 @@
                         <x-menu.item separator icon="newspaper" href="{{ route('admin.news') }}">{{ __('Manage the news') }}</x-menu.item>
 
                         <x-menu.item icon="star" href="{{ route('admin.objects-of-the-month') }}">{{ __('Objects of the month') }}</x-menu.item>
+
+                        <x-menu.item icon="trophy" href="{{ route('admin.challenges') }}">{{ __('Manage the challenges') }}</x-menu.item>
                     @endif
 
                     @if (Auth::user()->isAdministrator())

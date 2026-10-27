@@ -64,6 +64,12 @@
                             href="{{ route('admin.objects-of-the-month') }}"
                             label="{{ __('Objects of the month') }}"
                         />
+
+                        <x-dropdown.item
+                            icon="trophy"
+                            href="{{ route('admin.challenges') }}"
+                            label="{{ __('Manage the challenges') }}"
+                        />
                     @endif
 
                     @if (Auth::user()->isAdministrator())

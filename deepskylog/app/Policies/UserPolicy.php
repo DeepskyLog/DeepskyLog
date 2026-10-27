@@ -75,6 +75,15 @@ class UserPolicy
     }
 
     /**
+     * Administrators and database experts set the observing challenges on
+     * /admin/challenges.
+     */
+    public function manage_challenges(User $user): bool
+    {
+        return $user->isAdministrator() || $user->isDatabaseExpert();
+    }
+
+    /**
      * Only administrators may send a message to all observers.
      */
     public function broadcast(User $user): bool

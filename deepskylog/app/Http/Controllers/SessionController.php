@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Location;
 use App\Models\NewsItem;
 use App\Models\ObjectOfTheMonth;
+use App\Models\ObservingChallenge;
 use App\Models\Observation;
 use App\Models\ObservationLike;
 use App\Models\ObservationSession;
@@ -1027,6 +1028,14 @@ class SessionController extends Controller
             $objectOfTheMonthDrawings = collect();
         }
 
+        // The running observing challenges, those the observer joined first with their progress
+        try {
+            $challenges = ObservingChallenge::forHomePage(Auth::user());
+        } catch (\Throwable $e) {
+            report($e);
+            $challenges = collect();
+        }
+
         // The observer's own sessions of the last weeks without any observation of theirs
         try {
             $sessionsWithoutObservations = Auth::check() ? SessionObservationReminders::forUser(Auth::user()) : collect();
@@ -1051,6 +1060,7 @@ class SessionController extends Controller
             'starParties',
             'objectOfTheMonth',
             'objectOfTheMonthDrawings',
+            'challenges',
         )));
     }
 

@@ -137,6 +137,25 @@ Route::get('/objects-of-the-month/{objectOfTheMonth}', [App\Http\Controllers\Obj
     ->name('objects-of-the-month.show')->middleware('doNotCacheResponse');
 Route::post('/objects-of-the-month/{objectOfTheMonth}/observing-list', [App\Http\Controllers\ObjectOfTheMonthController::class, 'storeList'])
     ->middleware(['auth', 'doNotCacheResponse'])->name('objects-of-the-month.observing-list');
+// The observing challenges: set by administrators and database experts, joined by observers
+Route::middleware(['auth', 'doNotCacheResponse'])->can('manage_challenges', User::class)->group(function () {
+    Route::get('/admin/challenges', [App\Http\Controllers\ObservingChallengeController::class, 'admin'])->name('admin.challenges');
+    Route::get('/admin/challenges/create', [App\Http\Controllers\ObservingChallengeController::class, 'create'])->name('admin.challenges.create');
+    Route::post('/admin/challenges', [App\Http\Controllers\ObservingChallengeController::class, 'store'])->name('admin.challenges.store');
+    Route::get('/admin/challenges/{challenge}/edit', [App\Http\Controllers\ObservingChallengeController::class, 'edit'])->name('admin.challenges.edit');
+    Route::put('/admin/challenges/{challenge}', [App\Http\Controllers\ObservingChallengeController::class, 'update'])->name('admin.challenges.update');
+    Route::delete('/admin/challenges/{challenge}', [App\Http\Controllers\ObservingChallengeController::class, 'destroy'])->name('admin.challenges.destroy');
+});
+Route::get('/challenges', [App\Http\Controllers\ObservingChallengeController::class, 'index'])
+    ->name('challenges.index')->middleware('doNotCacheResponse');
+Route::get('/challenges/{challenge}', [App\Http\Controllers\ObservingChallengeController::class, 'show'])
+    ->name('challenges.show')->middleware('doNotCacheResponse');
+Route::post('/challenges/{challenge}/join', [App\Http\Controllers\ObservingChallengeController::class, 'join'])
+    ->middleware(['auth', 'doNotCacheResponse'])->name('challenges.join');
+Route::delete('/challenges/{challenge}/join', [App\Http\Controllers\ObservingChallengeController::class, 'leave'])
+    ->middleware(['auth', 'doNotCacheResponse'])->name('challenges.leave');
+Route::post('/challenges/{challenge}/observing-list', [App\Http\Controllers\ObservingChallengeController::class, 'storeList'])
+    ->middleware(['auth', 'doNotCacheResponse'])->name('challenges.observing-list');
 Route::view('/admin/object-reviews', 'admin.object-reviews')
     ->middleware(['auth', 'doNotCacheResponse'])
     ->can('review_objects', User::class)

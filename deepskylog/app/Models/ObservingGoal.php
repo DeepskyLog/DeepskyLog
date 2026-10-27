@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\DB;
  * target_count is null ("every Messier in one season"). With new_only, only
  * objects the observer had not seen (drawn) before starts_on count. The
  * progress is counted from the observations, so it follows every edit; it
- * is shown on the observer page and, for public goals, in the blog.
+ * is shown on the observer page and, for public goals, in the blog. A goal
+ * with a challenge_id is an observer's part in an ObservingChallenge: it
+ * follows the challenge and is removed by leaving it.
  */
 class ObservingGoal extends Model
 {
@@ -29,7 +31,7 @@ class ObservingGoal extends Model
     public const MAX_YEARS = 10;
 
     protected $fillable = [
-        'user_id', 'name', 'catalog', 'observing_list_id', 'source_label', 'target_count',
+        'user_id', 'challenge_id', 'name', 'catalog', 'observing_list_id', 'source_label', 'target_count',
         'mode', 'new_only', 'starts_on', 'ends_on', 'public',
     ];
 
@@ -43,6 +45,15 @@ class ObservingGoal extends Model
 
     private ?array $progress = null;
 
+    /** @var Collection<string, string>|null */
+    private ?Collection $firstDates = null;
+
+    /** @var Collection<int, string>|null */
+    private ?Collection $sourceObjects = null;
+
+    /** @var Collection<int, string>|null */
+    private ?Collection $countable = null;
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -51,6 +62,24 @@ class ObservingGoal extends Model
     public function observingList(): BelongsTo
     {
         return $this->belongsTo(ObservingList::class);
+    }
+
+    public function challenge(): BelongsTo
+    {
+        return $this->belongsTo(ObservingChallenge::class, 'challenge_id');
+    }
+
+    /**
+     * Use these names as the objects of the source, so the goals of all
+     * participants of a challenge read the source once.
+     *
+     * @param  Collection<int, string>  $names
+     */
+    public function useSourceObjects(Collection $names): static
+    {
+        $this->sourceObjects = $names;
+
+        return $this;
     }
 
     public function drawings(): bool
@@ -138,14 +167,19 @@ class ObservingGoal extends Model
      *
      * @return Collection<int, string>
      */
-    private function countableObjects(): Collection
+    public function countableObjects(): Collection
+    {
+        return $this->countable ??= $this->findCountableObjects();
+    }
+
+    private function findCountableObjects(): Collection
     {
         $source = $this->source();
         if ($source === null) {
             return collect();
         }
 
-        $names = ObjectSources::objects($source)->pluck('object_name')->filter()->unique()->values();
+        $names = $this->sourceObjects ?? ObjectSources::objects($source)->pluck('object_name')->filter()->unique()->values();
         if (! $this->new_only || $names->isEmpty()) {
             return $names;
         }
@@ -162,15 +196,19 @@ class ObservingGoal extends Model
 
     /**
      * The date each countable object was first seen (drawn) in the period,
-     * by object name.
+     * by object name in lower case.
      *
      * @return Collection<string, string>
      */
-    private function firstObservationDates(): Collection
+    public function firstObservationDates(): Collection
     {
+        if ($this->firstDates !== null) {
+            return $this->firstDates;
+        }
+
         $names = $this->countableObjects();
 
-        return $names->chunk(1000)->flatMap(fn (Collection $chunk) => $this->observations($chunk)
+        return $this->firstDates = $names->chunk(1000)->flatMap(fn (Collection $chunk) => $this->observations($chunk)
             ->whereBetween('observations.observed_on', [$this->starts_on->toDateString(), $this->ends_on->toDateString()])
             ->groupBy('observations.target_name')
             ->selectRaw('observations.target_name, MIN(observations.observed_on) AS first_on')
@@ -206,7 +244,9 @@ class ObservingGoal extends Model
         $goals = self::query()
             ->where('user_id', $observer->id)
             ->when($publicOnly || ! $viewer?->is($observer), fn ($query) => $query->where('public', true))
-            ->with('observingList:id,slug')
+            // The goals of a hidden challenge are hidden with it
+            ->where(fn ($query) => $query->whereNull('challenge_id')->orWhereHas('challenge', fn ($challenge) => $challenge->where('hidden', false)))
+            ->with(['observingList:id,slug', 'challenge:id,slug'])
             ->orderByDesc('ends_on')
             ->orderByDesc('id')
             ->get()

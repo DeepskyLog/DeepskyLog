@@ -9,6 +9,7 @@ use App\Charts\ObservationsPerYearChart;
 use App\Jobs\ComputeObserverStats;
 use App\Models\Country;
 use App\Models\Observation;
+use App\Models\ObservingChallenge;
 use App\Models\ObservingList;
 use App\Models\User;
 use App\Services\ObjectSources;
@@ -520,6 +521,7 @@ class ObserverController extends Controller
             'countryLabel' => ObserverCountries::label($user->country),
             'observedCountries' => $this->observedCountries($user),
             'catalogCounts' => $this->catalogCounts($user, ['M', 'Caldwell', 'H400', 'H400-II']),
+            'challengeTrophies' => ObservingChallenge::trophiesFor($user),
         ]);
 
     }

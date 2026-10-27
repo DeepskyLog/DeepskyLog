@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\ObservingGoal;
 use App\Models\User;
+use App\Services\ChallengeStandings;
 use App\Services\ObjectSources;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -68,7 +69,8 @@ class ObservingGoals extends Component
 
     public function edit(int $id): void
     {
-        $goal = ObservingGoal::where('user_id', $this->authorizeOwner()->id)->findOrFail($id);
+        // A goal of a challenge follows the challenge
+        $goal = ObservingGoal::where('user_id', $this->authorizeOwner()->id)->whereNull('challenge_id')->findOrFail($id);
 
         $this->resetValidation();
         $this->editingId = $goal->id;
@@ -106,7 +108,7 @@ class ObservingGoals extends Component
     public function save(): void
     {
         $user = $this->authorizeOwner();
-        $goal = $this->editingId !== null ? ObservingGoal::where('user_id', $user->id)->findOrFail($this->editingId) : null;
+        $goal = $this->editingId !== null ? ObservingGoal::where('user_id', $user->id)->whereNull('challenge_id')->findOrFail($this->editingId) : null;
 
         $source = ObjectSources::find($this->source, $user);
         // An edited goal keeps the list of another observer that is no longer subscribed to.
@@ -119,7 +121,7 @@ class ObservingGoals extends Component
                 if ($source === null) {
                     $validator->errors()->add('source', __('Choose a catalog or observing list.'));
                 }
-                if ($goal === null && ObservingGoal::where('user_id', $user->id)->count() >= ObservingGoal::MAX_PER_USER) {
+                if ($goal === null && ObservingGoal::where('user_id', $user->id)->whereNull('challenge_id')->count() >= ObservingGoal::MAX_PER_USER) {
                     $validator->errors()->add('name', __('You can have at most :count observing goals.', ['count' => ObservingGoal::MAX_PER_USER]));
                 }
             });
@@ -160,7 +162,12 @@ class ObservingGoals extends Component
 
     public function delete(int $id): void
     {
-        ObservingGoal::where('user_id', $this->authorizeOwner()->id)->whereKey($id)->first()?->delete();
+        $goal = ObservingGoal::where('user_id', $this->authorizeOwner()->id)->whereKey($id)->first();
+        $goal?->delete();
+        // Removing the goal of a challenge is leaving it
+        if ($goal?->challenge !== null) {
+            ChallengeStandings::forget($goal->challenge);
+        }
         if ($this->editingId === $id) {
             $this->resetForm();
         }

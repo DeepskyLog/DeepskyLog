@@ -4,6 +4,7 @@ namespace App\Services\News;
 
 use App\Models\Location;
 use App\Models\NewsItem;
+use App\Models\ObservingChallenge;
 use Carbon\Carbon;
 
 /**
@@ -50,6 +51,7 @@ class EventTexts
             'comet'         => __('Comet :comet at its brightest on :date', ['comet' => $data['name'] ?? '', 'date' => $date]),
             'supernova'     => __('Supernova :name at magnitude :magnitude', ['name' => $data['name'] ?? '', 'magnitude' => self::number($data['magnitude'] ?? 0, 1)]),
             'nova'          => __('Nova :name at magnitude :magnitude', ['name' => $data['name'] ?? '', 'magnitude' => self::number($data['magnitude'] ?? 0, 1)]),
+            'challenge'     => __('Observing challenge: :name', ['name' => $data['name'] ?? '']),
             default         => (string) $item->title,
         };
     }
@@ -93,8 +95,24 @@ class EventTexts
                 'band'      => $data['band'] ?? '',
                 'date'      => self::date($item->event_at, $location),
             ]),
+            'challenge' => self::challenge($item),
             default => '',
         };
+    }
+
+    /** What an observing challenge asks, and when. */
+    private static function challenge(NewsItem $item): string
+    {
+        $challenge = ObservingChallenge::find($item->data['challenge_id'] ?? null);
+        if ($challenge === null) {
+            return '';
+        }
+
+        return __(':task between :start and :end. Join the challenge and follow the leaderboard.', [
+            'task'  => $challenge->task(),
+            'start' => $challenge->starts_on->locale(app()->getLocale())->translatedFormat('j F Y'),
+            'end'   => $challenge->ends_on->locale(app()->getLocale())->translatedFormat('j F Y'),
+        ]);
     }
 
     /** The name of the Moon or a planet in the language of the request. */

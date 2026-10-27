@@ -32,6 +32,12 @@
             />
 
             <x-dropdown.item
+                icon="trophy"
+                href="{{ route('challenges.index') }}"
+                label="{{ __('Observing challenges') }}"
+            />
+
+            <x-dropdown.item
                 icon="bars-3-center-left"
                 href="/observations"
                 label="{{ __('All observations') }}"

@@ -17,8 +17,13 @@
                                 @if (!$goal->public)
                                     <span>{{ __("Private") }}</span>
                                 @endif
-                                <button type="button" wire:click="edit({{ $goal->id }})" class="hover:text-white hover:underline">{{ __("Edit") }}</button>
-                                <button type="button" wire:click="delete({{ $goal->id }})" wire:confirm="{{ __('Remove this observing goal?') }}" class="hover:text-white hover:underline">{{ __("Remove") }}</button>
+                                @if ($goal->challenge_id !== null)
+                                    <span>{{ __("Observing challenge") }}</span>
+                                    <button type="button" wire:click="delete({{ $goal->id }})" wire:confirm="{{ __('Leave this challenge?') }}" class="hover:text-white hover:underline">{{ __("Leave the challenge") }}</button>
+                                @else
+                                    <button type="button" wire:click="edit({{ $goal->id }})" class="hover:text-white hover:underline">{{ __("Edit") }}</button>
+                                    <button type="button" wire:click="delete({{ $goal->id }})" wire:confirm="{{ __('Remove this observing goal?') }}" class="hover:text-white hover:underline">{{ __("Remove") }}</button>
+                                @endif
                             </div>
                         @endif
                     </div>

@@ -187,6 +187,13 @@
                     />
                 @endif
 
+                @if ($challenges->isNotEmpty())
+                    <x-observing-challenges
+                        :entries="$challenges"
+                        class="order-2 lg:order-none"
+                    />
+                @endif
+
                 @if ($starParties->isNotEmpty())
                     <x-star-parties
                         :parties="$starParties"

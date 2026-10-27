@@ -12,7 +12,9 @@
     };
     $observer = $goal->user;
     $catalogUrl =
-        $goal->catalog !== null && $observer
+        $goal->challenge_id !== null
+        ? route("challenges.show", $goal->challenge)
+        : ($goal->catalog !== null && $observer
             ? route("observer.catalog", [
                 "observer" => $observer->slug,
                 "source" => $goal->source()["key"],
@@ -20,7 +22,7 @@
             ])
             : ($goal->observingList
                 ? route("observing-list.show", $goal->observingList->slug)
-                : null);
+                : null));
 @endphp
 
 <div {{ $attributes }}>

@@ -282,6 +282,9 @@
                 </h2>
 
                 <div class="flex flex-wrap gap-x-6 gap-y-4 px-5">
+                    @foreach ($challengeTrophies as $trophy)
+                        <x-challenge-trophy :trophy="$trophy" />
+                    @endforeach
                     @if ($user->achievements->count() > 0)
                         @foreach ($user->achievements as $achievement)
                             <div title="{{ $achievement->description }}" class="w-24 h-28 p-2 bg-white/5 rounded-lg flex flex-col items-center justify-start shadow">
@@ -416,8 +419,8 @@
                                 @endif
                             </div>
                         @endforeach
-                    @else
-                        <p class="text-sm text-gray-500">No trophies yet.</p>
+                    @elseif ($challengeTrophies->isEmpty())
+                        <p class="text-sm text-gray-500">{{ __('No trophies yet.') }}</p>
                     @endif
                 </div>
             </x-card>
