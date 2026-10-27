@@ -124,6 +124,7 @@
 - [X] Offline lists (PWA). Dark sites often have no signal. A service worker could cache the observing list, its charts and the at-the-eyepiece page, and keep observations entered offline until the connection return.
 - [X] "What's new for me" after new equipment: the objects a telescope shows that none of the observer's other active instruments shows, or an eyepiece adds to the standard telescope, at one of their locations, not seen yet, the 200 most observed, with a button to make that a list. Linked from the instrument and eyepiece pages, highlighted right after adding them.
 - [X] Binoculars: both eyes see fainter than one, so binoculars get a higher contrast reserve (+0.15) and limiting magnitude (+0.38) than a telescope of the same aperture, everywhere these are calculated (object page, stored metrics, Tonight's best, double stars, filter advice). Their field is estimated wider (60° apparent), the field views show them upright in place of the telescope, and the Messier marathon planner takes an instrument (by default the standard telescope): a faint object only counts from the altitude at which it can be seen with it, or is missed as too faint.
+- [X] Sky quality history of a location: the SQM and NELM recorded with the observations at a location, a point per night (median of its observations) and a line through the median of each year, on the location page.
 
 Community features
 
@@ -134,8 +135,6 @@ Object-of-the-week discussion. One object a week chosen from Tonight's best, sho
 "Observed together" at starparties. After a starparty, a combined page of what all participants saw, ranked by how many people saw each object, made into a shareable report. StarPartyActivity already collects the data.
 
 Smaller additions
-
-Sky quality history for a location. Plot the SQM and NELM values from all observations at a location over the years. This shows light pollution trends, and the location page already has a chart area.
 
 Calendar feed of your planned list times. .ics export of an observing list that has times, or of the clear-night alerts, as starparties already have.
 

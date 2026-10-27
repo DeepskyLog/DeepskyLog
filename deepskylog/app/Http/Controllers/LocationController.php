@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Charts\SkyQualityHistoryChart;
 use App\Models\Location;
 use App\Models\User;
+use App\Services\LocationSkyHistory;
 use App\Services\Weather\NightForecast;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,9 +48,21 @@ class LocationController extends Controller
             }
         }
 
+        // The SQM and NELM its owner recorded with the observations at the location over the years, the NELM with their correction
+        $skyHistory = LocationSkyHistory::forLocation($location);
+        $skyQualityChart = $skyHistory->isEmpty()
+            ? null
+            : (new SkyQualityHistoryChart)->build($location->name, $skyHistory, (float) ($location->user->fstOffset ?? 0));
+
         return view(
             'location.show',
-            ['location' => $location, 'image' => $image, 'nightForecast' => $nightForecast]
+            [
+                'location' => $location,
+                'image' => $image,
+                'nightForecast' => $nightForecast,
+                'skyHistory' => $skyHistory,
+                'skyQualityChart' => $skyQualityChart,
+            ]
         );
     }
 
