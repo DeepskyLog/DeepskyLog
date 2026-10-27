@@ -142,6 +142,14 @@
                     <span class="muted">{{ __('Session: :name', ['name' => html_entity_decode((string) $session->name)]) }}</span>
                 @endif
             </div>
+            {{-- SkySafari for iOS centres the object of a skyobject:// link, its
+                 GoTo then moves the telescope SkySafari is connected to; SkySafari
+                 for Android ignores the link, so the button is shown on iOS only --}}
+            <div class="row" style="margin-top:.5rem">
+                <a class="button" id="skysafari" href="skyobject://{{ rawurlencode($current['name']) }}" hidden>{{ __('Show in SkySafari') }}</a>
+                <button type="button" class="button" id="copy-name">{{ __('Copy name') }}</button>
+                <span class="muted" id="copy-name-status" role="status"></span>
+            </div>
         </section>
 
         {{-- Previous, next, following the clock --}}
@@ -270,6 +278,8 @@
                 <button type="button" class="button" id="save-offline">{{ __('Save for offline use') }}</button>
                 <span class="muted" id="save-offline-status" role="status"></span>
             </div>
+            <p class="muted">{{ __('Or open the whole list in SkySafari, which also works without a connection, and use its GoTo there.') }}</p>
+            <a class="button" href="{{ route('observing-list.export.skylist', $list) }}">{{ __('Export SkySafari (.skylist)') }}</a>
         </section>
     </main>
 
@@ -329,6 +339,8 @@
                 'removeConfirm' => __('Remove this observation from this device? It has not been sent.'),
                 'empty' => __('Write what you saw.'),
                 'at' => __('At :time'),
+                'copied' => __('Copied: paste it in the search of SkySafari.'),
+                'noSkySafari' => __('SkySafari did not open: copy the name and paste it in its search.'),
             ],
         ];
     @endphp
@@ -395,6 +407,35 @@
                         document.getElementById('view-' + other.getAttribute('data-view')).hidden = other !== tab;
                     });
                 });
+            });
+
+            // SkySafari: when the page is still in view a moment after the link,
+            // no app took it
+            var copyStatus = document.getElementById('copy-name-status');
+            var skySafari = document.getElementById('skysafari');
+            // An iPad presents itself as a Mac with a touch screen
+            skySafari.hidden = ! (/iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+            skySafari.addEventListener('click', function () {
+                copyStatus.textContent = '';
+                setTimeout(function () {
+                    if (document.visibilityState === 'visible' && document.hasFocus()) copyStatus.textContent = texts.noSkySafari;
+                }, 2000);
+            });
+            document.getElementById('copy-name').addEventListener('click', function () {
+                var done = function () { copyStatus.textContent = texts.copied; };
+                var fallback = function () {
+                    var field = document.createElement('textarea');
+                    field.value = data.object;
+                    field.setAttribute('readonly', '');
+                    field.style.position = 'fixed';
+                    field.style.opacity = '0';
+                    document.body.appendChild(field);
+                    field.select();
+                    try { document.execCommand('copy'); done(); } catch (e) {}
+                    document.body.removeChild(field);
+                };
+                if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(data.object).then(done, fallback);
+                else fallback();
             });
 
             // Observations kept on this device until they are sent

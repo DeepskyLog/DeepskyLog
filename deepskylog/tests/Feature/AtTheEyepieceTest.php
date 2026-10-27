@@ -249,3 +249,14 @@ it('refuses an observation noted by another observer or of an object not in the 
 it('adds the red night mode to every page', function () {
     $this->get('/')->assertOk()->assertSee('dsl-night-mode')->assertSee('data-dsl-night-toggle', false);
 });
+
+it('links the current object to SkySafari and the list to its skylist export', function () {
+    $owner = aeObserver();
+    $list = aeList($owner);
+
+    $this->actingAs($owner)->get(route('observing-list.eyepiece', $list))
+        ->assertOk()
+        ->assertSee('href="skyobject://M%2031"', false)
+        ->assertSee('Show in SkySafari')
+        ->assertSee(route('observing-list.export.skylist', $list), false);
+});
