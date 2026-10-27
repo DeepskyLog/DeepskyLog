@@ -255,6 +255,41 @@
                             </p>
                         @endif
 
+                        @if ($seenTogether->isNotEmpty())
+                            <h3 class="mt-4 mb-1 font-semibold text-white">{{ __("Objects seen by most participants") }}</h3>
+                            <p class="mb-2 text-sm text-gray-400">{{ __("Ranked by the number of observers who saw them, then by the number of observations.") }}</p>
+                            @php($cards = \App\Services\Observations\ObservationCardData::instance())
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm text-gray-300">
+                                    <thead class="text-left text-xs text-gray-400 uppercase">
+                                        <tr>
+                                            <th class="py-1 pr-2">#</th>
+                                            <th class="py-1 pr-2">{{ __("Object") }}</th>
+                                            <th class="py-1 pr-2 text-right">{{ __("Observers") }}</th>
+                                            <th class="py-1 pr-2 text-right">{{ __("Observations") }}</th>
+                                            <th class="py-1 text-right">{{ __("Drawings") }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-700">
+                                        @foreach ($seenTogether as $row)
+                                            @php($comet = $row->observation->target_type === \App\Models\Observation::TYPE_COMET && is_numeric($row->observation->target_key) ? $cards->comet($row->observation->target_key) : null)
+                                            @php($objectName = $comet?->name ?? (string) $row->observation->target_name)
+                                            @php($objectSlug = $comet?->slug ?? ($cards->target($row->observation->target_name)?->slug ?? \Illuminate\Support\Str::slug($objectName)))
+                                            <tr>
+                                                <td class="py-1 pr-2 text-gray-500">{{ $loop->iteration }}</td>
+                                                <td class="py-1 pr-2">
+                                                    <a href="{{ route("object.show", $objectSlug) }}" class="text-blue-400 hover:underline">{{ html_entity_decode($objectName, ENT_QUOTES | ENT_HTML5, "UTF-8") }}</a>
+                                                </td>
+                                                <td class="py-1 pr-2 text-right">{{ $row->observers }}</td>
+                                                <td class="py-1 pr-2 text-right">{{ $row->observations }}</td>
+                                                <td class="py-1 text-right">{{ $row->drawings ?: "" }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+
                         @if ($sessions->isNotEmpty())
                             <h3 class="mt-4 mb-2 font-semibold text-white">{{ __("Sessions") }}</h3>
                             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">

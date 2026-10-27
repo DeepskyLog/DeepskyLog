@@ -166,12 +166,15 @@ class StarPartyController extends Controller
         $sessions     = collect();
         $observations = collect();
         $observers    = collect();
+        $seenTogether = collect();
         if ($starParty->startsAt()->isPast()) {
             $activity     = new StarPartyActivity($starParty);
             $sessions     = app(SessionController::class)->prepareSessionCards($activity->sessions());
             $observations = $activity->observations();
             $observers    = $activity->observers();
-            ObservationCardData::instance()->preload($observations);
+            // The ranking only says something when several observers recorded
+            $seenTogether = $observers->count() > 1 ? $activity->objectsSeenTogether() : collect();
+            ObservationCardData::instance()->preload($observations)->preloadObjects($seenTogether->pluck('observation'));
         }
 
         return view('star-parties.show', [
@@ -183,6 +186,7 @@ class StarPartyController extends Controller
             'sessions'      => $sessions,
             'observations'  => $observations,
             'observers'     => $observers,
+            'seenTogether'  => $seenTogether,
             'observerUsers' => User::whereIn('username', $observers->pluck('observer_username'))->get(['id', 'name', 'slug', 'username'])->keyBy(fn (User $u) => mb_strtolower($u->username)),
             'status'        => $starParty->statusOf($user),
             'canManage'     => $starParty->canBeManagedBy($user),

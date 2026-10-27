@@ -111,6 +111,24 @@ class ObservationCardData
     }
 
     /**
+     * Load only the objects of these observations (target() and comet()), for
+     * pages that name and link the objects without cards.
+     *
+     * @param  iterable<mixed>  $observations
+     */
+    public function preloadObjects(iterable $observations): self
+    {
+        $observations = collect($observations)->filter(fn ($o) => $o instanceof Observation)->values();
+        if ($observations->isNotEmpty()) {
+            $this->preloadTargets($observations->pluck('target_name'));
+            $this->preloadModels(CometObject::class, $observations->where('target_type', Observation::TYPE_COMET)
+                ->pluck('target_key')->filter(fn ($key) => is_numeric($key)));
+        }
+
+        return $this;
+    }
+
+    /**
      * Load these users in one query, for user().
      *
      * @param  iterable<string|null>  $usernames

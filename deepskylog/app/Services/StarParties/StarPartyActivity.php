@@ -7,6 +7,7 @@ use App\Models\Observation;
 use App\Models\ObservationSession;
 use App\Models\StarParty;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
 
 /**
@@ -21,6 +22,9 @@ class StarPartyActivity
 {
     /** The observations shown on the page of a starparty. */
     public const MAX_OBSERVATIONS = 50;
+
+    /** The objects shown in the ranking of objects seen together. */
+    public const MAX_OBJECTS = 30;
 
     private const TARGET_TYPES = ['deepsky', 'comet', 'planet', 'solarsystem', 'lunar'];
 
@@ -144,5 +148,46 @@ class StarPartyActivity
             ->orderByDesc('id')
             ->limit($limit)
             ->get();
+    }
+
+    /**
+     * The objects seen at the starparty, ranked by the number of observers
+     * who saw them, then by the number of observations: one row per target
+     * (Observation::DIFFERENT_OBJECT_SQL), leaving out observations of
+     * objects that were not seen. Each row carries one of its observations
+     * (the first), which gives the name and link of the object.
+     *
+     * @return Collection<int, object{observation: Observation, observers: int, observations: int, drawings: int}>
+     */
+    public function objectsSeenTogether(int $limit = self::MAX_OBJECTS): Collection
+    {
+        $rows = $this->observationsQuery()
+            ->toBase()
+            ->whereNotNull(Observation::DIFFERENT_OBJECT_SQL)
+            ->whereNotExists(function (QueryBuilder $details) {
+                $details->selectRaw('1')
+                    ->from('deepsky_observation_details')
+                    ->whereColumn('deepsky_observation_details.observation_id', 'observations.id')
+                    ->where('deepsky_observation_details.visibility', Observation::VISIBILITY_NOT_SEEN);
+            })
+            ->selectRaw('MIN(observations.id) as observation_id, COUNT(DISTINCT observer_username) as observers, COUNT(*) as observations, SUM(CASE WHEN has_drawing = 1 THEN 1 ELSE 0 END) as drawings')
+            ->groupBy('target_type', Observation::DIFFERENT_OBJECT_SQL)
+            ->orderByDesc('observers')
+            ->orderByDesc('observations')
+            ->orderBy('observation_id')
+            ->limit($limit)
+            ->get();
+
+        $observations = Observation::whereIn('id', $rows->pluck('observation_id'))->get()->keyBy('id');
+
+        return $rows
+            ->filter(fn ($row) => $observations->has($row->observation_id))
+            ->map(fn ($row) => (object) [
+                'observation'  => $observations[$row->observation_id],
+                'observers'    => (int) $row->observers,
+                'observations' => (int) $row->observations,
+                'drawings'     => (int) $row->drawings,
+            ])
+            ->values();
     }
 }

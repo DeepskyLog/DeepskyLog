@@ -423,6 +423,45 @@ it('finds the sessions and observations at the site in the nights of the starpar
     expect((new StarPartyActivity($party->fresh()))->observations())->toHaveCount(2);
 });
 
+it('ranks the objects by the number of observers who saw them', function () {
+    $organiser = User::factory()->create();
+    $party     = starParty($organiser, ['start_date' => '2026-09-11', 'end_date' => '2026-09-12']);
+    $observers = User::factory()->count(3)->create();
+    foreach ($observers as $observer) {
+        StarPartyParticipant::create(['star_party_id' => $party->id, 'user_id' => $observer->id, 'status' => StarPartyParticipant::GOING]);
+    }
+
+    $observation = function (User $observer, string $object, array $attributes = []) {
+        $location = Location::where('user_id', $observer->id)->first() ?? starPartyLocation($observer, ['latitude' => 50.101, 'longitude' => 5.501]);
+
+        return Observation::create($attributes + [
+            'observer_username' => $observer->username, 'observer_user_id' => $observer->id, 'location_id' => $location->id,
+            'observed_on'       => '2026-09-11', 'observed_time' => '21:30:00', 'target_type' => 'deepsky', 'target_table' => 'objects',
+            'target_key'        => $object, 'target_name' => $object, 'description' => 'Seen',
+        ]);
+    };
+    [$a, $b, $c] = $observers->all();
+    // M 13 by one observer twice, M 31 by all three (one with a drawing), M 57 by two
+    $observation($a, 'M 13');
+    $observation($a, 'M 13', ['observed_time' => '22:30:00']);
+    $observation($a, 'M 31', ['has_drawing' => true]);
+    $observation($b, 'M 31');
+    $observation($c, 'M 31');
+    $observation($b, 'M 57');
+    $observation($c, 'M 57');
+    // Not seen does not count
+    $notSeen = $observation($a, 'M 57', ['observed_time' => '23:00:00']);
+    DB::table('deepsky_observation_details')->insert(['observation_id' => $notSeen->id, 'visibility' => Observation::VISIBILITY_NOT_SEEN]);
+
+    $ranking = (new StarPartyActivity($party))->objectsSeenTogether();
+    expect($ranking->map(fn ($row) => [$row->observation->target_name, $row->observers, $row->observations, $row->drawings])->all())
+        ->toBe([['M 31', 3, 3, 1], ['M 57', 2, 2, 0], ['M 13', 1, 2, 0]]);
+
+    $this->travelTo(Carbon::parse('2026-09-15 12:00'));
+    $this->get(route('star-parties.show', $party))->assertOk()
+        ->assertSeeInOrder(['Objects seen by most participants', 'M 31', 'M 57', 'M 13']);
+});
+
 it('saves the distance and the observers whose observations count', function () {
     $organiser = User::factory()->create();
     $location  = starPartyLocation($organiser);
