@@ -84,7 +84,7 @@
 
                 @php
                     $showInches = optional(auth()->user())->showInches ?? false;
-                    $oldObservedTime = old('observed_time', '');
+                    $oldObservedTime = old('observed_time', $prefill['observed_time'] ?? '');
                     $displayTime = '';
                     $displayAMPM = 'AM';
                     if (!empty($oldObservedTime)) {
@@ -166,6 +166,10 @@
                     @endif
                     <input type="hidden" name="target_table" value="{{ $resolved['table'] }}">
                     <input type="hidden" name="target_slug" value="{{ $resolved['record']->slug ?? $slug }}">
+                    @php $returnTo = \App\Http\Controllers\ObservationsController::returnUrl(old('return_to', request()->query('return_to'))); @endphp
+                    @if ($returnTo)
+                        <input type="hidden" name="return_to" value="{{ $returnTo }}">
+                    @endif
 
                     @if(isset($php_upload_max_filesize) || isset($php_post_max_size))
                         <div class="mb-3 p-3 rounded bg-yellow-900 text-yellow-100 text-sm">
@@ -177,7 +181,7 @@
 
                     @php
                         $showInches = optional(auth()->user())->showInches ?? false;
-                        $oldObservedTime = old('observed_time', '');
+                        $oldObservedTime = old('observed_time', $prefill['observed_time'] ?? '');
                         $displayTime = '';
                         $displayAMPM = 'AM';
                         if (!empty($oldObservedTime)) {
@@ -232,9 +236,9 @@
                             {{-- The scroll wheel of WireUI on touch screens, a Flatpickr field to type in elsewhere; the disabled fieldset is not sent --}}
                             <fieldset id="observed_time_touch" disabled hidden>
                                 @if($showInches)
-                                    <x-time-picker name="observed_time" without-seconds="true" value="{{ old('observed_time', '') }}" class="w-full" />
+                                    <x-time-picker name="observed_time" without-seconds="true" value="{{ old('observed_time', $prefill['observed_time'] ?? '') }}" class="w-full" />
                                 @else
-                                    <x-time-picker name="observed_time" military-time="true" without-seconds="true" value="{{ old('observed_time', '') }}" class="w-full" />
+                                    <x-time-picker name="observed_time" military-time="true" without-seconds="true" value="{{ old('observed_time', $prefill['observed_time'] ?? '') }}" class="w-full" />
                                 @endif
                             </fieldset>
                             <fieldset id="observed_time_desktop">

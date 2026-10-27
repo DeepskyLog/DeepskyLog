@@ -930,6 +930,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/observing-list/{list}/items/autofill-notes', [App\Http\Controllers\ObservingListController::class, 'batchAutofillNotes'])
         ->name('observing-list.items.autofill-notes');
 
+    // At the eyepiece: the current and next object of a list with times,
+    // "Log it", and the observations the page kept while offline
+    Route::get('/observing-list/{list}/eyepiece', [App\Http\Controllers\AtTheEyepieceController::class, 'show'])
+        ->name('observing-list.eyepiece')->middleware('doNotCacheResponse');
+    Route::get('/observing-list/{list}/eyepiece/{item}/log', [App\Http\Controllers\AtTheEyepieceController::class, 'log'])
+        ->whereNumber('item')->name('observing-list.eyepiece.log')->middleware('doNotCacheResponse');
+    Route::post('/observing-list/{list}/eyepiece/observations', [App\Http\Controllers\AtTheEyepieceController::class, 'store'])
+        ->name('observing-list.eyepiece.store')->middleware('throttle:60,1');
+
     // Empty all items from a list (but keep the list itself)
     Route::post('/observing-list/{list}/empty', [App\Http\Controllers\ObservingListController::class, 'emptyList'])
         ->name('observing-list.empty');

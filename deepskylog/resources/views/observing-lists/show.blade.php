@@ -66,6 +66,22 @@
                             @endif
                             @endcan
 
+                            {{-- At the eyepiece (AtTheEyepieceController), for a list with objects --}}
+                            @if ($list->items()->exists())
+                                <a href="{{ route('observing-list.eyepiece', $list) }}"
+                                   class="inline-flex items-center gap-1 px-3 py-1.5 bg-red-800 hover:bg-red-700 text-white rounded text-xs font-semibold">
+                                    {{ __('At the eyepiece') }}
+                                </a>
+                                @push('scripts')
+                                    <script>
+                                        // Keeps this page for use without a connection (public/sw.js)
+                                        if ('serviceWorker' in navigator) {
+                                            navigator.serviceWorker.register('/sw.js').catch(function () {});
+                                        }
+                                    </script>
+                                @endpush
+                            @endif
+
                             {{-- Subscribe / Unsubscribe (for non-owners) --}}
                             @if (!$isOwner && $list->public)
                                 @if ($isSubscribed)

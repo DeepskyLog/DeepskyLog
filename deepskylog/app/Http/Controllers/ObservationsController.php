@@ -1853,6 +1853,12 @@ class ObservationsController extends Controller
             }
         }
 
+        // "Log it" at the eyepiece (AtTheEyepiece::logParameters()): the local
+        // date and time, the location and the equipment of the observer.
+        if ($user) {
+            $prefill = array_merge($prefill, $this->requestedPrefill($request, $user, $locations));
+        }
+
         if (!empty($slug)) {
             $raw = (string) $slug;
             $candidates = Observation::slugCandidates($raw);
@@ -2637,6 +2643,12 @@ class ObservationsController extends Controller
         // only changes them would otherwise leave the cached pages stale.
         Observation::clearResponseCache();
 
+        // Back to the page at the eyepiece the observation was logged from
+        $returnUrl = self::returnUrl($request->input('return_to'));
+        if ($returnUrl !== null) {
+            return redirect($returnUrl)->with('success', __('Observation saved'));
+        }
+
         // Prefer redirecting to the canonical detail page for the newly-created unified observation
         try {
             $detailUrl = $this->buildObservationDetailUrlForUnified((int) $obs->id);
@@ -3019,5 +3031,56 @@ class ObservationsController extends Controller
         }
 
         return (int) $s;
+    }
+
+    /**
+     * The values the form starts with from the query: observed_on (Y-m-d)
+     * and observed_time (H:i, local at the location), and the ids of the
+     * observer's own active location and equipment (location, instrument,
+     * eyepiece, lens, filter). Others are ignored.
+     *
+     * @return array<string, mixed>
+     */
+    private function requestedPrefill(Request $request, User $user, $locations): array
+    {
+        $prefill = [];
+
+        $date = (string) $request->query('observed_on', '');
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) && checkdate((int) substr($date, 5, 2), (int) substr($date, 8, 2), (int) substr($date, 0, 4))) {
+            $prefill['observed_on'] = $date;
+        }
+        $time = (string) $request->query('observed_time', '');
+        if (preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $time)) {
+            $prefill['observed_time'] = $time;
+        }
+
+        $location = (int) $request->query('location', 0);
+        if ($location && $locations->contains('id', $location)) {
+            $prefill['location_id'] = $location;
+        }
+
+        $own = fn (string $model, string $parameter) => ($id = (int) $request->query($parameter, 0))
+            && $model::where('user_id', $user->id)->where('active', 1)->whereKey($id)->exists() ? $id : null;
+        $instrument = $own(Instrument::class, 'instrument');
+        if ($instrument !== null) {
+            // The equipment of the query replaces that of a recent observation
+            $prefill['instrument_id'] = $instrument;
+            $prefill['eyepiece_id'] = $own(Eyepiece::class, 'eyepiece');
+            $prefill['lens_id'] = $own(Lens::class, 'lens');
+            $prefill['filter_id'] = $own(Filter::class, 'filter');
+        }
+
+        return $prefill;
+    }
+
+    /**
+     * The page to return to after saving (the form's return_to): only the
+     * page at the eyepiece of an observing list on this site.
+     */
+    public static function returnUrl(?string $value): ?string
+    {
+        $value = (string) $value;
+
+        return preg_match('#^/observing-list/[^/?\#\\\\]+/eyepiece(\?item=\d+)?$#', $value) ? $value : null;
     }
 }

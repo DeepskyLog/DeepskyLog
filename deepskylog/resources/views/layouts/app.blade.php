@@ -13,6 +13,8 @@
     <meta name="share-retry-notice" content="{{ __('The sketch is ready: tap the share button again.') }}" />
 
     <title>{{ config('app.name', 'DeepskyLog') }}</title>
+    <meta name="theme-color" content="#111827" />
+    @include('partials.night-mode')
     <script>
         // Keep the browser's timezone in a cookie: "today" in the ephemeris
         // aside of guests is today in their timezone (EphemerisDate). On the

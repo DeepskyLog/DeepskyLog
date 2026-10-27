@@ -265,83 +265,33 @@ class CsvObservationImporter
 
             // ─── Save or update observation ────────────────────────────────────
 
-            try {
-                $fields = [
-                    'observer_username' => $this->user->username,
-                    'observer_user_id' => $this->user->id,
-                    'observed_on' => $observedOn,
-                    'observed_time' => $observedTime,
-                    'location_id' => $locationId,
-                    'instrument_id' => $instrumentId,
-                    'eyepiece_id' => $eyepieceId,
-                    'filter_id' => $filterId,
-                    'lens_id' => $lensId,
-                    'seeing' => $seeing,
-                    'limiting_magnitude' => $limitingMagnitude,
-                    'sqm' => $sqm,
-                    'language' => $lang,
-                    'description' => $description,
-                    'target_table' => $targetTable,
-                    'target_key' => $targetKey,
-                    'target_type' => $targetType,
-                    'target_name' => $canonicalName,
-                    'has_drawing' => false,
-                    'legacy_source' => null,
-                ];
-                if (in_array($observerClass, Observation::OBSERVER_CLASSES, true)) {
-                    $fields['observer_class'] = $observerClass;
-                }
-
-                if ($this->skipBelowHorizon($fields, $observedTime, $result, "Row {$rowNumber}", $line, $rowNumber)) {
-                    continue;
-                }
-
-                // Updates the observation when it is already there
-                [$obs, $updated] = $this->saveImportedObservation($fields, $observedTime);
-                $obsId = $obs->id;
-                $result->imported++;
-                $result->importedObservations[] = [
-                    'row' => $rowNumber,
-                    'object' => $canonicalName,
-                    'date' => $observedOn,
-                    'id' => $obsId,
-                    'updated' => $updated,
-                ];
-
-                if ($updated) {
-                    $result->addSuccess(
-                        "Row {$rowNumber}: Updated existing observation of '{$canonicalName}' on {$observedOn}.",
-                        '',
-                        $rowNumber
-                    );
-                } else {
-                    $result->addSuccess(
-                        "Row {$rowNumber}: Imported observation of '{$canonicalName}' on {$observedOn}.",
-                        '',
-                        $rowNumber
-                    );
-                }
-
-                if (self::isDrawingName($drawingName)) {
-                    $this->attachImportedDrawing($obs, [$drawingName], $result, "Row {$rowNumber}", $line, $rowNumber);
-                }
-
-                // Write deepsky visibility to detail table (for deepsky objects only)
-                if ($visibility !== null && in_array($targetTable, ['objects', 'objectnames'])) {
-                    DB::table('deepsky_observation_details')->updateOrInsert(
-                        ['observation_id' => $obsId],
-                        ['visibility' => $visibility]
-                    );
-                    // Written without model events.
-                    Observation::clearResponseCache();
-                }
-            } catch (\Throwable $e) {
-                $result->addError(
-                    "Row {$rowNumber}: Database error saving observation — {$e->getMessage()}",
-                    $line,
-                    $rowNumber
-                );
+            $fields = [
+                'observer_username' => $this->user->username,
+                'observer_user_id' => $this->user->id,
+                'observed_on' => $observedOn,
+                'observed_time' => $observedTime,
+                'location_id' => $locationId,
+                'instrument_id' => $instrumentId,
+                'eyepiece_id' => $eyepieceId,
+                'filter_id' => $filterId,
+                'lens_id' => $lensId,
+                'seeing' => $seeing,
+                'limiting_magnitude' => $limitingMagnitude,
+                'sqm' => $sqm,
+                'language' => $lang,
+                'description' => $description,
+                'target_table' => $targetTable,
+                'target_key' => $targetKey,
+                'target_type' => $targetType,
+                'target_name' => $canonicalName,
+                'has_drawing' => false,
+                'legacy_source' => null,
+            ];
+            if (in_array($observerClass, Observation::OBSERVER_CLASSES, true)) {
+                $fields['observer_class'] = $observerClass;
             }
+
+            $this->saveRow($fields, $visibility, $drawingName, $result, $rowNumber, $line);
         }
 
         $this->reportDrawings($result);
@@ -353,6 +303,117 @@ class CsvObservationImporter
         );
 
         return $result;
+    }
+
+    /**
+     * Save one observation of which the location and equipment are already
+     * known: the observations logged at the eyepiece (App\Services\AtTheEyepiece),
+     * also those kept while offline. The object is looked up, the horizon
+     * checked and an observation that is already there updated as for a row
+     * of a file, so sending the same observation twice stores it once. Date
+     * and time are UT.
+     *
+     * @param  array{object: string, observed_on: string, observed_time: ?string, location_id: ?int, instrument_id: int, eyepiece_id?: ?int, filter_id?: ?int, lens_id?: ?int, visibility?: ?int, language?: ?string, description: string}  $row
+     */
+    public function importOne(array $row): ImportResult
+    {
+        $result = new ImportResult();
+
+        [$targetTable, $targetKey, $targetType, $canonicalName] = $this->resolveObject($row['object']);
+        if ($targetTable === null) {
+            $result->addError("Object '{$row['object']}' not found in the database.", '', 1);
+            $result->skipped++;
+
+            return $result;
+        }
+
+        $this->saveRow([
+            'observer_username' => $this->user->username,
+            'observer_user_id' => $this->user->id,
+            'observed_on' => $row['observed_on'],
+            'observed_time' => $row['observed_time'],
+            'location_id' => $row['location_id'],
+            'instrument_id' => $row['instrument_id'],
+            'eyepiece_id' => $row['eyepiece_id'] ?? null,
+            'filter_id' => $row['filter_id'] ?? null,
+            'lens_id' => $row['lens_id'] ?? null,
+            'language' => $row['language'] ?? 'en',
+            'description' => $row['description'],
+            'target_table' => $targetTable,
+            'target_key' => $targetKey,
+            'target_type' => $targetType,
+            'target_name' => $canonicalName,
+            'has_drawing' => false,
+            'legacy_source' => null,
+        ], $row['visibility'] ?? null, '', $result, 1, '');
+
+        return $result;
+    }
+
+    /**
+     * Save the observation of one row (an observation that is already there
+     * is updated), with its drawing and the visibility of a deep-sky object.
+     *
+     * @param  array<string, mixed>  $fields
+     */
+    private function saveRow(array $fields, ?int $visibility, string $drawingName, ImportResult $result, int $rowNumber, string $line): void
+    {
+        $targetTable = $fields['target_table'];
+        $canonicalName = $fields['target_name'];
+        $observedOn = $fields['observed_on'];
+        $observedTime = $fields['observed_time'];
+
+        try {
+            if ($this->skipBelowHorizon($fields, $observedTime, $result, "Row {$rowNumber}", $line, $rowNumber)) {
+                return;
+            }
+
+            // Updates the observation when it is already there
+            [$obs, $updated] = $this->saveImportedObservation($fields, $observedTime);
+            $obsId = $obs->id;
+            $result->imported++;
+            $result->importedObservations[] = [
+                'row' => $rowNumber,
+                'object' => $canonicalName,
+                'date' => $observedOn,
+                'id' => $obsId,
+                'updated' => $updated,
+            ];
+
+            if ($updated) {
+                $result->addSuccess(
+                    "Row {$rowNumber}: Updated existing observation of '{$canonicalName}' on {$observedOn}.",
+                    '',
+                    $rowNumber
+                );
+            } else {
+                $result->addSuccess(
+                    "Row {$rowNumber}: Imported observation of '{$canonicalName}' on {$observedOn}.",
+                    '',
+                    $rowNumber
+                );
+            }
+
+            if (self::isDrawingName($drawingName)) {
+                $this->attachImportedDrawing($obs, [$drawingName], $result, "Row {$rowNumber}", $line, $rowNumber);
+            }
+
+            // Write deepsky visibility to detail table (for deepsky objects only)
+            if ($visibility !== null && in_array($targetTable, ['objects', 'objectnames'])) {
+                DB::table('deepsky_observation_details')->updateOrInsert(
+                    ['observation_id' => $obsId],
+                    ['visibility' => $visibility]
+                );
+                // Written without model events.
+                Observation::clearResponseCache();
+            }
+        } catch (\Throwable $e) {
+            $result->addError(
+                "Row {$rowNumber}: Database error saving observation — {$e->getMessage()}",
+                $line,
+                $rowNumber
+            );
+        }
     }
 
     // ─────────────────────────────────────────────────────────────────────────
