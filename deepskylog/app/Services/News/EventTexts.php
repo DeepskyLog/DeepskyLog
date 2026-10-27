@@ -48,6 +48,8 @@ class EventTexts
                 : __(':planet at greatest western elongation on :date', ['planet' => self::body($data['bodies'][0] ?? ''), 'date' => $date]),
             'meteor_shower' => __('Maximum of the :shower on :date', ['shower' => self::shower($data['shower'] ?? ''), 'date' => $date]),
             'comet'         => __('Comet :comet at its brightest on :date', ['comet' => $data['name'] ?? '', 'date' => $date]),
+            'supernova'     => __('Supernova :name at magnitude :magnitude', ['name' => $data['name'] ?? '', 'magnitude' => self::number($data['magnitude'] ?? 0, 1)]),
+            'nova'          => __('Nova :name at magnitude :magnitude', ['name' => $data['name'] ?? '', 'magnitude' => self::number($data['magnitude'] ?? 0, 1)]),
             default         => (string) $item->title,
         };
     }
@@ -85,6 +87,11 @@ class EventTexts
             'comet' => __('Predicted magnitude :magnitude, :elongation° from the Sun.', [
                 'magnitude'  => self::number($data['magnitude'] ?? 0, 1),
                 'elongation' => self::number(abs($data['elongation'] ?? 0), 0),
+            ]),
+            'supernova', 'nova' => __('Latest AAVSO estimate :magnitude (:band) on :date.', [
+                'magnitude' => self::number($data['magnitude'] ?? 0, 1),
+                'band'      => $data['band'] ?? '',
+                'date'      => self::date($item->event_at, $location),
             ]),
             default => '',
         };

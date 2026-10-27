@@ -301,7 +301,12 @@
                                         @endif
                                     @endif
 
-
+                                    @if (\App\Services\AavsoVariableStars::appliesTo($session->source_type_raw ?? null))
+                                        @php $aavsoVariable = \App\Services\AavsoVariableStars::forObjectName($session->name ?? null, fetch: false); @endphp
+                                        @if ($aavsoVariable)
+                                            <x-aavso-estimate :variable="$aavsoVariable" />
+                                        @endif
+                                    @endif
 
                                     @if (!empty($session->subr))
                                         <tr>

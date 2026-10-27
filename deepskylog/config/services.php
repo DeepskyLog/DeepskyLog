@@ -71,6 +71,14 @@ return [
         'enabled' => (bool) env('WEATHER_FORECAST', true),
     ],
 
+    'aavso' => [
+        // The variable star index and latest estimates of the AAVSO (App\Services\AavsoVariableStars), free without a key
+        'url' => env('AAVSO_VSX_URL', 'https://vsx.aavso.org/index.php'),
+        'enabled' => (bool) env('AAVSO', true),
+        // Milliseconds between two requests of aavso:refresh (more requests trip the AAVSO's firewall)
+        'delay' => (int) env('AAVSO_DELAY_MS', 1000),
+    ],
+
     'google' => [
         // GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET are already standard
         'client_id' => env('GOOGLE_CLIENT_ID', env('GOOGLE_KEY')),

@@ -60,6 +60,10 @@ class Kernel extends ConsoleKernel
         // published a week before the event.
         $schedule->command('news:astronomical-events --apply')->dailyAt('02:30')->withoutOverlapping();
 
+        // The latest AAVSO estimates of the supernovae, novae and variable
+        // stars in observing lists, and the news items of the bright ones.
+        $schedule->command('aavso:refresh --apply')->everySixHours(20)->withoutOverlapping();
+
         // The descriptions of new observations translated into the languages
         // of the site for the guests (#310), and the older ones gradually,
         // newest first, a few at a time to stay under Google's rate limit.

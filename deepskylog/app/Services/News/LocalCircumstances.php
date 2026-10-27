@@ -68,6 +68,8 @@ class LocalCircumstances
             'opposition'          => ['altitude' => round(90.0 - abs($latitude - (float) ($data['decl'] ?? 0)), 0)],
             'greatest_elongation' => self::elongation($at, $data, $latitude, $longitude),
             'comet'               => self::comet($at, $data, $latitude, $longitude),
+            // Highest in a dark (nautical) sky from the coming night on, as a comet far from the Sun
+            'supernova', 'nova'   => self::comet(max($at, time()), ['elongation' => 90.0] + $data, $latitude, $longitude),
             default               => null,
         };
     }

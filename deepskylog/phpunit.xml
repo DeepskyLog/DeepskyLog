@@ -31,5 +31,6 @@
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="TRANSLATE_OBSERVATIONS" value="false"/>
         <env name="WEATHER_FORECAST" value="false"/>
+        <env name="AAVSO" value="false"/>
     </php>
 </phpunit>
