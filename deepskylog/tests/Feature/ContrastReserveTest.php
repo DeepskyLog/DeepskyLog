@@ -262,3 +262,18 @@ it('reads a magnitude of 0 or 99.9 as unknown', function () {
     [$user, $instrument, $location] = contrastReserveEquipment();
     expect(ContrastReserveCalculator::calculate(ContrastReserveCalculator::target(66, 36, 0), $instrument, $location, $user)['contrast_reserve'])->toBeNull();
 });
+
+it('never gives an object a higher contrast reserve than a star of its magnitude', function () {
+    [$user, $instrument, $location] = contrastReserveEquipment(['aperture_mm' => 50, 'focal_length_mm' => 225]);
+
+    // a 16th magnitude galaxy whose size of 0.3' × 0.2' was stored as arcseconds
+    $tiny  = ContrastReserveCalculator::calculate(ContrastReserveCalculator::target(0.3, 0.2, 16.2), $instrument, $location, $user);
+    $point = ContrastReserveCalculator::pointSource(16.2, $instrument, $location, $user);
+    $large = ContrastReserveCalculator::target(600.0, 240.0, 8.4);
+    $sbobj = $large->calculateSBObj();
+
+    expect($tiny['contrast_reserve'])->toBeLessThan(0.0)
+        ->and($tiny['contrast_reserve'])->toBeLessThanOrEqual($point['contrast_reserve'] + 0.01)
+        ->and(ContrastReserveCalculator::contrastAt($large, $sbobj, 21.0, 50.0, 10.0))
+        ->toBe((float) $large->calculateContrastReserve($sbobj, 21.0, 50.0, 10.0));
+});

@@ -71,7 +71,7 @@ function equipmentGainObserver(): array
     equipmentGainObject('Seen Galaxy', 12.5, 60);
     equipmentGainObject('Hopeless Galaxy', 18.0, 30);
     // only visible at the highest magnification
-    equipmentGainObject('Tiny Nebula', 15.2, 10, 40.0, 'PLNNB');
+    equipmentGainObject('Tiny Nebula', 14.8, 10, 40.0, 'PLNNB');
     equipmentGainObject('Southern Galaxy', 12.5, 60, -70.0);
     equipmentGainObject('Some Double', 6.0, 10, 40.0, 'DS');
     DB::table('object_observation_stats')->insert([['object_name' => 'Faint Galaxy', 'observations' => 5], ['object_name' => 'Seen Galaxy', 'observations' => 9]]);

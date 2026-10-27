@@ -7,6 +7,7 @@ use App\Models\Instrument;
 use App\Models\Lens;
 use App\Models\Location;
 use App\Models\User;
+use deepskylog\AstronomyLibrary\Magnitude;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 
 /**
@@ -231,7 +232,8 @@ class ContrastReserveCalculator
      * sky in the eyepiece get ever brighter at lower magnifications, and
      * choose the lowest magnification for a faint nebula, the more so
      * behind a filter. With both eyes (binoculars) the reserve is
-     * BINOCULAR_GAIN higher.
+     * BINOCULAR_GAIN higher. The reserve is never above the one of a star
+     * of the object's magnitude (pointSourceLimit()).
      */
     public static function contrastAt(AstroTarget $target, float $sbobj, ?float $sqm, ?float $aperture, float $magnification, bool $binocular = false): ?float
     {
@@ -239,8 +241,34 @@ class ContrastReserveCalculator
             return null;
         }
         $contrast = $target->calculateContrastReserve($sbobj, $sqm, min($aperture, $magnification * self::EYE_PUPIL_MM), $magnification);
+        if (! is_numeric($contrast)) {
+            return null;
+        }
+        $contrast = (float) $contrast + ($binocular ? self::BINOCULAR_GAIN : 0.0);
+        $limit    = self::pointSourceLimit($target, $sqm, $aperture, $magnification, $binocular);
 
-        return is_numeric($contrast) ? (float) $contrast + ($binocular ? self::BINOCULAR_GAIN : 0.0) : null;
+        return $limit === null ? $contrast : min($contrast, $limit);
+    }
+
+    /**
+     * The contrast reserve of a star of the object's magnitude, as
+     * pointSource() gives it (0.4 (limit - magnitude)): an object spread
+     * over an area is never easier to see than all its light in one point.
+     * Clark's model alone makes a tiny object of a faint total magnitude,
+     * such as a galaxy whose size of arcminutes is stored as arcseconds,
+     * a bright patch visible in any instrument. The limit is taken without
+     * obstruction and with the transmission of lenses, so it is never too
+     * low. Null without a magnitude or a valid sky.
+     */
+    private static function pointSourceLimit(AstroTarget $target, ?float $sqm, float $aperture, float $magnification, bool $binocular): ?float
+    {
+        $magnitude = $target->getMagnitude();
+        if ($magnitude === null || $sqm === null || $sqm < 10.0 || $sqm > 22.0) {
+            return null;
+        }
+        $limit = TelescopicLimitingMagnitude::calculate(Magnitude::sqmToNelm($sqm), $aperture, $magnification, 0.0, false, $binocular);
+
+        return 0.4 * ($limit - (float) $magnitude);
     }
 
     /**
@@ -386,7 +414,7 @@ class ContrastReserveCalculator
     {
         $result = ['contrast_reserve' => null, 'category' => null, 'magnification' => null, 'eyepieces' => [], 'sqm' => null, 'extinction' => null];
 
-        $sqm         ??= $location->getSqm();
+        $sqm ??= $location->getSqm();
         $result['sqm'] = is_numeric($sqm) ? (float) $sqm : null;
         $aperture      = (float) $instrument->aperture_mm;
         if ($result['sqm'] === null || $aperture <= 0) {
