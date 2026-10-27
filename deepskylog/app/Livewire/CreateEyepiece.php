@@ -211,6 +211,7 @@ class CreateEyepiece extends Component
             $eyepiece = Eyepiece::create($data);
 
             session()->flash('message', __('Eyepiece created successfully.'));
+            session()->flash('equipment_created', true);
 
             // Return to /eyepiece/{user-slug}/{eyepiece-slug} page
             return redirect('/eyepiece/'.Auth()->user()->slug.'/'.$eyepiece->slug);

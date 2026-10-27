@@ -204,6 +204,9 @@
                                 <x-button type="submit" secondary label="{{ __('Edit') }} {!! $instrument->name !!}"/>
                             </a>
                         @endif
+                        @if ($instrument->user_id == Auth::user()->id && $instrument->aperture_mm > 0)
+                            <x-whats-new-link kind="instrument" :equipment="$instrument" />
+                        @endif
 
                         <br/>
                         <br/>

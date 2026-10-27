@@ -121,6 +121,9 @@
                                 <x-button type="submit" secondary label="{{ __('Edit') }} {!! $eyepiece->name !!}"/>
                             </a>
                         @endif
+                        @if ($eyepiece->user_id == Auth::user()->id)
+                            <x-whats-new-link kind="eyepiece" :equipment="$eyepiece" />
+                        @endif
 
                         <br/>
                         <br/>

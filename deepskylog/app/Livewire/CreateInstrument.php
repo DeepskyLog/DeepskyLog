@@ -271,6 +271,7 @@ class CreateInstrument extends Component
             $instrument = Instrument::create($data);
 
             session()->flash('message', __('Instrument created successfully.'));
+            session()->flash('equipment_created', true);
 
             // Return to /instrument/{user-slug}/{instrument-slug} page
             return redirect('/instrument/'.Auth()->user()->slug.'/'.$instrument->slug);

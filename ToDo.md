@@ -115,13 +115,11 @@
 - [X] Messier marathon planner: the best nights of March and April near the new Moon at the observer's location, and the order to see the Messier objects in, with the time window of each object (objects only high enough in the twilight marked), saved as an observing list.
 - [X] Filter advice per object
 - [X] Double star resolvability: whether the standard telescope splits a double star (Dawes limit, wider for a fainter companion, the companion bright enough) and at which magnification, on the object page, in the field views and as a filter of the object search. Double stars no longer get a contrast reserve; their companion magnitudes, separations and positions are completed and corrected from the Washington Double Star Catalog.
-
-
-Red night mode and an "at the eyepiece" view. There's no red-light theme today. Add a red-on-black toggle and a stripped-down page for an observing list that has times: the current object, the next one, the finder chart and a big "Log it" button that opens the observation form already filled in (session, time, equipment). The list times you just added would then be useful at the telescope, not only before the night.
-
-Offline lists (PWA). Dark sites often have no signal. A service worker could cache the observing list, its charts and the at-the-eyepiece page, and keep observations entered offline until the connection returns. This fits well with item 2.
-
-"What's new for me" after new equipment. When an observer adds a telescope or eyepiece, compare the stored contrast reserves of the old and new equipment and list the objects that only become visible with the new one, with a button to make that a list. ObservationComparison and the user_object_metrics table already hold most of what's needed.
+- [X] Variable stars and novae via AAVSO. Showing the latest AAVSO estimate on the object page for supernovae, novae and the variable stars in observing lists  makes the bright-supernova news items possible too.
+- [X] Red night mode and an "at the eyepiece" view. There's no red-light theme today. Add a red-on-black toggle and a stripped-down page for an observing list that has times: the current object, the next one, the finder chart and a big "Log it" button that opens the observation form already filled in (session, time, equipment). The list times you just added would then be useful at the telescope, not only before the night.
+- [X] Offline lists (PWA). Dark sites often have no signal. A service worker could cache the observing list, its charts and the at-the-eyepiece page, and keep observations entered offline until the connection return.
+- [X] "What's new for me" after new equipment: the objects a telescope shows that none of the observer's other active instruments shows, or an eyepiece adds to the standard telescope, at one of their locations, not seen yet, the 200 most observed, with a button to make that a list. Linked from the instrument and eyepiece pages, highlighted right after adding them.
+- [ ] Take into account binoculars.  They can see more than a telescope with the same aperture, and they have a different field of view.  The field views and the filter advice should take binoculars into account.  The Messier marathon planner should also take binoculars into account.
 
 Community features
 
@@ -134,7 +132,5 @@ Object-of-the-week discussion. One object a week chosen from Tonight's best, sho
 Smaller additions
 
 Sky quality history for a location. Plot the SQM and NELM values from all observations at a location over the years. This shows light pollution trends, and the location page already has a chart area.
-
-Variable stars and novae via AAVSO. Some groundwork exists, but there's no current-magnitude feed. Showing the latest AAVSO estimate on the object page for supernovae, novae and the variable stars in observing lists would make the bright-supernova news items possible too.
 
 Calendar feed of your planned list times. .ics export of an observing list that has times, or of the clear-night alerts, as starparties already have.
