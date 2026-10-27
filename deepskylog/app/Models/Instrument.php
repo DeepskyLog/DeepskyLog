@@ -55,12 +55,39 @@ class Instrument extends Model
      */
     public const FIXED_MAGNIFICATION_APPARENT_FOV = 50.0;
 
+    /**
+     * Apparent field, in degrees, assumed for binoculars whose true field of
+     * view is not entered: most have a wider one than a finder (10x50 6.5°,
+     * 15x70 4.4°, 7x50 7.5°).
+     */
+    public const BINOCULARS_APPARENT_FOV = 60.0;
+
+    /** The instrument type of binoculars, used with both eyes. */
+    public const BINOCULARS_TYPE = 'Binoculars';
+
+    /**
+     * The exit pupil (mm) assumed for binoculars without a magnification, as
+     * of 10x50 binoculars.
+     */
+    public const BINOCULARS_EXIT_PUPIL_MM = 5.0;
+
     /** The instrument types with mirrors, which transmit less light than lenses. */
     public const MIRROR_TYPES = ['Reflector', 'Cassegrain', 'Kutter', 'Maksutov', 'Schmidt Cassegrain'];
 
     public function hasMirrors(): bool
     {
         return in_array($this->instrument_type?->name, self::MIRROR_TYPES, true);
+    }
+
+    /**
+     * Whether these are binoculars, used with both eyes: the eyes together
+     * see fainter than one eye at a telescope of the same aperture
+     * (ContrastReserveCalculator::BINOCULAR_GAIN), and the image is upright
+     * and not mirrored.
+     */
+    public function isBinocular(): bool
+    {
+        return $this->instrument_type?->name === self::BINOCULARS_TYPE;
     }
 
     public function sluggable(): array
@@ -400,7 +427,8 @@ class Instrument extends Model
     /**
      * The field of view of an instrument with a fixed magnification: the one
      * entered for it, else the field of an ordinary eyepiece of
-     * FIXED_MAGNIFICATION_APPARENT_FOV degrees at that magnification.
+     * FIXED_MAGNIFICATION_APPARENT_FOV degrees (binoculars
+     * BINOCULARS_APPARENT_FOV) at that magnification.
      */
     public function fixedFieldOfViewDeg(): ?float
     {
@@ -409,10 +437,19 @@ class Instrument extends Model
         }
 
         if ((float) $this->fixedMagnification > 0) {
-            return self::FIXED_MAGNIFICATION_APPARENT_FOV / (float) $this->fixedMagnification;
+            return $this->apparentFieldOfViewDeg() / (float) $this->fixedMagnification;
         }
 
         return null;
+    }
+
+    /**
+     * The apparent field assumed for this instrument when its true field is
+     * not known.
+     */
+    public function apparentFieldOfViewDeg(): float
+    {
+        return $this->isBinocular() ? self::BINOCULARS_APPARENT_FOV : self::FIXED_MAGNIFICATION_APPARENT_FOV;
     }
 
     /**

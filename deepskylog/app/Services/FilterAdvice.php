@@ -243,7 +243,8 @@ class FilterAdvice
      * the image darker, so its best exit pupil is often larger than without
      * one. Empty when the object shines in a continuum or has no contrast
      * reserve without a filter. The target is already dimmed by the
-     * extinction.
+     * extinction. Binoculars, with a filter before each eyepiece, keep the
+     * gain of both eyes.
      *
      * @param  iterable<Filter>  $filters
      * @param  array<int, iterable<\App\Models\Eyepiece>>  $magnifications  magnification => eyepieces
@@ -260,11 +261,12 @@ class FilterAdvice
         if ($spectrum === null || $target->getMagnitude() === null || $aperture <= 0 || ! $magnifications) {
             return [];
         }
-        $without = self::best($target, $sqm, $aperture, array_keys($magnifications), $fields);
+        $binocular = $instrument->isBinocular();
+        $without   = self::best($target, $sqm, $aperture, array_keys($magnifications), $fields, $binocular);
         if ($without === null) {
             return [];
         }
-        $withoutCurrent = $current ? self::reserve($target, $sqm, $aperture, $current) : null;
+        $withoutCurrent = $current ? self::reserve($target, $sqm, $aperture, $current, $binocular) : null;
         $fixed          = (float) $instrument->fixedMagnification > 0;
 
         $byPassband = [];
@@ -279,9 +281,9 @@ class FilterAdvice
                 $filtered = clone $target;
                 $filtered->setMagnitude($target->getMagnitude() + $dimming['object']);
                 $filteredSqm = $sqm + $dimming['sky'];
-                $with        = self::best($filtered, $filteredSqm, $aperture, array_keys($magnifications), $fields);
-                $ideal       = $fixed ? null : self::best($filtered, $filteredSqm, $aperture, self::exitPupilMagnifications($aperture));
-                $atCurrent   = $current ? self::reserve($filtered, $filteredSqm, $aperture, $current) : null;
+                $with        = self::best($filtered, $filteredSqm, $aperture, array_keys($magnifications), $fields, $binocular);
+                $ideal       = $fixed ? null : self::best($filtered, $filteredSqm, $aperture, self::exitPupilMagnifications($aperture), [], $binocular);
+                $atCurrent   = $current ? self::reserve($filtered, $filteredSqm, $aperture, $current, $binocular) : null;
 
                 $byPassband[$passband] = $with === null ? null : [$with, $ideal, $atCurrent];
             }
@@ -334,20 +336,20 @@ class FilterAdvice
      * @param  array<int, float>  $fields
      * @return array{0: int, 1: float}|null
      */
-    private static function best(AstroTarget $target, float $sqm, float $aperture, array $magnifications, array $fields = []): ?array
+    private static function best(AstroTarget $target, float $sqm, float $aperture, array $magnifications, array $fields = [], bool $binocular = false): ?array
     {
         $sbobj = self::surfaceBrightness($target);
         $best  = $sbobj === null ? null : ContrastReserveCalculator::bestMagnification($target, $sbobj, $sqm, $aperture, $magnifications, $fields);
-        $value = $best ? ContrastReserveCalculator::contrastAt($target, $sbobj, $sqm, $aperture, $best) : null;
+        $value = $best ? ContrastReserveCalculator::contrastAt($target, $sbobj, $sqm, $aperture, $best, $binocular) : null;
 
         return $value === null ? null : [$best, $value];
     }
 
-    private static function reserve(AstroTarget $target, float $sqm, float $aperture, float $magnification): ?float
+    private static function reserve(AstroTarget $target, float $sqm, float $aperture, float $magnification, bool $binocular = false): ?float
     {
         $sbobj = self::surfaceBrightness($target);
 
-        return $sbobj === null ? null : ContrastReserveCalculator::contrastAt($target, $sbobj, $sqm, $aperture, $magnification);
+        return $sbobj === null ? null : ContrastReserveCalculator::contrastAt($target, $sbobj, $sqm, $aperture, $magnification, $binocular);
     }
 
     private static function surfaceBrightness(AstroTarget $target): ?float

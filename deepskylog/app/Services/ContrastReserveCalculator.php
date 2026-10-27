@@ -30,6 +30,14 @@ class ContrastReserveCalculator
     public const EYE_PUPIL_MM = 7.0;
 
     /**
+     * The contrast reserve gained by looking with both eyes (binoculars):
+     * binocular summation lowers the threshold contrast of the eye by a
+     * factor of about √2 (Campbell & Green 1965), log10 √2. The contrast
+     * reserve of a telescope is that of one eye.
+     */
+    public const BINOCULAR_GAIN = 0.15;
+
+    /**
      * The categories, from the lowest contrast reserve above which they apply.
      */
     private const CATEGORIES = [
@@ -146,7 +154,9 @@ class ContrastReserveCalculator
      * them. An instrument with a fixed magnification (binoculars, finders)
      * only has that magnification, without the lens: the lens is the
      * observer's default lens, which does not fit those. Without eyepieces
-     * the generic magnifications are used, without eyepieces.
+     * the generic magnifications are used, without eyepieces; binoculars
+     * without a magnification get the one of an exit pupil of
+     * Instrument::BINOCULARS_EXIT_PUPIL_MM.
      *
      * @return array<int, list<Eyepiece>> magnification => eyepieces
      */
@@ -164,6 +174,10 @@ class ContrastReserveCalculator
                     $magnifications[$mag][] = $ep;
                 }
             }
+        }
+
+        if (! $magnifications && $instrument->isBinocular() && (float) $instrument->aperture_mm > 0) {
+            return [max(1, (int) round((float) $instrument->aperture_mm / Instrument::BINOCULARS_EXIT_PUPIL_MM)) => []];
         }
 
         return $magnifications ?: array_fill_keys(self::GENERIC_MAGNIFICATIONS, []);
@@ -216,16 +230,17 @@ class ContrastReserveCalculator
      * of the aperture that gives that exit pupil. The library would let the
      * sky in the eyepiece get ever brighter at lower magnifications, and
      * choose the lowest magnification for a faint nebula, the more so
-     * behind a filter.
+     * behind a filter. With both eyes (binoculars) the reserve is
+     * BINOCULAR_GAIN higher.
      */
-    public static function contrastAt(AstroTarget $target, float $sbobj, ?float $sqm, ?float $aperture, float $magnification): ?float
+    public static function contrastAt(AstroTarget $target, float $sbobj, ?float $sqm, ?float $aperture, float $magnification, bool $binocular = false): ?float
     {
         if (! $aperture || $magnification <= 0) {
             return null;
         }
         $contrast = $target->calculateContrastReserve($sbobj, $sqm, min($aperture, $magnification * self::EYE_PUPIL_MM), $magnification);
 
-        return is_numeric($contrast) ? (float) $contrast : null;
+        return is_numeric($contrast) ? (float) $contrast + ($binocular ? self::BINOCULAR_GAIN : 0.0) : null;
     }
 
     /**
@@ -332,7 +347,7 @@ class ContrastReserveCalculator
         sort($magnificationList);
         $best = null;
         foreach ($magnificationList as $magnification) {
-            $limit   = TelescopicLimitingMagnitude::calculate((float) $nelm, $aperture, (float) $magnification, (float) $instrument->obstruction_perc, $instrument->hasMirrors());
+            $limit   = TelescopicLimitingMagnitude::forInstrument((float) $nelm, $instrument, (float) $magnification);
             $reserve = 0.4 * ($limit - $magnitude);
             // the lowest magnification wins a tie: the limit stops growing at small exit pupils
             if ($best === null || $reserve > $best[1] + 1e-9) {
@@ -405,7 +420,7 @@ class ContrastReserveCalculator
             return $result;
         }
         $best     = (int) $best;
-        $contrast = self::contrastAt($target, $sbobj, $result['sqm'], $aperture, $best);
+        $contrast = self::contrastAt($target, $sbobj, $result['sqm'], $aperture, $best, $instrument->isBinocular());
 
         return [
             'contrast_reserve' => is_numeric($contrast) ? (float) $contrast : null,

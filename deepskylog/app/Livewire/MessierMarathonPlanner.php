@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Instrument;
 use App\Models\Location;
 use App\Models\Observation;
 use App\Models\ObservingList;
@@ -18,6 +19,9 @@ use Livewire\Component;
  * new Moon at one of the observer's locations with the number of Messier
  * objects each lets see, and for the chosen night the order to see them in
  * (MessierMarathon), which can be made an observing list with the times.
+ * With one of the observer's instruments (by default the standard
+ * telescope), a faint object counts only while it stands high enough to be
+ * seen with it.
  */
 class MessierMarathonPlanner extends Component
 {
@@ -26,6 +30,9 @@ class MessierMarathonPlanner extends Component
 
     /** One of the observer's locations; null for Location::forEphemerides(). */
     public ?int $locationId = null;
+
+    /** One of the observer's instruments; null for the altitude alone. */
+    public ?int $instrumentId = null;
 
     public int $minAltitude = MessierMarathon::MIN_ALTITUDE;
 
@@ -44,11 +51,17 @@ class MessierMarathonPlanner extends Component
 
     public bool $public = false;
 
+    /** @var array<int, string>|null the instrument options of this request */
+    private ?array $instrumentChoices = null;
+
     public function mount(): void
     {
         $location         = Location::forEphemerides(Auth::user());
         $this->locationId = $location && (int) $location->user_id === (int) Auth::id() ? (int) $location->id : null;
         $this->season     = $this->seasonOptions()[0]['key'];
+
+        $standard           = (int) (Auth::user()?->stdtelescope ?? 0);
+        $this->instrumentId = array_key_exists($standard, $this->instrumentOptions()) ? $standard : null;
     }
 
     /**
@@ -56,7 +69,7 @@ class MessierMarathonPlanner extends Component
      */
     public function updated(string $property): void
     {
-        if (in_array($property, ['season', 'locationId'], true)) {
+        if (in_array($property, ['season', 'locationId', 'instrumentId'], true)) {
             $this->night = '';
         }
     }
@@ -89,13 +102,14 @@ class MessierMarathonPlanner extends Component
     protected function rules(): array
     {
         return [
-            'season'      => ['required', 'in:'.implode(',', array_column($this->seasonOptions(), 'key'))],
-            'locationId'  => ['nullable', 'integer', 'in:'.implode(',', array_keys($this->locationOptions()) ?: [0])],
-            'minAltitude' => ['required', 'integer', 'min:0', 'max:30'],
-            'minutes'     => ['required', 'integer', 'min:1', 'max:15'],
-            'gap'         => ['required', 'integer', 'min:0', 'max:15'],
-            'night'       => ['nullable', 'date_format:Y-m-d'],
-            'name'        => ['nullable', 'string', 'max:250'],
+            'season'       => ['required', 'in:'.implode(',', array_column($this->seasonOptions(), 'key'))],
+            'locationId'   => ['nullable', 'integer', 'in:'.implode(',', array_keys($this->locationOptions()) ?: [0])],
+            'instrumentId' => ['nullable', 'integer', 'in:'.implode(',', array_keys($this->instrumentOptions()) ?: [0])],
+            'minAltitude'  => ['required', 'integer', 'min:0', 'max:30'],
+            'minutes'      => ['required', 'integer', 'min:1', 'max:15'],
+            'gap'          => ['required', 'integer', 'min:0', 'max:15'],
+            'night'        => ['nullable', 'date_format:Y-m-d'],
+            'name'         => ['nullable', 'string', 'max:250'],
         ];
     }
 
@@ -152,7 +166,40 @@ class MessierMarathonPlanner extends Component
             (float) max(0, min(30, $this->minAltitude)),
             max(1, min(15, $this->minutes)),
             max(0, min(15, $this->gap)),
+            $this->instrument(),
+            Auth::user(),
         );
+    }
+
+    /**
+     * The chosen instrument, one of the observer's active ones.
+     */
+    private function instrument(): ?Instrument
+    {
+        return $this->instrumentId && array_key_exists($this->instrumentId, $this->instrumentOptions())
+            ? Instrument::where('user_id', Auth::id())->find($this->instrumentId)
+            : null;
+    }
+
+    /**
+     * The observer's active instruments with an aperture, not the naked eye.
+     *
+     * @return array<int, string>
+     */
+    private function instrumentOptions(): array
+    {
+        if (! Auth::id()) {
+            return [];
+        }
+
+        return $this->instrumentChoices ??= Instrument::where('user_id', Auth::id())
+            ->where('active', true)
+            ->where('aperture_mm', '>', 0)
+            ->orderBy('name')
+            ->get()
+            ->reject(fn (Instrument $instrument) => $instrument->instrument_type?->name === 'Naked Eye')
+            ->mapWithKeys(fn (Instrument $instrument) => [(int) $instrument->id => html_entity_decode($instrument->fullName(), ENT_QUOTES | ENT_HTML5, 'UTF-8')])
+            ->all();
     }
 
     /**
@@ -232,17 +279,19 @@ class MessierMarathonPlanner extends Component
         $names    = $plan ? array_merge(array_column($plan['objects'], 'list_name'), array_column($plan['missed'], 'list_name')) : [];
 
         return view('livewire.messier-marathon-planner', [
-            'timezone'        => $location ? EphemerisDate::timezone($location) : 'UTC',
-            'place'           => $location ? $this->placeName($location) : null,
-            'latitude'        => $location ? (int) round((float) $location->latitude) : null,
-            'locationOptions' => $this->locationOptions(),
-            'seasonOptions'   => $this->seasonOptions(),
-            'chosenSeason'    => $season,
-            'total'           => $marathon?->total() ?? 0,
-            'nights'          => $this->allNights ? $nights : array_values(array_filter($nights, fn (array $n) => $n['near_new_moon'])),
-            'plan'            => $plan,
-            'seen'            => $this->seen($names),
-            'defaultName'     => $marathon && $night ? $marathon->listName($night) : '',
+            'timezone'          => $location ? EphemerisDate::timezone($location) : 'UTC',
+            'place'             => $location ? $this->placeName($location) : null,
+            'latitude'          => $location ? (int) round((float) $location->latitude) : null,
+            'locationOptions'   => $this->locationOptions(),
+            'instrumentOptions' => $this->instrumentOptions(),
+            'instrumentName'    => $marathon?->instrumentName(),
+            'seasonOptions'     => $this->seasonOptions(),
+            'chosenSeason'      => $season,
+            'total'             => $marathon?->total() ?? 0,
+            'nights'            => $this->allNights ? $nights : array_values(array_filter($nights, fn (array $n) => $n['near_new_moon'])),
+            'plan'              => $plan,
+            'seen'              => $this->seen($names),
+            'defaultName'       => $marathon && $night ? $marathon->listName($night) : '',
         ]);
     }
 }

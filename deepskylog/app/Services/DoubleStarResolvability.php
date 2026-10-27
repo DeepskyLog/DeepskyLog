@@ -177,7 +177,7 @@ class DoubleStarResolvability
      */
     public static function limitingMagnitude(Instrument $instrument, float $nelm, ?float $magnification, float $extinction = 0.0): float
     {
-        return TelescopicLimitingMagnitude::calculate($nelm, (float) $instrument->aperture_mm, $magnification, (float) $instrument->obstruction_perc, $instrument->hasMirrors()) - $extinction;
+        return TelescopicLimitingMagnitude::forInstrument($nelm, $instrument, $magnification) - $extinction;
     }
 
     /**

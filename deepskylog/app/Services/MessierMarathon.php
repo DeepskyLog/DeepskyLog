@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Instrument;
 use App\Models\Location;
 use App\Models\ObservingList;
 use App\Models\User;
@@ -32,6 +33,13 @@ use Illuminate\Support\Facades\DB;
  * A night near the new Moon is one whose Moon light, the illuminated
  * fraction times the part of the night the Moon is up, is at most
  * MAX_MOON_LIGHT. The best nights see the most objects with the least Moon.
+ *
+ * With an instrument (useInstrument()), a faint object has to stand higher:
+ * the atmosphere dims it less there. Each object then counts from the
+ * lowest altitude at which its contrast reserve with the instrument under
+ * the dark sky of the location is above VISIBLE_ABOVE (lowestAltitude()),
+ * so binoculars see the faint galaxies of Virgo higher up than a telescope,
+ * or not at all ('faint').
  */
 class MessierMarathon
 {
@@ -56,11 +64,23 @@ class MessierMarathon
     /** The number of nights marked as best. */
     public const BEST_NIGHTS = 3;
 
+    /**
+     * The contrast reserve above which an object counts as seen with the
+     * instrument: at least difficult (EquipmentGain::VISIBLE_ABOVE).
+     */
+    public const VISIBLE_ABOVE = 0.1;
+
     /** How long the Moon of the nights of a season is kept. */
     private const CACHE_SECONDS = 7 * 86400;
 
-    /** @var list<array{number: int, name: string, list_name: string, slug: string, type: string, constellation: ?string, mag: ?float, ra: float, dec: float}> */
+    /** How long the lowest altitudes of the objects with an instrument are kept. */
+    private const ALTITUDE_CACHE_SECONDS = 86400;
+
+    /** @var list<array{number: int, name: string, list_name: string, slug: string, type: string, type_code: string, constellation: ?string, mag: ?float, diam1: ?float, diam2: ?float, ra: float, dec: float, min_altitude?: float}> */
     private array $objects;
+
+    /** The instrument the objects have to be seen with; null for the altitude alone. */
+    private ?Instrument $instrument = null;
 
     public function __construct(
         public readonly float $latitude,
@@ -74,9 +94,102 @@ class MessierMarathon
         $this->objects = self::objects();
     }
 
-    public static function forLocation(Location $location, string $timezone, float $minAltitude = self::MIN_ALTITUDE, int $minutes = self::MINUTES_PER_OBJECT, int $gap = 0): self
+    public static function forLocation(Location $location, string $timezone, float $minAltitude = self::MIN_ALTITUDE, int $minutes = self::MINUTES_PER_OBJECT, int $gap = 0, ?Instrument $instrument = null, ?User $user = null): self
     {
-        return new self((float) $location->latitude, (float) $location->longitude, (float) ($location->elevation ?? 0), $timezone, $minAltitude, $minutes, $gap);
+        $marathon = new self((float) $location->latitude, (float) $location->longitude, (float) ($location->elevation ?? 0), $timezone, $minAltitude, $minutes, $gap);
+
+        return $instrument ? $marathon->useInstrument($instrument, $location, $user) : $marathon;
+    }
+
+    /**
+     * Plan for the instrument at the location: each object counts from the
+     * lowest altitude at which it can be seen with it (lowestAltitude()),
+     * with the magnifications of the observer's eyepieces and the lens of
+     * the instrument. Cached a day per instrument, sky and magnifications.
+     */
+    public function useInstrument(Instrument $instrument, Location $location, ?User $user = null): self
+    {
+        $this->instrument = $instrument;
+        $lensFactor       = ContrastReserveCalculator::lensFactor($instrument->lens_id);
+        $magnifications   = ContrastReserveCalculator::magnifications($instrument, $user, $lensFactor);
+        $fields           = ContrastReserveCalculator::fields($instrument, $magnifications, $lensFactor);
+
+        $key = 'messier_marathon:altitudes:'.md5(json_encode([
+            $instrument->only(['aperture_mm', 'instrument_type_id', 'obstruction_perc', 'fixedMagnification', 'field_of_view_deg']),
+            $fields, array_keys($magnifications), $location->getSqm(), $location->getNelm((float) ($user?->fstOffset ?? 0)), $this->minAltitude, array_column($this->objects, 'list_name'),
+        ]));
+        $altitudes = Cache::remember($key, self::ALTITUDE_CACHE_SECONDS, fn () => array_map(
+            fn (array $object) => $this->lowestAltitude($object, $instrument, $location, $user, $lensFactor, $magnifications),
+            $this->objects,
+        ));
+        foreach ($altitudes as $index => $altitude) {
+            if ($altitude > $this->minAltitude) {
+                $this->objects[$index]['min_altitude'] = $altitude;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * The name of the instrument the objects have to be seen with.
+     */
+    public function instrumentName(): ?string
+    {
+        return $this->instrument ? html_entity_decode($this->instrument->fullName(), ENT_QUOTES | ENT_HTML5, 'UTF-8') : null;
+    }
+
+    /**
+     * The lowest altitude (degrees, to 0.1°) at which the object can be seen
+     * with the instrument: at least $minAltitude, higher when the extinction
+     * there brings its contrast reserve (a point source's for an object
+     * without a size, such as M 40) down to VISIBLE_ABOVE; INF when it is not
+     * seen even at the zenith. $minAltitude when its contrast reserve is
+     * unknown (no magnitude, a location without a sky brightness).
+     *
+     * @param  array<int, list<\App\Models\Eyepiece>>  $magnifications
+     */
+    public function lowestAltitude(array $object, Instrument $instrument, Location $location, ?User $user, float $lensFactor, array $magnifications): float
+    {
+        $reserve = function (float $altitude) use ($object, $instrument, $location, $user, $lensFactor, $magnifications): ?float {
+            if ($object['mag'] === null) {
+                return null;
+            }
+            $result = ['contrast_reserve' => null];
+            if (ContrastReserveCalculator::appliesTo($object['type_code'])) {
+                $target = ContrastReserveCalculator::target($object['diam1'], $object['diam2'], $object['mag']);
+                $result = ContrastReserveCalculator::calculate($target, $instrument, $location, $user, $lensFactor, $magnifications, null, $altitude);
+            }
+            if ($result['contrast_reserve'] === null) {
+                $result = ContrastReserveCalculator::pointSource($object['mag'], $instrument, $location, $user, $lensFactor, $magnifications, $altitude);
+            }
+
+            return $result['contrast_reserve'];
+        };
+
+        $low   = max(0.5, $this->minAltitude);
+        $atLow = $reserve($low);
+        if ($atLow === null || $atLow > self::VISIBLE_ABOVE) {
+            return $this->minAltitude;
+        }
+        $atZenith = $reserve(90.0);
+        if ($atZenith === null || $atZenith <= self::VISIBLE_ABOVE) {
+            return $atZenith === null ? $this->minAltitude : INF;
+        }
+
+        // The contrast reserve grows with the altitude: halve the interval
+        // between an altitude it is too low at and one it is high enough at.
+        $high = 90.0;
+        while ($high - $low > 0.1) {
+            $middle = ($low + $high) / 2;
+            if ($reserve($middle) > self::VISIBLE_ABOVE) {
+                $high = $middle;
+            } else {
+                $low = $middle;
+            }
+        }
+
+        return ceil($high * 10) / 10;
     }
 
     /**
@@ -85,11 +198,11 @@ class MessierMarathon
      * and constellation. An object is found by its name in the M catalog, or
      * else by its name.
      *
-     * @return list<array{number: int, name: string, list_name: string, slug: string, type: string, constellation: ?string, mag: ?float, ra: float, dec: float}>
+     * @return list<array{number: int, name: string, list_name: string, slug: string, type: string, type_code: string, constellation: ?string, mag: ?float, diam1: ?float, diam2: ?float, ra: float, dec: float}>
      */
     public static function objects(): array
     {
-        return Cache::remember('messier_marathon:objects', 86400, function () {
+        return Cache::remember('messier_marathon:objects:v2', 86400, function () {
             $numbers = range(1, self::LAST_NUMBER);
             $names   = DB::table('objectnames')
                 ->where('catalog', 'M')
@@ -105,7 +218,7 @@ class MessierMarathon
                 ->leftJoin('deepskytypes as t', 't.code', '=', 'o.type')
                 ->leftJoin('constellations as c', 'c.id', '=', 'o.con')
                 ->whereIn('o.name', array_values($names))
-                ->get(['o.name', 'o.slug', 'o.type', 'o.ra', 'o.decl', 'o.mag', 't.name as type_name', 'c.name as constellation'])
+                ->get(['o.name', 'o.slug', 'o.type', 'o.ra', 'o.decl', 'o.mag', 'o.diam1', 'o.diam2', 't.name as type_name', 'c.name as constellation'])
                 ->filter(fn ($row) => is_numeric($row->ra) && is_numeric($row->decl))
                 ->keyBy(fn ($row) => mb_strtolower((string) $row->name));
 
@@ -122,8 +235,11 @@ class MessierMarathon
                     'list_name'     => (string) $row->name,
                     'slug'          => (string) $row->slug,
                     'type'          => (string) ($row->type_name ?: $row->type),
+                    'type_code'     => (string) $row->type,
                     'constellation' => $row->constellation,
-                    'mag'           => is_numeric($row->mag) && (float) $row->mag < 99 ? (float) $row->mag : null,
+                    'mag'           => is_numeric($row->mag)   && (float) $row->mag < 99 && (float) $row->mag != 0.0 ? (float) $row->mag : null,
+                    'diam1'         => is_numeric($row->diam1) && (float) $row->diam1 > 0 ? (float) $row->diam1 : null,
+                    'diam2'         => is_numeric($row->diam2) && (float) $row->diam2 > 0 ? (float) $row->diam2 : null,
                     'ra'            => (float) $row->ra * 15.0,
                     'dec'           => (float) $row->decl,
                 ];
@@ -215,7 +331,8 @@ class MessierMarathon
      * The order to see the objects in during the night (Y-m-d): for each the
      * moment to see it, the window it stands high enough in, its altitude
      * then and whether that is in the twilight. The objects it misses are
-     * either never high enough in the night ('never') or not reached in time
+     * either never high enough in the night ('never'), high enough but not
+     * to be seen with the instrument ('faint') or not reached in time
      * ('time', with their windows). Null when it does not get dark enough.
      *
      * @return array{night: string, start: int, end: int, objects: list<array>, missed: list<array>}|null
@@ -242,7 +359,11 @@ class MessierMarathon
         $missed = [];
         foreach ($result['missed'] as $index) {
             $missed[] = $this->objects[$index] + [
-                'reason'    => $result['visibility'][$index]['intervals'] === [] ? 'never' : 'time',
+                'reason' => match (true) {
+                    in_array($index, $result['faint'], true)          => 'faint',
+                    $result['visibility'][$index]['intervals'] === [] => 'never',
+                    default                                           => 'time',
+                },
                 'intervals' => $result['visibility'][$index]['intervals'],
             ];
         }
@@ -270,9 +391,11 @@ class MessierMarathon
             ];
         }
         foreach ($plan['missed'] as $object) {
-            $details[$object['list_name']] = ['note' => $object['reason'] === 'never'
-                ? __('Not high enough in this night.')
-                : __('Not reached in time (high enough from :from to :until).', ['from' => $this->time($object['intervals'][0][0]), 'until' => $this->time(end($object['intervals'])[1])])];
+            $details[$object['list_name']] = ['note' => match ($object['reason']) {
+                'never' => __('Not high enough in this night.'),
+                'faint' => __('Too faint for :instrument at the altitudes it reaches in this night.', ['instrument' => $this->instrumentName()]),
+                default => __('Not reached in time (high enough from :from to :until).', ['from' => $this->time($object['intervals'][0][0]), 'until' => $this->time(end($object['intervals'])[1])]),
+            }];
         }
 
         $replace = [
@@ -285,6 +408,9 @@ class MessierMarathon
         $description = $place !== null
             ? __('Messier marathon in the night of :date from :location: the objects in the order to see them, :minutes minutes each, with the time to see each one and when it stands at least :altitude° high.', $replace)
             : __('Messier marathon in the night of :date at a latitude of :latitude°: the objects in the order to see them, :minutes minutes each, with the time to see each one and when it stands at least :altitude° high.', $replace);
+        if ($this->instrument) {
+            $description .= ' '.__('A faint object counts only while it stands high enough to be seen with :instrument.', ['instrument' => $this->instrumentName()]);
+        }
 
         $names = array_merge(array_column($plan['objects'], 'list_name'), array_column($plan['missed'], 'list_name'));
 
@@ -326,7 +452,10 @@ class MessierMarathon
      * the order of schedule(), the objects only high enough in the twilight
      * at the moment closest to the dark one, by time; and the objects missed.
      *
-     * @return array{start: int, end: int, window: NightWindow, possible: int, order: list<array{index: int, at: int, from: int, until: int, twilight: bool}>, missed: list<int>, visibility: list<array>}|null
+     * The objects missed that would be high enough without the instrument
+     * are 'faint'.
+     *
+     * @return array{start: int, end: int, window: NightWindow, possible: int, order: list<array{index: int, at: int, from: int, until: int, twilight: bool}>, missed: list<int>, faint: list<int>, visibility: list<array>}|null
      */
     private function night(string $night): ?array
     {
@@ -402,6 +531,12 @@ class MessierMarathon
         sort($missed);
         usort($order, fn (array $a, array $b) => $a['at'] <=> $b['at']);
 
+        $raised = array_filter($this->objects, fn (array $object, int $index) => isset($object['min_altitude']) && $visibility[$index]['intervals'] === [], ARRAY_FILTER_USE_BOTH);
+        $faint  = $raised === [] ? [] : array_keys(array_filter(
+            $planner->visibility($twilight, array_map(fn (array $object) => array_diff_key($object, ['min_altitude' => true]), $raised)),
+            fn (array $v) => $v['intervals'] !== [],
+        ));
+
         return [
             'start'      => $dark->start,
             'end'        => $dark->end,
@@ -409,6 +544,7 @@ class MessierMarathon
             'possible'   => count(array_filter($inDark, fn (array $v) => $v['intervals'] !== [])),
             'order'      => $order,
             'missed'     => $missed,
+            'faint'      => $faint,
             'visibility' => $visibility,
         ];
     }

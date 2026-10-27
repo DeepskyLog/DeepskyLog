@@ -181,14 +181,23 @@
                             default => 'text-white',
                         };
                     @endphp
-                    <span class="{{ $moonClass }} font-medium" title="{{ __('contrast.reserve.category.' . $moonlit['category']) }}">{{ $moonlit['contrast_reserve'] }}</span>
-                    <span class="text-xs text-gray-400">
-                        @if ($moonlit['moon_up'])
-                            {{ __('at :time (altitude :altitude°), the sky lit by the Moon (:fraction% illuminated) to :sqm mag/arcsec²', ['time' => $moonlit['time'], 'altitude' => $moonlit['altitude'], 'fraction' => (int) round($moonlit['moon_fraction'] * 100), 'sqm' => number_format($moonlit['sqm'], 2)]) }}
-                        @else
-                            {{ __('at :time (altitude :altitude°), with the Moon below the horizon', ['time' => $moonlit['time'], 'altitude' => $moonlit['altitude']]) }}
-                        @endif
-                    </span>
+                    {{-- The moment and the sky in a popover on hover (tap on a touch screen) --}}
+                    <div x-data="{ open: false }" class="relative" style="width: fit-content; cursor: help" @mouseenter="open = true" @mouseleave="open = false"
+                        @click="open = !open" @click.outside="open = false" @keydown.escape="open = false">
+                        <span class="{{ $moonClass }} font-medium">{{ $moonlit['contrast_reserve'] }}</span>
+                        <div x-show="open" x-cloak x-transition
+                            class="absolute z-10 left-0 mt-2 w-80 p-3 bg-gray-800 text-xs font-normal text-gray-100 rounded shadow-lg"
+                            data-dsl-no-overlay-hide="true">
+                            <div class="text-sm mb-1">{{ __('contrast.reserve.summary', ['value' => $moonlit['contrast_reserve'], 'category' => __('contrast.reserve.category.' . $moonlit['category'])]) }}</div>
+                            <div class="text-gray-300">
+                                @if ($moonlit['moon_up'])
+                                    {{ __('at :time (altitude :altitude°), the sky lit by the Moon (:fraction% illuminated) to :sqm mag/arcsec²', ['time' => $moonlit['time'], 'altitude' => $moonlit['altitude'], 'fraction' => (int) round($moonlit['moon_fraction'] * 100), 'sqm' => number_format($moonlit['sqm'], 2)]) }}
+                                @else
+                                    {{ __('at :time (altitude :altitude°), with the Moon below the horizon', ['time' => $moonlit['time'], 'altitude' => $moonlit['altitude']]) }}
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 @endif
             </td>
         </tr>

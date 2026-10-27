@@ -25,7 +25,10 @@ use Illuminate\Support\Collection;
 /**
  * The three views of an object: with the naked eye, in the finder of the
  * telescope and in the telescope itself, for an observer's equipment,
- * location and moment.
+ * location and moment. Binoculars take the place of the telescope, without
+ * a finder unless one is chosen: their image is upright and not mirrored,
+ * and both eyes see fainter (TelescopicLimitingMagnitude::BINOCULAR_GAIN,
+ * ContrastReserveCalculator::BINOCULAR_GAIN).
  *
  * Each view has the field of view of its instrument and the limiting
  * magnitude it reaches under the sky of the location (its NELM, or the one
@@ -150,7 +153,7 @@ class FieldViewBuilder
         $sqm      = is_numeric($sqm) && (float) $sqm > 0 ? (float) $sqm : Magnitude::nelmToSqm($nelm);
         $visible  = $altitude === null || $altitude  > 0;
         $contrast = fn (Instrument $scope, mixed $magnification) => $visible
-            ? $this->contrastReserve($object, $sqm, $extinction, (float) $scope->aperture_mm, $magnification)
+            ? $this->contrastReserve($object, $sqm, $extinction, $scope, $magnification)
             : ['value' => null, 'category' => 'not_visible'];
 
         // Whether a double star is split at the magnification of a view
@@ -196,6 +199,8 @@ class FieldViewBuilder
 
         $finderFov = $finder?->fixedFieldOfViewDeg();
         $up        = $instrument && $this->isEquatorial($instrument) ? 'north' : 'zenith';
+        $binocular = (bool) $instrument?->isBinocular();
+        $title     = $binocular ? __('Binoculars') : __('Telescope');
 
         $views = [];
 
@@ -210,6 +215,7 @@ class FieldViewBuilder
             'star_names'     => true,
             'overlays'       => array_values(array_filter([
                 $finderFov ? ['radius_deg' => $finderFov / 2, 'label' => __('Finder')] : null,
+                $binocular && $telescopeFov ? ['radius_deg' => $telescopeFov / 2, 'label' => __('Binoculars')] : null,
             ])),
         ];
         $views['naked_eye'] = [
@@ -224,7 +230,7 @@ class FieldViewBuilder
 
         // In the finder
         if ($finder && $finderFov) {
-            $finderLimit     = round(TelescopicLimitingMagnitude::calculate($nelm, (float) $finder->aperture_mm, (float) $finder->fixedMagnification, (float) $finder->obstruction_perc, $finder->hasMirrors()) - $extinction, 1);
+            $finderLimit     = round(TelescopicLimitingMagnitude::forInstrument($nelm, $finder, (float) $finder->fixedMagnification) - $extinction, 1);
             $views['finder'] = [
                 'title'    => __('Finder'),
                 'subtitle' => html_entity_decode($finder->fullName()).($finder->fixedMagnification ? ' · '.(int) $finder->fixedMagnification.'x' : ''),
@@ -237,13 +243,13 @@ class FieldViewBuilder
                     'star_limit'    => $finderLimit,
                     'object_limit'  => $finderLimit - self::OBJECT_LIMIT_OFFSET,
                     'up'            => $up,
-                    'flip'          => (bool) $finder->flip_image,
-                    'flop'          => (bool) $finder->flop_image,
+                    'flip'          => $this->flips($finder, 'flip_image'),
+                    'flop'          => $this->flips($finder, 'flop_image'),
                     'object_labels' => true,
                     'overlays'      => $telescopeFov ? [['radius_deg' => $telescopeFov / 2, 'label' => '']] : [],
                 ]),
             ];
-        } else {
+        } elseif (! $binocular) {
             $views['finder'] = [
                 'title'   => __('Finder'),
                 'message' => $instrument
@@ -254,7 +260,7 @@ class FieldViewBuilder
 
         // In the telescope
         if ($instrument && $telescopeFov) {
-            $telescopeLimit = round(TelescopicLimitingMagnitude::calculate($nelm, (float) $instrument->aperture_mm, $magnification ? (float) $magnification : null, (float) $instrument->obstruction_perc, $instrument->hasMirrors()) - $extinction, 1);
+            $telescopeLimit = round(TelescopicLimitingMagnitude::forInstrument($nelm, $instrument, $magnification ? (float) $magnification : null) - $extinction, 1);
             $subtitle       = html_entity_decode($instrument->fullName());
             if ($eyepiece) {
                 $subtitle .= ' · '.html_entity_decode($eyepiece->fullName());
@@ -267,9 +273,9 @@ class FieldViewBuilder
             }
 
             $views['telescope'] = [
-                'title'    => __('Telescope'),
+                'title'    => $title,
                 'subtitle' => $subtitle,
-                'fov'      => self::formatAngle($telescopeFov),
+                'fov'      => self::formatAngle($telescopeFov).($eyepiece === null && $instrument->hasEstimatedFieldOfView() ? ' ('.__('estimated').')' : ''),
                 'limit'    => $telescopeLimit,
                 'contrast' => $contrast($instrument, $magnification),
                 'double'   => $doubleStar($instrument, $magnification, $telescopeLimit),
@@ -280,14 +286,14 @@ class FieldViewBuilder
                     'object_limit'       => $telescopeLimit - self::OBJECT_LIMIT_OFFSET,
                     'unknown_magnitudes' => true,
                     'up'                 => $up,
-                    'flip'               => (bool) $instrument->flip_image,
-                    'flop'               => (bool) $instrument->flop_image,
+                    'flip'               => $this->flips($instrument, 'flip_image'),
+                    'flop'               => $this->flips($instrument, 'flop_image'),
                     'object_labels'      => true,
                 ]),
             ];
         } else {
             $views['telescope'] = [
-                'title'   => __('Telescope'),
+                'title'   => $title,
                 'message' => ! $instrument
                     ? __('Add an instrument to see the view through the telescope.')
                     : __('The field of view is unknown: choose an eyepiece with a focal length and an apparent field of view or field stop.'),
@@ -324,8 +330,9 @@ class FieldViewBuilder
      *
      * @return array{value: ?float, category: string}|null
      */
-    private function contrastReserve(DeepskyObject $object, float $sqm, float $extinction, float $aperture, mixed $magnification): ?array
+    private function contrastReserve(DeepskyObject $object, float $sqm, float $extinction, Instrument $scope, mixed $magnification): ?array
     {
+        $aperture = (float) $scope->aperture_mm;
         if (! ContrastReserveCalculator::appliesTo($object->type) || $aperture <= 0 || ! is_numeric($magnification) || (float) $magnification <= 0
                            || ! is_numeric($object->mag) || (float) $object->mag >= 99 || (float) $object->mag == 0.0) {
             return null;
@@ -334,7 +341,7 @@ class FieldViewBuilder
         try {
             $target = ContrastReserveCalculator::target($object->diam1, $object->diam2, (float) $object->mag + $extinction);
             $sbobj  = $target->calculateSBObj();
-            $value  = $sbobj === null ? null : ContrastReserveCalculator::contrastAt($target, $sbobj, $sqm, $aperture, (float) $magnification);
+            $value  = $sbobj === null ? null : ContrastReserveCalculator::contrastAt($target, $sbobj, $sqm, $aperture, (float) $magnification, $scope->isBinocular());
         } catch (\Throwable) {
             return null;
         }
@@ -598,6 +605,15 @@ class FieldViewBuilder
         }
 
         return $usable->firstWhere('id', $magnifications->sort()->keys()->first());
+    }
+
+    /**
+     * Whether the instrument mirrors the image this way: as set for it,
+     * never for binoculars, whose prisms keep the image upright.
+     */
+    private function flips(Instrument $instrument, string $setting): bool
+    {
+        return ! $instrument->isBinocular() && (bool) $instrument->{$setting};
     }
 
     private function isEquatorial(Instrument $instrument): bool

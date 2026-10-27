@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Instrument;
+
 /**
  * The faintest star visible in an instrument, from the naked-eye limiting
  * magnitude of the sky.
@@ -22,6 +24,10 @@ namespace App\Services;
  *   telescope at high power under a sky of 6.5). Below an exit pupil of
  *   MIN_EXIT_PUPIL_MM seeing and diffraction spread the star out as much as
  *   the background darkens, so the gain stops there.
+ *
+ * Binoculars are used with both eyes, which together see fainter stars than
+ * one eye (BINOCULAR_GAIN). The naked-eye limit of the sky is already one of
+ * both eyes, so the naked eye gets no gain.
  */
 class TelescopicLimitingMagnitude
 {
@@ -40,6 +46,13 @@ class TelescopicLimitingMagnitude
     /** Transmission of a mirror system: two aluminium coatings. */
     public const MIRROR_TRANSMISSION = 0.8;
 
+    /**
+     * Magnitudes gained by looking with both eyes: binocular summation lowers
+     * the threshold of the eye by a factor of about √2 (Campbell & Green
+     * 1965), 2.5 log √2.
+     */
+    public const BINOCULAR_GAIN = 0.38;
+
     /** The faintest limit returned: the depth of the star catalogue. */
     public const MAX_MAGNITUDE = 18.0;
 
@@ -49,8 +62,9 @@ class TelescopicLimitingMagnitude
      * @param  float|null  $magnification  magnification; null for the lowest useful one (exit pupil = eye pupil)
      * @param  float  $obstructionPerc  central obstruction, as a percentage of the aperture
      * @param  bool  $mirrors  whether the instrument has mirrors (lower transmission)
+     * @param  bool  $binocular  whether it is used with both eyes (binoculars)
      */
-    public static function calculate(float $nelm, float $apertureMm, ?float $magnification = null, float $obstructionPerc = 0.0, bool $mirrors = false): float
+    public static function calculate(float $nelm, float $apertureMm, ?float $magnification = null, float $obstructionPerc = 0.0, bool $mirrors = false, bool $binocular = false): float
     {
         $pupil = self::EYE_PUPIL_MM;
 
@@ -71,6 +85,15 @@ class TelescopicLimitingMagnitude
 
         $darkening = self::DARKENING_COEFFICIENT * log10($pupil / max(self::MIN_EXIT_PUPIL_MM, min($pupil, $exitPupil)));
 
-        return min(self::MAX_MAGNITUDE, round($nelm + max(0.0, $gain) + $darkening, 1));
+        return min(self::MAX_MAGNITUDE, round($nelm + max(0.0, $gain) + $darkening + ($binocular ? self::BINOCULAR_GAIN : 0.0), 1));
+    }
+
+    /**
+     * calculate() with the aperture, obstruction, optics and eyes of the
+     * instrument.
+     */
+    public static function forInstrument(float $nelm, Instrument $instrument, ?float $magnification = null): float
+    {
+        return self::calculate($nelm, (float) $instrument->aperture_mm, $magnification, (float) $instrument->obstruction_perc, $instrument->hasMirrors(), $instrument->isBinocular());
     }
 }

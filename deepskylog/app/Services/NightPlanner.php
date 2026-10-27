@@ -34,10 +34,11 @@ class NightPlanner
 
     /**
      * Per point (RA and declination in degrees, keys 'ra' and 'dec'), the
-     * parts of the window (timestamps) it stands at least $minAltitude high,
-     * and its transits in the window.
+     * parts of the window (timestamps) it stands at least $minAltitude high
+     * (or its own 'min_altitude'; above 90° never), and its transits in the
+     * window.
      *
-     * @param  array<int, array{ra: float, dec: float}>  $points
+     * @param  array<int, array{ra: float, dec: float, min_altitude?: float}>  $points
      * @return array<int, array{intervals: list<array{0: int, 1: int}>, transits: list<int>}>
      */
     public function visibility(NightWindow $window, array $points): array
@@ -49,8 +50,14 @@ class NightPlanner
 
         $visibility = [];
         foreach ($points as $key => $point) {
+            $altitude = (float) ($point['min_altitude'] ?? $this->minAltitude);
+            if ($altitude > 90.0) {
+                $visibility[$key] = ['intervals' => [], 'transits' => []];
+
+                continue;
+            }
             $dec      = deg2rad($point['dec']);
-            $cosLimit = (sin(deg2rad($this->minAltitude)) - sin($lat) * sin($dec)) / max(1e-12, cos($lat) * cos($dec));
+            $cosLimit = (sin(deg2rad($altitude)) - sin($lat) * sin($dec)) / max(1e-12, cos($lat) * cos($dec));
             $from     = fmod(fmod($window->lstStart - $point['ra'], 360.0) + 360.0, 360.0);
             $to       = $from + $span;
 

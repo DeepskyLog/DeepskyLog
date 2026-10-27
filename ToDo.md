@@ -119,7 +119,7 @@
 - [X] Red night mode and an "at the eyepiece" view. There's no red-light theme today. Add a red-on-black toggle and a stripped-down page for an observing list that has times: the current object, the next one, the finder chart and a big "Log it" button that opens the observation form already filled in (session, time, equipment). The list times you just added would then be useful at the telescope, not only before the night.
 - [X] Offline lists (PWA). Dark sites often have no signal. A service worker could cache the observing list, its charts and the at-the-eyepiece page, and keep observations entered offline until the connection return.
 - [X] "What's new for me" after new equipment: the objects a telescope shows that none of the observer's other active instruments shows, or an eyepiece adds to the standard telescope, at one of their locations, not seen yet, the 200 most observed, with a button to make that a list. Linked from the instrument and eyepiece pages, highlighted right after adding them.
-- [ ] Take into account binoculars.  They can see more than a telescope with the same aperture, and they have a different field of view.  The field views and the filter advice should take binoculars into account.  The Messier marathon planner should also take binoculars into account.
+- [X] Binoculars: both eyes see fainter than one, so binoculars get a higher contrast reserve (+0.15) and limiting magnitude (+0.38) than a telescope of the same aperture, everywhere these are calculated (object page, stored metrics, Tonight's best, double stars, filter advice). Their field is estimated wider (60° apparent), the field views show them upright in place of the telescope, and the Messier marathon planner takes an instrument (by default the standard telescope): a faint object only counts from the altitude at which it can be seen with it, or is missed as too faint.
 
 Community features
 
@@ -134,3 +134,29 @@ Smaller additions
 Sky quality history for a location. Plot the SQM and NELM values from all observations at a location over the years. This shows light pollution trends, and the location page already has a chart area.
 
 Calendar feed of your planned list times. .ics export of an observing list that has times, or of the clear-night alerts, as starparties already have.
+
+Android app to send GoTo commands to the Nexus DSC Pro.  
+
+Android has no equivalent command, and DeepskyLog's web page can't drive the mount directly either. But your Nexus DSC Pro gives you a way that needs no phone at all.
+
+Why the page can't send a GoTo itself
+
+The Nexus DSC Pro talks to SkySafari over its own WiFi: IP 10.0.0.1, port 4060, using the LX200 Classic command set. It passes GoTo commands on to the ServoCAT over USB.
+A web page in Chrome can only make web requests, not the raw network connection the Nexus expects. That's a browser rule, on Android as on iPhone.
+The Nexus has no Bluetooth, and its other ports are RS232 serial and USB. So the earlier Bluetooth idea is out as well.
+SkySafari for Android has no documented way for another app to send it an object. There's an open feature request from a user asking for exactly that, with no reply from the developer.
+What does work: the list on the Nexus itself
+
+The Nexus DSC Pro manual says it reads observing lists in SkySafari's .skylist format from the root folder of its microSD card. DeepskyLog already exports that format.
+
+Export the list as .skylist, from the list page or the button at the bottom of the eyepiece page.
+Copy the file to the root of the Nexus's microSD card.
+At the telescope, choose Find → From Observation List on the Nexus, pick the list, and step through the objects with the arrow keys.
+Press OK to open the telescope control panel, choose GOTO, and the ServoCAT slews.
+Keep DeepskyLog's eyepiece page alongside it for the times, charts and "Log it". SkySafari isn't needed for the GoTo at all.
+
+Caveat: the Nexus only shows objects that are also in its own databases. Planets, comets and obscure objects from a DeepskyLog list may be missing. Try it with a list and tell me which objects it skips; I can then adjust the names the .skylist export writes.
+
+A true one-tap GoTo
+
+That would need a small Android app of our own. It would open a DeepskyLog link such as dslgoto://… and send the object's coordinates to 10.0.0.1:4060 with the LX200 GoTo commands. It's feasible, but it's a separate project, and the manual doesn't say whether the Nexus accepts a second connection while SkySafari is connected. I'd only go that way if the microSD workflow turns out to be too clumsy.  Will this also work for other mounts?

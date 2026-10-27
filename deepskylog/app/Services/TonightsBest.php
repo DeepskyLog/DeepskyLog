@@ -868,7 +868,7 @@ class TonightsBest
             $nelm = $this->location->getNelm((float) ($this->user->fstOffset ?? 0));
             $nelm = is_numeric($nelm) && $nelm > 0 ? (float) $nelm : FieldViewBuilder::DEFAULT_NELM;
             // a comet is diffuse: some magnitudes brighter than the faintest star
-            $cometLimit = TelescopicLimitingMagnitude::calculate($nelm, (float) $this->instrument->aperture_mm, null, (float) $this->instrument->obstruction_perc, $this->instrument->hasMirrors()) - 3.0;
+            $cometLimit = TelescopicLimitingMagnitude::forInstrument($nelm, $this->instrument) - 3.0;
         }
 
         $comets  = [];

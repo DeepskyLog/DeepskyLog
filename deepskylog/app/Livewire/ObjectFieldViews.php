@@ -161,7 +161,7 @@ class ObjectFieldViews extends Component
             'result'          => $result,
             'datetimeValue'   => $datetime,
             'pdfUrl'          => route('object.field-views.pdf', ['slug' => $object->slug] + array_intersect_key($pdfQuery, array_flip(ObjectFieldViewController::OPTIONS))),
-            'canCoupleFinder' => $result['instrument'] && $result['finder'] && $result['instrument']->finder_id !== $result['finder']->id,
+            'canCoupleFinder' => $result['instrument'] && $result['finder'] && ! $result['instrument']->isBinocular() && $result['instrument']->finder_id !== $result['finder']->id,
         ]);
     }
 }

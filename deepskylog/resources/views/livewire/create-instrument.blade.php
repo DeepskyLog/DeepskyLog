@@ -252,7 +252,7 @@
                             <x-input
                                 name="field_of_view_deg"
                                 label="{!! __('True field of view of the instrument with a fixed magnification (in degrees)') !!}"
-                                hint="{{ __('Leave empty to estimate it as 50° divided by the magnification.') }}"
+                                hint="{{ __('Leave empty to estimate it as 50° (binoculars 60°) divided by the magnification.') }}"
                                 type="number"
                                 wire:model="field_of_view_deg"
                                 class="mt-1 block w-full"

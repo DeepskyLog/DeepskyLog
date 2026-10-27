@@ -54,8 +54,8 @@ class EquipmentGain
      */
     public const MAX_ATTEMPTS = 3;
 
-    /** Part of the cache key: raise it when the cached result changes shape. */
-    private const RESULT_VERSION = 1;
+    /** Part of the cache key: raise it when the cached result changes shape or calculation. */
+    private const RESULT_VERSION = 2;
 
     private ?string $key = null;
 

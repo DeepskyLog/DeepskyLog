@@ -918,7 +918,7 @@ class ObjectController extends Controller
 
                     if ($sbobj !== null && $sqm !== null && $aperture && $mag) {
                         // Show which eyepieces are used for contrast reserve calculation
-                        $contrast = \App\Services\ContrastReserveCalculator::contrastAt($target, $sbobj, $sqm, $aperture, $mag);
+                        $contrast = \App\Services\ContrastReserveCalculator::contrastAt($target, $sbobj, $sqm, $aperture, $mag, (bool) $userInstrument?->isBinocular());
                         $session->contrast_reserve = is_numeric($contrast) ? round($contrast, 2) : null;
 
                         // Determine a human category based on numeric ranges
@@ -2123,7 +2123,7 @@ class ObjectController extends Controller
                                             $session->optimum_detection_magnification = $best ? (int) $best : null;
 
                                             if (!empty($session->optimum_detection_magnification)) {
-                                                $contrast = \App\Services\ContrastReserveCalculator::contrastAt($target, $sbobj, $sqm, $aperture, $session->optimum_detection_magnification);
+                                                $contrast = \App\Services\ContrastReserveCalculator::contrastAt($target, $sbobj, $sqm, $aperture, $session->optimum_detection_magnification, (bool) $userInstrument?->isBinocular());
                                                 $session->contrast_reserve = is_numeric($contrast) ? round($contrast, 2) : null;
                                                 $cat = null;
                                                 if (is_numeric($session->contrast_reserve)) {

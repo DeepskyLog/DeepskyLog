@@ -66,6 +66,26 @@
                 @endif
             </label>
             <label class="block text-sm">
+                <span
+                    class="mb-1 block text-gray-400"
+                    >{{ __("Instrument") }}</span
+                >
+                <select
+                    wire:model.live="instrumentId"
+                    class="{{ $input }} w-full"
+                >
+                    <option value="">
+                        {{ __("None: only the altitude counts") }}
+                    </option>
+                    @foreach ($instrumentOptions as $id => $label)
+                        <option value="{{ $id }}">{{ $label }}</option>
+                    @endforeach
+                </select>
+                @error ("instrumentId")
+                    <span class="mt-1 block text-red-400">{{ $message }}</span>
+                @enderror
+            </label>
+            <label class="block text-sm">
                 <span class="mb-1 block text-gray-400">{{ __("Season") }}</span>
                 <select wire:model.live="season" class="{{ $input }} w-full">
                     @foreach ($seasonOptions as $option)
@@ -133,7 +153,11 @@
                 @enderror
             </label>
         </div>
-        <p class="mt-3 px-2 text-xs text-gray-500">{{ __("An object can be seen while it stands at least the lowest altitude high, between the ends of nautical twilight (the Sun 12° below the horizon); an object only that high in the brighter twilight is marked. Times are in :timezone.", ["timezone" => $timezone]) }}</p>
+        <p class="mt-3 px-2 text-xs text-gray-500">{{ __("An object can be seen while it stands at least the lowest altitude high, between the ends of nautical twilight (the Sun 12° below the horizon); an object only that high in the brighter twilight is marked. Times are in :timezone.", ["timezone" => $timezone]) }}
+            @if ($instrumentName)
+                {{ __("With an instrument, a faint object has to stand higher, where the atmosphere dims it less: it counts only from the altitude at which its contrast reserve with :instrument under the sky of the location is at least difficult.", ["instrument" => $instrumentName]) }}
+            @endif
+        </p>
     </x-card>
 
     @if ($total === 0)
@@ -451,6 +475,13 @@
                                         class="px-2 py-1 whitespace-nowrap text-gray-400"
                                     >
                                         {{ $time($object["from"]) }}–{{ $time($object["until"]) }}
+                                        @isset($object["min_altitude"])
+                                            <span
+                                                class="text-xs text-gray-500"
+                                                title="{{ __("The lowest altitude at which it can be seen with :instrument", ["instrument" => $instrumentName]) }}"
+                                                >(≥ {{ number_format($object["min_altitude"], 0) }}°)</span
+                                            >
+                                        @endisset
                                     </td>
                                 </tr>
                             @endforeach
@@ -484,6 +515,13 @@
                                             __(
                                                 "never :altitude° high in the night.",
                                                 ["altitude" => $minAltitude],
+                                            )
+                                        }}
+                                    @elseif ($object["reason"] === "faint")
+                                        {{
+                                            __(
+                                                "too faint for :instrument at the altitudes it reaches in this night.",
+                                                ["instrument" => $instrumentName],
                                             )
                                         }}
                                     @else
