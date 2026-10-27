@@ -260,3 +260,76 @@ it('links the current object to SkySafari and the list to its skylist export', f
         ->assertSee('Show in SkySafari')
         ->assertSee(route('observing-list.export.skylist', $list), false);
 });
+
+it('links the current object to the GoTo app with its J2000 position', function () {
+    $owner = aeObserver();
+    $list = aeList($owner);
+
+    $this->actingAs($owner)->get(route('observing-list.eyepiece', $list))
+        ->assertOk()
+        ->assertViewHas('goto', 'dslgoto://goto?name=M%2031&ra=10.68&dec=41.27&epoch=J2000')
+        ->assertSee('href="dslgoto://goto?name=M%2031&amp;ra=10.68&amp;dec=41.27&amp;epoch=J2000"', false);
+});
+
+it('links a planet to the GoTo app with its position of the date at its time', function () {
+    $owner = aeObserver();
+    DB::table('planets')->insert(['name' => 'Jupiter', 'slug' => 'jupiter', 'designation' => 'Jupiter', 'body_type' => 'planet', 'created_at' => now(), 'updated_at' => now()]);
+    DB::table('search_index')->insert([
+        'name' => 'Jupiter', 'name_normalized' => 'jupiter', 'source_table' => 'planets', 'display_name' => 'Jupiter',
+        'source_pk' => (string) DB::table('planets')->where('slug', 'jupiter')->value('id'), 'source_type' => 'planet',
+        'created_at' => now(), 'updated_at' => now(),
+    ]);
+    $list = ObservingList::createWithObjects($owner, 'Planets', ['Jupiter'], null, false);
+
+    $this->actingAs($owner)->get(route('observing-list.eyepiece', $list))
+        ->assertOk()
+        ->assertViewHas('goto', function (?string $link) {
+            parse_str((string) parse_url((string) $link, PHP_URL_QUERY), $query);
+
+            // Jupiter in Leo at the end of October 2026: 9h 45m, +14°
+            return str_starts_with((string) $link, 'dslgoto://goto?')
+                && $query['name'] === 'Jupiter' && $query['epoch'] === 'date'
+                && (float) $query['ra'] > 144 && (float) $query['ra'] < 148
+                && (float) $query['dec'] > 13 && (float) $query['dec'] < 16;
+        });
+});
+
+it('lists the observer\'s lists and subscribed lists with objects to take to the telescope', function () {
+    $owner = aeObserver();
+    $planned = aeList($owner);
+    $plain = ObservingList::createWithObjects($owner, 'Galaxies', ['M 31']);
+    ObservingList::createWithObjects($owner, 'Empty', []);
+    $other = aeObserver();
+    $subscribed = ObservingList::createWithObjects($other, 'Shared', ['M 42'], null, true);
+    $subscribed->subscriptions()->create(['user_id' => $owner->id]);
+    ObservingList::createWithObjects($other, 'Private of another', ['M 42']);
+    $owner->forceFill(['active_observing_list_id' => $plain->id])->save();
+
+    $this->actingAs($owner)->get(route('observing-lists.eyepiece'))
+        ->assertOk()
+        ->assertViewHas('planned', fn ($lists) => $lists->pluck('id')->all() === [$planned->id])
+        ->assertViewHas('other', fn ($lists) => $lists->pluck('id')->all() === [$plain->id, $subscribed->id])
+        ->assertSee(route('observing-list.eyepiece', $planned), false)
+        ->assertSee('planned for tonight')
+        ->assertSee('Active')
+        ->assertDontSee('Empty')
+        ->assertDontSee('Private of another');
+});
+
+it('counts a list planned for an earlier night as another list', function () {
+    $owner = aeObserver();
+    $list = aeList($owner, '2026-10-20');
+
+    $this->actingAs($owner)->get(route('observing-lists.eyepiece'))
+        ->assertViewHas('planned', fn ($lists) => $lists->isEmpty())
+        ->assertViewHas('other', fn ($lists) => $lists->pluck('id')->all() === [$list->id])
+        ->assertSee('planned for the night of 20 October 2026');
+});
+
+it('does not tell the app that it did not open', function () {
+    $owner = aeObserver();
+    $list = aeList($owner);
+
+    $this->actingAs($owner)->get(route('observing-list.eyepiece', $list))
+        ->assertSee('DeepskyLogGoTo', false);
+});

@@ -872,6 +872,12 @@ Route::get('/observing-lists/discover', [App\Http\Controllers\ObservingListContr
     ->name('observing-lists.discover');
 
 // Public list detail page (private lists still guarded in controller)
+// Logging in to the DeepskyLog GoTo app with Google or GitHub (AppLoginController)
+Route::get('/app/login', [App\Http\Controllers\AppLoginController::class, 'start'])
+    ->name('app-login.start')->middleware(['doNotCacheResponse', 'throttle:20,1']);
+Route::get('/app/login/redeem', [App\Http\Controllers\AppLoginController::class, 'redeem'])
+    ->name('app-login.redeem')->middleware(['doNotCacheResponse', 'throttle:20,1']);
+
 Route::get('/observing-list/{list}', [App\Http\Controllers\ObservingListController::class, 'show'])
     ->name('observing-list.show');
 
@@ -937,6 +943,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // At the eyepiece: the current and next object of a list with times,
     // "Log it", and the observations the page kept while offline
+    Route::get('/observing-lists/eyepiece', [App\Http\Controllers\AtTheEyepieceController::class, 'index'])
+        ->name('observing-lists.eyepiece')->middleware('doNotCacheResponse');
     Route::get('/observing-list/{list}/eyepiece', [App\Http\Controllers\AtTheEyepieceController::class, 'show'])
         ->name('observing-list.eyepiece')->middleware('doNotCacheResponse');
     Route::get('/observing-list/{list}/eyepiece/{item}/log', [App\Http\Controllers\AtTheEyepieceController::class, 'log'])

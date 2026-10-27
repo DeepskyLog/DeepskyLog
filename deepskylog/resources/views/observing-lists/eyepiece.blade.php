@@ -144,9 +144,14 @@
             </div>
             {{-- SkySafari for iOS centres the object of a skyobject:// link, its
                  GoTo then moves the telescope SkySafari is connected to; SkySafari
-                 for Android ignores the link, so the button is shown on iOS only --}}
+                 for Android ignores the link, so the button is shown on iOS only.
+                 On Android the DeepskyLog GoTo app (project deepskylog-goto)
+                 takes the dslgoto:// link and sends the position to the mount --}}
             <div class="row" style="margin-top:.5rem">
                 <a class="button" id="skysafari" href="skyobject://{{ rawurlencode($current['name']) }}" hidden>{{ __('Show in SkySafari') }}</a>
+                @if ($goto)
+                    <a class="button" id="goto" href="{{ $goto }}" hidden>{{ __('GoTo') }}</a>
+                @endif
                 <button type="button" class="button" id="copy-name">{{ __('Copy name') }}</button>
                 <span class="muted" id="copy-name-status" role="status"></span>
             </div>
@@ -341,6 +346,7 @@
                 'at' => __('At :time'),
                 'copied' => __('Copied: paste it in the search of SkySafari.'),
                 'noSkySafari' => __('SkySafari did not open: copy the name and paste it in its search.'),
+                'noGotoApp' => __('The GoTo app did not open: install DeepskyLog GoTo on this device.'),
             ],
         ];
     @endphp
@@ -421,6 +427,20 @@
                     if (document.visibilityState === 'visible' && document.hasFocus()) copyStatus.textContent = texts.noSkySafari;
                 }, 2000);
             });
+            var gotoLink = document.getElementById('goto');
+            if (gotoLink) {
+                gotoLink.hidden = ! /Android/i.test(navigator.userAgent);
+                // Inside the app the page stays in view while the app slews
+                if (/DeepskyLogGoTo\//.test(navigator.userAgent)) gotoLink = null;
+            }
+            if (gotoLink) {
+                gotoLink.addEventListener('click', function () {
+                    copyStatus.textContent = '';
+                    setTimeout(function () {
+                        if (document.visibilityState === 'visible' && document.hasFocus()) copyStatus.textContent = texts.noGotoApp;
+                    }, 2000);
+                });
+            }
             document.getElementById('copy-name').addEventListener('click', function () {
                 var done = function () { copyStatus.textContent = texts.copied; };
                 var fallback = function () {

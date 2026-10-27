@@ -2,8 +2,9 @@
  * DeepskyLog service worker: the observing lists and the page at the eyepiece
  * (resources/views/observing-lists/eyepiece.blade.php) without a connection.
  *
- * - The pages of an observing list (/observing-list/{slug}) and at the
- *   eyepiece (/observing-list/{slug}/eyepiece?item=…) are fetched from the
+ * - The pages of an observing list (/observing-list/{slug}), at the
+ *   eyepiece (/observing-list/{slug}/eyepiece?item=…) and the lists to take
+ *   to the telescope (/observing-lists/eyepiece) are fetched from the
  *   network and kept in PAGES; without a connection the kept copy is shown.
  *   The page at the eyepiece puts all its pages in PAGES with "Save for
  *   offline use".
@@ -22,7 +23,7 @@ const VERSION = 'v1';
 const PAGES = 'dsl-offline-' + VERSION;
 const ASSETS = 'dsl-assets-' + VERSION;
 
-const PAGE = /^\/observing-list\/[^/]+(\/eyepiece)?$/;
+const PAGE = /^\/observing-list\/[^/]+(\/eyepiece)?$|^\/observing-lists\/eyepiece$/;
 const LOG = /^\/observing-list\/([^/]+)\/eyepiece\/(\d+)\/log$/;
 const ASSET = /^\/(build\/|js\/|images\/icons\/|wireui\/assets\/|livewire\/livewire(\.min)?\.js$)/;
 

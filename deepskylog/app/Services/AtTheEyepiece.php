@@ -13,12 +13,14 @@ use App\Models\Observation;
 use App\Models\ObservationSession;
 use App\Models\ObservingList;
 use App\Models\ObservingListItem;
+use App\Models\ObservingListSubscription;
 use App\Models\User;
 use App\Services\Import\CsvObservationImporter;
 use App\Services\Import\ImportResult;
 use App\Services\Observations\ObservationCardData;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 /**
@@ -51,6 +53,52 @@ class AtTheEyepiece
 
     /** Types whose visibility scale differs (observations.visibility_oc / visibility_ds). */
     public const OPEN_CLUSTER_TYPES = ['OPNCL', 'LMCOC', 'SMCOC'];
+
+    /** How long ago a planned night may be for its list to count as planned on the list of lists. */
+    public const PLANNED_DAYS_BACK = 1;
+
+    /**
+     * The lists the observer can take to the telescope (/observing-lists/eyepiece,
+     * the start page of the DeepskyLog GoTo app): their own lists and the
+     * public lists they subscribed to, with objects. "planned" holds the lists
+     * with times for tonight or a later night (or the night before), the
+     * earliest first; "other" all the others, most recently changed first.
+     * The active list comes first in its group.
+     *
+     * @return array{planned: Collection<int, ObservingList>, other: Collection<int, ObservingList>, tonight: string}
+     */
+    public static function lists(User $user, ?Carbon $now = null): array
+    {
+        $now ??= Carbon::now();
+        $location = $user->stdlocation ? Location::find($user->stdlocation) : null;
+        $timezone = $location?->timezone && in_array($location->timezone, \DateTimeZone::listIdentifiers(), true) ? $location->timezone : config('app.timezone', 'UTC');
+        $tonight = self::nightOf($now, $timezone);
+
+        $subscribed = ObservingListSubscription::where('user_id', $user->id)->pluck('observing_list_id');
+        $lists = ObservingList::query()
+            ->where(fn ($query) => $query->where('owner_user_id', $user->id)
+                ->orWhere(fn ($query) => $query->whereIn('id', $subscribed)->where('public', true)))
+            ->has('items')
+            ->withCount('items')
+            ->withCount(['items as timed_count' => fn ($query) => $query->whereNotNull('planned_at')])
+            ->with('owner:id,name')
+            ->orderByDesc('updated_at')
+            ->get();
+
+        $since = Carbon::parse($tonight)->subDays(self::PLANNED_DAYS_BACK)->toDateString();
+        $planned = fn (ObservingList $list) => $list->timed_count > 0 && $list->planned_night && $list->planned_night->toDateString() >= $since;
+        $activeFirst = fn (ObservingList $list) => $list->id === (int) $user->active_observing_list_id ? 0 : 1;
+
+        return [
+            'planned' => $lists->filter($planned)
+                ->sortBy([fn ($a, $b) => $activeFirst($a) <=> $activeFirst($b), fn ($a, $b) => $a->planned_night <=> $b->planned_night])
+                ->values(),
+            'other' => $lists->reject($planned)
+                ->sortBy(fn (ObservingList $list) => $activeFirst($list))
+                ->values(),
+            'tonight' => $tonight,
+        ];
+    }
 
     /**
      * The objects of the page: of a list with times those with a time, in
@@ -400,6 +448,49 @@ class AtTheEyepiece
                 'language' => strtolower(substr((string) $language, 0, 10)),
                 'description' => $description,
             ]);
+    }
+
+    /**
+     * The link that sends the object to the mount through the DeepskyLog
+     * GoTo app for Android (project deepskylog-goto; a web page cannot
+     * open the network connection a mount expects):
+     * dslgoto://goto?name=…&ra=…&dec=…&epoch=…, RA and declination in
+     * degrees. A deep-sky object gives its J2000 position, a planet, comet,
+     * asteroid or the Moon its apparent position of the date at the moment
+     * (ListTargetPositions, at the location). Null without a position.
+     *
+     * @param  array<string, mixed>  $entry  an entry of page()
+     */
+    public static function gotoLink(array $entry, ?Location $location, Carbon $moment): ?string
+    {
+        $object = $entry['object'] ?? null;
+        if ($object === null) {
+            // An alternative name of a deep-sky object
+            $slug = DB::table('search_index')->where('name', $entry['name'])->where('source_table', 'objects')->value('source_pk');
+            $object = $slug !== null ? DeepskyObject::where('slug', $slug)->first() : null;
+        }
+
+        if ($object !== null && is_numeric($object->ra) && is_numeric($object->decl)) {
+            $position = ['ra' => (float) $object->ra * 15.0, 'dec' => (float) $object->decl];
+            $epoch = 'J2000';
+        } else {
+            $location = $location?->hasValidCoordinates() ? $location : Location::forEphemerides();
+            if ($location === null) {
+                return null;
+            }
+            $position = ListTargetPositions::at([$entry['name']], (float) $location->latitude, (float) $location->longitude, $moment)[$entry['name']] ?? null;
+            $epoch = 'date';
+        }
+        if ($position === null) {
+            return null;
+        }
+
+        return 'dslgoto://goto?'.http_build_query([
+            'name' => $entry['name'],
+            'ra' => round($position['ra'], 5),
+            'dec' => round($position['dec'], 5),
+            'epoch' => $epoch,
+        ], '', '&', PHP_QUERY_RFC3986);
     }
 
     /** The visibility scale of the object's type: the key of its labels in observations.php. */

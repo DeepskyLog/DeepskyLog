@@ -18,6 +18,19 @@ use Illuminate\View\View;
  */
 class AtTheEyepieceController extends Controller
 {
+    /**
+     * The lists to take to the telescope, each linking to its page at the
+     * eyepiece: the start page of the DeepskyLog GoTo app.
+     */
+    public function index(Request $request): View
+    {
+        $user = $request->user();
+
+        return view('observing-lists.eyepiece-lists', AtTheEyepiece::lists($user) + [
+            'activeId' => (int) $user->active_observing_list_id,
+        ]);
+    }
+
     public function show(Request $request, ObservingList $list, FieldViewBuilder $builder): View|RedirectResponse
     {
         $this->authorize('view', $list);
@@ -48,6 +61,7 @@ class AtTheEyepieceController extends Controller
             'views' => $views,
             'details' => AtTheEyepiece::details($current['object']),
             'nextDetails' => AtTheEyepiece::details($page['next']['object'] ?? null),
+            'goto' => AtTheEyepiece::gotoLink($current, $page['location'], $current['at'] ?? $page['now']),
         ]);
     }
 
