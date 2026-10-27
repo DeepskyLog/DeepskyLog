@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Location;
 use App\Models\NewsItem;
+use App\Models\ObjectOfTheMonth;
 use App\Models\Observation;
 use App\Models\ObservationLike;
 use App\Models\ObservationSession;
@@ -28,6 +29,8 @@ class SessionController extends Controller
 {
     /** The number of news items, sessions, observations and sketches on the home page. */
     private const HOMEPAGE_NEWS = 5;
+
+    private const HOMEPAGE_OBJECT_OF_THE_MONTH_DRAWINGS = 4;
 
     private const HOMEPAGE_SESSIONS = 3;
 
@@ -1011,6 +1014,19 @@ class SessionController extends Controller
             $starParties = collect();
         }
 
+        // The object of the month of Astroforum, with the newest drawings of its objects in its months
+        try {
+            $objectOfTheMonth = ObjectOfTheMonth::current();
+            $objectOfTheMonthDrawings = $objectOfTheMonth
+                ? $objectOfTheMonth->observationsQuery()->where('observations.has_drawing', true)->limit(self::HOMEPAGE_OBJECT_OF_THE_MONTH_DRAWINGS)->get()
+                : collect();
+            ObservationCardData::instance()->preload($objectOfTheMonthDrawings);
+        } catch (\Throwable $e) {
+            report($e);
+            $objectOfTheMonth = null;
+            $objectOfTheMonthDrawings = collect();
+        }
+
         // The observer's own sessions of the last weeks without any observation of theirs
         try {
             $sessionsWithoutObservations = Auth::check() ? SessionObservationReminders::forUser(Auth::user()) : collect();
@@ -1033,6 +1049,8 @@ class SessionController extends Controller
             'news',
             'newsLocation',
             'starParties',
+            'objectOfTheMonth',
+            'objectOfTheMonthDrawings',
         )));
     }
 

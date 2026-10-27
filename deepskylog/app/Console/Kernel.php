@@ -64,6 +64,10 @@ class Kernel extends ConsoleKernel
         // stars in observing lists, and the news items of the bright ones.
         $schedule->command('aavso:refresh --apply')->everySixHours(20)->withoutOverlapping();
 
+        // The new threads of the objects of the month of Astroforum, with the
+        // objects proposed for the administrators to confirm.
+        $schedule->command('astroforum:objects-of-the-month --apply')->dailyAt('06:40')->withoutOverlapping();
+
         // The descriptions of new observations translated into the languages
         // of the site for the guests (#310), and the older ones gradually,
         // newest first, a few at a time to stay under Google's rate limit.

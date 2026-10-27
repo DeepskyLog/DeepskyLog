@@ -40,6 +40,7 @@
   - [ ] php artisan objects:repair-measurements -v (dry run: check the changes), then php artisan objects:repair-measurements --apply (multiplies by 60 the sizes of the galaxies stored in arcminutes as arcseconds, and corrects M 24 (magnitude 4.6 instead of NGC 6603's 11.1), M 43 (6′ × 3′ instead of 20′ × 20′) and six galaxies from the PGC and UGC; on the development database: 58 galaxies, M 24, M 43 and 6 galaxies), then php artisan responsecache:clear
   - [ ] php artisan queue:restart (the workers must calculate the contrast reserves with the new code)
   - [ ] php artisan objects:repair-identities (dry run: check the merges, the type and the deletion), then php artisan objects:repair-identities --apply (merges the duplicates IC 1108 into NGC 5882, MCG -03-28-004 into NGC 3450, MCG +08-01-018 into UGC 12889 and NGC 5906 into NGC 5907, with their observations and list items, their names becoming alternative names; makes MCG +01-48-001 a bright nebula; deletes KAZ 50, which does not exist; on the development database: 4 merges with 3 observations and 3 list items, 1 type, 1 deletion)
+  - [ ] php artisan migrate (adds `objects_of_the_month`), then php artisan astroforum:objects-of-the-month -v (dry run: check the objects it finds in the threads of the feed), then php artisan astroforum:objects-of-the-month --apply (stores the threads of the feed, about 20, and messages the administrators and database experts about the current one; confirm the objects of the threads to show on /admin/objects-of-the-month, the older ones too for the archive). Scheduled daily at 06:40 after that.
   - [ ] Atlas pagina's worden gezet in storage/app/atlas -> kijk of die directory 755 als permissies heeft
   - [ ] Second queue worker for the PDF jobs (atlas, object sets, object reports). They now go to the `database-long` connection (queue `long`), so without this worker they stay "waiting for a worker". See also Tips.md.
     - [ ] Update the code only when no PDF is queued or being made: a PDF job that was queued before the update cannot be run by the new code (check with `SELECT id, queue, payload FROM jobs WHERE payload LIKE '%Pdf%';`).
@@ -126,39 +127,8 @@
 - [X] Binoculars: both eyes see fainter than one, so binoculars get a higher contrast reserve (+0.15) and limiting magnitude (+0.38) than a telescope of the same aperture, everywhere these are calculated (object page, stored metrics, Tonight's best, double stars, filter advice). Their field is estimated wider (60° apparent), the field views show them upright in place of the telescope, and the Messier marathon planner takes an instrument (by default the standard telescope): a faint object only counts from the altitude at which it can be seen with it, or is missed as too faint.
 - [X] Sky quality history of a location: the SQM and NELM recorded with the observations at a location, a point per night (median of its observations) and a line through the median of each year, on the location page.
 - [X] Objects seen by most participants of a starparty: on the starparty page, once it started and at least two observers recorded something, the objects ranked by the number of observers who saw them, with their observations and drawings.
+- [X] Astroforum object of the month: every day DeepskyLog reads the new threads of https://www.astroforum.nl/forums/objecten-van-de-maand.49/ (with Astroforum's permission), takes the months from the title and proposes the objects named in the first post. Administrators and database experts get a message and confirm the objects on /admin/objects-of-the-month. The home page shows the current one with its objects, how many observed them and the newest drawings; /objects-of-the-month holds all of them, each with everyone's observations of its objects in its months, a link to the thread and a button to make an observing list.
 
 Community features
 
 Observing challenges. Site-wide, time-limited challenges such as "Hickson month" or "Arp galaxies this spring", with a shared progress page and a leaderboard. They would reuse ObservingGoal::progress() and ObjectSources, and get their announcements from the news items.
-
-Object-of-the-week discussion. One object a week chosen from Tonight's best, shown on the home page with everyone's observations and drawings of it from that week. It's the observation counterpart of the sketch of the week.
-
-Smaller additions
-
-Calendar feed of your planned list times. .ics export of an observing list that has times, or of the clear-night alerts, as starparties already have.
-
-Android app to send GoTo commands to the Nexus DSC Pro.  
-
-Android has no equivalent command, and DeepskyLog's web page can't drive the mount directly either. But your Nexus DSC Pro gives you a way that needs no phone at all.
-
-Why the page can't send a GoTo itself
-
-The Nexus DSC Pro talks to SkySafari over its own WiFi: IP 10.0.0.1, port 4060, using the LX200 Classic command set. It passes GoTo commands on to the ServoCAT over USB.
-A web page in Chrome can only make web requests, not the raw network connection the Nexus expects. That's a browser rule, on Android as on iPhone.
-The Nexus has no Bluetooth, and its other ports are RS232 serial and USB. So the earlier Bluetooth idea is out as well.
-SkySafari for Android has no documented way for another app to send it an object. There's an open feature request from a user asking for exactly that, with no reply from the developer.
-What does work: the list on the Nexus itself
-
-The Nexus DSC Pro manual says it reads observing lists in SkySafari's .skylist format from the root folder of its microSD card. DeepskyLog already exports that format.
-
-Export the list as .skylist, from the list page or the button at the bottom of the eyepiece page.
-Copy the file to the root of the Nexus's microSD card.
-At the telescope, choose Find → From Observation List on the Nexus, pick the list, and step through the objects with the arrow keys.
-Press OK to open the telescope control panel, choose GOTO, and the ServoCAT slews.
-Keep DeepskyLog's eyepiece page alongside it for the times, charts and "Log it". SkySafari isn't needed for the GoTo at all.
-
-Caveat: the Nexus only shows objects that are also in its own databases. Planets, comets and obscure objects from a DeepskyLog list may be missing. Try it with a list and tell me which objects it skips; I can then adjust the names the .skylist export writes.
-
-A true one-tap GoTo
-
-That would need a small Android app of our own. It would open a DeepskyLog link such as dslgoto://… and send the object's coordinates to 10.0.0.1:4060 with the LX200 GoTo commands. It's feasible, but it's a separate project, and the manual doesn't say whether the Nexus accepts a second connection while SkySafari is connected. I'd only go that way if the microSD workflow turns out to be too clumsy.  Will this also work for other mounts?

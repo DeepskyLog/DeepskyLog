@@ -24,6 +24,8 @@
                         <x-menu.item icon="clipboard-document-check" href="{{ route('admin.object-reviews') }}">{{ __('Object reviews') }}</x-menu.item>
 
                         <x-menu.item separator icon="newspaper" href="{{ route('admin.news') }}">{{ __('Manage the news') }}</x-menu.item>
+
+                        <x-menu.item icon="star" href="{{ route('admin.objects-of-the-month') }}">{{ __('Objects of the month') }}</x-menu.item>
                     @endif
 
                     @if (Auth::user()->isAdministrator())

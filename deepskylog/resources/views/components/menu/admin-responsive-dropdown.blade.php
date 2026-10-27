@@ -58,6 +58,12 @@
                             href="{{ route('admin.news') }}"
                             label="{{ __('Manage the news') }}"
                         />
+
+                        <x-dropdown.item
+                            icon="star"
+                            href="{{ route('admin.objects-of-the-month') }}"
+                            label="{{ __('Objects of the month') }}"
+                        />
                     @endif
 
                     @if (Auth::user()->isAdministrator())

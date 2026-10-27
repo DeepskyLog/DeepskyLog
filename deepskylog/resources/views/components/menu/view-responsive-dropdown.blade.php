@@ -26,6 +26,12 @@
             />
 
             <x-dropdown.item
+                icon="star"
+                href="{{ route('objects-of-the-month.index') }}"
+                label="{{ __('Object of the Month') }}"
+            />
+
+            <x-dropdown.item
                 icon="bars-3-center-left"
                 href="/observations"
                 label="{{ __('All observations') }}"

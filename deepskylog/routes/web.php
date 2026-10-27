@@ -124,6 +124,19 @@ Route::post('/admin/news/{newsItem}/hidden', [App\Http\Controllers\NewsControlle
     ->middleware(['auth', 'doNotCacheResponse'])->can('manage_news', User::class)->name('admin.news.hidden');
 Route::get('/news', [App\Http\Controllers\NewsController::class, 'index'])->name('news.index')->middleware('doNotCacheResponse');
 Route::get('/news/{newsItem}', [App\Http\Controllers\NewsController::class, 'show'])->name('news.show')->middleware('doNotCacheResponse');
+// The objects of the month of Astroforum (astroforum:objects-of-the-month)
+Route::get('/admin/objects-of-the-month', [App\Http\Controllers\ObjectOfTheMonthController::class, 'admin'])
+    ->middleware(['auth', 'doNotCacheResponse'])->can('manage_news', User::class)->name('admin.objects-of-the-month');
+Route::get('/admin/objects-of-the-month/{objectOfTheMonth}/edit', [App\Http\Controllers\ObjectOfTheMonthController::class, 'edit'])
+    ->middleware(['auth', 'doNotCacheResponse'])->can('manage_news', User::class)->name('admin.objects-of-the-month.edit');
+Route::put('/admin/objects-of-the-month/{objectOfTheMonth}', [App\Http\Controllers\ObjectOfTheMonthController::class, 'update'])
+    ->middleware(['auth', 'doNotCacheResponse'])->can('manage_news', User::class)->name('admin.objects-of-the-month.update');
+Route::get('/objects-of-the-month', [App\Http\Controllers\ObjectOfTheMonthController::class, 'index'])
+    ->name('objects-of-the-month.index')->middleware('doNotCacheResponse');
+Route::get('/objects-of-the-month/{objectOfTheMonth}', [App\Http\Controllers\ObjectOfTheMonthController::class, 'show'])
+    ->name('objects-of-the-month.show')->middleware('doNotCacheResponse');
+Route::post('/objects-of-the-month/{objectOfTheMonth}/observing-list', [App\Http\Controllers\ObjectOfTheMonthController::class, 'storeList'])
+    ->middleware(['auth', 'doNotCacheResponse'])->name('objects-of-the-month.observing-list');
 Route::view('/admin/object-reviews', 'admin.object-reviews')
     ->middleware(['auth', 'doNotCacheResponse'])
     ->can('review_objects', User::class)

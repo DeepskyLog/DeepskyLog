@@ -79,6 +79,14 @@ return [
         'delay' => (int) env('AAVSO_DELAY_MS', 1000),
     ],
 
+    'astroforum' => [
+        // The threads of the objects of the month of Astroforum (App\Services\ObjectsOfTheMonth\AstroforumFeed), read with their permission
+        'feed' => env('ASTROFORUM_FEED_URL', 'https://www.astroforum.nl/forums/objecten-van-de-maand.49/index.rss'),
+        'enabled' => (bool) env('ASTROFORUM', true),
+        // Milliseconds between two requests to the forum
+        'delay' => (int) env('ASTROFORUM_DELAY_MS', 1000),
+    ],
+
     'google' => [
         // GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET are already standard
         'client_id' => env('GOOGLE_CLIENT_ID', env('GOOGLE_KEY')),

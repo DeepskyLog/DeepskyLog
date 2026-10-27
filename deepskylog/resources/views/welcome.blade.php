@@ -179,6 +179,14 @@
                     />
                 @endif
 
+                @if ($objectOfTheMonth)
+                    <x-object-of-the-month
+                        :item="$objectOfTheMonth"
+                        :drawings="$objectOfTheMonthDrawings"
+                        class="order-2 lg:order-none"
+                    />
+                @endif
+
                 @if ($starParties->isNotEmpty())
                     <x-star-parties
                         :parties="$starParties"
