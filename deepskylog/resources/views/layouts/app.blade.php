@@ -14,6 +14,8 @@
 
     <title>{{ config('app.name', 'DeepskyLog') }}</title>
     <meta name="theme-color" content="#111827" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/images/icons/icon-192.png" />
     @include('partials.night-mode')
     <script>
         // Keep the browser's timezone in a cookie: "today" in the ephemeris

@@ -87,6 +87,14 @@ return [
         'delay' => (int) env('ASTROFORUM_DELAY_MS', 1000),
     ],
 
+    'webpush' => [
+        // The push notifications of the alerts (App\Services\PushNotifications); make the keys with php artisan webpush:vapid
+        'public_key' => env('VAPID_PUBLIC_KEY'),
+        'private_key' => env('VAPID_PRIVATE_KEY'),
+        'subject' => env('VAPID_SUBJECT', 'mailto:' . env('MAIL_FROM_ADDRESS', 'noreply@mg.deepskylog.org')),
+        'enabled' => (bool) env('WEB_PUSH', true),
+    ],
+
     'google' => [
         // GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET are already standard
         'client_id' => env('GOOGLE_CLIENT_ID', env('GOOGLE_KEY')),

@@ -23,6 +23,14 @@
 
             <x-section-border/>
 
+            @if (\App\Services\PushNotifications::enabled())
+                <div class="mt-10 sm:mt-0">
+                    @include("profile.push-notifications")
+                </div>
+
+                <x-section-border/>
+            @endif
+
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()) && ! is_null($user->password))
                 <div class="mt-10 sm:mt-0">
                     @livewire("profile.update-password-form")

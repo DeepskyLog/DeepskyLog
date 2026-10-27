@@ -12,6 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        // The service worker's renewed push subscription (PushSubscriptionController::renew())
+        'push-subscriptions/renew',
     ];
 }

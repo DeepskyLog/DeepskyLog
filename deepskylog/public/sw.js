@@ -13,7 +13,12 @@
  *   the quick note; the page keeps that observation until it can be sent.
  * - The scripts, styles and icons the pages use are kept in ASSETS and
  *   refreshed in the background.
- * - Logging out deletes the kept pages.
+ * - Logging out deletes the kept pages and ends the push notifications of
+ *   this browser, which would show the observer's alerts to the next one.
+ * - Push notifications (App\Services\PushNotifications, turned on on the
+ *   profile page): shown with their title and text; tapping one opens its
+ *   url, in a DeepskyLog window already open if there is one. A subscription
+ *   the browser renews by itself is handed to /push-subscriptions/renew.
  *
  * Every other request goes to the network as usual. Change VERSION when this
  * file changes the way pages are kept; the page at the eyepiece writes to
@@ -86,7 +91,12 @@ self.addEventListener('fetch', (event) => {
 
     // The kept pages hold the observer's data: gone when they log out
     if (request.method === 'POST' && url.pathname === '/logout') {
-        event.waitUntil(caches.delete(PAGES));
+        event.waitUntil(Promise.all([
+            caches.delete(PAGES),
+            self.registration.pushManager.getSubscription()
+                .then((subscription) => subscription && subscription.unsubscribe())
+                .catch(() => {}),
+        ]));
         return;
     }
     if (request.method !== 'GET') {
@@ -109,4 +119,59 @@ self.addEventListener('fetch', (event) => {
     if (ASSET.test(url.pathname) || url.pathname === '/manifest.webmanifest') {
         event.respondWith(staleWhileRevalidate(request));
     }
+});
+
+self.addEventListener('push', (event) => {
+    let data = {};
+    try {
+        data = event.data ? event.data.json() : {};
+    } catch (e) {
+        data = { body: event.data ? event.data.text() : '' };
+    }
+    const options = {
+        body: data.body || '',
+        icon: data.icon || '/images/icons/icon-192.png',
+        badge: '/images/icons/icon-192.png',
+        data: { url: data.url || '/' },
+    };
+    if (data.tag) {
+        options.tag = data.tag;
+        options.renotify = true;
+    }
+    event.waitUntil(self.registration.showNotification(data.title || 'DeepskyLog', options));
+});
+
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    const target = new URL((event.notification.data && event.notification.data.url) || '/', self.location.origin);
+    if (target.origin !== self.location.origin) {
+        return;
+    }
+    event.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windows) => {
+        const open = windows.find((client) => new URL(client.url).origin === target.origin && 'navigate' in client);
+        if (open) {
+            return open.navigate(target.href).then((client) => (client || open).focus()).catch(() => self.clients.openWindow(target.href));
+        }
+        return self.clients.openWindow(target.href);
+    }));
+});
+
+self.addEventListener('pushsubscriptionchange', (event) => {
+    const old = event.oldSubscription;
+    if (!old) {
+        return;
+    }
+    const renewed = event.newSubscription
+        ? Promise.resolve(event.newSubscription)
+        : self.registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: old.options.applicationServerKey });
+    event.waitUntil(renewed.then((subscription) => {
+        const body = subscription.toJSON();
+        body.old_endpoint = old.endpoint;
+        return fetch('/push-subscriptions/renew', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify(body),
+        });
+    }).catch(() => {}));
 });

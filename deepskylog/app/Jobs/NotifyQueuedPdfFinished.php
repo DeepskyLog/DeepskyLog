@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Mail\MessageReceived;
 use App\Models\Message;
 use App\Models\User;
+use App\Services\PushNotifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -13,7 +14,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 
 /**
- * The DeepskyLog message (and mail, if the observer wants those) that a
+ * The DeepskyLog message (and mail, if the observer wants those, and push
+ * notification on the devices where they turned those on) that a
  * PDF or zip file of a QueuedPdfJob is ready or failed, in the language it
  * was asked for in. Queued QueuedPdfJob::NOTIFY_DELAY_SECONDS after the job
  * ended, and not sent when a page showed the observer the result meanwhile.
@@ -55,18 +57,19 @@ class NotifyQueuedPdfFinished implements ShouldQueue
 
         if ($this->ready) {
             $subject = __('Your file is ready: :name', ['name' => $name], $locale);
-            $body = '<p>' . e(__('The file ":name" you asked for is ready. You can download it until :date.', [
+            $text = __('The file ":name" you asked for is ready. You can download it until :date.', [
                 'name' => $name,
                 'date' => $kind::expiresAt($status)?->locale($locale)->isoFormat('LLL') ?? '',
-            ], $locale)) . '</p><p>';
+            ], $locale);
+            $body = '<p>' . e($text) . '</p><p>';
             if (($url = $kind::downloadUrl($this->token)) !== null) {
                 $body .= '<a href="' . e($url) . '">' . e(__('Download', [], $locale)) . '</a> - ';
             }
             $body .= $overview . '</p>';
         } else {
             $subject = __('Your file could not be made: :name', ['name' => $name], $locale);
-            $body = '<p>' . e(__('The file ":name" you asked for could not be made. You can ask for it again; if that fails too, please contact the administrators.', ['name' => $name], $locale))
-                . '</p><p>' . $overview . '</p>';
+            $text = __('The file ":name" you asked for could not be made. You can ask for it again; if that fails too, please contact the administrators.', ['name' => $name], $locale);
+            $body = '<p>' . e($text) . '</p><p>' . $overview . '</p>';
         }
 
         $body = Message::sanitizeHtml($body);
@@ -83,5 +86,7 @@ class NotifyQueuedPdfFinished implements ShouldQueue
                 ->locale($locale)
                 ->send(new MessageReceived('DeepskyLog', $subject, $body, $user->name, route('messages.show', $message->id)));
         }
+
+        PushNotifications::send($user, $subject, $text, route('downloads.mine'), 'file-' . $this->token);
     }
 }

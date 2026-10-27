@@ -6,6 +6,7 @@ use App\Mail\MessageReceived;
 use App\Models\Message;
 use App\Models\User;
 use App\Services\NightWindow;
+use App\Services\PushNotifications;
 use App\Services\Weather\NightForecast;
 use App\Support\EphemerisDate;
 use Carbon\Carbon;
@@ -17,7 +18,8 @@ use Illuminate\Support\Facades\Mail;
  * Sends the observers who asked for it on the profile page
  * (users.clear_night_alert) a DeepskyLog message when the coming night at
  * their standard location is forecast to be clear and dark (NightForecast's
- * verdict clear_dark), with a link to make an observing list for it.
+ * verdict clear_dark), with a link to make an observing list for it, and a
+ * push notification on the devices where they turned those on.
  *
  * An observer is looked at from ALERT_HOUR local time at that location until
  * it gets dark, so a forecast that clears up in the afternoon still gives a
@@ -107,6 +109,7 @@ class SendClearNightAlerts extends Command
             $date     = Carbon::parse($forecast['night'])->locale($locale)->isoFormat('dddd LL');
 
             $subject = __('Clear night forecast at :location', ['location' => $location], $locale);
+            $listUrl = route('observing-list.night', ['night' => $forecast['night']]);
 
             $body = '<p>'.e(__('The night of :date is forecast to be clear and dark at :location.', ['date' => $date, 'location' => $location], $locale)).'</p><ul>';
             $body .= '<li>'.e(__('Clear and dark :from–:until', $forecast['clear_dark'], $locale)).'</li>';
@@ -115,7 +118,7 @@ class SendClearNightAlerts extends Command
             if ($forecast['dew']) {
                 $body .= '<li>'.e(__('Risk of dew', [], $locale)).'</li>';
             }
-            $body .= '</ul><p><a href="'.e(route('observing-list.night', ['night' => $forecast['night']])).'">'.e(__('Make a list for this night', [], $locale)).'</a></p>';
+            $body .= '</ul><p><a href="'.e($listUrl).'">'.e(__('Make a list for this night', [], $locale)).'</a></p>';
             $body .= '<p>'.e(__('Weather data by :link', ['link' => 'Open-Meteo.com'], $locale)).'. '.e(__('You can turn this message off in your profile settings.', [], $locale)).'</p>';
             $body = Message::sanitizeHtml($body);
 
@@ -132,6 +135,16 @@ class SendClearNightAlerts extends Command
                     ->locale($locale)
                     ->send(new MessageReceived('DeepskyLog', $subject, $body, $user->name, route('messages.show', $message->id)));
             }
+
+            // Until the night ends: a notification about it is no use later
+            PushNotifications::send(
+                $user,
+                $subject,
+                __('Clear and dark :from–:until', $forecast['clear_dark'], $locale).' · '.__('Clouds :percent%', ['percent' => $forecast['cloud']], $locale),
+                $listUrl,
+                'clear-night',
+                ttl: 18 * 3600,
+            );
         } catch (\Throwable $e) {
             Log::warning('Failed to send the clear night alert', ['user_id' => $user->id, 'error' => $e->getMessage()]);
         }

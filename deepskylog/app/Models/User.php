@@ -1025,6 +1025,14 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * The browsers in which the observer turned on push notifications.
+     */
+    public function pushSubscriptions(): HasMany
+    {
+        return $this->hasMany(PushSubscription::class);
+    }
+
+    /**
      * Establishes a relationship between the User model and the Location model.
      *
      * This method defines a one-to-many relationship between the User model and the Location model.

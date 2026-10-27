@@ -186,6 +186,18 @@ Route::post('/observers/{observer}/follow', [App\Http\Controllers\FollowControll
 Route::post('/observers/{observer}/unfollow', [App\Http\Controllers\FollowController::class, 'unfollow'])
     ->name('observer.unfollow')->middleware(['auth', 'verified', 'doNotCacheResponse']);
 
+// Push notifications of the alerts in this browser (profile page, public/sw.js)
+Route::middleware('doNotCacheResponse')->group(function () {
+    Route::middleware(['auth', 'verified', 'throttle:30,1'])->group(function () {
+        Route::post('/push-subscriptions', [App\Http\Controllers\PushSubscriptionController::class, 'store'])->name('push-subscriptions.store');
+        Route::delete('/push-subscriptions', [App\Http\Controllers\PushSubscriptionController::class, 'destroy'])->name('push-subscriptions.destroy');
+        Route::post('/push-subscriptions/test', [App\Http\Controllers\PushSubscriptionController::class, 'test'])->name('push-subscriptions.test');
+    });
+    // From the service worker, without login or CSRF token (VerifyCsrfToken::$except)
+    Route::post('/push-subscriptions/renew', [App\Http\Controllers\PushSubscriptionController::class, 'renew'])
+        ->name('push-subscriptions.renew')->middleware('throttle:30,1');
+});
+
 // Starparties (#315): organised by observers, public or for the invited observers only
 Route::middleware('doNotCacheResponse')->group(function () {
     Route::get('/star-parties', [App\Http\Controllers\StarPartyController::class, 'index'])->name('star-parties.index');

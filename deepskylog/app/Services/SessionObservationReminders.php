@@ -112,8 +112,9 @@ class SessionObservationReminders
     }
 
     /**
-     * Send the observer one message (and a mail if they asked for mails)
-     * about their sessions without observations.
+     * Send the observer one message (and a mail if they asked for mails, a
+     * push notification on the devices where they turned those on) about
+     * their sessions without observations.
      *
      * @param  Collection<int, ObservationSession>  $sessions
      */
@@ -129,12 +130,13 @@ class SessionObservationReminders
                 $locale,
             );
 
-            $body = '<p>'.e(trans_choice(
+            $text = trans_choice(
                 'You have not added any observations to this session yet. Add what you saw while you still remember the night!|You have not added any observations to these sessions yet. Add what you saw while you still remember the nights!',
                 $sessions->count(),
                 [],
                 $locale,
-            )).'</p><ul>';
+            );
+            $body = '<p>'.e($text).'</p><ul>';
             foreach ($sessions as $session) {
                 $name = e(html_entity_decode((string) $session->name, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
                 $date = ($session->begindate ?? $session->enddate)?->locale($locale)->isoFormat('LL');
@@ -158,6 +160,15 @@ class SessionObservationReminders
                     ->locale($locale)
                     ->send(new MessageReceived('DeepskyLog', $subject, $body, $user->name, route('messages.show', $message->id)));
             }
+
+            // One session: straight to its observation form; several: the message listing them
+            PushNotifications::send(
+                $user,
+                $subject,
+                $text,
+                $sessions->count() === 1 ? self::addObservationUrl($sessions->first()) : route('messages.show', $message->id),
+                'session-reminder',
+            );
 
             return true;
         } catch (\Throwable $e) {
