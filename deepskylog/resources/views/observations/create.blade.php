@@ -422,6 +422,13 @@
                     <div class="mt-4" x-data="{ observation_language: @js(old('language', auth()->check() ? auth()->user()->observationlanguage : '')) }">
                         <label class="block text-xs text-gray-400 mb-1">{{ __('Description') }} <span class="text-red-400">*</span></label>
                         <textarea id="description" name="description" rows="6" class="w-full rounded bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100">{{ old('description') }}</textarea>
+                        <div class="mt-2 flex flex-wrap items-center gap-2">
+                            <button type="button" id="description-dictate" aria-pressed="false" hidden class="inline-flex items-center gap-1 rounded border border-gray-600 bg-gray-800 px-3 py-1.5 text-sm text-gray-100 hover:bg-gray-700 aria-pressed:border-red-500 aria-pressed:text-red-300">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v1a7 7 0 0 0 14 0v-1M12 18v4"/></svg>
+                                <span data-dictation-label>{{ __('Dictate') }}</span>
+                            </button>
+                            <span id="description-dictation" class="text-xs text-gray-400" role="status" aria-live="polite"></span>
+                        </div>
                     </div>
 
                     {{-- The description written by the observer in other languages of the site (#321),
@@ -565,6 +572,64 @@
 </x-app-layout>
 
 {{-- Date/time pickers use WireUI components; no inline conversion scripts needed. --}}
+
+@include('partials.dictation')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var textarea = document.getElementById('description');
+        if (!textarea || !window.dslDictation) return;
+        // Where the observer did not put the cursor in the editor, a phrase goes at the end
+        var placed = false;
+        window.dslDictation({
+            button: document.getElementById('description-dictate'),
+            status: document.getElementById('description-dictation'),
+            language: function () {
+                var field = document.getElementById('language_hidden');
+                return field && field.value ? field.value : null;
+            },
+            insert: function (phrase) {
+                var editor = typeof tinymce !== 'undefined' ? tinymce.get('description') : null;
+                if (!editor) {
+                    var before = window.dslDictation.join(textarea.value.slice(0, textarea.selectionStart), phrase);
+                    textarea.value = (before + ' ' + textarea.value.slice(textarea.selectionEnd).replace(/^\s+/, '')).trimEnd();
+                    textarea.selectionStart = textarea.selectionEnd = before.length;
+                    return;
+                }
+                if (!placed && !editor.dslCursorPlaced) {
+                    editor.selection.select(editor.getBody(), true);
+                    editor.selection.collapse(false);
+                }
+                placed = true;
+                // The text before the cursor decides on the space and the capital
+                var selection = editor.selection.getRng();
+                var range = editor.dom.createRng();
+                range.setStart(editor.getBody(), 0);
+                range.setEnd(selection.startContainer, selection.startOffset);
+                var textBefore = range.toString().replace(/ /g, ' ');
+                var trimmed = textBefore.replace(/\s+$/, '');
+                var added = window.dslDictation.join(textBefore, phrase).slice(trimmed.length);
+                if (trimmed.length < textBefore.length) added = added.replace(/^ /, '');
+                editor.undoManager.transact(function () {
+                    var node = editor.getDoc().createTextNode(added);
+                    selection.deleteContents();
+                    selection.insertNode(node);
+                    selection.setStartAfter(node);
+                    selection.collapse(true);
+                    editor.selection.setRng(selection);
+                });
+                editor.save();
+            },
+        });
+        // The editor is made later: note when the observer puts the cursor in it
+        var watch = setInterval(function () {
+            var editor = typeof tinymce !== 'undefined' ? tinymce.get('description') : null;
+            if (!editor) return;
+            clearInterval(watch);
+            editor.on('click keyup', function () { editor.dslCursorPlaced = true; });
+        }, 250);
+        setTimeout(function () { clearInterval(watch); }, 10000);
+    });
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

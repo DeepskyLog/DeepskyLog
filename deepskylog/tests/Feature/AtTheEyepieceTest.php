@@ -250,6 +250,25 @@ it('adds the red night mode to every page', function () {
     $this->get('/')->assertOk()->assertSee('dsl-night-mode')->assertSee('data-dsl-night-toggle', false);
 });
 
+it('offers dictation in the quick note and the observation form, in the language of the description', function () {
+    $owner = aeObserver();
+    $owner->forceFill(['observationlanguage' => 'nl'])->save();
+    $list = aeList($owner);
+
+    $this->actingAs($owner)->get(route('observing-list.eyepiece', $list))
+        ->assertOk()
+        ->assertSee('id="quick-log-dictate"', false)
+        ->assertSee('window.dslDictation', false)
+        ->assertSee('"language":"nl"', false)
+        // The browser refuses the microphone to a page whose policy forbids it
+        ->assertHeader('Permissions-Policy', 'camera=(), microphone=(self), payment=(), usb=()');
+
+    $this->actingAs($owner)->get(route('observation.create', ['slug' => 'm-31']))
+        ->assertOk()
+        ->assertSee('id="description-dictate"', false)
+        ->assertSee('window.dslDictation', false);
+});
+
 it('links the current object to SkySafari and the list to its skylist export', function () {
     $owner = aeObserver();
     $list = aeList($owner);

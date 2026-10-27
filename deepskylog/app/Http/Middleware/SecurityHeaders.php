@@ -32,7 +32,8 @@ class SecurityHeaders
             'X-Frame-Options' => 'SAMEORIGIN',
             'X-Content-Type-Options' => 'nosniff',
             'Referrer-Policy' => 'strict-origin-when-cross-origin',
-            'Permissions-Policy' => 'camera=(), microphone=(), payment=(), usb=()',
+            // The microphone only for the site's own pages: dictating a description
+            'Permissions-Policy' => 'camera=(), microphone=(self), payment=(), usb=()',
         ];
 
         // Only over HTTPS: browsers ignore it over HTTP, and a local site

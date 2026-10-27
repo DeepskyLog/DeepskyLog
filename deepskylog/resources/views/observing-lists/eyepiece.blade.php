@@ -40,6 +40,7 @@
         .button { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; padding: .55rem .9rem; border: 1px solid #374151; border-radius: .5rem; background: #111827; color: #e5e7eb; font: inherit; text-decoration: none; cursor: pointer; }
         .button[aria-pressed="true"] { border-color: #b91c1c; color: #fca5a5; }
         .button:disabled { opacity: .5; cursor: default; }
+        .button[hidden] { display: none; }
         main { max-width: 56rem; margin: 0 auto; padding: 1rem; }
         .flash, .notice, .error { margin: 0 0 1rem; padding: .6rem .8rem; border-radius: .5rem; font-size: .9rem; }
         .flash { background: #052e16; border: 1px solid #166534; color: #bbf7d0; }
@@ -305,6 +306,13 @@
             @endif
             <label for="quick-log-description">{{ __('Description') }}</label>
             <textarea id="quick-log-description" rows="6" maxlength="{{ \App\Services\AtTheEyepiece::MAX_DESCRIPTION }}" required></textarea>
+            <div class="row" style="margin-top:.5rem">
+                <button type="button" class="button" id="quick-log-dictate" aria-pressed="false" hidden>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v1a7 7 0 0 0 14 0v-1M12 18v4"/></svg>
+                    <span data-dictation-label>{{ __('Dictate') }}</span>
+                </button>
+                <span class="muted" id="quick-log-dictation" role="status" aria-live="polite"></span>
+            </div>
             <p class="muted">{{ __('Saved with the location and equipment of your last observation tonight, else your standard ones. Complete it later on the observation page.') }}</p>
             <p class="error" id="quick-log-error" hidden></p>
             <div class="row spread">
@@ -323,6 +331,8 @@
             'user' => $user->id,
             'timezone' => $timezone,
             'locale' => str_replace('_', '-', app()->getLocale()),
+            // The language AtTheEyepiece::store() saves the description in
+            'language' => $user->observationlanguage ?: ($user->language ?: app()->getLocale()),
             'item' => $current['item']->id,
             'object' => $current['name'],
             'following' => $following,
@@ -351,6 +361,7 @@
         ];
     @endphp
     <script type="application/json" id="eyepiece-data">@json($pageData)</script>
+    @include('partials.dictation')
     <script>
         (function () {
             var data = JSON.parse(document.getElementById('eyepiece-data').textContent);
@@ -576,6 +587,18 @@
                 if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open', '');
                 description.focus();
             }
+            var dictation = window.dslDictation({
+                button: document.getElementById('quick-log-dictate'),
+                status: document.getElementById('quick-log-dictation'),
+                language: function () { return data.language; },
+                insert: function (phrase) {
+                    var at = description.selectionStart;
+                    var before = window.dslDictation.join(description.value.slice(0, at), phrase);
+                    description.value = (before + ' ' + description.value.slice(description.selectionEnd).replace(/^\s+/, '')).trimEnd().slice(0, description.maxLength);
+                    description.selectionStart = description.selectionEnd = before.length;
+                },
+            });
+            dialog.addEventListener('close', function () { if (dictation) dictation.stop(); });
             document.getElementById('quick-log-open').addEventListener('click', openQuickLog);
             document.getElementById('quick-log-cancel').addEventListener('click', function () { dialog.close(); });
             document.getElementById('log-it').addEventListener('click', function (event) {

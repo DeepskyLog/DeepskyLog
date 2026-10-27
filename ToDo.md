@@ -61,6 +61,7 @@
 
 ### Done
 
+- [X] Voice notes: a Dictate button in the Quick note of the page at the eyepiece and under the description of the observation form, which writes what the observer says in the language of the description.
 - [x] Seasonal planner per list: for each object in an observing list, the months it is well placed from the observer's location, plus a "what's up this month" filter. Most of the year-graph logic already exists.
 - [x] Add privacy policy
 - [x] Use DeepskyLog logo in mails
@@ -129,3 +130,25 @@
 - [X] Objects seen by most participants of a starparty: on the starparty page, once it started and at least two observers recorded something, the objects ranked by the number of observers who saw them, with their observations and drawings.
 - [X] Astroforum object of the month: every day DeepskyLog reads the new threads of https://www.astroforum.nl/forums/objecten-van-de-maand.49/ (with Astroforum's permission), takes the months from the title and proposes the objects named in the first post. Administrators and database experts get a message and confirm the objects on /admin/objects-of-the-month. The home page shows the current one with its objects, how many observed them and the newest drawings; /objects-of-the-month holds all of them, each with everyone's observations of its objects in its months, a link to the thread and a button to make an observing list.
 - [X] Observing challenges: administrators and database experts set site-wide, time-limited challenges such as "Hickson month" or "Arp galaxies this spring" (a number of objects, or all, of a catalog or public observing list, to see or draw) on /admin/challenges, announced in the news a week before they start. Observers join on /challenges/{slug} and get the challenge as an observing goal on their observer page and in their blog; the page shows their progress, how many of the objects the participants saw together, the leaderboard and the objects with the number of participants who saw each, and makes an observing list of the objects they still need. The home page shows the running challenges and the coming ones once announced or joined, those the observer joined with their progress and place; reaching the target of a challenge gives a trophy in the Trophy Gallery of the observer page, gold for the winners.
+
+
+- Web push for alerts. The site is already a PWA. Push notifications for the clear-night alert, the session reminder and "your PDF is ready" would reach phones much faster than email.
+
+Planning
+
+- Lunar features at the terminator. You already have lunar features, but nothing gives the Moon's colongitude. A list like "Tonight well placed: Copernicus, Rupes Recta…", plus a Moon page with the terminator, would make the lunar part of the site useful every night, including the moonlit nights that are no good for deep-sky work.
+- Jupiter and Saturn events. Great Red Spot transits, shadow transits and eclipses of the Galilean moons, and Titan's elongations. These could be news items or part of Tonight's best. Meeus covers them and they fit SkyPositions.
+- Lunar occultations of bright stars and planets as automatic news items, with local times from LocalCircumstances.
+- "What if I bought…". "What's new for me" only works for equipment you already own. Letting someone enter a telescope they're thinking of buying (aperture, focal length) would use the same EquipmentGain calculation to answer "what does a 12" give me over my 8"?". That's a strong feature for beginners and a natural extension.
+- Seeing-aware advice. Planets and close double stars depend on seeing, not cloud cover. Adding a seeing/jet-stream forecast (for example 7Timer, which is free) to NightForecast would let Tonight's best favour double stars and planets on steady nights.
+
+Community
+
+- Clubs or groups. Many observers belong to a local club. Each club could have a page with its members, shared lists, its own challenges and starparties, and a club ranking. Challenges, goals and starparties are already there to build on.
+- Compare drawings of an object. Show all drawings of one object side by side, filtered by aperture, so you can see how M 51 looks in 8" against 16". It costs little and would be attractive on the object page.
+- Community finding notes per object. Short tips from observers ("use the UHC", "hop from ζ Ori") with likes, shown on the object page and the at-the-eyepiece page.
+
+Data quality
+
+- Detecting suspect observations. List observations where the object was below the horizon at the given time and place, or too faint for the instrument (contrast reserve far below 0 while marked as seen), or that look like duplicates. Show them to the observer, and to administrators in /admin/check-objects.
+- OpenAPI documentation for /api/v1/me, so the PiFinder and other tools besides pyDeepskyLog can use the API more easily.
