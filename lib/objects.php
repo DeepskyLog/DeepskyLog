@@ -1228,7 +1228,7 @@ class Objects
     {
         $newname = trim($cat.' '.ucwords(trim($catindex)));
         $newcatindex = ucwords(trim($catindex));
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
         $objDatabase->execSQL("UPDATE objects SET name=\"$newname\" WHERE name = \"$name\"");
 
         $objectnames = $objDatabase->selectSingleArray('SELECT * FROM objectnames WHERE objectname="' . $newname . '" AND altname="' . $newname . '"', 'objectname');
@@ -1238,7 +1238,7 @@ class Objects
         }
 
         $objDatabase->execSQL("UPDATE observing_list_items SET object_name=\"$newname\" WHERE object_name = \"$name\"");
-        $objDatabase->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname = \"$name\"");
+        $objObservationStore->renameObject($name, $newname);
         $objDatabase->execSQL("UPDATE objectpartof SET objectname=\"$newname\" WHERE objectname = \"$name\"");
         $objDatabase->execSQL("UPDATE objectpartof SET partofname=\"$newname\" WHERE partofname = \"$name\"");
     }
@@ -1581,7 +1581,7 @@ class Objects
                     $popup = _('Contrast reserve can only be calculate when the standard instrument has a fixed magnification or when there are eyepieces defined...');
                 } else {
                     $sql6 = 'SELECT limitingMagnitude, skyBackground, name from locations where id = "'.$get5->stdlocation.'"';
-                    $run6 = $objDatabase->selectRecordset($sql6);
+                    $run6 = $objDatabase_new->selectRecordset($sql6);
                     $get6 = $run6->fetch(PDO::FETCH_OBJ);
                     // Get the fst offset
                     $sql6bis = 'SELECT fstOffset from observers where id = "'.$loggedUser.'"';
@@ -1628,8 +1628,8 @@ class Objects
     {
         $newname = trim($cat.' '.ucwords(trim($catindex)));
         $newcatindex = ucwords(trim($catindex));
-        global $objDatabase;
-        $objDatabase->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname=\"$name\"");
+        global $objDatabase, $objObservationStore;
+        $objObservationStore->renameObject($name, $newname);
         $objDatabase->execSQL("UPDATE observing_list_items SET object_name=\"$newname\" WHERE object_name=\"$name\"");
         $objDatabase->execSQL("DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\"");
         $objDatabase->execSQL("DELETE objectpartof.* FROM objectpartof WHERE objectname=\"$name\" OR partofname = \"$name\"");
@@ -1638,8 +1638,8 @@ class Objects
 
     public function deleteObject($name)
     {
-        global $objDatabase;
-        $objDatabase->execSQL("DELETE FROM observations WHERE objectname=\"$name\"");
+        global $objDatabase, $objObservationStore;
+        $objObservationStore->deleteObservationsOf($name);
         $objDatabase->execSQL("DELETE FROM observing_list_items WHERE object_name=\"$name\"");
         $objDatabase->execSQL("DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\"");
         $objDatabase->execSQL("DELETE objectpartof.* FROM objectpartof WHERE objectname=\"$name\" OR partofname = \"$name\"");

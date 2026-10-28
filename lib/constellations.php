@@ -11,8 +11,9 @@ class Constellation
   { $this->conBoundries=$this->getAllBoundries();
   }
   public function getAllBoundries()
-  { global $objDatabase;
-    return $objDatabase->selectRecordsetArray("SELECT * FROM conlines;");
+  { global $objDatabase_new;
+    // The constellation boundaries of the new DB, in the columns of the old conlines.
+    return $objDatabase_new->selectRecordsetArray("SELECT * FROM constellation_boundaries;");
   }
   public function getConstellationFromCoordinates($thera,$thedecl)
   { $tempdecl=-90;

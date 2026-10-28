@@ -11,7 +11,7 @@
  * @link     http://www.deepskylog.org
  */
 
-global $baseURL, $objDatabase, $objObservations, $objObserver, $objUtil, $loggedUser, $objObservation;
+global $baseURL, $objDatabase, $objObservations, $objObserver, $objUtil, $loggedUser, $objObservation, $objObservationStore;
 
 echo "<div class=\"container-fluid\">";
 if ($loggedUser) {
@@ -25,10 +25,7 @@ if ($loggedUser) {
         echo "<img class=\"img-responsive img-rounded\" src=\""
             . $baseURL . "images/logo.png\" alt='DeepskyLog Logo'>
                 </a>";
-        $objDatabase->execSQL(
-            "UPDATE observers SET version=\"" . VERSIONINFO
-            . "\" WHERE id=\"" . $loggedUser . "\""
-        );
+        $objObserver->setObserverProperty($loggedUser, 'version', VERSIONINFO);
     }
 } else {
     echo "<a title=\"" . _("What's new in DeepskyLog")
@@ -163,8 +160,7 @@ foreach ($drawings as $drawing => $key) {
     echo "   <a href=\"" . $baseURL
         . "index.php?indexAction=detail_observation&observation="
         . $key["id"] . "&amp;dalm=D\">";
-    echo "    <img class=\"img-rounded\" src=\"" . $baseURL . "deepsky/drawings/"
-        . $key["id"] . ".jpg\">";
+    echo "    <img class=\"img-rounded\" src=\"" . $objObservationStore->drawingUrl($key["id"]) . "\">";
     echo "    <div class=\"caption\">";
     echo "     " . $objObserver->getFullName($key["observerid"]) . "<br />";
     echo "     " . $key["objectname"] . "<br />";

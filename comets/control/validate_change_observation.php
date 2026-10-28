@@ -8,7 +8,7 @@ else validate_change_observation();
 
 function validate_change_observation()
 { global $instDir,$entryMessage,$maxFileSize,$loggedUser,
-         $objObserver,$objCometObservation,$objUtil;
+         $objObserver,$objCometObservation,$objUtil,$objObservationStore;
 	if((!$_POST['day'])||
 	   (!$_POST['month'])||
 	   (!$_POST['year'])||
@@ -69,15 +69,7 @@ function validate_change_observation()
 	      $objCometObservation->setMagnitudeWeakerThan($_POST['observation'], 0);
 	    }
 	    if($_FILES['drawing']['tmp_name'] != "")
-	    { $upload_dir = 'cometdrawings';
-	      $dir = opendir($instDir."comets/".$upload_dir);
-	      // resize code
-	      require_once "common/control/resize.php";
-	      $original_image=$_FILES['drawing']['tmp_name'];
-	      $destination_image=$instDir."comets/".$upload_dir . "/" . $_POST['observation'] . "_resized.jpg";
-	      $new_image=image_createThumb($original_image,$destination_image,490,490,100);
-	      move_uploaded_file($_FILES['drawing']['tmp_name'], $instDir."comets/".$upload_dir . "/" . $_POST['observation'] . ".jpg");
-          $objCometObservation->setDrawing($current_observation);
+	    { $objObservationStore->saveDrawing($_POST['observation'], $_FILES['drawing']['tmp_name'], 'comet');
 	    }
 	    // save current details for faster submission of multiple observations
 	    $_SESSION['year'] = $_POST['year']; // save current year

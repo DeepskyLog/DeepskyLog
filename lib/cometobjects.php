@@ -6,7 +6,6 @@
 // Version 1.0 : 05/02/2006, WDM
 //
 
-include_once "database.php";
 include_once "cometobservations.php";
 
 class CometObjects

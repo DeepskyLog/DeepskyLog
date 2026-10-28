@@ -25,7 +25,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
 function showDrawings()
 {
     global $objObservation, $baseURL, $objInstrument, $objLocation, $locale;
-    global $objObserver;
+    global $objObserver, $objObservationStore;
 
     $observations = $objObservation->getUserDrawings($_GET['user']);
     $numberOfDrawings = count($observations);
@@ -54,12 +54,9 @@ function showDrawings()
             IntlDateFormatter::NONE
         );
 
-        print '<a href="' . $baseURL . 'deepsky/drawings/'
-            . $observations[$i]['id'] . '.jpg'
+        print '<a href="' . $objObservationStore->drawingUrl($observations[$i]['id']) . ''
             . '" data-lightbox="image-1" data-title="">
-                <img class="lazyload" data-src="' . $baseURL . 'deepsky/drawings/'
-            . $observations[$i]['id']
-            . '.jpg"' . ' alt="' . $i . '">
+                <img class="lazyload" data-src="' . $objObservationStore->drawingUrl($observations[$i]['id']) . '"' . ' alt="' . $i . '">
                </a>
                <div class="caption">
                 <h4><a href="' . $baseURL . '/index.php?indexAction=detail_observation&amp;observation=' . $observations[$i]['id'] . '&amp;dalm=D">' . $observations[$i]['objectname'] . '</a> - '

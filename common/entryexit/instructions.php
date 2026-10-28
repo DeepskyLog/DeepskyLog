@@ -9,7 +9,23 @@ if ((!isset($inIndex)) || (!$inIndex)) {
 }
 function instructions()
 {
-    global $baseURL, $loggedUser, $myList, $lastReadObservation, $theDate, $modules, $menuView, $menuAddChange, $menuAdmin, $menuLogin, $menuSearch, $menuDownloads, $menuMoon, $listname_ss, $listname, $entryMessage, $toastMessage, $step, $min, $objSession, $objAccomplishments, $objEyepiece, $objFilter, $objLens, $objInstrument, $objLocation, $objMessages, $objObject, $objObserver, $objObservation, $objFormLayout, $objUtil, $objList, $instDir;
+    global $baseURL, $loggedUser, $myList, $lastReadObservation, $theDate, $modules, $menuView, $menuAddChange, $menuAdmin, $menuLogin, $menuSearch, $menuDownloads, $menuMoon, $listname_ss, $listname, $entryMessage, $toastMessage, $step, $min, $objSession, $objAccomplishments, $objEyepiece, $objFilter, $objLens, $objInstrument, $objLocation, $objMessages, $objObject, $objObserver, $objObservation, $objFormLayout, $objUtil, $objList, $instDir, $baseURLNew;
+    // The accounts are the users of the new site: registering and resetting
+    // a password happen there.
+    $newSitePages = array(
+        'subscribe' => 'register',
+        'requestPassword' => 'forgot-password',
+        'changeToken' => 'forgot-password',
+        'removeToken' => 'forgot-password',
+    );
+    $action = $objUtil->checkRequestKey('indexAction');
+    if (array_key_exists($action, $newSitePages)) {
+        // After registering (and verifying the e-mail address) the new site
+        // sends the observer back here, if its LEGACY_SITE_URL is $baseURL.
+        $returnTo = ($newSitePages[$action] == 'register') ? '?return_to=' . urlencode($baseURL) : '';
+        header('Location: ' . rtrim($baseURLNew, '/') . '/' . $newSitePages[$action] . $returnTo);
+        exit;
+    }
     if ($objUtil->checkGetKey('saveLayout')) {
         $objFormLayout->saveLayout($objUtil->checkGetKey('formName', 'NoFormName'), $objUtil->checkGetKey('layoutName', 'layoutName'), $objUtil->checkGetKey('restoreColumns', ''), $objUtil->checkGetKey('orderColumns', ''));
     }
@@ -28,9 +44,6 @@ function instructions()
         $lastReadObservation = -1;
     }
 
-    if ($objUtil->checkGetKey('indexAction') == "removeToken") {
-        require_once $instDir . "common/control/removeToken.php";
-    }
     if ($objUtil->checkGetKey('indexAction') == "logout") { // logout
         require_once $instDir . "common/control/logout.php";
     }
@@ -441,9 +454,6 @@ function instructions()
         // $entryMessage is set in the validateAccount() function;
         // $_GET['indexAction'] is set in the validateAccount() function
     }
-    if ($objUtil->checkGetKey('indexAction') == "requestPassword") {
-        $objObserver->requestNewPassword();
-    }
     if ($objUtil->checkGetKey('indexAction') == "validate_eyepiece") { // validate eyepiece
         $entryMessage .= $objEyepiece->validateSaveEyepiece();
         $_GET ['indexAction'] = 'view_eyepieces';
@@ -629,26 +639,12 @@ function instructions()
     }
     if ($objUtil->checkPostKey('changePassword')) {
         $login = $objUtil->checkPostKey('userid'); // get password from form and encrypt
-        $passwd = md5($objUtil->checkPostKey('currentPassword'));
+        $passwd = $objUtil->checkPostKey('currentPassword');
 
-        $newPassword =  md5($objUtil->checkPostKey('newPassword'));
-        $confirmNewPassword =  md5($objUtil->checkPostKey('confirmPassword'));
+        $newPassword = $objUtil->checkPostKey('newPassword');
+        $confirmNewPassword = $objUtil->checkPostKey('confirmPassword');
 
         $objObserver->updatePassword($login, $passwd, $newPassword, $confirmNewPassword);
-    }
-    if ($objUtil->checkPostKey('changePasswordToken')) {
-        $login = $objUtil->checkPostKey('userid');
-        $token = $objUtil->checkPostKey('token');
-        $newPassword =  md5($objUtil->checkPostKey('newPassword'));
-        $confirmNewPassword =  md5($objUtil->checkPostKey('confirmPassword'));
-
-        $objObserver->updatePasswordToken($login, $newPassword, $confirmNewPassword);
-
-        // Remove token
-        include_once $instDir . "lib/password.php";
-        $password = new Password();
-
-        $password->removeToken($token);
     }
     if ($objUtil->checkGetKey('renameList') && ($listnameToAdd = $objUtil->checkGetKey('addlistname'))) {
         unset($_SESSION ['QobjParams']);

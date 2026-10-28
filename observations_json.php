@@ -69,7 +69,7 @@ $query = "SELECT
             observations.locationid,
             observations.description as observationdescription,
             observations.seeing,
-            observations.hasdrawing,
+            observations.hasDrawing as hasdrawing,
             IF((observations.limmag = 0 || observations.limmag IS NULL) , '-', observations.limmag) as limmag,
             IF(observations.sqm = 0, '-', observations.sqm) as sqm,
             observations.lensid,
@@ -86,12 +86,12 @@ $query = "SELECT
             IF(observations.time < 0, '-', INSERT(LPAD(observations.time, 4, '0'), 3, 0, ':')) as displaytime,
             observers.firstname,
             observers.name,
-            observations.smalldiameter,
-            observations.largediameter,
+            observations.smallDiameter as smalldiameter,
+            observations.largeDiameter as largediameter,
             observations.language as observerationlanguage,
-            IF(eyepieces.id = 0, '-', CONCAT(eyepieces.name, ' (', observations.magnification, 'x)')) as eyepiecedescription,
-            IF(lenses.id = 0, '-', CONCAT(lenses.name, ' (', lenses.factor, ')')) as lensdescription,
-            IF(filters.id = 0, '-', filters.name) as filterdescription,
+            IF(eyepieces.id IS NULL, '-', CONCAT(eyepieces.name, ' (', observations.magnification, 'x)')) as eyepiecedescription,
+            IF(lenses.id IS NULL, '-', CONCAT(lenses.name, ' (', lenses.factor, ')')) as lensdescription,
+            IF(filters.id IS NULL, '-', filters.name) as filterdescription,
             CONCAT(observers.firstname, ' ', observers.name) as observername,
             CONCAT(observers.name, ' ', observers.firstname) as observersortname,
             instruments.name as instrumentname,
@@ -118,9 +118,9 @@ $query = "SELECT
             LEFT JOIN objects ON observations.objectname = objects.name
             JOIN instruments ON observations.instrumentid = instruments.id
             JOIN locations ON observations.locationid = locations.id
-            JOIN lenses ON observations.lensid = lenses.id
-            JOIN filters ON observations.filterid = filters.id
-            JOIN eyepieces ON observations.eyepieceid = eyepieces.id
+            LEFT JOIN lenses ON observations.lensid = lenses.id
+            LEFT JOIN filters ON observations.filterid = filters.id
+            LEFT JOIN eyepieces ON observations.eyepieceid = eyepieces.id
             WHERE observations.objectname=:objectname
             OR observations.objectname = (
                     SELECT objectname 
@@ -178,6 +178,12 @@ foreach ($result as $key=>$value) {
         } else {
             $result[$key]['size'] = number_format($result[$key]['largediameter'], 1)." x ".number_format($result[$key]['smalldiameter'], 1)." "._("arcseconds");
         }
+    }
+
+    //add drawing
+    if ($result[$key]['hasdrawing']) {
+        $result[$key]['drawingurl'] = $objObservationStore->drawingUrl($result[$key]['observationid']);
+        $result[$key]['drawingurlresized'] = $objObservationStore->drawingUrl($result[$key]['observationid'], true);
     }
 
     //add moonpic

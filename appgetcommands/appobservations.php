@@ -2,7 +2,6 @@
 require_once 'lib/cometobservations.php';
 require_once 'lib/observations.php';
 require_once 'lib/setup/databaseInfo.php';
-require_once 'lib/database.php';
 
 global $objCometObservation;
 global $objDeepskyObservation;
@@ -10,7 +9,7 @@ global $objDatabase;
 
 $objDeepskyObservation=new Observations;
 $objCometObservation=new CometObservations;
-$objDatabase=new Database;
+// $objDatabase is the DatabaseMux of preludes.php (observations are in the new database).
 
 function cometMaxObservationId() {
 	global $objCometObservation;
@@ -36,7 +35,7 @@ function cometObservationFromId($fromId) {
 					 JOIN 	 instruments ON cometobservations.instrumentid=instruments.id
 					 JOIN 	 observers ON cometobservations.observerid=observers.id
 				   WHERE ((cometobservations.id=".$fromId."));";
-	return json_encode($objDatabase->selectRecordsetArrayNoQuotes($sql));
+	return json_encode($objDatabase->selectRecordsetArray($sql));
 }
 
 function deepskyObservationDetailsFromId($fromId) {
@@ -67,7 +66,7 @@ function deepskyObservationDetailsFromId($fromId) {
 			 JOIN 	 observers 		ON observations.observerid=observers.id
 		  WHERE ((observations.id=".$fromId."));";
 //	return $sql;
-	return json_encode($objDatabase->selectRecordsetArrayNoQuotes($sql));
+	return json_encode($objDatabase->selectRecordsetArray($sql));
 }
 
 function deepskyObservationFromId($fromId) {
@@ -83,7 +82,7 @@ function deepskyObservationFromId($fromId) {
 					 JOIN 	 instruments ON observations.instrumentid=instruments.id
 					 JOIN 	 observers ON observations.observerid=observers.id
 				   WHERE ((observations.id=".$fromId."));";
-	return json_encode($objDatabase->selectRecordsetArrayNoQuotes($sql));
+	return json_encode($objDatabase->selectRecordsetArray($sql));
 }
 
 function cometObservationsListFromIdToId($fromId,$toId) {
@@ -97,7 +96,7 @@ function cometObservationsListFromIdToId($fromId,$toId) {
 				JOIN cometobjects ON cometobservations.objectid=cometobjects.id
 				JOIN observers ON cometobservations.observerid=observers.id
 				WHERE ((cometobservations.id>=".$fromId.")AND(cometobservations.id<=".$toId."));";
-	return json_encode($objDatabase->selectRecordsetArrayNoQuotes($sql));
+	return json_encode($objDatabase->selectRecordsetArray($sql));
 }
 
 function deepskyObservationsListFromIdToId($fromId,$toId) {
@@ -110,7 +109,7 @@ function deepskyObservationsListFromIdToId($fromId,$toId) {
 				FROM 		observations
 				JOIN 		observers on observations.observerid=observers.id
 				WHERE ((observations.id>=".$fromId.")AND(observations.id<=".$toId."));";
-	return json_encode($objDatabase->selectRecordsetArrayNoQuotes($sql));
+	return json_encode($objDatabase->selectRecordsetArray($sql));
 }
 
 function cometObservationsListFromDateToDate($fromDate,$toDate) {
@@ -124,7 +123,7 @@ function cometObservationsListFromDateToDate($fromDate,$toDate) {
 				JOIN cometobjects ON cometobservations.objectid=cometobjects.id
 				JOIN observers ON cometobservations.observerid=observers.id
 				WHERE ((cometobservations.date>=".$fromDate.")AND(cometobservations.date<=".$toDate."));";
-	return json_encode($objDatabase->selectRecordsetArrayNoQuotes($sql));
+	return json_encode($objDatabase->selectRecordsetArray($sql));
 }
 
 function deepskyObservationsListFromDateToDate($fromDate,$toDate) {
@@ -137,7 +136,7 @@ function deepskyObservationsListFromDateToDate($fromDate,$toDate) {
 				FROM 		observations
 				JOIN 		observers on observations.observerid=observers.id
 				WHERE ((observations.date>=".$fromDate.")AND(observations.date<=".$toDate."));";
-	return json_encode($objDatabase->selectRecordsetArrayNoQuotes($sql));
+	return json_encode($objDatabase->selectRecordsetArray($sql));
 }
 
 function cometObservationsListDaysFromIdToId($fromId,$toId) {
@@ -147,7 +146,7 @@ function cometObservationsListDaysFromIdToId($fromId,$toId) {
 				FROM      	 cometobservations
 				WHERE      ((cometobservations.id>=".$fromId.")AND(cometobservations.id<=".$toId."))
 				GROUP BY     cometobservations.date;";
-	return json_encode($objDatabase->selectRecordsetArrayNoQuotes($sql));
+	return json_encode($objDatabase->selectRecordsetArray($sql));
 }
 
 function deepskyObservationsListDaysFromIdToId($fromId,$toId) {
@@ -157,7 +156,7 @@ function deepskyObservationsListDaysFromIdToId($fromId,$toId) {
 				FROM      	 observations
 				WHERE      ((observations.id>=".$fromId.")AND(observations.id<=".$toId."))
 				GROUP BY     observations.date;";
-	return json_encode($objDatabase->selectRecordsetArrayNoQuotes($sql));
+	return json_encode($objDatabase->selectRecordsetArray($sql));
 }
 
 function cometObservationsListDaysFromDateToDate($fromDate,$toDate) {
@@ -167,7 +166,7 @@ function cometObservationsListDaysFromDateToDate($fromDate,$toDate) {
 				FROM      	 cometobservations
 				WHERE      ((cometobservations.date>=\"".$fromDate."\")AND(cometobservations.date<=\"".$toDate."\"))
 				GROUP BY     cometobservations.date;";
-	return json_encode($objDatabase->selectRecordsetArrayNoQuotes($sql));
+	return json_encode($objDatabase->selectRecordsetArray($sql));
 }
 
 function deepskyObservationsListDaysFromDateToDate($fromDate,$toDate) {
@@ -177,7 +176,7 @@ function deepskyObservationsListDaysFromDateToDate($fromDate,$toDate) {
 				FROM      	 observations
 				WHERE      ((observations.date>=\"".$fromDate."\")AND(observations.date<=\"".$toDate."\"))
 				GROUP BY     observations.date;";
-	return json_encode($objDatabase->selectRecordsetArrayNoQuotes($sql));
+	return json_encode($objDatabase->selectRecordsetArray($sql));
 }
 
 
@@ -222,7 +221,7 @@ function observationsfromto($fromid,$toid) {
 	JOIN instruments on observations.instrumentid=instruments.id
 	JOIN observers on observations.observerid=observers.id
 	WHERE ((observations.id>=".$fromid.") AND (observations.id<=".$toid."));";
-	return json_encode($objDatabase->selectRecordsetArrayNoQuotes($sql));
+	return json_encode($objDatabase->selectRecordsetArray($sql));
 }
 function observationdetails($observationid) {
 	global $objDatabase;
@@ -248,7 +247,7 @@ function observationdetails($observationid) {
 					 JOIN objectnames on observations.objectname=objectnames.objectname
 					 JOIN observers on observations.observerid=observers.id
 				   WHERE (observations.id=".$observationid.");";
-	return html_entity_decode(json_encode(html_entity_decode($objDatabase->selectRecordsetArrayNoQuotes($sql))));
+	return html_entity_decode(json_encode(html_entity_decode($objDatabase->selectRecordsetArray($sql))));
 }
 */
 ?>

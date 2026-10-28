@@ -71,7 +71,7 @@ function ajaxinterface() {
 	elseif ($ajaxInstruction == "getReportLayouts")
 		echo (json_encode ( $objReportLayout->getLayoutListJavascript ( $objUtil->checkRequestKey ( 'reportname' ) ) ));
 	elseif ($ajaxInstruction == "saveReportLayout")
-		echo json_encode ( $objReportLayout->saveLayout ( $objUtil->checkRequestKey ( 'reportname' ), $objUtil->checkRequestKey ( 'reportlayout' ), stripslashes ( $objUtil->checkRequestKey ( 'thedata' ) ) ) );
+		echo json_encode ( $objReportLayout->saveLayout ( $objUtil->checkRequestKey ( 'reportname' ), $objUtil->checkRequestKey ( 'reportlayout' ), $objUtil->checkRequestKey ( 'thedata' ) ) );
 	elseif ($ajaxInstruction == "deleteReportLayout")
 		echo json_encode ( $objReportLayout->deleteLayout ( $objUtil->checkRequestKey ( 'reportname' ), $objUtil->checkRequestKey ( 'reportlayout' ) ) );
 	

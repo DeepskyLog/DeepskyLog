@@ -579,7 +579,7 @@ Correct observations which have been imported will not be registered for a secon
         $visibility,
         $language
     ) {
-        global $objDatabase;
+        global $objObservationStore;
         if (($seeing == "-1") || ($seeing == "") || (intval($seeing) > 5)
             || (intval($seeing) < 0)
         ) {
@@ -596,18 +596,22 @@ Correct observations which have been imported will not be registered for a secon
             $limmag = "$limmag";
         }
         $description = preg_replace("/(\")/", "", $description);
-        // Create a timestamp
-        $timestamp = date("YmdHis");
 
-        $objDatabase->execSQL(
-            "INSERT INTO observations (objectname, observerid, instrumentid,
-            locationid, date, time, description, seeing, limmag,
-            visibility, language, timestamp) "
-            . "VALUES (\"$objectname\", \"$observerid\", \"$instrumentid\",
-            \"$locationid\", \"$date\", \"$time\",
-            \"$description\", $seeing, $limmag, $visibility, \"$language\", \"$timestamp\")"
+        return $objObservationStore->addDeepsky(
+            [
+                'objectname' => $objectname,
+                'observerid' => $observerid,
+                'instrumentid' => $instrumentid,
+                'locationid' => $locationid,
+                'date' => $date,
+                'time' => $time,
+                'description' => $description,
+                'seeing' => $seeing,
+                'limmag' => $limmag,
+                'visibility' => $visibility,
+                'language' => $language,
+            ]
         );
-        return $objDatabase->insert_id();
     }
 
     /**
@@ -664,7 +668,7 @@ Correct observations which have been imported will not be registered for a secon
         $filterid,
         $lensid
     ) {
-        global $objDatabase, $objPresentations;
+        global $objDatabase, $objObservationStore;
         if (($seeing == "-1") || ($seeing == "")
             || (intval($seeing) > 5) || (intval($seeing) < 0)
         ) {
@@ -695,7 +699,7 @@ Correct observations which have been imported will not be registered for a secon
                                                 date=\"$date\" AND
                                                 time=\"$time\" AND
                                                 description=\"$description\" AND
-                                                seeing=$seeing AND
+                                                seeing" . ($seeing > 0 ? "=$seeing" : "<=0") . " AND
                                                 ROUND(limmag,2)=ROUND($limmag,2) AND
                                                 ROUND(SQM,2)=ROUND($sqm,2) AND
                                                 visibility=$visibility AND
@@ -709,45 +713,26 @@ Correct observations which have been imported will not be registered for a secon
         ) {
             return 0;
         } else {
-            // Create a timestamp
-            $timestamp = date("YmdHis");
-            $objDatabase->execSQL(
-                "INSERT INTO observations (objectname,
-                                            observerid,
-                                            instrumentid,
-                                            locationid,
-                                            date,
-                                            time,
-                                            description,
-                                            seeing,
-                                            limmag,
-                                            visibility,
-                                            language,
-                                            eyepieceid,
-                                            filterid,
-                                            lensid,
-                                            SQM,
-                                            timestamp)
-                                VALUES (\"$objectname\",
-                                            \"$observerid\",
-                                            \"$instrumentid\",
-                                            \"$locationid\",
-                                            \"$date\",
-                                            \"$time\",
-                                            \"$description\",
-                                            $seeing,
-                                            $limmag,
-                                            $visibility,
-                                            \"$language\",
-                                            $eyepieceid,
-                                            $filterid,
-                                            $lensid,
-                                            $sqm,
-                                            $timestamp)"
+            return $objObservationStore->addDeepsky(
+                [
+                    'objectname' => $objectname,
+                    'observerid' => $observerid,
+                    'instrumentid' => $instrumentid,
+                    'locationid' => $locationid,
+                    'date' => $date,
+                    'time' => $time,
+                    'description' => $description,
+                    'seeing' => $seeing,
+                    'limmag' => $limmag,
+                    'visibility' => $visibility,
+                    'language' => $language,
+                    'eyepieceid' => $eyepieceid,
+                    'filterid' => $filterid,
+                    'lensid' => $lensid,
+                    'SQM' => $sqm,
+                ]
             );
         }
-        // Return the obsid
-        return $objDatabase->insert_id();
     }
 
     /**
@@ -924,9 +909,10 @@ Correct observations which have been imported will not be registered for a secon
     public function getDsObservationProperty($id, $property, $defaultvalue = '')
     {
         global $objDatabase;
+        // The view gives its own case of the column name (smallDiameter).
         return $objDatabase->selectSingleValue(
-            "SELECT " . $property . " FROM observations WHERE id=\"" . $id . "\"",
-            $property,
+            "SELECT " . $property . " AS propertyvalue FROM observations WHERE id=\"" . $id . "\"",
+            'propertyvalue',
             $defaultvalue
         );
     }
@@ -1724,7 +1710,6 @@ Correct observations which have been imported will not be registered for a secon
             $canUseTwoStageQuery = array_key_exists('limit', $queries)
                 && is_numeric($queries['limit'])
                 && ((int)$queries['limit'] > 0)
-                && !$needsObjectnamesJoin
                 && (
                     $sortField === 'observationid'
                     || $sortField === 'observationdate'
@@ -1752,7 +1737,10 @@ Correct observations which have been imported will not be registered for a secon
                     : 'id';
                 
                 // STAGE 1: Get IDs with pagination applied
-                $idSubquery = "SELECT observations.id FROM observations";
+                // An observation can match several names of its object.
+                $idSubquery = "SELECT DISTINCT observations.id"
+                    . ($subquerySortField != 'id' ? ", observations." . $subquerySortField : "")
+                    . " FROM observations";
                 if ($needsObjectnamesJoin) {
                     $idSubquery .= " JOIN objectnames on "
                         . "observations.objectname=objectnames.objectname ";
@@ -1799,8 +1787,9 @@ Correct observations which have been imported will not be registered for a secon
                         ? "JOIN locations on observations.locationid=locations.id "
                         : "")
                     . "JOIN observers on observations.observerid=observers.id ";
-                
-                // No ORDER BY or LIMIT here - already applied in subquery
+
+                // The LIMIT is applied in the subquery; a join does not keep its order.
+                $sql .= " ORDER BY observations." . $subquerySortField . " " . $sortDirection;
             } else {
                 // SINGLE-PASS QUERY (original behavior for complex sort fields)
                 // Used when sorting by joined table columns or when no LIMIT
@@ -2185,13 +2174,14 @@ Correct observations which have been imported will not be registered for a secon
     public function getPopularObserversOverviewCatOrListAllInfo()
     {
         global $objDatabase;
-        $sql = "SELECT observations.observerid, "
+        // Count per observer first: grouping on the observer's name is slow.
+        $sql = "SELECT counts.observerid, "
             . "CONCAT(observers.firstname,' ',observers.name) As observername, "
-            . "COUNT(*) AS Cnt " . "FROM observations "
-            . "JOIN observers on observations.observerid = observers.id "
-            . "WHERE observations.visibility != 7 ";
-        $sql .= "GROUP BY observations.observerid, observers.name ";
-        $sql .= "ORDER BY Cnt DESC, observers.name ASC;";
+            . "counts.Cnt FROM (SELECT observations.observerid, COUNT(*) AS Cnt "
+            . "FROM observations WHERE observations.visibility != 7 "
+            . "GROUP BY observations.observerid) counts "
+            . "JOIN observers on counts.observerid = observers.id ";
+        $sql .= "ORDER BY counts.Cnt DESC, observers.name ASC;";
 
         return $objDatabase->selectRecordsetArray($sql);
     }
@@ -2315,13 +2305,8 @@ Correct observations which have been imported will not be registered for a secon
      */
     public function setDsObservationProperty($id, $property, $propertyValue)
     {
-        global $objDatabase;
-        $objDatabase->execSQL(
-            "UPDATE observations SET "
-            . $property . " = "
-            . (($propertyValue == "NULL") ? "NULL" : "\"" . $propertyValue . "\"")
-            . " WHERE id = \"" . $id . "\""
-        );
+        global $objObservationStore;
+        $objObservationStore->updateDeepsky($id, [$property => $propertyValue]);
     }
 
     /**
@@ -2336,7 +2321,7 @@ Correct observations which have been imported will not be registered for a secon
      */
     public function setLocalDateAndTime($id, $date, $time)
     {
-        global $objDatabase, $objLocation;
+        global $objObservationStore, $objLocation;
         if ($time >= 0) {
             $timezone = $objLocation->getLocationPropertyFromId(
                 $this->getDsObservationProperty($id, 'locationid'),
@@ -2353,13 +2338,9 @@ Correct observations which have been imported will not be registered for a secon
             $dateStr = $date->format("Ymd");
             $timeStr = $date->format('Hi');
 
-            $objDatabase->execSQL(
-                "UPDATE observations SET date = \"" . $dateStr
-                    . "\" WHERE id = \"" . $id . "\""
-            );
-            $objDatabase->execSQL(
-                "UPDATE observations SET time = \"" . $timeStr
-                    . "\" WHERE id = \"" . $id . "\""
+            $objObservationStore->updateDeepsky(
+                $id,
+                ['date' => $dateStr, 'time' => $timeStr]
             );
         }
     }
@@ -2396,7 +2377,7 @@ Correct observations which have been imported will not be registered for a secon
      */
     public function showListObservation($link, $lco)
     {
-        global $lastReadObservation, $objDatabase, $objObject;
+        global $lastReadObservation, $objDatabase, $objObject, $objObservationStore;
         global $baseURL, $loggedUser, $objObserver, $dateformat;
         global $myList, $objUtil, $objInstrument;
         global $listname, $listname_ss;
@@ -2858,13 +2839,9 @@ Correct observations which have been imported will not be registered for a secon
                     if ($lco == "C") {
                         echo "<td colspan=\"7\">"
                             . ($hasDrawing
-                            ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/"
-                            . $value['observationid']
-                            . ".jpg\" data-lightbox=" . $value['observationid']
+                            ? "<p>" . "<a  href=\"" . $objObservationStore->drawingUrl($value['observationid']) . "\" data-lightbox=" . $value['observationid']
                             . " data-title=\"\"><img class=\"account\" src=\""
-                            . $baseURL
-                            . "deepsky/drawings/" . $value['observationid']
-                            . "_resized.jpg\" alt=\""
+                            . $objObservationStore->drawingUrl($value['observationid'], true) . "\" alt=\""
                             . $title . "\"></img></a>" . "</p>"
                             : "") . "</td>";
                     } elseif ($lco == "O") {
@@ -2878,14 +2855,9 @@ Correct observations which have been imported will not be registered for a secon
                                       <td colspan=\"6\">"
                                                                         . ($hasDrawing
                                                                             ? "<p>"
-                                                                            . "<a href=\"" . $baseURL
-                                                                            . "deepsky/drawings/"
-                                                                            . $value['observationid']
-                                                                            . ".jpg\"  title=\"\">
+                                                                            . "<a href=\"" . $objObservationStore->drawingUrl($value['observationid']) . "\"  title=\"\">
                                                                                  <img class=\"account\" src=\""
-                                                                            . $baseURL . "deepsky/drawings/"
-                                                                            . $value['observationid']
-                                                                            . "_resized.jpg\" alt=\"" . $title . "\"></img>
+                                                                            . $objObservationStore->drawingUrl($value['observationid'], true) . "\" alt=\"" . $title . "\"></img>
                                                                                 </a>" . "</p>" : "") . "</td>";
                             }
                         } else {
@@ -2897,13 +2869,9 @@ Correct observations which have been imported will not be registered for a secon
                                 echo "<td colspan=\"6\">"
                                                 . ($hasDrawing
                                                 ? "<p>"
-                                                . "<a  href=\"" . $baseURL . "deepsky/drawings/"
-                                                . $value['observationid']
-                                                . ".jpg\" data-lightbox=\"image-1\" " .
+                                                . "<a  href=\"" . $objObservationStore->drawingUrl($value['observationid']) . "\" data-lightbox=\"image-1\" " .
                                                 "data-title=\"\">
-                                                    <img class=\"account\" src=\"" . $baseURL
-                                                . "deepsky/drawings/" . $value['observationid']
-                                                . "_resized.jpg\" alt=\""
+                                                    <img class=\"account\" src=\"" . $objObservationStore->drawingUrl($value['observationid'], true) . "\" alt=\""
                                                 . $title . "\"></img>
                                                   </a>" . "</p>" : "") . "</td>";
                             }
@@ -2912,12 +2880,9 @@ Correct observations which have been imported will not be registered for a secon
                             . (($LOdescription
                             && $this->getDsObservationProperty($LOid, 'hasDrawing'))
                             ? "<p>"
-                            . "<a href=\"" . $baseURL . "deepsky/drawings/" . $LOid
-                            . ".jpg"
+                            . "<a href=\"" . $objObservationStore->drawingUrl($LOid) . ""
                             . "\" data-lightbox=\"image-1\" data-title=\"\">
-                                    <img class=\"account\" src=\"" . $baseURL
-                            . "deepsky/drawings/" . $LOid
-                            . "_resized.jpg\" alt=\"" . $title . "\"></img>
+                                    <img class=\"account\" src=\"" . $objObservationStore->drawingUrl($LOid, true) . "\" alt=\"" . $title . "\"></img>
                                 </a>" . "</p>" : "") . "</td>";
                     }
                     echo "</tr>";
@@ -2956,7 +2921,7 @@ Correct observations which have been imported will not be registered for a secon
      */
     public function showObservation($LOid)
     {
-        global $objUtil, $dateformat, $myList, $listname, $listname_ss;
+        global $objUtil, $dateformat, $myList, $listname, $listname_ss, $objObservationStore;
         global $baseURL, $objAstroCalc, $objEyepiece, $objObserver;
         global $objInstrument, $loggedUser, $objObject, $objLens;
         global $objFilter, $objPresentations, $objDatabase, $objLocation;
@@ -3384,6 +3349,8 @@ Correct observations which have been imported will not be registered for a secon
             echo "<td>" . $charTypeText . "</td>";
             echo "</tr>";
             echo "</table>";
+            // Stellar, extended, resolved, mottled, ... (as the new site shows them)
+            echo $details1Text . " " . $details2Text;
         }
 
         $toClose = false;
@@ -3408,10 +3375,8 @@ Correct observations which have been imported will not be registered for a secon
             . $this->getDsObservationProperty($LOid, 'observerid');
 
         if ($this->getDsObservationProperty($LOid, 'hasDrawing')) {
-            echo "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/"
-                . $LOid . ".jpg" . "\" data-lightbox=\"image-1\" data-title=\"\">"
-                . "<img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/"
-                . $LOid . "_resized.jpg\" alt=\"" . $title . "\"></img></a></p>";
+            echo "<p>" . "<a  href=\"" . $objObservationStore->drawingUrl($LOid) . "" . "\" data-lightbox=\"image-1\" data-title=\"\">"
+                . "<img class=\"account\" src=\"" . $objObservationStore->drawingUrl($LOid, true) . "\" alt=\"" . $title . "\"></img></a></p>";
         }
         $copyright = $objObserver->getCopyright(
             $this->getDsObservationProperty($LOid, 'observerid')
@@ -3480,20 +3445,14 @@ Correct observations which have been imported will not be registered for a secon
      */
     public function validateDeleteDSObservation()
     {
-        global $objDatabase, $objDatabase_new, $objAccomplishments, $objUtil;
+        global $objObservationStore, $objAccomplishments, $objUtil;
         if (!$_GET['observationid']) {
             throw new Exception("No observation to delete.");
         }
         $id = $objUtil->checkGetKey('observationid');
         $user = $this->getDsObservationProperty($id, 'observerid');
         if ($id && ($objUtil->checkAdminOrUserID($user))) {
-            $objDatabase->execSQL(
-                "DELETE FROM observations WHERE id=\"" . $id . "\""
-            );
-            $objDatabase_new->execSQL(
-                "DELETE FROM sessionObservations WHERE observationid=\""
-                . $id . "\""
-            );
+            $objObservationStore->delete($id);
             $_SESSION['Qobs'] = array();
             $_SESSION['QobsParams'] = array();
             // Recalculate the accomplishments
@@ -3509,7 +3468,7 @@ Correct observations which have been imported will not be registered for a secon
      */
     public function validateObservation()
     {
-        global $loggedUser, $objUtil, $objObservation, $objObserver, $maxFileSize;
+        global $loggedUser, $objUtil, $objObservation, $objObserver, $maxFileSize, $objObservationStore;
         global $entryMessage, $objPresentations, $inIndex, $instDir, $objSession;
         global $objAccomplishments;
 
@@ -3755,34 +3714,28 @@ Correct observations which have been imported will not be registered for a secon
                         $_POST['largeDiam'] = $_POST['largeDiam'] * 60.0;
                     }
                 }
-                if ($_POST['sqm']) {
-                    $objObservation->setDsObservationProperty(
-                        $current_observation,
-                        'SQM',
-                        preg_replace("/,/", ".", $objUtil->checkPostKey('sqm', -1))
-                    );
-                }
-                if ($_POST['limit']) {
-                    $objObservation->setDsObservationProperty(
-                        $current_observation,
-                        'limmag',
-                        preg_replace("/,/", ".", $objUtil->checkPostKey('limit', 0))
-                    );
-                }
-                if ($_POST['smallDiam']) {
-                    $objObservation->setDsObservationProperty(
-                        $current_observation,
-                        'smallDiameter',
-                        $_POST ['smallDiam']
-                    );
-                }
-                if ($_POST['largeDiam']) {
-                    $objObservation->setDsObservationProperty(
-                        $current_observation,
-                        'largeDiameter',
-                        $_POST ['largeDiam']
-                    );
-                }
+                // Always written, so that a value cleared on the edit form is
+                // removed (ObservationStore stores an empty value as NULL).
+                $objObservation->setDsObservationProperty(
+                    $current_observation,
+                    'SQM',
+                    preg_replace("/,/", ".", $objUtil->checkPostKey('sqm', -1))
+                );
+                $objObservation->setDsObservationProperty(
+                    $current_observation,
+                    'limmag',
+                    preg_replace("/,/", ".", $objUtil->checkPostKey('limit', 0))
+                );
+                $objObservation->setDsObservationProperty(
+                    $current_observation,
+                    'smallDiameter',
+                    $objUtil->checkPostKey('smallDiam')
+                );
+                $objObservation->setDsObservationProperty(
+                    $current_observation,
+                    'largeDiameter',
+                    $objUtil->checkPostKey('largeDiam')
+                );
                 if (array_key_exists('stellarextended', $_POST)
                     && ($_POST ['stellarextended'] == "stellar")
                 ) {
@@ -3904,34 +3857,26 @@ Correct observations which have been imported will not be registered for a secon
                         -1
                     );
                 }
-                if ($_POST['filter']) {
-                    $objObservation->setDsObservationProperty(
-                        $current_observation,
-                        'filterid',
-                        $_POST['filter']
-                    );
-                }
-                if ($_POST['lens']) {
-                    $objObservation->setDsObservationProperty(
-                        $current_observation,
-                        'lensid',
-                        $_POST['lens']
-                    );
-                }
-                if ($_POST['eyepiece']) {
-                    $objObservation->setDsObservationProperty(
-                        $current_observation,
-                        'eyepieceid',
-                        $_POST['eyepiece']
-                    );
-                }
-                if ($_POST['magnification']) {
-                    $objObservation->setDsObservationProperty(
-                        $current_observation,
-                        'magnification',
-                        $_POST['magnification']
-                    );
-                }
+                $objObservation->setDsObservationProperty(
+                    $current_observation,
+                    'filterid',
+                    $objUtil->checkPostKey('filter')
+                );
+                $objObservation->setDsObservationProperty(
+                    $current_observation,
+                    'lensid',
+                    $objUtil->checkPostKey('lens')
+                );
+                $objObservation->setDsObservationProperty(
+                    $current_observation,
+                    'eyepieceid',
+                    $objUtil->checkPostKey('eyepiece')
+                );
+                $objObservation->setDsObservationProperty(
+                    $current_observation,
+                    'magnification',
+                    $objUtil->checkPostKey('magnification')
+                );
                 if (!($objObserver->getObserverProperty($loggedUser, 'UT'))) {
                     $objObservation->setLocalDateAndTime(
                         $current_observation,
@@ -3956,29 +3901,9 @@ Correct observations which have been imported will not be registered for a secon
                 );
                 if ($_FILES['drawing']['tmp_name'] != "") {
                     // drawing to upload
-                    $upload_dir = $instDir . 'deepsky/drawings';
-                    $dir = opendir($upload_dir);
-                    $original_image = $_FILES['drawing']['tmp_name'];
-                    $destination_image = $upload_dir . "/" . $current_observation
-                        . "_resized.jpg";
-                    include_once $instDir
-                        . "common/control/resize.php"; // resize code
-                    $new_image = image_createThumb(
-                        $original_image,
-                        $destination_image,
-                        490,
-                        490,
-                        100
-                    );
-                    move_uploaded_file(
-                        $_FILES['drawing']['tmp_name'],
-                        $upload_dir . "/"
-                        . $current_observation . ".jpg"
-                    );
-                    $objObservation->setDsObservationProperty(
+                    $objObservationStore->saveDrawing(
                         $current_observation,
-                        'hasDrawing',
-                        1
+                        $_FILES['drawing']['tmp_name']
                     );
                 }
 

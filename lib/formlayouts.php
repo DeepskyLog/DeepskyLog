@@ -7,29 +7,29 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 
 class formLayouts
 { public function loadLayout($formName,$layoutName)
-  { global $objDatabase;
-    $restoreColumns=$objDatabase->selectSingleValue("SELECT restoreColumns FROM formlayouts WHERE formName=\"".$formName."\" AND layoutName=\"".$layoutName."\";",'restoreColumns','');
-    $orderColumns=$objDatabase->selectSingleValue("SELECT orderColumns FROM formlayouts WHERE formName=\"".$formName."\" AND layoutName=\"".$layoutName."\";",'orderColumns','');
+  { global $objDatabase_new;
+    $restoreColumns=$objDatabase_new->selectSingleValue("SELECT restoreColumns FROM legacy_formlayouts WHERE formName=\"".$formName."\" AND layoutName=\"".$layoutName."\";",'restoreColumns','');
+    $orderColumns=$objDatabase_new->selectSingleValue("SELECT orderColumns FROM legacy_formlayouts WHERE formName=\"".$formName."\" AND layoutName=\"".$layoutName."\";",'orderColumns','');
     echo "setColumnsOrder(\"".$orderColumns."\");";                                                  //collapse columns
     echo "setColumnsRestore(\"".$restoreColumns."\");";                                              //collapse columns
   }
   public function saveLayout($formName,$layoutName,$restoreColumns,$orderColumns)
-  { global $loggedUser, $objDatabase;
+  { global $loggedUser, $objDatabase_new;
 	  if($layoutName&&($layoutName!='null'))
-    { $objDatabase->execSQL("DELETE FROM formlayouts WHERE observerid='".$loggedUser."' AND formName='".$formName."' AND layoutName='".$layoutName."';");
-      $objDatabase->execSQL("INSERT INTO formlayouts VALUES(\"".$loggedUser."\",\"".$formName."\",\"".$layoutName."\",\"".$restoreColumns."\",\"".$orderColumns."\");");
+    { $objDatabase_new->execSQL("DELETE FROM legacy_formlayouts WHERE observerid='".$loggedUser."' AND formName='".$formName."' AND layoutName='".$layoutName."';");
+      $objDatabase_new->execSQL("INSERT INTO legacy_formlayouts VALUES(\"".$loggedUser."\",\"".$formName."\",\"".$layoutName."\",\"".$restoreColumns."\",\"".$orderColumns."\");");
     }
   }
   public function removeLayout($formName,$layoutName)
-  { global $loggedUser, $objDatabase;
+  { global $loggedUser, $objDatabase_new;
     if($layoutName&&($layoutName!='null'))
-    { $objDatabase->execSQL("DELETE FROM formlayouts WHERE observerid='".$loggedUser."' AND formName='".$formName."' AND layoutName='".$layoutName."';");
+    { $objDatabase_new->execSQL("DELETE FROM legacy_formlayouts WHERE observerid='".$loggedUser."' AND formName='".$formName."' AND layoutName='".$layoutName."';");
     }
   }
   public function getLayoutList($formName)
-  { global $loggedUser, $objDatabase;
+  { global $loggedUser, $objDatabase_new;
 	  if($formName)
-    return $objDatabase->selectSingleArray("SELECT layoutName FROM formlayouts WHERE observerid='".$loggedUser."' AND formName='".$formName."';","layoutName");
+    return $objDatabase_new->selectSingleArray("SELECT layoutName FROM legacy_formlayouts WHERE observerid='".$loggedUser."' AND formName='".$formName."';","layoutName");
   }
 }
 ?>

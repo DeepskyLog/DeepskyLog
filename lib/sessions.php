@@ -328,10 +328,9 @@ class Sessions {
 		return $objDatabase_new->selectRecordsetArray ( "SELECT observer from sessionObservers where sessionid = \"" . $id . "\";" );
 	}
 	public function getObservations($id) {
-		global $objDatabase_new, $objLocation, $dbname, $dbnameNew;
-		// Single cross-database JOIN query replaces N+1 individual queries.
-		// sessionObservations and instruments are in $dbnameNew (deepskylogLaravel);
-		// observations, objects, and observers are in $dbname (deepskylog).
+		global $objDatabase_new, $objLocation;
+		// One query instead of one per observation. All tables are in the new DB;
+		// the observations and observers in the old columns (views legacy_*).
 		$rows = $objDatabase_new->selectRecordsetArray(
 			"SELECT so.observationid,
 			        o.*,
@@ -344,11 +343,11 @@ class Sessions {
 			        CONCAT(obs.firstname, ' ', obs.name) AS observername,
 			        i.name         AS instrumentname,
 			        i.diameter     AS instrumentdiameter
-			 FROM `" . $dbnameNew . "`.sessionObservations so
-			 JOIN `" . $dbname . "`.observations  o   ON so.observationid = o.id
-			 LEFT JOIN `" . $dbname . "`.objects  obj ON o.objectname     = obj.name
-			 LEFT JOIN `" . $dbname . "`.observers obs ON o.observerid    = obs.id
-			 LEFT JOIN `" . $dbnameNew . "`.instruments i ON o.instrumentid = i.id
+			 FROM sessionObservations so
+			 JOIN legacy_observations o   ON so.observationid = o.id
+			 LEFT JOIN objects  obj ON o.objectname     = obj.name
+			 LEFT JOIN legacy_observers obs ON o.observerid    = obs.id
+			 LEFT JOIN instruments i ON o.instrumentid = i.id
 			 WHERE so.sessionid = \"" . $id . "\""
 		);
 

@@ -40,7 +40,11 @@ class Filters
     public function getAllFiltersIds($id) // returns a list with all id's which have the same name as the name of the given id
     {
         global $objDatabase_new;
-        return $objDatabase_new->selectSingleArray("SELECT id FROM filters WHERE name = \"" . $objDatabase->selectSingleValue("SELECT name FROM filters WHERE id = \"" . $id . "\"") . "\"");
+        return $objDatabase_new->selectSingleArray(
+            "SELECT id FROM filters WHERE name = "
+            . "(SELECT name FROM filters WHERE id = " . (int) $id . ")",
+            'id'
+        );
     }
     public function getEchoColor($color)
     {

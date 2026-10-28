@@ -169,6 +169,11 @@ class database_new
     {
         return $this->databaseId->lastInsertId();
     }
+    // A value as an SQL string literal, or NULL.
+    public function quote($value)
+    {
+        return $value === null ? 'NULL' : $this->databaseId->quote((string) $value);
+    }
     public function selectSingleValue($sql, $name, $nullvalue = '')
     {
         if (!$this->databaseId) {

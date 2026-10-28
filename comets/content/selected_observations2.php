@@ -10,7 +10,7 @@ if ((!isset($inIndex)) || (!$inIndex)) {
 }
 function selected_observations()
 {
-    global $instDir, $baseURL, $loggedUser, $step, $dateformat, $objPresentations, $objUtil;
+    global $instDir, $baseURL, $loggedUser, $step, $dateformat, $objPresentations, $objUtil, $objCometObservation, $objObservationStore;
     $observations = new CometObservations();
     $instruments = new Instruments();
     $observers = new Observers();
@@ -300,17 +300,9 @@ function selected_observations()
 
                 // LINK TO DRAWING (IF AVAILABLE)
 
-                $upload_dir = 'cometdrawings';
-                $dir = opendir($instDir.'comets/'.$upload_dir);
-
-                while (false !== ($file = readdir($dir))) {
-                    if ('.' == $file or '..' == $file) {
-                        continue; // skip current directory and directory above
-                    }
-                    if (fnmatch($value.'_resized.gif', $file) || fnmatch($value.'_resized.jpg', $file) || fnmatch($value.'_resized.png', $file)) {
-                        echo '&nbsp;+&nbsp;';
-                        echo _('drawing');
-                    }
+                if ($objCometObservation->hasDrawing($value)) {
+                    echo '&nbsp;+&nbsp;';
+                    echo _('drawing');
                 }
 
                 echo '</a></td></tr>';

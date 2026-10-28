@@ -4,23 +4,27 @@
 // adapt observation data from the database.
 class CometObservations
 {
+    private $rows = [];
+    private $rowsVersion = 0;
+
     // addObservation adds a new observation to the database. The objectid,
     // observerid, date and time should be given as parameters.
     public function addObservation($objectid, $observerid, $date, $time)
     {
-        global $objAccomplishments, $objDatabase;
+        global $objAccomplishments, $objDatabase, $objObservationStore;
         if (! $_SESSION ['lang']) {
             $_SESSION ['lang'] = "English";
         }
 
         // Add the observation
-        $sql = "INSERT INTO cometobservations (objectid, observerid, date, time, description, timestamp) VALUES (\"$objectid\", \"$observerid\", \"$date\", \"$time\", \"\", ".time().")";
-        $objDatabase->execSQL($sql);
-
-        $query = "SELECT id FROM cometobservations ORDER BY id DESC LIMIT 1";
-        $run = $objDatabase->selectRecordset($query);
-        $get = $run->fetch(PDO::FETCH_OBJ);
-        $id = $get->id;
+        $id = $objObservationStore->addComet(
+            [
+                'objectid' => $objectid,
+                'observerid' => $observerid,
+                'date' => $date,
+                'time' => $time,
+            ]
+        );
 
         // Recalculate the accomplishments
         $objAccomplishments->recalculateComets($observerid);
@@ -31,19 +35,15 @@ class CometObservations
     // deleteObservation($id) deletes the observation with the given id.
     public function deleteObservation($id)
     {
-        global $objDatabase;
-        $sql = "DELETE FROM cometobservations WHERE id=\"$id\"";
-        $objDatabase->execSQL($sql);
+        global $objDatabase, $objObservationStore;
+        $objObservationStore->delete($id);
     }
 
     // getObjectId returns the objectid of the given observation
     public function getObjectId($id)
     {
         global $objDatabase;
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         if ($get) {
             return $get->objectid;
@@ -55,29 +55,24 @@ class CometObservations
     // setObjectId sets a new object for the given observation
     public function setObjectId($id, $object)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
 
-        $sql = "UPDATE cometobservations SET objectid = \"$object\" WHERE id = \"$id\"";
-        $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['objectid' => $object]);
     }
 
     // setHasDrawing sets a drawing for the given observation
     public function setHasDrawing($id)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
 
-        $sql = "UPDATE cometobservations SET hasDrawing = \"1\" WHERE id = \"$id\"";
-        $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['hasDrawing' => '1']);
     }
 
     // getObserverId returns the observerid of the given observation
     public function getObserverId($id)
     {
         global $objDatabase;
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         $observerid = $get->observerid;
 
@@ -87,23 +82,19 @@ class CometObservations
     // setObserverId sets a new observer for the given observation
     public function setObserverId($id, $observer)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
 
         print $observer;
         exit();
 
-        $sql = "UPDATE cometobservations SET observerid = \"$observer\" WHERE id = \"$id\" ";
-        $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['observerid' => $observer]);
     }
 
     // getInstrumentId returns the instrumentid of the given observation
     public function getInstrumentId($id)
     {
         global $objDatabase;
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         $instrumentid = $get->instrumentid;
 
@@ -113,10 +104,9 @@ class CometObservations
     // setInstrumentId sets a new instrument for the given observation
     public function setInstrumentId($id, $instrument)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
 
-        $sql = "UPDATE cometobservations SET instrumentid = \"$instrument\" WHERE id = \"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['instrumentid' => $instrument]);
     }
 
     // getLocationId returns the locationid of the given observation
@@ -124,10 +114,7 @@ class CometObservations
     {
         global $objDatabase;
 
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         if ($get) {
             return $get->locationid;
@@ -139,10 +126,9 @@ class CometObservations
     // setLocationId sets a new location for the given observation
     public function setLocationId($id, $location)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
 
-        $sql = "UPDATE cometobservations SET locationid = \"$location\" WHERE id = \"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['locationid' => $location]);
     }
 
     // getDate returns the date of the given observation
@@ -150,10 +136,7 @@ class CometObservations
     {
         global $objDatabase;
 
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         $date = $get->date;
 
@@ -163,10 +146,9 @@ class CometObservations
     // setDate sets a new date for the given observation
     public function setDate($id, $date)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
 
-        $sql = "UPDATE cometobservations SET date = \"$date\" WHERE id = \"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['date' => $date]);
     }
     public function getCometDrawingsCountFromObserver($id)
     {
@@ -178,15 +160,12 @@ class CometObservations
     // when the time is given in local time
     public function setLocalDateAndTime($id, $date, $time)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
         $locations = new Locations();
 
         if ($time >= 0) {
 
-            $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-            $run = $objDatabase->selectRecordset($sql);
-
-            $get = $run->fetch(PDO::FETCH_OBJ);
+            $get = $this->row($id);
 
             $location = $get->locationid;
 
@@ -245,11 +224,9 @@ class CometObservations
             }
         }
 
-        $sql = "UPDATE cometobservations SET date = \"$date\" WHERE id = \"$id\"";
-        $run = $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['date' => $date]);
 
-        $sql = "UPDATE cometobservations SET time = \"$time\" WHERE id = \"$id\"";
-        $run = $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['time' => $time]);
     }
 
     // getLocalDate returns the date of the given observation in local time
@@ -258,10 +235,7 @@ class CometObservations
         global $objDatabase;
         $locations = new Locations();
 
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         if ($get) {
             $date = $get->date;
@@ -334,10 +308,7 @@ class CometObservations
     public function getTime($id)
     {
         global $objDatabase;
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         if ($get) {
             return $get->time;
@@ -353,10 +324,7 @@ class CometObservations
 
         $locations = new Locations();
 
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         if ($get) {
             $date = $get->date;
@@ -421,19 +389,15 @@ class CometObservations
     // setTime sets a new time for the given observation
     public function setTime($id, $time)
     {
-        global $objDatabase;
-        $sql = "UPDATE cometobservations SET time = \"$time\" WHERE id = \"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        global $objDatabase, $objObservationStore;
+        $objObservationStore->updateComet($id, ['time' => $time]);
     }
 
     // getDescription returns the Description of the given observation
     public function getDescription($id)
     {
         global $objDatabase;
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         $description = $get->description;
 
@@ -443,19 +407,15 @@ class CometObservations
     // setDescription sets a new Description for the given observation
     public function setDescription($id, $description)
     {
-        global $objDatabase;
-        $sql = "UPDATE cometobservations SET description = \"" . $description . "\" WHERE id = \"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        global $objDatabase, $objObservationStore;
+        $objObservationStore->updateComet($id, ['description' => $description]);
     }
 
     // getMethode returns the Methode of the given observation
     public function getMethode($id)
     {
         global $objDatabase;
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         $methode = $get->methode;
 
@@ -465,19 +425,15 @@ class CometObservations
     // setMethode sets a new Methode for the given observation
     public function setMethode($id, $methode)
     {
-        global $objDatabase;
-        $sql = "UPDATE cometobservations SET methode = \"$methode\" WHERE id = \"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        global $objDatabase, $objObservationStore;
+        $objObservationStore->updateComet($id, ['methode' => $methode]);
     }
 
     // getMagnitude returns the Magnitude of the given observation
     public function getMagnitude($id)
     {
         global $objDatabase;
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         $magnitude = $get->mag;
 
@@ -487,19 +443,17 @@ class CometObservations
     // setMagnitude sets a new Magnitude for the given observation
     public function setMagnitude($id, $magnitude)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
 
-        $sql = "UPDATE cometobservations SET mag = \"$magnitude\" WHERE id = \"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['mag' => $magnitude]);
     }
 
     // setMagnitudeUncertain set the uncertain flag for the given magnitude
     public function setMagnitudeUncertain($id, $magnitude)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
 
-        $sql = "UPDATE cometobservations SET maguncertain = \"$magnitude\" WHERE id = \"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['maguncertain' => $magnitude]);
     }
 
     // getMagnitudeUncertain returns 1 if the magnitude is uncertain
@@ -507,10 +461,7 @@ class CometObservations
     {
         global $objDatabase;
 
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         $magnitude = $get->maguncertain;
 
@@ -520,11 +471,9 @@ class CometObservations
     // setMagnitudeWeakerThan set the weaker than flag for the given magnitude
     public function setMagnitudeWeakerThan($id, $magnitude)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
 
-        $sql = "UPDATE cometobservations SET lessmagnitude = \"$magnitude\" WHERE id =
-\"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['lessmagnitude' => $magnitude]);
     }
 
     // getMagnitudeWeakerThan returns 1 if the magnitude is weaker than the given magnitude
@@ -532,10 +481,7 @@ class CometObservations
     {
         global $objDatabase;
 
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         $magnitude = $get->lessmagnitude;
 
@@ -547,10 +493,7 @@ class CometObservations
     {
         global $objDatabase;
 
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         $chart = $get->chart;
 
@@ -560,10 +503,9 @@ class CometObservations
     // setChart sets a new Chart for the given observation
     public function setChart($id, $chart)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
 
-        $sql = "UPDATE cometobservations SET chart = \"$chart\" WHERE id = \"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['chart' => $chart]);
     }
 
     // getMagnification returns the Magnification of the given observation
@@ -571,10 +513,7 @@ class CometObservations
     {
         global $objDatabase;
 
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         $magnification = $get->magnification;
 
@@ -584,9 +523,8 @@ class CometObservations
     // setMagnification sets a new Magnification for the given observation
     public function setMagnification($id, $magnification)
     {
-        global $objDatabase;
-        $sql = "UPDATE cometobservations SET magnification = \"$magnification\" WHERE id = \"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        global $objDatabase, $objObservationStore;
+        $objObservationStore->updateComet($id, ['magnification' => $magnification]);
     }
 
     // getDc returns the Dc of the given observation
@@ -594,10 +532,7 @@ class CometObservations
     {
         global $objDatabase;
 
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         $dc = $get->dc;
 
@@ -607,10 +542,9 @@ class CometObservations
     // setDc sets a new Dc for the given observation
     public function setDc($id, $dc)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
 
-        $sql = "UPDATE cometobservations SET dc = \"$dc\" WHERE id = \"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['dc' => $dc]);
     }
 
     // getComa returns the Coma of the given observation
@@ -618,10 +552,7 @@ class CometObservations
     {
         global $objDatabase;
 
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         $coma = $get->coma;
 
@@ -631,10 +562,9 @@ class CometObservations
     // setComa sets a new Coma for the given observation
     public function setComa($id, $coma)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
 
-        $sql = "UPDATE cometobservations SET coma = \"$coma\" WHERE id = \"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['coma' => $coma]);
     }
 
     // getTail returns the Tail of the given observation
@@ -642,10 +572,7 @@ class CometObservations
     {
         global $objDatabase;
 
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         $tail = $get->tail;
 
@@ -655,10 +582,9 @@ class CometObservations
     // setTail sets a new Tail for the given observation
     public function setTail($id, $tail)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
 
-        $sql = "UPDATE cometobservations SET tail = \"$tail\" WHERE id = \"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['tail' => $tail]);
     }
 
     // getPa returns the Pa of the given observation
@@ -666,10 +592,7 @@ class CometObservations
     {
         global $objDatabase;
 
-        $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-        $run = $objDatabase->selectRecordset($sql);
-
-        $get = $run->fetch(PDO::FETCH_OBJ);
+        $get = $this->row($id);
 
         $pa = $get->pa;
 
@@ -679,10 +602,9 @@ class CometObservations
     // setPa sets a new Pa for the given observation
     public function setPa($id, $pa)
     {
-        global $objDatabase;
+        global $objDatabase, $objObservationStore;
 
-        $sql = "UPDATE cometobservations SET pa = \"$pa\" WHERE id = \"$id\" ";
-        $run = $objDatabase->execSQL($sql);
+        $objObservationStore->updateComet($id, ['pa' => $pa]);
     }
 
     // getObservations returns an array with all observations
@@ -774,11 +696,11 @@ class CometObservations
             );
         } else {
             return $objDatabase->selectSingleValue(
-                "SELECT COUNT(objectname) As Cnt FROM cometobservations JOIN locations "
+                "SELECT COUNT(*) As Cnt FROM cometobservations JOIN locations "
                 . "ON cometobservations.locationid=locations.id "
                 . "WHERE cometobservations.date > \""
                 . date('Ymd', strtotime('-1 year'))
-                . "\" AND hasDrawing=1 AND cometobservations.visibility != 7 and "
+                . "\" AND cometobservations.hasDrawing=1 and "
                 . "locations.country=\""
                 . $country . "\"",
                 'Cnt',
@@ -922,8 +844,48 @@ class CometObservations
 
         while ($get = $run->fetch(PDO::FETCH_OBJ)) {
             $observations [] = $get->id;
+            if (isset($get->objectid)) {
+                $this->rows[$get->id] = $get;
+            }
         }
         return $observations;
+    }
+
+    /**
+     * The row of a comet observation, read once per request: the pages read
+     * each field with its own getter.
+     *
+     * @param int $id The id of the comet observation.
+     *
+     * @return object|false
+     */
+    private function row($id)
+    {
+        global $objDatabase;
+        // A write empties the cache.
+        if ($this->rowsVersion !== ObservationStore::$writes) {
+            $this->rows = [];
+            $this->rowsVersion = ObservationStore::$writes;
+        }
+        if (!array_key_exists($id, $this->rows)) {
+            $this->rows[$id] = $objDatabase->selectRecordset(
+                "SELECT * FROM cometobservations WHERE id = \"" . $id . "\""
+            )->fetch(PDO::FETCH_OBJ);
+        }
+        return $this->rows[$id];
+    }
+
+    /**
+     * Does the comet observation have a drawing?
+     *
+     * @param int $id The id of the comet observation.
+     *
+     * @return bool
+     */
+    public function hasDrawing($id)
+    {
+        $get = $this->row($id);
+        return $get ? (bool) $get->hasDrawing : false;
     }
 
     /**
@@ -935,10 +897,8 @@ class CometObservations
      */
     public function setDrawing($id)
     {
-        global $objDatabase;
-        $sql = "UPDATE cometobservations SET hasDrawing = \"1\" "
-            . "where id = \"" . $id . "\"";
-        $run = $objDatabase->execSQL($sql);
+        global $objDatabase, $objObservationStore;
+        $objObservationStore->updateComet($id, ['hasDrawing' => 1]);
     }
 
     /**
@@ -993,7 +953,7 @@ class CometObservations
             }
         }
 
-        $sql = "SELECT cometobservations.* FROM cometobservations "
+        $sql = "SELECT cometobservations.id FROM cometobservations "
             . "LEFT JOIN instruments on "
             . "cometobservations.instrumentid=instruments.id "
             . "LEFT JOIN cometobjects on "
@@ -1188,7 +1148,13 @@ class CometObservations
 
         $sql = $sql . ";";
 
-        $obs = $objDatabase->selectSingleArray($sql, "id");
+        // The rankings ask the same query many times.
+        static $results = [];
+        $key = ObservationStore::$writes . ':' . $sql;
+        if (!array_key_exists($key, $results)) {
+            $results[$key] = $objDatabase->selectSingleArray($sql, "id");
+        }
+        $obs = $results[$key];
 
         if (isset($obs)) {
             return $obs;

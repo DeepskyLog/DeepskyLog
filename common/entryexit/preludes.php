@@ -38,15 +38,12 @@ function preludesA()
     }
 
     include_once "lib/setup/databaseInfo.php";
-    include_once "lib/database.php";
-    $objDatabase = new Database();
     include_once "lib/databaseNew.php";
     $objDatabase_new = new database_new();
     include_once "lib/databaseMux.php";
-    // Route queries touching migrated tables to the new DB.
-    // This keeps legacy code unchanged while ensuring those tables are
-    // read/written against the migrated schema in `$dbnameNew`.
-    $objDatabase = new DatabaseMux($objDatabase, $objDatabase_new, ['objects', 'cometobjects', 'observerobjectlist']);
+    // All data is in the new DB (`$dbnameNew`); the mux puts the views in the
+    // old columns in place of the old tables (see lib/databaseMux.php).
+    $objDatabase = new DatabaseMux($objDatabase_new);
     include_once "lib/util.php";
     $objUtil = new Utils();
     include_once "lib/setup/language.php";
@@ -74,7 +71,7 @@ function preludesB()
     global $objLanguage, $objLens, $objList, $objLocation, $objObject;
     global $objObjectOutlines, $objObservation, $objObserverQueries, $objObserver;
     global $objPresentations, $objPrintAtlas, $objReportLayout, $objStar;
-    global $objAccomplishments, $objUtil, $language, $locale;
+    global $objAccomplishments, $objUtil, $language, $locale, $objObservationStore;
 
     // This is needed to use the po files for the translations
     if ($language == "nl") {
@@ -125,6 +122,8 @@ function preludesB()
     $objContrast = new Contrast();
     include_once "lib/eyepieces.php";
     $objEyepiece = new Eyepieces();
+    include_once "lib/observationStore.php";
+    $objObservationStore = new ObservationStore();
     include_once "lib/observations.php";
     $objObservation = new Observations();
     include_once "lib/accomplishments.php";

@@ -20,29 +20,26 @@ function login() {
 		$loggedUser = "";
 		$_GET ['indexAction'] = 'default_action';
 	} elseif (array_key_exists ( 'deepskylogsec', $_COOKIE ) && $_COOKIE ['deepskylogsec']) {
-		if (strlen ( $_COOKIE ['deepskylogsec'] ) > 32) {
-			if (substr ( $_COOKIE ['deepskylogsec'], 0, 32 ) == $objObserver->getObserverProperty ( substr ( $_COOKIE ['deepskylogsec'], 32, 255 ), 'password' )) {
-				$_SESSION ['deepskylog_id'] = substr ( $_COOKIE ['deepskylogsec'], 32, 255 );
+		// The cookie holds a token of the password hash (Observers::loginToken()) and the observer id.
+		$cookieUser = substr ( $_COOKIE ['deepskylogsec'], 64, 255 );
+		if ((strlen ( $_COOKIE ['deepskylogsec'] ) > 64) && hash_equals ( $objObserver->loginToken ( $cookieUser ), substr ( $_COOKIE ['deepskylogsec'], 0, 64 ) )) {
+				$_SESSION ['deepskylog_id'] = $cookieUser;
 				$_SESSION ['lang'] = $objUtil->checkPostKey ( 'language', $objObserver->getObserverProperty ( $_SESSION ['deepskylog_id'], 'language' ) );
 				$loggedUser = $_SESSION ['deepskylog_id'];
 				if ($objObserver->getObserverProperty ( $_SESSION ['deepskylog_id'], 'role', 2 ) == "0") // administrator logs in
 					$_SESSION ['admin'] = "yes";
-			} else {
-				$loginErrorText = "Wrong password cookie";
-				$_GET ['indexAction'] = 'error_action';
-			}
 		} else {
-			$loginErrorText = "Wrong password cookie";
-			$_GET ['indexAction'] = 'error_action';
+			// A changed password, or a cookie of the MD5 passwords of before: log in again.
+			$_SESSION ['deepskylog_id'] = '';
+			setcookie("deepskylogsec", "", time() - 3600, "/", "", false);
 		}
 	} elseif (array_key_exists ( 'indexAction', $_GET ) && ($_GET ['indexAction'] == 'check_login')) // entered password
 {
 		if (array_key_exists ( 'deepskylog_id', $_POST ) && $_POST ['deepskylog_id'] && array_key_exists ( 'passwd', $_POST ) && $_POST ['passwd']) // all fields filled in
 {
-			$login = $_POST ['deepskylog_id']; // get password from form and encrypt
-			$passwd = md5 ( $_POST ['passwd'] );
-			$passwd_db = $objObserver->getObserverPropertyCS ( $login, 'password' ); // get password from database
-			if ($passwd_db == $passwd) // check if passwords match
+			// The ids of the new DB are not HTML-encoded, as the posted text is.
+			$login = html_entity_decode ( $_POST ['deepskylog_id'], ENT_QUOTES, 'UTF-8' );
+			if ($objObserver->checkPassword ( $login, $_POST ['passwd'] )) // check if passwords match
 {
 				$_SESSION ['lang'] = $objUtil->checkPostKey ( 'language', $objObserver->getObserverProperty ( $login, 'language' ) );
 				if ($objObserver->getObserverProperty ( $login, 'role', 2 ) == "2") // user in waitlist already tries to log in
@@ -64,7 +61,7 @@ function login() {
 					$_SESSION ['admin'] = "no"; // set session variable
 					$loggedUser = $_SESSION ['deepskylog_id'];
 					$cookietime = time () + (365 * 24 * 60 * 60); // 1 year
-					setcookie("deepskylogsec", $passwd . $login, $cookietime, "/", "", false);
+					setcookie("deepskylogsec", $objObserver->loginToken ( $login ) . $login, $cookietime, "/", "", false);
 				} else // administrator logs in
 {
 					session_regenerate_id ( true );
@@ -72,7 +69,7 @@ function login() {
 					$_SESSION ['admin'] = "yes";
 					$loggedUser = $login;
 					$cookietime = time () + (365 * 24 * 60 * 60); // 1 year
-					setcookie("deepskylogsec", $passwd . $login, $cookietime, "/", "", false);
+					setcookie("deepskylogsec", $objObserver->loginToken ( $login ) . $login, $cookietime, "/", "", false);
 				}
 				unset ( $_SESSION ['QobjParams'] );
 				$_GET ['indexAction'] = 'default_action';
@@ -150,11 +147,6 @@ function login() {
 	}
 	if ($loggedUser)
 		$loggedUserName = $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " " . $objObserver->getObserverProperty ( $loggedUser, 'name' );
-
-		// We remove the token to request a new password
-		include_once $instDir . "/lib/password.php";
-		$passClass = new Password();
-		$passClass->removeChangeRequest($loggedUser);
 }
 global $loggedUser;
 date_default_timezone_set ( 'UTC' );

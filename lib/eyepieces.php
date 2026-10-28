@@ -40,7 +40,11 @@ class Eyepieces
     public function getAllEyepiecesIds($id) // getAllIds returns a list with all id's which have the same name as the name of the given id
     {
         global $objDatabase_new;
-        return $objDatabase_new->selectSingleArray("SELECT id FROM eyepieces WHERE name=" . $objDatabase_new->selectSingleValue("SELECT name FROM eyepieces WHERE id = \"" . $id . "\"", 'name'), 'id');
+        return $objDatabase_new->selectSingleArray(
+            "SELECT id FROM eyepieces WHERE name = "
+            . "(SELECT name FROM eyepieces WHERE id = " . (int) $id . ")",
+            'id'
+        );
     }
     public function getEyepieceId($name, $observer) // returns the id for this eyepiece
     {

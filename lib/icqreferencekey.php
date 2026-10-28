@@ -6,16 +6,15 @@
 // Version 1.0 : 27/11/2005, WDM
 //
 
-include_once "database.php";
 
 class ICQREFERENCEKEY
 {
  // getDescription returns the description of an ICQMETHOD
  function getDescription($id)
  {
-  global $objDatabase;
-  $sql = "SELECT * FROM ICQ_REFERENCE_KEY WHERE id = \"$id\"";
-  $run = $objDatabase->selectRecordset($sql);
+  global $objDatabase_new;
+  $sql = "SELECT * FROM legacy_icq_reference_key WHERE id = \"$id\"";
+  $run = $objDatabase_new->selectRecordset($sql);
 
   $get = $run->fetch(PDO::FETCH_OBJ);
 
@@ -27,10 +26,10 @@ class ICQREFERENCEKEY
  // getIds returns an array with the ids of all ICQ METHODS
  function getIds()
  {
-  global $objDatabase;
+  global $objDatabase_new;
 
-  $sql = "SELECT * FROM ICQ_REFERENCE_KEY";
-  $run = $objDatabase->selectRecordset($sql);
+  $sql = "SELECT * FROM legacy_icq_reference_key";
+  $run = $objDatabase_new->selectRecordset($sql);
 
   while($get = $run->fetch(PDO::FETCH_OBJ)) {
   	$ids[] = $get->id;

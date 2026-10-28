@@ -8,8 +8,8 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 class Atlasses
 { public  $atlasCodes=array();
   public  function __construct()                                                // Constructor initialises the public atlasCodes property
-    { global $objDatabase;
-	  $run=$objDatabase->selectRecordset('SELECT atlasCode FROM atlasses;');
+    { global $objDatabase_new;
+	  $run=$objDatabase_new->selectRecordset('SELECT code AS atlasCode FROM atlases;');
 	  while($get=$run->fetch(PDO::FETCH_OBJ))
 	    $this->atlasCodes[$get->atlasCode]=$GLOBALS['AtlasName'.$get->atlasCode];
     asort($this->atlasCodes);

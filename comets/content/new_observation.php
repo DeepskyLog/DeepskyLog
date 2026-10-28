@@ -12,7 +12,7 @@ if ((! isset($inIndex)) || (! $inIndex)) {
 }
 function new_observation()
 {
-    global $baseURL, $loggedUser, $objInstrument, $objCometObject, $objCometObservation, $objPresentations, $objObserver, $objUtil, $objLocation, $instDir;
+    global $baseURL, $loggedUser, $objInstrument, $objCometObject, $objCometObservation, $objPresentations, $objObserver, $objUtil, $objLocation, $instDir, $objObservationStore;
     $role = $objObserver->getObserverProperty($loggedUser, 'role', 2);
     $adapt = false;
     echo "<div id=\"main\">";
@@ -183,15 +183,8 @@ function new_observation()
     // Make sure to show the current drawing
     $imaLocation = "";
     if ($obsid) {
-        $upload_dir = 'cometdrawings';
-        $dir = opendir($instDir . 'comets/' . $upload_dir);
-        while (false !== ($file = readdir($dir))) {
-            if ("." == $file or ".." == $file) {
-                continue; // skip current directory and directory above
-            }
-            if (fnmatch($obsid . "_resized.gif", $file) || fnmatch($obsid . "_resized.jpg", $file) || fnmatch($obsid . "_resized.png", $file)) {
-                $imaLocation = $baseURL . "comets/" . $upload_dir . "/" . $obsid . ".jpg";
-            }
+        if ($objCometObservation->hasDrawing($obsid)) {
+            $imaLocation = $objObservationStore->drawingUrl($obsid, false, 'comet');
         }
     }
 

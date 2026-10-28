@@ -1,19 +1,18 @@
 <?php
 require_once 'lib/observers.php';
 require_once 'lib/setup/databaseInfo.php';
-require_once 'lib/database.php';
 
 global $objObserver;
 global $objDatabase;
 
 $objObserver=new Observers;
-$objDatabase=new Database;
+// $objDatabase is the DatabaseMux of preludes.php (observations are in the new database).
 
 function checkUser($login, $passwd) {
 	global $objObserver;
 	if($login=="visitor")
 		return "visitor";
-	else if($objObserver->getObserverPropertyCS($login,'password')==md5($passwd))
+	else if($objObserver->checkPassword($login,$passwd))
 		return "loggedUser:".$objObserver->getObserverPropertyCS($login,"firstname","")." ".$objObserver->getObserverPropertyCS($login,"name","");
 	else
 		return "invalidUser";
@@ -24,7 +23,7 @@ function checkUserToSession($login, $passwd) {
 	$loggedUser='';
   $loggedUserName='';
   $_SESSION['admin']="no";
-  if(($login!="")&&($passwd!="")&&($objObserver->getObserverProperty($login,'password')==md5($passwd))) {
+  if(($login!="")&&($passwd!="")&&$objObserver->checkPassword($login,$passwd)) {
 		$_SESSION['lang']=$objUtil->checkGetKey('language',$objObserver->getObserverProperty($login,'language'));
 		$_SESSION['deepskylog_id']=$login;
 		$loggedUser=$_SESSION['deepskylog_id'];

@@ -495,7 +495,7 @@ class Utils
     public function comastObservations($result)
     {
         global $objPresentations, $objObservation, $objCatalog, $objSession;
-        global $objDatabase, $loggedUser;
+        global $objDatabase, $objDatabase_new, $loggedUser;
         include_once "cometobjects.php";
         include_once "observers.php";
         include_once "instruments.php";
@@ -1414,7 +1414,7 @@ class Utils
             // Check whether this observation is part of a session...
             if (!empty($usedSessions) && is_array($usedSessions)) {
                 for ($scnt = 0; $scnt < count($usedSessions); $scnt++) {
-                $sessionObs = $objDatabase->selectRecordsetArray(
+                $sessionObs = $objDatabase_new->selectRecordsetArray(
                     "select * from sessionObservations where sessionid = \"" .
                     $usedSessions [$scnt] . "\" and observationid = \"" .
                     $value ['observationid'] . "\""
@@ -2206,7 +2206,7 @@ class Utils
         include_once "icqreferencekey.php";
         include_once "setup/vars.php";
         include_once "setup/databaseInfo.php";
-        global $instDir, $objCometObject, $loggedUser, $dateformat;
+        global $instDir, $objCometObject, $loggedUser, $dateformat, $objObservationStore;
         $result = $this->sortResult($result);
 
         $objects = new CometObjects();
@@ -2396,25 +2396,9 @@ class Utils
                 $pdf->ezText(html_entity_decode($descstr), "12");
             }
 
-            $upload_dir = $instDir . 'comets/' . 'cometdrawings';
-            $dir = opendir($upload_dir);
-
-            while (false !== ($file = readdir($dir))) {
-                if ("." == $file or ".." == $file) {
-                    continue; // skip current directory and directory above
-                }
-                if (fnmatch($value . ".gif", $file)
-                    || fnmatch($value . ".jpg", $file)
-                    || fnmatch($value . ".png", $file)
-                ) {
-                    $pdf->ezImage(
-                        $upload_dir . "/" . $value . ".jpg",
-                        0,
-                        500,
-                        "none",
-                        "left"
-                    );
-                }
+            $drawing = $objObservationStore->drawingPath($value, 'comet');
+            if ($drawing) {
+                $pdf->ezImage($drawing, 0, 500, "none", "left");
             }
 
             $pdf->ezText("");
@@ -4444,7 +4428,7 @@ class Utils
      */
     public function pdfObservations($result)
     {
-        global $loggedUser, $dateformat, $instDir, $objObservation, $objObserver;
+        global $loggedUser, $dateformat, $instDir, $objObservation, $objObserver, $objObservationStore;
         global $objInstrument, $objLocation, $objPresentations, $objObject;
         global $objFilter, $objEyepiece, $objLens;
 
@@ -4745,11 +4729,13 @@ class Utils
                 $value['observationid'],
                 'hasDrawing'
             );
-            if ($hasDrawing) {
+            $drawing = $hasDrawing
+                ? $objObservationStore->drawingPath($value['observationid'])
+                : null;
+            if ($drawing) {
                 $pdf->ezText("");
                 $pdf->ezImage(
-                    $instDir . "deepsky/drawings/" . $value['observationid']
-                    . ".jpg",
+                    $drawing,
                     0,
                     500,
                     "none",
@@ -5311,9 +5297,6 @@ class Utils
             case 'detail_object':
                 return 'deepsky/content/view_object.php';
                 break;
-            case 'changeToken':
-                return 'common/content/change_password.php';
-                break;
             case 'detail_observation':
                 return 'deepsky/content/view_observation.php';
                 break;
@@ -5486,9 +5469,6 @@ class Utils
                 if ($loggedUser) {
                     return 'common/content/getLocation.php';
                 }
-                break;
-            case 'subscribe':
-                return 'common/content/register.php';
                 break;
             case 'privacy':
                 return 'common/content/privacy.php';

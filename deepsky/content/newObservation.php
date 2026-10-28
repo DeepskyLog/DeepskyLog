@@ -29,7 +29,7 @@ function newObservation()
     global $ClusterTypeC, $ClusterTypeD, $ClusterTypeE, $ClusterTypeF, $ClusterTypeG;
     global $ClusterTypeH, $ClusterTypeI, $ClusterTypeX, $objObservation, $objObject;
     global $objFilter, $objLens, $objEyepiece, $objLanguage, $objObserver;
-    global $objInstrument, $objLocation, $objPresentations, $objUtil;
+    global $objInstrument, $objLocation, $objPresentations, $objUtil, $objObservationStore;
 
     echo "<script type=\"text/javascript\" src=\"" . $baseURL
         . "lib/javascript/checkUtils.js\"></script>";
@@ -591,18 +591,32 @@ function newObservation()
             . ">" . _("arcseconds") . "</option>";
         $contentDiameter .= "</select>&nbsp;";
         // Misc ========================================================
+        // The characteristics of the observation being edited (1 yes,
+        // -1 or 0 no), else those of the form posted before.
+        $characteristic = function ($name) use ($observationid, $objObservation, $objUtil) {
+            return $observationid
+                ? ($objObservation->getDsObservationProperty($observationid, $name) > 0)
+                : (bool) $objUtil->checkPostKey($name);
+        };
+        if ($observationid) {
+            $theStellarExtended = $characteristic('stellar') ? 'stellar'
+                : ($characteristic('extended') ? 'extended' : '');
+        } else {
+            $theStellarExtended = $objUtil->checkPostKey("stellarextended");
+        }
+        $theResolved = $characteristic('resolved');
         $contentMisc1 = "<input type=\"radio\" name=\"stellarextended\""
             . " value=\"stellar\" "
-            . (($objUtil->checkPostKey("stellarextended") == "stellar")
+            . (($theStellarExtended == "stellar")
             ? "checked=\"checked\" " : "")
             . "/>" . _("Stellar") . "&nbsp;";
         $contentMisc1 .= "<input type=\"radio\" name=\"stellarextended\""
             . " value=\"extended\" "
-            . (($objUtil->checkPostKey("stellarextended") == "extended")
+            . (($theStellarExtended == "extended")
             ? "checked=\"checked\" " : "")
             . " />" . _("Extended") . "&nbsp;";
         $contentMisc1 .= "<input type=\"checkbox\" name=\"mottled\" "
-            . ($objUtil->checkPostKey("mottled") ? "checked " : "")
+            . ($characteristic("mottled") ? "checked " : "")
             . "/>" . _("Mottled") . "&nbsp;";
         $contentMisc2 = "";
         $contentMisc3 = "";
@@ -636,13 +650,13 @@ function newObservation()
                 . " '$visOc[3]', '$visOc[4]', '$visOc[5]', '$visOc[6]',"
                 . " '$visOc[7]', '$vis[1]', '$vis[2]', '$vis[3]', '$vis[4]',"
                 . " '$vis[5]', '$vis[6]', '$vis[7]')\""
-                . ($objUtil->checkPostKey("resolved") ? "checked " : "") . "/>"
+                . ($theResolved ? "checked " : "") . "/>"
                 . _("Resolved") . "&nbsp;";
-            $contentMisc2 .= "<input type=\"checkbox\" name=\"unusualShape\" />"
+            $contentMisc2 .= "<input type=\"checkbox\" name=\"unusualShape\" " . ($characteristic("unusualShape") ? "checked " : "") . "/>"
                 . _("Unusual Shape") . "&nbsp;";
-            $contentMisc2 .= "<input type=\"checkbox\" name=\"partlyUnresolved\" />"
+            $contentMisc2 .= "<input type=\"checkbox\" name=\"partlyUnresolved\" " . ($characteristic("partlyUnresolved") ? "checked " : "") . "/>"
                 . _("Partly unresolved") . "&nbsp;";
-            $contentMisc2 .= "<input type=\"checkbox\" name=\"colorContrasts\" />"
+            $contentMisc2 .= "<input type=\"checkbox\" name=\"colorContrasts\" " . ($characteristic("colorContrasts") ? "checked " : "") . "/>"
                 . _("Color contrasts");
             if ($objObject->getDsoProperty($object, 'type') != "GLOCL") {
                 $contentMisc3 .= "<a href=\"" . _("https://github.com/DeepskyLog/DeepskyLog/wiki/Open-Cluster-types")
@@ -663,39 +677,39 @@ function newObservation()
                     ? " selected=\"selected\" " : '') . ">A - " . $ClusterTypeA
                     . "</option>";
                 $contentMisc4 .= "<option value=\"B\""
-                    . (($objUtil->checkPostKey('clusterType') == 'B')
+                    . (($theClustertype == 'B')
                     ? " selected=\"selected\" " : '') . ">B - " . $ClusterTypeB
                     . "</option>";
                 $contentMisc4 .= "<option value=\"C\""
-                    . (($objUtil->checkPostKey('clusterType') == 'C')
+                    . (($theClustertype == 'C')
                     ? " selected=\"selected\" " : '') . ">C - " . $ClusterTypeC
                     . "</option>";
                 $contentMisc4 .= "<option value=\"D\""
-                    . (($objUtil->checkPostKey('clusterType') == 'D')
+                    . (($theClustertype == 'D')
                     ? " selected=\"selected\" " : '') . ">D - " . $ClusterTypeD
                     . "</option>";
                 $contentMisc4 .= "<option value=\"E\""
-                    . (($objUtil->checkPostKey('clusterType') == 'E')
+                    . (($theClustertype == 'E')
                     ? " selected=\"selected\" " : '') . ">E - " . $ClusterTypeE
                     . "</option>";
                 $contentMisc4 .= "<option value=\"F\""
-                    . (($objUtil->checkPostKey('clusterType') == 'F')
+                    . (($theClustertype == 'F')
                     ? " selected=\"selected\" " : '') . ">F - " . $ClusterTypeF
                     . "</option>";
                 $contentMisc4 .= "<option value=\"G\""
-                    . (($objUtil->checkPostKey('clusterType') == 'G')
+                    . (($theClustertype == 'G')
                     ? " selected=\"selected\" " : '') . ">G - " . $ClusterTypeG
                     . "</option>";
                 $contentMisc4 .= "<option value=\"H\""
-                    . (($objUtil->checkPostKey('clusterType') == 'H')
+                    . (($theClustertype == 'H')
                     ? " selected=\"selected\" " : '') . ">H - " . $ClusterTypeH
                     . "</option>";
                 $contentMisc4 .= "<option value=\"I\""
-                    . (($objUtil->checkPostKey('clusterType') == 'I')
+                    . (($theClustertype == 'I')
                     ? " selected=\"selected\" " : '') . ">I - " . $ClusterTypeI
                     . "</option>";
                 $contentMisc4 .= "<option value=\"X\""
-                    . (($objUtil->checkPostKey('clusterType') == 'X')
+                    . (($theClustertype == 'X')
                     ? " selected=\"selected\" " : '') . ">J - " . $ClusterTypeX
                     . "</option>";
                 $contentMisc4 .= "</select>&nbsp;";
@@ -706,9 +720,9 @@ function newObservation()
             )
         )
         ) {
-            $contentMisc2 .= "<input type=\"checkbox\" name=\"equalBrightness\" />"
+            $contentMisc2 .= "<input type=\"checkbox\" name=\"equalBrightness\" " . ($characteristic("equalBrightness") ? "checked " : "") . "/>"
                 . _("Equal Brightness") . "&nbsp;";
-            $contentMisc2 .= "<input type=\"checkbox\" name=\"niceField\" />"
+            $contentMisc2 .= "<input type=\"checkbox\" name=\"niceField\" " . ($characteristic("niceField") ? "checked " : "") . "/>"
                 . _("in nice field");
             if ($objObject->getDsoProperty($object, 'type') != "GLOCL") {
                 $contentMisc4 = _("component 1") . "&nbsp;";
@@ -831,8 +845,7 @@ function newObservation()
                            $observationid, 'hasDrawing'
                        )
                        ) {
-                           $imaLocation = $baseURL . "deepsky/drawings/"
-                               . $observationid . ".jpg";
+                           $imaLocation = $objObservationStore->drawingUrl($observationid) . "";
                            echo "<br /><img width=\"200\" src=" . $imaLocation . " />";
                        }
                    }
@@ -955,7 +968,8 @@ function newObservation()
             echo "<div class=\"form-group\">
                    <label>" . _("Visibility") . "</label>";
             echo "<div class=\"form-inline\">";
-            echo $contentVisibility;
+            echo (($objObject->getDsoProperty($object, 'type') == "OPNCL") && $theResolved)
+                ? $contentVisibilityOc : $contentVisibility;
             echo "</div>";
             echo "</div>";
 

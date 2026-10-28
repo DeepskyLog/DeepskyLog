@@ -199,7 +199,7 @@ class Messages {
 
 		if ($receiver == "all") {
 			// We loop over all observers and send all observers who wants to receive the messages as email a mail.
-			$toMail = $objDatabase->selectSingleArray ( "select * from observers where sendMail=\"1\" and role=\"1\"", "id" );
+			$toMail = $objDatabase->selectSingleArray ( "select * from observers where sendMail=\"1\" and role<>\"" . ROLEWAITLIST . "\"", "id" );
 			if (sizeof ( $toMail ) > 0) {
 				foreach ( $toMail as $mailTo ) {
 					$this->sendEmail ( $subject, $message . "<br /><br />", $mailTo );
@@ -280,7 +280,7 @@ class Messages {
 		$date = $mysqldate = date ( 'Y-m-d H:i:s' );
 
 		// We loop over all observers and send all observers who wants to receive the messages as email a mail.
-		$toMail = $objDatabase->selectSingleArray ( "select * from observers where role=\"1\"", "id" );
+		$toMail = $objDatabase->selectSingleArray ( "select * from observers where role<>\"" . ROLEWAITLIST . "\"", "id" );
 		if (sizeof ( $toMail ) > 0) {
 			foreach ( $toMail as $mailTo ) {
 				$this->sendEmail ( $subject, $message . "<br /><br />", $mailTo );

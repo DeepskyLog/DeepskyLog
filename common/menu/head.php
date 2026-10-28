@@ -149,8 +149,6 @@ function head() {
 		$TitleText = _("Add lens");
 	elseif ($includeFile == 'common/content/message.php')
 		$TitleText = "";
-	elseif ($includeFile == 'common/content/register.php')
-		$TitleText = _("Register");
 	elseif ($includeFile == 'common/content/overview_eyepieces.php')
 		$TitleText = _("Eyepiece overview");
 	elseif ($includeFile == 'common/content/overview_filters.php')

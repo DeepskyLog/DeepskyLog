@@ -32,32 +32,33 @@ if ((!isset($inIndex)) || (!$inIndex)) {
  */
 class Observers
 {
-    /**
-     * Adds a new observer to the database.
-     * The new observer will not be able to log in yet.
-     * Before being able to do so, the administrator must validate
-     * the new user.
-     *
-     * @param string $id        The id of the new user.
-     * @param string $name      The last name of the observer.
-     * @param string $firstname The first name of the observer.
-     * @param string $email     The mail address of the observer.
-     * @param string $password  The md5(...) encoded password.
-     *
-     * @return string The return string of the SQL command.
-     */
-    public function addObserver($id, $name, $firstname, $email, $password)
-    {
-        global $objDatabase, $objAccomplishments;
-        $toReturn = $objDatabase->execSQL(
-            "INSERT INTO observers (id, name, firstname, email, password, role, language)"
-            . " VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\","
-            . " \"$password\","
-            . " \"" . ROLEWAITLIST . "\", \"" . $_SESSION['lang'] . "\")"
-        );
-        $objAccomplishments->addObserver($id);
-        return $toReturn;
-    }
+    // The observers are the users of the new DB (view legacy_observers).
+    // Old property => column of users.
+    private const USER_COLUMNS = [
+        'email', 'language', 'stdlocation', 'stdtelescope', 'icqname',
+        'observationlanguage', 'standardAtlasCode', 'fstOffset', 'copyright',
+        'overviewdsos', 'lookupdsos', 'detaildsos', 'overviewstars',
+        'lookupstars', 'detailstars', 'atlaspagefont', 'photosize1',
+        'overviewFoV', 'photosize2', 'lookupFoV', 'detailFoV', 'sendMail',
+        'version', 'showInches',
+    ];
+
+    // Old property => key in user_preferences (users has no column for it).
+    private const PREFERENCES = [
+        'UT' => 'legacy_ut',
+        'usedLanguages' => 'legacy_used_languages',
+        'club' => 'legacy_club',
+        'lastReadObservationId' => 'legacy_last_read_observation',
+    ];
+
+    // Rows of observers read in this request (getObserverProperty()).
+    private static $_rows = [];
+
+    // The teams of the new application.
+    private const TEAM_OBSERVERS = 1;
+    private const TEAM_ADMINISTRATORS = 2;
+    private const TEAM_DATABASE_EXPERTS = 3;
+
     /**
      * Returns the user id if the mail is given.
      *
@@ -81,7 +82,7 @@ class Observers
     {
         global $objDatabase;
         return $objDatabase->selectSingleArray(
-            "SELECT id FROM observers WHERE role = \"ROLEADMIN\"", 'id'
+            "SELECT id FROM observers WHERE role = " . ROLEADMIN, 'id'
         );
     }
     /**
@@ -246,10 +247,17 @@ class Observers
     public function getObserverProperty($id, $property, $defaultValue = '')
     {
         global $objDatabase;
-        return $objDatabase->selectSingleValue(
-            "SELECT " . $property . " FROM observers WHERE id=\"" . $id . "\"",
-            $property, $defaultValue
-        );
+        // Pages ask for several properties of the same observers, row after row.
+        if (!array_key_exists($id, self::$_rows)) {
+            self::$_rows[$id] = array_change_key_case(
+                $objDatabase->selectRecordArray(
+                    "SELECT * FROM observers WHERE id=\"" . $id . "\""
+                )
+            );
+        }
+        $value = isset(self::$_rows[$id][strtolower($property)])
+            ? self::$_rows[$id][strtolower($property)] : '';
+        return $value != '' ? $value : $defaultValue;
     }
     /**
      * Returns the requested property from the observer, in utf8
@@ -363,11 +371,11 @@ class Observers
     {
         global $objDatabase, $loggedUser;
         if ($loggedUser) {
-            $objDatabase->execSQL(
-                "UPDATE observers SET lastReadObservationId="
-                . $objDatabase->selectSingleValue(
+            $this->setObserverProperty(
+                $loggedUser, 'lastReadObservationId',
+                $objDatabase->selectSingleValue(
                     "SELECT MAX(id) AS MaxID FROM observations", 'MaxID', 0
-                ) . " WHERE id=\"" . $loggedUser . "\""
+                )
             );
         }
     }
@@ -380,12 +388,9 @@ class Observers
      */
     public function markAsRead($themark)
     {
-        global $objDatabase, $loggedUser;
+        global $loggedUser;
         if ($loggedUser) {
-            $objDatabase->execSQL(
-                "UPDATE observers SET lastReadObservationId="
-                . $themark . " WHERE id=\"" . $loggedUser . "\""
-            );
+            $this->setObserverProperty($loggedUser, 'lastReadObservationId', (int) $themark);
         }
         unset($_SESSION['Qobs']);
     }
@@ -400,11 +405,145 @@ class Observers
      */
     public function setObserverProperty($id, $property, $propertyValue)
     {
-        global $objDatabase;
-        $objDatabase->execSQL(
-            "UPDATE observers SET " . $property . "=\""
-            . $propertyValue . "\" WHERE id=\"" . $id . "\""
+        global $objDatabase_new;
+        self::$_rows = [];
+        $userId = $this->_userId($id);
+        if (!$userId) {
+            return;
+        }
+        // The old site keeps posted text HTML-encoded, the new DB does not.
+        $value = html_entity_decode((string) $propertyValue, ENT_QUOTES, 'UTF-8');
+        $columns = array_change_key_case(array_combine(self::USER_COLUMNS, self::USER_COLUMNS));
+        $preferences = array_change_key_case(self::PREFERENCES);
+        $key = strtolower($property);
+
+        if (isset($columns[$key])) {
+            $this->_updateUser($userId, $columns[$key] . ' = ' . $objDatabase_new->quote($value));
+        } elseif ($key == 'name' || $key == 'firstname') {
+            // users has the full name: first name, space, last name.
+            $first = $key == 'firstname' ? $value : html_entity_decode($this->getObserverProperty($id, 'firstname'), ENT_QUOTES, 'UTF-8');
+            $last = $key == 'name' ? $value : html_entity_decode($this->getObserverProperty($id, 'name'), ENT_QUOTES, 'UTF-8');
+            $this->_updateUser($userId, 'name = ' . $objDatabase_new->quote(trim($first . ' ' . $last)));
+        } elseif (isset($preferences[$key])) {
+            $objDatabase_new->execSQL(
+                "INSERT INTO user_preferences (user_id, `key`, value, created_at, updated_at) VALUES ("
+                . $userId . ", " . $objDatabase_new->quote($preferences[$key]) . ", "
+                . $objDatabase_new->quote((string) $propertyValue) . ", NOW(), NOW()) "
+                . "ON DUPLICATE KEY UPDATE value = VALUES(value), updated_at = NOW()"
+            );
+        } elseif ($key == 'password') {
+            $this->_updateUser($userId, 'password = ' . $objDatabase_new->quote(password_hash($value, PASSWORD_BCRYPT)));
+        } elseif ($key == 'role') {
+            $this->_setRole($userId, (int) $propertyValue);
+        } else {
+            error_log('Observers: the property ' . $property . ' is not stored any more.');
+        }
+    }
+
+    /**
+     * The id in users of an observer, or 0.
+     *
+     * @param string $id The observerid.
+     *
+     * @return int
+     */
+    private function _userId($id)
+    {
+        global $objDatabase_new;
+        return (int) $objDatabase_new->selectSingleValue(
+            "SELECT id FROM users WHERE username = "
+            . $objDatabase_new->quote(html_entity_decode($id, ENT_QUOTES, 'UTF-8')),
+            'id',
+            0
         );
+    }
+
+    private function _updateUser($userId, $set)
+    {
+        global $objDatabase_new;
+        $objDatabase_new->execSQL(
+            "UPDATE users SET " . $set . ", updated_at = NOW() WHERE id = " . (int) $userId
+        );
+    }
+
+    /**
+     * The old role is a team of the new application: ROLEADMIN the
+     * administrators, ROLECOMETADMIN the database experts, ROLEUSER neither.
+     */
+    private function _setRole($userId, $role)
+    {
+        global $objDatabase_new;
+        $teams = [
+            self::TEAM_ADMINISTRATORS => $role == ROLEADMIN,
+            self::TEAM_DATABASE_EXPERTS => $role == ROLECOMETADMIN,
+        ];
+        if ($role == ROLEWAITLIST) {
+            return;
+        }
+        foreach ($teams as $team => $member) {
+            if ($member) {
+                $objDatabase_new->execSQL(
+                    "INSERT IGNORE INTO team_user (team_id, user_id, created_at, updated_at) VALUES ("
+                    . $team . ", " . (int) $userId . ", NOW(), NOW())"
+                );
+            } else {
+                $objDatabase_new->execSQL(
+                    "DELETE FROM team_user WHERE team_id = " . $team . " AND user_id = " . (int) $userId
+                );
+                // Back to the observers when that team was the active one.
+                $this->_updateUser(
+                    $userId,
+                    "current_team_id = IF(current_team_id = " . $team . ", " . self::TEAM_OBSERVERS . ", current_team_id)"
+                );
+            }
+        }
+    }
+
+    /**
+     * Checks a password (as posted, HTML-encoded) against the one of the
+     * observer. The new application stores bcrypt hashes; the accounts that
+     * have not logged in since still have the MD5 hash of the old site, plain
+     * or wrapped in bcrypt. Those are replaced by a bcrypt hash, as the new
+     * application does.
+     *
+     * @param string $id     The observerid.
+     * @param string $posted The password from the form.
+     *
+     * @return bool
+     */
+    public function checkPassword($id, $posted)
+    {
+        $hash = (string) $this->getObserverPropertyCS($id, 'password');
+        $plain = html_entity_decode($posted, ENT_COMPAT, 'UTF-8');
+        if ($hash === '' || $posted === '') {
+            return false;
+        }
+        if (preg_match('/^[0-9a-f]{32}$/i', $hash)) {
+            $ok = hash_equals(strtolower($hash), md5($posted));
+        } elseif (password_verify($plain, $hash)) {
+            return true;
+        } else {
+            $ok = password_verify(md5($posted), $hash)
+                || password_verify(md5(htmlentities($plain)), $hash);
+        }
+        if ($ok) {
+            $this->setObserverProperty($id, 'password', $plain);
+        }
+        return $ok;
+    }
+
+    /**
+     * The token in the login cookie: changes with the password.
+     *
+     * @param string $id The observerid.
+     *
+     * @return string 64 hex digits.
+     */
+    public function loginToken($id)
+    {
+        $hash = (string) $this->getObserverPropertyCS($id, 'password');
+        // No account, no token: random, so it matches no cookie.
+        return $hash === '' ? bin2hex(random_bytes(32)) : hash('sha256', $id . '|' . $hash);
     }
     /**
      * Sets all the used languages for the observer.
@@ -416,11 +555,7 @@ class Observers
      */
     private function _setUsedLanguages($id, $language)
     {
-        global $objDatabase;
-        $objDatabase->execSQL(
-            "UPDATE observers SET usedLanguages = '"
-            . serialize($language) . "' WHERE id=\"$id\""
-        );
+        $this->setObserverProperty($id, 'usedLanguages', serialize($language));
     }
     /**
      * Returns the full name of the observer.
@@ -667,73 +802,10 @@ class Observers
             && array_key_exists('deepskylog_id', $_POST)
             && $_POST['register'] && $_POST['deepskylog_id']
         ) {
-            // user doesn't exist yet
-            if ($this->getObserverProperty($_POST ['deepskylog_id'], 'name')) {
-                $entryMessage .= _("There is already someone with this account name, please choose another one!");
-                if ($objUtil->checkPostKey('change')) {
-                    $_GET['indexAction'] = 'change_account';
-                } else {
-                    $_GET['indexAction'] = 'subscribe';
-                }
-            } else {
-                $this->addObserver(
-                    $_POST['deepskylog_id'], $_POST['name'], $_POST['firstname'],
-                    $_POST['email'], md5($_POST['passwd'])
-                );
-                // READ ALL THE LANGUAGES FROM THE CHECKBOXES
-                $allLanguages = $objLanguage->getAllLanguages($_SESSION['lang']);
-                foreach ($allLanguages as $key=>$value) {
-                    if (array_key_exists($key, $_POST)) {
-                        $usedLanguages[] = $key;
-                    }
-                }
-                $this->_setUsedLanguages(
-                    $_POST['deepskylog_id'], $usedLanguages
-                );
-                $this->setObserverProperty(
-                    $_POST['deepskylog_id'], 'copyright', $this->getPostedLicense()
-                );
-                $this->setObserverProperty(
-                    $_POST['deepskylog_id'], 'observationlanguage',
-                    $_POST['description_language']
-                );
-                $this->setObserverProperty(
-                    $_POST['deepskylog_id'], 'language', $_POST['language']
-                );
-                $this->setObserverProperty(
-                    $_POST['deepskylog_id'], 'registrationDate', date("Ymd H:i")
-                );
-                $body = _("Details deepskylog account") . ": <br /><br />" .                 // send mail to administrator
-                                "<table><tr><td><strong>" . _("Account name")
-                    . "</strong></td><td>" . $_POST['deepskylog_id'] . "</td></tr>"
-                    . "<tr><td><strong>" . _("Email") . "</strong></td><td>"
-                    . $_POST['email'] . "</td></tr>"
-                    . "<tr><td><strong>" . _("Name") . "</strong></td><td>"
-                    . html_entity_decode($_POST['firstname']) . " "
-                    . html_entity_decode($_POST['name']) . "</td></tr>"
-                    . "<tr><td><strong>" . _("Motivation") . "</strong></td><td>"
-                    . html_entity_decode($_POST['motivation'])
-                    . "</td></tr></table><br />"
-                    . _("This email has automatically been sent by the DeepskyLog application")
-                    . "<br /><br />";
-
-                if (isset($developversion) && ($developversion == true)) {
-                    $entryMessage .= "On the live server, a mail would be sent with the subject: "
-                        . _("DeepskyLog - registration") . ".<p>";
-                } else {
-                    $objMessages->sendEmail(
-                        _("DeepskyLog - registration"), $body, "developers"
-                    );
-                }
-                $entryMessage = _(
-                    "Your DeepskyLog account has been created. One of our developers will validate your account as soon as possible. You will receive an email confirmation when this happens.
-                Please remember that DeepskyLog is the work of only a very small group of volunteers, and that it can take up to a day or so to get validated.
-                On very rare occasions, all developers are on an astronomical observing session for a week. Normally, there is a backup person in these periods.
-                If your account is not validated within 24 hours, you can send an email to deepskywim at gmail.com to be sure."
-                );
-                $_GET['user'] = $_POST['deepskylog_id'];
-                $_GET['indexAction'] = 'detail_observer';
-            }
+            // The accounts are the users of the new site: register there.
+            global $baseURLNew;
+            header('Location: ' . rtrim($baseURLNew, '/') . '/register?return_to=' . urlencode($baseURL));
+            exit;
         } elseif ($objUtil->checkPostKey('change')) {
             // pressed change button
             if (! $loggedUser) {
@@ -935,23 +1007,11 @@ class Observers
                 _("You need to be logged in as an administrator to execute these operations.")
             );
         }
-        $objDatabase->execSQL(
-            "DELETE FROM observers WHERE id=\""
-            . ($id = $objUtil->checkGetKey('validateDelete')) . "\""
-        );
-        $id = html_entity_decode($id, ENT_QUOTES, "UTF-8");
-        if (isset($developversion) && ($developversion == 1)) {
-            $entryMessage .= "On the live server, a mail would be sent with the subject: Deepskylog account deleted.<br />";
-        } else {
-            $objMessages->sendEmail(
-                "Deepskylog account deleted",
-                "The account for " . $id . " was deleted by "
-                . $objObserver->getFullName($loggedUser) . "<br /><br />",
-                "developers"
-            );
-        }
-        $objAccomplishments->deleteObserver($id);
-        return "The user has been erased.";
+        // Deleting the user here would leave everything the observer
+        // recorded in the new DB behind. Observers delete their own account
+        // on the profile page of the new site (which removes it all), and the
+        // accounts without anything recorded are deleted automatically.
+        return _("Accounts are deleted on the new DeepskyLog: the observer can delete the account on the profile page, and accounts that recorded nothing are deleted automatically after 24 months.");
     }
     /**
      * Validates the user with the given id and gives the user the given role.
@@ -967,9 +1027,8 @@ class Observers
                 _("You need to be logged in as an administrator to execute these operations.")
             );
         }
-        $objDatabase->execSQL(
-            "UPDATE observers SET role = \"" . ($role = ROLEUSER)
-            . "\" WHERE id=\"" . ($id = $objUtil->checkGetKey('validate')) . "\""
+        $this->setObserverProperty(
+            ($id = $objUtil->checkGetKey('validate')), 'role', ($role = ROLEUSER)
         );
         if ($role == ROLEADMIN) {
             $ad = "<br /><br />"
@@ -1048,11 +1107,10 @@ class Observers
         $login, $passwd, $newPassword, $confirmNewPassword
     ) {
         global $entryMessage, $loggedUser;
-        $passwd_db = $this->getObserverPropertyCS($login, "password");
 
         if (strcmp($login, $loggedUser) == 0) {
             // We check if we can change the password
-            if (strcmp($passwd_db, $passwd) == 0) {
+            if ($this->checkPassword($login, $passwd)) {
                 if (strcmp($newPassword, $confirmNewPassword) != 0) {
                     $entryMessage = _("The new password and the confirmed password are not the same. Unable to change the password.");
                 } else {
@@ -1066,7 +1124,7 @@ class Observers
                     session_regenerate_id(true);
                     $cookietime = time() + (365 * 24 * 60 * 60); // 1 year
                     setcookie(
-                        "deepskylogsec", $newPassword . $login,
+                        "deepskylogsec", $this->loginToken($login) . $login,
                         $cookietime, "/", "", false
                     );
 
@@ -1079,136 +1137,6 @@ class Observers
         }
         // Return to the change account page.
         $_GET['indexAction'] = 'change_account';
-    }
-    /**
-     * Updates the password of the observer using a token.
-     *
-     * @param string $login              The observerid.
-     * @param string $newPassword        The new password.
-     * @param string $confirmNewPassword The confirmation of the new password.
-     *
-     * @return None
-     */
-    public function updatePasswordToken($login, $newPassword, $confirmNewPassword)
-    {
-        global $entryMessage, $loggedUser;
-        $passwd_db = $this->getObserverPropertyCS($login, "password");
-
-        // We check if we can change the password
-        if (strcmp($newPassword, $confirmNewPassword) != 0) {
-            $entryMessage = _("The new password and the confirmed password are not the same. Unable to change the password.");
-        } else {
-            $this->setObserverProperty($login, 'password', $newPassword);
-
-            $entryMessage = _("The password is successfully changed.");
-        }
-        // Return to the change account page.
-        $_GET['indexAction'] = 'main';
-    }
-    /**
-     * Request a new password. A mail will be send to the observer which
-     * includes a token to change the password.
-     *
-     * @return None
-     */
-    public function requestNewPassword()
-    {
-        global $entryMessage, $objUtil, $mailFrom, $baseURL;
-        global $instDir, $objMessages;
-
-        // First check if we are indeed using the correct indexAction
-        if (strcmp($objUtil->checkPostKey('indexAction'), "requestPassword") == 0) {
-            // Check for the userid or the mail address
-            $userid = $objUtil->checkPostKey('deepskylog_id');
-            $email = $objUtil->checkPostKey('mail');
-
-            if ($userid != "") {
-                // Check if the userid exists in the database, if this is not the case,
-                // show a message that the userid is not known by DeepskyLog.
-                $email = $this->getObserverProperty($userid, 'email');
-
-                // If mail is empty, show message that the userid is not correct.
-                if (strcmp($email, "") == 0) {
-                    $entryMessage = sprintf(
-                        _("The username %s is not known by DeepskyLog. Impossible to request a new password."),
-                        "<strong>" . $userid . "</strong>"
-                    );
-                    return;
-                }
-            } elseif ($email != "") {
-                // We have a mail address, but no username. Get the userid which belongs
-                // to the mailaddress.
-                $userid = $this->getUserIdFromEmail($email);
-
-                if (strcmp($userid, "") == 0) {
-                    $entryMessage = sprintf(
-                        _("The mail address %s is not known by DeepskyLog. Impossible to request a new password."),
-                        "<strong>" . $email . "</strong>"
-                    );
-                    return;
-                }
-            } else {
-                $entryMessage = _("The given username and mail address are not known by DeepskyLog. Impossible to request a new password.");
-                return;
-            }
-
-            $token = bin2hex(openssl_random_pseudo_bytes(10));
-
-            include_once $instDir . "/lib/password.php";
-            $pass = new Password();
-            $pass->storeToken($userid, $token);
-
-            $confirmLink = $baseURL . "index.php?indexAction=changeToken&amp;t="
-                . $token;
-            $cancelLink = $baseURL . "index.php?indexAction=removeToken&amp;t="
-                . $token;
-
-            // Send nice looking mail
-            $subject = _("DeepskyLog Change Password Request");
-            $message = "\n"
-                . sprintf(
-                    _(
-                        "You have (or someone impersonating you has) requested to change your %s password.
-                    <br />To complete the change, visit the following link:"
-                    ),
-                    "<a href=\"" . $baseURL . "\">DeepskyLog</a>"
-                ) . "<br /><br />";
-            $message .= "<a href=\"" . $confirmLink . "\">" . $confirmLink . "</a>";
-            $message .= "<br /><br />"
-                . _("If you are not the person who made this request, or you wish to cancel this request, visit the following link:")
-                . "<br /><br />";
-            $message .= "<a href=\"" . $cancelLink . "\">" . $cancelLink . "</a>";
-
-            // Get correct date (in all languages)
-            include_once $instDir . "/lib/setup/language.php";
-            // Get the date in the correct locale
-            $lang = new Language();
-            $lang->setLocale();
-
-            $datetime = new DateTime();
-            $datetime->add(new DateInterval('PT24H'));
-            $formattedDate = $datetime->format('l jS F Y, H:i:s');
-
-            $message .= "<br /><br />"
-                . sprintf(
-                    _("If you do nothing, the request will lapse after 24 hours (on %s) or when you log in successfully."),
-                    $formattedDate
-                );
-
-            $message .= "<br /><h2><a href=\"mailto:deepskylog@groups.io\">"
-                . _("The DeepskyLog team") . "</a></h2>";
-
-            // Send the mail
-            $objMessages->sendEmail($subject, $message, $userid);
-
-            // Show message
-            // Show which username and which email we use for requesting the new password
-            $entryMessage = sprintf(
-                _("A token for changing the password of %s has been emailed to %s. Follow the instructions in that email to change your password."),
-                "<strong>" . $userid . "</strong>",
-                "<strong>" . $email . "</strong>"
-            );
-        }
     }
 }
 ?>

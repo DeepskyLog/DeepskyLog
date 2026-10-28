@@ -36,10 +36,14 @@ class Lenses {
 		return $objDatabase_new->selectSingleValue("SELECT id FROM lenses ORDER BY id DESC LIMIT 1", 'id', '');
 	}
 
-	public function getAllFiltersIds($id) // returns a list with all id's which have the same name as the name of the given id
-{
+	public function getAllLensesIds($id) // returns a list with all id's which have the same name as the name of the given id
+	{
 		global $objDatabase_new;
-		return $objDatabase_new->selectSinleArray ( "SELECT id FROM lenses WHERE name = \"" . $objDatabase->selectSingleValue ( "SELECT name FROM lenses WHERE id = \"" . $id . "\"" ) . "\"" );
+		return $objDatabase_new->selectSingleArray(
+		    "SELECT id FROM lenses WHERE name = "
+		    . "(SELECT name FROM lenses WHERE id = " . (int) $id . ")",
+		    'id'
+		);
 	}
 	public function getLensId($name, $observer) // returns the id for this lens
 {

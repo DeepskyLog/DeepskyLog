@@ -102,7 +102,7 @@ if ($loggedUser == '') {
                         result += d.observationdescription;
                     }
                     if(d.hasdrawing == 1){
-                        result += '<br/><br/><a data-lightbox="image-1" href="/deepsky/drawings/'+d.observationid+'.jpg"><img src="/deepsky/drawings/'+d.observationid+'_resized.jpg"/></a>';
+                        result += '<br/><br/><a data-lightbox="image-1" href="'+d.drawingurl+'"><img src="'+d.drawingurlresized+'"/></a>';
                     }
                     result +=
                     '</td>'+

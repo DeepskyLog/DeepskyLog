@@ -7,7 +7,7 @@ if ((! isset ( $inIndex )) || (! $inIndex))
 else
 	view_observation ();
 function view_observation() {
-	global $instDir, $baseURL, $loggedUser, $dateformat, $objCometObservation, $objCometObject, $objInstrument, $objLocation, $objObserver, $objPresentations;
+	global $instDir, $baseURL, $loggedUser, $dateformat, $objCometObservation, $objCometObject, $objInstrument, $objLocation, $objObserver, $objPresentations, $objObservationStore;
 	$ICQMETHODS = new ICQMETHOD ();
 	$ICQREFERENCEKEYS = new ICQREFERENCEKEY ();
 
@@ -148,18 +148,9 @@ function view_observation() {
 		echo "</tr>";
 		}
 		echo "</table>";
-		$upload_dir = 'cometdrawings';
-		$dir = opendir ( $instDir . 'comets/' . $upload_dir );
-		while ( FALSE !== ($file = readdir ( $dir )) ) {
-			if ("." == $file or ".." == $file) {
-				continue; // skip current directory and directory above
-			}
-			if (fnmatch ( $_GET ['observation'] . "_resized.gif", $file ) || fnmatch ( $_GET ['observation'] . "_resized.jpg", $file ) || fnmatch ( $_GET ['observation'] . "_resized.png", $file )) {
-				$content1 = $baseURL . "comets/" . $upload_dir . "/" . $_GET ['observation'] . ".jpg";
-				$content2 = "<a href=\"" . $baseURL . "comets/" . $upload_dir . "/" . $_GET ['observation'] . ".jpg\" data-lightbox=\"image-1\" data-title=\"\"><img class=\"account\" src=\"" . $baseURL . "comets/$upload_dir" . "/" . "$file\" alt=\"\"></img></a>";
-				echo $content2;
-				echo "<hr />";
-			}
+		if ($objCometObservation->hasDrawing($_GET ['observation'])) {
+		    echo "<a href=\"" . $objObservationStore->drawingUrl($_GET ['observation'], false, 'comet') . "\" data-lightbox=\"image-1\" data-title=\"\"><img class=\"account\" src=\"" . $objObservationStore->drawingUrl($_GET ['observation'], true, 'comet') . "\" alt=\"\"></img></a>";
+		    echo "<hr />";
 		}
 		$role = $objObserver->getObserverProperty ( $loggedUser, 'role', 2 );
 		if (($loggedUser == $objCometObservation->getObserverId ( $_GET ['observation'] )) || ($role == ROLEADMIN) || ($role == ROLECOMETADMIN)) {

@@ -6,15 +6,14 @@
 // Version 1.0 : 27/11/2005, WDM
 //
 
-include_once "database.php";
 
 class ICQMETHOD
 {
  // getDescription returns the description of an ICQMETHOD
  function getDescription($id)
- {global $objDatabase;
-  $sql = "SELECT * FROM ICQ_METHOD WHERE id = \"$id\"";
-  $run = $objDatabase->selectRecordset($sql);
+ {global $objDatabase_new;
+  $sql = "SELECT * FROM legacy_icq_method WHERE id = \"$id\"";
+  $run = $objDatabase_new->selectRecordset($sql);
 
   $get = $run->fetch(PDO::FETCH_OBJ);
 
@@ -26,9 +25,9 @@ class ICQMETHOD
  // getIds returns an array with the ids of all ICQ METHODS
  function getIds()
  {
-  global $objDatabase;
-  $sql = "SELECT * FROM ICQ_METHOD";
-  $run = $objDatabase->selectRecordset($sql);
+  global $objDatabase_new;
+  $sql = "SELECT * FROM legacy_icq_method";
+  $run = $objDatabase_new->selectRecordset($sql);
 
   while($get = $run->fetch(PDO::FETCH_OBJ))
   {

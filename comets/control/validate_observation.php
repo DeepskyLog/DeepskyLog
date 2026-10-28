@@ -15,7 +15,7 @@ if((!isset($inIndex)) || (!$inIndex)) {
 function validate_observation()
 {
     global $instDir,$entryMessage,$loggedUser,$maxFileSize,
-    $objObserver,$objCometObservation,$objCometObject,$objUtil;
+    $objObserver,$objCometObservation,$objCometObject,$objUtil,$objObservationStore;
     if($loggedUser) { // logged in
         if($_POST['addobservation']) { // pushed add observation button
             if (!$_POST['day'] || !$_POST['month'] || !$_POST['year'] || !$_POST['comet'] || (!$_POST['hours'] && strcmp($_POST['hours'], 0) != "0") || (!$_POST['minutes'] && strcmp($_POST['minutes'], 0) != "0")) { // user forgot required field
@@ -76,15 +76,7 @@ function validate_observation()
                     $objCometObservation->setMethode($current_observation, $_POST['icq_method']);
                     $objCometObservation->setDc($current_observation, $_POST['condensation']);
                     if($_FILES['drawing']['tmp_name'] != "") { // drawing to upload
-                        $upload_dir = 'cometdrawings';
-                        $dir = opendir($instDir."comets/".$upload_dir);
-                        // resize code
-                        require_once "common/control/resize.php";
-                        $original_image = $_FILES['drawing']['tmp_name'];
-                        $destination_image = $instDir.'comets/'.$upload_dir . "/" . $current_observation . "_resized.jpg";
-                        $new_image = image_createThumb($original_image, $destination_image, 490, 490, 100);
-                        move_uploaded_file($_FILES['drawing']['tmp_name'], $instDir.'comets/'.$upload_dir . "/" . $current_observation . ".jpg");
-                        $objCometObservation->setDrawing($current_observation);
+                        $objObservationStore->saveDrawing($current_observation, $_FILES['drawing']['tmp_name'], 'comet');
                     }
                     // save current details for faster submission of multiple observations
                     $_SESSION['year'] = $_POST['year']; // save current year

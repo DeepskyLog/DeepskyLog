@@ -96,11 +96,8 @@ class Locations
     {
         global $objDatabase_new;
         return $objDatabase_new->selectSingleArray(
-            "SELECT id FROM locations WHERE name = \""
-            . $objDatabase->selectSingleValue(
-                "SELECT name FROM locations WHERE id = \"" . $id . "\"",
-                'name'
-            ) . "\"",
+            "SELECT id FROM locations WHERE name = "
+            . "(SELECT name FROM locations WHERE id = " . (int) $id . ")",
             'id'
         );
     }

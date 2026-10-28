@@ -10,7 +10,7 @@ else databaseInfo();
 function databaseInfo()
 {
   global $host,$user,$pass,$dbname,$developversion,$googleAnalytics,$domainName,
-         $instDir,$baseURL,$tempDir,$mailFrom,$mailTo,$dirAtlasses,$copyright,
+         $instDir,$baseURL,$baseURLNew,$newStorageDir,$tempDir,$mailFrom,$mailTo,$dirAtlasses,$copyright,
          $title,$browsertitle,$vvsInfo,$dslInfo,$objectInfo,$w3cInfo,
          $register,$dateformat,$defaultLanguage,$languageMenu,$maxFileSize,$modules,
          $standardLanguagesForObservationsDuringRegistration,$languagesDuringRegistration,$dirAstroImageCatalogs,
@@ -20,6 +20,7 @@ function databaseInfo()
   $host           = "localhost";
   $user           = "root";
   $pass           = "";
+  // The old database: no longer used (all data is in $dbnameNew)
   $dbname         = "deepskylog";
   $developversion = 1;             // $developversion should be removed or set to 0 on the live server
   $mailFrom       = "developers@deepskylog.be";
@@ -28,6 +29,11 @@ function databaseInfo()
   // Installation directory and url (each one has to end on a slash!)
   $instDir      = "/var/www/html/";
   $baseURL      = "http://localhost/";
+  // The new application (DeepskyLog on Laravel), which holds the observations:
+  // its URL, and its public disk (storage/app/public/), where drawings uploaded
+  // here are stored and from where they are shown (each one has to end on a slash!)
+  $baseURLNew   = "https://www.deepskylog.org/";
+  $newStorageDir = "";  // e.g. "/var/www/deepskylog/storage/app/public/"
   // tempDir has NO end slash !
   $tempDir      = "/tmp/DeepskyLog";
   $dirAstroImageCatalogs = "http://www.distant-targets.be/files/DSL/astroimagecatalogs/";
