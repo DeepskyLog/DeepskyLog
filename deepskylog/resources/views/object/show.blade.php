@@ -1176,6 +1176,12 @@ try {
                                 </div>
                             @endif
 
+                            {{-- One drawing per aperture class, linking to the comparison of the drawings --}}
+                            @if (!empty($canonicalSlug) && !empty($session->name)
+                                && !in_array($session->source_type_raw ?? '', ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun'], true))
+                                <x-drawing-apertures :object-name="$session->name" :slug="$canonicalSlug" />
+                            @endif
+
                             {{-- Sketches that were DeepskyLog sketch(s) of the week for this object --}}
                             @php
 $objectSketches = collect();
@@ -1272,6 +1278,13 @@ try {
                                                 class="text-gray-300 hover:underline">{{ __('All drawings') }}</a>
                                         @endif
                                     </li>
+                                    @if (!empty($canonicalSlug) && ($drawingsCount ?? 0) > 1
+                                        && !in_array($session->source_type_raw ?? '', ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun'], true))
+                                        <li>
+                                            <a href="{{ route('object.drawings.compare', ['slug' => $canonicalSlug]) }}"
+                                                class="text-gray-300 hover:underline">{{ __('Compare drawings by aperture') }}</a>
+                                        </li>
+                                    @endif
                                     {{-- The charts are only useful for deep-sky objects --}}
                                     @if ((!empty($canonicalSlug) || !empty($session->slug))
                                         && !in_array($session->source_type_raw ?? '', ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun'], true))
