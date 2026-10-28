@@ -176,3 +176,10 @@ select:-moz-autofill {
 	color: rgb(243 244 246) !important;
 	/* gray-100 */
 }
+
+/* Leaflet gives its panes and controls z-indexes of 400 to 1000, which
+   otherwise compete with the rest of the page and put a map above the menus
+   and modals. Keep them inside the map. */
+.leaflet-container {
+    isolation: isolate;
+}
