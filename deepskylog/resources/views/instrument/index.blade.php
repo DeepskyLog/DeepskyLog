@@ -16,6 +16,9 @@
             >
                 {{ __("Add Instrument") }}
             </x-button>
+            <x-button secondary :href="route('instrument.what-if')" class="ml-2">
+                {{ __("What if I bought…") }}
+            </x-button>
         </div>
 
         <x-card>

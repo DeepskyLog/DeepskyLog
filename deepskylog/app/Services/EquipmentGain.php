@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Jobs\ComputeEquipmentGain;
 use App\Models\Eyepiece;
 use App\Models\Instrument;
+use App\Models\InstrumentType;
 use App\Models\Location;
 use App\Models\Observation;
 use App\Models\ObservingList;
@@ -18,7 +19,10 @@ use Illuminate\Support\Facades\DB;
  * observer's telescope or eyepiece shows at one of their locations (a
  * contrast reserve above VISIBLE_ABOVE) that they could not see before:
  * with none of their other active telescopes, or for an eyepiece, with the
- * standard telescope without it. Objects the observer has seen are left out
+ * standard telescope without it. "What if I bought…" (PLANNED) does the same
+ * for a telescope or binoculars the observer does not have: an unsaved
+ * Instrument made from the aperture and focal length or magnification they
+ * entered, used with their eyepieces. Objects the observer has seen are left out
  * when the result is shown (objects()), the rest are ranked by the number of
  * observations in DeepskyLog.
  *
@@ -34,7 +38,10 @@ class EquipmentGain
 
     public const EYEPIECE = 'eyepiece';
 
-    public const KINDS = [self::INSTRUMENT, self::EYEPIECE];
+    /** A telescope or binoculars the observer is thinking of buying. */
+    public const PLANNED = 'planned';
+
+    public const KINDS = [self::INSTRUMENT, self::EYEPIECE, self::PLANNED];
 
     /** Visible: a contrast reserve above this, "difficult" or better (as Tonight's best). */
     public const VISIBLE_ABOVE = 0.1;
@@ -65,7 +72,8 @@ class EquipmentGain
         public readonly Instrument|Eyepiece $equipment,
         public readonly ?Location $location,
         public readonly ?Instrument $instrument,
-        public readonly ?array $compareIds = null
+        public readonly ?array $compareIds = null,
+        public readonly ?array $planned = null
     ) {
     }
 
@@ -75,12 +83,72 @@ class EquipmentGain
      */
     public static function forInstrument(User $user, Instrument $instrument, ?Location $location, ?array $compareIds = null): self
     {
-        if ($compareIds !== null) {
-            $compareIds = array_values(array_unique(array_map('intval', $compareIds)));
-            sort($compareIds);
-        }
+        return new self($user, self::INSTRUMENT, $instrument, $location, $instrument, self::sortedIds($compareIds));
+    }
 
-        return new self($user, self::INSTRUMENT, $instrument, $location, $instrument, $compareIds);
+    /**
+     * The gain of a telescope or binoculars the observer does not have, from
+     * plannedSpec(), against the instruments of $compareIds, null for all
+     * their active ones.
+     */
+    public static function forPlanned(User $user, array $planned, ?Location $location, ?array $compareIds = null): self
+    {
+        $planned    = self::plannedSpec($planned);
+        $instrument = self::plannedInstrument($planned);
+
+        return new self($user, self::PLANNED, $instrument, $location, $instrument, self::sortedIds($compareIds), $planned);
+    }
+
+    /**
+     * A planned instrument as stored in the cache key and the job: binoculars
+     * or not, the aperture and focal length in mm (a telescope without one
+     * uses the generic magnifications), the magnification of binoculars
+     * (without one, that of a 5 mm exit pupil).
+     *
+     * @return array{binoculars: bool, aperture: float, focal_length: ?float, magnification: ?int}
+     */
+    public static function plannedSpec(array $planned): array
+    {
+        $binoculars    = (bool) ($planned['binoculars'] ?? false);
+        $focalLength   = (float) ($planned['focal_length'] ?? 0);
+        $magnification = (int) round((float) ($planned['magnification'] ?? 0));
+
+        return [
+            'binoculars'    => $binoculars,
+            'aperture'      => round(max(0.0, (float) ($planned['aperture'] ?? 0)), 1),
+            'focal_length'  => ! $binoculars && $focalLength > 0 ? round($focalLength, 1) : null,
+            'magnification' => $binoculars   && $magnification > 0 ? $magnification : null,
+        ];
+    }
+
+    /**
+     * An unsaved instrument of the spec, for ContrastReserveCalculator.
+     */
+    private static function plannedInstrument(array $planned): Instrument
+    {
+        $instrument = (new Instrument())->forceFill([
+            'name'               => '',
+            'aperture_mm'        => $planned['aperture'],
+            'focal_length_mm'    => $planned['focal_length']  ?? 0,
+            'fixedMagnification' => $planned['magnification'] ?? 0,
+            'field_of_view_deg'  => null,
+            'lens_id'            => null,
+        ]);
+        $instrument->setRelation('instrument_make', null);
+        $instrument->setRelation('instrument_type', $planned['binoculars'] ? (new InstrumentType())->forceFill(['name' => Instrument::BINOCULARS_TYPE]) : null);
+
+        return $instrument;
+    }
+
+    private static function sortedIds(?array $ids): ?array
+    {
+        if ($ids === null) {
+            return null;
+        }
+        $ids = array_values(array_unique(array_map('intval', $ids)));
+        sort($ids);
+
+        return $ids;
     }
 
     /**
@@ -91,8 +159,17 @@ class EquipmentGain
         return new self($user, self::EYEPIECE, $eyepiece, $location, $user->standardInstrument);
     }
 
-    public static function for(User $user, string $kind, int $equipmentId, ?int $locationId, ?array $compareIds = null): ?self
+    /**
+     * The gain of the observer's equipment of the kind, or of the planned
+     * instrument; null for equipment that is not theirs.
+     *
+     * @param  array|null  $planned  for PLANNED, the instrument (plannedSpec())
+     */
+    public static function for(User $user, string $kind, int $equipmentId, ?int $locationId, ?array $compareIds = null, ?array $planned = null): ?self
     {
+        if ($kind === self::PLANNED) {
+            return self::forPlanned($user, $planned ?? [], self::location($user, $locationId), $compareIds);
+        }
         $model     = $kind === self::EYEPIECE ? Eyepiece::class : Instrument::class;
         $equipment = $model::where('user_id', $user->id)->find($equipmentId);
         if (! $equipment) {
@@ -182,7 +259,7 @@ class EquipmentGain
         }
         Cache::add($this->key().':attempts', 0, now()->addHour());
         Cache::increment($this->key().':attempts');
-        ComputeEquipmentGain::dispatch($this->user->id, $this->kind, (int) $this->equipment->id, (int) $this->location->id, $this->compareIds);
+        ComputeEquipmentGain::dispatch($this->user->id, $this->kind, (int) $this->equipment->id, (int) $this->location->id, $this->compareIds, $this->planned);
 
         return true;
     }
@@ -278,20 +355,59 @@ class EquipmentGain
             return null;
         }
         $equipment   = $this->equipmentName();
-        $description = $this->kind === self::EYEPIECE
-            ? __('Objects the :eyepiece lets you see with your :instrument at :location that you could not see before.', ['eyepiece' => $equipment, 'instrument' => $this->instrumentName(), 'location' => $this->locationName()])
-            : __('Objects the :instrument lets you see at :location that you could not see with your other instruments.', ['instrument' => $equipment, 'location' => $this->locationName()]);
+        $description = match ($this->kind) {
+            self::EYEPIECE => __('Objects the :eyepiece lets you see with your :instrument at :location that you could not see before.', ['eyepiece' => $equipment, 'instrument' => $this->instrumentName(), 'location' => $this->locationName()]),
+            self::PLANNED  => __('Objects a :instrument would let you see at :location that you cannot see with your instruments.', ['instrument' => $equipment, 'location' => $this->locationName()]),
+            default        => __('Objects the :instrument lets you see at :location that you could not see with your other instruments.', ['instrument' => $equipment, 'location' => $this->locationName()]),
+        };
 
-        return ObservingList::createWithObjects($this->user, trim((string) $name) ?: __('New with :equipment', ['equipment' => $equipment]), $names, $description, $public);
+        return ObservingList::createWithObjects($this->user, trim((string) $name) ?: $this->defaultListName(), $names, $description, $public);
+    }
+
+    public function defaultListName(): string
+    {
+        return $this->kind === self::PLANNED
+            ? __('With a :instrument', ['instrument' => $this->equipmentName()])
+            : __('New with :equipment', ['equipment' => $this->equipmentName()]);
     }
 
     public function equipmentName(): string
     {
+        if ($this->kind === self::PLANNED) {
+            return $this->plannedName();
+        }
+
         return html_entity_decode((string) ($this->equipment instanceof Instrument ? $this->equipment->fullName() : $this->equipment->name), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+
+    /**
+     * "300 mm f/5 telescope", "12" telescope", "10×50 binoculars": the
+     * aperture of a telescope in inches when the observer uses them.
+     */
+    private function plannedName(): string
+    {
+        $aperture = $this->planned['aperture'];
+        if ($this->planned['binoculars']) {
+            return $this->planned['magnification']
+                ? __(':magnification×:aperture binoculars', ['magnification' => $this->planned['magnification'], 'aperture' => round($aperture)])
+                : __(':aperture mm binoculars', ['aperture' => round($aperture)]);
+        }
+        $size = $this->user->showInches
+            ? rtrim(rtrim(number_format($aperture / 25.4, 1, '.', ''), '0'), '.').'"'
+            : round($aperture).' mm';
+        if (! $this->planned['focal_length']) {
+            return __(':aperture telescope', ['aperture' => $size]);
+        }
+
+        return __(':aperture f/:ratio telescope', ['aperture' => $size, 'ratio' => rtrim(rtrim(number_format($this->planned['focal_length'] / $aperture, 1, '.', ''), '0'), '.')]);
     }
 
     public function instrumentName(): string
     {
+        if ($this->kind === self::PLANNED) {
+            return $this->plannedName();
+        }
+
         return $this->instrument ? html_entity_decode((string) $this->instrument->fullName(), ENT_QUOTES | ENT_HTML5, 'UTF-8') : '';
     }
 
@@ -363,7 +479,8 @@ class EquipmentGain
             'instrument'     => $instrument,
             'lens'           => $lens = ContrastReserveCalculator::lensFactor($instrument->lens_id),
             'magnifications' => $magnifications ?? ContrastReserveCalculator::magnifications($instrument, $this->user, $lens),
-            'label'          => html_entity_decode((string) $instrument->fullName(), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            // a planned instrument has no make
+            'label' => $instrument->exists ? html_entity_decode((string) $instrument->fullName(), ENT_QUOTES | ENT_HTML5, 'UTF-8') : $this->equipmentName(),
         ];
 
         if ($this->kind === self::EYEPIECE) {
@@ -393,13 +510,13 @@ class EquipmentGain
 
     /**
      * The instruments a telescope can be compared with: the observer's other
-     * active ones, the largest first.
+     * active ones (all of them for a planned one), the largest first.
      */
     public function comparable()
     {
         return Instrument::where('user_id', $this->user->id)
             ->where('active', true)
-            ->whereKeyNot($this->equipment->id)
+            ->when($this->equipment->exists, fn ($query) => $query->whereKeyNot($this->equipment->id))
             ->where('aperture_mm', '>', 0)
             ->orderByDesc('aperture_mm');
     }
@@ -488,6 +605,11 @@ class EquipmentGain
             ? [$this->equipment->focal_length_mm, $this->equipment->field_stop_mm, $this->equipment->apparentFOV, $this->instrument?->id]
             : [];
 
-        return 'equipment_gain:v'.self::RESULT_VERSION.':'.$this->user->id.':'.$this->kind.':'.$this->equipment->id.':'.md5(json_encode([$instruments, $eyepieces, $location, $equipment, $this->compareIds]));
+        $depends = [$instruments, $eyepieces, $location, $equipment, $this->compareIds];
+        if ($this->planned !== null) {
+            $depends[] = $this->planned;
+        }
+
+        return 'equipment_gain:v'.self::RESULT_VERSION.':'.$this->user->id.':'.$this->kind.':'.((int) $this->equipment->id).':'.md5(json_encode($depends));
     }
 }

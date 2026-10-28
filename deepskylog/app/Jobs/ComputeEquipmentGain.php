@@ -12,8 +12,9 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Calculates and caches the objects an observer's telescope or eyepiece
- * lets them see that they could not see before (EquipmentGain), for the
- * "What's new for me" page.
+ * (or one they are thinking of buying) lets them see that they could not
+ * see before (EquipmentGain), for the "What's new for me" and "What if I
+ * bought…" pages.
  */
 class ComputeEquipmentGain implements ShouldQueue
 {
@@ -31,14 +32,15 @@ class ComputeEquipmentGain implements ShouldQueue
         public string $kind,
         public int $equipmentId,
         public int $locationId,
-        public ?array $compareIds = null
+        public ?array $compareIds = null,
+        public ?array $planned = null
     ) {
     }
 
     public function handle(): void
     {
         $user = User::find($this->userId);
-        $gain = $user ? EquipmentGain::for($user, $this->kind, $this->equipmentId, $this->locationId, $this->compareIds) : null;
+        $gain = $user ? EquipmentGain::for($user, $this->kind, $this->equipmentId, $this->locationId, $this->compareIds, $this->planned) : null;
         try {
             if ($gain && $gain->unavailable() === null) {
                 $gain->compute();

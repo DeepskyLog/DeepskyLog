@@ -977,6 +977,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('instrument.whats-new')->middleware('doNotCacheResponse');
     Route::get('/eyepiece/{user}/{eyepiece}/whats-new', [App\Http\Controllers\WhatsNewEquipmentController::class, 'eyepiece'])
         ->name('eyepiece.whats-new')->middleware('doNotCacheResponse');
+    // What if I bought…: the objects a telescope the observer does not have adds
+    Route::view('/instrument/what-if', 'equipment.what-if')
+        ->name('instrument.what-if')->middleware('doNotCacheResponse');
 
     // Edit / update / delete an observing list
     Route::get('/observing-list/{list}/edit', [App\Http\Controllers\ObservingListController::class, 'edit'])
