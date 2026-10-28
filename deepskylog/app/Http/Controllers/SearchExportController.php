@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Pipelines\Sorting;
+use PowerComponents\Turbine\DataSource\Processors\Database\Pipelines\Sorting;
 
 class SearchExportController extends Controller
 {

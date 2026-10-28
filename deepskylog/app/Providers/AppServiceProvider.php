@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\ShareButtons\Presenters\CustomTemplateBasedPresenterMediator;
+use App\Support\PowerGridLazyLoading;
 use App\Support\SchemaColumns;
 use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Database\Eloquent\Model;
@@ -59,6 +60,9 @@ class AppServiceProvider extends ServiceProvider
                 Livewire::component($name, $class);
             }
         }
+
+        // PowerGrid 7 refuses Livewire's lazy loading of its tables
+        $this->app->booted(fn () => PowerGridLazyLoading::allow());
 
         // A migration can add or drop columns (the atlas columns of `objects`).
         Event::listen(MigrationsEnded::class, fn () => SchemaColumns::forget(['objects']));

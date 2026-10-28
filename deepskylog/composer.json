@@ -29,7 +29,7 @@
         "monarobase/country-list": "^3.4",
         "openspout/openspout": "^5.0",
         "petercoles/multilingual-language-list": "^1.16",
-        "power-components/livewire-powergrid": "^6",
+        "power-components/livewire-powergrid": "^7.0",
         "spatie/laravel-responsecache": "^7.0",
         "stichoza/google-translate-php": "^5.2",
         "symfony/http-client": "^7",

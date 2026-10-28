@@ -28,13 +28,14 @@ it('escapes cells a spreadsheet would read as a formula', function () {
 
 it('escapes formulas in the powergrid exports', function () {
     $export = (new ExportToCsv())->setData(
-        [Column::make('Name', 'name'), Column::make('Note', 'note')],
-        collect([(object) ['name' => '=1+1', 'note' => 'fine']])
+        [Column::make('Name', 'name'), Column::make('Note', 'note'), Column::make('Dec', 'dec')],
+        collect([(object) ['name' => '=1+1', 'note' => 'fine', 'dec' => '-12.5']])
     );
 
-    $prepared = $export->prepare($export->data, $export->columns, false);
+    $rows = iterator_to_array($export->streamRows($export->data, $export->columns, false), false);
 
-    expect($prepared['rows'][0])->toBe(['Name' => "'=1+1", 'Note' => 'fine']);
+    // PowerGrid escapes formulas itself, but a negative number stays a number
+    expect($rows[0])->toBe(["'=1+1", 'fine', '-12.5']);
 });
 
 it('sends security headers', function () {

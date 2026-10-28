@@ -33,11 +33,6 @@ final class PopularObservationsTable extends PowerGridComponent
         parent::mount();
     }
 
-    public function boot(): void
-    {
-        config(['livewire-powergrid.filter' => 'outside']);
-    }
-
     public function setUp(): array
     {
         $this->persist(['columns', 'filters']);

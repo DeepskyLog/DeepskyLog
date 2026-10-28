@@ -23,10 +23,6 @@ final class UserPopularObservationsTable extends PowerGridComponent
 
     protected ?\App\Models\User $observerUser = null;
 
-    public function boot(): void
-    {
-        config(['livewire-powergrid.filter' => 'outside']);
-    }
 
     // PowerGridComponent::mount() has no parameters, so keep signature compatible.
     public function mount(): void

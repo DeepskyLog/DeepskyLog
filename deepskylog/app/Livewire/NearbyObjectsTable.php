@@ -21,7 +21,6 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use App\Models\UserTableSetting;
@@ -31,7 +30,6 @@ use App\Models\UserTableSetting;
  */
 class NearbyObjectsTable extends PowerGridComponent
 {
-    use WithExport;
 
     public string $tableName = 'nearby-objects-table';
     public string $primaryKey = 'id';
@@ -142,7 +140,6 @@ class NearbyObjectsTable extends PowerGridComponent
 
     public function boot(): void
     {
-        config(['livewire-powergrid.filter' => 'outside']);
 
         // Attempt to load persisted user table settings early in the component
         // lifecycle so setUp() can pick up values like perPage when it runs.
@@ -3309,8 +3306,10 @@ class NearbyObjectsTable extends PowerGridComponent
     /**
      * Generic Livewire updated hook to catch property changes like sortField and sortDirection.
      */
-    public function updated($name, $value): void
+    public function updated(string $name, mixed $value = null): void
     {
+        parent::updated($name);
+
         try {
             // Direct property updates (simple Livewire updates)
             if ($name === 'sortField') {
@@ -3404,8 +3403,10 @@ class NearbyObjectsTable extends PowerGridComponent
     /**
      * Livewire hook: called when the PowerGrid setUp array changes (captures per-page changes)
      */
-    public function updatedSetUp($value): void
+    public function updatedSetUp(): void
     {
+        parent::updatedSetUp();
+
         try {
             // setUp.footer.perPage is used by PowerGrid; ensure we persist when it's changed
             if (is_array($this->setUp ?? null) && isset($this->setUp['footer']['perPage'])) {

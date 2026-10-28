@@ -102,11 +102,6 @@ class AdvancedObjectSearchTable extends PowerGridComponent
     private ?array $plannedTimes = null;
     public int $refreshTick = 0;
 
-    public function boot(): void
-    {
-        config(['livewire-powergrid.filter' => 'outside']);
-    }
-
     public function mount(array $filters = [], ?bool $showAddColumn = null): void
     {
         if ($showAddColumn !== null) {

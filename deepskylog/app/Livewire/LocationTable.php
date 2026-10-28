@@ -17,20 +17,13 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class LocationTable extends PowerGridComponent
 {
-    use WithExport;
 
     public bool $multiSort = false;
 
     public string $tableName = 'location-table';
-
-    public function boot(): void
-    {
-        config(['livewire-powergrid.filter' => 'outside']);
-    }
 
     public function setUp(): array
     {
@@ -224,16 +217,16 @@ final class LocationTable extends PowerGridComponent
         return view('actions.location', ['row' => $row]);
     }
 
-    public function onUpdatedToggleable($id, $field, $value): void
+    public function onPluginUpdated(string $plugin, string $event, array $params): void
     {
-        // $id and $field come from the browser: only the active flag of the
+        // The id and field come from the browser: only the active flag of the
         // user's own records may be toggled.
-        if ($field !== 'active') {
+        if ($plugin !== 'toggleable' || ($params['field'] ?? null) !== 'active') {
             return;
         }
 
-        Location::query()->where('id', $id)->where('user_id', Auth::id())->update([
-            'active' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
+        Location::query()->where('id', $params['id'] ?? null)->where('user_id', Auth::id())->update([
+            'active' => filter_var($params['value'] ?? false, FILTER_VALIDATE_BOOLEAN),
         ]);
     }
 

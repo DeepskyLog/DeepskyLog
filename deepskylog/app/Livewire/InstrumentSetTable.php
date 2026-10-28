@@ -14,21 +14,14 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 #[Lazy]
 class InstrumentSetTable extends PowerGridComponent
 {
-    use WithExport;
 
     public bool $multiSort = false;
 
     public string $tableName = 'instrumentset-table';
-
-    public function boot(): void
-    {
-        config(['livewire-powergrid.filter' => 'outside']);
-    }
 
     public function setUp(): array
     {

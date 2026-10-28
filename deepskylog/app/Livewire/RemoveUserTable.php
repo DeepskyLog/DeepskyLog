@@ -15,11 +15,9 @@ use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class RemoveUserTable extends PowerGridComponent
 {
-    use WithExport;
 
     public string $tableName = 'RemoveUserTable';
 
@@ -172,7 +170,7 @@ final class RemoveUserTable extends PowerGridComponent
         app(DeletesUsers::class)->delete($user);
     }
 
-    protected function getListeners(): array
+    public function getListeners(): array
     {
         return array_merge(
             parent::getListeners(),

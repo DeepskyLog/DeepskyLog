@@ -223,6 +223,9 @@
         };
     </script>
     <script src="/wireui/assets/scripts" defer></script>
+    {{-- PowerGrid's tables put scripts of their own in the page that register
+         with window.pgAlpine, which app.js (a deferred module) defines too late. --}}
+    <script>{!! file_get_contents(base_path('vendor/power-components/livewire-powergrid/resources/js/pg-alpine.js')) !!}</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
     <style>

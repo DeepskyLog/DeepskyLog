@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Livewire\Attributes\On;
 use OpenSpout\Common\Entity\Row;
 use OpenSpout\Writer\CSV\Options as CsvOptions;
 use OpenSpout\Writer\CSV\Writer as CsvWriter;
@@ -25,6 +26,7 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
+use PowerComponents\Turbine\Export\ExportEngine;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 final class ObservationSearchTable extends PowerGridComponent
@@ -55,6 +57,13 @@ final class ObservationSearchTable extends PowerGridComponent
 
     public string $sortField = 'observations.observed_on';
     public string $sortDirection = 'desc';
+
+    /**
+     * Whether <x-expand-all-details> opened all detail rows (#516), also those
+     * of the next page, sort or filter; $openedDetailIds then holds the rows
+     * toggled by hand.
+     */
+    public bool $allDetailsOpen = false;
 
     /** Object name filter passed in from the page (bound via :objectName="$q"). */
     public string $objectName = '';
@@ -133,9 +142,21 @@ final class ObservationSearchTable extends PowerGridComponent
         }
     }
 
-    public function boot(): void
+    #[On('expand-all-details')]
+    public function expandAllDetails(string $table, bool $expanded): void
     {
-        config(['livewire-powergrid.filter' => 'outside']);
+        if ($table !== $this->tableName) {
+            return;
+        }
+
+        $this->allDetailsOpen = $expanded;
+        $this->openedDetailIds = [];
+        $this->renderGridPartials();
+    }
+
+    public function isDetailOpen(int|string $rowId): bool
+    {
+        return $this->allDetailsOpen xor parent::isDetailOpen($rowId);
     }
 
     public function setUp(): array
@@ -1042,7 +1063,14 @@ final class ObservationSearchTable extends PowerGridComponent
 
     private function buildImportCompatibleRows(bool $selected): array
     {
-        $ids = collect($this->prepareToExport($selected))
+        // The rows PowerGrid's own export would write: the search, filters
+        // and sorting of the table, or the selected rows
+        $options = (array) data_get($this->setUp, 'exportable', []);
+        if ($selected) {
+            $options['selectedKeys'] = $this->checkboxValues;
+        }
+
+        $ids = collect((new ExportEngine())->prepareDataset($this, $options, $selected))
             ->pluck('id')
             ->filter(fn(mixed $id) => is_numeric($id))
             ->map(fn(mixed $id) => (int) $id)

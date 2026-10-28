@@ -15,19 +15,16 @@ function adminUserTableWithTwoMembers(): array
     return [$owner, $team, $other];
 }
 
-test('the remove button is handed to the front end for every row', function () {
-    [$owner, $team] = adminUserTableWithTwoMembers();
+test('the remove button is shown for the other members of the team', function () {
+    [$owner, $team, $other] = adminUserTableWithTwoMembers();
     test()->actingAs($owner);
 
-    $component = Livewire::test(AdminUserTable::class, ['team' => $team->id]);
-    $effects = (fn () => $this->lastState->getEffects())->call($component);
+    $html = Livewire::test(AdminUserTable::class, ['team' => $team->id])->html();
 
-    $actions = collect($effects['xjs'] ?? [])->firstWhere('expression', 'pgActions');
-    $payload = json_decode(data_get($actions, 'params.0', '[]'), true);
-
-    expect($payload)->toHaveKeys(array_map('strval', $team->users->pluck('id')->all()));
-    expect(data_get($payload, $team->users->last()->id.'.0.attributes.wire:click'))
-        ->toContain("\$dispatch('remove'");
+    // PowerGrid renders the buttons on the server; the rules hide it for
+    // user 1 and for the observer themselves
+    expect($html)->toContain(e("\$dispatch('remove', JSON.parse('[{$other->id}]'))"))
+        ->not->toContain(e("\$dispatch('remove', JSON.parse('[{$owner->id}]'))"));
 });
 
 test('a team member is removed when the remove button is clicked', function () {

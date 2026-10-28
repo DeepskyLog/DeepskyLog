@@ -139,8 +139,8 @@ it('lets the owner toggle the active flag in the table', function (string $facto
     $record = createOwnedBy($factory, $owner);
     $record->forceFill(['active' => 1])->save();
 
-    mountTable($table, $owner)
-        ->call('onUpdatedToggleable', (string) $record->id, 'active', '0');
+    $component = mountTable($table, $owner);
+    $component->dispatch('pg:toggleable-'.$component->get('tableName'), 'active', (string) $record->id, '0');
 
     expect((bool) $record->fresh()->active)->toBeFalse();
 })->with('equipment tables');
@@ -150,8 +150,8 @@ it('does not toggle the records of another user in the table', function (string 
     $record = createOwnedBy($factory, $owner);
     $record->forceFill(['active' => 1])->save();
 
-    mountTable($table, User::factory()->create())
-        ->call('onUpdatedToggleable', (string) $record->id, 'active', '0');
+    $component = mountTable($table, User::factory()->create());
+    $component->dispatch('pg:toggleable-'.$component->get('tableName'), 'active', (string) $record->id, '0');
 
     expect((bool) $record->fresh()->active)->toBeTrue();
 })->with('equipment tables');
@@ -160,8 +160,8 @@ it('only toggles the active column in the table', function (string $factory, str
     $owner = User::factory()->create();
     $record = createOwnedBy($factory, $owner);
 
-    mountTable($table, $owner)
-        ->call('onUpdatedToggleable', (string) $record->id, 'user_id', '0');
+    $component = mountTable($table, $owner);
+    $component->dispatch('pg:toggleable-'.$component->get('tableName'), 'user_id', (string) $record->id, '0');
 
     expect((int) $record->fresh()->user_id)->toBe($owner->id);
 })->with('equipment tables');

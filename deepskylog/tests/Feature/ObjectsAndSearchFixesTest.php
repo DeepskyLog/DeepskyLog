@@ -215,7 +215,7 @@ it('exports the search results in the order of the table', function () {
         ->toBe(['DSL NGC 2', 'DSL NGC 10', 'DSL NGC 100']);
 
     // After sorting the table on magnitude, the brightest last.
-    $this->withSession(['pg:advanced-search-results-table' => json_encode([
+    $this->withSession(['pg7:advanced-search-results-table' => json_encode([
         'sortField' => 'objects.mag',
         'sortDirection' => 'desc',
         'sortArray' => [],

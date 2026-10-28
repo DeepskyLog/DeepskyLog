@@ -67,7 +67,7 @@ it('uses the response cache for guests with a session cookie', function () {
 it('does not use the response cache when the session holds state that changes the page', function () {
     config(['responsecache.enabled' => true]);
 
-    expect(app(TeamAwareCacheProfile::class)->enabled(responseCacheGuestRequest('/observers', ['pg:observation-search' => ['filters' => ['x']]])))
+    expect(app(TeamAwareCacheProfile::class)->enabled(responseCacheGuestRequest('/observers', ['pg7:observation-search' => ['filters' => ['x']]])))
         ->toBeFalse();
 });
 

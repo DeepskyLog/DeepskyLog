@@ -3,23 +3,28 @@
 namespace App\Support\Exports;
 
 use App\Support\SpreadsheetCell;
-use Illuminate\Support\Collection;
+use Generator;
 
 /**
  * PowerGrid's CSV/XLSX export with the cells a spreadsheet would read as a
- * formula escaped (see SpreadsheetCell).
+ * formula escaped (see SpreadsheetCell). PowerGrid escapes them itself, but
+ * also a number such as "-12.5", which a declination column then exports as
+ * text: its apostrophe is taken off again for numbers.
  */
 trait EscapesFormulas
 {
-    public function prepare(Collection $data, array $columns, bool $stripTags): array
+    public function streamRows(iterable $data, array $columns, bool $stripTags): Generator
     {
-        $prepared = parent::prepare($data, $columns, $stripTags);
+        foreach (parent::streamRows($data, $columns, $stripTags) as $values) {
+            yield array_map(
+                fn ($value) => SpreadsheetCell::escape(SpreadsheetCell::unescape((string) $value)),
+                $values
+            );
+        }
+    }
 
-        $prepared['headers'] = SpreadsheetCell::escapeRow((array) $prepared['headers']);
-        $prepared['rows'] = collect($prepared['rows'])
-            ->map(fn ($row) => SpreadsheetCell::escapeRow((array) $row))
-            ->all();
-
-        return $prepared;
+    public function exportHeaders(array $columns): array
+    {
+        return SpreadsheetCell::escapeRow(parent::exportHeaders($columns));
     }
 }

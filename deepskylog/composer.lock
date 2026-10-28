@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a540fb285b28469bf11817939661a35a",
+    "content-hash": "92d1ed09dfc242239fcefd7f51337737",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3669,6 +3669,64 @@
             "time": "2026-10-27T07:14:23+00:00"
         },
         {
+            "name": "livewire/blaze",
+            "version": "v1.0.20",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/livewire/blaze.git",
+                "reference": "518679566eb57ea1f5f63cba551239c13d9b3e9c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/livewire/blaze/zipball/518679566eb57ea1f5f63cba551239c13d9b3e9c",
+                "reference": "518679566eb57ea1f5f63cba551239c13d9b3e9c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
+                "illuminate/view": "^10.0|^11.0|^12.0|^13.0",
+                "nikic/php-parser": "^5.0",
+                "php": "^8.1"
+            },
+            "conflict": {
+                "livewire/flux": "<2.12.1"
+            },
+            "require-dev": {
+                "livewire/flux": "dev-main",
+                "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
+                "pestphp/pest": "^2.0|^3.0|^4.0",
+                "pestphp/pest-plugin-laravel": "^2.0|^3.0|^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Livewire\\Blaze\\BlazeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Livewire\\Blaze\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Caleb Porzio"
+                }
+            ],
+            "description": "A tool for optimizing Blade component performance by folding them into parent templates",
+            "support": {
+                "issues": "https://github.com/livewire/blaze/issues",
+                "source": "https://github.com/livewire/blaze/tree/v1.0.20"
+            },
+            "time": "2026-10-25T20:07:27+00:00"
+        },
+        {
             "name": "livewire/livewire",
             "version": "v4.4.8",
             "source": {
@@ -5816,35 +5874,42 @@
         },
         {
             "name": "power-components/livewire-powergrid",
-            "version": "v6.11.1",
+            "version": "v7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Power-Components/livewire-powergrid.git",
-                "reference": "4bb2cade45d8ca99fd44201cdbac057f1e702e86"
+                "reference": "85db4690088754e24c8485222b302539d834a810"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Power-Components/livewire-powergrid/zipball/4bb2cade45d8ca99fd44201cdbac057f1e702e86",
-                "reference": "4bb2cade45d8ca99fd44201cdbac057f1e702e86",
+                "url": "https://api.github.com/repos/Power-Components/livewire-powergrid/zipball/85db4690088754e24c8485222b302539d834a810",
+                "reference": "85db4690088754e24c8485222b302539d834a810",
                 "shasum": ""
             },
             "require": {
                 "laravel/prompts": "^0.1|^0.2|^0.3",
-                "livewire/livewire": "^3.7|^4.0",
-                "php": "^8.2"
+                "livewire/blaze": "^1.0",
+                "livewire/livewire": "^4.0",
+                "php": "^8.3",
+                "power-components/partials": "^0.2.0",
+                "power-components/turbine": "^0.14.0"
+            },
+            "conflict": {
+                "illuminate/support": "<12.0",
+                "laravel/framework": "<12.0"
             },
             "require-dev": {
-                "composer/composer": "^2.9",
-                "laradumps/laradumps": "^4.6|^5.0",
-                "larastan/larastan": "^2.0|^3.0|^4.0",
-                "laravel/pint": "^1.26",
-                "laravel/scout": "^10.11.3",
-                "openspout/openspout": "^4.24.5|^5.0",
-                "orchestra/testbench": "^9.4|^10.0|^11.0",
-                "pestphp/pest": "^3.0|^4.0"
+                "composer/composer": "^2.10",
+                "laradumps/laradumps": "^5.0",
+                "larastan/larastan": "^3.10",
+                "laravel/pint": "^1.29",
+                "laravel/scout": "^11.3",
+                "openspout/openspout": "^5.0",
+                "orchestra/testbench": "^10.0|^11.0",
+                "pestphp/pest": "^4.7|^5.0"
             },
             "suggest": {
-                "openspout/openspout": "Required to export XLS and CSV"
+                "openspout/openspout": "Required to export XLS and CSV (v5)"
             },
             "type": "library",
             "extra": {
@@ -5882,7 +5947,7 @@
             "homepage": "https://github.com/power-components/livewire-powergrid",
             "support": {
                 "issues": "https://github.com/Power-Components/livewire-powergrid/issues",
-                "source": "https://github.com/Power-Components/livewire-powergrid/tree/v6.11.1"
+                "source": "https://github.com/Power-Components/livewire-powergrid/tree/v7.0.0"
             },
             "funding": [
                 {
@@ -5890,7 +5955,151 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-21T16:54:09+00:00"
+            "time": "2026-10-27T22:59:31+00:00"
+        },
+        {
+            "name": "power-components/partials",
+            "version": "v0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Power-Components/partials.git",
+                "reference": "7affd1ee28e59593abe37d014c90cd6000c099fd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Power-Components/partials/zipball/7affd1ee28e59593abe37d014c90cd6000c099fd",
+                "reference": "7affd1ee28e59593abe37d014c90cd6000c099fd",
+                "shasum": ""
+            },
+            "require": {
+                "livewire/livewire": "^4.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.29",
+                "mockery/mockery": "^1.6.12",
+                "orchestra/testbench": "^10.0",
+                "pestphp/pest": "^4.0",
+                "pestphp/pest-plugin-browser": "^4.0",
+                "pestphp/pest-plugin-laravel": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PowerComponents\\Partials\\PartialsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "PowerComponents\\Partials\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Luan Freitas",
+                    "email": "luanfreitas10@protonmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "homepage": "https://github.com/power-components/partials",
+            "support": {
+                "issues": "https://github.com/Power-Components/partials/issues",
+                "source": "https://github.com/Power-Components/partials/tree/v0.2.0"
+            },
+            "time": "2026-08-26T11:49:07+00:00"
+        },
+        {
+            "name": "power-components/turbine",
+            "version": "v0.14.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Power-Components/turbine.git",
+                "reference": "8e7b58491ccd10d6ed65556fb5affa91a4d62228"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Power-Components/turbine/zipball/8e7b58491ccd10d6ed65556fb5affa91a4d62228",
+                "reference": "8e7b58491ccd10d6ed65556fb5affa91a4d62228",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^12.0 || ^13.0",
+                "illuminate/database": "^12.0 || ^13.0",
+                "illuminate/http": "^12.0 || ^13.0",
+                "illuminate/pagination": "^12.0 || ^13.0",
+                "illuminate/pipeline": "^12.0 || ^13.0",
+                "illuminate/support": "^12.0 || ^13.0",
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.10",
+                "laravel/pint": "^1.29",
+                "laravel/scout": "^11.3",
+                "openspout/openspout": "^4.0 || ^5.0",
+                "orchestra/testbench": "^10.0 || ^11.0",
+                "pestphp/pest": "^4.0 || ^5.0"
+            },
+            "suggest": {
+                "laravel/scout": "Required to use Laravel Scout as a datasource.",
+                "openspout/openspout": "Required to export XLS and CSV (supports v4 and v5)"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PowerComponents\\Turbine\\Providers\\TurbineServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PowerComponents\\Turbine\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Luan Freitas",
+                    "email": "luanfreitas10@protonmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Headless, UI-agnostic table engine for Laravel: describe the grid in PHP, get JSON for Inertia, Livewire, REST or plain AJAX.",
+            "keywords": [
+                "JSON-API",
+                "datatable",
+                "eloquent",
+                "headless",
+                "inertia",
+                "laravel",
+                "livewire",
+                "powergrid",
+                "scout",
+                "turbine"
+            ],
+            "support": {
+                "issues": "https://github.com/Power-Components/turbine/issues",
+                "source": "https://github.com/Power-Components/turbine/tree/v0.14.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/luanfreitasdev",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-10-27T22:26:02+00:00"
         },
         {
             "name": "pragmarx/google2fa",

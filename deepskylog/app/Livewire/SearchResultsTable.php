@@ -62,10 +62,6 @@ class SearchResultsTable extends PowerGridComponent
     private array $cachedEphemerides = [];
     public int $refreshTick = 0;
 
-    public function boot(): void
-    {
-        config(['livewire-powergrid.filter' => 'outside']);
-    }
 
     // NOTE: recommendBestMagForRow removed — on-load computation/upsert disabled per request.
 

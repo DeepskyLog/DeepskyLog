@@ -33,11 +33,6 @@ final class PopularObjectsTable extends PowerGridComponent
 
     public string $sortDirection = 'asc';
 
-    public function boot(): void
-    {
-        config(['livewire-powergrid.filter' => 'outside']);
-    }
-
     public function mount(): void
     {
         if (!in_array($this->mode, PopularObjectsRanking::MODES, true)) {

@@ -2,21 +2,16 @@
 
 namespace App\Livewire\Concerns;
 
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use WireUi\Traits\WireUiActions;
 
 /**
  * PowerGrid's CSV/XLS export, refused when the table holds more rows than one
- * web request can load. Use instead of WithExport on public tables.
+ * web request can load. Use on public tables.
  */
 trait LimitsExportRows
 {
     use WireUiActions;
-    use WithExport {
-        exportToCsv as protected powerGridExportToCsv;
-        exportToXLS as protected powerGridExportToXLS;
-    }
 
     /** Most rows one CSV/XLS export may hold. */
     protected function maxExportRows(): int
@@ -30,7 +25,7 @@ trait LimitsExportRows
             return false;
         }
 
-        return $this->powerGridExportToCsv($selected);
+        return parent::exportToCsv($selected);
     }
 
     public function exportToXLS(bool $selected = false): BinaryFileResponse|bool
@@ -39,7 +34,7 @@ trait LimitsExportRows
             return false;
         }
 
-        return $this->powerGridExportToXLS($selected);
+        return parent::exportToXLS($selected);
     }
 
     /**

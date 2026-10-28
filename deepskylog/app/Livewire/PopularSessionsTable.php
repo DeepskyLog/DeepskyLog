@@ -19,11 +19,6 @@ final class PopularSessionsTable extends PowerGridComponent
 
     public string $tableName = 'popular-sessions';
 
-    public function boot(): void
-    {
-        config(['livewire-powergrid.filter' => 'outside']);
-    }
-
     public function setUp(): array
     {
         $this->persist(['columns', 'filters']);

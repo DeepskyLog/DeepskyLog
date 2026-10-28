@@ -15,11 +15,9 @@ use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class AdminUserTable extends PowerGridComponent
 {
-    use WithExport;
 
     public bool $multiSort = true;
 
@@ -283,7 +281,7 @@ final class AdminUserTable extends PowerGridComponent
         return Team::find($this->team);
     }
 
-    protected function getListeners(): array
+    public function getListeners(): array
     {
         return array_merge(
             parent::getListeners(),

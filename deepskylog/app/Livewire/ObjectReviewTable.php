@@ -33,6 +33,8 @@ final class ObjectReviewTable extends PowerGridComponent
 
     public function setUp(): array
     {
+        $this->withoutPersist();
+
         $this->showCheckBox('name');
 
         if (! in_array($this->status, [...DeepskyObject::REVIEW_STATUSES, 'none', 'all'], true)) {

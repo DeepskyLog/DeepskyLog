@@ -17,6 +17,8 @@ final class AdminEyepieceTable extends PowerGridComponent
 
     public function setUp(): array
     {
+        $this->withoutPersist();
+
         $this->showCheckBox();
 
         return [
