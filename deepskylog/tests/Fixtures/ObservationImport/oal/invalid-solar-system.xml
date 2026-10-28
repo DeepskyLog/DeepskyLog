@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oal:observations xmlns:oal="http://groups.google.com/group/openastronomylog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://groups.google.com/group/openastronomylog oal21.xsd">
+  <observers>
+    <observer id="observer-1"><name>Example</name><surname>Observer</surname></observer>
+  </observers>
+  <sites>
+    <site id="site-1"><name>Example Site</name><longitude unit="deg">4.70</longitude><latitude unit="deg">50.88</latitude><elevation>30</elevation><timezone>60</timezone></site>
+  </sites>
+  <sessions/>
+  <targets>
+    <target id="target-comet" xsi:type="oal:CometTargetType"><datasource>DeepskyLog</datasource><name>12P/Pons-Brooks</name></target>
+    <target id="target-moon" xsi:type="oal:MoonTargetType"><datasource>DeepskyLog</datasource><name>Moon</name></target>
+    <target id="target-crater" xsi:type="oal:MoonTargetType"><datasource>Example program</datasource><name>Example Crater</name></target>
+  </targets>
+  <scopes>
+    <scope id="scope-1" xsi:type="oal:scopeType"><model>Example Dobson 250</model><aperture>250</aperture><focalLength>1200</focalLength></scope>
+  </scopes>
+  <eyepieces>
+    <eyepiece id="eyepiece-1"><model>Example 10mm</model><focalLength>10</focalLength><apparentFOV unit="deg">82</apparentFOV></eyepiece>
+  </eyepieces>
+  <lenses>
+    <lens id="lens-1"><model>Example Barlow 2x</model><factor>2</factor></lens>
+  </lenses>
+  <filters/><imagers/>
+  <!-- 1: a lunar feature DeepskyLog does not know -->
+  <observation id="observation-1">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-crater</target>
+    <begin>2026-09-25T21:00:00Z</begin>
+    <scope>scope-1</scope>
+    <eyepiece>eyepiece-1</eyepiece>
+    <result lang="en"><description>A lunar feature DeepskyLog does not know.</description></result>
+  </observation>
+  <!-- 2: the Moon had set -->
+  <observation id="observation-2">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-moon</target>
+    <begin>2026-09-25T06:00:00Z</begin>
+    <result lang="en"><description>The Moon had set at this time.</description></result>
+  </observation>
+  <!-- 3: the comet had set -->
+  <observation id="observation-3">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-comet</target>
+    <begin>2024-03-20T23:30:00Z</begin>
+    <scope>scope-1</scope>
+    <eyepiece>eyepiece-1</eyepiece>
+    <result lang="en"><description>The comet had set at this time.</description></result>
+  </observation>
+</oal:observations>

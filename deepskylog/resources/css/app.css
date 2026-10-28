@@ -1,4 +1,5 @@
 @import '../../node_modules/flatpickr/dist/flatpickr.min.css' layer(base);
+@import '../../node_modules/flatpickr/dist/themes/dark.css' layer(base);
 @import '@fortawesome/fontawesome-free/css/fontawesome.css' layer(base);
 @import '@fortawesome/fontawesome-free/css/regular.css' layer(base);
 @import '@fortawesome/fontawesome-free/css/solid.css' layer(base);
@@ -12,6 +13,34 @@
 
 @import '../../vendor/power-components/livewire-powergrid/resources/css/tailwind4.css';
 
+/* The colours PowerGrid 6 defined and PowerGrid 7 no longer does: the
+   primary colour of the WireUI buttons and badges (PowerGrid's slate instead
+   of WireUI's indigo) and the pg-primary colour of the admin tables' buttons. */
+@theme {
+    --color-pg-primary-50: oklch(0.985 0 0);
+    --color-pg-primary-100: oklch(0.97 0 0);
+    --color-pg-primary-200: oklch(0.922 0 0);
+    --color-pg-primary-300: oklch(0.87 0 0);
+    --color-pg-primary-400: oklch(0.708 0 0);
+    --color-pg-primary-500: oklch(0.556 0 0);
+    --color-pg-primary-600: oklch(0.439 0 0);
+    --color-pg-primary-700: oklch(0.371 0 0);
+    --color-pg-primary-800: oklch(0.269 0 0);
+    --color-pg-primary-900: oklch(0.205 0 0);
+    --color-pg-primary-950: oklch(0.145 0 0);
+    --color-primary-50: oklch(0.984 0.003 247.858);
+    --color-primary-100: oklch(0.968 0.007 247.896);
+    --color-primary-200: oklch(0.929 0.013 255.508);
+    --color-primary-300: oklch(0.869 0.022 252.894);
+    --color-primary-400: oklch(0.704 0.04 256.788);
+    --color-primary-500: oklch(0.554 0.046 257.417);
+    --color-primary-600: oklch(0.446 0.043 257.281);
+    --color-primary-700: oklch(0.372 0.044 257.287);
+    --color-primary-800: oklch(0.279 0.041 260.031);
+    --color-primary-900: oklch(0.208 0.042 265.755);
+    --color-primary-950: oklch(0.129 0.042 264.695);
+}
+
 /** enable dark mode */
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -19,6 +48,14 @@
 @source '../../app/Livewire/**/*Table.php';
 @source '../../vendor/power-components/livewire-powergrid/src/Themes/Tailwind.php';
 @source '../../vendor/power-components/livewire-powergrid/resources/views/**/*.php';
+
+/* Always reserve the space of the vertical scrollbar. The responsive PowerGrid
+	 tables show all columns, then hide those that do not fit, whenever their
+	 width changes; when that made the scrollbar appear and disappear, the
+	 width changed with it and the table flickered without end. */
+html {
+	scrollbar-gutter: stable;
+}
 
 /* Restore basic list markers and alignment inside message .prose containers.
 	 Some resets remove list markers globally; these rules narrowly re-enable

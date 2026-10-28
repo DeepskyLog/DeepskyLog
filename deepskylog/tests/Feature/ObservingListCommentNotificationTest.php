@@ -51,3 +51,39 @@ it('does not send a message when the owner comments on their own list', function
     $count = Message::where('receiver', $owner->username)->count();
     expect($count)->toBe(0);
 });
+
+it('shows the comments of a public list to a guest without a delete button', function () {
+    $owner = User::factory()->create();
+    $list = ObservingList::create(['owner_user_id' => $owner->id, 'name' => 'Weekend list', 'public' => true]);
+    \App\Models\ObservingListComment::create(['observing_list_id' => $list->id, 'user_id' => $owner->id, 'body' => 'Clear skies all weekend']);
+
+    $this->get(route('observing-list.show', ['list' => $list]))
+        ->assertOk()
+        ->assertSee('Clear skies all weekend')
+        ->assertDontSee(route('observing-list.comments.destroy', [$list, 1]), false);
+});
+
+it('sorts popular lists with the same number of likes on the number of comments', function () {
+    $owner = User::factory()->create();
+    $make = fn (string $name, int $likes, int $comments) => ObservingList::create(['owner_user_id' => $owner->id, 'name' => $name, 'public' => true])
+        ->forceFill(['likes_count' => $likes, 'comments_count' => $comments])->save();
+    $make('Few comments', 3, 1);
+    $make('Most liked', 5, 0);
+    $make('Many comments', 3, 4);
+    $make('Not liked', 0, 9);
+
+    $this->get(route('observing-lists.discover', ['sort' => 'popular']))
+        ->assertOk()
+        ->assertSeeInOrder(['Most liked', 'Many comments', 'Few comments', 'Not liked']);
+});
+
+// Issue #447: the comments above the objects pushed the list itself down the
+// page. The objects now come first.
+it('shows the objects of a list above its comments', function () {
+    $owner = User::factory()->create();
+    $list = ObservingList::create(['owner_user_id' => $owner->id, 'name' => 'Autumn list', 'public' => true]);
+
+    $this->get(route('observing-list.show', ['list' => $list]))
+        ->assertOk()
+        ->assertSeeInOrder(['This list has no objects yet.', 'No comments yet.']);
+});

@@ -13,8 +13,13 @@
                 @unless(Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
                 <x-dropdown.item
                     icon="user-plus"
-                    href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming"
+                    href="{{ route('observation.add.select') }}"
                     label="{{ __('Observation') }}"
+                />
+                <x-dropdown.item
+                    icon="arrow-up-tray"
+                    href="{{ route('observation.import') }}"
+                    label="{{ __('Import observations') }}"
                 />
 
                 {{-- <x-dropdown.item --}}
@@ -28,6 +33,11 @@
                     <x-outline.session-icon class="h-4 w-4 mr-2 text-gray-300 inline-block align-middle" />
                     {{ __('Session') }}
                 </x-dropdown.item>
+                <x-dropdown.item
+                    icon="calendar-days"
+                    href="{{ route('star-parties.create') }}"
+                    label="{{ __('Starparty') }}"
+                />
 
 
                 <x-dropdown.item separator href="{{ route('instrument.create') }}">
@@ -67,11 +77,31 @@
                     href="{{ route('object.create') }}"
                     label="{{ __('Object') }}"
                 />
+                <x-dropdown.item
+                    icon="plus-circle"
+                    href="{{ route('object.create.comet') }}"
+                    label="{{ __('Comet') }}"
+                />
+                <x-dropdown.item
+                    icon="plus-circle"
+                    href="{{ route('object.create.asteroid') }}"
+                    label="{{ __('Asteroid') }}"
+                />
                 @else
                 <x-dropdown.item
                     icon="plus-circle"
                     href="{{ route('object.create') }}"
                     label="{{ __('Object') }}"
+                />
+                <x-dropdown.item
+                    icon="plus-circle"
+                    href="{{ route('object.create.comet') }}"
+                    label="{{ __('Comet') }}"
+                />
+                <x-dropdown.item
+                    icon="plus-circle"
+                    href="{{ route('object.create.asteroid') }}"
+                    label="{{ __('Asteroid') }}"
                 />
                 @endunless
             </div>

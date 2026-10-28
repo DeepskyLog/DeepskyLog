@@ -3,7 +3,7 @@
     $totalObs =
         isset($totalObservations) && $totalObservations !== null
             ? $totalObservations
-            : \App\Models\ObservationsOld::getObservationsCountForObject($objectName);
+            : \App\Models\Observation::getObservationsCountForObject($objectName);
 
     // Prefer controller-provided numeric/collection drawings when available (comet controller passes numeric counts)
     if (isset($drawings)) {
@@ -12,10 +12,10 @@
         } elseif (is_countable($drawings)) {
             $drawingsCount = count($drawings);
         } else {
-            $drawingsCount = \App\Models\ObservationsOld::getDrawingsCountForObject($objectName);
+            $drawingsCount = \App\Models\Observation::getDrawingsCountForObject($objectName);
         }
     } else {
-        $drawingsCount = \App\Models\ObservationsOld::getDrawingsCountForObject($objectName);
+        $drawingsCount = \App\Models\Observation::getDrawingsCountForObject($objectName);
     }
 
     // Prefer controller-provided per-user counts when available (controller sets comet-specific counts)
@@ -27,7 +27,7 @@
                 : 0);
     } else {
         $yourObs = auth()->check()
-            ? \App\Models\ObservationsOld::getObservationsCountForUser(auth()->user(), $objectName)
+            ? \App\Models\Observation::getObservationsCountForUser(auth()->user(), $objectName)
             : 0;
     }
 
@@ -40,15 +40,21 @@
         $yourDrawings = $yourDrawingsCount;
     } else {
         $yourDrawings = auth()->check()
-            ? \App\Models\ObservationsOld::getDrawingsCountForUser(auth()->user(), $objectName)
+            ? \App\Models\Observation::getDrawingsCountForUser(auth()->user(), $objectName)
             : 0;
     }
-    $lastObs = auth()->check()
-        ? \App\Models\ObservationsOld::getLastObservationDateForUser(auth()->user(), $objectName)
-        : null;
-    $lastDrawing = auth()->check()
-        ? \App\Models\ObservationsOld::getLastDrawingDateForUser(auth()->user(), $objectName)
-        : null;
+    // Prefer the controller-provided last dates (null when the user has not observed the object yet)
+    if (isset($yourObservations)) {
+        $lastObs = $lastObservationDate ?? null;
+        $lastDrawing = $lastDrawingDate ?? null;
+    } else {
+        $lastObs = auth()->check()
+            ? \App\Models\Observation::getLastObservationDateForUser(auth()->user(), $objectName)
+            : null;
+        $lastDrawing = auth()->check()
+            ? \App\Models\Observation::getLastDrawingDateForUser(auth()->user(), $objectName)
+            : null;
+    }
     $objSlug = $canonicalSlug ?? ($session->slug ?? \Illuminate\Support\Str::slug($session->name ?? ''));
     $isCometLocal = strtolower(trim((string) ($session->source_type_raw ?? ''))) === 'comet';
 @endphp
@@ -73,12 +79,12 @@
             <div class="flex items-center justify-start gap-0">
                 <span class="text-gray-400">{{ __('Observations') }}</span>
                 @if ($isCometLocal)
-                    <a href="{{ url('/cometobservations/' . $objSlug) }}"
-                        class="text-white font-medium ml-2 hover:underline">{{ $totalObs ?? 0 }}</a>
-                @else
-                    <a href="{{ url('/observations/' . $objSlug) }}"
-                        class="text-white font-medium ml-2 hover:underline">{{ $totalObs ?? 0 }}</a>
-                @endif
+                        <a href="{{ url('/cometobservations/' . $objSlug) }}"
+                            class="text-white font-medium ml-2 hover:underline">{{ $totalObs ?? 0 }}</a>
+                    @else
+                        <a href="{{ url('/observations/object/' . $objSlug) }}"
+                            class="text-white font-medium ml-2 hover:underline">{{ $totalObs ?? 0 }}</a>
+                    @endif
             </div>
 
             @auth

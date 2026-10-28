@@ -1,7 +1,13 @@
 <div class="p-4 pb-2 w-full bg-gray-800 rounded-lg dsl-search-card">
+    @php
+        $heading = $title ?: ($q !== ''
+            ? __('Search results for ":q"', ['q' => $q])
+            : __('Search results'));
+    @endphp
     <div class="mb-3 flex items-center gap-3">
-        <h2 class="text-lg font-semibold text-gray-200">Search results for "{{ $q }}"</h2>
+        <h2 class="text-lg font-semibold text-gray-200">{{ $heading }}</h2>
 
+        @if (! $fixedResultsMode)
         <div class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
             @auth
                 @if ($canModifyActiveList)
@@ -21,13 +27,26 @@
                 @endif
             @endauth
             @php
-                $exportNamesBase = route('search.names.pdf') . '?q=' . rawurlencode($q ?? '');
-                $exportTableBase = route('search.table.pdf') . '?q=' . rawurlencode($q ?? '');
-                $exportArgoBase = route('search.argo') . '?q=' . rawurlencode($q ?? '');
-                $exportSkylistBase = route('search.skylist') . '?q=' . rawurlencode($q ?? '');
-                $exportStxtBase = route('search.stxt') . '?q=' . rawurlencode($q ?? '');
-                $exportApdBase = route('search.apd') . '?q=' . rawurlencode($q ?? '');
+                $exportParams = [];
+                if (($q ?? '') !== '') {
+                    $exportParams['q'] = $q;
+                }
+                if (!empty($objectRefs ?? [])) {
+                    $exportParams['object_refs'] = $objectRefs;
+                }
+
+                $exportNamesBase = route('search.names.pdf', $exportParams);
+                $exportTableBase = route('search.table.pdf', $exportParams);
+                $exportArgoBase = route('search.argo', $exportParams);
+                $exportSkylistBase = route('search.skylist', $exportParams);
+                $exportStxtBase = route('search.stxt', $exportParams);
+                $exportApdBase = route('search.apd', $exportParams);
             @endphp
+
+            @auth
+                @include('object-sets.link', ['params' => ['source' => 'search'] + $exportParams])
+                @include('object-report.link', ['params' => ['source' => 'search'] + $exportParams])
+            @endauth
 
             <div class="relative inline-block text-left">
                 <button type="button" @click="open = !open" @keydown.escape="open = false"
@@ -43,26 +62,27 @@
                     class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
                     style="display:none;">
                     <div class="py-1 text-sm text-gray-100" role="menu" aria-orientation="vertical">
-                        <a href="{{ $exportNamesBase }}" target="_blank" rel="noopener noreferrer"
+                        <a href="{{ $exportNamesBase }}" target="_blank" rel="nofollow noopener noreferrer"
                             class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export names (PDF)') }}</a>
-                        <a href="{{ $exportTableBase }}" target="_blank" rel="noopener noreferrer"
+                        <a href="{{ $exportTableBase }}" target="_blank" rel="nofollow noopener noreferrer"
                             class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export table (PDF)') }}</a>
-                        <a href="{{ $exportArgoBase }}" target="_blank" rel="noopener noreferrer"
+                        <a href="{{ $exportArgoBase }}" target="_blank" rel="nofollow noopener noreferrer"
                             class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export Argo Navis') }}</a>
-                        <a href="{{ $exportSkylistBase }}" target="_blank" rel="noopener noreferrer"
+                        <a href="{{ $exportSkylistBase }}" target="_blank" rel="nofollow noopener noreferrer"
                             class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export SkySafari (.skylist)') }}</a>
-                        <a href="{{ $exportStxtBase }}" target="_blank" rel="noopener noreferrer"
+                        <a href="{{ $exportStxtBase }}" target="_blank" rel="nofollow noopener noreferrer"
                             class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export SkyTools (.txt)') }}</a>
-                        <a href="{{ $exportApdBase }}" target="_blank" rel="noopener noreferrer"
+                        <a href="{{ $exportApdBase }}" target="_blank" rel="nofollow noopener noreferrer"
                             class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export AstroPlanner (.apd)') }}</a>
                     </div>
                 </div>
             </div>
         </div>
+        @endif
     </div>
 
     <div class="w-full">
-        <livewire:search-results-table :q="$q" />
+        <livewire:search-results-table :q="$q" :object-refs="$objectRefs" :observation-search="$observationSearch" />
     </div>
 </div>
 

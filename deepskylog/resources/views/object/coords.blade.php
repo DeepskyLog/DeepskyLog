@@ -64,10 +64,9 @@ document.getElementById('simbadBtn').addEventListener('click', function () {
         .then(r => r.json())
         .then(json => {
             if (json.success && json.data) {
-                let raVal = json.data.ra;
-                if (raVal !== undefined && raVal !== null) {
-                    if (Math.abs(raVal) > 24) raVal = raVal / 15.0;
-                    document.getElementById('raInput').value = raVal;
+                // The lookup returns RA in hours
+                if (json.data.ra !== undefined && json.data.ra !== null) {
+                    document.getElementById('raInput').value = json.data.ra;
                 }
                 if (json.data.decl !== undefined && json.data.decl !== null) {
                     document.getElementById('declInput').value = json.data.decl;

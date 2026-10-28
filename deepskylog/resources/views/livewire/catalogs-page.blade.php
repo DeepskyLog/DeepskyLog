@@ -1,9 +1,12 @@
 <div class="p-6 max-w-6xl">
     <h1 class="text-2xl font-semibold text-gray-200">{{ __('Catalogs') }}</h1>
     <p class="mt-1 text-sm text-gray-400">{{ __('Select a catalog to view object counts by constellation, types and objects list.') }}</p>
+    <p class="mt-1 text-sm text-gray-400">
+        <a href="https://github.com/DeepskyLog/DeepskyLog/wiki/Deep-sky-Catalogues" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">{{ __('What are these catalogs? Read about the deep-sky catalogs in the DeepskyLog wiki.') }}</a>
+    </p>
 
     <div class="mt-6">
-        <div x-data="{ open: @entangle('open'), active: -1, query: @entangle('search') }" @keydown.escape="open=false" class="relative">
+        <div x-data="{ open: @entangle('open'), active: -1, query: @entangle('search') }" @keydown.escape="open=false" @click.outside="open = false" class="relative">
             <label class="block text-sm font-medium text-gray-400 mb-1">{{ __('Catalog') }}</label>
             <input
                 x-ref="input"
@@ -19,7 +22,7 @@
                 class="block w-full rounded border border-gray-600 bg-gray-900 text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
-            <div x-show="open" x-cloak @click.away="open = false" class="absolute z-20 mt-1 w-full bg-gray-900 border border-gray-700 rounded max-h-64 overflow-auto">
+            <div x-show="open" x-cloak class="absolute z-20 mt-1 w-full bg-gray-900 border border-gray-700 rounded max-h-64 overflow-auto">
                 <ul x-ref="list" role="listbox" class="py-1">
                     <div wire:loading wire:target="search" class="px-3 py-2 text-sm text-gray-400">{{ __('Searching...') }}</div>
 
@@ -31,7 +34,7 @@
                                 role="option"
                                 aria-selected="false"
                                 data-value="{{ $cat }}"
-                                @click.prevent="$wire.selectCatalog('{{ $cat }}'); open=false"
+                                @click.prevent="$wire.selectCatalog($el.dataset.value); open=false"
                                 @mouseenter="active = {{ $i }}"
                                 x-show="query === '' || ($el.dataset.value && $el.dataset.value.toLowerCase().includes(query.toLowerCase()))"
                                 x-bind:aria-hidden="!(query === '' || ($el.dataset.value && $el.dataset.value.toLowerCase().includes(query.toLowerCase())))"

@@ -16,7 +16,18 @@ class AdminObjectCheckController extends Controller
         // Cache the report for 10 minutes to avoid expensive recalculations
         $report = cache()->remember('admin_check_objects_report', 600, fn() => $service->buildReport());
 
-        return view('object-admin.check', ['report' => $report]);
+        return view('object-admin.check', [
+            'report' => $report,
+            'constellationCheck' => $service->constellationCheckStatus(),
+            'constellationCheckInProgress' => $service->constellationCheckInProgress(),
+        ]);
+    }
+
+    public function checkConstellations(AdminObjectCheckService $service): RedirectResponse
+    {
+        $this->ensureAdministrator();
+
+        return $this->queueConstellationCheck($service, false);
     }
 
     public function destroyOrphanObjectNames(AdminObjectCheckService $service): RedirectResponse
@@ -35,12 +46,22 @@ class AdminObjectCheckController extends Controller
     {
         $this->ensureAdministrator();
 
-        $updated = $service->repairConstellationMismatches();
-        cache()->forget('admin_check_objects_report');
+        return $this->queueConstellationCheck($service, true);
+    }
+
+    private function queueConstellationCheck(AdminObjectCheckService $service, bool $repair): RedirectResponse
+    {
+        if (!$service->queueConstellationCheck($repair)) {
+            return redirect()
+                ->route('admin.objects.check')
+                ->with('error', __('A constellation check is already in progress.'));
+        }
 
         return redirect()
             ->route('admin.objects.check')
-            ->with('success', trans_choice('{0} No constellation mismatches were corrected.|{1} Corrected 1 constellation mismatch.|[2,*] Corrected :count constellation mismatches.', $updated, ['count' => $updated]));
+            ->with('success', $repair
+                ? __('The constellations of all objects will be checked and corrected in the background.')
+                : __('The constellations of all objects will be checked in the background.'));
     }
 
     public function repairObservationObjectNames(AdminObjectCheckService $service): RedirectResponse
@@ -60,6 +81,8 @@ class AdminObjectCheckController extends Controller
         $this->ensureAdministrator();
 
         $csv = $service->exportConstellationMismatches();
+
+        abort_if($csv === null, 404);
 
         return response($csv)
             ->header('Content-Type', 'text/csv; charset=utf-8')

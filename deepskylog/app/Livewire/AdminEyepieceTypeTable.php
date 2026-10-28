@@ -2,8 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Eyepiece;
-use App\Models\EyepieceMake;
 use App\Models\EyepieceType;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
@@ -19,6 +17,8 @@ final class AdminEyepieceTypeTable extends PowerGridComponent
 
     public function setUp(): array
     {
+        $this->withoutPersist();
+
         $this->showCheckBox();
 
         return [
@@ -32,7 +32,7 @@ final class AdminEyepieceTypeTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return EyepieceType::query();
+        return EyepieceType::query()->with('make')->withCount('eyepieces');
     }
 
     public function relationSearch(): array
@@ -46,10 +46,10 @@ final class AdminEyepieceTypeTable extends PowerGridComponent
             ->add('id')
             ->add('name')
             ->add('number_of_eyepieces', function ($eyepiece_type) {
-                return Eyepiece::where('type_id', $eyepiece_type->id)->count();
+                return $eyepiece_type->eyepieces_count;
             })
             ->add('eyepiece_make', function ($eyepiece_type) {
-                return EyepieceMake::where('id', $eyepiece_type->eyepiece_makes_id)->first()->name;
+                return e(html_entity_decode((string) $eyepiece_type->make?->name));
             });
 
     }
@@ -63,7 +63,9 @@ final class AdminEyepieceTypeTable extends PowerGridComponent
                 ->searchable(),
 
             Column::make('Eyepiece make', 'eyepiece_make'),
-            Column::make('Number of Eyepieces', 'number_of_eyepieces'),
+            Column::make('Number of Eyepieces', 'number_of_eyepieces')
+                ->sortable()
+                ->sortUsing(fn ($query, string $direction) => $query->orderBy('eyepieces_count', $direction)),
 
             // Add update time
             Column::make('Created at', 'created_at')

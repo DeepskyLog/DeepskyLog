@@ -7,6 +7,12 @@
 
     <p class="text-sm text-gray-400 mt-2">{{ __('Please confirm that the object is not listed below') }}</p>
 
+    @if ($completeCatalog)
+        <div class="mt-4 p-3 rounded bg-yellow-900 text-yellow-100 text-sm">
+            {{ __('The :catalog catalog is complete: all its objects are already in DeepskyLog. Only add :name if it is missing by mistake.', ['catalog' => $completeCatalog, 'name' => $name]) }}
+        </div>
+    @endif
+
     <div class="mt-4 bg-gray-800 p-4 rounded">
         @if($candidates->isEmpty())
             <div class="text-gray-300">{{ __('No similar names found.') }}</div>
@@ -20,20 +26,37 @@
             <table class="w-full text-left text-gray-200">
                 <thead>
                     <tr class="text-sm text-gray-400 border-b border-gray-600">
-                        <th class="pb-1 pr-4">{{ __('Name') }}</th>
-                        <th class="pb-1 pr-4">{{ __('RA') }}</th>
-                        <th class="pb-1 pr-4">{{ __('Decl') }}</th>
-                        <th class="pb-1">{{ __('Type') }}</th>
+                        @foreach (['name' => __('Name'), 'ra' => __('RA'), 'decl' => __('Decl'), 'type' => __('Type')] as $column => $label)
+                            @php
+                                $isActiveSort = $sort === $column;
+                                $nextDirection = $isActiveSort && $direction === 'asc' ? 'desc' : 'asc';
+                                $sortIndicator = $isActiveSort ? ($direction === 'asc' ? '↑' : '↓') : '↕';
+                                $query = array_merge(request()->except('page'), ['sort' => $column, 'direction' => $nextDirection]);
+                            @endphp
+                            <th class="pb-1 {{ $loop->last ? '' : 'pr-4' }}">
+                                <a href="{{ route('object.nameSearch', $query) }}" class="inline-flex items-center gap-1 hover:text-white">
+                                    <span>{{ $label }}</span>
+                                    <span class="text-[10px] text-gray-500">{{ $sortIndicator }}</span>
+                                </a>
+                            </th>
+                        @endforeach
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($candidates as $cand)
-                        <tr class="border-t border-gray-700">
+                        @php
+                            $isExact = mb_strtolower($cand->objectname) === mb_strtolower($name)
+                                || mb_strtolower((string) $cand->altname) === mb_strtolower($name);
+                        @endphp
+                        <tr class="border-t border-gray-700 {{ $isExact ? 'bg-yellow-900' : '' }}">
                             <td class="py-2 pr-4">
                                 @if(!empty($cand->slug))
                                     <a href="{{ route('object.show', $cand->slug) }}" class="text-blue-400 hover:underline">{{ $cand->objectname }}</a>
                                 @else
                                     {{ $cand->objectname }}
+                                @endif
+                                @if(!empty($cand->altname) && $cand->altname !== $cand->objectname)
+                                    <span class="text-sm text-gray-400">({{ $cand->altname }})</span>
                                 @endif
                             </td>
                             <td class="py-2 pr-4 font-mono text-sm">{{ DeepskyObject::formatRa($cand->ra) ?? '—' }}</td>

@@ -1,13 +1,8 @@
 <?php
 
 use App\Console\Commands\updateAchievementsCommand;
-use App\Console\Commands\updateObservationsCommand;
-use App\Console\Commands\updateOldEyepieceTableCommand;
-use App\Console\Commands\updateOldFilterTableCommand;
-use App\Console\Commands\updateOldInstrumentTableCommand;
-use App\Console\Commands\updateOldLensTableCommand;
-use App\Console\Commands\updateOldLocationTableCommand;
-use App\Console\Commands\updateUserTableCommand;
+// legacy updateOld* commands removed
+// legacy update command removed: updateUserTableCommand
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 
@@ -27,10 +22,6 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command(updateAchievementsCommand::class)->everySixHours();
-Schedule::command(updateUserTableCommand::class)->everyFifteenMinutes();
-Schedule::command(updateObservationsCommand::class)->daily();
-Schedule::command(updateOldInstrumentTableCommand::class)->everyFifteenMinutes();
-Schedule::command(updateOldEyepieceTableCommand::class)->everyFifteenMinutes();
-Schedule::command(updateOldLensTableCommand::class)->everyThirtyMinutes();
-Schedule::command(updateOldFilterTableCommand::class)->everyThirtyMinutes();
-Schedule::command(updateOldLocationTableCommand::class)->everyThirtyMinutes();
+// Schedule::command(updateUserTableCommand::class)->everyFifteenMinutes();
+// update:observations command removed; counts are maintained by model observer
+// updateOld* scheduled commands removed

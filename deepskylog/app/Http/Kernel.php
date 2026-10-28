@@ -14,8 +14,14 @@ class Kernel extends HttpKernel
      * @var array<int, class-string|string>
      */
     protected $middleware = [
-        // \App\Http\Middleware\TrustHosts::class,
+        // Runs the callbacks of defer() (the refresh of Cache::flexible()) after the response is sent.
+        \Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks::class,
+        // Only the host of APP_URL and its subdomains (not in local/testing), so a
+        // forged Host header cannot end up in password-reset and other mailed links.
+        \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
+        // CSP, X-Frame-Options, HSTS and the like on every response.
+        \App\Http\Middleware\SecurityHeaders::class,
         \Illuminate\Http\Middleware\HandleCors::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
@@ -32,7 +38,11 @@ class Kernel extends HttpKernel
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class,
+            // Does not store sessions for cookieless crawlers.
+            \App\Http\Middleware\StartSession::class,
+            // After StartSession, so logged-in users are counted per account
+            // (limiter 'web' in RouteServiceProvider).
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':web',
             \App\Http\Middleware\NoCacheForAuth::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
@@ -70,5 +80,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'cacheResponse' => \Spatie\ResponseCache\Middlewares\CacheResponse::class,
         'doNotCacheResponse' => \Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class,
+        'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
+        'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
     ];
 }

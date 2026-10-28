@@ -26,25 +26,55 @@
                         />
                     @endif
 
-                    <x-dropdown.item
-                        icon="plus"
-                        separator
-                        href="/sketch-of-the-week/create"
-                        label="{{ __('Add sketch of the week') }}"
-                    />
-
-                    <x-dropdown.item
-                        icon="plus"
-                        href="/sketch-of-the-month/create"
-                        label="{{ __('Add sketch of the month') }}"
-                    />
-
                     @if (Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
                         <x-dropdown.item
                             icon="check-badge"
                             separator
                             href="{{ route('admin.objects.check') }}"
                             label="{{ __('Check Objects') }}"
+                        />
+
+                        <x-dropdown.item
+                            icon="lock-closed"
+                            href="{{ route('admin.complete-catalogs') }}"
+                            label="{{ __('Complete catalogs') }}"
+                        />
+
+                        <x-dropdown.item
+                            icon="arrow-up-tray"
+                            href="{{ route('admin.objects.import') }}"
+                            label="{{ __('Import objects') }}"
+                        />
+
+                        <x-dropdown.item
+                            icon="clipboard-document-check"
+                            href="{{ route('admin.object-reviews') }}"
+                            label="{{ __('Object reviews') }}"
+                        />
+
+                        <x-dropdown.item
+                            icon="newspaper"
+                            separator
+                            href="{{ route('admin.news') }}"
+                            label="{{ __('Manage the news') }}"
+                        />
+
+                        <x-dropdown.item
+                            icon="star"
+                            href="{{ route('admin.objects-of-the-month') }}"
+                            label="{{ __('Objects of the month') }}"
+                        />
+
+                        <x-dropdown.item
+                            icon="trophy"
+                            href="{{ route('admin.challenges') }}"
+                            label="{{ __('Manage the challenges') }}"
+                        />
+
+                        <x-dropdown.item
+                            icon="globe-alt"
+                            href="{{ route('admin.great-red-spot') }}"
+                            label="{{ __('Great Red Spot') }}"
                         />
                     @endif
 
@@ -60,7 +90,7 @@
                         />
 
                         <x-dropdown.item
-                            href="/admin/eyepiece-type"
+                            href="/admin/eyepiece-types"
                             label="{{ __('Eyepiece Types') }}"
                         />
 

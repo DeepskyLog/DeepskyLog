@@ -1,6 +1,6 @@
 @php $e = $ephemerides ?? null; @endphp
 
-<tbody wire:key="object-ephemerides-{{ $objectId ?? 'none' }}" @if(empty($ephemerides)) wire:poll.5s="pollCache" @endif>
+<tbody wire:key="object-ephemerides-{{ $objectId ?? 'none' }}" @if(empty($ephemerides) && !empty($pendingCacheKey)) wire:poll.5s="pollCache" @endif>
     @if (!$e)
         @auth
             <tr>
@@ -249,14 +249,16 @@ $decStr =
         @endif
 
         @auth
-            {{-- Do not render heavy graph blobs for the Moon: Moon pages use a Livewire-only flow and avoid inline graphs. --}}
-            @if (!empty($e['altitude_graph']) && ($sourceTypeRaw ?? '') !== 'moon')
+            {{-- Do not render heavy graph blobs for the Moon: Moon pages use a Livewire-only flow and avoid inline graphs.
+                 Comet pages get the graphs from the `comet-details` component. --}}
+            @php $graphsElsewhere = in_array(strtolower(trim((string) ($sourceTypeRaw ?? ''))), ['moon', 'comet'], true); @endphp
+            @if (!empty($e['altitude_graph']) && !$graphsElsewhere)
                 <tr>
                     <td colspan="2" class="pt-3">{!! $e['altitude_graph'] !!}</td>
                 </tr>
             @endif
 
-            @if (!empty($e['year_graph']) && ($sourceTypeRaw ?? '') !== 'moon')
+            @if (!empty($e['year_graph']) && !$graphsElsewhere)
                 <tr>
                     <td colspan="2" class="pt-2">{!! $e['year_graph'] !!}</td>
                 </tr>
@@ -279,7 +281,6 @@ $decStr =
                 'saturn',
                 'uranus',
                 'neptune',
-                'pluto',
                 'sun',
                 'moon',
             ];
@@ -287,7 +288,7 @@ $decStr =
                 ($sourceTypeRaw ?? '') === 'planet' || ($planetKeyLocal && in_array($planetKeyLocal, $knownPlanets));
         @endphp
 
-        @if ($isPlanetLocal && !empty($e['year_magnitude_graph']))
+        @if (($isPlanetLocal || ($sourceTypeRaw ?? '') === 'asteroid') && !empty($e['year_magnitude_graph']))
             <tr>
                 <td colspan="2" class="pr-4 font-medium pt-4">{{ __('Magnitude during the year') }}</td>
             </tr>

@@ -2,27 +2,26 @@
 
 namespace App\Livewire;
 
+use App\Support\SchemaColumns;
 use App\Models\DeepskyObject;
 use App\Models\Atlas;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Models\UserObjectMetric;
-use Illuminate\Support\Facades\Cache;
-use App\Jobs\ComputeContrastReserveForObject;
 use App\Services\ActiveObservingListService;
+use App\Services\ObjectMetricsQueue;
+use App\Services\ObjectObservationStatistics;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use App\Models\UserTableSetting;
 
@@ -31,7 +30,6 @@ use App\Models\UserTableSetting;
  */
 class NearbyObjectsTable extends PowerGridComponent
 {
-    use WithExport;
 
     public string $tableName = 'nearby-objects-table';
     public string $primaryKey = 'id';
@@ -40,6 +38,9 @@ class NearbyObjectsTable extends PowerGridComponent
     public ?string $objectName = null;
     public ?float $ra = null;
     public ?float $decl = null;
+
+    /** Largest radius the radius selector offers (2°), in arcminutes. */
+    public const MAX_RADIUS_ARCMIN = 120;
 
     public int $radiusArcMin = 30;
     public int $perPage = 25;
@@ -55,11 +56,6 @@ class NearbyObjectsTable extends PowerGridComponent
     public ?int $previewEyepieceId = null;
     public ?int $previewLensId = null;
 
-    // When true, perform inline bulk precompute up to $bulkInlineLimit objects
-    // during the preview update. Inline computation runs in the current PHP
-    // process and may be CPU-heavy; default limit is 100 as requested.
-    public int $bulkInlineLimit = 100;
-
     /**
      * Indicates whether there are any objects with pending CR calculations
      * (across all pages, not just current page). Used by JavaScript to 
@@ -67,6 +63,10 @@ class NearbyObjectsTable extends PowerGridComponent
      * @var bool
      */
     public bool $hasPendingCalculations = false;
+
+    /** The queued metric jobs of the nearby objects (ObjectMetricsQueue). */
+    #[Locked]
+    public ?string $metricsToken = null;
 
     /**
      * Cached eyepieces for the authenticated user during a single component render.
@@ -106,13 +106,6 @@ class NearbyObjectsTable extends PowerGridComponent
     private ?bool $canModifyActiveListCached = null;
 
     /**
-     * Derived aggregation SQL for legacy observations (populated when legacy DB exists).
-     * Stored here so we can attach it as a LEFT JOIN after the main select is built.
-     * @var string|null
-     */
-    private ?string $obsAggSql = null;
-
-    /**
      * Cached type names to avoid N+1 queries when resolving type codes.
      * Keyed by type code (e.g., 'PLNNB') with values being the full names.
      * @var array<string, string>
@@ -130,9 +123,23 @@ class NearbyObjectsTable extends PowerGridComponent
     public ?string $atlasName = null;
     public bool $includeAtlas = false;
 
+    /**
+     * Keep a radius coming from the client, the query string or the stored
+     * settings within what the radius selector offers.
+     */
+    public static function clampRadius(mixed $arcmin): int
+    {
+        return max(1, min(self::MAX_RADIUS_ARCMIN, (int) $arcmin));
+    }
+
+    public function updatedRadiusArcMin(): void
+    {
+        $this->radiusArcMin = self::clampRadius($this->radiusArcMin);
+        $this->triggerBulkPrecompute();
+    }
+
     public function boot(): void
     {
-        config(['livewire-powergrid.filter' => 'outside']);
 
         // Attempt to load persisted user table settings early in the component
         // lifecycle so setUp() can pick up values like perPage when it runs.
@@ -148,7 +155,7 @@ class NearbyObjectsTable extends PowerGridComponent
                         $this->perPage = intval($s['perPage']);
                     }
                     if (isset($s['radiusArcMin'])) {
-                        $this->radiusArcMin = intval($s['radiusArcMin']);
+                        $this->radiusArcMin = self::clampRadius($s['radiusArcMin']);
                     }
                     if (isset($s['sortField'])) {
                         $this->sortField = $s['sortField'];
@@ -209,7 +216,7 @@ class NearbyObjectsTable extends PowerGridComponent
                         $this->sortDirection = $s['sortDirection'];
                     }
                     if (isset($s['radiusArcMin'])) {
-                        $this->radiusArcMin = intval($s['radiusArcMin']);
+                        $this->radiusArcMin = self::clampRadius($s['radiusArcMin']);
                     }
                     if (isset($s['perPage'])) {
                         $this->perPage = intval($s['perPage']);
@@ -228,7 +235,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 try {
                     $m = Atlas::where('code', (string) $this->atlasCode)->first();
                     if (!$m) {
-                        $m = Atlas::whereRaw('LOWER(`code`) = ?', [strtolower((string) $this->atlasCode)])->first();
+                        $m = Atlas::where('code', (string) $this->atlasCode)->first();
                     }
                     $this->atlasName = $m?->name ?? null;
                 } catch (\Throwable $_) {
@@ -261,192 +268,69 @@ class NearbyObjectsTable extends PowerGridComponent
     }
 
     /**
-     * Update the hasPendingCalculations property by checking for objects without metrics.
-     * This is called on every boot() so JavaScript polling can detect when to stop.
+     * Update the hasPendingCalculations property from the cache (no query)
+     * and tell the JavaScript polling whether to go on.
      */
     protected function updateHasPendingCalculations(): void
     {
+        $this->hasPendingCalculations = ObjectMetricsQueue::pending($this->metricsToken);
+        if (!$this->hasPendingCalculations) {
+            $this->metricsToken = null;
+        }
+
         try {
-            $authUser = Auth::user();
-            if (!$authUser || !is_numeric($this->ra) || !is_numeric($this->decl)) {
-                $this->hasPendingCalculations = false;
-                return;
-            }
-
-            $instrId = $this->previewInstrumentId ?? ($authUser->standardInstrument?->id ?? null);
-            $locId = $authUser->standardLocation?->id ?? null;
-            $lensId = $this->previewLensId ?? null;
-
-            if (!$instrId || !$locId) {
-                $this->hasPendingCalculations = false;
-                return;
-            }
-
-            // Build a simplified query to count objects without metrics
-            $radiusDeg = $this->radiusArcMin / 60.0;
-            $centerRaDeg = floatval($this->ra);
-            if ($centerRaDeg <= 24.0) {
-                $centerRaDeg = $centerRaDeg * 15.0;
-            }
-
-            $expr = "DEGREES(ACOS(LEAST(1, GREATEST(-1, SIN(RADIANS(?))*SIN(RADIANS(`decl`)) + COS(RADIANS(?))*COS(RADIANS(`decl`))*COS(RADIANS((?)-(CASE WHEN `ra` <= 24 THEN `ra`*15 ELSE `ra` END))) ))))";
-            $exprBindings = [$this->decl, $this->decl, $centerRaDeg];
-
-            $query = DeepskyObject::selectRaw('objects.name')
-                ->leftJoin('constellations', 'objects.con', '=', 'constellations.id')
-                ->leftJoin('deepskytypes', 'deepskytypes.code', '=', 'objects.type')
-                ->whereRaw("{$expr} <= ?", array_merge($exprBindings, [$radiusDeg]));
-
-            // Exclude the current object (same as datasource() method)
-            if (!empty($this->objectName)) {
-                $query->where('objects.name', '<>', $this->objectName);
-            } elseif (!empty($this->objectId)) {
-                $query->where('objects.name', '<>', (string) $this->objectId);
-            }
-
-            // Join user_object_metrics based on lens configuration
-            if ($lensId === null) {
-                $query->leftJoin('user_object_metrics as uom', function ($join) use ($authUser, $instrId, $locId) {
-                    $join->on('objects.name', '=', 'uom.object_name')
-                        ->where('uom.user_id', $authUser->id)
-                        ->where('uom.instrument_id', $instrId)
-                        ->where('uom.location_id', $locId)
-                        ->whereNull('uom.lens_id');
-                });
-            } else {
-                $query->leftJoin('user_object_metrics as uom_lens', function ($join) use ($authUser, $instrId, $locId, $lensId) {
-                    $join->on('objects.name', '=', 'uom_lens.object_name')
-                        ->where('uom_lens.user_id', $authUser->id)
-                        ->where('uom_lens.instrument_id', $instrId)
-                        ->where('uom_lens.location_id', $locId)
-                        ->where('uom_lens.lens_id', $lensId);
-                })
-                    ->leftJoin('user_object_metrics as uom_default', function ($join) use ($authUser, $instrId, $locId) {
-                        $join->on('objects.name', '=', 'uom_default.object_name')
-                            ->where('uom_default.user_id', $authUser->id)
-                            ->where('uom_default.instrument_id', $instrId)
-                            ->where('uom_default.location_id', $locId)
-                            ->whereNull('uom_default.lens_id');
-                    });
-            }
-
-            $pendingCount = $query->whereRaw(
-                $lensId === null
-                ? 'uom.id IS NULL'
-                : 'COALESCE(uom_lens.id, uom_default.id) IS NULL'
-            )->count();
-
-            $this->hasPendingCalculations = $pendingCount > 0;
-
-            // Dispatch browser event to notify JavaScript of the current state
-            try {
-                $this->dispatch('hasPendingCalculationsUpdated', hasPending: $this->hasPendingCalculations);
-            } catch (\Throwable $_) {
-            }
-        } catch (\Throwable $e) {
-            $this->hasPendingCalculations = false;
+            $this->dispatch('hasPendingCalculationsUpdated', hasPending: $this->hasPendingCalculations);
+        } catch (\Throwable $_) {
         }
     }
 
     /**
-     * Kick off a background bulk precompute for the current nearby result
-     * set so objects not yet present in `user_object_metrics` are
-     * computed for the selected user/instrument/location/lens.
+     * Queue the metrics (contrast reserve, best magnification) missing for
+     * the nearby objects with the selected instrument, location and lens, as
+     * one job, instead of computing them in the request.
      */
     protected function triggerBulkPrecompute(): void
     {
         try {
             $authUser = Auth::user();
-            if ($authUser) {
-                $instrId = $this->previewInstrumentId ?? ($authUser->standardInstrument?->id ?? null);
-                $locId = $authUser->standardLocation?->id ?? null;
-                $lensId = $this->previewLensId ?? null;
-                if ($instrId && $locId && is_numeric($this->radiusArcMin) && is_numeric($this->ra) && is_numeric($this->decl)) {
-                    $bulkKey = 'uom_bulk_pending:' . $authUser->id . ':' . $instrId . ':' . $locId . ':' . ($lensId === null ? 'nolens' : (string) $lensId);
-                    // Add returns true only when the key did not exist.
-                    if (Cache::add($bulkKey, true, 600)) { // 10 minutes
-                        try {
-                            // Phase 1: Process first batch inline for fast feedback
-                            // (default 100). This is intentionally conservative to
-                            // avoid blocking the request for too long.
-                            $inlineLimit = intval($this->bulkInlineLimit) > 0 ? intval($this->bulkInlineLimit) : 100;
-                            $firstBatch = $this->datasource()->limit($inlineLimit)->pluck('name');
-                            foreach ($firstBatch as $oname) {
-                                try {
-                                    // If a lens is active, check for a lens-specific row,
-                                    // otherwise check for the legacy lens-less row.
-                                    $q = UserObjectMetric::where('user_id', $authUser->id)
-                                        ->where('instrument_id', $instrId)
-                                        ->where('location_id', $locId)
-                                        ->where('object_name', $oname);
-                                    if ($lensId === null) {
-                                        $q = $q->whereNull('lens_id');
-                                    } else {
-                                        $q = $q->where('lens_id', $lensId);
-                                    }
-                                    if (!$q->exists()) {
-                                        // Perform inline computation by invoking the
-                                        // ComputeContrastReserveForObject job's handle
-                                        // method synchronously. This keeps behavior
-                                        // consistent with the queued job but runs
-                                        // in-process as requested.
-                                        $job = new ComputeContrastReserveForObject($authUser->id, $instrId, $locId, $oname, $lensId);
-                                        try {
-                                            $job->handle();
-                                        } catch (\Throwable $_) {
-                                            // If inline job fails, fallback to enqueueing
-                                            // a queued version to avoid losing the work.
-                                            try {
-                                                ComputeContrastReserveForObject::dispatch($authUser->id, $instrId, $locId, $oname, $lensId);
-                                            } catch (\Throwable $__) {
-                                                // swallow; per-object failure
-                                            }
-                                        }
-                                    }
-                                } catch (\Throwable $_) {
-                                    // ignore per-object failures
-                                }
-                            }
-
-                            // Phase 2: Queue ALL remaining objects that need metrics
-                            // Get all object names from the full nearby set (no limit)
-                            try {
-                                $allNames = $this->datasource()->pluck('name');
-                                foreach ($allNames as $oname) {
-                                    try {
-                                        $q = UserObjectMetric::where('user_id', $authUser->id)
-                                            ->where('instrument_id', $instrId)
-                                            ->where('location_id', $locId)
-                                            ->where('object_name', $oname);
-                                        if ($lensId === null) {
-                                            $q = $q->whereNull('lens_id');
-                                        } else {
-                                            $q = $q->where('lens_id', $lensId);
-                                        }
-                                        // Queue if metric doesn't exist
-                                        if (!$q->exists()) {
-                                            try {
-                                                ComputeContrastReserveForObject::dispatch($authUser->id, $instrId, $locId, $oname, $lensId);
-                                            } catch (\Throwable $_) {
-                                                // swallow; per-object queue failure
-                                            }
-                                        }
-                                    } catch (\Throwable $_) {
-                                        // ignore per-object check failures
-                                    }
-                                }
-                            } catch (\Throwable $_) {
-                                // ignore failures during full set enumeration
-                            }
-                        } catch (\Throwable $_) {
-                            // ignore failures during bulk enumeration
-                        }
-                    }
-                }
+            $instrId = $this->previewInstrumentId ?? ($authUser?->standardInstrument?->id ?? null);
+            $locId = $authUser?->standardLocation?->id ?? null;
+            if ($authUser && $instrId && $locId && is_numeric($this->ra) && is_numeric($this->decl)) {
+                $this->metricsToken = ObjectMetricsQueue::queueMissing(
+                    $authUser->id,
+                    (int) $instrId,
+                    (int) $locId,
+                    $this->previewLensId,
+                    $this->nearbyObjectNames()
+                );
             }
-        } catch (\Throwable $_) {
-            // swallow background precompute failures to avoid breaking the UI
+        } catch (\Throwable $e) {
+            report($e);
         }
+    }
+
+    /**
+     * The names of the objects within the radius, in one light query: the
+     * declination band first (indexed), then the exact distance.
+     *
+     * @return list<string>
+     */
+    private function nearbyObjectNames(): array
+    {
+        $radiusDeg = self::clampRadius($this->radiusArcMin) / 60.0;
+        $centerRaDeg = floatval($this->ra);
+        if ($centerRaDeg <= 24.0) {
+            $centerRaDeg = $centerRaDeg * 15.0;
+        }
+        $expr = "DEGREES(ACOS(LEAST(1, GREATEST(-1, SIN(RADIANS(?))*SIN(RADIANS(`decl`)) + COS(RADIANS(?))*COS(RADIANS(`decl`))*COS(RADIANS((?)-(CASE WHEN `ra` <= 24 THEN `ra`*15 ELSE `ra` END))) ))))";
+
+        return DB::table('objects')
+            ->whereBetween('decl', [floatval($this->decl) - $radiusDeg, floatval($this->decl) + $radiusDeg])
+            ->whereRaw("{$expr} <= ?", [$this->decl, $this->decl, $centerRaDeg, $radiusDeg])
+            ->when(!empty($this->objectName), fn($query) => $query->where('name', '<>', $this->objectName))
+            ->when(empty($this->objectName) && !empty($this->objectId), fn($query) => $query->where('name', '<>', (string) $this->objectId))
+            ->pluck('name')
+            ->all();
     }
 
     public function datasource(): ?Builder
@@ -482,7 +366,7 @@ class NearbyObjectsTable extends PowerGridComponent
             $this->previewEyepieceModel = null;
         }
 
-        $radiusDeg = $this->radiusArcMin / 60.0;
+        $radiusDeg = self::clampRadius($this->radiusArcMin) / 60.0;
 
         $centerRaDeg = floatval($this->ra);
         if ($centerRaDeg <= 24.0) {
@@ -521,113 +405,19 @@ class NearbyObjectsTable extends PowerGridComponent
 
         // Bindings for the distance expression (used in both the SELECT and WHERE).
         $exprBindings = [$this->decl, $this->decl, $centerRaDeg];
-        // Separate bindings for the full SELECT (includes any legacy-user bindings
-        // appended for the correlated subqueries). Keep them distinct so we can
+        // Separate bindings for the full SELECT. Keep them distinct so we can
         // pass only the required values to each whereRaw/selectRaw call.
         $selectBindings = $exprBindings;
 
-        // Precompute a decl bounding box numeric literals here so the later
-        // legacy observations derived aggregation can restrict itself to only
-        // those objects falling within the same decl window. This avoids a
-        // full scan of the legacy `observations` table when building the
-        // derived aggregation.
-        $minDecl = floatval($this->decl) - $radiusDeg;
-        $maxDecl = floatval($this->decl) + $radiusDeg;
-
-        // Add counts and last-seen/drawing info from legacy observations DB so
-        // the columns can be sortable server-side. Use the configured mysqlOld
-        // database name (falls back to env). Bind the logged-in user's
-        // username for user-specific aggregates; when not authenticated we
-        // bind empty strings which will yield zero/null results.
-        try {
-            $oldDbName = config('database.connections.mysqlOld.database') ?? env('DB_DATABASE_OLD');
-            $authUser = Auth::user();
-            $legacyUser = $authUser?->username ?? '';
-            if (!empty($oldDbName)) {
-                // Replace many correlated subqueries with a single derived aggregation
-                // subquery. This computes all observation aggregates for every
-                // object in one pass and makes sorting by these aggregates fast.
-                // We embed a safely quoted legacy username literal to avoid
-                // binding-order complexity.
-                try {
-                    $quotedUser = DB::getPdo()->quote($legacyUser);
-                } catch (\Throwable $_) {
-                    // Fall back to a conservative SQL literal when quoting fails
-                    $quotedUser = "''";
-                }
-
-                // Build derived aggregation SQL (uses fully-qualified DB name).
-                // First, fetch the object names that fall into the decl bounding
-                // box — this produces a small list (the earlier decl index
-                // narrowed objects to a couple hundred rows) which we can then
-                // embed as an IN-list into the legacy observations aggregation.
-                // That avoids scanning the full legacy `observations` table.
-                try {
-                    $objectNames = DeepskyObject::query()
-                        ->whereBetween('decl', [$minDecl, $maxDecl])
-                        ->pluck('name')
-                        ->toArray();
-                } catch (\Throwable $_) {
-                    $objectNames = [];
-                }
-
-                if (empty($objectNames)) {
-                    // No candidate objects in the bounding box; use an empty
-                    // derived aggregation so the LEFT JOIN adds no rows.
-                    $obsAggSql = "SELECT o.objectname AS object_name, 0 AS total_observations, 0 AS total_drawings, 0 AS your_observations, 0 AS your_drawings, NULL AS last_seen_date, NULL AS your_last_seen_date, NULL AS last_drawing_date, NULL AS your_last_drawing_date FROM `" . $oldDbName . "`.`observations` o WHERE 0 = 1 GROUP BY o.objectname";
-                } else {
-                    $quotedNames = implode(', ', array_map(function ($n) {
-                        try {
-                            return DB::getPdo()->quote($n);
-                        } catch (\Throwable $_) {
-                            return "''";
-                        }
-                    }, $objectNames));
-
-                    $obsAggSql = "SELECT o.objectname AS object_name,
-                    COUNT(*) AS total_observations,
-                    SUM(o.hasDrawing = 1) AS total_drawings,
-                    SUM(o.observerid = {$quotedUser}) AS your_observations,
-                    SUM(o.observerid = {$quotedUser} AND o.hasDrawing = 1) AS your_drawings,
-                    MAX(o.date) AS last_seen_date,
-                    MAX(CASE WHEN o.observerid = {$quotedUser} THEN o.date END) AS your_last_seen_date,
-                    MAX(CASE WHEN o.hasDrawing = 1 THEN o.date END) AS last_drawing_date,
-                    MAX(CASE WHEN o.observerid = {$quotedUser} AND o.hasDrawing = 1 THEN o.date END) AS your_last_drawing_date
-                FROM `" . $oldDbName . "`.`observations` o
-                WHERE o.objectname IN ({$quotedNames})
-                GROUP BY o.objectname";
-                }
-
-                // Ensure the inner select includes the obs.* aliases so the
-                // outer wrapper (used by PowerGrid) can reference and sort them.
-                // Also expose aliases that match the PowerGrid field names ('seen', 'last_seen')
-                // so ORDER BY clauses generated by PowerGrid reference real columns.
-                $selectRaw .= ", obs.total_observations as total_observations, obs.total_drawings as total_drawings, obs.your_observations as your_observations, obs.your_drawings as your_drawings, obs.last_seen_date as last_seen_date, obs.your_last_seen_date as your_last_seen_date, obs.last_drawing_date as last_drawing_date, obs.your_last_drawing_date as your_last_drawing_date, obs.total_observations as seen, obs.your_last_seen_date as last_seen";
-
-                // Attach the derived aggregation as a LEFT JOIN; use DB::raw so
-                // the full derived SQL is embedded verbatim into the query.
-                // Note: we embed the quoted username literal directly in the SQL
-                // so no extra parameter bindings are required and binding order
-                // remains stable.
-                $this->obsAggSql = $obsAggSql;
-            }
-        } catch (\Throwable $_) {
-            // don't fail the whole query when legacy DB info is unavailable
-        }
+        // Observation statistics (total_observations, your_last_seen_date, ...),
+        // exposed by the inner select so the outer wrapper can sort on them.
+        $selectRaw .= ', ' . ObjectObservationStatistics::selectList();
 
         $baseQuery = DeepskyObject::query()
             ->leftJoin('constellations', 'constellations.id', '=', 'objects.con')
             ->leftJoin('deepskytypes', 'deepskytypes.code', '=', 'objects.type')
             ->selectRaw($selectRaw, $selectBindings);
-
-        // If we constructed a derived aggregation SQL for legacy observations,
-        // attach it as a LEFT JOIN so the inner subquery exposes obs.* aliases
-        // and the outer wrapper can sort/filter on them efficiently.
-        if (!empty($this->obsAggSql)) {
-            $baseQuery->leftJoin(DB::raw('(' . $this->obsAggSql . ') as obs'), function ($join) {
-                $join->on('obs.object_name', '=', 'objects.name');
-            });
-        }
+        ObjectObservationStatistics::join($baseQuery, Auth::user()?->username);
 
         // Apply a cheap bounding-box prefilter on decl using numeric literals
         // to avoid modifying the prepared statement binding order. This lets
@@ -834,7 +624,7 @@ class NearbyObjectsTable extends PowerGridComponent
      * Fallback behaviour:
      * - For any other field the method will attempt a fully-qualified
      *   `ORDER BY objects.<field> <ASC|DESC>` where `<field>` is validated
-     *   with a conservative regex and `Schema::hasColumn('objects', $field)`.
+     *   with a conservative regex and `SchemaColumns::has('objects', $field)`.
      *
      * Error handling and guarantees:
      * - The method catches and swallows exceptions to avoid breaking the
@@ -963,7 +753,7 @@ class NearbyObjectsTable extends PowerGridComponent
             $sd = strtoupper($sd) === 'DESC' ? 'DESC' : 'ASC';
 
             // Default fallback (fully-qualified), with validation to avoid SQL injection.
-            if (is_string($sf) && preg_match('/^[A-Za-z0-9_]+$/', $sf) && Schema::hasColumn('objects', $sf)) {
+            if (is_string($sf) && preg_match('/^[A-Za-z0-9_]+$/', $sf) && SchemaColumns::has('objects', $sf)) {
                 $outer->orderBy("objects.{$sf}", $sd);
             }
         } catch (\Throwable $_) {
@@ -1087,6 +877,16 @@ class NearbyObjectsTable extends PowerGridComponent
                     return 0;
                 }
             })
+            // The Seen column: the number of observations, linking to them when there are any.
+            ->add('seen_link', function ($row) {
+                $total = intval($row->total_observations ?? 0);
+                $slug = \Illuminate\Support\Str::slug($row->name ?? '');
+                if ($total <= 0 || $slug === '') {
+                    return e($total);
+                }
+
+                return '<a class="hover:underline" href="' . e(route('observations.object', ['slug' => $slug])) . '">' . e($total) . '</a>';
+            })
             ->add('your_last_seen_date', function ($row) {
                 try {
                     $d = $row->your_last_seen_date ?? null;
@@ -1172,40 +972,13 @@ class NearbyObjectsTable extends PowerGridComponent
                         return e((int) $cachedBest) . 'x';
                     }
 
-                    // Compute a lightweight fallback best-mag (do not queue background jobs here).
-                    $origMag = $row->mag ?? null;
-                    $origSubr = $row->subr ?? null;
-
-                    $m = (is_numeric($origMag) && floatval($origMag) != 99.9) ? floatval($origMag) : null;
-                    if ($m === null) {
-                        $d1f = is_numeric($row->diam1) ? floatval($row->diam1) : null;
-                        $d2f = is_numeric($row->diam2) ? floatval($row->diam2) : null;
-                        $subr = is_numeric($origSubr) ? floatval($origSubr) : null;
-                        if (($d1f !== null && $d1f > 0) && (empty($d2f) || $d2f <= 0)) {
-                            $d2f = $d1f;
-                        } elseif (($d2f !== null && $d2f > 0) && (empty($d1f) || $d1f <= 0)) {
-                            $d1f = $d2f;
-                        }
-
-                        if ($subr !== null && $d1f !== null && $d2f !== null && $d1f > 0 && $d2f > 0) {
-                            $area = pi() * ($d1f / 2.0) * ($d2f / 2.0);
-                            if ($area > 0) {
-                                $estimated = $subr - 2.5 * log10($area);
-                                $m = $estimated;
-                            }
-                        }
-                    }
-
-                    // Fallback single-mag from typical eyepiece if available
+                    // Fall back to the instrument's fixed magnification or the one given by its
+                    // typical eyepiece. The object's visual magnitude is not a magnification.
                     $mag = $userInstrument->fixedMagnification ?? null;
                     if (!$mag && isset($row->typicalEyepieceFocal) && !empty($userInstrument->focal_length_mm)) {
                         $mag = (int) round(($userInstrument->focal_length_mm / $row->typicalEyepieceFocal));
                     }
 
-                    if ($m !== null) {
-                        // If we estimated a magnitude, prefer that-derived mag
-                        return e((int) round($m)) . 'x';
-                    }
                     if ($mag) {
                         return e((int) $mag) . 'x';
                     }
@@ -1320,11 +1093,13 @@ class NearbyObjectsTable extends PowerGridComponent
                     $possibleMags = [];
                     if (!empty($userInstrument?->focal_length_mm)) {
                         $epFocals = [];
+                        $epModels = [];
                         if (!empty($this->previewEyepieceId)) {
                             try {
                                 $ep = $this->previewEyepieceModel ?? \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
                                 if ($ep && !empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
                                     $epFocals[] = floatval($ep->focal_length_mm);
+                                    $epModels[] = $ep;
                                 }
                             } catch (\Throwable $_) { /* ignore */
                             }
@@ -1355,6 +1130,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                         try {
                                             if ($sep->active && !empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
                                                 $epFocals[] = floatval($sep->focal_length_mm);
+                                                $epModels[] = $sep;
                                             }
                                         } catch (\Throwable $_) {
                                             continue;
@@ -1383,6 +1159,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                         if (!empty($usedWith) && in_array(intval($userInstrument->id), array_map('intval', (array) $usedWith))) {
                                             $foundInstrumentSpecific = true;
                                             $epFocals[] = floatval($ep->focal_length_mm);
+                                            $epModels[] = $ep;
                                         }
                                     } catch (\Throwable $_) {
                                         continue;
@@ -1393,6 +1170,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                         try {
                                             if (!empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
                                                 $epFocals[] = floatval($ep->focal_length_mm);
+                                                $epModels[] = $ep;
                                             }
                                         } catch (\Throwable $_) {
                                             continue;
@@ -1414,7 +1192,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
                     if (!empty($possibleMags) && isset($target) && isset($sbobj) && isset($sqm) && isset($aperture)) {
                         try {
-                            $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
+                            $best = \App\Services\ContrastReserveCalculator::bestMagnification($target, $sbobj, $sqm, $aperture, $possibleMags, isset($epModels) ? \App\Services\ContrastReserveCalculator::fields($userInstrument, \App\Services\ContrastReserveCalculator::eyepieceMagnifications($userInstrument, $epModels, $lensFactor ?? 1.0), $lensFactor ?? 1.0) : []);
                             if ($best) {
                                 return (int) $best . 'x';
                             }
@@ -1512,27 +1290,19 @@ class NearbyObjectsTable extends PowerGridComponent
                     $cachedCat = $row->computed_contrast_reserve_category ?? null;
                     $metricExists = $row->metric_exists ?? null;
 
-                    // If a metric EXISTS but contrast_reserve is NULL, that means
-                    // it was previously calculated and determined to be uncalculable
-                    // (e.g., due to sentinel values in object data). Return "-" immediately.
-                    // Don't attempt recalculation for objects where we've already determined CR is impossible.
-                    $standardInstrId = $authUser?->standardInstrument?->id ?? null;
-                    $previewInstrId = $this->previewInstrumentId ?? null;
-                    $previewDiffers = !empty($previewInstrId) && intval($previewInstrId) !== intval($standardInstrId);
-
-                    if ($metricExists !== null && $cached === null && !$previewDiffers) {
+                    // The datasource joined the metrics of the instrument shown
+                    // (the preview instrument, else the standard one). A metric
+                    // without a contrast reserve was calculated and has none
+                    // (e.g. no magnitude in the object record).
+                    if ($metricExists !== null && $cached === null && ($row->computed_contrast_reserve_category ?? null) === 'not_visible') {
+                        // the object never rises at the location (ContrastReserveCalculator)
+                        return '<span class="text-gray-600" title="' . e(__('The object never rises above the horizon at this location.')) . '">' . e(__('contrast.reserve.category.not_visible')) . '</span>';
+                    }
+                    if ($metricExists !== null && $cached === null) {
                         return '<span title="' . e('Contrast reserve unavailable for this object') . '">-</span>';
                     }
 
-                    // If we have a cached CR for the user's standard instrument,
-                    // use it unless a preview instrument is active and differs
-                    // from the user's standard instrument. When the preview
-                    // instrument equals the standard instrument it's safe to use
-                    // the cached value (the datasource joined metrics for the
-                    // standard instrument).
-                    $previewDiffers = !empty($previewInstrId) && intval($previewInstrId) !== intval($standardInstrId);
-
-                    if (is_numeric($cached) && !$previewDiffers) {
+                    if (is_numeric($cached)) {
                         $display = number_format(round(floatval($cached), 2), 2);
                         // Derive qualitative category from numeric value to avoid stale cached categories
                         $contrastVal = floatval($cached);
@@ -1597,652 +1367,18 @@ class NearbyObjectsTable extends PowerGridComponent
                         return $html;
                     }
 
-                    // If there's no cached contrast_reserve for this object/instrument/location
-                    // we will attempt a single inline computation for this row and persist
-                    // the result so subsequent renders use the cached value. If the inline
-                    // computation fails for any reason we fall back to dispatching the
-                    // background job and show a lightweight placeholder.
-                    try {
-                        $instrId = $userInstrument->id ?? null;
-                        $locId = $userLocation->id ?? null;
-                        if (!is_numeric($cached) && $instrId && $locId && !empty($row->name)) {
-                            // If both the magnitude and the surface brightness are
-                            // sentinel values (99.9) there's nothing meaningful to
-                            // compute — show '-' and avoid dispatching jobs or
-                            // inline computation which would only enqueue work
-                            // that cannot produce a valid contrast reserve.
-                            $rawMagCheck = $row->mag ?? null;
-                            $rawSubrCheck = $row->subr ?? null;
-                            $magIsSentinel = is_numeric($rawMagCheck) && floatval($rawMagCheck) == 99.9;
-                            $subrIsSentinel = is_numeric($rawSubrCheck) && floatval($rawSubrCheck) == 99.9;
-                            if ($magIsSentinel && $subrIsSentinel) {
-                                return '<span title="' . e('Contrast reserve unavailable (object has sentinel magnitude / surface brightness)') . '">-</span>';
-                            }
-                            // Attempt inline compute for this single row to seed the cache.
-                            $computedOk = false;
-                            try {
-                                // Extract object properties locally (do not rely on later variables)
-                                $d1 = $row->diam1 ?? null;
-                                $d2 = $row->diam2 ?? null;
-                                $origMag = $row->mag ?? null;
-                                $origSubr = $row->subr ?? null;
-
-                                // Estimate magnitude if missing (same logic as the main path)
-                                $m = (is_numeric($origMag) && floatval($origMag) != 99.9) ? floatval($origMag) : null;
-                                if ($m === null) {
-                                    $d1f = is_numeric($row->diam1) ? floatval($row->diam1) : (is_numeric($d1) ? floatval($d1) : null);
-                                    $d2f = is_numeric($row->diam2) ? floatval($row->diam2) : (is_numeric($d2) ? floatval($d2) : null);
-                                    $subr = is_numeric($origSubr) ? floatval($origSubr) : null;
-                                    if (($d1f !== null && $d1f > 0) && (empty($d2f) || $d2f <= 0)) {
-                                        $d2f = $d1f;
-                                    } elseif (($d2f !== null && $d2f > 0) && (empty($d1f) || $d1f <= 0)) {
-                                        $d1f = $d2f;
-                                    }
-                                    if ($subr !== null && $d1f !== null && $d2f !== null && $d1f > 0 && $d2f > 0) {
-                                        $area = pi() * ($d1f / 2.0) * ($d2f / 2.0);
-                                        if ($area > 0) {
-                                            $estimated = $subr - 2.5 * log10($area);
-                                            $m = $estimated;
-                                        }
-                                    }
-                                }
-
-                                $targetInline = new AstroTarget();
-                                if ($d1 && $d2) {
-                                    $targetInline->setDiameter($d1, $d2);
-                                }
-                                if ($m !== null) {
-                                    $targetInline->setMagnitude($m);
-                                }
-                                $sbobjInline = null;
-                                try {
-                                    $sbobjInline = $targetInline->calculateSBObj();
-                                } catch (\Throwable $_) {
-                                    $sbobjInline = null;
-                                }
-
-                                $sqmInline = null;
-                                try {
-                                    $sqmInline = method_exists($userLocation, 'getSqm') ? $userLocation->getSqm() : ($userLocation->sqm ?? null);
-                                } catch (\Throwable $_) {
-                                    $sqmInline = null;
-                                }
-
-                                $apertureInline = $userInstrument->aperture_mm ?? null;
-
-                                // Determine preview lens factor early
-                                $lensFactorInline = 1.0;
-                                try {
-                                    if (!empty($this->previewLensId)) {
-                                        $ln = $this->previewLensModel ?? \App\Models\Lens::where('id', $this->previewLensId)->first();
-                                        if ($ln && !empty($ln->factor) && is_numeric($ln->factor)) {
-                                            $lensFactorInline = floatval($ln->factor);
-                                        }
-                                    }
-                                } catch (\Throwable $_) { /* ignore */
-                                }
-
-                                // Determine a suitable magnification to evaluate (same logic as above)
-                                $magInline = $userInstrument->fixedMagnification ?? null;
-                                if (!$magInline && isset($row->typicalEyepieceFocal) && !empty($userInstrument->focal_length_mm)) {
-                                    $magInline = (int) round(($userInstrument->focal_length_mm / $row->typicalEyepieceFocal) * $lensFactorInline);
-                                }
-
-                                // If no single fallback mag, build possible mags from eyepieces
-                                $possibleMagsInline = [];
-                                if (!$magInline && !empty($userInstrument?->focal_length_mm)) {
-                                    $epFocalsInline = [];
-                                    if (!empty($this->previewEyepieceId)) {
-                                        try {
-                                            $ep = $this->previewEyepieceModel ?? \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
-                                            if ($ep && !empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
-                                                $epFocalsInline[] = floatval($ep->focal_length_mm);
-                                            }
-                                        } catch (\Throwable $_) { /* ignore */
-                                        }
-                                    }
-                                    try {
-                                        $instSetInline = $authUser?->standardInstrumentSet ?? null;
-                                        $usedSetInline = false;
-                                        if ($instSetInline && is_object($instSetInline) && isset($instSetInline->eyepieces) && isset($userInstrument->id)) {
-                                            $useSet = false;
-                                            try {
-                                                if (isset($instSetInline->instruments)) {
-                                                    foreach ($instSetInline->instruments as $sinst) {
-                                                        try {
-                                                            if (isset($sinst->id) && intval($sinst->id) === intval($userInstrument->id)) {
-                                                                $useSet = true;
-                                                                break;
-                                                            }
-                                                        } catch (\Throwable $_) {
-                                                            continue;
-                                                        }
-                                                    }
-                                                }
-                                            } catch (\Throwable $_) { /* ignore */
-                                            }
-                                            if ($useSet) {
-                                                foreach ($instSetInline->eyepieces as $sep) {
-                                                    try {
-                                                        if ($sep->active && !empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
-                                                            $epFocalsInline[] = floatval($sep->focal_length_mm);
-                                                        }
-                                                    } catch (\Throwable $_) {
-                                                        continue;
-                                                    }
-                                                }
-                                                $usedSetInline = true;
-                                            }
-                                        }
-                                    } catch (\Throwable $_) { /* ignore */
-                                    }
-
-                                    if (!$usedSetInline) {
-                                        try {
-                                            $userEpsInline = $this->getCachedEyepieces($authUser);
-                                            $foundInstSpecific = false;
-                                            foreach ($userEpsInline as $ep) {
-                                                try {
-                                                    if (empty($ep->focal_length_mm) || !is_numeric($ep->focal_length_mm))
-                                                        continue;
-                                                    $usedWith = [];
-                                                    try {
-                                                        $usedWith = method_exists($ep, 'get_used_instruments') ? $ep->get_used_instruments() : [];
-                                                    } catch (\Throwable $_) {
-                                                        $usedWith = [];
-                                                    }
-                                                    if (!empty($usedWith) && in_array(intval($userInstrument->id), array_map('intval', (array) $usedWith))) {
-                                                        $foundInstSpecific = true;
-                                                        $epFocalsInline[] = floatval($ep->focal_length_mm);
-                                                    }
-                                                } catch (\Throwable $_) {
-                                                    continue;
-                                                }
-                                            }
-                                            if (!$foundInstSpecific) {
-                                                foreach ($userEpsInline as $ep) {
-                                                    try {
-                                                        if (!empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
-                                                            $epFocalsInline[] = floatval($ep->focal_length_mm);
-                                                        }
-                                                    } catch (\Throwable $_) {
-                                                        continue;
-                                                    }
-                                                }
-                                            }
-                                        } catch (\Throwable $_) { /* ignore */
-                                        }
-                                    }
-
-                                    $epFocalsInline = array_values(array_unique(array_filter($epFocalsInline)));
-                                    foreach ($epFocalsInline as $ef) {
-                                        if ($ef > 0) {
-                                            $possibleMagsInline[] = (int) round(($userInstrument->focal_length_mm / $ef) * $lensFactorInline);
-                                        }
-                                    }
-                                }
-
-                                $possibleMagsInline = array_values(array_unique(array_filter($possibleMagsInline)));
-
-                                $bestInline = null;
-                                if (!empty($possibleMagsInline) && $sbobjInline !== null && $sqmInline !== null && $apertureInline) {
-                                    try {
-                                        $bestInline = $targetInline->calculateBestMagnification($sbobjInline, $sqmInline, $apertureInline, $possibleMagsInline);
-                                    } catch (\Throwable $_) {
-                                        $bestInline = null;
-                                    }
-                                }
-
-                                if ($bestInline) {
-                                    // compute contrast for the chosen mag so we can persist a full metric
-                                    $magForContrast = (int) $bestInline;
-                                    $contrastInline = null;
-                                    try {
-                                        if ($sbobjInline !== null && $sqmInline !== null && $apertureInline && $magForContrast) {
-                                            $contrastInline = $targetInline->calculateContrastReserve($sbobjInline, $sqmInline, $apertureInline, $magForContrast);
-                                        }
-                                    } catch (\Throwable $_) {
-                                        $contrastInline = null;
-                                    }
-
-                                    // persist into user_object_metrics
-                                    try {
-                                        $categoryInline = null;
-                                        if (is_numeric($contrastInline)) {
-                                            if ($contrastInline >= 3.0) {
-                                                $categoryInline = 'excellent';
-                                            } elseif ($contrastInline >= 1.0) {
-                                                $categoryInline = 'good';
-                                            } elseif ($contrastInline >= 0.5) {
-                                                $categoryInline = 'marginal';
-                                            } else {
-                                                $categoryInline = 'poor';
-                                            }
-                                        }
-                                        // When persisting contrast reserve, ensure we do not
-                                        // store a numeric value if the original object
-                                        // magnitude or surface brightness fields are the
-                                        // sentinel 99.9 value (meaning 'missing' in the
-                                        // catalogue). In that case store NULL for CR and
-                                        // category to avoid presenting misleading data.
-                                        $rawMagPersist = $row->mag ?? null;
-                                        $rawSubrPersist = $row->subr ?? null;
-                                        $magSentinel = is_numeric($rawMagPersist) && floatval($rawMagPersist) == 99.9;
-                                        $subrSentinel = is_numeric($rawSubrPersist) && floatval($rawSubrPersist) == 99.9;
-
-                                        $storeContrast = null;
-                                        $storeCategory = null;
-                                        if (!$magSentinel && !$subrSentinel && is_numeric($contrastInline)) {
-                                            $storeContrast = floatval($contrastInline);
-                                            $storeCategory = $categoryInline;
-                                        }
-
-                                        // Determine whether any original object fields were sentinel
-                                        // values; if so, do not persist or show a numeric best mag.
-                                        $rawMagPersist_local = $row->mag ?? null;
-                                        $rawSubrPersist_local = $row->subr ?? null;
-                                        $magSentinel_local = is_numeric($rawMagPersist_local) && floatval($rawMagPersist_local) == 99.9;
-                                        $subrSentinel_local = is_numeric($rawSubrPersist_local) && floatval($rawSubrPersist_local) == 99.9;
-                                        $storeBestInline = (!$magSentinel_local && !$subrSentinel_local) ? (int) $bestInline : null;
-
-                                        UserObjectMetric::updateOrCreate(
-                                            ['user_id' => $authUser->id, 'instrument_id' => $instrId, 'location_id' => $locId, 'lens_id' => $this->previewLensId ?? null, 'object_name' => $row->name],
-                                            [
-                                                'optimum_detection_magnification' => $storeBestInline,
-                                                'contrast_reserve' => $storeContrast,
-                                                'contrast_reserve_category' => $storeCategory,
-                                                'lens_id' => $this->previewLensId ?? null,
-                                            ]
-                                        );
-                                        $computedOk = true;
-                                    } catch (\Throwable $_) {
-                                        $computedOk = false;
-                                    }
-
-                                    if ($computedOk) {
-                                        // Show the inline-computed best magnification even
-                                        // when the object record had sentinel fields.
-                                        return '<span title="' . e(number_format(round(floatval($contrastInline), 2), 2)) . '">' . e((int) $bestInline) . 'x</span>';
-                                    }
-                                }
-                            } catch (\Throwable $_) {
-                                // inline compute failed; will fall back to background dispatch
-                            }
-
-                            // Check if we already have a stored result from a previous computation
-                            try {
-                                $existingMetric = UserObjectMetric::where([
-                                    'user_id' => $authUser->id,
-                                    'instrument_id' => $instrId,
-                                    'location_id' => $locId,
-                                    'object_name' => $row->name
-                                ])->where(function ($q) use ($row) {
-                                    $q->where('lens_id', $this->previewLensId ?? null)
-                                        ->orWhereNull('lens_id');
-                                })->first();
-
-                                if ($existingMetric && $existingMetric->optimum_detection_magnification !== null) {
-                                    // Use the cached value instead of showing "Computing..."
-                                    return '<span title="' . e('Cached: ' . number_format(round(floatval($existingMetric->contrast_reserve ?? 0), 2), 2)) . '">' . e((int) $existingMetric->optimum_detection_magnification) . 'x</span>';
-                                }
-                            } catch (\Throwable $_) {
-                                // If we can't check for existing metrics, continue to dispatch
-                            }
-
-                            // If inline compute did not succeed and no cached result exists, dispatch background job once and show placeholder
-                            $pendingKey = 'uom_pending:' . ($authUser->id ?? 'anon') . ':' . $instrId . ':' . $locId . ':' . $row->name;
-                            if (Cache::add($pendingKey, true, 300)) {
-                                ComputeContrastReserveForObject::dispatch($authUser->id, $instrId, $locId, $row->name, $this->previewLensId ?? null);
-                            }
-                            return '<span title="' . e(__('Computing...')) . '">…</span>';
-                        }
-                    } catch (\Throwable $_) {
-                        // if anything unexpected happened, fallthrough to the rest of the closure
-                    }
-
-                    $target = new AstroTarget();
-                    $d1 = $row->diam1 ?? null;
-                    $d2 = $row->diam2 ?? null;
-                    $origMag = $row->mag ?? null;
-                    $origSubr = $row->subr ?? null;
-
-                    $magMissing = !is_numeric($row->mag) || floatval($row->mag) == 99.9;
-                    $subrMissing = !is_numeric($row->subr) || floatval($row->subr) == 99.9;
-                    $diam1Missing = !is_numeric($row->diam1) || floatval($row->diam1) <= 0.0;
-                    $diam2Missing = !is_numeric($row->diam2) || floatval($row->diam2) <= 0.0;
-
-                    if (($magMissing || $subrMissing || $diam1Missing || $diam2Missing) && !empty($row->name)) {
-                        try {
-                            $fallback = DeepskyObject::where('name', $row->name)->first();
-                            if ($fallback) {
-                                $d1 = $d1 ?? $fallback->diam1 ?? null;
-                                $d2 = $d2 ?? $fallback->diam2 ?? null;
-                                if ($magMissing && is_numeric($fallback->mag) && floatval($fallback->mag) != 99.9) {
-                                    $row->mag = $fallback->mag;
-                                    $magMissing = false;
-                                }
-                                if ($subrMissing && is_numeric($fallback->subr) && floatval($fallback->subr) != 99.9) {
-                                    $row->subr = $fallback->subr;
-                                    $subrMissing = false;
-                                }
-                                if ($diam1Missing && is_numeric($fallback->diam1) && floatval($fallback->diam1) > 0) {
-                                    $d1 = $fallback->diam1;
-                                    $diam1Missing = false;
-                                }
-                                if ($diam2Missing && is_numeric($fallback->diam2) && floatval($fallback->diam2) > 0) {
-                                    $d2 = $fallback->diam2;
-                                    $diam2Missing = false;
-                                }
-                            }
-                        } catch (\Throwable $ex) {
-                            // fallback lookup failed
-                        }
-                    }
-                    if ($d1 && $d2) {
-                        $target->setDiameter($d1, $d2);
-                    }
-                    $m = (is_numeric($row->mag) && floatval($row->mag) != 99.9) ? floatval($row->mag) : null;
-                    if ($m === null) {
-                        $d1f = is_numeric($row->diam1) ? floatval($row->diam1) : null;
-                        $d2f = is_numeric($row->diam2) ? floatval($row->diam2) : null;
-                        $subr = is_numeric($row->subr) ? floatval($row->subr) : null;
-                        if (($d1f !== null && $d1f > 0) && (empty($d2f) || $d2f <= 0)) {
-                            $d2f = $d1f;
-                        } elseif (($d2f !== null && $d2f > 0) && (empty($d1f) || $d1f <= 0)) {
-                            $d1f = $d2f;
-                        }
-
-                        if ($subr !== null && $d1f !== null && $d2f !== null && $d1f > 0 && $d2f > 0) {
-                            $area = pi() * ($d1f / 2.0) * ($d2f / 2.0);
-                            if ($area > 0) {
-                                $estimated = $subr - 2.5 * log10($area);
-                                $m = $estimated;
-                            }
-                        }
-                    }
-                    if ($m !== null) {
-                        $target->setMagnitude($m);
-                    }
-
-                    $hasSubr = is_numeric($row->subr) && floatval($row->subr) != 99.9;
-                    $hasMag = is_numeric($m);
-
-                    $origMagMissing = !is_numeric($origMag) || floatval($origMag) == 99.9;
-                    $origSubrMissing = !is_numeric($origSubr) || floatval($origSubr) == 99.9;
-                    if ($origMagMissing && $origSubrMissing) {
-                        // Contrast reserve skipped - original object record missing mag and subr
+                    // Not calculated yet: queued by triggerBulkPrecompute(); the
+                    // table polls while the job runs.
+                    $magMissing = !is_numeric($row->mag ?? null) || floatval($row->mag) == 99.9;
+                    $subrMissing = !is_numeric($row->subr ?? null) || floatval($row->subr) == 99.9;
+                    if ($magMissing && $subrMissing) {
                         return '<span title="' . e('Contrast reserve requires either a magnitude or a surface brightness value in the object record') . '">-</span>';
                     }
-                    if (!$hasMag && !$hasSubr) {
-                        // Contrast reserve skipped - no magnitude and no surface brightness
-                        return '<span title="' . e('Contrast reserve requires either a magnitude or a surface brightness value for the object') . '">-</span>';
+                    if ($this->hasPendingCalculations) {
+                        return '<span title="' . e(__('Computing...')) . '">…</span>';
                     }
 
-                    $sbobj = null;
-                    try {
-                        $sbobj = $target->calculateSBObj();
-                    } catch (\Throwable $ex) {
-                        // calculateSBObj failed
-                        $sbobj = null;
-                    }
-
-                    $sqm = null;
-                    try {
-                        $sqm = method_exists($userLocation, 'getSqm') ? $userLocation->getSqm() : ($userLocation->sqm ?? null);
-                    } catch (\Throwable $ex) {
-                        // getSqm failed
-                        $sqm = null;
-                    }
-
-                    $aperture = $userInstrument->aperture_mm ?? null;
-
-                    // Determine preview lens factor early so any fallback mag
-                    // calculation includes it and we avoid mixing pre-lens
-                    // and lens-applied magnifications.
-                    $lensFactor = 1.0;
-                    try {
-                        if (!empty($this->previewLensId)) {
-                            $ln = $this->previewLensModel ?? \App\Models\Lens::where('id', $this->previewLensId)->first();
-                            if ($ln && !empty($ln->factor) && is_numeric($ln->factor)) {
-                                $lensFactor = floatval($ln->factor);
-                            }
-                        }
-                    } catch (\Throwable $_) { /* ignore lens lookup */
-                    }
-
-                    $mag = $userInstrument->fixedMagnification ?? null;
-                    if (!$mag && isset($row->typicalEyepieceFocal) && !empty($userInstrument->focal_length_mm)) {
-                        $mag = (int) round(($userInstrument->focal_length_mm / $row->typicalEyepieceFocal) * $lensFactor);
-                    }
-
-                    if (!$mag && !empty($userInstrument?->focal_length_mm)) {
-                        // Build possible magnifications from a single unified
-                        // source: the preview eyepiece (if present), the user's
-                        // instrument set, and cached eyepieces. Apply the
-                        // preview lens factor uniformly.
-                        $possibleMags = [];
-                        if (!empty($userInstrument?->focal_length_mm)) {
-                            $epFocals = [];
-                            // preview eyepiece focal
-                            if (!empty($this->previewEyepieceId)) {
-                                try {
-                                    $ep = $this->previewEyepieceModel ?? \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
-                                    if ($ep && !empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
-                                        $epFocals[] = floatval($ep->focal_length_mm);
-                                    }
-                                } catch (\Throwable $_) { /* ignore */
-                                }
-                            }
-
-                            // instrument set eyepieces — only use the set's eyepieces
-                            // if the selected instrument is actually a member of the
-                            // user's standard instrument set. This avoids collecting
-                            // eyepieces from unrelated instruments in the user's set.
-                            try {
-                                $instSet = $authUser?->standardInstrumentSet ?? null;
-                                if ($instSet && is_object($instSet) && isset($instSet->eyepieces) && isset($userInstrument->id)) {
-                                    $useSetEyepieces = false;
-                                    try {
-                                        if (isset($instSet->instruments)) {
-                                            foreach ($instSet->instruments as $sinst) {
-                                                try {
-                                                    if (isset($sinst->id) && intval($sinst->id) === intval($userInstrument->id)) {
-                                                        $useSetEyepieces = true;
-                                                        break;
-                                                    }
-                                                } catch (\Throwable $_) {
-                                                    continue;
-                                                }
-                                            }
-                                        }
-                                    } catch (\Throwable $_) { /* ignore */
-                                    }
-                                    if ($useSetEyepieces) {
-                                        foreach ($instSet->eyepieces as $sep) {
-                                            try {
-                                                if ($sep->active && !empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
-                                                    $epFocals[] = floatval($sep->focal_length_mm);
-                                                }
-                                            } catch (\Throwable $_) {
-                                                continue;
-                                            }
-                                        }
-                                    }
-                                }
-                            } catch (\Throwable $_) { /* ignore */
-                            }
-
-                            // cached eyepieces — prefer those that have been used with
-                            // the selected instrument. If none are found, fall back to
-                            // including all cached eyepieces to preserve previous
-                            // behavior for users without instrument-specific usage.
-                            try {
-                                $userEps = $this->getCachedEyepieces($authUser);
-                                $foundInstrumentSpecific = false;
-                                foreach ($userEps as $ep) {
-                                    try {
-                                        if (empty($ep->focal_length_mm) || !is_numeric($ep->focal_length_mm))
-                                            continue;
-                                        $usedWith = [];
-                                        try {
-                                            $usedWith = method_exists($ep, 'get_used_instruments') ? $ep->get_used_instruments() : [];
-                                        } catch (\Throwable $_) {
-                                            $usedWith = [];
-                                        }
-                                        if (!empty($usedWith) && in_array(intval($userInstrument->id), array_map('intval', (array) $usedWith))) {
-                                            $foundInstrumentSpecific = true;
-                                            $epFocals[] = floatval($ep->focal_length_mm);
-                                        }
-                                    } catch (\Throwable $_) {
-                                        continue;
-                                    }
-                                }
-                                if (!$foundInstrumentSpecific) {
-                                    // no instrument-specific cached eyepieces found; include all
-                                    foreach ($userEps as $ep) {
-                                        try {
-                                            if (!empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
-                                                $epFocals[] = floatval($ep->focal_length_mm);
-                                            }
-                                        } catch (\Throwable $_) {
-                                            continue;
-                                        }
-                                    }
-                                }
-                            } catch (\Throwable $_) { /* ignore */
-                            }
-
-                            $epFocals = array_values(array_unique(array_filter($epFocals)));
-                            foreach ($epFocals as $ef) {
-                                if ($ef > 0) {
-                                    $possibleMags[] = (int) round(($userInstrument->focal_length_mm / $ef) * $lensFactor);
-                                }
-                            }
-                        }
-                    }
-                    $possibleMags = array_values(array_unique(array_filter($possibleMags)));
-                    if (!empty($possibleMags) && isset($target) && isset($sbobj) && isset($sqm) && isset($aperture)) {
-                        try {
-                            $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
-                            if ($best) {
-                                $mag = (int) $best;
-                            }
-                        } catch (\Throwable $ex) {
-                            // calculateBestMagnification failed
-                        }
-                    }
-
-                    // Reduced logging: avoid emitting large objects to the logger
-    
-                    if ($sbobj !== null && $sqm !== null && $aperture && $mag) {
-                        try {
-                            $contrast = $target->calculateContrastReserve($sbobj, $sqm, $aperture, $mag);
-                            // Computed contrast reserve successfully (value: not logged to avoid large payloads)
-                            if (is_numeric($contrast)) {
-                                $display = number_format(round($contrast, 2), 2);
-                                if ($contrast > 1.0) {
-                                    $crCat = 'very_easy';
-                                } elseif ($contrast > 0.5) {
-                                    $crCat = 'easy';
-                                } elseif ($contrast > 0.35) {
-                                    $crCat = 'quite_difficult';
-                                } elseif ($contrast > 0.1) {
-                                    $crCat = 'difficult';
-                                } elseif ($contrast > -0.2) {
-                                    $crCat = 'questionable';
-                                } else {
-                                    $crCat = 'not_visible';
-                                }
-                                $crClass = 'text-white';
-                                if ($crCat === 'very_easy') {
-                                    $crClass = 'text-green-400';
-                                } elseif ($crCat === 'easy') {
-                                    $crClass = 'text-green-600';
-                                } elseif ($crCat === 'quite_difficult') {
-                                    $crClass = 'text-yellow-400';
-                                } elseif ($crCat === 'difficult') {
-                                    $crClass = 'text-orange-400';
-                                } elseif ($crCat === 'questionable') {
-                                    $crClass = 'text-gray-300';
-                                } elseif ($crCat === 'not_visible') {
-                                    $crClass = 'text-gray-600';
-                                }
-                                $categoryText = $crCat ? __('contrast.reserve.category.' . $crCat) : __('Unknown');
-                                $summaryKey = __('contrast.reserve.summary', ['value' => $display, 'category' => $categoryText]);
-                                if (str_contains($summaryKey, 'contrast.reserve.category.') || str_contains($summaryKey, 'contrast.reserve.summary')) {
-                                    $title = e($display);
-                                } else {
-                                    $title = e($summaryKey);
-                                }
-                                $instrName = $userInstrument->name ?? ($userInstrument->model ?? null);
-                                $locName = $userLocation->name ?? ($userLocation->label ?? null);
-
-                                $html = '<div x-data="{open:false,left:0,top:0,openAt(){this.open = !this.open; if(this.open){ this.$nextTick(()=>{ try{ let r=this.$refs.crbtn.getBoundingClientRect(); this.left = Math.max(8, Math.round(r.left)); this.top = Math.max(8, Math.round(r.bottom)); }catch(e){} }) } }}" class="inline-block">'
-                                    . '<button x-ref="crbtn" @click.prevent="openAt()" @keydown.escape="open = false" type="button" class="focus:outline-none ' . $crClass . ' font-medium">' . e($display) . '</button>'
-                                    . '<div x-show="open" x-cloak @click.outside="open = false" x-transition :style="`position:fixed; left:${left}px; top:${top}px;`" class="z-50 w-96 p-3 bg-gray-800 text-sm text-gray-100 rounded shadow-lg" data-dsl-no-overlay-hide="true">'
-                                    . '<div class="text-sm mb-2">' . $title . '</div>'
-                                    . '<div class="text-xs text-gray-300 mb-1"><strong>' . e(__('Location')) . ':</strong> ' . e($locName ?? __('Unknown')) . '</div>'
-                                    . '<div class="text-xs text-gray-300"><strong>' . e(__('Instrument')) . ':</strong> ' . e($instrName ?? __('Unknown')) . '</div>'
-                                    . '</div></div>';
-
-                                // Persist the computed contrast reserve and best mag for this user/instrument/location/object
-                                try {
-                                    $instrId = $userInstrument->id ?? null;
-                                    $locId = $userLocation->id ?? null;
-                                    if ($authUser && $instrId && $locId && !empty($row->name)) {
-                                        $categoryToStore = null;
-                                        if ($crCat === 'very_easy') {
-                                            $categoryToStore = 'excellent';
-                                        } elseif ($crCat === 'easy') {
-                                            $categoryToStore = 'good';
-                                        } elseif ($crCat === 'quite_difficult') {
-                                            $categoryToStore = 'marginal';
-                                        } elseif ($crCat === 'not_visible') {
-                                            $categoryToStore = 'poor';
-                                        } else {
-                                            $categoryToStore = $crCat;
-                                        }
-
-                                        // Do not persist a numeric best-mag when the object
-                                        // record contains sentinel values for mag or SB.
-                                        $rawMagPersist3 = $row->mag ?? null;
-                                        $rawSubrPersist3 = $row->subr ?? null;
-                                        $magSentinel3 = is_numeric($rawMagPersist3) && floatval($rawMagPersist3) == 99.9;
-                                        $subrSentinel3 = is_numeric($rawSubrPersist3) && floatval($rawSubrPersist3) == 99.9;
-                                        $storeBest3 = (!$magSentinel3 && !$subrSentinel3 && is_numeric($mag)) ? (int) $mag : null;
-
-                                        UserObjectMetric::updateOrCreate(
-                                            ['user_id' => $authUser->id, 'instrument_id' => $instrId, 'location_id' => $locId, 'lens_id' => $this->previewLensId ?? null, 'object_name' => $row->name],
-                                            [
-                                                'contrast_reserve' => floatval($contrast),
-                                                'contrast_reserve_category' => $categoryToStore,
-                                                'optimum_detection_magnification' => $storeBest3,
-                                                'lens_id' => $this->previewLensId ?? null,
-                                            ]
-                                        );
-                                    }
-                                } catch (\Throwable $_) {
-                                    // swallow persistence failures
-                                }
-
-                                return $html;
-                            }
-                        } catch (\Throwable $ex) {
-                            // ignore calculation failures to avoid noisy logs
-                        }
-                    } else {
-                        $missing = [];
-                        if (!$sbobj)
-                            $missing[] = 'surface brightness/magnitude';
-                        if (!$sqm)
-                            $missing[] = 'sky brightness (SQM)';
-                        if (!$aperture)
-                            $missing[] = 'instrument aperture';
-                        if (!$mag)
-                            $missing[] = 'magnification';
-                        $title = 'Missing: ' . implode(', ', $missing);
-                        return '<span title="' . e($title) . '">-</span>';
-                    }
+                    return '<span title="' . e('Contrast reserve unavailable for this object') . '">-</span>';
                 } catch (\Throwable $ex) {
                     // Contrast reserve outer exception
                 }
@@ -2561,7 +1697,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 $requested = (string) $authUser->standardAtlasCode;
                 $m = Atlas::where('code', $requested)->first();
                 if (!$m) {
-                    $m = Atlas::whereRaw('LOWER(`code`) = ?', [strtolower($requested)])->first();
+                    $m = Atlas::where('code', $requested)->first();
                 }
                 if ($m?->name) {
                     $atlasTitle = $m->name;
@@ -2612,7 +1748,9 @@ class NearbyObjectsTable extends PowerGridComponent
             // Use DB-backed field names for sorting. The fields() mapper
             // provides display renderers (see 'seen' and 'last_seen') while
             // these columns use concrete aliases that exist in the SQL.
-            Column::make(__('Seen'), 'total_observations')->sortable()->bodyAttribute('class', 'text-center'),
+            Column::make(__('Seen'), 'seen_link', 'total_observations')->sortable()->bodyAttribute('class', 'text-center')->visibleInExport(false),
+            // Export-only plain count (no link)
+            Column::make(__('Seen'), 'total_observations')->hidden()->visibleInExport(true),
             // The following columns are sensitive to user-specific context (per-user metrics or ephemerides)
             // and are shown only when an authenticated user is present. See below where we append them
             // when $authUser is available.
@@ -3055,11 +2193,8 @@ class NearbyObjectsTable extends PowerGridComponent
             $typeMap = [
                 'ASTER' => 'ASTERISM',
                 'BRTNB' => 'BRIGHT',
-                'CLANB' => 'NEBULA',
                 'DRKNB' => 'DARK',
                 'EMINB' => 'NEBULA',
-                'ENRNN' => 'NEBULA',
-                'ENSTR' => 'NEBULA',
                 'GALCL' => 'GALAXY CL',
                 'GALXY' => 'GALAXY',
                 'GLOCL' => 'GLOBULAR',
@@ -3075,13 +2210,11 @@ class NearbyObjectsTable extends PowerGridComponent
                 'OPNCL' => 'OPEN',
                 'PLNNB' => 'PLANETARY',
                 'REFNB' => 'NEBULA',
-                'RNHII' => 'NEBULA',
                 'SMCCN' => 'OPEN',
                 'SMCDN' => 'NEBULA',
                 'SMCGC' => 'GLOBULAR',
                 'SMCOC' => 'OPEN',
                 'SNREM' => 'NEBULA',
-                'STNEB' => 'NEBULA',
                 'QUASR' => 'USER',
                 'WRNEB' => 'NEBULA',
                 'AA1STAR' => 'STAR',
@@ -3318,7 +2451,7 @@ class NearbyObjectsTable extends PowerGridComponent
             };
 
             // Small helper to detect planets by name
-            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
+            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Moon', 'Sun']);
 
             $blocks = $rows->map(function ($r) use ($formatDiameter, $planetNames) {
                 $catalog = trim((string) ($r->name ?? ''));
@@ -3446,7 +2579,7 @@ class NearbyObjectsTable extends PowerGridComponent
                 return $size;
             };
 
-            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
+            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Moon', 'Sun']);
 
             $lines = $rows->map(function ($r) use ($formatDiameter, $planetNames) {
                 $catalog = trim((string) ($r->name ?? ''));
@@ -3568,11 +2701,8 @@ class NearbyObjectsTable extends PowerGridComponent
             $typeMap = [
                 'ASTER' => 'ASTERISM',
                 'BRTNB' => 'BRIGHT',
-                'CLANB' => 'NEBULA',
                 'DRKNB' => 'DARK',
                 'EMINB' => 'NEBULA',
-                'ENRNN' => 'NEBULA',
-                'ENSTR' => 'NEBULA',
                 'GALCL' => 'GALAXY CL',
                 'GALXY' => 'GALAXY',
                 'GLOCL' => 'GLOBULAR',
@@ -3588,13 +2718,11 @@ class NearbyObjectsTable extends PowerGridComponent
                 'OPNCL' => 'OPEN',
                 'PLNNB' => 'PLANETARY',
                 'REFNB' => 'NEBULA',
-                'RNHII' => 'NEBULA',
                 'SMCCN' => 'OPEN',
                 'SMCDN' => 'NEBULA',
                 'SMCGC' => 'GLOBULAR',
                 'SMCOC' => 'OPEN',
                 'SNREM' => 'NEBULA',
-                'STNEB' => 'NEBULA',
                 'QUASR' => 'USER',
                 'WRNEB' => 'NEBULA',
                 'AA1STAR' => 'STAR',
@@ -3810,11 +2938,13 @@ class NearbyObjectsTable extends PowerGridComponent
             $possibleMags = [];
             if (!empty($userInstrument?->focal_length_mm)) {
                 $epFocals = [];
+                $epModels = [];
                 if (!empty($this->previewEyepieceId)) {
                     try {
                         $ep = $this->previewEyepieceModel ?? \App\Models\Eyepiece::where('id', $this->previewEyepieceId)->first();
                         if ($ep && !empty($ep->focal_length_mm) && $ep->focal_length_mm > 0) {
                             $epFocals[] = floatval($ep->focal_length_mm);
+                            $epModels[] = $ep;
                         }
                     } catch (\Throwable $_) { /* ignore */
                     }
@@ -3845,6 +2975,7 @@ class NearbyObjectsTable extends PowerGridComponent
                                 try {
                                     if ($sep->active && !empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
                                         $epFocals[] = floatval($sep->focal_length_mm);
+                                        $epModels[] = $sep;
                                     }
                                 } catch (\Throwable $_) {
                                     continue;
@@ -3862,6 +2993,7 @@ class NearbyObjectsTable extends PowerGridComponent
                             try {
                                 if (!empty($ep->focal_length_mm) && is_numeric($ep->focal_length_mm)) {
                                     $epFocals[] = floatval($ep->focal_length_mm);
+                                    $epModels[] = $ep;
                                 }
                             } catch (\Throwable $_) {
                                 continue;
@@ -3882,7 +3014,7 @@ class NearbyObjectsTable extends PowerGridComponent
 
             if (!empty($possibleMags) && isset($target) && isset($sbobj) && isset($sqm) && isset($aperture)) {
                 try {
-                    $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
+                    $best = \App\Services\ContrastReserveCalculator::bestMagnification($target, $sbobj, $sqm, $aperture, $possibleMags, isset($epModels) ? \App\Services\ContrastReserveCalculator::fields($userInstrument, \App\Services\ContrastReserveCalculator::eyepieceMagnifications($userInstrument, $epModels, $lensFactor ?? 1.0), $lensFactor ?? 1.0) : []);
                     if ($best) {
                         return (int) $best . 'x';
                     }
@@ -4009,13 +3141,15 @@ class NearbyObjectsTable extends PowerGridComponent
     #[On('nearbyRadiusChanged')]
     public function updateRadius(int $arcmin): void
     {
-        $this->radiusArcMin = intval($arcmin);
+        $this->radiusArcMin = self::clampRadius($arcmin);
         // Persist the changed radius for the authenticated user
         try {
             $this->saveUserTableSettings(['radiusArcMin' => $this->radiusArcMin]);
         } catch (\Throwable $_) {
             // ignore
         }
+        // A larger radius brings objects without metrics.
+        $this->triggerBulkPrecompute();
         // Re-render: PowerGrid will call datasource on next render
     }
 
@@ -4051,10 +3185,6 @@ class NearbyObjectsTable extends PowerGridComponent
                 $this->dispatch('pg:eventRefresh-' . $this->tableName);
             } catch (\Throwable $_) {
             }
-            try {
-                $this->dispatchBrowserEvent('pg:eventRefresh-' . $this->tableName);
-            } catch (\Throwable $_) {
-            }
         } catch (\Throwable $_) {
             // swallow to avoid breaking UI
         }
@@ -4075,9 +3205,6 @@ class NearbyObjectsTable extends PowerGridComponent
             // Clear in-memory eyepiece cache so subsequent calculations pick up
             // the user's current eyepiece set / instrument selection.
             $this->cachedEyepieces = null;
-
-            // Store previous lens ID to detect changes
-            $previousLensId = $this->previewLensId;
 
             // Normalize incoming payload and store preview selections so fields()
             // can prefer the preview instrument/eyepiece when computing values.
@@ -4161,42 +3288,12 @@ class NearbyObjectsTable extends PowerGridComponent
             $this->refreshTick = intval($this->refreshTick) + 1;
             // Also dispatch PowerGrid's eventRefresh for this table so the
             // front-end PowerGrid handler forces a full refresh (handles lazy
-            // loading and virtual scroll cases). Emit both a server-side
-            // dispatch (existing listener hooks) and a browser event so the
-            // vendor frontend code receives the signal to reload rows.
+            // loading and virtual scroll cases). Livewire's dispatch() reaches
+            // both server-side listeners and the browser.
             try {
-                // server-side for any Livewire listeners
                 $this->dispatch('pg:eventRefresh-' . $this->tableName);
             } catch (\Throwable $_) {
                 // ignore dispatch failures
-            }
-            try {
-                // browser event: PowerGrid's client side listens for this
-                // custom event (examples in project use `$dispatch('pg:eventRefresh-...')`).
-                $this->dispatchBrowserEvent('pg:eventRefresh-' . $this->tableName);
-            } catch (\Throwable $_) {
-                // ignore browser event failures
-            }
-
-            // Clear bulk precompute cache if lens selection changed
-            // This allows new calculations to be dispatched for the new configuration
-            if ($previousLensId !== $this->previewLensId) {
-                try {
-                    $authUser = Auth::user();
-                    if ($authUser) {
-                        $instrId = $this->previewInstrumentId ?? ($authUser->standardInstrument?->id ?? null);
-                        $locId = $authUser->standardLocation?->id ?? null;
-                        if ($instrId && $locId) {
-                            // Clear cache for both old and new lens configurations
-                            $oldKey = 'uom_bulk_pending:' . $authUser->id . ':' . $instrId . ':' . $locId . ':' . ($previousLensId === null ? 'nolens' : (string) $previousLensId);
-                            $newKey = 'uom_bulk_pending:' . $authUser->id . ':' . $instrId . ':' . $locId . ':' . ($this->previewLensId === null ? 'nolens' : (string) $this->previewLensId);
-                            Cache::forget($oldKey);
-                            Cache::forget($newKey);
-                        }
-                    }
-                } catch (\Throwable $_) {
-                    // ignore cache clear failures
-                }
             }
 
             // Trigger bulk precompute when preview settings change
@@ -4209,8 +3306,10 @@ class NearbyObjectsTable extends PowerGridComponent
     /**
      * Generic Livewire updated hook to catch property changes like sortField and sortDirection.
      */
-    public function updated($name, $value): void
+    public function updated(string $name, mixed $value = null): void
     {
+        parent::updated($name);
+
         try {
             // Direct property updates (simple Livewire updates)
             if ($name === 'sortField') {
@@ -4304,8 +3403,10 @@ class NearbyObjectsTable extends PowerGridComponent
     /**
      * Livewire hook: called when the PowerGrid setUp array changes (captures per-page changes)
      */
-    public function updatedSetUp($value): void
+    public function updatedSetUp(): void
     {
+        parent::updatedSetUp();
+
         try {
             // setUp.footer.perPage is used by PowerGrid; ensure we persist when it's changed
             if (is_array($this->setUp ?? null) && isset($this->setUp['footer']['perPage'])) {
@@ -4340,6 +3441,9 @@ class NearbyObjectsTable extends PowerGridComponent
         ]);
 
         $existing = is_array($row->settings) ? $row->settings : (is_string($row->settings) ? json_decode($row->settings, true) ?? [] : []);
+        if (isset($overrides['radiusArcMin'])) {
+            $overrides['radiusArcMin'] = self::clampRadius($overrides['radiusArcMin']);
+        }
         $merged = array_merge($existing ?? [], $overrides);
         $row->settings = $merged;
         $row->save();

@@ -8,7 +8,7 @@
                          alt="{{ $lens->name }}">
                     @if (!empty($lens->description))
                         <div class="mt-4 p-3 border border-gray-700 bg-gray-800 text-gray-100 rounded prose prose-invert">
-                            {!! html_entity_decode($lens->description ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') !!}
+                            {!! \App\Support\Html::purify($lens->description, true) !!}
                         </div>
                     @endif
                 </div>
@@ -55,11 +55,9 @@
                                     $first_observation_date = $lens->first_observation_date();
                                     $last_observation_date = $lens->last_observation_date();
                                 @endphp
-                                @if (! is_null($first_observation_date[0]))
-                                    <a
-                                        href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $first_observation_date[1] }}"
-                                    >
-                                        {{$first_observation_date[0] }}
+                                @if (! is_null($first_observation_date[0]) && $first_observation_date[1])
+                                    <a href="{{ $first_observation_date[1]->detailUrl() }}">
+                                        {{ $first_observation_date[0] }}
                                     </a>
                                 @else
                                     {{ __("No observations added!") }}
@@ -70,10 +68,8 @@
                         <tr>
                             <td>{{ __("Last used on") }}</td>
                             <td>
-                                @if (! is_null($last_observation_date[0]))
-                                    <a
-                                        href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $last_observation_date[1] }}"
-                                    >
+                                @if (! is_null($last_observation_date[0]) && $last_observation_date[1])
+                                    <a href="{{ $last_observation_date[1]->detailUrl() }}">
                                         {{ $last_observation_date[0] }}
                                     </a>
                                 @else

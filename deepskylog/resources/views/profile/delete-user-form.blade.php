@@ -12,6 +12,10 @@
             {{ __("Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.") }}
         </div>
 
+        <div class="mt-3 max-w-xl text-sm text-gray-300">
+            {{ __("This deletes your observations and sketches, your sessions, your instruments, eyepieces, filters, lenses and locations, and your observing lists, comments and likes. Messages you sent stay in the inbox of their receivers.") }}
+        </div>
+
         <div class="mt-5">
             <x-button
                 negative

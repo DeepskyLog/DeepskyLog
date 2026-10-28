@@ -22,9 +22,9 @@ class TrustProxies extends Middleware
     public function __construct()
     {
         // Allow configuring trusted proxies via the TRUSTED_PROXIES env var
-        // (comma-separated list). If not set, leave as null so Laravel's
-        // default behavior applies.
-        $proxies = env('TRUSTED_PROXIES');
+        // (comma-separated list, read in config/app.php). If not set, leave as
+        // null so Laravel's default behavior applies.
+        $proxies = config('app.trusted_proxies');
         $this->proxies = $proxies ? explode(',', $proxies) : null;
     }
 

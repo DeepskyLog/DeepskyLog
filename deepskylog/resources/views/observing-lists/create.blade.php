@@ -41,6 +41,19 @@
                         </label>
                     </div>
 
+                    <div class="mb-6">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="hidden" name="make_active" value="0">
+                            <input type="checkbox" name="make_active" value="1"
+                                   {{ old('make_active', '1') ? 'checked' : '' }}
+                                   class="rounded border-gray-600 bg-gray-800 text-blue-600 focus:ring-blue-500">
+                            <div>
+                                <span class="text-sm font-medium text-gray-300">{{ __('Make this my active list') }}</span>
+                                <p class="text-xs text-gray-500">{{ __('The object pages and search results add objects to your active list.') }}</p>
+                            </div>
+                        </label>
+                    </div>
+
                     <div class="flex items-center gap-3">
                         <button type="submit"
                             class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-md text-sm font-semibold">

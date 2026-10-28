@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use App\Models\Asteroid;
+use App\Services\AsteroidCoordinates;
+use App\Services\ContrastReserveCalculator;
+use App\Services\DoubleStarResolvability;
+use App\Services\FilterAdvice;
+use App\Services\MoonlitContrastReserve;
+use App\Support\EphemerisDate;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
@@ -24,6 +31,15 @@ class AladinPreviewInfo extends Component
     public $contrast_used_sqm;
     public $contrast_used_nelm;
     public $contrast_used_instrument;
+    /** The highest altitude of the object (degrees) and the magnitudes the atmosphere dims it there. */
+    public $contrast_used_altitude;
+    public $contrast_used_extinction;
+    /** The contrast reserve with the Moon in the night of the date (MoonlitContrastReserve), or null. */
+    public $moonlit = null;
+    /** The contrast reserve with each of the observer's nebula filters (FilterAdvice::present()). */
+    public $filter_advice = [];
+    /** Whether the observer's telescope splits a double star, and at which magnification (DoubleStarResolvability::present()), or null. */
+    public $double_star = null;
     public $optimum_detection_magnification;
     public $optimum_eyepieces = [];
     // Raw object type passed from the page (e.g. 'comet', 'planet', etc.)
@@ -58,6 +74,8 @@ class AladinPreviewInfo extends Component
         $this->contrast_used_sqm = $initial['contrast_used_sqm'] ?? null;
         $this->contrast_used_nelm = $initial['contrast_used_nelm'] ?? null;
         $this->contrast_used_instrument = $initial['contrast_used_instrument'] ?? null;
+        $this->contrast_used_altitude = $initial['contrast_used_altitude'] ?? null;
+        $this->contrast_used_extinction = $initial['contrast_used_extinction'] ?? null;
         $this->optimum_detection_magnification = $initial['optimum_detection_magnification'] ?? null;
         $this->optimum_eyepieces = $initial['optimum_eyepieces'] ?? [];
         // accept object_type so blade can decide when to hide comet-only rows
@@ -205,8 +223,8 @@ class AladinPreviewInfo extends Component
                                         if (!$objNameRow) {
                                             // try altname/name variants in the legacy table
                                             $objNameRow = DB::table('objectnames')
-                                                ->whereRaw('LOWER(objectname) = ?', [mb_strtolower($slugCandidate)])
-                                                ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($slugCandidate)])
+                                                ->where('objectname', $slugCandidate)
+                                                ->orWhere('altname', $slugCandidate)
                                                 ->first();
                                         }
                                         if ($objNameRow && !empty($objNameRow->objectname)) {
@@ -240,7 +258,11 @@ class AladinPreviewInfo extends Component
                 }
             }
             // component-mounted id is $this->objectId
-            if ($useObjectId) {
+            // Asteroids: their ids overlap with those of the deep-sky objects
+            $isAsteroid = $this->object_type === 'asteroid';
+            if ($useObjectId && $isAsteroid) {
+                $obj = is_numeric((string) $useObjectId) ? Asteroid::find((int) $useObjectId) : Asteroid::where('slug', (string) $useObjectId)->first();
+            } elseif ($useObjectId) {
                 try {
                     if (is_numeric((string) $useObjectId)) {
                         $obj = \App\Models\DeepskyObject::where('id', $useObjectId)->first();
@@ -278,26 +300,29 @@ class AladinPreviewInfo extends Component
                 }
             }
 
-            // Server-side debounce: avoid repeated heavy recalculations when
-            // the preview is being updated rapidly. Use a per-user+object cache
-            // entry to track last dispatch time (microtime) and ignore requests
-            // within the debounce window.
+            // Server-side debounce: several events often carry the same change
+            // (the same selection or date arriving twice), so skip a request
+            // identical to one handled less than the debounce window ago. A
+            // different request (a second, quick change) is always handled:
+            // skipping it would leave the preview showing the first change.
             try {
                 $userId = Auth::id() ?? 'guest';
                 $incomingObj = $payloadObjectId ?: $this->objectId ?: 'none';
-                $cacheKey = "aladin_preview_last_dispatch:{$userId}:{$incomingObj}";
+                $cacheKey = "aladin_preview_last_dispatch:{$userId}:" . ($isAsteroid ? 'asteroid:' : '') . $incomingObj;
+                $fingerprintPayload = is_array($payload) ? $payload : (is_object($payload) ? (array) $payload : []);
+                unset($fingerprintPayload['_ts']);
+                $fingerprint = md5(serialize($fingerprintPayload));
                 $last = Cache::get($cacheKey);
-                if ($last && (microtime(true) - $last) < (self::PREVIEW_DEBOUNCE_MS / 1000)) {
+                if (is_array($last) && ($last['fingerprint'] ?? null) === $fingerprint
+                    && (microtime(true) - (float) ($last['at'] ?? 0)) < (self::PREVIEW_DEBOUNCE_MS / 1000)) {
                     try {
-                        Log::debug('AladinPreviewInfo: recalc debounced', ['user_id' => $userId, 'object' => $incomingObj, 'since_last_ms' => round((microtime(true) - $last) * 1000, 2)]);
+                        Log::debug('AladinPreviewInfo: recalc debounced', ['user_id' => $userId, 'object' => $incomingObj, 'since_last_ms' => round((microtime(true) - (float) $last['at']) * 1000, 2)]);
                     } catch (\Throwable $_) {
                     }
                     return;
                 }
-                // record last dispatch time for a short period so other rapid
-                // requests get suppressed. Keep the cache entry for 30s to avoid
-                // leaving stale keys around.
-                Cache::put($cacheKey, microtime(true), 30);
+                // Keep the cache entry for 30s to avoid leaving stale keys around.
+                Cache::put($cacheKey, ['fingerprint' => $fingerprint, 'at' => microtime(true)], 30);
             } catch (\Throwable $_) {
                 // don't block processing if cache/backend fails
             }
@@ -336,10 +361,16 @@ class AladinPreviewInfo extends Component
             // If the authenticated user has no configured standard instrument set
             // and the incoming payload does not supply any instrument/eyepiece/lens
             // or appearance values, short-circuit to avoid performing heavy
-            // astronomy calculations (HorizonsProxy, AstronomyLibrary, etc.).
+            // astronomy calculations.
             // This addresses slow page loads for logged-in users who haven't
             // configured an instrument set yet — the Sky preview is effectively
             // incomplete until the user provides selections.
+            // The payload as an array, and the appearance values it may provide
+            // (used by the guard below and by the calculations further on)
+            $payloadArr = is_array($payload) ? $payload : (is_object($payload) ? (array) $payload : []);
+            $payloadDiam1 = $payloadArr['diam1'] ?? null;
+            $payloadMag = array_key_exists('mag', $payloadArr) ? $payloadArr['mag'] : null;
+
             try {
                 $hasStdSet = false;
                 try {
@@ -362,7 +393,7 @@ class AladinPreviewInfo extends Component
 
                 if (Auth::check() && !$hasStdSet && !$hasPayloadSelection && $payloadDiam1 === null && $payloadMag === null) {
                     try {
-                        $this->dispatchBrowserEvent('aladin-preview-info-updated', [
+                        $this->dispatch('aladin-preview-info-updated', ...[
                             'status' => 'incomplete',
                             'contrast_reserve' => $this->contrast_reserve,
                             'optimum_detection_magnification' => $this->optimum_detection_magnification,
@@ -412,7 +443,7 @@ class AladinPreviewInfo extends Component
                 }
             } else {
                 // No lens specified in payload: fall back to user's default lens/preferences
-                $defaultLensId = $authUser?->stdlens ?? null;
+                $defaultLensId = $authUser?->standardLensId();
                 try {
                     if (!$defaultLensId && Schema::hasColumn('users', 'preferences') && is_array($authUser?->preferences) && isset($authUser->preferences['aladin_default_lens'])) {
                         $defaultLensId = $authUser->preferences['aladin_default_lens'];
@@ -447,7 +478,7 @@ class AladinPreviewInfo extends Component
 
             if (empty($userLocation)) {
                 try {
-                    $this->dispatchBrowserEvent('aladin-preview-info-updated', [
+                    $this->dispatch('aladin-preview-info-updated', ...[
                         'status' => 'incomplete',
                         'contrast_reserve' => $this->contrast_reserve,
                         'optimum_detection_magnification' => $this->optimum_detection_magnification,
@@ -463,7 +494,7 @@ class AladinPreviewInfo extends Component
             // we cannot compute contrast/optimum.
             if (!$obj && $payloadDiam1 === null && $payloadMag === null) {
                 try {
-                    $this->dispatchBrowserEvent('aladin-preview-info-updated', [
+                    $this->dispatch('aladin-preview-info-updated', ...[
                         'status' => 'incomplete',
                         'contrast_reserve' => $this->contrast_reserve,
                         'optimum_detection_magnification' => $this->optimum_detection_magnification,
@@ -476,20 +507,10 @@ class AladinPreviewInfo extends Component
             }
 
             // perform calculations similar to ObjectController::show
-            $date = \Carbon\Carbon::now();
-            // allow caller to provide a date in payload (ISO string or Y-m-d format)
-            try {
-                if (!empty($payload) && (is_array($payload) || is_object($payload))) {
-                    $p = (array) $payload;
-                    if (!empty($p['date'])) {
-                        try {
-                            $date = \Carbon\Carbon::parse($p['date']);
-                        } catch (\Throwable $_) { /* ignore parse errors */
-                        }
-                    }
-                }
-            } catch (\Throwable $_) {
-            }
+            // allow caller to provide a date in payload (ISO string or Y-m-d format);
+            // a date without a time is a date of the observer, read in their timezone
+            $payloadDate = (!empty($payload) && (is_array($payload) || is_object($payload))) ? (((array) $payload)['date'] ?? null) : null;
+            $date = EphemerisDate::parse($payloadDate, EphemerisDate::timezone($userLocation));
             $coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
             $astrolib = new AstronomyLibrary($date, $coords, $userLocation->elevation ?? 0.0);
 
@@ -539,7 +560,7 @@ class AladinPreviewInfo extends Component
                 if (!$isPlanet) {
                     try {
                         $pname = trim(strtolower($obj->name ?? ''));
-                        $map = ['mercury' => 'Mercury', 'venus' => 'Venus', 'earth' => 'Earth', 'mars' => 'Mars', 'jupiter' => 'Jupiter', 'saturn' => 'Saturn', 'uranus' => 'Uranus', 'neptune' => 'Neptune', 'pluto' => 'Pluto', 'sun' => 'Sun', 'moon' => 'Moon'];
+                        $map = ['mercury' => 'Mercury', 'venus' => 'Venus', 'earth' => 'Earth', 'mars' => 'Mars', 'jupiter' => 'Jupiter', 'saturn' => 'Saturn', 'uranus' => 'Uranus', 'neptune' => 'Neptune', 'sun' => 'Sun', 'moon' => 'Moon'];
                         $key = preg_replace('/[^a-z]/', '', $pname);
                         if ($key && isset($map[$key])) {
                             $isPlanet = true;
@@ -553,7 +574,7 @@ class AladinPreviewInfo extends Component
                     // If we detected planet via raw type but didn't set class, still try by name
                     try {
                         $pname = trim(strtolower($obj->name ?? ''));
-                        $map = ['mercury' => 'Mercury', 'venus' => 'Venus', 'earth' => 'Earth', 'mars' => 'Mars', 'jupiter' => 'Jupiter', 'saturn' => 'Saturn', 'uranus' => 'Uranus', 'neptune' => 'Neptune', 'pluto' => 'Pluto', 'sun' => 'Sun', 'moon' => 'Moon'];
+                        $map = ['mercury' => 'Mercury', 'venus' => 'Venus', 'earth' => 'Earth', 'mars' => 'Mars', 'jupiter' => 'Jupiter', 'saturn' => 'Saturn', 'uranus' => 'Uranus', 'neptune' => 'Neptune', 'sun' => 'Sun', 'moon' => 'Moon'];
                         $key = preg_replace('/[^a-z]/', '', $pname);
                         if ($key && isset($map[$key])) {
                             $planetClass = "\\deepskylog\\AstronomyLibrary\\Targets\\" . $map[$key];
@@ -565,93 +586,17 @@ class AladinPreviewInfo extends Component
                 if (!$skipPlanetCompute && $isPlanet && $planetClass && class_exists($planetClass)) {
                     $planet = new $planetClass();
                     // determine date from payload if provided
-                    $calcDate = \Carbon\Carbon::now();
-                    if (!empty($payload) && (is_array($payload) || is_object($payload))) {
-                        $pp = (array) $payload;
-                        if (!empty($pp['date'])) {
-                            try {
-                                $calcDate = \Carbon\Carbon::parse($pp['date']);
-                            } catch (\Throwable $_) {
-                            }
-                        }
-                    }
+                    $calcDate = $date->copy();
                     // Use user's location for topocentric coords when available
                     if ($userLocation && isset($userLocation->longitude) && isset($userLocation->latitude)) {
                         $geo = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
                         $height = $userLocation->elevation ?? 0.0;
                         try {
-                            // Prefer wrapper-provided coordinates via proxy; fall back to library
-                            if (method_exists(\App\Helpers\HorizonsProxy::class, 'calculateEquatorialCoordinates')) {
-                                // Compute a robust designation to pass into the proxy so
-                                // wrapper lookups can succeed. Use designation, slug,
-                                // name or payload-provided objectName as fallbacks.
-                                try {
-                                    $hDesig = null;
-                                    if (isset($obj) && $obj) {
-                                        $hDesig = $obj->designation ?? $obj->slug ?? $obj->name ?? null;
-                                    }
-                                    if (empty($hDesig) && !empty($payloadArr['objectName'] ?? null)) {
-                                        $hDesig = $payloadArr['objectName'];
-                                    }
-                                } catch (\Throwable $_) {
-                                    $hDesig = null;
-                                }
-                                try {
-                                    try {
-                                        \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calling HorizonsProxy (planet) start', ['designation' => $hDesig ?? null, 'objectId' => $obj->id ?? null]);
-                                    } catch (\Throwable $_) {
-                                    }
-                                    $proxyT0 = microtime(true);
-                                    $proxyResult = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($planet, $calcDate, $geo, $height, ['obj' => $obj ?? null, 'designation' => $hDesig ?? null]);
-                                    $proxyElapsed = round((microtime(true) - $proxyT0) * 1000, 2);
-                                    try {
-                                        \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calling HorizonsProxy (planet) end', ['elapsed_ms' => $proxyElapsed, 'designation' => $hDesig ?? null, 'objectId' => $obj->id ?? null]);
-                                    } catch (\Throwable $_) {
-                                    }
-                                } catch (\Throwable $proxyEx) {
-                                    $proxyResult = null;
-                                    try {
-                                        \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: HorizonsProxy exception', ['message' => $proxyEx->getMessage()]);
-                                    } catch (\Throwable $_) {
-                                    }
-                                }
-                            } else {
-                                $proxyResult = null;
-                            }
-
-                            if (is_array($proxyResult) && !empty($proxyResult['coords'])) {
-                                $computedCoords = $proxyResult['coords'];
-                                try {
-                                    if (method_exists($planet, 'setEquatorialCoordinates')) {
-                                        $planet->setEquatorialCoordinates($computedCoords);
-                                    }
-                                } catch (\Throwable $_) {
-                                }
-                            } else {
-                                // If proxy did not return coords, fall back to library calculations
-                                try {
-                                    $libT0 = microtime(true);
-                                    if (method_exists($planet, 'calculateEquatorialCoordinates')) {
-                                        $planet->calculateEquatorialCoordinates($calcDate, $geo, $height);
-                                    } elseif (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-                                        $planet->calculateApparentEquatorialCoordinates($calcDate);
-                                    }
-                                    $libElapsed = round((microtime(true) - $libT0) * 1000, 2);
-                                    try {
-                                        \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: planet library compute elapsed', ['elapsed_ms' => $libElapsed, 'objectId' => $obj->id ?? null]);
-                                    } catch (\Throwable $_) {
-                                    }
-                                } catch (\Throwable $libEx) {
-                                    try {
-                                        \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: planet library exception', ['message' => $libEx->getMessage()]);
-                                    } catch (\Throwable $_) {
-                                    }
-                                }
-                            }
+                            $planet->calculateEquatorialCoordinates($calcDate->copy(), $geo, $height);
                         } catch (\Throwable $_) {
                             try {
                                 if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-                                    $planet->calculateApparentEquatorialCoordinates($calcDate);
+                                    $planet->calculateApparentEquatorialCoordinates($calcDate->copy());
                                 }
                             } catch (\Throwable $_) {
                             }
@@ -659,7 +604,7 @@ class AladinPreviewInfo extends Component
                     } else {
                         try {
                             if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-                                $planet->calculateApparentEquatorialCoordinates($calcDate);
+                                $planet->calculateApparentEquatorialCoordinates($calcDate->copy());
                             }
                         } catch (\Throwable $_) {
                         }
@@ -752,53 +697,44 @@ class AladinPreviewInfo extends Component
             $aperture = $userInstrument->aperture_mm ?? null;
             $debug_aperture = $aperture;
 
-            // try to derive magnification
-            $mag = $userInstrument->fixedMagnification ?? null;
-            $debug_mag = $mag;
-            if (!$mag && $userInstrument->focal_length_mm && isset($obj->typicalEyepieceFocal)) {
-                $mag = round($userInstrument->focal_length_mm / $obj->typicalEyepieceFocal);
-            }
-
-
-            $possibleUsedForContrast = null;
-            if (!$mag && $sbobj !== null && $sqm !== null && $aperture) {
-                $possible = [25, 50, 75, 100, 150, 200];
-                if (!empty($possible) && !$explicitNoLens && $lensFactor !== 1.0) {
-                    $possible = array_map(fn($v) => (int) round($v * $lensFactor), $possible);
+            // Contrast reserve at the best of the observer's magnifications, as
+            // for the stored metrics of the tables (ContrastReserveCalculator),
+            // dimmed by the atmosphere at the highest altitude of the object:
+            // the declination for the date (ObjectEphemerides, a planet), else
+            // the stored one.
+            $crResult = null;
+            $crDecl = null;
+            if (is_numeric($payloadArr['decDeg'] ?? null)) {
+                $crDecl = (float) $payloadArr['decDeg'];
+            } elseif ($computedCoords) {
+                try {
+                    $crDecl = $computedCoords->getDeclination()->getCoordinate();
+                } catch (\Throwable $_) {
+                    $crDecl = null;
                 }
-                $possibleUsedForContrast = $possible;
-                // try to derive from instrument set eyepieces
-                $instSet = $authUser?->standardInstrumentSet ?? null;
-                if ($instSet && $userInstrument?->focal_length_mm) {
-                    try {
-                        $setModel = $instSet;
-                        if ($setModel && count($setModel->eyepieces) > 0) {
-                            $derived = [];
-                            foreach ($setModel->eyepieces as $sep) {
-                                if ($sep->active && !empty($sep->focal_length_mm) && $sep->focal_length_mm > 0) {
-                                    $derived[] = (int) round(($userInstrument->focal_length_mm / $sep->focal_length_mm) * ($explicitNoLens ? 1.0 : $lensFactor));
-                                }
-                            }
-                            $derived = array_values(array_unique(array_filter($derived)));
-                            if (!empty($derived)) {
-                                $possible = $derived;
-                                $possibleUsedForContrast = $possible;
-                            }
-                        }
-                    } catch (\Throwable $_) {
+            } elseif (is_numeric($obj->decl ?? null)) {
+                $crDecl = (float) $obj->decl;
+            }
+            $crAltitude = ContrastReserveCalculator::highestAltitude($crDecl, $userLocation);
+            if ($isAsteroid && $obj instanceof Asteroid && $userInstrument) {
+                // A point source: its predicted magnitude against the limiting
+                // magnitude of the instrument
+                try {
+                    $asteroidMag = is_numeric($computedMag) ? (float) $computedMag : null;
+                    if ($asteroidMag === null && ($asteroidTarget = AsteroidCoordinates::target(AsteroidCoordinates::orbitalElements($obj->number) ?? (object) []))) {
+                        $asteroidMag = AsteroidCoordinates::magnitude($asteroidTarget, $date);
                     }
+                    if ($asteroidMag !== null) {
+                        $this->object_mag = round($asteroidMag, 2);
+                        $crResult = ContrastReserveCalculator::pointSource($asteroidMag, $userInstrument, $userLocation, $authUser, $lensFactor, null, $crAltitude);
+                    }
+                } catch (\Throwable $_) {
+                    $crResult = null;
                 }
-                if (!empty($possible)) {
-                    $mag = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possible);
-                }
-                $debug_possible_used_for_contrast = $possibleUsedForContrast;
-                $debug_mag = $mag;
-            }
-
-            if ($sbobj !== null && $sqm !== null && $aperture && $mag) {
+            } elseif ($sbobj !== null && $sqm !== null && $aperture && $userInstrument && ContrastReserveCalculator::appliesTo($obj->type ?? null)) {
                 try {
                     $crT0 = microtime(true);
-                    $contrast = $target->calculateContrastReserve($sbobj, $sqm, $aperture, $mag);
+                    $crResult = ContrastReserveCalculator::calculate($target, $userInstrument, $userLocation, $authUser, $lensFactor, null, null, $crAltitude);
                     $crElapsed = round((microtime(true) - $crT0) * 1000, 2);
                     try {
                         \Illuminate\Support\Facades\Log::debug('AladinPreviewInfo: calculateContrastReserve elapsed', ['elapsed_ms' => $crElapsed, 'objectId' => $obj->id ?? null]);
@@ -809,28 +745,19 @@ class AladinPreviewInfo extends Component
                         \Illuminate\Support\Facades\Log::error('AladinPreviewInfo: calculateContrastReserve exception', ['message' => $crEx->getMessage()]);
                     } catch (\Throwable $_) {
                     }
-                    $contrast = null;
+                    $crResult = null;
                 }
+            }
+            $debug_mag = $crResult['magnification'] ?? null;
+
+            if ($crResult && $crResult['magnification']) {
+                $contrast = $crResult['contrast_reserve'];
                 $this->contrast_reserve = is_numeric($contrast) ? round($contrast, 2) : null;
-                $cat = null;
-                if (is_numeric($this->contrast_reserve)) {
-                    $c = (float) $this->contrast_reserve;
-                    if ($c > 1.0)
-                        $cat = 'very_easy';
-                    elseif ($c > 0.5)
-                        $cat = 'easy';
-                    elseif ($c > 0.35)
-                        $cat = 'quite_difficult';
-                    elseif ($c > 0.1)
-                        $cat = 'difficult';
-                    elseif ($c > -0.2)
-                        $cat = 'questionable';
-                    else
-                        $cat = 'not_visible';
-                }
-                $this->contrast_reserve_category = $cat;
+                $this->contrast_reserve_category = $crResult['category'];
                 $this->contrast_used_location = $userLocation?->name ?? null;
                 $this->contrast_used_instrument = $userInstrument?->fullName() ?? ($userInstrument?->name ?? null);
+                $this->contrast_used_altitude = $crAltitude !== null ? (int) round($crAltitude) : null;
+                $this->contrast_used_extinction = is_numeric($crResult['extinction'] ?? null) ? round($crResult['extinction'], 2) : null;
                 // expose SQM and NELM used for the calculation when available
                 try {
                     $this->contrast_used_sqm = is_numeric($sqm) ? round($sqm, 2) : null;
@@ -847,9 +774,54 @@ class AladinPreviewInfo extends Component
                 }
             } else {
                 $this->contrast_reserve = null;
-                $this->contrast_reserve_category = null;
+                // not_visible for an object that never rises at the location
+                $this->contrast_reserve_category = $crResult['category'] ?? null;
                 $this->contrast_used_location = null;
                 $this->contrast_used_instrument = null;
+                $this->contrast_used_altitude = null;
+                $this->contrast_used_extinction = null;
+            }
+
+            // The contrast reserve in the night of the date, with the sky lit
+            // by the Moon, for deep-sky objects (planets and asteroids move,
+            // and the stored metrics are for a dark sky).
+            $this->moonlit = null;
+            if ($this->contrast_reserve !== null && empty($isPlanet) && !$isAsteroid && is_numeric($obj->ra ?? null) && is_numeric($obj->decl ?? null)) {
+                try {
+                    $timezone = EphemerisDate::timezone($userLocation);
+                    $this->moonlit = MoonlitContrastReserve::for($target, (float) $obj->ra * 15.0, (float) $obj->decl, $userInstrument, $userLocation, $authUser,
+                        $date->copy()->timezone($timezone)->toDateString(), $timezone, $lensFactor) ?? ['contrast_reserve' => null, 'category' => null];
+                    if (is_numeric($this->moonlit['contrast_reserve'])) {
+                        $this->moonlit['contrast_reserve'] = round($this->moonlit['contrast_reserve'], 2);
+                    }
+                } catch (\Throwable $e) {
+                    report($e);
+                    $this->moonlit = null;
+                }
+            }
+
+            // Which of the observer's nebula filters help, for an emission
+            // nebula, under the same dark sky as the contrast reserve above.
+            $this->filter_advice = [];
+            if ($this->contrast_reserve !== null && $authUser && empty($isPlanet) && !$isAsteroid && FilterAdvice::spectrum($obj->type ?? null, $obj->name ?? null) !== null) {
+                try {
+                    $this->filter_advice = FilterAdvice::present(FilterAdvice::forObject($target, $obj->type ?? null, $obj->name ?? null, $userInstrument, $userLocation, $authUser, $lensFactor, $crAltitude));
+                } catch (\Throwable $e) {
+                    report($e);
+                    $this->filter_advice = [];
+                }
+            }
+
+            // Whether the telescope splits a double star, under the same sky.
+            $this->double_star = null;
+            if ($obj && $userInstrument && empty($isPlanet) && !$isAsteroid) {
+                try {
+                    $doubleStar = DoubleStarResolvability::forObject($obj, $userInstrument, $userLocation, $authUser, $lensFactor);
+                    $this->double_star = $doubleStar !== null ? DoubleStarResolvability::present($doubleStar) : null;
+                } catch (\Throwable $e) {
+                    report($e);
+                    $this->double_star = null;
+                }
             }
 
             // log intermediate debug values for easier diagnosis
@@ -877,15 +849,15 @@ class AladinPreviewInfo extends Component
                             }
                             $eyepieceIds = array_values(array_unique($eyepieceIds));
                             if (!empty($eyepieceIds)) {
-                                $map = \App\Models\ObservationsOld::getInstrumentsForEyepieceIds($eyepieceIds);
+                                $map = \App\Models\Observation::getInstrumentsForEyepieceIds($eyepieceIds);
                                 \App\Models\Eyepiece::setBulkUsedInstrumentsMap($map);
                                 try {
-                                    $firstMap = \App\Models\ObservationsOld::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                    $firstMap = \App\Models\Observation::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
                                     \App\Models\Eyepiece::setBulkFirstObservationMap($firstMap);
                                 } catch (\Throwable $_) {
                                 }
                                 try {
-                                    $lastMap = \App\Models\ObservationsOld::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                    $lastMap = \App\Models\Observation::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
                                     \App\Models\Eyepiece::setBulkLastObservationMap($lastMap);
                                 } catch (\Throwable $_) {
                                 }
@@ -973,58 +945,11 @@ class AladinPreviewInfo extends Component
                     }
                 }
 
-                $possibleMags = [];
-                if (!empty($epMap)) {
-                    $possibleMags = array_values(array_unique(array_keys($epMap)));
-                } elseif (!empty($eyepieceFocals) && $userInstrument?->focal_length_mm) {
-                    foreach ($eyepieceFocals as $ef) {
-                        if ($ef > 0)
-                            $possibleMags[] = (int) round($userInstrument->focal_length_mm / $ef);
-                    }
-                    $possibleMags = array_values(array_unique(array_filter($possibleMags)));
-                }
-                if (empty($possibleMags) && !empty($possibleUsedForContrast)) {
-                    $possibleMags = $possibleUsedForContrast;
-                }
-                if (!empty($possibleMags) && $sbobj !== null && $sqm !== null && $aperture) {
-                    $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
-                    $this->optimum_detection_magnification = $best ? (int) $best : null;
-                } else {
-                    $this->optimum_detection_magnification = null;
-                }
-
-                if (!empty($best) && isset($epMap[(int) $best])) {
-                    $this->optimum_eyepieces = $epMap[(int) $best];
-                } else {
-                    $selectedEps = [];
-                    foreach ($possibleMags as $pm) {
-                        if (isset($epMap[$pm])) {
-                            foreach ($epMap[$pm] as $epInfo)
-                                $selectedEps[] = $epInfo;
-                        }
-                    }
-                    $uniq = [];
-                    $finalEps = [];
-                    foreach ($selectedEps as $e) {
-                        $k = ($e['name'] ?? '') . '|' . ($e['focal'] ?? '');
-                        if (!isset($uniq[$k])) {
-                            $uniq[$k] = true;
-                            $finalEps[] = $e;
-                        }
-                    }
-                    if (empty($finalEps) && !empty($eyepiecesForDisplay)) {
-                        $uniq = [];
-                        $finalEps = [];
-                        foreach ($eyepiecesForDisplay as $e) {
-                            $k = ($e['name'] ?? '') . '|' . ($e['focal'] ?? '');
-                            if (!isset($uniq[$k])) {
-                                $uniq[$k] = true;
-                                $finalEps[] = $e;
-                            }
-                        }
-                    }
-                    $this->optimum_eyepieces = $finalEps;
-                }
+                // The optimum magnification is the one of the contrast reserve
+                $best = $crResult['magnification'] ?? null;
+                $this->optimum_detection_magnification = $best ? (int) $best : null;
+                // (no eyepieces with a fixed magnification or the generic magnifications)
+                $this->optimum_eyepieces = ($best && !empty($crResult['eyepieces'])) ? ($epMap[(int) $best] ?? []) : [];
             } catch (\Throwable $_) {
                 $this->optimum_detection_magnification = null;
                 $this->optimum_eyepieces = [];
@@ -1037,23 +962,39 @@ class AladinPreviewInfo extends Component
                 if (isset($computedCoords) && $computedCoords) {
                     $coords = $computedCoords;
                 }
-                if ($obj && $userLocation && (isset($obj->ra) && isset($obj->decl) || isset($coords))) {
+                $payloadHasCoords = is_numeric($payloadArr['raDeg'] ?? null) && is_numeric($payloadArr['decDeg'] ?? null);
+                if ($obj && $userLocation && (isset($obj->ra) && isset($obj->decl) || isset($coords) || $payloadHasCoords)) {
                     $tz = $userLocation->timezone ?? config('app.timezone');
-                    // attempt to convert RA/Dec using DeepskyObject helpers when available
                     $raDeg = null;
                     $decDeg = null;
+                    // Coordinates for the date: the ones ObjectEphemerides sent, else
+                    // the planet coordinates calculated above. Planets have no
+                    // RA/Dec in the database.
+                    if ($payloadHasCoords) {
+                        $raDeg = (float) $payloadArr['raDeg'];
+                        $decDeg = (float) $payloadArr['decDeg'];
+                    } elseif (isset($coords) && $coords) {
+                        try {
+                            $raDeg = $coords->getRA()->getCoordinate() * 15.0;
+                            $decDeg = $coords->getDeclination()->getCoordinate();
+                        } catch (\Throwable $_) {
+                            $raDeg = null;
+                            $decDeg = null;
+                        }
+                    }
+                    // attempt to convert RA/Dec using DeepskyObject helpers when available
                     try {
-                        if (method_exists(\App\Models\DeepskyObject::class, 'raToDecimal')) {
-                            $raDeg = \App\Models\DeepskyObject::raToDecimal($obj->ra);
-                            $decDeg = \App\Models\DeepskyObject::decToDecimal($obj->decl);
+                        if (($raDeg === null || $decDeg === null) && method_exists(\App\Models\DeepskyObject::class, 'raToDecimal')) {
+                            $raDeg = \App\Models\DeepskyObject::raToDecimal($obj->ra ?? null);
+                            $decDeg = \App\Models\DeepskyObject::decToDecimal($obj->decl ?? null);
                         }
                     } catch (\Throwable $_) {
                         $raDeg = null;
                         $decDeg = null;
                     }
                     if ($raDeg === null || $decDeg === null) {
-                        $raDeg = is_numeric($obj->ra) ? (float) $obj->ra : null;
-                        $decDeg = is_numeric($obj->decl) ? (float) $obj->decl : null;
+                        $raDeg = is_numeric($obj->ra ?? null) ? (float) $obj->ra : null;
+                        $decDeg = is_numeric($obj->decl ?? null) ? (float) $obj->decl : null;
                     }
                     if ($raDeg !== null && $decDeg !== null) {
                         $geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
@@ -1150,7 +1091,7 @@ class AladinPreviewInfo extends Component
                             if (is_numeric($maxHeight))
                                 $maxHeight = round($maxHeight, 1);
                             $ephemerides = [
-                                'date' => $date->timezone($tz)->toDateString(),
+                                'date' => $date->toDateString(),
                                 'rising' => $rising,
                                 'transit' => $transit,
                                 'setting' => $setting,
@@ -1199,7 +1140,7 @@ class AladinPreviewInfo extends Component
                         unset($previewEphemerides['altitude_graph'], $previewEphemerides['year_graph'], $previewEphemerides['year_magnitude_graph'], $previewEphemerides['year_diameter_graph']);
                     }
 
-                    $this->dispatch('aladin-preview-info-updated', [
+                    $this->dispatch('aladin-preview-info-updated', ...[
                         'status' => 'ok',
                         'contrast_reserve' => $this->contrast_reserve,
                         'contrast_reserve_category' => $this->contrast_reserve_category ?? null,
@@ -1231,10 +1172,12 @@ class AladinPreviewInfo extends Component
             $this->contrast_reserve_category = null;
             $this->optimum_detection_magnification = null;
             $this->optimum_eyepieces = [];
+            $this->filter_advice = [];
+            $this->double_star = null;
             $this->last_error = (string) $e->getMessage();
             Log::error('AladinPreviewInfo: recalculate() failed', ['object_id' => $this->objectId, 'user_id' => Auth::id(), 'error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             try {
-                $this->dispatchBrowserEvent('aladin-preview-info-updated', [
+                $this->dispatch('aladin-preview-info-updated', ...[
                     'status' => 'error',
                     'error' => $this->last_error,
                     'payload' => $payload,

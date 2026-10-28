@@ -2,15 +2,11 @@
 
 namespace App\Livewire\Profile;
 
-use App\Models\User;
 use Livewire\Component;
 
 class UpdateUserAtlasInformation extends Component
 {
     protected $rules = [
-        'overviewFoV' => 'required|numeric|max:3600|min:1',
-        'lookupFoV' => 'required|numeric|max:3600|min:1',
-        'detailFoV' => 'required|numeric|max:3600|min:1',
         'overviewdsos' => 'required|numeric|max:20.0|min:1.0',
         'lookupdsos' => 'required|numeric|max:20.0|min:1.0',
         'detaildsos' => 'required|numeric|max:20.0|min:1.0',
@@ -21,12 +17,6 @@ class UpdateUserAtlasInformation extends Component
         'photosize2' => 'required|numeric|max:3600|min:1',
         'atlaspagefont' => 'required|numeric|max:9|min:6',
     ];
-
-    public $overviewFoV;
-
-    public $lookupFoV;
-
-    public $detailFoV;
 
     public $overviewdsos;
 
@@ -53,9 +43,6 @@ class UpdateUserAtlasInformation extends Component
      */
     public function mount()
     {
-        $this->lookupFoV = auth()->user()->lookupFoV;
-        $this->detailFoV = auth()->user()->detailFoV;
-        $this->overviewFoV = auth()->user()->overviewFoV;
         if (auth()->user()->overviewdsos) {
             $this->overviewdsos = auth()->user()->overviewdsos;
         } else {
@@ -93,17 +80,12 @@ class UpdateUserAtlasInformation extends Component
 
     /**
      * Validate and update the given user's atlas information.
-     *
-     * @param  array<string, string>  $input
      */
     public function updateAtlasInformation(): void
     {
         $this->validate();
 
         auth()->user()->forceFill([
-            'overviewFoV' => $this->overviewFoV,
-            'lookupFoV' => $this->lookupFoV,
-            'detailFoV' => $this->detailFoV,
             'overviewdsos' => $this->overviewdsos,
             'lookupdsos' => $this->lookupdsos,
             'detaildsos' => $this->detaildsos,

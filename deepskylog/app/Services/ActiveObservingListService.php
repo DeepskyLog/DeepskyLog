@@ -15,8 +15,8 @@ class ActiveObservingListService
      */
     public function setActiveList(User $user, ObservingList $list): bool
     {
-        // Check authorization: user must own or be subscribed to the list
-        if ($user->id !== $list->owner_user_id && !$list->isSubscribedBy($user)) {
+        // Check authorization: user must own the list or be subscribed to it while it is public
+        if ($user->id !== $list->owner_user_id && !($list->public && $list->isSubscribedBy($user))) {
             throw new \Exception('User is not authorized to set this list as active');
         }
 
@@ -35,6 +35,18 @@ class ActiveObservingListService
         $user->forceFill(['active_observing_list_id' => null])->save();
 
         return true;
+    }
+
+    /**
+     * Clear the list as active list of every user but its owner, e.g. when
+     * the owner makes it private. With $includingOwner also for the owner,
+     * when the list is deleted.
+     */
+    public function clearForOthers(ObservingList $list, bool $includingOwner = false): void
+    {
+        User::where('active_observing_list_id', $list->id)
+            ->when(!$includingOwner, fn ($query) => $query->where('id', '<>', $list->owner_user_id))
+            ->update(['active_observing_list_id' => null]);
     }
 
     /**

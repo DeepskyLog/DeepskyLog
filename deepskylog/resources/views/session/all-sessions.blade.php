@@ -1,86 +1,27 @@
 <x-app-layout>
     <div class="pb-6">
         <div class="px-4 sm:px-6 lg:px-8">
-            <div class="bg-gray-900 shadow-sm sm:rounded-lg p-6">
+            <div class="bg-gray-900 p-6 shadow-sm sm:rounded-lg">
                 {{-- Page header inside the dark container --}}
-                <h2 class="font-semibold text-xl text-gray-200 leading-tight mb-6">{{ __('All sessions') }}</h2>
-                
-                {{-- preview_text and preview are prepared in the controller; views stay simple --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                    @foreach($sessions as $session)
-                        <article class="bg-gray-800 p-4 rounded">
-                            @if(! empty($session->preview))
-                                <div class="mb-3">
-                                    @php
-                                        $sessionUser = optional($session->observer)->slug ?? $session->observerid ?? null;
-                                        $sessionParam = $session->slug ?? $session->id ?? null;
-                                    @endphp
-                                    @if($sessionUser && $sessionParam)
-                                        <a href="{{ route('session.show', [$sessionUser, $sessionParam]) }}">
-                                            <img src="{{ $session->preview }}" alt="{{ html_entity_decode($session->name ?? __('Session'), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}" class="w-full h-40 object-cover rounded" />
-                                        </a>
-                                    @else
-                                        <img src="{{ $session->preview }}" alt="{{ html_entity_decode($session->name ?? __('Session'), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}" class="w-full h-40 object-cover rounded" />
-                                    @endif
-                                </div>
-                            @endif
+                <h2
+                    class="mb-6 text-xl leading-tight font-semibold text-gray-200"
+                >
+                    {{
+                        __(
+                            "All sessions",
+                        )
+                    }}
+                </h2>
 
-                            <h3 class="text-lg font-bold text-white mb-2">
-                                @php
-                                    $sessionUser = optional($session->observer)->slug ?? $session->observerid ?? null;
-                                    $sessionParam = $session->slug ?? $session->id ?? null;
-                                @endphp
-                                @if($sessionUser && $sessionParam)
-                                    <a href="{{ route('session.show', [$sessionUser, $sessionParam]) }}" class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
-                                @else
-                                    <span class="hover:underline">{{ html_entity_decode($session->name ?? __('Session :id', ['id' => $session->id]), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</span>
-                                @endif
-                            </h3>
-
-                            <div class="text-sm text-gray-400 mb-2">
-                                <span class="mr-2 font-medium text-gray-200">{{ __('Owner') }}:</span>
-                                @if($session->observer)
-                                    <a href="{{ route('observer.show', optional($session->observer)->slug) }}" class="text-gray-400 hover:underline">{{ optional($session->observer)->name ?? $session->observerid }}</a>
-                                @else
-                                    <span class="text-gray-400">{{ $session->observerid }}</span>
-                                @endif
-                            </div>
-
-                            <div class="text-sm text-gray-400 mb-2">
-                                <span class="mr-2 font-medium text-gray-200">{{ __('Location') }}:</span>
-                                <span class="text-gray-400">{{ $session->location_name ?? ($session->locationid ? __('Unknown') : __('Unknown')) }}</span>
-                            </div>
-
-                            <div class="text-sm text-gray-400 mb-3">
-                                <span>{{ $session->begindate ? \Carbon\Carbon::parse($session->begindate)->translatedFormat('j M Y') : __('Unknown') }}</span>
-                                <span class="mx-2">&ndash;</span>
-                                <span>{{ $session->enddate ? \Carbon\Carbon::parse($session->enddate)->translatedFormat('j M Y') : __('Unknown') }}</span>
-                            </div>
-
-                            @if(isset($session->observation_count))
-                                <div class="text-sm text-gray-300 mb-2">{{ __('Observations') }}: <strong class="text-white">{{ $session->observation_count }}</strong></div>
-                            @endif
-
-                            <p class="text-sm text-gray-300 mb-3">{{ $session->preview_text ?? Str::limit(strip_tags(html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8')), 180) }}</p>
-                            <div class="flex items-center justify-between text-sm">
-                                <div class="text-gray-400">{{ __('Observers') }}: {{ $session->otherObserversCount() ?? 1 }}</div>
-                                @php
-                                    $sessionUser = optional($session->observer)->slug ?? $session->observerid ?? null;
-                                    $sessionParam = $session->slug ?? $session->id ?? null;
-                                @endphp
-                                @if($sessionUser && $sessionParam)
-                                    <a href="{{ route('session.show', [$sessionUser, $sessionParam]) }}" class="text-blue-500 hover:underline">{{ __('Read more') }}</a>
-                                @else
-                                    <span class="text-blue-500">{{ __('Read more') }}</span>
-                                @endif
-                            </div>
-                        </article>
+                <div
+                    class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
+                >
+                    @foreach ($sessions as $session)
+                        <x-session-card :session="$session" />
                     @endforeach
                 </div>
 
-                <div class="mt-6">
-                    {{ $sessions->links() }}
-                </div>
+                <div class="mt-6">{{ $sessions->links() }}</div>
             </div>
         </div>
     </div>

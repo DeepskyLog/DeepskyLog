@@ -1,4 +1,28 @@
 <x-app-layout>
+    @if ($list->public)
+        @push('head')
+            @php
+                $ogTitle = html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8')
+                    . ' — ' . __('Observing list by') . ' ' . $list->owner->name;
+                $ogDescription = $list->description
+                    ? \Illuminate\Support\Str::limit(html_entity_decode(strip_tags($list->description), ENT_QUOTES | ENT_HTML5, 'UTF-8'), 200)
+                    : __(':count deep-sky objects curated by :owner on DeepskyLog.', [
+                        'count' => $items->total(),
+                        'owner' => $list->owner->name,
+                    ]);
+            @endphp
+            <meta property="og:type" content="website" />
+            <meta property="og:title" content="{{ $ogTitle }}" />
+            <meta property="og:description" content="{{ $ogDescription }}" />
+            <meta property="og:url" content="{{ url()->current() }}" />
+            <meta property="og:image" content="{{ url('/images/logo2.png') }}" />
+            <meta property="og:site_name" content="DeepskyLog" />
+            <meta name="twitter:card" content="summary" />
+            <meta name="twitter:title" content="{{ $ogTitle }}" />
+            <meta name="twitter:description" content="{{ $ogDescription }}" />
+        @endpush
+    @endif
+
     <div>
         <div class="mx-auto max-w-screen-xl xl:max-w-full bg-gray-900 px-6 py-6 sm:px-6 lg:px-8">
 
@@ -22,7 +46,8 @@
                     {{-- Action buttons --}}
                     <div class="flex flex-wrap items-center gap-2 flex-shrink-0">
                         @auth
-                            {{-- Active indicator / set active --}}
+                            {{-- Active indicator / set active (only owners and subscribers may activate a list) --}}
+                            @can('setAsActive', $list)
                             @if ($isActive)
                                 <span class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-700 text-blue-100 rounded text-xs font-semibold">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,6 +63,23 @@
                                         {{ __('Set as active') }}
                                     </button>
                                 </form>
+                            @endif
+                            @endcan
+
+                            {{-- At the eyepiece (AtTheEyepieceController), for a list with objects --}}
+                            @if ($list->items()->exists())
+                                <a href="{{ route('observing-list.eyepiece', $list) }}"
+                                   class="inline-flex items-center gap-1 px-3 py-1.5 bg-red-800 hover:bg-red-700 text-white rounded text-xs font-semibold">
+                                    {{ __('At the eyepiece') }}
+                                </a>
+                                @push('scripts')
+                                    <script>
+                                        // Keeps this page for use without a connection (public/sw.js)
+                                        if ('serviceWorker' in navigator) {
+                                            navigator.serviceWorker.register('/sw.js').catch(function () {});
+                                        }
+                                    </script>
+                                @endpush
                             @endif
 
                             {{-- Subscribe / Unsubscribe (for non-owners) --}}
@@ -114,6 +156,56 @@
                     @endif
                 </div>
 
+                {{-- Social sharing (public lists only) --}}
+                @if ($list->public)
+                    @php
+                        $shareUrl = url()->current();
+                        $shareListName = html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                        $shareOwner = $list->owner->name;
+                        $shareCount = $items->total();
+                        $shareText = __('Check out this observing list on DeepskyLog: ":list" by :owner – :count deep-sky objects!', [
+                            'list'  => $shareListName,
+                            'owner' => $shareOwner,
+                            'count' => $shareCount,
+                        ]) . ' #astronomy #deepsky #deepskylog';
+                        $shareSubject = $shareListName . ' — ' . __('Observing list on DeepskyLog');
+                        $shareBody    = $shareText . "\n\n" . $shareUrl;
+                        $shareTwitter  = 'https://twitter.com/intent/tweet?text=' . rawurlencode($shareText . "\n" . $shareUrl);
+                        $shareFacebook = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($shareUrl) . '&quote=' . rawurlencode($shareText);
+                        $shareWhatsapp = 'https://wa.me/?text=' . rawurlencode($shareText . "\n" . $shareUrl);
+                        $shareMailto   = 'mailto:?subject=' . rawurlencode($shareSubject) . '&body=' . rawurlencode($shareBody);
+                    @endphp
+                    <div class="mt-3 flex items-center gap-2">
+                        <span class="text-xs text-gray-500 mr-1">{{ __('Share:') }}</span>
+                        <a href="{{ $shareTwitter }}" target="_blank" rel="noopener noreferrer"
+                           title="{{ __('Share on X') }}"
+                           class="social-button hover text-gray-400 hover:text-white transition-colors">
+                            <span class="fab fa-square-x-twitter text-lg"></span>
+                        </a>
+                        <a href="{{ $shareFacebook }}" target="_blank" rel="noopener noreferrer"
+                           title="{{ __('Share on Facebook') }}"
+                           class="social-button hover text-gray-400 hover:text-white transition-colors">
+                            <span class="fab fa-facebook-square text-lg"></span>
+                        </a>
+                        <a href="{{ $shareWhatsapp }}" target="_blank" rel="noopener noreferrer"
+                           title="{{ __('Share on WhatsApp') }}"
+                           class="social-button hover text-gray-400 hover:text-white transition-colors">
+                            <span class="fab fa-square-whatsapp text-lg"></span>
+                        </a>
+                        <a href="{{ $shareMailto }}"
+                           title="{{ __('Share by email') }}"
+                           class="social-button hover text-gray-400 hover:text-white transition-colors">
+                            <span class="fas fa-envelope text-lg"></span>
+                        </a>
+                        <a href="{{ $shareUrl }}" id="obs-list-clip"
+                           title="{{ __('Copy link') }}"
+                           rel="nofollow noopener noreferrer"
+                           class="social-button hover text-gray-400 hover:text-white transition-colors">
+                            <span class="fas fa-share text-lg"></span>
+                        </a>
+                    </div>
+                @endif
+
                 {{-- Like button (for non-owners on public lists) --}}
                 @auth
                 @if (!$isOwner && $list->public)
@@ -136,6 +228,200 @@
             </header>
 
             <div class="grid grid-cols-1 gap-6">
+
+                {{-- Items list --}}
+                <section>
+                    @php
+                        $tableFilters = [
+                            'observing_lists' => [(string) $list->id],
+                            'observing_lists_mode' => 'in',
+                            'well_placed_month' => $wellPlacedMonth,
+                        ];
+                        $showAddColumn = !($list->public && !$isOwner);
+                        $exportNamesBase = route('observing-list.export.names.pdf', $list);
+                        $exportTableBase = route('observing-list.export.table.pdf', $list);
+                        $exportArgoBase = route('observing-list.export.argo', $list);
+                        $exportSkylistBase = route('observing-list.export.skylist', $list);
+                        $exportStxtBase = route('observing-list.export.stxt', $list);
+                        $exportApdBase = route('observing-list.export.apd', $list);
+                        $exportOalBase = route('observing-list.export.oal', $list);
+                    @endphp
+
+                    <div class="flex flex-wrap items-start justify-between gap-3 mb-3">
+                        <h2 class="text-lg font-semibold text-white">{{ __('Objects') }}</h2>
+
+                        {{-- Add one object by name (owner) --}}
+                        @auth
+                            @can('addItem', $list)
+                                <form method="POST" action="{{ route('observing-list.items.store', $list) }}"
+                                      class="flex flex-wrap items-start gap-2">
+                                    @csrf
+                                    <div>
+                                        <label for="add-object-name" class="sr-only">{{ __('Object name') }}</label>
+                                        <input type="text" id="add-object-name" name="object_name" maxlength="255" required
+                                               value="{{ old('object_name') }}"
+                                               placeholder="{{ __('e.g. M 31, NGC 224') }}"
+                                               class="w-56 bg-gray-800 border border-gray-600 rounded-md text-gray-100 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('object_name') border-red-500 @enderror">
+                                        @error('object_name')
+                                            <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <button type="submit"
+                                        class="inline-flex items-center px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded text-sm font-semibold">
+                                        {{ __('Add object') }}
+                                    </button>
+                                </form>
+                            @endcan
+                        @endauth
+                    </div>
+
+                    @if ($items->isEmpty())
+                        @if ($isOwner)
+                            {{-- How to fill a list (#378) --}}
+                            <div class="rounded-lg border border-gray-700 bg-gray-800 p-5 text-sm text-gray-300">
+                                <h3 class="text-base font-semibold text-white mb-1">{{ __('How to add objects to this list') }}</h3>
+                                <p class="text-gray-400 mb-4">{{ __('An observing list holds the objects you want to observe. Your observations stay in your observation log.') }}</p>
+
+                                <ol class="space-y-4 list-inside" style="list-style-type: decimal">
+                                    <li>
+                                        <span class="font-medium text-gray-100">{{ __('Type the name of an object') }}</span>
+                                        {{ __('in the field above, for instance M 31, NGC 7000 or Jupiter.') }}
+                                    </li>
+                                    <li>
+                                        <span class="font-medium text-gray-100">{{ __('Add objects while you browse.') }}</span>
+                                        {{ __('Make this your active list: every object page then has a button to add the object to it, and the search results and the nearby objects of an object page can add all their objects at once.') }}
+                                        <div class="mt-2 flex flex-wrap items-center gap-2">
+                                            @if ($isActive)
+                                                <span class="inline-flex items-center px-3 py-1.5 bg-blue-700 text-blue-100 rounded text-xs font-semibold">
+                                                    {{ __('This is your active list.') }}
+                                                </span>
+                                            @else
+                                                <form method="POST" action="{{ route('observing-list.set-active', $list) }}">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="inline-flex items-center px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded text-xs font-semibold">
+                                                        {{ __('Make this my active list') }}
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            <a href="{{ route('search.advanced') }}"
+                                               class="inline-flex items-center px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded text-xs font-semibold">
+                                                {{ __('Search objects') }}
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span class="font-medium text-gray-100">{{ __('Import a file') }}</span>
+                                        {{ __('from Argo Navis, SkySafari, SkyTools or AstroPlanner, a CSV file with the object names in the first column, or an OAL file.') }}
+                                        <div class="mt-2">
+                                            <button type="button" x-data @click="$dispatch('open-list-import')"
+                                                class="inline-flex items-center px-3 py-1.5 bg-green-700 hover:bg-green-600 text-white rounded text-xs font-semibold">
+                                                {{ __('Import objects') }}
+                                            </button>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </div>
+                        @else
+                            <p class="text-gray-400 text-sm">{{ __('This list has no objects yet.') }}</p>
+                        @endif
+                    @else
+                        <div class="bg-gray-800 rounded-lg p-4 dsl-search-card">
+                            <div class="mb-3 flex items-center gap-3 flex-wrap">
+                                @if ($seasons)
+                                    {{-- Seasonal planner: only the objects well placed in a month --}}
+                                    <form method="GET" action="{{ route('observing-list.show', $list) }}" class="flex flex-wrap items-center gap-2 text-sm">
+                                        <label for="well-placed-month" class="text-gray-300">{{ __('Well placed in') }}</label>
+                                        <select id="well-placed-month" name="month" onchange="this.form.submit()"
+                                            class="bg-gray-900 border border-gray-600 rounded-md text-gray-100 py-1 pl-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="">{{ __('Any month') }}</option>
+                                            @for ($m = 1; $m <= 12; $m++)
+                                                <option value="{{ $m }}" @selected($wellPlacedMonth === $m)>{{ \Carbon\Carbon::create(2000, $m, 1)->translatedFormat('F') }}</option>
+                                            @endfor
+                                        </select>
+                                        <noscript><button type="submit" class="px-2 py-1 bg-gray-700 rounded text-gray-200">{{ __('Show') }}</button></noscript>
+                                        @if ($wellPlacedMonth !== $seasons->currentMonth)
+                                            <a href="{{ route('observing-list.show', ['list' => $list, 'month' => $seasons->currentMonth]) }}"
+                                               class="inline-flex items-center px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded text-xs font-semibold">
+                                                {{ __("What's up this month") }}
+                                            </a>
+                                        @endif
+                                        @if ($wellPlacedMonth)
+                                            <a href="{{ route('observing-list.show', $list) }}" class="text-xs text-gray-400 hover:text-gray-200 underline">{{ __('Show all objects') }}</a>
+                                        @endif
+                                    </form>
+                                @endif
+                                <div class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
+                                    @auth
+                                        @include('object-sets.link', ['params' => ['source' => 'list', 'list' => $list->slug]])
+                                        @include('object-report.link', ['params' => ['source' => 'list', 'list' => $list->slug]])
+                                    @endauth
+                                    <div class="relative inline-block text-left">
+                                        <button type="button" @click="open = !open" @keydown.escape="open = false"
+                                            class="inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                                            aria-haspopup="true" :aria-expanded="open.toString()">
+                                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                            <span>{{ __('More exports') }}</span>
+                                        </button>
+
+                                        <div x-show="open" x-transition @click.outside="open = false"
+                                            class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+                                            style="display:none;">
+                                            <div class="py-1 text-sm text-gray-100" role="menu" aria-orientation="vertical">
+                                                <a href="{{ $exportNamesBase }}" target="_blank" rel="nofollow noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export names (PDF)') }}</a>
+                                                <a href="{{ $exportTableBase }}" target="_blank" rel="nofollow noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export table (PDF)') }}</a>
+                                                <a href="{{ $exportArgoBase }}" target="_blank" rel="nofollow noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export Argo Navis') }}</a>
+                                                <a href="{{ $exportSkylistBase }}" target="_blank" rel="nofollow noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export SkySafari (.skylist)') }}</a>
+                                                <a href="{{ $exportStxtBase }}" target="_blank" rel="nofollow noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export SkyTools (.txt)') }}</a>
+                                                <a href="{{ $exportApdBase }}" target="_blank" rel="nofollow noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export AstroPlanner (.apd)') }}</a>
+                                                <a href="{{ $exportOalBase }}" target="_blank" rel="nofollow noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export OAL') }}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if ($seasons)
+                                <p class="mb-3 text-xs text-gray-400">
+                                    {{ __('Months: at least :hours hour above :altitude° in the dark hours of the 15th, from :location.', [
+                                        'hours' => (int) \App\Services\SeasonalVisibility::MIN_HOURS,
+                                        'altitude' => (int) \App\Services\SeasonalVisibility::MIN_ALTITUDE,
+                                        'location' => html_entity_decode((string) $seasons->location?->name),
+                                    ]) }}
+                                    {{ __('An object that never stays that long that high counts in the months it is at its highest in the dark hours.') }}
+                                    @if ($wellPlacedMonth)
+                                        {{ __('Planets and comets move, so this filter leaves them out.') }}
+                                    @endif
+                                    @guest
+                                        {{ __('Log in to use your standard location.') }}
+                                    @endguest
+                                </p>
+                            @endif
+
+                            @auth
+                                {{-- When to observe each object in a night --}}
+                                @livewire('observing-list-times-panel', ['listId' => $list->id], key('observing-list-times-' . $list->id))
+                            @endauth
+
+                            <div class="w-full">
+                                @livewire('advanced-object-search-table', ['filters' => $tableFilters, 'showAddColumn' => $showAddColumn], key('observing-list-table-' . $list->id . '-' . $wellPlacedMonth))
+                            </div>
+                        </div>
+
+                        @auth
+                            @livewire('observing-list-notes', ['listId' => $list->id], key('observing-list-notes-' . $list->id))
+                        @endauth
+                    @endif
+                </section>
 
                 {{-- Comments section --}}
                 <section>
@@ -196,75 +482,6 @@
                     @endauth
                 </section>
 
-                {{-- Items list --}}
-                <section>
-                    @php
-                        $tableFilters = [
-                            'observing_lists' => [(string) $list->id],
-                            'observing_lists_mode' => 'in',
-                        ];
-                        $showAddColumn = !($list->public && !$isOwner);
-                        $exportNamesBase = route('observing-list.export.names.pdf', $list);
-                        $exportTableBase = route('observing-list.export.table.pdf', $list);
-                        $exportArgoBase = route('observing-list.export.argo', $list);
-                        $exportSkylistBase = route('observing-list.export.skylist', $list);
-                        $exportStxtBase = route('observing-list.export.stxt', $list);
-                        $exportApdBase = route('observing-list.export.apd', $list);
-                    @endphp
-
-                    <div class="flex items-center justify-between mb-3">
-                        <h2 class="text-lg font-semibold text-white">{{ __('Objects') }}</h2>
-                    </div>
-
-                    @if ($items->isEmpty())
-                        <p class="text-gray-400 text-sm">{{ __('This list has no objects yet.') }}</p>
-                    @else
-                        <div class="bg-gray-800 rounded-lg p-4 dsl-search-card">
-                            <div class="mb-3 flex items-center gap-3 flex-wrap">
-                                <div class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
-                                    <div class="relative inline-block text-left">
-                                        <button type="button" @click="open = !open" @keydown.escape="open = false"
-                                            class="inline-flex items-center gap-2 text-sm font-medium px-3 py-1.5 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
-                                            aria-haspopup="true" :aria-expanded="open.toString()">
-                                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                            <span>{{ __('More exports') }}</span>
-                                        </button>
-
-                                        <div x-show="open" x-transition @click.outside="open = false"
-                                            class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
-                                            style="display:none;">
-                                            <div class="py-1 text-sm text-gray-100" role="menu" aria-orientation="vertical">
-                                                <a href="{{ $exportNamesBase }}" target="_blank" rel="noopener noreferrer"
-                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export names (PDF)') }}</a>
-                                                <a href="{{ $exportTableBase }}" target="_blank" rel="noopener noreferrer"
-                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export table (PDF)') }}</a>
-                                                <a href="{{ $exportArgoBase }}" target="_blank" rel="noopener noreferrer"
-                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export Argo Navis') }}</a>
-                                                <a href="{{ $exportSkylistBase }}" target="_blank" rel="noopener noreferrer"
-                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export SkySafari (.skylist)') }}</a>
-                                                <a href="{{ $exportStxtBase }}" target="_blank" rel="noopener noreferrer"
-                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export SkyTools (.txt)') }}</a>
-                                                <a href="{{ $exportApdBase }}" target="_blank" rel="noopener noreferrer"
-                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export AstroPlanner (.apd)') }}</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="w-full">
-                                @livewire('advanced-object-search-table', ['filters' => $tableFilters, 'showAddColumn' => $showAddColumn], key('observing-list-table-' . $list->id))
-                            </div>
-                        </div>
-
-                        @auth
-                            @livewire('observing-list-notes', ['listId' => $list->id, 'listSlug' => $list->slug, 'isOwner' => $isOwner], key('observing-list-notes-' . $list->id))
-                        @endauth
-                    @endif
-                </section>
-
             </div>
 
             <div class="mt-6">
@@ -282,38 +499,60 @@
         </div>
     </div>
 
-    {{-- Like button JavaScript --}}
+    {{-- Like button + copy link JavaScript --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Like button
             const btn = document.getElementById('like-btn');
-            if (!btn) return;
+            if (btn) {
+                btn.addEventListener('click', function () {
+                    const url = btn.dataset.url;
 
-            btn.addEventListener('click', function () {
-                const url = btn.dataset.url;
-                const isLiked = btn.dataset.liked === '1';
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json',
+                        },
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        btn.dataset.liked = data.liked ? '1' : '0';
+                        document.getElementById('like-label').textContent = data.liked ? '{{ __('Liked') }}' : '{{ __('Like') }}';
+                        document.getElementById('like-count').textContent = data.likes_count;
+                        const svg = btn.querySelector('svg');
+                        if (svg) svg.setAttribute('fill', data.liked ? 'currentColor' : 'none');
+                        btn.classList.toggle('bg-pink-700', data.liked);
+                        btn.classList.toggle('text-white', data.liked);
+                        btn.classList.toggle('bg-gray-700', !data.liked);
+                        btn.classList.toggle('text-gray-300', !data.liked);
+                    })
+                    .catch(() => {});
+                });
+            }
 
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Accept': 'application/json',
-                    },
-                })
-                .then(res => res.json())
-                .then(data => {
-                    btn.dataset.liked = data.liked ? '1' : '0';
-                    document.getElementById('like-label').textContent = data.liked ? '{{ __('Liked') }}' : '{{ __('Like') }}';
-                    document.getElementById('like-count').textContent = data.likes_count;
-                    const svg = btn.querySelector('svg');
-                    if (svg) svg.setAttribute('fill', data.liked ? 'currentColor' : 'none');
-                    btn.classList.toggle('bg-pink-700', data.liked);
-                    btn.classList.toggle('text-white', data.liked);
-                    btn.classList.toggle('bg-gray-700', !data.liked);
-                    btn.classList.toggle('text-gray-300', !data.liked);
-                })
-                .catch(() => {});
-            });
+            // Copy link button
+            const clipBtn = document.getElementById('obs-list-clip');
+            if (clipBtn) {
+                clipBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const url = clipBtn.getAttribute('href');
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(url).then(function () {
+                            const icon = clipBtn.querySelector('span');
+                            if (icon) {
+                                icon.classList.remove('fa-share');
+                                icon.classList.add('fa-check');
+                                setTimeout(function () {
+                                    icon.classList.remove('fa-check');
+                                    icon.classList.add('fa-share');
+                                }, 2000);
+                            }
+                        });
+                    }
+                });
+            }
         });
     </script>
 </x-app-layout>

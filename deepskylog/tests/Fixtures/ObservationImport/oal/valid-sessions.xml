@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oal:observations xmlns:oal="http://groups.google.com/group/openastronomylog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://groups.google.com/group/openastronomylog oal21.xsd">
+  <observers>
+    <observer id="observer-1"><name>Example</name><surname>Observer</surname></observer>
+    <observer id="observer-2"><name>Example</name><surname>Companion</surname></observer>
+  </observers>
+  <sites>
+    <site id="site-1"><name>Example Site</name><longitude unit="deg">4.70</longitude><latitude unit="deg">50.88</latitude><elevation>30</elevation><timezone>60</timezone></site>
+    <site id="site-2"><name>Example Remote Site</name><longitude unit="deg">7.50</longitude><latitude unit="deg">46.00</latitude><elevation>2100</elevation><timezone>60</timezone></site>
+  </sites>
+  <sessions>
+    <!-- 1: local time with an offset (stored as the local time in Brussels), a co-observer, texts in Dutch -->
+    <session id="session-1" lang="nl">
+      <begin>2026-09-12T21:00:00+02:00</begin>
+      <end>2026-09-13T02:30:00+02:00</end>
+      <site>site-1</site>
+      <coObserver>observer-2</coObserver>
+      <weather>Helder &amp; koud, rond middernacht wat dauw.</weather>
+      <equipment>Dobson van 250 mm
+met een Telrad</equipment>
+      <comments>Mooie nacht, SQM tot 21.1.</comments>
+    </session>
+    <!-- 2: in UT, at a site that is not in the account yet (created), without texts or language -->
+    <session id="session-2">
+      <begin>2026-03-20T19:00:00Z</begin>
+      <end>2026-03-20T23:00:00Z</end>
+      <site>site-2</site>
+    </session>
+  </sessions>
+  <targets>
+    <target id="target-m31" xsi:type="oal:deepSkyGX"><datasource>DeepskyLog</datasource><name>M 31</name></target>
+    <target id="target-m42" xsi:type="oal:deepSkyGN"><datasource>DeepskyLog</datasource><name>M 42</name></target>
+    <target id="target-m45" xsi:type="oal:deepSkyOC"><datasource>DeepskyLog</datasource><name>M 45</name></target>
+    <target id="target-m81" xsi:type="oal:deepSkyGX"><datasource>DeepskyLog</datasource><name>M 81</name></target>
+  </targets>
+  <scopes>
+    <scope id="scope-1" xsi:type="oal:scopeType"><model>Example Dobson 250</model><type>N</type><aperture>250</aperture><focalLength>1200</focalLength></scope>
+  </scopes>
+  <eyepieces/><lenses/><filters/><imagers/>
+  <!-- 1 and 2: in session 1, the second after midnight local time (still 12 September UT) -->
+  <observation id="observation-1">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <session>session-1</session>
+    <target>target-m31</target>
+    <begin>2026-09-12T23:30:00+02:00</begin>
+    <scope>scope-1</scope>
+    <result lang="nl"><description>Heldere kern, stofband met perifeer zien.</description></result>
+  </observation>
+  <observation id="observation-2">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <session>session-1</session>
+    <target>target-m45</target>
+    <begin>2026-09-13T01:30:00+02:00</begin>
+    <result lang="nl"><description>Zeven sterren met het blote oog.</description></result>
+  </observation>
+  <!-- 3: in session 2 -->
+  <observation id="observation-3">
+    <observer>observer-1</observer>
+    <site>site-2</site>
+    <session>session-2</session>
+    <target>target-m81</target>
+    <begin>2026-03-20T20:15:30Z</begin>
+    <scope>scope-1</scope>
+    <result lang="en"><description>Bright oval with a stellar nucleus.</description></result>
+  </observation>
+  <!-- 4: in no session -->
+  <observation id="observation-4">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m42</target>
+    <begin>2026-01-15T21:00:00Z</begin>
+    <scope>scope-1</scope>
+    <result lang="en"><description>The wings are very extended.</description></result>
+  </observation>
+</oal:observations>

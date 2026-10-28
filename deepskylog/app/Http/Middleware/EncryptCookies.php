@@ -12,6 +12,7 @@ class EncryptCookies extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        // Set by the layout's script; only read as a timezone identifier.
+        \App\Support\EphemerisDate::TIMEZONE_COOKIE,
     ];
 }

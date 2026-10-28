@@ -5,10 +5,51 @@ namespace Tests;
 use App\Models\Team;
 use App\Models\User;
 use Database\Seeders\GroupSeeder;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Pagination\Paginator;
+use Tests\Support\CaseInsensitiveBlueprint;
 
 abstract class TestCase extends BaseTestCase
 {
+    /**
+     * Create the tables of the test database with case-insensitive string
+     * columns, as on MariaDB, and start every test with Laravel's paginator
+     * views.
+     */
+    public function createApplication()
+    {
+        $app = parent::createApplication();
+        $app->bind(Blueprint::class, CaseInsensitiveBlueprint::class);
+
+        // A paginated Livewire component switches the paginator views to its
+        // own and switches them back when it is destroyed, which it is not
+        // when its request aborts or throws. The views are static, so reset
+        // them, or the plain paginators of later tests render Livewire links.
+        Paginator::defaultView('pagination::tailwind');
+        Paginator::defaultSimpleView('pagination::simple-tailwind');
+
+        return $app;
+    }
+
+    /**
+     * Give the SQLite test database the REGEXP_REPLACE() of MariaDB, which
+     * the natural sort on object names uses.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $connection = $this->app['db']->connection();
+        if ($connection->getDriverName() === 'sqlite') {
+            $connection->getPdo()->sqliteCreateFunction(
+                'REGEXP_REPLACE',
+                fn ($value, $pattern, $replacement) => preg_replace('/'.$pattern.'/u', $replacement, (string) $value),
+                3
+            );
+        }
+    }
+
     /**
      * Create a user and assign it to the specified team.
      *

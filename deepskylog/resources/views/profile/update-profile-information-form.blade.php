@@ -7,6 +7,13 @@
         {!! __('Update your account\'s profile information and email address.') !!}
     </x-slot>
 
+    @php
+        // The country the observer's locations suggest, offered below the
+        // country select while the country is not set.
+        $suggestedCountry = auth()->user()->country == ""
+            ? \App\Services\ObserverCountries::suggestFor(auth()->user())
+            : null;
+    @endphp
     @if (auth()->user()->country == "")
         @push("scripts")
             <script>
@@ -177,6 +184,18 @@
                 option-label="name"
                 option-value="id"
             />
+            @if ($suggestedCountry && empty($this->state["country"]))
+                <div class="mt-1 text-sm text-gray-400">
+                    {{ __("Your locations suggest :country.", ["country" => \App\Services\ObserverCountries::label($suggestedCountry)]) }}
+                    <button
+                        type="button"
+                        class="text-sky-400 hover:underline"
+                        wire:click="$set('state.country', '{{ $suggestedCountry }}')"
+                    >
+                        {{ __("Use this country") }}
+                    </button>
+                </div>
+            @endif
         </div>
 
         {{-- About --}}

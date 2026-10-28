@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Message;
+use App\Models\MessageBlock;
 use App\Models\ObservationSession;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -101,8 +102,14 @@ class SendSessionInvitations implements ShouldQueue
 
                 $personalBody = str_replace('{SESSIONS_LINK}', '<a href="'.e($sessionsUrl).'">'.e(__('My sessions')).'</a>', $body);
 
+                // Not to an observer who blocked the sender.
+                $senderUser = User::where('username', $this->senderUsername)->first();
+                if ($recipientUser && $senderUser && MessageBlock::blocks($recipientUser, $senderUser)) {
+                    continue;
+                }
+
                 // Create internal message row
-                Message::create([
+                $message = Message::create([
                     'sender' => $this->senderUsername,
                     'receiver' => $username,
                     'subject' => $safeSubject,
@@ -114,7 +121,9 @@ class SendSessionInvitations implements ShouldQueue
                 if ($recipientUser && $recipientUser->sendMail) {
                     // Use the existing Mailable to notify via email; MessageReceived expects senderName, subject, messageHtml, recipientName
                     $senderName = User::where('username', $this->senderUsername)->value('name') ?? 'DeepskyLog';
-                    Mail::to($recipientUser->email)->send(new \App\Mail\MessageReceived($senderName, $subject, Message::sanitizeHtml($personalBody), $recipientUser->name));
+                    Mail::to($recipientUser->email)
+                        ->locale($recipientUser->language ?: app()->getLocale())
+                        ->send(new \App\Mail\MessageReceived($senderName, $subject, Message::sanitizeHtml($personalBody), $recipientUser->name, route('messages.show', $message->id)));
                 }
             } catch (\Throwable $e) {
                 logger()->error('Failed to send session invitation to '.$username.': '.$e->getMessage());

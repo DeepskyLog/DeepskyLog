@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use App\Casts\PurifiedHtml;
+use App\Models\Traits\DetachesOnDelete;
 use App\Models\Traits\HasObservationsDates;
+use App\Models\Traits\OwnedByUser;
 use App\Traits\ClearsResponseCache;
+use App\Traits\HasUniqueSlugPerUser;
 use Carbon\Carbon;
-use Cviebrock\EloquentSluggable\Sluggable;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Magnitude;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Session;
@@ -16,8 +20,10 @@ use Illuminate\Support\Facades\Session;
 class Location extends Model
 {
     use ClearsResponseCache;
+    use DetachesOnDelete;
     use HasObservationsDates;
-    use Sluggable;
+    use HasUniqueSlugPerUser;
+    use OwnedByUser;
 
     protected $fillable = [
         'user_id',
@@ -44,18 +50,29 @@ class Location extends Model
         'longitude' => 'float',
         'active' => 'boolean',
         'hidden' => 'boolean',
+        'description' => PurifiedHtml::class,
     ];
 
     /**
-     * Delete cached metrics when location sky conditions change.
+     * Delete cached metrics when location sky conditions change, or the
+     * latitude, which sets how high the objects get (the extinction).
      */
     protected static function booted()
     {
         static::updated(function (self $location) {
-            if ($location->wasChanged('skyBackground') || $location->wasChanged('limitingMagnitude')) {
+            if ($location->wasChanged('skyBackground') || $location->wasChanged('limitingMagnitude') || $location->wasChanged('latitude')) {
                 UserObjectMetric::where('location_id', $location->id)->delete();
             }
         });
+    }
+
+    /**
+     * Stores the canonical name of the country (the name of the countries
+     * table), so that one country is not counted under two names.
+     */
+    protected function country(): Attribute
+    {
+        return Attribute::make(set: fn (?string $value) => Country::canonicalName($value));
     }
 
     /**
@@ -78,7 +95,7 @@ class Location extends Model
         return [
             'slug' => [
                 'source' => 'name',
-                'unique' => false,
+                'unique' => true,
             ],
         ];
     }
@@ -91,6 +108,34 @@ class Location extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo('App\Models\User');
+    }
+
+    /**
+     * The location ephemerides are calculated for: the standard location of
+     * the user, else (for guests) the oldest active location. Every location
+     * belongs to an observer, so there is no site-wide one; ordering on the id
+     * gives every component (and the queue jobs) the same location.
+     * Locations without real coordinates (the old site's placeholders have
+     * -999) are skipped: they give nonsense ephemerides and a UTC timezone.
+     */
+    public static function forEphemerides(?User $user = null): ?self
+    {
+        $standard = $user?->standardLocation;
+        if ($standard && $standard->hasValidCoordinates()) {
+            return $standard;
+        }
+
+        return self::where('active', true)
+            ->whereBetween('latitude', [-90, 90])
+            ->whereBetween('longitude', [-180, 180])
+            ->orderBy('id')
+            ->first();
+    }
+
+    public function hasValidCoordinates(): bool
+    {
+        return is_numeric($this->latitude) && is_numeric($this->longitude)
+            && abs((float) $this->latitude) <= 90 && abs((float) $this->longitude) <= 180;
     }
 
     public function first_observation_date(): array
@@ -108,9 +153,12 @@ class Location extends Model
             if ($instrument == 0) {
                 continue;
             }
-            $inst = Instrument::where('id', $instrument)->first();
-            $to_return .= "<a href='/instrument/" . $inst->user->slug . '/' . $inst->slug . "'>" .
-                $inst->fullName() . '</a>' . ', ';
+            $inst = Instrument::with('user')->where('id', $instrument)->first();
+            if (! $inst || ! $inst->user) {
+                continue;
+            }
+            $to_return .= "<a href='/instrument/" . e($inst->user->slug) . '/' . e($inst->slug) . "'>" .
+                e(html_entity_decode($inst->fullName())) . '</a>' . ', ';
         }
 
         // Remove the trailing comma and space
@@ -119,7 +167,7 @@ class Location extends Model
 
     public function get_used_instruments()
     {
-        return ObservationsOld::where('locationid', $this->id)->groupby('instrumentid')->distinct()->pluck('instrumentid');
+        return Observation::where('location_id', $this->id)->groupby('instrument_id')->distinct()->pluck('instrument_id');
     }
 
     public function last_observation_date(): array
@@ -130,12 +178,13 @@ class Location extends Model
     /**
      * Get SQM value, calculated from limitingMagnitude if needed.
      */
-    public function getSqm($fstOffset = 0)
+    public function getSqm()
     {
         if ($this->skyBackground > 0) {
             return $this->skyBackground;
         } elseif ($this->limitingMagnitude > 0) {
-            return round(Magnitude::nelmToSqm($this->limitingMagnitude, $fstOffset), 2);
+            // The stored NELM is without the fstOffset of the observer
+            return round(Magnitude::nelmToSqm($this->limitingMagnitude), 2);
         } else {
             return null;
         }
@@ -147,7 +196,8 @@ class Location extends Model
     public function getNelm($fstOffset = 0)
     {
         if ($this->limitingMagnitude > 0) {
-            return $this->limitingMagnitude;
+            // The stored NELM is without the fstOffset, as sqmToNelm() applies it
+            return round($this->limitingMagnitude - $fstOffset, 2);
         } elseif ($this->skyBackground > 0) {
             return round(Magnitude::sqmToNelm($this->skyBackground, $fstOffset), 1);
         } else {
@@ -369,6 +419,14 @@ class Location extends Model
         }
 
         return $end . ' / ' . $start;
+    }
+
+    /**
+     * The users column that holds this as the user's default.
+     */
+    public function standardUserColumn(): ?string
+    {
+        return 'stdlocation';
     }
 
     /**

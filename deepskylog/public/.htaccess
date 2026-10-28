@@ -10,8 +10,8 @@
     # so reject those URLs before they reach PHP. THE_REQUEST is used because
     # every URL has become index.php by the time the rules are re-run.
     RewriteCond %{THE_REQUEST} ^[A-Z]+\s/(index\.php|dashboard)?(\?\S*)?\s
-    RewriteCond %{QUERY_STRING} (^|&)(sessions|sketches|cometsketches|deepsky|comets)=(?!(?:[1-9]|10)(?:&|$)) [NC,OR]
-    RewriteCond %{QUERY_STRING} (^|&)(sessions|sketches|cometsketches|deepsky|comets)=[^&]*&(.*&)?(sessions|sketches|cometsketches|deepsky|comets)= [NC]
+    RewriteCond %{QUERY_STRING} (^|&)(sessions|sketches|observations)=(?!(?:[1-9]|10)(?:&|$)) [NC,OR]
+    RewriteCond %{QUERY_STRING} (^|&)(sessions|sketches|observations)=[^&]*&(.*&)?(sessions|sketches|observations)= [NC]
     RewriteRule ^ - [R=404,L]
 
     # Handle Authorization Header

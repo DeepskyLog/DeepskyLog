@@ -9,13 +9,13 @@ class AddSlugToObjectsAndObjectnames extends Migration
     public function up()
     {
         Schema::table('objects', function (Blueprint $table) {
-            if (! Schema::hasColumn('objects', 'slug')) {
+            if (!Schema::hasColumn('objects', 'slug')) {
                 $table->string('slug', 191)->nullable()->unique()->after('name');
             }
         });
 
         Schema::table('objectnames', function (Blueprint $table) {
-            if (! Schema::hasColumn('objectnames', 'slug')) {
+            if (!Schema::hasColumn('objectnames', 'slug')) {
                 $table->string('slug', 191)->nullable()->unique()->after('objectname');
             }
         });
@@ -25,12 +25,14 @@ class AddSlugToObjectsAndObjectnames extends Migration
     {
         Schema::table('objects', function (Blueprint $table) {
             if (Schema::hasColumn('objects', 'slug')) {
+                $table->dropUnique('objects_slug_unique');
                 $table->dropColumn('slug');
             }
         });
 
         Schema::table('objectnames', function (Blueprint $table) {
             if (Schema::hasColumn('objectnames', 'slug')) {
+                $table->dropUnique('objectnames_slug_unique');
                 $table->dropColumn('slug');
             }
         });

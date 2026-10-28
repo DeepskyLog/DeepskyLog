@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\ClearsResponseCache;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ObservingListLike extends Model
 {
+    use ClearsResponseCache;
     use HasFactory;
 
     protected $fillable = [
@@ -29,5 +31,14 @@ class ObservingListLike extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Guests only see public lists, so changes on a private list do not
+     * clear the response cache.
+     */
+    protected function affectsCachedPages(): bool
+    {
+        return ObservingList::whereKey($this->observing_list_id)->where('public', true)->exists();
     }
 }

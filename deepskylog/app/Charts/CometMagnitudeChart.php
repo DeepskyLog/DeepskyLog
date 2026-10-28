@@ -25,7 +25,7 @@ class CometMagnitudeChart
 
         return (new OriginalLineChart())
             ->setTitle(__('Magnitude history: ') . $objectName)
-            ->setSubtitle(__('Source: ') . config('app.old_url'))
+            ->setSubtitle(__('Source: ') . config('app.url'))
             ->addData(__('Magnitude'), $data)
             ->setXAxisOption(new XAxisOption($labels))
             ->setTheme('dark')

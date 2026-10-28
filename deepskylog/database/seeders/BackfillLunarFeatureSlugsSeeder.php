@@ -16,12 +16,14 @@ class BackfillLunarFeatureSlugsSeeder extends Seeder
             return;
         }
 
-        DB::table('lunar_features')->orderBy('name')->chunk(500, function ($rows) {
+        // Only the rows without a slug: observations refer to the slug, so an
+        // existing one must never change (chunkById, as the filled rows drop out)
+        DB::table('lunar_features')->where(fn ($q) => $q->whereNull('slug')->orWhere('slug', ''))->chunkById(500, function ($rows) {
             foreach ($rows as $r) {
                 $base = Str::slug((string) $r->name, '-');
                 $slug = $base;
                 $i = 1;
-                while (DB::table('lunar_features')->where('slug', $slug)->exists()) {
+                while (DB::table('lunar_features')->where('slug', $slug)->where('id', '!=', $r->id)->exists()) {
                     $slug = $base . '-' . $i;
                     $i++;
                 }

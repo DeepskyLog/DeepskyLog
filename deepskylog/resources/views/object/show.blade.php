@@ -63,28 +63,30 @@
                 {{-- Summary row: object type, constellation and quick stats (observations/drawings, user-specific counts) --}}
                 @php
                     $objectName = $session->name ?? '';
-                    // Prefer controller-provided totals when available, otherwise query legacy observations table
+                    // Prefer controller-provided totals when available, otherwise query the observations table
                     $totalObs =
                         isset($totalObservations) && $totalObservations !== null
                             ? $totalObservations
-                            : \App\Models\ObservationsOld::getObservationsCountForObject($objectName);
+                            : \App\Models\Observation::getObservationsCountForObject($objectName);
                     $drawingsCount =
                         isset($drawings) && is_numeric($drawings)
                             ? intval($drawings)
                             : (isset($drawings) && is_countable($drawings)
                                 ? count($drawings)
-                                : \App\Models\ObservationsOld::getDrawingsCountForObject($objectName));
+                                : \App\Models\Observation::getDrawingsCountForObject($objectName));
                     $yourObs = auth()->check()
-                        ? ($yourObservations ?? \App\Models\ObservationsOld::getObservationsCountForUser(auth()->user(), $objectName))
+                        ? ($yourObservations ?? \App\Models\Observation::getObservationsCountForUser(auth()->user(), $objectName))
                         : 0;
                     $yourDrawings = auth()->check()
-                        ? ($yourDrawings ?? \App\Models\ObservationsOld::getDrawingsCountForUser(auth()->user(), $objectName))
+                        ? ($yourDrawings ?? \App\Models\Observation::getDrawingsCountForUser(auth()->user(), $objectName))
                         : 0;
+                    // The controller computes the last dates with the counts; they
+                    // are null when the user has not observed the object yet.
                     $lastObs = auth()->check()
-                        ? ($lastObservationDate ?? \App\Models\ObservationsOld::getLastObservationDateForUser(auth()->user(), $objectName))
+                        ? (isset($yourObservations) ? $lastObservationDate ?? null : \App\Models\Observation::getLastObservationDateForUser(auth()->user(), $objectName))
                         : null;
                     $lastDrawing = auth()->check()
-                        ? ($lastDrawingDate ?? \App\Models\ObservationsOld::getLastDrawingDateForUser(auth()->user(), $objectName))
+                        ? (isset($yourObservations) ? $lastDrawingDate ?? null : \App\Models\Observation::getLastDrawingDateForUser(auth()->user(), $objectName))
                         : null;
                 @endphp
 
@@ -105,7 +107,7 @@
 
                             <div class="flex items-center justify-start gap-0">
                                 <span class="text-gray-400">{{ __('Observations') }}</span>
-                                <a href="{{ url('/observations/' . $objSlug) }}"
+                                <a href="{{ route('observations.object', ['slug' => $objSlug]) }}"
                                     class="text-white font-medium ml-2 hover:underline">{{ $totalObs ?? 0 }}</a>
                             </div>
 
@@ -216,7 +218,14 @@
                                         </tr>
                                     @endif
                                     {{-- Static RA/Dec removed for comet pages; Livewire `comet-details` renders dynamic values. --}}
-                                    @if (isset($session->diam1) || isset($session->diam2))
+                                    @php $isDoubleStar = strtoupper((string) ($session->source_type_raw ?? '')) === 'DS'; @endphp
+                                    {{-- A double star stores the separation of the pair (arcseconds) as its diameter --}}
+                                    @if ($isDoubleStar && is_numeric($session->separation ?? null) && $session->separation > 0)
+                                        <tr>
+                                            <td class="pr-4 font-medium">{{ __('Separation') }}</td>
+                                            <td>{{ rtrim(rtrim(number_format($session->separation, 1), '0'), '.') }}″</td>
+                                        </tr>
+                                    @elseif (isset($session->diam1) || isset($session->diam2))
                                         @if ($session->diam1 > 0.0)
                                             <tr>
                                                 <td class="pr-4 font-medium">{{ __('Size') }}</td>
@@ -241,7 +250,7 @@
                                     @if (!empty(trim($session->comments ?? '')))
                                         <tr>
                                             <td class="pr-4 font-medium">{{ __('Description') }}</td>
-                                            <td>{!! nl2br(e($session->comments ?? '')) !!}</td>
+                                            <td>{!! \App\Support\Html::purify($session->comments, true) !!}</td>
                                         </tr>
                                     @endif
                                     @auth
@@ -266,7 +275,12 @@
                                                             ? __('Unknown')
                                                             : $mag;
                                                 @endphp
-                                                {{ $magDisplay }}
+                                                @if (!empty($session->mag_source) && $magDisplay !== __('Unknown'))
+                                                    ≈ {{ $magDisplay }}
+                                                    <span class="text-xs text-gray-400">({{ __('estimated from the brightness class of :source', ['source' => $session->mag_source]) }})</span>
+                                                @else
+                                                    {{ $magDisplay }}
+                                                @endif
                                             </td>
                                         </tr>
 
@@ -287,11 +301,16 @@
                                         @endif
                                     @endif
 
-
+                                    @if (\App\Services\AavsoVariableStars::appliesTo($session->source_type_raw ?? null))
+                                        @php $aavsoVariable = \App\Services\AavsoVariableStars::forObjectName($session->name ?? null, fetch: false); @endphp
+                                        @if ($aavsoVariable)
+                                            <x-aavso-estimate :variable="$aavsoVariable" />
+                                        @endif
+                                    @endif
 
                                     @if (!empty($session->subr))
                                         <tr>
-                                            <td class="pr-4 font-medium">{{ __('Surface brightness') }}</td>
+                                            <td class="pr-4 font-medium">{{ $isDoubleStar ? __('Magnitude of the companion') : __('Surface brightness') }}</td>
                                             <td>
                                                 @php
                                                     $sb = $session->subr;
@@ -339,7 +358,7 @@
                                     {{-- comet magnitude chart moved below the altitude/year graphs --}}
                                     @php $__isCometLocal = strtolower(trim((string) ($session->source_type_raw ?? '')) ) === 'comet'; @endphp
                                     @if ($__isCometLocal)
-                                        @includeWhen(true, 'object.partials.comet-details', ['session' => $session, 'comet_magnitudes' => $comet_magnitudes ?? null, 'ephemerides' => $ephemerides ?? null, 'suppressLivewire' => false])
+                                        @includeWhen(true, 'object.partials.comet-details', ['session' => $session, 'comet_magnitudes' => $comet_magnitudes ?? null, 'ephemerides' => $ephemerides ?? null, 'suppressLivewire' => false, 'part' => 'rows'])
                                     @endif
 
                                     @php
@@ -424,9 +443,7 @@
                                             } else {
                                                 if (class_exists(\App\Models\ObjectPartOf::class)) {
                                                     // Try exact case-insensitive match first
-                                                    $po = \App\Models\ObjectPartOf::whereRaw('LOWER(partofname) = ?', [
-                                                        mb_strtolower($session->name ?? ''),
-                                                    ])
+                                                    $po = \App\Models\ObjectPartOf::where('partofname', $session->name ?? '')
                                                         ->pluck('objectname')
                                                         ->unique()
                                                         ->toArray();
@@ -500,12 +517,6 @@
 
                                     {{-- (Observation/drawing stats moved to header) --}}
 
-                                    {{-- Ephemerides: date, rise/transit/set, best time, maximum altitude, altitude graph provided by astronomy library --}}
-                                    {{-- Date selector moved to global aside Livewire component --}}
-                                    {{-- Ephemerides rows are rendered by a Livewire component so they can update live when the aside date changes --}}
-                                    {{-- Render ephemerides for all visitors (not auth-only) so planet event rows are visible for Mercury/Venus. --}}
-                                    @livewire('object-ephemerides', ['objectId' => (string) ($session->id ?? ''), 'initial' => $ephemerides ?? null, 'objectName' => $session->name ?? null, 'sourceTypeRaw' => $session->source_type_raw ?? null])
-
                                     @auth
                                         @php
                                             // Check if user should see contrast reserve and optimum detection magnification
@@ -513,6 +524,8 @@
                                         @endphp
                                         
                                         @if ($showContrastInfo)
+                                        {{-- Contrast reserve and optimum detection magnification sit above the ephemerides,
+                                             whose Livewire component also draws the altitude and year graphs --}}
                                         {{-- Live-updating contrast reserve and optimum detection magnification via Livewire --}}
                                         {{-- Embed the Livewire component directly so it can render <tr> rows inside this table --}}
                                         @php
@@ -524,6 +537,8 @@ $initialCR = $session->contrast_reserve ?? null;
 $initialCRCat = $session->contrast_reserve_category ?? null;
 $initialCRLoc = $session->contrast_used_location ?? null;
 $initialCRInstr = $session->contrast_used_instrument ?? null;
+$initialCRAlt = $session->contrast_used_altitude ?? null;
+$initialCRExt = $session->contrast_used_extinction ?? null;
 $initialOptMag = $session->optimum_detection_magnification ?? null;
 $initialOptEps = $session->optimum_eyepieces ?? [];
 try {
@@ -582,17 +597,35 @@ try {
                                                         'contrast_reserve_category' => $initialCRCat,
                                                         'contrast_used_location' => $initialCRLoc,
                                                         'contrast_used_instrument' => $initialCRInstr,
+                                                        'contrast_used_altitude' => $initialCRAlt,
+                                                        'contrast_used_extinction' => $initialCRExt,
                                                         'optimum_detection_magnification' => $initialOptMag,
                                                         'optimum_eyepieces' => $initialOptEps,
+                                                        'object_type' => $session->source_type_raw ?? null,
                                                     ],
                                                 ])
                                             @else
-                                                <div class="text-sm text-gray-400">{{ __('Aladin preview disabled — configure a default instrument set or select instrument/eyepiece to enable.') }}</div>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="2" class="text-sm text-gray-400">{{ __('Aladin preview disabled — configure a default instrument set or select instrument/eyepiece to enable.') }}</td>
+                                                    </tr>
+                                                </tbody>
                                             @endif
                                         @endif
                                         @endif
                                     @endauth
 
+                                    {{-- Ephemerides: date, rise/transit/set, best time, maximum altitude, altitude graph provided by astronomy library --}}
+                                    {{-- Date selector moved to global aside Livewire component --}}
+                                    {{-- Ephemerides rows are rendered by a Livewire component so they can update live when the aside date changes --}}
+                                    {{-- Render ephemerides for all visitors (not auth-only) so planet event rows are visible for Mercury/Venus. --}}
+                                    @livewire('object-ephemerides', ['objectId' => (string) ($session->id ?? ''), 'initial' => $ephemerides ?? null, 'objectName' => $session->name ?? null, 'sourceTypeRaw' => $session->source_type_raw ?? null])
+
+
+                                    {{-- Comet altitude, year and light curve graphs below all rows of the table --}}
+                                    @if ($__isCometLocal)
+                                        @include('object.partials.comet-details', ['session' => $session, 'comet_magnitudes' => $comet_magnitudes ?? null, 'ephemerides' => $ephemerides ?? null, 'suppressLivewire' => false, 'part' => 'graphs'])
+                                    @endif
                                 </table>
 
                                 {{-- Comet magnitude chart: show under Optimum detection magnification --}}
@@ -709,7 +742,7 @@ try {
                                                         ->first();
                                                     if ($uts && is_array($uts->settings)) {
                                                         if (isset($uts->settings['radiusArcMin'])) {
-                                                            $nearbyRadiusSelected = intval(
+                                                            $nearbyRadiusSelected = \App\Livewire\NearbyObjectsTable::clampRadius(
                                                                 $uts->settings['radiusArcMin'],
                                                             );
                                                         }
@@ -763,8 +796,8 @@ try {
                                         @endphp
                                         <div class="flex items-center gap-3 mb-3">
                                             <label class="text-sm text-gray-300">{{ __('Radius:') }}</label>
-                                            <select
-                                                onchange="(function(v){try{v=parseInt(v,10); if(window.Livewire && typeof Livewire.dispatch==='function'){ Livewire.dispatch('nearbyRadiusChanged', [v]); } else if(window.Livewire && typeof Livewire.dispatchTo==='function'){ Livewire.dispatchTo('nearby-objects-table','nearbyRadiusChanged', [v]); } else if(window.Livewire && typeof Livewire.emit==='function'){ Livewire.emit('nearbyRadiusChanged', [v]); } }catch(e){} })(this.value)"
+                                            <select id="nearby-radius-select"
+                                                onchange="nearbyRadiusChanged(this.value)"
                                                 class="text-sm rounded bg-gray-700 text-gray-100 p-1 border-gray-600"
                                                 style="background-color: #374151; color: #f3f4f6;">
                                                 <option value="5" style="background-color: #374151; color: #f3f4f6;"
@@ -780,10 +813,54 @@ try {
                                                 <option value="120" style="background-color: #374151; color: #f3f4f6;"
                                                     {{ $nearbyRadiusSelected === 120 ? 'selected' : '' }}>2°</option>
                                             </select>
+                                            <script>
+                                                // The export links, the object set and report links and the
+                                                // "add all" form carry the radius they were rendered with: follow
+                                                // the select, and tell the nearby table.
+                                                function nearbyRadiusChanged(value) {
+                                                    const radius = parseInt(value, 10);
+                                                    if (!(radius > 0)) {
+                                                        return;
+                                                    }
+                                                    const controls = document.getElementById('nearby-radius-controls');
+                                                    if (controls) {
+                                                        controls.querySelectorAll('a[href]').forEach(function (link) {
+                                                            const url = new URL(link.href, window.location.href);
+                                                            if (url.searchParams.has('radius')) {
+                                                                url.searchParams.set('radius', radius);
+                                                                link.href = url.toString();
+                                                            }
+                                                        });
+                                                        controls.querySelectorAll('input[name="radius_arc_min"]').forEach(function (input) {
+                                                            input.value = radius;
+                                                        });
+                                                    }
+                                                    if (window.Livewire && typeof Livewire.dispatch === 'function') {
+                                                        Livewire.dispatch('nearbyRadiusChanged', [radius]);
+                                                    }
+                                                }
+
+                                                // Going back in the browser reuses the cached page, rendered
+                                                // with the original radius, but restores the radius last chosen
+                                                // in the select: apply that radius so everything agrees again.
+                                                // The browser restores the select only after DOMContentLoaded
+                                                // (and so after Livewire has started), hence pageshow. A page
+                                                // from the back/forward cache kept its state and needs nothing.
+                                                window.addEventListener('pageshow', function (event) {
+                                                    if (event.persisted) {
+                                                        return;
+                                                    }
+                                                    const select = document.getElementById('nearby-radius-select');
+                                                    const rendered = select && Array.from(select.options).find(o => o.defaultSelected);
+                                                    if (rendered && select.value !== rendered.value) {
+                                                        nearbyRadiusChanged(select.value);
+                                                    }
+                                                }, { once: true });
+                                            </script>
                                             <div class="text-xs text-gray-400 ml-2">
                                                 {{ __('Choose radius to search nearby objects.') }}</div>
                                             <!-- Export names (PDF) button: dispatches to the nearby-objects-table Livewire component -->
-                                            <div class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
+                                            <div id="nearby-radius-controls" class="ml-auto flex items-center gap-2" x-data="{ open: false }" x-cloak>
                                                 @php
                                                     $canModifyActiveList = false;
                                                     if (auth()->check()) {
@@ -856,6 +933,23 @@ try {
                                                         '&radius=' . rawurlencode($nearbyRadiusSelected ?? 30);
                                                 @endphp
 
+                                                @auth
+                                                    @include('object-sets.link', ['params' => [
+                                                        'source' => 'nearby',
+                                                        'object' => $canonicalSlug ?? ($session->slug ?? ''),
+                                                        'ra' => $nearbyRaDeg ?? '',
+                                                        'dec' => $nearbyDecDeg ?? '',
+                                                        'radius' => $nearbyRadiusSelected ?? 30,
+                                                    ]])
+                                                    @include('object-report.link', ['params' => [
+                                                        'source' => 'nearby',
+                                                        'object' => $canonicalSlug ?? ($session->slug ?? ''),
+                                                        'ra' => $nearbyRaDeg ?? '',
+                                                        'dec' => $nearbyDecDeg ?? '',
+                                                        'radius' => $nearbyRadiusSelected ?? 30,
+                                                    ]])
+                                                @endauth
+
                                                 <div class="relative inline-block text-left">
                                                     <button type="button" @click="open = !open"
                                                         @keydown.escape="open = false"
@@ -876,19 +970,19 @@ try {
                                                         <div class="py-1 text-sm text-gray-100" role="menu"
                                                             aria-orientation="vertical">
                                                             <a href="{{ $exportNamesBase }}" target="_blank"
-                                                                rel="noopener noreferrer"
+                                                                rel="nofollow noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export names (PDF)') }}</a>
                                                             <a href="{{ $exportTableBase }}" target="_blank"
-                                                                rel="noopener noreferrer"
+                                                                rel="nofollow noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export table (PDF)') }}</a>
                                                             <a href="{{ $exportArgoBase }}" target="_blank"
-                                                                rel="noopener noreferrer"
+                                                                rel="nofollow noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export Argo Navis') }}</a>
                                                             <a href="{{ $exportSkylistBase }}" target="_blank"
-                                                                rel="noopener noreferrer"
+                                                                rel="nofollow noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export SkySafari (.skylist)') }}</a>
                                                             @php
@@ -920,11 +1014,11 @@ try {
                                                                     rawurlencode($nearbyRadiusSelected ?? 30);
                                                             @endphp
                                                             <a href="{{ $exportStxtBase }}" target="_blank"
-                                                                rel="noopener noreferrer"
+                                                                rel="nofollow noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export SkyTools (.txt)') }}</a>
                                                             <a href="{{ $exportApdBase }}" target="_blank"
-                                                                rel="noopener noreferrer"
+                                                                rel="nofollow noopener noreferrer"
                                                                 class="block px-4 py-2 hover:bg-gray-700"
                                                                 role="menuitem">{{ __('Export AstroPlanner (.apd)') }}</a>
                                                         </div>
@@ -1090,38 +1184,30 @@ try {
 
     if ($isComet) {
         // For comet pages, use the comet object ID directly to avoid cross-comet false matches.
-        // sketch_of_the_week stores comet observations as negative observation_id values
-        // (i.e. observation_id = -cometobservations.id).
         $cometObjectId = $session->id ?? null;
-        if (!empty($cometObjectId)) {
-            $cometObsIds = \Illuminate\Support\Facades\DB::connection('mysqlOld')
-                ->table('cometobservations')
-                ->where('objectid', $cometObjectId)
+            if (!empty($cometObjectId)) {
+            $cometObsIds = \Illuminate\Support\Facades\DB::table('observations')
+                ->where('target_type', \App\Models\Observation::TYPE_COMET)
+                ->where('target_key', (string) $cometObjectId)
                 ->pluck('id')
                 ->toArray();
 
             if (!empty($cometObsIds)) {
-                $negativeCometObsIds = array_map(fn($id) => -$id, $cometObsIds);
-                $objectSketches = \App\Models\SketchOfTheWeek::whereIn('observation_id', $negativeCometObsIds)
+                $objectSketches = \App\Models\SketchOfTheWeek::published()->whereIn('observation_id', $cometObsIds)
                     ->orderByDesc('date')
                     ->get();
             }
         }
     } else {
-        // For deepsky objects, match by exact object name in the legacy observations table.
+        // For deepsky objects, match the observations of the object.
         $objName = $session->name ?? '';
         if (!empty($objName)) {
-            $obsIds = \Illuminate\Support\Facades\DB::connection('mysqlOld')
-                ->table('observations')
-                ->where('objectname', $objName)
-                ->pluck('id')
-                ->toArray();
-
-            if (!empty($obsIds)) {
-                $objectSketches = \App\Models\SketchOfTheWeek::whereIn('observation_id', $obsIds)
-                    ->orderByDesc('date')
-                    ->get();
-            }
+            $objectSketches = \App\Models\SketchOfTheWeek::published()->whereIn(
+                'observation_id',
+                \App\Models\Observation::ofDeepskyObject($objName)->select('id')
+            )
+                ->orderByDesc('date')
+                ->get();
         }
     }
 } catch (\Throwable $_) {
@@ -1136,6 +1222,11 @@ try {
                                     <div class="mt-2">
                                         <x-card>
                                             <div class="flex flex-wrap px-5">
+                                                @php
+                                                    // The observations of the cards and their observers, likes, ... in grouped queries.
+                                                    (new \Illuminate\Database\Eloquent\Collection($objectSketches->all()))->loadMissing(['observation', 'user']);
+                                                    \App\Services\Observations\ObservationCardData::instance()->preload($objectSketches->pluck('observation'));
+                                                @endphp
                                                 @foreach ($objectSketches as $sketch)
                                                     <x-sketch :sketch="$sketch" />
                                                 @endforeach
@@ -1152,15 +1243,26 @@ try {
                             <div class="bg-gray-800 p-3 rounded shadow text-gray-100">
                                 <h4 class="font-semibold mb-2 text-white">{{ __('Quick links') }}</h4>
                                 <ul class="space-y-2 text-sm">
-                                    <li>
-                                        @if (!empty($canonicalSlug))
-                                            <a href="{{ url('/observations/' . $canonicalSlug) }}"
-                                                class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
-                                        @else
-                                            <a href="{{ route('observations.index') }}"
-                                                class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
-                                        @endif
-                                    </li>
+                                        @auth
+                                        <li>
+                                            @if (!empty($canonicalSlug))
+                                                <a href="{{ route('observation.create', ['slug' => $canonicalSlug]) }}"
+                                                    class="text-gray-300 hover:underline">{{ __('Create observation') }}</a>
+                                            @else
+                                                <a href="{{ route('observation.create') }}"
+                                                    class="text-gray-300 hover:underline">{{ __('Create observation') }}</a>
+                                            @endif
+                                        </li>
+                                        @endauth
+                                        <li>
+                                            @if (!empty($canonicalSlug))
+                                                <a href="{{ route('observations.object', ['slug' => $canonicalSlug]) }}"
+                                                    class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
+                                            @else
+                                                <a href="{{ route('observations.index') }}"
+                                                    class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
+                                            @endif
+                                        </li>
                                     <li>
                                         @if (!empty($canonicalSlug))
                                             <a href="{{ route('observations.drawings.show', ['slug' => $canonicalSlug]) }}"
@@ -1170,6 +1272,29 @@ try {
                                                 class="text-gray-300 hover:underline">{{ __('All drawings') }}</a>
                                         @endif
                                     </li>
+                                    {{-- The charts are only useful for deep-sky objects --}}
+                                    @if ((!empty($canonicalSlug) || !empty($session->slug))
+                                        && !in_array($session->source_type_raw ?? '', ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun'], true))
+                                        @php $chartSlugMain = $canonicalSlug ?? $session->slug; @endphp
+                                        <li>
+                                            <div class="flex flex-wrap items-center gap-2">
+                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'overview']) }}" target="_blank" rel="nofollow noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium whitespace-nowrap rounded bg-gray-700 hover:bg-gray-600 text-white">
+                                                    {{ __('Overview chart') }}
+                                                </a>
+                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'lookup']) }}" target="_blank" rel="nofollow noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium whitespace-nowrap rounded bg-gray-700 hover:bg-gray-600 text-white">
+                                                    {{ __('Lookup chart') }}
+                                                </a>
+                                                <a href="{{ route('object.nearby.chart.pdf', ['slug' => $chartSlugMain, 'type' => 'detail']) }}" target="_blank" rel="nofollow noopener noreferrer" class="inline-flex items-center px-2 py-1 text-xs font-medium whitespace-nowrap rounded bg-gray-700 hover:bg-gray-600 text-white">
+                                                    {{ __('Detail chart') }}
+                                                </a>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('object.field-views', ['slug' => $chartSlugMain]) }}" rel="nofollow" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded bg-gray-700 hover:bg-gray-600 text-white">
+                                                {{ __('Naked eye, finder and telescope') }}
+                                            </a>
+                                        </li>
+                                    @endif
                                     @auth
                                         @if (!empty($canonicalSlug) && auth()->user()->slug)
                                             <li><a href="{{ route('observations.user.object', ['observer' => auth()->user()->slug, 'object' => $canonicalSlug]) }}"
@@ -1296,6 +1421,9 @@ try {
                                     @endif
                                 </ul>
                             </div>
+                            @if (!empty($session->name))
+                                @livewire('object-observing-lists', ['objectName' => $session->name], key('object-lists-' . $session->name))
+                            @endif
                             {{-- Aladin Lite preview --}}
                                 @php
                                     // Hide sky preview for administrators and database experts

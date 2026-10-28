@@ -4,12 +4,20 @@
             class="max-w-screen mx-auto bg-gray-900 px-2 py-10 sm:px-6 lg:px-8"
         >
             <h2 class="text-xl font-semibold leading-tight">
-                {{ __("Add DeepskyLog Sketch of the week") }}
+                {{
+                    __(
+                        "Add DeepskyLog Sketch of the week",
+                    )
+                }}
             </h2>
             <div class="mt-2">
                 <x-card>
                     <div class="mb-4 flex flex-wrap">
-                        {!! __("At this moment, this form is very basic.  If a comet sketch is the sketch of the week, enter the negative ID.  In the future, the option to add a DeepskyLog sketch of the week will be included in the details of an observation.") !!}
+                        {!!
+                            __(
+                                "Enter the observation ID from the unified observations table for both deep-sky and comet sketches. It is also possible to add a DeepskyLog sketch of the week from the details of an observation.",
+                            )
+                        !!}
                     </div>
                     <form
                         role="form"
@@ -27,20 +35,38 @@
                                 value="{{ old('observation_id') }}"
                             />
                             <x-input-error for="error" />
-                            @error("error")
+                            @error ("error")
                                 <p class="mt-1 text-xs text-red-500">
                                     {{ $message }}
                                 </p>
                             @enderror
                         </div>
                         <div class="col-span-4 mb-4 mt-4 sm:col-span-3">
-                            <x-datetime-picker
-                                without-time="true"
+                            <label
+                                for="date"
+                                class="block text-sm font-medium text-gray-300"
+                                >{{ __("Sunday") }}</label
+                            >
+                            <select
+                                id="date"
                                 name="date"
-                                label="{{ __('Date') }}"
                                 required
-                                value="{{old('date') }}"
-                            />
+                                class="mt-1 w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100"
+                            >
+                                @foreach (\App\Models\SketchOfTheWeek::freeSundays() as $sunday)
+                                    <option
+                                        value="{{ $sunday->toDateString() }}"
+                                        @selected(old("date") === $sunday->toDateString())
+                                    >
+                                        {{ $sunday->translatedFormat("l j F Y") }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error ("date")
+                                <p class="mt-1 text-xs text-red-500">
+                                    {{ $message }}
+                                </p>
+                            @enderror
                         </div>
 
                         <x-button

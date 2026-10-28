@@ -1,16 +1,38 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-wrap items-center justify-between gap-2">
             <h2 class="font-semibold text-xl text-gray-200 leading-tight">{{ __('My observing lists') }}</h2>
-            <div class="flex items-center gap-2">
+            <div class="flex flex-wrap items-center gap-2">
                 <a href="{{ route('observing-lists.discover') }}"
                    class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
                     {{ __('Discover public lists') }}
                 </a>
-                <a href="{{ route('observing-list.create') }}"
-                   class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500">
-                    {{ __('New list') }}
-                </a>
+                @can('create', \App\Models\ObservingList::class)
+                    <a href="{{ route('observing-list.night') }}"
+                       class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
+                        {{ __('New list for a night') }}
+                    </a>
+                    <a href="{{ route('observing-list.messier-marathon') }}"
+                       class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
+                        {{ __('Messier marathon') }}
+                    </a>
+                    <a href="{{ route('observing-list.create') }}"
+                       class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500">
+                        {{ __('New list') }}
+                    </a>
+                @else
+                    {{-- Observing lists are created in the Observer role; offer to switch to it. --}}
+                    @php $observersTeam = auth()->user()?->allTeams()->firstWhere('name', 'Observers'); @endphp
+                    @if ($observersTeam)
+                        <form method="POST" action="{{ route('current-team.switch', $observersTeam->id) }}">
+                            @csrf
+                            <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
+                                {{ __('Switch to the Observer role to create a list') }}
+                            </button>
+                        </form>
+                    @endif
+                @endcan
             </div>
         </div>
     </x-slot>
@@ -18,16 +40,16 @@
     <div class="py-6">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 space-y-8">
 
-            {{-- Name search --}}
+            {{-- Search on the name or the objects --}}
             <div class="p-4 bg-gray-800 border border-gray-700 rounded-md">
                 <form method="GET" action="{{ route('observing-lists.index') }}" class="flex flex-col sm:flex-row gap-3 sm:items-center">
-                    <label for="list-search" class="text-sm text-gray-300 sm:whitespace-nowrap">{{ __('Search list name') }}</label>
+                    <label for="list-search" class="text-sm text-gray-300 sm:whitespace-nowrap">{{ __('Search observing lists') }}</label>
                     <input
                         id="list-search"
                         name="q"
                         type="text"
                         value="{{ $search ?? '' }}"
-                        placeholder="{{ __('Type part of a list name...') }}"
+                        placeholder="{{ __('Search on name or object') }}"
                         class="flex-1 bg-gray-900 border border-gray-600 rounded-md text-gray-100 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                     <div class="flex items-center gap-2">

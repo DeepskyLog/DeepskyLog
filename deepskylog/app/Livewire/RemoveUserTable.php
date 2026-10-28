@@ -5,6 +5,8 @@ namespace App\Livewire;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Laravel\Jetstream\Contracts\DeletesUsers;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
@@ -13,13 +15,19 @@ use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class RemoveUserTable extends PowerGridComponent
 {
-    use WithExport;
 
     public string $tableName = 'RemoveUserTable';
+
+    /**
+     * The relations of a user that keep the account from being removed.
+     */
+    private const OWNED_RELATIONS = [
+        'locations', 'instruments', 'eyepieces', 'filters', 'lenses',
+        'observingLists', 'observations', 'sketchOfTheWeek', 'sketchOfTheMonth',
+    ];
 
     public function setUp(): array
     {
@@ -41,7 +49,9 @@ final class RemoveUserTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return User::query();
+        // One EXISTS subquery per relation in the page query, instead of nine
+        // queries per row in canBeRemoved().
+        return User::query()->withExists(self::OWNED_RELATIONS);
     }
 
     public function relationSearch(): array
@@ -53,7 +63,7 @@ final class RemoveUserTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('name', function ($row) {
-                return sprintf('<a href="%s">%s</a>', route('observer.show', $row->slug), $row->name);
+                return sprintf('<a href="%s">%s</a>', route('observer.show', $row->slug), e($row->name));
             })->add('created_at_formatted', function ($row) {
                 return $row->created_at->format('Y-m-d');
             });
@@ -118,39 +128,49 @@ final class RemoveUserTable extends PowerGridComponent
     {
         return [
             Rule::button('destroy')
-                ->when(fn ($user) => $user->id == 1)
-                ->hide(),
-            Rule::button('destroy')
-                ->when(fn ($user) => $user->id == Auth::user()->id)
-                ->hide(),
-            Rule::button('destroy')
-                ->when(fn ($user) => $user->locations->count() > 0)
-                ->hide(),
-            Rule::button('destroy')
-                ->when(fn ($user) => $user->instruments->count() > 0)
-                ->hide(),
-            Rule::button('destroy')
-                ->when(fn ($user) => $user->eyepieces->count() > 0)
-                ->hide(),
-            Rule::button('destroy')
-                ->when(fn ($user) => $user->filters->count() > 0)
-                ->hide(),
-            Rule::button('destroy')
-                ->when(fn ($user) => $user->lenses->count() > 0)
-                ->hide(),
-            Rule::button('destroy')
-                ->when(fn ($user) => $user->getObservingLists()->count() > 0)
+                ->when(fn ($user) => ! $this->canBeRemoved($user))
                 ->hide(),
         ];
     }
 
-    public function destroy($id): void
+    /**
+     * A user can only be removed when it is not the first account or the
+     * administrator itself, and has nothing of its own in DeepskyLog.
+     */
+    private function canBeRemoved(User $user): bool
     {
-        $user = User::where('id', '=', $id);
-        $user->delete();
+        if ($user->id == 1 || $user->id == Auth::id()) {
+            return false;
+        }
+
+        foreach (self::OWNED_RELATIONS as $relation) {
+            $attribute = Str::snake($relation) . '_exists';
+            if (! array_key_exists($attribute, $user->getAttributes())) {
+                $user->loadExists($relation);
+            }
+            if ($user->getAttribute($attribute)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    protected function getListeners(): array
+    public function destroy($id): void
+    {
+        $user = User::find($id);
+
+        // The rules only hide the button, so the conditions are checked again
+        if (! $user || ! Auth::user()->can('delete', User::class) || ! $this->canBeRemoved($user)) {
+            return;
+        }
+
+        // Jetstream's action also removes the team memberships, owned teams,
+        // tokens, connected accounts, profile photo and instrument sets
+        app(DeletesUsers::class)->delete($user);
+    }
+
+    public function getListeners(): array
     {
         return array_merge(
             parent::getListeners(),

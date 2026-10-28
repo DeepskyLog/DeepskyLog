@@ -1,7 +1,7 @@
 <!-- Search Dropdown (converted to use reusable menu component) -->
 <div class="hidden lg:ml-1 lg:flex lg:items-center">
     <div class="relative mr-0 text-sm">
-        <x-menu.dropdown :width="48">
+        <x-menu.dropdown :width="72">
             <x-slot name="trigger">
                 <button x-ref="trigger" @click="open = !open" aria-haspopup="true" :aria-expanded="open.toString()" class="inline-flex items-center rounded px-3 py-2 text-sm font-medium text-gray-200 hover:bg-gray-800">
                     {{ __("Search") }}
@@ -11,7 +11,7 @@
             {{-- preserve original items as plain links (icons handled inside original x-dropdown.item) --}}
             <x-menu.item icon="magnifying-glass" href="{{ route('search.advanced') }}">{{ __('Search object') }}</x-menu.item>
 
-            <x-menu.item icon="globe-europe-africa" href="{{ config('app.old_url') }}/index.php?indexAction=quickpick&myLanguages=true&searchObservationsQuickPick">{{ __('Search Observations') }}</x-menu.item>
+            <x-menu.item icon="globe-europe-africa" href="{{ route('search.observations.advanced') }}">{{ __('Search Observations') }}</x-menu.item>
 
         </x-menu.dropdown>
     </div>

@@ -6,6 +6,7 @@ use App\Jobs\BuildSessionCopies;
 use App\Jobs\SendSessionInvitations;
 use App\Models\ObservationSession;
 use App\Models\User;
+use App\Services\SessionObservationLinker;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -46,6 +47,8 @@ class CreateSession extends Component
     public function mount($session = null)
     {
         if ($session) {
+            abort_unless($session->canBeEditedBy(Auth::user()), 403);
+
             $this->session = $session;
             // Decode any stored HTML entities so the edit form shows human-readable characters
             $this->name = ! empty($session->name) ? html_entity_decode($session->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') : $session->name;
@@ -160,8 +163,17 @@ class CreateSession extends Component
             // ignore logging failures
         }
 
+        // The observer is not in the form: a session stays with its observer,
+        // and a new one belongs to whoever creates it.
+        if ($this->session) {
+            abort_unless($this->session->canBeEditedBy(Auth::user()), 403);
+            $this->observer = $this->session->observerid;
+        } else {
+            $this->observer = Auth::user()->username;
+        }
+
         $data = $this->validate([
-            'name' => 'required|min:3',
+            'name' => 'required|min:3|max:200',
             'observer' => 'nullable|exists:users,username',
             'locationid' => 'required|exists:locations,id',
             'begindate' => 'required|date',
@@ -216,6 +228,9 @@ class CreateSession extends Component
         }
 
         if ($this->session) {
+            // Participants before this edit, to find the observers who were added.
+            $previousParticipants = SessionObservationLinker::participants($this->session);
+
             // If we're updating an existing inactive session (draft), activate it
             $activeToSave = $this->session->active == 0 ? 1 : ($this->active ?? $this->session->active);
 
@@ -225,23 +240,13 @@ class CreateSession extends Component
                 'locationid' => $this->locationid,
                 'begindate' => $this->begindate,
                 'enddate' => $this->enddate,
-                'weather' => $this->weather,
-                'equipment' => $this->equipment,
+                'weather' => $this->weather ?? '',
+                'equipment' => $this->equipment ?? '',
                 'comments' => $this->comments,
                 'active' => $activeToSave,
             ]);
 
-            // Bust translation cache so stale cached values (e.g. from when fields were empty)
-            // are not served after the session content is updated.
-            foreach (Cache::get('laravel_locales', ['en', 'nl', 'fr', 'de', 'es']) as $locale) {
-                Cache::forget('session_weather:' . $this->session->id . ':' . $locale);
-                Cache::forget('session_equipment:' . $this->session->id . ':' . $locale);
-                Cache::forget('session_comments:' . $this->session->id . ':' . $locale);
-            }
-            // Always clear 'en' explicitly as a safeguard
-            Cache::forget('session_weather:' . $this->session->id . ':en');
-            Cache::forget('session_equipment:' . $this->session->id . ':en');
-            Cache::forget('session_comments:' . $this->session->id . ':en');
+            // The translation caches are cleared by ObservationSession::saved.
 
             // Keep component state in sync
             $this->session->active = $activeToSave;
@@ -268,10 +273,30 @@ class CreateSession extends Component
                 report($e);
             }
 
+            // The dates or observers may have changed: relink the observations, and
+            // give the added observers a copy of the session and an invitation.
+            try {
+                SessionObservationLinker::syncSession($this->session);
+
+                $participants = SessionObservationLinker::participants($this->session);
+                $added = array_values(array_diff($participants, $previousParticipants));
+                if (! empty($added)) {
+                    BuildSessionCopies::dispatch($this->session->id, $participants, $added);
+
+                    $creator = auth()->user()->username ?? null;
+                    $invitees = array_values(array_filter($added, fn ($u) => $u !== $creator));
+                    if (! empty($invitees)) {
+                        SendSessionInvitations::dispatch($this->session->id, $invitees, $creator ?? ($this->observer ?? 'admin'));
+                    }
+                }
+            } catch (\Throwable $e) {
+                report($e);
+            }
+
             // Handle photo upload for update: store on the public disk and persist path to DB
             try {
                 if ($this->photo) {
-                    $ext = $this->photo->getClientOriginalExtension() ?: 'jpg';
+                    $ext = $this->photo->extension();
                     $filename = $this->session->id.'.'.$ext;
 
                     // Remove any previous storage-based image path on this session
@@ -312,17 +337,17 @@ class CreateSession extends Component
             'locationid' => $this->locationid,
             'begindate' => $this->begindate,
             'enddate' => $this->enddate,
-            'weather' => $this->weather,
-            'equipment' => $this->equipment,
+            'weather' => $this->weather ?? '',
+            'equipment' => $this->equipment ?? '',
             'comments' => $this->comments,
-            'language' => 'en',
+            'language' => ObservationSession::languageOf(Auth::user()),
             'active' => $this->active,
         ]);
 
         // Persist uploaded photo for the new session (only creator's session gets the image)
         try {
             if ($this->photo) {
-                $ext = $this->photo->getClientOriginalExtension() ?: 'jpg';
+                $ext = $this->photo->extension();
                 $filename = $session->id.'.'.$ext;
                 $path = $this->photo->storePubliclyAs('photos/sessions', $filename, 'public');
                 $session->picture = $path;

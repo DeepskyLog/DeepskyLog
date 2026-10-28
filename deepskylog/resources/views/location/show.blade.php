@@ -9,7 +9,7 @@
 
                     @if (!empty($location->description))
                         <div class="w-full md:w-64 mx-auto mt-4 p-3 border border-gray-700 bg-gray-800 text-gray-100 rounded prose prose-invert">
-                            {!! html_entity_decode($location->description ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') !!}
+                            {!! \App\Support\Html::purify($location->description, true) !!}
                         </div>
                     @endif
 
@@ -146,11 +146,9 @@
                                     $first_observation_date = $location->first_observation_date();
                                     $last_observation_date = $location->last_observation_date();
                                 @endphp
-                                @if (! is_null($first_observation_date[0]))
-                                    <a
-                                        href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $first_observation_date[1] }}"
-                                    >
-                                        {{$first_observation_date[0] }}
+                                @if (! is_null($first_observation_date[0]) && $first_observation_date[1])
+                                    <a href="{{ $first_observation_date[1]->detailUrl() }}">
+                                        {{ $first_observation_date[0] }}
                                     </a>
                                 @else
                                     {{ __("No observations added!") }}
@@ -161,10 +159,8 @@
                         <tr>
                             <td>{{ __("Last observation") }}</td>
                             <td>
-                                @if (! is_null($last_observation_date[0]))
-                                    <a
-                                        href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $last_observation_date[1] }}"
-                                    >
+                                @if (! is_null($last_observation_date[0]) && $last_observation_date[1])
+                                    <a href="{{ $last_observation_date[1]->detailUrl() }}">
                                         {{ $last_observation_date[0] }}
                                     </a>
                                 @else
@@ -183,14 +179,25 @@
                             @endif
                         @endauth
 
-                        <tr>
-                            <td>{{ __('Weather Prospects') }}</td>
-                            <td>
-                                <a href="https://clearoutside.com/forecast/{{ round($location->latitude, 2) }}/{{ round($location->longitude, 2) }}">
-                                    <img alt="Weather forecast" src="https://clearoutside.com/forecast_image_small/{{ round($location->latitude, 2) }}/{{ round($location->longitude, 2) }}/forecast.png" />
-                                </a>
-                            </td>
-                        </tr>
+                        @if (!$location->hidden || $isOwner || $isAdmin)
+                            <tr>
+                                <td>{{ __('Weather Prospects') }}</td>
+                                <td>
+                                    {{-- The cloud forecast of the coming nights; ClearOutside until Open-Meteo answered --}}
+                                    @if (!empty($nightForecast))
+                                        <x-night-forecast-nights
+                                            :nights="$nightForecast"
+                                            :list-links="auth()->check() && auth()->user()->stdlocation == $location->id"
+                                            class="py-2"
+                                        />
+                                    @else
+                                        <a href="https://clearoutside.com/forecast/{{ round($location->latitude, 2) }}/{{ round($location->longitude, 2) }}">
+                                            <img alt="Weather forecast" src="https://clearoutside.com/forecast_image_small/{{ round($location->latitude, 2) }}/{{ round($location->longitude, 2) }}/forecast.png" />
+                                        </a>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endif
                     </table>
 
                     @auth
@@ -207,8 +214,47 @@
 
                 </div>
             </div>
+
+            @if ($skyQualityChart)
+                {{-- The SQM and NELM of the observations at this location over the years --}}
+                <div class="mt-6">
+                    <h4 class="font-bold text-xl">{{ __('Sky quality history') }}</h4>
+                    <p class="text-sm text-gray-400 mt-1">
+                        {{ __('The SQM and naked-eye limiting magnitude recorded with the observations at this location: a point per night, the line the median of each year.') }}
+                        {{ trans_choice(':count night with a value|:count nights with a value', count($skyHistory->nights), ['count' => count($skyHistory->nights)]) }}
+                    </p>
+                    <div class="mt-2 rounded bg-gray-800 p-2">
+                        {!! $skyQualityChart->container() !!}
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
+    @if ($skyQualityChart)
+        @push('scripts')
+            <script src="{{ $skyQualityChart->cdn() }}"></script>
+            <script>
+                (function () {
+                    // Both quantities share one scale of sky brightness (SkyQualityHistoryChart): the NELM axis
+                    // labels its heights with the NELM of that SQM (Magnitude::sqmToNelm(), with the owner's fstOffset), the tooltip each point's own value
+                    const options = {!! $skyQualityChart->toJsonEncodedString() !!};
+                    const nelmOfSqm = (sqm) => 7.93 - 5 * Math.log10(1 + Math.pow(10, 4.316 - sqm / 5));
+                    options.yaxis.forEach((axis) => {
+                        axis.labels = {
+                            formatter: (value) => (axis.nelmLabels ? nelmOfSqm(value) - axis.nelmOffset : value).toFixed(axis.nelmLabels ? 1 : 2),
+                        };
+                    });
+                    options.tooltip.y = {
+                        formatter: (value, { seriesIndex, dataPointIndex, w }) => {
+                            const point = w.config.series[seriesIndex].data[dataPointIndex];
+                            return point && point.value !== undefined ? String(point.value) : value;
+                        },
+                    };
+                    new ApexCharts(document.querySelector('#{{ $skyQualityChart->id }}'), options).render();
+                })();
+            </script>
+        @endpush
+    @endif
     @push('scripts')
         @if (!$location->hidden || $isOwner || $isAdmin)
             <script>

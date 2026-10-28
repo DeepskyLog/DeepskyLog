@@ -2,10 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Support\SchemaColumns;
 use App\Models\SavedObjectSearch;
+use App\Services\ObservationComparison;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 
 class AdvancedObjectSearch extends Component
@@ -42,6 +43,10 @@ class AdvancedObjectSearch extends Component
     // ── Surface brightness ────────────────────────────────────────────────
     public string $subrMin = '';
     public string $subrMax = '';
+
+    // ── Also show objects with an unknown magnitude / surface brightness ──
+    public bool $magUnknown = false;
+    public bool $subrUnknown = false;
 
     // ── Diameter 1 (arcmin) ───────────────────────────────────────────────
     public string $diam1Min = '';
@@ -92,6 +97,29 @@ class AdvancedObjectSearch extends Component
         'not_in' => 'Not in selected observing list(s)',
     ];
 
+    // ── Compare my observations (see ObservationComparison) ───────────────
+    public string $compareBy = ObservationComparison::BY_INSTRUMENT;
+    public string $compareSeen = '';
+    public string $compareNotSeen = '';
+    public string $compareSqm = '';
+    public string $compareSkyDirection = ObservationComparison::SKY_POOR_NOT_DARK;
+    public array $compareByOptions = [
+        ObservationComparison::BY_INSTRUMENT => 'Instrument',
+        ObservationComparison::BY_LOCATION => 'Location',
+        ObservationComparison::BY_SKY => 'Sky quality (SQM)',
+    ];
+    public array $compareSkyDirectionOptions = [
+        ObservationComparison::SKY_POOR_NOT_DARK => 'Seen under a brighter sky, not yet under a darker one',
+        ObservationComparison::SKY_DARK_NOT_POOR => 'Seen under a darker sky, not yet under a brighter one',
+    ];
+
+    // ── Double stars my standard telescope splits (DoubleStarResolvability) ──
+    public string $doubleStars = 'split';
+    public array $doubleStarsOptions = [
+        'split' => 'Double stars my standard telescope splits',
+        'not_split' => 'Double stars my standard telescope does not split yet',
+    ];
+
     // ── Saved searches ────────────────────────────────────────────────────
     public string $saveName = '';
     public array $nameSearchCatalogs = [];
@@ -122,6 +150,8 @@ class AdvancedObjectSearch extends Component
     public array $allCatalogs = [];
     public array $allAtlases = [];
     public array $allObservingLists = [];
+    public array $myInstruments = [];
+    public array $myLocations = [];
 
     public function mount(array $filters = []): void
     {
@@ -151,7 +181,7 @@ class AdvancedObjectSearch extends Component
             ->orderBy('name')
             ->get(['code', 'name']);
         $this->allAtlases = $atlasOptions
-            ->filter(fn($a) => preg_match('/^[A-Za-z0-9_]+$/', (string) $a->code) && Schema::hasColumn('objects', (string) $a->code))
+            ->filter(fn($a) => preg_match('/^[A-Za-z0-9_]+$/', (string) $a->code) && SchemaColumns::has('objects', (string) $a->code))
             ->mapWithKeys(fn($a) => [(string) $a->code => (string) $a->name])
             ->toArray();
 
@@ -215,10 +245,20 @@ class AdvancedObjectSearch extends Component
                 })
                 ->toArray();
 
-            // Combine all lists (owned + subscribed + public)
-            $this->allObservingLists = array_merge($ownedLists, $subscribedLists, $publicLists);
+            // Combine all lists (owned + subscribed + public); + keeps the list ids
+            // as keys, array_merge() would renumber them
+            $this->allObservingLists = $ownedLists + $subscribedLists + $publicLists;
         } catch (\Throwable $_) {
             $this->allObservingLists = [];
+        }
+
+        // The observer's own instruments and locations, for comparing their observations
+        if ($userId = Auth::id()) {
+            $decode = fn ($rows) => $rows
+                ->map(fn ($name) => html_entity_decode((string) $name, ENT_QUOTES | ENT_HTML5, 'UTF-8'))
+                ->toArray();
+            $this->myInstruments = $decode(DB::table('instruments')->where('user_id', $userId)->orderBy('name')->pluck('name', 'id'));
+            $this->myLocations = $decode(DB::table('locations')->where('user_id', $userId)->orderBy('name')->pluck('name', 'id'));
         }
 
         try {
@@ -247,6 +287,8 @@ class AdvancedObjectSearch extends Component
         $this->magMax = (string) ($filters['mag_max'] ?? '');
         $this->subrMin = (string) ($filters['subr_min'] ?? '');
         $this->subrMax = (string) ($filters['subr_max'] ?? '');
+        $this->magUnknown = (bool) ($filters['mag_unknown'] ?? false);
+        $this->subrUnknown = (bool) ($filters['subr_unknown'] ?? false);
         $this->diam1Min = (string) ($filters['diam1_min'] ?? '');
         $this->diam1Max = (string) ($filters['diam1_max'] ?? '');
         $this->diam2Min = (string) ($filters['diam2_min'] ?? '');
@@ -285,6 +327,19 @@ class AdvancedObjectSearch extends Component
         $this->atlasPageSpec = (string) ($filters['atlas_page_spec'] ?? '');
         $this->atlasPageMin = (string) ($filters['atlas_page_min'] ?? '');
         $this->atlasPageMax = (string) ($filters['atlas_page_max'] ?? '');
+
+        $compareBy = (string) ($filters['compare_by'] ?? '');
+        $this->compareBy = in_array($compareBy, ObservationComparison::BY, true) ? $compareBy : ObservationComparison::BY_INSTRUMENT;
+        $this->compareSeen = (string) ($filters['compare_seen'] ?? '');
+        $this->compareNotSeen = (string) ($filters['compare_not_seen'] ?? '');
+        $this->compareSqm = (string) ($filters['compare_sqm'] ?? '');
+        $direction = (string) ($filters['compare_sky_direction'] ?? '');
+        $this->compareSkyDirection = in_array($direction, ObservationComparison::SKY_DIRECTIONS, true)
+            ? $direction
+            : ObservationComparison::SKY_POOR_NOT_DARK;
+
+        $doubleStars = (string) ($filters['double_stars'] ?? '');
+        $this->doubleStars = array_key_exists($doubleStars, $this->doubleStarsOptions) ? $doubleStars : 'split';
 
         if (empty($active)) {
             if (!empty($this->constellations))
@@ -325,6 +380,10 @@ class AdvancedObjectSearch extends Component
                 $active[] = 'descriptionText';
             if ($this->atlasCode !== '' || $this->atlasPageSpec !== '' || $this->atlasPageMin !== '' || $this->atlasPageMax !== '')
                 $active[] = 'atlasPage';
+            if ($compareBy !== '')
+                $active[] = 'compareObservations';
+            if ($doubleStars !== '')
+                $active[] = 'doubleStars';
         }
 
         $this->activeFilters = array_values(array_intersect($this->validFilterTypes(), array_unique($active)));
@@ -360,8 +419,8 @@ class AdvancedObjectSearch extends Component
             'objectCategories' => $this->objectCategories = [],
             'catalogsInclude' => $this->catalogsInclude = [],
             'catalogsExclude' => $this->catalogsExclude = [],
-            'magnitude' => [$this->magMin, $this->magMax] = ['', ''],
-            'surfaceBrightness' => [$this->subrMin, $this->subrMax] = ['', ''],
+            'magnitude' => [$this->magMin, $this->magMax, $this->magUnknown] = ['', '', false],
+            'surfaceBrightness' => [$this->subrMin, $this->subrMax, $this->subrUnknown] = ['', '', false],
             'diam1' => [$this->diam1Min, $this->diam1Max] = ['', ''],
             'diam2' => [$this->diam2Min, $this->diam2Max] = ['', ''],
             'ratio' => [$this->ratioMin, $this->ratioMax] = ['', ''],
@@ -374,13 +433,16 @@ class AdvancedObjectSearch extends Component
             'nameText' => $this->nameText = '',
             'descriptionText' => [$this->descriptionText, $this->descriptionMode] = ['', 'and'],
             'atlasPage' => [$this->atlasCode, $this->atlasPageSpec, $this->atlasPageMin, $this->atlasPageMax] = ['', '', '', ''],
+            'compareObservations' => [$this->compareBy, $this->compareSeen, $this->compareNotSeen, $this->compareSqm, $this->compareSkyDirection]
+                = [ObservationComparison::BY_INSTRUMENT, '', '', '', ObservationComparison::SKY_POOR_NOT_DARK],
+            'doubleStars' => $this->doubleStars = 'split',
             default => null,
         };
     }
 
     private function validFilterTypes(): array
     {
-        return [
+        $types = [
             'constellations',
             'objectTypes',
             'objectCategories',
@@ -401,6 +463,14 @@ class AdvancedObjectSearch extends Component
             'descriptionText',
             'atlasPage',
         ];
+        // Comparing observations needs the observer's own observations
+        if (Auth::check()) {
+            $types[] = 'compareObservations';
+            // Needs the observer's standard telescope
+            $types[] = 'doubleStars';
+        }
+
+        return $types;
     }
 
     private function filterTypeLabels(): array
@@ -425,6 +495,8 @@ class AdvancedObjectSearch extends Component
             'nameText' => __('Name contains text'),
             'descriptionText' => __('Description contains text'),
             'atlasPage' => __('Atlas page'),
+            'compareObservations' => __('Seen with one instrument or location, not yet with another'),
+            'doubleStars' => __('Double stars my telescope splits'),
         ];
     }
 
@@ -444,6 +516,11 @@ class AdvancedObjectSearch extends Component
     public function search(): void
     {
         $this->errorMessage = '';
+
+        if (in_array('compareObservations', $this->activeFilters, true) && ($error = $this->compareError()) !== null) {
+            $this->errorMessage = $error;
+            return;
+        }
 
         $params = $this->buildParams();
 
@@ -479,12 +556,16 @@ class AdvancedObjectSearch extends Component
                 $params['mag_min'] = $this->magMin;
             if ($this->magMax !== '')
                 $params['mag_max'] = $this->magMax;
+            if ($this->magUnknown)
+                $params['mag_unknown'] = 1;
         }
         if (in_array('surfaceBrightness', $this->activeFilters)) {
             if ($this->subrMin !== '')
                 $params['subr_min'] = $this->subrMin;
             if ($this->subrMax !== '')
                 $params['subr_max'] = $this->subrMax;
+            if ($this->subrUnknown)
+                $params['subr_unknown'] = 1;
         }
         if (in_array('diam1', $this->activeFilters)) {
             if ($this->diam1Min !== '')
@@ -560,7 +641,75 @@ class AdvancedObjectSearch extends Component
                 $params['atlas_page_max'] = $this->atlasPageMax;
         }
 
+        if (in_array('compareObservations', $this->activeFilters)) {
+            $params = array_merge($params, $this->compareParams());
+        }
+        if (in_array('doubleStars', $this->activeFilters) && array_key_exists($this->doubleStars, $this->doubleStarsOptions)) {
+            $params['double_stars'] = $this->doubleStars;
+        }
+
         return $params;
+    }
+
+    /**
+     * The query parameters of the "compare my observations" filter, empty
+     * while it is incomplete.
+     */
+    private function compareParams(): array
+    {
+        if ($this->compareBy === ObservationComparison::BY_SKY) {
+            if ($this->compareSqm === '') {
+                return [];
+            }
+
+            return [
+                'compare_by' => $this->compareBy,
+                'compare_sqm' => $this->compareSqm,
+                'compare_sky_direction' => $this->compareSkyDirection,
+            ];
+        }
+        if (!in_array($this->compareBy, ObservationComparison::BY, true) || $this->compareSeen === '' || $this->compareNotSeen === '') {
+            return [];
+        }
+
+        return [
+            'compare_by' => $this->compareBy,
+            'compare_seen' => $this->compareSeen,
+            'compare_not_seen' => $this->compareNotSeen,
+        ];
+    }
+
+    /**
+     * Why the "compare my observations" filter can't be searched on, or null.
+     */
+    private function compareError(): ?string
+    {
+        if ($this->compareBy === ObservationComparison::BY_SKY) {
+            $sqm = $this->compareSqm;
+            if (!is_numeric($sqm) || (float) $sqm < ObservationComparison::MIN_SQM || (float) $sqm > ObservationComparison::MAX_SQM) {
+                return __('Enter an SQM between :min and :max.', ['min' => 10, 'max' => 22]);
+            }
+
+            return null;
+        }
+        if ($this->compareSeen === '' || $this->compareNotSeen === '') {
+            return __('Choose both what you saw the objects with and what you did not see them with yet.');
+        }
+        if ($this->compareSeen === $this->compareNotSeen) {
+            return __('Choose two different ones to compare.');
+        }
+
+        return null;
+    }
+
+    /**
+     * Switching between instruments and locations empties the choices, as
+     * their ids mean something else.
+     */
+    public function updatedCompareBy(): void
+    {
+        $this->compareSeen = '';
+        $this->compareNotSeen = '';
     }
 
     // ── Saved searches ────────────────────────────────────────────────────

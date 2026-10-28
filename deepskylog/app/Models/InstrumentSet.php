@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Casts\PurifiedHtml;
+use App\Models\Traits\OwnedByUser;
 use App\Traits\ClearsResponseCache;
-use Cviebrock\EloquentSluggable\Sluggable;
+use App\Traits\HasUniqueSlugPerUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,20 +15,42 @@ class InstrumentSet extends Model
 {
     use ClearsResponseCache;
     use HasFactory;
-    use Sluggable;
+    use HasUniqueSlugPerUser;
+    use OwnedByUser;
 
     protected $fillable = [
         'user_id', 'name', 'description', 'active', 'picture',
     ];
 
+    protected $casts = [
+        'description' => PurifiedHtml::class,
+    ];
+
     protected $with = [];
+
+    /**
+     * Detach the pivot rows (their foreign keys have no cascade) and clear the
+     * default of the users that have this set as their standard set.
+     */
+    protected static function booted()
+    {
+        static::deleting(function (self $set) {
+            $set->instruments()->detach();
+            $set->locations()->detach();
+            $set->eyepieces()->detach();
+            $set->filters()->detach();
+            $set->lenses()->detach();
+
+            User::where('stdinstrumentset', $set->id)->update(['stdinstrumentset' => null]);
+        });
+    }
 
     public function sluggable(): array
     {
         return [
             'slug' => [
                 'source' => 'name',
-                'unique' => false,
+                'unique' => true,
             ],
         ];
     }

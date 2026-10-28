@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\PurifiedHtml;
+use App\Traits\ClearsResponseCache;
 use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -11,11 +13,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use App\Models\Observation;
+use App\Jobs\ComputeObserverStats;
 use App\Jobs\EnqueueComputeCRForUser;
+use App\Services\ObserverCountries;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -27,6 +37,7 @@ use LevelUp\Experience\Concerns\HasAchievements;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
+    use ClearsResponseCache;
     use GiveExperience;
     use HasAchievements;
     use HasApiTokens;
@@ -66,6 +77,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',
+        'follow_feed_token',
     ];
 
     /**
@@ -75,6 +87,16 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'inactivity_deletion_at' => 'datetime',
+        'inactivity_final_warning_at' => 'datetime',
+        'follow_digest' => 'boolean',
+        'follow_digest_sent_at' => 'datetime',
+        'clear_night_alert' => 'boolean',
+        'clear_night_alert_night' => 'date',
+        'session_reminder' => 'boolean',
+        'year_review' => 'boolean',
+        'year_review_sent_year' => 'integer',
+        'about' => PurifiedHtml::class,
     ];
 
     /**
@@ -86,7 +108,53 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
-    protected $with = ['locations', 'instruments', 'eyepieces', 'filters', 'lenses'];
+    /**
+     * Login and session state, and settings that are only read for the
+     * logged-in user themself, never appear on a cached page (those are only
+     * served to guests), so changing them does not clear the response cache.
+     */
+    protected function responseCacheIgnoredAttributes(): array
+    {
+        return [
+            'password',
+            'remember_token',
+            'two_factor_secret',
+            'two_factor_recovery_codes',
+            'two_factor_confirmed_at',
+            'email_verified_at',
+            'current_team_id',
+            'current_connected_account_id',
+            'active_observing_list_id',
+            'stdeyepiece',
+            'stdinstrumentset',
+            'observationlanguage',
+            'standardAtlasCode',
+            'fstOffset',
+            'overviewdsos',
+            'lookupdsos',
+            'detaildsos',
+            'overviewstars',
+            'lookupstars',
+            'detailstars',
+            'atlaspagefont',
+            'photosize1',
+            'photosize2',
+            'overviewFoV',
+            'lookupFoV',
+            'detailFoV',
+            'sendMail',
+            'follow_digest',
+            'follow_digest_sent_at',
+            'follow_feed_token',
+            'clear_night_alert',
+            'clear_night_alert_night',
+            'session_reminder',
+            'year_review',
+            'year_review_sent_year',
+            'showInches',
+            'version',
+        ];
+    }
 
     /**
      * Return the sluggable configuration array for this model.
@@ -115,13 +183,58 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Overrides the methods from HasTeams.Switch the user's context to the given team.
+     * Overrides the method from HasProfilePhoto. Livewire returns the path of an upload
+     * even when the disk could not write the file ('throw' => false), so the path is only
+     * saved, and the previous photo deleted, once the file is really there.
+     *
+     * @param  UploadedFile  $photo  The uploaded photo
+     * @param  string  $storagePath  The directory on the profile photo disk
+     *
+     * @throws ValidationException When the photo could not be stored
+     */
+    public function updateProfilePhoto(UploadedFile $photo, $storagePath = 'profile-photos'): void
+    {
+        $disk = Storage::disk($this->profilePhotoDisk());
+        $path = $photo->storePublicly($storagePath, ['disk' => $this->profilePhotoDisk()]);
+
+        if (! $path || ! $disk->exists($path)) {
+            Log::error('Profile photo could not be stored', ['user' => $this->id, 'path' => $path]);
+
+            throw ValidationException::withMessages([
+                'photo' => __('The photo could not be saved. Please try again later.'),
+            ])->errorBag('updateProfileInformation');
+        }
+
+        $previous = $this->profile_photo_path;
+
+        $this->forceFill(['profile_photo_path' => $path])->save();
+
+        if ($previous && ! filter_var($previous, FILTER_VALIDATE_URL)) {
+            $disk->delete($previous);
+        }
+    }
+
+    /**
+     * Overrides the methods from HasTeams. Switch the user's context to the given team.
      *
      * @param  mixed  $team  The team to switch to
-     * @return bool True if the team was switched
+     * @return bool True if the team was switched, false if the user is not a member of it
      */
     public function switchTeam($team): bool
     {
+        // currentTeam() calls switchTeam(personalTeam()), which is null here.
+        if (is_null($team)) {
+            return false;
+        }
+
+        // The team decides the user's rights (Administrators, Database Experts),
+        // so only a team the user is a member of may become the active team.
+        // Asks the database rather than the teams relation, which may have been
+        // loaded before the user was attached to the team.
+        if (! $this->ownsTeam($team) && ! $this->teams()->whereKey($team->id)->exists()) {
+            return false;
+        }
+
         $this->forceFill([
             'current_team_id' => $team->id,
         ])->save();
@@ -132,13 +245,27 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Checks whether the user's active team is the team with the given id.
+     *
+     * Compares the id, not the name: team names can be changed by their owner,
+     * so a team renamed to "Administrators" must not grant any role.
+     *
+     * @param  int  $teamId  One of the Team::OBSERVERS/ADMINISTRATORS/DATABASE_EXPERTS ids
+     * @return bool True if the user's active team is that team
+     */
+    protected function currentTeamIs(int $teamId): bool
+    {
+        return $this->current_team_id !== null && (int) $this->current_team_id === $teamId;
+    }
+
+    /**
      * Checks if the user's active team is the administrators team
      *
      * @return bool True if the user's active team is the administrators team
      */
     public function isAdministrator(): bool
     {
-        return $this->isCurrentTeam(Team::where('name', 'Administrators')->firstOrFail());
+        return $this->currentTeamIs(Team::ADMINISTRATORS);
     }
 
     /**
@@ -148,11 +275,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasAdministratorPrivileges(): bool
     {
-        if ($this->teams()->where('name', 'Administrators')->count() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        // Uses the teams relation, which is loaded once, instead of counting in
+        // the database on every call.
+        return $this->teams->contains('id', Team::ADMINISTRATORS);
     }
 
     /**
@@ -162,7 +287,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isDatabaseExpert(): bool
     {
-        return $this->isCurrentTeam(Team::where('name', 'Database Experts')->firstOrFail());
+        return $this->currentTeamIs(Team::DATABASE_EXPERTS);
     }
 
     /**
@@ -172,7 +297,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isObserver(): bool
     {
-        return $this->isCurrentTeam(Team::where('name', 'Observers')->firstOrFail());
+        return $this->currentTeamIs(Team::OBSERVERS);
     }
 
     /**
@@ -195,7 +320,9 @@ class User extends Authenticatable implements MustVerifyEmail
         } elseif (strcmp($text, 'Attribution-NonCommercial-NoDerivs CC BY-NC-ND') === 0) {
             $copyright = '<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.';
         } else {
-            $copyright = $text;
+            // Free text of the observer: printed as HTML by the views, so escape it
+            // (old rows hold entities such as &copy;, hence the decode first).
+            $copyright = e(html_entity_decode((string) $text, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
         }
 
         return $copyright;
@@ -223,22 +350,19 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $language = app()->getLocale();
 
-        $firstDeepskyObservation = ObservationsOld::where('observerid', $this->username)->min('date');
-        $firstCometObservation = CometObservationsOld::where('observerid', $this->username)->min('date');
+        $first = Observation::where('observer_user_id', $this->id)->min('observed_on');
 
-        $firstObservation = min($firstDeepskyObservation, $firstCometObservation);
-
-        if ($firstObservation == null) {
+        if ($first === null) {
             return [null, null];
         }
-        $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
-        if ($firstObservation == $firstDeepskyObservation) {
-            $id = ObservationsOld::where('observerid', $this->username)->where('date', $firstObservation)->first()['id'];
-        } else {
-            $id = -CometObservationsOld::where('observerid', $this->username)->where('date', $firstObservation)->first()['id'];
-        }
 
-        return [$date, $id];
+        $date = Carbon::parse($first)->locale($language)->isoFormat('LL');
+        $row = Observation::where('observer_user_id', $this->id)
+            ->where('observed_on', $first)
+            ->orderBy('id')
+            ->first();
+
+        return [$date, $row];
     }
 
     /**
@@ -250,22 +374,19 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $language = app()->getLocale();
 
-        $lastDeepskyObservation = ObservationsOld::where('observerid', $this->username)->max('date');
-        $lastCometObservation = CometObservationsOld::where('observerid', $this->username)->min('date');
+        $last = Observation::where('observer_user_id', $this->id)->max('observed_on');
 
-        $lastObservation = max($lastDeepskyObservation, $lastCometObservation);
-
-        if ($lastObservation == null) {
+        if ($last === null) {
             return [null, null];
         }
-        $date = Carbon::createFromFormat('Ymd', $lastObservation)->locale($language)->isoFormat('LL');
-        if ($lastObservation == $lastDeepskyObservation) {
-            $id = ObservationsOld::where('observerid', $this->username)->where('date', $lastObservation)->first()['id'];
-        } else {
-            $id = -CometObservationsOld::where('observerid', $this->username)->where('date', $lastObservation)->first()['id'];
-        }
 
-        return [$date, $id];
+        $date = Carbon::parse($last)->locale($language)->isoFormat('LL');
+        $row = Observation::where('observer_user_id', $this->id)
+            ->where('observed_on', $last)
+            ->orderByDesc('id')
+            ->first();
+
+        return [$date, $row];
     }
 
     /**
@@ -276,10 +397,14 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getObservedCountFromCatalog(string $catalog): int
     {
-        return DB::connection('mysqlOld')->table('objectnames')
-            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
-            ->where('observations.observerid', $this->username)
-            ->where('observations.visibility', '!=', 7)
+        return DB::table('objectnames')
+            ->join('observations', 'objectnames.objectname', '=', 'observations.target_name')
+            ->leftJoin('deepsky_observation_details', 'observations.id', '=', 'deepsky_observation_details.observation_id')
+            ->where(function ($sub) {
+                $sub->whereNull('deepsky_observation_details.visibility')
+                    ->orWhere('deepsky_observation_details.visibility', '!=', 7);
+            })
+            ->where('observations.observer_username', $this->username)
             ->where('objectnames.catalog', $catalog)
             ->addSelect('objectnames.catindex')->distinct()->get()->count();
     }
@@ -292,21 +417,25 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDrawingCountFromCatalog(string $catalog): int
     {
-        return DB::connection('mysqlOld')->table('objectnames')
-            ->join('observations', 'objectnames.objectname', '=', 'observations.objectname')
-            ->where('observations.observerid', $this->username)
-            ->where('observations.visibility', '!=', 7)
+        return DB::table('objectnames')
+            ->join('observations', 'objectnames.objectname', '=', 'observations.target_name')
+            ->leftJoin('deepsky_observation_details', 'observations.id', '=', 'deepsky_observation_details.observation_id')
+            ->where(function ($sub) {
+                $sub->whereNull('deepsky_observation_details.visibility')
+                    ->orWhere('deepsky_observation_details.visibility', '!=', 7);
+            })
+            ->where('observations.observer_username', $this->username)
             ->where('objectnames.catalog', $catalog)
-            ->where('observations.hasDrawing', 1)
+            ->where('observations.has_drawing', 1)
             ->addSelect('objectnames.catindex')->distinct()->get()->count();
     }
 
     /**
      * Retrieves the count of open cluster observations for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
-     * name matches the observation object name, is of type "OPNCL" or "CLANB",
+     * name matches the observation object name, is of type "OPNCL",
      * and belongs to the current user. The count of these distinct object names is
      * returned as the total number of open cluster observations for the current user.
      *
@@ -314,24 +443,20 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getOpenClusterObservations(): int
     {
-        $total = count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname
-                                and objects.type = "OPNCL" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name
+                                                                and objects.type = ? and observations.observer_username = ?';
 
-        return $total + count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname
-                                and objects.type = "CLANB" and observations.observerid = "' . $this->username . '"'));
+        return count(DB::select($query, ['OPNCL', $this->username]));
     }
 
     /**
      * Retrieves the count of open cluster drawings for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
-     * name matches the observation object name, has a drawing, is of type "OPNCL" or
-     * "CLANB", and belongs to the current user. The count of these distinct object
+     * name matches the observation object name, has a drawing, is of type "OPNCL",
+     * and belongs to the current user. The count of these distinct object
      * names is returned as the total number of open cluster drawings for the current
      * user.
      *
@@ -339,21 +464,17 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getOpenClusterDrawings(): int
     {
-        $total = count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname and hasDrawing = 1
-                                and objects.type = "OPNCL" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name and observations.has_drawing = 1
+                                                                and objects.type = ? and observations.observer_username = ?';
 
-        return $total + count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname and hasDrawing = 1
-                                and objects.type = "CLANB" and observations.observerid = "' . $this->username . '"'));
+        return count(DB::select($query, ['OPNCL', $this->username]));
     }
 
     /**
      * Retrieves the count of globular cluster observations for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, is of type "GLOCL", and belongs to the
      * current user. The count of these distinct object names is returned as the total
@@ -363,16 +484,16 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getGlobularClusterObservations(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname
-                                and objects.type = "GLOCL" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name
+                                                                and objects.type = ? and observations.observer_username = ?';
+        return count(DB::select($query, ['GLOCL', $this->username]));
     }
 
     /**
      * Retrieves the count of globular cluster drawings for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, has a drawing, is of type "GLOCL",
      * and belongs to the current user. The count of these distinct object names is
@@ -382,16 +503,16 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getGlobularClusterDrawings(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname and hasDrawing = 1
-                                and objects.type = "GLOCL" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name and observations.has_drawing = 1
+                                                                and objects.type = ? and observations.observer_username = ?';
+        return count(DB::select($query, ['GLOCL', $this->username]));
     }
 
     /**
      * Retrieves the count of planetary nebula observations for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, is of type "PLNNB", and belongs to
      * the current user. The count of these distinct object names is returned as the
@@ -401,16 +522,16 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getPlanetaryNebulaObservations(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname
-                                and objects.type = "PLNNB" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name
+                                                                and objects.type = ? and observations.observer_username = ?';
+        return count(DB::select($query, ['PLNNB', $this->username]));
     }
 
     /**
      * Retrieves the count of planetary nebula drawings for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, has a drawing, is of type "PLNNB",
      * and belongs to the current user. The count of these distinct object names is
@@ -420,16 +541,16 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getPlanetaryNebulaDrawings(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname and hasDrawing = 1
-                                and objects.type = "PLNNB" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name and observations.has_drawing = 1
+                                                                and objects.type = ? and observations.observer_username = ?';
+        return count(DB::select($query, ['PLNNB', $this->username]));
     }
 
     /**
      * Retrieves the count of galaxy observations for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, is of type "GALXY", and belongs to
      * the current user. The count of these distinct object names is returned as
@@ -439,16 +560,16 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getGalaxyObservations(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname
-                                and objects.type = "GALXY" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name
+                                                                and objects.type = ? and observations.observer_username = ?';
+        return count(DB::select($query, ['GALXY', $this->username]));
     }
 
     /**
      * Retrieves the count of galaxy drawings for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, has a drawing, is of type "GALXY",
      * and belongs to the current user. The count of these distinct object names is
@@ -458,20 +579,19 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getGalaxyDrawings(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname and hasDrawing = 1
-                                and objects.type = "GALXY" and observations.observerid = "' . $this->username . '"'));
+        $query = 'select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name and observations.has_drawing = 1
+                                                                and objects.type = ? and observations.observer_username = ?';
+        return count(DB::select($query, ['GALXY', $this->username]));
     }
 
     /**
      * Retrieves the count of nebula observations for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name and belongs to one of the following
-     * object types: "EMINB", "ENRNN", "ENSTR", "REFNB", "RNHII", "HII", "SNREM",
-     * or "WRNEB". The count of these distinct object names is returned as the total
+     * object types: "EMINB", "REFNB", "HII", "SNREM" or "WRNEB". The count of these distinct object names is returned as the total
      * number of nebula observations for the current user.
      *
      * @return int The total number of nebula observations for the current user.
@@ -480,10 +600,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $objectTypes = [
             'EMINB',
-            'ENRNN',
-            'ENSTR',
             'REFNB',
-            'RNHII',
             'HII',
             'SNREM',
             'WRNEB',
@@ -493,10 +610,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
         foreach ($objectTypes as $objectType) {
             $query = 'SELECT DISTINCT(objects.name) FROM objects,observations
-                  WHERE objects.name = observations.objectname
+                  WHERE objects.name = observations.target_name
                   AND objects.type = ?
-                  AND observations.observerid = ?';
-            $results = DB::connection('mysqlOld')->select($query, [$objectType, $this->username]);
+                  AND observations.observer_username = ?';
+            $results = DB::select($query, [$objectType, $this->username]);
             $total += count($results);
         }
 
@@ -506,11 +623,10 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Retrieves the count of nebula drawings for the current user.
      *
-     * This function queries the 'mysqlOld' database connection and selects distinct
+     * This function selects distinct
      * object names from the 'objects' and 'observations' tables where the object
      * name matches the observation object name, has a drawing, and belongs to one of
-     * the following object types: "EMINB", "ENRNN", "ENSTR", "REFNB", "RNHII",
-     * "HII", or "SNREM". The count of these distinct object names is returned as
+     * the following object types: "EMINB", "REFNB", "HII", "SNREM" or "WRNEB". The count of these distinct object names is returned as
      * the total count of nebula drawings for the current user.
      *
      * @return int The count of nebula drawings for the current user.
@@ -519,10 +635,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $objectTypes = [
             'EMINB',
-            'ENRNN',
-            'ENSTR',
             'REFNB',
-            'RNHII',
             'HII',
             'SNREM',
             'WRNEB',
@@ -532,11 +645,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
         foreach ($objectTypes as $objectType) {
             $query = 'SELECT DISTINCT(objects.name) FROM objects,observations
-                  WHERE objects.name = observations.objectname
+                  WHERE objects.name = observations.target_name
                   AND objects.type = ?
-                  AND observations.observerid = ?
-                  AND hasDrawing = 1';
-            $results = DB::connection('mysqlOld')->select($query, [$objectType, $this->username]);
+                  AND observations.observer_username = ?
+                  AND observations.has_drawing = 1';
+            $results = DB::select($query, [$objectType, $this->username]);
             $total += count($results);
         }
 
@@ -550,10 +663,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getUniqueObjectsObservations(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname
-                                and observations.observerid = "' . $this->username . '"'));
+        return count(DB::select('select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name
+                                                                and observations.observer_username = "' . $this->username . '"'));
     }
 
     /**
@@ -563,10 +675,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getUniqueObjectsDrawings(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objects.name) from objects,observations
-                              where objects.name = observations.objectname and hasDrawing = 1
-                                and observations.observerid = "' . $this->username . '"'));
+        return count(DB::select('select DISTINCT(objects.name) from objects,observations
+                                                            where objects.name = observations.target_name and observations.has_drawing = 1
+                                                                and observations.observer_username = "' . $this->username . '"'));
     }
 
     /**
@@ -576,9 +687,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getCometObservations(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select * from cometobservations
-                              where observerid = "' . $this->username . '"'));
+        return Observation::where('target_type', 'comet')
+            ->where('observer_username', $this->username)
+            ->count();
     }
 
     /**
@@ -588,9 +699,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getCometDrawings(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select * from cometobservations where hasDrawing = 1
-                              and observerid = "' . $this->username . '"'));
+        return Observation::where('target_type', 'comet')
+            ->where('observer_username', $this->username)
+            ->where('has_drawing', 1)
+            ->count();
     }
 
     /**
@@ -600,50 +712,39 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getUniqueCometObservations(): int
     {
-        return count(DB::connection('mysqlOld')
-            ->select('select DISTINCT(objectid) from cometobservations
-                              where observerid = "' . $this->username . '"'));
+        return Observation::where('target_type', 'comet')
+            ->where('observer_username', $this->username)
+            ->whereNotNull('target_key')
+            ->distinct()
+            ->count('target_key');
     }
 
     /**
      * Retrieves the total number of drawings for the current user.
      *
-     * This function queries the 'observations' table in the 'mysqlOld' database
-     * to count the number of rows where the 'observerid' column matches the
-     * current user's username and the 'hasDrawing' column is 1.
+     * This function counts the rows of the 'observations' table where the
+     * 'observer_username' column matches the current user's username and the
+     * 'has_drawing' column is 1.
      *
      * @return int The total number of drawings for the current user.
      */
     public function getTotalNumberOfDrawings(): int
     {
-        return DB::connection('mysqlOld')->table('observations')
-            ->where('observerid', $this->username)
-            ->where('hasDrawing', 1)->get()->count();
+        return DB::table('observations')
+            ->where('observer_username', $this->username)
+            ->where('has_drawing', 1)->get()->count();
     }
 
     /**
-     * Get whether the user is in the top ten of observers based on the count of their observations.
+     * Get whether the user is in the top ten of observers (see getRank()).
      *
      * @return bool Whether the user is in the top ten of observers.
      */
     public function isInTopTenOfObservers(): bool
     {
-        // Get all the count of all observations combined per user
-        $allObservations = DB::connection('mysqlOld')->table('observations')
-            ->select(DB::raw('count(*) as count, observerid'))
-            ->groupBy('observerid')
-            ->orderBy('count', 'desc')
-            ->get();
+        $rank = $this->getRank();
 
-        $userIndex = 0;
-        foreach ($allObservations as $user) {
-            if ($user->observerid == $this->username) {
-                break;
-            }
-            $userIndex++;
-        }
-
-        return $userIndex < 10;
+        return $rank >= 1 && $rank <= 10;
     }
 
     /**
@@ -670,9 +771,8 @@ class User extends Authenticatable implements MustVerifyEmail
      * Retrieves the count of deep sky observations made by the user in the last year.
      *
      * This method calculates the total number of deep sky observations made by the user in the last year.
-     * It first retrieves the current year and subtracts one to get the previous year.
-     * It then queries the 'observations' table for entries where the 'date' column's year is greater than or equal to the last year
-     * and the 'observerid' matches the current user's username.
+     * It queries the 'observations' table for deep sky entries where 'observed_on' lies within the last year
+     * and 'observer_user_id' matches the current user's id.
      *
      * The count of these entries is returned, representing the total number of deep sky observations made by the user in the last year.
      *
@@ -680,39 +780,20 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDeepskyObservationsLastYear(): int
     {
-        // Get the observations from the last year
-        $lastYear = date('Ymd') - 10000;
-
-        return ObservationsOld::where('date', '>=', $lastYear)->where('observerid', $this->username)->count();
+        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('target_type', 'deepsky')->count();
     }
 
-    /**
-     * Retrieves the count of comet observations made by the user in the last year.
-     *
-     * This method calculates the total number of comet observations made by the user in the last year.
-     * It first retrieves the current year and subtracts one to get the previous year.
-     * It then queries the 'cometobservations' table for entries where the 'date' column's year is greater than or equal to the last year
-     * and the 'observerid' matches the current user's username.
-     *
-     * The count of these entries is returned, representing the total number of comet observations made by the user in the last year.
-     *
-     * @return int The total number of comet observations made by the user in the last year.
-     */
     public function getCometObservationsLastYear(): int
     {
-        // Get the observations from the last year
-        $lastYear = date('Ymd') - 10000;
-
-        return CometObservationsOld::where('date', '>=', $lastYear)->where('observerid', $this->username)->count();
+        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('target_type', 'comet')->count();
     }
 
     /**
      * Retrieves the count of deep sky drawings made by the user in the last year.
      *
      * This method calculates the total number of deep sky drawings made by the user in the last year.
-     * It first retrieves the current year and subtracts one to get the previous year.
-     * It then queries the 'observations' table for entries where the 'date' column's year is greater than or equal to the last year,
-     * the 'observerid' matches the current user's username, and the 'hasDrawing' column is set to 1 (indicating that the observation has a drawing).
+     * It queries the 'observations' table for deep sky entries where 'observed_on' lies within the last year,
+     * 'observer_user_id' matches the current user's id, and the 'has_drawing' column is set to 1 (indicating that the observation has a drawing).
      *
      * The count of these entries is returned, representing the total number of deep sky drawings made by the user in the last year.
      *
@@ -720,64 +801,168 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDeepskyDrawingsLastYear(): int
     {
-        // Get the observations from the last year
-        $lastYear = date('Ymd') - 10000;
-
-        return ObservationsOld::where('date', '>=', $lastYear)->where('observerid', $this->username)->where('hasDrawing', 1)->count();
+        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('target_type', 'deepsky')->where('has_drawing', 1)->count();
     }
 
-    /**
-     * Retrieves the count of comet drawings made by the user in the last year.
-     *
-     * This method calculates the total number of comet drawings made by the user in the last year.
-     * It first retrieves the current year and subtracts one to get the previous year.
-     * It then queries the 'cometobservations' table for entries where the 'date' column's year is greater than or equal to the last year,
-     * the 'observerid' matches the current user's username, and the 'hasDrawing' column is set to 1 (indicating that the observation has a drawing).
-     *
-     * The count of these entries is returned, representing the total number of comet drawings made by the user in the last year.
-     *
-     * @return int The total number of comet drawings made by the user in the last year.
-     */
     public function getCometDrawingsLastYear(): int
     {
-        // Get the observations from the last year
-        $lastYear = date('Ymd') - 10000;
-
-        return CometObservationsOld::where('date', '>=', $lastYear)->where('observerid', $this->username)->where('hasDrawing', 1)->count();
+        return Observation::where('observed_on', '>=', now()->subYear())->where('observer_user_id', $this->id)->where('target_type', 'comet')->where('has_drawing', 1)->count();
     }
 
     /**
-     * Retrieves the rank of the user based on the count of their observations.
+     * The rank of the user among the observers, by number of observations of
+     * every kind (deep-sky, comets, planets, Moon and Sun), as on /observers: one more than the number of observers with
+     * more observations, so observers with the same number share a rank.
      *
-     * This method calculates the rank of the user among all users based on the count of their observations.
-     * It first retrieves the count of all observations made by each user from the 'observations' table,
-     * groups them by 'observerid', and orders them in descending order of count.
-     *
-     * It then iterates over these grouped observations, incrementing a user index until it finds the current user's username.
-     * The user index at this point represents the rank of the user among all users based on the count of their observations.
-     *
-     * The rank is returned as an integer. Note that the rank is zero-based, so a rank of 0 means the user has the highest count of observations.
-     *
-     * @return int The rank of the user based on the count of their observations.
+     * @return int The rank, or 0 if the user has no observations.
      */
     public function getRank(): int
     {
-        // Get all the count of all observations combined per user
-        $allObservations = DB::connection('mysqlOld')->table('observations')
-            ->select(DB::raw('count(*) as count, observerid'))
-            ->groupBy('observerid')
-            ->orderBy('count', 'desc')
-            ->get();
-
-        $userIndex = 0;
-        foreach ($allObservations as $user) {
-            if ($user->observerid == $this->username) {
-                break;
-            }
-            $userIndex++;
+        $own = Observation::where('observer_username', $this->username)->count();
+        if ($own === 0) {
+            return 0;
         }
 
-        return $userIndex + 1;
+        return 1 + DB::query()->fromSub(
+            self::observationCounts()->havingRaw('COUNT(*) > ?', [$own]),
+            'counts'
+        )->count();
+    }
+
+    /**
+     * The rank of the user per category of the observer page (deep-sky,
+     * comet, double, sun, moon, planets; see
+     * ComputeObserverStats::categoryQueries()), counted as in getRank(),
+     * with the number of observers that have a rank in the category. The
+     * rank is 0 when the user has no observations in it.
+     *
+     * @return array<string, array{rank: int, observers: int}>
+     */
+    public function getCategoryRanks(): array
+    {
+        $ranks = [];
+        foreach (self::categoryObservationCounts() as $category => $counts) {
+            $own = $counts[$this->username] ?? 0;
+            $ranks[$category] = [
+                'rank' => $own > 0 ? 1 + count(array_filter($counts, fn(int $count) => $count > $own)) : 0,
+                'observers' => count($counts),
+            ];
+        }
+
+        return $ranks;
+    }
+
+    /**
+     * The ranks of getRank() and getCategoryRanks() among the observers of
+     * the user's country of residence, under 'all' and the categories. Null
+     * when the country is not set or has fewer observers than
+     * ObserverCountries::MIN_OBSERVERS.
+     *
+     * @return array<string, array{rank: int, observers: int}>|null
+     */
+    public function getCountryRanks(): ?array
+    {
+        if (!ObserverCountries::isOption($this->country)) {
+            return null;
+        }
+
+        $compatriots = array_flip(self::query()->where('country', $this->country)->pluck('username')->all());
+
+        $own = Observation::where('observer_username', $this->username)->count();
+        $counts = self::observationCounts()->where('users.country', $this->country);
+        $ranks = [
+            'all' => [
+                'rank' => $own > 0
+                    ? 1 + DB::query()->fromSub((clone $counts)->havingRaw('COUNT(*) > ?', [$own]), 'counts')->count()
+                    : 0,
+                'observers' => DB::query()->fromSub($counts, 'counts')->count(),
+            ],
+        ];
+
+        foreach (self::categoryObservationCounts() as $category => $categoryCounts) {
+            $categoryCounts = array_intersect_key($categoryCounts, $compatriots);
+            $own = $categoryCounts[$this->username] ?? 0;
+            $ranks[$category] = [
+                'rank' => $own > 0 ? 1 + count(array_filter($categoryCounts, fn(int $count) => $count > $own)) : 0,
+                'observers' => count($categoryCounts),
+            ];
+        }
+
+        return $ranks;
+    }
+
+    /**
+     * The number of observations of each observer per category, without the
+     * observers that have none, shared by all observer pages: fresh for an
+     * hour, for a day after that recomputed after the response.
+     *
+     * @return array<string, array<string, int>>
+     */
+    private static function categoryObservationCounts(): array
+    {
+        return Cache::flexible('observers:category_ranking', [3600, 86400], function () {
+            $counts = [];
+            foreach (ComputeObserverStats::categoryQueries() as $category => $query) {
+                if ($category === 'all') {
+                    continue;
+                }
+                $counts[$category] = $query()
+                    ->join('users', 'users.username', '=', 'observations.observer_username')
+                    ->groupBy('users.id', 'users.username')
+                    ->selectRaw('users.username, COUNT(*) as observations_count')
+                    ->pluck('observations_count', 'username')
+                    ->map(fn($count) => (int) $count)
+                    ->all();
+            }
+
+            // As on the observer page, the deep-sky counts leave out the double stars.
+            foreach ($counts['double'] as $username => $doubles) {
+                $counts['deepsky'][$username] = ($counts['deepsky'][$username] ?? 0) - $doubles;
+            }
+            $counts['deepsky'] = array_filter($counts['deepsky'], fn(int $count) => $count > 0);
+
+            return $counts;
+        });
+    }
+
+    /**
+     * The number of observers that have a rank (see getRank()).
+     */
+    public static function rankedObserverCount(): int
+    {
+        return DB::query()->fromSub(self::observationCounts(), 'counts')->count();
+    }
+
+    /**
+     * The usernames of the observers with a rank of 10 or better (see getRank()).
+     *
+     * @return array<int, string>
+     */
+    public static function topTenObserverUsernames(): array
+    {
+        $counts = self::observationCounts()
+            ->addSelect(DB::raw('COUNT(*) as observations_count'))
+            ->orderByDesc('observations_count')
+            ->get();
+        $tenth = $counts->get(9)?->observations_count;
+
+        return $counts
+            ->filter(fn($row) => $tenth === null || $row->observations_count >= $tenth)
+            ->pluck('username')
+            ->map(fn($username) => (string) $username)
+            ->values()
+            ->all();
+    }
+
+    /**
+     * The observations grouped per observer, the ranking of /observers.
+     */
+    private static function observationCounts(): \Illuminate\Database\Query\Builder
+    {
+        return DB::table('observations')
+            ->join('users', 'users.username', '=', 'observations.observer_username')
+            ->groupBy('users.id', 'users.username')
+            ->select('users.id', 'users.username');
     }
 
     /**
@@ -791,6 +976,24 @@ class User extends Authenticatable implements MustVerifyEmail
     public function standardLocation(): HasOne
     {
         return $this->hasOne(related: Location::class, foreignKey: 'id', localKey: 'stdlocation');
+    }
+
+    /**
+     * The lens that is always used with the standard telescope (a coma
+     * corrector, a Barlow), which the contrast reserve and best
+     * magnification are computed with.
+     */
+    public function standardLensId(): ?int
+    {
+        if (! $this->stdtelescope) {
+            return null;
+        }
+
+        $lensId = $this->relationLoaded('standardInstrument')
+            ? $this->standardInstrument?->lens_id
+            : Instrument::whereKey($this->stdtelescope)->value('lens_id');
+
+        return $lensId ? (int) $lensId : null;
     }
 
     /**
@@ -813,12 +1016,20 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function observationsCount(): float
     {
-        return \App\Models\ObservationsOld::getObservationsCountForUser($this);
+        return Observation::getObservationsCountForUserByName($this);
     }
 
     public function observations(): HasMany
     {
-        return $this->hasMany(related: ObservationsOld::class, foreignKey: 'observerid', localKey: 'username');
+        return $this->hasMany(related: Observation::class, foreignKey: 'observer_username', localKey: 'username');
+    }
+
+    /**
+     * The browsers in which the observer turned on push notifications.
+     */
+    public function pushSubscriptions(): HasMany
+    {
+        return $this->hasMany(PushSubscription::class);
     }
 
     /**
@@ -857,7 +1068,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function eyepieces(): HasMany
     {
-        return $this->hasMany(related: Eyepiece::class);
+        return $this->hasMany(related: Eyepiece::class)->orderBy('focal_length_mm', 'desc')->orderBy('name');
     }
 
     /**
@@ -918,6 +1129,76 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * The observer's observing goals.
+     */
+    public function observingGoals(): HasMany
+    {
+        return $this->hasMany(ObservingGoal::class);
+    }
+
+    /**
+     * The observers this user follows.
+     */
+    public function following(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'follower_id', 'followed_id')->withTimestamps();
+    }
+
+    /**
+     * The observers following this user.
+     */
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'followed_id', 'follower_id')->withTimestamps();
+    }
+
+    public function isFollowing(User $observer): bool
+    {
+        return UserFollow::where('follower_id', $this->id)->where('followed_id', $observer->id)->exists();
+    }
+
+    /**
+     * Whether this user may follow the observer: not themselves, and not an
+     * observer who blocked them.
+     */
+    public function canFollow(User $observer): bool
+    {
+        return (int) $observer->id !== (int) $this->id && !MessageBlock::blocks($observer, $this);
+    }
+
+    /**
+     * The observations of the observers this user follows.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<Observation>
+     */
+    public function followedObservations(): \Illuminate\Database\Eloquent\Builder
+    {
+        return Observation::query()->whereIn('observer_username', $this->following()->select('users.username'));
+    }
+
+    /**
+     * The secret token of the personal RSS feed of the observers this user
+     * follows, made the first time it is asked for.
+     */
+    public function followFeedToken(): string
+    {
+        if (empty($this->follow_feed_token)) {
+            $this->regenerateFollowFeedToken();
+        }
+
+        return $this->follow_feed_token;
+    }
+
+    /**
+     * Give the personal RSS feed a new token, so the old feed URL stops
+     * working.
+     */
+    public function regenerateFollowFeedToken(): void
+    {
+        $this->forceFill(['follow_feed_token' => Str::random(48)])->save();
+    }
+
+    /**
      * Get the observing lists owned by this user.
      */
     public function observingLists(): HasMany
@@ -957,8 +1238,8 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Register model event hooks to react when the user's standard instrument or
-     * standard location changes. We enqueue a background job to recompute
+     * Register model event hooks to react when the user's standard instrument,
+     * location or lens changes. We enqueue a background job to recompute
      * contrast-reserve metrics for the user so the cached per-user metrics stay
      * in sync with profile changes.
      */
@@ -967,16 +1248,16 @@ class User extends Authenticatable implements MustVerifyEmail
         static::updated(function (self $user) {
             try {
                 // Field names used in the database: stdtelescope (instrument) and stdlocation
-                $instrumentDirty = $user->wasChanged('stdtelescope');
-                $locationDirty = $user->wasChanged('stdlocation');
-
-                if ($instrumentDirty || $locationDirty) {
+                // The metrics are stored per lens as well: the lens of the standard
+                // telescope (Instrument recomputes them when that lens changes)
+                if ($user->wasChanged(['stdtelescope', 'stdlocation'])) {
                     $instrId = $user->stdtelescope ?? null;
                     $locId = $user->stdlocation ?? null;
-                    Log::info('User: standard instrument/location changed - enqueuing metrics recompute', ['user_id' => $user->id, 'stdtelescope' => $instrId, 'stdlocation' => $locId]);
+                    $lensId = $user->standardLensId();
+                    Log::info('User: standard instrument/location changed - enqueuing metrics recompute', ['user_id' => $user->id, 'stdtelescope' => $instrId, 'stdlocation' => $locId, 'lens' => $lensId]);
 
                     // Enqueue the job so it runs asynchronously (and itself will dispatch per-object jobs)
-                    EnqueueComputeCRForUser::dispatch($user->id, $instrId, $locId);
+                    EnqueueComputeCRForUser::dispatch($user->id, $instrId, $locId, $lensId);
                 }
             } catch (\Throwable $ex) {
                 Log::error('User: failed to enqueue metrics recompute', ['error' => $ex->getMessage(), 'user_id' => $user->id]);

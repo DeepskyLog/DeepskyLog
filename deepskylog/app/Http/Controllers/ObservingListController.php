@@ -3,23 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\ObservingList;
+use App\Services\SeasonalVisibility;
+use App\Services\ObservingListTimes;
+use App\Services\TonightsBest;
+use App\Support\EphemerisDate;
 use App\Models\ObservingListComment;
 use App\Models\ObservingListItem;
-use App\Models\Message;
-use App\Models\ObservationsOld;
-use App\Models\ObjectsOld;
+use App\Models\Observation;
+use App\Models\Target;
 use App\Models\User;
 use App\Models\Instrument;
 use App\Models\Location;
 use App\Services\ActiveObservingListService;
+use App\Services\CommentNotifier;
+use App\Services\ObserverCountries;
 use App\Services\ObservingListFileImportService;
+use App\Services\ObservingListItemNameResolver;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rules\Unique;
 
 class ObservingListController extends Controller
 {
@@ -43,8 +51,17 @@ class ObservingListController extends Controller
             ->withCount('items')
             ->orderBy('created_at', 'desc');
 
+        // Search on the name of the list and on the objects in it (under the
+        // canonical name the items are stored as), as on the discover page.
+        $objectNames = $search === '' ? [] : array_unique(array_filter([
+            $search,
+            app(ObservingListItemNameResolver::class)->resolve($search),
+        ]));
         if ($search !== '') {
-            $ownedListsQuery->where('name', 'like', '%' . $search . '%');
+            $ownedListsQuery->where(function ($q) use ($search, $objectNames) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhereHas('items', fn ($items) => $items->whereIn('object_name', $objectNames));
+            });
         }
 
         $ownedLists = $ownedListsQuery
@@ -58,7 +75,10 @@ class ObservingListController extends Controller
             ->orderBy('observing_list_subscriptions.created_at', 'desc');
 
         if ($search !== '') {
-            $subscribedListsQuery->where('observing_lists.name', 'like', '%' . $search . '%');
+            $subscribedListsQuery->where(function ($q) use ($search, $objectNames) {
+                $q->where('observing_lists.name', 'like', '%' . $search . '%')
+                    ->orWhereHas('items', fn ($items) => $items->whereIn('object_name', $objectNames));
+            });
         }
 
         $subscribedLists = $subscribedListsQuery
@@ -93,13 +113,38 @@ class ObservingListController extends Controller
             $query->where('owner_user_id', '<>', $user->id);
         }
 
-        if ($sortBy === 'popular') {
-            $query->orderBy('likes_count', 'desc');
-        } else {
-            $query->orderBy('created_at', 'desc');
+        // Search on the name, description and owner of the list, and on the
+        // objects in it (under the canonical name the items are stored as).
+        $search = trim((string) $request->query('q', ''));
+        if ($search !== '') {
+            $like = '%'.$search.'%';
+            $objectNames = array_unique(array_filter([
+                $search,
+                app(ObservingListItemNameResolver::class)->resolve($search),
+            ]));
+            $query->where(function ($q) use ($like, $objectNames) {
+                $q->where('name', 'like', $like)
+                    ->orWhere('description', 'like', $like)
+                    ->orWhereHas('owner', fn ($owner) => $owner->where('name', 'like', $like))
+                    ->orWhereHas('items', fn ($items) => $items->whereIn('object_name', $objectNames));
+            });
         }
 
-        $publicLists = $query->paginate(15);
+        // The lists of observers living in one country.
+        $countryOptions = ObserverCountries::options();
+        $country = strtoupper(trim((string) $request->query('country', '')));
+        $country = array_key_exists($country, $countryOptions) ? $country : null;
+        if ($country !== null) {
+            $query->whereHas('owner', fn ($owner) => $owner->where('country', $country));
+        }
+
+        if ($sortBy === 'popular') {
+            $query->orderByPopularity();
+        } else {
+            $query->withCount('subscriptions')->orderBy('created_at', 'desc');
+        }
+
+        $publicLists = $query->paginate(15)->withQueryString();
 
         // Mark which lists user is already subscribed to (only if logged in)
         $subscribedIds = [];
@@ -114,6 +159,9 @@ class ObservingListController extends Controller
             'publicLists' => $publicLists,
             'subscribedIds' => $subscribedIds,
             'sortBy' => $sortBy,
+            'search' => $search,
+            'countryOptions' => $countryOptions,
+            'country' => $country,
         ]);
     }
 
@@ -129,7 +177,7 @@ class ObservingListController extends Controller
             throw new AuthorizationException();
         }
 
-        // Logged-in users follow policy rules (owner/subscriber/public).
+        // Logged-in users follow policy rules (owner, or anybody for a public list).
         if ($user && !$user->can('view', $list)) {
             throw new AuthorizationException();
         }
@@ -137,7 +185,8 @@ class ObservingListController extends Controller
         $list->load('owner');
 
         $items = $list->items()
-            ->orderBy('created_at', 'desc')
+            ->orderBy('sort_order')
+            ->orderBy('id')
             ->paginate(50);
 
         $comments = $list->comments()
@@ -150,7 +199,14 @@ class ObservingListController extends Controller
         $isLiked = $user ? $list->isLikedBy($user) : false;
         $isActive = $user ? $this->activeListService->isActive($user, $list) : false;
 
+        // The seasonal planner: the months the objects are well placed, and
+        // ?month= to show only those well placed in that month.
+        $seasons = SeasonalVisibility::forViewer();
+        $month = (int) request()->query('month', 0);
+
         return view('observing-lists.show', [
+            'seasons' => $seasons,
+            'wellPlacedMonth' => $seasons && $month >= 1 && $month <= 12 ? $month : 0,
             'list' => $list,
             'items' => $items,
             'comments' => $comments,
@@ -178,9 +234,10 @@ class ObservingListController extends Controller
         $this->authorize('create', ObservingList::class);
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', $this->uniqueListNameRule()],
             'description' => ['nullable', 'string', 'max:5000'],
             'public' => ['boolean'],
+            'make_active' => ['boolean'],
         ]);
 
         $list = ObservingList::create([
@@ -190,8 +247,32 @@ class ObservingListController extends Controller
             'public' => $request->boolean('public'),
         ]);
 
+        // The "Add to" buttons of the object pages and search results add to
+        // the active list, so a new list is usually filled as the active one.
+        if ($request->boolean('make_active')) {
+            $this->activeListService->setActiveList($request->user(), $list);
+        }
+
         return redirect()->route('observing-list.show', $list)
             ->with('success', __('Observing list created.'));
+    }
+
+    /**
+     * Make an observing list of the deep-sky objects of Tonight's best on the
+     * home page, as the observer sees it (the same cached list).
+     */
+    public function storeTonight(Request $request): RedirectResponse
+    {
+        $this->authorize('create', ObservingList::class);
+
+        $result = TonightsBest::for($request->user());
+        $list = $result ? TonightsBest::createList($request->user(), $result) : null;
+        if (!$list) {
+            return redirect('/')->with('error', __('There are no deep-sky objects for tonight to put on a list.'));
+        }
+
+        return redirect()->route('observing-list.show', $list)
+            ->with('success', __('Observing list created with :count object(s).', ['count' => $list->items()->count()]));
     }
 
     /**
@@ -211,7 +292,7 @@ class ObservingListController extends Controller
         $this->authorize('update', $list);
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', $this->uniqueListNameRule($list)],
             'description' => ['nullable', 'string', 'max:5000'],
             'public' => ['boolean'],
         ]);
@@ -227,8 +308,17 @@ class ObservingListController extends Controller
     }
 
     /**
-     * Delete an observing list.
+     * The database has a unique index on (owner_user_id, name): check it during
+     * validation so a duplicate name gives an error message instead of a 500.
      */
+    private function uniqueListNameRule(?ObservingList $ignore = null): Unique
+    {
+        $rule = Rule::unique('observing_lists', 'name')
+            ->where('owner_user_id', $ignore?->owner_user_id ?? auth()->id());
+
+        return $ignore ? $rule->ignore($ignore->id) : $rule;
+    }
+
     /**
      * Empty all items from an observing list (but keep the list itself).
      */
@@ -243,6 +333,9 @@ class ObservingListController extends Controller
             ->with('success', __(':count items removed from the list.', ['count' => $itemCount]));
     }
 
+    /**
+     * Delete an observing list.
+     */
     public function destroy(ObservingList $list): RedirectResponse
     {
         $this->authorize('delete', $list);
@@ -308,6 +401,10 @@ class ObservingListController extends Controller
 
         $list->subscribers()->detach($user->id);
 
+        if ($this->activeListService->isActive($user, $list)) {
+            $this->activeListService->clearActiveList($user);
+        }
+
         return redirect()->back()->with('success', __('Unsubscribed from observing list.'));
     }
 
@@ -352,15 +449,22 @@ class ObservingListController extends Controller
 
         $longestObservationNote = $this->buildLongestObservationAutofillNote($item->object_name);
 
+        $timezone = $list->planned_timezone ?: EphemerisDate::timezone();
+
         return view('observing-lists.edit-item', [
             'list' => $list,
             'item' => $item,
             'longestObservationNote' => $longestObservationNote,
+            'plannedTime' => $item->planned_at?->copy()->setTimezone($timezone)->format('H:i'),
+            'timezone' => $timezone,
+            'defaultNight' => EphemerisDate::current($timezone),
         ]);
     }
 
     /**
-     * Update the description of an existing item.
+     * Update the description of an existing item and its time to observe it
+     * (H:i in the night of the list; the first time gives the list its
+     * night).
      */
     public function updateItem(Request $request, ObservingList $list, ObservingListItem $item): RedirectResponse
     {
@@ -376,11 +480,20 @@ class ObservingListController extends Controller
 
         $validated = $request->validate([
             'item_description' => ['nullable', 'string', 'max:2000'],
+            'planned_time' => ['nullable', 'date_format:H:i'],
+            'planned_night' => ['nullable', 'date_format:Y-m-d'],
         ]);
 
         $item->update([
             'item_description' => $validated['item_description'] ?? null,
         ]);
+
+        $time = $validated['planned_time'] ?? null;
+        $current = $item->planned_at?->copy()->setTimezone($list->planned_timezone ?: 'UTC')->format('H:i');
+        if ($time !== $current) {
+            $timezone = $list->planned_timezone ?: EphemerisDate::timezone();
+            ObservingListTimes::setTime($list, $item, $time, $validated['planned_night'] ?? EphemerisDate::current($timezone), $timezone);
+        }
 
         return redirect()->route('observing-list.show', $list)
             ->with('success', __('Note updated.'));
@@ -431,12 +544,12 @@ class ObservingListController extends Controller
      */
     private function buildLongestObservationAutofillNote(string $objectName): ?string
     {
-        $observation = ObservationsOld::query()
-            ->where('objectname', $objectName)
+        $observation = Observation::query()
+            ->where('target_name', $objectName)
             ->whereNotNull('description')
             ->whereRaw('TRIM(description) <> ""')
             ->orderByRaw('CHAR_LENGTH(description) DESC')
-            ->first(['description', 'observerid', 'instrumentid', 'locationid']);
+            ->first(['description', 'observer_username', 'instrument_id', 'location_id']);
 
         if (!$observation) {
             return null;
@@ -448,12 +561,12 @@ class ObservingListController extends Controller
         }
 
         $objectDescription = $this->normalizePlainText(
-            (string) (ObjectsOld::query()->where('name', $objectName)->value('description') ?? '')
+            (string) (Target::query()->where('name', $objectName)->value('description') ?? '')
         );
 
-        $observerName = $this->resolveObserverName($observation->observerid ?? null);
-        $instrumentName = $this->resolveInstrumentName($observation->instrumentid ?? null);
-        $locationName = $this->resolveLocationName($observation->locationid ?? null);
+        $observerName = $this->resolveObserverName($observation->observer_username ?? null);
+        $instrumentName = $this->resolveInstrumentName($observation->instrument_id ?? null);
+        $locationName = $this->resolveLocationName($observation->location_id ?? null);
 
         $contextLine = sprintf(
             '[%s: %s | %s: %s | %s: %s]',
@@ -557,14 +670,17 @@ class ObservingListController extends Controller
         $objectNames = [];
 
         if ($request->filled('search_query')) {
-            // Re-run the search to get matching display names
+            // Re-run the search exactly as the search results table and its
+            // exports do (wildcards, one row per object), and store each result
+            // under the name the list tables match on: objects.name for deep-sky
+            // objects (also when the search hit an alias), else the index name.
             $q = trim($request->input('search_query'));
             if (strlen($q) > 0) {
-                $like = '%' . $q . '%';
-                $objectNames = DB::table('search_index')
-                    ->whereRaw('LOWER(name) LIKE ?', [strtolower($like)])
-                    ->whereNotNull('display_name')
-                    ->pluck('display_name')
+                [, $rows] = app(SearchExportController::class)
+                    ->resolveRows(Request::create('/search', 'GET', ['q' => $q]));
+                $objectNames = collect($rows)
+                    ->map(fn ($row) => $row->obj_name ?? $row->name ?? $row->display_name ?? null)
+                    ->filter()
                     ->unique()
                     ->values()
                     ->toArray();
@@ -574,7 +690,9 @@ class ObservingListController extends Controller
                 'object_names' => ['required', 'array', 'max:2000'],
                 'object_names.*' => ['required', 'string', 'max:255'],
             ]);
-            $objectNames = $request->input('object_names');
+            $objectNames = array_values(array_filter(
+                app(ObservingListItemNameResolver::class)->resolveMany($request->input('object_names'))
+            ));
         }
 
         $added = 0;
@@ -709,7 +827,7 @@ class ObservingListController extends Controller
                 'required',
                 'file',
                 // AstroPlanner APD files are SQLite DBs and often fail MIME sniffing; validate by extension.
-                'extensions:txt,argo,skylist,apd,csv',
+                'extensions:txt,argo,skylist,apd,csv,xml,oal',
                 'max:5120', // 5MB max
             ],
         ]);
@@ -717,7 +835,7 @@ class ObservingListController extends Controller
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
-                ->with('error', __('Import failed. Please select a supported file (.argo, .skylist, .txt, .apd, .csv).'));
+                ->with('error', __('Import failed. Please select a supported file (.argo, .skylist, .txt, .apd, .csv, .xml).'));
         }
 
         $file = $request->file('file');
@@ -835,6 +953,16 @@ class ObservingListController extends Controller
             'item_description' => ['nullable', 'string', 'max:2000'],
         ]);
 
+        // Store the object under the name the list tables and exports match on;
+        // an unknown name would be saved but never shown.
+        $objectName = app(ObservingListItemNameResolver::class)->resolve($validated['object_name']);
+        if ($objectName === null) {
+            throw ValidationException::withMessages([
+                'object_name' => __('Unknown object: :name', ['name' => $validated['object_name']]),
+            ]);
+        }
+        $validated['object_name'] = $objectName;
+
         // Idempotent insert – ignore if already in list
         $list->items()->firstOrCreate(
             ['object_name' => $validated['object_name']],
@@ -902,49 +1030,18 @@ class ObservingListController extends Controller
 
         $list->addComment($user, $validated['body']);
 
-        // Notify the list owner via internal DeepskyLog message (skip self-comments).
-        if ((int) $list->owner_user_id !== (int) $user->id) {
-            try {
-                $list->loadMissing('owner');
-
-                $ownerUsername = $list->owner?->username;
-                if (!empty($ownerUsername)) {
-                    $subject = __('New comment on your observing list: :list', [
-                        'list' => html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-                    ]);
-
-                    $commentPreview = trim(strip_tags($validated['body']));
-                    if (mb_strlen($commentPreview) > 300) {
-                        $commentPreview = mb_substr($commentPreview, 0, 300) . '...';
-                    }
-
-                    $listUrl = route('observing-list.show', ['list' => $list]);
-                    $messageHtml = '<p>' . e(__('User :user commented on your observing list ":list".', [
-                        'user' => $user->username,
-                        'list' => html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-                    ])) . '</p>';
-
-                    if ($commentPreview !== '') {
-                        $messageHtml .= '<p><strong>' . e(__('Comment')) . ':</strong> ' . e($commentPreview) . '</p>';
-                    }
-
-                    $messageHtml .= '<p><a href="' . e($listUrl) . '">' . e(__('Open observing list')) . '</a></p>';
-
-                    Message::create([
-                        'sender' => $user->username ?: 'deepskylog',
-                        'receiver' => $ownerUsername,
-                        'subject' => Message::sanitizeHtml($subject),
-                        'message' => Message::sanitizeHtml($messageHtml),
-                        'date' => now(),
-                    ]);
-                }
-            } catch (\Throwable $e) {
-                Log::warning('Failed to send observing list comment notification', [
-                    'list_id' => $list->id,
-                    'commenter_id' => $user->id,
-                    'error' => $e->getMessage(),
-                ]);
-            }
+        $list->loadMissing('owner');
+        if ($list->owner) {
+            CommentNotifier::notify(
+                $list->owner,
+                $user,
+                $validated['body'],
+                'New comment on your observing list: :list',
+                'User :user commented on your observing list ":list".',
+                ['list' => html_entity_decode($list->name, ENT_QUOTES | ENT_HTML5, 'UTF-8')],
+                route('observing-list.show', ['list' => $list]),
+                'Open observing list',
+            );
         }
 
         return redirect()->back()->with('success', __('Comment added.'));
@@ -956,6 +1053,10 @@ class ObservingListController extends Controller
     public function destroyComment(Request $request, ObservingList $list, ObservingListComment $comment): RedirectResponse
     {
         $user = auth()->user();
+
+        if ((int) $comment->observing_list_id !== (int) $list->id) {
+            abort(404);
+        }
 
         if (!$comment->canBeDeletedBy($user)) {
             throw new AuthorizationException();

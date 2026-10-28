@@ -8,7 +8,7 @@
                          alt="{{ $instrument->fullName() }}">
                     @if (!empty($instrument->description))
                         <div class="mt-4 p-3 border border-gray-700 bg-gray-800 text-gray-100 rounded prose prose-invert">
-                            {!! html_entity_decode($instrument->description ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') !!}
+                            {!! \App\Support\Html::purify($instrument->description, true) !!}
                         </div>
                     @endif
                 </div>
@@ -46,12 +46,12 @@
                             <tr>
                                 <td>{{ __("Focal Length") }}</td>
                                 @auth
-                                    <td>{{ Auth::user()->showInches ? (number_format($instrument->fd * $instrument->diameter / 25.4, 2, '.' ,',')) . ' ' . __('inch') : $instrument->fd * $instrument->diameter . ' ' . __('mm')}}
+                                    <td>{{ Auth::user()->showInches ? (number_format($instrument->focal_length_mm / 25.4, 2, '.' ,',')) . ' ' . __('inch') : round($instrument->focal_length_mm, 1) . ' ' . __('mm')}}
                                         (F/{{ $instrument->fd }})
                                     </td>
                                 @endauth
                                 @guest
-                                    <td>{{ $instrument->fd * $instrument->diameter . ' ' . __('mm')}}</td>
+                                    <td>{{ round($instrument->focal_length_mm, 1) . ' ' . __('mm')}}</td>
                                 @endguest
                             </tr>
                         @endif
@@ -60,6 +60,36 @@
                             <tr>
                                 <td>{{ __("Fixed Magnification") }}</td>
                                 <td>{{ $instrument->fixedMagnification }}</td>
+                            </tr>
+                        @endif
+
+                        @if ((float) $instrument->fixedMagnification > 0)
+                            <tr>
+                                <td>{{ __("Field of view") }}</td>
+                                <td>
+                                    {{ \App\Services\FieldViews\FieldViewBuilder::formatAngle($instrument->fixedFieldOfViewDeg()) }}
+                                    @if ($instrument->hasEstimatedFieldOfView())
+                                        ({{ __('estimated') }})
+                                    @endif
+                                </td>
+                            </tr>
+                        @endif
+
+                        @if ($instrument->lens)
+                            <tr>
+                                <td>{{ __("Lens") }}</td>
+                                <td>
+                                    <a href="{{ url('/lens/' . $instrument->lens->user->slug . '/' . $instrument->lens->slug) }}">{{ html_entity_decode($instrument->lens->name) }}</a>
+                                </td>
+                            </tr>
+                        @endif
+
+                        @if ($instrument->finder)
+                            <tr>
+                                <td>{{ __("Finderscope") }}</td>
+                                <td>
+                                    <a href="{{ url('/instrument/' . $instrument->finder->user->slug . '/' . $instrument->finder->slug) }}">{{ html_entity_decode($instrument->finder->fullName()) }}</a>
+                                </td>
                             </tr>
                         @endif
 
@@ -92,20 +122,10 @@
                                     $first_observation_date = $instrument->first_observation_date();
                                     $last_observation_date = $instrument->last_observation_date();
                                 @endphp
-                                @if (! is_null($first_observation_date[0]))
-                                    @if ($first_observation_date[1] > 0)
-                                        <a
-                                            href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $first_observation_date[1] }}"
-                                        >
-                                            {{$first_observation_date[0] }}
-                                        </a>
-                                    @else
-                                        <a
-                                            href="{{ config("app.old_url") }}/index.php?indexAction=comets_detail_observation&observation={{ -$first_observation_date[1] }}"
-                                        >
-                                            {{ $first_observation_date[0] }}
-                                        </a>
-                                    @endif
+                                @if (! is_null($first_observation_date[0]) && $first_observation_date[1])
+                                    <a href="{{ $first_observation_date[1]->detailUrl() }}">
+                                        {{ $first_observation_date[0] }}
+                                    </a>
                                 @else
                                     {{ __("No observations added!") }}
                                 @endif
@@ -115,20 +135,10 @@
                         <tr>
                             <td>{{ __("Last used on") }}</td>
                             <td>
-                                @if (! is_null($last_observation_date[0]))
-                                    @if ($last_observation_date[1] > 0)
-                                        <a
-                                            href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $last_observation_date[1] }}"
-                                        >
-                                            {{ $last_observation_date[0] }}
-                                        </a>
-                                    @else
-                                        <a
-                                            href="{{ config("app.old_url") }}/index.php?indexAction=comets_detail_observation&observation={{ -$last_observation_date[1] }}"
-                                        >
-                                            {{ $last_observation_date[0] }}
-                                        </a>
-                                    @endif
+                                @if (! is_null($last_observation_date[0]) && $last_observation_date[1])
+                                    <a href="{{ $last_observation_date[1]->detailUrl() }}">
+                                        {{ $last_observation_date[0] }}
+                                    </a>
                                 @else
                                     {{ __("No observations added!") }}
                                 @endif
@@ -154,8 +164,17 @@
                                 <tr>
                                     <td>{{ __("Observed in the following locations") }}</td>
                                     <td>{!! $instrument->get_used_locations_as_string() !!}</td>
-                                    {{--                                    <td>ADD GOOGLE MAPS PAGE</td>--}}
                                 </tr>
+                                @php($mapLocations = $instrument->usedLocationsForMap(Auth::user()))
+                                @if (!empty($mapLocations))
+                                    <tr>
+                                        <td colspan="2">
+                                            <div id="instrument-locations-map" class="w-full mt-2 rounded overflow-hidden" style="height: 20rem; z-index:1;"
+                                                 data-locations='@json($mapLocations)'
+                                                 data-label="{{ __(':count observation(s) with this instrument') }}"></div>
+                                        </td>
+                                    </tr>
+                                @endif
 
                             @endif
                         @endauth
@@ -185,6 +204,9 @@
                                 <x-button type="submit" secondary label="{{ __('Edit') }} {!! $instrument->name !!}"/>
                             </a>
                         @endif
+                        @if ($instrument->user_id == Auth::user()->id && $instrument->aperture_mm > 0)
+                            <x-whats-new-link kind="instrument" :equipment="$instrument" />
+                        @endif
 
                         <br/>
                         <br/>
@@ -202,7 +224,7 @@
                                     </thead>
 
                                     <tbody>
-                                    @foreach(Eyepiece::where('user_id', Auth::user()->id)->where('active', 1)->get()->sortBy('focal_length_mm', SORT_NATURAL, true) as $eyepiece)
+                                    @foreach(Eyepiece::where('user_id', Auth::user()->id)->where('active', 1)->orderByFocalLength('desc')->get() as $eyepiece)
                                         <tr>
                                             <td>
                                                 <a href="/eyepiece/{{ Auth::user()->slug }}/{{ $eyepiece->slug }}">{{ $eyepiece->name }}</a>
@@ -235,7 +257,7 @@
                                         </thead>
 
                                         <tbody>
-                                        @foreach(Eyepiece::where('user_id', Auth::user()->id)->where('active', 1)->get()->sortBy('focal_length_mm', SORT_NATURAL, true) as $eyepiece)
+                                        @foreach(Eyepiece::where('user_id', Auth::user()->id)->where('active', 1)->orderByFocalLength('desc')->get() as $eyepiece)
                                             <tr>
                                                 <td>
                                                     <a href="/eyepiece/{{ Auth::user()->slug }}/{{ $eyepiece->slug }}">{{ $eyepiece->name }}</a>
@@ -262,4 +284,41 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var mapEl = document.getElementById('instrument-locations-map');
+                if (!mapEl) return;
+
+                var locations = JSON.parse(mapEl.getAttribute('data-locations') || '[]');
+                var label = mapEl.getAttribute('data-label') || '';
+
+                function escapeHtml(str) {
+                    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+                }
+
+                var map = L.map('instrument-locations-map', { fullscreenControl: true });
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                var bounds = [];
+                locations.forEach(function (loc) {
+                    var coords = [loc.latitude, loc.longitude];
+                    bounds.push(coords);
+                    L.marker(coords).addTo(map).bindPopup(
+                        '<a href="' + escapeHtml(loc.url) + '"><strong>' + escapeHtml(loc.name) + '</strong></a><br>'
+                        + escapeHtml(label.replace(':count', loc.observations))
+                    );
+                });
+
+                if (bounds.length === 1) {
+                    map.setView(bounds[0], 10);
+                } else {
+                    map.fitBounds(bounds, { padding: [30, 30], maxZoom: 10 });
+                }
+            });
+        </script>
+    @endpush
 </x-app-layout>

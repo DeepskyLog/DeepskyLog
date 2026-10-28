@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Lens;
 use App\Models\LensMake;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
@@ -18,6 +17,8 @@ final class AdminLensTable extends PowerGridComponent
 
     public function setUp(): array
     {
+        $this->withoutPersist();
+
         $this->showCheckBox();
 
         return [
@@ -31,7 +32,7 @@ final class AdminLensTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return LensMake::query();
+        return LensMake::query()->withCount('lenses');
     }
 
     public function relationSearch(): array
@@ -46,7 +47,7 @@ final class AdminLensTable extends PowerGridComponent
             ->add('name')
             ->add('created_at')
             ->add('number_of_lenses', function ($lens_make) {
-                return Lens::where('make_id', $lens_make->id)->count();
+                return $lens_make->lenses_count;
             });
     }
 
@@ -62,7 +63,9 @@ final class AdminLensTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Number of Lenses', 'number_of_lenses'),
+            Column::make('Number of Lenses', 'number_of_lenses')
+                ->sortable()
+                ->sortUsing(fn ($query, string $direction) => $query->orderBy('lenses_count', $direction)),
 
             Column::action('Action'),
         ];

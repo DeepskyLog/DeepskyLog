@@ -55,6 +55,51 @@ return [
         'redirect' => env('TWITTER_REDIRECT', env('TWITTER_REDIRECT_URI')),
     ],
 
+    'bigdatacloud' => [
+        // Reverse geocoding and time zones of new locations
+        'key' => env('BIGDATA_API_KEY'),
+    ],
+
+    'lightpollutionmap' => [
+        // Sky brightness of new locations
+        'key' => env('LIGHTPOLLUTIONMAP_API_KEY'),
+    ],
+
+    'open_meteo' => [
+        // The cloud forecast of the coming nights (App\Services\Weather\NightForecast), free without a key
+        'url' => env('OPEN_METEO_URL', 'https://api.open-meteo.com/v1/forecast'),
+        'enabled' => (bool) env('WEATHER_FORECAST', true),
+    ],
+
+    'aavso' => [
+        // The variable star index and latest estimates of the AAVSO (App\Services\AavsoVariableStars), free without a key
+        'url' => env('AAVSO_VSX_URL', 'https://vsx.aavso.org/index.php'),
+        'enabled' => (bool) env('AAVSO', true),
+        // Milliseconds between two requests of aavso:refresh (more requests trip the AAVSO's firewall)
+        'delay' => (int) env('AAVSO_DELAY_MS', 1000),
+    ],
+
+    'astroforum' => [
+        // The threads of the objects of the month of Astroforum (App\Services\ObjectsOfTheMonth\AstroforumFeed), read with their permission
+        'feed' => env('ASTROFORUM_FEED_URL', 'https://www.astroforum.nl/forums/objecten-van-de-maand.49/index.rss'),
+        'enabled' => (bool) env('ASTROFORUM', true),
+        // Milliseconds between two requests to the forum
+        'delay' => (int) env('ASTROFORUM_DELAY_MS', 1000),
+    ],
+
+    'webpush' => [
+        // The push notifications of the alerts (App\Services\PushNotifications); make the keys with php artisan webpush:vapid
+        'public_key' => env('VAPID_PUBLIC_KEY'),
+        'private_key' => env('VAPID_PRIVATE_KEY'),
+        'subject' => env('VAPID_SUBJECT', 'mailto:'.env('MAIL_FROM_ADDRESS', 'noreply@mg.deepskylog.org')),
+        'enabled' => (bool) env('WEB_PUSH', true),
+    ],
+
+    'legacy_site' => [
+        // The addresses of the old DeepskyLog site (its $baseURL), separated by commas, where observers who came from there to register return (App\Support\LegacySiteReturn); empty: nobody is sent back
+        'url' => env('LEGACY_SITE_URL'),
+    ],
+
     'google' => [
         // GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET are already standard
         'client_id' => env('GOOGLE_CLIENT_ID', env('GOOGLE_KEY')),

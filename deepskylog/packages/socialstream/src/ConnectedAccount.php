@@ -35,6 +35,17 @@ class ConnectedAccount extends Model
     ];
 
     /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'token',
+        'secret',
+        'refresh_token',
+    ];
+
+    /**
      * The event map for the model.
      *
      * @var array
@@ -55,6 +66,10 @@ class ConnectedAccount extends Model
         return [
             'created_at' => 'datetime',
             'expires_at' => 'datetime',
+            // The OAuth tokens are stored encrypted with the application key.
+            'token' => 'encrypted',
+            'secret' => 'encrypted',
+            'refresh_token' => 'encrypted',
         ];
     }
 

@@ -5,10 +5,10 @@ namespace App\Livewire;
 use App\Models\Eyepiece;
 use App\Models\EyepieceMake;
 use App\Models\EyepieceType;
+use App\Support\UploadedPhoto;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -48,6 +48,8 @@ class CreateEyepiece extends Component
     public function mount(): void
     {
         if ($this->eyepiece) {
+            abort_unless($this->eyepiece->canBeEditedBy(Auth::user()), 403);
+
             $this->name = $this->eyepiece->name;
 
             $this->eyepiece_make = $this->eyepiece->make_id;
@@ -133,6 +135,10 @@ class CreateEyepiece extends Component
 
     public function save()
     {
+        if ($this->eyepiece) {
+            abort_unless($this->eyepiece->canBeEditedBy(Auth::user()), 403);
+        }
+
         // Eyepiece Make
         if ($this->eyepiece_make != 1 && $this->eyepiece_make) {
             $make = $this->eyepiece_make;
@@ -143,7 +149,7 @@ class CreateEyepiece extends Component
             $make_name = $this->eyepiece_new_make;
 
             // Create a new make
-            $make = EyepieceMake::create(['name' => $make_name])->id;
+            $make = EyepieceMake::firstOrCreate(['name' => trim($make_name)])->id;
         } else {
             $make = 1;
         }
@@ -158,29 +164,25 @@ class CreateEyepiece extends Component
             $type_name = $this->eyepiece_new_type;
 
             // Create a new type
-            $type = EyepieceType::create(['name' => $type_name, 'eyepiece_makes_id' => $make])->id;
+            $type = EyepieceType::firstOrCreate(['name' => trim($type_name), 'eyepiece_makes_id' => $make])->id;
         } else {
             $type = 1;
-        }
-
-        $photoPath = null;
-        if ($this->photo) {
-            $upload_name = Str::slug(
-                Auth()->user()->slug.' '.$this->name,
-                '-'
-            ).'.'.$this->photo->getClientOriginalExtension();
-            // Make a slug from the upload_name
-            $photoPath = $this->photo->storePubliclyAs('photos/eyepieces', $upload_name, 'public');
         }
 
         $data = $this->validate([
             'name' => 'required|min:3',
             'focal_length_mm' => 'numeric|min:1',
-            'apparentFOV' => 'numeric|min:1|max:150|nullable',
+            'apparentFOV' => 'required|numeric|min:1|max:150',
             'field_stop_mm' => 'numeric|min:1|max:150|nullable',
+            'max_focal_length_mm' => 'numeric|gt:focal_length_mm|nullable',
             'photo' => 'nullable|image',
             'description' => 'nullable|string',
         ]);
+
+        $photoPath = null;
+        if ($this->photo) {
+            $photoPath = UploadedPhoto::store($this->photo, 'photos/eyepieces', $this->eyepiece);
+        }
 
         if ($this->field_stop_mm == '') {
             $data['field_stop_mm'] = 0;
@@ -209,6 +211,7 @@ class CreateEyepiece extends Component
             $eyepiece = Eyepiece::create($data);
 
             session()->flash('message', __('Eyepiece created successfully.'));
+            session()->flash('equipment_created', true);
 
             // Return to /eyepiece/{user-slug}/{eyepiece-slug} page
             return redirect('/eyepiece/'.Auth()->user()->slug.'/'.$eyepiece->slug);

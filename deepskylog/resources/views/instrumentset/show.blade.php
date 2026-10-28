@@ -9,7 +9,7 @@
 
                 @if (!empty($set->description))
                     <div class="mt-4 p-3 border border-gray-700 bg-gray-800 text-gray-100 rounded prose prose-invert">
-                        {!! html_entity_decode($set->description ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') !!}
+                        {!! \App\Support\Html::purify($set->description, true) !!}
                     </div>
                 @endif
             </div>
@@ -35,7 +35,7 @@
                         <td class="pr-6 align-top">{{ __("Instruments") }}</td>
                         <td>
                             @if ($set->instruments->count())
-                                {!! $set->instruments->where('active', 1)->map(fn($e) => '<a href="/instrument/'.$e->user->slug.'/'.$e->slug.'">'.$e->name.'</a>')->implode(', ') !!}
+                                {!! $set->instruments->where('active', 1)->map(fn($e) => '<a href="/instrument/'.e($e->user->slug).'/'.e($e->slug).'">'.e(html_entity_decode($e->name)).'</a>')->implode(', ') !!}
                             @else
                                 -
                             @endif
@@ -46,7 +46,7 @@
                         <td class="pr-6 align-top">{{ __("Eyepieces") }}</td>
                         <td>
                             @if ($set->eyepieces->count())
-                                {!! $set->eyepieces->where('active', 1)->sortByDesc(fn($e) => $e->focal_length_mm ?? 0)->map(fn($e) => '<a href="/eyepiece/'.$e->user->slug.'/'.$e->slug.'">'.$e->name.'</a>')->implode(', ') !!}
+                                {!! $set->eyepieces->where('active', 1)->sortByDesc(fn($e) => $e->focal_length_mm ?? 0)->map(fn($e) => '<a href="/eyepiece/'.e($e->user->slug).'/'.e($e->slug).'">'.e(html_entity_decode($e->name)).'</a>')->implode(', ') !!}
                             @else
                                 -
                             @endif
@@ -57,7 +57,7 @@
                         <td class="pr-6 align-top">{{ __("Filters") }}</td>
                         <td>
                             @if ($set->filters->count())
-                                {!! $set->filters->where('active', 1)->map(fn($f) => '<a href="/filter/'.$f->user->slug.'/'.$f->slug.'">'.$f->name.'</a>')->implode(', ') !!}
+                                {!! $set->filters->where('active', 1)->map(fn($f) => '<a href="/filter/'.e($f->user->slug).'/'.e($f->slug).'">'.e(html_entity_decode($f->name)).'</a>')->implode(', ') !!}
                             @else
                                 -
                             @endif
@@ -68,7 +68,7 @@
                         <td class="pr-6 align-top">{{ __("Lenses") }}</td>
                         <td>
                             @if ($set->lenses->count())
-                                {!! $set->lenses->where('active', 1)->map(fn($l) => '<a href="/lens/'.$l->user->slug.'/'.$l->slug.'">'.$l->name.'</a>')->implode(', ') !!}
+                                {!! $set->lenses->where('active', 1)->map(fn($l) => '<a href="/lens/'.e($l->user->slug).'/'.e($l->slug).'">'.e(html_entity_decode($l->name)).'</a>')->implode(', ') !!}
                             @else
                                 -
                             @endif
@@ -79,7 +79,7 @@
                         <td class="pr-6 align-top">{{ __("Locations") }}</td>
                         <td>
                             @if ($set->locations->count())
-                                {!! $set->locations->where('active', 1)->map(fn($loc) => '<a href="/location/'.$loc->user->slug.'/'.$loc->slug.'">'.$loc->name.'</a>')->implode(', ') !!}
+                                {!! $set->locations->where('active', 1)->map(fn($loc) => '<a href="/location/'.e($loc->user->slug).'/'.e($loc->slug).'">'.e(html_entity_decode($loc->name)).'</a>')->implode(', ') !!}
                             @else
                                 -
                             @endif

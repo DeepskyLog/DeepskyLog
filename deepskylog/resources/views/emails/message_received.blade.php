@@ -9,13 +9,15 @@
     <div style="max-width: 680px; margin: 0 auto;">
         <p>{{ __('Hello') }}{{ $recipientName ? ' '.$recipientName : '' }},</p>
 
-        <p>{!! __('You have received a new message from :sender.', ['sender' => $sender]) !!}</p>
+        <p>{{ __('You have received a new message from :sender.', ['sender' => $sender]) }}</p>
 
         <h3>{{ $subject ?? __('(no subject)') }}</h3>
 
         <div style="border-top:1px solid #ddd; padding-top:10px;">
             {!! $messageHtml !!}
         </div>
+
+        <p><a href="{{ $url }}">{{ __('Read and answer the message on DeepskyLog') }}</a></p>
 
     <p style="color:#666; font-size:12px;">{{ __('This email was sent from DeepskyLog notifications.') }}</p>
     <p style="color:#666; font-size:12px;">{{ __('Please note: replying to this email will not send a reply to the sender. To reply, please use the DeepskyLog application message interface.') }}</p>

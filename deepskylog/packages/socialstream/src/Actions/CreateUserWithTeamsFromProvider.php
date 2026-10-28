@@ -43,20 +43,19 @@ class CreateUserWithTeamsFromProvider implements CreatesUserFromProvider
 
                 $this->createsConnectedAccounts->create($user, $provider, $providerUser);
 
-                $this->createTeam($user);
+                $this->addToObservers($user);
             });
         });
     }
 
     /**
-     * Create a personal team for the user.
+     * Add the user to the Observers team. DeepskyLog has a fixed set of teams,
+     * so no personal team is created.
      */
-    protected function createTeam(User $user): void
+    protected function addToObservers(User $user): void
     {
-        $user->ownedTeams()->save(Team::forceCreate([
-            'user_id' => $user->id,
-            'name' => explode(' ', $user->name, 2)[0]."'s Team",
-            'personal_team' => true,
-        ]));
+        $team = Team::where('name', 'Observers')->firstOrFail();
+        $user->teams()->attach($team);
+        $user->switchTeam($team);
     }
 }

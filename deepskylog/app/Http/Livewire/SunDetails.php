@@ -108,7 +108,7 @@ class SunDetails extends Component
                 $loc = $user->standardLocation;
             } else {
                 try {
-                    $loc = Location::where('active', 1)->first();
+                    $loc = Location::forEphemerides();
                 } catch (\Throwable $_) {
                     $loc = null;
                 }

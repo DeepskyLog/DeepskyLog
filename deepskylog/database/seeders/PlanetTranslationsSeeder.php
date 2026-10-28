@@ -24,7 +24,6 @@ class PlanetTranslationsSeeder extends Seeder
             ['canonical' => 'Saturn', 'de' => 'Saturn', 'es' => 'Saturno', 'fr' => 'Saturne', 'nl' => 'Saturnus', 'sv' => 'Saturnus'],
             ['canonical' => 'Uranus', 'de' => 'Uranus', 'es' => 'Urano', 'fr' => 'Uranus', 'nl' => 'Uranus', 'sv' => 'Uranus'],
             ['canonical' => 'Neptune', 'de' => 'Neptun', 'es' => 'Neptuno', 'fr' => 'Neptune', 'nl' => 'Neptunus', 'sv' => 'Neptunus'],
-            ['canonical' => 'Pluto', 'de' => 'Pluto', 'es' => 'Plutón', 'fr' => 'Pluton', 'nl' => 'Pluto', 'sv' => 'Pluto'],
 
             // Major moons (use canonical names - typically unchanged across locales)
             ['canonical' => 'Phobos', 'de' => 'Phobos', 'es' => 'Fobos', 'fr' => 'Phobos', 'nl' => 'Phobos', 'sv' => 'Phobos'],

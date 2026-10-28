@@ -26,6 +26,30 @@
             />
 
             <x-dropdown.item
+                icon="star"
+                href="{{ route('objects-of-the-month.index') }}"
+                label="{{ __('Object of the Month') }}"
+            />
+
+            <x-dropdown.item
+                icon="trophy"
+                href="{{ route('challenges.index') }}"
+                label="{{ __('Observing challenges') }}"
+            />
+
+            <x-dropdown.item
+                icon="moon"
+                href="{{ route('moon.show') }}"
+                label="{{ __('The Moon tonight') }}"
+            />
+
+            <x-dropdown.item
+                icon="globe-alt"
+                href="{{ route('planet-moons.show') }}"
+                label="{{ __('Jupiter and Saturn tonight') }}"
+            />
+
+            <x-dropdown.item
                 icon="bars-3-center-left"
                 href="/observations"
                 label="{{ __('All observations') }}"
@@ -35,15 +59,20 @@
                 href="/drawings"
                 label="{{ __('All drawings') }}"
             />
+            <x-dropdown.item
+                icon="calendar-days"
+                href="{{ route('star-parties.index') }}"
+                label="{{ __('Starparties') }}"
+            />
 
             <x-dropdown.item
                 separator
                 icon="user-group"
-                href="{{ config('app.old_url') }}/index.php?indexAction=rank_observers"
+                href="{{ route('observers.index') }}"
                 label="{{ __('Observers') }}"
             />
 
-            <x-dropdown.item href="{{ config('app.old_url') }}/index.php?indexAction=rank_objects">
+            <x-dropdown.item href="{{ route('objects.popular') }}">
                 <x-outline.popular-objects-icon class="h-4 w-4 mr-2 ml-0 text-gray-300" />
                 {{ __('Popular objects') }}
             </x-dropdown.item>
@@ -60,7 +89,7 @@
 
             <x-dropdown.item
                 icon="chart-bar-square"
-                href="{{ config('app.old_url') }}/index.php?indexAction=statistics"
+                href="{{ route('statistics.index') }}"
                 label="{{ __('Statistics') }}"
             />
 

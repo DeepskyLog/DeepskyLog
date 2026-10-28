@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Services\AtlasLayout;
+use App\Traits\ClearsResponseCache;
 use Illuminate\Database\Eloquent\Model;
 
 class DeepskyObject extends Model
 {
+    use ClearsResponseCache;
+
     // Use default connection at runtime
     protected $table = 'objects';
 
@@ -18,6 +22,99 @@ class DeepskyObject extends Model
 
     // Allow mass assignment for all fields (used for admin edits)
     protected $guarded = [];
+
+    protected $casts = [
+        'reviewed_at' => 'datetime',
+    ];
+
+    /**
+     * Review status of an object (#526), set by administrators and database
+     * experts on the edit page; null is an object nobody reviewed yet. Every
+     * object added through DeepskyObjectCreator starts as new.
+     */
+    public const REVIEW_NEW = 'new';
+
+    public const REVIEW_CHECKED = 'checked';
+
+    public const REVIEW_ATTENTION = 'attention';
+
+    public const REVIEW_STATUSES = [self::REVIEW_NEW, self::REVIEW_CHECKED, self::REVIEW_ATTENTION];
+
+    protected static function booted(): void
+    {
+        // An edited magnitude is no longer the estimate of NebulaBrightness
+        static::saving(function (DeepskyObject $object) {
+            if ($object->exists && $object->isDirty('mag') && ! $object->isDirty('mag_source')) {
+                $object->mag_source = null;
+            }
+        });
+    }
+
+    /**
+     * Whether the magnitude is an estimate (from the brightness class of a
+     * nebula catalogue, App\Services\NebulaBrightness) rather than measured.
+     */
+    public function hasEstimatedMagnitude(): bool
+    {
+        return $this->mag_source !== null && $this->mag_source !== '';
+    }
+
+    /**
+     * The label of a review status, 'Not reviewed' for null.
+     */
+    public static function reviewStatusLabel(?string $status): string
+    {
+        return match ($status) {
+            self::REVIEW_NEW => __('New'),
+            self::REVIEW_CHECKED => __('Checked'),
+            self::REVIEW_ATTENTION => __('Needs attention'),
+            default => __('Not reviewed'),
+        };
+    }
+
+    /**
+     * Sets the review status and note; who reviewed it and when only change
+     * when one of them does. Not saved.
+     */
+    public function setReview(?string $status, ?string $note, ?int $userId): void
+    {
+        $note = $note !== null && trim($note) !== '' ? trim($note) : null;
+        if ($status === $this->review_status && $note === $this->review_note) {
+            return;
+        }
+
+        $this->review_status = $status;
+        $this->review_note = $note;
+        $this->reviewed_by = $status === null ? null : $userId;
+        $this->reviewed_at = $status === null ? null : now();
+    }
+
+    /**
+     * The number of objects per review status, keyed 'none' for the objects
+     * nobody reviewed yet.
+     *
+     * @return array<string, int>
+     */
+    public static function reviewCounts(): array
+    {
+        $counts = static::query()
+            ->selectRaw('review_status, COUNT(*) AS n')
+            ->groupBy('review_status')
+            ->pluck('n', 'review_status');
+
+        $result = [];
+        foreach (self::REVIEW_STATUSES as $status) {
+            $result[$status] = (int) ($counts[$status] ?? 0);
+        }
+        $result['none'] = (int) ($counts[''] ?? 0);
+
+        return $result;
+    }
+
+    public function reviewer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
+    }
 
     /**
      * Instance helper: formatted RA
@@ -140,6 +237,30 @@ class DeepskyObject extends Model
     }
 
     /**
+     * The objects whose name is this name plus one letter, such as IC 2554A
+     * and IC 2554B for IC 2554: the components an object was split into, as
+     * name => slug.
+     *
+     * @return array<string, string>
+     */
+    public static function componentsOf(string $name): array
+    {
+        $name = trim($name);
+        if ($name === '') {
+            return [];
+        }
+
+        // Wildcards in the name only widen the match, the filter makes it exact
+        return \Illuminate\Support\Facades\DB::table('objects')
+            ->where('name', 'like', $name . '_')
+            ->orderBy('name')
+            ->get(['name', 'slug'])
+            ->filter(fn($object) => preg_match('/^' . preg_quote($name, '/') . '[A-Za-z]$/iu', $object->name) === 1)
+            ->mapWithKeys(fn($object) => [$object->name => $object->slug ?: \Illuminate\Support\Str::slug($object->name)])
+            ->all();
+    }
+
+    /**
      * Parse Declination in various formats to decimal degrees.
      * Accepts: decimal degrees or D M S (with optional sign), returns degrees.
      */
@@ -170,5 +291,43 @@ class DeepskyObject extends Model
         }
 
         return null;
+    }
+
+    /**
+     * Return RA in hours (0..24)
+     */
+    public function raHours(): float
+    {
+        $raDeg = static::raToDecimal($this->ra ?? null);
+        if ($raDeg === null) {
+            return 0.0;
+        }
+
+        $hours = ($raDeg / 15.0);
+        $hours = fmod($hours, 24.0);
+        if ($hours < 0.0) {
+            $hours += 24.0;
+        }
+
+        return $hours;
+    }
+
+    /**
+     * Return declination in degrees as float
+     */
+    public function declDegrees(): float
+    {
+        return $this->decl === null ? 0.0 : (float) $this->decl;
+    }
+
+    /**
+     * Calculate the DeepskyLog atlas page number for this object's coordinates.
+     * Accepts atlas type index (0..5) where
+     * 0 = overview (portrait), 1 = lookup (portrait), 2 = detail (portrait),
+     * 3 = overview (landscape),4 = lookup (landscape),5 = detail (landscape)
+     */
+    public function atlasPageNumber(int $atlastype): int
+    {
+        return AtlasLayout::pageAt($atlastype, $this->raHours(), $this->declDegrees());
     }
 }

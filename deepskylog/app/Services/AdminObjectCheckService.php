@@ -2,23 +2,47 @@
 
 namespace App\Services;
 
+use App\Jobs\CheckObjectConstellations;
 use App\Models\Constellation;
 use App\Models\DeepskyObject;
+use App\Models\Observation;
+use App\Services\Observations\ObservationCardData;
+use App\Support\SpreadsheetCell;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 
 class AdminObjectCheckService
 {
     private const DISPLAY_LIMIT = 250;
 
+    /** How many observations of an unknown target the page links to. */
+    private const LINKS_PER_TARGET = 10;
+
+    /** Status and result of the last constellation check (CheckObjectConstellations). */
+    public const CONSTELLATION_STATUS_KEY = 'admin_check_objects:constellations';
+
+    /** All mismatches of the last constellation check, on the local disk. */
+    public const CONSTELLATION_EXPORT_PATH = 'object-checks/constellation-mismatches.csv';
+
+    /**
+     * A check that has not reported progress for this long is taken to have
+     * died with its worker, and may be queued again.
+     */
+    private const CONSTELLATION_STALE_MINUTES = 60;
+
+    /**
+     * The checks that are quick enough to run in the request; the
+     * constellation check runs on the queue, see constellationCheckStatus().
+     */
     public function buildReport(): array
     {
-        $constellations = Constellation::query()->pluck('name', 'id')->map(fn($name) => (string) $name);
-
         return [
-            'constellation_check' => $this->buildConstellationCheck($constellations),
+            'incomplete_objects' => $this->buildIncompleteObjectsCheck(),
             'orphan_objectnames' => $this->buildOrphanObjectNamesCheck(),
             'unknown_observations' => $this->buildUnknownObservationsCheck(),
         ];
@@ -39,109 +63,207 @@ class AdminObjectCheckService
         return DB::table('objectnames')->whereIn('id', $ids)->delete();
     }
 
-    public function repairConstellationMismatches(): int
+    /**
+     * The status of the last constellation check, null when none was queued:
+     * state (queued, running, complete or failed), repair, total, checked,
+     * skipped, mismatch_count, repaired, the first DISPLAY_LIMIT mismatches
+     * as examples, and when it was queued, started, last updated and finished.
+     */
+    public function constellationCheckStatus(): ?array
     {
-        $constellations = Constellation::query()->pluck('id', 'name')->mapWithKeys(fn($id, $name) => [strtoupper(trim((string) $name)) => (string) $id]);
+        $status = Cache::get(self::CONSTELLATION_STATUS_KEY);
 
-        $updated = 0;
-
-        DB::table('objects')
-            ->select('name', 'ra', 'decl')
-            ->orderBy('name')
-            ->chunk(500, function (Collection $objects) use ($constellations, &$updated) {
-                foreach ($objects as $object) {
-                    $raHours = $this->normalizeRaToHours($object->ra ?? null);
-                    $declination = DeepskyObject::decToDecimal($object->decl ?? null);
-
-                    if ($raHours === null || $declination === null) {
-                        continue;
-                    }
-
-                    $expectedCode = strtoupper((new EquatorialCoordinates($raHours, $declination))->getConstellation());
-
-                    if (DB::table('objects')->where('name', $object->name)->update(['con' => $expectedCode]) > 0) {
-                        $updated++;
-                    }
-                }
-            });
-
-        return $updated;
+        return is_array($status) ? $status : null;
     }
 
-    public function exportConstellationMismatches(): string
+    public function constellationCheckInProgress(): bool
     {
-        $constellations = Constellation::query()->pluck('name', 'id')->map(fn($name) => (string) $name);
-        $report = $this->buildConstellationCheck($constellations);
+        $status = $this->constellationCheckStatus();
 
-        $rows = ['Object', 'Stored Code', 'Stored Name', 'Expected Code', 'Expected Name', 'RA', 'Declination'];
-        $lines = [implode(',', array_map(fn($cell) => '"' . str_replace('"', '""', (string) $cell) . '"', $rows))];
+        return $status !== null
+            && in_array($status['state'], ['queued', 'running'], true)
+            && Carbon::parse($status['updated_at'])->gt(now()->subMinutes(self::CONSTELLATION_STALE_MINUTES));
+    }
 
-        foreach ($report['examples'] as $row) {
-            $lines[] = implode(',', array_map(
-                fn($cell) => '"' . str_replace('"', '""', (string) ($cell ?? '')) . '"',
-                [
-                    $row['name'],
-                    $row['stored_code'],
-                    $row['stored_name'] ?? '',
-                    $row['expected_code'],
-                    $row['expected_name'] ?? '',
-                    $row['ra'],
-                    $row['decl'],
-                ]
-            ));
+    /**
+     * Queue a check of the constellations of all objects, which corrects them
+     * when $repair is set. Returns false when a check is already in progress.
+     */
+    public function queueConstellationCheck(bool $repair): bool
+    {
+        if ($this->constellationCheckInProgress()) {
+            return false;
         }
 
-        return implode("\n", $lines);
+        $this->putConstellationStatus([
+            'state' => 'queued',
+            'repair' => $repair,
+            'queued_at' => now()->toIso8601String(),
+            'display_limit' => self::DISPLAY_LIMIT,
+        ]);
+
+        CheckObjectConstellations::dispatch($repair);
+
+        return true;
+    }
+
+    /**
+     * Compare the stored constellation of every object with the one of its
+     * coordinates, write all mismatches to CONSTELLATION_EXPORT_PATH and
+     * correct them when $repair is set. Objects whose coordinates can't be
+     * parsed are counted as skipped. Run by CheckObjectConstellations.
+     */
+    public function runConstellationCheck(bool $repair): array
+    {
+        $constellations = Constellation::query()->pluck('name', 'id')->map(fn($name) => (string) $name);
+        $previous = $this->constellationCheckStatus() ?? [];
+
+        $status = [
+            'state' => 'running',
+            'repair' => $repair,
+            'queued_at' => $previous['queued_at'] ?? now()->toIso8601String(),
+            'started_at' => now()->toIso8601String(),
+            'total' => DB::table('objects')->count(),
+            'checked' => 0,
+            'skipped' => 0,
+            'mismatch_count' => 0,
+            'repaired' => 0,
+            'examples' => [],
+            'display_limit' => self::DISPLAY_LIMIT,
+        ];
+        $this->putConstellationStatus($status);
+
+        $disk = Storage::disk('local');
+        $disk->makeDirectory(dirname(self::CONSTELLATION_EXPORT_PATH));
+        $file = fopen($disk->path(self::CONSTELLATION_EXPORT_PATH), 'w');
+
+        try {
+            fwrite($file, $this->csvLine(['Object', 'Stored Code', 'Stored Name', 'Expected Code', 'Expected Name', 'RA', 'Declination']));
+
+            // Only con changes, so the offsets of the chunks stay the same while repairing
+            DB::table('objects')
+                ->select('name', 'con', 'ra', 'decl')
+                ->orderBy('name')
+                ->chunk(500, function (Collection $objects) use ($constellations, $repair, $file, &$status) {
+                    foreach ($objects as $object) {
+                        $status['checked']++;
+
+                        $raHours = $this->normalizeRaToHours($object->ra);
+                        $declination = DeepskyObject::decToDecimal($object->decl);
+
+                        if ($raHours === null || $declination === null) {
+                            $status['skipped']++;
+
+                            continue;
+                        }
+
+                        $expectedCode = strtoupper((new EquatorialCoordinates($raHours, $declination))->getConstellation());
+                        $storedCode = strtoupper(trim((string) ($object->con ?? '')));
+
+                        if ($storedCode === $expectedCode) {
+                            continue;
+                        }
+
+                        $status['mismatch_count']++;
+
+                        $row = [
+                            'name' => $object->name,
+                            'stored_code' => $storedCode,
+                            'stored_name' => $constellations->get($storedCode),
+                            'expected_code' => $expectedCode,
+                            'expected_name' => $constellations->get($expectedCode),
+                            'ra' => DeepskyObject::formatRa($object->ra),
+                            'decl' => DeepskyObject::formatDec($object->decl),
+                        ];
+
+                        fwrite($file, $this->csvLine(array_values($row)));
+
+                        if (count($status['examples']) < self::DISPLAY_LIMIT) {
+                            $status['examples'][] = $row;
+                        }
+
+                        if ($repair && DB::table('objects')->where('name', $object->name)->update(['con' => $expectedCode]) > 0) {
+                            $status['repaired']++;
+                        }
+                    }
+
+                    $this->putConstellationStatus($status);
+                });
+        } finally {
+            fclose($file);
+        }
+
+        // The worker usually runs as another user than the web server, which
+        // must still be able to read the file to offer the download.
+        @chmod($disk->path(dirname(self::CONSTELLATION_EXPORT_PATH)), 0755);
+        @chmod($disk->path(self::CONSTELLATION_EXPORT_PATH), 0644);
+
+        if ($repair && $status['repaired'] > 0) {
+            Cache::forget('admin_check_objects_report');
+        }
+
+        $status['state'] = 'complete';
+        $status['finished_at'] = now()->toIso8601String();
+        $this->putConstellationStatus($status);
+
+        return $status;
+    }
+
+    public function markConstellationCheckFailed(): void
+    {
+        $this->putConstellationStatus(['state' => 'failed', 'finished_at' => now()->toIso8601String()] + ($this->constellationCheckStatus() ?? []));
+    }
+
+    /**
+     * All mismatches of the last complete constellation check as CSV, null
+     * when there is none.
+     */
+    public function exportConstellationMismatches(): ?string
+    {
+        if (($this->constellationCheckStatus()['state'] ?? null) !== 'complete') {
+            return null;
+        }
+
+        $csv = Storage::disk('local')->get(self::CONSTELLATION_EXPORT_PATH);
+
+        return is_string($csv) ? rtrim($csv, "\n") : null;
+    }
+
+    private function putConstellationStatus(array $status): void
+    {
+        $status['updated_at'] = now()->toIso8601String();
+
+        Cache::forever(self::CONSTELLATION_STATUS_KEY, $status);
     }
 
     public function exportOrphanObjectNames(): string
     {
         $report = $this->buildOrphanObjectNamesCheck();
 
-        $rows = ['ID', 'Object Name', 'Catalog', 'Index', 'Alternative Name'];
-        $lines = [implode(',', array_map(fn($cell) => '"' . str_replace('"', '""', (string) $cell) . '"', $rows))];
+        $csv = $this->csvLine(['ID', 'Object Name', 'Catalog', 'Index', 'Alternative Name']);
 
         foreach ($report['examples'] as $row) {
-            $lines[] = implode(',', array_map(
-                fn($cell) => '"' . str_replace('"', '""', (string) ($cell ?? '')) . '"',
-                [
-                    $row->id,
-                    $row->objectname,
-                    $row->catalog,
-                    $row->catindex,
-                    $row->altname,
-                ]
-            ));
+            $csv .= $this->csvLine([$row->id, $row->objectname, $row->catalog, $row->catindex, $row->altname]);
         }
 
-        return implode("\n", $lines);
+        return rtrim($csv, "\n");
     }
 
     public function exportAliasFixableObservationMappings(): string
     {
-        $headers = ['Observed Name', 'Primary Name', 'Observation Count'];
-        $lines = [implode(',', array_map(fn($cell) => '"' . str_replace('"', '""', (string) $cell) . '"', $headers))];
+        $csv = $this->csvLine(['Observed Name', 'Primary Name', 'Observation Count']);
 
-        if (!array_key_exists('mysqlOld', config('database.connections', []))) {
-            return implode("\n", $lines);
+        if (!Schema::hasTable('observations')) {
+            return rtrim($csv, "\n");
         }
 
-        if (!Schema::connection('mysqlOld')->hasTable('observations')) {
-            return implode("\n", $lines);
-        }
+        [$knownObjects, $primaryNameFor] = $this->primaryNameResolver();
 
-        $knownObjects = $this->buildKnownObjectsMap();
-        $aliasToPrimary = $this->buildAliasToPrimaryMap($knownObjects);
-
-        if (empty($aliasToPrimary)) {
-            return implode("\n", $lines);
-        }
-
-        DB::connection('mysqlOld')->table('observations')
-            ->select('objectname', DB::raw('COUNT(*) as observation_count'))
-            ->groupBy('objectname')
-            ->orderBy('objectname')
-            ->chunk(500, function (Collection $rows) use (&$lines, $knownObjects, $aliasToPrimary) {
+        $this->deepskyObservations()
+            ->select('target_key as objectname', DB::raw('COUNT(*) as observation_count'))
+            ->groupBy('target_key')
+            ->orderBy('target_key')
+            ->chunk(500, function (Collection $rows) use (&$csv, $knownObjects, $primaryNameFor) {
                 foreach ($rows as $row) {
                     $observedName = (string) ($row->objectname ?? '');
                     $normalized = $this->normalizeObjectNameKey($observedName);
@@ -150,139 +272,100 @@ class AdminObjectCheckService
                         continue;
                     }
 
-                    $primaryName = $aliasToPrimary[$normalized] ?? null;
+                    $primaryName = $primaryNameFor($normalized);
 
                     if ($primaryName === null) {
                         continue;
                     }
 
-                    $lines[] = implode(',', array_map(
-                        fn($cell) => '"' . str_replace('"', '""', (string) ($cell ?? '')) . '"',
-                        [
-                            $observedName,
-                            $primaryName,
-                            (int) $row->observation_count,
-                        ]
-                    ));
+                    $csv .= $this->csvLine([$observedName, $primaryName, (int) $row->observation_count]);
                 }
             });
 
-        return implode("\n", $lines);
+        return rtrim($csv, "\n");
     }
 
     public function repairObservationObjectNamesToPrimary(): int
     {
-        if (!array_key_exists('mysqlOld', config('database.connections', []))) {
+        if (!Schema::hasTable('observations')) {
             return 0;
         }
 
-        if (!Schema::connection('mysqlOld')->hasTable('observations')) {
-            return 0;
-        }
-
-        $knownObjects = $this->buildKnownObjectsMap();
-        $aliasToPrimary = $this->buildAliasToPrimaryMap($knownObjects);
-
-        if (empty($aliasToPrimary)) {
-            return 0;
-        }
+        [$knownObjects, $primaryNameFor] = $this->primaryNameResolver();
 
         $updated = 0;
 
-        DB::connection('mysqlOld')->table('observations')
-            ->select('objectname')
-            ->whereNotNull('objectname')
+        // The names are read first: renaming rows while chunking would shift the offsets
+        $observedNames = $this->deepskyObservations()
+            ->whereNotNull('target_key')
             ->distinct()
-            ->orderBy('objectname')
-            ->chunk(500, function (Collection $rows) use ($knownObjects, $aliasToPrimary, &$updated) {
-                foreach ($rows as $row) {
-                    $rawObjectName = (string) ($row->objectname ?? '');
-                    $normalized = $this->normalizeObjectNameKey($rawObjectName);
+            ->pluck('target_key');
 
-                    if ($normalized === '' || isset($knownObjects[$normalized])) {
-                        continue;
-                    }
+        foreach ($observedNames as $observedName) {
+            $rawObjectName = (string) $observedName;
+            $normalized = $this->normalizeObjectNameKey($rawObjectName);
 
-                    $primaryName = $aliasToPrimary[$normalized] ?? null;
+            if ($normalized === '' || isset($knownObjects[$normalized])) {
+                continue;
+            }
 
-                    if ($primaryName === null || $rawObjectName === $primaryName) {
-                        continue;
-                    }
+            $primaryName = $primaryNameFor($normalized);
 
-                    $updated += DB::connection('mysqlOld')->table('observations')
-                        ->where('objectname', $rawObjectName)
-                        ->update(['objectname' => $primaryName]);
-                }
-            });
+            if ($primaryName === null || $rawObjectName === $primaryName) {
+                continue;
+            }
+
+            $updated += $this->deepskyObservations()
+                ->where('target_key', $rawObjectName)
+                ->update(['target_table' => 'objects', 'target_key' => $primaryName, 'target_name' => $primaryName]);
+            ObjectObservationStatistics::refreshObjects([$rawObjectName, $primaryName]);
+        }
 
         return $updated;
     }
 
-    private function buildConstellationCheck(Collection $constellations): array
+    /**
+     * The deep-sky objects without a name, a type DeepskyLog knows or a
+     * position. The objects table stores a missing type as '' and a missing
+     * position as 0h 0°, which no real object has.
+     */
+    private function buildIncompleteObjectsCheck(): array
     {
-        // Quick counts (fast indexed queries)
-        $totalCount = DB::table('objects')->count();
-        $validCount = DB::table('objects')->whereNotNull('ra')->whereNotNull('decl')->count();
-        $skipped = $totalCount - $validCount;
+        $query = DB::table('objects')
+            ->leftJoin('deepskytypes', 'objects.type', '=', 'deepskytypes.code')
+            ->where(fn ($q) => $q->where('objects.name', '')
+                ->orWhereNull('deepskytypes.code')
+                ->orWhereNull('objects.ra')
+                ->orWhereNull('objects.decl')
+                ->orWhere(fn ($q) => $q->where('objects.ra', 0)->where('objects.decl', 0)));
 
-        // Find mismatches by sampling first 500 objects (fast preview)
-        // Full check should be run as a background job for comprehensive audit
-        $mismatchCount = 0;
-        $examples = [];
-        $sampleLimit = 500; // Sample only 500 objects for fast preview
-        $objectsScanned = 0;
-
-        DB::table('objects')
-            ->select('name', 'con', 'ra', 'decl')
-            ->whereNotNull('ra')
-            ->whereNotNull('decl')
-            ->orderBy('name')
-            ->limit($sampleLimit)
-            ->chunk(500, function (Collection $objects) use ($constellations, &$mismatchCount, &$examples, &$objectsScanned) {
-                foreach ($objects as $object) {
-                    $objectsScanned++;
-
-                    $raHours = $this->normalizeRaToHours($object->ra);
-                    $declination = DeepskyObject::decToDecimal($object->decl);
-
-                    if ($raHours === null || $declination === null) {
-                        continue;
-                    }
-
-                    $expectedCode = strtoupper((new EquatorialCoordinates($raHours, $declination))->getConstellation());
-                    $storedCode = strtoupper(trim((string) ($object->con ?? '')));
-
-                    if ($storedCode === $expectedCode) {
-                        continue;
-                    }
-
-                    $mismatchCount++;
-
-                    if (count($examples) >= self::DISPLAY_LIMIT) {
-                        continue;
-                    }
-
-                    $examples[] = [
-                        'name' => $object->name,
-                        'stored_code' => $storedCode,
-                        'stored_name' => $constellations->get($storedCode),
-                        'expected_code' => $expectedCode,
-                        'expected_name' => $constellations->get($expectedCode),
-                        'ra' => DeepskyObject::formatRa($object->ra),
-                        'decl' => DeepskyObject::formatDec($object->decl),
-                    ];
+        $examples = (clone $query)
+            ->select('objects.name', 'objects.slug', 'objects.type', 'objects.ra', 'objects.decl', 'objects.datasource', 'deepskytypes.code as known_type')
+            ->orderBy('objects.name')
+            ->limit(self::DISPLAY_LIMIT)
+            ->get()
+            ->map(function ($object) {
+                $problems = [];
+                if (trim((string) $object->name) === '') {
+                    $problems[] = __('no name');
                 }
+                if (trim((string) $object->type) === '') {
+                    $problems[] = __('no type');
+                } elseif ($object->known_type === null) {
+                    $problems[] = __('unknown type :type', ['type' => $object->type]);
+                }
+                if ($object->ra === null || $object->decl === null || ((float) $object->ra === 0.0 && (float) $object->decl === 0.0)) {
+                    $problems[] = __('no position');
+                }
+                $object->problems = $problems;
+
+                return $object;
             });
 
         return [
-            'total' => $totalCount,
-            'checked' => $objectsScanned,
-            'correct' => $objectsScanned - $mismatchCount,
-            'skipped' => $skipped,
-            'mismatch_count' => $mismatchCount,
+            'count' => (clone $query)->count(),
             'examples' => $examples,
             'display_limit' => self::DISPLAY_LIMIT,
-            'note' => $objectsScanned < $validCount ? "Preview: Scanned first {$objectsScanned} objects. Found {$mismatchCount} mismatches in this sample. Run the repair action to fix all constellation issues." : null,
         ];
     }
 
@@ -307,16 +390,11 @@ class AdminObjectCheckService
     private function buildUnknownObservationsCheck(): array
     {
         try {
-            if (!array_key_exists('mysqlOld', config('database.connections', []))) {
-                return $this->unavailableObservationsResult('The mysqlOld connection is not configured.');
+            if (!Schema::hasTable('observations')) {
+                return $this->unavailableObservationsResult('The observations table is not available.');
             }
 
-            if (!Schema::connection('mysqlOld')->hasTable('observations')) {
-                return $this->unavailableObservationsResult('The observations table is not available on the mysqlOld connection.');
-            }
-
-            $knownObjects = $this->buildKnownObjectsMap();
-            $aliasToPrimary = $this->buildAliasToPrimaryMap($knownObjects);
+            [$knownObjects, $primaryNameFor] = $this->primaryNameResolver();
 
             $examples = [];
             $unknownCount = 0;
@@ -324,11 +402,11 @@ class AdminObjectCheckService
             $aliasCount = 0;
             $aliasObservationTotal = 0;
 
-            DB::connection('mysqlOld')->table('observations')
-                ->select('objectname', DB::raw('COUNT(*) as observation_count'))
-                ->groupBy('objectname')
-                ->orderBy('objectname')
-                ->chunk(500, function (Collection $rows) use ($knownObjects, $aliasToPrimary, &$examples, &$unknownCount, &$unknownObservationTotal, &$aliasCount, &$aliasObservationTotal) {
+            $this->deepskyObservations()
+                ->select('target_key as objectname', DB::raw('COUNT(*) as observation_count'))
+                ->groupBy('target_key')
+                ->orderBy('target_key')
+                ->chunk(500, function (Collection $rows) use ($knownObjects, $primaryNameFor, &$examples, &$unknownCount, &$unknownObservationTotal, &$aliasCount, &$aliasObservationTotal) {
                     foreach ($rows as $row) {
                         $objectName = (string) ($row->objectname ?? '');
                         $normalized = $this->normalizeObjectNameKey($objectName);
@@ -338,7 +416,7 @@ class AdminObjectCheckService
                             continue;
                         }
 
-                        $primaryName = $aliasToPrimary[$normalized] ?? null;
+                        $primaryName = $primaryNameFor($normalized);
 
                         if ($primaryName !== null) {
                             $aliasCount++;
@@ -361,6 +439,8 @@ class AdminObjectCheckService
                     }
                 });
 
+            $examples = $this->addUnknownTargetLinks($examples);
+
             return [
                 'available' => true,
                 'count' => $unknownCount,
@@ -376,6 +456,60 @@ class AdminObjectCheckService
         }
     }
 
+    /**
+     * Give the unknown targets among the examples the observations that use
+     * them (observer, date, url) and the objects whose name is theirs plus a
+     * letter ("IC 2554A" and "IC 2554B" for "IC 2554"), with the url of their
+     * page, so the administrator can look up which object was meant.
+     */
+    private function addUnknownTargetLinks(array $examples): array
+    {
+        $unknownNames = collect($examples)->where('status', 'unknown')->pluck('objectname')->all();
+
+        if ($unknownNames === []) {
+            return $examples;
+        }
+
+        $observations = Observation::query()
+            ->where('target_type', Observation::TYPE_DEEPSKY)
+            ->whereIn('target_key', $unknownNames)
+            ->orderBy('observed_on')
+            ->get()
+            ->groupBy(fn(Observation $observation) => $this->normalizeObjectNameKey((string) $observation->target_key));
+        ObservationCardData::instance()->preloadDetailUrls($observations->flatten());
+
+        foreach ($examples as &$example) {
+            if ($example['status'] !== 'unknown') {
+                continue;
+            }
+
+            $example['observations'] = $observations->get($this->normalizeObjectNameKey($example['objectname']), collect())
+                ->take(self::LINKS_PER_TARGET)
+                ->map(fn(Observation $observation) => [
+                    'observer' => (string) $observation->observer_username,
+                    'date' => $observation->observed_on?->format('Y-m-d'),
+                    'url' => $observation->detailUrl(),
+                ])
+                ->all();
+
+            $example['candidates'] = collect(DeepskyObject::componentsOf($example['objectname']))
+                ->map(fn($slug, $name) => ['name' => $name, 'url' => route('object.show', ['slug' => $slug])])
+                ->values()
+                ->all();
+        }
+
+        return $examples;
+    }
+
+    /**
+     * Deep-sky observations; target_key holds the name of the object (see the
+     * target scheme in App\Models\Observation).
+     */
+    private function deepskyObservations(): \Illuminate\Database\Query\Builder
+    {
+        return DB::table('observations')->where('target_type', Observation::TYPE_DEEPSKY);
+    }
+
     private function unavailableObservationsResult(string $message): array
     {
         return [
@@ -388,6 +522,39 @@ class AdminObjectCheckService
             'display_limit' => self::DISPLAY_LIMIT,
             'message' => $message,
         ];
+    }
+
+    /**
+     * The objects (normalized name => name) and a function that gives the
+     * object an unknown observed name stands for, or null: the object of
+     * which it is an alternative name, else the one object or alternative
+     * name that differs only in spaces ("NGC1741B" for "NGC 1741B").
+     *
+     * @return array{0: array<string, string>, 1: callable(string): ?string}
+     */
+    private function primaryNameResolver(): array
+    {
+        $knownObjects = $this->buildKnownObjectsMap();
+        $aliasToPrimary = $this->buildAliasToPrimaryMap($knownObjects);
+
+        $compact = [];
+        foreach ([$knownObjects, $aliasToPrimary] as $names) {
+            foreach ($names as $key => $primary) {
+                $compactKey = $this->compactObjectNameKey($key);
+                // A spelling that fits several objects is left to the administrator
+                $compact[$compactKey] = isset($compact[$compactKey]) && $compact[$compactKey] !== $primary ? false : $primary;
+            }
+        }
+
+        return [
+            $knownObjects,
+            fn(string $normalized): ?string => $aliasToPrimary[$normalized] ?? ($compact[$this->compactObjectNameKey($normalized)] ?? null) ?: null,
+        ];
+    }
+
+    private function compactObjectNameKey(string $normalized): string
+    {
+        return preg_replace('/\s+/u', '', $normalized);
     }
 
     private function buildKnownObjectsMap(): array
@@ -445,6 +612,18 @@ class AdminObjectCheckService
             });
 
         return $map;
+    }
+
+    /**
+     * One CSV line with every cell quoted, text a spreadsheet would read as a
+     * formula made text.
+     */
+    private function csvLine(array $cells): string
+    {
+        return implode(',', array_map(
+            fn($cell) => '"' . str_replace('"', '""', (string) ($cell ?? '')) . '"',
+            SpreadsheetCell::escapeRow($cells)
+        )) . "\n";
     }
 
     private function normalizeObjectNameKey(string $name): string

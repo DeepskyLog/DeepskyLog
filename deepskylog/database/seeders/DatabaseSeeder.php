@@ -17,11 +17,12 @@ class DatabaseSeeder extends Seeder
             [
                 // Register legacy migration seeder
                 \Database\Seeders\LegacyObjectsSeeder::class,
+                \Database\Seeders\LegacyStarsSeeder::class,
+                \Database\Seeders\LegacyObjectContoursSeeder::class,
                 \Database\Seeders\AsteroidsSeeder::class,
                 \Database\Seeders\PlanetsSeeder::class,
                 \Database\Seeders\MoonsSeeder::class,
                 \Database\Seeders\LunarFeaturesSeeder::class,
-                \Database\Seeders\ObjectNameTranslationsSeeder::class,
                 \Database\Seeders\PopulateObjectSlugsSeeder::class,
                 \Database\Seeders\BackfillPlanetSlugsSeeder::class,
                 \Database\Seeders\BackfillMoonSlugsSeeder::class,

@@ -41,6 +41,10 @@ class JetstreamServiceProvider extends ServiceProvider
      */
     protected function configurePermissions(): void
     {
+        // The API only reads (/api/v1/me/...: the locations, equipment,
+        // observations, sessions and observing lists of the token's owner).
         Jetstream::defaultApiTokenPermissions(['read']);
+
+        Jetstream::permissions(['read']);
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Planet;
 use App\Models\LunarFeature;
 use App\Models\Moon;
 use App\Models\Asteroid;
+use App\Services\AsteroidCoordinates;
 use App\Models\SearchIndex;
 use App\Models\User;
 // objectnames legacy table accessed via DB facade
@@ -14,8 +15,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use App\Models\Atlas;
+use App\Models\CompleteCatalog;
 use App\Models\DeepskyObject;
 use App\Models\DeepskyType;
 use App\Models\Constellation as ConstellationModel;
@@ -24,11 +27,13 @@ use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Coordinates\EquatorialCoordinates;
 use deepskylog\AstronomyLibrary\Time;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
-use deepskylog\AstronomyLibrary\Targets\Elliptic;
-use deepskylog\AstronomyLibrary\Targets\Parabolic;
-use deepskylog\AstronomyLibrary\Targets\NearParabolic;
-use App\Helpers\HorizonsWrapper;
-use App\Helpers\HorizonsDesignation;
+use App\Services\CometCoordinates;
+use App\Services\DeepskyObjectCreator;
+use App\Services\NearbyObjects;
+use App\Services\ObjectNameCatalogs;
+use App\Services\ObjectSearchIndex;
+use App\Services\StarChartService;
+use App\Support\EphemerisDate;
 use Illuminate\Support\Facades\Cache;
 
 class ObjectController extends Controller
@@ -156,6 +161,7 @@ class ObjectController extends Controller
         if (!empty($slug)) {
             // Try all slug candidate variants against objectnames.slug
             $on = null;
+            $looseMatch = null;
             foreach ($candidates as $cand) {
                 // 1) exact slug match
                 $on = DB::table('objectnames')->where('slug', $cand)->first();
@@ -165,24 +171,40 @@ class ObjectController extends Controller
 
                 // 2) exact name/altname (case-insensitive)
                 $on = DB::table('objectnames')
-                    ->whereRaw('LOWER(objectname) = ?', [$cand])
-                    ->orWhereRaw('LOWER(altname) = ?', [$cand])
+                    ->where('objectname', $cand)
+                    ->orWhere('altname', $cand)
                     ->first();
                 if ($on) {
                     break;
                 }
 
-                // 3) name/altname with spaces/dashes removed (e.g. M 31 -> m31)
-                $on = DB::table('objectnames')
-                    ->whereRaw('LOWER(REPLACE(objectname, " ", "")) = ?', [$cand])
-                    ->orWhereRaw('LOWER(REPLACE(altname, " ", "")) = ?', [$cand])
-                    ->orWhereRaw('LOWER(REPLACE(objectname, "-", "")) = ?', [$cand])
-                    ->orWhereRaw('LOWER(REPLACE(altname, "-", "")) = ?', [$cand])
-                    ->first();
+                // 3) name/altname with spaces or dashes removed (e.g. M 31 -> m31).
+                //    The indexed generated columns of objectnames have both
+                //    removed, which gives a few rows to choose from: a name that
+                //    matches with only spaces or only dashes removed wins, so
+                //    ic1871 is IC 1871 and not IC 187-1.
+                $rows = DB::table('objectnames')
+                    ->where('objectname_compact', str_replace([' ', '-'], '', $cand))
+                    ->orWhere('altname_compact', str_replace([' ', '-'], '', $cand))
+                    ->get();
+                $on = $rows->first(function ($row) use ($cand) {
+                    foreach ([$row->objectname, $row->altname] as $name) {
+                        $name = mb_strtolower($name);
+                        if (str_replace(' ', '', $name) === $cand || str_replace('-', '', $name) === $cand) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                });
                 if ($on) {
                     break;
                 }
+                // Names that only match with both removed (sh2155 -> Sh 2-155)
+                // are used when no candidate matches otherwise.
+                $looseMatch ??= $rows->first();
             }
+            $on ??= $looseMatch;
             if ($on) {
                 // Found a canonical alias mapping to a deepsky object
                 $record = DB::table('objects')->where('name', $on->objectname)->first();
@@ -293,7 +315,9 @@ class ObjectController extends Controller
 
                 // asteroids
                 if (!$record && Schema::hasColumn('asteroids', 'slug')) {
-                    $a = DB::table('asteroids')->where('slug', $slug)->first();
+                    $a = DB::table('asteroids')->where('slug', $slug)->first()
+                        // also by the designation: /object/pluto, /object/1982-uc3
+                        ?? DB::table('asteroids')->where('designation', str_replace('-', ' ', $slug))->orderBy('number')->first();
                     if ($a) {
                         $record = Asteroid::where('id', $a->id)->first();
                         if ($record) {
@@ -319,8 +343,10 @@ class ObjectController extends Controller
 
         // If the slug fast-path didn't find a record, try the broader resolution logic.
         if (!$record) {
-            // Try to resolve via search_index first (helps with aliases and normalized names)
-            $si = SearchIndex::where('name', $slug)->orWhere('name_normalized', mb_strtolower($slug))->first();
+            // Try to resolve via search_index first (helps with aliases). No need to
+            // also match name_normalized: it is the lowercased name, and name is
+            // compared case-insensitively already.
+            $si = SearchIndex::where('name', $slug)->first();
             if ($si) {
                 // normalize some common table names to our internal types
                 switch ($si->source_table) {
@@ -728,12 +754,6 @@ class ObjectController extends Controller
             'pa' => null,
         ];
 
-        // Track if a wrapper-provided Horizons coordinate was used for this request.
-        // This ensures later ephemerides calculations do not overwrite wrapper results.
-        $wrapperUsedGlobal = false;
-        $wrapperRaHours = null;
-        $wrapperDecDeg = null;
-
         // Location and observations are not relevant; pass empty arrays where session.show expects them
         $location = null;
         $image = null;
@@ -756,62 +776,6 @@ class ObjectController extends Controller
             // Format RA/Dec for human readable output using runtime DeepskyObject
             $session->ra = DeepskyObject::formatRa($record->ra);
             $session->decl = DeepskyObject::formatDec($record->decl);
-        }
-
-        // Prefer project wrapper Horizons diagnostics for comets when available
-        try {
-            $isComet = ($sourceTypeRaw === 'comet' || $type === 'comet') || (isset($record->name) && preg_match('/\b(\d{1,4}P|C\/\d{4}[A-Z0-9-]*)\b/i', $record->name));
-            if ($isComet) {
-                // Build canonical candidate list for Horizons lookup
-                $cands = [];
-                // Prefer a canonicalized designation for consistent vendor queries
-                $canon = HorizonsDesignation::canonicalize($record->name ?? null);
-                if ($canon)
-                    $cands[] = $canon;
-                // Also add any short numeric periodic code if present
-                if (!empty($record->name) && preg_match('/\b(\d{1,4}P|C\/\d{4}[A-Z0-9-]*)\b/i', $record->name, $m)) {
-                    $short = HorizonsDesignation::canonicalize(strtoupper($m[1]));
-                    if ($short)
-                        $cands[] = $short;
-                }
-                try {
-                    $key = 'horizons_wrapper:' . md5(implode('|', $cands ?? []));
-                    $res = Cache::remember($key, 3600, fn() => HorizonsWrapper::latestCoordinatesForDesignation($cands, null, 86400));
-                } catch (\Throwable $_) {
-                    $res = HorizonsWrapper::latestCoordinatesForDesignation($cands, null, 86400);
-                }
-                if ($res && isset($res['ra_hours']) && isset($res['dec_deg'])) {
-                    $session->ra = \App\Models\DeepskyObject::formatRa($res['ra_hours']);
-                    $session->decl = \App\Models\DeepskyObject::formatDec($res['dec_deg']);
-                    // Preserve wrapper coords for later ephemerides computation
-                    $wrapperUsedGlobal = true;
-                    $wrapperRaHours = $res['ra_hours'];
-                    $wrapperDecDeg = $res['dec_deg'];
-                    // Force skipping any external Horizons helper for this request
-                    $forceUseWrapperSkipHorizons = true;
-                    // Provide initial ephemerides payload so Livewire mounts with wrapper coords
-                    try {
-                        $ephemerides = [
-                            'date' => $this->getCanonicalEphemerisDate()->toDateString(),
-                            'raDeg' => (float) $res['ra_hours'] * 15.0,
-                            'decDeg' => (float) $res['dec_deg'],
-                            // Mark that these coordinates came from the server-side wrapper
-                            // so Livewire can avoid re-calling the external Horizons helper.
-                            '_usedWrapper' => true,
-                            '_wrapper_source_file' => $res['source_file'] ?? null,
-                        ];
-                    } catch (\Throwable $_) {
-                        // ignore
-                    }
-                    try {
-                        Log::info('ObjectController: using HorizonsWrapper coords for page', ['file' => $res['source_file'] ?? null, 'ra_hours' => $res['ra_hours'], 'dec_deg' => $res['dec_deg'], 'object' => $record->name ?? null]);
-                    } catch (\Throwable $_) {
-                        // ignore logging error
-                    }
-                }
-            }
-        } catch (\Throwable $_) {
-            // ignore helper failures
         }
 
         // Compute contrast reserve for deep-sky objects when possible
@@ -843,10 +807,22 @@ class ObjectController extends Controller
                         $target->setDiameter($diam1, $diam2);
                     }
 
-                    // set magnitude
+                    // set magnitude, dimmed by the atmosphere at the highest
+                    // altitude of the object (ContrastReserveCalculator)
                     $m = ($record->mag && $record->mag != 99.9) ? $record->mag : null;
+                    $highest = \App\Services\ContrastReserveCalculator::highestAltitude($record->decl, $userLocation);
+                    $extinction = \App\Services\ContrastReserveCalculator::extinction($highest);
+                    if ($highest !== null && ! is_infinite($extinction)) {
+                        $session->contrast_used_altitude = (int) round($highest);
+                        $session->contrast_used_extinction = round($extinction, 2);
+                    }
+                    if (is_infinite($extinction)) {
+                        // never rises at the location
+                        $m = null;
+                        $session->contrast_reserve_category = 'not_visible';
+                    }
                     if ($m !== null) {
-                        $target->setMagnitude($m);
+                        $target->setMagnitude($m + $extinction);
                     }
 
                     // compute SBObj using library helper
@@ -866,7 +842,7 @@ class ObjectController extends Controller
                     }
 
                     // Determine if the user has a default lens configured and load it.
-                    $defaultLensId = $authUser?->stdlens ?? null;
+                    $defaultLensId = $authUser?->standardLensId();
                     try {
                         if (!$defaultLensId && Schema::hasColumn('users', 'preferences') && is_array($authUser?->preferences) && isset($authUser->preferences['aladin_default_lens'])) {
                             $defaultLensId = $authUser->preferences['aladin_default_lens'];
@@ -937,12 +913,12 @@ class ObjectController extends Controller
                             }
                         }
 
-                        $mag = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possible);
+                        $mag = \App\Services\ContrastReserveCalculator::bestMagnification($target, $sbobj, $sqm, $aperture, $possible, ($instSet && $userInstrument ? \App\Services\ContrastReserveCalculator::fields($userInstrument, \App\Services\ContrastReserveCalculator::eyepieceMagnifications($userInstrument, collect($instSet->eyepieces)->where('active', true), $lensFactor), $lensFactor) : []));
                     }
 
                     if ($sbobj !== null && $sqm !== null && $aperture && $mag) {
                         // Show which eyepieces are used for contrast reserve calculation
-                        $contrast = $target->calculateContrastReserve($sbobj, $sqm, $aperture, $mag);
+                        $contrast = \App\Services\ContrastReserveCalculator::contrastAt($target, $sbobj, $sqm, $aperture, $mag, (bool) $userInstrument?->isBinocular());
                         $session->contrast_reserve = is_numeric($contrast) ? round($contrast, 2) : null;
 
                         // Determine a human category based on numeric ranges
@@ -971,6 +947,7 @@ class ObjectController extends Controller
                         // Compute optimum detection magnification using available eyepieces
                         try {
                             $eyepieceFocals = [];
+                            $eyepieceModels = [];
                             // Prepare an array to store eyepiece display info
                             $eyepiecesForDisplay = [];
                             // Map magnification => eyepieces that produce it
@@ -1000,15 +977,15 @@ class ObjectController extends Controller
                                         }
                                         $eyepieceIds = array_values(array_unique($eyepieceIds));
                                         if (!empty($eyepieceIds)) {
-                                            $map = \App\Models\ObservationsOld::getInstrumentsForEyepieceIds($eyepieceIds);
+                                            $map = \App\Models\Observation::getInstrumentsForEyepieceIds($eyepieceIds);
                                             \App\Models\Eyepiece::setBulkUsedInstrumentsMap($map);
                                             try {
-                                                $firstMap = \App\Models\ObservationsOld::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                                $firstMap = \App\Models\Observation::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
                                                 \App\Models\Eyepiece::setBulkFirstObservationMap($firstMap);
                                             } catch (\Throwable $_) {
                                             }
                                             try {
-                                                $lastMap = \App\Models\ObservationsOld::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                                $lastMap = \App\Models\Observation::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
                                                 \App\Models\Eyepiece::setBulkLastObservationMap($lastMap);
                                             } catch (\Throwable $_) {
                                             }
@@ -1036,6 +1013,7 @@ class ObjectController extends Controller
                                             $usedSetEyepieces = true;
                                             $ef = $ep->focal_length_mm;
                                             $eyepieceFocals[] = $ef;
+                                            $eyepieceModels[] = $ep;
                                             // Attempt to include slugs so the view can link to eyepiece pages
                                             $userSlug = $epUserSlugMap[$ep->user_id] ?? null;
                                             // Build display name; if a default lens is set, append the lens name
@@ -1079,6 +1057,7 @@ class ObjectController extends Controller
                                         if (!empty($ep->focal_length_mm)) {
                                             $ef = $ep->focal_length_mm;
                                             $eyepieceFocals[] = $ef;
+                                            $eyepieceModels[] = $ep;
                                         } else {
                                             $ef = null;
                                         }
@@ -1143,7 +1122,7 @@ class ObjectController extends Controller
                                 $possibleMags = $possibleUsedForContrast;
                             }
                             if (!empty($possibleMags) && $sbobj !== null && $sqm !== null && $aperture) {
-                                $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possibleMags);
+                                $best = \App\Services\ContrastReserveCalculator::bestMagnification($target, $sbobj, $sqm, $aperture, $possibleMags, $userInstrument ? \App\Services\ContrastReserveCalculator::fields($userInstrument, \App\Services\ContrastReserveCalculator::eyepieceMagnifications($userInstrument, $eyepieceModels, $lensFactor), $lensFactor) : []);
                                 $session->optimum_detection_magnification = $best ? (int) $best : null;
                             } else {
                                 $session->optimum_detection_magnification = null;
@@ -1210,7 +1189,11 @@ class ObjectController extends Controller
         // may not provide these columns. Use null when missing and only perform
         // numeric transformations when values are present and numeric.
         $session->mag = isset($record->mag) ? $record->mag : null;
+        // An estimate from the brightness class of a nebula catalogue (NebulaBrightness)
+        $session->mag_source = $record->mag_source ?? null;
 
+        // The separation of a double star, in arcseconds
+        $session->separation = isset($record->diam1) && is_numeric($record->diam1) ? (float) $record->diam1 : null;
         if (isset($record->diam1) && is_numeric($record->diam1)) {
             $session->diam1 = round($record->diam1 / 60.0, 1);
         } else {
@@ -1276,8 +1259,7 @@ class ObjectController extends Controller
             $session->preview = $image;
         }
 
-        // Load alternative names (aliases) from legacy objectnames table when available.
-        // Use the mysqlOld connection which contains the legacy `objectnames` table.
+        // Load alternative names (aliases) from the objectnames table when available.
         $alternatives = [];
         try {
             if (!empty($record->name)) {
@@ -1323,72 +1305,6 @@ class ObjectController extends Controller
             $canonicalSlug = null;
         }
 
-        // Request-scoped guard to force skipping any external Horizons helper calls
-        // when wrapper-provided coordinates are available.
-        $forceUseWrapperSkipHorizons = false;
-
-        // Early: prefer project wrapper Horizons diagnostics for comets when available.
-        // Doing this early ensures downstream ephemerides code and Livewire mounting
-        // can observe wrapper-provided coordinates and avoid re-calling the external
-        // Horizons helper.
-        try {
-            $isCometEarly = ($sourceTypeRaw === 'comet' || $type === 'comet') || (isset($record->name) && preg_match('/\b(\d{1,4}P|C\/\d{4}[A-Z0-9-]*)\b/i', $record->name));
-            if ($isCometEarly) {
-                $earlyCands = [];
-                $canonName = \App\Helpers\HorizonsDesignation::canonicalize($record->name ?? null);
-                if ($canonName)
-                    $earlyCands[] = $canonName;
-                if (!empty($record->name) && preg_match('/\b(\d{1,4}P|C\/\d{4}[A-Z0-9-]*)\b/i', $record->name, $mm)) {
-                    $short = \App\Helpers\HorizonsDesignation::canonicalize(strtoupper($mm[1]));
-                    if ($short)
-                        $earlyCands[] = $short;
-                }
-                if (!empty($earlyCands)) {
-                    try {
-                        $key = 'horizons_wrapper:' . md5(implode('|', $earlyCands ?? []));
-                        $earlyRes = Cache::remember($key, 3600, fn() => \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($earlyCands, null, 86400));
-                    } catch (\Throwable $_) {
-                        $earlyRes = \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($earlyCands, null, 86400);
-                    }
-                    if ($earlyRes && isset($earlyRes['ra_hours']) && isset($earlyRes['dec_deg'])) {
-                        // set session RA/Dec display and preserve wrapper coords for later logic
-                        try {
-                            $session->ra = \App\Models\DeepskyObject::formatRa($earlyRes['ra_hours']);
-                            $session->decl = \App\Models\DeepskyObject::formatDec($earlyRes['dec_deg']);
-                        } catch (\Throwable $_) {
-                            // ignore formatting errors
-                        }
-                        $wrapperUsedGlobal = true;
-                        $wrapperRaHours = $earlyRes['ra_hours'];
-                        $wrapperDecDeg = $earlyRes['dec_deg'];
-                        // Strong guard: if we found wrapper coords early, force skipping
-                        // any subsequent calls to the external Horizons helper for
-                        // this request so wrapper results remain authoritative.
-                        $forceUseWrapperSkipHorizons = true;
-                        try {
-                            $ephemerides = [
-                                'date' => $this->getCanonicalEphemerisDate()->toDateString(),
-                                'raDeg' => (float) $earlyRes['ra_hours'] * 15.0,
-                                'decDeg' => (float) $earlyRes['dec_deg'],
-                                // Mark these as wrapper-provided so Livewire can avoid recalc
-                                '_usedWrapper' => true,
-                                '_wrapper_source_file' => $earlyRes['source_file'] ?? null,
-                            ];
-                        } catch (\Throwable $_) {
-                            // ignore
-                        }
-                        try {
-                            Log::info('ObjectController: early using HorizonsWrapper coords for page', ['file' => $earlyRes['source_file'] ?? null, 'ra_hours' => $earlyRes['ra_hours'], 'dec_deg' => $earlyRes['dec_deg'], 'object' => $record->name ?? null]);
-                        } catch (\Throwable $_) {
-                            // ignore logging errors
-                        }
-                    }
-                }
-            }
-        } catch (\Throwable $_) {
-            // ignore
-        }
-
         // Ensure observation-related variables are defined so view compact() doesn't fail
         $totalObservations = $totalObservations ?? null;
         $drawings = $drawings ?? null;
@@ -1397,153 +1313,39 @@ class ObjectController extends Controller
         $lastObservationDate = $lastObservationDate ?? null;
         $lastDrawingDate = $lastDrawingDate ?? null;
 
-        // Compute legacy observation/drawing counts when possible so the view shows accurate totals
+        // Observation and drawing counts of this object. Migrated and new
+        // observations are stored the same way (see App\Models\Observation).
         try {
-            if (!empty($session->name)) {
-                // Skip legacy name-based counts for planets — legacy table rows for planet names
-                // can be noisy. Only consult the legacy `observations` table for non-planet objects.
-                if ((($session->source_type_raw ?? '') !== 'planet') && class_exists(\App\Models\ObservationsOld::class)) {
-                    try {
-                        // Collapse all object-level count work into one query.
-                        $objectStats = DB::connection('mysqlOld')
-                            ->table('observations')
-                            ->selectRaw('COUNT(*) as total_obs, SUM(CASE WHEN hasDrawing = 1 THEN 1 ELSE 0 END) as total_drawings')
-                            ->where('objectname', $session->name)
-                            ->first();
+            $objectObservations = null;
+            $solarSystemTables = ['planet' => 'planets', 'sun' => 'planets', 'moon' => 'moons', 'lunar_feature' => 'lunar_features', 'asteroid' => 'asteroids'];
+            if ($sourceTypeRaw === 'comet' && isset($record->id) && is_numeric($record->id)) {
+                $objectObservations = fn() => \App\Models\Observation::ofComet((int) $record->id);
+            } elseif ($sourceTypeRaw === 'object' && !empty($session->name)) {
+                $objectName = \App\Models\Observation::canonicalDeepskyName($session->name) ?? $session->name;
+                $objectObservations = fn() => \App\Models\Observation::ofDeepskyObject($objectName);
+            } elseif (isset($solarSystemTables[$sourceTypeRaw]) && !empty($record->slug)) {
+                $objectObservations = fn() => \App\Models\Observation::where('target_table', $solarSystemTables[$sourceTypeRaw])
+                    ->where('target_key', $record->slug);
+            }
 
-                        $totalObservations = (int) ($objectStats->total_obs ?? 0);
-                        $drawings = (int) ($objectStats->total_drawings ?? 0);
-                    } catch (\Throwable $_) {
-                        $totalObservations = $totalObservations ?? null;
-                        $drawings = $drawings ?? null;
-                    }
+            if ($objectObservations !== null) {
+                $totalObservations = $objectObservations()->count();
+                $drawings = $objectObservations()->where('has_drawing', 1)->count();
 
-                    try {
-                        if (Auth::check()) {
-                            $legacyUsername = Auth::user()->username ?? null;
-                            if (!empty($legacyUsername)) {
-                                $userStats = DB::connection('mysqlOld')
-                                    ->table('observations')
-                                    ->selectRaw('COUNT(*) as your_obs')
-                                    ->selectRaw('SUM(CASE WHEN hasDrawing = 1 THEN 1 ELSE 0 END) as your_drawings')
-                                    ->selectRaw('MAX(date) as last_obs_date')
-                                    ->selectRaw('MAX(CASE WHEN hasDrawing = 1 THEN date ELSE NULL END) as last_drawing_date')
-                                    ->where('observerid', $legacyUsername)
-                                    ->where('objectname', $session->name)
-                                    ->first();
+                $authUser = Auth::user();
+                if ($authUser) {
+                    $yours = fn() => $objectObservations()->where('observer_user_id', $authUser->id);
+                    $yourObservations = $yours()->count();
+                    $yourDrawings = $yours()->where('has_drawing', 1)->count();
 
-                                $yourObservations = (int) ($userStats->your_obs ?? 0);
-                                $yourDrawings = (int) ($userStats->your_drawings ?? 0);
-
-                                $lastObsRaw = $userStats->last_obs_date ?? null;
-                                if (!empty($lastObsRaw)) {
-                                    try {
-                                        $lastObservationDate = \Carbon\Carbon::createFromFormat('Ymd', (string) $lastObsRaw);
-                                    } catch (\Throwable $_) {
-                                        $lastObservationDate = null;
-                                    }
-                                }
-
-                                $lastDrawingRaw = $userStats->last_drawing_date ?? null;
-                                if (!empty($lastDrawingRaw)) {
-                                    try {
-                                        $lastDrawingDate = \Carbon\Carbon::createFromFormat('Ymd', (string) $lastDrawingRaw);
-                                    } catch (\Throwable $_) {
-                                        $lastDrawingDate = null;
-                                    }
-                                }
-                            }
-                        }
-                    } catch (\Throwable $_) {
-                        // ignore
-                    }
-                }
-                // If this object is a comet, also attempt to read legacy comet observations
-                if ((($session->source_type_raw ?? '') === 'comet') || (($type ?? '') === 'comet')) {
-                    try {
-                        if (class_exists(\App\Models\CometObservationsOld::class)) {
-                            $hasCometObsTable = false;
-                            try {
-                                $hasCometObsTable = DB::connection('mysqlOld')->getSchemaBuilder()->hasTable('cometobservations');
-                            } catch (\Throwable $_) {
-                                $hasCometObsTable = false;
-                            }
-
-                            if ($hasCometObsTable) {
-                                $coObjId = null;
-                                // Prefer numeric session id when available (legacy cometobservations.objectid stores numeric comet id)
-                                if (isset($session->id) && is_numeric($session->id)) {
-                                    $coObjId = (int) $session->id;
-                                } else {
-                                    // Try resolving by modern CometObject (legacy table fallback removed)
-                                    try {
-                                        $coModel = \App\Models\CometObject::where('name', $session->name ?? '')->first();
-                                        if ($coModel)
-                                            $coObjId = $coModel->id ?? null;
-                                    } catch (\Throwable $_) {
-                                    }
-                                    if (empty($coObjId)) {
-                                        try {
-                                            if (class_exists(\App\Models\CometObject::class)) {
-                                                $coOld = \App\Models\CometObject::where('name', $session->name ?? '')->first();
-                                                if ($coOld)
-                                                    $coObjId = $coOld->id ?? null;
-                                            }
-                                        } catch (\Throwable $_) {
-                                        }
-                                    }
-                                }
-
-                                if (!empty($coObjId)) {
-                                    try {
-                                        $totalObservations = \App\Models\CometObservationsOld::where('objectid', $coObjId)->count();
-                                    } catch (\Throwable $_) {
-                                        // ignore and leave existing totalObservations
-                                    }
-
-                                    try {
-                                        // Provide drawings as a numeric count; view will handle numeric values
-                                        $drawings = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('hasDrawing', 1)->count();
-                                    } catch (\Throwable $_) {
-                                        $drawings = $drawings ?? null;
-                                    }
-
-                                    // Provide per-user counts when user is authenticated
-                                    try {
-                                        if (Auth::check()) {
-                                            $uname = Auth::user()->username ?? Auth::user()->slug ?? null;
-                                            if (!empty($uname)) {
-                                                $yourObservations = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('observerid', $uname)->count();
-                                                $yourDrawings = \App\Models\CometObservationsOld::where('objectid', $coObjId)->where('observerid', $uname)->where('hasDrawing', 1)->count();
-                                            }
-                                        }
-                                    } catch (\Throwable $_) {
-                                        // ignore per-user errors
-                                    }
-                                }
-                            }
-                        }
-                    } catch (\Throwable $_) {
-                        // ignore comet counting errors
-                    }
+                    $lastObsRaw = $yours()->max('observed_on');
+                    $lastObservationDate = $lastObsRaw ? \Carbon\Carbon::parse($lastObsRaw) : null;
+                    $lastDrawingRaw = $yours()->where('has_drawing', 1)->max('observed_on');
+                    $lastDrawingDate = $lastDrawingRaw ? \Carbon\Carbon::parse($lastDrawingRaw) : null;
                 }
             }
         } catch (\Throwable $_) {
             // defensive: ignore count errors and leave variables as-is
-        }
-
-        // Defensive override: ensure planets never show legacy observation counts.
-        // There are currently no planet observations in the database; force zeros
-        // to avoid misleading totals derived from legacy name-based rows.
-        try {
-            if (($session->source_type_raw ?? '') === 'planet' || ($type ?? '') === 'planet') {
-                $totalObservations = 0;
-                $drawings = 0;
-                $yourObservations = 0;
-                $yourDrawings = 0;
-            }
-        } catch (\Throwable $_) {
-            // ignore
         }
 
         // Atlas page: if a user is logged in and they have a standardAtlasCode set,
@@ -1685,12 +1487,7 @@ class ObjectController extends Controller
             $userLocation = $authUser?->standardLocation ?? null;
             if ($userLocation && isset($record->ra) && isset($record->decl)) {
                 // Use a canonical ephemeris date: prefer session or request, fall back to now
-                $date = $this->getCanonicalEphemerisDate();
-                // Use user's timezone if available
-                try {
-                    $date = $date->timezone($userLocation->timezone ?? config('app.timezone'));
-                } catch (\Throwable $_) {
-                }
+                $date = $this->getCanonicalEphemerisDate($userLocation);
 
                 $geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
 
@@ -1716,10 +1513,8 @@ class ObjectController extends Controller
                 }
 
                 if ($raDeg !== null && $decDeg !== null) {
-                    // EquatorialCoordinates expects RA in hours (0..24).
-                    // Some legacy storage may hold RA as degrees (>24) or as hours (<=24).
-                    // Normalize: if value > 24 assume degrees and convert to hours.
-                    $raHours = (is_numeric($raDeg) && $raDeg > 24.0) ? ((float) $raDeg / 15.0) : (float) $raDeg;
+                    // EquatorialCoordinates expects RA in hours (0..24); $raDeg is in degrees.
+                    $raHours = (float) $raDeg / 15.0;
                     $equa = new EquatorialCoordinates($raHours, (float) $decDeg);
                     $target->setEquatorialCoordinates($equa);
 
@@ -1858,7 +1653,6 @@ class ObjectController extends Controller
                         'saturn' => 'Saturn',
                         'uranus' => 'Uranus',
                         'neptune' => 'Neptune',
-                        'pluto' => 'Pluto',
                     ];
                     if (isset($map[$key])) {
                         $className = $map[$key];
@@ -1874,36 +1668,11 @@ class ObjectController extends Controller
                                 $geo = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
                                 $height = $userLocation->elevation ?? 0.0;
                                 try {
-                                    // Prefer wrapper-provided coordinates via proxy; fall back to library
-                                    try {
-                                        $proxyRes = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($planet, $date, $geo, $height, ['obj' => null, 'designation' => $planetName ?? null]);
-                                    } catch (\Throwable $_) {
-                                        $proxyRes = null;
-                                    }
-                                    if (empty($proxyRes) || empty($proxyRes['usedWrapper'])) {
-                                        // calculateEquatorialCoordinates populates topocentric coords
-                                        if (method_exists($planet, 'calculateEquatorialCoordinates')) {
-                                            $planet->calculateEquatorialCoordinates($date, $geo, $height);
-                                        } elseif (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-                                            $planet->calculateApparentEquatorialCoordinates($date);
-                                        }
-                                    } else {
-                                        // Apply wrapper coords into the planet instance so subsequent
-                                        // accessors (getEquatorialCoordinatesToday, etc.) can read them.
-                                        $coords = $proxyRes['coords'] ?? null;
-                                        if ($coords && method_exists($planet, 'setEquatorialCoordinates')) {
-                                            try {
-                                                $planet->setEquatorialCoordinates($coords);
-                                            } catch (\Throwable $_) {
-                                            }
-                                        }
-                                    }
+                                    $planet->calculateEquatorialCoordinates($date->copy(), $geo, $height);
                                 } catch (\Throwable $_) {
                                     // fallback to apparent if topocentric calc fails
                                     try {
-                                        if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-                                            $planet->calculateApparentEquatorialCoordinates($date);
-                                        }
+                                        $planet->calculateApparentEquatorialCoordinates($date->copy());
                                     } catch (\Throwable $_) {
                                         // give up silently
                                     }
@@ -1912,7 +1681,7 @@ class ObjectController extends Controller
                                 // no user location: use apparent (geocentric) coordinates
                                 try {
                                     if (method_exists($planet, 'calculateApparentEquatorialCoordinates')) {
-                                        $planet->calculateApparentEquatorialCoordinates($date);
+                                        $planet->calculateApparentEquatorialCoordinates($date->copy());
                                     }
                                 } catch (\Throwable $_) {
                                     // ignore
@@ -1928,7 +1697,7 @@ class ObjectController extends Controller
                                 } else {
                                     $coords = null;
                                 }
-                                if (empty($usedWrapper) && $coords) {
+                                if ($coords) {
                                     // EquatorialCoordinates provides human-readable printing methods
                                     try {
                                         if (method_exists($coords, 'printRA')) {
@@ -2090,8 +1859,8 @@ class ObjectController extends Controller
                                         try {
                                             $geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
                                             $target = new AstroTarget();
-                                            // EquatorialCoordinates expects RA in hours (0..24).
-                                            $raHours = (is_numeric($raDeg) && $raDeg > 24.0) ? ((float) $raDeg / 15.0) : (float) $raDeg;
+                                            // EquatorialCoordinates expects RA in hours (0..24); $raDeg is in degrees.
+                                            $raHours = (float) $raDeg / 15.0;
                                             $equa = new EquatorialCoordinates($raHours, (float) $decDeg);
                                             $target->setEquatorialCoordinates($equa);
 
@@ -2283,15 +2052,19 @@ class ObjectController extends Controller
                                         if ($d1)
                                             $target->setDiameter($d1, $d2 ?? $d1);
                                         $mval = is_numeric($session->mag) ? $session->mag : null;
+                                        // dimmed by the atmosphere at the highest altitude of the planet
+                                        $extinction = \App\Services\ContrastReserveCalculator::extinction(\App\Services\ContrastReserveCalculator::highestAltitude($decDeg ?? null, $userLocation));
+                                        if (is_infinite($extinction))
+                                            $mval = null;
                                         if ($mval !== null)
-                                            $target->setMagnitude($mval);
+                                            $target->setMagnitude($mval + $extinction);
 
                                         $sbobj = $target->calculateSBObj();
                                         $sqm = $userLocation->getSqm();
                                         $aperture = $userInstrument->aperture_mm ?? null;
 
                                         // Lens factor / default lens handling similar to deepsky branch
-                                        $defaultLensId = $authUser?->stdlens ?? null;
+                                        $defaultLensId = $authUser?->standardLensId();
                                         try {
                                             if (!$defaultLensId && Schema::hasColumn('users', 'preferences') && is_array($authUser?->preferences) && isset($authUser->preferences['aladin_default_lens'])) {
                                                 $defaultLensId = $authUser->preferences['aladin_default_lens'];
@@ -2346,11 +2119,11 @@ class ObjectController extends Controller
                                                 }
                                             }
 
-                                            $best = $target->calculateBestMagnification($sbobj, $sqm, $aperture, $possible);
+                                            $best = \App\Services\ContrastReserveCalculator::bestMagnification($target, $sbobj, $sqm, $aperture, $possible, ($instSet && $userInstrument ? \App\Services\ContrastReserveCalculator::fields($userInstrument, \App\Services\ContrastReserveCalculator::eyepieceMagnifications($userInstrument, collect($instSet->eyepieces)->where('active', true), $lensFactor), $lensFactor) : []));
                                             $session->optimum_detection_magnification = $best ? (int) $best : null;
 
                                             if (!empty($session->optimum_detection_magnification)) {
-                                                $contrast = $target->calculateContrastReserve($sbobj, $sqm, $aperture, $session->optimum_detection_magnification);
+                                                $contrast = \App\Services\ContrastReserveCalculator::contrastAt($target, $sbobj, $sqm, $aperture, $session->optimum_detection_magnification, (bool) $userInstrument?->isBinocular());
                                                 $session->contrast_reserve = is_numeric($contrast) ? round($contrast, 2) : null;
                                                 $cat = null;
                                                 if (is_numeric($session->contrast_reserve)) {
@@ -2392,15 +2165,15 @@ class ObjectController extends Controller
                                                                     }
                                                                     $eyepieceIds = array_values(array_unique($eyepieceIds));
                                                                     if (!empty($eyepieceIds)) {
-                                                                        $map = \App\Models\ObservationsOld::getInstrumentsForEyepieceIds($eyepieceIds);
+                                                                        $map = \App\Models\Observation::getInstrumentsForEyepieceIds($eyepieceIds);
                                                                         \App\Models\Eyepiece::setBulkUsedInstrumentsMap($map);
                                                                         try {
-                                                                            $firstMap = \App\Models\ObservationsOld::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                                                            $firstMap = \App\Models\Observation::getFirstObservationDateAndIdForEyepieceIds($eyepieceIds);
                                                                             \App\Models\Eyepiece::setBulkFirstObservationMap($firstMap);
                                                                         } catch (\Throwable $_) {
                                                                         }
                                                                         try {
-                                                                            $lastMap = \App\Models\ObservationsOld::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
+                                                                            $lastMap = \App\Models\Observation::getLastObservationDateAndIdForEyepieceIds($eyepieceIds);
                                                                             \App\Models\Eyepiece::setBulkLastObservationMap($lastMap);
                                                                         } catch (\Throwable $_) {
                                                                         }
@@ -2582,8 +2355,8 @@ class ObjectController extends Controller
                     } elseif (Schema::hasColumn('users', 'preferences') && is_array($authUser->preferences) && isset($authUser->preferences['aladin_default_eyepiece'])) {
                         $selectedEyepieceId = $authUser->preferences['aladin_default_eyepiece'];
                     }
-                    if (Schema::hasColumn('users', 'stdlens') && $authUser->stdlens) {
-                        $selectedLensId = $authUser->stdlens;
+                    if ($authUser->standardLensId()) {
+                        $selectedLensId = $authUser->standardLensId();
                     } elseif (Schema::hasColumn('users', 'preferences') && is_array($authUser->preferences) && isset($authUser->preferences['aladin_default_lens'])) {
                         $selectedLensId = $authUser->preferences['aladin_default_lens'];
                     }
@@ -2705,695 +2478,67 @@ class ObjectController extends Controller
             // ignore logging failures
         }
 
-        // If ephemerides still empty and this is a comet, attempt a minimal
-        // server-side calculation so the initial inline payload contains
-        // coordinates when possible. Keep this logic compact to avoid heavy
-        // nesting and reduce risk of errors during page render.
+        // Comets: show the current position, calculated from the orbital elements.
+        // The rest of the ephemerides of comets comes from the Livewire components.
         try {
-            if (empty($ephemerides) && ($sourceTypeRaw === 'comet' || $type === 'comet')) {
-                $authUser = Auth::user();
-                $userLocation = $authUser?->standardLocation ?? null;
-                if ($userLocation && Schema::hasTable('comets_orbital_elements')) {
-                    $nameToMatch = $record->name ?? null;
-                    if (!empty($nameToMatch)) {
-                        $cometRow = DB::table('comets_orbital_elements')->where('name', $nameToMatch)->first();
-                        if (!$cometRow) {
-                            $clean = preg_replace('/\s+/', ' ', trim($nameToMatch));
-                            $cometRow = DB::table('comets_orbital_elements')->where('name', 'like', "%{$clean}%")->first();
-                        }
-                        // Fallback: some comet names include the discoverer in
-                        // parentheses (e.g. "C/2023 A3 (Tsuchinshan-ATLAS)").
-                        // Try matching after removing parentheses from the
-                        // stored name to handle records where the object
-                        // name in our objects table doesn't include them.
-                        if (!$cometRow) {
-                            try {
-                                $cleanNoPar = preg_replace('/[()]/', '', $clean);
-                                $pattern = '%' . strtolower($cleanNoPar) . '%';
-                                $cometRow = DB::table('comets_orbital_elements')
-                                    ->whereRaw("LOWER(REPLACE(REPLACE(name, '(', ''), ')', '')) LIKE ?", [$pattern])
-                                    ->first();
-                            } catch (\Throwable $_) {
-                                // ignore DB errors and continue without cometRow
-                                $cometRow = null;
-                            }
-                        }
-                        if ($cometRow) {
-                            try {
-                                Log::info('ObjectController: comets_orbital_elements match', ['name' => $cometRow->name ?? null, 'Tp' => $cometRow->Tp ?? null, 'epoch' => $cometRow->epoch ?? null]);
-                            } catch (\Throwable $_) {
-                                // ignore logging errors
-                            }
-                            // Basic perihelion parsing
-                            $peri = null;
-                            $Tp = $cometRow->Tp ?? null;
-                            if ($Tp !== null && is_numeric($Tp)) {
-                                $tpInt = (int) $Tp;
-                                $tpStr = str_pad((string) $tpInt, 8, '0', STR_PAD_LEFT);
-                                $Y = substr($tpStr, 0, 4);
-                                $M = substr($tpStr, 4, 2) ?: '01';
-                                $D = substr($tpStr, 6, 2) ?: '01';
-                                if ($M === '00')
-                                    $M = '01';
-                                if ($D === '00')
-                                    $D = '01';
-                                $peri = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', "{$Y}-{$M}-{$D} 12:00:00", 'UTC');
-                            } elseif (!empty($Tp)) {
-                                try {
-                                    $peri = \Carbon\Carbon::parse($Tp);
-                                } catch (\Throwable $_) {
-                                    $peri = null;
-                                }
-                            }
-                            if (!$peri && isset($cometRow->epoch) && is_numeric($cometRow->epoch)) {
-                                try {
-                                    $peri = Time::fromJd($cometRow->epoch);
-                                } catch (\Throwable $_) {
-                                    $peri = null;
-                                }
-                            }
-                            if (!$peri)
-                                $peri = \Carbon\Carbon::now('UTC');
-
-                            // semi-major axis
-                            $a = null;
-                            if (isset($cometRow->q) && isset($cometRow->e) && ((float) $cometRow->e != 1.0)) {
-                                $a = (float) $cometRow->q / (1.0 - (float) $cometRow->e);
-                            } elseif (isset($cometRow->a)) {
-                                $a = (float) $cometRow->a;
-                            }
-
-                            if ($a !== null) {
-                                $date = $this->getCanonicalEphemerisDate();
-                                try {
-                                    $date = $date->timezone($userLocation->timezone ?? config('app.timezone'));
-                                } catch (\Throwable $_) {
-                                }
-                                $geo_coords = new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
-
-                                $eVal = isset($cometRow->e) ? (float) $cometRow->e : 0.0;
-                                $qVal = isset($cometRow->q) ? (float) $cometRow->q : null;
-                                $coords = null;
-
-                                try {
-                                    if ($eVal === 1.0) {
-                                        // Parabolic
-                                        $par = new Parabolic();
-                                        $par->setOrbitalElements((float) $qVal, (float) ($cometRow->i ?? 0.0), (float) ($cometRow->w ?? 0.0), (float) ($cometRow->node ?? 0.0), $peri);
-                                        $coordsFromProxy = false;
-                                        try {
-                                            try {
-                                                $proxyRes = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($par, $date, $geo_coords, $userLocation->elevation ?? 0.0, ['designation' => $hDesig ?? null, 'obj' => $record ?? null]);
-                                            } catch (\Throwable $_) {
-                                                $proxyRes = null;
-                                            }
-                                            if (empty($proxyRes) || empty($proxyRes['usedWrapper'])) {
-                                                try {
-                                                    $par->calculateEquatorialCoordinates($date, $geo_coords);
-                                                } catch (\Throwable $_) {
-                                                    try {
-                                                        $par->calculateEquatorialCoordinates($date);
-                                                    } catch (\Throwable $_) {
-                                                    }
-                                                }
-                                            } else {
-                                                $coords = $proxyRes['coords'] ?? null;
-                                                $coordsFromProxy = true;
-                                                if ($coords && method_exists($par, 'setEquatorialCoordinates')) {
-                                                    try {
-                                                        $par->setEquatorialCoordinates($coords);
-                                                    } catch (\Throwable $_) {
-                                                    }
-                                                }
-                                            }
-                                        } catch (\Throwable $_) { /* ignore */
-                                        }
-                                        if (!empty($coordsFromProxy)) {
-                                            // coords already set from proxy
-                                        } else {
-                                            if (method_exists($par, 'getEquatorialCoordinatesToday'))
-                                                $coords = $par->getEquatorialCoordinatesToday();
-                                            elseif (method_exists($par, 'getEquatorialCoordinates'))
-                                                $coords = $par->getEquatorialCoordinates();
-                                        }
-                                    } elseif ($eVal < 1.0) {
-                                        // Elliptic
-                                        $ell = new Elliptic();
-                                        $ell->setOrbitalElements((float) $a, $eVal, (float) ($cometRow->i ?? 0.0), (float) ($cometRow->w ?? 0.0), (float) ($cometRow->node ?? 0.0), $peri);
-                                        try {
-                                            // Prefer Horizons ephemerides when supported by the library.
-                                            try {
-                                                if (method_exists($ell, 'setUseHorizons')) {
-                                                    $ell->setUseHorizons(true);
-                                                    // Attempt to derive a Horizons designation from the orbital row or object name.
-                                                    // Prefer the full resolved object name (e.g. "12P/Pons-Brooks") as the
-                                                    // Horizons designation. Fall back to legacy `designation` or a
-                                                    // short-code extracted from the name when full name is not available.
-                                                    $hDesig = null;
-                                                    $fullName = $record->name ?? ($cometRow->name ?? null);
-                                                    if (!empty($fullName)) {
-                                                        $hDesig = \App\Helpers\HorizonsDesignation::canonicalize((string) $fullName);
-                                                    } elseif (isset($cometRow->designation) && !empty($cometRow->designation)) {
-                                                        $hDesig = \App\Helpers\HorizonsDesignation::canonicalize((string) $cometRow->designation);
-                                                    } else {
-                                                        $nameCandidate = $cometRow->name ?? $record->name ?? null;
-                                                        if (!empty($nameCandidate) && preg_match('/\b([0-9]{1,4}P|C\/\d{4}[A-Z0-9-]*)\b/i', $nameCandidate, $m)) {
-                                                            $hDesig = \App\Helpers\HorizonsDesignation::canonicalize(strtoupper($m[1]));
-                                                        }
-                                                    }
-                                                    if ($hDesig && method_exists($ell, 'setHorizonsDesignation')) {
-                                                        $ell->setHorizonsDesignation($hDesig);
-                                                    }
-                                                }
-                                            } catch (\Throwable $_) {
-                                                // non-fatal: fall back to local propagation if Horizons not available
-                                            }
-                                            // If Horizons mode is enabled, Horizons helper expects UTC datetimes.
-                                            $calcDate = $date;
-                                            try {
-                                                if (method_exists($ell, 'setUseHorizons') && $ell instanceof Elliptic && property_exists($ell, '_useHorizons')) {
-                                                    // Use a UTC clone so the helper receives UTC time string
-                                                    $calcDate = $date->copy()->timezone('UTC');
-                                                }
-                                            } catch (\Throwable $_) {
-                                                $calcDate = $date;
-                                            }
-
-                                            // If an earlier wrapper lookup supplied coordinates for this request,
-                                            // prefer those and skip calling the Horizons helper again. Honor
-                                            // the explicit request-scoped guard `$forceUseWrapperSkipHorizons`
-                                            // if it was set during early lookup so we never hit the helper.
-                                            try {
-                                                if (!empty($forceUseWrapperSkipHorizons) && is_numeric($wrapperRaHours) && is_numeric($wrapperDecDeg)) {
-                                                    $coords = new EquatorialCoordinates($wrapperRaHours, $wrapperDecDeg);
-                                                    $usedWrapper = true;
-                                                    $raDeg = (float) $wrapperRaHours * 15.0;
-                                                    $decDeg = (float) $wrapperDecDeg;
-                                                    $wrapperUsedGlobal = true;
-                                                    \Illuminate\Support\Facades\Log::info('Elliptic: using HorizonsWrapper coords (controller, forced skip)', ['ra_hours' => $wrapperRaHours, 'dec_deg' => $wrapperDecDeg, 'designation' => $hDesig ?? null]);
-                                                } elseif (!empty($wrapperUsedGlobal) && is_numeric($wrapperRaHours) && is_numeric($wrapperDecDeg)) {
-                                                    $coords = new EquatorialCoordinates($wrapperRaHours, $wrapperDecDeg);
-                                                    $usedWrapper = true;
-                                                    $raDeg = (float) $wrapperRaHours * 15.0;
-                                                    $decDeg = (float) $wrapperDecDeg;
-                                                    \Illuminate\Support\Facades\Log::info('Elliptic: using HorizonsWrapper coords (controller, global)', ['ra_hours' => $wrapperRaHours, 'dec_deg' => $wrapperDecDeg, 'designation' => $hDesig ?? null]);
-                                                } else {
-                                                    // Check project wrapper diagnostics and use them if available
-                                                    try {
-                                                        // Build canonical candidate list for wrapper lookup
-                                                        $candList = [];
-                                                        if (!empty($hDesig)) {
-                                                            $candList[] = \App\Helpers\HorizonsDesignation::canonicalize($hDesig);
-                                                        }
-                                                        if (!empty($hDesig) && preg_match('/\b(\d{1,4}P|C\/\d{4}[A-Z0-9-]*)\b/i', $hDesig, $mm)) {
-                                                            $candList[] = \App\Helpers\HorizonsDesignation::canonicalize(strtoupper($mm[1]));
-                                                        }
-                                                        // Also include the record slug/name to match wrapper runs that used alternate identifiers
-                                                        try {
-                                                            if (isset($record) && !empty($record->slug)) {
-                                                                $candList[] = \App\Helpers\HorizonsDesignation::canonicalize($record->slug);
-                                                            }
-                                                        } catch (\Throwable $_) {
-                                                        }
-                                                        try {
-                                                            if (!empty($fullName) && ($fullName !== ($hDesig ?? null))) {
-                                                                $candList[] = \App\Helpers\HorizonsDesignation::canonicalize($fullName);
-                                                            }
-                                                        } catch (\Throwable $_) {
-                                                        }
-                                                        $candList = array_values(array_unique(array_filter($candList)));
-                                                        try {
-                                                            $key = 'horizons_wrapper:' . md5(implode('|', $candList ?? []) . '|' . ($calcDate ? $calcDate->toDateString() : 'none'));
-                                                            $wrapperCoords = Cache::remember($key, 3600, fn() => \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($candList, $calcDate, 86400, 120));
-                                                        } catch (\Throwable $_) {
-                                                            $wrapperCoords = \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($candList, $calcDate, 86400, 120);
-                                                        }
-                                                        if ($wrapperCoords && isset($wrapperCoords['ra_hours']) && isset($wrapperCoords['dec_deg'])) {
-                                                            try {
-                                                                $coords = new EquatorialCoordinates($wrapperCoords['ra_hours'], $wrapperCoords['dec_deg']);
-                                                                // Treat wrapper result as authoritative for this request
-                                                                $usedWrapper = true;
-                                                                $raDeg = (float) $wrapperCoords['ra_hours'] * 15.0;
-                                                                $decDeg = (float) $wrapperCoords['dec_deg'];
-                                                                // Also record globally so other blocks can observe we're using wrapper
-                                                                $wrapperUsedGlobal = true;
-                                                                $wrapperRaHours = $wrapperCoords['ra_hours'];
-                                                                $wrapperDecDeg = $wrapperCoords['dec_deg'];
-                                                                \Illuminate\Support\Facades\Log::info('Elliptic: using HorizonsWrapper coords (controller)', ['file' => $wrapperCoords['source_file'] ?? null, 'ra_hours' => $wrapperCoords['ra_hours'], 'dec_deg' => $wrapperCoords['dec_deg'], 'designation' => $hDesig ?? null]);
-                                                            } catch (\Throwable $_) {
-                                                                // failed to construct coords; fall back to helper
-                                                            }
-                                                        }
-                                                    } catch (\Throwable $_) {
-                                                        // ignore wrapper failures
-                                                    }
-                                                }
-                                            } catch (\Throwable $_) {
-                                                // ignore global wrapper handling errors
-                                            }
-
-                                            // Only call the Horizons helper if we don't already have coords from the wrapper
-                                            if (empty($coords)) {
-                                                // Perform a permissive wrapper lookup immediately before calling the Horizons helper
-                                                try {
-                                                    $robustCandidates = $candList ?? [];
-                                                    if (!empty($hDesig))
-                                                        $robustCandidates[] = $hDesig;
-                                                    try {
-                                                        if (!empty($fullName))
-                                                            $robustCandidates[] = $fullName;
-                                                    } catch (\Throwable $_) {
-                                                    }
-                                                    try {
-                                                        if (isset($record) && !empty($record->slug))
-                                                            $robustCandidates[] = $record->slug;
-                                                    } catch (\Throwable $_) {
-                                                    }
-                                                    $extra = [];
-                                                    foreach ($robustCandidates as $rc) {
-                                                        if (!$rc)
-                                                            continue;
-                                                        $s = trim((string) $rc);
-                                                        $extra[] = $s;
-                                                        $extra[] = strtoupper($s);
-                                                        $extra[] = strtolower($s);
-                                                        $extra[] = str_replace('/', ' ', $s);
-                                                        $extra[] = str_replace(' ', '', $s);
-                                                    }
-                                                    $robustCandidates = array_values(array_unique(array_filter(array_merge($robustCandidates, $extra))));
-                                                    try {
-                                                        $key = 'horizons_wrapper:' . md5(implode('|', $robustCandidates ?? []) . '|' . ($calcDate ? $calcDate->toDateString() : 'none'));
-                                                        $robWrapper = Cache::remember($key, 3600, fn() => \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($robustCandidates, $calcDate, 7 * 86400, 3600));
-                                                    } catch (\Throwable $_) {
-                                                        $robWrapper = \App\Helpers\HorizonsWrapper::latestCoordinatesForDesignation($robustCandidates, $calcDate, 7 * 86400, 3600);
-                                                    }
-                                                    if ($robWrapper && isset($robWrapper['ra_hours']) && isset($robWrapper['dec_deg'])) {
-                                                        $coords = new EquatorialCoordinates($robWrapper['ra_hours'], $robWrapper['dec_deg']);
-                                                        $usedWrapper = true;
-                                                        $raDeg = (float) $robWrapper['ra_hours'] * 15.0;
-                                                        $decDeg = (float) $robWrapper['dec_deg'];
-                                                        $wrapperUsedGlobal = true;
-                                                        $wrapperRaHours = $robWrapper['ra_hours'];
-                                                        $wrapperDecDeg = $robWrapper['dec_deg'];
-                                                        \Illuminate\Support\Facades\Log::info('Elliptic: using HorizonsWrapper coords (pre-call robust)', ['file' => $robWrapper['source_file'] ?? null, 'ra_hours' => $robWrapper['ra_hours'], 'dec_deg' => $robWrapper['dec_deg'], 'designation' => $hDesig ?? null]);
-                                                    }
-                                                } catch (\Throwable $_) {
-                                                    // ignore robust probe failures and continue
-                                                }
-
-                                                if (empty($coords)) {
-                                                    try {
-                                                        \Illuminate\Support\Facades\Log::info('Elliptic: calling Horizons helper', [
-                                                            'designation' => $hDesig ?? null,
-                                                            'date_utc' => $calcDate->toIso8601String(),
-                                                            'object' => $record->name ?? null,
-                                                        ]);
-                                                    } catch (\Throwable $_) {
-                                                        // ignore logging errors
-                                                    }
-
-                                                    // Use centralized proxy to consult HorizonsWrapper first
-                                                    try {
-                                                        $proxyResult = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($ell, $calcDate, $geo_coords, $userLocation->elevation ?? 0.0, ['designation' => $hDesig ?? null, 'obj' => $record ?? null]);
-                                                        if (!empty($proxyResult) && !empty($proxyResult['usedWrapper'])) {
-                                                            $coords = $proxyResult['coords'] ?? null;
-                                                            $usedWrapper = true;
-                                                            $wrapperUsedGlobal = true;
-                                                            if ($coords && method_exists($coords, 'getRA')) {
-                                                                try {
-                                                                    $raHoursVal = $coords->getRA()->getCoordinate();
-                                                                    $raDeg = is_numeric($raHoursVal) ? (float) $raHoursVal * 15.0 : $raDeg;
-                                                                } catch (\Throwable $_) {
-                                                                }
-                                                            }
-                                                            if ($coords && method_exists($coords, 'getDeclination')) {
-                                                                try {
-                                                                    $decVal = $coords->getDeclination()->getCoordinate();
-                                                                    $decDeg = is_numeric($decVal) ? (float) $decVal : $decDeg;
-                                                                } catch (\Throwable $_) {
-                                                                }
-                                                            }
-                                                            $wrapperRaHours = $wrapperRaHours ?? ($coords && method_exists($coords, 'getRA') ? $coords->getRA()->getCoordinate() : $wrapperRaHours);
-                                                            $wrapperDecDeg = $wrapperDecDeg ?? ($coords && method_exists($coords, 'getDeclination') ? $coords->getDeclination()->getCoordinate() : $wrapperDecDeg);
-                                                        }
-                                                    } catch (\Throwable $_) {
-                                                        // ignore proxy failures and allow underlying code to continue
-                                                    }
-                                                } else {
-                                                    // Using wrapper coords - skip helper
-                                                }
-                                            } else {
-                                                // Using wrapper coords - skip helper (coords pre-populated)
-                                            }
-                                        } catch (\Throwable $_) { /* ignore */
-                                        }
-                                        if (method_exists($ell, 'getEquatorialCoordinatesToday'))
-                                            $coords = $ell->getEquatorialCoordinatesToday();
-                                        elseif (method_exists($ell, 'getEquatorialCoordinates'))
-                                            $coords = $ell->getEquatorialCoordinates();
-                                        try {
-                                            if ($coords) {
-                                                $raLog = null;
-                                                $decLog = null;
-                                                try {
-                                                    $raObj = method_exists($coords, 'getRA') ? $coords->getRA() : ($coords->ra ?? null);
-                                                    $raLog = (is_object($raObj) && method_exists($raObj, 'getCoordinate')) ? $raObj->getCoordinate() : $raObj;
-                                                } catch (\Throwable $_) {
-                                                }
-                                                try {
-                                                    $decObj = method_exists($coords, 'getDeclination') ? $coords->getDeclination() : ($coords->dec ?? null);
-                                                    $decLog = (is_object($decObj) && method_exists($decObj, 'getCoordinate')) ? $decObj->getCoordinate() : $decObj;
-                                                } catch (\Throwable $_) {
-                                                }
-                                                \Illuminate\Support\Facades\Log::info('Elliptic: coords after calculate', ['designation' => $hDesig ?? null, 'ra' => $raLog, 'dec' => $decLog, 'object' => $record->name ?? null]);
-                                            }
-                                        } catch (\Throwable $_) {
-                                            // ignore logging errors
-                                        }
-                                    } else {
-                                        // Hyperbolic / near-parabolic
-                                        $near = new NearParabolic();
-                                        $near->setOrbitalElements((float) $qVal, $eVal, (float) ($cometRow->i ?? 0.0), (float) ($cometRow->w ?? 0.0), (float) ($cometRow->node ?? 0.0), $peri);
-                                        $coordsFromProxy = false;
-                                        try {
-                                            try {
-                                                $proxyRes = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($near, $date, null, null, ['designation' => $hDesig ?? null, 'obj' => $record ?? null]);
-                                            } catch (\Throwable $_) {
-                                                $proxyRes = null;
-                                            }
-                                            if (empty($proxyRes) || empty($proxyRes['usedWrapper'])) {
-                                                try {
-                                                    $near->calculateEquatorialCoordinates($date);
-                                                } catch (\Throwable $_) { /* ignore */
-                                                }
-                                            } else {
-                                                $coords = $proxyRes['coords'] ?? null;
-                                                $coordsFromProxy = true;
-                                                if ($coords && method_exists($near, 'setEquatorialCoordinates')) {
-                                                    try {
-                                                        $near->setEquatorialCoordinates($coords);
-                                                    } catch (\Throwable $_) {
-                                                    }
-                                                }
-                                            }
-                                        } catch (\Throwable $_) { /* ignore */
-                                        }
-                                        if (!empty($coordsFromProxy)) {
-                                            // coords already fulfilled by proxy
-                                        } else {
-                                            if (method_exists($near, 'getEquatorialCoordinatesToday'))
-                                                $coords = $near->getEquatorialCoordinatesToday();
-                                            elseif (method_exists($near, 'getEquatorialCoordinates'))
-                                                $coords = $near->getEquatorialCoordinates();
-                                        }
-                                    }
-                                } catch (\Throwable $_) {
-                                    $coords = null;
-                                }
-
-                                if ($coords) {
-                                    $raDeg = null;
-                                    $decDeg = null;
-                                    try {
-                                        $raObj = method_exists($coords, 'getRA') ? $coords->getRA() : ($coords->ra ?? null);
-                                        $raVal = (is_object($raObj) && method_exists($raObj, 'getCoordinate')) ? $raObj->getCoordinate() : $raObj;
-                                        if (is_numeric($raVal))
-                                            $raDeg = ((float) $raVal <= 24.0) ? ((float) $raVal * 15.0) : (float) $raVal;
-                                    } catch (\Throwable $_) {
-                                        $raDeg = null;
-                                    }
-                                    try {
-                                        $decObj = method_exists($coords, 'getDeclination') ? $coords->getDeclination() : ($coords->dec ?? null);
-                                        $decVal = (is_object($decObj) && method_exists($decObj, 'getCoordinate')) ? $decObj->getCoordinate() : $decObj;
-                                        if (is_numeric($decVal))
-                                            $decDeg = (float) $decVal;
-                                    } catch (\Throwable $_) {
-                                        $decDeg = null;
-                                    }
-
-                                    if (is_numeric($raDeg) && is_numeric($decDeg)) {
-                                        // Build ephemerides briefly using AstroTarget so view gets rising/transit/setting
-                                        try {
-                                            $raHours = ($raDeg > 24.0) ? ($raDeg / 15.0) : $raDeg;
-                                            $equa = new EquatorialCoordinates((float) $raHours, (float) $decDeg);
-                                            $target = new AstroTarget();
-                                            $target->setEquatorialCoordinates($equa);
-                                            $gst = Time::apparentSiderialTimeGreenwich($date);
-                                            $dt = Time::deltaT($date);
-                                            $target->calculateEphemerides($geo_coords, $gst, $dt);
-
-                                            $transit = null;
-                                            $rising = null;
-                                            $setting = null;
-                                            $bestTime = null;
-                                            $maxHeightAtNight = null;
-                                            $maxHeight = null;
-                                            try {
-                                                $transit = $target->getTransit();
-                                            } catch (\Throwable $_) {
-                                                $transit = null;
-                                            }
-                                            try {
-                                                $rising = $target->getRising();
-                                            } catch (\Throwable $_) {
-                                                $rising = null;
-                                            }
-                                            try {
-                                                $setting = $target->getSetting();
-                                            } catch (\Throwable $_) {
-                                                $setting = null;
-                                            }
-                                            try {
-                                                $bestTime = $target->getBestTimeToObserve();
-                                            } catch (\Throwable $_) {
-                                                $bestTime = null;
-                                            }
-
-                                            $tz = $userLocation->timezone ?? config('app.timezone');
-                                            if ($transit instanceof \DateTimeInterface) {
-                                                try {
-                                                    $transit = \Carbon\Carbon::instance($transit)->timezone($tz)->isoFormat('HH:mm');
-                                                } catch (\Throwable $_) {
-                                                    $transit = (string) $transit;
-                                                }
-                                            }
-                                            if ($rising instanceof \DateTimeInterface) {
-                                                try {
-                                                    $rising = \Carbon\Carbon::instance($rising)->timezone($tz)->isoFormat('HH:mm');
-                                                } catch (\Throwable $_) {
-                                                    $rising = (string) $rising;
-                                                }
-                                            }
-                                            if ($setting instanceof \DateTimeInterface) {
-                                                try {
-                                                    $setting = \Carbon\Carbon::instance($setting)->timezone($tz)->isoFormat('HH:mm');
-                                                } catch (\Throwable $_) {
-                                                    $setting = (string) $setting;
-                                                }
-                                            }
-                                            if ($bestTime instanceof \DateTimeInterface) {
-                                                try {
-                                                    $bestTime = \Carbon\Carbon::instance($bestTime)->timezone($tz)->isoFormat('HH:mm');
-                                                } catch (\Throwable $_) {
-                                                    $bestTime = (string) $bestTime;
-                                                }
-                                            }
-
-                                            $altitudeGraph = null;
-                                            try {
-                                                $altitudeGraph = $target->altitudeGraph($geo_coords, $date);
-                                            } catch (\Throwable $_) {
-                                                $altitudeGraph = null;
-                                            }
-                                            $yearGraph = null;
-                                            try {
-                                                $yearGraph = $target->yearGraph($geo_coords, $date);
-                                            } catch (\Throwable $_) {
-                                                $yearGraph = null;
-                                            }
-
-                                            $ephemerides = [
-                                                'date' => $date->timezone($tz)->toDateString(),
-                                                'rising' => $rising,
-                                                'transit' => $transit,
-                                                'setting' => $setting,
-                                                'best_time' => $bestTime,
-                                                'max_height_at_night' => $maxHeightAtNight,
-                                                'max_height' => $maxHeight,
-                                                'altitude_graph' => $altitudeGraph,
-                                                'year_graph' => $yearGraph,
-                                                'raDeg' => $raDeg,
-                                                'decDeg' => $decDeg,
-                                                // Expose comet magnitude when available (legacy DB value)
-                                                'mag' => $record->mag ?? null,
-                                            ];
-                                            try {
-                                                Log::info('ObjectController: computed comet ephemerides for initial payload', ['name' => $record->name ?? null, 'raDeg' => $raDeg, 'decDeg' => $decDeg]);
-                                            } catch (\Throwable $_) {
-                                            }
-                                        } catch (\Throwable $_) { /* ignore */
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (\Throwable $_) { /* ignore */
-        }
-
-        // If we discovered wrapper coordinates at any point but did not populate
-        // the initial ephemerides payload, ensure the view receives the wrapper
-        // coordinates so Livewire mounts with authoritative values and will
-        // avoid calling the external Horizons helper.
-        try {
-            if (!empty($wrapperUsedGlobal) && is_numeric($wrapperRaHours) && is_numeric($wrapperDecDeg)) {
-                if (empty($ephemerides) || !(isset($ephemerides['raDeg']) && isset($ephemerides['decDeg']))) {
-                    $raDegVal = (float) $wrapperRaHours * 15.0;
-                    $decDegVal = (float) $wrapperDecDeg;
-                    $extra = [];
-                    // Attempt to compute rise/transit/setting and constellation when we have a user location
-                    try {
-                        if (isset($userLocation) && $userLocation) {
-                            $geo_coords_local = new \deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates($userLocation->longitude, $userLocation->latitude);
-                            $tmpTarget = new AstroTarget();
-                            // EquatorialCoordinates constructor expects RA in hours and declination in degrees
-                            $equaTmp = new EquatorialCoordinates((float) $wrapperRaHours, (float) $wrapperDecDeg);
-                            $tmpTarget->setEquatorialCoordinates($equaTmp);
-                            $gstTmp = Time::apparentSiderialTimeGreenwich(\Carbon\Carbon::now());
-                            $dtTmp = Time::deltaT(\Carbon\Carbon::now());
-                            try {
-                                $tmpTarget->calculateEphemerides($geo_coords_local, $gstTmp, $dtTmp);
-                                $trans = null;
-                                $rising = null;
-                                $setting = null;
-                                $bestTime = null;
-                                $maxHeightAtNight = null;
-                                $maxHeight = null;
-                                try {
-                                    $trans = $tmpTarget->getTransit();
-                                } catch (\Throwable $_) {
-                                    $trans = null;
-                                }
-                                try {
-                                    $rising = $tmpTarget->getRising();
-                                } catch (\Throwable $_) {
-                                    $rising = null;
-                                }
-                                try {
-                                    $setting = $tmpTarget->getSetting();
-                                } catch (\Throwable $_) {
-                                    $setting = null;
-                                }
-                                try {
-                                    $bestTime = $tmpTarget->getBestTimeToObserve();
-                                } catch (\Throwable $_) {
-                                    $bestTime = null;
-                                }
-                                try {
-                                    $maxHeightAtNight = $tmpTarget->getMaxHeightAtNight();
-                                } catch (\Throwable $_) {
-                                    $maxHeightAtNight = null;
-                                }
-                                try {
-                                    $maxHeight = $tmpTarget->getMaxHeight();
-                                } catch (\Throwable $_) {
-                                    $maxHeight = null;
-                                }
-                                $tzLocal = $userLocation->timezone ?? config('app.timezone');
-                                if ($trans instanceof \DateTimeInterface) {
-                                    try {
-                                        $trans = \Carbon\Carbon::instance($trans)->timezone($tzLocal)->isoFormat('HH:mm');
-                                    } catch (\Throwable $_) {
-                                        $trans = (string) $trans;
-                                    }
-                                }
-                                if ($rising instanceof \DateTimeInterface) {
-                                    try {
-                                        $rising = \Carbon\Carbon::instance($rising)->timezone($tzLocal)->isoFormat('HH:mm');
-                                    } catch (\Throwable $_) {
-                                        $rising = (string) $rising;
-                                    }
-                                }
-                                if ($setting instanceof \DateTimeInterface) {
-                                    try {
-                                        $setting = \Carbon\Carbon::instance($setting)->timezone($tzLocal)->isoFormat('HH:mm');
-                                    } catch (\Throwable $_) {
-                                        $setting = (string) $setting;
-                                    }
-                                }
-                                if ($bestTime instanceof \DateTimeInterface) {
-                                    try {
-                                        $bestTime = \Carbon\Carbon::instance($bestTime)->timezone($tzLocal)->isoFormat('HH:mm');
-                                    } catch (\Throwable $_) {
-                                        $bestTime = (string) $bestTime;
-                                    }
-                                }
-                                if (is_object($maxHeightAtNight) && method_exists($maxHeightAtNight, 'getCoordinate'))
-                                    $maxHeightAtNight = $maxHeightAtNight->getCoordinate();
-                                if (is_object($maxHeight) && method_exists($maxHeight, 'getCoordinate'))
-                                    $maxHeight = $maxHeight->getCoordinate();
-                                if (is_numeric($maxHeightAtNight))
-                                    $maxHeightAtNight = round($maxHeightAtNight, 1);
-                                if (is_numeric($maxHeight))
-                                    $maxHeight = round($maxHeight, 1);
-                                $extra['transit'] = $trans;
-                                $extra['rising'] = $rising;
-                                $extra['setting'] = $setting;
-                                $extra['best_time'] = $bestTime;
-                                $extra['max_height_at_night'] = $maxHeightAtNight;
-                                $extra['max_height'] = $maxHeight;
-                            } catch (\Throwable $_) {
-                                // ignore ephemerides calc failures
-                            }
-                            // Attempt to derive constellation
-                            try {
-                                $cons = null;
-                                if (method_exists($equaTmp, 'getConstellation')) {
-                                    $cons = $equaTmp->getConstellation();
-                                } elseif (method_exists($tmpTarget, 'getConstellation')) {
-                                    $cons = $tmpTarget->getConstellation();
-                                }
-                                if ($cons) {
-                                    // resolve DB mapping when possible
-                                    try {
-                                        $foundCons = ConstellationModel::where('name', $cons)->orWhere('id', $cons)->first();
-                                        if ($foundCons) {
-                                            $extra['constellation'] = $foundCons->name;
-                                            $extra['constellation_code'] = $foundCons->id;
-                                        } else {
-                                            $extra['constellation'] = $cons;
-                                        }
-                                    } catch (\Throwable $_) {
-                                        $extra['constellation'] = $cons;
-                                    }
-                                }
-                            } catch (\Throwable $_) {
-                                // ignore
-                            }
-                        }
-                    } catch (\Throwable $_) {
-                        // ignore location-based calculations
-                    }
-
-                    $ephemerides = array_merge([
-                        'date' => $this->getCanonicalEphemerisDate()->toDateString(),
-                        'raDeg' => $raDegVal,
-                        'decDeg' => $decDegVal,
-                        '_usedWrapper' => true,
-                        '_wrapper_source_file' => $wrapperSourceFile ?? ($wrapperCoords['source_file'] ?? null) ?? null,
-                    ], $extra);
-                    try {
-                        Log::info('ObjectController: forcing ephemerides from wrapper before render', ['ra_hours' => $wrapperRaHours, 'dec_deg' => $wrapperDecDeg, 'object' => $record->name ?? null]);
-                    } catch (\Throwable $_) {
-                    }
-                    // Also ensure downstream code honors the wrapper for this request
-                    $forceUseWrapperSkipHorizons = true;
+            if ($sourceTypeRaw === 'comet' || $type === 'comet') {
+                $userLocation = Auth::user()?->standardLocation ?? null;
+                $geo_coords = $userLocation
+                    ? new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude)
+                    : new GeographicalCoordinates(0.0, 0.0);
+                $coords = CometCoordinates::forName($record->name ?? null, $this->getCanonicalEphemerisDate(), $geo_coords, (float) ($userLocation->elevation ?? 0.0));
+                if ($coords) {
+                    $session->ra = DeepskyObject::formatRa($coords->getRA()->getCoordinate());
+                    $session->decl = DeepskyObject::formatDec($coords->getDeclination()->getCoordinate());
                 }
             }
         } catch (\Throwable $_) {
-            // ignore
+            // ignore: the page is shown without coordinates
+        }
+
+        // Asteroids: the same, from their orbital elements
+        try {
+            if ($type === 'asteroid' && $record instanceof Asteroid) {
+                $asteroidTarget = AsteroidCoordinates::target(AsteroidCoordinates::orbitalElements($record->number) ?? (object) []);
+                if ($asteroidTarget) {
+                    $userLocation = Auth::user()?->standardLocation ?? null;
+                    $geo_coords = $userLocation
+                        ? new GeographicalCoordinates($userLocation->longitude, $userLocation->latitude)
+                        : new GeographicalCoordinates(0.0, 0.0);
+                    $asteroidDate = $this->getCanonicalEphemerisDate();
+                    $coords = AsteroidCoordinates::calculate($asteroidTarget, $asteroidDate, $geo_coords, (float) ($userLocation->elevation ?? 0.0));
+                    $session->ra = DeepskyObject::formatRa($coords->getRA()->getCoordinate());
+                    $session->decl = DeepskyObject::formatDec($coords->getDeclination()->getCoordinate());
+                    // The predicted magnitude (H-G system) for the date
+                    $asteroidMag = AsteroidCoordinates::magnitude($asteroidTarget, $asteroidDate);
+                    $session->mag = $asteroidMag !== null ? round($asteroidMag, 1) : null;
+
+                    // The contrast reserve of a point source, with the standard
+                    // telescope (and its lens) at the standard location
+                    $authUser = Auth::user();
+                    $instrument = $authUser?->standardInstrument;
+                    if ($asteroidMag !== null && $instrument && $userLocation) {
+                        $lens = \App\Models\Lens::find($authUser->standardLensId());
+                        $cr = \App\Services\ContrastReserveCalculator::pointSource($asteroidMag, $instrument, $userLocation, $authUser, \App\Services\ContrastReserveCalculator::lensFactor($lens), null,
+                            \App\Services\ContrastReserveCalculator::highestAltitude($coords->getDeclination()->getCoordinate(), $userLocation));
+                        if ($cr['magnification']) {
+                            $session->contrast_reserve = round($cr['contrast_reserve'], 2);
+                            $session->contrast_reserve_category = $cr['category'];
+                            $session->contrast_used_location = $userLocation->name;
+                            $session->contrast_used_instrument = $instrument->fullName();
+                            $session->optimum_detection_magnification = $cr['magnification'];
+                            $session->optimum_eyepieces = collect($cr['eyepieces'])->map(fn ($ep) => [
+                                'name' => $ep->fullName().($lens ? ' ('.$lens->fullName().')' : ''),
+                                'focal' => (float) $ep->focal_length_mm,
+                                'slug' => $ep->slug,
+                                'user_slug' => $authUser->slug,
+                            ])->all();
+                        }
+                    }
+                }
+            }
+        } catch (\Throwable $_) {
+            // ignore: the page is shown without coordinates
         }
 
         // Prepare legacy comet magnitude time-series when available
@@ -3402,72 +2547,52 @@ class ObjectController extends Controller
         $comet_max_mag = null;
         $cometMagnitudeChart = null;
         try {
-            if (class_exists(\App\Models\CometObservationsOld::class)) {
-                $hasCometObsTable = false;
+            $coObjId = null;
+            if (isset($session->id) && is_numeric($session->id)) {
+                $coObjId = (int) $session->id;
+            } else {
                 try {
-                    $hasCometObsTable = DB::connection('mysqlOld')->getSchemaBuilder()->hasTable('cometobservations');
+                    $coModel = \App\Models\CometObject::where('name', $session->name ?? '')->first();
+                    if ($coModel)
+                        $coObjId = $coModel->id ?? null;
                 } catch (\Throwable $_) {
-                    $hasCometObsTable = false;
                 }
+            }
 
-                if ($hasCometObsTable) {
-                    $coObjId = null;
-                    if (isset($session->id) && is_numeric($session->id)) {
-                        $coObjId = (int) $session->id;
-                    } else {
+            if (!empty($coObjId)) {
+                try {
+                    // Magnitude is stored in comet_observation_details, not in observations itself
+                    $rows = DB::table('observations')
+                        ->join('comet_observation_details', 'comet_observation_details.observation_id', '=', 'observations.id')
+                        ->where('observations.target_type', \App\Models\Observation::TYPE_COMET)
+                        ->where('observations.target_key', (string) $coObjId)
+                        ->whereNotNull('comet_observation_details.magnitude')
+                        ->orderBy('observations.observed_on')
+                        ->select('observations.observed_on', 'comet_observation_details.magnitude')
+                        ->get();
+                    foreach ($rows as $r) {
                         try {
-                            $coModel = \App\Models\CometObject::where('name', $session->name ?? '')->first();
-                            if ($coModel)
-                                $coObjId = $coModel->id ?? null;
-                        } catch (\Throwable $_) {
-                        }
-                    }
+                            $mag = $r->magnitude !== null ? floatval($r->magnitude) : null;
+                            if ($mag === null)
+                                continue;
 
-                    if (!empty($coObjId)) {
-                        try {
-                            $rows = \App\Models\CometObservationsOld::where('objectid', $coObjId)->orderBy('date')->get();
-                            foreach ($rows as $r) {
-                                try {
-                                    $attrs = $r->getAttributes();
-                                    $mag = null;
-                                    foreach (['mag', 'mag_v', 'magnitude', 'estmag', 'mag_v_est', 'vmag', 'magv', 'm'] as $k) {
-                                        if (array_key_exists($k, $attrs) && $attrs[$k] !== null && $attrs[$k] !== '') {
-                                            $mag = floatval($attrs[$k]);
-                                            break;
-                                        }
-                                    }
-                                    if ($mag === null)
-                                        continue;
+                            $formatted = \Carbon\Carbon::parse($r->observed_on)->toDateString();
 
-                                    $dateStr = (string) ($r->date ?? '');
-                                    $formatted = null;
-                                    if (preg_match('/^\d{8}$/', $dateStr)) {
-                                        $formatted = substr($dateStr, 0, 4) . '-' . substr($dateStr, 4, 2) . '-' . substr($dateStr, 6, 2);
-                                    } else {
-                                        try {
-                                            $formatted = \Carbon\Carbon::parse($r->date)->toDateString();
-                                        } catch (\Throwable $_) {
-                                            $formatted = null;
-                                        }
-                                    }
-
-                                    if ($formatted) {
-                                        $comet_magnitudes[] = ['date' => $formatted, 'mag' => $mag];
-                                        if (!is_null($mag)) {
-                                            if (is_null($comet_min_mag) || $mag < $comet_min_mag)
-                                                $comet_min_mag = $mag;
-                                            if (is_null($comet_max_mag) || $mag > $comet_max_mag)
-                                                $comet_max_mag = $mag;
-                                        }
-                                    }
-                                } catch (\Throwable $_) {
-                                    // ignore individual row errors
+                            if ($formatted) {
+                                $comet_magnitudes[] = ['date' => $formatted, 'mag' => $mag];
+                                if (!is_null($mag)) {
+                                    if (is_null($comet_min_mag) || $mag < $comet_min_mag)
+                                        $comet_min_mag = $mag;
+                                    if (is_null($comet_max_mag) || $mag > $comet_max_mag)
+                                        $comet_max_mag = $mag;
                                 }
                             }
                         } catch (\Throwable $_) {
-                            // ignore fetch errors
+                            // ignore individual row errors
                         }
                     }
+                } catch (\Throwable $_) {
+                    // ignore fetch errors
                 }
             }
         } catch (\Throwable $_) {
@@ -3527,9 +2652,9 @@ class ObjectController extends Controller
         }
 
         // For comet detail pages we should not embed server-side ephemerides into
-        // the initial HTML payload. Ephemerides can be stale across sessions or
-        // driven by wrapper diagnostics; prefer Livewire's EphemerisAside as the
-        // authoritative source so interactive date selection and reloads match.
+        // the initial HTML payload. Ephemerides can be stale across sessions;
+        // prefer Livewire's EphemerisAside as the authoritative source so
+        // interactive date selection and reloads match.
         try {
             if ((($session->source_type_raw ?? '') === 'comet') || (($type ?? '') === 'comet')) {
                 $ephemerides = null;
@@ -3547,53 +2672,53 @@ class ObjectController extends Controller
         try {
             if (($type === 'deepsky' || $type === 'objects')) {
                 $vars['dsl_deepsky_full_container'] = true;
+                // Shared so the navigation menu (a separate Livewire component,
+                // which does not see the page's variables) renders full width too.
+                View::share('dsl_deepsky_full_container', true);
             }
         } catch (\Throwable $_) {
             // ignore
+        }
+
+        try {
+            Log::info('ObjectController: counts', [
+                'slug' => $slug,
+                'name' => $session->name ?? null,
+                'type' => $session->source_type_raw ?? $type ?? null,
+                'possibleKeys' => $possibleKeys ?? null,
+                'totalObservations' => $totalObservations ?? null,
+                'drawings' => $drawings ?? null,
+                'yourObservations' => $yourObservations ?? null,
+                'yourDrawings' => $yourDrawings ?? null,
+            ]);
+        } catch (\Throwable $_) {
         }
 
         return response()->view('object.show', $vars);
     }
 
     /**
-     * Return the canonical ephemeris date for this request.
+     * Return the canonical ephemeris date for this request, in the timezone of
+     * the location (else of the user's standard location).
      * Preference order: request query `date`, session `dsl_ephemeris_date`, now().
+     * A date without a time is a date of the observer: noon in their timezone.
      *
      * @return \Carbon\Carbon
      */
-    private function getCanonicalEphemerisDate()
+    private function getCanonicalEphemerisDate($location = null)
     {
+        $tz = EphemerisDate::timezone($location instanceof \App\Models\Location ? $location : null);
+
+        $value = null;
         try {
-            $q = request()->query('date');
-            if (!empty($q)) {
-                try {
-                    return \Carbon\Carbon::parse($q);
-                } catch (\Throwable $_) {
-                    // ignore parse errors
-                }
-            }
+            $value = request()->query('date');
         } catch (\Throwable $_) {
-            // ignore
+        }
+        if (empty($value)) {
+            $value = EphemerisDate::chosen($tz);
         }
 
-        try {
-            $sess = session()->get('dsl_ephemeris_date');
-            if (!empty($sess)) {
-                try {
-                    return \Carbon\Carbon::createFromFormat('Y-m-d', $sess);
-                } catch (\Throwable $_) {
-                    try {
-                        return \Carbon\Carbon::parse($sess);
-                    } catch (\Throwable $_) {
-                        // ignore
-                    }
-                }
-            }
-        } catch (\Throwable $_) {
-            // ignore
-        }
-
-        return \Carbon\Carbon::now();
+        return EphemerisDate::parse(is_string($value) ? $value : null, $tz);
     }
 
     /**
@@ -3713,16 +2838,19 @@ class ObjectController extends Controller
      * Show the form for editing a deepsky object.
      * Only accessible by Administrators and Database Experts.
      */
-    public function edit(string $slug)
+    /**
+     * The deep-sky object of the edit page and its form: the slug may also be
+     * an alternative name or slug in objectnames, or the object's name.
+     */
+    private function objectForEdit(string $slug): DeepskyObject
     {
-        // Find the object using similar logic to show()
         $record = null;
 
         // Try objectnames table first (for aliases)
         $on = DB::table('objectnames')
             ->where('slug', $slug)
-            ->orWhereRaw('LOWER(objectname) = ?', [mb_strtolower($slug)])
-            ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($slug)])
+            ->orWhere('objectname', $slug)
+            ->orWhere('altname', $slug)
             ->first();
 
         if ($on) {
@@ -3743,8 +2871,65 @@ class ObjectController extends Controller
             abort(404, 'Object not found');
         }
 
-        // Convert to DeepskyObject model instance
-        $object = DeepskyObject::where('name', $record->name)->firstOrFail();
+        return DeepskyObject::where('name', $record->name)->firstOrFail();
+    }
+
+    /** Largest radius of the chart on the edit page, for the largest objects. */
+    private const EDIT_PREVIEW_MAX_RADIUS_ARCMIN = 180.0;
+
+    /**
+     * Star chart of the object as the edit form has it (#526): the position,
+     * type, magnitude and size in the query string are applied to the object
+     * without saving it, so the chart shows where the form would put it
+     * among the stars and the other objects.
+     */
+    public function editPreviewChart(Request $request, StarChartService $starChartService, string $slug)
+    {
+        $object = $this->objectForEdit($slug);
+        $this->authorize('edit', $object);
+
+        $validated = $request->validate([
+            'ra' => 'required|string',
+            'decl' => 'required|string',
+            'type' => 'nullable|string|exists:deepskytypes,code',
+            'mag' => 'nullable|numeric',
+            'diam1' => 'nullable|numeric|min:0',
+            'diam2' => 'nullable|numeric|min:0',
+            'pa' => 'nullable|numeric',
+        ]);
+
+        $raHours = $this->parseRaInput($validated['ra']);
+        $declDegrees = $this->parseDeclInput($validated['decl']);
+        if ($raHours === null || $declDegrees === null || $raHours < 0 || $raHours >= 24 || abs($declDegrees) > 90) {
+            abort(422, 'Invalid coordinates');
+        }
+
+        $columns = DeepskyObjectCreator::measurementColumns($validated);
+        $object->fill([
+            'ra' => $raHours,
+            'decl' => $declDegrees,
+            'type' => $validated['type'] ?? $object->type,
+            'mag' => $columns['mag'],
+            'diam1' => $columns['diam1'],
+            'diam2' => $columns['diam2'],
+            'pa' => $columns['pa'],
+        ]);
+
+        // A field a few times the object's size, at least 20' across
+        $majorArcMin = max($columns['diam1'], $columns['diam2']) / 60.0;
+        $radiusArcMin = min(self::EDIT_PREVIEW_MAX_RADIUS_ARCMIN, max(10.0, 1.5 * $majorArcMin));
+
+        $chart = $starChartService->build($object, $raHours * 15.0, $declDegrees, $radiusArcMin);
+
+        return response($chart['svg'], 200, [
+            'Content-Type' => 'image/svg+xml',
+            'Cache-Control' => 'no-store',
+        ]);
+    }
+
+    public function edit(string $slug)
+    {
+        $object = $this->objectForEdit($slug);
 
         // Authorize
         $this->authorize('edit', $object);
@@ -3778,12 +2963,35 @@ class ObjectController extends Controller
         // Get SIMBAD-compatible name for external link
         $simbadName = $this->translateObjectNameForSimbad($object->name);
 
-        return view('object.edit', compact('object', 'constellations', 'types', 'alternativeNames', 'partOfObjects', 'containsObjects', 'simbadName'));
+        // The form asks about new names of a catalog DeepskyLog does not have (#526)
+        $knownCatalogs = app(ObjectNameCatalogs::class)->known();
+
+        return view('object.edit', compact('object', 'constellations', 'types', 'alternativeNames', 'partOfObjects', 'containsObjects', 'simbadName', 'knownCatalogs'));
+    }
+
+    /**
+     * RA in hours from a SIMBAD VOTable cell: RA_d is decimal degrees, RA is sexagesimal hours.
+     */
+    private static function simbadRaHours(string $fieldName, string $value): ?float
+    {
+        $value = trim($value);
+        if ($value === '') {
+            return null;
+        }
+        if ($fieldName === 'RA_d') {
+            return is_numeric($value) ? fmod((float) $value, 360.0) / 15.0 : null;
+        }
+        if (is_numeric($value)) {
+            return null; // a bare number in the RA column is ambiguous
+        }
+        $raDeg = DeepskyObject::raToDecimal($value);
+
+        return $raDeg === null ? null : $raDeg / 15.0;
     }
 
     /**
      * Parse RA input (supports both decimal hours and sexagesimal hh mm ss.sss format).
-     * Returns RA in degrees (0-360) for database storage.
+     * Returns RA in decimal hours (0-24), the unit of the objects.ra column.
      */
     private function parseRaInput(?string $input): ?float
     {
@@ -3795,28 +3003,21 @@ class ObjectController extends Controller
 
         // Check if input contains spaces (sexagesimal format: hh mm ss.sss)
         if (preg_match('/^(\d+)\s+(\d+)\s+([\d.]+)$/', $input, $matches)) {
-            // Sexagesimal format
             $hours = floatval($matches[1]);
             $minutes = floatval($matches[2]);
             $seconds = floatval($matches[3]);
 
-            // Convert to decimal hours
-            $decimalHours = $hours + ($minutes / 60.0) + ($seconds / 3600.0);
-
-            // Convert hours to degrees for storage
-            return $decimalHours * 15.0;
+            return $hours + ($minutes / 60.0) + ($seconds / 3600.0);
         }
 
-        // Decimal format (assume hours)
+        if (!is_numeric($input)) {
+            return null;
+        }
+
+        // Decimal format: hours, unless the value can only be degrees (> 24)
         $value = floatval($input);
 
-        // If value is in hours (0-24), convert to degrees
-        // If already in degrees (> 24), keep as is
-        if ($value <= 24) {
-            return $value * 15.0;  // Convert hours to degrees
-        }
-
-        return $value;  // Already in degrees
+        return $value > 24 ? $value / 15.0 : $value;
     }
 
     /**
@@ -3838,8 +3039,8 @@ class ObjectController extends Controller
             $minutes = floatval($matches[2]);
             $seconds = floatval($matches[3]);
 
-            // Handle negative values
-            $sign = $degrees < 0 ? -1 : 1;
+            // Handle negative values, also -00 30 00
+            $sign = str_starts_with($matches[1], '-') ? -1 : 1;
             $absDegrees = abs($degrees);
 
             // Convert to decimal degrees
@@ -3849,7 +3050,7 @@ class ObjectController extends Controller
         }
 
         // Decimal format (already in degrees)
-        return floatval($input);
+        return is_numeric($input) ? floatval($input) : null;
     }
 
     /**
@@ -3858,36 +3059,7 @@ class ObjectController extends Controller
      */
     public function update(Request $request, string $slug)
     {
-        // Find the object using similar logic to show()
-        $record = null;
-
-        // Try objectnames table first (for aliases)
-        $on = DB::table('objectnames')
-            ->where('slug', $slug)
-            ->orWhereRaw('LOWER(objectname) = ?', [mb_strtolower($slug)])
-            ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($slug)])
-            ->first();
-
-        if ($on) {
-            $record = DB::table('objects')->where('name', $on->objectname)->first();
-        }
-
-        // Try direct slug match on objects table
-        if (!$record) {
-            $record = DB::table('objects')->where('slug', $slug)->first();
-        }
-
-        // Try direct name match
-        if (!$record) {
-            $record = DB::table('objects')->where('name', $slug)->first();
-        }
-
-        if (!$record) {
-            abort(404, 'Object not found');
-        }
-
-        // Convert to DeepskyObject model instance
-        $object = DeepskyObject::where('name', $record->name)->firstOrFail();
+        $object = $this->objectForEdit($slug);
 
         // Authorize
         $this->authorize('update', $object);
@@ -3899,7 +3071,6 @@ class ObjectController extends Controller
             'part_of_type' => gettype($request->input('part_of')),
             'contains_type' => gettype($request->input('contains')),
             'alternative_names' => $request->input('alternative_names'),
-            'all_input' => $request->all(),
         ]);
 
         // Validate the request
@@ -3908,7 +3079,7 @@ class ObjectController extends Controller
             'ra' => 'required|string',
             'decl' => 'required|string',
             'con' => 'nullable|string|max:5',
-            'type' => 'required|string|max:8',
+            'type' => 'required|string|exists:deepskytypes,code',
             'mag' => 'nullable|numeric',
             'subr' => 'nullable|numeric',
             'diam1' => 'nullable|numeric',
@@ -3921,126 +3092,95 @@ class ObjectController extends Controller
             'part_of.*' => 'string|max:255',
             'contains' => 'nullable|array',
             'contains.*' => 'string|max:255',
+            'review_status' => 'nullable|string|in:'.implode(',', DeepskyObject::REVIEW_STATUSES),
+            'review_note' => 'nullable|string|max:255',
+            'name_catalogs' => 'nullable|array',
+            'name_catalogs.*.name' => 'required|string',
+            'name_catalogs.*.choice' => 'required|in:'.ObjectNameCatalogs::NEW_CATALOG.','.ObjectNameCatalogs::NO_CATALOG,
         ]);
 
+        // A new name whose catalog DeepskyLog does not have yet starts a new
+        // catalog, or is a name without a catalog: the form says which (#526)
+        // (read before the names of this object are rewritten below)
+        $catalogs = app(ObjectNameCatalogs::class);
+        $catalogs->known();
+        $catalogChoices = collect($validated['name_catalogs'] ?? [])->pluck('choice', 'name');
+        $savedNames = DB::table('objectnames')->where('objectname', $object->name)->pluck('altname')->push($object->name)->all();
+        $newNames = $request->has('alternative_names')
+            ? array_filter(array_map('trim', explode(',', (string) ($validated['alternative_names'] ?? ''))))
+            : [];
+        $newNames[] = $validated['name'];
+        $unresolved = collect($newNames)
+            ->unique()
+            ->reject(fn (string $name) => in_array($name, $savedNames, true) || $catalogChoices->has($name))
+            ->filter(fn (string $name) => $catalogs->newCatalogOf($name) !== null)
+            ->values();
+        if ($unresolved->isNotEmpty()) {
+            return back()->withErrors([
+                'alternative_names' => __('These names would start a new catalog: :names. Choose for each whether it is a new catalog or a name without a catalog.', ['names' => $unresolved->implode(', ')]),
+            ])->withInput();
+        }
+
         // Parse RA and Decl (support both decimal and sexagesimal formats)
-        $raDegrees = $this->parseRaInput($validated['ra']);
+        $raHours = $this->parseRaInput($validated['ra']);
         $declDegrees = $this->parseDeclInput($validated['decl']);
 
         // Ensure RA and Decl were parsed successfully
-        if ($raDegrees === null || $declDegrees === null) {
+        if ($raHours === null || $declDegrees === null) {
             return back()->withErrors([
-                'ra' => $raDegrees === null ? 'Invalid RA format' : null,
+                'ra' => $raHours === null ? 'Invalid RA format' : null,
                 'decl' => $declDegrees === null ? 'Invalid Declination format' : null,
             ])->withInput();
         }
 
-        // Handle optional fields - use sentinel values when empty
-        // Position angle: 999 means no value
-        $pa = 999;
-        if (!empty($validated['pa']) && $validated['pa'] !== '') {
-            $pa = $validated['pa'];
-        }
-
-        // Diameters: 0 means no value
-        // Note: User enters arcminutes, database stores arcseconds
-        $diam1 = 0;
-        if (!empty($validated['diam1']) && $validated['diam1'] !== '') {
-            $diam1 = $validated['diam1'] * 60.0; // Convert arcminutes to arcseconds
-        }
-
-        $diam2 = 0;
-        if (!empty($validated['diam2']) && $validated['diam2'] !== '') {
-            $diam2 = $validated['diam2'] * 60.0; // Convert arcminutes to arcseconds
-        }
-
-        // Magnitude: 99.9 means no value
-        $mag = 99.9;
-        if (!empty($validated['mag']) && $validated['mag'] !== '') {
-            $mag = $validated['mag'];
-        }
-
-        // Surface brightness: 99.9 means no value
-        $subr = 99.9;
-        if (!empty($validated['subr']) && $validated['subr'] !== '') {
-            $subr = $validated['subr'];
-        }
-
-        // Calculate SBObj if we have the necessary data (not sentinel values)
-        $SBObj = -999;  // Sentinel value for no data
-        if ($mag != 99.9 && $subr != 99.9 && $diam1 > 0) {
-            // If diam2 is 0, use diam1 for both dimensions (circular object)
-            $effectiveDiam2 = ($diam2 > 0) ? $diam2 : $diam1;
-
-            // Calculate SBObj (formula: mag + 2.5 * log10(π * diam1 * diam2 / 4))
-            $SBObj = $mag + 2.5 * log10(M_PI * $diam1 * $effectiveDiam2 / 4);
-        }
-
-        // Store the original name before updating, for updating related tables
+        // Store the original name and slug before updating, for updating related tables
         $originalName = $object->getOriginal('name');
+        $originalSlug = $object->getOriginal('slug');
+        $renamed = $originalName !== $validated['name'];
 
         // Auto-recalculate constellation and all atlas pages from the new coordinates.
-        // parseRaInput() returns degrees; EquatorialCoordinates expects hours.
-        $raHours = $raDegrees / 15.0;
-        $newCon = $validated['con'] ?? $object->con;
-        $atlasData = [];
-        try {
-            $coords = new EquatorialCoordinates($raHours, $declDegrees);
-
-            // Constellation
-            $newCon = $coords->getConstellation();
-
-            // All 17 supported atlas keys
-            foreach ([
-                'urano',
-                'urano_new',
-                'sky',
-                'taki',
-                'psa',
-                'torresB',
-                'torresBC',
-                'torresC',
-                'milleniumbase',
-                'DSLDL',
-                'DSLDP',
-                'DSLLL',
-                'DSLLP',
-                'DSLOL',
-                'DSLOP',
-                'DeepskyHunter',
-                'Interstellarum'
-            ] as $atlasKey) {
-                $atlasData[$atlasKey] = $coords->calculateAtlasPage($atlasKey);
-            }
-
-            // Millenium Star Atlas volume: I=0–8h, II=8–16h, III=>16h
-            $milVol = $raHours <= 8 ? 'I' : ($raHours <= 16 ? 'II' : 'III');
-            $atlasData['millenium'] = $atlasData['milleniumbase'] . '/' . $milVol;
-        } catch (\Throwable $e) {
-            Log::warning('Atlas/constellation recalculation failed during object update', ['error' => $e->getMessage()]);
-        }
+        $atlasData = DeepskyObjectCreator::coordinateDerivedFields($raHours, $declDegrees, 'object update');
+        $newCon = $atlasData['con'] ?? ($validated['con'] ?? $object->con);
+        unset($atlasData['con']);
 
         // Update the object
         $object->fill(array_merge([
             'name' => $validated['name'],
-            'ra' => $raDegrees,
+            'ra' => $raHours,
             'decl' => $declDegrees,
             'con' => $newCon,
             'type' => $validated['type'],
-            'mag' => $mag,
-            'subr' => $subr,
-            'SBObj' => $SBObj,
-            'diam1' => $diam1,
-            'diam2' => $diam2,
-            'pa' => $pa,
             'description' => $validated['description'] ?? $object->description,
             'datasource' => $validated['datasource'] ?? $object->datasource,
-        ], $atlasData));
+            'timestamp' => now(),
+        ], DeepskyObjectCreator::measurementColumns($validated), $atlasData));
+
+        // The review of the object (#526), when the form has it
+        if ($request->has('review_status')) {
+            $object->setReview($validated['review_status'] ?? null, $validated['review_note'] ?? null, Auth::id());
+        }
+
+        // A renamed object gets the slug of its new name, unless another object has it
+        if ($renamed) {
+            $newSlug = \Illuminate\Support\Str::slug($validated['name'], '-');
+            if ($newSlug !== '' && !DB::table('objects')->where('slug', $newSlug)->where('name', '!=', $originalName)->exists()) {
+                $object->slug = $newSlug;
+            }
+        }
 
         $object->save();
 
         // If name changed, update all related tables
-        if ($originalName !== $validated['name']) {
+        if ($renamed) {
+            // Observations and observing list entries refer to the object by name
+            \App\Models\Observation::ofDeepskyObject($originalName)
+                ->update(['target_key' => $validated['name'], 'target_name' => $validated['name']]);
+            \App\Services\ObjectObservationStatistics::refreshObjects([$originalName, $validated['name']]);
+
+            DB::table('observing_list_items')
+                ->where('object_name', $originalName)
+                ->update(['object_name' => $validated['name']]);
+
             // Update objectnames table
             DB::table('objectnames')
                 ->where('objectname', $originalName)
@@ -4061,6 +3201,13 @@ class ObjectController extends Controller
         if ($request->has('alternative_names')) {
             $altNamesInput = trim($validated['alternative_names'] ?? '');
 
+            // Aliases that are kept keep their catalog and catindex: these come from the
+            // old database and cannot always be derived from the name.
+            $previousNames = DB::table('objectnames')
+                ->where('objectname', $object->name)
+                ->get(['altname', 'catalog', 'catindex'])
+                ->keyBy('altname');
+
             // Delete existing alternative names for this object
             DB::table('objectnames')->where('objectname', $object->name)->delete();
 
@@ -4078,22 +3225,15 @@ class ObjectController extends Controller
                 foreach ($altNames as $altName) {
                     if (!empty($altName)) {
 
-                        // Parse catalog and catindex from altname
-                        // Expected formats: "NGC 3623", "M 65", "IC 1234", etc.
-                        $catalog = '';
-                        $catindex = '';
-
-                        // Try to match catalog prefix and number
-                        if (preg_match('/^([A-Za-z]+)\s*(.+)$/', trim($altName), $matches)) {
-                            $catalog = $matches[1];
-                            $catindex = trim($matches[2]);
+                        $previous = $previousNames->get($altName);
+                        if ($previous) {
+                            $catalog = (string) $previous->catalog;
+                            $catindex = (string) $previous->catindex;
                         } else {
-                            // If no match, use the whole name
-                            $catalog = $altName;
-                            $catindex = '';
+                            [$catalog, $catindex] = $catalogs->split($altName, $catalogChoices->get($altName));
                         }
 
-                        $slug = \Illuminate\Support\Str::slug($altName);
+                        $slug = \App\Models\ObjectName::slugFor($altName);
 
                         // Check if this slug exists for another object
                         $existingEntry = DB::table('objectnames')->where('slug', $slug)->first();
@@ -4177,12 +3317,7 @@ class ObjectController extends Controller
             ->where('altname', $object->name)
             ->exists();
         if (!$canonicalExists) {
-            $cat = '';
-            $catIdx = '';
-            if (preg_match('/^([A-Za-z]+)\s*(.+)$/', trim($object->name), $m)) {
-                $cat = $m[1];
-                $catIdx = trim($m[2]);
-            }
+            [$cat, $catIdx] = $catalogs->split($object->name, $catalogChoices->get($object->name));
             // Only insert if the slug is not already claimed by a different object
             $slugTaken = DB::table('objectnames')
                 ->where('slug', $canonicalSlug)
@@ -4199,6 +3334,11 @@ class ObjectController extends Controller
                 ]);
             }
         }
+
+        // An STF, STT, ... name gets its Σ name (#480)
+        \App\Services\StruveSigmaNames::addFor([$object->name]);
+
+        ObjectSearchIndex::syncObject($object->name, [$originalName, $originalSlug]);
 
         return redirect()->route('object.show', ['slug' => $object->slug ?? $object->name])
             ->with('success', __('Object updated successfully.'));
@@ -4238,8 +3378,8 @@ class ObjectController extends Controller
 
         $on = DB::table('objectnames')
             ->where('slug', $slug)
-            ->orWhereRaw('LOWER(objectname) = ?', [mb_strtolower($slug)])
-            ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($slug)])
+            ->orWhere('objectname', $slug)
+            ->orWhere('altname', $slug)
             ->first();
 
         if ($on) {
@@ -4365,7 +3505,185 @@ class ObjectController extends Controller
             ->orderBy('catalog')
             ->pluck('catalog');
 
-        return view('object.create_name', compact('catalogs'));
+        // Observers can't add objects to a complete catalog
+        $completeCatalogs = CompleteCatalog::codes();
+        $user = $request->user();
+        if (!$user->isAdministrator() && !$user->isDatabaseExpert()) {
+            $complete = array_map('mb_strtolower', $completeCatalogs);
+            $catalogs = $catalogs->reject(fn ($code) => in_array(mb_strtolower($code), $complete, true))->values();
+        }
+
+        return view('object.create_name', compact('catalogs', 'completeCatalogs'));
+    }
+
+    /**
+     * Why an observer can't add an object with this name to a complete catalog:
+     * the object it already is, else that the catalog is complete.
+     */
+    private function completeCatalogMessage(string $name, string $catalog): string
+    {
+        $existing = DB::table('objectnames')->where('altname', $name)->value('objectname');
+        if ($existing !== null) {
+            return __(':name is already in DeepskyLog as :object.', ['name' => $name, 'object' => $existing]);
+        }
+
+        return __('The :catalog catalog is complete: all its objects are already in DeepskyLog. Check the name of the object.', ['catalog' => $catalog]);
+    }
+
+    /**
+     * Show a simple comet-selection form (select from comets_orbital_elements)
+     */
+    public function createComet(Request $request)
+    {
+        $q = trim((string) $request->input('q', ''));
+        $query = DB::table('comets_orbital_elements')
+            ->whereRaw('NOT EXISTS (SELECT 1 FROM cometobjects WHERE cometobjects.name = comets_orbital_elements.name)');
+
+        if ($q !== '') {
+            $query->where('name', 'like', "%{$q}%");
+        }
+
+        $comets = $query->orderBy('name')->limit(200)->get();
+
+        return view('object.create_comet', compact('q', 'comets'));
+    }
+
+    /**
+     * Persist selected comet from comets_orbital_elements into cometobjects if missing.
+     */
+    public function storeComet(Request $request)
+    {
+        $request->validate([
+            'comet_name' => 'required|string|exists:comets_orbital_elements,name',
+        ]);
+
+        $name = (string) $request->input('comet_name');
+
+        // Check if the comet already exists (case-insensitive match on name)
+        $existing = DB::table('cometobjects')->where('name', $name)->first();
+        if ($existing) {
+            // Redirect to existing comet page (prefer slug when available)
+            $slug = $existing->slug ?? null;
+            if (!empty($slug)) {
+                return redirect()->route('object.show', ['slug' => $slug])->with('success', __('Comet already exists.'));
+            }
+            return redirect()->route('object.show', ['slug' => $existing->id])->with('success', __('Comet already exists.'));
+        }
+
+        // Prepare insert data
+        $icqname = mb_substr($name, 0, 11);
+        $timestamp = now();
+        $data = [
+            'name' => $name,
+            'icqname' => $icqname,
+            'timestamp' => $timestamp,
+        ];
+
+        // If the cometobjects table has a slug column, generate a unique slug
+        if (Schema::hasColumn('cometobjects', 'slug')) {
+            $base = \Illuminate\Support\Str::slug($name, '-');
+            if (empty($base)) {
+                $base = 'comet';
+            }
+            $slug = $base;
+            $i = 0;
+            while (DB::table('cometobjects')->where('slug', $slug)->exists()) {
+                $i++;
+                $slug = $base . '-' . $i;
+            }
+            $data['slug'] = $slug;
+        }
+
+        try {
+            $id = DB::table('cometobjects')->insertGetId($data);
+        } catch (\Exception $e) {
+            Log::error('Failed to create cometobject', ['error' => $e->getMessage(), 'name' => $name]);
+            return redirect()->back()->with('error', __('Failed to add comet: :msg', ['msg' => $e->getMessage()]));
+        }
+
+        // Ensure slug exists if column is present but wasn't set for some reason
+        if (!isset($data['slug']) && Schema::hasColumn('cometobjects', 'slug')) {
+            $base = \Illuminate\Support\Str::slug($name, '-');
+            if (empty($base)) {
+                $base = 'comet';
+            }
+            $slug = $base;
+            $i = 0;
+            while (DB::table('cometobjects')->where('slug', $slug)->where('id', '!=', $id)->exists()) {
+                $i++;
+                $slug = $base . '-' . $i;
+            }
+            try {
+                DB::table('cometobjects')->where('id', $id)->update(['slug' => $slug]);
+            } catch (\Throwable $_) {
+                // ignore update failures
+            }
+        }
+
+        $row = DB::table('cometobjects')->where('id', $id)->first();
+
+        // Add a search_index row so the comet is immediately discoverable
+        try {
+            DB::table('search_index')->where('source_table', 'cometobjects')->where('source_pk', (string) $id)->delete();
+            DB::table('search_index')->insert([
+                'name' => $row->name,
+                'name_normalized' => mb_strtolower($row->name),
+                'source_table' => 'cometobjects',
+                'source_pk' => (string) $id,
+                'display_name' => $row->name,
+                'source_type' => 'comet',
+                'ra' => null,
+                'decl' => null,
+                'metadata' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            SearchIndex::markUniqueNames([$row->name]);
+        } catch (\Exception $e) {
+            Log::warning('Failed to update search_index for cometobjects', ['error' => $e->getMessage(), 'id' => $id]);
+        }
+
+        if (!empty($row->slug)) {
+            return redirect()->route('object.show', ['slug' => $row->slug])->with('success', __('Comet added.'));
+        }
+
+        return redirect()->route('object.show', ['slug' => $row->id])->with('success', __('Comet added.'));
+    }
+
+    /**
+     * Search the orbital elements of the numbered asteroids by number, name or
+     * designation, to add one that is not in DeepskyLog yet.
+     */
+    public function createAsteroid(Request $request)
+    {
+        $q = trim((string) $request->input('q', ''));
+        $asteroids = AsteroidCoordinates::search($q);
+        // The ones already in DeepskyLog link to their page instead
+        $existing = $asteroids->isEmpty() ? collect() : Asteroid::whereIn('number', $asteroids->pluck('number'))->get()->keyBy('number');
+
+        return view('object.create_asteroid', compact('q', 'asteroids', 'existing'));
+    }
+
+    /**
+     * Add the asteroid with this number from its orbital elements, unless it
+     * is in DeepskyLog already, and show its page.
+     */
+    public function storeAsteroid(Request $request)
+    {
+        $request->validate([
+            'number' => 'required|integer|min:1',
+        ]);
+
+        $elements = AsteroidCoordinates::orbitalElements((int) $request->input('number'));
+        if ($elements === null) {
+            return redirect()->back()->with('error', __('No orbital elements found for this asteroid.'));
+        }
+
+        $wasThere = Asteroid::where('number', (int) $elements->number)->exists();
+        $asteroid = Asteroid::addFromElements($elements);
+
+        return redirect()->route('object.show', ['slug' => $asteroid->slug])
+            ->with('success', $wasThere ? __('Asteroid already exists.') : __('Asteroid added.'));
     }
 
     /**
@@ -4381,6 +3699,9 @@ class ObjectController extends Controller
 
         return redirect()->route('object.nameSearch', $request->only(['catalog', 'number', 'name']));
     }
+
+    /** Columns the candidates of nameSearch() can be sorted on. */
+    private const NAME_SEARCH_SORTS = ['name', 'ra', 'decl', 'type'];
 
     /**
      * GET: show paginated similar-name candidates.
@@ -4405,12 +3726,21 @@ class ObjectController extends Controller
             $name = '';
         }
 
-        // Base query: objectnames → objects → target_types (for human-readable type label)
+        $completeCatalog = $name !== '' ? CompleteCatalog::catalogOf($name) : null;
+        if ($completeCatalog !== null && CompleteCatalog::refusedCatalog($name, $request->user()) !== null) {
+            return redirect()->route('object.create')
+                ->withInput($request->only(['catalog', 'number']))
+                ->withErrors(['catalog' => $this->completeCatalogMessage($name, $completeCatalog)]);
+        }
+
+        // Base query: objectnames → objects → target_types (for human-readable type label).
+        // Joined on the object name: an alias has its own slug, not the one of its object.
         $base = DB::table('objectnames')
-            ->join('objects', 'objectnames.slug', '=', 'objects.slug')
+            ->join('objects', 'objectnames.objectname', '=', 'objects.name')
             ->leftJoin('target_types', 'objects.type', '=', 'target_types.id')
             ->select(
                 'objectnames.objectname',
+                'objectnames.altname',
                 'objectnames.catalog',
                 'objectnames.catindex',
                 'objects.ra',
@@ -4429,30 +3759,50 @@ class ObjectController extends Controller
                     if ($catalog !== '') {
                         $q->orWhere(function ($q2) use ($catalog, $catindex) {
                             $q2->where('objectnames.catalog', $catalog)
-                                ->whereBetween('objectnames.catindex', [$catindex - 3, $catindex + 3]);
+                                ->whereRaw('objectnames.catindex + 0 BETWEEN ? AND ?', [$catindex - 3, $catindex + 3]);
                         });
                     }
-                })
-                ->orderBy('objectnames.catalog')
-                ->orderBy('objectnames.catindex')
-                ->paginate(25)
-                ->withQueryString();
+                });
         } elseif ($name !== '') {
             $q = mb_strtolower($name);
             $candidates = (clone $base)
                 ->where(function ($qb) use ($q) {
-                    $qb->whereRaw('LOWER(objectnames.objectname) LIKE ?', ["%{$q}%"])
-                        ->orWhereRaw('LOWER(objectnames.altname) LIKE ?', ["%{$q}%"]);
-                })
-                ->orderBy('objectnames.catalog')
-                ->orderBy('objectnames.catindex')
+                    $qb->where('objectnames.objectname', 'like', "%{$q}%")
+                        ->orWhere('objectnames.altname', 'like', "%{$q}%");
+                });
+        } else {
+            $candidates = null;
+        }
+
+        $sort = in_array($request->input('sort'), self::NAME_SEARCH_SORTS, true) ? $request->input('sort') : 'name';
+        $direction = $request->input('direction') === 'desc' ? 'desc' : 'asc';
+
+        if ($candidates !== null) {
+            // The name asked for stays at the top, whatever the sort
+            $candidates->orderByRaw(
+                'CASE WHEN objectnames.altname = ? OR objectnames.objectname = ? THEN 0 ELSE 1 END',
+                [$name, $name]
+            );
+
+            match ($sort) {
+                'ra' => $candidates->orderBy('objects.ra', $direction),
+                'decl' => $candidates->orderBy('objects.decl', $direction),
+                'type' => $candidates->orderBy('type_label', $direction),
+                default => null,
+            };
+
+            // catindex is a string: + 0 sorts 8 before 11
+            $candidates = $candidates
+                ->orderBy('objectnames.catalog', $sort === 'name' ? $direction : 'asc')
+                ->orderByRaw('objectnames.catindex + 0 ' . ($sort === 'name' ? $direction : 'asc'))
+                ->orderBy('objectnames.catindex', $sort === 'name' ? $direction : 'asc')
                 ->paginate(25)
                 ->withQueryString();
         } else {
             $candidates = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 25);
         }
 
-        return view('object.name_check', compact('name', 'candidates'));
+        return view('object.name_check', compact('name', 'candidates', 'completeCatalog', 'sort', 'direction'));
     }
 
     /**
@@ -4505,11 +3855,9 @@ class ObjectController extends Controller
 
         // DB stores RA in decimal hours (0–24); raToDecimal() returns degrees (0–360).
         // Convert to hours so the whereBetween comparison is in the same unit as the DB.
-        $raHours = $raDeg / 15.0;
-        $decRadius = 0.5;          // degrees
-        $raRadius = $decRadius / 15.0; // equivalent hours
+        $raHours = fmod(fmod($raDeg / 15.0, 24.0) + 24.0, 24.0);
 
-        $nearby = DB::table('objects')
+        $nearby = NearbyObjects::query($raHours, $decDeg, 0.5)
             ->leftJoin('target_types', 'objects.type', '=', 'target_types.id')
             ->select(
                 'objects.name',
@@ -4519,9 +3867,6 @@ class ObjectController extends Controller
                 'objects.type',
                 'target_types.type as type_label'
             )
-            ->whereBetween('objects.ra', [$raHours - $raRadius, $raHours + $raRadius])
-            ->whereBetween('objects.decl', [$decDeg - $decRadius, $decDeg + $decRadius])
-            ->orderByRaw('ABS(objects.ra - ?) + ABS(objects.decl - ?)', [$raHours, $decDeg])
             ->paginate(25)
             ->withQueryString();
 
@@ -4561,219 +3906,43 @@ class ObjectController extends Controller
      */
     public function store(Request $request)
     {
-        // If a new catalog code was provided, normalize to uppercase before validation
-        if ($request->filled('catalog_create_code')) {
-            $request->merge(['catalog_create_code' => strtoupper(trim($request->input('catalog_create_code')))]);
-        }
-
         $validated = $request->validate([
             'name' => 'required|string',
-            'ra' => 'nullable|string',
-            'decl' => 'nullable|string',
-            'type' => 'nullable|string',
+            'ra' => 'required|string',
+            'decl' => 'required|string',
+            'type' => 'required|string|exists:deepskytypes,code',
             'mag' => 'nullable|numeric',
             'subr' => 'nullable|numeric',
             'diam1' => 'nullable|numeric',
             'diam2' => 'nullable|numeric',
             'pa' => 'nullable|integer',
             'catalog' => 'nullable|string',
-            'catalog_create_code' => ['nullable', 'string', 'regex:/^[A-Z0-9_-]{1,10}$/', 'unique:atlases,code'],
-            'catalog_create_description' => ['nullable', 'string', 'max:255'],
         ]);
 
-        // Convert RA to decimal hours (DB stores hours, not degrees)
-        if (!empty($validated['ra'])) {
-            $raDeg = DeepskyObject::raToDecimal($validated['ra']);
-            if ($raDeg !== null)
-                $validated['ra'] = $raDeg / 15.0;
-        }
-        if (!empty($validated['decl'])) {
-            $decDeg = DeepskyObject::decToDecimal($validated['decl']);
-            if ($decDeg !== null)
-                $validated['decl'] = $decDeg;
+        if (($catalog = CompleteCatalog::refusedCatalog($validated['name'], $request->user())) !== null) {
+            return redirect()->route('object.create')
+                ->withErrors(['catalog' => $this->completeCatalogMessage($validated['name'], $catalog)]);
         }
 
-        // Auto-calculate constellation and atlas pages from RA/Dec
-        if (!empty($validated['ra']) && !empty($validated['decl'])) {
-            try {
-                $coords = new EquatorialCoordinates($validated['ra'], $validated['decl']);
-                $validated['con'] = $coords->getConstellation();
-
-                // Calculate atlas page numbers for all supported atlases
-                foreach ([
-                    'urano',
-                    'urano_new',
-                    'sky',
-                    'taki',
-                    'psa',
-                    'torresB',
-                    'torresBC',
-                    'torresC',
-                    'milleniumbase',
-                    'DSLDL',
-                    'DSLDP',
-                    'DSLLL',
-                    'DSLLP',
-                    'DSLOL',
-                    'DSLOP',
-                    'DeepskyHunter',
-                    'Interstellarum'
-                ] as $atlasKey) {
-                    $validated[$atlasKey] = $coords->calculateAtlasPage($atlasKey);
-                }
-
-                // Millenium Star Atlas full ref: page/volume (I=0-8h, II=8-16h, III=16-24h)
-                $raH = $validated['ra'];
-                $milVol = $raH <= 8 ? 'I' : ($raH <= 16 ? 'II' : 'III');
-                $validated['millenium'] = $validated['milleniumbase'] . '/' . $milVol;
-            } catch (\Throwable $e) {
-                Log::warning('Constellation/atlas auto-calculation failed', ['error' => $e->getMessage()]);
-            }
+        // A deep-sky object always has a position: RA in decimal hours (DB stores hours, not degrees)
+        $raDeg = DeepskyObject::raToDecimal($validated['ra']);
+        $decDeg = DeepskyObject::decToDecimal($validated['decl']);
+        if ($raDeg === null || $raDeg < 0 || $raDeg >= 360 || $decDeg === null || abs($decDeg) > 90) {
+            return back()->withInput()->withErrors(array_filter([
+                'ra' => $raDeg === null || $raDeg < 0 || $raDeg >= 360 ? __('Invalid right ascension :value.', ['value' => $validated['ra']]) : null,
+                'decl' => $decDeg === null || abs($decDeg) > 90 ? __('Invalid declination :value.', ['value' => $validated['decl']]) : null,
+            ]));
         }
+        $validated['ra'] = $raDeg / 15.0;
+        $validated['decl'] = $decDeg;
 
-        // Auto-calculate SBObj: mag + 2.5*log10(2827 * (diam1/60) * (diam2/60))
-        // Use diam2 = diam1 when only one diameter is given (circular object)
-        // At this point diam1/diam2 are in arcminutes (as entered by the user).
-        $mag = $validated['mag'] ?? null;
-        $diam1 = $validated['diam1'] ?? null;
-        $diam2 = $validated['diam2'] ?? null;
-        if ($mag !== null && $mag != 0 && $mag != 99.9 && ($diam1 || $diam2)) {
-            $d1 = ($diam1 ?: $diam2) / 60.0;
-            $d2 = ($diam2 ?: $diam1) / 60.0;
-            $validated['SBObj'] = $mag + 2.5 * log10(2827.0 * $d1 * $d2);
-        }
-
-        // The DB stores diameters in arcseconds; convert from arcminutes before persisting.
-        if (!empty($validated['diam1'])) {
-            $validated['diam1'] = $validated['diam1'] * 60.0;
-        }
-        if (!empty($validated['diam2'])) {
-            $validated['diam2'] = $validated['diam2'] * 60.0;
-        }
-
-        // If privileged user requested creating a new catalog, persist it first
+        // Constellation, atlas pages, magnitudes, diameters (arcminutes → arcseconds),
+        // position angle and SBObj, the objectnames entry and the search index
         try {
-            $user = Auth::user();
-            if ($user && ($user->isAdministrator() || $user->isDatabaseExpert())) {
-                $newCode = trim($request->input('catalog_create_code'));
-                if (!empty($newCode)) {
-                    // Insert if not exists
-                    DB::table('atlases')->insertOrIgnore([
-                        'code' => $newCode,
-                        'name' => $newCode,
-                    ]);
-                    // Make sure the object's catalog references the new code
-                    $validated['catalog'] = $newCode;
-                }
-            }
-        } catch (\Throwable $e) {
-            Log::warning('Catalog creation during object add failed', ['error' => $e->getMessage()]);
-        }
-
-        // Create a DeepskyObject record — only pass columns that exist in the objects table.
-        // Provide empty/zero defaults for legacy NOT NULL columns that have no DB default.
-        try {
-            $defaults = [
-                'ra' => 0.0,
-                'decl' => 0.0,
-                'type' => '',
-                'con' => '',
-                'mag' => 0.0,
-                'subr' => 0.0,
-                'diam1' => 0.0,
-                'diam2' => 0.0,
-                'urano' => 0,
-                'urano_new' => 0,
-                'sky' => 0,
-                'millenium' => '',
-                'taki' => '',
-                'SBObj' => 0.0,
-                'description' => '',
-                'psa' => '',
-                'torresB' => '',
-                'torresBC' => '',
-                'torresC' => '',
-                'milleniumbase' => '',
-                'DSLDL' => '',
-                'DSLDP' => '',
-                'DSLLL' => '',
-                'DSLLP' => '',
-                'DSLOL' => '',
-                'DSLOP' => '',
-                'DeepskyHunter' => '',
-                'Interstellarum' => '',
-            ];
-            $userValues = array_filter(array_intersect_key($validated, array_flip([
-                'name',
-                'type',
-                'con',
-                'ra',
-                'decl',
-                'mag',
-                'subr',
-                'pa',
-                'diam1',
-                'diam2',
-                'SBObj',
-                'urano',
-                'urano_new',
-                'sky',
-                'millenium',
-                'taki',
-                'psa',
-                'torresB',
-                'torresBC',
-                'torresC',
-                'milleniumbase',
-                'DSLDL',
-                'DSLDP',
-                'DSLLL',
-                'DSLLP',
-                'DSLOL',
-                'DSLOP',
-                'DeepskyHunter',
-                'Interstellarum',
-            ])), fn($v) => $v !== null && $v !== '');
-            $objectData = array_merge($defaults, $userValues);
-            $objectData['name'] = $validated['name'];
-            $objectData['slug'] = \Illuminate\Support\Str::slug($validated['name'], '-');
-            $obj = DeepskyObject::create($objectData);
+            $obj = app(DeepskyObjectCreator::class)->create($validated);
         } catch (\Exception $e) {
             Log::error('Failed to create object', ['error' => $e->getMessage(), 'data' => $validated]);
             return redirect()->back()->withInput()->with('error', __('Failed to create object: :msg', ['msg' => $e->getMessage()]));
-        }
-
-        // Insert a primary entry into objectnames so the catalog appears in the dropdown
-        // on the create page and so object lookups via objectnames.slug work correctly.
-        try {
-            $objName = $objectData['name'];
-            $objSlug = $objectData['slug'];
-
-            // Extract catalog code and catindex from the name (e.g. "Wdm 1" → "Wdm", "1")
-            $catalogCode = '';
-            $catindex = '';
-            if (preg_match('/^([A-Za-z][A-Za-z0-9\-]*)\s+(\S.*)$/', $objName, $m)) {
-                $catalogCode = $m[1];
-                $catindex = $m[2];
-            }
-
-            // Only insert if there is no existing entry for this object name
-            $exists = DB::table('objectnames')->where('objectname', $objName)->exists();
-            if (!$exists) {
-                DB::table('objectnames')->insert([
-                    'objectname' => $objName,
-                    'catalog' => $catalogCode,
-                    'catindex' => $catindex,
-                    'altname' => $objName,
-                    'slug' => $objSlug,
-                    'timestamp' => now(),
-                ]);
-            }
-        } catch (\Throwable $e) {
-            Log::warning('Failed to insert objectnames entry for new object', [
-                'error' => $e->getMessage(),
-                'name' => $objectData['name'] ?? null,
-            ]);
         }
 
         return redirect()->route('object.show', ['slug' => $obj->slug ?? $obj->name])->with('success', __('Object added successfully.'));
@@ -4895,8 +4064,10 @@ class ObjectController extends Controller
             switch ($fieldName) {
                 case 'RA':
                 case 'RA_d':
-                    if ($value !== '' && is_numeric($value)) {
-                        $data['ra'] = floatval($value);
+                    // Returned in hours, as the RA inputs of the create wizard expect
+                    $raHours = self::simbadRaHours($fieldName, $value);
+                    if ($raHours !== null) {
+                        $data['ra'] = $raHours;
                     }
                     break;
                 case 'DEC':
@@ -4975,8 +4146,8 @@ class ObjectController extends Controller
         // Try objectnames table first (for aliases)
         $on = DB::table('objectnames')
             ->where('slug', $slug)
-            ->orWhereRaw('LOWER(objectname) = ?', [mb_strtolower($slug)])
-            ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($slug)])
+            ->orWhere('objectname', $slug)
+            ->orWhere('altname', $slug)
             ->first();
 
         if ($on) {
@@ -5059,13 +4230,10 @@ class ObjectController extends Controller
                 switch ($fieldName) {
                     case 'RA':
                     case 'RA_d':
-                        if (!empty($value) && is_numeric($value)) {
-                            // Parse RA value to decimal degrees and store as hours
-                            // (database stores RA in decimal hours 0..24).
-                            $raDeg = \App\Models\DeepskyObject::raToDecimal($value);
-                            if ($raDeg !== null) {
-                                $updates['ra'] = $raDeg / 15.0;
-                            }
+                        // The database stores RA in decimal hours (0..24)
+                        $raHours = self::simbadRaHours($fieldName, $value);
+                        if ($raHours !== null) {
+                            $updates['ra'] = $raHours;
                         }
                         break;
                     case 'DEC':
@@ -5108,7 +4276,17 @@ class ObjectController extends Controller
             // Update the object with SIMBAD data
             $updates['datasource'] = 'SIMBAD';
             $object->fill($updates);
+
+            // Keep the columns derived from the position and the brightness in step
+            if (isset($updates['ra']) || isset($updates['decl'])) {
+                $object->fill(DeepskyObjectCreator::coordinateDerivedFields((float) $object->ra, (float) $object->decl, 'SIMBAD update'));
+            }
+            if (isset($updates['mag']) || isset($updates['diam1']) || isset($updates['diam2'])) {
+                $object->SBObj = DeepskyObjectCreator::surfaceBrightness($object->mag, $object->diam1, $object->diam2) ?? -999;
+            }
+            $object->timestamp = now();
             $object->save();
+            ObjectSearchIndex::syncObject($object->name);
 
             return redirect()->route('object.show', ['slug' => $object->slug ?? $object->name])
                 ->with('success', __('Object updated successfully from SIMBAD.'));
@@ -5129,8 +4307,8 @@ class ObjectController extends Controller
         $record = null;
         $on = DB::table('objectnames')
             ->where('slug', $slug)
-            ->orWhereRaw('LOWER(objectname) = ?', [mb_strtolower($slug)])
-            ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($slug)])
+            ->orWhere('objectname', $slug)
+            ->orWhere('altname', $slug)
             ->first();
 
         if ($on) {
@@ -5161,8 +4339,8 @@ class ObjectController extends Controller
             $targetRecord = null;
             $targetOn = DB::table('objectnames')
                 ->where('slug', $moveToSlug)
-                ->orWhereRaw('LOWER(objectname) = ?', [mb_strtolower($moveToSlug)])
-                ->orWhereRaw('LOWER(altname) = ?', [mb_strtolower($moveToSlug)])
+                ->orWhere('objectname', $moveToSlug)
+                ->orWhere('altname', $moveToSlug)
                 ->first();
 
             if ($targetOn) {
@@ -5181,27 +4359,32 @@ class ObjectController extends Controller
 
             $targetName = $targetRecord->name;
 
-            // Move observations in the legacy database
-            DB::connection('mysqlOld')
-                ->table('observations')
-                ->where('objectname', $objectName)
-                ->update(['objectname' => $targetName]);
+            // Move the observations (see the target scheme in App\Models\Observation)
+            \App\Models\Observation::ofDeepskyObject($objectName)
+                ->update(['target_table' => 'objects', 'target_key' => $targetName, 'target_name' => $targetName]);
+            \App\Services\ObjectObservationStatistics::refreshObjects([$objectName, $targetName]);
 
             // Move observing list entries in the new observing_list_items table
             DB::table('observing_list_items')
                 ->where('object_name', $objectName)
                 ->update(['object_name' => $targetName]);
         } else {
+            // Observations can't be left pointing to a deleted object
+            if (\App\Models\Observation::ofDeepskyObject($objectName)->exists()) {
+                return redirect()->back()->with('error', __('This object has observations. Choose an object to move them to before deleting it.'));
+            }
+
             // No move target — remove any observing list entries for this object
             DB::table('observing_list_items')
                 ->where('object_name', $objectName)
                 ->delete();
         }
 
-        // Remove associated records
+        // Remove associated records; the search_index rows of the object and
+        // its aliases all have the slug of the object as source_pk
+        ObjectSearchIndex::removeObject($objectName, $object->slug);
         DB::table('objectnames')->where('objectname', $objectName)->delete();
         DB::table('objectpartof')->where('objectname', $objectName)->orWhere('partofname', $objectName)->delete();
-        DB::table('search_index')->where('name', $objectName)->delete();
 
         // Delete the object itself
         $object->delete();

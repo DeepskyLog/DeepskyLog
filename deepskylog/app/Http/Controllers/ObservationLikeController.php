@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CometObservationsOld;
+use App\Models\Observation;
 use App\Models\ObservationLike;
-use App\Models\ObservationsOld;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,14 +17,19 @@ class ObservationLikeController extends Controller
             'observation_id' => 'required|integer',
         ]);
 
-        if (! Auth::check()) {
+        if (!Auth::check()) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         $user = Auth::user();
 
-        $type = $request->input('observation_type');
-        $id = $request->input('observation_id');
+        // Anything but a session is an observation, liked by its id in the
+        // `observations` table. Pages rendered before likes were moved to that
+        // id still send the target type (deepsky, comet, planet, ...).
+        $type = $request->input('observation_type') === ObservationLike::TYPE_SESSION
+            ? ObservationLike::TYPE_SESSION
+            : ObservationLike::TYPE_OBSERVATION;
+        $id = (int) $request->input('observation_id');
 
         $like = ObservationLike::where('user_id', $user->id)
             ->where('observation_type', $type)
@@ -34,25 +38,21 @@ class ObservationLikeController extends Controller
 
         // Determine owner of observation/session
         $owner = null;
-        if ($type === 'deepsky') {
-            $obs = ObservationsOld::find($id);
-            if ($obs) {
-                $owner = User::where('username', html_entity_decode($obs->observerid))->first();
-            }
-        } elseif ($type === 'comet') {
-            $obs = CometObservationsOld::find($id);
-            if ($obs) {
-                $owner = User::where('username', html_entity_decode($obs->observerid))->first();
-            }
-        } elseif ($type === 'session') {
+        if ($type === ObservationLike::TYPE_SESSION) {
             // For sessions, owner is the observer (observerid) on the session record
             $session = \App\Models\ObservationSession::find($id);
             if ($session) {
                 $owner = User::where('username', html_entity_decode($session->observerid))->first();
             }
+        } else {
+            $obs = Observation::find($id);
+            if ($obs) {
+                $owner = User::find($obs->observer_user_id)
+                    ?? User::where('username', html_entity_decode((string) $obs->observer_username))->first();
+            }
         }
 
-        if (! $owner) {
+        if (!$owner) {
             return response()->json(['message' => 'Observation not found'], 404);
         }
 

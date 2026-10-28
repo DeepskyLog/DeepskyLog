@@ -14,21 +14,14 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 #[Lazy]
 class InstrumentSetTable extends PowerGridComponent
 {
-    use WithExport;
 
     public bool $multiSort = false;
 
     public string $tableName = 'instrumentset-table';
-
-    public function boot(): void
-    {
-        config(['livewire-powergrid.filter' => 'outside']);
-    }
 
     public function setUp(): array
     {
@@ -64,7 +57,7 @@ class InstrumentSetTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('name_link', function ($set) {
-                return '<a class="font-bold" href="/instrumentset/'.Auth()->user()->slug.'/'.$set->slug.'">'.$set->name.'</a>';
+                return '<a class="font-bold" href="/instrumentset/'.e(Auth()->user()->slug).'/'.e($set->slug).'">'.e(html_entity_decode((string) $set->name)).'</a>';
             })
             ->add('name')
             ->add('instruments_count')
@@ -117,27 +110,17 @@ class InstrumentSetTable extends PowerGridComponent
     #[On('clickToDelete')]
     public function clickToDelete(int $id): void
     {
-        $set = InstrumentSet::find($id);
-
-        if (! $set) {
-            return;
-        }
-
-        // Detach all related pivot records first to avoid FK constraint failures
-        $set->instruments()->detach();
-        $set->locations()->detach();
-        $set->eyepieces()->detach();
-        $set->filters()->detach();
-        $set->lenses()->detach();
-
-        $set->delete();
+        // The model detaches the pivot rows and clears the standard set
+        InstrumentSet::where('id', $id)->where('user_id', Auth::id())->first()?->delete();
     }
 
     #[On('clickToMakeDefault')]
     public function clickToMakeDefault(int $id): void
     {
-        auth()->user()->forceFill([
-            'stdinstrumentset' => $id,
-        ])->save();
+        if (InstrumentSet::where('id', $id)->where('user_id', Auth::id())->exists()) {
+            auth()->user()->forceFill([
+                'stdinstrumentset' => $id,
+            ])->save();
+        }
     }
 }

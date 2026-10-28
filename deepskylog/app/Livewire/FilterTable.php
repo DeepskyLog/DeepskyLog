@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\SortsEmptyLast;
 use App\Models\Filter as DSL_Filter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -13,20 +14,19 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class FilterTable extends PowerGridComponent
 {
-    use WithExport;
+    use SortsEmptyLast;
 
     public bool $multiSort = false;
 
     public string $tableName = 'filter-table';
 
-    public function boot(): void
-    {
-        config(['livewire-powergrid.filter' => 'outside']);
-    }
+    // The datasource joins the makes and types, which have an id as well.
+    public string $primaryKey = 'filters.id';
+
+    public ?string $primaryKeyAlias = 'id';
 
     public function setUp(): array
     {
@@ -52,7 +52,15 @@ final class FilterTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return DSL_Filter::query()->where('user_id', Auth::id());
+        // The make, type and color columns are searchable, so their tables are
+        // joined here: PowerGrid qualifies a searchable column with the table of
+        // the query's base model unless the column carries its own table prefix.
+        return DSL_Filter::query()
+            ->select('filters.*')
+            ->leftJoin('filter_makes', 'filter_makes.id', '=', 'filters.make_id')
+            ->leftJoin('filter_types', 'filter_types.id', '=', 'filters.type_id')
+            ->leftJoin('filter_colors', 'filter_colors.id', '=', 'filters.color_id')
+            ->where('filters.user_id', Auth::id());
     }
 
     public function fields(): PowerGridFields
@@ -60,15 +68,15 @@ final class FilterTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('makestr', function ($filter) {
-                return $filter->filter_make->name;
+                return e(html_entity_decode((string) $filter->filter_make->name));
             })->add('name_link', function ($filter) {
-                return '<a class="font-bold" href="/filter/'.Auth()->user()->slug.'/'.$filter->slug.'">'.$filter->name.'</a>';
+                return '<a class="font-bold" href="/filter/'.e(Auth()->user()->slug).'/'.e($filter->slug).'">'.e(html_entity_decode((string) $filter->name)).'</a>';
             })
             ->add('typestr', function ($filter) {
-                return $filter->filter_type->name;
+                return e(html_entity_decode((string) $filter->filter_type->name));
             })
             ->add('colorstr', function ($filter) {
-                return $filter->filter_color->name;
+                return e(html_entity_decode((string) $filter->filter_color->name));
             })->add('name')
             ->add('active')
             ->add('active_label', fn ($filter) => $filter->active ? 'Yes' : 'No')
@@ -79,8 +87,9 @@ final class FilterTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make(__('Make'), 'makestr')
-                ->searchable(),
+            Column::make(__('Make'), 'makestr', 'filter_makes.name')
+                ->searchable()
+                ->sortUsing($this->sortEmptyLast('filter_makes.name')),
 
             Column::make('Name', 'name_link', 'name')
                 ->visibleInExport(false)
@@ -92,11 +101,13 @@ final class FilterTable extends PowerGridComponent
                 ->hidden()
                 ->visibleInExport(true),
 
-            Column::make(__('Type'), 'typestr')
-                ->searchable(),
+            Column::make(__('Type'), 'typestr', 'filter_types.name')
+                ->searchable()
+                ->sortUsing($this->sortEmptyLast('filter_types.name')),
 
-            Column::make(__('Color'), 'colorstr')
-                ->searchable(),
+            Column::make(__('Color'), 'colorstr', 'filter_colors.name')
+                ->searchable()
+                ->sortUsing($this->sortEmptyLast('filter_colors.name')),
 
             Column::add()
                 ->title(__('Active'))
@@ -105,11 +116,11 @@ final class FilterTable extends PowerGridComponent
                 ->sortable(),
 
             Column::make('Wratten', 'wratten')
-                ->sortable()
+                ->sortUsing($this->sortEmptyLast('filters.wratten'))
                 ->searchable(),
 
             Column::make('Schott', 'schott')
-                ->sortable()
+                ->sortUsing($this->sortEmptyLast('filters.schott'))
                 ->searchable(),
 
             Column::make(__('# obs'), 'observations')
@@ -124,17 +135,24 @@ final class FilterTable extends PowerGridComponent
         return view('actions.filter', ['row' => $row]);
     }
 
-    public function onUpdatedToggleable($id, $field, $value): void
+    public function onPluginUpdated(string $plugin, string $event, array $params): void
     {
-        DSL_Filter::query()->where('id', $id)->update([
-            $field => boolval($value),
+        // The id and field come from the browser: only the active flag of the
+        // user's own records may be toggled.
+        if ($plugin !== 'toggleable' || ($params['field'] ?? null) !== 'active') {
+            return;
+        }
+
+        DSL_Filter::query()->where('id', $params['id'] ?? null)->where('user_id', Auth::id())->update([
+            'active' => filter_var($params['value'] ?? false, FILTER_VALIDATE_BOOLEAN),
         ]);
     }
 
     #[On('clickToDelete')]
     public function clickToDelete(int $id): void
     {
-        $filter = DSL_Filter::where('id', '=', $id);
-        $filter->delete();
+        // Delete the model, not a query, so it detaches itself from instrument
+        // sets and is cleared as the default of its user.
+        DSL_Filter::where('id', $id)->where('user_id', Auth::id())->first()?->delete();
     }
 }

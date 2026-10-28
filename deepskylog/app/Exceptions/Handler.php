@@ -7,6 +7,7 @@ use Throwable;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class Handler extends ExceptionHandler
 {
@@ -46,6 +47,20 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        // After switching teams the user is sent back to the page they came from;
+        // when the new team may not see that page, go to the home page instead.
+        $this->renderable(function (HttpExceptionInterface $e, $request) {
+            if ($e->getStatusCode() !== 403
+                || ! $request->isMethod('GET')
+                || $request->expectsJson()
+                || ! $request->hasSession()
+                || ! $request->session()->get('team_switched')) {
+                return null;
+            }
+
+            return redirect('/');
         });
 
         // Capture CSRF token mismatch details so we can debug 419s from specific clients

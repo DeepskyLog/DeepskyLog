@@ -3,8 +3,9 @@
 namespace App\Livewire;
 
 use App\Models\InstrumentSet;
+use App\Support\UploadedPhoto;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -36,6 +37,8 @@ class CreateInstrumentSet extends Component
     public function mount(): void
     {
         if ($this->set) {
+            abort_unless($this->set->canBeEditedBy(Auth::user()), 403);
+
             $this->name = $this->set->name;
             $this->description = $this->set->description;
             // Pre-load related item ids so multi-selects show existing selections when editing
@@ -67,20 +70,29 @@ class CreateInstrumentSet extends Component
 
     public function save()
     {
+        if ($this->set) {
+            abort_unless($this->set->canBeEditedBy(Auth::user()), 403);
+        }
+
+        // Only the owner's equipment and locations may be added to a set (an
+        // administrator may edit someone else's set).
+        $ownerId = $this->set->user_id ?? Auth::id();
+        $owned = fn (string $table) => Rule::exists($table, 'id')->where('user_id', $ownerId);
+
         $data = $this->validate([
             'name' => 'required|min:3',
             'photo' => 'nullable|image|max:10240', // max 10MB
             'description' => 'nullable|string',
             'instruments' => 'nullable|array',
-            'instruments.*' => 'integer',
+            'instruments.*' => ['integer', $owned('instruments')],
             'eyepieces' => 'nullable|array',
-            'eyepieces.*' => 'integer',
+            'eyepieces.*' => ['integer', $owned('eyepieces')],
             'lenses' => 'nullable|array',
-            'lenses.*' => 'integer',
+            'lenses.*' => ['integer', $owned('lenses')],
             'filters' => 'nullable|array',
-            'filters.*' => 'integer',
+            'filters.*' => ['integer', $owned('filters')],
             'locations' => 'nullable|array',
-            'locations.*' => 'integer',
+            'locations.*' => ['integer', $owned('locations')],
         ], [
             'name.required' => __('Please enter a name for the instrument set.'),
             'name.min' => __('The name must be at least :min characters.', ['min' => 3]),
@@ -89,8 +101,7 @@ class CreateInstrumentSet extends Component
         ]);
 
         if ($this->photo) {
-            $upload_name = Str::slug(Auth()->user()->slug.' '.$this->name, '-').'.'.$this->photo->getClientOriginalExtension();
-            $photoPath = $this->photo->storePubliclyAs('photos/instrumentset', $upload_name, 'public');
+            $photoPath = UploadedPhoto::store($this->photo, 'photos/instrumentset', $this->set);
             $data['picture'] = $photoPath;
         }
 

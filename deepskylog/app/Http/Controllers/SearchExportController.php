@@ -2,39 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Livewire\AdvancedObjectSearchTable;
+use App\Livewire\SearchResultsTable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use PowerComponents\Turbine\DataSource\Processors\Database\Pipelines\Sorting;
 
 class SearchExportController extends Controller
 {
+    /**
+     * Most objects one export may hold. dompdf builds the PDFs in memory,
+     * the plain text and AstroPlanner files are cheap per object.
+     */
+    private const MAX_EXPORT_OBJECTS = [
+        'pdf' => 1000,
+        'file' => 10000,
+    ];
+
     /**
      * Generate a PDF listing names of search results based on query param q.
      */
     public function namesPdf(Request $request)
     {
         try {
-            $q = $request->query('q', '');
-
-            $comp = new \App\Livewire\SearchResultsTable();
-            if (method_exists($comp, 'boot')) {
-                try {
-                    $comp->boot();
-                } catch (\Throwable $_) {
-                }
+            [$comp, $rows] = $this->resolveRows($request, self::MAX_EXPORT_OBJECTS['pdf']);
+            if ($refused = $this->tooManyObjects($rows, 'pdf')) {
+                return $refused;
             }
-            if (method_exists($comp, 'mount')) {
-                try {
-                    $comp->mount();
-                } catch (\Throwable $_) {
-                }
-            }
-
-            $comp->q = $q;
-
-            $query = $comp->datasource();
-            $rows = $query ? $query->get() : collect();
+            $q = trim((string) $request->query('q', ''));
 
             $names = $rows->pluck('display_name')->filter()->values();
 
@@ -45,7 +44,8 @@ class SearchExportController extends Controller
                 $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)->setPaper('a4', 'portrait');
                 $filename = 'search_names_' . date('Ymd_His') . '.pdf';
                 return response()->streamDownload(function () use ($pdf) {
-                    echo $pdf->output(); }, $filename, ['Content-Type' => 'application/pdf']);
+                    echo $pdf->output();
+                }, $filename, ['Content-Type' => 'application/pdf']);
             }
 
             if (class_exists('Dompdf\\Dompdf')) {
@@ -56,7 +56,8 @@ class SearchExportController extends Controller
                 $output = $dompdf->output();
                 $filename = 'search_names_' . date('Ymd_His') . '.pdf';
                 return response()->streamDownload(function () use ($output) {
-                    echo $output; }, $filename, ['Content-Type' => 'application/pdf']);
+                    echo $output;
+                }, $filename, ['Content-Type' => 'application/pdf']);
             }
 
             return redirect()->back()->with('error', __('PDF library not installed. Please run: composer require barryvdh/laravel-dompdf'));
@@ -72,65 +73,12 @@ class SearchExportController extends Controller
     public function tablePdf(Request $request)
     {
         try {
-            $q = $request->query('q', '');
-
-            $comp = new \App\Livewire\SearchResultsTable();
-            if (method_exists($comp, 'boot')) {
-                try {
-                    $comp->boot();
-                } catch (\Throwable $_) {
-                }
+            [$comp, $rows] = $this->resolveRows($request, self::MAX_EXPORT_OBJECTS['pdf']);
+            if ($refused = $this->tooManyObjects($rows, 'pdf')) {
+                return $refused;
             }
-            if (method_exists($comp, 'mount')) {
-                try {
-                    $comp->mount();
-                } catch (\Throwable $_) {
-                }
-            }
-            $comp->q = $q;
 
-            $query = $comp->datasource();
-            $rows = $query ? $query->get() : collect();
-
-            $formatDiameter = function ($d1, $d2, $pa = null) {
-                $hasD1 = is_numeric($d1) && floatval($d1) > 0;
-                $hasD2 = is_numeric($d2) && floatval($d2) > 0;
-                if (!$hasD1 && !$hasD2)
-                    return '';
-                $d1f = $hasD1 ? floatval($d1) : 0.0;
-                $d2f = $hasD2 ? floatval($d2) : 0.0;
-                $fmt = function ($v) {
-                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v); };
-                if ($hasD1 && $hasD2) {
-                    if (max($d1f, $d2f) > 60.0) {
-                        $d1m = $d1f / 60.0;
-                        $d2m = $d2f / 60.0;
-                        $d1m_fmt = $fmt($d1m);
-                        $d2m_fmt = $fmt($d2m);
-                        if ($d1m_fmt === '0' || $d1m_fmt === '0.0' || $d2m_fmt === '0' || $d2m_fmt === '0.0') {
-                            $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
-                        } else {
-                            $size = $d1m_fmt . "'x" . $d2m_fmt . "'";
-                        }
-                    } else {
-                        $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
-                    }
-                } else {
-                    $single = $hasD1 ? $d1f : $d2f;
-                    if ($single > 60.0) {
-                        $single_fmt = $fmt($single / 60.0) . "'";
-                    } else {
-                        $single_fmt = $fmt($single) . "''";
-                    }
-                    $size = $single_fmt;
-                }
-                if (is_numeric($pa) && intval(round(floatval($pa))) !== 999) {
-                    $size .= '/' . sprintf('%d', round(floatval($pa))) . '°';
-                }
-                return $size;
-            };
-
-            $data = $rows->map(function ($r) use ($formatDiameter, $comp) {
+            $data = $rows->map(function ($r) use ($comp) {
                 $d1 = $r->diam1 ?? null;
                 $d2 = $r->diam2 ?? null;
                 $pa = $r->pa ?? null;
@@ -142,7 +90,7 @@ class SearchExportController extends Controller
                     'constellation' => $r->constellation ?? '',
                     'mag' => (is_numeric($r->mag) && floatval($r->mag) != 99.9 && floatval($r->mag) != 0.0) ? (string) $r->mag : '-',
                     'sb' => (is_numeric($r->subr) && floatval($r->subr) != 99.9 && floatval($r->subr) != 0.0) ? (string) $r->subr : '-',
-                    'diameter' => $formatDiameter($d1, $d2, $pa),
+                    'diameter' => $this->formatSize($d1, $d2, $pa),
                     'atlas_page' => property_exists($comp, 'includeAtlas') && $comp->includeAtlas ? ($r->atlas_page ?? '-') : '-',
                     'cr' => isset($r->computed_contrast_reserve) && is_numeric($r->computed_contrast_reserve) ? number_format(round(floatval($r->computed_contrast_reserve), 2), 2) : ($r->computed_contrast_reserve_category ?? '-'),
                     'best_mag' => $this->computeBestMagForExport($r, $comp),
@@ -158,7 +106,8 @@ class SearchExportController extends Controller
                 $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)->setPaper('a4', 'landscape');
                 $filename = 'search_objects_' . date('Ymd_His') . '.pdf';
                 return response()->streamDownload(function () use ($pdf) {
-                    echo $pdf->output(); }, $filename, ['Content-Type' => 'application/pdf']);
+                    echo $pdf->output();
+                }, $filename, ['Content-Type' => 'application/pdf']);
             }
 
             if (class_exists('Dompdf\\Dompdf')) {
@@ -169,7 +118,8 @@ class SearchExportController extends Controller
                 $output = $dompdf->output();
                 $filename = 'search_objects_' . date('Ymd_His') . '.pdf';
                 return response()->streamDownload(function () use ($output) {
-                    echo $output; }, $filename, ['Content-Type' => 'application/pdf']);
+                    echo $output;
+                }, $filename, ['Content-Type' => 'application/pdf']);
             }
 
             return redirect()->back()->with('error', __('PDF library not installed. Please run: composer require barryvdh/laravel-dompdf'));
@@ -185,72 +135,16 @@ class SearchExportController extends Controller
     public function argoNavis(Request $request)
     {
         try {
-            $q = $request->query('q', '');
-
-            $comp = new \App\Livewire\SearchResultsTable();
-            if (method_exists($comp, 'boot')) {
-                try {
-                    $comp->boot();
-                } catch (\Throwable $_) {
-                }
+            [, $rows] = $this->resolveRows($request, self::MAX_EXPORT_OBJECTS['file']);
+            if ($refused = $this->tooManyObjects($rows, 'file')) {
+                return $refused;
             }
-            if (method_exists($comp, 'mount')) {
-                try {
-                    $comp->mount();
-                } catch (\Throwable $_) {
-                }
-            }
-            $comp->q = $q;
-
-            $query = $comp->datasource();
-            $rows = $query ? $query->get() : collect();
-
-            $formatDiameter = function ($d1, $d2, $pa = null) {
-                $hasD1 = is_numeric($d1) && floatval($d1) > 0;
-                $hasD2 = is_numeric($d2) && floatval($d2) > 0;
-                if (!$hasD1 && !$hasD2)
-                    return '';
-                $d1f = $hasD1 ? floatval($d1) : 0.0;
-                $d2f = $hasD2 ? floatval($d2) : 0.0;
-                $fmt = function ($v) {
-                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v); };
-                if ($hasD1 && $hasD2) {
-                    if (max($d1f, $d2f) > 60.0) {
-                        $d1m = $d1f / 60.0;
-                        $d2m = $d2f / 60.0;
-                        $d1m_fmt = $fmt($d1m);
-                        $d2m_fmt = $fmt($d2m);
-                        if ($d1m_fmt === '0' || $d1m_fmt === '0.0' || $d2m_fmt === '0' || $d2m_fmt === '0.0') {
-                            $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
-                        } else {
-                            $size = $d1m_fmt . "'x" . $d2m_fmt . "'";
-                        }
-                    } else {
-                        $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
-                    }
-                } else {
-                    $single = $hasD1 ? $d1f : $d2f;
-                    if ($single > 60.0) {
-                        $single_fmt = $fmt($single / 60.0) . "'";
-                    } else {
-                        $single_fmt = $fmt($single) . "''";
-                    }
-                    $size = $single_fmt;
-                }
-                if (is_numeric($pa) && intval(round(floatval($pa))) !== 999) {
-                    $size .= '/' . sprintf('%d', round(floatval($pa))) . '°';
-                }
-                return $size;
-            };
 
             $typeMap = [
                 'ASTER' => 'ASTERISM',
                 'BRTNB' => 'BRIGHT',
-                'CLANB' => 'NEBULA',
                 'DRKNB' => 'DARK',
                 'EMINB' => 'NEBULA',
-                'ENRNN' => 'NEBULA',
-                'ENSTR' => 'NEBULA',
                 'GALCL' => 'GALAXY CL',
                 'GALXY' => 'GALAXY',
                 'GLOCL' => 'GLOBULAR',
@@ -266,13 +160,11 @@ class SearchExportController extends Controller
                 'OPNCL' => 'OPEN',
                 'PLNNB' => 'PLANETARY',
                 'REFNB' => 'NEBULA',
-                'RNHII' => 'NEBULA',
                 'SMCCN' => 'OPEN',
                 'SMCDN' => 'NEBULA',
                 'SMCGC' => 'GLOBULAR',
                 'SMCOC' => 'OPEN',
                 'SNREM' => 'NEBULA',
-                'STNEB' => 'NEBULA',
                 'QUASR' => 'USER',
                 'WRNEB' => 'NEBULA',
                 'AA1STAR' => 'STAR',
@@ -282,9 +174,7 @@ class SearchExportController extends Controller
                 'AA8STAR' => 'ASTERISM',
             ];
 
-            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
-
-            $lines = $rows->map(function ($r) use ($formatDiameter, $typeMap, $planetNames) {
+            $lines = $rows->map(function ($r) use ($typeMap) {
                 $name = 'DSL ' . ($r->display_name ?? $r->name ?? '');
                 $ra = $this->formatRAColon($r->obj_ra ?? $r->ra ?? null);
                 $dec = $this->formatDecColon($r->obj_decl ?? $r->decl ?? null);
@@ -299,35 +189,18 @@ class SearchExportController extends Controller
                 }
 
                 $mag = (is_numeric($r->mag) && floatval($r->mag) != 99.9 && floatval($r->mag) != 0.0) ? (string) $r->mag : '';
-                $size = $formatDiameter($r->diam1 ?? null, $r->diam2 ?? null, $r->pa ?? null);
-                $atlas = ''; // atlas handled in table export only
+                $size = $this->formatSize($r->diam1 ?? null, $r->diam2 ?? null, $r->pa ?? null);
                 $cr = isset($r->computed_contrast_reserve) && is_numeric($r->computed_contrast_reserve) ? number_format(round(floatval($r->computed_contrast_reserve), 2), 2) : ($r->computed_contrast_reserve_category ?? '');
                 $best = $this->computeBestMagForExport($r, null);
 
-                $lowerName = strtolower(trim((string) ($r->display_name ?? $r->name ?? '')));
-                // Default to deep-sky. Classify solar-system objects (planets, moons,
-                // comets) as 1,-1,-1 and stars as 2,-1,-1 using both the source
-                // table and the object's type hints.
-                $objectId = '4,-1,-1';
-                $sourceTable = strtolower(trim((string) ($r->source_table ?? '')));
-                if (in_array($sourceTable, ['planets', 'moons', 'cometobjects', 'lunar_features'], true) || in_array($lowerName, $planetNames, true)) {
-                    $objectId = '1,-1,-1';
-                } else {
-                    $rawTypeCodeUpper = strtoupper(trim((string) ($r->obj_type ?? $r->source_type ?? '')));
-                    $typeNameUpper = strtoupper(trim((string) ($r->type_name ?? '')));
-                    $starCodes = ['DS', 'AA1STAR', 'AA3STAR', 'AA4STAR', 'AA8STAR'];
-                    if ($rawTypeCodeUpper !== '' && (in_array($rawTypeCodeUpper, $starCodes, true) || str_contains($rawTypeCodeUpper, 'STAR') || str_contains($typeNameUpper, 'STAR'))) {
-                        $objectId = '2,-1,-1';
-                    }
-                }
-
-                return implode('|', [$name, $ra, $dec, $type, $mag, implode(';', array_filter([$size, $atlas, 'CR ' . ($cr === '' ? '-' : $cr), $best]))]);
+                return implode('|', [$name, $ra, $dec, $type, $mag, implode(';', array_filter([$size, 'CR ' . ($cr === '' ? '-' : $cr), $best]))]);
             })->values()->all();
 
             $content = implode("\n", $lines) . "\n";
             $filename = 'search_argo_' . date('Ymd_His') . '.argo';
             return response()->streamDownload(function () use ($content) {
-                echo $content; }, $filename, ['Content-Type' => 'text/plain']);
+                echo $content;
+            }, $filename, ['Content-Type' => 'text/plain']);
         } catch (\Throwable $ex) {
             Log::error('SearchExportController::argoNavis failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate Argo Navis export'));
@@ -340,74 +213,15 @@ class SearchExportController extends Controller
     public function skylist(Request $request)
     {
         try {
-            $q = $request->query('q', '');
-
-            $comp = new \App\Livewire\SearchResultsTable();
-            if (method_exists($comp, 'boot')) {
-                try {
-                    $comp->boot();
-                } catch (\Throwable $_) {
-                }
+            [, $rows] = $this->resolveRows($request, self::MAX_EXPORT_OBJECTS['file']);
+            if ($refused = $this->tooManyObjects($rows, 'file')) {
+                return $refused;
             }
-            if (method_exists($comp, 'mount')) {
-                try {
-                    $comp->mount();
-                } catch (\Throwable $_) {
-                }
-            }
-            $comp->q = $q;
 
-            $query = $comp->datasource();
-            $rows = $query ? $query->get() : collect();
+            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Moon', 'Sun']);
 
-            $formatDiameter = function ($d1, $d2, $pa = null) {
-                $hasD1 = is_numeric($d1) && floatval($d1) > 0;
-                $hasD2 = is_numeric($d2) && floatval($d2) > 0;
-                if (!$hasD1 && !$hasD2)
-                    return '';
-                $d1f = $hasD1 ? floatval($d1) : 0.0;
-                $d2f = $hasD2 ? floatval($d2) : 0.0;
-                $fmt = function ($v) {
-                    return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v); };
-                if ($hasD1 && $hasD2) {
-                    if (max($d1f, $d2f) > 60.0) {
-                        $d1m = $d1f / 60.0;
-                        $d2m = $d2f / 60.0;
-                        $d1m_fmt = $fmt($d1m);
-                        $d2m_fmt = $fmt($d2m);
-                        if ($d1m_fmt === '0' || $d1m_fmt === '0.0' || $d2m_fmt === '0' || $d2m_fmt === '0.0') {
-                            $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
-                        } else {
-                            $size = $d1m_fmt . "'x" . $d2m_fmt . "'";
-                        }
-                    } else {
-                        $size = $fmt($d1f) . "''x" . $fmt($d2f) . "''";
-                    }
-                } else {
-                    $single = $hasD1 ? $d1f : $d2f;
-                    if ($single > 60.0) {
-                        $single_fmt = $fmt($single / 60.0) . "'";
-                    } else {
-                        $single_fmt = $fmt($single) . "''";
-                    }
-                    $size = $single_fmt;
-                }
-                if (is_numeric($pa) && intval(round(floatval($pa))) !== 999) {
-                    $size .= '/' . sprintf('%d', round(floatval($pa))) . '°';
-                }
-                return $size;
-            };
-
-            $planetNames = array_map('strtolower', ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Moon', 'Sun']);
-
-            $blocks = $rows->map(function ($r) use ($formatDiameter, $planetNames) {
+            $blocks = $rows->map(function ($r) use ($planetNames) {
                 $catalog = trim((string) ($r->display_name ?? $r->name ?? ''));
-                $common = '';
-                $date = null;
-                $size = $formatDiameter($r->diam1 ?? null, $r->diam2 ?? null, $r->pa ?? null);
-                $atlas = '';
-                $cr = isset($r->computed_contrast_reserve) && is_numeric($r->computed_contrast_reserve) ? number_format(round(floatval($r->computed_contrast_reserve), 2), 2) : ($r->computed_contrast_reserve_category ?? '');
-                $best = $this->computeBestMagForExport($r, null);
 
                 $lowerName = strtolower($catalog);
                 $objectId = '4,-1,-1';
@@ -429,12 +243,6 @@ class SearchExportController extends Controller
                 if ($catalog !== '') {
                     $lines[] = "   CatalogNumber=" . str_replace("\n", "\\n", $catalog);
                 }
-                if ($common !== '') {
-                    $lines[] = "   CommonName=" . str_replace("\n", "\\n", $common);
-                }
-                if ($date) {
-                    $lines[] = "   DateObserved={$date}";
-                }
                 $lines[] = "EndObject=SkyObject";
 
                 return implode("\n", $lines);
@@ -443,7 +251,8 @@ class SearchExportController extends Controller
             $content = "SkySafariObservingListVersion=3.0\n" . implode("\n\n", $blocks) . "\n";
             $filename = 'search_objects_' . date('Ymd_His') . '.skylist';
             return response()->streamDownload(function () use ($content) {
-                echo $content; }, $filename, ['Content-Type' => 'text/plain']);
+                echo $content;
+            }, $filename, ['Content-Type' => 'text/plain']);
         } catch (\Throwable $ex) {
             Log::error('SearchExportController::skylist failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate SkySafari export'));
@@ -456,29 +265,16 @@ class SearchExportController extends Controller
     public function stxt(Request $request)
     {
         try {
-            $q = $request->query('q', '');
-            $comp = new \App\Livewire\SearchResultsTable();
-            if (method_exists($comp, 'boot')) {
-                try {
-                    $comp->boot();
-                } catch (\Throwable $_) {
-                }
+            [, $rows] = $this->resolveRows($request, self::MAX_EXPORT_OBJECTS['file']);
+            if ($refused = $this->tooManyObjects($rows, 'file')) {
+                return $refused;
             }
-            if (method_exists($comp, 'mount')) {
-                try {
-                    $comp->mount();
-                } catch (\Throwable $_) {
-                }
-            }
-            $comp->q = $q;
-
-            $query = $comp->datasource();
-            $rows = $query ? $query->get() : collect();
             $names = $rows->pluck('display_name')->filter()->values();
             $content = implode("\n", $names->all()) . "\n";
             $filename = 'search_objects_' . date('Ymd_His') . '.txt';
             return response()->streamDownload(function () use ($content) {
-                echo $content; }, $filename, ['Content-Type' => 'text/plain']);
+                echo $content;
+            }, $filename, ['Content-Type' => 'text/plain']);
         } catch (\Throwable $ex) {
             Log::error('SearchExportController::stxt failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate SkyTools TXT export'));
@@ -490,25 +286,13 @@ class SearchExportController extends Controller
      */
     public function apd(Request $request)
     {
-        try {
-            $q = $request->query('q', '');
-            $comp = new \App\Livewire\SearchResultsTable();
-            if (method_exists($comp, 'boot')) {
-                try {
-                    $comp->boot();
-                } catch (\Throwable $_) {
-                }
-            }
-            if (method_exists($comp, 'mount')) {
-                try {
-                    $comp->mount();
-                } catch (\Throwable $_) {
-                }
-            }
-            $comp->q = $q;
+        $tmp = false;
 
-            $query = $comp->datasource();
-            $rows = $query ? $query->get() : collect();
+        try {
+            [, $rows] = $this->resolveRows($request, self::MAX_EXPORT_OBJECTS['file']);
+            if ($refused = $this->tooManyObjects($rows, 'file')) {
+                return $refused;
+            }
 
             // Create temporary sqlite file
             $tmp = tempnam(sys_get_temp_dir(), 'dsl_apd_');
@@ -530,16 +314,8 @@ class SearchExportController extends Controller
                 $type = $r->type_name ?? $r->source_type ?? '';
                 $ra = is_numeric($r->obj_ra ?? $r->ra) ? floatval($r->obj_ra ?? $r->ra) : null;
                 $dec = is_numeric($r->obj_decl ?? $r->decl) ? floatval($r->obj_decl ?? $r->decl) : null;
-                $mag = (is_numeric($r->mag) && floatval($r->mag) != 99.9) ? floatval($r->mag) : null;
-                $size = '';
-                try {
-                    $d1 = $r->diam1 ?? null;
-                    $d2 = $r->diam2 ?? null;
-                    $pa = $r->pa ?? null;
-                    $size = $this->formatSizeForApd((object) ['diam1' => $d1, 'diam2' => $d2, 'pa' => $pa]);
-                } catch (\Throwable $_) {
-                    $size = '';
-                }
+                $mag = (is_numeric($r->mag) && floatval($r->mag) != 99.9 && floatval($r->mag) != 0.0) ? floatval($r->mag) : null;
+                $size = $this->formatSize($r->diam1 ?? null, $r->diam2 ?? null, $r->pa ?? null);
                 $catalogue = '';
                 $notes = '';
 
@@ -550,8 +326,16 @@ class SearchExportController extends Controller
             $db = null;
             $filename = 'search_objects_' . date('Ymd_His') . '.apd';
             return response()->streamDownload(function () use ($tmp) {
-                readfile($tmp); }, $filename, ['Content-Type' => 'application/x-sqlite3']);
+                try {
+                    readfile($tmp);
+                } finally {
+                    @unlink($tmp);
+                }
+            }, $filename, ['Content-Type' => 'application/x-sqlite3']);
         } catch (\Throwable $ex) {
+            if ($tmp !== false) {
+                @unlink($tmp);
+            }
             Log::error('SearchExportController::apd failed', ['error' => (string) $ex]);
             return redirect()->back()->with('error', __('Failed to generate AstroPlanner APD export'));
         }
@@ -630,11 +414,156 @@ class SearchExportController extends Controller
         }
     }
 
-    private function formatSizeForApd($r): string
+    /**
+     * The search component and the rows it yields for the request.
+     *
+     * Public so the object sets page can take its objects from exactly the
+     * search results the exports see.
+     *
+     * @return array{0: SearchResultsTable|AdvancedObjectSearchTable, 1: \Illuminate\Support\Collection}
+     */
+    public function resolveRows(Request $request, ?int $max = null): array
     {
-        $d1 = $r->diam1 ?? null;
-        $d2 = $r->diam2 ?? null;
-        $pa = $r->pa ?? null;
+        $component = $this->makeSearchComponent($request);
+
+        $query = $component->datasource();
+        if ($query) {
+            $this->applyTableSort($component, $query);
+        }
+        if ($query && $max !== null) {
+            // The one row too many tells tooManyObjects() to refuse.
+            $query->limit($max + 1);
+        }
+        $rows = $query ? $query->get() : collect();
+
+        return [$component, $rows];
+    }
+
+    /**
+     * Refuse an export whose search matches more objects than the format
+     * allows, with a message asking to narrow the search down.
+     */
+    private function tooManyObjects(Collection $rows, string $kind)
+    {
+        $max = self::MAX_EXPORT_OBJECTS[$kind];
+
+        if ($rows->count() <= $max) {
+            return null;
+        }
+
+        return redirect()
+            ->back()
+            ->with('error', __('This search matches more than :max objects, the most that can be exported in this format. Please narrow down your search.', [
+                'max' => number_format($max),
+            ]));
+    }
+
+    /**
+     * Sort the export as the observer sorted the table: the sort the table
+     * persisted in the session, else its default sort, applied through the
+     * table's own column sort callbacks as PowerGrid does.
+     */
+    private function applyTableSort(SearchResultsTable|AdvancedObjectSearchTable $component, Builder $query): void
+    {
+        try {
+            // Restore the sort only: the persisted filters belong to the table
+            // on screen, the export takes its filters from the request.
+            $persisted = $component->persist;
+            $component->persist(['sorting'], $component->persistPrefix);
+            (fn () => $this->restoreState())->call($component);
+            $component->persist($persisted, $component->persistPrefix);
+        } catch (\Throwable $_) {
+        }
+
+        (new Sorting($component))->handle($query, fn ($sorted) => $sorted);
+    }
+
+    private function makeSearchComponent(Request $request): SearchResultsTable|AdvancedObjectSearchTable
+    {
+        $filters = $this->extractAdvancedFilters($request);
+
+        if ($filters !== []) {
+            $component = new AdvancedObjectSearchTable();
+            $this->bootSearchComponent($component, $filters);
+
+            return $component;
+        }
+
+        $component = new SearchResultsTable();
+        $this->bootSearchComponent($component);
+        $component->q = trim((string) $request->query('q', ''));
+        $component->objectRefs = $this->normalizeObjectRefs($request->query('object_refs', []));
+
+        return $component;
+    }
+
+    private function bootSearchComponent(object $component, ...$mountArgs): void
+    {
+        if (method_exists($component, 'boot')) {
+            try {
+                $component->boot();
+            } catch (\Throwable $_) {
+            }
+        }
+
+        if (method_exists($component, 'mount')) {
+            try {
+                $component->mount(...$mountArgs);
+            } catch (\Throwable $_) {
+            }
+        }
+    }
+
+    private function extractAdvancedFilters(Request $request): array
+    {
+        $filters = $request->except(['_token', 'page', 'q', 'object_refs']);
+
+        return array_filter($filters, function ($value): bool {
+            if (is_array($value)) {
+                return collect($value)
+                    ->flatten()
+                    ->contains(fn($item): bool => trim((string) $item) !== '');
+            }
+
+            return trim((string) $value) !== '';
+        });
+    }
+
+    private function normalizeObjectRefs(mixed $rawRefs): array
+    {
+        if (!is_array($rawRefs)) {
+            return [];
+        }
+
+        return collect($rawRefs)
+            ->map(function ($ref): ?array {
+                if (!is_array($ref)) {
+                    return null;
+                }
+
+                $sourceTable = strtolower(trim((string) ($ref['source_table'] ?? '')));
+                $name = trim((string) ($ref['name'] ?? ''));
+
+                if ($sourceTable === '' || $name === '') {
+                    return null;
+                }
+
+                return [
+                    'source_table' => $sourceTable,
+                    'name' => $name,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * The size of an object for the exports, in arcseconds or (above a minute) arcminutes,
+     * with the position angle when it is known.
+     */
+    private function formatSize($d1, $d2, $pa = null): string
+    {
         $hasD1 = is_numeric($d1) && floatval($d1) > 0;
         $hasD2 = is_numeric($d2) && floatval($d2) > 0;
         if (!$hasD1 && !$hasD2)
@@ -642,7 +571,8 @@ class SearchExportController extends Controller
         $d1f = $hasD1 ? floatval($d1) : 0.0;
         $d2f = $hasD2 ? floatval($d2) : 0.0;
         $fmt = function ($v) {
-            return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v); };
+            return (floor($v) == $v) ? sprintf('%d', $v) : sprintf('%.1f', $v);
+        };
         if ($hasD1 && $hasD2) {
             if (max($d1f, $d2f) > 60.0) {
                 $d1m = $d1f / 60.0;

@@ -14,12 +14,22 @@
                         <x-menu.item separator icon="users" href="/observers/admin">{{ __('Observers') }}</x-menu.item>
                     @endif
 
-                    <x-menu.item separator icon="plus" href="/sketch-of-the-week/create">{{ __('Add sketch of the week') }}</x-menu.item>
-
-                    <x-menu.item icon="plus" href="/sketch-of-the-month/create">{{ __('Add sketch of the month') }}</x-menu.item>
-
                     @if (Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
                         <x-menu.item separator icon="check-badge" href="{{ route('admin.objects.check') }}">{{ __('Check Objects') }}</x-menu.item>
+
+                        <x-menu.item icon="lock-closed" href="{{ route('admin.complete-catalogs') }}">{{ __('Complete catalogs') }}</x-menu.item>
+
+                        <x-menu.item icon="arrow-up-tray" href="{{ route('admin.objects.import') }}">{{ __('Import objects') }}</x-menu.item>
+
+                        <x-menu.item icon="clipboard-document-check" href="{{ route('admin.object-reviews') }}">{{ __('Object reviews') }}</x-menu.item>
+
+                        <x-menu.item separator icon="newspaper" href="{{ route('admin.news') }}">{{ __('Manage the news') }}</x-menu.item>
+
+                        <x-menu.item icon="star" href="{{ route('admin.objects-of-the-month') }}">{{ __('Objects of the month') }}</x-menu.item>
+
+                        <x-menu.item icon="trophy" href="{{ route('admin.challenges') }}">{{ __('Manage the challenges') }}</x-menu.item>
+
+                        <x-menu.item icon="globe-alt" href="{{ route('admin.great-red-spot') }}">{{ __('Great Red Spot') }}</x-menu.item>
                     @endif
 
                     @if (Auth::user()->isAdministrator())

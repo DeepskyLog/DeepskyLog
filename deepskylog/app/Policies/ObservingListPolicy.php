@@ -18,17 +18,8 @@ class ObservingListPolicy
             return true;
         }
 
-        // Public lists can be viewed by anyone
-        if ($list->public) {
-            return true;
-        }
-
-        // Subscribers can view
-        if ($list->isSubscribedBy($user)) {
-            return true;
-        }
-
-        return false;
+        // Public lists can be viewed by anyone, private lists only by their owner
+        return (bool) $list->public;
     }
 
     /**
@@ -149,8 +140,8 @@ class ObservingListPolicy
      */
     public function setAsActive(User $user, ObservingList $list): bool
     {
-        // Can only set as active if owner or subscribed
-        return $user->id === $list->owner_user_id || $list->isSubscribedBy($user);
+        // The owner, or a subscriber as long as the list is public
+        return $user->id === $list->owner_user_id || ($list->public && $list->isSubscribedBy($user));
     }
 
     /**

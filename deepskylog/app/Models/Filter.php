@@ -2,19 +2,39 @@
 
 namespace App\Models;
 
+use App\Casts\PurifiedHtml;
+use App\Models\Traits\DetachesOnDelete;
+use App\Models\Traits\HasObservationsDates;
+use App\Models\Traits\OwnedByUser;
 use App\Traits\ClearsResponseCache;
-use Carbon\Carbon;
-use Cviebrock\EloquentSluggable\Sluggable;
+use App\Traits\HasUniqueSlugPerUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Filter extends Model
 {
     use ClearsResponseCache;
-    use Sluggable;
+    use DetachesOnDelete;
+    use HasObservationsDates;
+    use HasUniqueSlugPerUser;
+    use OwnedByUser;
 
     protected $fillable = [
-        'user_id', 'name', 'make_id', 'type_id', 'color_id', 'wratten', 'schott', 'active', 'observer', 'picture', 'description',
+        'user_id',
+        'name',
+        'make_id',
+        'type_id',
+        'color_id',
+        'wratten',
+        'schott',
+        'active',
+        'observer',
+        'picture',
+        'description',
+    ];
+
+    protected $casts = [
+        'description' => PurifiedHtml::class,
     ];
 
     protected $with = ['filter_make', 'filter_color', 'filter_type'];
@@ -24,7 +44,7 @@ class Filter extends Model
         return [
             'slug' => [
                 'source' => 'name',
-                'unique' => false,
+                'unique' => true,
             ],
         ];
     }
@@ -57,7 +77,7 @@ class Filter extends Model
     /**
      * Retrieves the date of the first observation made with the filter.
      *
-     * This method calculates the earliest observation date for the filter from ObservationsOld
+     * This method calculates the earliest observation date for the filter from the observations table
      *
      * If no observations are found, it returns [null, null].
      *
@@ -68,25 +88,13 @@ class Filter extends Model
      */
     public function first_observation_date(): array
     {
-        $language = app()->getLocale();
-
-        $firstObservation = ObservationsOld::where('filterid', $this->id)->min('date');
-
-        if ($firstObservation == null) {
-            return [null, null];
-        }
-
-        $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
-
-        $id = ObservationsOld::where('filterid', $this->id)->where('date', $firstObservation)->first()['id'];
-
-        return [$date, $id];
+        return $this->first_observation_date_generic('filterid');
     }
 
     /**
      * Retrieves the date of the last observation made with the filter.
      *
-     * This method calculates the last observation date for the filter from ObservationsOld
+     * This method calculates the last observation date for the filter from the observations table
      *
      * If no observations are found, it returns [null, null].
      *
@@ -97,18 +105,7 @@ class Filter extends Model
      */
     public function last_observation_date(): array
     {
-        $language = app()->getLocale();
-
-        $lastObservation = ObservationsOld::where('filterid', $this->id)->max('date');
-
-        if ($lastObservation == null) {
-            return [null, null];
-        }
-
-        $date = Carbon::createFromFormat('Ymd', $lastObservation)->locale($language)->isoFormat('LL');
-        $id = ObservationsOld::where('filterid', $this->id)->where('date', $lastObservation)->first()['id'];
-
-        return [$date, $id];
+        return $this->last_observation_date_generic('filterid');
     }
 
     /**
@@ -121,6 +118,6 @@ class Filter extends Model
 
     public function fullName(): string
     {
-        return ltrim($this->filter_make->name.' '.$this->name);
+        return ltrim($this->filter_make->name . ' ' . $this->name);
     }
 }

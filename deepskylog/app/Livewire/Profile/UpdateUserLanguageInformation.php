@@ -4,6 +4,7 @@ namespace App\Livewire\Profile;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class UpdateUserLanguageInformation extends Component
@@ -16,12 +17,32 @@ class UpdateUserLanguageInformation extends Component
 
     public $sendMail;
 
-    protected $rules = [
-        'observationlanguage' => 'string',
-        'language' => 'string',
-        'translate' => 'boolean',
-        'sendMail' => 'boolean',
-    ];
+    public $followDigest;
+
+    public $clearNightAlert;
+
+    public $sessionReminder;
+
+    public $yearReview;
+
+    protected function rules(): array
+    {
+        return [
+            // The current value stays valid, so an observer with a language
+            // that is no longer offered can still save the other settings.
+            'observationlanguage' => ['required', 'string', Rule::in([
+                ...config('app.observation_languages'),
+                auth()->user()->observationlanguage,
+            ])],
+            'language' => ['required', 'string', Rule::in(array_values(config('app.available_locales')))],
+            'translate' => 'boolean',
+            'sendMail' => 'boolean',
+            'followDigest' => 'boolean',
+            'clearNightAlert' => 'boolean',
+            'sessionReminder' => 'boolean',
+            'yearReview' => 'boolean',
+        ];
+    }
 
     /**
      * Sets the database values.
@@ -34,6 +55,10 @@ class UpdateUserLanguageInformation extends Component
         $this->language = auth()->user()->language;
         $this->translate = boolval(auth()->user()->translate);
         $this->sendMail = boolval(auth()->user()->sendMail);
+        $this->followDigest = boolval(auth()->user()->follow_digest);
+        $this->clearNightAlert = boolval(auth()->user()->clear_night_alert);
+        $this->sessionReminder = boolval(auth()->user()->session_reminder);
+        $this->yearReview = boolval(auth()->user()->year_review);
     }
 
     /**
@@ -41,11 +66,17 @@ class UpdateUserLanguageInformation extends Component
      */
     public function updateLanguageInformation(): void
     {
+        $this->validate();
+
         auth()->user()->forceFill([
             'observationlanguage' => $this->observationlanguage,
             'language' => $this->language,
             'translate' => $this->translate,
             'sendMail' => $this->sendMail,
+            'follow_digest' => $this->followDigest,
+            'clear_night_alert' => $this->clearNightAlert,
+            'session_reminder' => $this->sessionReminder,
+            'year_review' => $this->yearReview,
         ])->save();
 
         App::setLocale($this->language);

@@ -5,10 +5,12 @@ namespace App\Livewire;
 use App\Models\Instrument;
 use App\Models\InstrumentMake;
 use App\Models\InstrumentType;
+use App\Models\Lens;
+use App\Support\UploadedPhoto;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -36,6 +38,12 @@ class CreateInstrument extends Component
 
     public $fixedMagnification;
 
+    public $field_of_view_deg;
+
+    public $finder_id;
+
+    public $lens_id;
+
     public $obstruction_perc;
 
     public $mount_type_id;
@@ -52,6 +60,8 @@ class CreateInstrument extends Component
     public function mount(): void
     {
         if ($this->instrument) {
+            abort_unless($this->instrument->canBeEditedBy(Auth::user()), 403);
+
             $this->name = $this->instrument->name;
 
             if (Auth::user()->showInches) {
@@ -70,6 +80,9 @@ class CreateInstrument extends Component
                 $this->f_d = null;
             }
             $this->fixedMagnification = $this->instrument->fixedMagnification;
+            $this->field_of_view_deg = $this->instrument->field_of_view_deg;
+            $this->finder_id = $this->instrument->finder_id;
+            $this->lens_id = $this->instrument->lens_id;
             if ($this->instrument->obstruction_perc != 0) {
                 $this->obstruction_perc = $this->instrument->obstruction_perc;
             }
@@ -84,11 +97,34 @@ class CreateInstrument extends Component
 
     public function render(): Application|Factory|\Illuminate\Contracts\View\View|View
     {
-        if ($this->instrument) {
-            return view('livewire.create-instrument', ['update' => true]);
-        }
+        return view('livewire.create-instrument', [
+            'update' => (bool) $this->instrument,
+            'finders' => $this->finderOptions(),
+            'lenses' => Lens::where('user_id', Auth::id())->orderBy('name')->get()
+                ->map(fn (Lens $lens) => ['id' => $lens->id, 'name' => html_entity_decode($lens->name)])
+                ->all(),
+        ]);
+    }
 
-        return view('livewire.create-instrument', ['update' => false]);
+    /**
+     * The instruments of the observer that can be the finder of this one:
+     * all the others, the ones with a fixed magnification (finders,
+     * binoculars) first.
+     *
+     * @return array<int, array{id: int, name: string}>
+     */
+    private function finderOptions(): array
+    {
+        return Instrument::where('user_id', Auth::id())
+            ->when($this->instrument, fn ($query) => $query->where('id', '!=', $this->instrument->id))
+            ->orderByRaw('CASE WHEN fixedMagnification > 0 THEN 0 ELSE 1 END')
+            ->orderBy('name')
+            ->get()
+            ->map(fn (Instrument $instrument) => [
+                'id' => $instrument->id,
+                'name' => html_entity_decode($instrument->fullName()),
+            ])
+            ->all();
     }
 
     public function updateAperture(): void
@@ -140,6 +176,10 @@ class CreateInstrument extends Component
 
     public function save()
     {
+        if ($this->instrument) {
+            abort_unless($this->instrument->canBeEditedBy(Auth::user()), 403);
+        }
+
         if ($this->instrument_make != 1 && $this->instrument_make) {
             $make = $this->instrument_make;
         } elseif ($this->instrument_new_make != '') {
@@ -149,31 +189,26 @@ class CreateInstrument extends Component
             $make_name = $this->instrument_new_make;
 
             // Create a new make
-            $make = InstrumentMake::create(['name' => $make_name])->id;
+            $make = InstrumentMake::firstOrCreate(['name' => trim($make_name)])->id;
         } else {
             $make = 1;
-        }
-
-        $photoPath = null;
-        if ($this->photo) {
-            $upload_name = Str::slug(
-                Auth()->user()->slug.' '.$make.' '.$this->name,
-                '-'
-            ).'.'.$this->photo->getClientOriginalExtension();
-            // Make a slug from the upload_name
-            $photoPath = $this->photo->storePubliclyAs('photos/instruments', $upload_name, 'public');
         }
 
         if ($this->focal_length_mm == '') {
             $this->focal_length_mm = 0;
         }
-
-        // Check if aperture and focal length are set in inches
-        if (Auth::user()->showInches) {
-            $this->aperture_mm = $this->aperture_mm * 25.4;
-            $this->focal_length_mm = $this->focal_length_mm * 25.4;
+        if ($this->field_of_view_deg === '') {
+            $this->field_of_view_deg = null;
+        }
+        if ($this->finder_id === '') {
+            $this->finder_id = null;
+        }
+        if ($this->lens_id === '') {
+            $this->lens_id = null;
         }
 
+        // The form values are validated; in inches they are converted afterwards,
+        // so the form keeps showing inches after a validation error.
         $data = $this->validate([
             'name' => 'required|min:3',
             'instrument_type_id' => 'required',
@@ -181,11 +216,30 @@ class CreateInstrument extends Component
             'focal_length_mm' => 'numeric|min:0|nullable',
             'f_d' => 'numeric|min:0|nullable',
             'fixedMagnification' => 'nullable|numeric|min:1',
+            'field_of_view_deg' => 'nullable|numeric|gt:0|max:60',
+            'finder_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('instruments', 'id')->where('user_id', Auth::id()),
+                Rule::notIn($this->instrument ? [$this->instrument->id] : []),
+            ],
+            'lens_id' => ['nullable', 'integer', Rule::exists('lenses', 'id')->where('user_id', Auth::id())],
             'mount_type_id' => 'required',
             'obstruction_perc' => 'nullable|numeric|min:0',
             'photo' => 'nullable|image',
             'description' => 'nullable|string',
         ]);
+
+        $photoPath = null;
+        if ($this->photo) {
+            $photoPath = UploadedPhoto::store($this->photo, 'photos/instruments', $this->instrument);
+        }
+
+        // Check if aperture and focal length are set in inches
+        if (Auth::user()->showInches) {
+            $data['aperture_mm'] = (int) round($this->inchesToMm($data['aperture_mm'], $this->instrument?->aperture_mm));
+            $data['focal_length_mm'] = $this->inchesToMm($data['focal_length_mm'] ?? 0, $this->instrument?->focal_length_mm);
+        }
 
         if ($this->flipped_image) {
             $data['flip_image'] = true;
@@ -217,10 +271,25 @@ class CreateInstrument extends Component
             $instrument = Instrument::create($data);
 
             session()->flash('message', __('Instrument created successfully.'));
+            session()->flash('equipment_created', true);
 
             // Return to /instrument/{user-slug}/{instrument-slug} page
             return redirect('/instrument/'.Auth()->user()->slug.'/'.$instrument->slug);
         }
 
+    }
+
+    /**
+     * Converts a value in inches to millimeters. When the value is the one mount()
+     * showed for the stored millimeters (rounded to 0.1"), the stored value is
+     * kept, so saving without changes doesn't shift it.
+     */
+    private function inchesToMm($inches, $storedMm): float
+    {
+        if ($storedMm !== null && round($storedMm / 25.4, 1) == (float) $inches) {
+            return (float) $storedMm;
+        }
+
+        return (float) $inches * 25.4;
     }
 }

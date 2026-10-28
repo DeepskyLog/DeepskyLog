@@ -1,7 +1,7 @@
 <x-app-layout>
     <div>
         <div class="max-w-screen mx-auto bg-gray-900 px-2 py-10 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-wrap items-center justify-between gap-2">
                 <h2 class="text-xl font-semibold leading-tight">
                     @if ($user == '')
                         {{ __('Comet sketches') }}
@@ -35,18 +35,19 @@
                             <div class="mt-3 max-w-xl pr-3">
                                 {{-- Show the correct drawing --}}
                                 @php
-                                    // Use preloaded user data to avoid N+1 query
-                                    $sketchUser = $sketchUsers[$sketch->observerid] ?? null;
-                                    $observer_name = $sketchUser ? $sketchUser->name : $sketch->observerid;
-                                    $observation_date =
-                                        substr($sketch->date, 0, 4) .
-                                        '-' .
-                                        substr($sketch->date, 4, 2) .
-                                        '-' .
-                                        substr($sketch->date, 6, 2);
+                                    $sketchUser = \App\Services\Observations\ObservationCardData::instance()->user($sketch->observer_username);
+                                    $observer_name = $sketchUser ? $sketchUser->name : $sketch->observer_username;
+                                    $observation_date = optional($sketch->observed_on)?->format('Y-m-d');
                                 @endphp
 
-                                <x-sketch-comet :observation_id="$sketch->id" :observer_name="$observer_name" :observation_date="$observation_date" />
+                                <x-sketch-comet
+                                    :observation_id="$sketch->legacy_id"
+                                    :unified_observation="$sketch"
+                                    :observer_name="$observer_name"
+                                    :observer_username="$sketch->observer_username"
+                                    :observer_slug="$sketchUser?->slug"
+                                    :observation_date="$observation_date"
+                                />
                             </div>
                         @endforeach
                     </div>

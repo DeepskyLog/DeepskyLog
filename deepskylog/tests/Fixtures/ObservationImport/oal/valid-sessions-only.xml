@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oal:observations xmlns:oal="http://groups.google.com/group/openastronomylog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://groups.google.com/group/openastronomylog oal21.xsd">
+  <observers>
+    <observer id="observer-1"><name>Example</name><surname>Observer</surname></observer>
+  </observers>
+  <sites>
+    <site id="site-1"><name>Example Site</name><longitude unit="deg">4.70</longitude><latitude unit="deg">50.88</latitude><elevation>30</elevation><timezone>60</timezone></site>
+  </sites>
+  <!-- A session without observations: it is imported, with a warning that there are no observations -->
+  <sessions>
+    <session id="session-1" lang="en">
+      <begin>2026-09-12T21:00:00+02:00</begin>
+      <end>2026-09-13T02:30:00+02:00</end>
+      <site>site-1</site>
+      <weather>Clear, no wind.</weather>
+    </session>
+  </sessions>
+  <targets/><scopes/><eyepieces/><lenses/><filters/><imagers/>
+</oal:observations>

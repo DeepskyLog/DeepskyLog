@@ -1,4 +1,4 @@
-@php use App\Models\Instrument;use App\MOdels\Lens; @endphp
+@php use App\Models\Instrument;use App\Models\Lens; @endphp
 <x-app-layout>
     <div>
         <div class="mx-auto max-w-screen bg-gray-900 px-2 py-10 sm:px-6 lg:px-8">
@@ -8,7 +8,7 @@
                          alt="{{ $eyepiece->name }}">
                     @if (!empty($eyepiece->description))
                         <div class="mt-4 p-3 border border-gray-700 bg-gray-800 text-gray-100 rounded prose prose-invert">
-                            {!! html_entity_decode($eyepiece->description ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') !!}
+                            {!! \App\Support\Html::purify($eyepiece->description, true) !!}
                         </div>
                     @endif
                 </div>
@@ -82,20 +82,10 @@
                                     $first_observation_date = $eyepiece->first_observation_date();
                                     $last_observation_date = $eyepiece->last_observation_date();
                                 @endphp
-                                @if (! is_null($first_observation_date[0]))
-                                    @if ($first_observation_date[1] > 0)
-                                        <a
-                                            href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $first_observation_date[1] }}"
-                                        >
-                                            {{$first_observation_date[0] }}
-                                        </a>
-                                    @else
-                                        <a
-                                            href="{{ config("app.old_url") }}/index.php?indexAction=comets_detail_observation&observation={{ -$first_observation_date[1] }}"
-                                        >
-                                            {{ $first_observation_date[0] }}
-                                        </a>
-                                    @endif
+                                @if (! is_null($first_observation_date[0]) && $first_observation_date[1])
+                                    <a href="{{ $first_observation_date[1]->detailUrl() }}">
+                                        {{ $first_observation_date[0] }}
+                                    </a>
                                 @else
                                     {{ __("No observations added!") }}
                                 @endif
@@ -105,20 +95,10 @@
                         <tr>
                             <td>{{ __("Last used on") }}</td>
                             <td>
-                                @if (! is_null($last_observation_date[0]))
-                                    @if ($last_observation_date[1] > 0)
-                                        <a
-                                            href="{{ config("app.old_url") }}/index.php?indexAction=detail_observation&observation={{ $last_observation_date[1] }}"
-                                        >
-                                            {{ $last_observation_date[0] }}
-                                        </a>
-                                    @else
-                                        <a
-                                            href="{{ config("app.old_url") }}/index.php?indexAction=comets_detail_observation&observation={{ -$last_observation_date[1] }}"
-                                        >
-                                            {{ $last_observation_date[0] }}
-                                        </a>
-                                    @endif
+                                @if (! is_null($last_observation_date[0]) && $last_observation_date[1])
+                                    <a href="{{ $last_observation_date[1]->detailUrl() }}">
+                                        {{ $last_observation_date[0] }}
+                                    </a>
                                 @else
                                     {{ __("No observations added!") }}
                                 @endif
@@ -140,6 +120,9 @@
                             <a href="/eyepiece/{{$eyepiece->user->slug}}/{{$eyepiece->slug }}/edit">
                                 <x-button type="submit" secondary label="{{ __('Edit') }} {!! $eyepiece->name !!}"/>
                             </a>
+                        @endif
+                        @if ($eyepiece->user_id == Auth::user()->id)
+                            <x-whats-new-link kind="eyepiece" :equipment="$eyepiece" />
                         @endif
 
                         <br/>

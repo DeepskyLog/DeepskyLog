@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Casts\PurifiedHtml;
+use App\Models\Traits\DetachesOnDelete;
+use App\Models\Traits\HasObservationsDates;
+use App\Models\Traits\OwnedByUser;
 use App\Traits\ClearsResponseCache;
-use Carbon\Carbon;
-use Cviebrock\EloquentSluggable\Sluggable;
+use App\Traits\HasUniqueSlugPerUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
@@ -12,12 +15,29 @@ use Illuminate\Support\Collection;
 class Eyepiece extends Model
 {
     use ClearsResponseCache;
-    use Sluggable;
+    use DetachesOnDelete;
+    use HasObservationsDates;
+    use HasUniqueSlugPerUser;
+    use OwnedByUser;
 
     protected $fillable = [
-        'user_id', 'name', 'make_id', 'type_id', 'focal_length_mm', 'apparentFOV',
-        'active', 'observer', 'max_focal_length_mm', 'maxFocalLength', 'field_stop_mm', 'picture',
+        'user_id',
+        'name',
+        'make_id',
+        'type_id',
+        'focal_length_mm',
+        'apparentFOV',
+        'active',
+        'observer',
+        'max_focal_length_mm',
+        'maxFocalLength',
+        'field_stop_mm',
+        'picture',
         'description',
+    ];
+
+    protected $casts = [
+        'description' => PurifiedHtml::class,
     ];
 
     protected $with = ['eyepiece_make', 'eyepiece_type'];
@@ -27,7 +47,7 @@ class Eyepiece extends Model
         return [
             'slug' => [
                 'source' => 'name',
-                'unique' => false,
+                'unique' => true,
             ],
         ];
     }
@@ -57,7 +77,7 @@ class Eyepiece extends Model
     /**
      * Retrieves the date of the first observation made with the eyepiece.
      *
-     * This method calculates the earliest observation date for the eyepiece from ObservationsOld
+     * This method calculates the earliest observation date for the eyepiece from the observations table
      *
      * If no observations are found, it returns [null, null].
      *
@@ -68,35 +88,22 @@ class Eyepiece extends Model
      */
     public function first_observation_date(): array
     {
-        $language = app()->getLocale();
-
         // Prefer a request-scoped bulk map when available to avoid per-eyepiece queries
         if (isset(self::$bulkFirstObservationMap) && array_key_exists($this->id, self::$bulkFirstObservationMap)) {
             $entry = self::$bulkFirstObservationMap[$this->id];
-            if (! $entry) return [null, null];
-            $firstObservation = $entry['date'];
-            $id = $entry['id'];
-            $date = Carbon::createFromFormat('Ymd', (string) $firstObservation)->locale($language)->isoFormat('LL');
-            return [$date, $id];
+            if (!$entry)
+                return [null, null];
+            [$formatted, $id] = [$entry['date'], $entry['id']];
+            return [$formatted, $id];
         }
 
-        $firstDeepskyObservation = ObservationsOld::where('eyepieceid', $this->id)->min('date');
-
-        if ($firstDeepskyObservation == null) {
-            return [null, null];
-        }
-
-        $firstObservation = $firstDeepskyObservation;
-        $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
-        $id = ObservationsOld::where('eyepieceid', $this->id)->where('date', $firstObservation)->first()['id'];
-
-        return [$date, $id];
+        return $this->first_observation_date_generic('eyepieceid');
     }
 
     /**
      * Retrieves the date of the last observation made with the eyepiece.
      *
-     * This method calculates the last observation date for the eyepiece from ObservationsOld
+     * This method calculates the last observation date for the eyepiece from the observations table
      *
      * If no observations are found, it returns [null, null].
      *
@@ -107,28 +114,16 @@ class Eyepiece extends Model
      */
     public function last_observation_date(): array
     {
-        $language = app()->getLocale();
-
         // Prefer a request-scoped bulk map when available to avoid per-eyepiece queries
         if (isset(self::$bulkLastObservationMap) && array_key_exists($this->id, self::$bulkLastObservationMap)) {
             $entry = self::$bulkLastObservationMap[$this->id];
-            if (! $entry) return [null, null];
-            $lastObservation = $entry['date'];
-            $id = $entry['id'];
-            $date = Carbon::createFromFormat('Ymd', (string) $lastObservation)->locale($language)->isoFormat('LL');
-            return [$date, $id];
+            if (!$entry)
+                return [null, null];
+            [$formatted, $id] = [$entry['date'], $entry['id']];
+            return [$formatted, $id];
         }
 
-        $lastDeepskyObservation = ObservationsOld::where('eyepieceid', $this->id)->max('date');
-
-        if ($lastDeepskyObservation == null) {
-            return [null, null];
-        }
-
-        $date = Carbon::createFromFormat('Ymd', $lastDeepskyObservation)->locale($language)->isoFormat('LL');
-        $id = ObservationsOld::where('eyepieceid', $this->id)->where('date', $lastDeepskyObservation)->first()['id'];
-
-        return [$date, $id];
+        return $this->last_observation_date_generic('eyepieceid');
     }
 
     public function get_used_instruments_as_string(): string
@@ -142,11 +137,13 @@ class Eyepiece extends Model
                 continue;
             }
 
-            $inst = Instrument::where('id', $instrument)->first();
-            $user_slug = User::where('id', $inst->user_id)->pluck('slug')[0];
+            $inst = Instrument::with('user')->where('id', $instrument)->first();
+            if (! $inst || ! $inst->user) {
+                continue;
+            }
 
-            $to_return .= "<a href='/instrument/".$user_slug.'/'.$inst->slug."'>".
-                $inst->fullName().'</a>'.', ';
+            $to_return .= "<a href='/instrument/" . e($inst->user->slug) . '/' . e($inst->slug) . "'>" .
+                e(html_entity_decode($inst->fullName())) . '</a>' . ', ';
         }
 
         // Remove the trailing comma and space
@@ -161,28 +158,20 @@ class Eyepiece extends Model
             return collect(self::$bulkUsedInstrumentsMap[$this->id]);
         }
 
-        // Fast-path: if the authenticated user has a standard instrument set
-        // or a selected standard instrument, restrict calculations to that
-        // instrument only. This avoids many legacy per-eyepiece queries
-        // against the old `observations` table when the user expects
-        // calculations only for their default instrument.
-        try {
-            $authUser = auth()->user();
-            if ($authUser && ! empty($authUser->standardInstrument)) {
-                $inst = $authUser->standardInstrument;
-                if ($inst && isset($inst->id)) {
-                    return collect([$inst->id]);
-                }
-            }
-        } catch (\Throwable $_) {
-            // ignore and fall back to legacy behaviour
-        }
-
-        return ObservationsOld::where('eyepieceid', $this->id)->groupby('instrumentid')->distinct()->pluck('instrumentid');
+        // The instruments this eyepiece was used with, whoever is looking;
+        // remembered for the request, as it is asked for every row of a table.
+        return collect(self::$usedInstrumentsCache[$this->id] ??= Observation::where('eyepiece_id', $this->id)
+            ->whereNotNull('instrument_id')
+            ->distinct()
+            ->pluck('instrument_id')
+            ->all());
     }
 
     // Request-scoped bulk map of eyepiece_id => array of instrument ids.
     protected static array $bulkUsedInstrumentsMap = [];
+
+    // Request-scoped cache of get_used_instruments() per eyepiece id.
+    protected static array $usedInstrumentsCache = [];
 
     // Request-scoped bulk map eyepiece_id => ['date'=>..., 'id'=>...] for first/last observations
     protected static array $bulkFirstObservationMap = [];
@@ -211,6 +200,24 @@ class Eyepiece extends Model
     public function fullName(): string
     {
         return trim($this->name);
+    }
+
+    /**
+     * Scope a query to order eyepieces by focal length (then name).
+     */
+    public function scopeOrderByFocalLength($query, string $direction = 'desc')
+    {
+        $dir = strtolower($direction) === 'asc' ? 'asc' : 'desc';
+
+        return $query->orderByRaw("COALESCE(focal_length_mm, 0) $dir")->orderBy('name');
+    }
+
+    /**
+     * The users column that holds this as the user's default.
+     */
+    public function standardUserColumn(): ?string
+    {
+        return 'stdeyepiece';
     }
 
     /**

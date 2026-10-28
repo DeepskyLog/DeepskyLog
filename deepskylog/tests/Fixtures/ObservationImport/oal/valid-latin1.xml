@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<oal:observations xmlns:oal="http://groups.google.com/group/openastronomylog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://groups.google.com/group/openastronomylog oal21.xsd">
+  <observers>
+    <observer id="observer-1"><name>Example</name><surname>Observer</surname></observer>
+  </observers>
+  <sites>
+    <site id="site-1"><name>Example Site</name><longitude unit="deg">4.70</longitude><latitude unit="deg">50.88</latitude><elevation>30</elevation><timezone>60</timezone></site>
+  </sites>
+  <sessions/>
+  <targets>
+    <target id="target-m31" xsi:type="oal:deepSkyGX"><datasource>DeepskyLog</datasource><name>M 31</name></target>
+  </targets>
+  <scopes>
+    <scope id="scope-1" xsi:type="oal:scopeType"><model>Example Dobson 250</model><aperture>250</aperture><focalLength>1200</focalLength></scope>
+  </scopes>
+  <eyepieces/><lenses/><filters/><imagers/>
+  <observation id="observation-1">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-m31</target>
+    <begin>2026-09-12T21:30:00Z</begin>
+    <scope>scope-1</scope>
+    <result lang="fr"><description>Très belle galaxie, bras spiraux à peine visibles. Noyau étoilé.</description></result>
+  </observation>
+</oal:observations>

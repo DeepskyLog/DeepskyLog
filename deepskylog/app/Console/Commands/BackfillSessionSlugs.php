@@ -38,11 +38,20 @@ class BackfillSessionSlugs extends Command
         $updated = 0;
 
         foreach ($sessions as $session) {
-            $base = Str::slug($session->name ?: 'session-'.$session->id);
+            // Names are stored with HTML entities, as in ObservationSession::sluggable().
+            // A name without letters or digits ("???") gives an empty slug, which
+            // would never become a usable one: fall back to the id then.
+            $base = Str::slug(html_entity_decode((string) $session->name, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+            if ($base === '') {
+                $base = 'session-'.$session->id;
+            }
             $slug = $base;
             $i = 2;
 
-            while (ObservationSession::where('slug', $slug)->where('observerid', $session->observerid)->exists()) {
+            while (ObservationSession::where('slug', $slug)
+                ->where('observerid', $session->observerid)
+                ->whereKeyNot($session->getKey())
+                ->exists()) {
                 $slug = $base.'-'.$i;
                 $i++;
             }

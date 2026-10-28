@@ -29,5 +29,11 @@
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
+        <env name="TRANSLATE_OBSERVATIONS" value="false"/>
+        <env name="WEATHER_FORECAST" value="false"/>
+        <env name="AAVSO" value="false"/>
+        <env name="WEB_PUSH" value="false"/>
+        <env name="POWERGRID_PARTIALS_ENABLED" value="false"/>
+        <env name="ASTROFORUM" value="false"/>
     </php>
 </phpunit>

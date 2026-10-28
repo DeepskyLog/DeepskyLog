@@ -37,4 +37,57 @@ class UserPolicy
     {
         return $user->isAdministrator() || $user->isDatabaseExpert();
     }
+
+    /**
+     * Administrators and database experts manage the complete catalogs, to
+     * which observers can't add objects.
+     */
+    public function manage_catalogs(User $user): bool
+    {
+        return $user->isAdministrator() || $user->isDatabaseExpert();
+    }
+
+    /**
+     * Administrators and database experts import objects from a CSV file and
+     * compare the objects with it on /admin/objects/import.
+     */
+    public function import_objects(User $user): bool
+    {
+        return $user->isAdministrator() || $user->isDatabaseExpert();
+    }
+
+    /**
+     * Administrators and database experts review the objects (#526) on their
+     * edit page and list them by review status on /admin/object-reviews.
+     */
+    public function review_objects(User $user): bool
+    {
+        return $user->isAdministrator() || $user->isDatabaseExpert();
+    }
+
+    /**
+     * Administrators and database experts write the news of the home page
+     * (#960) and hide the automatic items on /admin/news.
+     */
+    public function manage_news(User $user): bool
+    {
+        return $user->isAdministrator() || $user->isDatabaseExpert();
+    }
+
+    /**
+     * Administrators and database experts set the observing challenges on
+     * /admin/challenges.
+     */
+    public function manage_challenges(User $user): bool
+    {
+        return $user->isAdministrator() || $user->isDatabaseExpert();
+    }
+
+    /**
+     * Only administrators may send a message to all observers.
+     */
+    public function broadcast(User $user): bool
+    {
+        return $user->isAdministrator();
+    }
 }

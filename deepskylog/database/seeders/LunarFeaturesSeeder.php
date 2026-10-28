@@ -39,6 +39,9 @@ class LunarFeaturesSeeder extends Seeder
             DB::table('lunar_features')->insertOrIgnore($chunk);
         }
 
+        // Positions, diameters and the features the static list misses, from the IAU gazetteer
+        \App\Services\Moon\LunarGazetteer::apply(\App\Services\Moon\LunarGazetteer::plan());
+
         $this->command->info('Lunar features seeding complete. Inserted approx: ' . count($features));
     }
 }

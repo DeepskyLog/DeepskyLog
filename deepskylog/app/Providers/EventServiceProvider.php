@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Listeners\EmbedMailLogo;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
@@ -18,6 +20,18 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        MessageSending::class => [
+            EmbedMailLogo::class,
+        ],
+    ];
+
+    /**
+     * Model observers to register.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $observers = [
+        \App\Models\Observation::class => \App\Observers\ObservationObserver::class,
     ];
 
     /**

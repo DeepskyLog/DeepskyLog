@@ -2,6 +2,7 @@
 
 namespace App\Actions\Socialstream;
 
+use App\Support\OAuthEmail;
 use JoelButcher\Socialstream\Contracts\ResolvesSocialiteUsers;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Socialite\Contracts\User;
@@ -20,12 +21,8 @@ class ResolveSocialiteUser implements ResolvesSocialiteUsers
             // Log diagnostic info at callback time
             Log::info('oauth: callback received', [
                 'provider' => $provider,
-                'url' => Request::fullUrl(),
+                'url' => Request::url(),
                 'method' => Request::method(),
-                'session_id' => session()->getId(),
-                'session_cookie' => request()->cookie(config('session.cookie')),
-                'cookies' => request()->cookies->all(),
-                'query' => request()->query(),
             ]);
 
             $user = Socialite::driver($provider)->user();
@@ -34,10 +31,6 @@ class ResolveSocialiteUser implements ResolvesSocialiteUsers
                 Log::info('oauth: provider user', [
                     'provider' => $provider,
                     'provider_id' => $user->getId(),
-                    'email' => $user->getEmail(),
-                    'name' => $user->getName(),
-                    'nickname' => method_exists($user, 'getNickname') ? $user->getNickname() : null,
-                    'avatar' => method_exists($user, 'getAvatar') ? $user->getAvatar() : null,
                     'has_token' => ! empty($user->token ?? null),
                 ]);
             } catch (\Throwable $e) {
@@ -45,7 +38,7 @@ class ResolveSocialiteUser implements ResolvesSocialiteUsers
             }
 
             if (Socialstream::generatesMissingEmails()) {
-                $user->email = $user->getEmail() ?? ("{$user->id}@{$provider}".config('app.domain'));
+                $user->email = $user->getEmail() ?? OAuthEmail::generate($provider, $user->id);
             }
 
             return $user;
@@ -53,10 +46,6 @@ class ResolveSocialiteUser implements ResolvesSocialiteUsers
             Log::warning('oauth: InvalidStateException on callback', [
                 'provider' => $provider,
                 'error' => $e->getMessage(),
-                'session_id' => session()->getId(),
-                'session_cookie' => request()->cookie(config('session.cookie')),
-                'cookies' => request()->cookies->all(),
-                'query' => request()->query(),
             ]);
 
             // Re-throw to let configured handler deal with it (or bubble up)

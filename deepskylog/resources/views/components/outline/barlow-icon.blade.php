@@ -9,7 +9,7 @@
   .barlow--twoinch { /* example: use a wider SVG or scale container */ }
 </style>
 <!-- Astronomical Lens (Barlow / Telecentric) Icon -->
-<svg
+<svg {{ $attributes }}
   xmlns="http://www.w3.org/2000/svg"
   width="24" height="24" viewBox="0 0 24 24"
   role="img" aria-labelledby="title desc"

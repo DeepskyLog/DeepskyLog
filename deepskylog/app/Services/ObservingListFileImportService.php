@@ -60,6 +60,10 @@ class ObservingListFileImportService
                 case 'csv':
                     $objectNames = $this->parseCsv($file);
                     break;
+                case 'xml':
+                case 'oal':
+                    $objectNames = $this->parseOal($file);
+                    break;
                 default:
                     $this->errors[] = __('Unsupported file format: :format', ['format' => $extension]);
                     return [
@@ -109,7 +113,7 @@ class ObservingListFileImportService
      */
     protected function parseArgoNavisOrTxt(UploadedFile $file): array
     {
-        $content = file_get_contents($file->getRealPath());
+        $content = $this->readText($file);
         $lines = array_filter(array_map('trim', explode("\n", $content)));
         $objectNames = [];
 
@@ -135,6 +139,17 @@ class ObservingListFileImportService
     }
 
     /**
+     * The contents of a text file, without the UTF-8 byte order mark that
+     * Excel and Notepad write: it would stick to the first object's name.
+     */
+    protected function readText(UploadedFile $file): string
+    {
+        $content = (string) file_get_contents($file->getRealPath());
+
+        return str_starts_with($content, "\xEF\xBB\xBF") ? substr($content, 3) : $content;
+    }
+
+    /**
      * Parse SkySafari .skylist format.
      * Format: key=value pairs with SkyObject blocks
      *
@@ -143,7 +158,7 @@ class ObservingListFileImportService
      */
     protected function parseSkySafari(UploadedFile $file): array
     {
-        $content = file_get_contents($file->getRealPath());
+        $content = $this->readText($file);
         $objectNames = [];
 
         // Remove version line and split by objects
@@ -189,7 +204,11 @@ class ObservingListFileImportService
                 throw new \RuntimeException('File does not exist or is not readable');
             }
 
-            $db = new \PDO('sqlite:' . $filePath);
+            // The file comes from the user: open it read-only, so nothing in
+            // it (a trigger, a view) can write to it or to an attached file.
+            $db = new \PDO('sqlite:' . $filePath, null, null, [
+                \PDO::SQLITE_ATTR_OPEN_FLAGS => \PDO::SQLITE_OPEN_READONLY,
+            ]);
             $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
             // Check if Objects table exists
@@ -239,7 +258,7 @@ class ObservingListFileImportService
     protected function parseCsv(UploadedFile $file): array
     {
         $objectNames = [];
-        $content = file_get_contents($file->getRealPath());
+        $content = $this->readText($file);
         $lines = array_filter(array_map('trim', explode("\n", $content)));
 
         foreach ($lines as $line) {
@@ -256,6 +275,68 @@ class ObservingListFileImportService
     }
 
     /**
+     * Parse an OAL file (#114): the names of its <target> elements, as the
+     * list export writes them and Eye&Telescope exports an observing plan. The
+     * other sections, and the observations of a logbook export, are ignored.
+     * A target whose name DeepskyLog doesn't know is taken by the first of its
+     * <alias> names it does know.
+     *
+     * @return array  Array of object names
+     */
+    protected function parseOal(UploadedFile $file): array
+    {
+        $previous = libxml_use_internal_errors(true);
+        $document = new \DOMDocument();
+        $loaded = $document->loadXML($this->readText($file), LIBXML_NONET);
+        $error = libxml_get_errors()[0] ?? null;
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+
+        if (!$loaded || $document->documentElement?->localName !== 'observations') {
+            $this->errors[] = $loaded
+                ? __('Not an OAL file: it has no <observations> element.')
+                : __('Not a valid OAL file: :error (line :line)', ['error' => trim((string) $error?->message), 'line' => $error?->line]);
+
+            return [];
+        }
+
+        // OAL files put their sections in no namespace, or in the default one.
+        $xpath = new \DOMXPath($document);
+        $targets = [];
+        foreach ($xpath->query("/*/*[local-name()='targets']/*[local-name()='target']") as $target) {
+            $names = [];
+            foreach ($xpath->query("*[local-name()='name' or local-name()='alias']", $target) as $node) {
+                $name = trim($node->textContent);
+                if ($name === '') {
+                    continue;
+                }
+                // The name first, whatever the order in the file.
+                if ($node->localName === 'name') {
+                    array_unshift($names, $name);
+                } else {
+                    $names[] = $name;
+                }
+            }
+            if ($names !== []) {
+                $targets[] = $names;
+            }
+        }
+
+        $resolver = app(ObservingListItemNameResolver::class);
+        $resolved = $resolver->resolveMany(array_merge([], ...$targets));
+
+        return array_map(function (array $names) use ($resolver, $resolved): string {
+            foreach ($names as $name) {
+                if (($resolved[$resolver->clean($name)] ?? null) !== null) {
+                    return $name;
+                }
+            }
+
+            return $names[0];
+        }, $targets);
+    }
+
+    /**
      * Import an array of object names into the observing list.
      *
      * @param  ObservingList  $list
@@ -264,10 +345,16 @@ class ObservingListFileImportService
      */
     protected function importObjectNames(ObservingList $list, array $objectNames, User $user): void
     {
-        foreach ($objectNames as $name) {
-            $name = trim((string) $name);
+        // Store every object under the name the list tables and exports match
+        // on; names DeepskyLog doesn't know would silently vanish from them.
+        $resolved = app(ObservingListItemNameResolver::class)->resolveMany($objectNames);
+        $unknown = [];
 
-            if (empty($name)) {
+        foreach ($resolved as $inputName => $name) {
+            if ($name === null) {
+                $unknown[] = $inputName;
+                $this->skippedCount++;
+
                 continue;
             }
 
@@ -299,6 +386,12 @@ class ObservingListFileImportService
                 // Continue with next object instead of failing
                 $this->skippedCount++;
             }
+        }
+
+        if ($unknown !== []) {
+            $shown = array_slice($unknown, 0, 20);
+            $this->errors[] = __('Unknown objects: :names', ['names' => implode(', ', $shown)])
+                . (count($unknown) > count($shown) ? ' ' . __('and :count more', ['count' => count($unknown) - count($shown)]) : '');
         }
     }
 

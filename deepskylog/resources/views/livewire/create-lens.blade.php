@@ -62,7 +62,7 @@
                             editor.save();
                             try {
                                 // Prefer direct @this.set to synchronously update the Livewire property
-                                @this.set('description', editor.getContent());
+                                @this.set('description', editor.getContent(), false);
                             } catch (err) {
                                 // Fallback to emit if @this isn't available
                                 if (typeof Livewire !== 'undefined' && typeof Livewire.dispatch === 'function') {
@@ -139,7 +139,6 @@
                 <x-card>
                     <form
                         role="form"
-                        action="{{ route("lens.store") }}"
                         method="POST"
                         wire:submit="save"
                     >
@@ -147,8 +146,7 @@
                         <div class="col-span-6 sm:col-span-5">
                             <x-select
                                 label="{{ __('Select the make of the lens, if the make is not in the list, add a new make in the next field.') }}"
-                                wire:model="lens_make"
-                                x-on:selected="updateMake($event.detail.value)"
+                                wire:model.live="lens_make"
                                 :async-data="route('lens_makes.api')"
                                 option-label="name"
                                 option-value="id"
@@ -159,7 +157,7 @@
                                 name="lens_new_make"
                                 label="{!! __('Only add a make for the lens here if the correct make is not available in the dropdown above.') !!}"
                                 type="text"
-                                wire:model.live="lens_new_make"
+                                wire:model.live.debounce.500ms="lens_new_make"
                                 class="mt-1 block w-full"
                                 value=""
                                 id="lens_new_make"
@@ -168,9 +166,9 @@
                             {{-- Enter the name of the lens--}}
                             <x-input
                                 name="name"
-                                label="{!! __('Name of the lens') !!}"
+                                :label="__('Name of the lens - proposal: ') . $proposed_name"
                                 type="text"
-                                wire:model.live="name"
+                                wire:model="name"
                                 class="mt-1 block w-full"
                                 value="{{ old('name') }}"/>
 
@@ -179,7 +177,7 @@
                                 label="{{ __('Factor of the lens') }}"
                                 type="number"
                                 class="mt-1 block w-full"
-                                wire:model.live="factor"
+                                wire:model.live.debounce.500ms="factor"
                                 step="0.01"
                                 min="0.1"
                                 required
@@ -192,7 +190,7 @@
                             </div>
                             <div class="col-span-6 sm:col-span-5" wire:ignore>
                                 <textarea
-                                    wire:model.live="description"
+                                    wire:model="description"
                                     class="h-48 min-h-fit mt-1 block w-full"
                                     name="description"
                                     id="description"

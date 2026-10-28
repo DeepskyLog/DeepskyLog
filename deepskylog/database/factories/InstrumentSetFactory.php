@@ -21,7 +21,6 @@ class InstrumentSetFactory extends Factory
             'slug' => Str::slug($name),
             'description' => $this->faker->sentence(),
             'active' => true,
-            'observer' => null,
             'picture' => null,
         ];
     }

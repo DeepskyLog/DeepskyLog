@@ -6,6 +6,7 @@ use Livewire\Component;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Location;
+use App\Support\EphemerisDate;
 use deepskylog\AstronomyLibrary\AstronomyLibrary;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Targets\Moon as AstroMoon;
@@ -120,7 +121,7 @@ class MoonDetails extends Component
                 $loc = $user->standardLocation;
             } else {
                 try {
-                    $loc = Location::where('active', 1)->first();
+                    $loc = Location::forEphemerides();
                 } catch (\Throwable $_) {
                     $loc = null;
                 }
@@ -130,13 +131,10 @@ class MoonDetails extends Component
                 return;
             }
 
-            try {
-                $d = Carbon::createFromFormat('Y-m-d', $date);
-            } catch (\Exception $_) {
-                $d = Carbon::now();
-            }
-            $d->hour = 12;
-            $timezone = $loc->timezone ?? config('app.timezone');
+            // Noon of the date at the location, as in the ephemeris aside, so
+            // both show the same rise, set and illumination
+            $timezone = EphemerisDate::timezone($loc);
+            $d = EphemerisDate::parse($date, $timezone)->setTime(12, 0);
 
             $coords = new GeographicalCoordinates($loc->longitude, $loc->latitude);
             $moonTarget = new AstroMoon();
@@ -168,19 +166,7 @@ class MoonDetails extends Component
                     $moonTarget->calculateEquatorialCoordinates($d->copy(), $coords, $loc->elevation ?? 0.0);
                     $moonTarget->calculateEphemerides($coords, $greenwichSiderialTime, $deltaT);
                 } catch (\Throwable $_) {
-                    try {
-                        $proxyResult = \App\Helpers\HorizonsProxy::calculateEquatorialCoordinates($moonTarget, $d->copy(), $coords, $loc->elevation ?? 0.0, ['obj' => null]);
-                        if (! empty($proxyResult) && ! empty($proxyResult['coords'])) {
-                            if (method_exists($moonTarget, 'setEquatorialCoordinates')) {
-                                try {
-                                    $moonTarget->setEquatorialCoordinates($proxyResult['coords']);
-                                    $moonTarget->calculateEphemerides($coords, $greenwichSiderialTime, $deltaT);
-                                } catch (\Throwable $_) {
-                                }
-                            }
-                        }
-                    } catch (\Throwable $_) {
-                    }
+                    // ignore: no rise and set times
                 }
 
                 $moonRise = null;

@@ -23,6 +23,14 @@
 
             <x-section-border/>
 
+            @if (\App\Services\PushNotifications::enabled())
+                <div class="mt-10 sm:mt-0">
+                    @include("profile.push-notifications")
+                </div>
+
+                <x-section-border/>
+            @endif
+
             @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()) && ! is_null($user->password))
                 <div class="mt-10 sm:mt-0">
                     @livewire("profile.update-password-form")
@@ -57,7 +65,8 @@
                 </div>
             @endif
 
-            @if (Laravel\Jetstream\Jetstream::hasAccountDeletionFeatures() && ! is_null($user->getAuthPassword()))
+            {{-- User 1 owns the system teams and is never deleted --}}
+            @if (Laravel\Jetstream\Jetstream::hasAccountDeletionFeatures() && ! is_null($user->getAuthPassword()) && $user->id !== 1)
                 <x-section-border/>
 
                 <div class="mt-10 sm:mt-0">

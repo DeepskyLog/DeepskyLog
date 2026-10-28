@@ -2,13 +2,24 @@
     <h4 class="font-semibold mb-2 text-white">{{ __('Quick links') }}</h4>
     @php $isCometLocal = strtolower(trim((string) ($session->source_type_raw ?? '')) ) === 'comet'; @endphp
     <ul class="space-y-2 text-sm">
+        @auth
+        <li>
+            @if (!empty($canonicalSlug))
+                <a href="{{ route('observation.create', ['slug' => $canonicalSlug]) }}"
+                    class="text-gray-300 hover:underline">{{ __('Create observation') }}</a>
+            @else
+                <a href="{{ route('observation.create') }}"
+                    class="text-gray-300 hover:underline">{{ __('Create observation') }}</a>
+            @endif
+        </li>
+        @endauth
         <li>
             @if (!empty($canonicalSlug))
                 @if ($isCometLocal)
                     <a href="{{ url('/cometobservations/' . $canonicalSlug) }}"
                         class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
                 @else
-                    <a href="{{ url('/observations/' . $canonicalSlug) }}"
+                    <a href="{{ route('observations.object', ['slug' => $canonicalSlug]) }}"
                         class="text-gray-300 hover:underline">{{ __('All observations') }}</a>
                 @endif
             @else
@@ -35,6 +46,12 @@
                     class="text-gray-300 hover:underline">{{ __('All drawings') }}</a>
             @endif
         </li>
+        @if (($session->source_type_raw ?? '') === 'lunar_feature' || (($session->source_type_raw ?? '') === 'moon' && strcasecmp((string) ($session->name ?? ''), 'Moon') === 0))
+            {{-- The Moon (not the moons of the planets) and its features: the terminator tonight --}}
+            <li>
+                <a href="{{ route('moon.show') }}" class="text-gray-300 hover:underline">{{ __('The Moon and its terminator') }}</a>
+            </li>
+        @endif
         @auth
             @if (!empty($canonicalSlug) && auth()->user()->slug)
                 @if ($isCometLocal)
@@ -50,7 +67,7 @@
                 @endif
             @else
                 @if ($isCometLocal)
-                    <li><a href="{{ route('observations.comet.show', ['observer' => auth()->user()->slug]) }}"
+                    <li><a href="{{ route('observations.comet.object', ['object' => auth()->user()->slug]) }}"
                             class="text-gray-300 hover:underline">{{ __('My observations') }}</a></li>
                     <li><a href="{{ route('cometdrawings.show', ['observer' => auth()->user()->slug]) }}"
                             class="text-gray-300 hover:underline">{{ __('My drawings') }}</a></li>

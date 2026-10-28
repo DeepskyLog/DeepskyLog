@@ -2,11 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Support\SchemaColumns;
+use App\Livewire\Concerns\LimitsExportRows;
 use App\Models\SearchIndex;
 use App\Models\Atlas;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
@@ -14,19 +15,21 @@ use Illuminate\Support\Facades\Log;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use Livewire\Attributes\Lazy;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
-use App\Jobs\ComputeContrastReserveForObject;
+use App\Services\ObjectMetricsQueue;
+use App\Services\ObjectObservationStatistics;
+use App\Services\ObservationSearchQuery;
 
 #[Lazy]
 class SearchResultsTable extends PowerGridComponent
 {
-    use WithExport;
+    use LimitsExportRows;
 
     public string $tableName = 'search-results-table';
     public string $primaryKey = 'search_index_id';
@@ -35,14 +38,20 @@ class SearchResultsTable extends PowerGridComponent
     public string $sortField = 'display_name';
 
     public string $q = '';
+    public array $objectRefs = [];
+    // An observation search (['q' => ..., 'filters' => [...]]): list the
+    // objects of its observations. Matched with a subquery, because the
+    // number of objects can be far too large to pass around as $objectRefs.
+    #[Locked]
+    public ?array $observationSearch = null;
     public ?int $previewInstrumentId = null;
     public ?int $previewLensId = null;
     public ?int $previewEyepieceId = null;
 
-    // Track whether we've performed the preview-time upserts during this render
-    public bool $bestMagUpsertedThisLoad = false;
-    public bool $crUpsertedThisLoad = false;
     public bool $hasPendingCalculations = false;
+    // The queued metric jobs of this result set (ObjectMetricsQueue).
+    #[Locked]
+    public ?string $metricsToken = null;
 
     private ?\App\Models\Instrument $previewInstrumentModel = null;
     private ?\App\Models\Lens $previewLensModel = null;
@@ -51,19 +60,14 @@ class SearchResultsTable extends PowerGridComponent
     // Ephemeris helpers
     public ?string $ephemerisDate = null;
     private array $cachedEphemerides = [];
-    private ?array $cachedEyepieces = null;
     public int $refreshTick = 0;
 
-    public function boot(): void
-    {
-        config(['livewire-powergrid.filter' => 'outside']);
-    }
 
     // NOTE: recommendBestMagForRow removed — on-load computation/upsert disabled per request.
 
     public function setUp(): array
     {
-        $this->persist(['columns', 'filters']);
+        $this->persist(['columns', 'filters', 'sorting']);
 
         return [
             PowerGrid::header()->showSearchInput()->showToggleColumns(),
@@ -75,11 +79,131 @@ class SearchResultsTable extends PowerGridComponent
         ];
     }
 
-    public function datasource(): ?Builder
+    /**
+     * Restrict the search_index query to the rows this table lists: the
+     * objects of an observation search, an explicit list of object
+     * references, or the names matching the search term.
+     */
+    private function constrainToResults($query, $objectRefs, string $like): void
+    {
+        $name = 'LOWER(COALESCE(name, display_name))';
+
+        if ($this->observationSearch !== null) {
+            $targets = app(ObservationSearchQuery::class)->targets(
+                trim((string) ($this->observationSearch['q'] ?? '')),
+                (array) ($this->observationSearch['filters'] ?? [])
+            );
+            $query->whereIn(DB::raw("(source_table, {$name})"), $targets);
+
+            return;
+        }
+
+        if ($objectRefs->isNotEmpty()) {
+            $query->where(function ($query) use ($objectRefs, $name) {
+                foreach ($objectRefs as $ref) {
+                    $query->orWhere(function ($inner) use ($ref, $name) {
+                        $inner
+                            ->where('source_table', $ref['source_table'])
+                            ->whereRaw("{$name} = ?", [$ref['name']]);
+                    });
+                }
+            });
+
+            return;
+        }
+
+        $query->where('name', 'like', $like);
+    }
+
+    /**
+     * The object references to list, normalized (lower-case names).
+     */
+    private function normalizedObjectRefs(): \Illuminate\Support\Collection
+    {
+        return collect($this->objectRefs)
+            ->map(function ($ref): ?array {
+                if (!is_array($ref)) {
+                    return null;
+                }
+
+                $sourceTable = strtolower(trim((string) ($ref['source_table'] ?? '')));
+                $name = Str::lower(trim((string) ($ref['name'] ?? '')));
+
+                if ($sourceTable === '' || $name === '') {
+                    return null;
+                }
+
+                return [
+                    'source_table' => $sourceTable,
+                    'name' => $name,
+                ];
+            })
+            ->filter()
+            ->unique(fn(array $ref): string => $ref['source_table'] . ':' . $ref['name'])
+            ->values();
+    }
+
+    /**
+     * Whether the table lists anything: a search term, object references or
+     * an observation search.
+     */
+    private function hasResults(): bool
+    {
+        return trim($this->q) !== '' || $this->normalizedObjectRefs()->isNotEmpty() || $this->observationSearch !== null;
+    }
+
+    /**
+     * The LIKE pattern of the search term; '*' and '%' are wildcards.
+     */
+    private function likePattern(): string
     {
         $q = trim($this->q);
-        if ($q === '') {
-            return SearchIndex::query()->whereRaw('0 = 1');
+        // Sigma 1, Struve 1: the Struve double star STF 1
+        $q = \App\Services\StruveSigmaNames::designation($q) ?? $q;
+        // Accept both '*' and '%' as user wildcards and normalize to '*'
+        if (strpos($q, '*') !== false || strpos($q, '%') !== false) {
+            $trimQ = str_replace('%', '*', $q);
+            if (preg_match('/^\*/', $trimQ)) {
+                return '%' . ltrim(str_replace('*', '%', $trimQ), '%');
+            }
+            if (preg_match('/\*\s*$/', $trimQ)) {
+                return preg_replace('/\*+\s*$/', '', $trimQ) . '%';
+            }
+
+            return '%' . str_replace('*', '%', $trimQ) . '%';
+        }
+
+        return '%' . $q . '%';
+    }
+
+    /**
+     * The names (objects.name) of the deep-sky objects of the result set, the
+     * rows that get a contrast reserve, in one light query.
+     *
+     * @return list<string>
+     */
+    private function resultObjectNames(): array
+    {
+        if (!$this->hasResults()) {
+            return [];
+        }
+
+        $slugs = DB::table('search_index')->where('source_table', 'objects')->select('source_pk');
+        $this->constrainToResults($slugs, $this->normalizedObjectRefs(), $this->likePattern());
+
+        return DB::table('objects')->whereIn('slug', $slugs)->distinct()->pluck('name')->all();
+    }
+
+    public function datasource(): ?Builder
+    {
+        $objectRefs = $this->normalizedObjectRefs();
+
+        if (!$this->hasResults()) {
+            // Nothing to show, but the objects join is kept so that the searchable
+            // objects.* columns still resolve when a search term is typed.
+            return SearchIndex::query()
+                ->leftJoin('objects', 'search_index.source_pk', '=', 'objects.slug')
+                ->whereRaw('0 = 1');
         }
 
         // Populate per-render cached preview models to avoid N+1 DB lookups
@@ -107,22 +231,7 @@ class SearchResultsTable extends PowerGridComponent
             $this->previewEyepieceModel = null;
         }
 
-        // Build LIKE pattern from wildcard query (same semantics as SearchResults)
-        $like = null;
-        // Accept both '*' and '%' as user wildcards and normalize to '*'
-        if (strpos($q, '*') !== false || strpos($q, '%') !== false) {
-            $trimQ = str_replace('%', '*', trim($q));
-            if (preg_match('/^\*/', $trimQ)) {
-                $like = '%' . ltrim(str_replace('*', '%', $trimQ), '%');
-            } elseif (preg_match('/\*\s*$/', $trimQ)) {
-                $base = preg_replace('/\*+\s*$/', '', $trimQ);
-                $like = $base . '%';
-            } else {
-                $like = '%' . str_replace('*', '%', $trimQ) . '%';
-            }
-        } else {
-            $like = '%' . $q . '%';
-        }
+        $like = $this->likePattern();
 
         // Aggregate search_index rows by a normalized display-name so
         // alternate rows with the same visible name (e.g. multiple
@@ -140,9 +249,11 @@ class SearchResultsTable extends PowerGridComponent
                 . 'MAX(ra) as ra, MAX(decl) as decl, '
                 . "COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN source_type END), MIN(source_type)) as source_type, "
                 . "COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN metadata END), MIN(metadata)) as metadata"
-            )
-            ->whereRaw('LOWER(name) LIKE ?', [Str::lower($like)])
-            ->groupBy(DB::raw("LOWER(COALESCE(name, display_name))"));
+            );
+
+        $this->constrainToResults($sub, $objectRefs, $like);
+
+        $sub->groupBy(DB::raw("LOWER(COALESCE(name, display_name))"));
 
         $query = SearchIndex::query()->fromSub($sub, 'search_index')
             ->leftJoin('objects', function ($join) {
@@ -158,7 +269,7 @@ class SearchResultsTable extends PowerGridComponent
             $authUser = Auth::user();
             if ($authUser && !empty($authUser->standardAtlasCode) && preg_match('/^[A-Za-z0-9_]+$/', (string) $authUser->standardAtlasCode)) {
                 $acol = (string) $authUser->standardAtlasCode;
-                if (Schema::hasColumn('objects', $acol)) {
+                if (SchemaColumns::has('objects', $acol)) {
                     $select .= ', objects.`' . $acol . '` as atlas_page';
                 }
             }
@@ -166,87 +277,22 @@ class SearchResultsTable extends PowerGridComponent
             // ignore failures checking user/profile
         }
 
-        // Attach legacy observations derived aggregation (total_observations, your_last_seen_date)
+        // Observation statistics (total_observations, your_last_seen_date, ...)
         try {
-            $oldDbName = config('database.connections.mysqlOld.database') ?? env('DB_DATABASE_OLD');
-            $authUser = Auth::user();
-            $legacyUser = $authUser?->username ?? '';
-            if (!empty($oldDbName)) {
-                // Build a list of object names that match the current search so
-                // we can drive a compact aggregation over the legacy observations DB.
-                try {
-                    $nameQuery = SearchIndex::query()
-                        ->leftJoin('objects', function ($join) {
-                            $join->on('search_index.source_pk', '=', 'objects.slug')
-                                ->where('search_index.source_table', '=', 'objects');
-                        })
-                        ->whereRaw('LOWER(search_index.name) LIKE ?', [Str::lower($like)])
-                        ->whereNotNull('objects.name');
-
-                    $objectNames = $nameQuery->pluck('objects.name')->toArray();
-                } catch (\Throwable $_) {
-                    $objectNames = [];
-                }
-
-                if (empty($objectNames)) {
-                    $obsAggSql = "SELECT o.objectname AS object_name, 0 AS total_observations, 0 AS total_drawings, 0 AS your_observations, 0 AS your_drawings, NULL AS last_seen_date, NULL AS your_last_seen_date, NULL AS last_drawing_date, NULL AS your_last_drawing_date FROM `" . $oldDbName . "`.`observations` o WHERE 0 = 1 GROUP BY o.objectname";
-                } else {
-                    try {
-                        $quotedNames = implode(', ', array_map(function ($n) {
-                            try {
-                                return DB::getPdo()->quote($n);
-                            } catch (\Throwable $_) {
-                                return "''";
-                            }
-                        }, $objectNames));
-                    } catch (\Throwable $_) {
-                        $quotedNames = "''";
-                    }
-
-                    try {
-                        $quotedUser = DB::getPdo()->quote($legacyUser);
-                    } catch (\Throwable $_) {
-                        $quotedUser = "''";
-                    }
-
-                    $obsAggSql = "SELECT o.objectname AS object_name,
-                    COUNT(*) AS total_observations,
-                    SUM(o.hasDrawing = 1) AS total_drawings,
-                    SUM(o.observerid = {$quotedUser}) AS your_observations,
-                    SUM(o.observerid = {$quotedUser} AND o.hasDrawing = 1) AS your_drawings,
-                    MAX(o.date) AS last_seen_date,
-                    MAX(CASE WHEN o.observerid = {$quotedUser} THEN o.date END) AS your_last_seen_date,
-                    MAX(CASE WHEN o.hasDrawing = 1 THEN o.date END) AS last_drawing_date,
-                    MAX(CASE WHEN o.observerid = {$quotedUser} AND o.hasDrawing = 1 THEN o.date END) AS your_last_drawing_date
-                FROM `" . $oldDbName . "`.`observations` o
-                WHERE o.objectname IN ({$quotedNames})
-                GROUP BY o.objectname";
-                }
-
-                // Expose obs.* aliases to the outer query so PowerGrid can sort on them.
-                $select .= ", obs.total_observations as total_observations, obs.total_drawings as total_drawings, obs.your_observations as your_observations, obs.your_drawings as your_drawings, obs.last_seen_date as last_seen_date, obs.your_last_seen_date as your_last_seen_date, obs.last_drawing_date as last_drawing_date, obs.your_last_drawing_date as your_last_drawing_date, obs.total_observations as seen, obs.your_last_seen_date as last_seen";
-
-                // Attach the derived aggregation as a LEFT JOIN
-                try {
-                    $query->leftJoin(DB::raw('(' . $obsAggSql . ') as obs'), function ($join) {
-                        $join->on('obs.object_name', '=', 'objects.name');
-                    });
-                } catch (\Throwable $_) {
-                    // swallow left join failures
-                }
-            }
+            ObjectObservationStatistics::join($query, Auth::user()?->username);
+            $select .= ', ' . ObjectObservationStatistics::selectList();
         } catch (\Throwable $_) {
-            // ignore legacy aggregation failures
+            // ignore statistics failures
         }
 
         // Attach per-user cached metrics (contrast reserve / best mag) when possible
-        // Strict policy: only use the user's stdtelescope and stdlens fields. If absent, do not join metrics.
+        // Strict policy: only use the user's stdtelescope and its lens. If absent, do not join metrics.
         try {
             $authUser = Auth::user();
             if ($authUser && $authUser->standardLocation) {
                 $locId = $authUser->standardLocation->id ?? null;
                 $instrId = $authUser->stdtelescope ?? null; // use stdtelescope only
-                $stdLens = $authUser->stdlens ?? null; // use stdlens only
+                $stdLens = $authUser->standardLensId(); // the lens of the standard telescope
 
                 if ($instrId && $locId) {
                     if (!empty($stdLens)) {
@@ -298,119 +344,12 @@ class SearchResultsTable extends PowerGridComponent
         // change the primary ORDER BY as expected.
         $finalBuilder = $query->selectRaw($select);
 
-        // Compute & upsert best-mag for preview rows on first load only.
-        try {
-            $authUser = Auth::user();
-            if (!$this->bestMagUpsertedThisLoad && $authUser && $authUser->stdtelescope && $authUser->standardLocation) {
-                $this->bestMagUpsertedThisLoad = true;
-                $instr = \App\Models\Instrument::find($authUser->stdtelescope);
-                $lens = $authUser->stdlens ? \App\Models\Lens::find($authUser->stdlens) : null;
-                $eyepieces = $this->getCachedEyepieces($authUser);
-
-                $previewRows = (clone $finalBuilder)->limit(100)->get();
-                if (!empty($previewRows)) {
-                    // Only consider canonical deepsky `objects` rows for best-mag upserts
-                    $names = array_values(array_unique(array_filter(array_map(function ($r) {
-                        return (($r->source_table ?? null) === 'objects') ? ($r->obj_name ?? $r->name ?? $r->display_name ?? null) : null;
-                    }, $previewRows->all()))));
-                    if (!empty($names)) {
-                        $existing = DB::table('user_object_metrics')
-                            ->where('user_id', $authUser->id)
-                            ->where('instrument_id', $instr->id)
-                            ->where('location_id', $authUser->standardLocation->id ?? null)
-                            ->where('lens_id', ($lens?->id ?? null))
-                            ->whereIn('object_name', $names)
-                            ->get()
-                            ->keyBy('object_name');
-
-                        foreach ($previewRows as $r) {
-                            try {
-                                // skip non-deepsky rows
-                                if ((($r->source_table ?? null) !== 'objects'))
-                                    continue;
-                                $objName = $r->obj_name ?? $r->name ?? $r->display_name ?? null;
-                                if (empty($objName))
-                                    continue;
-                                $exists = $existing[$objName] ?? null;
-                                if ($exists && is_numeric($exists->optimum_detection_magnification)) {
-                                    continue;
-                                }
-                                // compute best mag only when missing
-                                $recommended = $this->computeBestMagFromEyepieces($instr, $lens, $eyepieces, $r);
-                                if ($recommended === null)
-                                    continue;
-                                DB::table('user_object_metrics')->updateOrInsert(
-                                    ['user_id' => $authUser->id, 'object_name' => $objName, 'instrument_id' => $instr->id, 'location_id' => $authUser->standardLocation->id ?? null, 'lens_id' => ($lens?->id ?? null)],
-                                    ['optimum_detection_magnification' => $recommended, 'updated_at' => \Carbon\Carbon::now(), 'created_at' => \Carbon\Carbon::now()]
-                                );
-                            } catch (\Throwable $_) {
-                                // ignore per-row failures
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (\Throwable $_) {
-            // ignore compute/upsert failures
-        }
-
-        // Compute & upsert contrast_reserve for preview rows (bounded, inline)
-        // This provides fast feedback on the first page without waiting for the
-        // full queued background computation. Keep the batch small to avoid
-        // blocking the request for too long.
-        try {
-            $authUser = Auth::user();
-            if (!$this->crUpsertedThisLoad && $authUser && $authUser->stdtelescope && $authUser->standardLocation) {
-                $this->crUpsertedThisLoad = true;
-                $instr = \App\Models\Instrument::find($authUser->stdtelescope);
-                $lens = $authUser->stdlens ? \App\Models\Lens::find($authUser->stdlens) : null;
-
-                $previewRows = (clone $finalBuilder)->limit(25)->get();
-                if (!empty($previewRows)) {
-                    foreach ($previewRows as $r) {
-                        try {
-                            // Only compute CR for canonical deepsky `objects` rows
-                            if ((($r->source_table ?? null) !== 'objects'))
-                                continue;
-                            $objName = $r->obj_name ?? $r->name ?? $r->display_name ?? null;
-                            if (empty($objName))
-                                continue;
-                            $hasContrast = isset($r->computed_contrast_reserve) && is_numeric($r->computed_contrast_reserve);
-                            if ($hasContrast)
-                                continue;
-
-                            $userId = $authUser->id;
-                            $instrId = $instr?->id ?? null;
-                            $locId = $authUser->standardLocation->id ?? null;
-                            $lensId = $lens?->id ?? null;
-
-                            // Attempt inline compute using the existing job handler.
-                            // If it fails, fall back to enqueueing a queued job.
-                            $job = new ComputeContrastReserveForObject($userId, $instrId, $locId, $objName, $lensId);
-                            try {
-                                $job->handle();
-                            } catch (\Throwable $_) {
-                                try {
-                                    ComputeContrastReserveForObject::dispatch($userId, $instrId, $locId, $objName, $lensId);
-                                } catch (\Throwable $__) {
-                                    // swallow per-row queue failure
-                                }
-                            }
-                        } catch (\Throwable $_) {
-                            // ignore per-row failures
-                        }
-                    }
-                }
-            }
-        } catch (\Throwable $_) {
-            // ignore preview CR upsert failures
-        }
-
         return $finalBuilder;
     }
 
     /**
-     * Mount hook: trigger bulk precompute and initial pending check.
+     * Queue the contrast reserves missing for the result set, as one job
+     * (per thousand objects) instead of computing them in the request.
      */
     public function mount(): void
     {
@@ -419,16 +358,23 @@ class SearchResultsTable extends PowerGridComponent
         }
 
         try {
-            $this->triggerBulkPrecompute();
-        } catch (\Throwable $_) {
-            // ignore
+            $authUser = Auth::user();
+            $instrId = $this->previewInstrumentId ?? ($authUser?->stdtelescope ?: null);
+            $locId = $authUser?->standardLocation?->id;
+            if ($authUser && $instrId && $locId) {
+                $this->metricsToken = ObjectMetricsQueue::queueMissing(
+                    $authUser->id,
+                    (int) $instrId,
+                    (int) $locId,
+                    $this->previewLensId,
+                    $this->resultObjectNames()
+                );
+            }
+        } catch (\Throwable $e) {
+            report($e);
         }
 
-        try {
-            $this->updateHasPendingCalculations();
-        } catch (\Throwable $_) {
-            // ignore
-        }
+        $this->updateHasPendingCalculations();
     }
 
     /**
@@ -436,188 +382,34 @@ class SearchResultsTable extends PowerGridComponent
      */
     public function rendering(): void
     {
-        try {
-            $this->updateHasPendingCalculations();
-        } catch (\Throwable $_) {
-            // ignore
-        }
+        $this->updateHasPendingCalculations();
     }
 
     /**
-     * Start background bulk precompute for the current search result set.
-     * Inline processes a small batch and enqueues remaining objects.
-     */
-    protected function triggerBulkPrecompute(): void
-    {
-        try {
-            $authUser = Auth::user();
-            if (!$authUser)
-                return;
-
-            $instrId = $this->previewInstrumentId ?? ($authUser->stdtelescope ?? null);
-            $locId = $authUser->standardLocation?->id ?? null;
-            $lensId = $this->previewLensId ?? null;
-
-            if (!$instrId || !$locId)
-                return;
-
-            $bulkKey = 'uom_bulk_pending:' . $authUser->id . ':' . $instrId . ':' . $locId . ':' . ($lensId === null ? 'nolens' : (string) $lensId);
-            if (!Cache::add($bulkKey, true, 600)) {
-                return; // already scheduled recently
-            }
-
-            // Phase 1: inline first small batch for quick feedback
-            $inlineLimit = 25;
-            try {
-                $previewRows = (clone $this->datasource())->limit($inlineLimit)->get();
-                // Only consider canonical deepsky `objects` rows for precompute
-                $names = array_values(array_unique(array_filter(array_map(function ($r) {
-                    return (($r->source_table ?? null) === 'objects') ? ($r->obj_name ?? $r->name ?? $r->display_name ?? null) : null;
-                }, $previewRows->all()))));
-            } catch (\Throwable $_) {
-                $names = [];
-            }
-
-            foreach ($names as $oname) {
-                try {
-                    if (empty($oname))
-                        continue;
-                    $q = DB::table('user_object_metrics')
-                        ->where('user_id', $authUser->id)
-                        ->where('instrument_id', $instrId)
-                        ->where('location_id', $locId)
-                        ->where('object_name', $oname);
-                    if ($lensId === null) {
-                        $q = $q->whereNull('lens_id');
-                    } else {
-                        $q = $q->where('lens_id', $lensId);
-                    }
-                    if (!$q->exists()) {
-                        $job = new ComputeContrastReserveForObject($authUser->id, $instrId, $locId, $oname, $lensId);
-                        try {
-                            $job->handle();
-                        } catch (\Throwable $_) {
-                            try {
-                                ComputeContrastReserveForObject::dispatch($authUser->id, $instrId, $locId, $oname, $lensId);
-                            } catch (\Throwable $_) { /* swallow */
-                            }
-                        }
-                    }
-                } catch (\Throwable $_) { /* ignore per-row */
-                }
-            }
-
-            // Phase 2: enqueue remaining objects from the full search set
-            try {
-                $allRows = (clone $this->datasource())->get()->map(function ($r) {
-                    return (($r->source_table ?? null) === 'objects') ? ($r->obj_name ?? $r->name ?? $r->display_name ?? null) : null;
-                })->filter()->unique()->values()->toArray();
-            } catch (\Throwable $_) {
-                $allRows = [];
-            }
-
-            foreach ($allRows as $oname) {
-                try {
-                    if (empty($oname))
-                        continue;
-                    $q = DB::table('user_object_metrics')
-                        ->where('user_id', $authUser->id)
-                        ->where('instrument_id', $instrId)
-                        ->where('location_id', $locId)
-                        ->where('object_name', $oname);
-                    if ($lensId === null) {
-                        $q = $q->whereNull('lens_id');
-                    } else {
-                        $q = $q->where('lens_id', $lensId);
-                    }
-                    if (!$q->exists()) {
-                        try {
-                            ComputeContrastReserveForObject::dispatch($authUser->id, $instrId, $locId, $oname, $lensId);
-                        } catch (\Throwable $_) { /* swallow */
-                        }
-                    }
-                } catch (\Throwable $_) { /* ignore per-row */
-                }
-            }
-        } catch (\Throwable $_) {
-            // swallow errors
-        }
-    }
-
-    /**
-     * Update `hasPendingCalculations` and dispatch a browser event so JS can poll.
+     * Update `hasPendingCalculations` (from the cache, without querying) and
+     * dispatch a browser event so JS can poll.
      */
     protected function updateHasPendingCalculations(): void
     {
-        try {
-            $authUser = Auth::user();
-            if (!$authUser) {
-                $this->hasPendingCalculations = false;
-                return;
-            }
-
-            $instrId = $this->previewInstrumentId ?? ($authUser->stdtelescope ?? null);
-            $locId = $authUser->standardLocation?->id ?? null;
-            $lensId = $this->previewLensId ?? null;
-
-            if (!$instrId || !$locId) {
-                $this->hasPendingCalculations = false;
-                return;
-            }
-
-            // Inspect a bounded set of names from the current search to decide
-            // whether any objects lack metrics. Limit to avoid large queries.
-            try {
-                $rows = (clone $this->datasource())->limit(500)->get();
-                // Only consider canonical deepsky `objects` rows when checking pending metrics
-                $names = array_values(array_unique(array_filter(array_map(function ($r) {
-                    return (($r->source_table ?? null) === 'objects') ? ($r->obj_name ?? $r->name ?? $r->display_name ?? null) : null;
-                }, $rows->all()))));
-            } catch (\Throwable $_) {
-                $names = [];
-            }
-
-            if (empty($names)) {
-                $this->hasPendingCalculations = false;
-                $this->dispatch('hasPendingCalculationsUpdated', hasPending: $this->hasPendingCalculations);
-                return;
-            }
-
-            if ($lensId === null) {
-                $existing = DB::table('user_object_metrics')
-                    ->where('user_id', $authUser->id)
-                    ->where('instrument_id', $instrId)
-                    ->where('location_id', $locId)
-                    ->whereNull('lens_id')
-                    ->whereIn('object_name', $names)
-                    ->distinct()
-                    ->count('object_name');
-            } else {
-                $existing = DB::table('user_object_metrics')
-                    ->where('user_id', $authUser->id)
-                    ->where('instrument_id', $instrId)
-                    ->where('location_id', $locId)
-                    ->whereIn('object_name', $names)
-                    ->distinct()
-                    ->count('object_name');
-            }
-
-            $pendingCount = max(0, count($names) - intval($existing));
-            $this->hasPendingCalculations = $pendingCount > 0;
-
-            // Debug logging removed to avoid noisy entries in laravel.log
-
-            try {
-                $this->dispatch('hasPendingCalculationsUpdated', hasPending: $this->hasPendingCalculations);
-            } catch (\Throwable $_) {
-                try {
-                    $this->dispatchBrowserEvent('hasPendingCalculationsUpdated', ['hasPending' => $this->hasPendingCalculations]);
-                } catch (\Throwable $__) {
-                }
-            }
-        } catch (\Throwable $_) {
-            $this->hasPendingCalculations = false;
+        $this->hasPendingCalculations = ObjectMetricsQueue::pending($this->metricsToken);
+        if (!$this->hasPendingCalculations) {
+            $this->metricsToken = null;
         }
+
+        try {
+            $this->dispatch('hasPendingCalculationsUpdated', hasPending: $this->hasPendingCalculations);
+        } catch (\Throwable $_) {
+        }
+    }
+
+    /**
+     * The observer's standard instrument, which the metrics are joined for.
+     */
+    private function standardInstrument(): ?\App\Models\Instrument
+    {
+        $authUser = Auth::user();
+
+        return $authUser?->stdtelescope ? $authUser->standardInstrument : null;
     }
 
     public function fields(): PowerGridFields
@@ -766,15 +558,7 @@ class SearchResultsTable extends PowerGridComponent
                     }
                     $userLocation = $authUser?->standardLocation ?? null;
                     // Strictly use stdtelescope only
-                    $userInstrument = null;
-                    try {
-                        $instrId = $authUser?->stdtelescope ?? null;
-                        if ($instrId) {
-                            $userInstrument = \App\Models\Instrument::find($instrId);
-                        }
-                    } catch (\Throwable $_) {
-                        $userInstrument = null;
-                    }
+                    $userInstrument = $this->standardInstrument();
                     if (!$userLocation || !$userInstrument) {
                         return '<span title="' . e("Contrast reserve requires a standard observing location and instrument in your profile") . '">-</span>';
                     }
@@ -783,6 +567,10 @@ class SearchResultsTable extends PowerGridComponent
                     $cachedCat = $row->computed_contrast_reserve_category ?? null;
                     $metricExists = $row->metric_exists ?? null;
 
+                    if ($metricExists !== null && $cached === null && ($row->computed_contrast_reserve_category ?? null) === 'not_visible') {
+                        // the object never rises at the location (ContrastReserveCalculator)
+                        return '<span class="text-gray-600" title="' . e(__('The object never rises above the horizon at this location.')) . '">' . e(__('contrast.reserve.category.not_visible')) . '</span>';
+                    }
                     if ($metricExists !== null && $cached === null) {
                         return '<span title="' . e('Contrast reserve unavailable for this object') . '">-</span>';
                     }
@@ -865,15 +653,7 @@ class SearchResultsTable extends PowerGridComponent
 
                     $userLocation = $authUser?->standardLocation ?? null;
                     // Strictly use stdtelescope only
-                    $userInstrument = null;
-                    try {
-                        $instrId = $authUser?->stdtelescope ?? null;
-                        if ($instrId) {
-                            $userInstrument = \App\Models\Instrument::find($instrId);
-                        }
-                    } catch (\Throwable $_) {
-                        $userInstrument = null;
-                    }
+                    $userInstrument = $this->standardInstrument();
 
                     if (!$userLocation || !$userInstrument) {
                         return '<span title="' . e('Best mag requires a standard observing location and instrument in your profile') . '">-</span>';
@@ -890,38 +670,13 @@ class SearchResultsTable extends PowerGridComponent
                         return e((int) $cachedBest) . 'x';
                     }
 
-                    // Lightweight fallback computation (estimate from SB/diameters)
-                    $origMag = $row->mag ?? null;
-                    $origSubr = $row->subr ?? null;
-
-                    $m = (is_numeric($origMag) && floatval($origMag) != 99.9) ? floatval($origMag) : null;
-                    if ($m === null) {
-                        $d1f = is_numeric($row->diam1) ? floatval($row->diam1) : null;
-                        $d2f = is_numeric($row->diam2) ? floatval($row->diam2) : null;
-                        $subr = is_numeric($origSubr) ? floatval($origSubr) : null;
-                        if (($d1f !== null && $d1f > 0) && (empty($d2f) || $d2f <= 0)) {
-                            $d2f = $d1f;
-                        } elseif (($d2f !== null && $d2f > 0) && (empty($d1f) || $d1f <= 0)) {
-                            $d1f = $d2f;
-                        }
-
-                        if ($subr !== null && $d1f !== null && $d2f !== null && $d1f > 0 && $d2f > 0) {
-                            $area = pi() * ($d1f / 2.0) * ($d2f / 2.0);
-                            if ($area > 0) {
-                                $estimated = $subr - 2.5 * log10($area);
-                                $m = $estimated;
-                            }
-                        }
-                    }
-
+                    // Fall back to the instrument's fixed magnification or the one given by its
+                    // typical eyepiece. The object's visual magnitude is not a magnification.
                     $mag = $userInstrument->fixedMagnification ?? null;
                     if (!$mag && isset($row->typicalEyepieceFocal) && !empty($userInstrument->focal_length_mm)) {
                         $mag = (int) round(($userInstrument->focal_length_mm / $row->typicalEyepieceFocal));
                     }
 
-                    if ($m !== null) {
-                        return e((int) round($m)) . 'x';
-                    }
                     if ($mag) {
                         return e((int) $mag) . 'x';
                     }
@@ -1034,7 +789,7 @@ class SearchResultsTable extends PowerGridComponent
                 $requested = (string) $authUser->standardAtlasCode;
                 $m = Atlas::where('code', $requested)->first();
                 if (!$m) {
-                    $m = Atlas::whereRaw('LOWER(`code`) = ?', [strtolower($requested)])->first();
+                    $m = Atlas::where('code', $requested)->first();
                 }
                 if ($m?->name) {
                     $atlasTitle = $m->name;
@@ -1114,12 +869,12 @@ class SearchResultsTable extends PowerGridComponent
                 ->bodyAttribute('style', 'white-space:normal; overflow:visible;')
                 ->headerAttribute('class', 'whitespace-normal')
                 ->headerAttribute('style', 'white-space:normal;'),
-            Column::make(__('Mag'), 'mag')
+            Column::make(__('Mag'), 'mag', 'objects.mag')
                 ->sortUsing(function ($query, $direction) {
                     $query->orderBy('objects.mag', $direction);
                 })
                 ->searchable(),
-            Column::make(__('SB'), 'subr')
+            Column::make(__('SB'), 'subr', 'objects.subr')
                 ->sortUsing(function ($query, $direction) {
                     $query->orderBy('objects.subr', $direction);
                 })
@@ -1201,100 +956,6 @@ class SearchResultsTable extends PowerGridComponent
     }
 
     /**
-     * Return a cached list of active eyepieces for the given user.
-     * We cache the result in-memory for the duration of the component render to
-     * avoid repeated DB queries when rendering many table rows.
-     *
-     * @param \App\Models\User|\Illuminate\Contracts\Auth\Authenticatable|null $user
-     * @return array
-     */
-    private function getCachedEyepieces($user): array
-    {
-        if ($this->cachedEyepieces !== null) {
-            return $this->cachedEyepieces;
-        }
-
-        $this->cachedEyepieces = [];
-        try {
-            if (!$user || !isset($user->id)) {
-                return $this->cachedEyepieces;
-            }
-
-            $eps = \App\Models\Eyepiece::where('user_id', $user->id)
-                ->where('active', 1)
-                ->orderBy('focal_length_mm', 'asc')
-                ->limit(200)
-                ->get();
-
-            foreach ($eps as $ep) {
-                $this->cachedEyepieces[] = $ep;
-            }
-        } catch (\Throwable $_) {
-            // ignore and return empty
-        }
-        return $this->cachedEyepieces;
-    }
-
-    /**
-     * Compute a recommended integer best magnification given instrument, lens and eyepieces.
-     * Returns null if unable to compute.
-     *
-     * @param \App\Models\Instrument $instr
-     * @param \App\Models\Lens|null $lens
-     * @param array $eyepieces
-     * @param object|null $row
-     * @return int|null
-     */
-    private function computeBestMagFromEyepieces($instr, $lens, array $eyepieces, $row = null): ?int
-    {
-        try {
-            if (!$instr || empty($eyepieces))
-                return null;
-            $idealExit = 1.2; // mm
-            $bestScore = -INF;
-            $bestMag = null;
-            foreach ($eyepieces as $ep) {
-                $epF = $ep->focal_length_mm ?? null;
-                if (!$epF || $epF <= 0)
-                    continue;
-                $factor = $lens?->factor ?? 1.0;
-                $ef = $epF * $factor;
-                if (!$ef || $ef <= 0)
-                    continue;
-                $mag = $instr->focal_length_mm / $ef;
-                if (!is_numeric($mag) || $mag <= 0)
-                    continue;
-                $exit = $instr->aperture_mm / $mag;
-                $penalty = 0.0;
-                if ($exit < 0.4)
-                    $penalty += (0.4 - $exit) * 2.0;
-                if ($exit > 4.0)
-                    $penalty += ($exit - 4.0) * 0.5;
-                $score = 1.0 / (1.0 + abs($exit - $idealExit) + $penalty);
-                if ($mag < 10)
-                    $score *= 0.5;
-                if ($mag > ($instr->aperture_mm * 2))
-                    $score *= 0.1;
-                if ($score > $bestScore) {
-                    $bestScore = $score;
-                    $bestMag = $mag;
-                }
-            }
-            if ($bestMag === null)
-                return null;
-            $recommended = (int) round($bestMag);
-            if ($recommended < 10)
-                $recommended = 10;
-            $maxUseful = (int) floor($instr->aperture_mm * 2);
-            if ($recommended > $maxUseful)
-                $recommended = $maxUseful;
-            return $recommended;
-        } catch (\Throwable $_) {
-            return null;
-        }
-    }
-
-    /**
      * Compute per-row ephemerides using the AstronomyLibrary. Results are cached
      * in-memory for the duration of the render to avoid repeated heavy work.
      *
@@ -1321,13 +982,7 @@ class SearchResultsTable extends PowerGridComponent
             if (!empty($this->ephemerisDate)) {
                 $useDateString = (string) $this->ephemerisDate;
             } else {
-                try {
-                    $sess = session()->get('dsl_ephemeris_date');
-                    if (!empty($sess))
-                        $useDateString = (string) $sess;
-                } catch (\Throwable $_) {
-                    $useDateString = null;
-                }
+                $useDateString = \App\Support\EphemerisDate::chosen(\App\Support\EphemerisDate::timezone($userLocation));
             }
 
             if (empty($useDateString)) {
@@ -1474,10 +1129,6 @@ class SearchResultsTable extends PowerGridComponent
             // Instruct PowerGrid to refresh this table server-side and client-side
             try {
                 $this->dispatch('pg:eventRefresh-' . $this->tableName);
-            } catch (\Throwable $_) {
-            }
-            try {
-                $this->dispatchBrowserEvent('pg:eventRefresh-' . $this->tableName);
             } catch (\Throwable $_) {
             }
         } catch (\Throwable $_) {

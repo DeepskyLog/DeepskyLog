@@ -2,10 +2,18 @@
 
 namespace App\Livewire\Profile;
 
+use App\Services\ObserverCountries;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class UpdateUserObservingInformation extends Component
 {
+    /**
+     * Fallback atlas, matching the database default of users.standardAtlasCode,
+     * which is a NOT NULL column.
+     */
+    private const DEFAULT_ATLAS_CODE = 'urano';
+
     public $stdlocation;
 
     public $stdtelescope;
@@ -15,19 +23,26 @@ class UpdateUserObservingInformation extends Component
     public $standardAtlasCode;
 
     public $showInches;
-    
+
     // New defaults for Aladin preview
     public $stdeyepiece;
-    public $stdlens;
 
-    protected $rules = [
-        'stdlocation' => 'numeric',
-        'stdtelescope' => 'numeric',
-        'stdinstrumentset' => 'numeric',
-        'showInches' => 'boolean',
-        'stdeyepiece' => 'numeric|nullable',
-        'stdlens' => 'numeric|nullable',
-    ];
+    /**
+     * The defaults must be the user's own equipment and locations.
+     */
+    protected function rules(): array
+    {
+        $owned = fn (string $table) => Rule::exists($table, 'id')->where('user_id', auth()->id());
+
+        return [
+            'stdlocation' => ['nullable', 'integer', $owned('locations')],
+            'stdtelescope' => ['nullable', 'integer', $owned('instruments')],
+            'stdinstrumentset' => ['nullable', 'integer', $owned('instrument_sets')],
+            'standardAtlasCode' => 'required|string|exists:atlases,code',
+            'showInches' => 'boolean',
+            'stdeyepiece' => ['nullable', 'integer', $owned('eyepieces')],
+        ];
+    }
 
     /**
      * Sets the database values.
@@ -37,10 +52,9 @@ class UpdateUserObservingInformation extends Component
         $this->stdlocation = auth()->user()->stdlocation;
         $this->stdtelescope = auth()->user()->stdtelescope;
         $this->stdinstrumentset = auth()->user()->stdinstrumentset ?? null;
-        $this->standardAtlasCode = auth()->user()->standardAtlasCode;
+        $this->standardAtlasCode = auth()->user()->standardAtlasCode ?: self::DEFAULT_ATLAS_CODE;
         $this->showInches = boolval(auth()->user()->showInches);
         $this->stdeyepiece = auth()->user()->stdeyepiece ?? null;
-        $this->stdlens = auth()->user()->stdlens ?? null;
     }
 
     /**
@@ -48,47 +62,28 @@ class UpdateUserObservingInformation extends Component
      */
     public function updateObservingInformation(): void
     {
+        // An unset select sends an empty string, which is not numeric, and the
+        // "No standard ..." options of the selects have id 0, which exists nowhere.
+        foreach (['stdlocation', 'stdtelescope', 'stdinstrumentset', 'stdeyepiece'] as $field) {
+            if ($this->{$field} === '' || (string) $this->{$field} === '0') {
+                $this->{$field} = null;
+            }
+        }
+
+        // standardAtlasCode is NOT NULL, so a cleared select falls back to the default.
+        if (blank($this->standardAtlasCode)) {
+            $this->standardAtlasCode = self::DEFAULT_ATLAS_CODE;
+        }
+
         $this->validate();
 
-        if ($this->stdlocation == 0) {
-            auth()->user()->forceFill([
-                'stdlocation' => null,
-            ])->save();
-        } else {
-            auth()->user()->forceFill([
-                'stdlocation' => $this->stdlocation,
-            ])->save();
-        }
-        if ($this->stdtelescope == 0) {
-            auth()->user()->forceFill([
-                'stdtelescope' => null,
-            ])->save();
-        } else {
-            auth()->user()->forceFill([
-                'stdtelescope' => $this->stdtelescope,
-            ])->save();
-        }
-        if ($this->stdinstrumentset == 0) {
-            auth()->user()->forceFill([
-                'stdinstrumentset' => null,
-            ])->save();
-        } else {
-            auth()->user()->forceFill([
-                'stdinstrumentset' => $this->stdinstrumentset,
-            ])->save();
-        }
-        // Persist eyepiece and lens defaults
-        if ($this->stdeyepiece == 0) {
-            auth()->user()->forceFill(['stdeyepiece' => null])->save();
-        } else {
-            auth()->user()->forceFill(['stdeyepiece' => $this->stdeyepiece])->save();
-        }
-        if ($this->stdlens == 0) {
-            auth()->user()->forceFill(['stdlens' => null])->save();
-        } else {
-            auth()->user()->forceFill(['stdlens' => $this->stdlens])->save();
-        }
+        // Saved at once, so that the recompute of the contrast reserve that a
+        // changed default instrument or location queues (User::booted()) runs once.
         auth()->user()->forceFill([
+            'stdlocation' => $this->stdlocation ?: null,
+            'stdtelescope' => $this->stdtelescope ?: null,
+            'stdinstrumentset' => $this->stdinstrumentset ?: null,
+            'stdeyepiece' => $this->stdeyepiece ?: null,
             'standardAtlasCode' => $this->standardAtlasCode,
             'showInches' => $this->showInches,
         ])->save();
@@ -98,6 +93,10 @@ class UpdateUserObservingInformation extends Component
 
     public function render()
     {
-        return view('livewire.profile.update-user-observing-information');
+        return view('livewire.profile.update-user-observing-information', [
+            // Observers of a country that measures in inches are offered the switch.
+            'suggestInches' => ! $this->showInches && ObserverCountries::usesInches(auth()->user()->country),
+            'countryLabel' => ObserverCountries::label(auth()->user()->country),
+        ]);
     }
 }

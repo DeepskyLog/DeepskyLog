@@ -5,8 +5,36 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta name="share-notice" content="{{ __('The text has been copied: paste it into your Facebook post.') }}" />
+    <meta name="share-facebook-open" content="{{ __('Open Facebook') }}" />
+    <meta name="share-cancel" content="{{ __('Cancel') }}" />
+    <meta name="share-image-notice" content="{{ __('The sketch has been copied: paste it (Ctrl+V) into your post on X.') }}" />
+    <meta name="share-image-mail-notice" content="{{ __('The sketch has been copied: paste it (Ctrl+V) into your mail.') }}" />
+    <meta name="share-retry-notice" content="{{ __('The sketch is ready: tap the share button again.') }}" />
 
     <title>{{ config('app.name', 'DeepskyLog') }}</title>
+    <meta name="theme-color" content="#111827" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/images/icons/icon-192.png" />
+    @include('partials.night-mode')
+    <script>
+        // Keep the browser's timezone in a cookie: "today" in the ephemeris
+        // aside of guests is today in their timezone (EphemerisDate). On the
+        // first visit, or after a change, the aside recalculates once.
+        (function() {
+            try {
+                var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                if (!tz) return;
+                var m = document.cookie.match(/(?:^|;\s*)dsl_tz=([^;]*)/);
+                if (m && decodeURIComponent(m[1]) === tz) return;
+                document.cookie = 'dsl_tz=' + encodeURIComponent(tz) + ';path=/;max-age=31536000;SameSite=Lax'
+                    + (location.protocol === 'https:' ? ';Secure' : '');
+                document.addEventListener('livewire:initialized', function() {
+                    window.Livewire.dispatch('dsl-timezone-detected');
+                });
+            } catch (e) {}
+        })();
+    </script>
     <script>
         (function() {
             try {
@@ -141,9 +169,12 @@
         }
 
         /* Also clip overflow at the card level to guard against any other
-           source of page-level horizontal overflow on the search page. */
+           source of page-level horizontal overflow on the search page.
+           `clip`, not `hidden`: `hidden` turns overflow-y into `auto`, which
+           cut off the top of select popovers that open upwards (the search
+           field of the observer select on the advanced observation search). */
         .dsl-search-card {
-            overflow-x: hidden;
+            overflow-x: clip;
         }
 
         /* Tighten footer/filter area inside the card */
@@ -192,6 +223,9 @@
         };
     </script>
     <script src="/wireui/assets/scripts" defer></script>
+    {{-- PowerGrid's tables put scripts of their own in the page that register
+         with window.pgAlpine, which app.js (a deferred module) defines too late. --}}
+    <script>{!! file_get_contents(base_path('vendor/power-components/livewire-powergrid/resources/js/pg-alpine.js')) !!}</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
     <style>
@@ -255,6 +289,12 @@
         window.__dsl_debug_enabled = !!(location && location.search && String(location.search).indexOf('dsl_debug=1') !== -
             1);
     </script>
+    <!-- RSS feed autodiscovery -->
+    <link rel="alternate" type="application/rss+xml" title="{{ config('app.name', 'DeepskyLog') }} – Latest Observations" href="{{ route('feed.observations') }}" />
+    <link rel="alternate" type="application/rss+xml" title="{{ config('app.name', 'DeepskyLog') }} – Latest Sketches" href="{{ route('feed.drawings') }}" />
+    <link rel="alternate" type="application/rss+xml" title="{{ config('app.name', 'DeepskyLog') }} – New Public Observing Lists" href="{{ route('feed.observing-lists') }}" />
+
+    @stack('head')
     </head>
 
     <body class="font-sans antialiased dark @yield('body_class') min-h-screen flex flex-col">
@@ -277,11 +317,11 @@
                     <div class="mx-auto max-w-screen-xl xl:max-w-full bg-gray-900 px-6 py-6 sm:px-6 lg:px-8">
                         <div class="flex flex-col lg:flex-row gap-4 w-full items-start">
                             @livewire('ephemeris-aside')
-                            <div class="flex-1" data-dsl-main-content>
+                            <div class="w-full min-w-0 flex-1" data-dsl-main-content>
                 @else
                     <div class="flex flex-col lg:flex-row gap-4 w-full items-start">
                         @livewire('ephemeris-aside')
-                        <div class="flex-1" data-dsl-main-content>
+                        <div class="w-full min-w-0 flex-1" data-dsl-main-content>
                 @endif
                         {{-- Optional page header slot (used by pages like messages.create) --}}
                         @isset($header)
@@ -302,6 +342,18 @@
                             <div class="px-4 sm:px-6 lg:px-8 pt-4">
                                 <div class="p-4 bg-red-800 border border-red-600 rounded-md text-red-100 text-sm">
                                     {{ session('error') }}
+                                </div>
+                            </div>
+                        @endif
+                        {{-- Jetstream/Socialstream banner (e.g. linking a connected account) --}}
+                        @if (session('flash.banner'))
+                            <div class="px-4 sm:px-6 lg:px-8 pt-4">
+                                <div @class([
+                                    'p-4 border rounded-md text-sm',
+                                    'bg-green-800 border-green-600 text-green-100' => session('flash.bannerStyle', 'success') === 'success',
+                                    'bg-red-800 border-red-600 text-red-100' => session('flash.bannerStyle') !== 'success',
+                                ])>
+                                    {{ session('flash.banner') }}
                                 </div>
                             </div>
                         @endif
@@ -344,8 +396,8 @@
                     <x-socialstream-icons.instagram class="h-5 w-5" />
                 </a>
 
-                <a href="https://twitter.com/DeepskyLog" class="px-2 pt-0.5">
-                    <x-socialstream-icons.twitter class="h-5 w-5" />
+                <a href="https://x.com/DeepskyLog" class="px-2 pt-0.5" title="X">
+                    <x-socialstream-icons.x class="h-5 w-5" />
                 </a>
 
                 <a href="https://www.youtube.com/channel/UC66H7w2Fl9q3krRy_tHRK5g" class="px-2">
@@ -746,32 +798,6 @@
                 // noop
             });
         });
-    </script>
-    <script>
-        // Ensure team-switch links trigger a full navigation even when other
-        // libraries (e.g. TinyMCE) add global click handlers that call
-        // preventDefault(). We listen in the capture phase and, when a
-        // `.dsl-switch-team` anchor is clicked without modifier keys, we
-        // stop propagation so downstream listeners cannot turn the click
-        // into an XHR/fetch. Respect Ctrl/Meta/Shift/Alt for opening in new
-        // tabs/windows or modified behavior.
-        document.addEventListener('click', function(e) {
-            const el = e.target.closest && e.target.closest('a.dsl-switch-team');
-            if (!el) return;
-
-            // Respect modifier keys to allow opening in new tab/window
-            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-
-            // If it's a normal left-click on the link, ensure native navigation
-            // by stopping propagation on the capture phase so other handlers
-            // can't prevent the default.
-            try {
-                e.stopPropagation();
-            } catch (err) {
-                // ignore
-            }
-            // Let the browser perform the default action (navigation).
-        }, true);
     </script>
 </body>
 

@@ -51,7 +51,7 @@
                             editor.on("init", function () {
                                 editor.save();
                                 try {
-                                    @this.set('description', editor.getContent());
+                                    @this.set('description', editor.getContent(), false);
                                 } catch (err) {
                                         if (typeof Livewire !== 'undefined' && typeof Livewire.dispatch === 'function') {
                                             Livewire.dispatch('setDescription', editor.getContent());
@@ -129,7 +129,7 @@
                             name="name"
                             label="{!! __('Name of the instrument set') !!}"
                             type="text"
-                            wire:model.live="name"
+                            wire:model="name"
                             class="mt-1 block w-full"
                             value="{{ old('name') }}"/>
 
@@ -206,7 +206,7 @@
 
                         <div class="col-span-6 sm:col-span-5" wire:ignore>
                             <textarea
-                                wire:model.live="description"
+                                wire:model="description"
                                 class="h-48 min-h-fit mt-1 block w-full"
                                 name="description"
                                 id="description"

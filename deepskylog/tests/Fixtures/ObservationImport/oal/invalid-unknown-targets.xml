@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oal:observations xmlns:oal="http://groups.google.com/group/openastronomylog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://groups.google.com/group/openastronomylog oal21.xsd">
+  <observers>
+    <observer id="observer-1"><name>Example</name><surname>Observer</surname></observer>
+  </observers>
+  <sites>
+    <site id="site-1"><name>Example Site</name><longitude unit="deg">4.70</longitude><latitude unit="deg">50.88</latitude><elevation>30</elevation><timezone>60</timezone></site>
+  </sites>
+  <sessions/>
+  <targets>
+    <target id="target-no-position" xsi:type="oal:deepSkyGN"><datasource>Example catalogue</datasource><name>Example Unknown Nebula 123</name></target>
+    <target id="target-na" xsi:type="oal:deepSkyNA">
+      <datasource>Example catalogue</datasource>
+      <name>Example Unknown Object 5</name>
+      <position><ra unit="deg">10.0</ra><dec unit="deg">41.0</dec></position>
+    </target>
+    <target id="target-comet" xsi:type="oal:CometTargetType"><datasource>Example catalogue</datasource><name>C/2099 Z1 (Example)</name></target>
+    <target id="target-southern" xsi:type="oal:deepSkyGX">
+      <datasource>Example catalogue</datasource>
+      <name>Example Southern Galaxy</name>
+      <position><ra unit="deg">90.0</ra><dec unit="deg">-80.0</dec></position>
+    </target>
+    <target id="target-untyped">
+      <datasource>Example catalogue</datasource>
+      <name>Example Untyped Object</name>
+      <position><ra unit="deg">10.0</ra><dec unit="deg">41.0</dec></position>
+    </target>
+  </targets>
+  <scopes>
+    <scope id="scope-1" xsi:type="oal:scopeType"><model>Example Dobson 250</model><aperture>250</aperture><focalLength>1200</focalLength></scope>
+  </scopes>
+  <eyepieces/><lenses/><filters/><imagers/>
+  <!-- 1: not in the database, and no position in the file -->
+  <observation id="observation-1">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-no-position</target>
+    <begin>2026-09-12T21:30:00Z</begin>
+    <scope>scope-1</scope>
+    <result lang="en"><description>An unknown nebula without a position.</description></result>
+  </observation>
+  <!-- 2: not in the database, with a position but type deepSkyNA (not available) -->
+  <observation id="observation-2">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-na</target>
+    <begin>2026-09-12T21:30:00Z</begin>
+    <scope>scope-1</scope>
+    <result lang="en"><description>An unknown object without a type.</description></result>
+  </observation>
+  <!-- 3: a comet DeepskyLog does not know -->
+  <observation id="observation-3">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-comet</target>
+    <begin>2026-09-12T21:30:00Z</begin>
+    <scope>scope-1</scope>
+    <result lang="en"><description>An unknown comet.</description></result>
+  </observation>
+  <!-- 4: fully defined, but never above the horizon of Example Site: no observation and no object -->
+  <observation id="observation-4">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-southern</target>
+    <begin>2026-09-12T21:30:00Z</begin>
+    <scope>scope-1</scope>
+    <result lang="en"><description>A galaxy that never rises here.</description></result>
+  </observation>
+  <!-- 5: not in the database, with a position but without a type -->
+  <observation id="observation-5">
+    <observer>observer-1</observer>
+    <site>site-1</site>
+    <target>target-untyped</target>
+    <begin>2026-09-12T21:30:00Z</begin>
+    <scope>scope-1</scope>
+    <result lang="en"><description>An unknown object without a type.</description></result>
+  </observation>
+</oal:observations>

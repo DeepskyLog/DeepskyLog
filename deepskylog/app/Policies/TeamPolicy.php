@@ -28,10 +28,13 @@ class TeamPolicy
 
     /**
      * Determine whether the user can create models.
+     *
+     * DeepskyLog only has the teams Observers, Administrators and Database
+     * Experts (see GroupSeeder); nobody can create another one.
      */
     public function create(User $user): bool
     {
-        return true;
+        return false;
     }
 
     /**

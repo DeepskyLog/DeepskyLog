@@ -2,9 +2,8 @@
 
 namespace App\Charts;
 
-use App\Models\CometObservationsOld;
+use App\Models\Observation;
 use App\Models\Country;
-use App\Models\ObservationsOld;
 use App\Models\User;
 use Countries;
 use Illuminate\Support\Facades\DB;
@@ -20,15 +19,9 @@ class CountriesChart
     /**
      * Builds a pie chart of observations per country for a given user.
      *
-     * This method retrieves the count of comet observations and deep sky observations made by the user for each country,
-     * and stores them in two separate arrays. It then creates a pie chart with these data, sets the title, subtitle, colors,
-     * and other properties of the chart, and returns it.
-     *
-     * The method uses raw SQL queries to retrieve the count of observations from the 'cometobservations' and 'observations' tables.
-     * The queries join the 'locations' table on the 'locationid' column, select the 'country' column from the 'locations' table and the count of observations,
-     * and group them by 'country'.
-     *
-     * The method then initializes two arrays, and populates them with the countries and the count of observations for each country.
+     * This method counts the observations (of all target types) made by the user for each country. The query joins
+     * the 'locations' table on the 'location_id' column of the 'observations' table and groups by the 'country' column.
+     * Country names are localized, and counts of names that end up the same are merged.
      *
      * Finally, the method creates a new OriginalPieChart object, sets its properties, and adds the count of observations as data and the countries as labels.
      *
@@ -37,17 +30,20 @@ class CountriesChart
      */
     public function build(User $user): OriginalPieChart
     {
-        $deepsky = ObservationsOld::where('observerid', $user->username)->join('locations', 'observations.locationid', '=', 'locations.id')->select('locations.country', DB::raw('count(*) as count'))->groupBy('locations.country')->get();
+        $deepsky = Observation::where('observer_username', $user->username)->join('locations', 'observations.location_id', '=', 'locations.id')->select('locations.country', DB::raw('count(*) as count'))->groupBy('locations.country')->get();
 
-        $comets = CometObservationsOld::where('observerid', $user->username)->join('locations', 'cometobservations.locationid', '=', 'locations.id')->select('locations.country', DB::raw('count(*) as count'))->groupBy('locations.country')->get();
+        // The Country models of all these countries, in one query. Keyed on the lower
+        // case name, as the column compares case-insensitively in the database.
+        $countryModels = Country::whereIn('country', $deepsky->pluck('country')->filter()->unique()->values())
+            ->get()
+            ->keyBy(fn (Country $country) => mb_strtolower(rtrim((string) $country->country)));
 
         $countries = [];
         $values = [];
 
-        // Build country labels and values from deep-sky observations.
+        // Build country labels and values.
         foreach ($deepsky as $item) {
-            // Try to find a Country model for this location country value.
-            $countryModel = Country::where('country', $item->country)->first();
+            $countryModel = $countryModels->get(mb_strtolower(rtrim((string) $item->country)));
 
             // Prefer localized name from Countries::getOne when we have a code.
             if ($countryModel && $countryModel->code) {
@@ -71,31 +67,9 @@ class CountriesChart
             }
         }
 
-        // Add comet observations, merging into the same arrays and handling missing Country models.
-        foreach ($comets as $comet) {
-            $countryModel = Country::where('country', $comet->country)->first();
-
-            if ($countryModel && $countryModel->code) {
-                $countryName = Countries::getOne($countryModel->code, app()->getLocale()) ?? $countryModel->country;
-            } else {
-                $countryName = $comet->country;
-            }
-
-            if (empty($countryName)) {
-                continue;
-            }
-
-            if (in_array($countryName, $countries, true)) {
-                $values[array_search($countryName, $countries, true)] += $comet->count;
-            } else {
-                $countries[] = $countryName;
-                $values[] = $comet->count;
-            }
-        }
-
         return (new OriginalPieChart)
-            ->setTitle(__('Observations per country: ').$user->name)
-            ->setSubtitle(__('Source: ').config('app.old_url'))
+            ->setTitle(__('Observations per country: ') . $user->name)
+            ->setSubtitle(__('Source: ') . config('app.url'))
             ->addData($values)
             ->setLabels($countries)
             ->setTheme('dark')

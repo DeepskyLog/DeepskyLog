@@ -15,7 +15,7 @@
                         <div class="col-span-6 sm:col-span-5">
 
                             <x-input name="name" label="{{ __('Name of the location') }}" type="text"
-                                wire:model.live="name" class="mt-1 block w-full" required maxlength="255"
+                                wire:model="name" class="mt-1 block w-full" required maxlength="255"
                                 value="{{ old('name') }}" />
 
                             <!-- Leaflet.js Map and Search -->
@@ -44,13 +44,13 @@
                             <div class="mt-4 flex flex-col gap-3 md:flex-row">
                                 <div class="flex-1">
                                     <x-input name="sqm" label="{{ __('SQM (mag/arcsec²)') }}" type="number"
-                                        step="0.01" min="15" max="22" wire:model.live="sqm"
+                                        step="0.01" min="15" max="22" wire:model.live.debounce.500ms="sqm"
                                         class="mt-1 block w-full" value="{{ old('sqm') }}" />
                                 </div>
 
                                 <div class="flex-1">
                                     <x-input name="nelm" label="{{ __('NELM') }}" type="number" step="0.1"
-                                        min="0" max="8" wire:model.live="nelm" class="mt-1 block w-full"
+                                        min="0" max="8" wire:model.live.debounce.500ms="nelm" class="mt-1 block w-full"
                                         value="{{ old('nelm') }}" />
                                 </div>
 
@@ -91,7 +91,7 @@
                                 {{ __('Tell something about your location') }}
                             </div>
                             <div class="col-span-6 sm:col-span-5" wire:ignore>
-                                <textarea wire:model.live="description" class="h-48 min-h-fit" name="description" id="description"></textarea>
+                                <textarea wire:model="description" class="h-48 min-h-fit" name="description" id="description"></textarea>
                             </div>
 
                             <div class="mt-5">
@@ -301,7 +301,7 @@
                             // console.log removed: TinyMCE initialized for #description
                             try {
                                 // Prefer direct @this.set to synchronously update the Livewire property
-                                @this.set('description', editor.getContent());
+                                @this.set('description', editor.getContent(), false);
                             } catch (err) {
                                 // Fallback to dispatch if @this isn't available
                                 if (typeof Livewire !== 'undefined' && typeof Livewire

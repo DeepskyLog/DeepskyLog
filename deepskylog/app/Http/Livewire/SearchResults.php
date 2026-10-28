@@ -11,12 +11,26 @@ class SearchResults extends Component
 {
     public $q;
     public $results = [];
+    public array $objectRefs = [];
+    // An observation search (['q' => ..., 'filters' => [...]]) whose observed
+    // objects are listed; matched in the database by the results table.
+    public ?array $observationSearch = null;
+    public ?string $title = null;
     public bool $canModifyActiveList = false;
+    public bool $fixedResultsMode = false;
 
-    public function mount($q = '')
+    public function mount($q = '', $objectRefs = [], $title = null, $observationSearch = null)
     {
         $this->q = $q;
-        $this->performSearch();
+        $this->objectRefs = is_array($objectRefs) ? $objectRefs : [];
+        $this->observationSearch = is_array($observationSearch) ? $observationSearch : null;
+        $this->title = is_string($title) && $title !== '' ? $title : null;
+        $this->fixedResultsMode = $this->objectRefs !== [] || $this->observationSearch !== null;
+
+        if (!$this->fixedResultsMode) {
+            $this->performSearch();
+        }
+
         $this->resolveCanModifyActiveList();
     }
 
@@ -73,7 +87,7 @@ class SearchResults extends Component
         try {
             if (DB::getSchemaBuilder()->hasTable('search_index')) {
                 $this->results = DB::table('search_index')
-                    ->whereRaw('LOWER(name) LIKE ?', [Str::lower($like)])
+                    ->where('name', 'like', $like)
                     ->orderBy('name')
                     ->limit(200)
                     ->get()
@@ -87,7 +101,7 @@ class SearchResults extends Component
         // Fallback: search objects and aliases
         $objs = DB::table('objects')
             ->select(['name as title', 'slug', DB::raw("'object' as source_type")])
-            ->whereRaw('LOWER(name) LIKE ?', [Str::lower($like)])
+            ->where('name', 'like', $like)
             ->limit(200)
             ->get()
             ->toArray();

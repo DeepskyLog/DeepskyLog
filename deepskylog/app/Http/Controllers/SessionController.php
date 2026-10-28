@@ -2,15 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\HomepagePagination;
-use App\Jobs\TranslateObservationDescriptions;
-use App\Models\CometObservationsOld;
 use App\Models\Location;
+use App\Models\NewsItem;
+use App\Models\ObjectOfTheMonth;
+use App\Models\ObservingChallenge;
+use App\Models\Observation;
+use App\Models\ObservationLike;
 use App\Models\ObservationSession;
-use App\Models\ObservationsOld;
+use App\Models\ObservingList;
+use App\Models\SketchOfTheMonth;
+use App\Models\SketchOfTheWeek;
+use App\Models\StarParty;
 use App\Models\User;
+use App\Services\Moon\LunarTerminator;
+use App\Services\Planets\PlanetMoonEvents;
+use App\Services\Observations\ObservationCardData;
+use App\Services\SessionObservationReminders;
+use App\Services\TonightsBest;
+use App\Services\Weather\NightForecast;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB as DBFacade;
@@ -18,6 +30,28 @@ use Illuminate\Support\Str;
 
 class SessionController extends Controller
 {
+    /** The number of news items, sessions, observations and sketches on the home page. */
+    private const HOMEPAGE_NEWS = 5;
+
+    private const HOMEPAGE_OBJECT_OF_THE_MONTH_DRAWINGS = 4;
+
+    private const HOMEPAGE_SESSIONS = 3;
+
+    private const HOMEPAGE_OBSERVATIONS = 8;
+
+    /** The starparties on the home page: those starting within this many days. */
+    private const HOMEPAGE_STAR_PARTY_DAYS = 60;
+
+    private const HOMEPAGE_STAR_PARTIES = 4;
+
+    private const HOMEPAGE_SKETCHES = 8;
+
+    /** The observations on the home page: deep-sky, comets and the solar system (old 'solarsystem' and normalized 'planet' and 'lunar'). */
+    private const HOMEPAGE_TARGET_TYPES = ['deepsky', 'comet', 'planet', 'solarsystem', 'lunar'];
+
+    /** Query parameters of the old paginated home page, redirected to the page without them. */
+    private const OLD_HOMEPAGE_PARAMS = ['sessions', 'sketches', 'observations', 'sketch_type', 'obs_type'];
+
     public function show(string $user_slug, string $session_slug)
     {
         $user = User::where('slug', $user_slug)->firstOrFail();
@@ -42,7 +76,7 @@ class SessionController extends Controller
             $viewerIsOwner = $viewer && ($viewer->username === $session->observerid || ($viewer->slug ?? null) === ($user->slug ?? null));
             $viewerIsAdmin = $viewer && method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges();
 
-            if (! ($viewerIsOwner || ($allowAdmin && $viewerIsAdmin))) {
+            if (!($viewerIsOwner || ($allowAdmin && $viewerIsAdmin))) {
                 abort(404);
             }
         }
@@ -50,10 +84,10 @@ class SessionController extends Controller
         // Load location information
         $location = null;
         $image = null; // default: no image unless found
-        if (! empty($session->locationid)) {
+        if (!empty($session->locationid)) {
             $location = Location::find($session->locationid);
-            if ($location && ! empty($location->picture)) {
-                $image = asset('storage/'.$location->picture);
+            if ($location && !empty($location->picture)) {
+                $image = asset('storage/' . $location->picture);
             }
         }
 
@@ -63,7 +97,7 @@ class SessionController extends Controller
         // Load other observers (legacy pivot table 'sessionObservers')
         $observerUsernames = $session->otherObservers();
         $observers = [];
-        if (! empty($observerUsernames)) {
+        if (!empty($observerUsernames)) {
             foreach ($observerUsernames as $uname) {
                 if ($uname === $session->observerid) {
                     continue;
@@ -81,29 +115,28 @@ class SessionController extends Controller
         $totalObservations = DBFacade::table('sessionObservations')->where('sessionid', $session->id)->count();
 
         // Build list of observation IDs for this session so we can filter old observations
-        $obsIds = DBFacade::table('sessionObservations')->where('sessionid', $session->id)->pluck('observationid')->toArray();
+        // sessionObservations now stores new observations.id values (bigint).
+        $newObsIds = DBFacade::table('sessionObservations')
+            ->where('sessionid', $session->id)
+            ->pluck('observationid')
+            ->map(fn($v) => (int) $v)
+            ->toArray();
 
-    // Allow viewing observations for a specific observer via ?observer={username}
-    $targetObserver = request()->get('observer', $session->observerid);
-    $selectedObserverUser = User::where('username', $targetObserver)->first();
-    $selectedObserverName = $selectedObserverUser ? $selectedObserverUser->name : $targetObserver;
+        $obsIds = $newObsIds;
+
+        // Allow viewing observations for a specific observer via ?observer={username}
+        $targetObserver = request()->get('observer', $session->observerid);
+        $selectedObserverUser = User::where('username', $targetObserver)->first();
+        $selectedObserverName = $selectedObserverUser ? $selectedObserverUser->name : $targetObserver;
 
         // Fetch observations and drawings
-        if (! empty($obsIds)) {
-            // Fetch observations for the session regardless of which observer recorded them.
-            // Previously this filtered by the session owner, preventing other viewers from seeing observations.
-            // Show observations recorded by the requested observer (defaults to session owner)
-            $deepObservations = ObservationsOld::whereIn('id', $obsIds)
-                ->where('observerid', $targetObserver)
+        if (!empty($obsIds)) {
+            // Fetch observations for the session recorded by the requested observer
+            $allObservations = Observation::whereIn('id', $obsIds)
+                ->where('observer_username', $targetObserver)
                 ->orderBy('id', 'desc')
                 ->get();
-
-            $cometObservations = CometObservationsOld::whereIn('id', $obsIds)
-                ->where('observerid', $targetObserver)
-                ->orderBy('id', 'desc')
-                ->get();
-
-            $allObservations = $deepObservations->merge($cometObservations)->sortByDesc('id')->values();
+            [$cometObservations, $deepObservations] = $allObservations->partition(fn($o) => $o->target_type === Observation::TYPE_COMET);
 
             // Manual pagination for combined observations
             $perPage = 20;
@@ -123,11 +156,8 @@ class SessionController extends Controller
                 ]
             );
 
-            // Drawings should also be visible to viewers of the session regardless of who made them.
             // Drawings for the requested observer
-            $drawingDeep = ObservationsOld::whereIn('id', $obsIds)->where('observerid', $targetObserver)->where('hasDrawing', 1)->orderBy('id', 'desc')->get();
-            $drawingComet = CometObservationsOld::whereIn('id', $obsIds)->where('observerid', $targetObserver)->where('hasDrawing', 1)->orderBy('id', 'desc')->get();
-            $allDrawings = $drawingDeep->merge($drawingComet)->sortByDesc('id')->values();
+            $allDrawings = $allObservations->where('has_drawing', true)->values();
 
             // Paginate drawings separately from observations. Use a distinct page name to avoid conflicts.
             $drawingsPerPage = 8;
@@ -148,8 +178,8 @@ class SessionController extends Controller
                 ]
             );
 
-            $objectsDeepSky = $deepObservations->pluck('objectname')->unique()->values()->toArray();
-            $objectsComet = $cometObservations->pluck('objectname')->unique()->values()->toArray();
+            $objectsDeepSky = $deepObservations->pluck('target_name')->unique()->values()->toArray();
+            $objectsComet = $cometObservations->pluck('target_name')->unique()->values()->toArray();
         } else {
             $observations = collect([]);
             $drawings = collect([]);
@@ -161,30 +191,18 @@ class SessionController extends Controller
         sort($allObjects, SORT_STRING | SORT_FLAG_CASE);
 
         // Compute number of observations each observer did during this session.
-        // Counts are calculated only when there are session observation ids available.
         $observerStats = [];
 
         $counts = [];
-        if (! empty($obsIds)) {
-            // Count per observer in deep observations
-            $deepCounts = ObservationsOld::whereIn('id', $obsIds)
-                ->select('observerid', DBFacade::raw('count(*) as cnt'))
-                ->groupBy('observerid')
-                ->pluck('cnt', 'observerid')
+        if (!empty($obsIds)) {
+            // Count per observer across deepsky and comet
+            $allCounts = Observation::whereIn('id', $newObsIds)
+                ->select('observer_username', DBFacade::raw('count(*) as cnt'))
+                ->groupBy('observer_username')
+                ->pluck('cnt', 'observer_username')
                 ->toArray();
 
-            // Count per observer in comet observations
-            $cometCounts = CometObservationsOld::whereIn('id', $obsIds)
-                ->select('observerid', DBFacade::raw('count(*) as cnt'))
-                ->groupBy('observerid')
-                ->pluck('cnt', 'observerid')
-                ->toArray();
-
-            // Merge counts
-            foreach ($deepCounts as $who => $c) {
-                $counts[$who] = ($counts[$who] ?? 0) + (int) $c;
-            }
-            foreach ($cometCounts as $who => $c) {
+            foreach ($allCounts as $who => $c) {
                 $counts[$who] = ($counts[$who] ?? 0) + (int) $c;
             }
         }
@@ -192,11 +210,8 @@ class SessionController extends Controller
         // Primary observer count (defaults to zero)
         $primaryCount = isset($counts[$session->observerid]) ? (int) $counts[$session->observerid] : 0;
         // Fallback: if primaryCount is zero but there are totalObservations, try direct count
-        if ($primaryCount === 0 && $totalObservations > 0 && ! empty($obsIds)) {
-            $primaryCount = (int) (
-                (int) (ObservationsOld::whereIn('id', $obsIds)->where('observerid', $session->observerid)->count()) +
-                (int) (CometObservationsOld::whereIn('id', $obsIds)->where('observerid', $session->observerid)->count())
-            );
+        if ($primaryCount === 0 && $totalObservations > 0 && !empty($obsIds)) {
+            $primaryCount = (int) Observation::whereIn('id', $newObsIds)->where('observer_username', $session->observerid)->count();
         }
 
         // Always include the primary observer (even when there are no observations)
@@ -210,35 +225,8 @@ class SessionController extends Controller
         }
 
         // Prepare translations for session fields (weather, equipment, comments) if user requested
-        // Allow forcing translation via query string for testing: ?force_translate=1
-        $forceTranslate = request()->boolean('force_translate');
-        $forceLang = request()->get('force_lang');
-        $shouldTranslate = (Auth::check() && Auth::user()->translate) || $forceTranslate;
-        $lang = null;
-        if ($shouldTranslate) {
-            if (! empty($forceLang)) {
-                $lang = $forceLang;
-            } elseif (Auth::check()) {
-                $lang = Auth::user()->language ?? config('app.locale');
-            } else {
-                $lang = config('app.locale');
-            }
-        }
-
-        // Dispatch background job to pre-warm translation cache for deep-sky observations on this page.
-        // The blade component uses Cache::get() (non-blocking), so this job populates cache asynchronously.
-        if ($shouldTranslate && $lang && isset($itemsForCurrentPage)) {
-            $deepIds = $itemsForCurrentPage
-                ->filter(fn ($obs) => isset($obs->objectname))
-                ->filter(fn ($obs) => ($obs->language ?? 'nl') !== $lang)  // skip when languages already match
-                ->filter(fn ($obs) => ! Cache::has('observation_deepsky_translation:' . $obs->id . ':' . $lang))
-                ->pluck('id')
-                ->values()
-                ->all();
-            if (! empty($deepIds)) {
-                TranslateObservationDescriptions::dispatch($deepIds, $lang);
-            }
-        }
+        $shouldTranslate = Auth::check() && Auth::user()->translate;
+        $lang = $shouldTranslate ? (Auth::user()->language ?? config('app.locale')) : null;
 
         // Only translate session fields when the user's language actually differs from the session's language.
         // When they match (e.g. both English), serve the original HTML to preserve TinyMCE formatting.
@@ -248,7 +236,7 @@ class SessionController extends Controller
         $rawWeather = html_entity_decode($session->weather ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $weatherTranslated = $rawWeather;
         if ($needsTranslation && trim(strip_tags($rawWeather)) !== '') {
-            $cacheKey = 'session_weather:'.$session->id.':'.$lang;
+            $cacheKey = 'session_weather:' . $session->id . ':' . $lang;
             $cached = Cache::get($cacheKey);
             if ($cached !== null && $cached !== '') {
                 $weatherTranslated = $cached;
@@ -271,7 +259,7 @@ class SessionController extends Controller
         $rawEquipment = html_entity_decode($session->equipment ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $equipmentTranslated = $rawEquipment;
         if ($needsTranslation && trim(strip_tags($rawEquipment)) !== '') {
-            $cacheKey = 'session_equipment:'.$session->id.':'.$lang;
+            $cacheKey = 'session_equipment:' . $session->id . ':' . $lang;
             $cached = Cache::get($cacheKey);
             if ($cached !== null && $cached !== '') {
                 $equipmentTranslated = $cached;
@@ -293,7 +281,7 @@ class SessionController extends Controller
         $rawComments = html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $commentsTranslated = $rawComments;
         if ($needsTranslation && trim(strip_tags($rawComments)) !== '') {
-            $cacheKey = 'session_comments:'.$session->id.':'.$lang;
+            $cacheKey = 'session_comments:' . $session->id . ':' . $lang;
             $cached = Cache::get($cacheKey);
             if ($cached !== null && $cached !== '') {
                 $commentsTranslated = $cached;
@@ -337,17 +325,24 @@ class SessionController extends Controller
             // ignore logging failures
         }
 
-        // Preload users for drawings to avoid N+1 queries in the view
-        $drawingUsers = [];
-        if (isset($drawings) && $drawings->count() > 0) {
-            $drawingObserverIds = $drawings->pluck('observerid')->unique()->filter()->all();
-            $drawingUsers = User::whereIn('username', $drawingObserverIds)->get()->keyBy('username');
-        }
+        // What the observation and sketch cards show (observers, objects,
+        // equipment, likes, ...), in grouped queries instead of per card.
+        ObservationCardData::instance()->preload($drawings)->preload($observations);
 
-    // Provide the selected observer username and display name to the view so it can highlight the active observer in the sidebar
-    $selectedObserverUsername = $targetObserver;
+        // Provide the selected observer username and display name to the view so it can highlight the active observer in the sidebar
+        $selectedObserverUsername = $targetObserver;
 
-    return $this->noCacheResponse(response()->view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'drawingUsers', 'observerStats', 'selectedObserverUsername', 'selectedObserverName')));
+        // The starparties (#315) the session took place at: the night it
+        // started in (before noon belongs to the night before) at the site.
+        $starParties = $session->begindate
+            ? StarParty::atSiteOn($location, $session->begindate->copy()->subHours(12)->toDateString(), $session->observerid, Auth::user())
+            : collect();
+
+        // The owner's own session without observations of theirs: a link to add them.
+        $lacksObservations = Auth::user()?->username === $session->observerid && $primaryCount === 0
+            && SessionObservationReminders::lacksObservations($session);
+
+        return $this->noCacheResponse(response()->view('session.show', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'starParties', 'lacksObservations')));
     }
 
     /**
@@ -356,7 +351,7 @@ class SessionController extends Controller
     public function mine(Request $request)
     {
         $user = Auth::user();
-        if (! $user) {
+        if (!$user) {
             abort(403);
         }
 
@@ -369,12 +364,13 @@ class SessionController extends Controller
 
         $perPage = 12;
         $sessions = $query->paginate($perPage)->withQueryString();
+        ObservationSession::preloadOtherObservers($sessions->getCollection());
 
         // Prefetch related locations to avoid N+1 when resolving location pictures
         $collection = $sessions->getCollection();
         $locationIds = $collection->pluck('locationid')->filter()->unique()->values()->all();
         $locations = [];
-        if (! empty($locationIds)) {
+        if (!empty($locationIds)) {
             $locations = Location::whereIn('id', $locationIds)->get()->keyBy('id');
         }
 
@@ -384,24 +380,24 @@ class SessionController extends Controller
         // Pre-scan image directories once and build maps session_id => image URL
         $storageSessionMap = [];
         if (is_dir($storageSessionDir)) {
-            $glob = glob($storageSessionDir.'/*');
-            if (! empty($glob)) {
+            $glob = glob($storageSessionDir . '/*');
+            if (!empty($glob)) {
                 foreach ($glob as $p) {
                     $base = basename($p);
                     $id = pathinfo($base, PATHINFO_FILENAME);
-                    $storageSessionMap[$id] = asset('storage/photos/sessions/'.$base);
+                    $storageSessionMap[$id] = asset('storage/photos/sessions/' . $base);
                 }
             }
         }
 
         $publicSessionMap = [];
         if (is_dir($sessionImageDir)) {
-            $glob = glob($sessionImageDir.'/*');
-            if (! empty($glob)) {
+            $glob = glob($sessionImageDir . '/*');
+            if (!empty($glob)) {
                 foreach ($glob as $p) {
                     $base = basename($p);
                     $id = pathinfo($base, PATHINFO_FILENAME);
-                    $publicSessionMap[$id] = '/images/sessions/'.$base;
+                    $publicSessionMap[$id] = '/images/sessions/' . $base;
                 }
             }
         }
@@ -409,34 +405,85 @@ class SessionController extends Controller
         // Precompute observation counts for the sessions in this page to avoid N+1 queries
         $sessionIds = $collection->pluck('id')->filter()->unique()->values()->all();
         $obsCounts = [];
-        if (! empty($sessionIds)) {
+        if (!empty($sessionIds)) {
             $obsCounts = DBFacade::table('sessionObservations')
                 ->whereIn('sessionid', $sessionIds)
                 ->select('sessionid', DBFacade::raw('count(*) as cnt'))
                 ->groupBy('sessionid')
                 ->pluck('cnt', 'sessionid')
                 ->toArray();
-        }
 
-        // Allow forcing translation via query string for testing: ?force_translate=1
-        $forceTranslate = request()->boolean('force_translate');
-        $forceLang = request()->get('force_lang');
-        $shouldTranslate = (Auth::check() && Auth::user()->translate) || $forceTranslate;
-        $lang = null;
-        if ($shouldTranslate) {
-            if (! empty($forceLang)) {
-                $lang = $forceLang;
-            } elseif (Auth::check()) {
-                $lang = Auth::user()->language ?? config('app.locale');
-            } else {
-                $lang = config('app.locale');
+            // Also include any new unified observations from the `observations` table
+            // that match the session participants and date range but are not yet
+            // present in the `sessionObservations` pivot. This ensures newly
+            // created observations appear on the homepage without waiting for
+            // background backfills/jobs.
+            try {
+                foreach ($collection as $session) {
+                    $sid = $session->id;
+
+                    // Prepare participants: primary observer + any other observers
+                    $participants = [];
+                    try {
+                        $participants = is_array($session->otherObservers()) ? $session->otherObservers() : [];
+                    } catch (\Throwable $_) {
+                        $participants = [];
+                    }
+                    if (!in_array($session->observerid, $participants, true)) {
+                        $participants[] = $session->observerid;
+                    }
+
+                    if (empty($participants)) {
+                        continue;
+                    }
+
+                    // Date range
+                    $startDate = null;
+                    $endDate = null;
+                    try {
+                        if (!empty($session->begindate)) {
+                            $startDate = \Carbon\Carbon::parse($session->begindate)->format('Y-m-d');
+                        }
+                    } catch (\Throwable $_) {
+                        $startDate = null;
+                    }
+                    try {
+                        if (!empty($session->enddate)) {
+                            $endDate = \Carbon\Carbon::parse($session->enddate)->format('Y-m-d');
+                        }
+                    } catch (\Throwable $_) {
+                        $endDate = null;
+                    }
+
+                    // Determine existing pivot observation ids for this session to avoid double-counting
+                    $existingIds = DBFacade::table('sessionObservations')->where('sessionid', $sid)->pluck('observationid')->map(fn($v) => (int) $v)->toArray();
+
+                    $q = DBFacade::table('observations')->whereIn('observer_username', $participants);
+                    if ($startDate) {
+                        $q->where('observed_on', '>=', $startDate);
+                    }
+                    if ($endDate) {
+                        $q->where('observed_on', '<=', $endDate);
+                    }
+                    if (!empty($existingIds)) {
+                        $q->whereNotIn('id', $existingIds);
+                    }
+
+                    $additional = (int) $q->count();
+                    $obsCounts[$sid] = (int) ($obsCounts[$sid] ?? 0) + $additional;
+                }
+            } catch (\Throwable $_) {
+                // If anything fails here, fall back to the original counts silently.
             }
         }
+
+        $shouldTranslate = Auth::check() && Auth::user()->translate;
+        $lang = $shouldTranslate ? (Auth::user()->language ?? config('app.locale')) : null;
 
         // Preload primary observers for the sessions so views can safely access $session->observer
         $observerUsernames = $collection->pluck('observerid')->filter()->unique()->values()->all();
         $observerUsers = [];
-        if (! empty($observerUsernames)) {
+        if (!empty($observerUsernames)) {
             $observerUsers = User::whereIn('username', $observerUsernames)->get()->keyBy('username');
         }
 
@@ -444,24 +491,24 @@ class SessionController extends Controller
         $storageSessionDir = storage_path('app/public/photos/sessions');
         $storageSessionMap = [];
         if (is_dir($storageSessionDir)) {
-            $glob = glob($storageSessionDir.'/*');
-            if (! empty($glob)) {
+            $glob = glob($storageSessionDir . '/*');
+            if (!empty($glob)) {
                 foreach ($glob as $p) {
                     $base = basename($p);
                     $id = pathinfo($base, PATHINFO_FILENAME);
-                    $storageSessionMap[$id] = asset('storage/photos/sessions/'.$base);
+                    $storageSessionMap[$id] = asset('storage/photos/sessions/' . $base);
                 }
             }
         }
 
         $publicSessionMap = [];
         if (is_dir($sessionImageDir)) {
-            $glob = glob($sessionImageDir.'/*');
-            if (! empty($glob)) {
+            $glob = glob($sessionImageDir . '/*');
+            if (!empty($glob)) {
                 foreach ($glob as $p) {
                     $base = basename($p);
                     $id = pathinfo($base, PATHINFO_FILENAME);
-                    $publicSessionMap[$id] = '/images/sessions/'.$base;
+                    $publicSessionMap[$id] = '/images/sessions/' . $base;
                 }
             }
         }
@@ -479,8 +526,8 @@ class SessionController extends Controller
             $rawComments = html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
             $translated = $rawComments;
             if ($shouldTranslate && $lang) {
-                $cacheKey = 'session_preview:'.$session->id.':'.$lang;
-                $translated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawComments, $lang) {
+                $cacheKey = 'session_preview:' . $session->id . ':' . $lang;
+                $translated = Cache::remember($cacheKey, now()->addDays(30), function () use ($rawComments, $lang) {
                     try {
                         $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
                         $t = $tr->translate($rawComments);
@@ -523,7 +570,7 @@ class SessionController extends Controller
             $inactiveSessions = $inactiveSessions->map(function ($s) {
                 $others = $s->otherObservers();
                 $names = [];
-                if (! empty($others)) {
+                if (!empty($others)) {
                     foreach ($others as $uname) {
                         $u = User::where('username', $uname)->first();
                         if ($u) {
@@ -555,47 +602,34 @@ class SessionController extends Controller
 
         $perPage = 12;
         $sessions = $query->paginate($perPage)->withQueryString();
+        $sessions->setCollection($this->prepareSessionCards($sessions->getCollection()));
+
+        return $this->noCacheResponse(response()->view('session.all-sessions', compact('sessions')));
+    }
+
+    /**
+     * Prepare sessions for x-session-card (the home page and /sessions): the
+     * observer, location name, picture, number of observations, likes and the
+     * start of the comments, with grouped queries for all sessions together.
+     *
+     * @param  Collection<int, ObservationSession>  $collection
+     * @return Collection<int, ObservationSession>
+     */
+    public function prepareSessionCards(Collection $collection): Collection
+    {
+        ObservationSession::preloadOtherObservers($collection);
 
         // Prefetch related locations to avoid N+1 when resolving location pictures
-        $collection = $sessions->getCollection();
         $locationIds = $collection->pluck('locationid')->filter()->unique()->values()->all();
         $locations = [];
-        if (! empty($locationIds)) {
+        if (!empty($locationIds)) {
             $locations = Location::whereIn('id', $locationIds)->get()->keyBy('id');
-        }
-
-        $sessionImageDir = public_path('images/sessions');
-        $storageSessionDir = storage_path('app/public/photos/sessions');
-
-        // Pre-scan image directories once and build maps session_id => image URL
-        $storageSessionMap = [];
-        if (is_dir($storageSessionDir)) {
-            $glob = glob($storageSessionDir.'/*');
-            if (! empty($glob)) {
-                foreach ($glob as $p) {
-                    $base = basename($p);
-                    $id = pathinfo($base, PATHINFO_FILENAME);
-                    $storageSessionMap[$id] = asset('storage/photos/sessions/'.$base);
-                }
-            }
-        }
-
-        $publicSessionMap = [];
-        if (is_dir($sessionImageDir)) {
-            $glob = glob($sessionImageDir.'/*');
-            if (! empty($glob)) {
-                foreach ($glob as $p) {
-                    $base = basename($p);
-                    $id = pathinfo($base, PATHINFO_FILENAME);
-                    $publicSessionMap[$id] = '/images/sessions/'.$base;
-                }
-            }
         }
 
         // Precompute observation counts for the sessions in this page to avoid N+1 queries
         $sessionIds = $collection->pluck('id')->filter()->unique()->values()->all();
         $obsCounts = [];
-        if (! empty($sessionIds)) {
+        if (!empty($sessionIds)) {
             $obsCounts = DBFacade::table('sessionObservations')
                 ->whereIn('sessionid', $sessionIds)
                 ->select('sessionid', DBFacade::raw('count(*) as cnt'))
@@ -604,34 +638,35 @@ class SessionController extends Controller
                 ->toArray();
         }
 
+        [$likeCounts, $likedIds] = $this->sessionLikes($sessionIds);
+
         $shouldTranslate = Auth::check() && Auth::user()->translate;
         $lang = $shouldTranslate ? (Auth::user()->language ?? config('app.locale')) : null;
 
         // Preload primary observers for the sessions so views can safely access $session->observer
         $observerUsernames = $collection->pluck('observerid')->filter()->unique()->values()->all();
         $observerUsers = [];
-        if (! empty($observerUsernames)) {
+        if (!empty($observerUsernames)) {
             $observerUsers = User::whereIn('username', $observerUsernames)->get()->keyBy('username');
         }
 
-        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang, $observerUsers) {
+        return $collection->transform(function ($session) use ($locations, $obsCounts, $shouldTranslate, $lang, $observerUsers, $likeCounts, $likedIds) {
             if (empty($session->observer)) {
                 $session->observer = isset($observerUsers[$session->observerid]) ? $observerUsers[$session->observerid] : (object) ['name' => $session->observerid, 'slug' => null];
             }
-            $image = null;
-
             $loc = isset($locations[$session->locationid]) ? $locations[$session->locationid] : null;
-            // Attach a human-friendly location name to the session for use in views
             $session->location_name = $loc ? ($loc->name ?? null) : null;
             $session->preview = $this->resolveSessionImage($session, $loc);
             $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
+            $session->likes_count = (int) ($likeCounts[$session->id] ?? 0);
+            $session->liked = isset($likedIds[$session->id]);
 
-            // Prepare translated preview text (comments) for homepage
+            // The start of the comments, translated for observers who asked for translations
             $rawComments = html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
             $translated = $rawComments;
             if ($shouldTranslate && $lang) {
-                $cacheKey = 'session_preview:'.$session->id.':'.$lang;
-                $translated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawComments, $lang) {
+                $cacheKey = 'session_preview:' . $session->id . ':' . $lang;
+                $translated = Cache::remember($cacheKey, now()->addDays(30), function () use ($rawComments, $lang) {
                     try {
                         $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
                         $t = $tr->translate($rawComments);
@@ -647,10 +682,37 @@ class SessionController extends Controller
 
             return $session;
         });
+    }
 
-        $sessions->setCollection($collection);
+    /**
+     * Like counts of the given sessions, and which of them the viewer liked.
+     *
+     * @return array{0: array<int, int>, 1: array<int, int>} counts keyed by session id, and the liked session ids as keys
+     */
+    private function sessionLikes(array $sessionIds): array
+    {
+        if (empty($sessionIds)) {
+            return [[], []];
+        }
 
-        return $this->noCacheResponse(response()->view('session.all-sessions', compact('sessions')));
+        $likeCounts = ObservationLike::where('observation_type', ObservationLike::TYPE_SESSION)
+            ->whereIn('observation_id', $sessionIds)
+            ->select('observation_id', DBFacade::raw('count(*) as cnt'))
+            ->groupBy('observation_id')
+            ->pluck('cnt', 'observation_id')
+            ->toArray();
+
+        $likedIds = [];
+        if (Auth::check()) {
+            $likedIds = ObservationLike::where('observation_type', ObservationLike::TYPE_SESSION)
+                ->whereIn('observation_id', $sessionIds)
+                ->where('user_id', Auth::id())
+                ->pluck('observation_id')
+                ->flip()
+                ->all();
+        }
+
+        return [$likeCounts, $likedIds];
     }
 
     /**
@@ -660,7 +722,7 @@ class SessionController extends Controller
     {
         // Try to resolve user by slug first, then by username fallback
         $u = User::where('slug', $user)->first();
-        if (! $u) {
+        if (!$u) {
             $u = User::where('username', $user)->firstOrFail();
         }
 
@@ -672,12 +734,13 @@ class SessionController extends Controller
 
         $perPage = 12;
         $sessions = $query->paginate($perPage)->withQueryString();
+        ObservationSession::preloadOtherObservers($sessions->getCollection());
 
         // Prefetch related locations to avoid N+1 when resolving location pictures
         $collection = $sessions->getCollection();
         $locationIds = $collection->pluck('locationid')->filter()->unique()->values()->all();
         $locations = [];
-        if (! empty($locationIds)) {
+        if (!empty($locationIds)) {
             $locations = Location::whereIn('id', $locationIds)->get()->keyBy('id');
         }
 
@@ -686,7 +749,7 @@ class SessionController extends Controller
         // Precompute observation counts for the sessions in this page to avoid N+1 queries
         $sessionIds = $collection->pluck('id')->filter()->unique()->values()->all();
         $obsCounts = [];
-        if (! empty($sessionIds)) {
+        if (!empty($sessionIds)) {
             $obsCounts = DBFacade::table('sessionObservations')
                 ->whereIn('sessionid', $sessionIds)
                 ->select('sessionid', DBFacade::raw('count(*) as cnt'))
@@ -724,24 +787,26 @@ class SessionController extends Controller
 
         // Only show inactive (draft) sessions to the page owner. Do not allow administrator override here.
         if ($ownerUsername && $viewerIsOwner) {
+            // The first 10 drafts, or all of them after "Show more" (?show_drafts=1).
+            $showAllDrafts = $request->boolean('show_drafts');
             $allDrafts = ObservationSession::where('observerid', $ownerUsername)
                 ->where('active', 0)
                 ->with('observer')
                 ->orderByDesc('id')
-                ->limit(11)
+                ->when(!$showAllDrafts, fn ($query) => $query->limit(11))
                 ->get();
 
-            if ($allDrafts->count() > 10) {
+            if (!$showAllDrafts && $allDrafts->count() > 10) {
                 $inactiveMore = true;
             }
 
-            $inactiveSessions = $allDrafts->slice(0, 10);
+            $inactiveSessions = $showAllDrafts ? $allDrafts : $allDrafts->slice(0, 10);
 
             // Attach display names of other observers for each draft
             $inactiveSessions = $inactiveSessions->map(function ($s) {
                 $others = $s->otherObservers();
                 $names = [];
-                if (! empty($others)) {
+                if (!empty($others)) {
                     foreach ($others as $uname) {
                         $u = User::where('username', $uname)->first();
                         if ($u) {
@@ -762,132 +827,19 @@ class SessionController extends Controller
     /**
      * Show form to create a new observation session.
      */
-    public function create()
+    public function create(Request $request)
     {
-        // Only authenticated users can create sessions (route is protected by middleware)
-        $users = User::orderBy('name')->get();
-        $locations = Location::orderBy('name')->get();
-
-        return $this->noCacheResponse(response()->view('session.create', compact('users', 'locations')));
-    }
-
-    /**
-     * Store a newly created observation session.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'observer' => 'required|string|exists:users,username',
-            'locationid' => 'required|integer|exists:locations,id',
-            'begindate' => 'required|date',
-            'enddate' => 'required|date',
-            'weather' => 'nullable|string',
-            'equipment' => 'nullable|string',
-            'comments' => 'nullable|string',
-            'active' => 'sometimes|boolean',
-        ]);
-
-        $session = new ObservationSession;
-        $session->name = $validated['name'];
-        $session->observerid = $validated['observer'];
-        $session->locationid = $validated['locationid'] ?? null;
-        // Debug: log incoming raw date values
-        try {
-            \Illuminate\Support\Facades\Log::info('SessionController.store raw dates', ['begindate_raw' => $request->input('begindate'), 'enddate_raw' => $request->input('enddate')]);
-        } catch (\Throwable $e) {
-            // ignore
+        // ?adapt_from={id} opens an existing session in the form (see adapt()),
+        // which saves over it, so it needs the same check as adapt().
+        $session = null;
+        if ($request->filled('adapt_from')) {
+            $session = ObservationSession::findOrFail($request->query('adapt_from'));
+            if (!$session->canBeEditedBy($request->user())) {
+                abort(403);
+            }
         }
 
-        // Normalize date-only inputs to literal datetimes (no timezone conversion)
-        if (! empty($validated['begindate'])) {
-            try {
-                $raw = (string) $validated['begindate'];
-                if (preg_match('/^(\d{4}-\d{2}-\d{2})/', $raw, $m)) {
-                    $session->begindate = $m[1].' 00:00:00';
-                } else {
-                    $session->begindate = $validated['begindate'];
-                }
-            } catch (\Throwable $e) {
-                $session->begindate = $validated['begindate'];
-            }
-        } else {
-            $session->begindate = null;
-        }
-
-        if (! empty($validated['enddate'])) {
-            try {
-                $raw = (string) $validated['enddate'];
-                if (preg_match('/^(\d{4}-\d{2}-\d{2})/', $raw, $m)) {
-                    $session->enddate = $m[1].' 23:59:59';
-                } else {
-                    $session->enddate = $validated['enddate'];
-                }
-            } catch (\Throwable $e) {
-                $session->enddate = $validated['enddate'];
-            }
-        } else {
-            $session->enddate = null;
-        }
-
-        // Validate that enddate is not before begindate
-        try {
-            if (! empty($session->begindate) && ! empty($session->enddate)) {
-                $begin = \Carbon\Carbon::parse($session->begindate);
-                $end = \Carbon\Carbon::parse($session->enddate);
-                if ($end->lt($begin)) {
-                    return redirect()->back()->withInput()->withErrors(['enddate' => __('The end date must be the same as or after the begin date.')]);
-                }
-            }
-        } catch (\Throwable $e) {
-            // If parsing fails, allow the save to proceed and let DB constraints handle it if necessary
-        }
-        $session->weather = $validated['weather'] ?? null;
-        $session->equipment = $validated['equipment'] ?? null;
-        $session->comments = $validated['comments'] ?? null;
-        $session->active = isset($validated['active']) ? (int) $validated['active'] : 1;
-
-        $session->save();
-
-        // After saving the primary session, dispatch job to build per-user copies and sessionObservations
-        try {
-            $otherObservers = $request->input('otherObservers');
-            $otherArray = [];
-            if (! empty($otherObservers)) {
-                if (is_array($otherObservers)) {
-                    $otherArray = $otherObservers;
-                } else {
-                    $otherArray = array_filter(array_map('trim', explode(',', $otherObservers)));
-                }
-            }
-
-            $participants = array_values(array_unique(array_filter(array_merge([$session->observerid], $otherArray))));
-            \App\Jobs\BuildSessionCopies::dispatch($session->id, $participants);
-
-            // Dispatch invitation messages asynchronously
-            try {
-                $sender = auth()->check() ? auth()->user()->username : ($session->observerid ?? 'admin');
-                $creator = auth()->check() ? auth()->user()->username : null;
-                $invitees = $participants;
-                if (! empty($creator)) {
-                    $invitees = array_values(array_filter($participants, function ($u) use ($creator) {
-                        return $u !== $creator;
-                    }));
-                }
-
-                if (! empty($invitees)) {
-                    \App\Jobs\SendSessionInvitations::dispatch($session->id, $invitees, $sender);
-                }
-            } catch (\Throwable $e) {
-                report($e);
-            }
-        } catch (\Throwable $e) {
-            report($e);
-        }
-        // Redirect to the newly created session page. Find the user by username to get the slug for URL.
-        $user = User::where('username', $session->observerid)->first();
-
-        return redirect()->route('session.show', [$user ? $user->slug : $session->observerid, $session->slug ?? $session->id]);
+        return $this->noCacheResponse(response()->view('session.create', compact('session')));
     }
 
     /**
@@ -898,9 +850,7 @@ class SessionController extends Controller
     {
         $session = ObservationSession::findOrFail($sessionId);
 
-        // Allow owner or administrators (when feature flag enabled) to adapt the session
-        $allowAdmin = config('sessions.allow_admin_override', false);
-        if (! auth()->check() || (auth()->user()->username !== $session->observerid && ! ($allowAdmin && method_exists(auth()->user(), 'hasAdministratorPrivileges') && auth()->user()->hasAdministratorPrivileges()))) {
+        if (!$session->canBeEditedBy(auth()->user())) {
             abort(403);
         }
 
@@ -915,9 +865,7 @@ class SessionController extends Controller
     {
         $session = ObservationSession::findOrFail($sessionId);
 
-        // Allow owner or administrators (when feature flag enabled) to delete the session
-        $allowAdmin = config('sessions.allow_admin_override', false);
-        if (! auth()->check() || (auth()->user()->username !== $session->observerid && ! ($allowAdmin && method_exists(auth()->user(), 'hasAdministratorPrivileges') && auth()->user()->hasAdministratorPrivileges()))) {
+        if (!$session->canBeEditedBy(auth()->user())) {
             abort(403);
         }
 
@@ -930,13 +878,13 @@ class SessionController extends Controller
             DBFacade::table('sessionObservers')->where('sessionid', $session->id)->delete();
 
             // Remove observation likes that reference this session (observation_type = 'session')
-            \App\Models\ObservationLike::where('observation_type', 'session')->where('observation_id', $session->id)->delete();
+            \App\Models\ObservationLike::where('observation_type', \App\Models\ObservationLike::TYPE_SESSION)->where('observation_id', $session->id)->delete();
 
             // Remove any public image files named after the session id
             $sessionImageDir = public_path('images/sessions');
             if (is_dir($sessionImageDir)) {
-                $matches = glob($sessionImageDir.'/'.$session->id.'.*');
-                if (! empty($matches)) {
+                $matches = glob($sessionImageDir . '/' . $session->id . '.*');
+                if (!empty($matches)) {
                     foreach ($matches as $f) {
                         @unlink($f);
                     }
@@ -944,9 +892,9 @@ class SessionController extends Controller
             }
 
             // Remove legacy stored picture referenced via storage if present
-            if (! empty($session->picture)) {
+            if (!empty($session->picture)) {
                 // session->picture is usually stored for asset('storage/...') paths, remove from storage/app/public
-                $storagePath = storage_path('app/public/'.ltrim($session->picture, '/'));
+                $storagePath = storage_path('app/public/' . ltrim($session->picture, '/'));
                 if (file_exists($storagePath)) {
                     @unlink($storagePath);
                 }
@@ -972,149 +920,168 @@ class SessionController extends Controller
     }
 
     /**
-     * Homepage sessions (mirrors previous route closure) - shows 5 newest active sessions.
+     * The home page (and /dashboard): news, tonight's best, the sketches of the
+     * week and month, and a short preview of the newest observations, sketches,
+     * sessions and observing lists, each with a link to its full page.
      */
     public function homepage(Request $request)
     {
-        // Reject crawler URLs (combined or deep page parameters) before doing any work.
-        if (! HomepagePagination::isValidRequest($request)) {
-            abort(404);
+        // The home page no longer pages its boxes: send the old (crawler) URLs to the page itself.
+        if (array_intersect(self::OLD_HOMEPAGE_PARAMS, array_keys($request->query())) !== []) {
+            return redirect($request->url(), 301);
         }
 
-        $query = ObservationSession::where('active', 1)
+        $sessions = $this->prepareSessionCards(ObservationSession::where('active', 1)
             ->withObserver()
             ->orderByDesc('enddate')
-            ->orderByDesc('begindate');
+            ->orderByDesc('begindate')
+            ->limit(self::HOMEPAGE_SESSIONS)
+            ->get());
 
-        $perPage = 6;
-        $sessions = HomepagePagination::cap($query->paginate($perPage, $columns = ['*'], $pageName = 'sessions'));
+        // The newest observations and sketches, refreshed every 5 minutes and when an observation
+        // changes (ObservationObserver::forgetHomepageCaches())
+        $observations = Cache::remember('welcome_observations', 300, fn () => Observation::whereIn('target_type', self::HOMEPAGE_TARGET_TYPES)
+            ->orderByDesc('observed_on')
+            ->orderByDesc('id')
+            ->limit(self::HOMEPAGE_OBSERVATIONS)
+            ->get());
+        $sketches = Cache::remember('welcome_sketches', 300, fn () => Observation::where('has_drawing', true)
+            ->whereIn('target_type', self::HOMEPAGE_TARGET_TYPES)
+            ->orderByDesc('observed_on')
+            ->orderByDesc('id')
+            ->limit(self::HOMEPAGE_SKETCHES)
+            ->get());
 
-        // Prefetch related locations to avoid N+1 when resolving location pictures
-        $collection = $sessions->getCollection();
-        $locationIds = $collection->pluck('locationid')->filter()->unique()->values()->all();
-        $locations = [];
-        if (! empty($locationIds)) {
-            $locations = Location::whereIn('id', $locationIds)->get()->keyBy('id');
+        $today = today()->toDateString();
+        $sketchOfTheWeek = Cache::remember('welcome_sketch_week:' . $today, 3600, fn () => SketchOfTheWeek::published()->orderByDesc('date')->first());
+        $sketchOfTheMonth = Cache::remember('welcome_sketch_month:' . $today, 3600, fn () => SketchOfTheMonth::published()->with('observation')->orderByDesc('date')->first());
+
+        // Observers, objects, equipment, ... of all observations on the page in grouped queries
+        ObservationCardData::instance()->preload($observations->concat($sketches)
+            ->push($sketchOfTheWeek?->observation, $sketchOfTheMonth?->observation)
+            ->filter());
+
+        // The newest public observing lists with objects, refreshed every 5 minutes as the sketches
+        $observingLists = Cache::remember('welcome_observing_lists', 300, fn () => ObservingList::where('public', true)
+            ->has('items')
+            ->with('owner:id,name,slug')
+            ->withCount(['items', 'subscriptions'])
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->limit(6)
+            ->get());
+
+        // The objects worth observing tonight, for the observer's telescope or, for guests, the most observed ones
+        try {
+            $tonightsBest = TonightsBest::for(Auth::user());
+        } catch (\Throwable $e) {
+            report($e);
+            $tonightsBest = null;
         }
 
-        $sessionImageDir = public_path('images/sessions');
-
-        // Precompute observation counts for the sessions in this page to avoid N+1 queries
-        $sessionIds = $collection->pluck('id')->filter()->unique()->values()->all();
-        $obsCounts = [];
-        if (! empty($sessionIds)) {
-            $obsCounts = DBFacade::table('sessionObservations')
-                ->whereIn('sessionid', $sessionIds)
-                ->select('sessionid', DBFacade::raw('count(*) as cnt'))
-                ->groupBy('sessionid')
-                ->pluck('cnt', 'sessionid')
-                ->toArray();
-        }
-
-        // Allow forcing translation via query string for testing: ?force_translate=1
-        $forceTranslate = request()->boolean('force_translate');
-        $forceLang = request()->get('force_lang');
-        $shouldTranslate = (Auth::check() && Auth::user()->translate) || $forceTranslate;
-        $lang = null;
-        if ($shouldTranslate) {
-            if (! empty($forceLang)) {
-                $lang = $forceLang;
-            } elseif (Auth::check()) {
-                $lang = Auth::user()->language ?? config('app.locale');
-            } else {
-                $lang = config('app.locale');
-            }
-        }
-
-        // Preload primary observers for the sessions so views can safely access $session->observer
-        $observerUsernames = $collection->pluck('observerid')->filter()->unique()->values()->all();
-        $observerUsers = [];
-        if (! empty($observerUsernames)) {
-            $observerUsers = User::whereIn('username', $observerUsernames)->get()->keyBy('username');
-        }
-
-        // Pre-scan image directories once and build maps session_id => image URL (homepage)
-        $storageSessionDir = storage_path('app/public/photos/sessions');
-        $storageSessionMap = [];
-        if (is_dir($storageSessionDir)) {
-            $glob = glob($storageSessionDir.'/*');
-            if (! empty($glob)) {
-                foreach ($glob as $p) {
-                    $base = basename($p);
-                    $id = pathinfo($base, PATHINFO_FILENAME);
-                    $storageSessionMap[$id] = asset('storage/photos/sessions/'.$base);
-                }
+        // The cloud forecast of the coming nights at the observer's standard location, if Open-Meteo answered already
+        $nightForecast = null;
+        $forecastLocation = Auth::user()?->standardLocation;
+        if ($forecastLocation && $forecastLocation->hasValidCoordinates()) {
+            try {
+                $nightForecast = NightForecast::forLocation($forecastLocation, fetch: false);
+            } catch (\Throwable $e) {
+                report($e);
             }
         }
 
-        $publicSessionMap = [];
-        if (is_dir($sessionImageDir)) {
-            $glob = glob($sessionImageDir.'/*');
-            if (! empty($glob)) {
-                foreach ($glob as $p) {
-                    $base = basename($p);
-                    $id = pathinfo($base, PATHINFO_FILENAME);
-                    $publicSessionMap[$id] = '/images/sessions/'.$base;
-                }
-            }
+        // The Moon tonight with the lunar features at the terminator
+        try {
+            $moonTonight = LunarTerminator::forHomePage(Auth::user());
+        } catch (\Throwable $e) {
+            report($e);
+            $moonTonight = null;
         }
 
-        $collection = $collection->transform(function ($session) use ($locations, $sessionImageDir, $obsCounts, $shouldTranslate, $lang, $observerUsers, $storageSessionMap, $publicSessionMap) {
-            if (empty($session->observer)) {
-                $session->observer = isset($observerUsers[$session->observerid]) ? $observerUsers[$session->observerid] : (object) ['name' => $session->observerid, 'slug' => null];
-            }
-            // Lookup pre-scanned image maps to avoid per-session filesystem checks
-            $image = null;
-            if (isset($storageSessionMap[$session->id])) {
-                $image = $storageSessionMap[$session->id];
-            } elseif (isset($publicSessionMap[$session->id])) {
-                $image = $publicSessionMap[$session->id];
-            }
+        // The events of the moons of Jupiter and Saturn still to come tonight
+        try {
+            $planetMoonsTonight = PlanetMoonEvents::forHomePage(Auth::user());
+        } catch (\Throwable $e) {
+            report($e);
+            $planetMoonsTonight = null;
+        }
 
-            // Fallback: session->picture (legacy) if present
-            if (empty($image) && ! empty($session->picture)) {
-                $image = asset('storage/'.$session->picture);
-            }
+        // The current news (#960), with the local circumstances of the events for the observer's location
+        try {
+            $news = NewsItem::current()->with('author:id,name')->orderByDesc('published_at')->orderByDesc('id')->limit(self::HOMEPAGE_NEWS)->get();
+            $newsLocation = $news->contains(fn (NewsItem $item) => $item->isAutomatic()) ? Location::forEphemerides(Auth::user()) : null;
+        } catch (\Throwable $e) {
+            report($e);
+            $news = collect();
+            $newsLocation = null;
+        }
 
-            // Fallback: location picture if available
-            if (empty($image) && ! empty($session->locationid) && isset($locations[$session->locationid])) {
-                $loc = $locations[$session->locationid];
-                if (! empty($loc->picture)) {
-                    $image = asset('storage/'.$loc->picture);
-                }
-            }
+        // The starparties of the coming weeks (#315) the observer may see
+        try {
+            $starParties = StarParty::visibleTo(Auth::user())
+                ->upcoming()
+                ->where('start_date', '<=', today()->addDays(self::HOMEPAGE_STAR_PARTY_DAYS)->toDateString())
+                ->with('participants')
+                ->orderBy('start_date')
+                ->orderBy('id')
+                ->limit(self::HOMEPAGE_STAR_PARTIES)
+                ->get()
+                ->reject(fn (StarParty $party) => $party->isPast())
+                ->values();
+        } catch (\Throwable $e) {
+            report($e);
+            $starParties = collect();
+        }
 
-            // Attach a human-friendly location name for homepage sessions
-            $loc = isset($locations[$session->locationid]) ? $locations[$session->locationid] : null;
-            $session->location_name = $loc ? ($loc->name ?? null) : null;
-            $session->preview = $image;
-            $session->observation_count = isset($obsCounts[$session->id]) ? (int) $obsCounts[$session->id] : 0;
+        // The object of the month of Astroforum, with the newest drawings of its objects in its months
+        try {
+            $objectOfTheMonth = ObjectOfTheMonth::current();
+            $objectOfTheMonthDrawings = $objectOfTheMonth
+                ? $objectOfTheMonth->observationsQuery()->where('observations.has_drawing', true)->limit(self::HOMEPAGE_OBJECT_OF_THE_MONTH_DRAWINGS)->get()
+                : collect();
+            ObservationCardData::instance()->preload($objectOfTheMonthDrawings);
+        } catch (\Throwable $e) {
+            report($e);
+            $objectOfTheMonth = null;
+            $objectOfTheMonthDrawings = collect();
+        }
 
-            // Prepare translated preview text (comments) for homepage
-            $rawComments = html_entity_decode($session->comments ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            $translated = $rawComments;
-            if ($shouldTranslate && $lang) {
-                $cacheKey = 'session_preview:'.$session->id.':'.$lang;
-                $translated = Cache::remember($cacheKey, 60 * 24 * 30, function () use ($rawComments, $lang) {
-                    try {
-                        $tr = new \Stichoza\GoogleTranslate\GoogleTranslate($lang);
-                        $t = $tr->translate($rawComments);
+        // The running observing challenges, those the observer joined first with their progress
+        try {
+            $challenges = ObservingChallenge::forHomePage(Auth::user());
+        } catch (\Throwable $e) {
+            report($e);
+            $challenges = collect();
+        }
 
-                        return $t !== null ? $t : $rawComments;
-                    } catch (\Throwable $e) {
-                        return $rawComments;
-                    }
-                });
-            }
+        // The observer's own sessions of the last weeks without any observation of theirs
+        try {
+            $sessionsWithoutObservations = Auth::check() ? SessionObservationReminders::forUser(Auth::user()) : collect();
+        } catch (\Throwable $e) {
+            report($e);
+            $sessionsWithoutObservations = collect();
+        }
 
-            $session->preview_text = Str::limit(strip_tags($translated), 180);
-
-            return $session;
-        });
-
-        $sessions->setCollection($collection);
-
-        return $this->noCacheResponse(response()->view('welcome', compact('sessions')));
+        return $this->noCacheResponse(response()->view('welcome', compact(
+            'sessions',
+            'sessionsWithoutObservations',
+            'observations',
+            'sketches',
+            'sketchOfTheWeek',
+            'sketchOfTheMonth',
+            'observingLists',
+            'tonightsBest',
+            'nightForecast',
+            'forecastLocation',
+            'moonTonight',
+            'planetMoonsTonight',
+            'news',
+            'newsLocation',
+            'starParties',
+            'objectOfTheMonth',
+            'objectOfTheMonthDrawings',
+            'challenges',
+        )));
     }
 
     /**
@@ -1139,7 +1106,7 @@ class SessionController extends Controller
      * @param  \App\Models\Location|null  $location
      * @return string|null
      */
-    protected function resolveSessionImage($session, $location = null)
+    public static function resolveSessionImage($session, $location = null)
     {
         $image = null;
 
@@ -1147,22 +1114,22 @@ class SessionController extends Controller
         $storageSessionDir = storage_path('app/public/photos/sessions');
         if (is_dir($storageSessionDir)) {
             $patterns = [
-                $storageSessionDir.'/'.$session->id.'.jpg',
-                $storageSessionDir.'/'.$session->id.'.jpeg',
-                $storageSessionDir.'/'.$session->id.'.png',
-                $storageSessionDir.'/'.$session->id.'.gif',
+                $storageSessionDir . '/' . $session->id . '.jpg',
+                $storageSessionDir . '/' . $session->id . '.jpeg',
+                $storageSessionDir . '/' . $session->id . '.png',
+                $storageSessionDir . '/' . $session->id . '.gif',
             ];
             foreach ($patterns as $p) {
                 if (file_exists($p)) {
-                    $image = asset('storage/photos/sessions/'.basename($p));
+                    $image = asset('storage/photos/sessions/' . basename($p));
                     break;
                 }
             }
 
             if (empty($image)) {
-                $glob = glob($storageSessionDir.'/'.$session->id.'.*');
-                if (! empty($glob)) {
-                    $image = asset('storage/photos/sessions/'.basename($glob[0]));
+                $glob = glob($storageSessionDir . '/' . $session->id . '.*');
+                if (!empty($glob)) {
+                    $image = asset('storage/photos/sessions/' . basename($glob[0]));
                 }
             }
         }
@@ -1172,35 +1139,35 @@ class SessionController extends Controller
             $sessionImageDir = public_path('images/sessions');
             if (is_dir($sessionImageDir)) {
                 $patterns = [
-                    $sessionImageDir.'/'.$session->id.'.jpg',
-                    $sessionImageDir.'/'.$session->id.'.jpeg',
-                    $sessionImageDir.'/'.$session->id.'.png',
-                    $sessionImageDir.'/'.$session->id.'.gif',
+                    $sessionImageDir . '/' . $session->id . '.jpg',
+                    $sessionImageDir . '/' . $session->id . '.jpeg',
+                    $sessionImageDir . '/' . $session->id . '.png',
+                    $sessionImageDir . '/' . $session->id . '.gif',
                 ];
                 foreach ($patterns as $p) {
                     if (file_exists($p)) {
-                        $image = '/images/sessions/'.basename($p);
+                        $image = '/images/sessions/' . basename($p);
                         break;
                     }
                 }
 
                 if (empty($image)) {
-                    $glob = glob($sessionImageDir.'/'.$session->id.'.*');
-                    if (! empty($glob)) {
-                        $image = '/images/sessions/'.basename($glob[0]);
+                    $glob = glob($sessionImageDir . '/' . $session->id . '.*');
+                    if (!empty($glob)) {
+                        $image = '/images/sessions/' . basename($glob[0]);
                     }
                 }
             }
         }
 
         // 3) legacy session->picture stored under storage/app/public/... (session->picture is usually a relative path)
-        if (empty($image) && ! empty($session->picture)) {
-            $image = asset('storage/'.$session->picture);
+        if (empty($image) && !empty($session->picture)) {
+            $image = asset('storage/' . $session->picture);
         }
 
         // 4) location picture (fallback)
-        if (empty($image) && $location && ! empty($location->picture)) {
-            $image = asset('storage/'.$location->picture);
+        if (empty($image) && $location && !empty($location->picture)) {
+            $image = asset('storage/' . $location->picture);
         }
 
         return $image;

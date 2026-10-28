@@ -1,14 +1,16 @@
 import "./bootstrap";
 import "./share-buttons.js";
 import "./toggle-list-item.js";
+import "./wireui-multiselect-search.js";
 import "../css/toast.css";
 
-import "./../../vendor/power-components/livewire-powergrid/dist/powergrid";
-import "./../../vendor/power-components/livewire-powergrid/dist/tailwind.css";
+import "./../../vendor/power-components/livewire-powergrid/resources/js/powergrid.js";
+import "./powergrid-responsive.js";
 
 //@formatter:off
 import flatpickr from "flatpickr";
 flatpickr.l10ns.default.firstDayOfWeek = 1;
+window.flatpickr = flatpickr;
 //@formatter:on
 
 import L from 'leaflet';

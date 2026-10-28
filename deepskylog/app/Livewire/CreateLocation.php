@@ -2,14 +2,15 @@
 
 namespace App\Livewire;
 
+use App\Models\Country;
 use App\Models\Location;
+use App\Support\UploadedPhoto;
 use deepskylog\AstronomyLibrary\Magnitude;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -69,6 +70,8 @@ class CreateLocation extends Component
     public function mount($location = null): void
     {
         if ($location) {
+            abort_unless($location->canBeEditedBy(Auth::user()), 403);
+
             $this->location = $location;
             $this->update = true;
             $this->name = $location->name;
@@ -77,47 +80,63 @@ class CreateLocation extends Component
             $this->longitude = $location->longitude;
             $this->hidden = $location->hidden;
             $this->elevation = $location->elevation;
+            $this->country = $location->country;
+            $this->timezone = $location->timezone;
 
             if ($location->skyBackground > 0) {
                 $this->sqm = $location->skyBackground ?? null;
                 $this->updatedSqm($this->sqm);
             } elseif ($location->limitingMagnitude > 0) {
-                $this->nelm = $location->limitingMagnitude ?? null;
+                // The stored NELM is without the fstOffset of the observer, the
+                // form shows (and save() stores) it with the offset.
+                $this->nelm = $location->getNelm(Auth()->user()->fstOffset ?? 0);
                 $this->updatedNelm($this->nelm);
             }
             // Frontend initialization of the map is handled client-side via Livewire hooks
+        } else {
+            // The country of residence, until the reverse geocoder answers;
+            // also what is kept when the lookup fails.
+            $this->country = Country::nameForCode(Auth::user()->country);
         }
     }
 
     public function save()
     {
-        $this->updateElevation($this->latitude, $this->longitude);
-        $this->updateCountry($this->latitude, $this->longitude);
+        if ($this->location) {
+            abort_unless($this->location->canBeEditedBy(Auth::user()), 403);
+        }
 
-        // Make sure to add the nelm value without the fstOffset
-        if ($this->sqm !== null) {
-            $this->nelm = $this->nelm + Auth()->user()->fstOffset;
-        } else {
-            $this->sqm = -999;
-            $this->nelm = -999;
+        // Only look the elevation, country and time zone up for a new location,
+        // moved coordinates or values that are still missing.
+        if ($this->needsLookup()) {
+            $this->updateElevation($this->latitude, $this->longitude);
+            $this->updateCountry($this->latitude, $this->longitude);
         }
 
         $photoPath = null;
 
-        $this->country = preg_replace('/\s*\(.*\)\s*/', '', $this->country);
+        $this->country = Country::canonicalName($this->country);
 
-        // Validate first to ensure uploaded file is acceptable before any processing
+        // Validate first to ensure uploaded file is acceptable before any processing.
+        // The form values are validated, not the stored ones: -999 (no value) and
+        // the NELM with the fstOffset are outside the ranges of the rules.
         $this->validate();
+
+        // Make sure to add the nelm value without the fstOffset
+        if ($this->sqm !== null && $this->sqm !== '') {
+            $skyBackground = $this->sqm;
+            $limitingMagnitude = ($this->nelm === null || $this->nelm === '')
+                ? -999
+                : $this->nelm + (Auth()->user()->fstOffset ?? 0);
+        } else {
+            $skyBackground = -999;
+            $limitingMagnitude = -999;
+        }
 
         // If a photo was uploaded, store it now.
         // dd($this->photo);
         if ($this->photo) {
-            $upload_name = Str::slug(
-                Auth()->user()->slug.' '.$this->name,
-                '-'
-            ).'.'.$this->photo->getClientOriginalExtension();
-            // Make a slug from the upload_name
-            $photoPath = $this->photo->storePubliclyAs('photos/locations', $upload_name, 'public');
+            $photoPath = UploadedPhoto::store($this->photo, 'photos/locations', $this->location);
 
             $picture = $photoPath;
         }
@@ -125,15 +144,15 @@ class CreateLocation extends Component
         if ($this->update) {
             $this->location->update([
                 'name' => $this->name,
-                'description' => $this->description,
+                'description' => $this->description ?? '',
                 'latitude' => $this->latitude,
                 'longitude' => $this->longitude,
                 'hidden' => $this->hidden,
                 'elevation' => $this->elevation,
                 'country' => $this->country,
                 'timezone' => $this->timezone,
-                'skyBackground' => $this->sqm,
-                'limitingMagnitude' => $this->nelm,
+                'skyBackground' => $skyBackground,
+                'limitingMagnitude' => $limitingMagnitude,
             ]);
 
             if ($this->photo) {
@@ -151,15 +170,15 @@ class CreateLocation extends Component
 
             $location = Location::create([
                 'name' => $this->name,
-                'description' => $this->description,
+                'description' => $this->description ?? '',
                 'latitude' => $this->latitude,
                 'longitude' => $this->longitude,
                 'hidden' => $this->hidden,
                 'elevation' => $this->elevation,
                 'country' => $this->country,
                 'timezone' => $this->timezone,
-                'skyBackground' => $this->sqm,
-                'limitingMagnitude' => $this->nelm,
+                'skyBackground' => $skyBackground,
+                'limitingMagnitude' => $limitingMagnitude,
                 'user_id' => $user_id,
                 'observer' => $observer,
             ]);
@@ -180,6 +199,24 @@ class CreateLocation extends Component
         $this->description = $value;
     }
 
+    private function needsLookup(): bool
+    {
+        if (! $this->update) {
+            return true;
+        }
+
+        $moved = abs((float) $this->latitude - (float) $this->location->latitude) > 1e-6
+            || abs((float) $this->longitude - (float) $this->location->longitude) > 1e-6;
+
+        return $moved
+            || $this->elevation === null || $this->elevation === ''
+            || empty($this->country) || $this->country === 'Unknown'
+            || empty($this->timezone);
+    }
+
+    /**
+     * Looks the elevation up. On a failure the current value is kept (0 when there is none).
+     */
     public function updateElevation($latitude, $longitude): void
     {
         $client = new Client;
@@ -190,14 +227,17 @@ class CreateLocation extends Component
                 ],
             ]);
             $data = json_decode($response->getBody(), true);
-            $this->elevation = $data['results'][0]['elevation'] ?? 0;
-
-            $this->updateCountry($latitude, $longitude);
+            $this->elevation = $data['results'][0]['elevation'] ?? $this->elevation ?? 0;
         } catch (GuzzleException) {
-            $this->elevation = 0;
+            $this->elevation ??= 0;
         }
     }
 
+    /**
+     * Looks the country and time zone up. On a failure the current values are
+     * kept (for a new location the observer's country of residence), 'Unknown'
+     * and 'UTC' when there are none.
+     */
     public function updateCountry($latitude, $longitude): void
     {
         $client = new Client;
@@ -207,13 +247,13 @@ class CreateLocation extends Component
                     'latitude' => $latitude,
                     'longitude' => $longitude,
                     'localityLanguage' => 'en',
-                    'key' => env('BIGDATA_API_KEY'),
+                    'key' => config('services.bigdatacloud.key'),
                 ],
             ]);
             $data = json_decode($response->getBody(), true);
-            $this->country = $data['countryName'] ?? 'Unknown';
+            $this->country = ($data['countryName'] ?? '') ?: ($this->country ?: 'Unknown');
         } catch (GuzzleException $e) {
-            $this->country = 'Unknown';
+            $this->country = $this->country ?: 'Unknown';
         }
 
         $client2 = new Client;
@@ -222,13 +262,13 @@ class CreateLocation extends Component
                 'query' => [
                     'latitude' => $latitude,
                     'longitude' => $longitude,
-                    'key' => env('BIGDATA_API_KEY'),
+                    'key' => config('services.bigdatacloud.key'),
                 ],
             ]);
             $data = json_decode($response->getBody(), true);
-            $this->timezone = $data['ianaTimeId'] ?? 'UTC';
+            $this->timezone = ($data['ianaTimeId'] ?? '') ?: ($this->timezone ?: 'UTC');
         } catch (GuzzleException $e) {
-            $this->timezone = 'UTC';
+            $this->timezone = $this->timezone ?: 'UTC';
         }
     }
 
@@ -375,7 +415,7 @@ class CreateLocation extends Component
                     'ql' => 'wa_2015',
                     'qt' => 'point',
                     'qd' => $this->longitude.','.$this->latitude,
-                    'key' => env('LIGHTPOLLUTIONMAP_API_KEY'),
+                    'key' => config('services.lightpollutionmap.key'),
                 ],
             ]);
 

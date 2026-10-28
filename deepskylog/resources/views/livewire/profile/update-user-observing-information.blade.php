@@ -92,6 +92,14 @@
                 id="showInches"
                 wire:model.live="showInches"
             />
+            @if ($suggestInches)
+                <div class="mt-1 text-sm text-gray-400">
+                    {{ __('Observers in :country usually give the diameter in inches.', ['country' => $countryLabel]) }}
+                    <button type="button" class="text-sky-400 hover:underline" wire:click="$set('showInches', true)">
+                        {{ __('Use inches') }}
+                    </button>
+                </div>
+            @endif
         </div>
 
         {{-- Default eyepiece --}}
@@ -100,17 +108,6 @@
                 label="{{ __('Default eyepiece') }}"
                 wire:model.live="stdeyepiece"
                 :async-data="route('eyepiece.select.api', ['instrument_set' => $stdinstrumentset ?? ''])"
-                option-label="name"
-                option-value="id"
-            />
-        </div>
-
-        {{-- Default lens --}}
-        <div class="col-span-6 sm:col-span-5">
-            <x-select
-                label="{{ __('Default lens') }}"
-                wire:model.live="stdlens"
-                :async-data="route('lens.select.api', ['instrument_set' => $stdinstrumentset ?? ''])"
                 option-label="name"
                 option-value="id"
             />

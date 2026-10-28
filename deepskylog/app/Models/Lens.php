@@ -2,19 +2,45 @@
 
 namespace App\Models;
 
+use App\Casts\PurifiedHtml;
+use App\Models\Traits\DetachesOnDelete;
+use App\Models\Traits\HasObservationsDates;
+use App\Models\Traits\OwnedByUser;
 use App\Traits\ClearsResponseCache;
-use Carbon\Carbon;
-use Cviebrock\EloquentSluggable\Sluggable;
+use App\Traits\HasUniqueSlugPerUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Lens extends Model
 {
     use ClearsResponseCache;
-    use Sluggable;
+    use DetachesOnDelete;
+    use HasObservationsDates;
+    use HasUniqueSlugPerUser;
+    use OwnedByUser;
+
+    /**
+     * A deleted lens is no longer the lens of a telescope (the foreign key
+     * does this too, but not every database enforces it).
+     */
+    protected static function booted(): void
+    {
+        static::deleting(fn (self $lens) => Instrument::where('lens_id', $lens->id)->update(['lens_id' => null]));
+    }
 
     protected $fillable = [
-        'user_id', 'name', 'factor', 'make_id', 'active', 'observer', 'picture', 'description',
+        'user_id',
+        'name',
+        'factor',
+        'make_id',
+        'active',
+        'observer',
+        'picture',
+        'description',
+    ];
+
+    protected $casts = [
+        'description' => PurifiedHtml::class,
     ];
 
     protected $with = ['lens_make'];
@@ -24,7 +50,7 @@ class Lens extends Model
         return [
             'slug' => [
                 'source' => 'name',
-                'unique' => false,
+                'unique' => true,
             ],
         ];
     }
@@ -47,7 +73,7 @@ class Lens extends Model
     /**
      * Retrieves the date of the first observation made with the lens.
      *
-     * This method calculates the earliest observation date for the lens from ObservationsOld
+     * This method calculates the earliest observation date for the lens from the observations table
      *
      * If no observations are found, it returns [null, null].
      *
@@ -58,25 +84,13 @@ class Lens extends Model
      */
     public function first_observation_date(): array
     {
-        $language = app()->getLocale();
-
-        $firstObservation = ObservationsOld::where('lensid', $this->id)->min('date');
-
-        if ($firstObservation == null) {
-            return [null, null];
-        }
-
-        $date = Carbon::createFromFormat('Ymd', $firstObservation)->locale($language)->isoFormat('LL');
-
-        $id = ObservationsOld::where('lensid', $this->id)->where('date', $firstObservation)->first()['id'];
-
-        return [$date, $id];
+        return $this->first_observation_date_generic('lensid');
     }
 
     /**
      * Retrieves the date of the last observation made with the lens.
      *
-     * This method calculates the last observation date for the lens from ObservationsOld
+     * This method calculates the last observation date for the lens from the observations table
      *
      * If no observations are found, it returns [null, null].
      *
@@ -87,18 +101,7 @@ class Lens extends Model
      */
     public function last_observation_date(): array
     {
-        $language = app()->getLocale();
-
-        $lastObservation = ObservationsOld::where('lensid', $this->id)->max('date');
-
-        if ($lastObservation == null) {
-            return [null, null];
-        }
-
-        $date = Carbon::createFromFormat('Ymd', $lastObservation)->locale($language)->isoFormat('LL');
-        $id = ObservationsOld::where('lensid', $this->id)->where('date', $lastObservation)->first()['id'];
-
-        return [$date, $id];
+        return $this->last_observation_date_generic('lensid');
     }
 
     /**
@@ -111,6 +114,6 @@ class Lens extends Model
 
     public function fullName(): string
     {
-        return ltrim($this->lens_make->name.' '.$this->name);
+        return ltrim($this->lens_make->name . ' ' . $this->name);
     }
 }

@@ -98,8 +98,15 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'deepskywim@gmail.com'),
-        'name' => env('MAIL_FROM_NAME', 'Wim De Meester'),
+        'address' => env('MAIL_FROM_ADDRESS', 'noreply@mg.deepskylog.org'),
+        'name' => env('MAIL_FROM_NAME', 'DeepskyLog'),
+    ],
+
+    // The from address is on the Mailgun domain, so that the mails pass DMARC;
+    // it has no mailbox, so replies go to this address.
+    'reply_to' => [
+        'address' => env('MAIL_REPLY_TO_ADDRESS', 'deepskywim@gmail.com'),
+        'name' => env('MAIL_REPLY_TO_NAME', 'DeepskyLog'),
     ],
 
     /*

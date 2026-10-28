@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Eyepiece;
 use App\Models\EyepieceMake;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
@@ -18,6 +17,8 @@ final class AdminEyepieceTable extends PowerGridComponent
 
     public function setUp(): array
     {
+        $this->withoutPersist();
+
         $this->showCheckBox();
 
         return [
@@ -31,7 +32,7 @@ final class AdminEyepieceTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return EyepieceMake::query();
+        return EyepieceMake::query()->withCount('eyepieces');
     }
 
     public function relationSearch(): array
@@ -45,7 +46,7 @@ final class AdminEyepieceTable extends PowerGridComponent
             ->add('id')
             ->add('name')
             ->add('number_of_eyepieces', function ($eyepiece_make) {
-                return Eyepiece::where('make_id', $eyepiece_make->id)->count();
+                return $eyepiece_make->eyepieces_count;
             });
     }
 
@@ -56,7 +57,9 @@ final class AdminEyepieceTable extends PowerGridComponent
             Column::make('Name', 'name')
                 ->sortable()
                 ->searchable(),
-            Column::make('Number of Eyepieces', 'number_of_eyepieces'),
+            Column::make('Number of Eyepieces', 'number_of_eyepieces')
+                ->sortable()
+                ->sortUsing(fn ($query, string $direction) => $query->orderBy('eyepieces_count', $direction)),
             Column::make('Created at', 'created_at')
                 ->sortable()
                 ->searchable(),

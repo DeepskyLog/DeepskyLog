@@ -62,7 +62,7 @@
                             editor.save();
                             try {
                                 // Prefer direct @this.set to synchronously update the Livewire property
-                                @this.set('description', editor.getContent());
+                                @this.set('description', editor.getContent(), false);
                             } catch (err) {
                                 // Fallback to emit if @this isn't available
                                 if (typeof Livewire !== 'undefined' && typeof Livewire.dispatch === 'function') {
@@ -139,7 +139,6 @@
                 <x-card>
                     <form
                         role="form"
-                        action="{{ route("eyepiece.store") }}"
                         method="POST"
                         wire:submit="save"
                     >
@@ -161,10 +160,10 @@
                                     name="eyepiece_new_make"
                                     label="{!! __('Only add a make for the eyepiece here if the correct make is not available in the dropdown above.') !!}"
                                     type="text"
-                                    wire:model.live="eyepiece_new_make"
+                                    wire:model="eyepiece_new_make"
                                     class="mt-1 block w-full"
                                     value=""
-                                    x-on:input="$wire.updateMake"
+                                    x-on:input.debounce.500ms="$wire.updateMake"
                                     id="eyepiece_new_make"
                                     name="eyepiece_new_make"
                                 />
@@ -198,8 +197,8 @@
                                     name="eyepiece_new_type"
                                     label="{!! __('Only add a type for the eyepiece here if the correct type is not available in the dropdown above.') !!}"
                                     type="text"
-                                    wire:model.live="eyepiece_new_type"
-                                    x-on:input="$wire.updateMake"
+                                    wire:model="eyepiece_new_type"
+                                    x-on:input.debounce.500ms="$wire.updateMake"
                                     class="mt-1 block w-full"
                                     value=""
                                     id="eyepiece_new_type"
@@ -209,7 +208,7 @@
                                     name="eyepiece_new_type"
                                     label="{!! __('Only add a type for the eyepiece here if the correct type is not available in the dropdown above.') !!}"
                                     type="text"
-                                    wire:model.live="eyepiece_new_type"
+                                    wire:model="eyepiece_new_type"
                                     class="mt-1 block w-full"
                                     value=""
                                     id="eyepiece_new_type"
@@ -221,8 +220,8 @@
                                 label="{!! __('Focal Length of the eyepiece (in mm)') !!}"
                                 type="number"
                                 class="mt-1 block w-full"
-                                wire:model.live="focal_length_mm"
-                                x-on:input="$wire.updateFocalLength"
+                                wire:model="focal_length_mm"
+                                x-on:input.debounce.500ms="$wire.updateFocalLength"
                                 step="0.1"
                                 min="0.1"
                                 required
@@ -234,8 +233,8 @@
                                 label="{!! __('Maximal focal Length of the eyepiece (in mm) - only for zoom eyepieces') !!}"
                                 type="number"
                                 class="mt-1 block w-full"
-                                wire:model.live="max_focal_length_mm"
-                                x-on:input="$wire.updateFocalLength"
+                                wire:model="max_focal_length_mm"
+                                x-on:input.debounce.500ms="$wire.updateFocalLength"
                                 step="0.1"
                                 min="0.1"
                                 value="{{ old('max_focal_length_mm') }}"
@@ -246,9 +245,9 @@
                                 label="{!! __('Apparent Field Of View (in degrees)') !!}"
                                 type="number"
                                 class="mt-1 block w-full"
-                                wire:model.live="apparentFOV"
+                                wire:model="apparentFOV"
                                 step="1"
-                                min="0"
+                                min="1"
                                 max="150"
                                 required
                                 value="{{ old('apparentFOV') }}"
@@ -259,7 +258,7 @@
                                 label="{!! __('Field stop (in mm)') !!}"
                                 type="number"
                                 class="mt-1 block w-full"
-                                wire:model.live="field_stop_mm"
+                                wire:model="field_stop_mm"
                                 step="0.1"
                                 min="0"
                                 max="99.9"
@@ -269,9 +268,9 @@
                             {{-- Enter the name of the eyepiece--}}
                             <x-input
                                 name="name"
-                                label="{!! __('Name of the eyepiece - proposal: ') . $proposed_name !!}"
+                                :label="__('Name of the eyepiece - proposal: ') . $proposed_name"
                                 type="text"
-                                wire:model.live="name"
+                                wire:model="name"
                                 class="mt-1 block w-full"
                                 value="{{ old('name') }}"/>
 
@@ -280,7 +279,7 @@
                             </div>
                             <div class="col-span-6 sm:col-span-5" wire:ignore>
                                 <textarea
-                                    wire:model.live="description"
+                                    wire:model="description"
                                     class="h-48 min-h-fit mt-1 block w-full"
                                     name="description"
                                     id="description"

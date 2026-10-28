@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\SortsEmptyLast;
 use App\Models\Eyepiece;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -13,20 +14,19 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class EyepieceTable extends PowerGridComponent
 {
-    use WithExport;
+    use SortsEmptyLast;
 
     public bool $multiSort = false;
 
     public string $tableName = 'eyepiece-table';
 
-    public function boot(): void
-    {
-        config(['livewire-powergrid.filter' => 'outside']);
-    }
+    // The datasource joins the makes and types, which have an id as well.
+    public string $primaryKey = 'eyepieces.id';
+
+    public ?string $primaryKeyAlias = 'id';
 
     public function setUp(): array
     {
@@ -52,19 +52,26 @@ final class EyepieceTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Eyepiece::query()->where('user_id', Auth::id());
+        // The make and type columns are searchable and sortable, so their tables
+        // are joined here: PowerGrid qualifies a column with the table of the
+        // query's base model unless the column carries its own table prefix.
+        return Eyepiece::query()
+            ->select('eyepieces.*')
+            ->leftJoin('eyepiece_makes', 'eyepiece_makes.id', '=', 'eyepieces.make_id')
+            ->leftJoin('eyepiece_types', 'eyepiece_types.id', '=', 'eyepieces.type_id')
+            ->where('eyepieces.user_id', Auth::id());
     }
 
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields()
             ->add('make_str', function ($eyepiece) {
-                return $eyepiece->eyepiece_make->name;
+                return e(html_entity_decode((string) $eyepiece->eyepiece_make->name));
             })
             ->add('type_str', function ($eyepiece) {
-                return $eyepiece->eyepiece_type->name;
+                return e(html_entity_decode((string) $eyepiece->eyepiece_type->name));
             })->add('name_link', function ($eyepiece) {
-                return '<a class="font-bold" href="/eyepiece/'.Auth()->user()->slug.'/'.$eyepiece->slug.'">'.$eyepiece->name.'</a>';
+                return '<a class="font-bold" href="/eyepiece/'.e(Auth()->user()->slug).'/'.e($eyepiece->slug).'">'.e(html_entity_decode((string) $eyepiece->name)).'</a>';
             })
             ->add('active')
             ->add('active_label', fn ($instrument) => $instrument->active ? 'Yes' : 'No')
@@ -91,8 +98,12 @@ final class EyepieceTable extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::make('Make', 'make_str'),
-            Column::make('Type', 'type_str'),
+            Column::make('Make', 'make_str', 'eyepiece_makes.name')
+                ->searchable()
+                ->sortUsing($this->sortEmptyLast('eyepiece_makes.name')),
+            Column::make('Type', 'type_str', 'eyepiece_types.name')
+                ->searchable()
+                ->sortUsing($this->sortEmptyLast('eyepiece_types.name')),
 
             Column::make('Name', 'name_link', 'name')
                 ->visibleInExport(false)
@@ -115,15 +126,15 @@ final class EyepieceTable extends PowerGridComponent
                 ->searchable(),
 
             Column::make('ApparentFOV', 'apparentFOV')
-                ->sortable()
+                ->sortUsing($this->sortEmptyLast('eyepieces.apparentFOV', 'eyepieces.apparentFOV IS NULL'))
                 ->searchable(),
 
             Column::make('Max focal length', 'max_focal_length_mm')
-                ->sortable()
+                ->sortUsing($this->sortEmptyLast('eyepieces.max_focal_length_mm', 'eyepieces.max_focal_length_mm IS NULL OR eyepieces.max_focal_length_mm <= 0'))
                 ->searchable(),
 
             Column::make('Field stop', 'field_stop_mm')
-                ->sortable()
+                ->sortUsing($this->sortEmptyLast('eyepieces.field_stop_mm', 'eyepieces.field_stop_mm IS NULL OR eyepieces.field_stop_mm <= 0'))
                 ->searchable(),
 
             Column::make('Observations', 'observations')
@@ -143,28 +154,39 @@ final class EyepieceTable extends PowerGridComponent
         ];
     }
 
-    #[On('edit')]
-    public function edit($rowId): void
-    {
-        $this->js('alert('.$rowId.')');
-    }
-
     public function actionsFromView($row): View
     {
         return view('actions.eyepiece', ['row' => $row]);
     }
 
-    public function onUpdatedToggleable($id, $field, $value): void
+    public function onPluginUpdated(string $plugin, string $event, array $params): void
     {
-        Eyepiece::query()->where('id', $id)->update([
-            $field => boolval($value),
+        // The id and field come from the browser: only the active flag of the
+        // user's own records may be toggled.
+        if ($plugin !== 'toggleable' || ($params['field'] ?? null) !== 'active') {
+            return;
+        }
+
+        Eyepiece::query()->where('id', $params['id'] ?? null)->where('user_id', Auth::id())->update([
+            'active' => filter_var($params['value'] ?? false, FILTER_VALIDATE_BOOLEAN),
         ]);
     }
 
     #[On('clickToDelete')]
     public function clickToDelete(int $id): void
     {
-        $eyepiece = Eyepiece::where('id', '=', $id);
-        $eyepiece->delete();
+        // Delete the model, not a query, so it detaches itself from instrument
+        // sets and is cleared as the default of its user.
+        Eyepiece::where('id', $id)->where('user_id', Auth::id())->first()?->delete();
+    }
+
+    #[On('clickToMakeDefault')]
+    public function clickToMakeDefault(int $id): void
+    {
+        if (Eyepiece::where('id', $id)->where('user_id', Auth::id())->exists()) {
+            auth()->user()->forceFill([
+                'stdeyepiece' => $id,
+            ])->save();
+        }
     }
 }

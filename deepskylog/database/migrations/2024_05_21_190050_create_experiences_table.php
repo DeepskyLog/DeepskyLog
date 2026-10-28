@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create(config('level-up.table'), function (Blueprint $table) {
+        Schema::create(config('level-up.tables.experiences'), function (Blueprint $table) {
             $table->id();
             $table->foreignId(config('level-up.user.foreign_key'))->constrained(config('level-up.user.users_table'));
             $table->foreignId('level_id')->constrained();

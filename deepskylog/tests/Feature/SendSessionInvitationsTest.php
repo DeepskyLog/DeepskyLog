@@ -1,33 +1,48 @@
 <?php
 
-use App\Http\Controllers\SessionController;
 use App\Jobs\SendSessionInvitations;
-use App\Models\ObservationSession;
+use App\Livewire\CreateSession;
+use App\Models\Location;
 use App\Models\User;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Auth;
+use Livewire\Livewire;
 
-it('does not include the creator when dispatching session invitations via controller store', function () {
+it('does not include the creator when dispatching session invitations when creating a session', function () {
     Bus::fake();
 
-    // Create a dummy user as creator
     $creator = User::factory()->create(['username' => 'creatoruser']);
-    Auth::login($creator);
-
-    // Prepare dummy request data
-    $request = new \Illuminate\Http\Request([], [
-        'name' => 'Test Session',
-        'observer' => $creator->username,
-        'active' => 1,
+    // The job is only dispatched when somebody other than the creator is
+    // invited, so the session needs a second participant to be worth asserting on.
+    $invitee = User::factory()->create(['username' => 'inviteduser']);
+    $location = Location::query()->create([
+        'user_id' => $creator->id,
+        'name' => 'Test Site',
+        'longitude' => 4.0,
+        'latitude' => 50.0,
+        'timezone' => 'UTC',
+        'limitingMagnitude' => -999,
+        'skyBackground' => -999,
+        'elevation' => 0,
+        'country' => 'Belgium',
+        'active' => true,
+        'observer' => '',
+        'observations' => 0,
+        'slug' => 'test-site',
     ]);
 
-    // Call controller store method
-    $controller = new SessionController();
-    $response = $controller->store($request);
+    $this->actingAs($creator);
 
-    // The BuildSessionCopies job may be dispatched; ensure SendSessionInvitations was dispatched
-    Bus::assertDispatched(SendSessionInvitations::class, function ($job) use ($creator) {
-        // The creator should not be in recipients
-        return is_array($job->recipients) && ! in_array($creator->username, $job->recipients, true);
+    Livewire::test(CreateSession::class)
+        ->set('name', 'Test Session')
+        ->set('locationid', $location->id)
+        ->set('begindate', '2026-01-01')
+        ->set('enddate', '2026-01-02')
+        ->set('otherObservers', [$invitee->username])
+        ->call('save')
+        ->assertHasNoErrors();
+
+    Bus::assertDispatched(SendSessionInvitations::class, function ($job) use ($creator, $invitee) {
+        return ! in_array($creator->username, $job->recipients, true)
+            && in_array($invitee->username, $job->recipients, true);
     });
 });

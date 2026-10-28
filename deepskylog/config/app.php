@@ -55,9 +55,15 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
-    'old_url' => env('APP_OLD_URL', 'http://localhost'),
 
-    'asset_url' => env('ASSET_URL', '/'),
+    'asset_url' => env('ASSET_URL'),
+
+    // Host name used for generated e-mail addresses of social logins without
+    // one ({id}@{provider}.{domain}); defaults to the host of APP_URL.
+    'domain' => env('APP_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST) ?: 'localhost'),
+
+    // Comma-separated list of trusted proxies (App\Http\Middleware\TrustProxies)
+    'trusted_proxies' => env('TRUSTED_PROXIES'),
 
     /*
     |--------------------------------------------------------------------------
@@ -105,6 +111,21 @@ return [
         'Spanish' => 'es',
         'Dutch' => 'nl',
         'Swedish' => 'sv',
+    ],
+
+    // Translate the descriptions of the observations into the languages of
+    // the site (#310) with Google Translate: for guests (in the language of
+    // the site) and for observers who turned on translations. Off in the
+    // tests, so a saved observation never calls Google.
+    'translate_observations' => (bool) env('TRANSLATE_OBSERVATIONS', true),
+
+    // How many observations the scheduled observations:translate-descriptions
+    // queues for translation per run (every ten minutes), newest first.
+    'translations_per_run' => (int) env('TRANSLATIONS_PER_RUN', 20),
+
+    // The languages an observer can write observations in.
+    'observation_languages' => [
+        'bg', 'hr', 'cs', 'da', 'nl', 'en', 'eo', 'fi', 'fr', 'de', 'el', 'is', 'it', 'no', 'pl', 'pt', 'es', 'sv',
     ],
 
     /*

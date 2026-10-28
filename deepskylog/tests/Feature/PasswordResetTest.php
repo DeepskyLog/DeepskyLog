@@ -1,5 +1,6 @@
 <?php
 
+use App\Listeners\EmbedMailLogo;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Notification;
@@ -78,4 +79,30 @@ it('password can be reset with valid token', function () {
 
         return true;
     });
+});
+
+it('sends the reset password mail in the language of the site', function () {
+    if (! Features::enabled(Features::resetPasswords())) {
+        $this->markTestSkipped('Password updates are not enabled.');
+    }
+
+    $user = User::factory()->create();
+
+    $this->withSession(['locale' => 'nl'])->post('/forgot-password', [
+        'email' => $user->email,
+    ]);
+
+    $messages = app('mailer')->getSymfonyTransport()->messages();
+    expect($messages)->toHaveCount(1);
+
+    $email = $messages->first()->getOriginalMessage();
+    $html = $email->getHtmlBody();
+
+    expect($email->getSubject())->toBe('Je wachtwoord resetten')
+        ->and($email->getFrom()[0]->getAddress())->toBe(config('mail.from.address'))
+        ->and($email->getReplyTo()[0]->getAddress())->toBe(config('mail.reply_to.address'))
+        ->and($html)->toContain('Met vriendelijke groeten,')
+        ->and($html)->toContain('src="cid:'.EmbedMailLogo::CID.'"')
+        ->and($html)->not->toContain('logo-mail.png')
+        ->and(collect($email->getAttachments())->map->getName()->all())->toContain(EmbedMailLogo::CID);
 });

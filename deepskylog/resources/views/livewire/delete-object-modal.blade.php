@@ -65,7 +65,7 @@
                         <div class="relative" x-data="{ open: false }">
                             <input
                                 type="text"
-                                wire:model.live="moveToSearch"
+                                wire:model.live.debounce.300ms="moveToSearch"
                                 x-on:focus="open = true"
                                 x-on:click.outside="open = false"
                                 placeholder="{{ __('Search for an object...') }}"

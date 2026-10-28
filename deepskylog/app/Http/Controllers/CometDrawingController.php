@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CometObservationsOld;
+use App\Models\Observation;
 use App\Models\User;
+use App\Services\Observations\ObservationCardData;
 use Illuminate\Support\Facades\DB;
 
 class CometDrawingController extends Controller
@@ -19,7 +20,7 @@ class CometDrawingController extends Controller
      */
     public function index()
     {
-        $query = CometObservationsOld::where('hasDrawing', 1)->orderBy('id', 'desc');
+        $query = Observation::comets()->where('has_drawing', 1)->orderBy('id', 'desc');
         // Optional object filter via query param or path segment handled in routes
         try {
             if (request()->route('observer') && request()->route('object')) {
@@ -33,14 +34,15 @@ class CometDrawingController extends Controller
                     $co = \App\Models\CometObject::where('slug', $objSlug)->orWhere('name', $objSlug)->first();
                 } catch (\Throwable $_) {
                 }
-                if (! $co) {
+                if (!$co) {
                     try {
-                        $row = DB::connection('mysqlOld')->table('cometobjects')->where('slug', $objSlug)->orWhere('name', $objSlug)->first();
-                        if ($row) $query->where('objectid', $row->id);
+                        $row = DB::table('cometobjects')->where('slug', $objSlug)->orWhere('name', $objSlug)->first();
+                        if ($row)
+                            $query->where('target_key', (string) $row->id);
                     } catch (\Throwable $_) {
                     }
                 } else {
-                    $query->where('objectid', $co->id);
+                    $query->where('target_key', (string) $co->id);
                 }
             }
         } catch (\Throwable $_) {
@@ -48,11 +50,10 @@ class CometDrawingController extends Controller
 
         $sketches = $query->paginate(20);
 
-        // Preload users to avoid N+1 queries in the view
-        $observerIds = $sketches->pluck('observerid')->unique()->all();
-        $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+        // Observers, objects, likes, ... of the sketch cards in grouped queries.
+        ObservationCardData::instance()->preload($sketches);
 
-        return view('cometdrawings.show', ['user' => '', 'sketches' => $sketches, 'sketchUsers' => $sketchUsers]);
+        return view('cometdrawings.show', ['user' => '', 'sketches' => $sketches]);
     }
 
     /**
@@ -67,27 +68,32 @@ class CometDrawingController extends Controller
         $objectId = null;
         try {
             $co = \App\Models\CometObject::where('slug', $objectSlug)->orWhere('name', $objectSlug)->first();
-            if ($co) $objectId = $co->id;
+            if ($co)
+                $objectId = $co->id;
         } catch (\Throwable $_) {
         }
-        if (! $objectId) {
+        if (!$objectId) {
             try {
-                $row = DB::connection('mysqlOld')->table('cometobjects')->where('slug', $objectSlug)->orWhere('name', $objectSlug)->first();
-                if ($row) $objectId = $row->id;
+                $row = DB::table('cometobjects')->where('slug', $objectSlug)->orWhere('name', $objectSlug)->first();
+                if ($row)
+                    $objectId = $row->id;
             } catch (\Throwable $_) {
             }
         }
 
-        $query = CometObservationsOld::where('observerid', $user->username)->where('hasDrawing', 1)->orderBy('date', 'desc');
-        if ($objectId) $query->where('objectid', $objectId);
+        if (!$objectId) {
+            abort(404);
+        }
+
+        $query = Observation::comets()->where('observer_username', $user->username)->where('has_drawing', 1)->orderBy('observed_on', 'desc')
+            ->where('target_key', (string) $objectId);
 
         $sketches = $query->paginate(20);
 
-        // Preload users to avoid N+1 queries in the view
-        $observerIds = $sketches->pluck('observerid')->unique()->all();
-        $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+        // Observers, objects, likes, ... of the sketch cards in grouped queries.
+        ObservationCardData::instance()->preload($sketches);
 
-        return view('cometdrawings.show', ['user' => $user, 'sketches' => $sketches, 'sketchUsers' => $sketchUsers]);
+        return view('cometdrawings.show', ['user' => $user, 'sketches' => $sketches]);
     }
 
     /**
@@ -107,14 +113,13 @@ class CometDrawingController extends Controller
         // First try to resolve slug as a user (existing behaviour)
         $user = User::where('slug', $slug)->first();
         if ($user) {
-            $sketches = CometObservationsOld::where('observerid', $user->username)->where('hasDrawing', 1)
-                ->orderBy('date', 'desc')->paginate(20);
+            $sketches = Observation::comets()->where('observer_username', $user->username)->where('has_drawing', 1)
+                ->orderBy('observed_on', 'desc')->paginate(20);
 
-            // Preload users to avoid N+1 queries in the view
-            $observerIds = $sketches->pluck('observerid')->unique()->all();
-            $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+            // Observers, objects, likes, ... of the sketch cards in grouped queries.
+            ObservationCardData::instance()->preload($sketches);
 
-            return view('cometdrawings.show', ['user' => $user, 'sketches' => $sketches, 'sketchUsers' => $sketchUsers]);
+            return view('cometdrawings.show', ['user' => $user, 'sketches' => $sketches]);
         }
 
         // Not a user: try to resolve slug to an object and show object-scoped drawings
@@ -122,26 +127,30 @@ class CometDrawingController extends Controller
         $objectId = null;
         try {
             $co = \App\Models\CometObject::where('slug', $objectSlug)->orWhere('name', $objectSlug)->first();
-            if ($co) $objectId = $co->id;
+            if ($co)
+                $objectId = $co->id;
         } catch (\Throwable $_) {
         }
-        if (! $objectId) {
+        if (!$objectId) {
             try {
-                $row = DB::connection('mysqlOld')->table('cometobjects')->where('slug', $objectSlug)->orWhere('name', $objectSlug)->first();
-                if ($row) $objectId = $row->id;
+                $row = DB::table('cometobjects')->where('slug', $objectSlug)->orWhere('name', $objectSlug)->first();
+                if ($row)
+                    $objectId = $row->id;
             } catch (\Throwable $_) {
             }
         }
 
-        $query = CometObservationsOld::where('hasDrawing', 1)->orderBy('id', 'desc');
-        if ($objectId) $query->where('objectid', $objectId);
-        $sketches = $query->paginate(20);
+        if (!$objectId) {
+            abort(404);
+        }
 
-        // Preload users to avoid N+1 queries in the view
-        $observerIds = $sketches->pluck('observerid')->unique()->all();
-        $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+        $sketches = Observation::comets()->where('has_drawing', 1)->where('target_key', (string) $objectId)
+            ->orderBy('id', 'desc')->paginate(20);
+
+        // Observers, objects, likes, ... of the sketch cards in grouped queries.
+        ObservationCardData::instance()->preload($sketches);
 
         $fakeUser = (object) ['name' => $objectSlug, 'slug' => $objectSlug, 'username' => null];
-        return view('cometdrawings.show', ['user' => $fakeUser, 'sketches' => $sketches, 'sketchUsers' => $sketchUsers]);
+        return view('cometdrawings.show', ['user' => $fakeUser, 'sketches' => $sketches]);
     }
 }

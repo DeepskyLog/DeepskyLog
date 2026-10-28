@@ -3,6 +3,7 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
+use App\Support\OAuthEmail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -19,10 +20,10 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     {
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id), OAuthEmail::notGeneratedRule($user->email)],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
             'country' => ['string'],
-            'about' => ['string:max:1000', 'nullable'],
+            'about' => ['nullable', 'string', 'max:1000'],
             'fstOffset' => ['numeric', 'min:-5.0', 'max:5.0'],
         ])->validateWithBag('updateProfileInformation');
 
@@ -30,23 +31,26 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user->updateProfilePhoto($input['photo']);
         }
 
+        if ($input['copyrightSelection'] === 'Enter your own copyright text') {
+            $copyright = $input['copyright'];
+        } else {
+            $copyright = $input['copyrightSelection'];
+        }
+
+        // The other fields are saved too when the email address changes
+        $user->forceFill([
+            'name' => $input['name'],
+            'country' => $input['country'],
+            'about' => Str::limit($input['about'], 1000),
+            'fstOffset' => $input['fstOffset'],
+            'copyright' => $copyright,
+            'copyrightSelection' => $input['copyrightSelection'],
+        ]);
+
         if ($input['email'] !== $user->email) {
             $this->updateVerifiedUser($user, $input);
         } else {
-            if ($input['copyrightSelection'] === 'Enter your own copyright text') {
-                $copyright = $input['copyright'];
-            } else {
-                $copyright = $input['copyrightSelection'];
-            }
-            $user->forceFill([
-                'name' => $input['name'],
-                'email' => $input['email'],
-                'country' => $input['country'],
-                'about' => Str::limit($input['about'], 1000),
-                'fstOffset' => $input['fstOffset'],
-                'copyright' => $copyright,
-                'copyrightSelection' => $input['copyrightSelection'],
-            ])->save();
+            $user->save();
         }
     }
 
@@ -58,7 +62,6 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     protected function updateVerifiedUser(User $user, array $input): void
     {
         $user->forceFill([
-            'name' => $input['name'],
             'email' => $input['email'],
             'email_verified_at' => null,
         ])->save();

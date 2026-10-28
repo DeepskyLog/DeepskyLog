@@ -4,6 +4,38 @@
         // Compute session parameter for route generation: use slug if available, otherwise fall back to id
         $sessionParam = trim($session->slug ?: '') ?: ($session->id ?? null);
     @endphp
+    @push('head')
+        @php
+            // Facebook fills the post with this preview only: it ignores any text passed to the sharer.
+            $ogTitle = __('Observations from :session by :owner', [
+                'session' => html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                'owner' => $user->name,
+            ]);
+            $ogDescription = html_entity_decode((string) ($session->comments ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $ogDescription = trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags(str_replace('<', ' <', $ogDescription)), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+            $ogDescription = $ogDescription !== ''
+                ? \Illuminate\Support\Str::limit($ogDescription, 200)
+                : trans_choice(':count observation on DeepskyLog|:count observations on DeepskyLog', (int) $totalObservations, ['count' => (int) $totalObservations]);
+            // WhatsApp skips large images: the session picture is shared as a preview of at most 300 KB.
+            $ogPreview = !empty($image) ? \App\Services\SharePreviewImage::for($image) : null;
+            $ogImage = $ogPreview['url'] ?? url('/images/logo2.png');
+        @endphp
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="{{ $ogTitle }}" />
+        <meta property="og:description" content="{{ $ogDescription }}" />
+        <meta property="og:url" content="{{ url(route('session.show', [$user->slug, $sessionParam])) }}" />
+        <meta property="og:image" content="{{ $ogImage }}" />
+        @if (!empty($ogPreview['width']) && !empty($ogPreview['height']))
+            <meta property="og:image:width" content="{{ $ogPreview['width'] }}" />
+            <meta property="og:image:height" content="{{ $ogPreview['height'] }}" />
+        @endif
+        <meta property="og:site_name" content="DeepskyLog" />
+        <meta name="description" content="{{ $ogDescription }}" />
+        <meta name="twitter:card" content="{{ !empty($image) ? 'summary_large_image' : 'summary' }}" />
+        <meta name="twitter:title" content="{{ $ogTitle }}" />
+        <meta name="twitter:description" content="{{ $ogDescription }}" />
+        <meta name="twitter:image" content="{{ $ogImage }}" />
+    @endpush
     <div>
     <div class="mx-auto max-w-full bg-gray-900 px-4 py-6 sm:px-4 lg:px-6">
         <header class="mb-6">
@@ -13,13 +45,17 @@
                 <a class="text-white hover:underline font-medium" href="{{ route('observer.show', $user->slug) }}">{{ $user->name }}</a>
                 @if(!empty($observerStats))
                     <span class="text-gray-500">&middot;</span>
-                    <a class="text-gray-300 hover:underline" href="{{ route('session.show', [$user->slug, $sessionParam]) }}?observer={{ urlencode($session->observerid) }}">{{ $totalObservations }} {{ __('observations') }}</a>
+                    <a class="text-gray-300 hover:underline" href="{{ route('session.show', [$user->slug, $sessionParam]) }}?observer={{ urlencode($session->observerid) }}">{{ $totalObservations }} {{ \Illuminate\Support\Str::lower(__('Observations')) }}</a>
                 @endif
             </p>
 
             <div class="mt-3 flex items-center gap-3">
-                {{-- Share buttons using ShareButtons facade configured in app --}}
-                {!! \ShareButtons::page(url()->current(), __('Observations from :session by :owner', ['session' => html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8'), 'owner' => $user->name])) !!}
+                <a href="{{ route('session.export.oal', [$user->slug, $sessionParam]) }}"
+                   class="inline-flex items-center rounded-md border border-indigo-400/50 bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white shadow-[0_0_0_1px_rgba(255,255,255,0.08)] transition hover:bg-indigo-500"
+                   target="_blank"
+                   rel="nofollow noopener noreferrer">
+                    {{ __('Export OAL') }}
+                </a>
 
                 {{-- Message button moved to bottom of page --}}
             </div>
@@ -68,7 +104,7 @@
                         @if($weatherVisible)
                             <tr>
                                 <td class="pr-4 font-medium">{{ __('Weather') }}</td>
-                                <td>{!! strip_tags($weatherTranslated, '<p><br><em><strong><b><i><u><ul><ol><li>') !!}</td>
+                                <td>{!! \App\Support\Html::purify($weatherTranslated) !!}</td>
                             </tr>
                         @endif
                         <tr>
@@ -82,13 +118,13 @@
                         @if($equipmentVisible)
                             <tr>
                                 <td class="pr-4 font-medium">{{ __('Equipment') }}</td>
-                                <td>{!! strip_tags($equipmentTranslated, '<p><br><em><strong><b><i><u><ul><ol><li>') !!}</td>
+                                <td>{!! \App\Support\Html::purify($equipmentTranslated) !!}</td>
                             </tr>
                         @endif
                         @if(false)
                             {{-- comments moved out of table --}}
                             <tr>
-                                <td>{!! html_entity_decode(nl2br(e($session->comments))) !!}</td>
+                                <td>{!! \App\Support\Html::purify($session->comments, true) !!}</td>
                             </tr>
                         @endif
                     </table>
@@ -99,7 +135,7 @@
                         @endphp
                         <div class="mt-4">
                             <x-card>
-                                <div class="text-sm">{!! strip_tags($commentsTranslated, '<p><br><em><strong><b><i><u><ul><ol><li>') !!}</div>
+                                <div class="text-sm">{!! \App\Support\Html::purify($commentsTranslated) !!}</div>
                             </x-card>
                         </div>
                     @endif
@@ -134,6 +170,21 @@
                     @endif
                 </div>
 
+                @if ($lacksObservations ?? false)
+                    <p class="mb-3 rounded-md border border-blue-600 bg-blue-900/50 px-3 py-2 text-sm text-gray-100">
+                        {{ __('You have not added any observations to this session yet.') }}
+                        <a href="{{ \App\Services\SessionObservationReminders::addObservationUrl($session) }}" class="font-semibold text-blue-300 hover:underline">{{ __('Add observations') }}</a>
+                    </p>
+                @endif
+
+                @foreach ($starParties ?? [] as $starParty)
+                    <p class="mb-3 rounded bg-gray-800 px-3 py-2 text-sm text-gray-200">
+                        {{ __('This session took place at the starparty') }}
+                        <a href="{{ route('star-parties.show', $starParty) }}" class="text-blue-400 hover:underline">{{ html_entity_decode($starParty->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>
+                        ({{ $starParty->dateRange() }}).
+                    </p>
+                @endforeach
+
                 @if ($location)
                     <div id="session-location-map" class="w-full h-64 rounded mb-4"
                          data-lat="{{ $location->latitude }}"
@@ -149,17 +200,16 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                             @foreach($drawings as $drawing)
                                 @php
-                                    // Use preloaded user data to avoid N+1 query
-                                    $drawingUser = $drawingUsers[$drawing->observerid] ?? null;
+                                    $drawingUser = \App\Services\Observations\ObservationCardData::instance()->user($drawing->observerid);
                                     $observer_name = $drawingUser ? $drawingUser->name : $drawing->observerid;
                                     $observation_date = substr($drawing->date, 0, 4) . "-" . substr($drawing->date, 4, 2) . "-" . substr($drawing->date, 6, 2);
                                 @endphp
 
                                 <div class="max-w-xl">
-                                    @if(isset($drawing->objectname))
-                                        <x-sketch-deepsky :observation_id="$drawing->id" :observer_name="$observer_name" :observer_username="$drawing->observerid" :observation_date="$observation_date" />
+                                    @if($drawing->target_type === \App\Models\Observation::TYPE_COMET)
+                                        <x-sketch-comet :unified_observation="$drawing" :observer_name="$observer_name" :observer_username="$drawing->observerid" :observation_date="$observation_date" />
                                     @else
-                                        <x-sketch-comet :observation_id="$drawing->id" :observer_name="$observer_name" :observer_username="$drawing->observerid" :observation_date="$observation_date" />
+                                        <x-sketch-deepsky :observation_id="$drawing->id" :unified_observation="$drawing" :observer_name="$observer_name" :observer_username="$drawing->observerid" :observation_date="$observation_date" />
                                     @endif
                                 </div>
                             @endforeach
@@ -176,18 +226,12 @@
 
                 <section>
                     <h3 class="text-lg font-semibold text-white">{{ __('Observations by :owner', ['owner' => $selectedObserverName ?? $user->name]) }}</h3>
-                    @php
-                        $tr = null;
-                        if (auth()->check() && auth()->user()->translate) {
-                            $tr = new \Stichoza\GoogleTranslate\GoogleTranslate(auth()->user()->language);
-                        }
-                    @endphp
                     @if($observations->count() > 0)
                         @foreach($observations as $observation)
-                            @if(isset($observation->objectname))
-                                <x-observation-deepsky :observation="$observation" :translator="$tr" />
-                            @else
+                            @if($observation->target_type === \App\Models\Observation::TYPE_COMET)
                                 <x-observation-comet :observation="$observation" />
+                            @else
+                                <x-observation-deepsky :observation="$observation" />
                             @endif
                         @endforeach
 
@@ -240,25 +284,32 @@
                 <div class="mt-3 text-right">
                     <div class="flex items-center justify-end gap-3">
                         {{-- Share buttons for session (same options as sketches) --}}
-                        <div>
-                            {!!
-                                ShareButtons::page(url(route('session.show', [$user->slug, $sessionParam])), __('Look at this session :session by :owner', ['session' => $session->name, 'owner' => $user->name]), [
-                                    'title' => __('Share this session'),
-                                    'class' => 'text-gray-500 hover:text-gray-700',
-                                    'rel' => 'nofollow noopener noreferrer',
-                                ])
-                                    ->facebook(['class' => 'hover', 'rel' => 'follow'])
-                                    ->twitter(['class' => 'hover', 'rel' => 'follow'])
-                                    ->copylink()
-                                    ->mailto(['class' => 'hover', 'rel' => 'nofollow'])
-                                    ->whatsapp()
-                                    ->render()
-                            !!}
+                        @php
+                            $shareUrl = url(route('session.show', [$user->slug, $sessionParam]));
+                            $shareName = html_entity_decode($session->name ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                            $shareDesc = __('Look at this session :session by :owner', ['session' => $shareName, 'owner' => $user->name]);
+                            $shareTags = '#astronomy #deepsky #deepskylog';
+                            $shareText = $shareDesc . "\n\n" . $shareUrl . "\n\n" . $shareTags;
+                            $twitterHref = 'https://twitter.com/intent/tweet?text=' . rawurlencode($shareText);
+                            $facebookHref = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($shareUrl);
+                            $whatsappHref = 'https://wa.me/?text=' . rawurlencode($shareText);
+                            $mailtoHref = 'mailto:?subject=' . rawurlencode($shareDesc) . '&body=' . rawurlencode($shareDesc . "\n\n" . $shareUrl);
+                        @endphp
+                        <div id="social-buttons" data-share data-share-image="{{ $image ?? '' }}" data-share-title="{{ $shareDesc }}" data-share-text="{{ $shareDesc . "\n\n" . $shareTags }}" data-share-url="{{ $shareUrl }}"
+                             data-share-image-notice="{{ __('The picture has been copied: paste it (Ctrl+V) into your post on X.') }}"
+                             data-share-image-mail-notice="{{ __('The picture has been copied: paste it (Ctrl+V) into your mail.') }}"
+                             data-share-retry-notice="{{ __('The picture is ready: tap the share button again.') }}">
+                            <a href="{{ $facebookHref }}" class="social-button hover" data-share-text="{{ $shareDesc . "\n\n" . $shareTags }}" title="{{ __('Share on Facebook') }}" rel="follow"><span class="fab fa-facebook-square"></span></a>
+                            <a href="{{ $twitterHref }}" class="social-button hover" title="{{ __('Share on X') }}" rel="follow"><span class="fab fa-square-x-twitter"></span></a>
+                            <a href="{{ $shareUrl }}" class="social-button hover" id="clip" title="{{ __('Copy link') }}" rel="nofollow noopener noreferrer"><span class="fas fa-share"></span></a>
+                            <a href="{{ $mailtoHref }}" class="social-button hover" title="{{ __('Share by email') }}" rel="nofollow"><span class="fas fa-envelope"></span></a>
+                            <a href="{{ $whatsappHref }}" class="social-button hover" title="{{ __('Share on WhatsApp') }}" target="_blank" rel="nofollow"><span class="fab fa-square-whatsapp"></span></a>
+                            <a href="{{ $shareUrl }}" class="social-button native-share hover" title="{{ __('Share…') }}" rel="nofollow"><span class="fas fa-share-nodes"></span></a>
                         </div>
 
                         @php
-                            $sessionLikes = \App\Models\ObservationLike::where('observation_type', 'session')->where('observation_id', $session->id)->count();
-                            $sessionLiked = auth()->check() && \App\Models\ObservationLike::where('observation_type', 'session')->where('observation_id', $session->id)->where('user_id', auth()->id())->exists();
+                            $sessionLikes = \App\Models\ObservationLike::where('observation_type', \App\Models\ObservationLike::TYPE_SESSION)->where('observation_id', $session->id)->count();
+                            $sessionLiked = auth()->check() && \App\Models\ObservationLike::where('observation_type', \App\Models\ObservationLike::TYPE_SESSION)->where('observation_id', $session->id)->where('user_id', auth()->id())->exists();
                         @endphp
 
                         <button data-observation-type="session" data-observation-id="{{ $session->id }}" class="like-button px-2 py-1 rounded bg-gray-800 hover:bg-gray-700 text-white">
@@ -268,7 +319,7 @@
 
                         {{-- Message about session (link to internal messaging) --}}
                         @auth
-                        <a href="{{ route('messages.create', ['to' => $user->username ?? $user->name, 'subject' => __('About your session :session', ['session' => $session->name])]) }}" class="inline-flex items-center p-2 rounded bg-blue-600 hover:bg-blue-700 text-white" aria-label="{{ __('Send message about this session') }}">
+                        <a href="{{ route('messages.create', ['to' => $user->username ?? $user->name, 'subject' => __('About your session :session', ['session' => $shareName]), 'about' => url()->current()]) }}" class="inline-flex items-center p-2 rounded bg-blue-600 hover:bg-blue-700 text-white" aria-label="{{ __('Send message about this session') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path d="M2.94 6.94A2 2 0 014.828 6h10.344a2 2 0 011.888.94L10 11.586 2.94 6.94z" />
                                 <path d="M18 8.118V13a2 2 0 01-2 2H4a2 2 0 01-2-2V8.118l7.293 4.377a1 1 0 001.414 0L18 8.118z" />

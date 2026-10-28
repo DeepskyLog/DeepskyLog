@@ -8,47 +8,13 @@
             </h2>
             <div class="mt-2">
                 <x-card>
-                    <div class="mb-4 flex flex-wrap">
-                        {!! __("At this moment, this form is very basic.  If a comet sketch is the sketch of the month, enter the negative ID.  In the future, the option to add a DeepskyLog sketch of the month will be included in the details of an observation.") !!}
-                    </div>
-                    <form
-                        role="form"
-                        action="{{ route("sketch-of-the-month") }}"
-                        method="POST"
-                    >
-                        @csrf
-                        <div class="col-span-6 sm:col-span-5">
-                            <x-input
-                                name="observation_id"
-                                label="{!! __('Observation ID') !!}"
-                                type="number"
-                                class="mt-1 block w-full"
-                                required
-                                value="{{ old('observation_id') }}"
-                            />
-                            <x-input-error for="error" />
-                            @error("error")
-                                <p class="mt-1 text-xs text-red-500">
-                                    {{ $message }}
-                                </p>
-                            @enderror
-                        </div>
-                        <div class="col-span-4 mb-4 mt-4 sm:col-span-3">
-                            <x-datetime-picker
-                                without-time="true"
-                                name="date"
-                                label="{{ __('Date') }}"
-                                required
-                                value="{{old('date') }}"
-                            />
-                        </div>
-
-                        <x-button
-                            type="submit"
-                            secondary
-                            label="{{ __('Add sketch of the month') }}"
-                        />
-                    </form>
+                    <p class="mb-4">
+                        {{ __("The sketch of the month is shown from the 8th of the month on, and is chosen from the DeepskyLog sketches of the week of the month before.") }}
+                    </p>
+                    @foreach (array_merge($errors->get('date'), $errors->get('observation_id')) as $message)
+                        <p class="mb-2 text-sm text-red-500">{{ $message }}</p>
+                    @endforeach
+                    <livewire:choose-sketch-of-the-month :selected="old('date')" />
                 </x-card>
             </div>
         </div>

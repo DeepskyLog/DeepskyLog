@@ -27,7 +27,7 @@ class ObjectConstellation extends Component
             if (empty($this->constellation) && ! empty($this->objectId)) {
                 // Request a server-side ephemerides recompute by emitting the
                 // normalized payload event that `ObjectEphemerides` listens to.
-                $this->emit('ephemerisPayloadUpdated', ['objectId' => $this->objectId]);
+                $this->dispatch('ephemerisPayloadUpdated', payload: ['objectId' => $this->objectId])->to('object-ephemerides');
             }
         } catch (\Throwable $_) {
             // ignore

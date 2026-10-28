@@ -1,10 +1,11 @@
 <x-app-layout>
-    @php $isBroadcast = request()->query('receiver') === 'all'; @endphp
+    {{-- Only administrators may send a message to all observers; others get the normal form. --}}
+    @php $isBroadcast = request()->query('receiver') === 'all' && auth()->user()?->can('broadcast', \App\Models\User::class); @endphp
     <x-slot name="header">{{ $isBroadcast ? __('Broadcast message') : __('New message') }}</x-slot>
 
     <div class="py-6">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-gray-900 shadow-sm sm:rounded-lg p-4">
+            <div class="bg-gray-900 shadow-sm sm:rounded-lg p-4">
                 <div class="max-w-2xl mx-auto">
                     <div class="bg-gray-900 p-6 rounded-lg shadow">
                     <style>
@@ -23,11 +24,26 @@
                         }
                     </style>
         @php
-            $usersAsyncRoute = !$isBroadcast ? (request()->query('to') ? route('users.select.api', ['selected' => request()->query('to')]) : route('users.select.api')) : null;
-            $selectedUser = null;
-            if (!$isBroadcast && request()->query('to')) {
-                $selectedUser = \App\Models\User::where('username', request()->query('to'))->first();
+            // The receivers chosen before a failed send (the JSON list of the
+            // multiselect, or one receiver), else the ?to= of the link:
+            // usernames separated by commas, which a username can't contain.
+            $oldReceivers = old('receivers');
+            $receiverNames = is_string($oldReceivers) ? (json_decode($oldReceivers, true) ?: []) : (array) $oldReceivers;
+            if ($receiverNames === [] && is_string(old('receiver')) && old('receiver') !== '') {
+                $receiverNames = [old('receiver')];
             }
+            if ($receiverNames === [] && is_string(request()->query('to'))) {
+                $receiverNames = explode(',', request()->query('to'));
+            }
+            $receiverNames = array_slice(array_values(array_filter(array_map(fn ($u) => is_string($u) ? trim($u) : '', $receiverNames), 'strlen')), 0, \App\Http\Controllers\MessagesController::MAX_RECEIVERS);
+            // In the order of the link (a reply to all starts with the sender).
+            $order = array_flip(array_map('mb_strtolower', $receiverNames));
+            $selectedUsers = ! $isBroadcast && $receiverNames !== []
+                ? \App\Models\User::whereIn('username', $receiverNames)->get()->sortBy(fn ($u) => $order[mb_strtolower($u->username)] ?? PHP_INT_MAX)->values()
+                : collect();
+            $usersAsyncRoute = ! $isBroadcast
+                ? route('users.select.api', $selectedUsers->isNotEmpty() ? ['selected' => $selectedUsers->pluck('username')->all()] : [])
+                : null;
 
             // No inline Blade conditionals inside the component tag — use safe Blade expressions in attributes instead.
         @endphp
@@ -37,30 +53,41 @@
 
             @if(! $isBroadcast)
                 <div class="mb-2">
+                    {{-- The multiselect submits its own hidden input 'receivers', a JSON list of usernames.
+                         The receivers it starts with come from Alpine (x-model): a value attribute
+                         would be escaped twice on its way through the WireUI components. --}}
+                    <div x-data="{ receivers: @js($selectedUsers->pluck('username')->values()) }">
                     <x-select
-                        label="{{ __('Receiver') }}"
+                        label="{{ __('Receivers') }}"
+                        name="receivers"
                         async-data="{{ $usersAsyncRoute }}"
-                        value="{{ $selectedUser->username ?? '' }}"
-                        placeholder="{{ $selectedUser->name ?? '' }}"
+                        x-model="receivers"
                         option-label="name"
                         option-value="id"
+                        multiselect
                         class="w-full"
-                        x-on:selected="document.getElementById('receiver_hidden').value = $event.detail.value"
                     >
-                        @if($selectedUser)
+                        @foreach($selectedUsers as $selectedUser)
                             <x-select.option
                                 label="{{ $selectedUser->name }}"
                                 value="{{ $selectedUser->username }}"
                             />
-                        @endif
+                        @endforeach
                     </x-select>
-
-                    {{-- Hidden input that will actually be submitted with the form. It is kept in sync with the x-select. --}}
-                    <input type="hidden" id="receiver_hidden" name="receiver" value="{{ old('receiver', request()->query('to', '')) }}" />
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">{{ __('You can send the message to up to :max observers.', ['max' => \App\Http\Controllers\MessagesController::MAX_RECEIVERS]) }}</p>
+                    @error('receiver')
+                        <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
             @else
                 {{-- Broadcast: receiver is fixed to "all" and not selectable --}}
                 <input type="hidden" name="receiver" value="all" />
+            @endif
+
+            {{-- The message this one answers, so the message page shows the conversation --}}
+            @if (! $isBroadcast && ctype_digit((string) old('reply_to_id', request()->query('reply_to'))))
+                <input type="hidden" name="reply_to_id" value="{{ old('reply_to_id', request()->query('reply_to')) }}" />
             @endif
 
             <div class="mb-2">
@@ -75,8 +102,11 @@
             <div class="mb-2">
                 <label for="message" class="block text-sm font-medium text-gray-300">{{ __('Message') }}</label>
                 <div class="mt-1">
-                    <textarea id="message" name="message" class="w-full h-48 mt-1 block p-2 bg-gray-800 text-gray-100 rounded">{{ old('message', request()->query('message', '')) }}</textarea>
+                    <textarea id="message" name="message" class="w-full h-48 mt-1 block p-2 bg-gray-800 text-gray-100 rounded">{{ old('message', request()->query('message', $aboutUrl ? '<p>'.e(__('About:')).' <a href="'.e($aboutUrl).'">'.e($aboutUrl).'</a></p><p></p>' : '')) }}</textarea>
                 </div>
+                @error('message')
+                    <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                @enderror
                 <p class="text-sm text-gray-400 mt-2">{!! __('Note: recipients can disable email notifications in their :link; if they have, this message will only appear in the DeepskyLog message inbox.', ['link' => '<a href="'.url('/user/profile').'" class="underline hover:text-white">'.__('profile settings').'</a>']) !!}</p>
             </div>
 
@@ -106,10 +136,6 @@
                 fetch('/messages/' + replyTo + '/reply-data', { headers: headers })
                     .then(function(res){ if (!res.ok) throw new Error('Network error'); return res.json(); })
                     .then(function(json){
-                        // set receiver if not already present
-                        var recv = document.querySelector('input[name="receiver"]');
-                        if (recv && !recv.value) recv.value = json.sender || params.get('to') || '';
-
                         var subj = document.querySelector('input[name="subject"]');
                         if (subj && (!subj.value || subj.value.trim() === '')) subj.value = json.subject || '';
 
@@ -145,14 +171,6 @@
             } else {
                 // no replyTo present; nothing to fetch. (leave receiver as-is)
             }
-            // If the page was loaded with a `to` query param (username), ensure the hidden input is populated
-            var params = new URLSearchParams(window.location.search);
-            var toParam = params.get('to');
-            if (toParam) {
-                var hidden = document.getElementById('receiver_hidden');
-                if (hidden && !hidden.value) hidden.value = toParam;
-            }
-
             // Initialize TinyMCE for the #message textarea (retry until tinymce is available)
             function initializeMessageTinyMCE() {
                 if (typeof tinymce === 'undefined') return;
@@ -176,6 +194,10 @@
                         quickbars_selection_toolbar: 'bold italic',
                         skin: 'oxide-dark',
                         content_css: 'dark',
+                        // Keep links as written: TinyMCE makes them relative to
+                        // /messages/create by default ('../observation/…'),
+                        // which breaks them in the notification email.
+                        convert_urls: false,
                         setup: function (editor) {
                             editor.on('init', function () {
                                 if (window.replyPrefillHtml) {

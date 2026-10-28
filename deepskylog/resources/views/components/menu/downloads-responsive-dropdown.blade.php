@@ -30,6 +30,13 @@
                 href="/downloads/magazines"
                 label="{{ __('Deep-sky magazines') }}"
             />
+            @auth
+                <x-dropdown.item
+                    icon="document-arrow-down"
+                    href="{{ route('downloads.mine') }}"
+                    label="{{ __('Your PDFs and zip files') }}"
+                />
+            @endauth
         </div>
     </div>
 </div>

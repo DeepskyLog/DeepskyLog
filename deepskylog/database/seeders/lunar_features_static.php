@@ -1,7 +1,6 @@
 <?php
 
 return [
-    ['name' => 'Moon', 'feature_type' => 'other', 'lat' => null, 'lon' => null, 'created_at' => '2025-10-02 10:31:06', 'updated_at' => '2025-10-02 10:31:06'],
     ['name' => 'Abbot', 'feature_type' => 'crater', 'lat' => null, 'lon' => null, 'created_at' => '2025-10-02 10:31:06', 'updated_at' => '2025-10-02 10:31:06'],
     ['name' => 'Abel', 'feature_type' => 'crater', 'lat' => null, 'lon' => null, 'created_at' => '2025-10-02 10:31:06', 'updated_at' => '2025-10-02 10:31:06'],
     ['name' => 'Abenezra', 'feature_type' => 'crater', 'lat' => null, 'lon' => null, 'created_at' => '2025-10-02 10:31:06', 'updated_at' => '2025-10-02 10:31:06'],

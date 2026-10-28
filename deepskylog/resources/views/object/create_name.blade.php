@@ -36,6 +36,16 @@
                 @endforeach
             </select>
             <p class="mt-1 text-xs text-gray-500">{{ __('e.g. NGC, IC, M, …') }}</p>
+            @unless(Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
+                @if (count($completeCatalogs))
+                    <p class="mt-1 text-xs text-gray-500">
+                        {{ __('All objects of :catalogs are already in DeepskyLog: these catalogs are not in the list.', ['catalogs' => implode(', ', $completeCatalogs)]) }}
+                    </p>
+                @endif
+                <p class="mt-1 text-xs text-gray-500">
+                    {!! __('Is the catalog of your object not in the list? Ask the :linkDeepskyLog team:close_link to add it.', ['link' => '<a class="font-bold hover:underline" href="mailto:deepskylog@groups.io">', 'close_link' => '</a>']) !!}
+                </p>
+            @endunless
         </div>
 
         {{-- Catalog number --}}
@@ -71,6 +81,14 @@
             <a href="{{ url()->previous() }}"
                class="inline-flex items-center bg-gray-600 text-white px-5 py-2 rounded hover:bg-gray-500 font-medium">
                 {{ __('Cancel') }}
+            </a>
+            <a href="{{ route('object.create.comet') }}"
+               class="inline-flex items-center bg-indigo-700 text-white px-5 py-2 rounded hover:bg-indigo-600 font-medium">
+                {{ __('Add comet instead') }}
+            </a>
+            <a href="{{ route('object.create.asteroid') }}"
+               class="inline-flex items-center bg-indigo-700 text-white px-5 py-2 rounded hover:bg-indigo-600 font-medium">
+                {{ __('Add asteroid instead') }}
             </a>
         </div>
     </form>

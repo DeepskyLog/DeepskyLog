@@ -9,7 +9,7 @@ class MigrateOldMessagesSeeder extends Seeder
 {
     public function run(): void
     {
-        $oldConn = DB::connection('mysqlOld');
+        $oldConn = DB::connection();
         $newConn = DB::connection();
         // disable query log to avoid memory growth while processing large datasets
         DB::disableQueryLog();
@@ -32,7 +32,7 @@ class MigrateOldMessagesSeeder extends Seeder
                 $maxId = $m->id > ($maxId ?? 0) ? $m->id : $maxId;
             }
 
-            if (! empty($rows)) {
+            if (!empty($rows)) {
                 foreach (array_chunk($rows, 500) as $insertChunk) {
                     $newConn->table('messages')->insert($insertChunk);
                 }
@@ -44,7 +44,7 @@ class MigrateOldMessagesSeeder extends Seeder
             $driver = $newConn->getDriverName();
             // Only adjust for MySQL-compatible drivers
             if (in_array($driver, ['mysql', 'pdo_mysql'], true)) {
-                $newConn->statement('ALTER TABLE `messages` AUTO_INCREMENT = '.((int) $maxId + 1));
+                $newConn->statement('ALTER TABLE `messages` AUTO_INCREMENT = ' . ((int) $maxId + 1));
             }
         }
 

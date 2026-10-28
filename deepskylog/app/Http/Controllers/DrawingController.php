@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ObservationsOld;
+use App\Helpers\ListingPagination;
+use App\Models\Observation;
 use App\Models\User;
+use App\Services\Observations\ObservationCardData;
 
 class DrawingController extends Controller
 {
@@ -18,13 +20,31 @@ class DrawingController extends Controller
      */
     public function index()
     {
-        $sketches = ObservationsOld::where('hasDrawing', 1)->orderBy('id', 'desc')->deferredPaginate(20);
+        if (!ListingPagination::isValidPage(request(), 'page')) {
+            abort(404);
+        }
 
-        // Preload users to avoid N+1 queries in the view
-        $observerIds = $sketches->pluck('observerid')->unique()->all();
-        $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+        $obsType = request()->query('obs_type', 'all');
+        $allowedTypes = ['all', 'deepsky', 'comet', 'solarsystem'];
+        if (!in_array($obsType, $allowedTypes)) {
+            $obsType = 'all';
+        }
 
-        return view('drawings.show', ['user' => '', 'sketches' => $sketches, 'sketchUsers' => $sketchUsers]);
+        $query = Observation::where('has_drawing', 1);
+        if ($obsType === 'all') {
+            $query->whereIn('target_type', ['deepsky', 'comet', 'planet', 'solarsystem', 'lunar']);
+        } elseif ($obsType === 'solarsystem') {
+            $query->whereIn('target_type', ['planet', 'solarsystem', 'lunar']);
+        } else {
+            $query->where('target_type', $obsType);
+        }
+
+        $sketches = ListingPagination::cap($query->orderBy('id', 'desc')->deferredPaginate(20));
+
+        // Observers, objects, likes, ... of the sketch cards in grouped queries.
+        ObservationCardData::instance()->preload($sketches);
+
+        return view('drawings.show', ['user' => '', 'sketches' => $sketches, 'obsType' => $obsType]);
     }
 
     /**
@@ -42,13 +62,27 @@ class DrawingController extends Controller
     public function show(string $slug)
     {
         $user = User::where('slug', $slug)->firstOrFail();
-        $sketches = ObservationsOld::where('observerid', $user->username)
-            ->where('hasDrawing', 1)->orderBy('date', 'desc')->paginate(20);
 
-        // Preload users to avoid N+1 queries in the view
-        $observerIds = $sketches->pluck('observerid')->unique()->all();
-        $sketchUsers = User::whereIn('username', $observerIds)->get()->keyBy('username');
+        $obsType = request()->query('obs_type', 'all');
+        $allowedTypes = ['all', 'deepsky', 'comet', 'solarsystem'];
+        if (!in_array($obsType, $allowedTypes)) {
+            $obsType = 'all';
+        }
 
-        return view('drawings.show', ['user' => $user, 'sketches' => $sketches, 'sketchUsers' => $sketchUsers]);
+        $query = Observation::where('observer_username', $user->username)->where('has_drawing', 1);
+        if ($obsType === 'all') {
+            $query->whereIn('target_type', ['deepsky', 'comet', 'planet', 'solarsystem', 'lunar']);
+        } elseif ($obsType === 'solarsystem') {
+            $query->whereIn('target_type', ['planet', 'solarsystem', 'lunar']);
+        } else {
+            $query->where('target_type', $obsType);
+        }
+
+        $sketches = $query->orderBy('observed_on', 'desc')->paginate(20)->appends(ListingPagination::query());
+
+        // Observers, objects, likes, ... of the sketch cards in grouped queries.
+        ObservationCardData::instance()->preload($sketches);
+
+        return view('drawings.show', ['user' => $user, 'sketches' => $sketches, 'obsType' => $obsType]);
     }
 }

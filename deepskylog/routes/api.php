@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\MeController;
 use App\Http\Controllers\EyepieceController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\InstrumentController;
@@ -38,6 +39,14 @@ use App\Http\Controllers\SearchController;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "api" middleware group. Make something great!
 |
+| Endpoints that read the logged-in user (their equipment, locations,
+| profile settings) need 'auth:sanctum': the site's own pages are
+| authenticated by their session cookie, guests get a 401. Object search,
+| users.select.api (the observation search is open to guests; guests only
+| get observers with observations) and the documented
+| /api/{instrument,eyepieces,lenses,filters}/{userid} stay public.
+| /api/v1/me/... is the token API for programs (App\Http\Controllers\Api\MeController).
+|
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -53,12 +62,19 @@ Route::get('objects/simbad-lookup', [ObjectController::class, 'simbadLookupByNam
 
 Route::get('countries.index', function (Request $request) {
     $allCountries = [];
-    // Show the selected option
+    // Show the selected option: the one asked for (WireUI sends it as
+    // selected[0], also after the profile page suggested a country), else
+    // the observer's own.
     if ($request->exists('selected')) {
-        $allCountries[] = [
-            'id' => auth()->user()->country,
-            'name' => Countries::getOne(auth()->user()->country, $request->lang),
-        ];
+        $selected = $request->input('selected');
+        $selected = strtoupper(trim((string) (is_array($selected) ? (reset($selected) ?: '') : $selected)));
+        $selected = $selected !== '' ? $selected : (string) auth()->user()->country;
+        if (array_key_exists($selected, Countries::getList('en'))) {
+            $allCountries[] = [
+                'id' => $selected,
+                'name' => Countries::getOne($selected, $request->lang),
+            ];
+        }
     }
 
     foreach (Countries::getList($request->lang) as $code => $name) {
@@ -71,7 +87,7 @@ Route::get('countries.index', function (Request $request) {
     }
 
     return $allCountries;
-})->name('countries.index');
+})->name('countries.index')->middleware('auth:sanctum');
 
 Route::get('licenses.index', function (Request $request) {
     $licenses = [
@@ -108,7 +124,7 @@ Route::get('licenses.index', function (Request $request) {
     }
 
     return $allLicenses;
-})->name('licenses.index');
+})->name('licenses.index')->middleware('auth:sanctum');
 
 Route::get('locations.api', function (Request $request) {
     $allLocations = [];
@@ -169,7 +185,7 @@ Route::get('locations.api', function (Request $request) {
     ];
 
     return $allLocations;
-})->name('locations.api');
+})->name('locations.api')->middleware('auth:sanctum');
 
 // Location select helper that correctly returns any selected locations (supports arrays)
 Route::get('location.select.api', function (Request $request) {
@@ -234,7 +250,7 @@ Route::get('location.select.api', function (Request $request) {
     });
 
     foreach ($locations as $location) {
-        if ($request->search == '' || Str::contains(Str::lower($location->fullName()), Str::lower($request->search))) {
+        if ($request->search == '' || Str::contains(Str::lower(html_entity_decode($location->name)), Str::lower($request->search))) {
             $allLocations[] = [
                 'id' => $location->id,
                 'name' => $location->name,
@@ -254,17 +270,26 @@ Route::get('location.select.api', function (Request $request) {
     }
 
     return $uniqueLocations;
-})->name('location.select.api');
+})->name('location.select.api')->middleware('auth:sanctum');
 
 Route::get('instrument.api', function (Request $request) {
     $allInstruments = [];
-    // Show the selected option
+    // Show the selected option(s); without a value, the standard instrument
     if ($request->exists('selected')) {
-        $allInstruments[] = [
-            'id' => auth()->user()->stdtelescope,
-            'name' => Instrument::where('id', auth()->user()->stdtelescope)->first()->fullName(),
-            'description' => Instrument::where('id', auth()->user()->stdtelescope)->first()->description,
-        ];
+        $selected = array_filter((array) $request->selected, fn ($sel) => $sel !== null && $sel !== '');
+        if (empty($selected)) {
+            $selected = [auth()->user()->stdtelescope];
+        }
+        foreach ($selected as $sel) {
+            $instrument = Instrument::where('id', $sel)->first();
+            if ($instrument) {
+                $allInstruments[] = [
+                    'id' => $instrument->id,
+                    'name' => $instrument->fullName(),
+                    'description' => $instrument->description,
+                ];
+            }
+        }
     }
 
     // If an instrument_set is provided, try to return only instruments that belong to that set
@@ -306,7 +331,7 @@ Route::get('instrument.api', function (Request $request) {
     ];
 
     return $allInstruments;
-})->name('instrument.api');
+})->name('instrument.api')->middleware('auth:sanctum');
 
 Route::get('instrumentset.api', function (Request $request) {
     $allSets = [];
@@ -340,7 +365,7 @@ Route::get('instrumentset.api', function (Request $request) {
     ];
 
     return $allSets;
-})->name('instrumentset.api');
+})->name('instrumentset.api')->middleware('auth:sanctum');
 
 // InstrumentSet select helper that correctly returns any selected instrument sets (supports arrays)
 Route::get('instrumentset.select.api', function (Request $request) {
@@ -422,10 +447,24 @@ Route::get('instrumentset.select.api', function (Request $request) {
     }
 
     return $uniqueSets;
-})->name('instrumentset.select.api');
+})->name('instrumentset.select.api')->middleware('auth:sanctum');
 
 // Instrument select helper that correctly returns any selected instruments (supports arrays)
 Route::get('instrument.select.api', function (Request $request) {
+    // The observer's own instruments carry the lens that is always used with
+    // them, which the observation form then selects with the instrument.
+    $lensNames = \App\Models\Lens::with('lens_make')->where('user_id', auth()->id())->get()
+        ->mapWithKeys(fn ($lens) => [$lens->id => html_entity_decode($lens->fullName())]);
+    $option = function (Instrument $instrument) use ($lensNames) {
+        $option = ['id' => $instrument->id, 'name' => $instrument->fullName()];
+        if ((int) $instrument->user_id === (int) auth()->id()) {
+            $lensId = $instrument->lens_id && isset($lensNames[$instrument->lens_id]) ? (int) $instrument->lens_id : null;
+            $option['lens_id'] = $lensId;
+            $option['lens_name'] = $lensId ? $lensNames[$lensId] : null;
+        }
+
+        return $option;
+    };
 
     $allInstruments = [];
 
@@ -451,11 +490,7 @@ Route::get('instrument.select.api', function (Request $request) {
         foreach ($selected as $sel) {
             $inst = Instrument::where('id', $sel)->first();
             if ($inst) {
-                $allInstruments[] = [
-                    'id' => $inst->id,
-                    'name' => $inst->fullName(),
-                    'description' => $inst->description,
-                ];
+                $allInstruments[] = $option($inst);
             }
         }
 
@@ -471,11 +506,7 @@ Route::get('instrument.select.api', function (Request $request) {
         foreach ($selected as $sel) {
             $inst = Instrument::where('id', $sel)->first();
             if ($inst) {
-                $allInstruments[] = [
-                    'id' => $inst->id,
-                    'name' => $inst->fullName(),
-                    'description' => $inst->description,
-                ];
+                $allInstruments[] = $option($inst);
             }
         }
     }
@@ -499,11 +530,7 @@ Route::get('instrument.select.api', function (Request $request) {
                 })->values();
                 foreach ($setInstruments as $instrument) {
                     if ($request->search == '' || Str::contains(Str::lower($instrument->fullName()), Str::lower($request->search))) {
-                        $allInstruments[] = [
-                            'id' => $instrument->id,
-                            'name' => $instrument->fullName(),
-                            'description' => $instrument->description,
-                        ];
+                        $allInstruments[] = $option($instrument);
                     }
                 }
                 // Remove duplicates while preserving order
@@ -523,11 +550,7 @@ Route::get('instrument.select.api', function (Request $request) {
 
     foreach ($instruments as $instrument) {
         if ($request->search == '' || Str::contains(Str::lower($instrument->fullName()), Str::lower($request->search))) {
-            $allInstruments[] = [
-                'id' => $instrument->id,
-                'name' => $instrument->fullName(),
-                'description' => $instrument->description,
-            ];
+            $allInstruments[] = $option($instrument);
         }
     }
 
@@ -542,16 +565,19 @@ Route::get('instrument.select.api', function (Request $request) {
     }
 
     return $uniqueInstruments;
-})->name('instrument.select.api');
+})->name('instrument.select.api')->middleware('auth:sanctum');
 
 Route::get('atlas.index', function (Request $request) {
     $allAtlases = [];
     // Show the selected option
     if ($request->exists('selected')) {
-        $allAtlases[] = [
-            'id' => auth()->user()->standardAtlasCode,
-            'name' => Atlas::where('code', auth()->user()->standardAtlasCode)->first()->name,
-        ];
+        $atlas = Atlas::where('code', auth()->user()->standardAtlasCode)->first();
+        if ($atlas) {
+            $allAtlases[] = [
+                'id' => $atlas->code,
+                'name' => $atlas->name,
+            ];
+        }
     }
 
     // Get the atlases
@@ -565,16 +591,23 @@ Route::get('atlas.index', function (Request $request) {
     }
 
     return $allAtlases;
-})->name('atlas.index');
+})->name('atlas.index')->middleware('auth:sanctum');
 
 Route::get('ui_languages.index', function (Request $request) {
     $allLanguages = [];
-    // Show the selected option
+    // Show the selected option: the one asked for (WireUI sends it as
+    // selected[0]), else the observer's own.
     if ($request->exists('selected')) {
-        $allLanguages[] = [
-            'id' => auth()->user()->language,
-            'name' => Languages::lookup([auth()->user()->language], 'mixed')->values()[0],
-        ];
+        $sel = $request->input('selected');
+        $sel = trim((string) (is_array($sel) ? (reset($sel) ?: '') : $sel));
+        $sel = $sel !== '' ? $sel : (string) auth()->user()->language;
+        $name = $sel !== '' ? Languages::lookup([$sel], 'mixed')->first() : null;
+        if ($name !== null) {
+            $allLanguages[] = [
+                'id' => $sel,
+                'name' => $name,
+            ];
+        }
     }
 
     // Get the languages
@@ -589,21 +622,30 @@ Route::get('ui_languages.index', function (Request $request) {
     }
 
     return $allLanguages;
-})->name('ui_languages.index');
+})->name('ui_languages.index')->middleware('auth:sanctum');
 
 // Make a list of all possible languages for the observations in DeepskyLog.
 Route::get('observation_languages.index', function (Request $request) {
     $allLanguages = [];
-    // Show the selected option
+    // Show the selected option: the one asked for (WireUI sends it as
+    // selected[0]), else the observer's own.
     if ($request->exists('selected')) {
-        $allLanguages[] = [
-            'id' => auth()->user()->observationlanguage,
-            'name' => Languages::lookup([auth()->user()->observationlanguage], 'mixed')->values()[0],
-        ];
+        $sel = $request->input('selected');
+        $sel = trim((string) (is_array($sel) ? (reset($sel) ?: '') : $sel));
+        if ($sel === '' && auth()->check()) {
+            $sel = (string) auth()->user()->observationlanguage;
+        }
+        $name = $sel !== '' ? Languages::lookup([$sel], 'mixed')->first() : null;
+        if ($name !== null) {
+            $allLanguages[] = [
+                'id' => $sel,
+                'name' => $name,
+            ];
+        }
     }
 
     // Get the languages
-    foreach (Languages::lookup(['bg', 'hr', 'cs', 'da', 'nl', 'en', 'eo', 'fi', 'fr', 'de', 'el', 'is', 'it', 'no', 'pl', 'pt', 'es', 'sv'], 'mixed') as $key => $language) {
+    foreach (Languages::lookup(config('app.observation_languages'), 'mixed') as $key => $language) {
         if ($request->search == '' || Str::contains(Str::lower($language), Str::lower($request->search))) {
             $allLanguages[] = [
                 'id' => $key,
@@ -613,10 +655,14 @@ Route::get('observation_languages.index', function (Request $request) {
     }
 
     return $allLanguages;
-})->name('observation_languages.index');
+})->name('observation_languages.index')->middleware('auth:sanctum');
 
 // Make a list of all users to add to a team.
+// The list contains the e-mail addresses of all users, so only administrators
+// get it (any user can create and own a team, so ownership is not enough).
 Route::get('addUserToTeam.index', function (Request $request) {
+    abort_unless($request->user()->hasAdministratorPrivileges(), 403);
+
     $allUsers = [];
 
     // Get the languages
@@ -630,93 +676,80 @@ Route::get('addUserToTeam.index', function (Request $request) {
     }
 
     return $allUsers;
-})->name('addUserToTeam.index');
+})->name('addUserToTeam.index')->middleware('auth:sanctum');
 
-// Users select helper for message receiver (returns username as id and full name)
+// Users select helper for the message receiver, the session's other
+// observers and the observer filter of the observation search (returns the
+// username as id and the full name). The observation search is open to
+// guests, so guests only get observers with observations, who are listed on
+// /observers anyway. Users are only looked up by username, never by e-mail
+// address, so the endpoint does not tell which addresses are registered. The
+// search runs in the database and returns at most $limit users. With
+// compatriots_first, the observers living in the country of the logged-in
+// user come first (the co-observers of a session).
 Route::get('users.select.api', function (Request $request) {
-    $allUsers = [];
+    $limit = 50;
+    $loggedIn = $request->user('sanctum') !== null;
+
+    $query = User::query()->select(['id', 'name', 'username']);
+    if (!$loggedIn) {
+        $query->whereExists(function ($q) {
+            $q->selectRaw('1')->from('observations')->whereColumn('observations.observer_username', 'users.username');
+        });
+    }
 
     // Support comma-separated selected_ids parameter used by some callers
+    $selected = $request->input('selected', []);
     if (!$request->exists('selected') && $request->filled('selected_ids')) {
-        $ids = array_filter(array_map('trim', explode(',', $request->selected_ids)));
-        if (!empty($ids)) {
-            $request->merge(['selected' => $ids]);
-        }
+        $selected = explode(',', (string) $request->selected_ids);
     }
+    $selected = array_values(array_filter(array_map('trim', array_map('strval', array_filter((array) $selected, 'is_scalar')))));
+    $selected = array_slice($selected, 0, $limit);
+
+    $selectedUsers = collect();
+    if ($selected !== []) {
+        $selectedUsers = (clone $query)
+            ->whereIn('username', $selected)
+            ->get();
+    }
+
+    $search = trim((string) $request->input('search', ''));
 
     // If selected is provided and there's no search term, return only the selected items
-    if ($request->exists('selected') && ($request->search == '' || $request->search === null)) {
-        $selected = $request->selected;
-        if (!is_array($selected)) {
-            $selected = [$selected];
-        }
-        foreach ($selected as $sel) {
-            $u = User::where('username', $sel)->orWhere('email', $sel)->first();
-            if ($u) {
-                $allUsers[] = [
-                    'id' => $u->username,
-                    'name' => $u->name,
-                ];
-            }
-        }
-
-        return $allUsers;
+    if ($request->exists('selected') && $search === '') {
+        return $selectedUsers->map(fn ($u) => ['id' => $u->username, 'name' => $u->name])->values();
     }
 
-    // Otherwise return selected first + the full (or filtered) list
-    if ($request->exists('selected')) {
-        $selected = $request->selected;
-        if (!is_array($selected)) {
-            $selected = [$selected];
-        }
-        foreach ($selected as $sel) {
-            $u = User::where('username', $sel)->orWhere('email', $sel)->first();
-            if ($u) {
-                $allUsers[] = [
-                    'id' => $u->username,
-                    'name' => $u->name,
-                ];
-            }
-        }
+    // Otherwise return selected first + the (filtered) list, sorted by full name
+    if ($search !== '') {
+        $like = '%' . addcslashes($search, '%_\\') . '%';
+        $query->where(fn ($q) => $q->where('name', 'like', $like)->orWhere('username', 'like', $like));
     }
-
-    // Get all users and sort by full name (case-insensitive)
-    $users = User::all()->sortBy(function ($u) {
-        return Str::lower($u->name);
-    });
-
-    foreach ($users as $user) {
-        if ($request->search == '' || Str::contains(Str::lower($user->name), Str::lower($request->search)) || Str::contains(Str::lower($user->username), Str::lower($request->search))) {
-            $allUsers[] = [
-                'id' => $user->username,
-                'name' => $user->name,
-            ];
-        }
+    $country = (string) ($request->user('sanctum')?->country ?? '');
+    if ($request->boolean('compatriots_first') && $country !== '') {
+        $query->orderByRaw('CASE WHEN country = ? THEN 0 ELSE 1 END', [$country]);
     }
+    $users = $query->orderBy('name')->limit($limit)->get();
 
-    // Remove duplicates while preserving order
-    $seen = [];
-    $unique = [];
-    foreach ($allUsers as $u) {
-        if (!isset($seen[$u['id']])) {
-            $seen[$u['id']] = true;
-            $unique[] = $u;
-        }
-    }
-
-    return $unique;
+    return $selectedUsers->concat($users)
+        ->unique('username')
+        ->map(fn ($u) => ['id' => $u->username, 'name' => $u->name])
+        ->values();
 })->name('users.select.api');
 
 Route::get('instrument_makes.api', function (Request $request) {
     $allMakes = [];
     // Show the selected option
     if ($request->exists('selected')) {
-        $allMakes[] = [
-            'id' => InstrumentMake::where('id', $request->selected)->first()->id,
-            'name' => InstrumentMake::where('id', $request->selected)->first()->name,
-        ];
+        $item = InstrumentMake::where('id', $request->selected)->first();
+        if ($item) {
+            $allMakes[] = [
+                'id' => $item->id,
+                'name' => $item->name,
+            ];
+        }
     }
-    $makes = InstrumentMake::get();
+    $makes = InstrumentMake::orderBy('name')->get();
     foreach ($makes as $make) {
         if ($request->search == '' || Str::contains(Str::lower($make->name), Str::lower($request->search))) {
             $allMakes[] = [
@@ -727,16 +760,19 @@ Route::get('instrument_makes.api', function (Request $request) {
     }
 
     return $allMakes;
-})->name('instrument_makes.api');
+})->name('instrument_makes.api')->middleware('auth:sanctum');
 
 Route::get('instrument_types.api', function (Request $request) {
     $allTypes = [];
     // Show the selected option
     if ($request->exists('selected')) {
-        $allTypes[] = [
-            'id' => InstrumentType::where('id', $request->selected)->first()->id,
-            'name' => InstrumentType::where('id', $request->selected)->first()->name,
-        ];
+        $item = InstrumentType::where('id', $request->selected)->first();
+        if ($item) {
+            $allTypes[] = [
+                'id' => $item->id,
+                'name' => $item->name,
+            ];
+        }
     }
     $types = InstrumentType::get();
     foreach ($types as $type) {
@@ -749,16 +785,19 @@ Route::get('instrument_types.api', function (Request $request) {
     }
 
     return $allTypes;
-})->name('instrument_types.api');
+})->name('instrument_types.api')->middleware('auth:sanctum');
 
 Route::get('mount_types.api', function (Request $request) {
     $allTypes = [];
     // Show the selected option
     if ($request->exists('selected')) {
-        $allTypes[] = [
-            'id' => MountType::where('id', $request->selected)->first()->id,
-            'name' => MountType::where('id', $request->selected)->first()->name,
-        ];
+        $item = MountType::where('id', $request->selected)->first();
+        if ($item) {
+            $allTypes[] = [
+                'id' => $item->id,
+                'name' => $item->name,
+            ];
+        }
 
     }
     $types = MountType::get();
@@ -772,18 +811,21 @@ Route::get('mount_types.api', function (Request $request) {
     }
 
     return $allTypes;
-})->name('mount_types.api');
+})->name('mount_types.api')->middleware('auth:sanctum');
 
 Route::get('eyepiece_makes.api', function (Request $request) {
     $allMakes = [];
     // Show the selected option
     if ($request->exists('selected')) {
-        $allMakes[] = [
-            'id' => EyepieceMake::where('id', $request->selected)->first()->id,
-            'name' => EyepieceMake::where('id', $request->selected)->first()->name,
-        ];
+        $item = EyepieceMake::where('id', $request->selected)->first();
+        if ($item) {
+            $allMakes[] = [
+                'id' => $item->id,
+                'name' => $item->name,
+            ];
+        }
     }
-    $makes = EyepieceMake::get();
+    $makes = EyepieceMake::orderBy('name')->get();
     foreach ($makes as $make) {
         if ($request->search == '' || Str::contains(Str::lower($make->name), Str::lower($request->search))) {
             $allMakes[] = [
@@ -794,52 +836,53 @@ Route::get('eyepiece_makes.api', function (Request $request) {
     }
 
     return $allMakes;
-})->name('eyepiece_makes.api');
+})->name('eyepiece_makes.api')->middleware('auth:sanctum');
 
 Route::get('eyepiece_type.api', function (Request $request) {
     $allTypes = [];
     // Show the selected option
     if ($request->exists('selected')) {
-        $allTypes[] = [
-            'id' => EyepieceType::where('id', $request->selected)->first()->id,
-            'name' => EyepieceType::where('id', $request->selected)->first()->name,
-        ];
-    }
-    if ($request->exists('make')) {
-        $allTypes[] = [
-            'id' => 0,
-            'name' => '',
-        ];
-        $types = EyepieceType::where('eyepiece_makes_id', $request->make)->get();
-        foreach ($types as $type) {
-            if ($request->search == '' || Str::contains(Str::lower($type->name), Str::lower($request->search))) {
-                $allTypes[] = [
-                    'id' => $type->id,
-                    'name' => $type->name,
-                ];
-            }
+        $item = EyepieceType::where('id', $request->selected)->first();
+        if ($item) {
+            $allTypes[] = [
+                'id' => $item->id,
+                'name' => $item->name,
+            ];
         }
-    } else {
-        $types = EyepieceType::get();
-        $allTypes[] = [
-            'id' => 0,
-            'name' => '',
-        ];
+    }
+    $allTypes[] = [
+        'id' => 0,
+        'name' => '',
+    ];
+    // Limit to the types of the given make; without a make, all types
+    $types = $request->exists('make')
+        ? EyepieceType::where('eyepiece_makes_id', $request->make)->orderBy('name')->get()
+        : EyepieceType::orderBy('name')->get();
+    foreach ($types as $type) {
+        if ($request->search == '' || Str::contains(Str::lower($type->name), Str::lower($request->search))) {
+            $allTypes[] = [
+                'id' => $type->id,
+                'name' => $type->name,
+            ];
+        }
     }
 
     return $allTypes;
-})->name('eyepiece_types.api');
+})->name('eyepiece_types.api')->middleware('auth:sanctum');
 
 Route::get('lens_makes.api', function (Request $request) {
     $allMakes = [];
     // Show the selected option
     if ($request->exists('selected')) {
-        $allMakes[] = [
-            'id' => LensMake::where('id', $request->selected)->first()->id,
-            'name' => LensMake::where('id', $request->selected)->first()->name,
-        ];
+        $item = LensMake::where('id', $request->selected)->first();
+        if ($item) {
+            $allMakes[] = [
+                'id' => $item->id,
+                'name' => $item->name,
+            ];
+        }
     }
-    $makes = LensMake::get();
+    $makes = LensMake::orderBy('name')->get();
     foreach ($makes as $make) {
         if ($request->search == '' || Str::contains(Str::lower($make->name), Str::lower($request->search))) {
             $allMakes[] = [
@@ -850,18 +893,21 @@ Route::get('lens_makes.api', function (Request $request) {
     }
 
     return $allMakes;
-})->name('lens_makes.api');
+})->name('lens_makes.api')->middleware('auth:sanctum');
 
 Route::get('filter_makes.api', function (Request $request) {
     $allMakes = [];
     // Show the selected option
     if ($request->exists('selected')) {
-        $allMakes[] = [
-            'id' => FilterMake::where('id', $request->selected)->first()->id,
-            'name' => FilterMake::where('id', $request->selected)->first()->name,
-        ];
+        $item = FilterMake::where('id', $request->selected)->first();
+        if ($item) {
+            $allMakes[] = [
+                'id' => $item->id,
+                'name' => $item->name,
+            ];
+        }
     }
-    $makes = FilterMake::get();
+    $makes = FilterMake::orderBy('name')->get();
     foreach ($makes as $make) {
         if ($request->search == '' || Str::contains(Str::lower($make->name), Str::lower($request->search))) {
             $allMakes[] = [
@@ -872,16 +918,19 @@ Route::get('filter_makes.api', function (Request $request) {
     }
 
     return $allMakes;
-})->name('filter_makes.api');
+})->name('filter_makes.api')->middleware('auth:sanctum');
 
 Route::get('filter_colors.api', function (Request $request) {
     $allColors = [];
     // Show the selected option
     if ($request->exists('selected')) {
-        $allColors[] = [
-            'id' => FilterColor::where('id', $request->selected)->first()->id,
-            'name' => FilterColor::where('id', $request->selected)->first()->name,
-        ];
+        $item = FilterColor::where('id', $request->selected)->first();
+        if ($item) {
+            $allColors[] = [
+                'id' => $item->id,
+                'name' => $item->name,
+            ];
+        }
     }
     $colors = FilterColor::get();
     foreach ($colors as $color) {
@@ -894,16 +943,19 @@ Route::get('filter_colors.api', function (Request $request) {
     }
 
     return $allColors;
-})->name('filter_colors.api');
+})->name('filter_colors.api')->middleware('auth:sanctum');
 
 Route::get('filter_types.api', function (Request $request) {
     $allTypes = [];
     // Show the selected option
     if ($request->exists('selected')) {
-        $allTypes[] = [
-            'id' => FilterType::where('id', $request->selected)->first()->id,
-            'name' => FilterType::where('id', $request->selected)->first()->name,
-        ];
+        $item = FilterType::where('id', $request->selected)->first();
+        if ($item) {
+            $allTypes[] = [
+                'id' => $item->id,
+                'name' => $item->name,
+            ];
+        }
     }
     $types = FilterType::get();
     foreach ($types as $type) {
@@ -916,7 +968,7 @@ Route::get('filter_types.api', function (Request $request) {
     }
 
     return $allTypes;
-})->name('filter_types.api');
+})->name('filter_types.api')->middleware('auth:sanctum');
 
 // Eyepiece select helper that correctly returns any selected eyepieces (supports arrays)
 Route::get('eyepiece.select.api', function (Request $request) {
@@ -947,8 +999,7 @@ Route::get('eyepiece.select.api', function (Request $request) {
             if ($ep) {
                 $allEyepieces[] = [
                     'id' => $ep->id,
-                    'name' => $ep->name,
-                    'description' => $ep->description,
+                    'name' => $ep->fullName(),
                 ];
             }
         }
@@ -967,8 +1018,7 @@ Route::get('eyepiece.select.api', function (Request $request) {
             if ($ep) {
                 $allEyepieces[] = [
                     'id' => $ep->id,
-                    'name' => $ep->name,
-                    'description' => $ep->description,
+                    'name' => $ep->fullName(),
                 ];
             }
         }
@@ -988,8 +1038,7 @@ Route::get('eyepiece.select.api', function (Request $request) {
                     if ($request->search == '' || Str::contains(Str::lower($eyepiece->fullName()), Str::lower($request->search))) {
                         $allEyepieces[] = [
                             'id' => $eyepiece->id,
-                            'name' => $eyepiece->name,
-                            'description' => $eyepiece->description,
+                            'name' => $eyepiece->fullName(),
                         ];
                     }
                 }
@@ -1019,8 +1068,7 @@ Route::get('eyepiece.select.api', function (Request $request) {
         if ($request->search == '' || Str::contains(Str::lower($eyepiece->fullName()), Str::lower($request->search))) {
             $allEyepieces[] = [
                 'id' => $eyepiece->id,
-                'name' => $eyepiece->name,
-                'description' => $eyepiece->description,
+                'name' => $eyepiece->fullName(),
             ];
         }
     }
@@ -1036,7 +1084,7 @@ Route::get('eyepiece.select.api', function (Request $request) {
     }
 
     return $uniqueEyepieces;
-})->name('eyepiece.select.api');
+})->name('eyepiece.select.api')->middleware('auth:sanctum');
 
 // Lens select helper that correctly returns any selected lenses (supports arrays)
 Route::get('lens.select.api', function (Request $request) {
@@ -1068,7 +1116,6 @@ Route::get('lens.select.api', function (Request $request) {
                 $allLenses[] = [
                     'id' => $lns->id,
                     'name' => $lns->fullName(),
-                    'description' => $lns->description,
                 ];
             }
         }
@@ -1088,7 +1135,6 @@ Route::get('lens.select.api', function (Request $request) {
                 $allLenses[] = [
                     'id' => $lns->id,
                     'name' => $lns->fullName(),
-                    'description' => $lns->description,
                 ];
             }
         }
@@ -1114,7 +1160,6 @@ Route::get('lens.select.api', function (Request $request) {
                         $allLenses[] = [
                             'id' => $lens->id,
                             'name' => $lens->fullName(),
-                            'description' => $lens->description,
                         ];
                     }
                 }
@@ -1138,7 +1183,6 @@ Route::get('lens.select.api', function (Request $request) {
             $allLenses[] = [
                 'id' => $lens->id,
                 'name' => $lens->fullName(),
-                'description' => $lens->description,
             ];
         }
     }
@@ -1154,7 +1198,7 @@ Route::get('lens.select.api', function (Request $request) {
     }
 
     return $uniqueLenses;
-})->name('lens.select.api');
+})->name('lens.select.api')->middleware('auth:sanctum');
 
 // Filter select helper that correctly returns any selected filters (supports arrays)
 Route::get('filter.select.api', function (Request $request) {
@@ -1186,7 +1230,6 @@ Route::get('filter.select.api', function (Request $request) {
                 $allFilters[] = [
                     'id' => $filter->id,
                     'name' => $filter->fullName(),
-                    'description' => $filter->description,
                 ];
             }
         }
@@ -1206,7 +1249,6 @@ Route::get('filter.select.api', function (Request $request) {
                 $allFilters[] = [
                     'id' => $filter->id,
                     'name' => $filter->fullName(),
-                    'description' => $filter->description,
                 ];
             }
         }
@@ -1223,7 +1265,6 @@ Route::get('filter.select.api', function (Request $request) {
             $allFilters[] = [
                 'id' => $filter->id,
                 'name' => $filter->fullName(),
-                'description' => $filter->description,
             ];
         }
     }
@@ -1239,12 +1280,32 @@ Route::get('filter.select.api', function (Request $request) {
     }
 
     return $uniqueFilters;
-})->name('filter.select.api');
+})->name('filter.select.api')->middleware('auth:sanctum');
 
 Route::get('/instrument/{userid}', [InstrumentController::class, 'show_from_user']);
 Route::get('/eyepieces/{userid}', [EyepieceController::class, 'show_from_user']);
 Route::get('/lenses/{userid}', [LensController::class, 'show_from_user']);
 Route::get('/filters/{userid}', [FilterController::class, 'show_from_user']);
+
+// Read-only API on the data of the authenticated observer (pydeepskylog and
+// other programs): a personal access token with the 'read' ability, made on
+// /user/api-tokens and sent as "Authorization: Bearer <token>".
+Route::prefix('v1/me')->middleware(['auth:sanctum', 'abilities:read'])->name('api.me.')->group(function () {
+    Route::get('/', [MeController::class, 'profile'])->name('profile');
+    Route::get('locations', [MeController::class, 'locations'])->name('locations');
+    Route::get('instruments', [MeController::class, 'instruments'])->name('instruments');
+    Route::get('eyepieces', [MeController::class, 'eyepieces'])->name('eyepieces');
+    Route::get('lenses', [MeController::class, 'lenses'])->name('lenses');
+    Route::get('filters', [MeController::class, 'filters'])->name('filters');
+    Route::get('instrument-sets', [MeController::class, 'instrumentSets'])->name('instrument-sets');
+    Route::get('observations', [MeController::class, 'observations'])->name('observations');
+    Route::get('observations/{id}', [MeController::class, 'observation'])->whereNumber('id')->name('observation');
+    Route::get('sessions', [MeController::class, 'sessions'])->name('sessions');
+    Route::get('sessions/{id}', [MeController::class, 'session'])->whereNumber('id')->name('session');
+    Route::get('observing-lists', [MeController::class, 'observingLists'])->name('observing-lists');
+    Route::get('observing-lists/{id}', [MeController::class, 'observingList'])->whereNumber('id')->name('observing-list');
+    Route::get('star-parties', [MeController::class, 'starParties'])->name('star-parties');
+});
 
 // Persist Aladin preview defaults for the authenticated user
 Route::middleware('auth:sanctum')->post('user/aladin-defaults', function (Request $request) {
@@ -1291,27 +1352,23 @@ Route::middleware('auth:sanctum')->post('user/aladin-defaults', function (Reques
             }
         }
 
-        // Lens
+        // Lens: the lens of the telescope saved as default (the observer has
+        // no standard lens of their own; a telescope has the lens that is
+        // always used with it).
+        $lens = null;
         if (!empty($data['lens_id']) && $data['lens_id'] != 0) {
-            $ln = \App\Models\Lens::where('id', $data['lens_id'])->where('observer', $user->username)->first();
-            if (!$ln)
+            $lens = \App\Models\Lens::where('id', $data['lens_id'])->where('user_id', $user->id)->first();
+            if (!$lens)
                 return response()->json(['error' => 'Invalid lens'], 422);
-            if (Schema::hasColumn('users', 'stdlens')) {
-                $user->stdlens = $ln->id;
-            } else if (Schema::hasColumn('users', 'preferences')) {
-                $prefs = $user->preferences ?? [];
-                $prefs['aladin_default_lens'] = $ln->id;
-                $user->preferences = $prefs;
-            }
-        } else {
-            if (Schema::hasColumn('users', 'stdlens')) {
-                $user->stdlens = null;
-            }
-            if (Schema::hasColumn('users', 'preferences')) {
-                $prefs = $user->preferences ?? [];
-                unset($prefs['aladin_default_lens']);
-                $user->preferences = $prefs;
-            }
+        }
+        if (Schema::hasColumn('users', 'preferences')) {
+            $prefs = $user->preferences ?? [];
+            unset($prefs['aladin_default_lens']);
+            $user->preferences = $prefs;
+        }
+        $telescope = $user->stdtelescope ? \App\Models\Instrument::where('id', $user->stdtelescope)->where('user_id', $user->id)->first() : null;
+        if ($telescope && (int) $telescope->lens_id !== (int) $lens?->id) {
+            $telescope->update(['lens_id' => $lens?->id]);
         }
 
         $user->save();
@@ -1320,3 +1377,20 @@ Route::middleware('auth:sanctum')->post('user/aladin-defaults', function (Reques
         return response()->json(['error' => 'Save failed', 'message' => $ex->getMessage()], 500);
     }
 })->name('user.aladin-defaults.save');
+
+// Compute magnification client-side without a Livewire round-trip
+Route::get('magnification', function (Request $request) {
+    $instrumentId = $request->query('instrument_id');
+    $eyepieceId   = $request->query('eyepiece_id');
+    $lensId       = $request->query('lens_id');
+
+    $instrument = $instrumentId ? \App\Models\Instrument::find($instrumentId) : null;
+    if (! $instrument) {
+        return response()->json(['magnification' => null]);
+    }
+
+    $eyepiece = $eyepieceId ? \App\Models\Eyepiece::find($eyepieceId) : null;
+    $lens     = $lensId ? \App\Models\Lens::find($lensId) : null;
+
+    return response()->json(['magnification' => $instrument->magnificationFor($eyepiece, $lens)]);
+})->name('magnification.compute')->middleware('auth:sanctum');

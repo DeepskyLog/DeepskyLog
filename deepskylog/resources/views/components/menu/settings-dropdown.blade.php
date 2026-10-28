@@ -52,37 +52,31 @@
 
                 @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
                 <x-menu.item href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}">
-                    <x-outline.session-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
-                    {{ __('My sessions') }}
+                    <x-slot:svg><x-outline.session-icon class="h-4 w-4" /></x-slot:svg>{{ __('My sessions') }}
                 </x-menu.item>
 
                 <x-menu.item separator icon="bars-3-center-left" href="{{ route('observing-lists.index') }}">{!! __('My observing lists') !!}</x-menu.item>
 
                 <x-menu.item separator href="/instrument">
-                    <x-outline.telescope-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
-                    {{ __('My instruments') }}
+                    <x-slot:svg><x-outline.telescope-icon class="h-4 w-4" /></x-slot:svg>{{ __('My instruments') }}
                 </x-menu.item>
 
                 <x-menu.item href="/instrumentset">
-                    <x-outline.instrument-set-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
-                    {{ __('My instrument sets') }}
+                    <x-slot:svg><x-outline.instrument-set-icon class="h-4 w-4" /></x-slot:svg>{{ __('My instrument sets') }}
                 </x-menu.item>
 
                 <x-menu.item icon="globe-europe-africa" href="/location">{{ __('My locations') }}</x-menu.item>
 
                 <x-menu.item href="/eyepiece">
-                    <x-outline.eyepiece-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
-                    {{ __('My eyepieces') }}
+                    <x-slot:svg><x-outline.eyepiece-icon class="h-4 w-4" /></x-slot:svg>{{ __('My eyepieces') }}
                 </x-menu.item>
 
                 <x-menu.item href="/filter">
-                    <x-outline.filter-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
-                    {{ __('My filters') }}
+                    <x-slot:svg><x-outline.filter-icon class="h-4 w-4" /></x-slot:svg>{{ __('My filters') }}
                 </x-menu.item>
 
                 <x-menu.item href="/lens">
-                    <x-outline.barlow-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
-                    {{ __('My lenses') }}
+                    <x-slot:svg><x-outline.barlow-icon class="h-4 w-4" /></x-slot:svg>{{ __('My lenses') }}
                 </x-menu.item>
 
                 <x-menu.item separator icon="user-circle" href="/observers/{{ Auth::user()->slug }}">{{ __('Details') }}</x-menu.item>
@@ -94,7 +88,7 @@
             <x-menu.item icon="cog" href="{{ route('profile.show') }}">{{ __('Profile') }}</x-menu.item>
 
             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                <x-menu.item href="{{ route('api-tokens.index') }}">{!! __('API Tokens') !!}</x-menu.item>
+                <x-menu.item icon="key" href="{{ route('api-tokens.index') }}">{!! __('API Tokens') !!}</x-menu.item>
             @endif
 
             <!-- Authentication -->

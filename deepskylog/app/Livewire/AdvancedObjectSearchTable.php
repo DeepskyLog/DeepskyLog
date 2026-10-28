@@ -2,16 +2,23 @@
 
 namespace App\Livewire;
 
+use App\Support\SchemaColumns;
+use App\Livewire\Concerns\LimitsExportRows;
 use App\Models\SearchIndex;
 use App\Models\Atlas;
+use App\Models\ObservingList;
 use App\Services\ActiveObservingListService;
+use App\Services\ObjectObservationStatistics;
+use App\Services\ObservationComparison;
+use App\Services\DoubleStarResolvability;
+use App\Services\SeasonalVisibility;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
@@ -20,13 +27,12 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
-use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use App\Jobs\ComputeContrastReserveForObject;
 
 #[Lazy]
 class AdvancedObjectSearchTable extends PowerGridComponent
 {
-    use WithExport;
+    use LimitsExportRows;
 
     public string $tableName = 'advanced-search-results-table';
     public string $primaryKey = 'search_index_id';
@@ -43,6 +49,9 @@ class AdvancedObjectSearchTable extends PowerGridComponent
     public string $magMax = '';
     public string $subrMin = '';
     public string $subrMax = '';
+    // Also match objects whose magnitude / surface brightness is unknown.
+    public bool $magUnknown = false;
+    public bool $subrUnknown = false;
     public string $diam1Min = '';
     public string $diam1Max = '';
     public string $diam2Min = '';
@@ -67,6 +76,16 @@ class AdvancedObjectSearchTable extends PowerGridComponent
     public string $atlasPageSpec = '';
     public string $atlasPageMin = '';
     public string $atlasPageMax = '';
+    // Compare my observations (see ObservationComparison)
+    public string $compareBy = '';
+    public string $compareSeen = '';
+    public string $compareNotSeen = '';
+    public string $compareSqm = '';
+    public string $compareSkyDirection = ObservationComparison::SKY_POOR_NOT_DARK;
+    // Observing list only: the month (1–12) its objects have to be well placed in (SeasonalVisibility), 0 = any
+    public int $wellPlacedMonth = 0;
+    // Double stars the observer's standard telescope splits ('split') or does not split yet ('not_split'), '' = any
+    public string $doubleStars = '';
 
     // ── CR / best-mag dedup flags ─────────────────────────────────────────
     public bool $bestMagUpsertedThisLoad = false;
@@ -75,17 +94,16 @@ class AdvancedObjectSearchTable extends PowerGridComponent
     private ?bool $canModifyActiveListCached = null;
 
     private ?array $cachedEyepieces = null;
+    // [list id, SeasonalVisibility or null] of seasons(); PowerGrid's mount() asks before the list is set
+    private ?array $seasons = null;
+    // The slugs of doubleStarSlugs(), once per request
+    private ?array $doubleStarSlugs = null;
+    // [list id, planned times or null] of plannedTimes()
+    private ?array $plannedTimes = null;
     public int $refreshTick = 0;
-
-    public function boot(): void
-    {
-        config(['livewire-powergrid.filter' => 'outside']);
-    }
 
     public function mount(array $filters = [], ?bool $showAddColumn = null): void
     {
-        parent::mount();
-
         if ($showAddColumn !== null) {
             $this->showAddColumn = $showAddColumn;
         }
@@ -99,6 +117,8 @@ class AdvancedObjectSearchTable extends PowerGridComponent
         $this->magMax = (string) ($filters['mag_max'] ?? '');
         $this->subrMin = (string) ($filters['subr_min'] ?? '');
         $this->subrMax = (string) ($filters['subr_max'] ?? '');
+        $this->magUnknown = (bool) ($filters['mag_unknown'] ?? false);
+        $this->subrUnknown = (bool) ($filters['subr_unknown'] ?? false);
         $this->diam1Min = (string) ($filters['diam1_min'] ?? '');
         $this->diam1Max = (string) ($filters['diam1_max'] ?? '');
         $this->diam2Min = (string) ($filters['diam2_min'] ?? '');
@@ -130,6 +150,30 @@ class AdvancedObjectSearchTable extends PowerGridComponent
         $this->atlasPageSpec = (string) ($filters['atlas_page_spec'] ?? '');
         $this->atlasPageMin = (string) ($filters['atlas_page_min'] ?? '');
         $this->atlasPageMax = (string) ($filters['atlas_page_max'] ?? '');
+        $this->compareBy = (string) ($filters['compare_by'] ?? '');
+        $this->compareSeen = (string) ($filters['compare_seen'] ?? '');
+        $this->compareNotSeen = (string) ($filters['compare_not_seen'] ?? '');
+        $this->compareSqm = (string) ($filters['compare_sqm'] ?? '');
+        $direction = (string) ($filters['compare_sky_direction'] ?? '');
+        $this->compareSkyDirection = in_array($direction, ObservationComparison::SKY_DIRECTIONS, true)
+            ? $direction
+            : ObservationComparison::SKY_POOR_NOT_DARK;
+        $month = (int) ($filters['well_placed_month'] ?? 0);
+        $this->wellPlacedMonth = $month >= 1 && $month <= 12 ? $month : 0;
+        $doubleStars = (string) ($filters['double_stars'] ?? '');
+        $this->doubleStars = in_array($doubleStars, ['split', 'not_split'], true) ? $doubleStars : '';
+
+        // PowerGrid makes the columns here, which depend on the list (Months, Time).
+        parent::mount();
+
+        // A list made for one night is shown in the order of its times; the
+        // sorting persisted from such a list does not apply to other lists.
+        if ($this->plannedTimes() !== null) {
+            $this->sortField = 'list_planned_at';
+            $this->sortDirection = 'asc';
+        } elseif ($this->sortField === 'list_planned_at') {
+            $this->sortField = 'display_name';
+        }
     }
 
     #[On('advanced-add-all-to-active-list')]
@@ -192,7 +236,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
 
     public function setUp(): array
     {
-        $this->persist(['columns', 'filters']);
+        $this->persist(['columns', 'filters', 'sorting']);
 
         return [
             PowerGrid::header()->showSearchInput()->showToggleColumns(),
@@ -285,29 +329,20 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             if (!empty($this->constellations)) {
                 $objQ->whereIn('con', array_map('strval', $this->constellations));
             }
-            if ($this->magMin !== '' && is_numeric($this->magMin)) {
-                $objQ->where('mag', '>=', floatval($this->magMin));
-            }
-            if ($this->magMax !== '' && is_numeric($this->magMax)) {
-                $objQ->where('mag', '<=', floatval($this->magMax));
-            }
-            if ($this->subrMin !== '' && is_numeric($this->subrMin)) {
-                $objQ->where('subr', '>=', floatval($this->subrMin));
-            }
-            if ($this->subrMax !== '' && is_numeric($this->subrMax)) {
-                $objQ->where('subr', '<=', floatval($this->subrMax));
-            }
+            $this->applyBrightnessRange($objQ, 'mag', $this->magMin, $this->magMax, $this->magUnknown);
+            $this->applyBrightnessRange($objQ, 'subr', $this->subrMin, $this->subrMax, $this->subrUnknown);
+            // Diameters are entered in arcmin; the objects table stores arcsec.
             if ($this->diam1Min !== '' && is_numeric($this->diam1Min)) {
-                $objQ->where('diam1', '>=', floatval($this->diam1Min));
+                $objQ->where('diam1', '>=', floatval($this->diam1Min) * 60);
             }
             if ($this->diam1Max !== '' && is_numeric($this->diam1Max)) {
-                $objQ->where('diam1', '<=', floatval($this->diam1Max));
+                $objQ->where('diam1', '<=', floatval($this->diam1Max) * 60);
             }
             if ($this->diam2Min !== '' && is_numeric($this->diam2Min)) {
-                $objQ->where('diam2', '>=', floatval($this->diam2Min));
+                $objQ->where('diam2', '>=', floatval($this->diam2Min) * 60);
             }
             if ($this->diam2Max !== '' && is_numeric($this->diam2Max)) {
-                $objQ->where('diam2', '<=', floatval($this->diam2Max));
+                $objQ->where('diam2', '<=', floatval($this->diam2Max) * 60);
             }
             if (($this->ratioMin !== '' && is_numeric($this->ratioMin)) || ($this->ratioMax !== '' && is_numeric($this->ratioMax))) {
                 $objQ->whereNotNull('diam1')->where('diam1', '>', 0)
@@ -323,37 +358,33 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             $preloadedObjectSlugs = $objQ->pluck('slug')->toArray();
         }
 
-        // Build a subquery that groups search_index rows by canonical name.
+        // ── Double stars the standard telescope splits (or not yet) ─────────
+        if ($this->doubleStars !== '') {
+            $doubleSlugs = $this->doubleStarSlugs();
+            $preloadedObjectSlugs = $preloadedObjectSlugs === null
+                ? $doubleSlugs
+                : array_values(array_intersect($preloadedObjectSlugs, $doubleSlugs));
+        }
+
+        // The search_index rows to list, one per canonical name (see below).
         // When categories are specified we restrict to those source_tables;
         // otherwise we include all source_tables.
-        $sub = DB::table('search_index')
-            ->where('source_type', '<>', 'alias')
-            ->selectRaw(
-                'MIN(id) as search_index_id, '
-                . "LOWER(COALESCE(name, display_name)) as canonical_name_norm, "
-                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN source_table END), MIN(source_table)) as source_table, "
-                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN source_pk END), MIN(source_pk)) as source_pk, "
-                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN display_name END), COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN display_name END), MIN(display_name))) as display_name, "
-                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN name END), COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN name END), MIN(name))) as name, "
-                . 'MAX(ra) as ra, MAX(decl) as decl, '
-                . "COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN source_type END), MIN(source_type)) as source_type, "
-                . "COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN metadata END), MIN(metadata)) as metadata"
-            );
+        $rows = DB::table('search_index')->where('source_type', '<>', 'alias');
 
         if (!empty($categories)) {
-            $sub->whereIn('source_table', $categories);
+            $rows->whereIn('source_table', $categories);
         }
 
         // ── Catalog include/exclude via objectnames ───────────────────────────
         if (!empty($this->catalogsInclude)) {
             $include = array_map('strval', $this->catalogsInclude);
-            $sub->whereIn('name', function ($q) use ($include) {
+            $rows->whereIn('name', function ($q) use ($include) {
                 $q->from('objectnames')->whereIn('catalog', $include)->select('objectname');
             });
         }
         if (!empty($this->catalogsExclude)) {
             $exclude = array_map('strval', $this->catalogsExclude);
-            $sub->whereNotIn('name', function ($q) use ($exclude) {
+            $rows->whereNotIn('name', function ($q) use ($exclude) {
                 $q->from('objectnames')->whereIn('catalog', $exclude)->select('objectname');
             });
         }
@@ -363,7 +394,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             $catalogs = array_values(array_filter(array_map('trim', $this->nameSearchCatalogs), fn($v) => $v !== ''));
             $number = trim((string) $this->nameSearchNumber);
 
-            $sub->whereIn('name', function ($q) use ($catalogs, $number) {
+            $rows->whereIn('name', function ($q) use ($catalogs, $number) {
                 $q->from('objectnames')->select('objectname');
 
                 if (!empty($catalogs)) {
@@ -375,44 +406,115 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             });
         }
 
-        // ── Apply observing list pre-filter to $sub (before GROUP BY) ────────
+        // ── Compare my observations (deep-sky objects only) ─────────────────
+        if ($this->compareBy !== '') {
+            ObservationComparison::restrict(
+                $rows,
+                Auth::user()?->username,
+                $this->compareBy,
+                $this->compareSeen,
+                $this->compareNotSeen,
+                $this->compareSqm,
+                $this->compareSkyDirection
+            );
+        }
+
+        // ── Apply observing list pre-filter to $rows (before GROUP BY) ────────
         // This lets MySQL use search_index_name_index instead of a full scan.
         if ($preloadedListFilter !== null) {
             if ($preloadedListFilter === 'zero') {
-                $sub->whereRaw('1 = 0');
+                $rows->whereRaw('1 = 0');
             } else {
                 [$listMode, $listNames] = $preloadedListFilter;
+
+                // Resolve object names to slugs via the objects table so that
+                // objects whose primary search_index entry may be missing are
+                // still matched by their source_pk (slug).
+                $objectSlugsForList = !empty($listNames)
+                    ? DB::table('objects')
+                        ->whereIn('name', $listNames)
+                        ->pluck('slug')
+                        ->toArray()
+                    : [];
+
                 if ($listMode === 'not_in') {
                     if (!empty($listNames)) {
-                        $sub->whereNotIn('name', $listNames);
+                        $rows->whereNotIn('name', $listNames);
+                    }
+                    if (!empty($objectSlugsForList)) {
+                        $rows->whereNotIn('source_pk', $objectSlugsForList);
                     }
                     // Empty list in not_in mode = no restriction (keep all objects).
                 } else {
                     // 'in' mode
                     if (empty($listNames)) {
-                        $sub->whereRaw('1 = 0');
+                        $rows->whereRaw('1 = 0');
+                    } elseif ($this->wellPlacedMonth > 0) {
+                        // Only the deep-sky objects of the list that are well
+                        // placed in the month; the others move or have no position.
+                        $seasons = $this->seasons();
+                        $slugs = !$seasons ? [] : DB::table('objects')
+                            ->whereIn('name', $listNames)
+                            ->get(['slug', 'ra', 'decl'])
+                            ->filter(fn($o) => is_numeric($o->ra) && is_numeric($o->decl)
+                                && $seasons->isWellPlaced((float) $o->ra * 15.0, (float) $o->decl, $this->wellPlacedMonth))
+                            ->pluck('slug')
+                            ->all();
+                        $rows->where('source_table', 'objects');
+                        empty($slugs) ? $rows->whereRaw('1 = 0') : $rows->whereIn('source_pk', $slugs);
                     } else {
-                        $sub->whereIn('name', $listNames);
+                        // Match by name (for all source types including comets/planets)
+                        // OR by slug/source_pk (for DSO objects missing from search_index).
+                        $rows->where(function ($q) use ($listNames, $objectSlugsForList) {
+                            $q->whereIn('name', $listNames);
+                            if (!empty($objectSlugsForList)) {
+                                $q->orWhereIn('source_pk', $objectSlugsForList);
+                            }
+                        });
                     }
                 }
             }
         }
 
-        // ── Apply objects-table pre-filter to $sub (before GROUP BY) ──────────
-        // Restricts $sub to matching source_pks so MySQL uses search_index_source_pk_index
+        // ── Apply objects-table pre-filter to $rows (before GROUP BY) ──────────
+        // Restricts $rows to matching source_pks so MySQL uses search_index_source_pk_index
         // instead of scanning all 83K rows + filesort.
         if ($preloadedObjectSlugs !== null) {
             // These filters only apply to deep-sky objects.
-            $sub->where('source_table', 'objects');
+            $rows->where('source_table', 'objects');
 
             if (empty($preloadedObjectSlugs)) {
-                $sub->whereRaw('1 = 0');
+                $rows->whereRaw('1 = 0');
             } else {
-                $sub->whereIn('source_pk', $preloadedObjectSlugs);
+                $rows->whereIn('source_pk', $preloadedObjectSlugs);
             }
         }
 
-        $sub->groupBy(DB::raw("LOWER(COALESCE(name, display_name))"));
+        // Rows sharing a canonical name are merged into one, preferring the
+        // deep-sky object's values. Only the few rows whose name another row
+        // has as well need a GROUP BY (name_unique, see
+        // SearchIndex::markUniqueNames()); grouping the whole index took about
+        // 2.5 s per sort or page click. A group filtered down to one row gives
+        // that row's own values, so this lists the same as grouping everything.
+        $key = SearchIndex::NAME_KEY;
+        $unique = (clone $rows)
+            ->where('name_unique', true)
+            ->selectRaw("id as search_index_id, {$key} as canonical_name_norm, source_table, source_pk, display_name, name, ra, decl, source_type, metadata");
+        $merged = (clone $rows)
+            ->where('name_unique', false)
+            ->selectRaw(
+                'MIN(id) as search_index_id, '
+                . "{$key} as canonical_name_norm, "
+                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN source_table END), MIN(source_table)) as source_table, "
+                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN source_pk END), MIN(source_pk)) as source_pk, "
+                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN display_name END), COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN display_name END), MIN(display_name))) as display_name, "
+                . "COALESCE(MIN(CASE WHEN source_table = 'objects' THEN name END), COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN name END), MIN(name))) as name, "
+                . 'MAX(ra) as ra, MAX(decl) as decl, '
+                . "COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN source_type END), MIN(source_type)) as source_type, "
+                . "COALESCE(MIN(CASE WHEN source_type <> 'alias' THEN metadata END), MIN(metadata)) as metadata"
+            )
+            ->groupBy(DB::raw($key));
+        $sub = $unique->unionAll($merged);
 
         $query = SearchIndex::query()->fromSub($sub, 'search_index')
             ->leftJoin('objects', function ($join) {
@@ -421,6 +523,21 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             })
             ->leftJoin('deepskytypes', 'deepskytypes.code', '=', 'objects.type')
             ->leftJoin('constellations', 'constellations.id', '=', 'objects.con');
+
+        // ── The times of a list made for one night ────────────────────────────
+        if ($planned = $this->plannedTimes()) {
+            $query->leftJoin('observing_list_items as list_items', function ($join) use ($planned) {
+                $join->where('list_items.observing_list_id', '=', $planned['list_id'])
+                    ->where(function ($on) {
+                        $on->whereColumn('list_items.object_name', 'search_index.name')
+                            ->orWhereColumn('list_items.object_name', 'objects.name');
+                    });
+            })->addSelect([
+                'list_items.planned_at as list_planned_at',
+                'list_items.planned_from as list_planned_from',
+                'list_items.planned_until as list_planned_until',
+            ]);
+        }
 
         // ── Object type filter ────────────────────────────────────────────────
         if (!empty($this->objectTypes)) {
@@ -440,22 +557,22 @@ class AdvancedObjectSearchTable extends PowerGridComponent
         if ($nameNeedle !== '') {
             $needle = mb_strtolower($nameNeedle);
             $query->where(function ($q) use ($needle) {
-                $q->whereRaw('LOWER(COALESCE(search_index.display_name, \'\')) LIKE ?', ['%' . $needle . '%'])
-                    ->orWhereRaw('LOWER(COALESCE(search_index.name, \'\')) LIKE ?', ['%' . $needle . '%'])
-                    ->orWhereRaw('LOWER(COALESCE(objects.name, \'\')) LIKE ?', ['%' . $needle . '%'])
+                $q->whereRaw('COALESCE(search_index.display_name, \'\') LIKE ?', ['%' . $needle . '%'])
+                    ->orWhereRaw('COALESCE(search_index.name, \'\') LIKE ?', ['%' . $needle . '%'])
+                    ->orWhereRaw('COALESCE(objects.name, \'\') LIKE ?', ['%' . $needle . '%'])
                     ->orWhereExists(function ($sq) use ($needle) {
                         // Match aliases stored in search_index rows for the same canonical source item.
                         $sq->selectRaw('1')
                             ->from('search_index as si_alias')
                             ->whereRaw('si_alias.source_table = search_index.source_table')
                             ->whereRaw('si_alias.source_pk = search_index.source_pk')
-                            ->whereRaw('LOWER(COALESCE(si_alias.display_name, \'\')) LIKE ?', ['%' . $needle . '%']);
+                            ->whereRaw('COALESCE(si_alias.display_name, \'\') LIKE ?', ['%' . $needle . '%']);
                     })
                     ->orWhereIn('objects.name', function ($sq) use ($needle) {
                         // Match alternative names from objectnames (e.g. "Jupiter\'s Ghost").
                         $sq->from('objectnames')
                             ->select('objectname')
-                            ->whereRaw('LOWER(COALESCE(altname, \'\')) LIKE ?', ['%' . $needle . '%']);
+                            ->whereRaw('COALESCE(altname, \'\') LIKE ?', ['%' . $needle . '%']);
                     });
             });
         }
@@ -485,36 +602,24 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             }
         }
 
-        // ── Magnitude filter ──────────────────────────────────────────────────
-        if ($this->magMin !== '' && is_numeric($this->magMin)) {
-            $query->where('objects.mag', '>=', floatval($this->magMin));
-        }
-        if ($this->magMax !== '' && is_numeric($this->magMax)) {
-            $query->where('objects.mag', '<=', floatval($this->magMax));
-        }
+        // ── Magnitude and surface brightness filters ──────────────────────────
+        $this->applyBrightnessRange($query, 'objects.mag', $this->magMin, $this->magMax, $this->magUnknown);
+        $this->applyBrightnessRange($query, 'objects.subr', $this->subrMin, $this->subrMax, $this->subrUnknown);
 
-        // ── Surface brightness filter ─────────────────────────────────────────
-        if ($this->subrMin !== '' && is_numeric($this->subrMin)) {
-            $query->where('objects.subr', '>=', floatval($this->subrMin));
-        }
-        if ($this->subrMax !== '' && is_numeric($this->subrMax)) {
-            $query->where('objects.subr', '<=', floatval($this->subrMax));
-        }
-
-        // ── Diameter 1 filter ─────────────────────────────────────────────────
+        // ── Diameter 1 filter (entered in arcmin, stored in arcsec) ───────────
         if ($this->diam1Min !== '' && is_numeric($this->diam1Min)) {
-            $query->where('objects.diam1', '>=', floatval($this->diam1Min));
+            $query->where('objects.diam1', '>=', floatval($this->diam1Min) * 60);
         }
         if ($this->diam1Max !== '' && is_numeric($this->diam1Max)) {
-            $query->where('objects.diam1', '<=', floatval($this->diam1Max));
+            $query->where('objects.diam1', '<=', floatval($this->diam1Max) * 60);
         }
 
-        // ── Diameter 2 filter ─────────────────────────────────────────────────
+        // ── Diameter 2 filter (entered in arcmin, stored in arcsec) ───────────
         if ($this->diam2Min !== '' && is_numeric($this->diam2Min)) {
-            $query->where('objects.diam2', '>=', floatval($this->diam2Min));
+            $query->where('objects.diam2', '>=', floatval($this->diam2Min) * 60);
         }
         if ($this->diam2Max !== '' && is_numeric($this->diam2Max)) {
-            $query->where('objects.diam2', '<=', floatval($this->diam2Max));
+            $query->where('objects.diam2', '<=', floatval($this->diam2Max) * 60);
         }
 
         // ── Diam1/Diam2 ratio filter ──────────────────────────────────────────
@@ -557,7 +662,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
         $atlasMin = trim((string) $this->atlasPageMin);
         $atlasMax = trim((string) $this->atlasPageMax);
         if ($atlasCode !== '' || $atlasSpec !== '' || $atlasMin !== '' || $atlasMax !== '') {
-            if ($atlasCode !== '' && preg_match('/^[A-Za-z0-9_]+$/', $atlasCode) && Schema::hasColumn('objects', $atlasCode)) {
+            if ($atlasCode !== '' && preg_match('/^[A-Za-z0-9_]+$/', $atlasCode) && SchemaColumns::has('objects', $atlasCode)) {
                 $query->where('search_index.source_table', 'objects');
 
                 $atlasExpr = "NULLIF(TRIM(objects.`{$atlasCode}`), '')";
@@ -621,7 +726,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             $authUser = Auth::user();
             if ($authUser && !empty($authUser->standardAtlasCode) && preg_match('/^[A-Za-z0-9_]+$/', (string) $authUser->standardAtlasCode)) {
                 $acol = (string) $authUser->standardAtlasCode;
-                if (Schema::hasColumn('objects', $acol)) {
+                if (SchemaColumns::has('objects', $acol)) {
                     $select .= ', objects.`' . $acol . '` as atlas_page';
                 }
             }
@@ -630,125 +735,50 @@ class AdvancedObjectSearchTable extends PowerGridComponent
 
         $status = trim((string) $this->observingStatus);
         $needsObservingStatusFilter = $status !== '' && $status !== 'all';
-        $obsJoinApplied = false;
 
-        // Legacy observations aggregate
-        try {
-            $oldDbName = config('database.connections.mysqlOld.database') ?? env('DB_DATABASE_OLD');
-            $authUser = Auth::user();
-            $legacyUser = $authUser?->username ?? '';
-            if (!empty($oldDbName)) {
-                try {
-                    $quotedUser = DB::getPdo()->quote($legacyUser);
-                } catch (\Throwable $_) {
-                    $quotedUser = "''";
-                }
-
-                $globalSearch = '';
-                try {
-                    $globalSearch = trim((string) ($this->search ?? ''));
-                } catch (\Throwable $_) {
-                    $globalSearch = '';
-                }
-
-                // Build aggregate only for names that survive the current filters.
-                // This keeps PowerGrid pagination/search responsive.
-                $filteredObjectNames = [];
-                try {
-                    $filteredObjectNames = (clone $query)
-                        ->whereNotNull('objects.name')
-                        ->distinct()
-                        ->pluck('objects.name')
-                        ->map(fn($n) => (string) $n)
-                        ->values()
-                        ->toArray();
-                } catch (\Throwable $_) {
-                    $filteredObjectNames = [];
-                }
-
-                // For broad datasets or active text search, skip legacy aggregation and
-                // return neutral values to keep PowerGrid interactions responsive.
-                if ((!empty($globalSearch) || empty($filteredObjectNames) || count($filteredObjectNames) > 1500) && !$needsObservingStatusFilter) {
-                    $select .= ", 0 as total_observations, 0 as total_drawings, 0 as your_observations, 0 as your_drawings, NULL as last_seen_date, NULL as your_last_seen_date, NULL as last_drawing_date, NULL as your_last_drawing_date, 0 as seen, NULL as last_seen";
-                } else {
-                    try {
-                        $quotedNames = implode(', ', array_map(function ($n) {
-                            try {
-                                return DB::getPdo()->quote($n);
-                            } catch (\Throwable $_) {
-                                return "''";
-                            }
-                        }, $filteredObjectNames));
-                    } catch (\Throwable $_) {
-                        $quotedNames = "''";
-                    }
-
-                    $obsAggSql = "SELECT o.objectname AS object_name,
-                    COUNT(*) AS total_observations,
-                    SUM(o.hasDrawing = 1) AS total_drawings,
-                    SUM(o.observerid = {$quotedUser}) AS your_observations,
-                    SUM(o.observerid = {$quotedUser} AND o.hasDrawing = 1) AS your_drawings,
-                    MAX(o.date) AS last_seen_date,
-                    MAX(CASE WHEN o.observerid = {$quotedUser} THEN o.date END) AS your_last_seen_date,
-                    MAX(CASE WHEN o.hasDrawing = 1 THEN o.date END) AS last_drawing_date,
-                    MAX(CASE WHEN o.observerid = {$quotedUser} AND o.hasDrawing = 1 THEN o.date END) AS your_last_drawing_date
-                FROM `" . $oldDbName . "`.`observations` o
-                WHERE o.objectname IN ({$quotedNames})
-                GROUP BY o.objectname";
-
-                    $select .= ", obs.total_observations as total_observations, obs.total_drawings as total_drawings, obs.your_observations as your_observations, obs.your_drawings as your_drawings, obs.last_seen_date as last_seen_date, obs.your_last_seen_date as your_last_seen_date, obs.last_drawing_date as last_drawing_date, obs.your_last_drawing_date as your_last_drawing_date, obs.total_observations as seen, obs.your_last_seen_date as last_seen";
-
-                    try {
-                        $query->leftJoin(DB::raw('(' . $obsAggSql . ') as obs'), function ($join) {
-                            $join->on('obs.object_name', '=', 'objects.name');
-                        });
-                        $obsJoinApplied = true;
-                    } catch (\Throwable $_) {
-                    }
-                }
-            }
-        } catch (\Throwable $_) {
-        }
+        // Observation statistics (total_observations, your_last_seen_date, ...),
+        // which the observing status filter also uses.
+        ObjectObservationStatistics::join($query, Auth::user()?->username);
+        $statistics = ObjectObservationStatistics::expressions();
+        $select .= ', ' . ObjectObservationStatistics::selectList();
 
         if ($needsObservingStatusFilter) {
-            // If aggregation cannot be joined, avoid returning misleading results.
-            if (!$obsJoinApplied) {
-                $query->whereRaw('1 = 0');
-            } else {
-                switch ($status) {
-                    case 'seen_any':
-                        $query->whereRaw('COALESCE(obs.total_observations, 0) > 0');
-                        break;
-                    case 'drawn_any':
-                        $query->whereRaw('COALESCE(obs.total_drawings, 0) > 0');
-                        break;
-                    case 'unseen_any':
-                        $query->whereRaw('COALESCE(obs.total_observations, 0) = 0');
-                        break;
-                    case 'undrawn_any':
-                        $query->whereRaw('COALESCE(obs.total_drawings, 0) = 0');
-                        break;
-                    case 'seen_by_me':
-                        $query->whereRaw('COALESCE(obs.your_observations, 0) > 0');
-                        break;
-                    case 'drawn_by_me':
-                        $query->whereRaw('COALESCE(obs.your_drawings, 0) > 0');
-                        break;
-                    case 'unseen_by_me':
-                        $query->whereRaw('COALESCE(obs.your_observations, 0) = 0');
-                        break;
-                    case 'undrawn_by_me':
-                        $query->whereRaw('COALESCE(obs.your_drawings, 0) = 0');
-                        break;
-                    case 'seen_by_others_not_me':
-                        $query->whereRaw('COALESCE(obs.total_observations, 0) > 0')
-                            ->whereRaw('COALESCE(obs.your_observations, 0) = 0');
-                        break;
-                    case 'drawn_by_others_not_me':
-                        $query->whereRaw('COALESCE(obs.total_drawings, 0) > 0')
-                            ->whereRaw('COALESCE(obs.your_drawings, 0) = 0');
-                        break;
-                }
+            $seen = $statistics['total_observations'];
+            $drawn = $statistics['total_drawings'];
+            $seenByMe = $statistics['your_observations'];
+            $drawnByMe = $statistics['your_drawings'];
+
+            switch ($status) {
+                case 'seen_any':
+                    $query->whereRaw("{$seen} > 0");
+                    break;
+                case 'drawn_any':
+                    $query->whereRaw("{$drawn} > 0");
+                    break;
+                case 'unseen_any':
+                    $query->whereRaw("{$seen} = 0");
+                    break;
+                case 'undrawn_any':
+                    $query->whereRaw("{$drawn} = 0");
+                    break;
+                case 'seen_by_me':
+                    $query->whereRaw("{$seenByMe} > 0");
+                    break;
+                case 'drawn_by_me':
+                    $query->whereRaw("{$drawnByMe} > 0");
+                    break;
+                case 'unseen_by_me':
+                    $query->whereRaw("{$seenByMe} = 0");
+                    break;
+                case 'undrawn_by_me':
+                    $query->whereRaw("{$drawnByMe} = 0");
+                    break;
+                case 'seen_by_others_not_me':
+                    $query->whereRaw("{$seen} > 0")->whereRaw("{$seenByMe} = 0");
+                    break;
+                case 'drawn_by_others_not_me':
+                    $query->whereRaw("{$drawn} > 0")->whereRaw("{$drawnByMe} = 0");
+                    break;
             }
         }
 
@@ -759,7 +789,7 @@ class AdvancedObjectSearchTable extends PowerGridComponent
             if ($authUser && $authUser->standardLocation) {
                 $locId = $authUser->standardLocation->id ?? null;
                 $instrId = $authUser->stdtelescope ?? null;
-                $stdLens = $authUser->stdlens ?? null;
+                $stdLens = $authUser->standardLensId();
 
                 if ($instrId && $locId) {
                     if (!empty($stdLens)) {
@@ -975,6 +1005,10 @@ class AdvancedObjectSearchTable extends PowerGridComponent
                     }
                     $cached = $row->computed_contrast_reserve ?? null;
                     $metricExists = $row->metric_exists ?? null;
+                    if ($metricExists !== null && $cached === null && ($row->computed_contrast_reserve_category ?? null) === 'not_visible') {
+                        // the object never rises at the location (ContrastReserveCalculator)
+                        return '<span class="text-gray-600" title="' . e(__('The object never rises above the horizon at this location.')) . '">' . e(__('contrast.reserve.category.not_visible')) . '</span>';
+                    }
                     if ($metricExists !== null && $cached === null) {
                         return '<span title="' . e(__('Contrast reserve unavailable for this object')) . '">-</span>';
                     }
@@ -1000,7 +1034,172 @@ class AdvancedObjectSearchTable extends PowerGridComponent
                     return '-';
                 }
             })
-            ->add('atlas_page');
+            ->add('atlas_page')
+            ->add('seasons', fn($row) => $this->seasonsCell($row))
+            ->add('seasons_plain', function ($row) {
+                $months = $this->rowMonths($row);
+                if ($months === null) {
+                    return '';
+                }
+                $well = array_keys(array_filter($months, fn($m) => $m['well']));
+
+                return implode(', ', array_map(fn($m) => \Carbon\Carbon::create(2000, $m, 1)->translatedFormat('M'), $well));
+            })
+            ->add('planned_time', function ($row) {
+                $at = $this->plannedTime($row->list_planned_at ?? null);
+                if ($at === '') {
+                    return '';
+                }
+                $from = $this->plannedTime($row->list_planned_from ?? null);
+                $until = $this->plannedTime($row->list_planned_until ?? null);
+                $window = $from !== '' && $until !== ''
+                    ? '<span class="block text-xs text-gray-400" title="' . e(__('When the object stands high enough')) . '">' . e($from . '–' . $until) . '</span>'
+                    : '';
+
+                return '<span class="font-medium">' . e($at) . '</span>' . $window;
+            })
+            ->add('planned_time_plain', fn($row) => $this->plannedTime($row->list_planned_at ?? null))
+            ->add('planned_window_plain', function ($row) {
+                $from = $this->plannedTime($row->list_planned_from ?? null);
+                $until = $this->plannedTime($row->list_planned_until ?? null);
+
+                return $from !== '' && $until !== '' ? $from . '–' . $until : '';
+            });
+    }
+
+    /**
+     * The list the table shows, when it was made for one night (some of its
+     * objects have a time): its id and the time zone of its times.
+     *
+     * @return array{list_id: int, timezone: string}|null
+     */
+    private function plannedTimes(): ?array
+    {
+        $listId = $this->observingListsMode === 'in' && count($this->observingLists) === 1 ? $this->currentObservingListId() : null;
+        if ($this->plannedTimes === null || $this->plannedTimes[0] !== $listId) {
+            $list = $listId !== null ? ObservingList::find($listId) : null;
+            $this->plannedTimes = [$listId, $list && $list->hasPlannedTimes()
+                ? ['list_id' => $list->id, 'timezone' => $list->planned_timezone ?: 'UTC']
+                : null];
+        }
+
+        return $this->plannedTimes[1];
+    }
+
+    /**
+     * A planned moment (UTC, as stored) as the time in the list's time zone.
+     */
+    private function plannedTime(?string $moment): string
+    {
+        $planned = $this->plannedTimes();
+        if ($planned === null || $moment === null || $moment === '') {
+            return '';
+        }
+
+        return \Carbon\Carbon::parse($moment, 'UTC')->setTimezone($planned['timezone'])->format('H:i');
+    }
+
+    /**
+     * The seasonal planner of the observing list, or null when the table
+     * shows no list or there is no location.
+     */
+    /**
+     * The slugs of the double stars the observer's standard telescope splits
+     * at their standard location (or does not split yet), none without a
+     * standard telescope (DoubleStarResolvability::slugs()).
+     *
+     * @return list<string>
+     */
+    private function doubleStarSlugs(): array
+    {
+        if ($this->doubleStarSlugs === null) {
+            $user = Auth::user();
+            $instrument = $user?->standardInstrument;
+            $location = $user?->standardLocation;
+            $split = $this->doubleStars === 'split';
+            // About 0.15 s for all double stars: kept an hour per aperture and sky
+            $key = 'double_star_slugs:' . implode(':', [$instrument?->id, $instrument?->aperture_mm, $instrument?->obstruction_perc,
+                $location?->id, $location?->latitude, $location?->getNelm((float) ($user?->fstOffset ?? 0)), (int) $split]);
+            $this->doubleStarSlugs = $instrument
+                ? Cache::remember($key, 3600, fn () => DoubleStarResolvability::slugs($instrument, $location, $user, $split))
+                : [];
+        }
+
+        return $this->doubleStarSlugs;
+    }
+
+    private function seasons(): ?SeasonalVisibility
+    {
+        $listId = $this->currentObservingListId();
+        if ($this->seasons === null || $this->seasons[0] !== $listId) {
+            $this->seasons = [$listId, $listId !== null ? SeasonalVisibility::forViewer() : null];
+        }
+
+        return $this->seasons[1];
+    }
+
+    /**
+     * The months of SeasonalVisibility::months() for the row's object, or null
+     * for an object that moves (planet, comet) or has no position.
+     *
+     * @return array<int, array{hours: float|null, well: bool}>|null
+     */
+    private function rowMonths($row): ?array
+    {
+        $seasons = $this->seasons();
+        if (!$seasons || ($row->source_table ?? null) !== 'objects' || !is_numeric($row->obj_ra ?? null) || !is_numeric($row->obj_decl ?? null)) {
+            return null;
+        }
+
+        return $seasons->months((float) $row->obj_ra * 15.0, (float) $row->obj_decl);
+    }
+
+    /**
+     * Twelve small cells, one per month, shaded by the hours the object stands
+     * well placed in the dark hours; the current month is outlined. An object
+     * that never reaches the altitude is yellow in the months it transits in
+     * the dark hours.
+     */
+    private function seasonsCell($row): string
+    {
+        $months = $this->rowMonths($row);
+        if ($months === null) {
+            return '<span class="text-gray-500" title="' . e(__('Planets and comets move across the sky: see their object page.')) . '">-</span>';
+        }
+
+        $seasons = $this->seasons();
+        $decl = (float) $row->obj_decl;
+        $low = $seasons->isLow($decl);
+        $html = '<span class="inline-flex gap-0.5" role="img" aria-label="' . e(__('Months well placed')) . '">';
+        foreach ($months as $month => ['hours' => $h, 'well' => $well]) {
+            $name = \Carbon\Carbon::create(2000, $month, 1)->translatedFormat('F');
+            if ($h === null) {
+                $class = 'bg-gray-900';
+                $title = __(':month: no dark hours', ['month' => $name]);
+            } elseif ($low) {
+                $class = $well ? 'bg-yellow-600' : 'bg-gray-700';
+                $title = $well
+                    ? __(':month: highest at :altitude° in the dark hours', ['month' => $name, 'altitude' => (int) round($seasons->highestAltitude($decl))])
+                    : __(':month: not at its highest (:altitude°) in the dark hours', ['month' => $name, 'altitude' => (int) round($seasons->highestAltitude($decl))]);
+            } else {
+                $class = match (true) {
+                    $h >= 6 => 'bg-green-400',
+                    $h >= 3 => 'bg-green-600',
+                    $well => 'bg-green-800',
+                    $h > 0 => 'bg-gray-600',
+                    default => 'bg-gray-700',
+                };
+                $title = __(':month: :hours h above :altitude° in the dark hours', [
+                    'month' => $name,
+                    'hours' => number_format($h, 1),
+                    'altitude' => (int) SeasonalVisibility::MIN_ALTITUDE,
+                ]);
+            }
+            $ring = $month === $seasons->currentMonth ? ' ring-1 ring-blue-400' : '';
+            $html .= '<span class="inline-block w-2 h-4 rounded-sm ' . $class . $ring . '" title="' . e($title) . '"></span>';
+        }
+
+        return $html . '</span>';
     }
 
     public function columns(): array
@@ -1038,6 +1237,22 @@ class AdvancedObjectSearchTable extends PowerGridComponent
                 ->bodyAttribute('style', 'white-space:normal; overflow:visible;')
                 ->headerAttribute('style', 'white-space:normal;'),
             Column::make(__('Name'), 'name_plain')->hidden()->visibleInExport(true),
+        ];
+
+        if ($planned = $this->plannedTimes()) {
+            $cols[] = Column::make(__('Time (:timezone)', ['timezone' => $planned['timezone']]), 'planned_time', 'list_planned_at')
+                ->sortUsing(function ($query, $direction) {
+                    $query->orderByRaw("list_items.planned_at IS NULL, list_items.planned_at {$direction}, list_items.sort_order {$direction}");
+                })
+                ->bodyAttribute('class', 'text-center')
+                ->bodyAttribute('style', 'white-space:nowrap;')
+                ->visibleInExport(false);
+            $cols[] = Column::make(__('Time'), 'planned_time_plain')->hidden()->visibleInExport(true);
+            $cols[] = Column::make(__('Window'), 'planned_window_plain')->hidden()->visibleInExport(true);
+        }
+
+        $cols = [
+            ...$cols,
             Column::make(__('RA'), 'ra')
                 ->sortUsing(function ($query, $direction) {
                     $query->orderByRaw("(CASE WHEN COALESCE(objects.ra, search_index.ra) > 24 THEN COALESCE(objects.ra, search_index.ra) / 15.0 ELSE COALESCE(objects.ra, search_index.ra) END) $direction");
@@ -1079,6 +1294,14 @@ class AdvancedObjectSearchTable extends PowerGridComponent
 
         $cols[] = Column::make(__('Size'), 'size')->sortable()->bodyAttribute('class', 'text-center');
 
+        if ($this->seasons()) {
+            $cols[] = Column::make(__('Months'), 'seasons')
+                ->bodyAttribute('class', 'text-center')
+                ->bodyAttribute('style', 'white-space:nowrap;')
+                ->visibleInExport(false);
+            $cols[] = Column::make(__('Months well placed'), 'seasons_plain')->hidden()->visibleInExport(true);
+        }
+
         if ($authUser && $this->showAddColumn && $this->canModifyActiveList()) {
             $cols[] = Column::make(__('Add'), 'add_to_list_action')
                 ->bodyAttribute('class', 'text-center')
@@ -1102,6 +1325,37 @@ class AdvancedObjectSearchTable extends PowerGridComponent
      *
      * @return array{pages: array<int>, ranges: array<array{0:int,1:int}>}
      */
+    /**
+     * Limit a magnitude or surface brightness column to [min, max]. An unknown
+     * value (NULL or the placeholder 99.9) never matches the range, so a
+     * minimum no longer lets the placeholder through; with $includeUnknown
+     * the objects with an unknown value are added to the results.
+     */
+    private function applyBrightnessRange($query, string $column, string $min, string $max, bool $includeUnknown): void
+    {
+        $hasMin = $min !== '' && is_numeric($min);
+        $hasMax = $max !== '' && is_numeric($max);
+        if (! $hasMin && ! $hasMax) {
+            return;
+        }
+
+        $query->where(function ($q) use ($column, $min, $max, $hasMin, $hasMax, $includeUnknown) {
+            $q->where(function ($known) use ($column, $min, $max, $hasMin, $hasMax) {
+                $known->whereNotNull($column)->where($column, '<', 99.0);
+                if ($hasMin) {
+                    $known->where($column, '>=', floatval($min));
+                }
+                if ($hasMax) {
+                    $known->where($column, '<=', floatval($max));
+                }
+            });
+
+            if ($includeUnknown) {
+                $q->orWhereNull($column)->orWhere($column, '>=', 99.0);
+            }
+        });
+    }
+
     private function parseAtlasPageSpec(string $spec): array
     {
         $pages = [];

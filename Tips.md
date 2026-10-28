@@ -79,6 +79,14 @@ cd /var/www/DeepskyLog/deepskylog
 php artisan queue:work --tries=3 --sleep=3 --timeout=60
 ```
 
+The PDF jobs (atlas, object sets, object reports) run for up to six hours and are queued on a connection of
+their own, `database-long`, so a second worker does not start the same PDF again after 90 seconds. They need a
+worker of their own as well; without it the PDFs stay "waiting for a worker":
+
+```bash
+php artisan queue:work database-long --sleep=3
+```
+
 4) Restart workers after deploy or code change (graceful restart):
 
 ```bash
@@ -126,13 +134,20 @@ StandardError=syslog
 WantedBy=multi-user.target
 ```
 
-Enable and start the service:
+Create `/etc/systemd/system/deepskylog-pdf-worker.service` for the PDF jobs in the same way, with
+
+```ini
+Description=DeepskyLog PDF queue worker
+ExecStart=/usr/bin/php /var/www/DeepskyLog/deepskylog/artisan queue:work database-long --sleep=3
+```
+
+Enable and start the services:
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable deepskylog-worker.service
-sudo systemctl start deepskylog-worker.service
-sudo systemctl status deepskylog-worker.service
+sudo systemctl enable deepskylog-worker.service deepskylog-pdf-worker.service
+sudo systemctl start deepskylog-worker.service deepskylog-pdf-worker.service
+sudo systemctl status deepskylog-worker.service deepskylog-pdf-worker.service
 ```
 
 8) Useful debugging tips

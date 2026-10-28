@@ -2,16 +2,25 @@
 
 namespace App\Jobs;
 
+use App\Models\DeepskyObject;
+use App\Models\Instrument;
+use App\Models\Location;
+use App\Models\User;
+use App\Services\ContrastReserveCalculator;
+use App\Services\ObjectMetricsQueue;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 /**
- * Job to compute and persist contrast reserve for multiple objects in one batch.
+ * Computes and stores the metrics (user_object_metrics) of several objects
+ * with the same equipment, for the objects that have none yet, or for all of
+ * them with $recompute. The equipment and the magnifications are loaded once,
+ * the rows written with one insert per chunk. Queued by ObjectMetricsQueue,
+ * for the object tables and after a change of the standard equipment.
  */
 class ComputeContrastReserveForObjectsBatch implements ShouldQueue
 {
@@ -36,45 +45,89 @@ class ComputeContrastReserveForObjectsBatch implements ShouldQueue
     public ?int $locationId;
     public array $objectNames;
     public ?int $lensId;
+    public ?string $token;
+    public bool $recompute;
 
-    public function __construct(int $userId, ?int $instrumentId, ?int $locationId, array $objectNames, ?int $lensId = null)
+    public function __construct(int $userId, ?int $instrumentId, ?int $locationId, array $objectNames, ?int $lensId = null, ?string $token = null, bool $recompute = false)
     {
         $this->userId = $userId;
         $this->instrumentId = $instrumentId;
         $this->locationId = $locationId;
         $this->objectNames = $objectNames;
         $this->lensId = $lensId;
+        $this->token = $token;
+        $this->recompute = $recompute;
     }
 
     public function handle(): void
     {
-        $start = microtime(true);
-        $total = 0;
-        $succeeded = 0;
-        $failed = 0;
         try {
-            Log::debug('ComputeContrastReserveForObjectsBatch: start', ['user_id' => $this->userId, 'instrument_id' => $this->instrumentId, 'location_id' => $this->locationId, 'count' => count($this->objectNames), 'lens_id' => $this->lensId]);
-            foreach ($this->objectNames as $oname) {
-                $total++;
-                try {
-                    // Reuse existing single-object job logic by instantiating
-                    // the single-object job and invoking its handle() method
-                    // synchronously within this batch job. This keeps behavior
-                    // identical while avoiding dispatching many separate jobs.
-                    $job = new ComputeContrastReserveForObject($this->userId, $this->instrumentId, $this->locationId, $oname, $this->lensId);
-                    $job->handle();
-                    $succeeded++;
-                } catch (\Throwable $ex) {
-                    $failed++;
-                    Log::debug('ComputeContrastReserveForObjectsBatch: per-object compute failed', ['object' => $oname, 'error' => (string) $ex]);
-                    // continue with other objects
-                }
-            }
-        } catch (\Throwable $ex) {
-            Log::debug('ComputeContrastReserveForObjectsBatch: batch job failed', ['error' => (string) $ex]);
+            $this->compute();
         } finally {
-            $elapsed = round((microtime(true) - $start) * 1000, 2);
-            Log::debug('ComputeContrastReserveForObjectsBatch: end', ['user_id' => $this->userId, 'instrument_id' => $this->instrumentId, 'location_id' => $this->locationId, 'count' => $total, 'succeeded' => $succeeded, 'failed' => $failed, 'elapsed_ms' => $elapsed]);
+            if ($this->token !== null) {
+                ObjectMetricsQueue::jobDone($this->token);
+            }
+        }
+    }
+
+    private function compute(): void
+    {
+        $user = User::find($this->userId);
+        $instrument = $this->instrumentId ? Instrument::find($this->instrumentId) : null;
+        $location = $this->locationId ? Location::find($this->locationId) : null;
+        if (!$user || !$instrument || !$location) {
+            return;
+        }
+
+        // Computed meanwhile (by another table or job): not again, unless the
+        // stored values are to be replaced.
+        $missing = $this->recompute
+            ? $this->objectNames
+            : ObjectMetricsQueue::missing($this->userId, $this->instrumentId, $this->locationId, $this->lensId, $this->objectNames);
+        if ($missing === []) {
+            return;
+        }
+
+        $magnifications = ContrastReserveCalculator::magnifications($instrument, $user, ContrastReserveCalculator::lensFactor($this->lensId));
+        $now = now();
+
+        foreach (array_chunk($missing, 500) as $chunk) {
+            $rows = [];
+            foreach (DeepskyObject::whereIn('name', $chunk)->get()->unique('name') as $object) {
+                $values = ComputeContrastReserveForObject::valuesFor($object, $user, $instrument, $location, $this->lensId, $magnifications);
+                $rows[] = [
+                    'user_id' => $this->userId,
+                    'instrument_id' => $this->instrumentId,
+                    'location_id' => $this->locationId,
+                    'lens_id' => $this->lensId,
+                    'object_name' => $object->name,
+                    'contrast_reserve' => $values['contrast_reserve'],
+                    'contrast_reserve_category' => $values['contrast_reserve_category'],
+                    'optimum_detection_magnification' => $values['optimum_detection_magnification'],
+                    // insert() does not apply the model's array cast
+                    'optimum_eyepieces' => $values['optimum_eyepieces'] === null ? null : json_encode($values['optimum_eyepieces']),
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
+            if ($this->recompute) {
+                // Replaces the stored rows. Not upsert(): the table has no unique
+                // key to match on, and a NULL lens_id would never match anyway.
+                DB::transaction(function () use ($chunk, $rows) {
+                    DB::table('user_object_metrics')
+                        ->where('user_id', $this->userId)
+                        ->where('instrument_id', $this->instrumentId)
+                        ->where('location_id', $this->locationId)
+                        ->when($this->lensId === null, fn ($query) => $query->whereNull('lens_id'), fn ($query) => $query->where('lens_id', $this->lensId))
+                        ->whereIn('object_name', $chunk)
+                        ->delete();
+                    if ($rows !== []) {
+                        DB::table('user_object_metrics')->insert($rows);
+                    }
+                });
+            } elseif ($rows !== []) {
+                DB::table('user_object_metrics')->insert($rows);
+            }
         }
     }
 }

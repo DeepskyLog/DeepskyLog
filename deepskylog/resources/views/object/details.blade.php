@@ -33,6 +33,7 @@
                     {{ $ra ?? '—' }}
                 </div>
                 <input type="hidden" name="ra" value="{{ old('ra', $ra ?? '') }}" />
+                @error('ra') <div class="text-sm text-red-400 mt-1">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label class="block text-sm text-gray-400">{{ __('Decl') }}</label>
@@ -40,6 +41,7 @@
                     {{ $decl ?? '—' }}
                 </div>
                 <input type="hidden" name="decl" value="{{ old('decl', $decl ?? '') }}" />
+                @error('decl') <div class="text-sm text-red-400 mt-1">{{ $message }}</div> @enderror
             </div>
             <div>
                 <label class="block text-sm text-gray-400">{{ __('Constellation') }}</label>
@@ -56,9 +58,9 @@
             </div>
             <div>
                 <label class="block text-sm text-gray-400">{{ __('Type') }}</label>
-                <select name="type"
+                <select name="type" required
                     class="mt-1 block w-full rounded border border-gray-600 bg-gray-900 text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">--</option>
+                    <option value="" disabled {{ old('type', '') === '' ? 'selected' : '' }}>{{ __('Select type') }}</option>
                     @foreach($types as $t)
                         <option value="{{ $t->code }}" @if(old('type') == $t->code) selected @endif>{{ $t->name }}</option>
                     @endforeach
@@ -152,7 +154,7 @@ document.getElementById('simbadFill').addEventListener('click', function() {
                 const d = json.data;
                 const filled = [];
 
-                // Always update hidden RA/Dec inputs (used on form submit)
+                // Always update hidden RA/Dec inputs (used on form submit); RA is in hours
                 if (d.ra != null) document.querySelector('input[name="ra"]').value = d.ra;
                 if (d.decl != null) document.querySelector('input[name="decl"]').value = d.decl;
 

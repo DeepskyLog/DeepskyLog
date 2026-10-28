@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Filter;
 use App\Models\FilterMake;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
@@ -18,6 +17,8 @@ final class AdminFilterTable extends PowerGridComponent
 
     public function setUp(): array
     {
+        $this->withoutPersist();
+
         $this->showCheckBox();
 
         return [
@@ -31,7 +32,7 @@ final class AdminFilterTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return FilterMake::query();
+        return FilterMake::query()->withCount('filters');
     }
 
     public function relationSearch(): array
@@ -46,7 +47,7 @@ final class AdminFilterTable extends PowerGridComponent
             ->add('name')
             ->add('created_at')
             ->add('number_of_filters', function ($filter_make) {
-                return Filter::where('make_id', $filter_make->id)->count();
+                return $filter_make->filters_count;
             });
     }
 
@@ -62,7 +63,9 @@ final class AdminFilterTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Number of Filters', 'number_of_filters'),
+            Column::make('Number of Filters', 'number_of_filters')
+                ->sortable()
+                ->sortUsing(fn ($query, string $direction) => $query->orderBy('filters_count', $direction)),
 
             Column::action('Action'),
         ];

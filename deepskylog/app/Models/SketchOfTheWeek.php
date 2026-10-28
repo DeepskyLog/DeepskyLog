@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\ClearsResponseCache;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class SketchOfTheWeek extends Model
 {
+    use ClearsResponseCache;
 
     public $timestamps = false;
 
@@ -15,16 +19,63 @@ class SketchOfTheWeek extends Model
     protected $table = 'sketch_of_the_week';
 
     /**
-     * Establishes a relationship between the SketchOfTheWeek model and the ObservationsOld model.
+     * The number of free Sundays offered when a sketch of the week is chosen.
+     */
+    public const SUNDAYS_OFFERED = 12;
+
+    /**
+     * Sketches of the week whose Sunday has come. A sketch chosen for a later
+     * Sunday stays hidden until then.
+     */
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->whereDate('date', '<=', Carbon::today()->toDateString());
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->date !== null && $this->date->lte(Carbon::today());
+    }
+
+    /**
+     * The Sundays from today on that have no sketch of the week yet.
      *
-     * This method defines a one-to-one relationship between the SketchOfTheWeek model and the ObservationsOld model.
-     * The relationship is established based on the 'observation_id' attribute of the SketchOfTheWeek model and the 'id' attribute of the ObservationsOld model.
-     *
-     * @return HasOne The relationship between the SketchOfTheWeek model and the ObservationsOld model.
+     * @return array<int, Carbon>
+     */
+    public static function freeSundays(int $count = self::SUNDAYS_OFFERED): array
+    {
+        $today = Carbon::today();
+        $taken = static::query()
+            ->whereDate('date', '>=', $today->toDateString())
+            ->pluck('date')
+            ->map(fn ($date) => Carbon::parse($date)->toDateString())
+            ->flip();
+
+        $sunday = $today->isSunday() ? $today->copy() : $today->copy()->next(Carbon::SUNDAY);
+        $sundays = [];
+        while (count($sundays) < $count) {
+            if (! $taken->has($sunday->toDateString())) {
+                $sundays[] = $sunday->copy();
+            }
+            $sunday->addWeek();
+        }
+
+        return $sundays;
+    }
+
+    public static function isFreeSunday(Carbon $date): bool
+    {
+        return $date->isSunday()
+            && $date->gte(Carbon::today())
+            && ! static::query()->whereDate('date', $date->toDateString())->exists();
+    }
+
+    /**
+     * Sketch links to the unified observations table using observations.id.
      */
     public function observation(): HasOne
     {
-        return $this->hasOne(related: ObservationsOld::class, foreignKey: 'id', localKey: 'observation_id');
+        return $this->hasOne(related: Observation::class, foreignKey: 'id', localKey: 'observation_id');
     }
 
     /**
