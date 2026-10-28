@@ -1,8 +1,8 @@
 @props (["nights", "listLinks" => true])
 
 {{--
-    The cloud forecast of nights (App\Services\Weather\NightForecast): per night the verdict, the dark hours,
-    the Moon, the clouds and the hourly cloud cover. With listLinks, a clear night links to the night list
+    The cloud forecast of nights (App\Services\Weather\NightForecast): per night the verdict, the seeing, the dark
+    hours, the Moon, the clouds and the hourly cloud cover. With listLinks, a clear night links to the night list
     wizard, which uses the observer's standard location.
 --}}
 <div {{ $attributes->merge(["class" => "space-y-3 text-sm text-gray-400"]) }}>
@@ -11,6 +11,9 @@
             <div class="flex flex-wrap items-center gap-2">
                 <span class="font-semibold text-white">{{ \Carbon\Carbon::parse($night["night"])->locale(app()->getLocale())->isoFormat("ddd D MMM") }}</span>
                 <x-forecast-verdict :night="$night" />
+                @if ($night["seeing"] ?? null)
+                    <x-forecast-seeing :seeing="$night['seeing']" />
+                @endif
                 @if ($listLinks && in_array($night["verdict"], ["clear_dark", "clear_moon"], true))
                     <a href="{{ route("observing-list.night", ["night" => $night["night"]]) }}" class="text-xs text-blue-400 hover:underline">{{ __("Make a list for this night") }}</a>
                 @endif

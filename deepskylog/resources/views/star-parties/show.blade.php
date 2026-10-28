@@ -158,6 +158,9 @@
                                                 <td class="px-2 py-1">
                                                     @isset ($forecast[$row["night"]])
                                                         <x-forecast-verdict :night="$forecast[$row['night']]" />
+                                                        @if ($forecast[$row["night"]]["seeing"] ?? null)
+                                                            <x-forecast-seeing :seeing="$forecast[$row['night']]['seeing']" />
+                                                        @endif
                                                         @if ($forecast[$row["night"]]["cloud"] !== null)
                                                             <span class="text-xs whitespace-nowrap text-gray-400">{{ __("Clouds :percent%", ["percent" => $forecast[$row["night"]]["cloud"]]) }}</span>
                                                         @endif

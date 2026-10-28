@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
  * The cloud forecast of the coming nights at a location: the hourly forecast
  * of Open-Meteo (free, without a key, CC BY 4.0) in the dark hours of each
  * night (NightWindow), with the Moon in them (MoonlightSky), and a verdict
- * per night.
+ * per night; with the seeing of SeeingForecast where it reaches.
  *
  * The forecast is cached per cell of GRID degrees for CACHE_SECONDS. Pages
  * pass $fetch = false: a forecast that is not cached yet is then fetched
@@ -113,13 +113,14 @@ class NightForecast
         if ($hourly === null) {
             return null;
         }
+        $seeing = SeeingForecast::points($latitude, $longitude, $fetch);
 
-        $key = 'night_forecast:nights:'.md5(json_encode([round($latitude, 4), round($longitude, 4), round($elevation), $timezone, $nights, $hourly['fetched_at']]));
+        $key = 'night_forecast:nights:v2:'.md5(json_encode([round($latitude, 4), round($longitude, 4), round($elevation), $timezone, $nights, $hourly['fetched_at'], $seeing['fetched_at'] ?? null]));
 
-        return Cache::remember($key, self::CACHE_SECONDS, function () use ($hourly, $latitude, $longitude, $elevation, $timezone, $nights) {
+        return Cache::remember($key, self::CACHE_SECONDS, function () use ($hourly, $seeing, $latitude, $longitude, $elevation, $timezone, $nights) {
             $result = [];
             foreach ($nights as $night) {
-                $result[$night] = self::night($hourly, $latitude, $longitude, $elevation, $timezone, $night);
+                $result[$night] = self::night($hourly, $latitude, $longitude, $elevation, $timezone, $night, $seeing);
             }
 
             return $result;
@@ -183,7 +184,7 @@ class NightForecast
 
     /**
      * The forecast of a night in one line of text: the verdict, the clouds,
-     * the clear hours and the risk of dew.
+     * the clear hours, the seeing and the risk of dew.
      *
      * @param  array<string, mixed>  $night  as night() gives it
      */
@@ -197,6 +198,9 @@ class NightForecast
             $parts[] = __('Clear and dark :from–:until', $night['clear_dark'], $locale);
         } elseif (($night['clear']['minutes'] ?? 0) >= 60) {
             $parts[] = __('Clear :from–:until', $night['clear'], $locale);
+        }
+        if ($night['seeing'] ?? null) {
+            $parts[] = SeeingForecast::label($night['seeing']['class'], $locale).' ('.$night['seeing']['arcsec'].')';
         }
         if ($night['dew']) {
             $parts[] = __('Risk of dew', [], $locale);
@@ -221,16 +225,19 @@ class NightForecast
     /**
      * The forecast of one night: its dark hours, the Moon, the forecast hours
      * in them, the average cloud cover, the longest clear stretch with and
-     * without a bright Moon, and the verdict.
+     * without a bright Moon, the seeing of the dark hours (with $seeing, as
+     * SeeingForecast::between() gives it) and the verdict, which the seeing
+     * does not change.
      *
      * @param  array<string, mixed>  $hourly  as hourly() gives it
+     * @param  array<string, mixed>|null  $seeing  as SeeingForecast::points() gives them
      * @return array<string, mixed>
      */
-    public static function night(array $hourly, float $latitude, float $longitude, float $elevation, string $timezone, string $night): array
+    public static function night(array $hourly, float $latitude, float $longitude, float $elevation, string $timezone, string $night, ?array $seeing = null): array
     {
         $result = [
             'night' => $night, 'dark' => null, 'moon' => null, 'hours' => [], 'cloud' => null,
-            'clear' => null, 'clear_dark' => null, 'dew' => false, 'verdict' => 'no_dark',
+            'clear' => null, 'clear_dark' => null, 'dew' => false, 'seeing' => null, 'verdict' => 'no_dark',
         ];
 
         $window = NightWindow::for($latitude, $longitude, $night, $timezone);
@@ -260,6 +267,7 @@ class NightForecast
                 'high'     => (int) ($hourly['cloud_cover_high'][$i] ?? 0),
                 'humidity' => (int) ($hourly['relative_humidity_2m'][$i] ?? 0),
                 'wind'     => (int) round($hourly['wind_speed_10m'][$i] ?? 0),
+                'seeing'   => SeeingForecast::at($seeing, $timestamp),
             ];
         }
 
@@ -289,6 +297,7 @@ class NightForecast
         $result['clear']      = self::longest($result['hours'], $clear, $time);
         $result['clear_dark'] = self::longest($result['hours'], fn (array $hour) => $clear($hour) && ! $hour['moon'], $time);
         $result['dew']        = collect($result['hours'])->contains(fn (array $hour) => $clear($hour) && $hour['humidity'] >= self::DEW_HUMIDITY);
+        $result['seeing']     = $seeing === null ? null : SeeingForecast::between($seeing, $window->start, $window->end);
 
         $result['verdict'] = match (true) {
             ($result['clear_dark']['minutes'] ?? 0) >= self::MIN_CLEAR_MINUTES     => 'clear_dark',

@@ -50,6 +50,10 @@
                         : __("No Moon")
                 }}
             @endif
+            @if ($best["seeing"] ?? null)
+                &middot;
+                <x-forecast-seeing :seeing="$best['seeing']" />
+            @endif
         </p>
 
         @if ($best["mode"] !== "personal")
@@ -130,6 +134,17 @@
                         }}
                     @endif
                 </p>
+                @if ($best["field"] ?? null)
+                    <p>
+                        {{
+                            __(
+                                "Your telescope has a field of view of :field°: large, bright objects that fill it come first.",
+                                ["field" => $best["field"]],
+                            )
+                        }}
+                    </p>
+                @endif
+                <x-tonights-best-seeing :best="$best" />
                 @if ($best["dark"])
                     <p>
                         @if ($best["dark"]["twilight"] === "astronomical")

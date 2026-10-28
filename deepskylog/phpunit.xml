@@ -31,6 +31,7 @@
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="TRANSLATE_OBSERVATIONS" value="false"/>
         <env name="WEATHER_FORECAST" value="false"/>
+        <env name="SEEING_FORECAST" value="false"/>
         <env name="AAVSO" value="false"/>
         <env name="WEB_PUSH" value="false"/>
         <env name="POWERGRID_PARTIALS_ENABLED" value="false"/>

@@ -8,6 +8,7 @@ use App\Models\Observation;
 use App\Models\ObservingList;
 use App\Models\User;
 use App\Services\FieldViews\FieldViewBuilder;
+use App\Services\Weather\SeeingForecast;
 use App\Support\EphemerisDate;
 use Carbon\Carbon;
 use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
@@ -41,6 +42,18 @@ use Illuminate\Support\Str;
  * objects that are well placed at the location of the ephemerides. Both get
  * the planets and the bright comets as well, unless left out. The deep-sky
  * objects are spread over the hours chosen (pick()).
+ *
+ * A standard telescope with a wide field (binoculars, a rich-field telescope
+ * with its lowest magnification: at least WIDE_FIELD_DEG) shows large objects
+ * best: the objects that fill that field and are easy to see come first
+ * (rank()), so M 57 does not top the list of a pair of binoculars.
+ *
+ * Planets and close double stars need steady air (SeeingForecast, the
+ * seeing of the dark hours of the night). On a steady night the close double
+ * stars the telescope splits are added on top of the deep-sky objects (so
+ * they never push those out) and every planet that is up is on the list; on
+ * a poor night chosen double stars closer than CLOSE_DOUBLE_ARCSEC are left
+ * out. Planets and close double stars are marked with the seeing.
  *
  * The list is cached per observer, equipment, night and options; for an
  * observer until they record a new observation.
@@ -111,6 +124,39 @@ class TonightsBest
      * easy or challenging like the other objects.
      */
     private const DOUBLE_STAR_RESERVES = ['easy' => 1.1, 'split' => 0.6, 'difficult' => 0.3];
+
+    /**
+     * Double stars closer than this (arcseconds) need steady air: on a steady
+     * night the ones the telescope splits are added, on a poor night they are
+     * left out.
+     */
+    public const CLOSE_DOUBLE_ARCSEC = 3.0;
+
+    /** On a steady night, one close double star per this many deep-sky objects is added. */
+    private const STEADY_DOUBLES_PER = 5;
+
+    /** A widest true field of view (degrees) from which large objects are favoured. */
+    public const WIDE_FIELD_DEG = 2.0;
+
+    /**
+     * An object whose major axis is less than this part of the field is a
+     * small one in it; from FILLS_FIELD up to the whole field it fills it.
+     */
+    private const SMALL_IN_FIELD = 0.05;
+
+    public const FILLS_FIELD = 0.25;
+
+    /**
+     * In a wide field, the weight of filling the field and of a contrast
+     * reserve (up to BRIGHT_CAP) against the log10 of the number of
+     * observations: a large, easy object observed 30 times comes before a
+     * small one observed 1000 times.
+     */
+    private const FIELD_WEIGHT = 2.0;
+
+    private const BRIGHT_WEIGHT = 0.5;
+
+    private const BRIGHT_CAP = 1.0;
 
     /** The objects whose contrast reserve is recalculated under the Moon. */
     private const MOON_POOL = 300;
@@ -183,7 +229,8 @@ class TonightsBest
      * starparty, which need not be stored), else that of the ephemerides.
      *
      * @param  array<string, mixed>  $options  see options()
-     * @return array{mode: string, night: string, location: ?string, instrument: ?string, latitude: float,
+     * @return array{mode: string, night: string, location: ?string, instrument: ?string, latitude: float, field: ?float,
+     *     seeing: ?array{index: float, class: string, arcsec: string}, steady_doubles: int,
      *     dark: ?array{from: string, until: string, twilight: string}, period: ?array{from: string, until: string},
      *     moon: ?array{fraction: float, from: string, until: string}, objects: list<array<string, mixed>>, pending: bool}|null
      */
@@ -198,10 +245,13 @@ class TonightsBest
         $night      = $options['night'] ?? EphemerisDate::chosen($timezone) ?? EphemerisDate::today($timezone);
         $instrument = $user ? self::instrument($user, $location) : null;
         $lensId     = $instrument ? $user->standardLensId() : null;
+        $field      = $instrument ? self::wideField($instrument, $user, $lensId) : null;
+        // a seeing forecast not cached yet is fetched after the response, and changes the key
+        $seeing = SeeingForecast::forNight((float) $location->latitude, (float) $location->longitude, $night, $timezone, fetch: false);
 
-        // v2: a magnitude of 0 is unknown (ContrastReserveCalculator::target())
-        $key = 'tonights_best:v3:'.md5(json_encode([
-            $user?->id, $instrument?->id, $location->id, (float) $location->latitude, (float) $location->longitude, $lensId, $night, $timezone, $options,
+        // v2: a magnitude of 0 is unknown (ContrastReserveCalculator::target()); v4: the field of view; v5: the seeing
+        $key = 'tonights_best:v5:'.md5(json_encode([
+            $user?->id, $instrument?->id, $location->id, (float) $location->latitude, (float) $location->longitude, $lensId, $field, $seeing, $night, $timezone, $options,
             // a new observation changes what the observer has seen
             $user ? DB::table('observations')->where('observer_username', $user->username)->max('id') : null,
         ]));
@@ -210,7 +260,7 @@ class TonightsBest
             return $cached;
         }
 
-        $result = (new self($user, $location, $instrument, $lensId, $night, $timezone, $options))->build();
+        $result = (new self($user, $location, $instrument, $lensId, $field, $seeing, $night, $timezone, $options))->build();
         Cache::put($key, $result, $result['pending'] ? self::PENDING_CACHE_SECONDS : self::CACHE_SECONDS);
 
         return $result;
@@ -261,11 +311,40 @@ class TonightsBest
         $parts[] = $result['mode'] === 'personal'
             ? __('Chosen for :instrument from :location.', ['instrument' => $result['instrument'], 'location' => $result['location']])
             : __('Chosen for a latitude of :latitude°.', ['latitude' => $result['latitude']]);
+        if ($result['field'] ?? null) {
+            $parts[] = __('Large objects that fill the field of view of :field° come first.', ['field' => $result['field']]);
+        }
+        if ($result['seeing'] ?? null) {
+            $parts[] = __('Seeing forecast: :seeing (:arcsec).', ['seeing' => SeeingForecast::label($result['seeing']['class']), 'arcsec' => $result['seeing']['arcsec']]);
+        }
         if ($result['moon'] ?? null) {
             $parts[] = __('The Moon is :fraction% illuminated.', ['fraction' => (int) round($result['moon']['fraction'] * 100)]);
         }
 
         return implode(' ', $parts);
+    }
+
+    /**
+     * The widest true field of view (degrees) of the telescope with the
+     * observer's eyepieces (ContrastReserveCalculator::fields(), else
+     * estimated from the magnification), or its own field (binoculars,
+     * finders), when it is at least WIDE_FIELD_DEG. Null for a telescope
+     * without eyepieces: its generic magnifications say nothing of its field.
+     */
+    public static function wideField(Instrument $instrument, User $user, ?int $lensId): ?float
+    {
+        $lensFactor     = ContrastReserveCalculator::lensFactor($lensId);
+        $magnifications = ContrastReserveCalculator::magnifications($instrument, $user, $lensFactor);
+        if (array_merge(...array_values($magnifications)) === [] && (float) $instrument->fixedMagnification <= 0 && ! $instrument->isBinocular()) {
+            return null;
+        }
+        $fields = ContrastReserveCalculator::fields($instrument, $magnifications, $lensFactor);
+        $widest = 0.0;
+        foreach (array_keys($magnifications) as $magnification) {
+            $widest = max($widest, $fields[$magnification] ?? $instrument->apparentFieldOfViewDeg() / max(1, (int) $magnification));
+        }
+
+        return $widest >= self::WIDE_FIELD_DEG ? $widest : null;
     }
 
     /**
@@ -308,6 +387,10 @@ class TonightsBest
         private Location $location,
         private ?Instrument $instrument,
         private ?int $lensId,
+        /** The widest true field of view (degrees) of the telescope, when at least WIDE_FIELD_DEG. */
+        private ?float $field,
+        /** The seeing of the dark hours (SeeingForecast::forNight()), when forecast. */
+        private ?array $seeing,
         private string $night,
         private string $timezone,
         private array $options,
@@ -321,18 +404,21 @@ class TonightsBest
     private function build(): array
     {
         $result = [
-            'mode'        => $this->instrument ? 'personal' : 'popular',
-            'night'       => $this->night,
-            'location'    => $this->instrument ? html_entity_decode((string) $this->location->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') : null,
-            'instrument'  => $this->instrument ? html_entity_decode((string) $this->instrument->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') : null,
-            'latitude'    => round((float) $this->location->latitude),
-            'timezone'    => $this->timezone,
-            'location_id' => $this->location->id,
-            'dark'        => null,
-            'period'      => null,
-            'moon'        => null,
-            'objects'     => [],
-            'pending'     => false,
+            'mode'           => $this->instrument ? 'personal' : 'popular',
+            'night'          => $this->night,
+            'location'       => $this->instrument ? html_entity_decode((string) $this->location->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') : null,
+            'instrument'     => $this->instrument ? html_entity_decode((string) $this->instrument->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') : null,
+            'latitude'       => round((float) $this->location->latitude),
+            'timezone'       => $this->timezone,
+            'location_id'    => $this->location->id,
+            'field'          => $this->field !== null ? round($this->field, 1) : null,
+            'seeing'         => $this->seeing,
+            'steady_doubles' => 0,
+            'dark'           => null,
+            'period'         => null,
+            'moon'           => null,
+            'objects'        => [],
+            'pending'        => false,
         ];
         if ($this->dark === null) {
             return $result;
@@ -370,6 +456,13 @@ class TonightsBest
                 $popular = array_filter($popular, fn (array $object) => ! isset($judged[$object['name']]) && ContrastReserveCalculator::appliesTo($object['type_code']));
             }
             $deepsky = array_merge($deepsky, $this->pick(array_values($popular), $count - count($deepsky), $deepsky));
+        }
+        // On a steady night close double stars, on top of the deep-sky objects
+        // of all kinds (chosen double stars are among those already).
+        if ($this->seeingClass() === 'steady' && $this->instrument && $this->options['deepsky'] && $this->options['types'] === [] && ! $this->options['sources_only']) {
+            $doubles                  = $this->steadyDoubles($deepsky);
+            $deepsky                  = array_merge($deepsky, $doubles);
+            $result['steady_doubles'] = count($doubles);
         }
 
         $objects = array_merge($deepsky, $this->options['planets'] || $this->options['comets'] ? $this->solarSystem() : []);
@@ -434,8 +527,10 @@ class TonightsBest
                 $candidates[$row->name]     = $object;
             }
         }
-        foreach ($this->doubleStars() as $name => $object) {
-            $candidates[$name] ??= $object;
+        if (in_array('DS', $this->options['types'], true)) {
+            foreach ($this->doubleStars() as $name => $object) {
+                $candidates[$name] ??= $object;
+            }
         }
         $this->queueMissingMetrics();
 
@@ -449,8 +544,9 @@ class TonightsBest
         unset($object);
 
         // The objects of the chosen sources first, then the ones observed
-        // most by all observers (the showpieces).
-        usort($candidates, self::byPriority(...));
+        // most by all observers (the showpieces); in a wide field the large,
+        // easy ones (rank()).
+        usort($candidates, $this->byPriority(...));
         $count      = $this->options['count'];
         $difficulty = $this->options['difficulty'];
         $maxSeen    = $this->maxSeen();
@@ -484,7 +580,7 @@ class TonightsBest
      */
     private function popularDeepsky(): array
     {
-        $columns = ['o.name', 'o.slug', 'o.type', 'o.ra', 'o.decl', 'o.mag', 't.name as type_name', 'c.name as constellation', 's.observations'];
+        $columns = ['o.name', 'o.slug', 'o.type', 'o.ra', 'o.decl', 'o.mag', 'o.diam1', 'o.diam2', 't.name as type_name', 'c.name as constellation', 's.observations'];
         $rows    = $this->options['sources_only'] ? collect() : $this->objectQuery()
             ->join('object_observation_stats as s', 's.object_name', '=', 'o.name')
             ->orderByDesc('s.observations')
@@ -514,7 +610,7 @@ class TonightsBest
         }
 
         $candidates = array_values($candidates);
-        usort($candidates, self::byPriority(...));
+        usort($candidates, $this->byPriority(...));
         $count   = $this->options['count'];
         $maxSeen = $this->maxSeen();
         $new     = array_values(array_filter($candidates, fn (array $object) => $this->options['seen'] === 'any' || $object['status'] !== 'seen'));
@@ -545,18 +641,21 @@ class TonightsBest
 
     /**
      * The objects that can get high enough at the latitude, of the chosen
-     * types, with their type and constellation.
+     * types (or the $types given), with their type and constellation.
+     *
+     * @param  list<string>|null  $types
      */
-    private function objectQuery(): Builder
+    private function objectQuery(?array $types = null): Builder
     {
         $latitude = (float) $this->location->latitude;
+        $types ??= $this->options['types'];
 
         return DB::table('objects as o')
             ->leftJoin('deepskytypes as t', 't.code', '=', 'o.type')
             ->leftJoin('constellations as c', 'c.id', '=', 'o.con')
             ->when(
-                $this->options['types'] !== [],
-                fn (Builder $query) => $query->whereIn('o.type', $this->options['types']),
+                $types !== [],
+                fn (Builder $query) => $query->whereIn('o.type', $types),
                 fn (Builder $query) => $query->whereNotIn('o.type', [...self::EXCLUDED_TYPES, self::NONEXISTENT_TYPE])
             )
             ->whereBetween('o.decl', [$latitude - (90.0 - self::MIN_ALTITUDE), $latitude + (90.0 - self::MIN_ALTITUDE)]);
@@ -580,20 +679,18 @@ class TonightsBest
     }
 
     /**
-     * The chosen double stars the standard telescope splits, with the
-     * contrast reserve of their verdict (DOUBLE_STAR_RESERVES).
+     * The double stars the standard telescope splits, with the contrast
+     * reserve of their verdict (DOUBLE_STAR_RESERVES); with $close only
+     * those closer than CLOSE_DOUBLE_ARCSEC. A close pair is marked with the
+     * seeing, and left out on a poor night.
      *
      * @return array<string, array<string, mixed>>
      */
-    private function doubleStars(): array
+    private function doubleStars(bool $close = false): array
     {
-        if (! in_array('DS', $this->options['types'], true)) {
-            return [];
-        }
-
         $candidates = [];
-        $rows       = $this->objectQuery()
-            ->where('o.type', 'DS')
+        $rows       = $this->objectQuery(['DS'])
+            ->when($close, fn (Builder $query) => $query->where('o.diam1', '>', 0)->where('o.diam1', '<', self::CLOSE_DOUBLE_ARCSEC))
             ->leftJoin('object_observation_stats as s', 's.object_name', '=', 'o.name')
             ->get(['o.name', 'o.slug', 'o.type', 'o.ra', 'o.decl', 'o.mag', 'o.subr', 'o.pa', 'o.diam1', 'o.diam2', 't.name as type_name', 'c.name as constellation', 's.observations']);
         $magnifications = ContrastReserveCalculator::magnifications($this->instrument, $this->user, ContrastReserveCalculator::lensFactor($this->lensId));
@@ -603,13 +700,55 @@ class TonightsBest
             }
             $split   = DoubleStarResolvability::forObject($row, $this->instrument, $this->location, $this->user, 1.0, $magnifications);
             $reserve = self::DOUBLE_STAR_RESERVES[$split['verdict'] ?? ''] ?? null;
-            if ($reserve !== null) {
-                $object['contrast_reserve'] = $reserve;
-                $candidates[$row->name]     = $object;
+            $isClose = $split !== null && $split['separation'] < self::CLOSE_DOUBLE_ARCSEC;
+            if ($reserve === null || ($isClose && $this->seeingClass() === 'poor')) {
+                continue;
             }
+            $object['contrast_reserve'] = $reserve;
+            $object['seeing']           = $isClose ? $this->seeingMark() : null;
+            $candidates[$row->name]     = $object;
         }
 
         return $candidates;
+    }
+
+    /**
+     * The close double stars added on a steady night: one per
+     * STEADY_DOUBLES_PER deep-sky objects, of the difficulty chosen, those
+     * not seen yet first, then the objects of the chosen sources and the most
+     * observed; spread over the night like the others (pick()).
+     *
+     * @param  list<array<string, mixed>>  $chosen  the deep-sky objects
+     * @return list<array<string, mixed>>
+     */
+    private function steadyDoubles(array $chosen): array
+    {
+        $doubles = array_filter($this->doubleStars(close: true), fn (array $object) => match (true) {
+            $this->options['seen']       === 'none' && $object['status'] === 'seen' => false,
+            $this->options['difficulty'] === 'easy'                                 => $object['contrast_reserve'] > self::EASY_ABOVE,
+            $this->options['difficulty'] === 'challenging'                          => $object['contrast_reserve'] <= self::EASY_ABOVE,
+            default                                                                 => true,
+        });
+        $doubles = array_map(fn (array $object) => [...$object, 'category' => ContrastReserveCalculator::category($object['contrast_reserve'])], array_values($doubles));
+        usort($doubles, fn (array $a, array $b) => [$b['status'] !== 'seen', $b['priority'], $b['observations']] <=> [$a['status'] !== 'seen', $a['priority'], $a['observations']]);
+
+        return $this->pick($doubles, max(1, (int) round($this->options['count'] / self::STEADY_DOUBLES_PER)), $chosen);
+    }
+
+    /** The class of the seeing forecast of the night (SeeingForecast::CLASSES), or null. */
+    private function seeingClass(): ?string
+    {
+        return $this->seeing['class'] ?? null;
+    }
+
+    /**
+     * The mark of the objects that need steady air (planets, close double
+     * stars): 'steady' or 'poor', null on an average night or without a
+     * forecast.
+     */
+    private function seeingMark(): ?string
+    {
+        return in_array($this->seeingClass(), ['steady', 'poor'], true) ? $this->seeingClass() : null;
     }
 
     /**
@@ -692,6 +831,7 @@ class TonightsBest
             'decl'             => (float) $row->decl,
             'diam1'            => $row->diam1 ?? null,
             'diam2'            => $row->diam2 ?? null,
+            'field_fraction'   => $this->fieldFraction($row),
             'altitude'         => (int) round($highest['altitude']),
             'timestamp'        => $highest['timestamp'],
             'time'             => $this->time($highest['timestamp']),
@@ -701,7 +841,39 @@ class TonightsBest
             'observations'     => (int) ($row->observations ?? 0),
             'priority'         => isset($this->priority[$row->name]),
             'status'           => $this->status('objects', (string) $row->name),
+            'seeing'           => null,
         ];
+    }
+
+    /**
+     * The part of the wide field (WIDE_FIELD_DEG) the major axis of the
+     * object takes up; null without a wide field or a size, and for a double
+     * star, whose diam1 is its separation.
+     */
+    private function fieldFraction(object $row): ?float
+    {
+        if ($this->field === null || ! ContrastReserveCalculator::appliesTo((string) $row->type)) {
+            return null;
+        }
+        $size = max((float) ($row->diam1 ?? 0), (float) ($row->diam2 ?? 0)) / 3600.0;
+
+        return $size > 0 ? $size / $this->field : null;
+    }
+
+    /**
+     * How well an object of that part of the field fills it: 0 for a small
+     * one (up to SMALL_IN_FIELD), rising to 1 at FILLS_FIELD, 1 up to the
+     * whole field, then down to 0.5 for an object twice as large as the
+     * field, of which only a part is seen.
+     */
+    private static function fieldFit(?float $fraction): float
+    {
+        return match (true) {
+            $fraction === null || $fraction <= self::SMALL_IN_FIELD => 0.0,
+            $fraction < self::FILLS_FIELD                           => ($fraction - self::SMALL_IN_FIELD) / (self::FILLS_FIELD - self::SMALL_IN_FIELD),
+            $fraction <= 1.0                                        => 1.0,
+            default                                                 => max(0.5, 1.0 - 0.5 * ($fraction - 1.0)),
+        };
     }
 
     /**
@@ -714,7 +886,7 @@ class TonightsBest
      */
     private function underTheMoon(array $candidates): array
     {
-        usort($candidates, self::byPriority(...));
+        usort($candidates, $this->byPriority(...));
         $pool = array_slice($candidates, 0, self::MOON_POOL);
         $hard = array_values(array_filter(array_slice($candidates, self::MOON_POOL), fn (array $object) => $object['contrast_reserve'] <= self::EASY_ABOVE));
         $pool = array_merge($pool, array_slice($hard, 0, self::MOON_POOL_CHALLENGING));
@@ -752,11 +924,27 @@ class TonightsBest
 
     /**
      * The objects of the chosen sources first, then the most observed
-     * objects, then the highest contrast reserve.
+     * objects, then the highest contrast reserve; in a wide field by rank().
      */
-    private static function byPriority(array $a, array $b): int
+    private function byPriority(array $a, array $b): int
     {
+        if ($this->field !== null) {
+            return [$b['priority'], $this->rank($b), $b['observations']] <=> [$a['priority'], $this->rank($a), $a['observations']];
+        }
+
         return [$b['priority'], $b['observations'], $b['contrast_reserve']] <=> [$a['priority'], $a['observations'], $a['contrast_reserve']];
+    }
+
+    /**
+     * How good an object is for a wide field: the log10 of its number of
+     * observations, plus FIELD_WEIGHT for filling the field (fieldFit()) and
+     * BRIGHT_WEIGHT per unit of contrast reserve (up to BRIGHT_CAP).
+     */
+    private function rank(array $object): float
+    {
+        return log10(1 + $object['observations'])
+            + self::FIELD_WEIGHT  * self::fieldFit($object['field_fraction'] ?? null)
+            + self::BRIGHT_WEIGHT * min(self::BRIGHT_CAP, max(0.0, (float) ($object['contrast_reserve'] ?? 0)));
     }
 
     /**
@@ -857,7 +1045,8 @@ class TonightsBest
      * The planets and the bright comets above MIN_SOLAR_SYSTEM_ALTITUDE
      * (MIN_COMET_ALTITUDE) in the hours chosen, of the kinds chosen (with
      * sources_only, only the ones of the chosen lists): the brightest comets
-     * first, then the planets from bright to faint.
+     * first, then the planets from bright to faint; on a steady night all
+     * planets that are up.
      *
      * @return list<array<string, mixed>>
      */
@@ -900,6 +1089,7 @@ class TonightsBest
                 'contrast_reserve' => null,
                 'category'         => null,
                 'status'           => $this->status($body['kind'] === 'comet' ? 'cometobjects' : 'planets', (string) $body['key']),
+                'seeing'           => $body['kind'] === 'planet' ? $this->seeingMark() : null,
             ];
             if ($body['kind'] === 'comet') {
                 $comets[] = $object;
@@ -910,6 +1100,10 @@ class TonightsBest
         $byMagnitude = fn (array $a, array $b) => ($a['magnitude'] ?? 99) <=> ($b['magnitude'] ?? 99);
         usort($comets, $byMagnitude);
         usort($planets, $byMagnitude);
+
+        if ($this->seeingClass() === 'steady') {
+            return array_merge(array_slice($comets, 0, self::MAX_COMETS), $planets);
+        }
 
         $chosen = array_slice($comets, 0, self::MAX_COMETS);
         $chosen = array_merge($chosen, array_slice($planets, 0, self::SOLAR_SYSTEM_COUNT - count($chosen)));

@@ -71,6 +71,12 @@ return [
         'enabled' => (bool) env('WEATHER_FORECAST', true),
     ],
 
+    'seven_timer' => [
+        // The seeing forecast of the coming nights (App\Services\Weather\SeeingForecast), free without a key
+        'url' => env('SEVEN_TIMER_URL', 'https://www.7timer.info/bin/astro.php'),
+        'enabled' => (bool) env('SEEING_FORECAST', true),
+    ],
+
     'aavso' => [
         // The variable star index and latest estimates of the AAVSO (App\Services\AavsoVariableStars), free without a key
         'url' => env('AAVSO_VSX_URL', 'https://vsx.aavso.org/index.php'),

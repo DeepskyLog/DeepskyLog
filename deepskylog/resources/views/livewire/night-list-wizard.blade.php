@@ -193,6 +193,10 @@
                         {{ __("Well placed between :from and :until.", $result["period"]) }}
                     @endif
                 </p>
+                @if ($result["field"] ?? null)
+                    <p>{{ __("Your telescope has a field of view of :field°: large, bright objects that fill it come first.", ["field" => $result["field"]]) }}</p>
+                @endif
+                <x-tonights-best-seeing :best="$result" />
                 @if ($result["moon"])
                     <p>{{ __("The Moon (:fraction% illuminated) is above the horizon from :from to :until; the times and the visibility take the brighter sky into account.", ["fraction" => (int) round($result["moon"]["fraction"] * 100), "from" => $result["moon"]["from"], "until" => $result["moon"]["until"]]) }}</p>
                 @endif

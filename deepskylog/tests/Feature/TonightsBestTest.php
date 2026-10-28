@@ -16,18 +16,18 @@ use Illuminate\Support\Str;
 use Livewire\Livewire;
 
 /** A night of new Moon (2026-11-09) and one of (nearly) full Moon (2026-10-24). */
-const TB_NEW_MOON = '2026-11-09';
+const TB_NEW_MOON  = '2026-11-09';
 const TB_FULL_MOON = '2026-10-24';
 
-function tbObject(string $name, float $ra, float $decl, string $type = 'GALXY', int $observations = 0, float $mag = 8.0): void
+function tbObject(string $name, float $ra, float $decl, string $type = 'GALXY', int $observations = 0, float $mag = 8.0, float $diam = 300.0): void
 {
     DB::table('objects')->insert([
-        'name' => $name, 'slug' => Str::slug($name), 'type' => $type, 'con' => 'AND',
-        'ra' => $ra, 'decl' => $decl, 'mag' => $mag, 'subr' => 13.0, 'pa' => 0, 'urano' => 0,
-        'urano_new' => 0, 'sky' => 0, 'millenium' => '', 'diam1' => 300.0, 'diam2' => 200.0,
-        'datasource' => null, 'taki' => '', 'SBObj' => 0.0, 'description' => '', 'psa' => '',
-        'torresB' => '', 'torresBC' => '', 'torresC' => '', 'milleniumbase' => '0', 'DSLDL' => '0',
-        'DSLDP' => '0', 'DSLLL' => '0', 'DSLLP' => '0', 'DSLOL' => '0', 'DSLOP' => '0',
+        'name'          => $name, 'slug' => Str::slug($name), 'type' => $type, 'con' => 'AND',
+        'ra'            => $ra, 'decl' => $decl, 'mag' => $mag, 'subr' => 13.0, 'pa' => 0, 'urano' => 0,
+        'urano_new'     => 0, 'sky' => 0, 'millenium' => '', 'diam1' => $diam, 'diam2' => $diam * 2 / 3,
+        'datasource'    => null, 'taki' => '', 'SBObj' => 0.0, 'description' => '', 'psa' => '',
+        'torresB'       => '', 'torresBC' => '', 'torresC' => '', 'milleniumbase' => '0', 'DSLDL' => '0',
+        'DSLDP'         => '0', 'DSLLL' => '0', 'DSLLP' => '0', 'DSLOL' => '0', 'DSLOP' => '0',
         'DeepskyHunter' => '0', 'Interstellarum' => '0', 'timestamp' => now(),
     ]);
     if ($observations > 0) {
@@ -61,8 +61,8 @@ function tbObserver(): User
     $user->teams()->attach($team);
     $user->switchTeam($team);
     $instrument = InstrumentFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'aperture_mm' => 300, 'focal_length_mm' => 1500, 'fixedMagnification' => null]);
-    $location = LocationFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'latitude' => 50.85, 'longitude' => 4.35,
-        'timezone' => 'Europe/Brussels', 'skyBackground' => 21.5]);
+    $location   = LocationFactory::new()->create(['user_id' => $user->id, 'observer' => $user->username, 'latitude' => 50.85, 'longitude' => 4.35,
+        'timezone'                                          => 'Europe/Brussels', 'skyBackground' => 21.5]);
     $user->forceFill(['stdtelescope' => $instrument->id, 'stdlocation' => $location->id])->save();
 
     return $user->fresh();
@@ -75,15 +75,15 @@ function tbMetrics(User $user, array $reserves): void
 {
     foreach ($reserves as $name => $reserve) {
         DB::table('user_object_metrics')->insert(['user_id' => $user->id, 'instrument_id' => $user->stdtelescope, 'location_id' => $user->stdlocation,
-            'lens_id' => null, 'object_name' => $name, 'contrast_reserve' => $reserve, 'created_at' => now(), 'updated_at' => now()]);
+            'lens_id'                                       => null, 'object_name' => $name, 'contrast_reserve' => $reserve, 'created_at' => now(), 'updated_at' => now()]);
     }
 }
 
 function tbSeen(User $user, string $object, ?int $instrumentId): void
 {
     DB::table('observations')->insert(['observer_username' => $user->username, 'observed_on' => '2025-10-01', 'instrument_id' => $instrumentId,
-        'target_type' => 'deepsky', 'target_table' => 'objects', 'target_key' => $object, 'target_name' => $object,
-        'has_drawing' => false, 'language' => 'en', 'legacy_source' => 'deepsky', 'created_at' => now(), 'updated_at' => now()]);
+        'target_type'                                      => 'deepsky', 'target_table' => 'objects', 'target_key' => $object, 'target_name' => $object,
+        'has_drawing'                                      => false, 'language' => 'en', 'legacy_source' => 'deepsky', 'created_at' => now(), 'updated_at' => now()]);
 }
 
 it('finds the highest altitude in the dark hours as stepping through the night does', function () {
@@ -115,7 +115,7 @@ it('brightens the sky with the Moon', function () {
 
     // Without the Moon above the horizon the sky stays dark.
     $window = NightWindow::for(50.85, 4.35, TB_NEW_MOON, 'Europe/Brussels');
-    $moon = new MoonlightSky($window, 4.35);
+    $moon   = new MoonlightSky($window, 4.35);
     expect($moon->isUp())->toBeFalse()
         ->and($moon->sqmAt($window->start, 10.0, 41.0, 21.5))->toBe(21.5);
 });
@@ -125,7 +125,7 @@ it('shows the most observed well placed objects to guests', function () {
     LocationFactory::new()->create(['latitude' => 50.85, 'longitude' => 4.35, 'timezone' => 'Europe/Brussels', 'observer' => 'someone']);
 
     $result = TonightsBest::for(null, ['night' => TB_NEW_MOON]);
-    $names = collect($result['objects'])->where('kind', 'deepsky')->pluck('name');
+    $names  = collect($result['objects'])->where('kind', 'deepsky')->pluck('name');
 
     expect($result['mode'])->toBe('popular')
         ->and($result['moon'])->toBeNull()
@@ -155,9 +155,9 @@ it('makes a personal list of mostly new objects with only a few seen ones', func
         tbObject('Seen Galaxy '.($i + 1), 0.6 + $i / 10, 40.0, $type, 2001 + $i);
     }
     tbObject('Not Yet Computed', 1.1, 38.0, 'GALXY', 50);
-    $user = tbObserver();
+    $user     = tbObserver();
     $reserves = ['Autumn Galaxy 1' => 1.4, 'Autumn Galaxy 2' => 0.8, 'Autumn Cluster 1' => 2.0, 'Autumn Cluster 2' => 2.5, 'Autumn Nebula' => 0.4,
-        'Autumn Globular' => 1.1, 'Faint Galaxy' => 0.2, 'Southern Galaxy' => 1.0];
+        'Autumn Globular'          => 1.1, 'Faint Galaxy' => 0.2, 'Southern Galaxy' => 1.0];
     foreach (range(1, 12) as $i) {
         $reserves["Seen Galaxy {$i}"] = 1.5;
         tbSeen($user, "Seen Galaxy {$i}", $user->stdtelescope);
@@ -166,7 +166,7 @@ it('makes a personal list of mostly new objects with only a few seen ones', func
     // Seen with another telescope only: still new for this one.
     tbSeen($user, 'Autumn Galaxy 2', null);
 
-    $result = TonightsBest::for($user, ['night' => TB_NEW_MOON]);
+    $result  = TonightsBest::for($user, ['night' => TB_NEW_MOON]);
     $deepsky = collect($result['objects'])->where('kind', 'deepsky');
 
     expect($result['mode'])->toBe('personal')
@@ -190,9 +190,9 @@ it('lowers the contrast reserve under the full Moon', function () {
     tbAutumnSky();
     $user = tbObserver();
     tbMetrics($user, ['Autumn Galaxy 1' => 0.9, 'Autumn Galaxy 2' => 0.9, 'Autumn Cluster 1' => 0.9, 'Autumn Cluster 2' => 0.9, 'Autumn Nebula' => 0.9,
-        'Autumn Globular' => 0.9, 'Faint Galaxy' => 0.9, 'Southern Galaxy' => 0.9]);
+        'Autumn Globular'               => 0.9, 'Faint Galaxy' => 0.9, 'Southern Galaxy' => 0.9]);
 
-    $dark = TonightsBest::for($user, ['night' => TB_NEW_MOON]);
+    $dark    = TonightsBest::for($user, ['night' => TB_NEW_MOON]);
     $moonlit = TonightsBest::for($user, ['night' => TB_FULL_MOON]);
 
     expect($moonlit['moon']['fraction'])->toBeGreaterThan(0.9);
@@ -208,7 +208,7 @@ it('puts the objects of the chosen sources first, or only them', function () {
     tbAutumnSky();
     $user = tbObserver();
     tbMetrics($user, ['Autumn Galaxy 1' => 1.4, 'Autumn Galaxy 2' => 0.8, 'Autumn Cluster 1' => 2.0, 'Autumn Cluster 2' => 2.5, 'Autumn Nebula' => 0.6,
-        'Autumn Globular' => 1.1, 'Faint Galaxy' => 0.7]);
+        'Autumn Globular'               => 1.1, 'Faint Galaxy' => 0.7]);
     $list = ObservingList::createWithObjects($user, 'Favourites', ['Faint Galaxy', 'Autumn Globular']);
 
     $first = TonightsBest::for($user, ['night' => TB_NEW_MOON, 'sources' => ['list:'.$list->id], 'count' => 5, 'planets' => false, 'comets' => false]);
@@ -222,7 +222,7 @@ it('puts the objects of the chosen sources first, or only them', function () {
 
     // Another observer's private list gives no objects.
     $private = ObservingList::createWithObjects(User::factory()->create(), 'Secret', ['Autumn Nebula']);
-    $none = TonightsBest::for($user, ['night' => TB_NEW_MOON, 'sources' => ['list:'.$private->id], 'sources_only' => true]);
+    $none    = TonightsBest::for($user, ['night' => TB_NEW_MOON, 'sources' => ['list:'.$private->id], 'sources_only' => true]);
     expect($none['objects'])->toBe([]);
 });
 
@@ -232,7 +232,7 @@ it('keeps to the part of the night that was chosen', function () {
     $user = tbObserver();
 
     $evening = TonightsBest::for($user, ['night' => TB_NEW_MOON, 'period' => 'evening', 'planets' => false, 'comets' => false]);
-    $custom = TonightsBest::for($user, ['night' => TB_NEW_MOON, 'period' => 'custom', 'from' => '23:00', 'until' => '01:30', 'planets' => false, 'comets' => false]);
+    $custom  = TonightsBest::for($user, ['night' => TB_NEW_MOON, 'period' => 'custom', 'from' => '23:00', 'until' => '01:30', 'planets' => false, 'comets' => false]);
 
     expect($evening['period']['from'])->toBe($evening['dark']['from'])
         ->and($custom['period'])->toBe(['from' => '23:00', 'until' => '01:30']);
@@ -272,7 +272,7 @@ it('makes an observing list for a night with the wizard', function () {
     tbAutumnSky();
     $user = tbObserver();
     tbMetrics($user, ['Autumn Galaxy 1' => 1.4, 'Autumn Galaxy 2' => 0.8, 'Autumn Cluster 1' => 2.0, 'Autumn Cluster 2' => 2.5, 'Autumn Globular' => 1.1,
-        'Autumn Nebula' => 0.6, 'Faint Galaxy' => 0.05]);
+        'Autumn Nebula'                 => 0.6, 'Faint Galaxy' => 0.05]);
     $this->actingAs($user);
 
     $this->get(route('observing-list.night'))->assertOk()->assertSee('Which night do you want to observe?');
@@ -311,12 +311,12 @@ it('validates the answers of the wizard', function () {
 });
 
 it('gives the contrast reserve of an object with the Moon of the night', function () {
-    $user = tbObserver();
-    $target = \App\Services\ContrastReserveCalculator::target(180.0, 60.0, 4.0);
-    $reserve = fn (string $night) => \App\Services\MoonlitContrastReserve::for($target, 0.7 * 15.0, 41.0, $user->standardInstrument, $user->standardLocation, $user, $night, 'Europe/Brussels');
-    $newMoon = $reserve(TB_NEW_MOON);
+    $user     = tbObserver();
+    $target   = \App\Services\ContrastReserveCalculator::target(180.0, 60.0, 4.0);
+    $reserve  = fn (string $night) => \App\Services\MoonlitContrastReserve::for($target, 0.7 * 15.0, 41.0, $user->standardInstrument, $user->standardLocation, $user, $night, 'Europe/Brussels');
+    $newMoon  = $reserve(TB_NEW_MOON);
     $fullMoon = $reserve(TB_FULL_MOON);
-    $dark = \App\Services\ContrastReserveCalculator::calculate($target, $user->standardInstrument, $user->standardLocation, $user, altitude: $newMoon['altitude'])['contrast_reserve'];
+    $dark     = \App\Services\ContrastReserveCalculator::calculate($target, $user->standardInstrument, $user->standardLocation, $user, altitude: $newMoon['altitude'])['contrast_reserve'];
 
     // Without the Moon it is the contrast reserve of the dark sky, at the
     // altitude of the object then (the altitude is rounded).
@@ -336,7 +336,7 @@ it('offers planets, comets and double stars as kinds of objects in the wizard', 
     tbObject('Autumn Double', 1.0, 38.0, 'DS', 5000);
     $user = tbObserver();
     tbMetrics($user, ['Autumn Galaxy 1' => 1.4, 'Autumn Galaxy 2' => 0.8, 'Autumn Cluster 1' => 2.0, 'Autumn Cluster 2' => 2.5, 'Autumn Globular' => 1.1,
-        'Autumn Nebula' => 0.6, 'Faint Galaxy' => 0.05, 'Autumn Double' => 6.0]);
+        'Autumn Nebula'                 => 0.6, 'Faint Galaxy' => 0.05, 'Autumn Double' => 6.0]);
     $this->actingAs($user);
 
     // Double stars only when they are chosen, despite their contrast reserve.
@@ -423,4 +423,31 @@ it('leaves out the objects asked to', function () {
     $names = collect(TonightsBest::for(null, ['night' => TB_NEW_MOON, 'exclude' => ['Autumn Galaxy 1', 'Autumn Nebula']])['objects'])->pluck('name');
 
     expect($names)->toContain('Autumn Galaxy 2')->not->toContain('Autumn Galaxy 1', 'Autumn Nebula');
+});
+
+it('puts the large objects that fill a wide field first', function () {
+    DB::table('deepskytypes')->insertOrIgnore([['code' => 'OPNCL', 'name' => 'Open cluster'], ['code' => 'GALXY', 'name' => 'Galaxy']]);
+    // much observed small objects, and large ones (1.5°) observed less
+    foreach (['GALXY', 'OPNCL', 'GALXY', 'OPNCL'] as $i => $type) {
+        tbObject("Small {$i}", 0.7 + $i * 0.05, 41.0, $type, 1000 - $i, 8.0, 60.0);
+        tbObject("Large {$i}", 0.9 + $i * 0.05, 41.0, $type, 30 - $i, 5.0, 5400.0);
+    }
+    $user = tbObserver();
+    tbMetrics($user, collect(range(0, 3))->flatMap(fn ($i) => ["Small {$i}" => 1.0, "Large {$i}" => 1.0])->all());
+    $options = ['night' => TB_NEW_MOON, 'count' => 5, 'difficulty' => 'easy', 'seen' => 'any', 'planets' => false, 'comets' => false];
+
+    // a telescope without eyepieces: no known field, the most observed first
+    $names = collect(TonightsBest::for($user, $options)['objects'])->pluck('name');
+    expect(TonightsBest::for($user, $options)['field'])->toBeNull()
+        ->and($names)->toContain('Small 0', 'Small 1', 'Small 2', 'Small 3');
+
+    // binoculars with a field of 5°: the large objects fill a third of it
+    $user->standardInstrument->forceFill(['fixedMagnification' => 10, 'aperture_mm' => 50, 'field_of_view_deg' => 5.0])->save();
+    $result = TonightsBest::for($user->fresh(), $options);
+    $large  = collect($result['objects'])->firstWhere('name', 'Large 0');
+    expect($result['field'])->toBe(5.0)
+        ->and(collect($result['objects'])->pluck('name'))->toContain('Large 0', 'Large 1', 'Large 2', 'Large 3')
+        ->and($large['field_fraction'])->toEqualWithDelta(0.3, 0.001);
+
+    $this->get('/')->assertOk();
 });

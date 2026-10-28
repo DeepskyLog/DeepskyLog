@@ -28,6 +28,14 @@
                         @if ($best["mode"] === "personal" && $object["kind"] === "deepsky")
                             <a href="{{ route("object.field-views", ["slug" => $object["slug"], "datetime" => $object["moment"]]) }}" class="ml-1 text-xs text-gray-400 hover:underline" title="{{ __("Field views") }}">&#128301;</a>
                         @endif
+                        @if (($best["field"] ?? null) && ($object["field_fraction"] ?? null) !== null && $object["field_fraction"] >= \App\Services\TonightsBest::FILLS_FIELD)
+                            <span class="ml-1 whitespace-nowrap rounded bg-blue-900 px-1.5 py-0.5 text-xs text-blue-100" title="{{ __(":percent% of your field of view of :field°", ["percent" => (int) round($object["field_fraction"] * 100), "field" => $best["field"]]) }}">{{ $object["field_fraction"] > 1 ? __("Larger than the field") : __("Fills the field") }}</span>
+                        @endif
+                        @if (($object["seeing"] ?? null) === "steady")
+                            <span class="ml-1 whitespace-nowrap rounded bg-green-900 px-1.5 py-0.5 text-xs text-green-100" title="{{ __("Steady seeing is forecast: a night for fine detail") }}">{{ __("Steady air") }}</span>
+                        @elseif (($object["seeing"] ?? null) === "poor")
+                            <span class="ml-1 whitespace-nowrap rounded bg-red-900 px-1.5 py-0.5 text-xs text-red-200" title="{{ __("Poor seeing is forecast: little fine detail tonight") }}">{{ __("Turbulent air") }}</span>
+                        @endif
                     </td>
                     <td class="px-2 py-1">{{ __($object["type"]) }}</td>
                     <td class="hidden px-2 py-1 md:table-cell">{{ $object["constellation"] ? __($object["constellation"]) : "" }}</td>
