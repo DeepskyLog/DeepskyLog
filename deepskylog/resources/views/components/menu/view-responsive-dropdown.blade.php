@@ -38,6 +38,12 @@
             />
 
             <x-dropdown.item
+                icon="moon"
+                href="{{ route('moon.show') }}"
+                label="{{ __('The Moon tonight') }}"
+            />
+
+            <x-dropdown.item
                 icon="bars-3-center-left"
                 href="/observations"
                 label="{{ __('All observations') }}"

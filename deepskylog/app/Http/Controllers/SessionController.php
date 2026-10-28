@@ -14,6 +14,7 @@ use App\Models\SketchOfTheMonth;
 use App\Models\SketchOfTheWeek;
 use App\Models\StarParty;
 use App\Models\User;
+use App\Services\Moon\LunarTerminator;
 use App\Services\Observations\ObservationCardData;
 use App\Services\SessionObservationReminders;
 use App\Services\TonightsBest;
@@ -988,6 +989,14 @@ class SessionController extends Controller
             }
         }
 
+        // The Moon tonight with the lunar features at the terminator
+        try {
+            $moonTonight = LunarTerminator::forHomePage(Auth::user());
+        } catch (\Throwable $e) {
+            report($e);
+            $moonTonight = null;
+        }
+
         // The current news (#960), with the local circumstances of the events for the observer's location
         try {
             $news = NewsItem::current()->with('author:id,name')->orderByDesc('published_at')->orderByDesc('id')->limit(self::HOMEPAGE_NEWS)->get();
@@ -1055,6 +1064,7 @@ class SessionController extends Controller
             'tonightsBest',
             'nightForecast',
             'forecastLocation',
+            'moonTonight',
             'news',
             'newsLocation',
             'starParties',

@@ -124,6 +124,12 @@ Route::post('/admin/news/{newsItem}/hidden', [App\Http\Controllers\NewsControlle
     ->middleware(['auth', 'doNotCacheResponse'])->can('manage_news', User::class)->name('admin.news.hidden');
 Route::get('/news', [App\Http\Controllers\NewsController::class, 'index'])->name('news.index')->middleware('doNotCacheResponse');
 Route::get('/news/{newsItem}', [App\Http\Controllers\NewsController::class, 'show'])->name('news.show')->middleware('doNotCacheResponse');
+// The Moon in a night with the lunar features at the terminator
+Route::get('/moon', [App\Http\Controllers\MoonController::class, 'show'])
+    ->name('moon.show')->middleware('doNotCacheResponse');
+Route::post('/moon/observing-list', [App\Http\Controllers\MoonController::class, 'storeList'])
+    ->middleware(['auth', 'doNotCacheResponse'])->name('moon.observing-list');
+
 // The objects of the month of Astroforum (astroforum:objects-of-the-month)
 Route::get('/admin/objects-of-the-month', [App\Http\Controllers\ObjectOfTheMonthController::class, 'admin'])
     ->middleware(['auth', 'doNotCacheResponse'])->can('manage_news', User::class)->name('admin.objects-of-the-month');

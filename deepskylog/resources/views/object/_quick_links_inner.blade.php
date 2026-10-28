@@ -46,6 +46,12 @@
                     class="text-gray-300 hover:underline">{{ __('All drawings') }}</a>
             @endif
         </li>
+        @if (($session->source_type_raw ?? '') === 'lunar_feature' || (($session->source_type_raw ?? '') === 'moon' && strcasecmp((string) ($session->name ?? ''), 'Moon') === 0))
+            {{-- The Moon (not the moons of the planets) and its features: the terminator tonight --}}
+            <li>
+                <a href="{{ route('moon.show') }}" class="text-gray-300 hover:underline">{{ __('The Moon and its terminator') }}</a>
+            </li>
+        @endif
         @auth
             @if (!empty($canonicalSlug) && auth()->user()->slug)
                 @if ($isCometLocal)

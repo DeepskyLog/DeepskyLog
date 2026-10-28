@@ -27,6 +27,8 @@
                             @livewire('moon-details', ['objectId' => (string) ($session->id ?? ''), 'initial' => $ephemerides ?? null])
                         </table>
                     </div>
+
+                    <x-lunar-feature-terminator :slug="$canonicalSlug ?? ($session->slug ?? '')" :name="$session->name ?? ''" />
                 </div>
 
                 @include('object._quick_links')

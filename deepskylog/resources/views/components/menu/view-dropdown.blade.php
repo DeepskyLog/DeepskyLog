@@ -18,6 +18,8 @@
 
             <x-menu.item icon="trophy" href="{{ route('challenges.index') }}">{{ __('Observing challenges') }}</x-menu.item>
 
+            <x-menu.item icon="moon" href="{{ route('moon.show') }}">{{ __('The Moon tonight') }}</x-menu.item>
+
             @if (!Auth::guest() && Auth::user()->isObserver())
                 <x-menu.item href="{{ route('session.all') }}">
                     <x-slot:svg><x-outline.session-icon class="h-4 w-4" /></x-slot:svg>{{ __('All sessions') }}
