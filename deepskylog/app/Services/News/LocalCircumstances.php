@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Cache;
  * How an astronomical event of the news looks from a location: the local
  * circumstances of an eclipse, the best moment to see a conjunction (the
  * moment closest to it with the bodies at least MIN_ALTITUDE high in a dark
- * enough sky), whether the Moon covers a planet there, how high a planet at
+ * enough sky), whether the Moon covers a planet there, when the Moon covers
+ * a planet or bright star there (lunarOccultation()), how high a planet at
  * opposition gets, the altitude of Mercury or Venus at the end or start of
  * the civil twilight around its greatest elongation, which part of the
  * shadows on Jupiter or Saturn can be seen.
@@ -69,6 +70,7 @@ class LocalCircumstances
             'lunar_eclipse'       => ['altitudes' => Eclipses::localLunar($data['contacts'] ?? [], $latitude, $longitude)],
             'opposition'          => ['altitude' => round(90.0 - abs($latitude - (float) ($data['decl'] ?? 0)), 0)],
             'greatest_elongation' => self::elongation($at, $data, $latitude, $longitude),
+            'lunar_occultation'   => self::lunarOccultation($at, $data, $latitude, $longitude, $height),
             'comet'               => self::comet($at, $data, $latitude, $longitude),
             // Highest in a dark (nautical) sky from the coming night on, as a comet far from the Sun
             'supernova', 'nova'                             => self::comet(max($at, time()), ['elongation' => 90.0] + $data, $latitude, $longitude),
@@ -136,6 +138,114 @@ class LocalCircumstances
     }
 
     /**
+     * The disappearance and reappearance of the planet or star behind the
+     * Moon seen from the place (to the second), each with the altitudes of the
+     * Moon and the Sun and the limb (dark or bright) it happens at; null when
+     * the Moon misses it there, with the best moment to see them together
+     * (conjunction()).
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    private static function lunarOccultation(int $at, array $data, float $latitude, float $longitude, float $height): array
+    {
+        // The parallax shifts the moments seen from a place up to two hours from the geocentric ones.
+        $step    = 120;
+        $inside  = null;
+        $contact = ['disappears' => null, 'reappears' => null];
+        for ($t = $at - 4 * 3600; $t <= $at + 4 * 3600; $t += $step) {
+            $sample = self::occultationSample($data, $t, $latitude, $longitude, $height);
+            $now    = $sample['separation'] < $sample['moon_radius'];
+            if ($inside !== null && $now !== $inside) {
+                $moment = self::bisectContact($data, $t - $step, $t, $latitude, $longitude, $height);
+                $kind   = $now ? 'disappears' : 'reappears';
+                $contact[$kind] ??= self::contact($data, $moment, $latitude, $longitude, $height);
+            }
+            $inside = $now;
+        }
+
+        if ($contact['disappears'] === null && $contact['reappears'] === null) {
+            return ['occultation' => null] + self::conjunction('lunar_occultation', $at, $data, $latitude, $longitude, $height);
+        }
+
+        $visible = array_filter($contact, fn ($c) => $c !== null && $c['moon_altitude'] > 0);
+
+        return ['occultation' => $contact + ['visible' => $visible !== []], 'best' => null];
+    }
+
+    /** The moment (to a second) between two the target crosses the Moon's limb. */
+    private static function bisectContact(array $data, int $before, int $after, float $latitude, float $longitude, float $height): int
+    {
+        $inside = fn (int $t) => ($s = self::occultationSample($data, $t, $latitude, $longitude, $height))['separation'] < $s['moon_radius'];
+        $first  = $inside($before);
+        while ($after - $before > 1) {
+            $middle = intdiv($before + $after, 2);
+            if ($inside($middle) === $first) {
+                $before = $middle;
+            } else {
+                $after = $middle;
+            }
+        }
+
+        return $after;
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array{at: int, moon_altitude: float, sun_altitude: float, limb: string}
+     */
+    private static function contact(array $data, int $t, float $latitude, float $longitude, float $height): array
+    {
+        $sample = self::occultationSample($data, $t, $latitude, $longitude, $height);
+
+        return [
+            'at'            => $t,
+            'moon_altitude' => round($sample['moon_altitude'], 0),
+            'sun_altitude'  => round($sample['sun_altitude'], 0),
+            'limb'          => $sample['bright_limb'] ? 'bright' : 'dark',
+        ];
+    }
+
+    /**
+     * The topocentric distance of the target from the Moon's centre, the
+     * Moon's radius, the altitudes of the Moon and the Sun, and whether the
+     * target is on the lit side of the Moon: within 90 degrees of the position
+     * angle of the bright limb (Meeus 48.5).
+     *
+     * @param  array<string, mixed>  $data
+     * @return array{separation: float, moon_radius: float, moon_altitude: float, sun_altitude: float, bright_limb: bool}
+     */
+    private static function occultationSample(array $data, int $t, float $latitude, float $longitude, float $height): array
+    {
+        $moon     = SkyPositions::moon($t);
+        $moonEq   = SkyPositions::toEquatorial($moon['lon'], $moon['lat'], $t);
+        $moonTopo = SkyPositions::topocentric($moonEq['ra'], $moonEq['dec'], $moon['distance'], $latitude, $longitude, $height, $t);
+
+        if (($data['target'] ?? 'star') === 'star') {
+            // The star's J2000 position moved to the equinox of the date, as the Moon's.
+            $ecliptical = SkyPositions::eclipticalOfDate((float) $data['star']['ra'], (float) $data['star']['decl'], $t);
+        } else {
+            $ecliptical = SkyPositions::planet($data['target'], $t);
+        }
+        $target = SkyPositions::toEquatorial($ecliptical['lon'], $ecliptical['lat'], $t);
+        $sun    = SkyPositions::sun($t);
+        $sunEq  = SkyPositions::toEquatorial($sun['lon'], $sun['lat'], $t);
+
+        $positionAngle = fn (array $p) => rad2deg(atan2(
+            cos(deg2rad($p['dec'])) * sin(deg2rad($p['ra'] - $moonTopo['ra'])),
+            sin(deg2rad($p['dec'])) * cos(deg2rad($moonTopo['dec'])) - cos(deg2rad($p['dec'])) * sin(deg2rad($moonTopo['dec'])) * cos(deg2rad($p['ra'] - $moonTopo['ra'])),
+        ));
+
+        return [
+            'separation'    => SkyPositions::separation($moonTopo['ra'], $moonTopo['dec'], $target['ra'], $target['dec']),
+            'moon_radius'   => 358473400.0 / $moon['distance'] / 3600.0,
+            'moon_altitude' => SkyPositions::altitude($moonTopo['ra'], $moonTopo['dec'], $latitude, $longitude, $t),
+            'sun_altitude'  => SkyPositions::altitude($sunEq['ra'], $sunEq['dec'], $latitude, $longitude, $t),
+            'bright_limb'   => abs(SkyPositions::wrap180($positionAngle($target) - $positionAngle($sunEq))) < 90.0,
+        ];
+    }
+
+    /**
      * The altitudes of the bodies of a conjunction and of the Sun, and their
      * distance (topocentric for the Moon).
      *
@@ -160,6 +270,9 @@ class LocalCircumstances
         if (in_array($kind, ['deepsky_conjunction', 'moon_deepsky_conjunction'], true)) {
             // The object's J2000 position moved to the equinox of the date, as the planets'.
             $ecliptical  = SkyPositions::eclipticalOfDate((float) $data['object']['ra'], (float) $data['object']['decl'], $t);
+            $positions[] = SkyPositions::toEquatorial($ecliptical['lon'], $ecliptical['lat'], $t);
+        } elseif ($kind === 'lunar_occultation' && ($data['target'] ?? 'star') === 'star') {
+            $ecliptical  = SkyPositions::eclipticalOfDate((float) $data['star']['ra'], (float) $data['star']['decl'], $t);
             $positions[] = SkyPositions::toEquatorial($ecliptical['lon'], $ecliptical['lat'], $t);
         }
 

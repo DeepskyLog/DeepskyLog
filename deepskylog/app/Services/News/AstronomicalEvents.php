@@ -2,15 +2,19 @@
 
 namespace App\Services\News;
 
+use App\Services\FieldViews\FieldViewRenderer;
 use App\Services\Planets\PlanetMoonEvents;
+use App\Services\WashingtonDoubleStars;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * The astronomical events the news announces (#960): eclipses (Eclipses),
  * close conjunctions of two planets, of the Moon and a planet and of a
  * planet and a Messier object, of the Moon and a bright Messier object,
- * oppositions of the outer planets, greatest elongations of Mercury and
- * Venus, the peaks of the major meteor showers, bright comets
+ * lunar occultations of the planets and of the stars brighter than
+ * OCCULTATION_STAR_MAGNITUDE, oppositions of the outer planets, greatest
+ * elongations of Mercury and Venus, the peaks of the major meteor showers, bright comets
  * (BrightComets) and the shadows of the moons of Jupiter and Saturn
  * (PlanetMoonEvents::newsEvents(): two shadows on Jupiter, Titan's shadow on
  * Saturn).
@@ -19,6 +23,8 @@ use Illuminate\Support\Facades\DB;
  * local minimum of the distance below the threshold of its kind, refined with
  * a parabola through the samples around it. A body closer than
  * MIN_ELONGATION to the Sun is lost in its glare and gives no conjunction.
+ * A conjunction of the Moon and a planet close enough for the Moon to cover
+ * the planet from somewhere on the Earth is a lunar occultation instead.
  */
 class AstronomicalEvents
 {
@@ -41,6 +47,24 @@ class AstronomicalEvents
     public const MOON_DEEPSKY_NEW = 4.0;
 
     public const MOON_DEEPSKY_FULL = 1.6;
+
+    /**
+     * The faintest star (V) whose occultation by the Moon is announced: the
+     * stars of the first magnitude (Aldebaran, Regulus, Spica, Antares). At
+     * 3.5 there would be about 120 occultations a year.
+     */
+    public const OCCULTATION_STAR_MAGNITUDE = 1.5;
+
+    /**
+     * The proper names of the bright stars the Moon can cover, by the Bayer
+     * designation of the stars table; the others are named by it.
+     */
+    public const STAR_NAMES = [
+        'Alp Tau' => 'Aldebaran', 'Bet Tau' => 'Elnath', 'Eta Tau' => 'Alcyone', 'Alp Leo' => 'Regulus',
+        'Alp Vir' => 'Spica', 'Gam Vir' => 'Porrima', 'Alp Sco' => 'Antares', 'Bet Sco' => 'Acrab',
+        'Del Sco' => 'Dschubba', 'Sig Sgr' => 'Nunki', 'Del Sgr' => 'Kaus Media', 'Lam Sgr' => 'Kaus Borealis',
+        'Zet Sgr' => 'Ascella', 'Mu Gem' => 'Tejat', 'Eta Gem' => 'Propus', 'Del Cap' => 'Deneb Algedi',
+    ];
 
     /** Degrees from the Sun a body needs to be seen in the twilight. */
     public const MIN_ELONGATION = 15.0;
@@ -98,6 +122,7 @@ class AstronomicalEvents
             ...$this->moonConjunctions(),
             ...$this->deepskyConjunctions(),
             ...$this->moonDeepskyConjunctions(),
+            ...$this->lunarOccultations(),
             ...$this->oppositions(),
             ...$this->elongations(),
             ...$this->meteorShowers(),
@@ -171,11 +196,10 @@ class AstronomicalEvents
                 if (abs($elongation) < self::MIN_ELONGATION) {
                     continue;
                 }
-                $moon = SkyPositions::moon($at);
-                // Seen from somewhere on the Earth the Moon covers the planet
-                // when the geocentric distance is below the Moon's parallax
-                // plus its radius.
-                $reach = rad2deg(asin(SkyPositions::EARTH_RADIUS_KM / $moon['distance'])) + 358473400.0 / $moon['distance'] / 3600.0;
+                // The Moon covers the planet somewhere: a lunar occultation.
+                if ($separation < self::occultationReach($at)) {
+                    continue;
+                }
 
                 $events[] = [
                     'key'  => 'moon_conjunction:' . $planet . ':' . gmdate('Y-m-d', $at),
@@ -187,13 +211,150 @@ class AstronomicalEvents
                         'elongation'        => round($elongation, 1),
                         'magnitudes'        => [$planet => SkyPositions::planetMagnitude($planet, $at)],
                         'moon_illumination' => round(SkyPositions::moonIllumination($at), 2),
-                        'occultation'       => $separation < $reach,
                     ],
                 ];
             }
         }
 
         return $events;
+    }
+
+    /**
+     * Degrees: seen from somewhere on the Earth the Moon covers a point when
+     * its geocentric distance from the Moon's centre is below the Moon's
+     * parallax plus its radius.
+     */
+    public static function occultationReach(int $at): float
+    {
+        $moon = SkyPositions::moon($at);
+
+        return rad2deg(asin(SkyPositions::EARTH_RADIUS_KM / $moon['distance'])) + 358473400.0 / $moon['distance'] / 3600.0;
+    }
+
+    /**
+     * The Moon covering a planet or a star brighter than
+     * OCCULTATION_STAR_MAGNITUDE as seen from somewhere on the Earth. The
+     * moments seen from the reader's location are LocalCircumstances'.
+     *
+     * @return list<array{key: string, kind: string, at: int, data: array<string, mixed>}>
+     */
+    private function lunarOccultations(): array
+    {
+        $targets = [];
+        foreach (array_keys(SkyPositions::PLANETS) as $planet) {
+            $targets[] = ['key' => $planet, 'positions' => $this->positions[$planet], 'data' => ['target' => $planet, 'bodies' => ['moon', $planet]]];
+        }
+        foreach ($this->occultableStars() as $star) {
+            $targets[] = [
+                'key'       => $star['key'],
+                'positions' => array_map(fn (int $t) => SkyPositions::eclipticalOfDate($star['ra'], $star['decl'], $t), $this->times),
+                'data'      => ['target' => 'star', 'bodies' => ['moon'], 'star' => array_diff_key($star, ['key' => true])],
+            ];
+        }
+
+        $events = [];
+        foreach ($targets as $target) {
+            $distances = $this->distances($this->positions['moon'], $target['positions']);
+            // The reach is at most 1.3 degrees, at perigee.
+            foreach ($this->minima($distances, 1.3) as [$at, $separation]) {
+                if ($separation >= self::occultationReach($at)) {
+                    continue;
+                }
+                $sun        = SkyPositions::sun($at);
+                $moon       = SkyPositions::moon($at);
+                $elongation = SkyPositions::separation($sun['lon'], $sun['lat'], $moon['lon'], $moon['lat']);
+                if ($elongation < self::MIN_ELONGATION) {
+                    continue;
+                }
+                $planet   = $target['data']['target'] === 'star' ? null : $target['data']['target'];
+                $events[] = [
+                    'key'  => 'lunar_occultation:' . $target['key'] . ':' . gmdate('Y-m-d', $at),
+                    'kind' => 'lunar_occultation',
+                    'at'   => $at,
+                    'data' => $target['data'] + [
+                        'separation'        => round($separation, 2),
+                        'elongation'        => round(SkyPositions::wrap180($moon['lon'] - $sun['lon']) >= 0 ? $elongation : -$elongation, 1),
+                        'magnitudes'        => $planet === null ? [] : [$planet => SkyPositions::planetMagnitude($planet, $at)],
+                        'moon_illumination' => round(SkyPositions::moonIllumination($at), 2),
+                    ],
+                ];
+            }
+        }
+
+        return $events;
+    }
+
+    /**
+     * The stars with a Bayer or Flamsteed designation brighter than
+     * OCCULTATION_STAR_MAGNITUDE near enough to the ecliptic for the Moon to
+     * cover them (5.3 degrees of the Moon's orbit plus its reach), with the
+     * object page of the star when DeepskyLog has one.
+     *
+     * @return list<array{key: string, name: string, designation: string, slug: ?string, ra: float, decl: float, mag: float}>
+     */
+    private function occultableStars(): array
+    {
+        $rows = DB::table('stars')
+            ->whereNotNull('constellation_code')
+            ->where(fn ($q) => $q->whereNotNull('bayer')->orWhereNotNull('flamsteed'))
+            ->where('vmag', '<=', self::OCCULTATION_STAR_MAGNITUDE)
+            ->orderBy('vmag')
+            ->get(['constellation_code', 'bayer', 'bayer_suffix', 'flamsteed', 'ra_degrees', 'decl_degrees', 'vmag']);
+
+        $greek = array_flip(WashingtonDoubleStars::GREEK);
+        $stars = [];
+        $names = [];
+        foreach ($rows as $row) {
+            $position = SkyPositions::eclipticalOfDate((float) $row->ra_degrees, (float) $row->decl_degrees, $this->times[0]);
+            if (abs($position['lat']) > 5.3 + 1.3) {
+                continue;
+            }
+            $bayer = $row->bayer === null ? null : ucfirst(strtolower((string) $row->bayer));
+            $key   = $bayer      === null ? $row->flamsteed . ' ' . $row->constellation_code : $bayer . ($row->bayer_suffix ?? '') . ' ' . $row->constellation_code;
+            // The brightest row of a star the table holds twice (Castor)
+            if (isset($stars[$key])) {
+                continue;
+            }
+            $letter      = $bayer  === null ? null : (FieldViewRenderer::GREEK_LETTERS[$bayer] ?? null);
+            $designation = $letter === null
+                ? $row->flamsteed . ' ' . $row->constellation_code
+                : $letter . strtr((string) ($row->bayer_suffix ?? ''), ['1' => '¹', '2' => '²', '3' => '³']) . ' ' . $row->constellation_code;
+
+            // The names the objects of DeepskyLog are known by: Alpha Tau, 87 Tau
+            if ($bayer !== null && isset($greek[$bayer])) {
+                $names[ucfirst($greek[$bayer]) . ($row->bayer_suffix ? '-' . $row->bayer_suffix : '') . ' ' . $row->constellation_code] = $key;
+            }
+            if ($row->flamsteed !== null) {
+                $names[$row->flamsteed . ' ' . $row->constellation_code] = $key;
+            }
+
+            $stars[$key] = [
+                'key'         => Str::slug($key),
+                'name'        => self::STAR_NAMES[$bayer . ' ' . $row->constellation_code] ?? $designation,
+                'designation' => $designation,
+                'slug'        => null,
+                'ra'          => round((float) $row->ra_degrees, 5),
+                'decl'        => round((float) $row->decl_degrees, 5),
+                'mag'         => round((float) $row->vmag, 1),
+            ];
+        }
+
+        if ($names !== []) {
+            $slugs = DB::table('objectnames')
+                ->join('objects', 'objects.name', '=', 'objectnames.objectname')
+                ->whereIn('objectnames.altname', array_keys($names))
+                ->pluck('objects.slug', 'objectnames.altname');
+            foreach ($slugs as $altname => $slug) {
+                foreach ($names as $candidate => $key) {
+                    // The comparison of the database ignores case.
+                    if (strcasecmp($candidate, (string) $altname) === 0 && $stars[$key]['slug'] === null) {
+                        $stars[$key]['slug'] = $slug;
+                    }
+                }
+            }
+        }
+
+        return array_values($stars);
     }
 
     /**
@@ -264,7 +425,7 @@ class AstronomicalEvents
                 if ($magnitude > self::moonDeepskyLimit($illumination) || $elongation < self::MIN_ELONGATION) {
                     continue;
                 }
-                $reach = rad2deg(asin(SkyPositions::EARTH_RADIUS_KM / $moon['distance'])) + 358473400.0 / $moon['distance'] / 3600.0;
+                $reach = self::occultationReach($at);
 
                 $events[] = [
                     'key'  => 'moon_deepsky_conjunction:' . $object->slug . ':' . gmdate('Y-m-d', $at),

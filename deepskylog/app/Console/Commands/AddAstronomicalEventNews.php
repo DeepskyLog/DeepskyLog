@@ -9,8 +9,8 @@ use Illuminate\Console\Command;
 /**
  * Adds a news item (#960) for each astronomical event of the coming days
  * (App\Services\News\AstronomicalEvents: eclipses, close conjunctions,
- * oppositions, greatest elongations, meteor showers, shadows on Jupiter and
- * Saturn), published PUBLISH_DAYS_BEFORE days before the event (or those of
+ * lunar occultations, oppositions, greatest elongations, meteor showers,
+ * shadows on Jupiter and Saturn), published PUBLISH_DAYS_BEFORE days before the event (or those of
  * PUBLISH_DAYS_BEFORE_KIND) and expiring a day after it. An
  * item is found again by the event's key, so a later run only updates it and
  * keeps it hidden when an administrator hid it; a scheduled item whose event
@@ -30,7 +30,7 @@ class AddAstronomicalEventNews extends Command
         {--apply : Write the news items}
         {--days=45 : How many days ahead to look}';
 
-    protected $description = 'Add news items for the coming eclipses, conjunctions, oppositions, elongations and meteor showers';
+    protected $description = 'Add news items for the coming eclipses, conjunctions, lunar occultations, oppositions, elongations and meteor showers';
 
     public function handle(): int
     {
