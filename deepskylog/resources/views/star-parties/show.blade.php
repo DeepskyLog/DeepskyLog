@@ -42,6 +42,10 @@
                     <p class="text-sm text-gray-400">
                         {{ __("Organised by") }}
                         <a href="{{ route("observer.show", $party->organiser->slug) }}" class="text-blue-400 hover:underline">{{ html_entity_decode($party->organiser->name, ENT_QUOTES | ENT_HTML5, "UTF-8") }}</a>
+                        @if ($party->club)
+                            &middot; {{ __("Club") }}
+                            <a href="{{ route("clubs.show", $party->club) }}" class="text-blue-400 hover:underline">{{ html_entity_decode($party->club->name, ENT_QUOTES | ENT_HTML5, "UTF-8") }}</a>
+                        @endif
                     </p>
                 @endif
             </div>
@@ -427,6 +431,12 @@
                                     class="w-full"
                                 />
                             </div>
+                            @if ($party->club)
+                                <label class="flex items-center gap-2">
+                                    <input type="checkbox" name="club_members" value="1" />
+                                    {{ __("All members of the club :club", ["club" => $party->club->name]) }}
+                                </label>
+                            @endif
                             @if ($canManage)
                                 <div>
                                     <label for="emails" class="mb-1 block font-medium text-gray-400">{{ __("E-mail addresses (optional)") }}</label>

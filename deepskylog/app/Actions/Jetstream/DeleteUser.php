@@ -3,6 +3,7 @@
 namespace App\Actions\Jetstream;
 
 use App\Jobs\ComputeObserverStats;
+use App\Models\Club;
 use App\Models\Observation;
 use App\Models\ObservationLike;
 use App\Models\Team;
@@ -18,7 +19,7 @@ use Laravel\Jetstream\Contracts\DeletesUsers;
 /**
  * Deletes an account with everything the observer recorded: observations
  * (with their sketches, likes and comments), sessions, equipment, locations,
- * observing lists, comments, likes and settings. Used when observers delete
+ * observing lists, comments, likes, club memberships and settings. Used when observers delete
  * their own account on the profile page, by the administrators' "remove
  * user" page and by users:prune-inactive. Messages the observer sent stay in
  * the inbox of their receivers.
@@ -58,6 +59,12 @@ class DeleteUser implements DeletesUsers
             $user->deleteProfilePhoto();
             $user->connectedAccounts->each->delete();
             $user->tokens->each->delete();
+
+            // The clubs: another member takes over as administrator, a club
+            // left without members goes; the membership rows cascade
+            foreach (Club::ofMember($user)->get() as $club) {
+                $club->remove($user);
+            }
 
             $objectNames = $this->deleteObservations($user, $files);
             $this->deleteSessions($user, $files);

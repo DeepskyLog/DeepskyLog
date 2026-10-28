@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Mail\InactiveAccountWarning;
+use App\Models\ClubMember;
 use App\Models\StarPartyParticipant;
 use App\Models\Team;
 use App\Models\User;
@@ -63,6 +64,7 @@ class PruneInactiveUsers extends Command
         'saved_observation_searches' => 'user_id',
         'report_layouts' => 'user_id',
         'star_parties' => 'user_id',
+        'clubs' => 'user_id',
         'sessions' => 'user_id',
     ];
 
@@ -214,6 +216,10 @@ class PruneInactiveUsers extends Command
         $query->whereNotExists(fn ($q) => $q->from('star_party_participants')
             ->whereColumn('star_party_participants.user_id', 'users.id')
             ->where('star_party_participants.status', '<>', StarPartyParticipant::INVITED));
+        // Membership of a club, or asking to join one, not an invitation the observer did not answer.
+        $query->whereNotExists(fn ($q) => $q->from('club_members')
+            ->whereColumn('club_members.user_id', 'users.id')
+            ->where('club_members.status', '<>', ClubMember::INVITED));
 
         return $query;
     }

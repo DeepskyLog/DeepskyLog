@@ -7,12 +7,13 @@
         <h1 class="mb-4 text-xl font-semibold text-white">
             {{ $challenge->exists ? __("Edit the challenge") : __("New challenge") }}
         </h1>
+        @if ($club)
+            <p class="-mt-2 mb-4 text-sm text-gray-400">
+                {{ __("A challenge of the club :club: only its members can join it, and they get a message when it is saved.", ["club" => $club->name]) }}
+            </p>
+        @endif
 
-        <form
-            method="POST"
-            action="{{ $challenge->exists ? route("admin.challenges.update", $challenge) : route("admin.challenges.store") }}"
-            class="space-y-4 text-sm text-gray-200"
-        >
+        <form method="POST" action="{{ $action }}" class="space-y-4 text-sm text-gray-200">
             @csrf
             @if ($challenge->exists)
                 @method ("PUT")
@@ -43,7 +44,9 @@
                             </optgroup>
                         @endif
                     </select>
-                    <p class="mt-1 text-xs text-gray-400">{{ __("Only public observing lists you own or subscribed to can be chosen.") }}</p>
+                    <p class="mt-1 text-xs text-gray-400">
+                        {{ $club ? __("Only public observing lists you own or subscribed to, or shared with the club, can be chosen.") : __("Only public observing lists you own or subscribed to can be chosen.") }}
+                    </p>
                     @error ("source")
                         <p class="mt-1 text-red-400">{{ $message }}</p>
                     @enderror
@@ -92,7 +95,7 @@
                 <label class="flex items-center gap-2">
                     <input type="hidden" name="hidden" value="0" />
                     <input type="checkbox" name="hidden" value="1" @checked (old("hidden", $challenge->hidden)) />
-                    {{ __("Hidden (also its news item)") }}
+                    {{ $club ? __("Hidden") : __("Hidden (also its news item)") }}
                 </label>
             </div>
 
@@ -106,9 +109,19 @@
 
             <div class="flex gap-3">
                 <button type="submit" class="rounded bg-green-700 px-4 py-2 font-medium text-white hover:bg-green-600">{{ __("Save") }}</button>
-                <a href="{{ route("admin.challenges") }}" class="rounded px-4 py-2 text-gray-300 hover:bg-gray-700">{{ __("Cancel") }}</a>
+                <a href="{{ $cancelUrl }}" class="rounded px-4 py-2 text-gray-300 hover:bg-gray-700">{{ __("Cancel") }}</a>
             </div>
         </form>
+
+        @if ($club && $challenge->exists)
+            <form method="POST" action="{{ route("clubs.challenges.destroy", [$club, $challenge]) }}" class="mt-6">
+                @csrf
+                @method ("DELETE")
+                <button type="submit" class="rounded bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-600" onclick="return confirm({{ \Illuminate\Support\Js::from(__("Delete this challenge?")) }})">
+                    {{ __("Delete the challenge") }}
+                </button>
+            </form>
+        @endif
     </div>
 
     @push ("scripts")

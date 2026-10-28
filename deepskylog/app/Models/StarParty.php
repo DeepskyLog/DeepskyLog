@@ -21,6 +21,10 @@ use Illuminate\Support\Str;
  * one is only seen by the organiser, the invited observers, holders of an
  * e-mail invitation and the administrators. The site (name, coordinates,
  * time zone) is copied from one of the organiser's locations.
+ *
+ * A starparty of a club (club_id, one of the organiser's clubs) is listed on
+ * the page of the club; a private one is also seen, and can be answered, by
+ * the members of the club.
  */
 class StarParty extends Model
 {
@@ -51,7 +55,7 @@ class StarParty extends Model
     public const REMINDER_DAYS = 3;
 
     protected $fillable = [
-        'user_id', 'name', 'description', 'language', 'translations', 'visibility', 'start_date', 'end_date',
+        'user_id', 'club_id', 'name', 'description', 'language', 'translations', 'visibility', 'start_date', 'end_date',
         'registration_deadline', 'max_participants', 'location_id', 'location_name', 'latitude', 'longitude',
         'elevation', 'timezone', 'country', 'venue', 'website', 'activity_radius_km', 'activity_participants_only',
         'cancelled_at', 'reminder_sent_at',
@@ -101,6 +105,11 @@ class StarParty extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function club(): BelongsTo
+    {
+        return $this->belongsTo(Club::class);
+    }
+
     public function participants(): HasMany
     {
         return $this->hasMany(StarPartyParticipant::class);
@@ -124,7 +133,8 @@ class StarParty extends Model
 
     /**
      * The starparties the user may see: the public ones, and the private ones
-     * they organise or are invited to (all of them for administrators).
+     * they organise, are invited to or of a club they are a member of (all
+     * of them for administrators).
      */
     public function scopeVisibleTo(Builder $query, ?User $user): Builder
     {
@@ -136,7 +146,8 @@ class StarParty extends Model
             $q->where('visibility', self::PUBLIC);
             if ($user) {
                 $q->orWhere('user_id', $user->id)
-                    ->orWhereIn('id', StarPartyParticipant::select('star_party_id')->where('user_id', $user->id));
+                    ->orWhereIn('id', StarPartyParticipant::select('star_party_id')->where('user_id', $user->id))
+                    ->orWhereIn('club_id', Club::ofMember($user)->select('id'));
             }
         });
     }
@@ -207,11 +218,17 @@ class StarParty extends Model
         if ($this->isPublic() || $this->canBeManagedBy($user)) {
             return true;
         }
-        if ($user && $this->participants()->where('user_id', $user->id)->exists()) {
+        if ($user && ($this->participants()->where('user_id', $user->id)->exists() || $this->isForClubMember($user))) {
             return true;
         }
 
         return $invitationToken !== null && $this->invitations()->where('token', $invitationToken)->exists();
+    }
+
+    /** Whether the user is a member of the club of the starparty. */
+    public function isForClubMember(?User $user): bool
+    {
+        return $this->club_id !== null && (bool) $this->club?->isMember($user);
     }
 
     /** The organiser and the administrators edit, cancel and delete a starparty. */
@@ -274,7 +291,7 @@ class StarParty extends Model
             return false;
         }
         $current = $this->statusOf($user);
-        if (! $this->isPublic() && $current === null && (int) $user->id !== (int) $this->user_id) {
+        if (! $this->isPublic() && $current === null && (int) $user->id !== (int) $this->user_id && ! $this->isForClubMember($user)) {
             return false;
         }
         if ($status === StarPartyParticipant::DECLINED) {

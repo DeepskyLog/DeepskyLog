@@ -239,6 +239,34 @@ Route::middleware('doNotCacheResponse')->group(function () {
     Route::get('/star-parties/{starParty}', [App\Http\Controllers\StarPartyController::class, 'show'])->name('star-parties.show');
 });
 
+// Clubs and groups of observers: an observer can be a member of several
+Route::middleware('doNotCacheResponse')->group(function () {
+    Route::get('/clubs', [App\Http\Controllers\ClubController::class, 'index'])->name('clubs.index');
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('/clubs/create', [App\Http\Controllers\ClubController::class, 'create'])->name('clubs.create');
+        Route::post('/clubs', [App\Http\Controllers\ClubController::class, 'store'])->name('clubs.store');
+        Route::get('/clubs/{club}/edit', [App\Http\Controllers\ClubController::class, 'edit'])->name('clubs.edit');
+        Route::put('/clubs/{club}', [App\Http\Controllers\ClubController::class, 'update'])->name('clubs.update');
+        Route::delete('/clubs/{club}', [App\Http\Controllers\ClubController::class, 'destroy'])->name('clubs.destroy');
+        Route::post('/clubs/{club}/join', [App\Http\Controllers\ClubController::class, 'join'])->name('clubs.join');
+        Route::delete('/clubs/{club}/join', [App\Http\Controllers\ClubController::class, 'leave'])->name('clubs.leave');
+        Route::post('/clubs/{club}/invite', [App\Http\Controllers\ClubController::class, 'invite'])
+            ->name('clubs.invite')->middleware('throttle:messages');
+        Route::post('/clubs/{club}/members/{member}/approve', [App\Http\Controllers\ClubController::class, 'approve'])->name('clubs.members.approve');
+        Route::put('/clubs/{club}/members/{member}/role', [App\Http\Controllers\ClubController::class, 'role'])->name('clubs.members.role');
+        Route::delete('/clubs/{club}/members/{member}', [App\Http\Controllers\ClubController::class, 'removeMember'])->name('clubs.members.destroy');
+        Route::post('/clubs/{club}/lists', [App\Http\Controllers\ClubController::class, 'shareList'])->name('clubs.lists.store');
+        Route::delete('/clubs/{club}/lists', [App\Http\Controllers\ClubController::class, 'unshareList'])->name('clubs.lists.destroy');
+        // The challenges of a club, set by its administrators
+        Route::get('/clubs/{club}/challenges/create', [App\Http\Controllers\ObservingChallengeController::class, 'clubCreate'])->name('clubs.challenges.create');
+        Route::post('/clubs/{club}/challenges', [App\Http\Controllers\ObservingChallengeController::class, 'clubStore'])->name('clubs.challenges.store');
+        Route::get('/clubs/{club}/challenges/{challenge}/edit', [App\Http\Controllers\ObservingChallengeController::class, 'clubEdit'])->name('clubs.challenges.edit');
+        Route::put('/clubs/{club}/challenges/{challenge}', [App\Http\Controllers\ObservingChallengeController::class, 'clubUpdate'])->name('clubs.challenges.update');
+        Route::delete('/clubs/{club}/challenges/{challenge}', [App\Http\Controllers\ObservingChallengeController::class, 'clubDestroy'])->name('clubs.challenges.destroy');
+    });
+    Route::get('/clubs/{club}', [App\Http\Controllers\ClubController::class, 'show'])->name('clubs.show');
+});
+
 // RSS feeds
 Route::get('/feed/star-parties', [App\Http\Controllers\RssFeedController::class, 'starParties'])->name('feed.star-parties');
 Route::get('/feed/observations', [App\Http\Controllers\RssFeedController::class, 'observations'])->name('feed.observations');

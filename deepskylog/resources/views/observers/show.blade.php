@@ -30,6 +30,14 @@
                             @endif
                         @endauth
                     </div>
+                    @if ($clubs->isNotEmpty())
+                        <div class="mb-2 text-sm">
+                            <span class="text-gray-400">{{ __('Clubs') }}:</span>
+                            @foreach ($clubs as $club)
+                                <a class="hover:underline" href="{{ route('clubs.show', $club) }}">{{ html_entity_decode($club->name, ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</a>@if (!$loop->last), @endif
+                            @endforeach
+                        </div>
+                    @endif
                     @if ($followerList !== null)
                         {{-- Only on one's own page: who follows you, and whom you follow --}}
                         @foreach ([[__('Your followers'), $followerList], [__('Observers you follow'), $followingList]] as [$followLabel, $followUsers])

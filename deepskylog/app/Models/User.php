@@ -1152,6 +1152,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(User::class, 'user_follows', 'followed_id', 'follower_id')->withTimestamps();
     }
 
+    /**
+     * The clubs the observer is a member of (an observer can be in several).
+     */
+    public function clubs(): BelongsToMany
+    {
+        return $this->belongsToMany(Club::class, 'club_members')
+            ->wherePivot('status', ClubMember::MEMBER)
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
     public function isFollowing(User $observer): bool
     {
         return UserFollow::where('follower_id', $this->id)->where('followed_id', $observer->id)->exists();

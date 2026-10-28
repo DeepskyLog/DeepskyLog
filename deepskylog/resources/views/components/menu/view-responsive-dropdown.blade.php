@@ -64,6 +64,11 @@
                 href="{{ route('star-parties.index') }}"
                 label="{{ __('Starparties') }}"
             />
+            <x-dropdown.item
+                icon="user-group"
+                href="{{ route('clubs.index') }}"
+                label="{{ __('Clubs') }}"
+            />
 
             <x-dropdown.item
                 separator

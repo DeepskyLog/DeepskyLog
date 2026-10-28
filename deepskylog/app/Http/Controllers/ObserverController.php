@@ -407,6 +407,7 @@ class ObserverController extends Controller
         $ownPage = $viewer && (int) $viewer->id === (int) $user->id;
         $follow = [
             'followersCount' => $user->followers()->count(),
+            'clubs' => $user->clubs()->orderBy('name')->get(['clubs.id', 'clubs.name', 'clubs.slug']),
             'isFollowing' => $viewer && !$ownPage && $viewer->isFollowing($user),
             'canFollow' => $viewer && $viewer->canFollow($user),
             'followerList' => $ownPage ? $user->followers()->orderBy('name')->get(['users.id', 'name', 'slug']) : null,
