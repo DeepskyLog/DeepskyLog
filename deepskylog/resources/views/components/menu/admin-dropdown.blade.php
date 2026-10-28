@@ -28,6 +28,8 @@
                         <x-menu.item icon="star" href="{{ route('admin.objects-of-the-month') }}">{{ __('Objects of the month') }}</x-menu.item>
 
                         <x-menu.item icon="trophy" href="{{ route('admin.challenges') }}">{{ __('Manage the challenges') }}</x-menu.item>
+
+                        <x-menu.item icon="globe-alt" href="{{ route('admin.great-red-spot') }}">{{ __('Great Red Spot') }}</x-menu.item>
                     @endif
 
                     @if (Auth::user()->isAdministrator())

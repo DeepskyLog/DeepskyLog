@@ -9,8 +9,9 @@ use Illuminate\Console\Command;
 /**
  * Adds a news item (#960) for each astronomical event of the coming days
  * (App\Services\News\AstronomicalEvents: eclipses, close conjunctions,
- * oppositions, greatest elongations, meteor showers), published
- * PUBLISH_DAYS_BEFORE days before the event and expiring a day after it. An
+ * oppositions, greatest elongations, meteor showers, shadows on Jupiter and
+ * Saturn), published PUBLISH_DAYS_BEFORE days before the event (or those of
+ * PUBLISH_DAYS_BEFORE_KIND) and expiring a day after it. An
  * item is found again by the event's key, so a later run only updates it and
  * keeps it hidden when an administrator hid it; a scheduled item whose event
  * is no longer found is removed.
@@ -18,6 +19,12 @@ use Illuminate\Console\Command;
 class AddAstronomicalEventNews extends Command
 {
     public const PUBLISH_DAYS_BEFORE = 7;
+
+    /**
+     * Kinds published closer to the event: in the months Io and Europa are in
+     * step there are two shadows on Jupiter every three and a half days.
+     */
+    public const PUBLISH_DAYS_BEFORE_KIND = ['double_shadow_transit' => 2];
 
     protected $signature = 'news:astronomical-events
         {--apply : Write the news items}
@@ -47,7 +54,7 @@ class AddAstronomicalEventNews extends Command
                 'kind'         => $event['kind'],
                 'event_at'     => $at,
                 'data'         => $event['data'],
-                'published_at' => $at->copy()->subDays(self::PUBLISH_DAYS_BEFORE),
+                'published_at' => $at->copy()->subDays(self::PUBLISH_DAYS_BEFORE_KIND[$event['kind']] ?? self::PUBLISH_DAYS_BEFORE),
                 'expires_at'   => $at->copy()->addDay(),
             ];
             $rows[] = [$at->format('Y-m-d H:i'), $event['key']];

@@ -70,6 +70,12 @@
                             href="{{ route('admin.challenges') }}"
                             label="{{ __('Manage the challenges') }}"
                         />
+
+                        <x-dropdown.item
+                            icon="globe-alt"
+                            href="{{ route('admin.great-red-spot') }}"
+                            label="{{ __('Great Red Spot') }}"
+                        />
                     @endif
 
                     @if (Auth::user()->isAdministrator())

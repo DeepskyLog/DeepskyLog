@@ -5,6 +5,7 @@ namespace App\Services\News;
 use App\Models\Location;
 use App\Models\NewsItem;
 use App\Models\ObservingChallenge;
+use App\Services\Planets\PlanetMoonEvents;
 use Carbon\Carbon;
 
 /**
@@ -47,12 +48,16 @@ class EventTexts
             'greatest_elongation' => ($data['side'] ?? 'east') === 'east'
                 ? __(':planet at greatest eastern elongation on :date', ['planet' => self::body($data['bodies'][0] ?? ''), 'date' => $date])
                 : __(':planet at greatest western elongation on :date', ['planet' => self::body($data['bodies'][0] ?? ''), 'date' => $date]),
-            'meteor_shower' => __('Maximum of the :shower on :date', ['shower' => self::shower($data['shower'] ?? ''), 'date' => $date]),
-            'comet'         => __('Comet :comet at its brightest on :date', ['comet' => $data['name'] ?? '', 'date' => $date]),
-            'supernova'     => __('Supernova :name at magnitude :magnitude', ['name' => $data['name'] ?? '', 'magnitude' => self::number($data['magnitude'] ?? 0, 1)]),
-            'nova'          => __('Nova :name at magnitude :magnitude', ['name' => $data['name'] ?? '', 'magnitude' => self::number($data['magnitude'] ?? 0, 1)]),
-            'challenge'     => __('Observing challenge: :name', ['name' => $data['name'] ?? '']),
-            default         => (string) $item->title,
+            'meteor_shower'         => __('Maximum of the :shower on :date', ['shower' => self::shower($data['shower'] ?? ''), 'date' => $date]),
+            'comet'                 => __('Comet :comet at its brightest on :date', ['comet' => $data['name'] ?? '', 'date' => $date]),
+            'supernova'             => __('Supernova :name at magnitude :magnitude', ['name' => $data['name'] ?? '', 'magnitude' => self::number($data['magnitude'] ?? 0, 1)]),
+            'nova'                  => __('Nova :name at magnitude :magnitude', ['name' => $data['name'] ?? '', 'magnitude' => self::number($data['magnitude'] ?? 0, 1)]),
+            'challenge'             => __('Observing challenge: :name', ['name' => $data['name'] ?? '']),
+            'double_shadow_transit' => count($data['moons'] ?? []) > 2
+                ? __('Three shadows on Jupiter on :date', ['date' => $date])
+                : __('Two shadows on Jupiter on :date', ['date' => $date]),
+            'titan_shadow_transit' => __('The shadow of Titan on Saturn on :date', ['date' => $date]),
+            default                => (string) $item->title,
         };
     }
 
@@ -95,7 +100,16 @@ class EventTexts
                 'band'      => $data['band'] ?? '',
                 'date'      => self::date($item->event_at, $location),
             ]),
-            'challenge' => self::challenge($item),
+            'challenge'             => self::challenge($item),
+            'double_shadow_transit' => __('The shadows of :moons are on Jupiter together from :start to :end UT.', [
+                'moons' => self::moons($data['moons'] ?? []),
+                'start' => gmdate('H:i', (int) ($data['start'] ?? 0)),
+                'end'   => gmdate('H:i', (int) ($data['end'] ?? 0)),
+            ]),
+            'titan_shadow_transit' => __('The shadow of Titan crosses Saturn from :start to :end UT.', [
+                'start' => gmdate('H:i', (int) ($data['start'] ?? 0)),
+                'end'   => gmdate('H:i', (int) ($data['end'] ?? 0)),
+            ]),
             default => '',
         };
     }
@@ -129,6 +143,19 @@ class EventTexts
             'neptune' => __('Neptune'),
             default   => ucfirst($body),
         };
+    }
+
+    /**
+     * The names of moons of PlanetMoons joined with "and".
+     *
+     * @param  list<string>  $moons
+     */
+    public static function moons(array $moons): string
+    {
+        $names = array_map(fn (string $moon) => PlanetMoonEvents::moonName($moon), $moons);
+        $last  = array_pop($names);
+
+        return $names === [] ? (string) $last : __(':first and :last', ['first' => implode(', ', $names), 'last' => $last]);
     }
 
     public static function shower(string $shower): string

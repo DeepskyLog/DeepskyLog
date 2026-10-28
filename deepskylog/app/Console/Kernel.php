@@ -68,6 +68,10 @@ class Kernel extends ConsoleKernel
         // objects proposed for the administrators to confirm.
         $schedule->command('astroforum:objects-of-the-month --apply')->dailyAt('06:40')->withoutOverlapping();
 
+        // The administrators and database experts are asked to check the
+        // longitude of Jupiter's Great Red Spot, which drifts irregularly.
+        $schedule->command('planets:grs-reminder --apply')->monthlyOn(1, '09:00');
+
         // The descriptions of new observations translated into the languages
         // of the site for the guests (#310), and the older ones gradually,
         // newest first, a few at a time to stay under Google's rate limit.

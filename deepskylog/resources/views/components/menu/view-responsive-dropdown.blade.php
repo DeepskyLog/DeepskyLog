@@ -44,6 +44,12 @@
             />
 
             <x-dropdown.item
+                icon="globe-alt"
+                href="{{ route('planet-moons.show') }}"
+                label="{{ __('Jupiter and Saturn tonight') }}"
+            />
+
+            <x-dropdown.item
                 icon="bars-3-center-left"
                 href="/observations"
                 label="{{ __('All observations') }}"

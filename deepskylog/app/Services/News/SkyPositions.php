@@ -129,6 +129,30 @@ class SkyPositions
     }
 
     /**
+     * The geometric heliocentric rectangular positions (AU, ecliptic of the
+     * date) of the Earth at the moment and of a planet at the moment less the
+     * light time, and that light time (days): what the theories of the
+     * planets' moons start from (Meeus chapters 44 and 46).
+     *
+     * @return array{earth: array{0: float, 1: float, 2: float}, planet: array{0: float, 1: float, 2: float}, tau: float}
+     */
+    public static function planetVectors(string $planet, int $timestamp): array
+    {
+        $date  = self::tt($timestamp);
+        $earth = self::rectangular(self::target(Earth::class)->calculateHeliocentricCoordinates($date));
+        $body  = self::target(self::PLANETS[$planet]);
+
+        $tau = 0.0;
+        for ($i = 0; $i < 3; $i++) {
+            $p     = self::rectangular($body->calculateHeliocentricCoordinates($date->copy()->subMicroseconds((int) round($tau * 86400e6))));
+            $delta = sqrt(($p[0] - $earth[0]) ** 2 + ($p[1] - $earth[1]) ** 2 + ($p[2] - $earth[2]) ** 2);
+            $tau   = 0.0057755183 * $delta;
+        }
+
+        return ['earth' => $earth, 'planet' => $p, 'tau' => $tau];
+    }
+
+    /**
      * The apparent visual magnitude of a planet, from the formulas of the
      * library (Meeus chapter 41) with the distances it would compute itself.
      */

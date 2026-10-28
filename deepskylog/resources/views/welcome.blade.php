@@ -115,6 +115,14 @@
                     />
                 @endif
 
+                @if (!empty($planetMoonsTonight))
+                    <x-planet-moons-tonight
+                        :night="$planetMoonsTonight['night']"
+                        :events="$planetMoonsTonight['events']"
+                        class="order-3 lg:order-none"
+                    />
+                @endif
+
                 @if ($observations->isNotEmpty())
                     <x-home-section
                         :title="__('Newest observations')"

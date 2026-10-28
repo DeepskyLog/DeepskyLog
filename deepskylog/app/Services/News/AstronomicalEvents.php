@@ -2,6 +2,7 @@
 
 namespace App\Services\News;
 
+use App\Services\Planets\PlanetMoonEvents;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -9,8 +10,10 @@ use Illuminate\Support\Facades\DB;
  * close conjunctions of two planets, of the Moon and a planet and of a
  * planet and a Messier object, of the Moon and a bright Messier object,
  * oppositions of the outer planets, greatest elongations of Mercury and
- * Venus, the peaks of the major meteor showers and bright comets
- * (BrightComets).
+ * Venus, the peaks of the major meteor showers, bright comets
+ * (BrightComets) and the shadows of the moons of Jupiter and Saturn
+ * (PlanetMoonEvents::newsEvents(): two shadows on Jupiter, Titan's shadow on
+ * Saturn).
  *
  * The positions are sampled every hour (SkyPositions); a conjunction is a
  * local minimum of the distance below the threshold of its kind, refined with
@@ -88,6 +91,7 @@ class AstronomicalEvents
             $events[] = $eclipse + ['key' => $eclipse['kind'] . ':' . gmdate('Y-m-d', $eclipse['at'])];
         }
         array_push($events, ...BrightComets::between($from, $to));
+        array_push($events, ...PlanetMoonEvents::newsEvents($from, $to));
         array_push(
             $events,
             ...$this->planetConjunctions(),

@@ -129,6 +129,9 @@ Route::get('/moon', [App\Http\Controllers\MoonController::class, 'show'])
     ->name('moon.show')->middleware('doNotCacheResponse');
 Route::post('/moon/observing-list', [App\Http\Controllers\MoonController::class, 'storeList'])
     ->middleware(['auth', 'doNotCacheResponse'])->name('moon.observing-list');
+// The moons of Jupiter and Saturn in a night: transits, shadows, eclipses, the Great Red Spot, Titan's elongations
+Route::get('/jupiter-saturn', [App\Http\Controllers\PlanetMoonsController::class, 'show'])
+    ->name('planet-moons.show')->middleware('doNotCacheResponse');
 
 // The objects of the month of Astroforum (astroforum:objects-of-the-month)
 Route::get('/admin/objects-of-the-month', [App\Http\Controllers\ObjectOfTheMonthController::class, 'admin'])
@@ -143,6 +146,12 @@ Route::get('/objects-of-the-month/{objectOfTheMonth}', [App\Http\Controllers\Obj
     ->name('objects-of-the-month.show')->middleware('doNotCacheResponse');
 Route::post('/objects-of-the-month/{objectOfTheMonth}/observing-list', [App\Http\Controllers\ObjectOfTheMonthController::class, 'storeList'])
     ->middleware(['auth', 'doNotCacheResponse'])->name('objects-of-the-month.observing-list');
+// The System II longitude of Jupiter's Great Red Spot, kept up to date by administrators and database experts
+Route::middleware(['auth', 'doNotCacheResponse'])->can('manage_news', User::class)->group(function () {
+    Route::get('/admin/great-red-spot', [App\Http\Controllers\GreatRedSpotController::class, 'index'])->name('admin.great-red-spot');
+    Route::post('/admin/great-red-spot', [App\Http\Controllers\GreatRedSpotController::class, 'store'])->name('admin.great-red-spot.store');
+    Route::delete('/admin/great-red-spot/{position}', [App\Http\Controllers\GreatRedSpotController::class, 'destroy'])->name('admin.great-red-spot.destroy');
+});
 // The observing challenges: set by administrators and database experts, joined by observers
 Route::middleware(['auth', 'doNotCacheResponse'])->can('manage_challenges', User::class)->group(function () {
     Route::get('/admin/challenges', [App\Http\Controllers\ObservingChallengeController::class, 'admin'])->name('admin.challenges');

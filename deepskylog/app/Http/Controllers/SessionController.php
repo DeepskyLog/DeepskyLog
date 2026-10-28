@@ -15,6 +15,7 @@ use App\Models\SketchOfTheWeek;
 use App\Models\StarParty;
 use App\Models\User;
 use App\Services\Moon\LunarTerminator;
+use App\Services\Planets\PlanetMoonEvents;
 use App\Services\Observations\ObservationCardData;
 use App\Services\SessionObservationReminders;
 use App\Services\TonightsBest;
@@ -997,6 +998,14 @@ class SessionController extends Controller
             $moonTonight = null;
         }
 
+        // The events of the moons of Jupiter and Saturn still to come tonight
+        try {
+            $planetMoonsTonight = PlanetMoonEvents::forHomePage(Auth::user());
+        } catch (\Throwable $e) {
+            report($e);
+            $planetMoonsTonight = null;
+        }
+
         // The current news (#960), with the local circumstances of the events for the observer's location
         try {
             $news = NewsItem::current()->with('author:id,name')->orderByDesc('published_at')->orderByDesc('id')->limit(self::HOMEPAGE_NEWS)->get();
@@ -1065,6 +1074,7 @@ class SessionController extends Controller
             'nightForecast',
             'forecastLocation',
             'moonTonight',
+            'planetMoonsTonight',
             'news',
             'newsLocation',
             'starParties',
