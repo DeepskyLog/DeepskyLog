@@ -1045,6 +1045,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/observing-list/{list}/eyepiece/observations', [App\Http\Controllers\AtTheEyepieceController::class, 'store'])
         ->name('observing-list.eyepiece.store')->middleware('throttle:60,1');
 
+    // Finding notes of an object, from the page at the eyepiece (the object
+    // page uses the Livewire ObjectFindingNotes)
+    Route::post('/finding-notes', [App\Http\Controllers\ObjectFindingNoteController::class, 'store'])
+        ->name('finding-notes.store')->middleware('throttle:20,1');
+    Route::post('/finding-notes/{note}/like', [App\Http\Controllers\ObjectFindingNoteController::class, 'toggleLike'])
+        ->whereNumber('note')->name('finding-notes.like')->middleware('throttle:60,1');
+
     // Empty all items from a list (but keep the list itself)
     Route::post('/observing-list/{list}/empty', [App\Http\Controllers\ObservingListController::class, 'emptyList'])
         ->name('observing-list.empty');

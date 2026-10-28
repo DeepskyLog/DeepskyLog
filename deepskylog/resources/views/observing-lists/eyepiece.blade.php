@@ -72,6 +72,12 @@
         dialog select, dialog textarea { width: 100%; padding: .5rem; border: 1px solid #374151; border-radius: .5rem; background: #000; color: #f3f4f6; font: inherit; }
         .queue li { margin: .35rem 0; }
         .queue .problem { color: #fca5a5; }
+        ul.tips { margin: .4rem 0; padding-left: 1.2rem; }
+        ul.tips li { margin: .3rem 0; color: #e5e7eb; }
+        .like { padding: .1rem .45rem; border: 1px solid #374151; border-radius: .4rem; background: transparent; color: #9ca3af; font: inherit; font-size: .85rem; cursor: pointer; }
+        .like[aria-pressed="true"] { border-color: #b91c1c; color: #fca5a5; }
+        .tip-form { display: flex; gap: .5rem; margin-top: .5rem; }
+        .tip-form input { flex: 1; min-width: 0; padding: .5rem; border: 1px solid #374151; border-radius: .5rem; background: #000; color: #f3f4f6; font: inherit; }
         .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
     </style>
 </head>
@@ -174,6 +180,46 @@
                 <span></span>
             @endif
         </nav>
+
+        {{-- Finding notes of observers, the most liked (deep-sky objects) --}}
+        @if ($current['object'])
+            <section class="card" aria-labelledby="finding-notes-title">
+                <div class="label" id="finding-notes-title">{{ __('Finding notes') }}</div>
+                @if ($findingNotes['notes']->isEmpty())
+                    <p class="muted">{{ __('No finding notes yet.') }}</p>
+                @else
+                    <ul class="tips">
+                        @foreach ($findingNotes['notes'] as $note)
+                            <li>
+                                <span>{{ $note->text }}</span>
+                                <span class="muted">— {{ html_entity_decode((string) ($note->user?->name ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}</span>
+                                @if ($note->canBeLikedBy($user))
+                                    <button type="button" class="like" data-like="{{ route('finding-notes.like', $note) }}" aria-pressed="{{ $note->liked ? 'true' : 'false' }}" title="{{ __('Like') }}">♥ <span>{{ $note->likes_count }}</span></button>
+                                @elseif ($note->likes_count > 0)
+                                    <span class="muted" title="{{ __('Likes') }}">♥ {{ $note->likes_count }}</span>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                    @if ($findingNotes['total'] > $findingNotes['notes']->count())
+                        <a class="muted" href="{{ route('object.show', ['slug' => $current['slug']]) }}#finding-notes">{{ __('All :count finding notes', ['count' => $findingNotes['total']]) }}</a>
+                    @endif
+                @endif
+                <details @if ($errors->has('text')) open @endif>
+                    <summary class="muted">{{ __('Add finding note') }}</summary>
+                    <form method="POST" action="{{ route('finding-notes.store') }}" class="tip-form">
+                        @csrf
+                        <input type="hidden" name="object_name" value="{{ $current['object']->name }}" />
+                        <input type="text" name="text" maxlength="{{ \App\Models\ObjectFindingNote::MAX_LENGTH }}" required
+                            value="{{ old('text') }}" aria-label="{{ __('Finding note') }}" placeholder="{{ __('E.g. hop from ζ Ori, use the UHC filter') }}" />
+                        <button type="submit" class="button">{{ __('Save') }}</button>
+                    </form>
+                    @error('text')
+                        <p class="error">{{ $message }}</p>
+                    @enderror
+                </details>
+            </section>
+        @endif
 
         {{-- Charts --}}
         <section>
@@ -415,6 +461,24 @@
             }
             tick();
             setInterval(function () { tick(); follow(); }, 15000);
+
+            // Liking a finding note (needs a connection)
+            document.querySelectorAll('[data-like]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    button.disabled = true;
+                    fetch(button.getAttribute('data-like'), {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
+                    }).then(function (response) {
+                        if (! response.ok) throw new Error(response.status);
+                        return response.json();
+                    }).then(function (result) {
+                        button.setAttribute('aria-pressed', result.liked ? 'true' : 'false');
+                        button.querySelector('span').textContent = result.count;
+                    }).catch(function () {}).then(function () { button.disabled = false; });
+                });
+            });
 
             // Charts
             document.querySelectorAll('[data-view]').forEach(function (tab) {

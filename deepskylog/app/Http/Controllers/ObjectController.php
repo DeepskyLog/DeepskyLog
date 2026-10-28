@@ -3180,6 +3180,7 @@ class ObjectController extends Controller
             DB::table('observing_list_items')
                 ->where('object_name', $originalName)
                 ->update(['object_name' => $validated['name']]);
+            \App\Models\ObjectFindingNote::moveObject($originalName, $validated['name']);
 
             // Update objectnames table
             DB::table('objectnames')
@@ -4368,6 +4369,7 @@ class ObjectController extends Controller
             DB::table('observing_list_items')
                 ->where('object_name', $objectName)
                 ->update(['object_name' => $targetName]);
+            \App\Models\ObjectFindingNote::moveObject($objectName, $targetName);
         } else {
             // Observations can't be left pointing to a deleted object
             if (\App\Models\Observation::ofDeepskyObject($objectName)->exists()) {
@@ -4385,6 +4387,8 @@ class ObjectController extends Controller
         ObjectSearchIndex::removeObject($objectName, $object->slug);
         DB::table('objectnames')->where('objectname', $objectName)->delete();
         DB::table('objectpartof')->where('objectname', $objectName)->orWhere('partofname', $objectName)->delete();
+        // Finding notes not moved to another object
+        DB::table('object_finding_notes')->where('object_name', $objectName)->delete();
 
         // Delete the object itself
         $object->delete();

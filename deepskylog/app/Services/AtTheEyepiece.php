@@ -9,6 +9,7 @@ use App\Models\Filter;
 use App\Models\Instrument;
 use App\Models\Lens;
 use App\Models\Location;
+use App\Models\ObjectFindingNote;
 use App\Models\Observation;
 use App\Models\ObservationSession;
 use App\Models\ObservingList;
@@ -56,6 +57,9 @@ class AtTheEyepiece
 
     /** How long ago a planned night may be for its list to count as planned on the list of lists. */
     public const PLANNED_DAYS_BACK = 1;
+
+    /** The finding notes shown of the current object, the most liked. */
+    public const FINDING_NOTES = 3;
 
     /**
      * The lists the observer can take to the telescope (/observing-lists/eyepiece,
@@ -254,6 +258,23 @@ class AtTheEyepiece
             'note' => $item->item_description,
             'done' => isset($done[mb_strtolower($name)]),
         ];
+    }
+
+    /**
+     * The most liked finding notes of a deep-sky object (FINDING_NOTES), with
+     * the number of all of them; none for another kind of object.
+     *
+     * @return array{notes: Collection<int, ObjectFindingNote>, total: int}
+     */
+    public static function findingNotes(?DeepskyObject $object, User $user): array
+    {
+        if ($object === null) {
+            return ['notes' => collect(), 'total' => 0];
+        }
+
+        $query = ObjectFindingNote::forObject((string) $object->name, $user);
+
+        return ['notes' => (clone $query)->limit(self::FINDING_NOTES)->get(), 'total' => $query->count()];
     }
 
     /**

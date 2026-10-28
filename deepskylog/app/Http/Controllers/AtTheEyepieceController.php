@@ -62,6 +62,7 @@ class AtTheEyepieceController extends Controller
             'details' => AtTheEyepiece::details($current['object']),
             'nextDetails' => AtTheEyepiece::details($page['next']['object'] ?? null),
             'goto' => AtTheEyepiece::gotoLink($current, $page['location'], $current['at'] ?? $page['now']),
+            'findingNotes' => AtTheEyepiece::findingNotes($current['object'], $user),
         ]);
     }
 

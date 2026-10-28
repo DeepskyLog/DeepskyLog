@@ -58,6 +58,8 @@ class PruneInactiveUsers extends Command
         'observing_goals' => 'user_id',
         'observation_comments' => 'user_id',
         'observation_likes' => 'user_id',
+        'object_finding_notes' => 'user_id',
+        'object_finding_note_likes' => 'user_id',
         'sketch_of_the_week' => 'user_id',
         'sketch_of_the_month' => 'user_id',
         'saved_object_searches' => 'user_id',

@@ -4,6 +4,7 @@ namespace App\Actions\Jetstream;
 
 use App\Jobs\ComputeObserverStats;
 use App\Models\Club;
+use App\Models\ObjectFindingNote;
 use App\Models\Observation;
 use App\Models\ObservationLike;
 use App\Models\Team;
@@ -91,10 +92,11 @@ class DeleteUser implements DeletesUsers
             }
             // Personal rows without a foreign key, or one that would only set
             // the user to null; the cascading ones (comments, likes, saved
-            // searches, report layouts, streaks, blocks, follows in both
-            // directions, the starparties they organise with their
-            // participants and invitations, their answers to those of
+            // searches, report layouts, streaks, blocks, finding notes,
+            // follows in both directions, the starparties they organise with
+            // their participants and invitations, their answers to those of
             // others) go with the user row
+            ObjectFindingNote::removeLikesOf($user);
             foreach (['user_object_metrics', 'user_table_settings', 'sessions', 'observation_comments', 'observation_likes'] as $table) {
                 DB::table($table)->where('user_id', $user->id)->delete();
             }
