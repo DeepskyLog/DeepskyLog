@@ -75,6 +75,9 @@ class LegacyObjectContoursSeeder extends Seeder
         $decl1Column = $this->firstExistingColumn($columns, ['decl1_degrees', 'decl1_deg', 'dec1_deg', 'decl1', 'dec1']);
 
         $serializedColumn = $this->firstExistingColumn($columns, ['coordinates', 'coords', 'points', 'polyline', 'path']);
+        // The old objectOutlines marks each outline with a start and an end
+        // row: an object can have several (IC 5068 has three).
+        $typeColumn = $this->firstExistingColumn($columns, ['type']);
 
         $supportedPointSchemas =
             ($raColumn !== null && $declColumn !== null)
@@ -95,6 +98,13 @@ class LegacyObjectContoursSeeder extends Seeder
 
         $raMode = $this->detectRaMode($legacy, $sourceTable, array_values(array_filter([$raColumn, $ra0Column, $ra1Column])));
 
+        // Running it again replaces the contours of the objects it imports.
+        $legacyObjects = $legacy->table($sourceTable)->distinct()->pluck($objectColumn)
+            ->map(fn ($name) => trim((string) $name))->filter()->values();
+        foreach ($legacyObjects->chunk(500) as $names) {
+            DB::table('object_contours')->whereIn('object_name', $names->all())->delete();
+        }
+
         $beforeCount = DB::table('object_contours')->count();
 
         $nextPointIndex = [];
@@ -109,7 +119,7 @@ class LegacyObjectContoursSeeder extends Seeder
             ));
         }
 
-        $legacy->table($sourceTable)->orderBy($objectColumn)->chunk(5000, function ($rows) use ($objectColumn, $contourColumn, $pointColumn, $raColumn, $declColumn, $ra0Column, $decl0Column, $ra1Column, $decl1Column, $serializedColumn, $raMode, &$nextPointIndex, &$nextContourIndex, &$insertedRows): void {
+        $legacy->table($sourceTable)->orderBy($objectColumn)->chunk(5000, function ($rows) use ($objectColumn, $typeColumn, $contourColumn, $pointColumn, $raColumn, $declColumn, $ra0Column, $decl0Column, $ra1Column, $decl1Column, $serializedColumn, $raMode, &$nextPointIndex, &$nextContourIndex, &$insertedRows): void {
             $batch = [];
 
             foreach ($rows as $row) {
@@ -119,6 +129,12 @@ class LegacyObjectContoursSeeder extends Seeder
                 }
 
                 $contourIndex = $this->coerceInt($row->{$contourColumn} ?? null);
+                if ($contourIndex === null && $typeColumn !== null
+                    && strtolower(trim((string) ($row->{$typeColumn} ?? ''))) === 'start'
+                    && isset($nextPointIndex[$objectName . '|' . ($nextContourIndex[$objectName] ?? 0)])
+                ) {
+                    $nextContourIndex[$objectName] = ($nextContourIndex[$objectName] ?? 0) + 1;
+                }
                 if ($contourIndex === null) {
                     $contourIndex = $nextContourIndex[$objectName] ?? 0;
                 }

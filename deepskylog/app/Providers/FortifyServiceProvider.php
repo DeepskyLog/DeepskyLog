@@ -6,6 +6,10 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Http\Middleware\RememberLegacySiteReturn;
+use App\Http\Responses\OAuthRegisterResponse;
+use App\Http\Responses\RegisterResponse;
+use App\Http\Responses\VerifyEmailResponse;
 use App\Models\User;
 use App\Support\LegacyPassword;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -16,6 +20,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use JoelButcher\Socialstream\Contracts\OAuthRegisterResponse as OAuthRegisterResponseContract;
+use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
+use Laravel\Fortify\Contracts\VerifyEmailResponse as VerifyEmailResponseContract;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -25,7 +32,10 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Back to the old site for observers who came from there to register.
+        $this->app->singleton(RegisterResponseContract::class, RegisterResponse::class);
+        $this->app->singleton(VerifyEmailResponseContract::class, VerifyEmailResponse::class);
+        $this->app->singleton(OAuthRegisterResponseContract::class, OAuthRegisterResponse::class);
     }
 
     /**
@@ -61,6 +71,10 @@ class FortifyServiceProvider extends ServiceProvider
             foreach (Route::getRoutes()->getRoutes() as $route) {
                 if ($route->getName() === 'register.store' && ! in_array('throttle:registration', $route->middleware(), true)) {
                     $route->middleware('throttle:registration');
+                }
+                // The ?return_to= of the old site's link (App\Support\LegacySiteReturn).
+                if ($route->getName() === 'register' && ! in_array(RememberLegacySiteReturn::class, $route->middleware(), true)) {
+                    $route->middleware(RememberLegacySiteReturn::class);
                 }
             }
         });

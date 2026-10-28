@@ -77,6 +77,10 @@ class Kernel extends ConsoleKernel
         // newest first, a few at a time to stay under Google's rate limit.
         $schedule->command('observations:translate-descriptions --apply')->everyTenMinutes()->withoutOverlapping();
 
+        // The observations the old site (DeepskyLog.old) created, changed or
+        // deleted get the counters, session links and statistics of this site.
+        $schedule->command('observations:apply-legacy-changes --apply')->everyMinute()->withoutOverlapping();
+
         $schedule->command('astronomy:updateCometPhotometry')->weeklyOn(2, '4:30');
         // Incremental search index reindex (one-run nightly; safe for production)
         $schedule->command('search:reindex --incremental')

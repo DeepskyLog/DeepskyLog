@@ -91,8 +91,13 @@ return [
         // The push notifications of the alerts (App\Services\PushNotifications); make the keys with php artisan webpush:vapid
         'public_key' => env('VAPID_PUBLIC_KEY'),
         'private_key' => env('VAPID_PRIVATE_KEY'),
-        'subject' => env('VAPID_SUBJECT', 'mailto:' . env('MAIL_FROM_ADDRESS', 'noreply@mg.deepskylog.org')),
+        'subject' => env('VAPID_SUBJECT', 'mailto:'.env('MAIL_FROM_ADDRESS', 'noreply@mg.deepskylog.org')),
         'enabled' => (bool) env('WEB_PUSH', true),
+    ],
+
+    'legacy_site' => [
+        // The addresses of the old DeepskyLog site (its $baseURL), separated by commas, where observers who came from there to register return (App\Support\LegacySiteReturn); empty: nobody is sent back
+        'url' => env('LEGACY_SITE_URL'),
     ],
 
     'google' => [
