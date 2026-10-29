@@ -97,6 +97,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'session_reminder' => 'boolean',
         'year_review' => 'boolean',
         'year_review_sent_year' => 'integer',
+        'partner_search' => 'boolean',
         'about' => PurifiedHtml::class,
     ];
 
@@ -153,6 +154,8 @@ class User extends Authenticatable implements MustVerifyEmail
             'session_reminder',
             'year_review',
             'year_review_sent_year',
+            'partner_search',
+            'partner_note',
             'showInches',
             'version',
         ];

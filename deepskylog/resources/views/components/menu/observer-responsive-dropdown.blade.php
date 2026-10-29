@@ -55,6 +55,12 @@
                     label="{{ __('Which of my sites tonight?') }}"
                 />
 
+                <x-dropdown.item
+                    icon="user-group"
+                    href="{{ route('observing-partners') }}"
+                    label="{{ __('Observing partners nearby') }}"
+                />
+
                 <x-dropdown.item href="/eyepiece">
                     <x-outline.eyepiece-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
                     {{ __('My eyepieces') }}
