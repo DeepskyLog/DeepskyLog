@@ -182,8 +182,8 @@ class RssFeedController extends Controller
     }
 
     /**
-     * Personal RSS feed of the latest observations of the observers a user
-     * follows. The URL holds the user's secret token instead of a login, so
+     * Personal RSS feed of the latest observations of the observers and
+     * objects a user follows. The URL holds the user's secret token instead of a login, so
      * feed readers can poll it.
      */
     public function following(string $token): Response
@@ -195,7 +195,7 @@ class RssFeedController extends Controller
 
     /**
      * Forget the cached personal feed, after the user followed or unfollowed
-     * someone.
+     * someone or an object.
      */
     public static function forgetFollowingFeed(User $user): void
     {
@@ -224,9 +224,9 @@ class RssFeedController extends Controller
 
         $channel = $follower
             ? [
-                'title'       => 'Observers followed by ' . $follower->name,
+                'title'       => 'Followed by ' . $follower->name,
                 'link'        => url('/observations?following=1'),
-                'description' => 'The latest observations of the observers ' . $follower->name . ' follows on DeepskyLog.',
+                'description' => 'The latest observations of the observers and objects ' . $follower->name . ' follows on DeepskyLog.',
                 'self'        => route('feed.following', ['token' => $follower->follow_feed_token]),
             ]
             : null;

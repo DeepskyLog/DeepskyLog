@@ -50,10 +50,10 @@
             />&nbsp;
         </div>
 
-        <!-- Daily message with the new observations of the observers one follows -->
+        <!-- Daily message with the new observations of the observers and objects one follows -->
         <div class="col-span-6 sm:col-span-5">
             <x-toggle
-                label="{{ __('Send me a daily message with the new observations of the observers I follow') }}"
+                label="{{ __('Send me a daily message with the new observations of the observers and objects I follow') }}"
                 name="followDigest"
                 id="followDigest"
                 wire:model.live="followDigest"

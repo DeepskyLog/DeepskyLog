@@ -93,7 +93,7 @@ class DeleteUser implements DeletesUsers
             // Personal rows without a foreign key, or one that would only set
             // the user to null; the cascading ones (comments, likes, saved
             // searches, report layouts, streaks, blocks, finding notes,
-            // follows in both directions, the starparties they organise with
+            // follows in both directions, followed objects, the starparties they organise with
             // their participants and invitations, their answers to those of
             // others) go with the user row
             ObjectFindingNote::removeLikesOf($user);

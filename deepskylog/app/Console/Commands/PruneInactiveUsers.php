@@ -23,7 +23,7 @@ use Throwable;
  * An account is kept as soon as it has one row of its own in any of the
  * tables below: observations, sessions (also as a co-observer of somebody
  * else's session), equipment, locations, observing lists and their items,
- * comments, likes and subscriptions, followed observers, sketches of the
+ * comments, likes and subscriptions, followed observers and objects, sketches of the
  * week/month, sent messages, saved searches or report layouts. Rows the site makes for the
  * user (achievements, experience, streaks, object metrics, table settings,
  * teams, tokens, connected accounts) don't count.
@@ -55,6 +55,7 @@ class PruneInactiveUsers extends Command
         'observing_list_likes' => 'user_id',
         'observing_list_subscriptions' => 'user_id',
         'user_follows' => 'follower_id',
+        'object_follows' => 'user_id',
         'observing_goals' => 'user_id',
         'observation_comments' => 'user_id',
         'observation_likes' => 'user_id',

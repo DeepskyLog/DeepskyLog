@@ -1178,18 +1178,56 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * The observations of the observers this user follows.
+     * The objects this user follows.
+     */
+    public function followedObjects(): HasMany
+    {
+        return $this->hasMany(ObjectFollow::class);
+    }
+
+    /**
+     * The observations of the observers this user follows and those of
+     * others of the objects they follow.
      *
      * @return \Illuminate\Database\Eloquent\Builder<Observation>
      */
     public function followedObservations(): \Illuminate\Database\Eloquent\Builder
     {
+        $objects = $this->followedObjects()->get();
+        if ($objects->isEmpty()) {
+            return $this->followedObserverObservations();
+        }
+
+        return Observation::query()->where(fn ($query) => $query
+            ->whereIn('observer_username', $this->following()->select('users.username'))
+            ->orWhere(fn ($query) => ObjectFollow::constrainObservations($query, $objects)
+                ->where('observer_username', '!=', $this->username)));
+    }
+
+    /**
+     * The observations of the observers this user follows.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<Observation>
+     */
+    public function followedObserverObservations(): \Illuminate\Database\Eloquent\Builder
+    {
         return Observation::query()->whereIn('observer_username', $this->following()->select('users.username'));
     }
 
     /**
-     * The secret token of the personal RSS feed of the observers this user
-     * follows, made the first time it is asked for.
+     * The observations by others of the objects this user follows.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder<Observation>
+     */
+    public function followedObjectObservations(): \Illuminate\Database\Eloquent\Builder
+    {
+        return ObjectFollow::constrainObservations(Observation::query(), $this->followedObjects()->get())
+            ->where('observer_username', '!=', $this->username);
+    }
+
+    /**
+     * The secret token of the personal RSS feed of the observers and objects
+     * this user follows, made the first time it is asked for.
      */
     public function followFeedToken(): string
     {

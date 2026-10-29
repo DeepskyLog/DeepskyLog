@@ -58,6 +58,8 @@
                             ])
                         @endif
                     @endauth
+
+                    <x-follow-object :target="$followTarget ?? null" />
                 </div>
 
                 {{-- Summary row: object type, constellation and quick stats (observations/drawings, user-specific counts) --}}

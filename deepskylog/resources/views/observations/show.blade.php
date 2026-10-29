@@ -39,7 +39,7 @@
                             @endif
                         @else
                             @if ($user == '' && !empty($following))
-                                {{ __('Observations of the observers you follow') }}
+                                {{ __('Observations of what you follow') }}
                             @elseif ($user == '')
                                 {{ __('Observations') }}
                             @else
@@ -83,7 +83,7 @@
                             >{{ $typeLabel }}</a>
                         @endforeach
                         @auth
-                            {{-- Only the observers the user follows, keeping the type filter --}}
+                            {{-- Only the observers and objects the user follows, keeping the type filter --}}
                             @php
                                 $followingParams = \App\Helpers\ListingPagination::query(['following']);
                                 if (empty($following)) {
@@ -93,7 +93,7 @@
                             @endphp
                             <a href="{{ $followingUrl }}"
                                class="rounded px-3 py-1 text-sm font-medium {{ !empty($following) ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200 hover:bg-gray-600' }}"
-                            >{{ __('Observers I follow') }}</a>
+                            >{{ __('What I follow') }}</a>
                         @endauth
                     @else
                         {{-- Non-global pages: keep the deepsky/comet toggle buttons --}}
@@ -235,7 +235,7 @@
                 @else
                     @if (!empty($following))
                         <div class="mb-3 flex flex-wrap items-center gap-2 text-sm text-gray-400">
-                            <span>{{ __('The RSS feed of the observers you follow has a private address: anyone who knows it can read the feed.') }}</span>
+                            <span>{{ __('The RSS feed of what you follow has a private address: anyone who knows it can read the feed.') }}</span>
                             <form method="POST" action="{{ route('feed.following.regenerate') }}">
                                 @csrf
                                 <button type="submit" class="underline hover:text-gray-200">{{ __('Give the feed a new address') }}</button>
@@ -244,7 +244,7 @@
                     @endif
                     <x-card>
                         @if ($deepsky->isEmpty() && !empty($following) && empty($followingCount))
-                            <div class="text-center text-gray-300">{{ __('You do not follow any observers yet. Use the Follow button on the page of an observer.') }}</div>
+                            <div class="text-center text-gray-300">{{ __('You do not follow any observers or objects yet. Use the Follow button on the page of an observer or an object.') }}</div>
                         @elseif ($deepsky->isEmpty())
                             <div class="text-center text-gray-300">{{ __('No observations yet.') }}</div>
                         @else

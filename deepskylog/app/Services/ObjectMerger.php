@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\ObjectFollow;
 use App\Models\Observation;
 use Illuminate\Support\Facades\DB;
 use Spatie\ResponseCache\Facades\ResponseCache;
@@ -42,6 +43,7 @@ class ObjectMerger
             DB::table('observing_list_items')->where('object_name', $from->name)->whereIn('observing_list_id', $lists)->delete();
             DB::table('observing_list_items')->where('object_name', $from->name)->update(['object_name' => $target->name]);
             DB::table('object_finding_notes')->where('object_name', $from->name)->update(['object_name' => $target->name]);
+            ObjectFollow::moveDeepskyObject($from->name, $target->name);
 
             foreach (['objectname', 'partofname'] as $column) {
                 $other = $column === 'objectname' ? 'partofname' : 'objectname';
@@ -90,6 +92,7 @@ class ObjectMerger
             DB::table('objectpartof')->where('objectname', $object->name)->orWhere('partofname', $object->name)->delete();
             DB::table('observing_list_items')->where('object_name', $object->name)->delete();
             DB::table('object_finding_notes')->where('object_name', $object->name)->delete();
+            ObjectFollow::forgetDeepskyObject($object->name);
             DB::table('object_name_translations')->where('objectname', $object->name)->delete();
             self::deleteRows($object->name);
         });

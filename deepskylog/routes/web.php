@@ -203,6 +203,10 @@ Route::post('/observers/{observer}/follow', [App\Http\Controllers\FollowControll
     ->name('observer.follow')->middleware(['auth', 'verified', 'doNotCacheResponse']);
 Route::post('/observers/{observer}/unfollow', [App\Http\Controllers\FollowController::class, 'unfollow'])
     ->name('observer.unfollow')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::post('/object-follows', [App\Http\Controllers\ObjectFollowController::class, 'follow'])
+    ->name('object.follow')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::post('/object-follows/unfollow', [App\Http\Controllers\ObjectFollowController::class, 'unfollow'])
+    ->name('object.unfollow')->middleware(['auth', 'verified', 'doNotCacheResponse']);
 
 // Push notifications of the alerts in this browser (profile page, public/sw.js)
 Route::middleware('doNotCacheResponse')->group(function () {

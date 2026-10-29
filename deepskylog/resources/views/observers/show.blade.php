@@ -50,8 +50,16 @@
                                 </div>
                             @endif
                         @endforeach
-                        @if ($followingList->isNotEmpty())
-                            <a class="mb-2 inline-block text-sm hover:underline" href="{{ url('/observations?following=1') }}">{{ __('Observations of the observers you follow') }}</a>
+                        @if (($followedObjectList ?? collect())->isNotEmpty())
+                            <div class="mb-2 text-sm">
+                                <span class="text-gray-400">{{ __('Objects you follow') }}:</span>
+                                @foreach ($followedObjectList as $followedObject)
+                                    <a class="hover:underline" href="{{ route('object.show', ['slug' => $followedObject['slug']]) }}">{{ $followedObject['name'] }}</a>@if (!$loop->last), @endif
+                                @endforeach
+                            </div>
+                        @endif
+                        @if ($followingList->isNotEmpty() || ($followedObjectList ?? collect())->isNotEmpty())
+                            <a class="mb-2 inline-block text-sm hover:underline" href="{{ url('/observations?following=1') }}">{{ __('Observations of what you follow') }}</a>
                         @endif
                     @endif
                     <div class="mx-left">

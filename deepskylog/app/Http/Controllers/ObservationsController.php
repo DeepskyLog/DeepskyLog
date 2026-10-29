@@ -333,7 +333,7 @@ class ObservationsController extends Controller
 
         $sort = request()->query('sort', 'observed');
 
-        // ?following=1: only the observers the logged-in user follows
+        // ?following=1: only the observers and objects the logged-in user follows
         $following = request()->boolean('following');
         if ($following && !auth()->check()) {
             return redirect()->guest(route('login'));
@@ -365,7 +365,7 @@ class ObservationsController extends Controller
             'mode' => 'deepsky',
             'obsType' => $obsType,
             'following' => $following,
-            'followingCount' => $following ? auth()->user()->following()->count() : null,
+            'followingCount' => $following ? auth()->user()->following()->count() + auth()->user()->followedObjects()->count() : null,
         ]);
     }
 

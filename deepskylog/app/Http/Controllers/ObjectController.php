@@ -1315,6 +1315,8 @@ class ObjectController extends Controller
 
         // Observation and drawing counts of this object. Migrated and new
         // observations are stored the same way (see App\Models\Observation).
+        // The object as the observations store it, for the Follow button
+        $followTarget = null;
         try {
             $objectObservations = null;
             $solarSystemTables = ['planet' => 'planets', 'sun' => 'planets', 'moon' => 'moons', 'lunar_feature' => 'lunar_features', 'asteroid' => 'asteroids'];
@@ -1329,6 +1331,11 @@ class ObjectController extends Controller
             }
 
             if ($objectObservations !== null) {
+                $followTarget = $sourceTypeRaw === 'comet'
+                    ? ['table' => 'cometobjects', 'key' => (string) $record->id]
+                    : ($sourceTypeRaw === 'object'
+                        ? ['table' => 'objects', 'key' => $objectName]
+                        : ['table' => $solarSystemTables[$sourceTypeRaw], 'key' => (string) $record->slug]);
                 $totalObservations = $objectObservations()->count();
                 $drawings = $objectObservations()->where('has_drawing', 1)->count();
 
@@ -2665,10 +2672,10 @@ class ObjectController extends Controller
 
         // Use the moon-style page for lunar features so coordinates/constellation are hidden
         if ((($session->source_type_raw ?? '') === 'lunar_feature') || (($type ?? '') === 'lunar_feature')) {
-            return response()->view('object.moon-page', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId', 'ephemerides', 'yourObservations', 'yourDrawings', 'lastObservationDate', 'lastDrawingDate', 'comet_magnitudes', 'comet_min_mag', 'comet_max_mag', 'cometMagnitudeChart'));
+            return response()->view('object.moon-page', compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId', 'ephemerides', 'yourObservations', 'yourDrawings', 'lastObservationDate', 'lastDrawingDate', 'comet_magnitudes', 'comet_min_mag', 'comet_max_mag', 'cometMagnitudeChart', 'followTarget'));
         }
 
-        $vars = compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId', 'ephemerides', 'yourObservations', 'yourDrawings', 'lastObservationDate', 'lastDrawingDate', 'comet_magnitudes', 'comet_min_mag', 'comet_max_mag', 'cometMagnitudeChart');
+        $vars = compact('session', 'user', 'location', 'image', 'observers', 'totalObservations', 'observations', 'drawings', 'observerStats', 'selectedObserverUsername', 'selectedObserverName', 'atlasPage', 'atlasName', 'alternatives', 'canonicalSlug', 'aladinDefaults', 'availableInstruments', 'availableEyepieces', 'availableLenses', 'selectedInstrumentId', 'selectedEyepieceId', 'selectedLensId', 'ephemerides', 'yourObservations', 'yourDrawings', 'lastObservationDate', 'lastDrawingDate', 'comet_magnitudes', 'comet_min_mag', 'comet_max_mag', 'cometMagnitudeChart', 'followTarget');
         try {
             if (($type === 'deepsky' || $type === 'objects')) {
                 $vars['dsl_deepsky_full_container'] = true;
@@ -3181,6 +3188,7 @@ class ObjectController extends Controller
                 ->where('object_name', $originalName)
                 ->update(['object_name' => $validated['name']]);
             \App\Models\ObjectFindingNote::moveObject($originalName, $validated['name']);
+            \App\Models\ObjectFollow::moveDeepskyObject($originalName, $validated['name']);
 
             // Update objectnames table
             DB::table('objectnames')
@@ -4370,6 +4378,7 @@ class ObjectController extends Controller
                 ->where('object_name', $objectName)
                 ->update(['object_name' => $targetName]);
             \App\Models\ObjectFindingNote::moveObject($objectName, $targetName);
+            \App\Models\ObjectFollow::moveDeepskyObject($objectName, $targetName);
         } else {
             // Observations can't be left pointing to a deleted object
             if (\App\Models\Observation::ofDeepskyObject($objectName)->exists()) {
@@ -4387,8 +4396,9 @@ class ObjectController extends Controller
         ObjectSearchIndex::removeObject($objectName, $object->slug);
         DB::table('objectnames')->where('objectname', $objectName)->delete();
         DB::table('objectpartof')->where('objectname', $objectName)->orWhere('partofname', $objectName)->delete();
-        // Finding notes not moved to another object
+        // Finding notes and follows not moved to another object
         DB::table('object_finding_notes')->where('object_name', $objectName)->delete();
+        \App\Models\ObjectFollow::forgetDeepskyObject($objectName);
 
         // Delete the object itself
         $object->delete();
