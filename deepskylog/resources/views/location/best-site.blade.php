@@ -307,7 +307,7 @@
                                         $site["location"]->id === $home->id &&
                                         in_array(
                                             $forecast["verdict"],
-                                            ["clear_dark", "clear_moon"],
+                                            ["clear_dark", "clear_twilight", "clear_moon"],
                                             true
                                         ))
                                         <a
@@ -327,10 +327,15 @@
                                             $forecast["dark"]["twilight"] ===
                                             "astronomical"
                                                 ? __("Dark :from–:until", $forecast["dark"])
-                                                : __(
-                                                    "Nautical twilight :from–:until",
-                                                    $forecast["dark"],
-                                                )
+                                                : (isset($forecast["dark"]["dark_from"])
+                                                    ? __(
+                                                        "Nautical twilight :from–:until, completely dark :dark_from–:dark_until",
+                                                        $forecast["dark"],
+                                                    )
+                                                    : __(
+                                                        "Nautical twilight :from–:until",
+                                                        $forecast["dark"],
+                                                    ))
                                         }}
                                         &middot;
                                         {{
@@ -345,14 +350,22 @@
                                                 "percent" => $forecast["cloud"],
                                             ])
                                         }}
-                                        &middot; {{
-                                            __(
-                                                "Clear :hours h, without bright Moon :dark h",
-                                                [
-                                                    "hours" => number_format($forecast["clear_minutes"] / 60, 1),
-                                                    "dark" => number_format($forecast["clear_dark_minutes"] / 60, 1),
-                                                ],
-                                            )
+                                        @php
+                                            $clearHours = [
+                                                "hours" => number_format($forecast["clear_minutes"] / 60, 1),
+                                                "dark" => number_format($forecast["clear_dark_minutes"] / 60, 1),
+                                            ];
+                                        @endphp
+                                        &middot;
+                                        {{
+                                            ($forecast["dark"]["twilight"] ??
+                                                "astronomical") ===
+                                            "astronomical"
+                                                ? __("Clear :hours h, without bright Moon :dark h", $clearHours)
+                                                : __(
+                                                    "Clear :hours h, completely dark without bright Moon :dark h",
+                                                    $clearHours,
+                                                )
                                         }}
                                     @endif
                                     @if ($forecast["dew"])

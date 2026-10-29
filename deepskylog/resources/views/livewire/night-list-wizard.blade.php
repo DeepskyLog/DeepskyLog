@@ -62,8 +62,12 @@
                     @elseif ($dark)
                         @if ($dark["twilight"] === "astronomical")
                             {{ __("Dark from :from to :until.", $dark) }}
+                        @elseif (isset($dark["dark_from"]))
+                            {{ __("It is completely dark only from :dark_from to :dark_until: the list uses the nautical twilight from :from to :until.", $dark) }}
+                            {{ __("The visibility takes the brighter sky of the twilight into account.") }}
                         @else
                             {{ __("It does not get completely dark: from :from to :until the sky stays in nautical twilight.", $dark) }}
+                            {{ __("The visibility takes the brighter sky of the twilight into account.") }}
                         @endif
                     @endif
                 </p>

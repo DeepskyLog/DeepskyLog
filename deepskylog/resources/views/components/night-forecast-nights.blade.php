@@ -14,7 +14,7 @@
                 @if ($night["seeing"] ?? null)
                     <x-forecast-seeing :seeing="$night['seeing']" />
                 @endif
-                @if ($listLinks && in_array($night["verdict"], ["clear_dark", "clear_moon"], true))
+                @if ($listLinks && in_array($night["verdict"], ["clear_dark", "clear_twilight", "clear_moon"], true))
                     <a href="{{ route("observing-list.night", ["night" => $night["night"]]) }}" class="text-xs text-blue-400 hover:underline">{{ __("Make a list for this night") }}</a>
                 @endif
             </div>
@@ -23,7 +23,9 @@
                     {{
                         $night["dark"]["twilight"] === "astronomical"
                             ? __("Dark :from–:until", $night["dark"])
-                            : __("Nautical twilight :from–:until", $night["dark"])
+                            : (isset($night["dark"]["dark_from"])
+                                ? __("Nautical twilight :from–:until, completely dark :dark_from–:dark_until", $night["dark"])
+                                : __("Nautical twilight :from–:until", $night["dark"]))
                     }}
                     &middot;
                     {{

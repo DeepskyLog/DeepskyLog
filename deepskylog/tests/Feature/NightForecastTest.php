@@ -103,6 +103,25 @@ it('finds the clear part of a night that clouds over', function () {
         ->and($night['clear_dark']['until'])->toBe('21:30');
 });
 
+it('calls a clear midsummer night clear in twilight, and sends no message for it', function () {
+    // Near the new Moon of 15 June, the Sun never 18° below the horizon
+    Carbon::setTestNow(Carbon::parse('2026-06-14 14:00', 'Europe/Brussels'));
+    fakeForecast(fn () => 0, '2026-06-13 00:00');
+
+    $night = forecastNight('2026-06-14');
+    expect($night['verdict'])->toBe('clear_twilight')
+        ->and($night['dark']['twilight'])->toBe('nautical')
+        ->and($night['moon'])->toBeNull()
+        ->and($night['clear']['minutes'])->toBeGreaterThan(200)
+        ->and($night['clear_dark'])->toBeNull()
+        ->and($night['clear_dark_minutes'])->toBe(0)
+        ->and(collect($night['hours'])->every(fn (array $hour) => $hour['twilight']))->toBeTrue()
+        ->and(NightForecast::verdictLabel('clear_twilight'))->toBe('Clear, in twilight');
+
+    forecastObserver();
+    $this->artisan('forecast:send-clear-night-alerts --apply')->expectsOutput('Messages sent: 0')->assertSuccessful();
+});
+
 it('calls a night with one clear hour partly cloudy and an overcast night cloudy', function () {
     $clear = Carbon::parse('2026-11-09 23:00', 'UTC')->getTimestamp();
     fakeForecast(fn (int $t) => $t === $clear ? 0 : 100);

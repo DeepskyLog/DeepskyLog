@@ -271,7 +271,10 @@ class NightListWizard extends Component
                 'from'     => Carbon::createFromTimestamp($window->start, $timezone)->format('H:i'),
                 'until'    => Carbon::createFromTimestamp($window->end, $timezone)->format('H:i'),
                 'twilight' => $window->twilight,
-            ] : false;
+            ] + ($window->astronomical ? [
+                'dark_from'  => Carbon::createFromTimestamp($window->astronomical[0], $timezone)->format('H:i'),
+                'dark_until' => Carbon::createFromTimestamp($window->astronomical[1], $timezone)->format('H:i'),
+            ] : []) : false;
         }
 
         $result = $this->showPreview && ! $this->getErrorBag()->any() ? TonightsBest::for(Auth::user(), $this->options()) : null;

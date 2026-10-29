@@ -12,7 +12,7 @@
     @foreach ($hours as $hour)
         <div
             class="flex-1 text-center"
-            title="{{ $hour["time"] }} · {{ __("Clouds :percent% (low :low%, middle :mid%, high :high%)", ["percent" => $hour["cloud"], "low" => $hour["low"], "mid" => $hour["mid"], "high" => $hour["high"]]) }} · {{ __("Humidity :percent%", ["percent" => $hour["humidity"]]) }} · {{ __("Wind :speed km/h", ["speed" => $hour["wind"]]) }}{{ ($hour["seeing"] ?? null) ? " · " . __("Seeing :arcsec", ["arcsec" => \App\Services\Weather\SeeingForecast::arcsec($hour["seeing"])]) : "" }}{{ $hour["moon"] ? " · " . __("Moon up") : "" }}"
+            title="{{ $hour["time"] }} · {{ __("Clouds :percent% (low :low%, middle :mid%, high :high%)", ["percent" => $hour["cloud"], "low" => $hour["low"], "mid" => $hour["mid"], "high" => $hour["high"]]) }} · {{ __("Humidity :percent%", ["percent" => $hour["humidity"]]) }} · {{ __("Wind :speed km/h", ["speed" => $hour["wind"]]) }}{{ ($hour["seeing"] ?? null) ? " · " . __("Seeing :arcsec", ["arcsec" => \App\Services\Weather\SeeingForecast::arcsec($hour["seeing"])]) : "" }}{{ $hour["moon"] ? " · " . __("Moon up") : "" }}{{ ($hour["twilight"] ?? false) ? " · " . __("Twilight") : "" }}"
         >
             <div
                 class="h-6"

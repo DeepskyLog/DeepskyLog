@@ -6,6 +6,7 @@ use App\Models\Location;
 use App\Models\StarParty;
 use App\Services\MoonlightSky;
 use App\Services\NightWindow;
+use App\Services\TwilightSky;
 use App\Support\EphemerisDate;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -16,7 +17,10 @@ use Illuminate\Support\Facades\Log;
  * The cloud forecast of the coming nights at a location: the hourly forecast
  * of Open-Meteo (free, without a key, CC BY 4.0) in the dark hours of each
  * night (NightWindow), with the Moon in them (MoonlightSky), and a verdict
- * per night; with the seeing of SeeingForecast where it reaches.
+ * per night; with the seeing of SeeingForecast where it reaches. In a night
+ * that stays in nautical twilight (summer, away from the equator) the hours
+ * with the Sun above TwilightSky::ASTRONOMICAL are twilight: they are never
+ * clear and dark, and a clear night of them is clear_twilight.
  *
  * The forecast is cached per cell of GRID degrees for CACHE_SECONDS. Pages
  * pass $fetch = false: a forecast that is not cached yet is then fetched
@@ -39,7 +43,7 @@ class NightForecast
     /** An hour this humid (%) or more brings dew. */
     public const DEW_HUMIDITY = 90;
 
-    public const VERDICTS = ['clear_dark', 'clear_moon', 'partly', 'cloudy', 'no_dark', 'unknown'];
+    public const VERDICTS = ['clear_dark', 'clear_twilight', 'clear_moon', 'partly', 'cloudy', 'no_dark', 'unknown'];
 
     private const FORECAST_DAYS = 7;
 
@@ -115,7 +119,7 @@ class NightForecast
         }
         $seeing = SeeingForecast::points($latitude, $longitude, $fetch);
 
-        $key = 'night_forecast:nights:v3:'.md5(json_encode([round($latitude, 4), round($longitude, 4), round($elevation), $timezone, $nights, $hourly['fetched_at'], $seeing['fetched_at'] ?? null]));
+        $key = 'night_forecast:nights:v4:'.md5(json_encode([round($latitude, 4), round($longitude, 4), round($elevation), $timezone, $nights, $hourly['fetched_at'], $seeing['fetched_at'] ?? null]));
 
         return Cache::remember($key, self::CACHE_SECONDS, function () use ($hourly, $seeing, $latitude, $longitude, $elevation, $timezone, $nights) {
             $result = [];
@@ -159,12 +163,13 @@ class NightForecast
     public static function verdictLabel(string $verdict, ?string $locale = null): string
     {
         return match ($verdict) {
-            'clear_dark' => __('Clear and dark', [], $locale),
-            'clear_moon' => __('Clear, with Moon', [], $locale),
-            'partly'     => __('Partly cloudy', [], $locale),
-            'cloudy'     => __('Cloudy', [], $locale),
-            'no_dark'    => __('Not dark', [], $locale),
-            default      => __('No forecast yet', [], $locale),
+            'clear_dark'     => __('Clear and dark', [], $locale),
+            'clear_twilight' => __('Clear, in twilight', [], $locale),
+            'clear_moon'     => __('Clear, with Moon', [], $locale),
+            'partly'         => __('Partly cloudy', [], $locale),
+            'cloudy'         => __('Cloudy', [], $locale),
+            'no_dark'        => __('Not dark', [], $locale),
+            default          => __('No forecast yet', [], $locale),
         };
     }
 
@@ -174,11 +179,12 @@ class NightForecast
     public static function verdictClass(string $verdict): string
     {
         return match ($verdict) {
-            'clear_dark' => 'bg-green-700',
-            'clear_moon' => 'bg-yellow-700',
-            'partly'     => 'bg-blue-700',
-            'cloudy'     => 'bg-gray-600',
-            default      => 'bg-gray-700',
+            'clear_dark'     => 'bg-green-700',
+            'clear_twilight' => 'bg-teal-700',
+            'clear_moon'     => 'bg-yellow-700',
+            'partly'         => 'bg-blue-700',
+            'cloudy'         => 'bg-gray-600',
+            default          => 'bg-gray-700',
         };
     }
 
@@ -223,9 +229,11 @@ class NightForecast
     }
 
     /**
-     * The forecast of one night: its dark hours, the Moon, the forecast hours
-     * in them, the average cloud cover, the longest clear stretch with and
-     * without a bright Moon and all clear minutes with and without it, the seeing of the dark hours (with $seeing, as
+     * The forecast of one night: its dark hours (with the completely dark
+     * part of a nautical window), the Moon, the forecast hours in them, the
+     * average cloud cover, the longest clear stretch with and without a
+     * bright Moon or twilight and all clear minutes with and without them,
+     * the seeing of the dark hours (with $seeing, as
      * SeeingForecast::between() gives it) and the verdict, which the seeing
      * does not change.
      *
@@ -247,6 +255,9 @@ class NightForecast
 
         $time           = fn (int $timestamp) => Carbon::createFromTimestamp($timestamp, $timezone)->format('H:i');
         $result['dark'] = ['from' => $time($window->start), 'until' => $time($window->end), 'twilight' => $window->twilight];
+        if ($window->astronomical) {
+            $result['dark'] += ['dark_from' => $time($window->astronomical[0]), 'dark_until' => $time($window->astronomical[1])];
+        }
 
         // Each forecast hour stands for the half hour before and after it,
         // clipped to the dark hours.
@@ -268,6 +279,8 @@ class NightForecast
                 'humidity' => (int) ($hourly['relative_humidity_2m'][$i] ?? 0),
                 'wind'     => (int) round($hourly['wind_speed_10m'][$i] ?? 0),
                 'seeing'   => SeeingForecast::at($seeing, $timestamp),
+                'twilight' => $window->twilight !== 'astronomical'
+                    && TwilightSky::sunAltitude(intdiv($from + $until, 2), $latitude, $longitude) > TwilightSky::ASTRONOMICAL,
             ];
         }
 
@@ -295,17 +308,20 @@ class NightForecast
 
         $clear                = fn (array $hour) => $hour['cloud'] <= self::CLEAR_PERCENT;
         $result['clear']      = self::longest($result['hours'], $clear, $time);
-        $result['clear_dark'] = self::longest($result['hours'], fn (array $hour) => $clear($hour) && ! $hour['moon'], $time);
+        $dark                 = fn (array $hour) => $clear($hour) && ! $hour['moon'] && ! $hour['twilight'];
+        $result['clear_dark'] = self::longest($result['hours'], $dark, $time);
+        $unlit                = self::longest($result['hours'], fn (array $hour) => $clear($hour) && ! $hour['moon'], $time);
         $result['dew']        = collect($result['hours'])->contains(fn (array $hour) => $clear($hour) && $hour['humidity'] >= self::DEW_HUMIDITY);
         $result['seeing']     = $seeing === null ? null : SeeingForecast::between($seeing, $window->start, $window->end);
 
         // All clear minutes of the dark hours, not only the longest stretch (SiteComparison)
         $minutes                      = fn (callable $test) => intdiv(array_sum(array_map(fn (array $hour) => $test($hour) ? $hour['until'] - $hour['from'] : 0, $result['hours'])), 60);
         $result['clear_minutes']      = $minutes($clear);
-        $result['clear_dark_minutes'] = $minutes(fn (array $hour) => $clear($hour) && ! $hour['moon']);
+        $result['clear_dark_minutes'] = $minutes($dark);
 
         $result['verdict'] = match (true) {
             ($result['clear_dark']['minutes'] ?? 0) >= self::MIN_CLEAR_MINUTES     => 'clear_dark',
+            ($unlit['minutes'] ?? 0)                >= self::MIN_CLEAR_MINUTES     => 'clear_twilight',
             ($result['clear']['minutes'] ?? 0)      >= self::MIN_CLEAR_MINUTES     => 'clear_moon',
             ($result['clear']['minutes'] ?? 0)      >= 60 || $result['cloud'] < 60 => 'partly',
             default                                                                => 'cloudy',

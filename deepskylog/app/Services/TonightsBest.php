@@ -36,8 +36,10 @@ use Illuminate\Support\Str;
  * have not seen with that telescope yet, easy ones and a few challenging
  * ones, and a few they have; the objects of the chosen catalogs and lists
  * first, then the most observed ones (by all observers). When the Moon is
- * up, the sky at each object is brightened with MoonlightSky, its contrast
- * reserve recalculated with that sky and its best moment the darkest one.
+ * up or the night stays in twilight (a nautical NightWindow), the sky at
+ * each object is brightened with MoonlightSky, its contrast reserve
+ * recalculated with that sky and its best moment the one it stands out best
+ * against it (MoonlightSky::bestMoment()).
  * Guests (and observers without that equipment) get the most observed
  * objects that are well placed at the location of the ephemerides. Both get
  * the planets and the bright comets as well, unless left out. The deep-sky
@@ -158,7 +160,7 @@ class TonightsBest
 
     private const BRIGHT_CAP = 1.0;
 
-    /** The objects whose contrast reserve is recalculated under the Moon. */
+    /** The objects whose contrast reserve is recalculated under the Moon or in the twilight. */
     private const MOON_POOL = 300;
 
     private const MOON_POOL_CHALLENGING = 150;
@@ -249,8 +251,8 @@ class TonightsBest
         // a seeing forecast not cached yet is fetched after the response, and changes the key
         $seeing = SeeingForecast::forNight((float) $location->latitude, (float) $location->longitude, $night, $timezone, fetch: false);
 
-        // v2: a magnitude of 0 is unknown (ContrastReserveCalculator::target()); v4: the field of view; v5: the seeing
-        $key = 'tonights_best:v5:'.md5(json_encode([
+        // v2: a magnitude of 0 is unknown (ContrastReserveCalculator::target()); v4: the field of view; v5: the seeing; v6: the twilight
+        $key = 'tonights_best:v6:'.md5(json_encode([
             $user?->id, $instrument?->id, $location->id, (float) $location->latitude, (float) $location->longitude, $lensId, $field, $seeing, $night, $timezone, $options,
             // a new observation changes what the observer has seen
             $user ? DB::table('observations')->where('observer_username', $user->username)->max('id') : null,
@@ -424,6 +426,9 @@ class TonightsBest
             return $result;
         }
         $result['dark'] = ['from' => $this->time($this->dark->start), 'until' => $this->time($this->dark->end), 'twilight' => $this->dark->twilight];
+        if ($this->dark->astronomical) {
+            $result['dark'] += ['dark_from' => $this->time($this->dark->astronomical[0]), 'dark_until' => $this->time($this->dark->astronomical[1])];
+        }
 
         $this->window = $this->period();
         if ($this->window === null) {
@@ -434,7 +439,8 @@ class TonightsBest
         $this->moon = new MoonlightSky($this->window, (float) $this->location->longitude, (float) ($this->location->elevation ?? 0.0));
         if ($up = $this->moon->upBetween()) {
             $result['moon'] = ['fraction' => round($this->moon->illuminatedFraction(), 2), 'from' => $this->time($up[0]), 'until' => $this->time($up[1])];
-        } else {
+        }
+        if (! $this->moon->brightens()) {
             $this->moon = null;
         }
         $this->seen     = $this->seenTargets();
@@ -600,7 +606,7 @@ class TonightsBest
                 continue;
             }
             if ($this->moon) {
-                $object = $this->darkestMoment($object);
+                $object = $this->bestMoment($object);
                 $bright = (float) $row->mag > 0 && (float) $row->mag <= self::BRIGHT_SKY_MAX_MAGNITUDE;
                 if ($object === null || ($object['sqm'] < self::BRIGHT_SKY && ! $bright)) {
                     continue;
@@ -877,9 +883,10 @@ class TonightsBest
     }
 
     /**
-     * The candidates with the Moon up: of the best ones, the contrast reserve
-     * at their darkest moment, recalculated for the sky the Moon lights.
-     * Objects that are no longer visible drop out.
+     * The candidates with the Moon up or in a twilight night: of the best
+     * ones, the contrast reserve at their best moment, recalculated for the
+     * sky the Moon and the twilight light. Objects that are no longer
+     * visible drop out.
      *
      * @param  list<array<string, mixed>>  $candidates
      * @return list<array<string, mixed>>
@@ -894,7 +901,7 @@ class TonightsBest
         $magnifications = ContrastReserveCalculator::magnifications($this->instrument, $this->user, ContrastReserveCalculator::lensFactor($this->lensId));
         $visible        = [];
         foreach ($pool as $object) {
-            $object = $this->darkestMoment($object);
+            $object = $this->bestMoment($object);
             if ($object === null) {
                 continue;
             }
@@ -948,12 +955,13 @@ class TonightsBest
     }
 
     /**
-     * The object at the moment its sky is darkest while it is high enough
-     * (the higher of equally dark moments), with the sky brightness then.
+     * The object at the moment it stands out best against the sky while it
+     * is high enough (MoonlightSky::bestMoment()), with the sky brightness
+     * then.
      */
-    private function darkestMoment(array $object): ?array
+    private function bestMoment(array $object): ?array
     {
-        $best = $this->moon->darkestMoment($object['ra'], $object['decl'], $this->darkSqm, self::MIN_ALTITUDE);
+        $best = $this->moon->bestMoment($object['ra'], $object['decl'], $this->darkSqm, self::MIN_ALTITUDE);
         if ($best === null) {
             return null;
         }

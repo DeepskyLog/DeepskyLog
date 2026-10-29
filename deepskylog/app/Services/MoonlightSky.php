@@ -7,15 +7,18 @@ use deepskylog\AstronomyLibrary\Coordinates\GeographicalCoordinates;
 use deepskylog\AstronomyLibrary\Targets\Moon;
 
 /**
- * The brightness of the sky lit by the Moon, with the model of Krisciunas and
- * Schaefer (1991, PASP 103, 1033): the light of the Moon, scattered by the
+ * The brightness of the sky lit by the Moon and the twilight. The Moon with
+ * the model of Krisciunas and Schaefer (1991, PASP 103, 1033): the light of the Moon, scattered by the
  * atmosphere towards a point of the sky, depends on the phase of the Moon,
  * its altitude, the altitude of the point and their distance. It is added to
  * the brightness of the dark sky, so a dark site with an SQM of 21.5 gets
- * about 18 near the full Moon.
+ * about 18 near the full Moon. The twilight (TwilightSky) adds the light of
+ * the Sun below the horizon, which matters in the nights that never get
+ * astronomically dark (NightWindow's nautical windows, in summer).
  *
- * The positions of the Moon during a night are calculated once, every
- * STEP_MINUTES; sqmAt() then only needs a little trigonometry per object.
+ * The positions of the Moon and the Sun during a night are calculated once,
+ * every STEP_MINUTES; sqmAt() then only needs a little trigonometry per
+ * object.
  */
 class MoonlightSky
 {
@@ -31,6 +34,14 @@ class MoonlightSky
      * @var array<int, array{ra: float, dec: float, altitude: float, fraction: float}>
      */
     private array $moon = [];
+
+    /**
+     * The light of the twilight at the zenith (nanolamberts) at each step of
+     * the window, keyed by timestamp.
+     *
+     * @var array<int, float>
+     */
+    private array $twilight = [];
 
     public function __construct(private NightWindow $window, float $longitude, float $elevation = 0.0)
     {
@@ -49,6 +60,7 @@ class MoonlightSky
                 'altitude' => $window->altitude($ra, $dec, $timestamp),
                 'fraction' => $body->illuminatedFraction($date->copy()),
             ];
+            $this->twilight[$timestamp] = TwilightSky::light(TwilightSky::sunAltitude($timestamp, $window->latitude, $longitude));
         }
     }
 
@@ -83,6 +95,31 @@ class MoonlightSky
     }
 
     /**
+     * Whether the twilight brightens the sky at some moment of the window.
+     */
+    public function hasTwilight(): bool
+    {
+        return max($this->twilight) > 0.0;
+    }
+
+    /**
+     * Whether the twilight brightens the sky at one of the moments().
+     */
+    public function twilightAt(int $timestamp): bool
+    {
+        return ($this->twilight[$timestamp] ?? 0.0) > 0.0;
+    }
+
+    /**
+     * Whether the Moon or the twilight brightens the sky at some moment of
+     * the window, so the sky differs from the dark sky of the location.
+     */
+    public function brightens(): bool
+    {
+        return $this->isUp() || $this->hasTwilight();
+    }
+
+    /**
      * The illuminated fraction of the Moon in the middle of the window.
      */
     public function illuminatedFraction(): float
@@ -106,14 +143,16 @@ class MoonlightSky
     }
 
     /**
-     * The moment of the window the sky at the point is darkest while the
-     * point stands at least $minAltitude high (the higher of equally dark
-     * moments), with the sky brightness then; null when it never gets that
-     * high.
+     * The moment of the window the point stands out best against the sky
+     * while it stands at least $minAltitude high: the sky at it darkest less
+     * the extinction of the point then (AtmosphericExtinction), the higher
+     * of equally good moments; with the sky brightness then. Null when it
+     * never gets that high. Without the extinction every point would get
+     * the middle of a twilight night, however low it stands then.
      *
      * @return array{timestamp: int, sqm: float, altitude: float}|null
      */
-    public function darkestMoment(float $raDeg, float $decDeg, float $darkSqm, float $minAltitude): ?array
+    public function bestMoment(float $raDeg, float $decDeg, float $darkSqm, float $minAltitude): ?array
     {
         $best = null;
         foreach ($this->moments() as $timestamp) {
@@ -121,31 +160,36 @@ class MoonlightSky
             if ($altitude < $minAltitude) {
                 continue;
             }
-            $sqm = round($this->sqmAt($timestamp, $raDeg, $decDeg, $darkSqm), 2);
-            if ($best === null || [$sqm, $altitude] > [$best['sqm'], $best['altitude']]) {
-                $best = ['timestamp' => $timestamp, 'sqm' => $sqm, 'altitude' => $altitude];
+            $sqm   = round($this->sqmAt($timestamp, $raDeg, $decDeg, $darkSqm), 2);
+            $score = round($sqm - AtmosphericExtinction::magnitudes($altitude), 2);
+            if ($best === null || [$score, $altitude] > [$best['score'], $best['altitude']]) {
+                $best = ['timestamp' => $timestamp, 'sqm' => $sqm, 'altitude' => $altitude, 'score' => $score];
             }
         }
+        unset($best['score']);
 
         return $best;
     }
 
     /**
      * The sky brightness (magnitudes per square arcsecond) at the point of the
-     * sky at one of the moments(), from the brightness of the dark sky.
+     * sky at one of the moments(), from the brightness of the dark sky: the
+     * twilight (the same over the sky) and the Moon added to it.
      */
     public function sqmAt(int $timestamp, float $raDeg, float $decDeg, float $darkSqm): float
     {
-        $moon = $this->moon[$timestamp] ?? null;
+        $twilight = $this->twilight[$timestamp] ?? 0.0;
+        $sky      = $twilight > 0.0 ? self::toSqm(self::toNanoLambert($darkSqm) + $twilight) : $darkSqm;
+        $moon     = $this->moon[$timestamp] ?? null;
         if ($moon === null || $moon['altitude'] <= 0) {
-            return $darkSqm;
+            return $sky;
         }
         $altitude = $this->window->altitude($raDeg, $decDeg, $timestamp);
         if ($altitude <= 0) {
-            return $darkSqm;
+            return $sky;
         }
 
-        return self::toSqm(self::toNanoLambert($darkSqm) + self::moonlight($moon['fraction'], 90.0 - $moon['altitude'], 90.0 - $altitude, self::separation($raDeg, $decDeg, $moon['ra'], $moon['dec'])));
+        return self::toSqm(self::toNanoLambert($darkSqm) + $twilight + self::moonlight($moon['fraction'], 90.0 - $moon['altitude'], 90.0 - $altitude, self::separation($raDeg, $decDeg, $moon['ra'], $moon['dec'])));
     }
 
     /**

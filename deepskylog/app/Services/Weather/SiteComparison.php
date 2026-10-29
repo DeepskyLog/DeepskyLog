@@ -16,7 +16,8 @@ use Illuminate\Support\Collection;
  * locations, with the typical sky of the site, as a score from 0 to 100.
  *
  * For deep-sky objects (MODE_DEEPSKY) the score is the clear hours of the
- * night (an hour with a bright Moon counts for MOONLIT_WEIGHT), up to
+ * night (an hour with a bright Moon or in twilight counts for
+ * MOONLIT_WEIGHT: NightForecast's clear_dark_minutes leave both out), up to
  * FULL_HOURS, times the darkness of the sky, linear in the SQM from
  * SQM_POOR to SQM_DARK. For planets and double stars (MODE_PLANETS) the
  * Moon and the sky do not matter: the clear hours times SEEING_WEIGHTS.

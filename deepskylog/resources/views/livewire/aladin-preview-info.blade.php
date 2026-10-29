@@ -165,7 +165,7 @@
     @if ($moonlit !== null)
         {{-- The contrast reserve above is for a dark sky; this one for the sky of the night of the date (MoonlitContrastReserve) --}}
         <tr>
-            <td class="pr-4 font-medium">{{ __('Contrast reserve with the Moon') }}</td>
+            <td class="pr-4 font-medium">{{ ($moonlit['twilight'] ?? false) ? __('Contrast reserve in the twilight') : __('Contrast reserve with the Moon') }}</td>
             <td>
                 @if ($moonlit['contrast_reserve'] === null)
                     <span class="text-gray-400">{{ __('The object does not get high enough in the dark hours of this night.') }}</span>
@@ -190,7 +190,11 @@
                             data-dsl-no-overlay-hide="true">
                             <div class="text-sm mb-1">{{ __('contrast.reserve.summary', ['value' => $moonlit['contrast_reserve'], 'category' => __('contrast.reserve.category.' . $moonlit['category'])]) }}</div>
                             <div class="text-gray-300">
-                                @if ($moonlit['moon_up'])
+                                @if ($moonlit['moon_up'] && $moonlit['twilight'])
+                                    {{ __('at :time (altitude :altitude°), the sky lit by the Moon (:fraction% illuminated) and the twilight to :sqm mag/arcsec²', ['time' => $moonlit['time'], 'altitude' => $moonlit['altitude'], 'fraction' => (int) round($moonlit['moon_fraction'] * 100), 'sqm' => number_format($moonlit['sqm'], 2)]) }}
+                                @elseif ($moonlit['twilight'])
+                                    {{ __('at :time (altitude :altitude°), the sky brightened by the twilight to :sqm mag/arcsec² (it does not get completely dark this night)', ['time' => $moonlit['time'], 'altitude' => $moonlit['altitude'], 'sqm' => number_format($moonlit['sqm'], 2)]) }}
+                                @elseif ($moonlit['moon_up'])
                                     {{ __('at :time (altitude :altitude°), the sky lit by the Moon (:fraction% illuminated) to :sqm mag/arcsec²', ['time' => $moonlit['time'], 'altitude' => $moonlit['altitude'], 'fraction' => (int) round($moonlit['moon_fraction'] * 100), 'sqm' => number_format($moonlit['sqm'], 2)]) }}
                                 @else
                                     {{ __('at :time (altitude :altitude°), with the Moon below the horizon', ['time' => $moonlit['time'], 'altitude' => $moonlit['altitude']]) }}
