@@ -24,6 +24,7 @@ use App\Services\AavsoVariableStars;
 use App\Services\ObservationSearchQuery;
 use App\Services\Observations\ObservationCardData;
 use App\Services\Observations\SameFieldObjects;
+use App\Services\Observations\SketchOverlay;
 use App\Services\Observations\TargetAltitude;
 use App\Support\Html;
 use Carbon\Carbon;
@@ -174,6 +175,8 @@ class ObservationsController extends Controller
             // The observations of the other objects seen in the same field
             'sameFieldObservations' => $selectedUnified->seenInSameField(),
             'variableStarEstimate' => $obsType === 'deepsky' ? VariableStarEstimate::find($selectedUnified->id) : null,
+            // The drawing laid over the DSS image
+            'sketchOverlay' => $obsType === 'deepsky' ? SketchOverlay::for($selectedUnified) : null,
         ], $preloadedData, $socialData));
     }
 

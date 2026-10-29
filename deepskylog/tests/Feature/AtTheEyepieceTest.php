@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Database\Factories\InstrumentFactory;
 use Database\Factories\LocationFactory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 // The page at the eyepiece of an observing list with times
@@ -244,6 +245,76 @@ it('refuses an observation noted by another observer or of an object not in the 
     ])->assertStatus(422);
 
     expect(Observation::count())->toBe(0);
+});
+
+/** A sketch as the sketch pad sends it: a white star on black. */
+function aeSketch(): string
+{
+    $image = imagecreatetruecolor(100, 100);
+    imagefilledellipse($image, 50, 50, 10, 10, imagecolorallocate($image, 255, 255, 255));
+    ob_start();
+    imagejpeg($image, null, 95);
+
+    return 'data:image/jpeg;base64,'.base64_encode((string) ob_get_clean());
+}
+
+it('saves a sketch of the sketch pad as the drawing, white stars on black, also without a description', function () {
+    Storage::fake('public');
+    $owner = aeObserver();
+    $list = aeList($owner);
+    $m31 = $list->items()->where('object_name', 'M 31')->first();
+    $payload = ['item' => $m31->id, 'observed_at' => '2026-10-26T20:41:30Z', 'drawing' => aeSketch(), 'user' => $owner->id];
+
+    $first = $this->actingAs($owner)->postJson(route('observing-list.eyepiece.store', $list), $payload)
+        ->assertCreated()->assertJson(['drawing' => true]);
+
+    $observation = Observation::findOrFail($first->json('id'));
+    expect($observation->has_drawing)->toBeTrue()
+        ->and($observation->drawing_filename)->toStartWith('observations/eyepiece-');
+    Storage::disk('public')->assertExists($observation->drawing_filename);
+
+    // As drawn: a black sky with a white star
+    $image = imagecreatefromstring(Storage::disk('public')->get($observation->drawing_filename));
+    expect(imagecolorat($image, 2, 2) & 0xFF)->toBeLessThan(15)
+        ->and(imagecolorat($image, 50, 50) & 0xFF)->toBeGreaterThan(240);
+
+    // Sent again, it replaces its own copy
+    $old = $observation->drawing_filename;
+    $this->actingAs($owner)->postJson(route('observing-list.eyepiece.store', $list), $payload)->assertOk();
+    $observation->refresh();
+    expect($observation->drawing_filename)->not->toBe($old);
+    Storage::disk('public')->assertMissing($old);
+    expect(Observation::count())->toBe(1);
+});
+
+it('refuses a note without description or sketch, and a sketch that is no image', function () {
+    $owner = aeObserver();
+    $list = aeList($owner);
+    $m31 = $list->items()->where('object_name', 'M 31')->first();
+
+    $this->actingAs($owner)->postJson(route('observing-list.eyepiece.store', $list), [
+        'item' => $m31->id, 'observed_at' => '2026-10-26T20:41:00Z',
+    ])->assertStatus(422)->assertJsonValidationErrors('description');
+
+    $this->actingAs($owner)->postJson(route('observing-list.eyepiece.store', $list), [
+        'item' => $m31->id, 'observed_at' => '2026-10-26T20:41:00Z', 'drawing' => 'data:image/png;base64,'.base64_encode('not an image'),
+    ])->assertStatus(422);
+
+    expect(Observation::count())->toBe(0);
+});
+
+it('offers the sketch pad on the page at the eyepiece', function () {
+    $owner = aeObserver();
+    $list = aeList($owner);
+
+    $this->actingAs($owner)->get(route('observing-list.eyepiece', $list))->assertOk()
+        ->assertSee('id="sketch-pad"', false)
+        ->assertSee('id="sketch-open"', false)
+        ->assertSee('dsl-eyepiece-sketch:', false)
+        ->assertViewHas('compass', fn ($compass) => is_array($compass)
+            && abs(hypot(...$compass['north']) - 1) < 1e-3 && abs(hypot(...$compass['west']) - 1) < 1e-3
+            // West is a quarter turn from north, to the right without mirroring
+            && abs($compass['north'][0] * $compass['west'][0] + $compass['north'][1] * $compass['west'][1]) < 1e-3);
 });
 
 it('adds the red night mode to every page', function () {

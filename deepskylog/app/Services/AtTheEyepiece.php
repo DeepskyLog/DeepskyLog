@@ -22,6 +22,7 @@ use App\Services\Observations\ObservationCardData;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -43,6 +44,12 @@ use Illuminate\Support\Str;
  * standard equipment). An observation logged on the page itself (offline,
  * kept by the page until the connection returns) is saved with the same
  * location and equipment through CsvObservationImporter::importOne().
+ *
+ * The sketch pad of the page draws light on black, as the eye sees the
+ * field, the field circle SKETCH_FIELD of the square with N and W outside
+ * it; drawingImage()
+ * reads such a sketch and saveDrawing() stores it as it is, white stars on
+ * black, as the observation's drawing.
  */
 class AtTheEyepiece
 {
@@ -60,6 +67,17 @@ class AtTheEyepiece
 
     /** The finding notes shown of the current object, the most liked. */
     public const FINDING_NOTES = 3;
+
+    /** The largest sketch accepted from the sketch pad, in bytes of the image and in pixels per side. */
+    public const MAX_DRAWING_BYTES = 4 * 1024 * 1024;
+
+    public const MAX_DRAWING_PIXELS = 2000;
+
+    /** The part of the width of a sketch the field circle spans: the rest holds N and W. */
+    public const SKETCH_FIELD = 0.88;
+
+    /** Where saveDrawing() stores the sketches, on the public disk. */
+    public const DRAWING_PREFIX = 'observations/eyepiece-';
 
     /**
      * The lists the observer can take to the telescope (/observing-lists/eyepiece,
@@ -469,6 +487,51 @@ class AtTheEyepiece
                 'language' => strtolower(substr((string) $language, 0, 10)),
                 'description' => $description,
             ]);
+    }
+
+    /**
+     * The image of a sketch sent by the page (a data: URL of a PNG or JPEG
+     * image), or null when it is none or too large.
+     */
+    public static function drawingImage(string $dataUrl): ?\GdImage
+    {
+        if (! preg_match('#^data:image/(png|jpeg);base64,#', $dataUrl, $match)) {
+            return null;
+        }
+        $bytes = base64_decode(substr($dataUrl, strlen($match[0])), true);
+        if ($bytes === false || $bytes === '' || strlen($bytes) > self::MAX_DRAWING_BYTES) {
+            return null;
+        }
+        $info = @getimagesizefromstring($bytes);
+        if ($info === false || ! in_array($info[2], [IMAGETYPE_PNG, IMAGETYPE_JPEG], true)
+            || $info[0] > self::MAX_DRAWING_PIXELS || $info[1] > self::MAX_DRAWING_PIXELS) {
+            return null;
+        }
+        $image = @imagecreatefromstring($bytes);
+
+        return $image === false ? null : $image;
+    }
+
+    /**
+     * Store a sketch of the sketch pad as the drawing of the observation,
+     * light on black as drawn. It replaces the drawing the observation
+     * had; a sketch of the pad it replaces (the page sent it again) is
+     * deleted.
+     */
+    public static function saveDrawing(Observation $observation, \GdImage $image): void
+    {
+        ob_start();
+        imagejpeg($image, null, 90);
+        $jpeg = (string) ob_get_clean();
+
+        $path = self::DRAWING_PREFIX.Str::random(32).'.jpg';
+        Storage::disk('public')->put($path, $jpeg);
+
+        $old = (string) $observation->drawing_filename;
+        $observation->forceFill(['has_drawing' => true, 'drawing_filename' => $path])->save();
+        if ($old !== '' && $old !== $path && str_starts_with($old, self::DRAWING_PREFIX)) {
+            Storage::disk('public')->delete($old);
+        }
     }
 
     /**

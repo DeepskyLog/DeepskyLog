@@ -17,6 +17,17 @@
     }
     html.dsl-night body::after { background: #808080; mix-blend-mode: saturation; }
     html.dsl-night::after { background: #ff0000; mix-blend-mode: multiply; }
+    /* A modal dialog is in the top layer, above the layers of the page: it
+       gets layers of its own, over its own box (the sketch pad, Quick note) */
+    html.dsl-night dialog[open]::before,
+    html.dsl-night dialog[open]::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+    html.dsl-night dialog[open]::before { z-index: 2147483646; background: #808080; mix-blend-mode: saturation; }
+    html.dsl-night dialog[open]::after { z-index: 2147483647; background: #ff0000; mix-blend-mode: multiply; }
 </style>
 <script>
     (function () {

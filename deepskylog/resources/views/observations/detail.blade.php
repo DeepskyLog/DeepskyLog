@@ -277,6 +277,9 @@
                                 {!! $user->getCopyright() !!}
                             </div>
                         @endif
+                        @if (! empty($sketchOverlay))
+                            @include('observations.partials.sketch-overlay')
+                        @endif
                     @endif
 
                     {{-- Header: observer + object --}}

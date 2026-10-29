@@ -78,6 +78,15 @@
         .like[aria-pressed="true"] { border-color: #b91c1c; color: #fca5a5; }
         .tip-form { display: flex; gap: .5rem; margin-top: .5rem; }
         .tip-form input { flex: 1; min-width: 0; padding: .5rem; border: 1px solid #374151; border-radius: .5rem; background: #000; color: #f3f4f6; font: inherit; }
+        dialog.sketch { inset: 0; width: auto; max-width: none; height: auto; max-height: none; margin: 0; padding: .5rem; border: 0; border-radius: 0; background: #000; }
+        dialog.sketch[open] { display: flex; flex-direction: column; gap: .5rem; }
+        .sketch-stage { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+        .sketch-stage canvas { display: block; max-width: 100%; max-height: 100%; aspect-ratio: 1; touch-action: none; background: #000; }
+        .sketch-tools { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: center; }
+        .sketch-tools .button { padding: .5rem .7rem; }
+        .sketch-tools .button[aria-pressed="true"] { background: #1f2937; border-color: #d1d5db; color: #fff; }
+        .sketch-tools .gap { width: .6rem; }
+        .sketch-thumb { display: block; width: 8rem; height: 8rem; margin: .4rem 0; border: 1px solid #374151; border-radius: .4rem; background: #000; }
         .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
     </style>
 </head>
@@ -144,7 +153,10 @@
 
             <a class="log" id="log-it" href="{{ route('observing-list.eyepiece.log', ['list' => $list, 'item' => $current['item']->id]) }}">{{ __('Log it') }}</a>
             <div class="row spread">
-                <button type="button" class="button" id="quick-log-open">{{ __('Quick note') }}</button>
+                <span class="row">
+                    <button type="button" class="button" id="quick-log-open">{{ __('Quick note') }}</button>
+                    <button type="button" class="button" id="sketch-open">{{ __('Sketch') }}</button>
+                </span>
                 @if ($session)
                     <span class="muted">{{ __('Session: :name', ['name' => html_entity_decode((string) $session->name)]) }}</span>
                 @endif
@@ -351,13 +363,21 @@
                 </select>
             @endif
             <label for="quick-log-description">{{ __('Description') }}</label>
-            <textarea id="quick-log-description" rows="6" maxlength="{{ \App\Services\AtTheEyepiece::MAX_DESCRIPTION }}" required></textarea>
+            <textarea id="quick-log-description" rows="6" maxlength="{{ \App\Services\AtTheEyepiece::MAX_DESCRIPTION }}"></textarea>
             <div class="row" style="margin-top:.5rem">
                 <button type="button" class="button" id="quick-log-dictate" aria-pressed="false" hidden>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v1a7 7 0 0 0 14 0v-1M12 18v4"/></svg>
                     <span data-dictation-label>{{ __('Dictate') }}</span>
                 </button>
                 <span class="muted" id="quick-log-dictation" role="status" aria-live="polite"></span>
+            </div>
+            <div id="quick-log-sketch" hidden>
+                <label>{{ __('Sketch') }}</label>
+                <img class="sketch-thumb" id="quick-log-sketch-image" alt="{{ __('Sketch') }}" />
+            </div>
+            <div class="row" style="margin-top:.5rem">
+                <button type="button" class="button" id="quick-log-sketch-edit">{{ __('Add a sketch') }}</button>
+                <button type="button" class="button" id="quick-log-sketch-remove" hidden>{{ __('Remove the sketch') }}</button>
             </div>
             <p class="muted">{{ __('Saved with the location and equipment of your last observation tonight, else your standard ones. Complete it later on the observation page.') }}</p>
             <p class="error" id="quick-log-error" hidden></p>
@@ -366,6 +386,36 @@
                 <button type="submit" class="button" style="border-color:#b91c1c">{{ __('Save') }}</button>
             </div>
         </form>
+    </dialog>
+
+    {{-- Sketch pad: light on black as in the eyepiece, the field circle to
+         the edges; saved with the Quick note as it is drawn
+         (AtTheEyepiece::saveDrawing()) --}}
+    <dialog id="sketch-pad" class="sketch" aria-labelledby="sketch-title">
+        <div class="row spread">
+            <span class="label" id="sketch-title">{{ __('Sketch') }} · {{ $current['name'] }}</span>
+            <span class="muted" id="sketch-up"></span>
+        </div>
+        <div class="sketch-stage">
+            <canvas id="sketch-canvas" width="1000" height="1000" role="img" aria-label="{{ __('Sketch of :object', ['object' => $current['name']]) }}"></canvas>
+        </div>
+        <div class="sketch-tools" role="toolbar" aria-label="{{ __('Tools') }}">
+            <button type="button" class="button" data-tool="soft" aria-pressed="true">{{ __('Soft') }}</button>
+            <button type="button" class="button" data-tool="hard" aria-pressed="false">{{ __('Hard') }}</button>
+            <button type="button" class="button" data-tool="star" aria-pressed="false">{{ __('Star') }}</button>
+            <button type="button" class="button" data-tool="eraser" aria-pressed="false">{{ __('Eraser') }}</button>
+            <span class="gap"></span>
+            <button type="button" class="button" data-size="0" aria-pressed="false" title="{{ __('Small') }}">S</button>
+            <button type="button" class="button" data-size="1" aria-pressed="true" title="{{ __('Medium') }}">M</button>
+            <button type="button" class="button" data-size="2" aria-pressed="false" title="{{ __('Large') }}">L</button>
+            <span class="gap"></span>
+            <button type="button" class="button" id="sketch-undo">{{ __('Undo') }}</button>
+            <button type="button" class="button" id="sketch-clear">{{ __('Clear') }}</button>
+        </div>
+        <div class="row spread">
+            <button type="button" class="button" id="sketch-close">{{ __('Close') }}</button>
+            <button type="button" class="button" id="sketch-done" style="border-color:#b91c1c">{{ __('Continue to the note') }}</button>
+        </div>
     </dialog>
 
     @php
@@ -381,6 +431,12 @@
             'language' => $user->observationlanguage ?: ($user->language ?: app()->getLocale()),
             'item' => $current['item']->id,
             'object' => $current['name'],
+            // How the field views turn the field: the sketch is drawn as seen
+            // Unit vectors (x right, y down) of north and west in the view
+            'compass' => $compass,
+            'compassLabels' => ['north' => __('N'), 'west' => __('W')],
+            'sketchField' => \App\Services\AtTheEyepiece::SKETCH_FIELD,
+            'up' => isset($views['orientation']) ? ($views['orientation'] === 'zenith' ? __('Zenith up, as in the telescope view') : __('North up, as in the telescope view')) : '',
             'following' => $following,
             // Only a list with times follows the clock
             'sequence' => $timed ? $entries->map(fn ($entry) => ['id' => $entry['item']->id, 'at' => $entry['at']->timestamp])->values() : [],
@@ -398,7 +454,13 @@
                 'login' => __('Log in again to send the observations kept on this device.'),
                 'remove' => __('Remove'),
                 'removeConfirm' => __('Remove this observation from this device? It has not been sent.'),
-                'empty' => __('Write what you saw.'),
+                'empty' => __('Write what you saw, or add a sketch.'),
+                'full' => __('There is no room left on this device: send the observations waiting first.'),
+                'sketch' => __('sketch'),
+                'addSketch' => __('Add a sketch'),
+                'editSketch' => __('Edit the sketch'),
+                'clearConfirm' => __('Clear the whole sketch?'),
+                'removeSketchConfirm' => __('Remove the sketch?'),
                 'at' => __('At :time'),
                 'copied' => __('Copied: paste it in the search of SkySafari.'),
                 'noSkySafari' => __('SkySafari did not open: copy the name and paste it in its search.'),
@@ -422,8 +484,10 @@
             var storage = function (store, key, value) {
                 try {
                     if (value === undefined) return window[store].getItem(key);
-                    window[store].setItem(key, value);
-                } catch (e) { return null; }
+                    if (value === null) window[store].removeItem(key);
+                    else window[store].setItem(key, value);
+                    return true;
+                } catch (e) { return value === undefined ? null : false; }
             };
 
             // The clock and the minutes to or since each time, at the location
@@ -537,7 +601,12 @@
             function queue() {
                 try { return JSON.parse(storage('localStorage', QUEUE) || '[]'); } catch (e) { return []; }
             }
-            function saveQueue(entries) { storage('localStorage', QUEUE, JSON.stringify(entries)); renderQueue(); }
+            // False when the device has no room left (a sketch takes some)
+            function saveQueue(entries) {
+                var saved = storage('localStorage', QUEUE, JSON.stringify(entries)) === true;
+                renderQueue();
+                return saved;
+            }
             var queueStatus = document.getElementById('queue-status');
             function renderQueue(status) {
                 var entries = queue();
@@ -547,7 +616,7 @@
                 list.textContent = '';
                 entries.forEach(function (entry) {
                     var li = document.createElement('li');
-                    li.textContent = entry.object + ' · ' + hm.format(new Date(entry.observed_at)) + ' ';
+                    li.textContent = entry.object + ' · ' + hm.format(new Date(entry.observed_at)) + (entry.drawing ? ' · ' + texts.sketch : '') + ' ';
                     if (entry.problem) {
                         var problem = document.createElement('div');
                         problem.className = 'problem';
@@ -584,7 +653,7 @@
                     method: 'POST',
                     credentials: 'same-origin',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': token },
-                    body: JSON.stringify({ item: entry.item, observed_at: entry.observed_at, description: entry.description, visibility: entry.visibility, user: entry.user }),
+                    body: JSON.stringify({ item: entry.item, observed_at: entry.observed_at, description: entry.description, visibility: entry.visibility, user: entry.user, drawing: entry.drawing || null }),
                 });
             }
             var sending = false;
@@ -637,6 +706,208 @@
             renderQueue();
             send();
 
+            // Sketch pad: strokes in canvas pixels, light on black, kept on
+            // the device per object until the note is saved, so a reload or
+            // the next object does not lose it. The image is the strokes,
+            // black outside the field circle and the circle itself.
+            var sketch = (function () {
+                var SIZE = 1000;
+                var RADIUS = SIZE / 2 * data.sketchField;
+                var DRAFT = 'dsl-eyepiece-sketch:' + data.list + ':' + data.item;
+                // Per tool the small, medium and large size (pixels)
+                var SIZES = { soft: [14, 28, 56], hard: [1.5, 3, 6], star: [2, 3.5, 6], eraser: [10, 24, 50] };
+                var dialog = document.getElementById('sketch-pad');
+                var canvas = document.getElementById('sketch-canvas');
+                var context = canvas.getContext('2d');
+                var paint = document.createElement('canvas');
+                paint.width = paint.height = SIZE;
+                var ink = paint.getContext('2d');
+                var tool = 'soft';
+                var size = 1;
+                var strokes = [];
+                var started = null;
+                var current = null;
+                var queued = false;
+                try {
+                    var draft = JSON.parse(storage('localStorage', DRAFT) || 'null');
+                    if (draft && Array.isArray(draft.strokes)) { strokes = draft.strokes; started = draft.started || null; }
+                } catch (e) {}
+                document.getElementById('sketch-up').textContent = data.up || '';
+
+                function keep() {
+                    storage('localStorage', DRAFT, strokes.length ? JSON.stringify({ strokes: strokes, started: started }) : null);
+                }
+                function dab(x, y, radius, alpha) {
+                    var gradient = ink.createRadialGradient(x, y, 0, x, y, radius);
+                    gradient.addColorStop(0, 'rgba(255,255,255,' + alpha + ')');
+                    gradient.addColorStop(1, 'rgba(255,255,255,0)');
+                    ink.fillStyle = gradient;
+                    ink.beginPath();
+                    ink.arc(x, y, radius, 0, 2 * Math.PI);
+                    ink.fill();
+                }
+                function line(a, b, colour, width) {
+                    ink.strokeStyle = colour;
+                    ink.lineWidth = width;
+                    ink.lineCap = ink.lineJoin = 'round';
+                    ink.beginPath();
+                    ink.moveTo(a[0], a[1]);
+                    ink.lineTo(b[0] + (a[0] === b[0] && a[1] === b[1] ? 0.01 : 0), b[1]);
+                    ink.stroke();
+                }
+                // Paint the points of a stroke from index `from` on; a soft
+                // stroke lays dabs a quarter of its radius apart
+                function draw(stroke, from) {
+                    var points = stroke.points;
+                    var radius = SIZES[stroke.tool][stroke.size];
+                    if (stroke.tool === 'star') {
+                        dab(points[0][0], points[0][1], radius * 2.2, 0.9);
+                        ink.fillStyle = '#fff';
+                        ink.beginPath();
+                        ink.arc(points[0][0], points[0][1], radius * 0.6, 0, 2 * Math.PI);
+                        ink.fill();
+                        return;
+                    }
+                    for (var i = from; i < points.length; i++) {
+                        var a = points[Math.max(i - 1, 0)];
+                        var b = points[i];
+                        if (stroke.tool !== 'soft') {
+                            line(a, b, stroke.tool === 'eraser' ? '#000' : '#fff', stroke.tool === 'eraser' ? 2 * radius : radius);
+                            continue;
+                        }
+                        var spacing = radius / 4;
+                        if (i === 0) { dab(b[0], b[1], radius, 0.06); stroke.carry = 0; continue; }
+                        var length = Math.hypot(b[0] - a[0], b[1] - a[1]);
+                        var t = spacing - (stroke.carry || 0);
+                        for (; t <= length; t += spacing) {
+                            dab(a[0] + (b[0] - a[0]) * t / length, a[1] + (b[1] - a[1]) * t / length, radius, 0.06);
+                        }
+                        stroke.carry = length - (t - spacing);
+                    }
+                }
+                function compose() {
+                    queued = false;
+                    context.fillStyle = '#000';
+                    context.fillRect(0, 0, SIZE, SIZE);
+                    context.save();
+                    context.beginPath();
+                    context.arc(SIZE / 2, SIZE / 2, RADIUS, 0, 2 * Math.PI);
+                    context.clip();
+                    context.drawImage(paint, 0, 0);
+                    context.restore();
+                    context.strokeStyle = '#555';
+                    context.lineWidth = 3;
+                    context.beginPath();
+                    context.arc(SIZE / 2, SIZE / 2, RADIUS, 0, 2 * Math.PI);
+                    context.stroke();
+                    // N and W outside the rim, with a tick, as on a sketch on paper
+                    if (data.compass) {
+                        context.fillStyle = context.strokeStyle = '#888';
+                        context.font = 'bold 40px system-ui, sans-serif';
+                        context.textAlign = 'center';
+                        context.textBaseline = 'middle';
+                        ['north', 'west'].forEach(function (key) {
+                            var d = data.compass[key];
+                            context.beginPath();
+                            context.moveTo(SIZE / 2 + d[0] * RADIUS, SIZE / 2 + d[1] * RADIUS);
+                            context.lineTo(SIZE / 2 + d[0] * (RADIUS + 12), SIZE / 2 + d[1] * (RADIUS + 12));
+                            context.stroke();
+                            context.fillText(data.compassLabels[key], SIZE / 2 + d[0] * (RADIUS + 36), SIZE / 2 + d[1] * (RADIUS + 36));
+                        });
+                    }
+                }
+                function show() {
+                    if (! queued) { queued = true; window.requestAnimationFrame(compose); }
+                }
+                function redraw() {
+                    ink.fillStyle = '#000';
+                    ink.fillRect(0, 0, SIZE, SIZE);
+                    strokes.forEach(function (stroke) { draw(stroke, 0); });
+                    compose();
+                }
+                function point(event) {
+                    var box = canvas.getBoundingClientRect();
+                    return [
+                        Math.round((event.clientX - box.left) / box.width * SIZE * 10) / 10,
+                        Math.round((event.clientY - box.top) / box.height * SIZE * 10) / 10,
+                    ];
+                }
+                canvas.addEventListener('pointerdown', function (event) {
+                    event.preventDefault();
+                    canvas.setPointerCapture(event.pointerId);
+                    if (! started) started = new Date().toISOString();
+                    current = { tool: tool, size: size, points: [point(event)] };
+                    strokes.push(current);
+                    draw(current, 0);
+                    show();
+                    if (tool === 'star') { current = null; keep(); }
+                });
+                canvas.addEventListener('pointermove', function (event) {
+                    if (! current) return;
+                    var events = event.getCoalescedEvents ? event.getCoalescedEvents() : [event];
+                    var from = current.points.length;
+                    (events.length ? events : [event]).forEach(function (one) { current.points.push(point(one)); });
+                    draw(current, from);
+                    show();
+                });
+                ['pointerup', 'pointercancel'].forEach(function (name) {
+                    canvas.addEventListener(name, function () {
+                        if (! current) return;
+                        delete current.carry;
+                        current = null;
+                        keep();
+                    });
+                });
+                document.querySelectorAll('[data-tool]').forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        tool = button.getAttribute('data-tool');
+                        document.querySelectorAll('[data-tool]').forEach(function (other) { other.setAttribute('aria-pressed', other === button ? 'true' : 'false'); });
+                    });
+                });
+                document.querySelectorAll('[data-size]').forEach(function (button) {
+                    button.addEventListener('click', function () {
+                        size = Number(button.getAttribute('data-size'));
+                        document.querySelectorAll('[data-size]').forEach(function (other) { other.setAttribute('aria-pressed', other === button ? 'true' : 'false'); });
+                    });
+                });
+                document.getElementById('sketch-undo').addEventListener('click', function () {
+                    strokes.pop();
+                    keep();
+                    redraw();
+                });
+                document.getElementById('sketch-clear').addEventListener('click', function () {
+                    if (strokes.length && window.confirm(texts.clearConfirm)) api.clear();
+                });
+                document.getElementById('sketch-close').addEventListener('click', function () { dialog.close(); });
+                redraw();
+
+                var api = {
+                    open: function () {
+                        if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open', '');
+                    },
+                    close: function () { if (dialog.open) dialog.close(); },
+                    has: function () { return strokes.length > 0; },
+                    started: function () { return started ? new Date(started) : null; },
+                    // JPEG is a fraction of PNG for the soft strokes
+                    image: function (width) {
+                        compose();
+                        if (! width) return canvas.toDataURL('image/jpeg', 0.85);
+                        var small = document.createElement('canvas');
+                        small.width = small.height = width;
+                        small.getContext('2d').drawImage(canvas, 0, 0, width, width);
+                        return small.toDataURL('image/jpeg', 0.8);
+                    },
+                    clear: function () {
+                        strokes = [];
+                        started = null;
+                        keep();
+                        redraw();
+                    },
+                    dialog: dialog,
+                };
+                return api;
+            })();
+
             // Quick note, and "Log it" without a connection
             var dialog = document.getElementById('quick-log');
             var form = document.getElementById('quick-log-form');
@@ -644,10 +915,20 @@
             var visibility = document.getElementById('quick-log-visibility');
             var error = document.getElementById('quick-log-error');
             var openedAt = null;
+            var sketchBlock = document.getElementById('quick-log-sketch');
+            var sketchEdit = document.getElementById('quick-log-sketch-edit');
+            var sketchRemove = document.getElementById('quick-log-sketch-remove');
+            function showSketch() {
+                sketchBlock.hidden = sketchRemove.hidden = ! sketch.has();
+                sketchEdit.textContent = sketch.has() ? texts.editSketch : texts.addSketch;
+                if (sketch.has()) document.getElementById('quick-log-sketch-image').src = sketch.image(256);
+            }
+            // The moment of a sketch is when it was begun
             function openQuickLog() {
-                openedAt = new Date();
+                openedAt = sketch.started() || openedAt || new Date();
                 document.getElementById('quick-log-time').textContent = format(texts.at, { time: hm.format(openedAt) });
                 error.hidden = true;
+                showSketch();
                 if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open', '');
                 description.focus();
             }
@@ -662,9 +943,24 @@
                     description.selectionStart = description.selectionEnd = before.length;
                 },
             });
-            dialog.addEventListener('close', function () { if (dictation) dictation.stop(); });
+            var toSketch = false;
+            dialog.addEventListener('close', function () {
+                if (dictation) dictation.stop();
+                if (toSketch) { toSketch = false; sketch.open(); } else { openedAt = null; }
+            });
             document.getElementById('quick-log-open').addEventListener('click', openQuickLog);
             document.getElementById('quick-log-cancel').addEventListener('click', function () { dialog.close(); });
+            document.getElementById('sketch-open').addEventListener('click', function () { sketch.open(); });
+            sketchEdit.addEventListener('click', function () { toSketch = true; dialog.close(); });
+            sketchRemove.addEventListener('click', function () {
+                if (! window.confirm(texts.removeSketchConfirm)) return;
+                sketch.clear();
+                showSketch();
+            });
+            document.getElementById('sketch-done').addEventListener('click', function () {
+                sketch.close();
+                openQuickLog();
+            });
             document.getElementById('log-it').addEventListener('click', function (event) {
                 if (navigator.onLine === false) {
                     event.preventDefault();
@@ -673,13 +969,14 @@
             });
             form.addEventListener('submit', function (event) {
                 event.preventDefault();
-                if (! description.value.trim()) {
+                if (! description.value.trim() && ! sketch.has()) {
                     error.textContent = texts.empty;
                     error.hidden = false;
                     return;
                 }
                 var entries = queue();
                 entries.push({
+                    drawing: sketch.has() ? sketch.image() : null,
                     key: Date.now() + '-' + Math.random().toString(36).slice(2),
                     store: data.store,
                     item: data.item,
@@ -689,7 +986,12 @@
                     visibility: visibility && visibility.value ? Number(visibility.value) : null,
                     user: data.user,
                 });
-                saveQueue(entries);
+                if (! saveQueue(entries)) {
+                    error.textContent = texts.full;
+                    error.hidden = false;
+                    return;
+                }
+                sketch.clear();
                 description.value = '';
                 if (visibility) visibility.value = '';
                 dialog.close();
