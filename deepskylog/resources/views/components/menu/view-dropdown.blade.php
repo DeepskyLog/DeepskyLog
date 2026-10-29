@@ -52,6 +52,8 @@
 
             <x-menu.item icon="trophy" href="{{ route('records.aperture') }}">{{ __('Aperture records') }}</x-menu.item>
 
+            <x-menu.item icon="map" href="{{ route('sky-brightness-map') }}">{{ __('Sky brightness map') }}</x-menu.item>
+
             <x-menu.item icon="chart-bar-square" href="{{ route('statistics.index') }}">{{ __('Statistics') }}</x-menu.item>
 
             <x-menu.item separator icon="list-bullet" href="{{ route('observing-lists.discover') }}">{{ __('Observing lists') }}</x-menu.item>

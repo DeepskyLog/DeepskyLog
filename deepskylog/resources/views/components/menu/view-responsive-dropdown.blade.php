@@ -99,6 +99,12 @@
             />
 
             <x-dropdown.item
+                icon="map"
+                href="{{ route('sky-brightness-map') }}"
+                label="{{ __('Sky brightness map') }}"
+            />
+
+            <x-dropdown.item
                 icon="chart-bar-square"
                 href="{{ route('statistics.index') }}"
                 label="{{ __('Statistics') }}"

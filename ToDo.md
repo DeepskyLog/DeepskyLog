@@ -182,14 +182,8 @@
 - [X] Follow an object: the page of a deep-sky object, comet, planet, moon, lunar feature or asteroid has a Follow button. The observations others make of the objects an observer follows appear, with those of the observers they follow, under "What I follow" on /observations (?following=1) and in their personal RSS feed, and the daily digest gets a part per followed object with the number of new observations and drawings, linking to the object. The digest now also comes as a push notification. The observer's own page lists the objects they follow. A renamed or merged object keeps its followers.
 - [X] Revisit with your telescope: /observing-lists/revisit (linked from "My observing lists" and, as "Revisit with this telescope", from the page of one's own instrument) lists the deep-sky objects the observer has seen only with a much smaller instrument (at most two thirds of the aperture), or never drew, that their standard telescope (or another of their instruments) shows with a clearly higher contrast reserve at one of their locations than the best of the instruments they saw it with, ranked by that gain. It can show only one of the two kinds, and makes an observing list of them. Where "What's new for me" is about objects never seen, this one is about objects worth a second look.
 - [X] Observing activity calendar: the observer page shows a GitHub-style heatmap of the nights with observations of one year (a choice of all years with observations, the latest first), each night coloured by the number of different objects seen, with the new Moons marked as rings. A night is the date of its evening, as in the blog, and clicking it opens the blog at that night.
+- [X] Community sky-brightness map: /sky-brightness-map (View menu "Sky brightness map") shows the sky brightness (the measured SQM of a night, else its NELM converted to the SQM of the same sky with the observer's correction, at most 22.0, marked ≈ when mostly from NELMs, as these read too dark under a dark sky), or only the SQM or NELM, the observers recorded with their observations as the median per cell of 0.25° by 0.25° on a map (dots at the scale of a continent, the cells from zoom 7), coloured as the light pollution maps, for all years or the last 10. Clicking a cell shows its SQM and NELM, the number of observers and nights, and the median per year with a line, so you see how the sky there changed. To protect the observers no location is ever shown, only the cell it lies in, without the observers, and hidden locations are left out. Every observer weighs the same and a night counts once, with the values and range checks of the sky quality history of a location.
 
-
-
-- Community sky-brightness map
-
-The SQM and NELM values with observations, aggregated per grid cell of about 0.25° and anonymised (only cells with several observers), shown as a Leaflet layer.
-Shows how the sky at a site changed over the years.
-Reuses LocationSkyHistory and its range checks. Privacy needs care, so it should use cells, never exact locations.
 
 
 - Beginner path

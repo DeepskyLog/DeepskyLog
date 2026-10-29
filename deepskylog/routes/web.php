@@ -922,6 +922,9 @@ Route::get('/popular-objects', [App\Http\Controllers\PopularObjectController::cl
 // The faintest objects seen with at most an aperture
 Route::get('/records/aperture', [App\Http\Controllers\ApertureRecordsController::class, 'index'])->name('records.aperture');
 
+// The SQM and NELM of the observations per cell of 0.25°, only cells with several observers
+Route::get('/sky-brightness-map', [App\Http\Controllers\SkyBrightnessMapController::class, 'index'])->name('sky-brightness-map');
+
 // Popular sessions
 Route::get('/popular-sessions', function () {
     return view('observations.popular-sessions');
@@ -1127,6 +1130,7 @@ Route::get('/sitemap.xml', function () {
         $urls[] = ['loc' => $base . '/popular-sessions', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
         $urls[] = ['loc' => $base . '/popular-objects', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
         $urls[] = ['loc' => $base . '/records/aperture', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.5'];
+        $urls[] = ['loc' => $base . '/sky-brightness-map', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.5'];
         $urls[] = ['loc' => $base . '/popular-observations', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
         $urls[] = ['loc' => $base . '/statistics', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
         $urls[] = ['loc' => $base . '/drawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];

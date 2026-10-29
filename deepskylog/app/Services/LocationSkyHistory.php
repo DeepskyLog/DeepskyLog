@@ -100,7 +100,8 @@ class LocationSkyHistory
         return false;
     }
 
-    private static function within(mixed $value, array $range): ?float
+    /** The value when it lies within the range, else null. */
+    public static function within(mixed $value, array $range): ?float
     {
         if ($value === null || ! is_numeric($value)) {
             return null;
@@ -111,7 +112,7 @@ class LocationSkyHistory
     }
 
     /** The median of the values that are not null, or null without any. */
-    private static function median(array $values, int $precision): ?float
+    public static function median(array $values, int $precision): ?float
     {
         $values = array_values(array_filter($values, fn ($value) => $value !== null));
         if ($values === []) {
