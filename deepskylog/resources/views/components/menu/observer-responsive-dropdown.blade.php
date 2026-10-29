@@ -22,6 +22,11 @@
                     href="/drawings/{{ Auth::user()->slug }}"
                     label="{{__('My drawings') }}"/>
 
+                <x-dropdown.item
+                    icon="exclamation-triangle"
+                    href="{{ route('observations.suspect') }}"
+                    label="{{ __('Observations to check') }}"/>
+
                 @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
                 <x-dropdown.item href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}">
                     <x-outline.session-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />

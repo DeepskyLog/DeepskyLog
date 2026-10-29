@@ -35,6 +35,12 @@
                         />
 
                         <x-dropdown.item
+                            icon="exclamation-triangle"
+                            href="{{ route('admin.suspect-observations') }}"
+                            label="{{ __('Suspect observations') }}"
+                        />
+
+                        <x-dropdown.item
                             icon="lock-closed"
                             href="{{ route('admin.complete-catalogs') }}"
                             label="{{ __('Complete catalogs') }}"

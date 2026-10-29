@@ -99,6 +99,13 @@
                     />
                 @endif
 
+                @if (($suspectObservationCount ?? 0) > 0)
+                    <x-suspect-observations-notice
+                        :count="$suspectObservationCount"
+                        class="order-1 lg:order-none"
+                    />
+                @endif
+
                 @if (!empty($nightForecast))
                     <x-night-forecast
                         :nights="$nightForecast"

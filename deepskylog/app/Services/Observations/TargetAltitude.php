@@ -75,12 +75,23 @@ class TargetAltitude
      */
     public static function at(array $target, Location $location, Carbon $moment): ?float
     {
-        $geo = self::geo($location);
-        $coordinates = self::coordinates($target, $moment, $geo, (float) ($location->elevation ?? 0.0));
-        if ($coordinates === null) {
-            return null;
+        $coordinates = self::coordinates($target, $moment, self::geo($location), (float) ($location->elevation ?? 0.0));
+
+        return $coordinates === null ? null : self::ofCoordinates($coordinates, $location, $moment);
+    }
+
+    /**
+     * The altitude in degrees of a fixed position at the moment, or, without
+     * a moment, the highest altitude it reaches (at its transit). For callers
+     * that already read the position of many deep-sky objects.
+     */
+    public static function ofCoordinates(EquatorialCoordinates $coordinates, Location $location, ?Carbon $moment): float
+    {
+        if ($moment === null) {
+            return 90.0 - abs((float) $location->latitude - $coordinates->getDeclination()->getCoordinate());
         }
 
+        $geo = self::geo($location);
         $sidereal = Time::meanSiderialTime($moment->copy()->utc(), $geo);
 
         return $coordinates->convertToHorizontal($geo, $sidereal)->getAltitude()->getCoordinate();
@@ -111,7 +122,8 @@ class TargetAltitude
         return $highest;
     }
 
-    private static function usable(?Location $location): bool
+    /** Whether the location has coordinates to compute an altitude from. */
+    public static function usable(?Location $location): bool
     {
         if ($location === null || $location->latitude === null || $location->longitude === null) {
             return false;

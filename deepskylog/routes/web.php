@@ -73,6 +73,9 @@ Route::get('language/{locale}', function ($locale) {
     return redirect()->back();
 });
 
+// The documentation of the token API /api/v1/me (the OpenAPI description of App\Support\Api\MeApiSpec)
+Route::view('/api-documentation', 'api.documentation')->name('api.documentation');
+
 // Teams
 Route::get('/teams/{team}', 'App\Http\Controllers\DeepskyLogTeamController@show')->name('teams.show');
 
@@ -319,6 +322,20 @@ Route::get('/observations/search/export.apd', [App\Http\Controllers\ObservationS
 Route::get('/observations/search/export.oal.xml', [App\Http\Controllers\ObservationSearchExportController::class, 'oal'])
     ->name('observations.search.oal')
     ->middleware(['doNotCacheResponse', 'throttle:exports']);
+// The observations that look wrong (App\Services\Observations\SuspectObservations):
+// the observer's own, everybody's for administrators and database experts.
+Route::get('/observations/suspect', [App\Http\Controllers\SuspectObservationController::class, 'index'])
+    ->name('observations.suspect')
+    ->middleware(['auth', 'doNotCacheResponse']);
+Route::get('/admin/suspect-observations', [App\Http\Controllers\SuspectObservationController::class, 'admin'])
+    ->name('admin.suspect-observations')
+    ->middleware(['auth', 'doNotCacheResponse']);
+Route::post('/suspect-observations/{suspect}/dismiss', [App\Http\Controllers\SuspectObservationController::class, 'dismiss'])
+    ->name('suspect-observations.dismiss')
+    ->middleware('auth');
+Route::post('/suspect-observations/{suspect}/restore', [App\Http\Controllers\SuspectObservationController::class, 'restore'])
+    ->name('suspect-observations.restore')
+    ->middleware('auth');
 // Zip files of observations with their drawings, made by a queue worker
 // (App\Jobs\GenerateObservationsZip).
 Route::get('/observations/zip', [App\Http\Controllers\ObservationZipController::class, 'index'])

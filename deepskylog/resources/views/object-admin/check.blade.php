@@ -243,6 +243,34 @@
         </x-card>
 
         <x-card>
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <h3 class="text-lg font-semibold text-white">{{ __('Suspect observations') }}</h3>
+                    <p class="mt-1 text-sm text-gray-300">
+                        {{ __('Observations of an object below the horizon at the date, time and location entered, far too faint for the instrument while marked as seen, or duplicated. The observers see their own on the page Observations to check.') }}
+                        @if ($suspectObservations['checked_until'])
+                            {{ __('Last checked :time.', ['time' => \Illuminate\Support\Carbon::parse($suspectObservations['checked_until'])->diffForHumans()]) }}
+                        @else
+                            {{ __('The observations have not been checked yet (php artisan observations:check-suspect).') }}
+                        @endif
+                    </p>
+                    <ul class="mt-2 space-y-1 text-sm text-gray-200">
+                        @foreach (\App\Models\SuspectObservation::reasonLabels() as $key => $label)
+                            <li>
+                                <a href="{{ route('admin.suspect-observations', ['reason' => $key]) }}" class="text-blue-400 hover:underline">{{ $label }}</a>:
+                                {{ trans_choice('{0} none to check|{1} 1 to check|[2,*] :count to check', $suspectObservations['reasons'][$key]['open'], ['count' => number_format($suspectObservations['reasons'][$key]['open'])]) }},
+                                {{ trans_choice('{0} none marked as right|{1} 1 marked as right|[2,*] :count marked as right', $suspectObservations['reasons'][$key]['dismissed'], ['count' => number_format($suspectObservations['reasons'][$key]['dismissed'])]) }}
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+                <a href="{{ route('admin.suspect-observations') }}" class="inline-flex items-center whitespace-nowrap rounded bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700">
+                    {{ __('Show all') }}
+                </a>
+            </div>
+        </x-card>
+
+        <x-card>
             <div>
                 <div class="flex items-start justify-between gap-4">
                     <h3 class="text-lg font-semibold text-white">{{ __('Observations on unknown objects') }}</h3>

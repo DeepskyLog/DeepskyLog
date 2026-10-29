@@ -41,6 +41,12 @@ class Kernel extends ConsoleKernel
         // days, to the observers who come.
         $schedule->command('star-parties:send-reminders --apply')->dailyAt('08:00')->withoutOverlapping();
 
+        // The observations that look wrong (below the horizon, far too faint,
+        // duplicated): hourly those changed since the last run, weekly all,
+        // as a changed object, location or instrument changes the findings.
+        $schedule->command('observations:check-suspect')->hourlyAt(25)->withoutOverlapping();
+        $schedule->command('observations:check-suspect --all')->weeklyOn(0, '04:15')->withoutOverlapping();
+
         // The reminder of the sessions of the last days without any
         // observation of their observer, to finish logging the night.
         $schedule->command('sessions:send-observation-reminders --apply')->dailyAt('10:00')->withoutOverlapping();

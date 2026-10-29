@@ -384,6 +384,12 @@ class MeController extends Controller
         return array_map(function (Observation $observation) use ($details) {
             $detail = $details[$observation->target_type][$observation->id] ?? null;
             $detail = $detail !== null ? collect((array) $detail)->except('observation_id')->all() : null;
+            // DECIMAL columns, which MySQL returns as strings ("11.30")
+            foreach (['small_diameter', 'large_diameter', 'magnitude'] as $decimal) {
+                if (isset($detail[$decimal]) && is_numeric($detail[$decimal])) {
+                    $detail[$decimal] = (float) $detail[$decimal];
+                }
+            }
 
             return [
                 'id' => $observation->id,

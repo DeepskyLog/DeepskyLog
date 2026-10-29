@@ -11,6 +11,7 @@ use App\Models\Location;
 use App\Jobs\TranslateObservationDescriptions;
 use App\Services\ObjectObservationStatistics;
 use App\Services\Observations\DescriptionTranslations;
+use App\Services\Observations\SuspectObservations;
 use App\Services\SessionObservationLinker;
 use Illuminate\Support\Facades\Cache;
 
@@ -57,6 +58,7 @@ class ObservationObserver
         }
 
         $this->refreshObjectStatistics($obs);
+        SuspectObservations::forget($obs, deleted: true);
 
         // Deleted observation -> invalidate homepage caches so lists refresh
         $this->forgetHomepageCaches();
@@ -79,6 +81,11 @@ class ObservationObserver
 
         if ($obs->wasChanged(['description', 'language'])) {
             $this->retranslate($obs);
+        }
+
+        // A corrected observation is no longer suspect until the next check
+        if ($obs->wasChanged(SuspectObservations::CHECKED_COLUMNS)) {
+            SuspectObservations::forget($obs);
         }
 
         if ($obs->wasChanged('instrument_id')) {

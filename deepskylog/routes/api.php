@@ -23,6 +23,7 @@ use App\Models\LensMake;
 use App\Models\Location;
 use App\Models\MountType;
 use App\Models\User;
+use App\Support\Api\MeApiSpec;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -1290,6 +1291,9 @@ Route::get('/filters/{userid}', [FilterController::class, 'show_from_user']);
 // Read-only API on the data of the authenticated observer (pydeepskylog and
 // other programs): a personal access token with the 'read' ability, made on
 // /user/api-tokens and sent as "Authorization: Bearer <token>".
+// The OpenAPI description of /api/v1/me (App\Support\Api\MeApiSpec), public
+Route::get('v1/openapi.json', fn () => response()->json(MeApiSpec::spec(), 200, [], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT))
+    ->name('api.openapi');
 Route::prefix('v1/me')->middleware(['auth:sanctum', 'abilities:read'])->name('api.me.')->group(function () {
     Route::get('/', [MeController::class, 'profile'])->name('profile');
     Route::get('locations', [MeController::class, 'locations'])->name('locations');

@@ -17,6 +17,8 @@
                     @if (Auth::user()->isAdministrator() || Auth::user()->isDatabaseExpert())
                         <x-menu.item separator icon="check-badge" href="{{ route('admin.objects.check') }}">{{ __('Check Objects') }}</x-menu.item>
 
+                        <x-menu.item icon="exclamation-triangle" href="{{ route('admin.suspect-observations') }}">{{ __('Suspect observations') }}</x-menu.item>
+
                         <x-menu.item icon="lock-closed" href="{{ route('admin.complete-catalogs') }}">{{ __('Complete catalogs') }}</x-menu.item>
 
                         <x-menu.item icon="arrow-up-tray" href="{{ route('admin.objects.import') }}">{{ __('Import objects') }}</x-menu.item>

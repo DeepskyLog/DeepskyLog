@@ -50,6 +50,8 @@
 
                 <x-menu.item icon="pencil-square" href="/drawings/{{ Auth::user()->slug }}">{{ __('My drawings') }}</x-menu.item>
 
+                <x-menu.item icon="exclamation-triangle" href="{{ route('observations.suspect') }}">{{ __('Observations to check') }}</x-menu.item>
+
                 @php $me = Auth::user(); $meSlug = $me ? ($me->slug ?? $me->username) : null; @endphp
                 <x-menu.item href="{{ $meSlug ? route('session.user', [$meSlug]) : '#' }}">
                     <x-slot:svg><x-outline.session-icon class="h-4 w-4" /></x-slot:svg>{{ __('My sessions') }}
