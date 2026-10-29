@@ -175,13 +175,7 @@
 - [X] Detecting suspect observations. List observations where the object was below the horizon at the given time and place, or too faint for the instrument (contrast reserve far below 0 while marked as seen), or that look like duplicates. Show them to the observer, and to administrators in /admin/check-objects.
 - [X] OpenAPI documentation for /api/v1/me, so the PiFinder and other tools besides pyDeepskyLog can use the API more easily.
 - [X] Eyepiece gap analysis per telescope: the page of the observer's own telescope shows the eyepiece ladder, the magnifications of their active eyepieces with it (all of them or only those of one of their instrument sets, with the lens always used with it, zooms as a range, and on request with each Barlow lens or reducer) with the exit pupil and true field of each, on a strip of exit pupils. It points out the gaps (a widest field well below that of a wide 2" eyepiece, two steps more than a factor 1.7 apart in exit pupil, nothing near the highest useful magnification) and suggests the focal lengths that fill them, each with the number of objects not seen yet it would let the observer see at their standard location. "What if I bought this eyepiece…" (/instrument/{user}/{instrument}/what-if-eyepiece, linked from each suggestion) lists those objects for any focal length and apparent field, with a button to make an observing list. This replaces the eyepiece tables per lens of the instrument page.
-
-
-- Export comet observations in COBS/ICQ format
-
-Comet observers send their estimates to COBS (Comet OBServation database).
-DeepskyLog already stores the magnitude, coma and DC, and the ICQ method and reference-key tables (legacy_icq_*).
-An export to the ICQ/COBS format from the comet observation search would save observers typing everything in twice. A later step could be importing from COBS.
+- [X] Export comet observations in COBS/ICQ format: the Export menu of the observation searches has "Export comets for COBS (ICQ)", which writes the comet observations of the search that have a magnitude estimate as 80-column ICQ lines (designation from the comet's name, UT date to 0.01 day, method, magnitude with "[" for "weaker than" and ":" for uncertain, reference key, aperture, instrument type, f-ratio, magnification, coma, DC, tail and its position angle, the observer's ICQ code), ready to upload to COBS. Observers enter their ICQ observer code on the profile page. A later step could be importing from COBS.
 
 
 - Variable star estimates, exported in AAVSO format

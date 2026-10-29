@@ -15,6 +15,7 @@ use App\Models\Observation;
 use App\Services\Import\OalSchemaValidator;
 use App\Services\Oal\OalWriter;
 use App\Services\ObservationSearchQuery;
+use App\Services\Observations\IcqExport;
 use App\Services\Observations\ObservationPdfDataBuilder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Http\Request;
@@ -51,6 +52,7 @@ class ObservationSearchExportController extends Controller
         'skylist' => 10000,
         'obs' => 2500,
         'oal' => 7500,
+        'icq' => 10000,
     ];
 
     private const EXPORT_FORMAT_NAMES = [
@@ -58,6 +60,7 @@ class ObservationSearchExportController extends Controller
         'skylist' => 'SkySafari',
         'obs' => 'AstroPlanner',
         'oal' => 'OAL',
+        'icq' => 'ICQ',
     ];
 
     public function pdf(Request $request, ObservationPdfDataBuilder $builder)
@@ -205,6 +208,39 @@ class ObservationSearchExportController extends Controller
                 ->back()
                 ->with('error', __('Failed to generate SkySafari export'));
         }
+    }
+
+    /**
+     * The comet observations of the search with a magnitude estimate, in the
+     * 80-column ICQ format that COBS imports.
+     */
+    public function icq(Request $request)
+    {
+        $comets = fn () => $this->matchingObservations($request)->where('observations.target_type', Observation::TYPE_COMET);
+
+        $max = self::MAX_EXPORT_OBSERVATIONS['icq'];
+        $count = $comets()->count();
+        if ($count > $max) {
+            return redirect()
+                ->back()
+                ->with('error', __('This search matches :count observations, but at most :max observations can be exported as :format. Please narrow down your search.', [
+                    'count' => number_format($count),
+                    'max' => number_format($max),
+                    'format' => self::EXPORT_FORMAT_NAMES['icq'],
+                ]));
+        }
+
+        $export = IcqExport::build($comets()->orderBy('observations.observed_on')->orderBy('observations.observed_time')->get());
+
+        if ($export['count'] === 0) {
+            return redirect()
+                ->back()
+                ->with('error', __('This search has no comet observations with a magnitude estimate to export in the ICQ format.'));
+        }
+
+        return response()->streamDownload(function () use ($export) {
+            echo $export['content'];
+        }, 'comet_observations_' . now()->format('Ymd_His') . '.icq', ['Content-Type' => 'text/plain; charset=US-ASCII']);
     }
 
     public function apd(Request $request)

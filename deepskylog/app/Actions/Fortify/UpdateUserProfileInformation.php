@@ -25,6 +25,8 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'country' => ['string'],
             'about' => ['nullable', 'string', 'max:1000'],
             'fstOffset' => ['numeric', 'min:-5.0', 'max:5.0'],
+            // The ICQ/COBS observer code: three letters and up to two digits (KAR02).
+            'icqname' => ['nullable', 'string', 'regex:/^\s*[A-Za-z]{3}\d{0,2}\s*$/'],
         ])->validateWithBag('updateProfileInformation');
 
         if (isset($input['photo'])) {
@@ -45,6 +47,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'fstOffset' => $input['fstOffset'],
             'copyright' => $copyright,
             'copyrightSelection' => $input['copyrightSelection'],
+            'icqname' => strtoupper(trim((string) ($input['icqname'] ?? ''))) ?: null,
         ]);
 
         if ($input['email'] !== $user->email) {

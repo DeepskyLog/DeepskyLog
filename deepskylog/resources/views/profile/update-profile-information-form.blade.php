@@ -227,6 +227,20 @@
             <x-input-error for="fstOffset" class="mt-2"/>
         </div>
 
+        {{-- ICQ observer code, for the comet observations exported for COBS --}}
+        <div class="col-span-6 sm:col-span-5">
+            <x-input
+                id="icqname"
+                label="{{ __('ICQ observer code') }}"
+                type="text"
+                maxlength="5"
+                class="mt-1 block w-full uppercase"
+                wire:model.live="state.icqname"
+                hint="{{ __('Your code at COBS (three letters and two digits, e.g. ABC01), written in the ICQ export of your comet observations.') }}"
+            />
+            <x-input-error for="icqname" class="mt-2"/>
+        </div>
+
         {{-- License --}}
         <div class="col-span-6 sm:col-span-5">
             {{-- <div x-data='' wire:ignore> --}}

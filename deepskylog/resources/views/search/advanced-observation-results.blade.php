@@ -20,6 +20,7 @@
                 $exportSkylistUrl = route('observations.search.skylist', $exportParams);
                 $exportObsUrl = route('observations.search.obs', $exportParams);
                 $exportOalUrl = route('observations.search.oal', $exportParams);
+                $exportIcqUrl = route('observations.search.icq', $exportParams);
                 $exportZipUrl = route('observations.zip', $exportParams);
                 $extractObjectsUrl = route('observations.search.objects', $exportParams);
             @endphp
@@ -63,6 +64,9 @@
                         </x-menu.item>
                         <x-menu.item href="{{ $exportOalUrl }}" target="_blank" rel="nofollow noopener noreferrer">
                             {{ __('Export OAL') }}
+                        </x-menu.item>
+                        <x-menu.item href="{{ $exportIcqUrl }}" target="_blank" rel="nofollow noopener noreferrer">
+                            {{ __('Export comets for COBS (ICQ)') }}
                         </x-menu.item>
                         <x-menu.item href="{{ $exportZipUrl }}" rel="nofollow" data-last>
                             {{ auth()->user()?->hasAdministratorPrivileges() ? __('Zip file with drawings') : __('Zip file with my drawings') }}
