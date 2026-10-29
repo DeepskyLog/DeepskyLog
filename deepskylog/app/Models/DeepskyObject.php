@@ -40,6 +40,25 @@ class DeepskyObject extends Model
 
     public const REVIEW_STATUSES = [self::REVIEW_NEW, self::REVIEW_CHECKED, self::REVIEW_ATTENTION];
 
+    /** Length of the review_note column. */
+    public const REVIEW_NOTE_LENGTH = 1000;
+
+    /**
+     * What an observer can report as wrong with an object on its page
+     * (reportError()), with the English label written in the review note.
+     */
+    public const ERROR_KINDS = [
+        'position' => 'Position',
+        'magnitude' => 'Magnitude',
+        'size' => 'Size',
+        'type' => 'Type',
+        'name' => 'Name',
+        'other' => 'Other',
+    ];
+
+    /** Longest note of an error report. */
+    public const ERROR_NOTE_LENGTH = 300;
+
     protected static function booted(): void
     {
         // An edited magnitude is no longer the estimate of NebulaBrightness
@@ -87,6 +106,31 @@ class DeepskyObject extends Model
         $this->review_note = $note;
         $this->reviewed_by = $status === null ? null : $userId;
         $this->reviewed_at = $status === null ? null : now();
+    }
+
+    /**
+     * An observer reports an error in the object (a kind of ERROR_KINDS and a
+     * note): the object needs attention, with the report first in the review
+     * note, before the earlier reports of an object that already needed
+     * attention (the oldest are cut off at REVIEW_NOTE_LENGTH). Saved.
+     */
+    public function reportError(string $kind, string $note, User $reporter): void
+    {
+        $report = sprintf(
+            '%s (%s, %s): %s',
+            self::ERROR_KINDS[$kind] ?? self::ERROR_KINDS['other'],
+            $reporter->username ?? $reporter->name,
+            now()->toDateString(),
+            trim(preg_replace('/\s+/u', ' ', $note)),
+        );
+
+        $earlier = $this->review_status === self::REVIEW_ATTENTION ? trim((string) $this->review_note) : '';
+
+        $this->review_status = self::REVIEW_ATTENTION;
+        $this->review_note = mb_substr($earlier === '' ? $report : $report."\n".$earlier, 0, self::REVIEW_NOTE_LENGTH);
+        $this->reviewed_by = $reporter->id;
+        $this->reviewed_at = now();
+        $this->save();
     }
 
     /**

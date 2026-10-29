@@ -355,10 +355,11 @@
                                         </select>
                                     </div>
                                     <div class="md:col-span-2">
-                                        <x-input name="review_note" label="{{ __('Review note') }}" type="text"
-                                                 class="mt-1 block w-full" maxlength="255" id="review_note"
-                                                 value="{{ old('review_note', $object->review_note) }}"
-                                                 placeholder="{{ __('What needs attention, or what was checked') }}" />
+                                        <label for="review_note" class="block text-sm font-medium text-gray-300 mb-1">{{ __('Review note') }}</label>
+                                        <textarea name="review_note" id="review_note" rows="3"
+                                                  maxlength="{{ \App\Models\DeepskyObject::REVIEW_NOTE_LENGTH }}"
+                                                  placeholder="{{ __('What needs attention, or what was checked') }}"
+                                                  class="mt-1 block w-full rounded-lg border-gray-600 bg-gray-800 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 focus:ring-2 px-4 py-2">{{ old('review_note', $object->review_note) }}</textarea>
                                     </div>
                                 </div>
                             </div>

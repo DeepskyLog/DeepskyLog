@@ -850,6 +850,10 @@ Route::post('/object/{slug}/update-from-simbad', [App\Http\Controllers\ObjectCon
 Route::delete('/object/{slug}', [App\Http\Controllers\ObjectController::class, 'destroy'])
     ->name('object.destroy')->middleware(['auth', 'doNotCacheResponse']);
 
+// Report an error in an object (any logged-in observer)
+Route::post('/object/{slug}/report-error', [App\Http\Controllers\ObjectController::class, 'reportError'])
+    ->name('object.report-error')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:10,60']);
+
 // Nearby names PDF export (uses query params ra, dec, radius)
 Route::get('/object/{slug}/nearby-names.pdf', [App\Http\Controllers\NearbyExportController::class, 'namesPdf'])
     ->name('object.nearby.names.pdf')->middleware(['auth', 'doNotCacheResponse', 'throttle:exports']);
@@ -1049,6 +1053,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Revisit with your telescope: seen objects the telescope shows much better
     Route::view('/observing-lists/revisit', 'observing-lists.revisit')
         ->name('observing-list.revisit')->middleware('doNotCacheResponse');
+    // Next for you: unseen objects the observers who saw the same objects saw too
+    Route::view('/observing-lists/next-for-you', 'observing-lists.next-for-you')
+        ->name('observing-list.next-for-you')->middleware('doNotCacheResponse');
     // The beginner path: about 30 showpieces for a new observer's telescope and location
     Route::view('/beginner-path', 'beginner-path')
         ->name('beginner-path')->middleware('doNotCacheResponse');

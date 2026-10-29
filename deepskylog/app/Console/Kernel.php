@@ -87,6 +87,10 @@ class Kernel extends ConsoleKernel
         // deleted get the counters, session links and statistics of this site.
         $schedule->command('observations:apply-legacy-changes --apply')->everyMinute()->withoutOverlapping();
 
+        // "Observers who saw this also saw…" and the personal suggestions
+        // built on it, from the observations of the week (on the long queue).
+        $schedule->job(new \App\Jobs\ComputeObjectSimilarities())->weeklyOn(1, '03:50');
+
         $schedule->command('astronomy:updateCometPhotometry')->weeklyOn(2, '4:30');
         // Incremental search index reindex (one-run nightly; safe for production)
         $schedule->command('search:reindex --incremental')

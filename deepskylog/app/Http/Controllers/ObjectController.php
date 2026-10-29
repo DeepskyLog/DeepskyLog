@@ -30,6 +30,7 @@ use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use App\Services\CometCoordinates;
 use App\Services\DeepskyObjectCreator;
 use App\Services\NearbyObjects;
+use App\Services\ObjectErrorReportNotifier;
 use App\Services\ObjectNameCatalogs;
 use App\Services\ObjectSearchIndex;
 use App\Services\StarChartService;
@@ -3100,7 +3101,7 @@ class ObjectController extends Controller
             'contains' => 'nullable|array',
             'contains.*' => 'string|max:255',
             'review_status' => 'nullable|string|in:'.implode(',', DeepskyObject::REVIEW_STATUSES),
-            'review_note' => 'nullable|string|max:255',
+            'review_note' => 'nullable|string|max:'.DeepskyObject::REVIEW_NOTE_LENGTH,
             'name_catalogs' => 'nullable|array',
             'name_catalogs.*.name' => 'required|string',
             'name_catalogs.*.choice' => 'required|in:'.ObjectNameCatalogs::NEW_CATALOG.','.ObjectNameCatalogs::NO_CATALOG,
@@ -4310,6 +4311,27 @@ class ObjectController extends Controller
      * Delete an object. If a moveToSlug is provided, move all observations to the target object first.
      * Only Administrators and Database Experts can delete objects.
      */
+    /**
+     * An observer reports an error in a deep-sky object from its page
+     * ("Something wrong with this object?"): the object needs attention, with
+     * the report in its review note, and is listed on /admin/object-reviews;
+     * the administrators and database experts get a message.
+     */
+    public function reportError(Request $request, string $slug)
+    {
+        $object = $this->objectForEdit($slug);
+
+        $validated = $request->validate([
+            'kind' => 'required|string|in:'.implode(',', array_keys(DeepskyObject::ERROR_KINDS)),
+            'note' => 'required|string|max:'.DeepskyObject::ERROR_NOTE_LENGTH,
+        ]);
+
+        $object->reportError($validated['kind'], $validated['note'], $request->user());
+        ObjectErrorReportNotifier::notify($object, $validated['kind'], $validated['note'], $request->user());
+
+        return redirect()->back()->with('success', __('Thank you. A database expert will check :name.', ['name' => $object->name]));
+    }
+
     public function destroy(Request $request, string $slug)
     {
         // Resolve the object

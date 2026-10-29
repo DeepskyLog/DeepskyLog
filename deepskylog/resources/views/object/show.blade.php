@@ -60,6 +60,10 @@
                     @endauth
 
                     <x-follow-object :target="$followTarget ?? null" />
+
+                    @if ($isDeepskyObject ?? false)
+                        <x-report-object-error :slug="$objSlugTop" />
+                    @endif
                 </div>
 
                 {{-- Summary row: object type, constellation and quick stats (observations/drawings, user-specific counts) --}}
@@ -1195,6 +1199,8 @@ try {
                                 {{-- The smallest aperture and the brightest sky with which the object was seen --}}
                                 <x-aperture-records :object-name="$session->name" />
                                 <x-drawing-apertures :object-name="$session->name" :slug="$canonicalSlug" />
+                                {{-- Observers who saw this also saw… --}}
+                                <x-also-seen :object-name="$session->name" />
                             @endif
 
                             {{-- Sketches that were DeepskyLog sketch(s) of the week for this object --}}
