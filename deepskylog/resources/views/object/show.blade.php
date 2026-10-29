@@ -1529,16 +1529,16 @@ try {
                 </div>
         </div>
 
-<!-- Aladin Lite assets (inline so layout stack is not required) -->
-<link rel="stylesheet" href="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css">
 <!-- Tom Select removed: using native selects / WireUI styling instead -->
 
 <input type="hidden" id="object-id-hidden" value="{{ $session->id ?? '' }}">
 <!-- Fallback payload observer installer: ensures an observer is present even if earlier script didn't run -->
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script defer src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js"></script>
-<script src="/js/object-show-inline.js"></script>
+@if ($showSkyPreview ?? false)
+    @include('partials.aladin-assets')
+@endif
+<script src="/js/object-show-inline.js?v={{ @filemtime(public_path('js/object-show-inline.js')) }}"></script>
 
 <script>
 // Attach Save handler for Aladin preview defaults

@@ -597,6 +597,8 @@
 
     // initial update on load
     document.addEventListener('DOMContentLoaded', function () { updateLegend(null); });
+    // again when Aladin, loaded asynchronously, arrives late (applyFovToAladin waits for the instance)
+    document.addEventListener('dsl:aladin-ready', function () { updateLegend(null); });
     // update when selects dispatch their event
     window.addEventListener('dsl-aladin-updated', function (ev) { try { updateLegend(ev && ev.detail ? ev.detail : null); } catch (e) { } }, true);
     // update when server sends preview info (contains opt mag etc.) — prefer local calculation but allow server-sent mag as fallback

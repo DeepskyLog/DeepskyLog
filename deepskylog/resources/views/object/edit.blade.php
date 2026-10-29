@@ -533,9 +533,8 @@
     </div>
 
     @push('scripts')
-    <link rel="stylesheet" href="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script defer src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js"></script>
+    @include('partials.aladin-assets')
     <script>
         document.addEventListener('alpine:init', () => {
             // New names whose catalog DeepskyLog does not have yet, from the name and
@@ -896,14 +895,12 @@
                 });
             });
 
-            // Aladin Lite is loaded with defer: wait for it before the first draw
-            (function start(attempts) {
-                if ((typeof A === 'undefined' || typeof A.aladin !== 'function') && attempts < 100) {
-                    setTimeout(function() { start(attempts + 1); }, 100);
-                    return;
-                }
-                update();
-            })(0);
+            // Aladin Lite loads asynchronously (partials.aladin-assets): draw the chart
+            // now and the Aladin view once it is there
+            update();
+            if (!window.__dslAladinReady) {
+                document.addEventListener('dsl:aladin-ready', update, { once: true });
+            }
         });
 
         // SIMBAD Data Fetching and Applying
