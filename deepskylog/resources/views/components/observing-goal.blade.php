@@ -11,8 +11,9 @@
         default => "bg-blue-500",
     };
     $observer = $goal->user;
-    $catalogUrl =
-        $goal->challenge_id !== null
+    $catalogUrl = $goal->beginner_path
+        ? route("beginner-path")
+        : ($goal->challenge_id !== null
         ? route("challenges.show", $goal->challenge)
         : ($goal->catalog !== null && $observer
             ? route("observer.catalog", [
@@ -22,7 +23,7 @@
             ])
             : ($goal->observingList
                 ? route("observing-list.show", $goal->observingList->slug)
-                : null));
+                : null)));
 @endphp
 
 <div {{ $attributes }}>

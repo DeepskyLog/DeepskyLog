@@ -14,6 +14,7 @@ use App\Models\SketchOfTheMonth;
 use App\Models\SketchOfTheWeek;
 use App\Models\StarParty;
 use App\Models\User;
+use App\Services\BeginnerPath;
 use App\Services\Moon\LunarTerminator;
 use App\Services\Planets\PlanetMoonEvents;
 use App\Services\Observations\ObservationCardData;
@@ -1071,9 +1072,18 @@ class SessionController extends Controller
             $suspectObservationCount = 0;
         }
 
+        // The beginner path: the next object, or an invitation to new observers
+        try {
+            $beginnerPath = Auth::check() ? BeginnerPath::forHomePage(Auth::user()) : null;
+        } catch (\Throwable $e) {
+            report($e);
+            $beginnerPath = null;
+        }
+
         return $this->noCacheResponse(response()->view('welcome', compact(
             'sessions',
             'sessionsWithoutObservations',
+            'beginnerPath',
             'suspectObservationCount',
             'observations',
             'sketches',

@@ -16,6 +16,10 @@
                        class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
                         {{ __('Messier marathon') }}
                     </a>
+                    <a href="{{ route('beginner-path') }}"
+                       class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
+                        {{ __('Beginner path') }}
+                    </a>
                     <a href="{{ route('observing-list.revisit') }}"
                        class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
                         {{ __('Revisit with your telescope') }}

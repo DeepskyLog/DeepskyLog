@@ -92,6 +92,13 @@
                     />
                 @endif
 
+                @if (!empty($beginnerPath))
+                    <x-beginner-path
+                        :path="$beginnerPath"
+                        class="order-1 lg:order-none"
+                    />
+                @endif
+
                 @if ($sessionsWithoutObservations->isNotEmpty())
                     <x-session-reminders
                         :sessions="$sessionsWithoutObservations"

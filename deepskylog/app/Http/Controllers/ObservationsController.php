@@ -3122,12 +3122,13 @@ class ObservationsController extends Controller
 
     /**
      * The page to return to after saving (the form's return_to): only the
-     * page at the eyepiece of an observing list on this site.
+     * page at the eyepiece of an observing list on this site, or the
+     * beginner path.
      */
     public static function returnUrl(?string $value): ?string
     {
         $value = (string) $value;
 
-        return preg_match('#^/observing-list/[^/?\#\\\\]+/eyepiece(\?item=\d+)?$#', $value) ? $value : null;
+        return preg_match('#^/observing-list/[^/?\#\\\\]+/eyepiece(\?item=\d+)?$#', $value) || $value === '/beginner-path' ? $value : null;
     }
 }

@@ -132,7 +132,7 @@ class EquipmentGain
     /**
      * An unsaved instrument of the spec, for ContrastReserveCalculator.
      */
-    private static function plannedInstrument(array $planned): Instrument
+    public static function plannedInstrument(array $planned): Instrument
     {
         $instrument = (new Instrument())->forceFill([
             'name'               => '',

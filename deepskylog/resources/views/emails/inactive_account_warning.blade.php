@@ -15,6 +15,8 @@
 
         <p>{!! __('To keep your account, :login and record something, for example an observation, an instrument or a location.', ['login' => '<a href="'.e(route('login')).'">'.e(__('log in')).'</a>']) !!}</p>
 
+        <p>{!! __('New to observing? Our :linkbeginner path:close_link picks about 30 of the finest objects of the sky for your telescope and location, and guides you to them one by one.', ['link' => '<a href="'.e(route('beginner-path')).'">', 'close_link' => '</a>']) !!}</p>
+
         <p>{{ __('If you no longer want to use DeepskyLog, you do not have to do anything.') }}</p>
 
         <p style="color:#666; font-size:12px;">{!! __('In case of questions, contact us at :email.', ['email' => '<a href="mailto:deepskylog@groups.io">deepskylog@groups.io</a>']) !!}</p>
