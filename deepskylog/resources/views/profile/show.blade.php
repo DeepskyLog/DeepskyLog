@@ -19,6 +19,12 @@
 
             <x-section-border/>
 
+            <div class="mt-10 sm:mt-0">
+                @livewire("profile.own-eye")
+            </div>
+
+            <x-section-border/>
+
             @livewire("profile.update-user-language-information")
 
             <x-section-border/>

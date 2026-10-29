@@ -238,7 +238,7 @@ class SuspectObservations
      * The altitude of the target at the moment, or its highest altitude on
      * the date without a moment; null when unknown.
      */
-    private function altitude(Observation $observation, ?object $object, Location $location, ?Carbon $moment): ?float
+    public function altitude(Observation $observation, ?object $object, Location $location, ?Carbon $moment): ?float
     {
         if ($observation->target_table === 'objects') {
             if ($object === null || ! is_numeric($object->ra) || ! is_numeric($object->decl)) {
@@ -266,6 +266,32 @@ class SuspectObservations
      */
     private function faint(Observation $observation, object $object, Instrument $instrument, Location $location, ?float $altitude, mixed $storedMagnification, ?Eyepiece $eyepiece, ?Lens $lens): ?array
     {
+        $predicted = $this->predictedReserve($observation, $object, $instrument, $location, $altitude, $storedMagnification, $eyepiece, $lens);
+        if ($predicted === null || $predicted['contrast_reserve'] >= self::FAINT_BELOW) {
+            return null;
+        }
+
+        return [
+            'contrast_reserve' => round($predicted['contrast_reserve'], 2),
+            'magnification' => $predicted['magnification'],
+            'sqm' => round($predicted['sqm'], 2),
+            'aperture' => (float) $instrument->aperture_mm,
+            'altitude' => $predicted['altitude'] !== null ? round($predicted['altitude'], 1) : null,
+        ];
+    }
+
+    /**
+     * The contrast reserve the model predicts for an observation: under the
+     * sky of the observation (its SQM or limiting magnitude, else the
+     * location's), dimmed by the extinction at the altitude of its moment
+     * (else the highest altitude), at the best of the magnification recorded
+     * and the observer's magnifications with the instrument. Null when it
+     * cannot be calculated. Also used by DetectionThreshold.
+     *
+     * @return array{contrast_reserve: float, magnification: ?int, sqm: float, altitude: ?float}|null
+     */
+    public function predictedReserve(Observation $observation, object $object, Instrument $instrument, Location $location, ?float $altitude, mixed $storedMagnification, ?Eyepiece $eyepiece, ?Lens $lens): ?array
+    {
         $sqm = $observation->sqm ?? $location->getSqm();
         if (! is_numeric($sqm) || (float) $sqm < 10 || (float) $instrument->aperture_mm <= 0) {
             return null;
@@ -285,17 +311,15 @@ class SuspectObservations
         }
         $target = ContrastReserveCalculator::target($object->diam1, $object->diam2, $object->mag);
         $result = ContrastReserveCalculator::calculate($target, $instrument, $location, null, 1.0, $magnifications, (float) $sqm, $altitude);
-        $reserve = $result['contrast_reserve'];
-        if ($reserve === null || $reserve >= self::FAINT_BELOW) {
+        if ($result['contrast_reserve'] === null) {
             return null;
         }
 
         return [
-            'contrast_reserve' => round($reserve, 2),
+            'contrast_reserve' => (float) $result['contrast_reserve'],
             'magnification' => $result['magnification'],
-            'sqm' => round((float) $sqm, 2),
-            'aperture' => (float) $instrument->aperture_mm,
-            'altitude' => $altitude !== null ? round($altitude, 1) : null,
+            'sqm' => (float) $sqm,
+            'altitude' => $altitude,
         ];
     }
 

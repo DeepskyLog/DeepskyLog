@@ -47,6 +47,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('observations:check-suspect')->hourlyAt(25)->withoutOverlapping();
         $schedule->command('observations:check-suspect --all')->weeklyOn(0, '04:15')->withoutOverlapping();
 
+        // "Your own eye": the detection threshold of the observers whose
+        // observations changed, fitted from what they saw and did not see.
+        $schedule->command('observers:fit-detection-thresholds')->dailyAt('04:45')->withoutOverlapping();
+
         // The reminder of the sessions of the last days without any
         // observation of their observer, to finish logging the night.
         $schedule->command('sessions:send-observation-reminders --apply')->dailyAt('10:00')->withoutOverlapping();

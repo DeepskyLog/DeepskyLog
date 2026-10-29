@@ -451,3 +451,20 @@ it('puts the large objects that fill a wide field first', function () {
 
     $this->get('/')->assertOk();
 });
+
+it('uses the observer\'s own detection threshold when they chose to', function () {
+    Queue::fake();
+    tbAutumnSky();
+    $user = tbObserver();
+    tbMetrics($user, ['Autumn Galaxy 1' => 1.4, 'Autumn Nebula' => 0.4, 'Faint Galaxy' => 0.05]);
+    $names = fn (User $user) => collect(TonightsBest::for($user, ['night' => TB_NEW_MOON])['objects'])->where('kind', 'deepsky')->pluck('contrast_reserve', 'name');
+
+    expect($names($user)->keys())->not->toContain('Faint Galaxy');
+
+    // sees 0.2 fainter than the model: the faint galaxy becomes visible
+    $user->forceFill(['use_detection_threshold' => true, 'detection_threshold_fit' => ['threshold' => -0.2, 'reliable' => true]])->save();
+    $reserves = $names($user->fresh());
+
+    expect($reserves['Faint Galaxy'] ?? null)->toEqualWithDelta(0.25, 1e-9)
+        ->and($reserves['Autumn Galaxy 1'])->toEqualWithDelta(1.6, 1e-9);
+});

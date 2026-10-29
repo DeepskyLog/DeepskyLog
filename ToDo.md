@@ -93,6 +93,7 @@
   - [ ] Observing partners nearby: `php artisan migrate` (`2026_10_29_000070_add_partner_search_to_users`: `users.partner_search` and `users.partner_note`; the views of the old site list their columns and are not affected), then `php artisan responsecache:clear` (the user menu links to /observing-partners).
   - [ ] Observers who saw this also saw… / Next for you: `php artisan migrate` (`2026_10_29_000080_create_object_similarities_table`), then `php artisan objects:rebuild-also-seen` (about 30 s and 1 GB at most; on the development database 121,080 observer/object pairs, 198,989 suggestions of 9,952 objects; after that the scheduler queues it every Monday at 03:50 on the long queue, so the `database-long` worker must run), then `php artisan queue:restart` and `php artisan responsecache:clear` (the object pages and "My observing lists" do not have the new box and link yet).
   - [ ] Local horizon: `php artisan migrate` (`2026_10_29_000100_add_horizon_to_locations`: `locations.horizon`, nullable, so the old site is not affected), then `php artisan responsecache:clear` (the cached location pages do not have the panorama yet) and `npm run build`.
+  - [ ] Your own eye: `php artisan migrate` (`2026_10_29_000110_add_detection_threshold_to_users`: `users.detection_threshold`, `detection_threshold_fit`, `use_detection_threshold`; the old site's `legacy_observers` view names its columns, so it is not affected), then `php artisan observers:fit-detection-thresholds -v` (a few seconds; on the development database 26 observers fitted, 10 with a reliable threshold between −0.09 and +0.25; after that the scheduler runs it daily at 04:45), then `php artisan queue:restart` (the profile page queues `FitDetectionThreshold`).
 - [ ] Release new version of pyDeepskyLog
   - [ ] Ready to be released, make sure to check if everything still works with the PiFinder.
 
@@ -209,7 +210,7 @@ What's new: on the location page, the observer enters the altitude of the obstru
 What it changes: these planners check an object against the horizon at its azimuth instead of a fixed altitude. The night planner's limit uses TwilightSky/MoonlightSky-style altitude checks per point, so a check per azimuth fits in there. The field views would draw the real horizon.
 Of the features listed here, this would make the plans most accurate for the most observers.
 
-- Your own eye, learned from your observations
+- [X] Your own eye, learned from your observations
 The contrast reserve uses a model observer, with fstOffset as the only personal setting. The suspect-observation check already compares every observation with its predicted contrast reserve.
 
 What's new: for an observer with enough seen and not-seen deep-sky observations, fit their own detection threshold: the contrast reserve at which they see an object half the time. Show it on the profile as something like "you see objects down to a reserve of −0.15; the model assumes 0".

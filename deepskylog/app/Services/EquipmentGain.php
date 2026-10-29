@@ -29,7 +29,8 @@ use Illuminate\Support\Facades\DB;
  * eyepiece, as the eyepiece gap analysis of the instrument page suggests it.
  * Objects the observer has seen are left out when the result is shown
  * (objects()), the rest are ranked by the number of observations in
- * DeepskyLog.
+ * DeepskyLog. An observer who chose to use their own detection threshold
+ * gets DetectionThreshold::offsetFor() added to the reserves of both sides.
  *
  * Both sides are calculated with ContrastReserveCalculator, not read from
  * user_object_metrics: those only hold the standard equipment, with all
@@ -519,21 +520,24 @@ class EquipmentGain
     {
         [$new, $old] = $this->sides();
         $sqm         = (float) $this->location->getSqm();
+        // the observer's own detection threshold, when they chose to use it, on both sides
+        $offset = DetectionThreshold::offsetFor($this->user);
 
         $gained = [];
         foreach ($this->candidates() as $object) {
             $target   = ContrastReserveCalculator::target($object->diam1, $object->diam2, $object->mag);
             $altitude = ContrastReserveCalculator::highestAltitude($object->decl, $this->location);
             $after    = $this->reserve($target, $new, $altitude);
-            if ($after['contrast_reserve'] === null || $after['contrast_reserve'] <= self::VISIBLE_ABOVE) {
+            if ($after['contrast_reserve'] === null || $after['contrast_reserve'] + $offset <= self::VISIBLE_ABOVE) {
                 continue;
             }
+            $after['contrast_reserve'] += $offset;
             // the best of the old equipment, stopping at the first that shows it
             $before = null;
             foreach ($old as $side) {
                 $reserve = $this->reserve($target, $side, $altitude)['contrast_reserve'];
-                if ($reserve !== null && ($before === null || $reserve > $before)) {
-                    $before = $reserve;
+                if ($reserve !== null && ($before === null || $reserve + $offset > $before)) {
+                    $before = $reserve + $offset;
                 }
                 if ($before !== null && $before > self::VISIBLE_ABOVE) {
                     continue 2;
@@ -710,7 +714,7 @@ class EquipmentGain
             ? [$this->equipment->focal_length_mm, $this->equipment->field_stop_mm, $this->equipment->apparentFOV, $this->instrument?->id]
             : [];
 
-        $depends = [$instruments, $eyepieces, $location, $equipment, $this->compareIds];
+        $depends = [$instruments, $eyepieces, $location, $equipment, $this->compareIds, DetectionThreshold::offsetFor($this->user)];
         if ($this->planned !== null) {
             $depends[] = $this->planned;
         }

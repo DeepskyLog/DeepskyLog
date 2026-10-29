@@ -179,3 +179,16 @@ it('shows the page and makes a list of the objects', function () {
     expect($list->name)->toBe('Next for you')
         ->and($list->items()->pluck('object_name')->all())->toEqualCanonicalizing(['Galaxy 3', 'Nebula 1', 'Nebula 2']);
 });
+
+it('uses the observer\'s own detection threshold when they chose to', function () {
+    $user = nextObserver();
+    AlsoSeenObjects::rebuild();
+    // needs 0.35 more than the model: Nebula 2 (0.4) drops to 0.05
+    $user->forceFill(['use_detection_threshold' => true, 'detection_threshold_fit' => ['threshold' => 0.35, 'reliable' => true]])->save();
+
+    $next  = NextForYou::for($user->fresh());
+    $shown = $next->objects($next->compute());
+
+    expect(array_column($shown['objects'], 'name'))->toBe(['Galaxy 3', 'Nebula 1'])
+        ->and($shown['objects'][1]['contrast_reserve'])->toBe(0.15);
+});

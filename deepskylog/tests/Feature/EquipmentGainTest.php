@@ -303,3 +303,21 @@ it('links to the planned telescope from the instrument pages', function () {
     $this->actingAs($user)->get(route('instrument.index'))->assertSee(route('instrument.what-if'));
     $this->actingAs($user)->get(route('instrument.whats-new', [$user->slug, $large->slug]))->assertSee(route('instrument.what-if'));
 });
+
+it('uses the observer\'s own detection threshold when they chose to', function () {
+    [$user, , $large] = equipmentGainObserver();
+    $before = EquipmentGain::forInstrument($user, $large, EquipmentGain::location($user, null))->compute();
+
+    $user->forceFill(['use_detection_threshold' => true, 'detection_threshold_fit' => ['threshold' => -0.3, 'reliable' => true]])->save();
+    $gain  = EquipmentGain::forInstrument($user->fresh(), $large, EquipmentGain::location($user, null));
+    $after = $gain->result() ?? $gain->compute();
+
+    $reserves = fn (array $result) => array_column($result['objects'], 'contrast_reserve', 'name');
+    foreach (array_intersect_key($reserves($after), $reserves($before)) as $name => $reserve) {
+        expect($reserve)->toEqualWithDelta($reserves($before)[$name] + 0.3, 0.011);
+    }
+    foreach ($after['objects'] as $object) {
+        expect($object['before'] === null || $object['before'] <= EquipmentGain::VISIBLE_ABOVE)->toBeTrue();
+    }
+    expect($after)->not->toBe($before);
+});

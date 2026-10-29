@@ -26,7 +26,8 @@ use Illuminate\Support\Facades\DB;
  * the stored contrast reserves (user_object_metrics; missing ones are queued
  * with ObjectMetricsQueue), and for double stars from whether the telescope
  * splits them (DoubleStarResolvability), so new metrics or equipment show
- * at once.
+ * at once; with DetectionThreshold::offsetFor() added to the contrast
+ * reserves when the observer chose to use their own threshold.
  */
 class NextForYou
 {
@@ -193,6 +194,7 @@ class NextForYou
             ->keyBy(fn ($row) => mb_strtolower((string) $row->object_name));
 
         $magnifications = null;
+        $offset         = null;
         $missing        = [];
         $shown          = [];
         foreach ($candidates as $candidate) {
@@ -215,12 +217,17 @@ class NextForYou
 
                     continue;
                 }
-                if (! is_numeric($metric->contrast_reserve) || (float) $metric->contrast_reserve <= EquipmentGain::VISIBLE_ABOVE) {
+                if (! is_numeric($metric->contrast_reserve)) {
+                    continue;
+                }
+                // with the observer's own detection threshold, when they chose to use it
+                $reserve = (float) $metric->contrast_reserve + ($offset ??= DetectionThreshold::offsetFor($this->user));
+                if ($reserve <= EquipmentGain::VISIBLE_ABOVE) {
                     continue;
                 }
                 $visibility = [
-                    'contrast_reserve' => round((float) $metric->contrast_reserve, 2),
-                    'category'         => ContrastReserveCalculator::category((float) $metric->contrast_reserve),
+                    'contrast_reserve' => round($reserve, 2),
+                    'category'         => ContrastReserveCalculator::category($reserve),
                     'magnification'    => $metric->optimum_detection_magnification ? (int) $metric->optimum_detection_magnification : null,
                 ];
             }

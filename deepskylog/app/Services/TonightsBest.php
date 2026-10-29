@@ -44,6 +44,9 @@ use Illuminate\Support\Str;
  * objects that are well placed at the location of the ephemerides. Both get
  * the planets and the bright comets as well, unless left out. The deep-sky
  * objects are spread over the hours chosen (pick()).
+ * An observer who chose to use their own detection threshold gets
+ * DetectionThreshold::offsetFor() added to the contrast reserves of the
+ * deep-sky objects.
  *
  * A standard telescope with a wide field (binoculars, a rich-field telescope
  * with its lowest magnification: at least WIDE_FIELD_DEG) shows large objects
@@ -251,12 +254,14 @@ class TonightsBest
         $instrument = $user ? self::instrument($user, $location) : null;
         $lensId     = $instrument ? $user->standardLensId() : null;
         $field      = $instrument ? self::wideField($instrument, $user, $lensId) : null;
+        // the observer's own detection threshold, when they chose to use it
+        $offset = $instrument ? DetectionThreshold::offsetFor($user) : 0.0;
         // a seeing forecast not cached yet is fetched after the response, and changes the key
         $seeing = SeeingForecast::forNight((float) $location->latitude, (float) $location->longitude, $night, $timezone, fetch: false);
 
         // v2: a magnitude of 0 is unknown (ContrastReserveCalculator::target()); v4: the field of view; v5: the seeing; v6: the twilight
         $key = 'tonights_best:v6:'.md5(json_encode([
-            $user?->id, $instrument?->id, $location->id, (float) $location->latitude, (float) $location->longitude, $location->horizon, $lensId, $field, $seeing, $night, $timezone, $options,
+            $user?->id, $instrument?->id, $location->id, (float) $location->latitude, (float) $location->longitude, $location->horizon, $lensId, $field, $seeing, $night, $timezone, $options, $offset,
             // a new observation changes what the observer has seen
             $user ? DB::table('observations')->where('observer_username', $user->username)->max('id') : null,
         ]));
@@ -265,7 +270,7 @@ class TonightsBest
             return $cached;
         }
 
-        $result = (new self($user, $location, $instrument, $lensId, $field, $seeing, $night, $timezone, $options))->build();
+        $result = (new self($user, $location, $instrument, $lensId, $field, $seeing, $night, $timezone, $options, $offset))->build();
         Cache::put($key, $result, $result['pending'] ? self::PENDING_CACHE_SECONDS : self::CACHE_SECONDS);
 
         return $result;
@@ -402,6 +407,8 @@ class TonightsBest
         private string $night,
         private string $timezone,
         private array $options,
+        /** Added to the contrast reserves of the deep-sky objects: DetectionThreshold::offsetFor(). */
+        private float $offset = 0.0,
     ) {
         $this->dark     = NightWindow::for((float) $location->latitude, (float) $location->longitude, $night, $timezone);
         $this->horizon  = LocalHorizon::forLocation($location);
@@ -532,11 +539,11 @@ class TonightsBest
         $rows       = $this->objectQuery()
             ->join('user_object_metrics as m', fn (JoinClause $join) => $this->joinMetrics($join))
             ->leftJoin('object_observation_stats as s', 's.object_name', '=', 'o.name')
-            ->where('m.contrast_reserve', '>', self::VISIBLE_ABOVE)
+            ->where('m.contrast_reserve', '>', self::VISIBLE_ABOVE - $this->offset)
             ->get(['o.name', 'o.slug', 'o.type', 'o.ra', 'o.decl', 'o.mag', 'o.diam1', 'o.diam2', 't.name as type_name', 'c.name as constellation', 'm.contrast_reserve', 's.observations']);
         foreach ($rows as $row) {
             if (! isset($candidates[$row->name]) && $this->allowed($row->name) && ($object = $this->placed($row))) {
-                $object['contrast_reserve'] = (float) $row->contrast_reserve;
+                $object['contrast_reserve'] = (float) $row->contrast_reserve + $this->offset;
                 $candidates[$row->name]     = $object;
             }
         }
@@ -943,7 +950,7 @@ class TonightsBest
                 if ($reserve === null) {
                     continue;
                 }
-                $object['contrast_reserve'] = $reserve;
+                $object['contrast_reserve'] = $reserve + $this->offset;
             }
             if ($object['contrast_reserve'] > self::VISIBLE_ABOVE) {
                 $visible[] = $object;
