@@ -555,6 +555,10 @@ Route::post('admin/filter_make/destroy', 'App\Http\Controllers\FilterController@
 Route::resource('location', 'App\Http\Controllers\LocationController')
     ->middleware(['auth', 'verified'])->only(['index', 'create']);
 
+// Which of my sites tonight? The observer's locations compared for the coming nights
+Route::get('/location/best-site', [App\Http\Controllers\BestSiteController::class, 'index'])
+    ->name('location.best-site')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+
 Route::get('/location/{user}/{location}', 'App\Http\Controllers\LocationController@show')
     ->name('location.show');
 

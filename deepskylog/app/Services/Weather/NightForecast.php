@@ -115,7 +115,7 @@ class NightForecast
         }
         $seeing = SeeingForecast::points($latitude, $longitude, $fetch);
 
-        $key = 'night_forecast:nights:v2:'.md5(json_encode([round($latitude, 4), round($longitude, 4), round($elevation), $timezone, $nights, $hourly['fetched_at'], $seeing['fetched_at'] ?? null]));
+        $key = 'night_forecast:nights:v3:'.md5(json_encode([round($latitude, 4), round($longitude, 4), round($elevation), $timezone, $nights, $hourly['fetched_at'], $seeing['fetched_at'] ?? null]));
 
         return Cache::remember($key, self::CACHE_SECONDS, function () use ($hourly, $seeing, $latitude, $longitude, $elevation, $timezone, $nights) {
             $result = [];
@@ -225,7 +225,7 @@ class NightForecast
     /**
      * The forecast of one night: its dark hours, the Moon, the forecast hours
      * in them, the average cloud cover, the longest clear stretch with and
-     * without a bright Moon, the seeing of the dark hours (with $seeing, as
+     * without a bright Moon and all clear minutes with and without it, the seeing of the dark hours (with $seeing, as
      * SeeingForecast::between() gives it) and the verdict, which the seeing
      * does not change.
      *
@@ -236,8 +236,8 @@ class NightForecast
     public static function night(array $hourly, float $latitude, float $longitude, float $elevation, string $timezone, string $night, ?array $seeing = null): array
     {
         $result = [
-            'night' => $night, 'dark' => null, 'moon' => null, 'hours' => [], 'cloud' => null,
-            'clear' => null, 'clear_dark' => null, 'dew' => false, 'seeing' => null, 'verdict' => 'no_dark',
+            'night' => $night, 'dark' => null, 'moon' => null, 'hours' => [], 'cloud' => null, 'clear_minutes' => 0,
+            'clear' => null, 'clear_dark' => null, 'clear_dark_minutes' => 0, 'dew' => false, 'seeing' => null, 'verdict' => 'no_dark',
         ];
 
         $window = NightWindow::for($latitude, $longitude, $night, $timezone);
@@ -298,6 +298,11 @@ class NightForecast
         $result['clear_dark'] = self::longest($result['hours'], fn (array $hour) => $clear($hour) && ! $hour['moon'], $time);
         $result['dew']        = collect($result['hours'])->contains(fn (array $hour) => $clear($hour) && $hour['humidity'] >= self::DEW_HUMIDITY);
         $result['seeing']     = $seeing === null ? null : SeeingForecast::between($seeing, $window->start, $window->end);
+
+        // All clear minutes of the dark hours, not only the longest stretch (SiteComparison)
+        $minutes                      = fn (callable $test) => intdiv(array_sum(array_map(fn (array $hour) => $test($hour) ? $hour['until'] - $hour['from'] : 0, $result['hours'])), 60);
+        $result['clear_minutes']      = $minutes($clear);
+        $result['clear_dark_minutes'] = $minutes(fn (array $hour) => $clear($hour) && ! $hour['moon']);
 
         $result['verdict'] = match (true) {
             ($result['clear_dark']['minutes'] ?? 0) >= self::MIN_CLEAR_MINUTES     => 'clear_dark',

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\NightWindow;
 use App\Services\PushNotifications;
 use App\Services\Weather\NightForecast;
+use App\Services\Weather\SiteComparison;
 use App\Support\EphemerisDate;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -17,9 +18,11 @@ use Illuminate\Support\Facades\Mail;
 /**
  * Sends the observers who asked for it on the profile page
  * (users.clear_night_alert) a DeepskyLog message when the coming night at
- * their standard location is forecast to be clear and dark (NightForecast's
- * verdict clear_dark), with a link to make an observing list for it, and a
- * push notification on the devices where they turned those on.
+ * their standard location, or at one of their other active locations within
+ * RADIUS_KM of it, is forecast to be clear and dark (NightForecast's verdict
+ * clear_dark), naming the best of those sites (SiteComparison's deep-sky
+ * score), with a link to make an observing list for it and to compare the
+ * sites, and a push notification on the devices where they turned those on.
  *
  * An observer is looked at from ALERT_HOUR local time at that location until
  * it gets dark, so a forecast that clears up in the afternoon still gives a
@@ -30,6 +33,9 @@ class SendClearNightAlerts extends Command
 {
     /** The local hour from which the forecast of the coming night is trusted. */
     public const ALERT_HOUR = 12;
+
+    /** The other sites looked at, at most this far (km) from the standard location. */
+    public const RADIUS_KM = 250;
 
     protected $signature = 'forecast:send-clear-night-alerts
         {--apply : Send the messages}
@@ -76,21 +82,29 @@ class SendClearNightAlerts extends Command
                     }
                 }
 
-                $forecast = NightForecast::forLocation($location, nights: 1)[0] ?? null;
-                if (($forecast['verdict'] ?? null) !== 'clear_dark') {
+                $sites = SiteComparison::compare($user, [$night], SiteComparison::MODE_DEEPSKY, true, self::RADIUS_KM);
+                $clear = array_values(array_filter(
+                    SiteComparison::ranked($sites, $night),
+                    fn (array $site) => $site['nights'][$night]['forecast']['verdict'] === 'clear_dark',
+                ));
+                if ($clear === []) {
                     return;
                 }
 
+                $best     = $clear[0];
+                $forecast = $best['nights'][$night]['forecast'];
+                $home     = collect($sites)->firstWhere(fn (array $site) => $site['location']->id === $location->id);
+
                 $sent++;
-                $rows[] = [$user->id, $user->username, $location->name, $night, $forecast['clear_dark']['from'].'–'.$forecast['clear_dark']['until'], $forecast['cloud'].'%'];
+                $rows[] = [$user->id, $user->username, $best['location']->name, $night, $forecast['clear_dark']['from'].'–'.$forecast['clear_dark']['until'], $forecast['cloud'].'%', count($clear)];
                 if ($apply) {
-                    $this->send($user, $location->name, $forecast);
+                    $this->send($user, $best, $night, $best['location']->id === $location->id ? null : $home, array_slice($clear, 1));
                     $user->forceFill(['clear_night_alert_night' => $night])->save();
                 }
             });
 
         if ($rows !== [] && $this->output->isVerbose()) {
-            $this->table(['Id', 'Username', 'Location', 'Night', 'Clear and dark', 'Clouds'], $rows);
+            $this->table(['Id', 'Username', 'Best site', 'Night', 'Clear and dark', 'Clouds', 'Clear sites'], $rows);
         }
 
         $this->info(($apply ? 'Messages sent: ' : 'Messages to send: ').$sent);
@@ -99,13 +113,17 @@ class SendClearNightAlerts extends Command
     }
 
     /**
-     * @param  array<string, mixed>  $forecast  the night as NightForecast::night() gives it
+     * @param  array<string, mixed>  $best  the best clear site, as SiteComparison::compare() gives it
+     * @param  array<string, mixed>|null  $home  the standard location when it is not the best site
+     * @param  list<array<string, mixed>>  $others  the other clear sites, best first
      */
-    private function send(User $user, string $locationName, array $forecast): void
+    private function send(User $user, array $best, string $night, ?array $home, array $others): void
     {
         try {
             $locale   = $user->language ?: config('app.locale');
-            $location = html_entity_decode($locationName, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $name     = fn (array $site) => html_entity_decode($site['location']->name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $location = $name($best);
+            $forecast = $best['nights'][$night]['forecast'];
             $date     = Carbon::parse($forecast['night'])->locale($locale)->isoFormat('dddd LL');
 
             $subject = __('Clear night forecast at :location', ['location' => $location], $locale);
@@ -118,7 +136,19 @@ class SendClearNightAlerts extends Command
             if ($forecast['dew']) {
                 $body .= '<li>'.e(__('Risk of dew', [], $locale)).'</li>';
             }
-            $body .= '</ul><p><a href="'.e($listUrl).'">'.e(__('Make a list for this night', [], $locale)).'</a></p>';
+            $body .= '</ul>';
+            if ($home !== null) {
+                $homeNight = $home['nights'][$night]['forecast'] ?? null;
+                $body .= '<p>'.e(__('At your standard location :location: :forecast', [
+                    'location' => $name($home),
+                    'forecast' => $homeNight ? NightForecast::summary($homeNight, $locale) : NightForecast::verdictLabel('unknown', $locale),
+                ], $locale)).'</p>';
+            }
+            if ($others !== []) {
+                $body .= '<p>'.e(__('Also clear and dark: :locations', ['locations' => implode(', ', array_map($name, $others))], $locale)).'</p>';
+            }
+            $compareUrl = route('location.best-site', ['night' => $night]);
+            $body .= '<p><a href="'.e($listUrl).'">'.e(__('Make a list for this night', [], $locale)).'</a> · <a href="'.e($compareUrl).'">'.e(__('Compare your sites', [], $locale)).'</a></p>';
             $body .= '<p>'.e(__('Weather data by :link', ['link' => 'Open-Meteo.com'], $locale)).'. '.e(__('You can turn this message off in your profile settings.', [], $locale)).'</p>';
             $body = Message::sanitizeHtml($body);
 
