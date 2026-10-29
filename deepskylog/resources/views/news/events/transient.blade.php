@@ -60,6 +60,29 @@
         )
     !!}
 </p>
+@if (!empty($data["slug"]))
+    <p>
+        {!!
+            __(
+                "Seen it? :log with the comparison stars of the AAVSO chart, then send it to the AAVSO with :export.",
+                [
+                    "log" =>
+                        '<a href="' .
+                        e(route("observation.create", ["slug" => $data["slug"]])) .
+                        '" class="text-blue-400 hover:underline">' .
+                        e(__("Log your magnitude estimate")) .
+                        "</a>",
+                    "export" =>
+                        '<a href="' .
+                        e(route("observations.search.aavso")) .
+                        '" class="text-blue-400 hover:underline" rel="nofollow">' .
+                        e(__("Export my variable star estimates for the AAVSO")) .
+                        "</a>",
+                ],
+            )
+        !!}
+    </p>
+@endif
 @if ($location && $local)
     <h3 class="mt-3 font-semibold text-white">
         {{

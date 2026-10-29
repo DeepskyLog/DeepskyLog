@@ -11,10 +11,12 @@ use App\Models\Location;
 use App\Models\ObservationSession;
 use App\Models\SearchIndex;
 use App\Models\User;
+use App\Models\VariableStarEstimate;
 use App\Models\Observation;
 use App\Services\Import\OalSchemaValidator;
 use App\Services\Oal\OalWriter;
 use App\Services\ObservationSearchQuery;
+use App\Services\Observations\AavsoExport;
 use App\Services\Observations\IcqExport;
 use App\Services\Observations\ObservationPdfDataBuilder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -53,6 +55,7 @@ class ObservationSearchExportController extends Controller
         'obs' => 2500,
         'oal' => 7500,
         'icq' => 10000,
+        'aavso' => 10000,
     ];
 
     private const EXPORT_FORMAT_NAMES = [
@@ -61,6 +64,7 @@ class ObservationSearchExportController extends Controller
         'obs' => 'AstroPlanner',
         'oal' => 'OAL',
         'icq' => 'ICQ',
+        'aavso' => 'AAVSO',
     ];
 
     public function pdf(Request $request, ObservationPdfDataBuilder $builder)
@@ -241,6 +245,54 @@ class ObservationSearchExportController extends Controller
         return response()->streamDownload(function () use ($export) {
             echo $export['content'];
         }, 'comet_observations_' . now()->format('Ymd_His') . '.icq', ['Content-Type' => 'text/plain; charset=US-ASCII']);
+    }
+
+    /**
+     * The viewer's own magnitude estimates of variable stars, novae and
+     * supernovae among the observations of the search, in the AAVSO Visual
+     * File Format: a file holds one observer's estimates.
+     */
+    public function aavso(Request $request)
+    {
+        $user = $request->user();
+        if (! $user) {
+            abort(403);
+        }
+        if (trim((string) $user->aavso_code) === '') {
+            return redirect()
+                ->back()
+                ->with('error', __('Enter your AAVSO observer code on your profile page to export your variable star estimates for the AAVSO.'));
+        }
+
+        $estimates = fn () => $this->matchingObservations($request)
+            ->where('observations.observer_username', $user->username)
+            ->whereIn('observations.id', VariableStarEstimate::query()->select('observation_id'));
+
+        $max = self::MAX_EXPORT_OBSERVATIONS['aavso'];
+        $count = $estimates()->count();
+        if ($count > $max) {
+            return redirect()
+                ->back()
+                ->with('error', __('This search matches :count observations, but at most :max observations can be exported as :format. Please narrow down your search.', [
+                    'count' => number_format($count),
+                    'max' => number_format($max),
+                    'format' => self::EXPORT_FORMAT_NAMES['aavso'],
+                ]));
+        }
+
+        $export = AavsoExport::build($estimates()->orderBy('observations.observed_on')->orderBy('observations.observed_time')->get(), (string) $user->aavso_code);
+
+        if ($export['count'] === 0) {
+            return redirect()
+                ->back()
+                ->with('error', $export['skipped'] > 0
+                    ? __('Your variable star estimates in this search have no time. The AAVSO needs the time of an estimate.')
+                    : __('This search has none of your variable star estimates to export for the AAVSO.'));
+        }
+
+        return response()->streamDownload(function () use ($export) {
+            echo $export['content'];
+        }, 'aavso_estimates_' . now()->format('Ymd_His') . '.txt', ['Content-Type' => 'text/plain; charset=UTF-8']);
     }
 
     public function apd(Request $request)

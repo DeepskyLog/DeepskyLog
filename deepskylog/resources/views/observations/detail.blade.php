@@ -917,6 +917,55 @@
                                 </div>
                             @endif
 
+                            {{-- The magnitude estimate of a variable star, nova or supernova --}}
+                            @if (!empty($variableStarEstimate))
+                                @php
+                                    $estimateCodes = array_filter(str_split((string) $variableStarEstimate->comment_codes));
+                                    $codeLabels = \App\Models\VariableStarEstimate::commentCodeLabels();
+                                @endphp
+                                <div class="mt-4">
+                                    <dt class="text-xs uppercase tracking-wide text-gray-400">
+                                        {{ __("Magnitude estimate") }}
+                                    </dt>
+                                    <dd class="mt-1">
+                                        <span class="font-semibold">
+                                            {{ $variableStarEstimate->fainter ? __("fainter than") . " " : "" }}{{ number_format($variableStarEstimate->magnitude, 1) }}
+                                        </span>
+                                        @if ($variableStarEstimate->comparison1 || $variableStarEstimate->comparison2)
+                                            <span class="text-sm text-gray-300">
+                                                &middot;
+                                                {{ __("Comparison stars") }}:
+                                                {{ collect([$variableStarEstimate->comparison1, $variableStarEstimate->comparison2])->filter()->implode(", ") }}
+                                            </span>
+                                        @endif
+                                        @if ($variableStarEstimate->chart)
+                                            <span class="text-sm text-gray-300">
+                                                &middot; {{ __("Chart") }}
+                                                {{ $variableStarEstimate->chart }}
+                                            </span>
+                                        @endif
+                                        @if (!empty($estimateCodes))
+                                            <div class="mt-2 flex flex-wrap gap-2">
+                                                @foreach ($estimateCodes as $code)
+                                                    <span class="inline-block rounded-full bg-gray-700 px-3 py-1 text-sm text-gray-200">{{ $codeLabels[$code] ?? $code }}</span>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                        @if (auth()->check() && auth()->user()->username === ($obs->observerid ?? $obs->observer_username ?? ""))
+                                            <div class="mt-2 text-sm">
+                                                <a
+                                                    href="{{ route("observations.search.aavso") }}"
+                                                    class="text-blue-300 hover:underline"
+                                                    rel="nofollow"
+                                                >
+                                                    {{ __("Export my variable star estimates for the AAVSO") }}
+                                                </a>
+                                            </div>
+                                        @endif
+                                    </dd>
+                                </div>
+                            @endif
+
                         @else
                             {{-- Comet observation details section --}}
                             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">

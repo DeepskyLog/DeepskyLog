@@ -16,9 +16,11 @@ use App\Models\Constellation;
 use App\Models\DeepskyObject;
 use App\Models\SketchOfTheWeek;
 use App\Models\SketchOfTheMonth;
+use App\Models\VariableStarEstimate;
 use App\Models\ObservationLike;
 use App\Models\ObservationComment;
 use App\Models\ObservationTranslation;
+use App\Services\AavsoVariableStars;
 use App\Services\ObservationSearchQuery;
 use App\Services\Observations\ObservationCardData;
 use App\Services\Observations\SameFieldObjects;
@@ -171,6 +173,7 @@ class ObservationsController extends Controller
             'objectAltitude' => $objectAltitude,
             // The observations of the other objects seen in the same field
             'sameFieldObservations' => $selectedUnified->seenInSameField(),
+            'variableStarEstimate' => $obsType === 'deepsky' ? VariableStarEstimate::find($selectedUnified->id) : null,
         ], $preloadedData, $socialData));
     }
 
@@ -2240,8 +2243,19 @@ class ObservationsController extends Controller
                 }
             }
 
+            // A variable star, nova or supernova gets a magnitude estimate,
+            // with its star in the AAVSO (for the link to its chart) when known
+            $variableStar = null;
+            if ($resolved['type'] === 'deepsky' && !empty($objectName)) {
+                $variableObject = DeepskyObject::where('name', $objectName)->first();
+                if ($variableObject && VariableStarEstimate::appliesTo($variableObject->type)) {
+                    $variableStar = ['star' => AavsoVariableStars::starOf($variableObject, fetch: false)];
+                }
+            }
+
             return view('observations.create', [
                 'resolved' => $resolved,
+                'variableStar' => $variableStar,
                 'slug' => $slug,
                 // Editing an observation of an object that is not in the
                 // database: the objects it may have been split into
@@ -2411,6 +2425,14 @@ class ObservationsController extends Controller
             'comet_coma' => 'nullable|integer',
             'comet_tail_length' => 'nullable|integer',
             'comet_position_angle' => 'nullable|integer|between:0,360',
+            // The magnitude estimate of a variable star, nova or supernova
+            'variable_magnitude' => 'nullable|numeric|between:-2,25',
+            'variable_fainter' => 'nullable',
+            'variable_comparison1' => 'nullable|string|max:20',
+            'variable_comparison2' => 'nullable|string|max:20',
+            'variable_chart' => 'nullable|string|max:20',
+            'variable_comment_codes' => 'nullable|array',
+            'variable_comment_codes.*' => ['string', Rule::in(VariableStarEstimate::COMMENT_CODES)],
             // The other objects seen in the same field (#831): the suggested ones
             // ticked, and those chosen in the multiselect (a JSON list)
             'also_seen' => 'nullable|array|max:' . SameFieldObjects::MAX,
@@ -2616,6 +2638,20 @@ class ObservationsController extends Controller
                     ['observation_id' => $obs->id],
                     $detailValues
                 );
+
+                // The magnitude estimate, for a variable star, nova or supernova
+                if (VariableStarEstimate::appliesTo(DB::table('objects')->where('name', $obs->target_key)->value('type'))) {
+                    VariableStarEstimate::saveFor((int) $obs->id, [
+                        'magnitude' => $validated['variable_magnitude'] ?? null,
+                        'fainter' => $validated['variable_fainter'] ?? null,
+                        'comparison1' => $validated['variable_comparison1'] ?? null,
+                        'comparison2' => $validated['variable_comparison2'] ?? null,
+                        'chart' => $validated['variable_chart'] ?? null,
+                        'comment_codes' => $validated['variable_comment_codes'] ?? null,
+                    ]);
+                } else {
+                    VariableStarEstimate::whereKey($obs->id)->delete();
+                }
             }
         } catch (\Throwable $e) {
             try {
@@ -2855,6 +2891,17 @@ class ObservationsController extends Controller
                         $prefill['component1'] = (int) $details->component1;
                     if (!empty($details->component2))
                         $prefill['component2'] = (int) $details->component2;
+                }
+
+                $estimate = VariableStarEstimate::find($selectedUnified->id);
+                if ($estimate) {
+                    $prefill['variable_magnitude'] = $estimate->magnitude;
+                    if ($estimate->fainter)
+                        $prefill['variable_fainter'] = 1;
+                    $prefill['variable_comparison1'] = $estimate->comparison1;
+                    $prefill['variable_comparison2'] = $estimate->comparison2;
+                    $prefill['variable_chart'] = $estimate->chart;
+                    $prefill['variable_comment_codes'] = str_split((string) $estimate->comment_codes);
                 }
             }
         } catch (\Throwable $_) {

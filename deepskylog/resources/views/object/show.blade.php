@@ -717,6 +717,11 @@ try {
 
                             </div>
 
+                            {{-- The light curve of a variable star, nova or supernova from the estimates in DeepskyLog --}}
+                            @if (!empty($canonicalSlug) && !empty($session->name) && \App\Models\VariableStarEstimate::appliesTo($session->source_type_raw ?? null))
+                                <x-variable-star-light-curve :object-name="$session->name" :slug="$canonicalSlug" />
+                            @endif
+
                             {{-- Finding notes of observers (deep-sky objects) --}}
                             @if (!empty($session->name) && \App\Models\DeepskyObject::where('name', $session->name)->exists()
                                 && !in_array($session->source_type_raw ?? '', ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun'], true))

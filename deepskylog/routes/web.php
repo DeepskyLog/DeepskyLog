@@ -325,6 +325,9 @@ Route::get('/observations/search/export.oal.xml', [App\Http\Controllers\Observat
 Route::get('/observations/search/export.icq', [App\Http\Controllers\ObservationSearchExportController::class, 'icq'])
     ->name('observations.search.icq')
     ->middleware(['doNotCacheResponse', 'throttle:exports']);
+Route::get('/observations/search/export.aavso.txt', [App\Http\Controllers\ObservationSearchExportController::class, 'aavso'])
+    ->name('observations.search.aavso')
+    ->middleware(['auth', 'doNotCacheResponse', 'throttle:exports']);
 // The observations that look wrong (App\Services\Observations\SuspectObservations):
 // the observer's own, everybody's for administrators and database experts.
 Route::get('/observations/suspect', [App\Http\Controllers\SuspectObservationController::class, 'index'])

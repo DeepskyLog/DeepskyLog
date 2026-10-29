@@ -118,6 +118,34 @@ class AavsoVariableStars
      */
     public static function forObject(DeepskyObject $object, bool $fetch = true): ?array
     {
+        $star = self::starOf($object, $fetch);
+        if ($star === null) {
+            return null;
+        }
+
+        $latestKey = self::latestKey($star);
+        $latest    = Cache::get($latestKey);
+        if ($latest === null) {
+            if (! $fetch) {
+                defer(fn () => self::latest($star), 'aavso:'.$latestKey);
+
+                return ['star' => $star, 'latest' => null];
+            }
+            $latest = self::latest($star);
+        }
+
+        return ['star' => $star, 'latest' => is_array($latest) ? $latest : null];
+    }
+
+    /**
+     * The star of the object in VSX, or null when the object is no known
+     * variable, the AAVSO failed or, with $fetch false, it is not cached yet
+     * (then it is fetched after the response, with its latest estimates).
+     *
+     * @return array<string, mixed>|null
+     */
+    public static function starOf(DeepskyObject $object, bool $fetch = true): ?array
+    {
         if (! self::appliesTo($object->type)) {
             return null;
         }
@@ -141,22 +169,8 @@ class AavsoVariableStars
             }
             Cache::put($starKey, $star, self::STAR_SECONDS);
         }
-        if (! is_array($star)) {
-            return null;
-        }
 
-        $latestKey = self::latestKey($star);
-        $latest    = Cache::get($latestKey);
-        if ($latest === null) {
-            if (! $fetch) {
-                defer(fn () => self::latest($star), 'aavso:'.$latestKey);
-
-                return ['star' => $star, 'latest' => null];
-            }
-            $latest = self::latest($star);
-        }
-
-        return ['star' => $star, 'latest' => is_array($latest) ? $latest : null];
+        return is_array($star) ? $star : null;
     }
 
     /**

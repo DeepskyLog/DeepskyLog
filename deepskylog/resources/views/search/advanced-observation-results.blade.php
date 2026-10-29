@@ -21,6 +21,7 @@
                 $exportObsUrl = route('observations.search.obs', $exportParams);
                 $exportOalUrl = route('observations.search.oal', $exportParams);
                 $exportIcqUrl = route('observations.search.icq', $exportParams);
+                $exportAavsoUrl = route('observations.search.aavso', $exportParams);
                 $exportZipUrl = route('observations.zip', $exportParams);
                 $extractObjectsUrl = route('observations.search.objects', $exportParams);
             @endphp
@@ -68,6 +69,11 @@
                         <x-menu.item href="{{ $exportIcqUrl }}" target="_blank" rel="nofollow noopener noreferrer">
                             {{ __('Export comets for COBS (ICQ)') }}
                         </x-menu.item>
+                        @auth
+                            <x-menu.item href="{{ $exportAavsoUrl }}" target="_blank" rel="nofollow noopener noreferrer">
+                                {{ __('Export my variable star estimates for the AAVSO') }}
+                            </x-menu.item>
+                        @endauth
                         <x-menu.item href="{{ $exportZipUrl }}" rel="nofollow" data-last>
                             {{ auth()->user()?->hasAdministratorPrivileges() ? __('Zip file with drawings') : __('Zip file with my drawings') }}
                         </x-menu.item>
