@@ -172,8 +172,60 @@
 - [X] Clubs or groups: /clubs (View menu "Clubs") lists the clubs; an observer makes a club and is its first administrator, and can be a member of as many clubs as they like. A club is open (join at once) or asks its administrators to let observers in; administrators also invite observers, make other members administrator and remove members. The page of a club shows its members, the public observing lists the members share with it, its own challenges (set by its administrators, joined by its members only, announced to them by a message instead of the news, on the home page of the members), its starparties (a starparty can belong to one of the organiser's clubs; a private one is also seen by the members, and all members can be invited at once) and the ranking of the members this year, the last 12 months or ever, by different objects, observations, drawings or the objects of a catalog or list. The observer page lists the observer's clubs.
 - [X] Compare drawings of an object: /object/{slug}/drawings/compare (linked from the quick links and the new "Drawings by aperture" section of the object page) shows the drawings of a deep-sky object in two columns side by side, each for an aperture class of the instrument they were made with (up to 4", 5–6", 8", 10–12", 14–16", 18–20", 22" and more, or in mm for observers who do not use inches), at first the smallest against the largest, so you can see how M 51 looks in 8" against 16". The object page shows the most liked drawing of each aperture class.
 - [X] Community finding notes per object. Short tips from observers ("use the UHC", "hop from ζ Ori") with likes, shown on the object page and the at-the-eyepiece page.
-
-Data quality
-
 - [X] Detecting suspect observations. List observations where the object was below the horizon at the given time and place, or too faint for the instrument (contrast reserve far below 0 while marked as seen), or that look like duplicates. Show them to the observer, and to administrators in /admin/check-objects.
 - [X] OpenAPI documentation for /api/v1/me, so the PiFinder and other tools besides pyDeepskyLog can use the API more easily.
+- [X] Eyepiece gap analysis per telescope: the page of the observer's own telescope shows the eyepiece ladder, the magnifications of their active eyepieces with it (all of them or only those of one of their instrument sets, with the lens always used with it, zooms as a range, and on request with each Barlow lens or reducer) with the exit pupil and true field of each, on a strip of exit pupils. It points out the gaps (a widest field well below that of a wide 2" eyepiece, two steps more than a factor 1.7 apart in exit pupil, nothing near the highest useful magnification) and suggests the focal lengths that fill them, each with the number of objects not seen yet it would let the observer see at their standard location. "What if I bought this eyepiece…" (/instrument/{user}/{instrument}/what-if-eyepiece, linked from each suggestion) lists those objects for any focal length and apparent field, with a button to make an observing list. This replaces the eyepiece tables per lens of the instrument page.
+
+
+- Export comet observations in COBS/ICQ format
+
+Comet observers send their estimates to COBS (Comet OBServation database).
+DeepskyLog already stores the magnitude, coma and DC, and the ICQ method and reference-key tables (legacy_icq_*).
+An export to the ICQ/COBS format from the comet observation search would save observers typing everything in twice. A later step could be importing from COBS.
+
+
+- Variable star estimates, exported in AAVSO format
+
+The AAVSO integration already identifies the variable stars and shows the latest estimates.
+A "magnitude estimate" field (with comparison stars) on observations of AA1STAR/SNOVA objects would let observers log their estimates.
+An export in the AAVSO Visual File Format would let them submit those estimates to AAVSO, which makes the supernova and nova news items lead to an action.
+
+
+- Smallest aperture per object ("aperture records")
+
+On the object page: the smallest aperture, and separately the brightest sky (SQM/NELM), with which the object was reported seen, linked to those observations.
+It answers "can I see this with my 4-inch?" from real observations instead of a calculation.
+It can reuse the suspect-observation check, so impossible records are left out.
+A ranking page ("faintest objects seen with ≤ 100 mm") would make it a friendly competition.
+
+
+- Follow an object
+
+Observers can already follow other observers, but not objects.
+Following an object (say Hubble's Variable Nebula, a comet or a supernova) would include its new observations and drawings in the daily digest, as a push notification and in the personal RSS feed.
+It reuses the follows:send-digest setup.
+
+
+- "Revisit with your current telescope"
+
+Lists the objects the observer saw only with a much smaller instrument, or never drew, that their current standard telescope shows much better (a higher contrast reserve), ranked by the gain.
+Where "What's new for me" is about objects never seen, this one is about objects worth a second look. It can be made into an observing list.
+
+
+- Observing activity calendar on the observer page
+
+A GitHub-style heatmap of the nights with observations over the years, coloured by number of objects, with the new Moons marked.
+It is cheap to build from ObserverBlog::night(), and every night links to the blog entry for that night.
+
+
+- Community sky-brightness map
+
+The SQM and NELM values with observations, aggregated per grid cell of about 0.25° and anonymised (only cells with several observers), shown as a Leaflet layer.
+Shows how the sky at a site changed over the years.
+Reuses LocationSkyHistory and its range checks. Privacy needs care, so it should use cells, never exact locations.
+
+
+- Beginner path
+
+A guided series of about 30 objects for new observers, picked to suit their standard telescope and location, each with finding notes and field views. It builds on the existing goals or challenges.
+It would help the many accounts that users:prune-inactive now deletes for never recording anything.

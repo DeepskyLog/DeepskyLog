@@ -12,7 +12,9 @@ use Illuminate\View\View;
  * "What's new for me" of the observer's own telescope or eyepiece
  * (/instrument/{user}/{instrument}/whats-new,
  * /eyepiece/{user}/{eyepiece}/whats-new): the page of the Livewire
- * WhatsNewEquipment. Another observer's equipment is not found.
+ * WhatsNewEquipment, and "What if I bought this eyepiece"
+ * (/instrument/{user}/{instrument}/what-if-eyepiece). Another observer's
+ * equipment is not found.
  */
 class WhatsNewEquipmentController extends Controller
 {
@@ -24,6 +26,18 @@ class WhatsNewEquipmentController extends Controller
     public function eyepiece(string $userSlug, string $eyepieceSlug): View
     {
         return $this->show(EquipmentGain::EYEPIECE, Eyepiece::class, $userSlug, $eyepieceSlug);
+    }
+
+    /**
+     * "What if I bought this eyepiece" for the observer's own telescope.
+     */
+    public function plannedEyepiece(string $userSlug, string $instrumentSlug): View
+    {
+        $user = Auth::user();
+        abort_unless($user && $user->slug === $userSlug, 404);
+        $instrument = Instrument::where('user_id', $user->id)->where('slug', $instrumentSlug)->firstOrFail();
+
+        return view('equipment.what-if-eyepiece', ['instrument' => $instrument]);
     }
 
     private function show(string $kind, string $model, string $userSlug, string $slug): View

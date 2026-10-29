@@ -14,6 +14,15 @@
                     "Thinking of buying a telescope or binoculars? Enter its aperture and see the deep-sky objects it would let you see that you cannot see with any of your instruments, calculated from their contrast reserve. Objects you have already seen are left out.",
                 )
             }}
+        @elseif ($gain->kind === \App\Services\EquipmentGain::PLANNED_EYEPIECE)
+            {{
+                __(
+                    "Thinking of buying an eyepiece for your :instrument? Enter its focal length and see the deep-sky objects it would let you see that you cannot see with your eyepieces and lenses, calculated from their contrast reserve. Objects you have already seen are left out.",
+                    [
+                        "instrument" => $gain->instrumentName(),
+                    ],
+                )
+            }}
         @elseif ($gain->kind === \App\Services\EquipmentGain::EYEPIECE)
             {{
                 __(
@@ -121,6 +130,70 @@
             <x-button type="submit" primary :label="__('Calculate')" />
         </form>
         @foreach (["plannedType", "aperture", "focalLength", "magnification"] as $field)
+            @error ($field)
+                <p class="-mt-2 text-sm text-red-400">{{ $message }}</p>
+            @enderror
+        @endforeach
+    @endif
+
+    @if ($gain->kind === \App\Services\EquipmentGain::PLANNED_EYEPIECE)
+        <form wire:submit="calculate" class="flex flex-wrap items-end gap-3">
+            <label class="block w-36 text-sm">
+                <span class="mb-1 block text-gray-400"
+                    >{{ __("Focal length") }} ({{ __("mm") }})</span
+                >
+                <input
+                    type="number"
+                    step="any"
+                    min="0"
+                    wire:model="focalLength"
+                    class="{{ $input }} w-full"
+                    required
+                />
+            </label>
+            <label class="block w-36 text-sm">
+                <span class="mb-1 block text-gray-400"
+                    >{{ __("Apparent Field of View") }} (°)</span
+                >
+                <input
+                    type="number"
+                    step="any"
+                    min="0"
+                    wire:model="apparentField"
+                    placeholder="{{ __("optional") }}"
+                    class="{{ $input }} w-full"
+                />
+            </label>
+            @if ($sets)
+                <label class="block text-sm">
+                    <span class="mb-1 block text-gray-400">{{
+                        __(
+                            "Eyepieces and lenses",
+                        )
+                    }}</span>
+                    <select wire:model="instrumentSet" class="{{ $input }}">
+                        <option value="">
+                            {{
+                                __(
+                                    "All my eyepieces and lenses",
+                                )
+                            }}
+                        </option>
+                        @foreach ($sets as $id => $label)
+                            <option value="{{ $id }}">
+                                {{
+                                    __("Only those of :set", [
+                                        "set" => $label,
+                                    ])
+                                }}
+                            </option>
+                        @endforeach
+                    </select>
+                </label>
+            @endif
+            <x-button type="submit" primary :label="__('Calculate')" />
+        </form>
+        @foreach (["focalLength", "apparentField", "instrumentSet"] as $field)
             @error ($field)
                 <p class="-mt-2 text-sm text-red-400">{{ $message }}</p>
             @enderror
@@ -255,7 +328,20 @@
                     </p>
                 @else
                     <p class="text-base text-gray-100">
-                        @if ($gain->kind === \App\Services\EquipmentGain::PLANNED)
+                        @if ($gain->kind === \App\Services\EquipmentGain::PLANNED_EYEPIECE)
+                            {{
+                                trans_choice(
+                                    "{1} A :eyepiece would show one object you have not seen with your :instrument at :location.|[2,*] A :eyepiece would show :count objects you have not seen with your :instrument at :location.",
+                                    $shown["total"],
+                                    [
+                                        "count" => number_format($shown["total"]),
+                                        "location" => $gain->locationName(),
+                                        "eyepiece" => $gain->equipmentName(),
+                                        "instrument" => $gain->instrumentName(),
+                                    ],
+                                )
+                            }}
+                        @elseif ($gain->kind === \App\Services\EquipmentGain::PLANNED)
                             {{
                                 trans_choice(
                                     "{1} A :instrument would show one object you have not seen at :location.|[2,*] A :instrument would show :count objects you have not seen at :location.",
@@ -328,6 +414,15 @@
                                 }}
                             @endif
                         </p>
+                        @if ($gain->kind === \App\Services\EquipmentGain::PLANNED_EYEPIECE)
+                            <p>
+                                {{
+                                    __(
+                                        "The eyepiece is added to your active eyepieces, each also with your active Barlow lenses and reducers; without an apparent field its field is estimated.",
+                                    )
+                                }}
+                            </p>
+                        @endif
                         @if ($gain->kind === \App\Services\EquipmentGain::PLANNED &&
                             !$gain->planned["binoculars"])
                             <p>

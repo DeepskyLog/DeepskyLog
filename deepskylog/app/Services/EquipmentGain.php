@@ -6,6 +6,7 @@ use App\Jobs\ComputeEquipmentGain;
 use App\Models\Eyepiece;
 use App\Models\Instrument;
 use App\Models\InstrumentType;
+use App\Models\Lens;
 use App\Models\Location;
 use App\Models\Observation;
 use App\Models\ObservingList;
@@ -22,9 +23,13 @@ use Illuminate\Support\Facades\DB;
  * standard telescope without it. "What if I bought…" (PLANNED) does the same
  * for a telescope or binoculars the observer does not have: an unsaved
  * Instrument made from the aperture and focal length or magnification they
- * entered, used with their eyepieces. Objects the observer has seen are left out
- * when the result is shown (objects()), the rest are ranked by the number of
- * observations in DeepskyLog.
+ * entered, used with their eyepieces. PLANNED_EYEPIECE does the same for an
+ * eyepiece they do not have, with one of their telescopes: the ladder of
+ * their eyepieces and lenses with it (EyepieceGaps) with and without the
+ * eyepiece, as the eyepiece gap analysis of the instrument page suggests it.
+ * Objects the observer has seen are left out when the result is shown
+ * (objects()), the rest are ranked by the number of observations in
+ * DeepskyLog.
  *
  * Both sides are calculated with ContrastReserveCalculator, not read from
  * user_object_metrics: those only hold the standard equipment, with all
@@ -41,7 +46,10 @@ class EquipmentGain
     /** A telescope or binoculars the observer is thinking of buying. */
     public const PLANNED = 'planned';
 
-    public const KINDS = [self::INSTRUMENT, self::EYEPIECE, self::PLANNED];
+    /** An eyepiece the observer is thinking of buying, with one of their telescopes. */
+    public const PLANNED_EYEPIECE = 'planned_eyepiece';
+
+    public const KINDS = [self::INSTRUMENT, self::EYEPIECE, self::PLANNED, self::PLANNED_EYEPIECE];
 
     /** Visible: a contrast reserve above this, "difficult" or better (as Tonight's best). */
     public const VISIBLE_ABOVE = 0.1;
@@ -116,7 +124,7 @@ class EquipmentGain
         return [
             'binoculars'    => $binoculars,
             'aperture'      => round(max(0.0, (float) ($planned['aperture'] ?? 0)), 1),
-            'focal_length'  => ! $binoculars && $focalLength > 0 ? round($focalLength, 1) : null,
+            'focal_length'  => ! $binoculars && $focalLength   > 0 ? round($focalLength, 1) : null,
             'magnification' => $binoculars   && $magnification > 0 ? $magnification : null,
         ];
     }
@@ -152,6 +160,46 @@ class EquipmentGain
     }
 
     /**
+     * The gain of an eyepiece the observer does not have, from
+     * plannedEyepieceSpec(), with their telescope and all their eyepieces
+     * and lenses.
+     */
+    public static function forPlannedEyepiece(User $user, Instrument $instrument, array $planned, ?Location $location): self
+    {
+        $planned = self::plannedEyepieceSpec($planned);
+
+        return new self($user, self::PLANNED_EYEPIECE, EyepieceGaps::plannedEyepiece($planned), $location, $instrument, null, $planned);
+    }
+
+    /**
+     * A planned eyepiece as stored in the cache key and the job: its focal
+     * length (mm), apparent field (degrees, null when unknown) and the
+     * instrument set whose eyepieces and lenses it is added to (null for all
+     * the observer's).
+     *
+     * @return array{focal_length: float, apparent_fov: ?float, instrument_set: ?int}
+     */
+    public static function plannedEyepieceSpec(array $planned): array
+    {
+        $apparentFov = round((float) ($planned['apparent_fov'] ?? 0));
+        $set         = (int) ($planned['instrument_set'] ?? 0);
+
+        return [
+            'focal_length'   => round(max(0.0, (float) ($planned['focal_length'] ?? 0)), 1),
+            'apparent_fov'   => $apparentFov > 0 ? $apparentFov : null,
+            'instrument_set' => $set         > 0 ? $set : null,
+        ];
+    }
+
+    /**
+     * The ladder a planned eyepiece is added to.
+     */
+    private function ladder(): EyepieceGaps
+    {
+        return new EyepieceGaps($this->user, $this->instrument, EyepieceGaps::set($this->user, $this->planned['instrument_set'] ?? null));
+    }
+
+    /**
      * The gain of an eyepiece of the observer, with their standard telescope.
      */
     public static function forEyepiece(User $user, Eyepiece $eyepiece, ?Location $location): self
@@ -163,7 +211,8 @@ class EquipmentGain
      * The gain of the observer's equipment of the kind, or of the planned
      * instrument; null for equipment that is not theirs.
      *
-     * @param  array|null  $planned  for PLANNED, the instrument (plannedSpec())
+     * @param  int  $equipmentId  for PLANNED_EYEPIECE, the telescope
+     * @param  array|null  $planned  for PLANNED, the instrument (plannedSpec()); for PLANNED_EYEPIECE, the eyepiece (plannedEyepieceSpec())
      */
     public static function for(User $user, string $kind, int $equipmentId, ?int $locationId, ?array $compareIds = null, ?array $planned = null): ?self
     {
@@ -176,6 +225,9 @@ class EquipmentGain
             return null;
         }
         $location = self::location($user, $locationId);
+        if ($kind === self::PLANNED_EYEPIECE) {
+            return self::forPlannedEyepiece($user, $equipment, $planned ?? [], $location);
+        }
 
         return $kind === self::EYEPIECE
             ? self::forEyepiece($user, $equipment, $location)
@@ -231,6 +283,13 @@ class EquipmentGain
             if ($this->eyepieceMagnification() === null) {
                 return 'This eyepiece has no focal length.';
             }
+        } elseif ($this->kind === self::PLANNED_EYEPIECE) {
+            if (! EyepieceGaps::applies($this->instrument)) {
+                return 'This instrument does not take eyepieces.';
+            }
+            if ((float) $this->equipment->focal_length_mm <= 0) {
+                return 'This eyepiece has no focal length.';
+            }
         } elseif ((float) $this->instrument->aperture_mm <= 0) {
             return 'This instrument has no aperture.';
         }
@@ -259,7 +318,7 @@ class EquipmentGain
         }
         Cache::add($this->key().':attempts', 0, now()->addHour());
         Cache::increment($this->key().':attempts');
-        ComputeEquipmentGain::dispatch($this->user->id, $this->kind, (int) $this->equipment->id, (int) $this->location->id, $this->compareIds, $this->planned);
+        ComputeEquipmentGain::dispatch($this->user->id, $this->kind, $this->equipmentId(), (int) $this->location->id, $this->compareIds, $this->planned);
 
         return true;
     }
@@ -303,6 +362,26 @@ class EquipmentGain
         Cache::forget($this->key().':attempts');
 
         return $result;
+    }
+
+    /**
+     * The id for(), the job and the cache key take: of the telescope for a
+     * planned eyepiece, of the equipment otherwise (0 for a planned
+     * instrument).
+     */
+    private function equipmentId(): int
+    {
+        return (int) ($this->kind === self::PLANNED_EYEPIECE ? $this->instrument->id : $this->equipment->id);
+    }
+
+    /**
+     * The number of objects of the result the observer has not seen yet.
+     */
+    public function unseenTotal(array $result): int
+    {
+        $seen = $this->seenNames();
+
+        return count(array_filter($result['objects'], fn (array $object) => ! isset($seen[mb_strtolower($object['name'])])));
     }
 
     /**
@@ -356,9 +435,10 @@ class EquipmentGain
         }
         $equipment   = $this->equipmentName();
         $description = match ($this->kind) {
-            self::EYEPIECE => __('Objects the :eyepiece lets you see with your :instrument at :location that you could not see before.', ['eyepiece' => $equipment, 'instrument' => $this->instrumentName(), 'location' => $this->locationName()]),
-            self::PLANNED  => __('Objects a :instrument would let you see at :location that you cannot see with your instruments.', ['instrument' => $equipment, 'location' => $this->locationName()]),
-            default        => __('Objects the :instrument lets you see at :location that you could not see with your other instruments.', ['instrument' => $equipment, 'location' => $this->locationName()]),
+            self::EYEPIECE         => __('Objects the :eyepiece lets you see with your :instrument at :location that you could not see before.', ['eyepiece' => $equipment, 'instrument' => $this->instrumentName(), 'location' => $this->locationName()]),
+            self::PLANNED          => __('Objects a :instrument would let you see at :location that you cannot see with your instruments.', ['instrument' => $equipment, 'location' => $this->locationName()]),
+            self::PLANNED_EYEPIECE => __('Objects a :eyepiece would let you see with your :instrument at :location that you cannot see with your eyepieces.', ['eyepiece' => $equipment, 'instrument' => $this->instrumentName(), 'location' => $this->locationName()]),
+            default                => __('Objects the :instrument lets you see at :location that you could not see with your other instruments.', ['instrument' => $equipment, 'location' => $this->locationName()]),
         };
 
         return ObservingList::createWithObjects($this->user, trim((string) $name) ?: $this->defaultListName(), $names, $description, $public);
@@ -366,7 +446,7 @@ class EquipmentGain
 
     public function defaultListName(): string
     {
-        return $this->kind === self::PLANNED
+        return in_array($this->kind, [self::PLANNED, self::PLANNED_EYEPIECE], true)
             ? __('With a :instrument', ['instrument' => $this->equipmentName()])
             : __('New with :equipment', ['equipment' => $this->equipmentName()]);
     }
@@ -375,6 +455,9 @@ class EquipmentGain
     {
         if ($this->kind === self::PLANNED) {
             return $this->plannedName();
+        }
+        if ($this->kind === self::PLANNED_EYEPIECE) {
+            return $this->plannedEyepieceName();
         }
 
         return html_entity_decode((string) ($this->equipment instanceof Instrument ? $this->equipment->fullName() : $this->equipment->name), ENT_QUOTES | ENT_HTML5, 'UTF-8');
@@ -400,6 +483,18 @@ class EquipmentGain
         }
 
         return __(':aperture f/:ratio telescope', ['aperture' => $size, 'ratio' => rtrim(rtrim(number_format($this->planned['focal_length'] / $aperture, 1, '.', ''), '0'), '.')]);
+    }
+
+    /**
+     * "9 mm eyepiece", "9 mm 68° eyepiece".
+     */
+    private function plannedEyepieceName(): string
+    {
+        $focalLength = rtrim(rtrim(number_format($this->planned['focal_length'], 1, '.', ''), '0'), '.');
+
+        return $this->planned['apparent_fov']
+            ? __(':focal_length mm :apparent_fov° eyepiece', ['focal_length' => $focalLength, 'apparent_fov' => (int) $this->planned['apparent_fov']])
+            : __(':focal_length mm eyepiece', ['focal_length' => $focalLength]);
     }
 
     public function instrumentName(): string
@@ -499,6 +594,16 @@ class EquipmentGain
             $old['label']                           = __(':instrument without the :eyepiece', ['instrument' => $old['label'], 'eyepiece' => $this->equipmentName()]);
 
             return [$side($this->instrument, $with), [$old]];
+        }
+
+        if ($this->kind === self::PLANNED_EYEPIECE) {
+            $ladder       = $this->ladder();
+            $old          = $side($this->instrument, $ladder->magnifications());
+            $old['label'] = $ladder->set
+                ? __(':instrument with the eyepieces of :set', ['instrument' => $old['label'], 'set' => html_entity_decode((string) $ladder->set->name, ENT_QUOTES | ENT_HTML5, 'UTF-8')])
+                : __(':instrument with your eyepieces', ['instrument' => $old['label']]);
+
+            return [$side($this->instrument, $ladder->magnifications($this->equipment)), [$old]];
         }
 
         $others = $this->comparable()
@@ -610,6 +715,15 @@ class EquipmentGain
             $depends[] = $this->planned;
         }
 
-        return 'equipment_gain:v'.self::RESULT_VERSION.':'.$this->user->id.':'.$this->kind.':'.((int) $this->equipment->id).':'.md5(json_encode($depends));
+        if ($this->kind === self::PLANNED_EYEPIECE) {
+            // all eyepieces and the lenses of the ladder, not only those of the standard set
+            $depends[] = array_map(
+                fn (array $eyepieces) => array_map(fn ($eyepiece) => [$eyepiece->id, $eyepiece->field_stop_mm, $eyepiece->apparentFOV], $eyepieces),
+                $this->ladder()->magnifications()
+            );
+            $depends[] = Lens::where('user_id', $this->user->id)->where('active', true)->orderBy('id')->pluck('factor', 'id')->all();
+        }
+
+        return 'equipment_gain:v'.self::RESULT_VERSION.':'.$this->user->id.':'.$this->kind.':'.$this->equipmentId().':'.md5(json_encode($depends));
     }
 }
