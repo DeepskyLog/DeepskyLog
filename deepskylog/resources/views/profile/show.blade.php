@@ -23,6 +23,12 @@
 
             <x-section-border/>
 
+            <div class="mt-10 sm:mt-0">
+                @include("profile.sky-calendar")
+            </div>
+
+            <x-section-border/>
+
             @if (\App\Services\PushNotifications::enabled())
                 <div class="mt-10 sm:mt-0">
                     @include("profile.push-notifications")

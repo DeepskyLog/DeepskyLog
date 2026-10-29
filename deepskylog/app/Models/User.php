@@ -78,6 +78,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'two_factor_recovery_codes',
         'two_factor_secret',
         'follow_feed_token',
+        'calendar_feed_token',
     ];
 
     /**
@@ -146,6 +147,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'follow_digest',
             'follow_digest_sent_at',
             'follow_feed_token',
+            'calendar_feed_token',
             'clear_night_alert',
             'clear_night_alert_night',
             'session_reminder',
@@ -1245,6 +1247,28 @@ class User extends Authenticatable implements MustVerifyEmail
     public function regenerateFollowFeedToken(): void
     {
         $this->forceFill(['follow_feed_token' => Str::random(48)])->save();
+    }
+
+    /**
+     * The secret token of the personal sky calendar (App\Services\SkyCalendar),
+     * made the first time it is asked for.
+     */
+    public function calendarFeedToken(): string
+    {
+        if (empty($this->calendar_feed_token)) {
+            $this->regenerateCalendarFeedToken();
+        }
+
+        return $this->calendar_feed_token;
+    }
+
+    /**
+     * Give the sky calendar a new token, so the old calendar URL stops
+     * working.
+     */
+    public function regenerateCalendarFeedToken(): void
+    {
+        $this->forceFill(['calendar_feed_token' => Str::random(48)])->save();
     }
 
     /**

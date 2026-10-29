@@ -287,6 +287,12 @@ Route::post('/feed/following/regenerate', [App\Http\Controllers\FollowController
 Route::get('/feed/following/{token}', [App\Http\Controllers\RssFeedController::class, 'following'])
     ->name('feed.following')->middleware('doNotCacheResponse');
 
+// The personal sky calendar (iCalendar) of an observer, by its secret token
+Route::post('/calendar/regenerate', [App\Http\Controllers\SkyCalendarController::class, 'regenerate'])
+    ->name('sky-calendar.regenerate')->middleware(['auth', 'verified', 'doNotCacheResponse']);
+Route::get('/calendar/{token}.ics', [App\Http\Controllers\SkyCalendarController::class, 'show'])
+    ->name('sky-calendar.show')->middleware('doNotCacheResponse');
+
 // Drawings
 Route::get('/drawings', 'App\Http\Controllers\DrawingController@index')->name('drawings.index');
 Route::get('/cometdrawings', 'App\Http\Controllers\CometDrawingController@index')->name('cometdrawings.index');

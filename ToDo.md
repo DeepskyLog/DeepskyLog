@@ -95,6 +95,7 @@
 
 ### Done
 
+- [X] Personal sky calendar: an iCalendar address on the profile page (with "Subscribe in your calendar app", "Add to Google Calendar" and a button that gives it a new address) that a phone or computer calendar subscribes to, opened with a secret token instead of a login, in the observer's language. It holds the eclipses, lunar occultations, conjunctions and shadows on Jupiter and Saturn of the news from their local begin to end as seen from the standard location (only those that can be seen there), oppositions, elongations, meteor showers and comets as a day, the nights forecast clear and dark there with the clear and dark hours, the starparties the observer organises or comes or may come to, the nights of their own observing lists with planned times, and the start and end of the challenges they joined (the start of the others open to them).
 - [X] Voice notes: a Dictate button in the Quick note of the page at the eyepiece and under the description of the observation form, which writes what the observer says in the language of the description.
 - [x] Seasonal planner per list: for each object in an observing list, the months it is well placed from the observer's location, plus a "what's up this month" filter. Most of the year-graph logic already exists.
 - [x] Add privacy policy
@@ -189,8 +190,6 @@
 - [X] Which of my sites tonight? /location/best-site (user menu, the locations page and the forecast box of the home page) compares the observer's active locations (and their standard location, the nearest 20, or only those within 50, 100, 250 or 500 km) for the coming five nights: per site and night a score from 0 to 100, for deep-sky objects the clear hours of the night up to 6 (an hour with a bright Moon counts for a third) times the darkness of the site's sky (the median SQM of their observations there in the last 5 years, else the SQM or NELM of the location), for planets and double stars the clear hours times the seeing. A chosen night lists the sites best first with their forecast. The clear night alert now looks at all their sites within 250 km of the standard location: it comes when one of them is clear and dark, names the best one, says how the standard location does, lists the other clear sites and links to the comparison.
 
 
-
-- Personal sky calendar (ICS feed): a secret-token .ics feed, like the follow RSS token, that a phone calendar can subscribe to. It would hold the news events with times for the observer's location (eclipses, occultations, double shadows on Jupiter), nights forecast clear and dark, the starparties they're going to, the nights of their planned lists, and challenge start and end dates. It reuses AstronomicalEvents, LocalCircumstances and StarPartyCalendar. Small to medium.
 
 - Sketch pad at the eyepiece: a drawing canvas on the At the eyepiece page, in red night mode. Tools would be a pencil with soft and hard strokes, stars and an eraser. It would work offline through the existing Quick note queue, and the drawing would be inverted to a white background when saved as the observation's drawing. Today a drawing has to be scanned and uploaded later. Medium.
 
