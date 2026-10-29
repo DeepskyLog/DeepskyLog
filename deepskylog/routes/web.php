@@ -1033,6 +1033,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('observing-list.night')->middleware('doNotCacheResponse');
     Route::view('/observing-lists/messier-marathon', 'observing-lists.messier-marathon')
         ->name('observing-list.messier-marathon')->middleware('doNotCacheResponse');
+    // Revisit with your telescope: seen objects the telescope shows much better
+    Route::view('/observing-lists/revisit', 'observing-lists.revisit')
+        ->name('observing-list.revisit')->middleware('doNotCacheResponse');
     // What's new for me: the objects a telescope or eyepiece adds
     Route::get('/instrument/{user}/{instrument}/whats-new', [App\Http\Controllers\WhatsNewEquipmentController::class, 'instrument'])
         ->name('instrument.whats-new')->middleware('doNotCacheResponse');

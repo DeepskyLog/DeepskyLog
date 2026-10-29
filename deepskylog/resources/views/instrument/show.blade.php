@@ -205,6 +205,9 @@
                         @endif
                         @if ($instrument->user_id == Auth::user()->id && $instrument->aperture_mm > 0)
                             <x-whats-new-link kind="instrument" :equipment="$instrument" />
+                            <a href="{{ route('observing-list.revisit', ['instrument' => $instrument->id]) }}">
+                                <x-button secondary>{{ __('Revisit with this telescope') }}</x-button>
+                            </a>
                         @endif
 
                         <br/>
