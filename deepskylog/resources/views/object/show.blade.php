@@ -1190,6 +1190,8 @@ try {
                             {{-- One drawing per aperture class, linking to the comparison of the drawings --}}
                             @if (!empty($canonicalSlug) && !empty($session->name)
                                 && !in_array($session->source_type_raw ?? '', ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun'], true))
+                                {{-- The smallest aperture and the brightest sky with which the object was seen --}}
+                                <x-aperture-records :object-name="$session->name" />
                                 <x-drawing-apertures :object-name="$session->name" :slug="$canonicalSlug" />
                             @endif
 

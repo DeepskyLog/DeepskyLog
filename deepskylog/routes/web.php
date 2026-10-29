@@ -915,6 +915,9 @@ Route::get('/popular-observations', [App\Http\Controllers\PopularObservationCont
 
 Route::get('/popular-objects', [App\Http\Controllers\PopularObjectController::class, 'index'])->name('objects.popular');
 
+// The faintest objects seen with at most an aperture
+Route::get('/records/aperture', [App\Http\Controllers\ApertureRecordsController::class, 'index'])->name('records.aperture');
+
 // Popular sessions
 Route::get('/popular-sessions', function () {
     return view('observations.popular-sessions');
@@ -1116,6 +1119,7 @@ Route::get('/sitemap.xml', function () {
         $urls[] = ['loc' => $base . '/sessions', 'lastmod' => $now, 'changefreq' => 'daily', 'priority' => '0.8'];
         $urls[] = ['loc' => $base . '/popular-sessions', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
         $urls[] = ['loc' => $base . '/popular-objects', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
+        $urls[] = ['loc' => $base . '/records/aperture', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.5'];
         $urls[] = ['loc' => $base . '/popular-observations', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
         $urls[] = ['loc' => $base . '/statistics', 'lastmod' => $now, 'changefreq' => 'weekly', 'priority' => '0.7'];
         $urls[] = ['loc' => $base . '/drawings', 'lastmod' => $now, 'changefreq' => 'monthly', 'priority' => '0.5'];

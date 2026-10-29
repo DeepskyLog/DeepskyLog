@@ -93,6 +93,12 @@
             </x-dropdown.item>
 
             <x-dropdown.item
+                icon="trophy"
+                href="{{ route('records.aperture') }}"
+                label="{{ __('Aperture records') }}"
+            />
+
+            <x-dropdown.item
                 icon="chart-bar-square"
                 href="{{ route('statistics.index') }}"
                 label="{{ __('Statistics') }}"
