@@ -147,17 +147,20 @@ class MoonlightSky
      * while it stands at least $minAltitude high: the sky at it darkest less
      * the extinction of the point then (AtmosphericExtinction), the higher
      * of equally good moments; with the sky brightness then. Null when it
-     * never gets that high. Without the extinction every point would get
+     * never gets that high (above the local horizon, when given). Without the extinction every point would get
      * the middle of a twilight night, however low it stands then.
      *
      * @return array{timestamp: int, sqm: float, altitude: float}|null
      */
-    public function bestMoment(float $raDeg, float $decDeg, float $darkSqm, float $minAltitude): ?array
+    public function bestMoment(float $raDeg, float $decDeg, float $darkSqm, float $minAltitude, ?LocalHorizon $horizon = null): ?array
     {
         $best = null;
         foreach ($this->moments() as $timestamp) {
             $altitude = $this->window->altitude($raDeg, $decDeg, $timestamp);
             if ($altitude < $minAltitude) {
+                continue;
+            }
+            if ($horizon !== null && ! $horizon->isClear($this->window->latitude, $this->window->siderealTime($timestamp) - $raDeg, $decDeg)) {
                 continue;
             }
             $sqm   = round($this->sqmAt($timestamp, $raDeg, $decDeg, $darkSqm), 2);

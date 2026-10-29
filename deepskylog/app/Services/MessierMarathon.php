@@ -82,6 +82,9 @@ class MessierMarathon
     /** The instrument the objects have to be seen with; null for the altitude alone. */
     private ?Instrument $instrument = null;
 
+    /** The local horizon of the location: objects behind it are not seen. */
+    public ?LocalHorizon $horizon = null;
+
     public function __construct(
         public readonly float $latitude,
         public readonly float $longitude,
@@ -96,7 +99,8 @@ class MessierMarathon
 
     public static function forLocation(Location $location, string $timezone, float $minAltitude = self::MIN_ALTITUDE, int $minutes = self::MINUTES_PER_OBJECT, int $gap = 0, ?Instrument $instrument = null, ?User $user = null): self
     {
-        $marathon = new self((float) $location->latitude, (float) $location->longitude, (float) ($location->elevation ?? 0), $timezone, $minAltitude, $minutes, $gap);
+        $marathon          = new self((float) $location->latitude, (float) $location->longitude, (float) ($location->elevation ?? 0), $timezone, $minAltitude, $minutes, $gap);
+        $marathon->horizon = LocalHorizon::forLocation($location);
 
         return $instrument ? $marathon->useInstrument($instrument, $location, $user) : $marathon;
     }
@@ -332,7 +336,8 @@ class MessierMarathon
      * moment to see it, the window it stands high enough in, its altitude
      * then and whether that is in the twilight. The objects it misses are
      * either never high enough in the night ('never'), high enough but not
-     * to be seen with the instrument ('faint') or not reached in time
+     * to be seen with the instrument ('faint'), only high enough behind the
+     * local horizon ('horizon') or not reached in time
      * ('time', with their windows). Null when it does not get dark enough.
      *
      * @return array{night: string, start: int, end: int, objects: list<array>, missed: list<array>}|null
@@ -361,6 +366,7 @@ class MessierMarathon
             $missed[] = $this->objects[$index] + [
                 'reason' => match (true) {
                     in_array($index, $result['faint'], true)          => 'faint',
+                    in_array($index, $result['hidden'], true)         => 'horizon',
                     $result['visibility'][$index]['intervals'] === [] => 'never',
                     default                                           => 'time',
                 },
@@ -392,9 +398,10 @@ class MessierMarathon
         }
         foreach ($plan['missed'] as $object) {
             $details[$object['list_name']] = ['note' => match ($object['reason']) {
-                'never' => __('Not high enough in this night.'),
-                'faint' => __('Too faint for :instrument at the altitudes it reaches in this night.', ['instrument' => $this->instrumentName()]),
-                default => __('Not reached in time (high enough from :from to :until).', ['from' => $this->time($object['intervals'][0][0]), 'until' => $this->time(end($object['intervals'])[1])]),
+                'never'   => __('Not high enough in this night.'),
+                'horizon' => __('Behind the local horizon of the location in this night.'),
+                'faint'   => __('Too faint for :instrument at the altitudes it reaches in this night.', ['instrument' => $this->instrumentName()]),
+                default   => __('Not reached in time (high enough from :from to :until).', ['from' => $this->time($object['intervals'][0][0]), 'until' => $this->time(end($object['intervals'])[1])]),
             }];
         }
 
@@ -453,9 +460,9 @@ class MessierMarathon
      * at the moment closest to the dark one, by time; and the objects missed.
      *
      * The objects missed that would be high enough without the instrument
-     * are 'faint'.
+     * are 'faint'; those that would be without the local horizon 'hidden'.
      *
-     * @return array{start: int, end: int, window: NightWindow, possible: int, order: list<array{index: int, at: int, from: int, until: int, twilight: bool}>, missed: list<int>, faint: list<int>, visibility: list<array>}|null
+     * @return array{start: int, end: int, window: NightWindow, possible: int, order: list<array{index: int, at: int, from: int, until: int, twilight: bool}>, missed: list<int>, faint: list<int>, hidden: list<int>, visibility: list<array>}|null
      */
     private function night(string $night): ?array
     {
@@ -465,7 +472,7 @@ class MessierMarathon
         }
         $twilight = NightWindow::for($this->latitude, $this->longitude, $night, $this->timezone, ['civil']) ?? $dark;
 
-        $planner    = new NightPlanner($this->latitude, $this->minAltitude, $this->minutes + $this->gap);
+        $planner    = new NightPlanner($this->latitude, $this->minAltitude, $this->minutes + $this->gap, $this->horizon);
         $visibility = $planner->visibility($twilight, $this->objects);
         $inDark     = array_map(fn (array $v) => [
             'intervals' => array_values(array_filter(array_map(fn (array $i) => [max($i[0], $dark->start), min($i[1], $dark->end)], $v['intervals']), fn (array $i) => $i[1] > $i[0])),
@@ -537,6 +544,14 @@ class MessierMarathon
             fn (array $v) => $v['intervals'] !== [],
         ));
 
+        // The objects missed that would be high enough without the local horizon
+        $hidden = [];
+        if ($this->horizon !== null) {
+            $never  = array_filter($this->objects, fn (array $object, int $index) => $visibility[$index]['intervals'] === [] && ! in_array($index, $faint, true), ARRAY_FILTER_USE_BOTH);
+            $open   = new NightPlanner($this->latitude, $this->minAltitude, $this->minutes + $this->gap);
+            $hidden = $never === [] ? [] : array_keys(array_filter($open->visibility($twilight, $never), fn (array $v) => $v['intervals'] !== []));
+        }
+
         return [
             'start'      => $dark->start,
             'end'        => $dark->end,
@@ -545,6 +560,7 @@ class MessierMarathon
             'order'      => $order,
             'missed'     => $missed,
             'faint'      => $faint,
+            'hidden'     => $hidden,
             'visibility' => $visibility,
         ];
     }

@@ -13,6 +13,7 @@ use App\Services\AtmosphericExtinction;
 use App\Services\ContrastReserveCalculator;
 use App\Services\DoubleStarResolvability;
 use App\Services\FilterAdvice;
+use App\Services\LocalHorizon;
 use App\Services\TelescopicLimitingMagnitude;
 use App\Support\EphemerisDate;
 use Carbon\Carbon;
@@ -123,10 +124,11 @@ class FieldViewBuilder
         $raDeg  = (float) $object->ra * 15.0;
         $decDeg = (float) $object->decl;
 
-        $lst      = null;
-        $latitude = null;
-        $altitude = null;
-        $azimuth  = null;
+        $lst          = null;
+        $latitude     = null;
+        $altitude     = null;
+        $azimuth      = null;
+        $localHorizon = $hasPlace ? LocalHorizon::forLocation($location) : null;
         if ($hasPlace) {
             $geo      = new GeographicalCoordinates((float) $location->longitude, (float) $location->latitude);
             $sidereal = Time::meanSiderialTime($moment->copy()->utc(), $geo);
@@ -140,6 +142,8 @@ class FieldViewBuilder
 
             if ($altitude < 0) {
                 $warnings[] = __(':object is below the horizon at this moment.', ['object' => $object->name]);
+            } elseif ($localHorizon && $altitude < $localHorizon->altitudeAt($azimuth)) {
+                $warnings[] = __(':object is behind the local horizon of the location at this moment.', ['object' => $object->name]);
             }
         }
 
@@ -210,6 +214,7 @@ class FieldViewBuilder
             'star_limit'     => $nelm,
             'up'             => 'zenith',
             'horizon'        => true,
+            'local_horizon'  => $localHorizon?->altitudes,
             'extinction'     => true,
             'constellations' => true,
             'star_names'     => true,
@@ -535,19 +540,22 @@ class FieldViewBuilder
             $ra         = (float) $object->ra                                                   * 15.0;
             $dec        = (float) $object->decl;
             $altitudeAt = fn (int $timestamp) => FieldViewRenderer::altitude($ra, $dec, $lstStart + 360.98564736629 * ($timestamp - $start) / 86400.0, $latitude);
+            // A moment behind the local horizon only wins when the object is never above it
+            $horizon = LocalHorizon::forLocation($location);
+            $score   = $horizon === null ? $altitudeAt : fn (int $timestamp) => $altitudeAt($timestamp) - ($horizon->isClear($latitude, $lstStart + 360.98564736629 * ($timestamp - $start) / 86400.0 - $ra, $dec) ? 0.0 : 180.0);
 
             $best = $start;
             for ($t = $start; $t <= $end; $t += self::NIGHT_STEP_MINUTES * 60) {
-                if ($altitudeAt($t) > $altitudeAt($best)) {
+                if ($score($t) > $score($best)) {
                     $best = $t;
                 }
             }
-            if ($altitudeAt($end) > $altitudeAt($best)) {
+            if ($score($end) > $score($best)) {
                 $best = $end;
             }
             // Refine to the minute around the best step.
             for ($t = max($start, $best - self::NIGHT_STEP_MINUTES * 60); $t <= min($end, $best + self::NIGHT_STEP_MINUTES * 60); $t += 60) {
-                if ($altitudeAt($t) > $altitudeAt($best)) {
+                if ($score($t) > $score($best)) {
                     $best = $t;
                 }
             }

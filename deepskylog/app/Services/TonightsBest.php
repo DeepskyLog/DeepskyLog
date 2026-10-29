@@ -57,6 +57,9 @@ use Illuminate\Support\Str;
  * a poor night chosen double stars closer than CLOSE_DOUBLE_ARCSEC are left
  * out. Planets and close double stars are marked with the seeing.
  *
+ * Objects behind the local horizon of the location (LocalHorizon) are only
+ * taken while they stand above it, at their highest moment there.
+ *
  * The list is cached per observer, equipment, night and options; for an
  * observer until they record a new observation.
  */
@@ -253,7 +256,7 @@ class TonightsBest
 
         // v2: a magnitude of 0 is unknown (ContrastReserveCalculator::target()); v4: the field of view; v5: the seeing; v6: the twilight
         $key = 'tonights_best:v6:'.md5(json_encode([
-            $user?->id, $instrument?->id, $location->id, (float) $location->latitude, (float) $location->longitude, $lensId, $field, $seeing, $night, $timezone, $options,
+            $user?->id, $instrument?->id, $location->id, (float) $location->latitude, (float) $location->longitude, $location->horizon, $lensId, $field, $seeing, $night, $timezone, $options,
             // a new observation changes what the observer has seen
             $user ? DB::table('observations')->where('observer_username', $user->username)->max('id') : null,
         ]));
@@ -384,6 +387,9 @@ class TonightsBest
 
     private bool $pending = false;
 
+    /** The local horizon of the location. */
+    private ?LocalHorizon $horizon = null;
+
     private function __construct(
         private ?User $user,
         private Location $location,
@@ -398,6 +404,7 @@ class TonightsBest
         private array $options,
     ) {
         $this->dark     = NightWindow::for((float) $location->latitude, (float) $location->longitude, $night, $timezone);
+        $this->horizon  = LocalHorizon::forLocation($location);
         $sqm            = $location->getSqm();
         $this->darkSqm  = is_numeric($sqm) && (float) $sqm > 0 ? (float) $sqm : Magnitude::nelmToSqm(FieldViewBuilder::DEFAULT_NELM);
         $this->excluded = array_fill_keys($options['exclude'], true);
@@ -768,7 +775,7 @@ class TonightsBest
             ->leftJoin('user_object_metrics as m', fn (JoinClause $join) => $this->joinMetrics($join))
             ->whereNull('m.id')
             ->get(['o.name', 'o.ra', 'o.decl'])
-            ->filter(fn ($row) => $this->allowed($row->name) && $this->window->highest((float) $row->ra * 15.0, (float) $row->decl)['altitude'] >= self::MIN_ALTITUDE)
+            ->filter(fn ($row) => $this->allowed($row->name) && $this->highest((float) $row->ra * 15.0, (float) $row->decl, self::MIN_ALTITUDE) !== null)
             ->pluck('name');
         if ($missing->isEmpty()) {
             return;
@@ -813,14 +820,31 @@ class TonightsBest
     }
 
     /**
+     * The highest altitude of the point in the hours chosen and its moment,
+     * while it stands at least $minAltitude high and above the local
+     * horizon; null when it never does.
+     *
+     * @return array{altitude: float, timestamp: int}|null
+     */
+    private function highest(float $raDeg, float $decDeg, float $minAltitude): ?array
+    {
+        if ($this->horizon?->blocksAbove($minAltitude)) {
+            return $this->horizon->highest($this->window, $raDeg, $decDeg, $minAltitude);
+        }
+        $highest = $this->window->highest($raDeg, $decDeg);
+
+        return $highest['altitude'] >= $minAltitude ? $highest : null;
+    }
+
+    /**
      * The entry of a deep-sky object at its highest moment of the hours
      * chosen, or null when it does not get high enough.
      */
     private function placed(object $row): ?array
     {
         $ra      = (float) $row->ra * 15.0;
-        $highest = $this->window->highest($ra, (float) $row->decl);
-        if ($highest['altitude'] < self::MIN_ALTITUDE) {
+        $highest = $this->highest($ra, (float) $row->decl, self::MIN_ALTITUDE);
+        if ($highest === null) {
             return null;
         }
 
@@ -961,7 +985,7 @@ class TonightsBest
      */
     private function bestMoment(array $object): ?array
     {
-        $best = $this->moon->bestMoment($object['ra'], $object['decl'], $this->darkSqm, self::MIN_ALTITUDE);
+        $best = $this->moon->bestMoment($object['ra'], $object['decl'], $this->darkSqm, self::MIN_ALTITUDE, $this->horizon);
         if ($best === null) {
             return null;
         }
@@ -1077,8 +1101,8 @@ class TonightsBest
             if ($body['kind'] === 'comet' && ($body['magnitude'] === null || $body['magnitude'] > $cometLimit)) {
                 continue;
             }
-            $highest = $this->window->highest($body['ra'], $body['decl']);
-            if ($highest['altitude'] < ($body['kind'] === 'comet' ? self::MIN_COMET_ALTITUDE : self::MIN_SOLAR_SYSTEM_ALTITUDE)) {
+            $highest = $this->highest($body['ra'], $body['decl'], $body['kind'] === 'comet' ? self::MIN_COMET_ALTITUDE : self::MIN_SOLAR_SYSTEM_ALTITUDE);
+            if ($highest === null) {
                 continue;
             }
             $object = [

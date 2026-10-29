@@ -517,6 +517,12 @@
                                                 ["altitude" => $minAltitude],
                                             )
                                         }}
+                                    @elseif ($object["reason"] === "horizon")
+                                        {{
+                                            __(
+                                                "behind the local horizon of the location in this night.",
+                                            )
+                                        }}
                                     @elseif ($object["reason"] === "faint")
                                         {{
                                             __(

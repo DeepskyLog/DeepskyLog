@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Services\ContrastReserveCalculator;
 use App\Services\FieldViews\FieldViewBuilder;
 use App\Services\FieldViews\FieldViewRenderer;
+use App\Services\LocalHorizon;
 use Database\Factories\EyepieceFactory;
 use Database\Factories\InstrumentFactory;
 use Database\Factories\LensFactory;
@@ -78,6 +79,17 @@ it('turns the view so that the zenith is up', function () {
     // And the horizon below the object lies below the centre.
     [$horizonRa, $horizonDec] = FieldViewRenderer::horizontalToEquatorial(0.0, 100.0, 120.0, 50.0);
     expect($renderer->project($horizonRa, $horizonDec)[1])->toBeGreaterThan(300);
+});
+
+it('draws the local horizon over the ground of the naked-eye view', function () {
+    [$ra, $dec] = FieldViewRenderer::horizontalToEquatorial(20.0, 180.0, 120.0, 50.0);
+    $view       = ['ra' => $ra, 'dec' => $dec, 'radius_deg' => 45, 'star_limit' => 1, 'lst' => 120.0, 'latitude' => 50.0, 'up' => 'zenith', 'horizon' => true];
+
+    $open   = (new FieldViewRenderer())->render($view);
+    $walled = (new FieldViewRenderer())->render($view + ['local_horizon' => array_fill(0, LocalHorizon::POINTS, 30)]);
+
+    expect($open)->not->toContain('stroke-dasharray')
+        ->and($walled)->toContain('stroke-dasharray');
 });
 
 it('draws east to the left with north up, and mirrors it when the image is flopped', function () {

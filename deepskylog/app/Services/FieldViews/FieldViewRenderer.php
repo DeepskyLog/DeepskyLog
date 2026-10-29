@@ -3,6 +3,7 @@
 namespace App\Services\FieldViews;
 
 use App\Services\AtmosphericExtinction;
+use App\Services\LocalHorizon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -31,6 +32,8 @@ use Illuminate\Support\Facades\Schema;
  * - up: 'zenith' or 'north'
  * - flip (top-bottom), flop (left-right): mirroring of the image
  * - horizon: whether to draw the ground and the compass points on it
+ * - local_horizon: the altitudes of the trees and houses around the location
+ *   (LocalHorizon::$altitudes), drawn as ground above the horizon
  * - extinction: whether stars fade towards the horizon
  * - constellations, star_names, object_labels: what to draw besides the stars
  * - overlays: [['radius_deg' => float, 'label' => string]], circles around the centre
@@ -120,6 +123,7 @@ class FieldViewRenderer
             'flip'               => false,
             'flop'               => false,
             'horizon'            => false,
+            'local_horizon'      => null,
             'extinction'         => false,
             'constellations'     => false,
             'star_names'         => false,
@@ -152,6 +156,7 @@ class FieldViewRenderer
         $svg[] = $this->stars($s);
         if ($this->view['horizon'] && $this->hasTime()) {
             $svg[] = $this->ground($s);
+            $svg[] = $this->localHorizon($s);
         }
         $svg[] = $this->overlays($s);
         $svg[] = $this->targetMarker($s);
@@ -706,6 +711,65 @@ class FieldViewRenderer
         }
 
         return $fill.sprintf('<circle cx="%s" cy="%s" r="%s" fill="none" stroke="%s" stroke-width="%s"/>', $this->f($cx), $this->f($cy), $this->f($r), $lineColor, $width);
+    }
+
+    /**
+     * The local horizon: for each stretch of azimuth the part of the sky
+     * between the horizon and the trees and houses, as one path. Stretches
+     * that lie far outside the field are left out, as the projection blows
+     * up near the opposite point of the sky.
+     */
+    private function localHorizon(float $s): string
+    {
+        $altitudes = $this->view['local_horizon'];
+        if (! is_array($altitudes) || $altitudes === []) {
+            return '';
+        }
+        $horizon = LocalHorizon::fromArray($altitudes);
+        if ($horizon === null) {
+            return '';
+        }
+
+        $lst   = (float) $this->view['lst'];
+        $lat   = (float) $this->view['latitude'];
+        $point = function (float $alt, float $az) use ($lst, $lat): ?array {
+            [$ra, $dec] = self::horizontalToEquatorial($alt, $az, $lst, $lat);
+            $point      = $this->project($ra, $dec);
+
+            return $point !== null && hypot($point[0] - $this->centerX, $point[1] - $this->centerY) < 3 * $this->plotRadius ? $point : null;
+        };
+
+        $step  = 2.5;
+        $path  = '';
+        $edges = '';
+        for ($az = 0.0; $az < 360.0; $az += $step) {
+            $h1 = $horizon->altitudeAt($az);
+            $h2 = $horizon->altitudeAt($az + $step);
+            if ($h1 <= 0.0 && $h2 <= 0.0) {
+                continue;
+            }
+            $corners = [$point(0.0, $az), $point($h1, $az), $point($h2, $az + $step), $point(0.0, $az + $step)];
+            if (in_array(null, $corners, true)) {
+                continue;
+            }
+            $path  .= 'M'.implode('L', array_map(fn (array $p) => $this->f($p[0]).' '.$this->f($p[1]), $corners)).'Z';
+            $edges .= sprintf('M%s %sL%s %s', $this->f($corners[1][0]), $this->f($corners[1][1]), $this->f($corners[2][0]), $this->f($corners[2][1]));
+        }
+        if ($path === '') {
+            return '';
+        }
+
+        return sprintf(
+            '<path d="%s" fill="%s" fill-opacity="0.92" stroke="%s" stroke-width="%s"/><path d="%s" fill="none" stroke="%s" stroke-width="%s" stroke-dasharray="%s"/>',
+            $path,
+            $this->colors['ground'],
+            $this->colors['ground'],
+            $this->f(0.6 * $s),
+            $edges,
+            $this->colors['horizon'],
+            $this->f(1.2 * $s),
+            $this->f(4 * $s).' '.$this->f(3 * $s),
+        );
     }
 
     private function circlePath(float $cx, float $cy, float $r): string

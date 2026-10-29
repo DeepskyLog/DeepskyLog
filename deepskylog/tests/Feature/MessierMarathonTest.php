@@ -4,6 +4,7 @@ use App\Livewire\AdvancedObjectSearchTable;
 use App\Livewire\MessierMarathonPlanner;
 use App\Models\ObservingList;
 use App\Models\User;
+use App\Services\LocalHorizon;
 use App\Services\MessierMarathon;
 use App\Services\NightWindow;
 use Carbon\Carbon;
@@ -191,6 +192,18 @@ it('misses the objects there is no time for', function () {
     expect(array_column($plan['objects'], 'name'))->toBe(['M 1'])
         ->and(array_column($plan['missed'], 'name'))->toBe(['M 2', 'M 3'])
         ->and(array_column($plan['missed'], 'reason'))->toBe(['time', 'time']);
+});
+
+it('misses the objects behind the local horizon', function () {
+    mmSky();
+    // A wall of trees in the west hides M 77 when it sets after the dark
+    $marathon          = mmLeuven();
+    $marathon->horizon = LocalHorizon::fromArray(array_map(fn (int $i) => $i * LocalHorizon::STEP >= 225 && $i * LocalHorizon::STEP <= 300 ? 35 : 0, range(0, LocalHorizon::POINTS - 1)));
+    $plan              = $marathon->plan('2027-04-01');
+    $m77               = collect($plan['missed'])->firstWhere('name', 'M 77');
+
+    expect($m77['reason'])->toBe('horizon')
+        ->and(collect($plan['objects'])->firstWhere('name', 'M 31'))->not->toBeNull();
 });
 
 it('gives the best nights near the new Moon', function () {

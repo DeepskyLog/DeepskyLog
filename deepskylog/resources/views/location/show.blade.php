@@ -215,6 +215,11 @@
                 </div>
             </div>
 
+            @if (!$location->hidden || $isOwner || $isAdmin)
+                {{-- The trees and houses around the location, which the planners take into account --}}
+                <livewire:location-horizon :location="$location" />
+            @endif
+
             @if ($skyQualityChart)
                 {{-- The SQM and NELM of the observations at this location over the years --}}
                 <div class="mt-6">

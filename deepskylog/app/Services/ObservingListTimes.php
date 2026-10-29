@@ -90,7 +90,7 @@ class ObservingListTimes
                 $points[$index] = $positions[$name];
             }
         }
-        $planner    = new NightPlanner((float) $location->latitude, $minAltitude, $minutes + $gap);
+        $planner    = new NightPlanner((float) $location->latitude, $minAltitude, $minutes + $gap, LocalHorizon::forLocation($location));
         $visibility = $planner->visibility($window, $points);
         $schedule   = $planner->schedule($window, $visibility, $points);
 

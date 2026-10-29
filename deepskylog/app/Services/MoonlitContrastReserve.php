@@ -43,8 +43,9 @@ class MoonlitContrastReserve
         $moon    = new MoonlightSky($window, (float) $location->longitude, (float) ($location->elevation ?? 0.0));
         $darkSqm = $location->getSqm();
         $darkSqm = is_numeric($darkSqm) && (float) $darkSqm > 0 ? (float) $darkSqm : Magnitude::nelmToSqm(FieldViewBuilder::DEFAULT_NELM);
-        $best    = $moon->bestMoment($raDeg, $decDeg, $darkSqm, self::MIN_ALTITUDE)
-            ?? $moon->bestMoment($raDeg, $decDeg, $darkSqm, self::LOW_ALTITUDE);
+        $horizon = LocalHorizon::forLocation($location);
+        $best    = $moon->bestMoment($raDeg, $decDeg, $darkSqm, self::MIN_ALTITUDE, $horizon)
+            ?? $moon->bestMoment($raDeg, $decDeg, $darkSqm, self::LOW_ALTITUDE, $horizon);
         if ($best === null) {
             return null;
         }

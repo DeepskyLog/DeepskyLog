@@ -92,6 +92,7 @@
   - [ ] Which of my sites tonight: nothing to migrate; `php artisan responsecache:clear` (the menus and the home page link to /location/best-site), then `php artisan queue:restart`.
   - [ ] Observing partners nearby: `php artisan migrate` (`2026_10_29_000070_add_partner_search_to_users`: `users.partner_search` and `users.partner_note`; the views of the old site list their columns and are not affected), then `php artisan responsecache:clear` (the user menu links to /observing-partners).
   - [ ] Observers who saw this also saw… / Next for you: `php artisan migrate` (`2026_10_29_000080_create_object_similarities_table`), then `php artisan objects:rebuild-also-seen` (about 30 s and 1 GB at most; on the development database 121,080 observer/object pairs, 198,989 suggestions of 9,952 objects; after that the scheduler queues it every Monday at 03:50 on the long queue, so the `database-long` worker must run), then `php artisan queue:restart` and `php artisan responsecache:clear` (the object pages and "My observing lists" do not have the new box and link yet).
+  - [ ] Local horizon: `php artisan migrate` (`2026_10_29_000100_add_horizon_to_locations`: `locations.horizon`, nullable, so the old site is not affected), then `php artisan responsecache:clear` (the cached location pages do not have the panorama yet) and `npm run build`.
 - [ ] Release new version of pyDeepskyLog
   - [ ] Ready to be released, make sure to check if everything still works with the PiFinder.
 
@@ -197,3 +198,47 @@
 - [X] "Observers who saw this also saw…": the page of a deep-sky object shows the 8 objects the observers who saw it saw most, compared with how many observers saw each (so the showpieces everybody saw do not top every list, and an observer who logged thousands of objects counts less), with how many saw both and a ✓ for the ones the viewer has seen: the Horsehead brings IC 434 and the Flame Nebula, NGC 891 other edge-on galaxies, Hickson 44 the galaxies around it and Arp galaxies. "Next for you" (/observing-lists/next-for-you, linked from that box and "My observing lists") adds up these neighbours of everything the observer has seen into a personal list of objects they have not seen that their standard telescope shows at their standard location (contrast reserve difficult or better, or a double star it splits), each with the seen objects it comes from ("Because you saw"), and makes an observing list of the best 100. The neighbours are recalculated every week on the queue.
 
 - [X] Report an object error: a "Something wrong with this object?" button next to Follow on the page of a deep-sky object (logged-in observers) opens a short form: what is wrong (position, magnitude, size, type, name, other) and a note. The object gets review_status = attention, the report (kind, observer, date, note) goes first in its review note before the earlier reports, and it shows up in /admin/object-reviews. The administrators and database experts get a DeepskyLog message (mail if sendMail) with the report. The review note can now hold 1000 characters (a textarea on the edit page).
+
+- [X] Local horizon: the page of a location shows the trees, houses and hills around it as a panorama, which the owner draws by dragging over it, types per 15° of azimuth, or pastes as the horizon.txt of a Stellarium landscape. Tonight's best (home page, night list wizard), the times of an observing list, the Messier marathon (with "behind the local horizon" as the reason an object is missed), the months of a list, the contrast reserve with the Moon on the object page and the field views (the horizon drawn in the naked-eye view, a warning when the object is behind it, and the default moment the highest one above it) leave out what stands behind it.
+
+
+- [X] Local horizon per location
+Right now every planner assumes the horizon is clear all around. Tonight's best, the night planner, the Messier marathon, the seasonal planner and the beginner path all use a flat lowest altitude (30°). In practice observers have trees, houses or a hill to the south.
+
+What's new: on the location page, the observer enters the altitude of the obstruction every 10–15° of azimuth (a small editor drawn on a polar plot, or an imported Stellarium horizon.txt).
+What it changes: these planners check an object against the horizon at its azimuth instead of a fixed altitude. The night planner's limit uses TwilightSky/MoonlightSky-style altitude checks per point, so a check per azimuth fits in there. The field views would draw the real horizon.
+Of the features listed here, this would make the plans most accurate for the most observers.
+
+- Your own eye, learned from your observations
+The contrast reserve uses a model observer, with fstOffset as the only personal setting. The suspect-observation check already compares every observation with its predicted contrast reserve.
+
+What's new: for an observer with enough seen and not-seen deep-sky observations, fit their own detection threshold: the contrast reserve at which they see an object half the time. Show it on the profile as something like "you see objects down to a reserve of −0.15; the model assumes 0".
+What it changes: optionally use it as a personal offset in Tonight's best, Next for you and What's new for me.
+The data is already there, so this mostly needs a fitting service and a profile card.
+
+- Seen by how many, per aperture
+Aperture records show the single smallest telescope that saw an object. Across 190,000 observations there is enough data to show the whole curve.
+
+What's new: on the object page, a "seen by X% of observers with 4″, 6″, 8″, 12″…" chart. It would use the DrawingComparison::CLASSES aperture classes, count seen and not seen, and apply the plausibility filter of ApertureRecords.
+Why: the model's prediction would sit next to what observers actually saw. It's a strong addition to the object page, and cheap, because it's cached aggregate work.
+
+- Trip planner: "What could I see from…?"
+An observer going to La Palma, Namibia or a starparty abroad wants to know what's new for them there.
+
+What's new: pick a place on a map (not one of their saved locations), dates and an instrument. The list holds the objects that never rise high enough at home, or that their telescope doesn't show from their usual dark sky, ranked by popularity. They can make it an observing list with times per night.
+It would reuse EquipmentGain (unsaved location instead of an unsaved instrument), TonightsBest, NightPlanner and SeasonalVisibility.
+
+- Your earlier observations at the eyepiece
+When the current object at the eyepiece is one the observer has seen before, show their last observation(s): date, instrument, description and drawing thumbnail. They can then compare while still at the telescope.
+
+It's small, and the eyepiece page plus the offline cache already hold everything needed.
+
+-  Weather of the night filled in for sessions and observations
+What's new: for past nights, fetch temperature, humidity, wind and cloud cover from Open-Meteo's historical archive API (the same provider as the forecast). Prefill the empty weather field of a session, and show "conditions that night" on old observations.
+Why: it closes a gap in thousands of old sessions without asking anyone to type anything.
+
+- Star-hop routes for any object
+The beginner path already gives a hop() from the nearest bright star.
+
+What's new: generalise it to a chain of stars that each fit in the observer's finder field, from a naked-eye star to the object. Draw the chain on the finder field view and show it at the eyepiece.
+Who it helps: owners of Dobsonians without GoTo, who are a large part of the users.
