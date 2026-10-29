@@ -181,13 +181,8 @@
 - [X] Aperture records: the object page shows the smallest aperture, and separately the brightest sky (SQM and NELM), with which the object was reported seen, each linked to its observation, and tells a logged-in observer whether their standard telescope is at least as large. Observations the suspect-observation check doubts are left out, and so are objects fainter than the aperture can show under a very dark sky (the check skips observations without a sky). "Aperture records" in the View menu (/records/aperture) ranks the faintest objects seen with the naked eye or with at most 50, 80, 100, 150 or 200 mm (2", 3", 4", 6", 8" for observers who use inches), each with the observation that saw it with the smallest aperture, and the observers by the faintest object they saw.
 - [X] Follow an object: the page of a deep-sky object, comet, planet, moon, lunar feature or asteroid has a Follow button. The observations others make of the objects an observer follows appear, with those of the observers they follow, under "What I follow" on /observations (?following=1) and in their personal RSS feed, and the daily digest gets a part per followed object with the number of new observations and drawings, linking to the object. The digest now also comes as a push notification. The observer's own page lists the objects they follow. A renamed or merged object keeps its followers.
 - [X] Revisit with your telescope: /observing-lists/revisit (linked from "My observing lists" and, as "Revisit with this telescope", from the page of one's own instrument) lists the deep-sky objects the observer has seen only with a much smaller instrument (at most two thirds of the aperture), or never drew, that their standard telescope (or another of their instruments) shows with a clearly higher contrast reserve at one of their locations than the best of the instruments they saw it with, ranked by that gain. It can show only one of the two kinds, and makes an observing list of them. Where "What's new for me" is about objects never seen, this one is about objects worth a second look.
+- [X] Observing activity calendar: the observer page shows a GitHub-style heatmap of the nights with observations of one year (a choice of all years with observations, the latest first), each night coloured by the number of different objects seen, with the new Moons marked as rings. A night is the date of its evening, as in the blog, and clicking it opens the blog at that night.
 
-
-
-- Observing activity calendar on the observer page
-
-A GitHub-style heatmap of the nights with observations over the years, coloured by number of objects, with the new Moons marked.
-It is cheap to build from ObserverBlog::night(), and every night links to the blog entry for that night.
 
 
 - Community sky-brightness map
