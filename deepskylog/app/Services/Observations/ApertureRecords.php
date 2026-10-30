@@ -189,6 +189,24 @@ class ApertureRecords
      */
     private function restrict(Builder|QueryBuilder $query): Builder|QueryBuilder
     {
+        return self::credible($query)
+            ->whereRaw('NOT '.self::notSeenSql());
+    }
+
+    /**
+     * The observations of deep-sky objects with a known aperture that the
+     * suspect-observation check does not doubt, seen or not, joined to
+     * instruments, instrument_types, locations and objects: a seen one only
+     * when the object's magnitude is within reach of the aperture
+     * (plausibleSql()), not seeing a faint object is always plausible.
+     *
+     * @template T of Builder|QueryBuilder
+     *
+     * @param  T  $query
+     * @return T
+     */
+    public static function credible(Builder|QueryBuilder $query): Builder|QueryBuilder
+    {
         return $query
             ->join('instruments', 'instruments.id', '=', 'observations.instrument_id')
             ->leftJoin('instrument_types', 'instrument_types.id', '=', 'instruments.instrument_type_id')
@@ -196,11 +214,7 @@ class ApertureRecords
             ->join('objects', 'objects.name', '=', 'observations.target_key')
             ->where('observations.target_type', Observation::TYPE_DEEPSKY)
             ->whereRaw(self::apertureSql().' IS NOT NULL')
-            ->whereRaw(self::plausibleSql())
-            ->whereNotExists(fn (QueryBuilder $details) => $details->selectRaw('1')
-                ->from('deepsky_observation_details')
-                ->whereColumn('deepsky_observation_details.observation_id', 'observations.id')
-                ->where('deepsky_observation_details.visibility', Observation::VISIBILITY_NOT_SEEN))
+            ->whereRaw('('.self::notSeenSql().' OR '.self::plausibleSql().')')
             ->whereNotExists(fn (QueryBuilder $suspect) => $suspect->selectRaw('1')
                 ->from('suspect_observations')
                 ->whereColumn('suspect_observations.observation_id', 'observations.id')
@@ -208,8 +222,21 @@ class ApertureRecords
                 ->whereNull('suspect_observations.dismissed_at'));
     }
 
+    /** Whether the observation reports the object not seen. */
+    public static function notSeenSql(): string
+    {
+        return 'EXISTS (SELECT 1 FROM deepsky_observation_details WHERE deepsky_observation_details.observation_id = observations.id'
+            .' AND deepsky_observation_details.visibility = '.(int) Observation::VISIBILITY_NOT_SEEN.')';
+    }
+
+    /** Whether the instrument is the naked eye. */
+    public static function nakedEyeSql(): string
+    {
+        return "CASE WHEN instrument_types.name = '".self::NAKED_EYE_TYPE."' THEN 1 ELSE 0 END";
+    }
+
     /** The aperture in mm, the naked eye as NAKED_EYE_MM; null when unknown. */
-    private static function apertureSql(): string
+    public static function apertureSql(): string
     {
         return "CASE WHEN instrument_types.name = '".self::NAKED_EYE_TYPE."' THEN ".self::NAKED_EYE_MM
             .' WHEN instruments.aperture_mm >= '.self::MIN_APERTURE_MM.' THEN instruments.aperture_mm END';
@@ -234,7 +261,7 @@ class ApertureRecords
     }
 
     /** The SQM ('sqm') or NELM ('nelm') of the observation, else of its location. */
-    private static function skySql(string $kind): string
+    public static function skySql(string $kind): string
     {
         [$from, $to] = $kind === 'sqm' ? LocationSkyHistory::SQM_RANGE : LocationSkyHistory::NELM_RANGE;
         [$own, $location] = $kind === 'sqm'

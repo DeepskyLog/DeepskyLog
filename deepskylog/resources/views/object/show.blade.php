@@ -1198,6 +1198,8 @@ try {
                                 && !in_array($session->source_type_raw ?? '', ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun'], true))
                                 {{-- The smallest aperture and the brightest sky with which the object was seen --}}
                                 <x-aperture-records :object-name="$session->name" />
+                                {{-- How many observers saw it, per aperture class, next to the model --}}
+                                <x-seen-by-aperture :object-name="$session->name" />
                                 <x-drawing-apertures :object-name="$session->name" :slug="$canonicalSlug" />
                                 {{-- Observers who saw this also saw… --}}
                                 <x-also-seen :object-name="$session->name" />

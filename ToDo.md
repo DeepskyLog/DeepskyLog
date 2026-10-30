@@ -217,7 +217,7 @@ What's new: for an observer with enough seen and not-seen deep-sky observations,
 What it changes: optionally use it as a personal offset in Tonight's best, Next for you and What's new for me.
 The data is already there, so this mostly needs a fitting service and a profile card.
 
-- Seen by how many, per aperture
+- [X] Seen by how many, per aperture
 Aperture records show the single smallest telescope that saw an object. Across 190,000 observations there is enough data to show the whole curve.
 
 What's new: on the object page, a "seen by X% of observers with 4″, 6″, 8″, 12″…" chart. It would use the DrawingComparison::CLASSES aperture classes, count seen and not seen, and apply the plausibility filter of ApertureRecords.
