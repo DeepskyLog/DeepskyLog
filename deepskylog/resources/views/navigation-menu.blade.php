@@ -10,19 +10,8 @@
             </x-nav-link>
         </div>
 
-        @php
-            // Default centered nav container
-            $navContainerClass = 'mx-auto max-w-6xl px-4 sm:px-6 lg:px-8';
-
-            // Deep-sky object pages render full-bleed (ObjectController::show()
-            // shares dsl_deepsky_full_container); widen the nav container too so
-            // header and background align with the page container.
-            if (! empty($dsl_deepsky_full_container)) {
-                $navContainerClass = 'w-full px-4 sm:px-6 lg:px-8';
-            }
-        @endphp
-
-        <div class="{{ $navContainerClass }}">
+        {{-- The same centered container on every page, also on the full-width deep-sky object pages --}}
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 justify-between pl-6 lg:pl-36">
                 <!-- Mobile brand (visible on small screens) -->
                 <div class="flex items-center lg:hidden pl-0 z-60">
