@@ -1,11 +1,16 @@
 <?php
 
 use App\Http\Controllers\ObservationsController;
+use App\Models\Instrument;
+use App\Models\Location;
 use App\Models\Observation;
 use App\Models\ObservingList;
 use App\Models\User;
+use App\Services\AtTheEyepiece;
 use Carbon\Carbon;
+use Database\Factories\EyepieceFactory;
 use Database\Factories\InstrumentFactory;
+use Database\Factories\LensFactory;
 use Database\Factories\LocationFactory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -315,6 +320,25 @@ it('offers the sketch pad on the page at the eyepiece', function () {
             && abs(hypot(...$compass['north']) - 1) < 1e-3 && abs(hypot(...$compass['west']) - 1) < 1e-3
             // West is a quarter turn from north, to the right without mirroring
             && abs($compass['north'][0] * $compass['west'][0] + $compass['north'][1] * $compass['west'][1]) < 1e-3);
+});
+
+it('offers the details of the observation to print on the sketch', function () {
+    $owner = aeObserver();
+    $list = aeList($owner);
+    $lens = LensFactory::new()->create(['user_id' => $owner->id, 'observer' => '', 'name' => 'Paracorr', 'factor' => 1.15]);
+    $eyepiece = EyepieceFactory::new()->create(['user_id' => $owner->id, 'name' => '6mm Ethos', 'focal_length_mm' => 6, 'apparentFOV' => 100]);
+    Instrument::whereKey($owner->stdtelescope)->update(['focal_length_mm' => 2000, 'fixedMagnification' => 0, 'lens_id' => $lens->id]);
+    Location::whereKey($owner->stdlocation)->update(['skyBackground' => 19.8]);
+    $owner->forceFill(['stdeyepiece' => $eyepiece->id])->save();
+
+    // 2000 mm × 1.15 / 6 mm = 383x, 100° / 383 = 16′
+    expect(AtTheEyepiece::sketchLabels($owner->fresh(), $list, now()))
+        ->toBe(['Dobson', 'Leuven', 'SQM 19.80', '6mm Ethos, Paracorr: 383x, 16′']);
+
+    $this->actingAs($owner)->get(route('observing-list.eyepiece', $list))->assertOk()
+        ->assertSee('id="sketch-labels-on"', false)
+        ->assertSee('id="sketch-brightness"', false)
+        ->assertViewHas('sketchLabels', fn ($labels) => in_array('SQM 19.80', $labels, true));
 });
 
 it('adds the red night mode to every page', function () {

@@ -86,7 +86,13 @@
         .sketch-tools .button { padding: .5rem .7rem; }
         .sketch-tools .button[aria-pressed="true"] { background: #1f2937; border-color: #d1d5db; color: #fff; }
         .sketch-tools .gap { width: .6rem; }
-        .sketch-thumb { display: block; width: 8rem; height: 8rem; margin: .4rem 0; border: 1px solid #374151; border-radius: .4rem; background: #000; }
+        .sketch-tools label.button { display: inline-flex; align-items: center; gap: .4rem; }
+        .sketch-tools input[type="range"] { width: 7rem; }
+        .sketch-labels { display: flex; flex-wrap: wrap; gap: .5rem; align-items: flex-start; justify-content: center; }
+        .sketch-labels[hidden] { display: none; }
+        .sketch-labels textarea { flex: 1 1 14rem; max-width: 24rem; min-height: 7rem; }
+        .sketch-labels img { width: 12rem; max-width: 100%; border: 1px solid #374151; background: #000; }
+        .sketch-thumb { display: block; width: 12rem; max-width: 100%; height: auto; margin: .4rem 0; border: 1px solid #374151; border-radius: .4rem; background: #000; }
         .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
     </style>
 </head>
@@ -412,6 +418,17 @@
             <button type="button" class="button" id="sketch-undo">{{ __('Undo') }}</button>
             <button type="button" class="button" id="sketch-clear">{{ __('Clear') }}</button>
         </div>
+        <div class="sketch-tools">
+            <label class="button">{{ __('Field brightness') }} <input type="range" id="sketch-brightness" min="0" max="80" step="2" /></label>
+            <label class="button"><input type="checkbox" id="sketch-labels-on" /> {{ __('Details on the sketch') }}</label>
+            <button type="button" class="button" id="sketch-labels-edit" aria-expanded="false" aria-controls="sketch-labels">{{ __('Edit the details') }}</button>
+        </div>
+        {{-- The date, object and constellation come first; these lines (equipment,
+             site, sky) go at the bottom and can be changed --}}
+        <div class="sketch-labels" id="sketch-labels" hidden>
+            <textarea id="sketch-labels-text" rows="5" aria-label="{{ __('Details on the sketch, one per line') }}"></textarea>
+            <img id="sketch-labels-preview" alt="{{ __('Sketch') }}" />
+        </div>
         <div class="row spread">
             <button type="button" class="button" id="sketch-close">{{ __('Close') }}</button>
             <button type="button" class="button" id="sketch-done" style="border-color:#b91c1c">{{ __('Continue to the note') }}</button>
@@ -436,6 +453,8 @@
             'compass' => $compass,
             'compassLabels' => ['north' => __('N'), 'west' => __('W')],
             'sketchField' => \App\Services\AtTheEyepiece::SKETCH_FIELD,
+            'constellation' => $details['constellation'],
+            'sketchLabels' => $sketchLabels,
             'up' => isset($views['orientation']) ? ($views['orientation'] === 'zenith' ? __('Zenith up, as in the telescope view') : __('North up, as in the telescope view')) : '',
             'following' => $following,
             // Only a list with times follows the clock
@@ -709,11 +728,25 @@
             // Sketch pad: strokes in canvas pixels, light on black, kept on
             // the device per object until the note is saved, so a reload or
             // the next object does not lose it. The image is the strokes,
-            // black outside the field circle and the circle itself.
+            // screened over the grey of the field (Field brightness), black
+            // outside the field circle and the circle itself; with the
+            // details on, a wider image with the date, object and
+            // constellation at the top left and the editable lines of the
+            // equipment at the bottom left, the field still in the middle
+            // (SketchOverlay takes the field from the smaller side).
             var sketch = (function () {
                 var SIZE = 1000;
                 var RADIUS = SIZE / 2 * data.sketchField;
                 var DRAFT = 'dsl-eyepiece-sketch:' + data.list + ':' + data.item;
+                // The field brightness and details on or off, for every sketch on this device
+                var STYLE = 'dsl-eyepiece-sketch-style';
+                var MARGIN = 300;
+                var style = { brightness: 40, labels: true };
+                try {
+                    var kept = JSON.parse(storage('localStorage', STYLE) || 'null');
+                    if (kept && typeof kept.brightness === 'number') style.brightness = kept.brightness;
+                    if (kept && typeof kept.labels === 'boolean') style.labels = kept.labels;
+                } catch (e) {}
                 // Per tool the small, medium and large size (pixels)
                 var SIZES = { soft: [14, 28, 56], hard: [1.5, 3, 6], star: [2, 3.5, 6], eraser: [10, 24, 50] };
                 var dialog = document.getElementById('sketch-pad');
@@ -726,16 +759,30 @@
                 var size = 1;
                 var strokes = [];
                 var started = null;
+                var labels = null;
                 var current = null;
                 var queued = false;
                 try {
                     var draft = JSON.parse(storage('localStorage', DRAFT) || 'null');
                     if (draft && Array.isArray(draft.strokes)) { strokes = draft.strokes; started = draft.started || null; }
+                    if (draft && typeof draft.labels === 'string') labels = draft.labels;
                 } catch (e) {}
                 document.getElementById('sketch-up').textContent = data.up || '';
+                var labelsText = document.getElementById('sketch-labels-text');
+                var labelsPanel = document.getElementById('sketch-labels');
+                var labelsPreview = document.getElementById('sketch-labels-preview');
+                var labelsOn = document.getElementById('sketch-labels-on');
+                var brightness = document.getElementById('sketch-brightness');
+                labelsText.value = labels !== null ? labels : (data.sketchLabels || []).join('\n');
+                labelsOn.checked = style.labels;
+                brightness.value = style.brightness;
 
                 function keep() {
-                    storage('localStorage', DRAFT, strokes.length ? JSON.stringify({ strokes: strokes, started: started }) : null);
+                    var edited = labelsText.value !== (data.sketchLabels || []).join('\n');
+                    storage('localStorage', DRAFT, strokes.length || edited ? JSON.stringify({ strokes: strokes, started: started, labels: edited ? labelsText.value : null }) : null);
+                }
+                function keepStyle() {
+                    storage('localStorage', STYLE, JSON.stringify(style));
                 }
                 function dab(x, y, radius, alpha) {
                     var gradient = ink.createRadialGradient(x, y, 0, x, y, radius);
@@ -793,6 +840,19 @@
                     context.beginPath();
                     context.arc(SIZE / 2, SIZE / 2, RADIUS, 0, 2 * Math.PI);
                     context.clip();
+                    // The grey of the field, darker towards the edge as in an
+                    // eyepiece; the strokes are screened over it, so the
+                    // eraser (black) gives the grey back
+                    if (style.brightness > 0) {
+                        var grey = function (level) { level = Math.round(level); return 'rgb(' + level + ',' + level + ',' + level + ')'; };
+                        var field = context.createRadialGradient(SIZE / 2, SIZE / 2, 0, SIZE / 2, SIZE / 2, RADIUS);
+                        field.addColorStop(0, grey(style.brightness));
+                        field.addColorStop(0.8, grey(style.brightness * 0.95));
+                        field.addColorStop(1, grey(style.brightness * 0.45));
+                        context.fillStyle = field;
+                        context.fillRect(0, 0, SIZE, SIZE);
+                        context.globalCompositeOperation = 'screen';
+                    }
                     context.drawImage(paint, 0, 0);
                     context.restore();
                     context.strokeStyle = '#555';
@@ -818,6 +878,57 @@
                 }
                 function show() {
                     if (! queued) { queued = true; window.requestAnimationFrame(compose); }
+                }
+                // "2025/02/01 21:55" at the location
+                function moment(date) {
+                    var parts = {};
+                    try {
+                        new Intl.DateTimeFormat('en-CA', { timeZone: data.timezone, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+                            .formatToParts(date).forEach(function (part) { parts[part.type] = part.value; });
+                    } catch (e) {
+                        return date.toLocaleString();
+                    }
+                    return parts.year + '/' + parts.month + '/' + parts.day + ' ' + parts.hour + ':' + parts.minute;
+                }
+                // The sketch with the details beside the field: each line as
+                // large as fits between the edge and the field circle with N and W
+                function labelled() {
+                    compose();
+                    var width = SIZE + 2 * MARGIN;
+                    var out = document.createElement('canvas');
+                    out.width = width;
+                    out.height = SIZE;
+                    var pen = out.getContext('2d');
+                    pen.fillStyle = '#000';
+                    pen.fillRect(0, 0, width, SIZE);
+                    pen.drawImage(canvas, MARGIN, 0);
+                    var PAD = 28, FONT = 38, LINE = 1.3;
+                    var centreX = MARGIN + SIZE / 2, centreY = SIZE / 2;
+                    var clear = RADIUS + 64;
+                    function write(text, top, colour) {
+                        var bottom = top + FONT * LINE;
+                        var dy = top <= centreY && bottom >= centreY ? 0 : Math.min(Math.abs(top - centreY), Math.abs(bottom - centreY));
+                        var right = dy >= clear ? width - PAD : centreX - Math.sqrt(clear * clear - dy * dy);
+                        pen.font = FONT + 'px system-ui, sans-serif';
+                        var size = Math.max(16, Math.min(FONT, FONT * (right - PAD) / Math.max(1, pen.measureText(text).width)));
+                        pen.font = size + 'px system-ui, sans-serif';
+                        pen.fillStyle = colour;
+                        pen.textBaseline = 'top';
+                        pen.textAlign = 'left';
+                        pen.fillText(text, PAD, top + (FONT - size) * 0.8);
+                    }
+                    var head = [
+                        [moment(started ? new Date(started) : new Date()), '#d4d4d4'],
+                        [data.object, '#d4d4d4'],
+                        [data.constellation || '', '#c4f1f6'],
+                    ].filter(function (line) { return line[0]; });
+                    head.forEach(function (line, i) { write(line[0], PAD + i * FONT * LINE, line[1]); });
+                    var foot = labelsText.value.split('\n').map(function (line) { return line.trim(); }).filter(Boolean);
+                    foot.forEach(function (line, i) { write(line, SIZE - PAD - (foot.length - i) * FONT * LINE, '#ffffff'); });
+                    return out;
+                }
+                function preview() {
+                    if (! labelsPanel.hidden) labelsPreview.src = api.image(384);
                 }
                 function redraw() {
                     ink.fillStyle = '#000';
@@ -879,6 +990,27 @@
                     if (strokes.length && window.confirm(texts.clearConfirm)) api.clear();
                 });
                 document.getElementById('sketch-close').addEventListener('click', function () { dialog.close(); });
+                brightness.addEventListener('input', function () {
+                    style.brightness = Number(brightness.value);
+                    keepStyle();
+                    show();
+                });
+                brightness.addEventListener('change', preview);
+                labelsOn.addEventListener('change', function () {
+                    style.labels = labelsOn.checked;
+                    keepStyle();
+                    preview();
+                });
+                document.getElementById('sketch-labels-edit').addEventListener('click', function () {
+                    labelsPanel.hidden = ! labelsPanel.hidden;
+                    this.setAttribute('aria-expanded', labelsPanel.hidden ? 'false' : 'true');
+                    if (! labelsPanel.hidden && ! labelsOn.checked) { labelsOn.checked = style.labels = true; keepStyle(); }
+                    preview();
+                });
+                labelsText.addEventListener('input', function () {
+                    keep();
+                    preview();
+                });
                 redraw();
 
                 var api = {
@@ -890,18 +1022,21 @@
                     started: function () { return started ? new Date(started) : null; },
                     // JPEG is a fraction of PNG for the soft strokes
                     image: function (width) {
-                        compose();
-                        if (! width) return canvas.toDataURL('image/jpeg', 0.85);
+                        var source = style.labels ? labelled() : (compose(), canvas);
+                        if (! width) return source.toDataURL('image/jpeg', 0.85);
                         var small = document.createElement('canvas');
-                        small.width = small.height = width;
-                        small.getContext('2d').drawImage(canvas, 0, 0, width, width);
+                        small.width = width;
+                        small.height = Math.round(width * source.height / source.width);
+                        small.getContext('2d').drawImage(source, 0, 0, small.width, small.height);
                         return small.toDataURL('image/jpeg', 0.8);
                     },
                     clear: function () {
                         strokes = [];
                         started = null;
+                        labelsText.value = (data.sketchLabels || []).join('\n');
                         keep();
                         redraw();
+                        preview();
                     },
                     dialog: dialog,
                 };

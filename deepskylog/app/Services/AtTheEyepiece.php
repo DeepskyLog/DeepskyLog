@@ -330,6 +330,47 @@ class AtTheEyepiece
     }
 
     /**
+     * The lines the sketch pad can print beside the field, as on a finished
+     * drawing: the equipment and site the observation is saved with
+     * (equipment()), its sky, and the eyepiece, lens, magnification, true
+     * field and filter. The page puts the date, object and constellation
+     * above them; the observer can edit these lines before saving.
+     *
+     * @return list<string>
+     */
+    public static function sketchLabels(User $user, ObservingList $list, Carbon $moment): array
+    {
+        $equipment = self::equipment($user, $list, $moment);
+        $name = fn ($model) => $model ? trim(html_entity_decode((string) $model->name, ENT_QUOTES | ENT_HTML5, 'UTF-8')) : '';
+
+        $instrument = $equipment['instrument_id'] ? Instrument::find($equipment['instrument_id']) : null;
+        $location = $equipment['location_id'] ? Location::find($equipment['location_id']) : null;
+        $eyepiece = $equipment['eyepiece_id'] ? Eyepiece::find($equipment['eyepiece_id']) : null;
+        $lens = $equipment['lens_id'] ? Lens::find($equipment['lens_id']) : null;
+        $filter = $equipment['filter_id'] ? Filter::find($equipment['filter_id']) : null;
+
+        $lines = [$name($instrument), $name($location)];
+        if ($location !== null && $location->skyBackground > 0) {
+            $lines[] = 'SQM '.number_format((float) $location->skyBackground, 2);
+        } elseif ($location !== null && $location->limitingMagnitude > 0) {
+            $lines[] = 'NELM '.number_format((float) $location->limitingMagnitude, 1);
+        }
+
+        // "6mm Ethos, Paracorr: 394x, 15′"
+        $optics = implode(', ', array_filter([$name($eyepiece), $name($lens)]));
+        $magnification = $instrument?->magnificationFor($eyepiece, $lens);
+        $field = $instrument?->trueFieldOfViewDeg($eyepiece, $lens);
+        $numbers = array_filter([
+            $magnification ? $magnification.'x' : null,
+            $field > 0 ? ($field >= 1 ? round($field, 1).'°' : round($field * 60).'′') : null,
+        ]);
+        $lines[] = $optics.($optics !== '' && $numbers ? ': ' : '').implode(', ', $numbers);
+        $lines[] = $name($filter);
+
+        return array_values(array_filter($lines, fn (string $line) => $line !== ''));
+    }
+
+    /**
      * The names (lower case) of the objects the observer observed in the night.
      *
      * @return array<string, true>
