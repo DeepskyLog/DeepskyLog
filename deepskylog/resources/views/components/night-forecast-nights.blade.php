@@ -1,8 +1,9 @@
-@props (["nights", "listLinks" => true])
+@props (["nights", "listLinks" => true, "instrument" => null])
 
 {{--
     The cloud forecast of nights (App\Services\Weather\NightForecast): per night the verdict, the seeing, the dark
-    hours, the Moon, the clouds and the hourly cloud cover. With listLinks, a clear night links to the night list
+    hours, the Moon, the clouds, the dew, the hourly cloud cover and, for an instrument with a mirror, when to put it
+    outside to cool down (App\Services\Weather\CoolDownAdvice). With listLinks, a clear night links to the night list
     wizard, which uses the observer's standard location.
 --}}
 <div {{ $attributes->merge(["class" => "space-y-3 text-sm text-gray-400"]) }}>
@@ -42,10 +43,13 @@
                 @elseif ($night["clear"] && $night["clear"]["minutes"] >= 60)
                     &middot; {{ __("Clear :from–:until", $night["clear"]) }}
                 @endif
-                @if ($night["dew"])
-                    &middot; {{ __("Risk of dew") }}
+                @if ($dew = \App\Services\Weather\NightForecast::dewLabel($night))
+                    &middot; {{ $dew }}
                 @endif
             </p>
+            @if ($night["clear"] && ($coolDown = \App\Services\Weather\CoolDownAdvice::forNight($night, $instrument)))
+                <p>{{ \App\Services\Weather\CoolDownAdvice::label($coolDown, $instrument) }}</p>
+            @endif
 
             @if ($night["hours"] !== [])
                 <x-forecast-hours :hours="$night['hours']" class="mt-1" />

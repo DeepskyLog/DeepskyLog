@@ -4,7 +4,7 @@
 <x-home-section :title="__('Coming nights')" {{ $attributes }}>
     <div class="space-y-3 px-2">
         <p class="text-sm text-gray-400">{{ html_entity_decode($location->name, ENT_QUOTES | ENT_HTML5, "UTF-8") }}</p>
-        <x-night-forecast-nights :nights="$nights" />
+        <x-night-forecast-nights :nights="$nights" :instrument="auth()->user()?->standardInstrument" />
     </div>
     @auth
         <x-slot name="footer">

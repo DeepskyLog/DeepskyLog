@@ -188,6 +188,7 @@
                                         <x-night-forecast-nights
                                             :nights="$nightForecast"
                                             :list-links="auth()->check() && auth()->user()->stdlocation == $location->id"
+                                            :instrument="auth()->user()?->standardInstrument"
                                             class="py-2"
                                         />
                                     @else

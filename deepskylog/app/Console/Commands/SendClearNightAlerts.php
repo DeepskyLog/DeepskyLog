@@ -7,6 +7,7 @@ use App\Models\Message;
 use App\Models\User;
 use App\Services\NightWindow;
 use App\Services\PushNotifications;
+use App\Services\Weather\CoolDownAdvice;
 use App\Services\Weather\NightForecast;
 use App\Services\Weather\SiteComparison;
 use App\Support\EphemerisDate;
@@ -21,8 +22,9 @@ use Illuminate\Support\Facades\Mail;
  * their standard location, or at one of their other active locations within
  * RADIUS_KM of it, is forecast to be clear and dark (NightForecast's verdict
  * clear_dark), naming the best of those sites (SiteComparison's deep-sky
- * score), with a link to make an observing list for it and to compare the
- * sites, and a push notification on the devices where they turned those on.
+ * score), with the dew and when to put the standard telescope outside to
+ * cool down (CoolDownAdvice), a link to make an observing list for it and to
+ * compare the sites, and a push notification on the devices where they turned those on.
  *
  * An observer is looked at from ALERT_HOUR local time at that location until
  * it gets dark, so a forecast that clears up in the afternoon still gives a
@@ -133,8 +135,11 @@ class SendClearNightAlerts extends Command
             $body .= '<li>'.e(__('Clear and dark :from–:until', $forecast['clear_dark'], $locale)).'</li>';
             $body .= '<li>'.e(__('Clouds :percent%', ['percent' => $forecast['cloud']], $locale)).'</li>';
             $body .= '<li>'.e($forecast['moon'] ? __('Moon :fraction%, up :from–:until', $forecast['moon'], $locale) : __('No Moon', [], $locale)).'</li>';
-            if ($forecast['dew']) {
-                $body .= '<li>'.e(__('Risk of dew', [], $locale)).'</li>';
+            if ($dew = NightForecast::dewLabel($forecast, $locale)) {
+                $body .= '<li>'.e($dew).'</li>';
+            }
+            if ($coolDown = CoolDownAdvice::forNight($forecast, $user->standardInstrument)) {
+                $body .= '<li>'.e(CoolDownAdvice::label($coolDown, $user->standardInstrument, $locale)).'</li>';
             }
             $body .= '</ul>';
             if ($home !== null) {
