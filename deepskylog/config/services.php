@@ -69,6 +69,9 @@ return [
         // The cloud forecast of the coming nights (App\Services\Weather\NightForecast), free without a key
         'url' => env('OPEN_METEO_URL', 'https://api.open-meteo.com/v1/forecast'),
         'enabled' => (bool) env('WEATHER_FORECAST', true),
+        // The weather of past nights (App\Services\Weather\NightWeather), from the historical archive
+        'archive_url' => env('OPEN_METEO_ARCHIVE_URL', 'https://archive-api.open-meteo.com/v1/archive'),
+        'archive_enabled' => (bool) env('WEATHER_HISTORY', true),
     ],
 
     'seven_timer' => [

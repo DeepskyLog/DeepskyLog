@@ -94,6 +94,7 @@
   - [ ] Observers who saw this also saw… / Next for you: `php artisan migrate` (`2026_10_29_000080_create_object_similarities_table`), then `php artisan objects:rebuild-also-seen` (about 30 s and 1 GB at most; on the development database 121,080 observer/object pairs, 198,989 suggestions of 9,952 objects; after that the scheduler queues it every Monday at 03:50 on the long queue, so the `database-long` worker must run), then `php artisan queue:restart` and `php artisan responsecache:clear` (the object pages and "My observing lists" do not have the new box and link yet).
   - [ ] Local horizon: `php artisan migrate` (`2026_10_29_000100_add_horizon_to_locations`: `locations.horizon`, nullable, so the old site is not affected), then `php artisan responsecache:clear` (the cached location pages do not have the panorama yet) and `npm run build`.
   - [ ] Your own eye: `php artisan migrate` (`2026_10_29_000110_add_detection_threshold_to_users`: `users.detection_threshold`, `detection_threshold_fit`, `use_detection_threshold`; the old site's `legacy_observers` view names its columns, so it is not affected), then `php artisan observers:fit-detection-thresholds -v` (a few seconds; on the development database 26 observers fitted, 10 with a reliable threshold between −0.09 and +0.25; after that the scheduler runs it daily at 04:45), then `php artisan queue:restart` (the profile page queues `FitDetectionThreshold`).
+  - [ ] Weather of past nights: `php artisan migrate` (`2026_10_30_000000_create_night_weather_table`), then `php artisan weather:fill-nights` (dry run: on the development database 705 cells, about 45,000 days, 8,968 requests of which 640 for the sessions); after that the scheduler runs it hourly with `--apply` (250 requests a run, sessions first, so everything is filled in within about two days, well under Open-Meteo's 10,000 a day), then `php artisan responsecache:clear` (the cached observation pages do not have "Conditions that night" yet).
 - [ ] Release new version of pyDeepskyLog
   - [ ] Ready to be released, make sure to check if everything still works with the PiFinder.
 
@@ -234,7 +235,7 @@ When the current object at the eyepiece is one the observer has seen before, sho
 
 It's small, and the eyepiece page plus the offline cache already hold everything needed.
 
--  Weather of the night filled in for sessions and observations
+- [X] Weather of the night filled in for sessions and observations
 What's new: for past nights, fetch temperature, humidity, wind and cloud cover from Open-Meteo's historical archive API (the same provider as the forecast). Prefill the empty weather field of a session, and show "conditions that night" on old observations.
 Why: it closes a gap in thousands of old sessions without asking anyone to type anything.
 

@@ -1266,6 +1266,11 @@
                             </div>
                         @endif
 
+                        {{-- The weather of that night from Open-Meteo's archive (shared: deepsky + comet) --}}
+                        @if ($obs instanceof \App\Models\Observation && \App\Services\Weather\NightWeather::appliesToObservation($obs))
+                            <livewire:night-conditions :observation-id="$obs->id" lazy />
+                        @endif
+
                         {{-- Description / notes --}}
                         @if (!empty($obs->description) && $obs->description !== "")
                             <div class="border-t border-gray-700 pt-5">

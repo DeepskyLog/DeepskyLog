@@ -106,6 +106,12 @@
                                 <td class="pr-4 font-medium">{{ __('Weather') }}</td>
                                 <td>{!! \App\Support\Html::purify($weatherTranslated) !!}</td>
                             </tr>
+                        @elseif(\App\Services\Weather\NightWeather::appliesToSession($session))
+                            {{-- The observer wrote no weather: that of Open-Meteo's archive --}}
+                            <tr>
+                                <td class="pr-4 font-medium align-top">{{ __('Weather') }}</td>
+                                <td><livewire:night-conditions :session-id="$session->id" lazy /></td>
+                            </tr>
                         @endif
                         <tr>
                             <td colspan="2" class="py-2"></td>

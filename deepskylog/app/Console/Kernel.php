@@ -47,6 +47,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('observations:check-suspect')->hourlyAt(25)->withoutOverlapping();
         $schedule->command('observations:check-suspect --all')->weeklyOn(0, '04:15')->withoutOverlapping();
 
+        // The weather of the nights of the sessions and observations from
+        // Open-Meteo's historical archive, a few days after them; hourly
+        // with at most 250 requests, so the archive fills in over a few days.
+        $schedule->command('weather:fill-nights --apply')->hourlyAt(35)->withoutOverlapping();
+
         // "Your own eye": the detection threshold of the observers whose
         // observations changed, fitted from what they saw and did not see.
         $schedule->command('observers:fit-detection-thresholds')->dailyAt('04:45')->withoutOverlapping();
