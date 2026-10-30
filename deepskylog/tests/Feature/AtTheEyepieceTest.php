@@ -134,6 +134,42 @@ it('shows a list without times in its own order, from the first object not obser
         ->assertSee('There is no finder chart for M 13.');
 });
 
+it('shows the observer\'s own earlier observations of the current object, not those of tonight or of others', function () {
+    $owner = aeObserver();
+    $other = aeObserver();
+    $list = aeList($owner);
+    $observe = fn (User $user, string $date, string $time, string $description, array $extra = []) => Observation::create([
+        'observer_username' => $user->username, 'observer_user_id' => $user->id, 'observed_on' => $date, 'observed_time' => $time,
+        'target_table' => 'objects', 'target_key' => 'M 31', 'target_type' => 'deepsky', 'target_name' => 'M 31',
+        'description' => $description, 'instrument_id' => $user->stdtelescope,
+    ] + $extra);
+    $observe($owner, '2020-09-01', '21:00:00', '<p>Dust lane &amp; M 110</p>');
+    $observe($owner, '2023-10-10', '22:00:00', 'With a drawing', ['has_drawing' => true, 'drawing_filename' => 'observations/m31.jpg']);
+    $notSeen = $observe($owner, '2024-01-05', '19:00:00', 'Too much haze');
+    DB::table('deepsky_observation_details')->insert(['observation_id' => $notSeen->id, 'visibility' => Observation::VISIBILITY_NOT_SEEN]);
+    $observe($owner, '2018-08-08', '23:00:00', 'Oldest');
+    $observe($owner, '2026-10-26', '20:10:00', 'Tonight');
+    $observe($other, '2025-11-01', '21:00:00', 'Not mine');
+
+    $this->actingAs($owner)->get(route('observing-list.eyepiece', $list))
+        ->assertOk()
+        ->assertViewHas('earlier', fn ($earlier) => $earlier['total'] === 4
+            && array_column($earlier['observations'], 'description') === ['Too much haze', 'With a drawing', 'Dust lane & M 110']
+            && $earlier['observations'][0]['not_seen'] && ! $earlier['observations'][1]['not_seen']
+            && $earlier['observations'][0]['instrument'] === 'Dobson'
+            && str_ends_with((string) $earlier['observations'][1]['drawing'], 'observations/m31.jpg'))
+        ->assertSee('Your earlier observations')
+        ->assertSee('data-offline-src', false)
+        ->assertSee('You observed M 31 4 times before.')
+        ->assertDontSee('Not mine');
+
+    $m42 = $list->items()->where('object_name', 'M 42')->first();
+    $this->actingAs($owner)->get(route('observing-list.eyepiece', ['list' => $list, 'item' => $m42->id]))
+        ->assertOk()
+        ->assertViewHas('earlier', fn ($earlier) => $earlier['total'] === 0)
+        ->assertDontSee('Your earlier observations');
+});
+
 it('sends an empty list back to the list page', function () {
     $owner = aeObserver();
     $list = ObservingList::createWithObjects($owner, 'Empty', []);

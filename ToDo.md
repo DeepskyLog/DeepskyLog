@@ -229,7 +229,7 @@ An observer going to La Palma, Namibia or a starparty abroad wants to know what'
 What's new: pick a place on a map (not one of their saved locations), dates and an instrument. The list holds the objects that never rise high enough at home, or that their telescope doesn't show from their usual dark sky, ranked by popularity. They can make it an observing list with times per night.
 It would reuse EquipmentGain (unsaved location instead of an unsaved instrument), TonightsBest, NightPlanner and SeasonalVisibility.
 
-- Your earlier observations at the eyepiece
+- [X] Your earlier observations at the eyepiece
 When the current object at the eyepiece is one the observer has seen before, show their last observation(s): date, instrument, description and drawing thumbnail. They can then compare while still at the telescope.
 
 It's small, and the eyepiece page plus the offline cache already hold everything needed.

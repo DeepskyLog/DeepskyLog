@@ -18,6 +18,7 @@ use App\Models\ObservingListSubscription;
 use App\Models\User;
 use App\Services\Import\CsvObservationImporter;
 use App\Services\Import\ImportResult;
+use App\Services\Observations\ApertureRecords;
 use App\Services\Observations\ObservationCardData;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -67,6 +68,12 @@ class AtTheEyepiece
 
     /** The finding notes shown of the current object, the most liked. */
     public const FINDING_NOTES = 3;
+
+    /** The observer's own earlier observations shown of the current object, the latest. */
+    public const EARLIER_OBSERVATIONS = 3;
+
+    /** The longest part of the description of an earlier observation shown, in characters. */
+    public const EARLIER_DESCRIPTION = 400;
 
     /** The largest sketch accepted from the sketch pad, in bytes of the image and in pixels per side. */
     public const MAX_DRAWING_BYTES = 4 * 1024 * 1024;
@@ -293,6 +300,54 @@ class AtTheEyepiece
         $query = ObjectFindingNote::forObject((string) $object->name, $user);
 
         return ['notes' => (clone $query)->limit(self::FINDING_NOTES)->get(), 'total' => $query->count()];
+    }
+
+    /**
+     * The observer's own latest observations of the current object made
+     * before tonight (EARLIER_OBSERVATIONS), to compare with at the telescope:
+     * the local date, instrument, whether it was seen, the description as
+     * plain text (at most EARLIER_DESCRIPTION characters) and the drawing.
+     * A deep-sky object is matched on its canonical name, another target
+     * (planet, comet) on the name in the list. With the number of all of them.
+     *
+     * @param  array<string, mixed>  $entry  an entry of page()
+     * @return array{observations: list<array<string, mixed>>, total: int}
+     */
+    public static function earlierObservations(array $entry, User $user, string $tonight, string $timezone): array
+    {
+        $object = $entry['object'];
+        $name = $object !== null ? (string) $object->name : (string) $entry['name'];
+        if ($name === '') {
+            return ['observations' => [], 'total' => 0];
+        }
+
+        $start = Carbon::parse($tonight.' 12:00', $timezone)->utc();
+        $query = Observation::where('observer_user_id', $user->id)
+            ->where(fn ($q) => $q->where('target_name', $name)
+                ->when($object !== null, fn ($q) => $q->orWhere(fn ($q) => $q->ofDeepskyObject($name))))
+            ->where(fn ($q) => $q->where('observed_on', '<', $start->toDateString())
+                ->orWhere(fn ($q) => $q->where('observed_on', $start->toDateString())
+                    ->where(fn ($q) => $q->whereNull('observed_time')->orWhere('observed_time', '<', $start->format('H:i:s')))));
+
+        $observations = (clone $query)->with('instrument')
+            ->selectRaw('observations.*, '.ApertureRecords::notSeenSql().' AS not_seen')
+            ->orderByDesc('observed_on')->orderByDesc('observed_time')->orderByDesc('id')
+            ->limit(self::EARLIER_OBSERVATIONS)
+            ->get();
+
+        $plain = fn (?string $text) => trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags(str_replace(['<br', '</p>'], [' <br', ' </p>'], (string) $text)), ENT_QUOTES | ENT_HTML5, 'UTF-8')) ?? '');
+
+        return [
+            'observations' => $observations->map(fn (Observation $observation) => [
+                'date' => $observation->localDate(),
+                'instrument' => $observation->instrument ? trim(html_entity_decode((string) $observation->instrument->name, ENT_QUOTES | ENT_HTML5, 'UTF-8')) : null,
+                'not_seen' => (bool) $observation->not_seen,
+                'description' => Str::limit($plain($observation->description), self::EARLIER_DESCRIPTION),
+                'drawing' => $observation->drawingUrl(),
+                'url' => $observation->detailUrl(),
+            ])->all(),
+            'total' => $query->count(),
+        ];
     }
 
     /**

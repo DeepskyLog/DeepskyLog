@@ -7,7 +7,8 @@
  *   to the telescope (/observing-lists/eyepiece) are fetched from the
  *   network and kept in PAGES; without a connection the kept copy is shown.
  *   The page at the eyepiece puts all its pages in PAGES with "Save for
- *   offline use".
+ *   offline use", with the drawings of the observer's earlier observations
+ *   they show, which an image request falls back to without a connection.
  * - "Log it" (/observing-list/{slug}/eyepiece/{item}/log) without a
  *   connection goes back to the page of the object with #log, which opens
  *   the quick note; the page keeps that observation until it can be sent.
@@ -118,6 +119,14 @@ self.addEventListener('fetch', (event) => {
 
     if (ASSET.test(url.pathname) || url.pathname === '/manifest.webmanifest') {
         event.respondWith(staleWhileRevalidate(request));
+        return;
+    }
+
+    // The drawings of the earlier observations that "Save for offline use" kept
+    if (request.destination === 'image') {
+        event.respondWith(fetch(request).catch(() => caches.open(PAGES)
+            .then((cache) => cache.match(request, { ignoreVary: true }))
+            .then((cached) => cached || Response.error())));
     }
 });
 

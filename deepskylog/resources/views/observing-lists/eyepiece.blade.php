@@ -93,6 +93,11 @@
         .sketch-labels textarea { flex: 1 1 14rem; max-width: 24rem; min-height: 7rem; }
         .sketch-labels img { width: 12rem; max-width: 100%; border: 1px solid #374151; background: #000; }
         .sketch-thumb { display: block; width: 12rem; max-width: 100%; height: auto; margin: .4rem 0; border: 1px solid #374151; border-radius: .4rem; background: #000; }
+        ul.earlier { margin: .4rem 0 0; padding: 0; list-style: none; }
+        ul.earlier li { display: flex; gap: .75rem; align-items: flex-start; padding: .5rem 0; border-top: 1px solid #1f2937; }
+        ul.earlier li:first-child { border-top: 0; }
+        ul.earlier img { display: block; width: 6rem; height: 6rem; object-fit: cover; border: 1px solid #374151; border-radius: .4rem; background: #000; }
+        ul.earlier .note { margin-top: .25rem; font-size: .95rem; }
         .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
     </style>
 </head>
@@ -198,6 +203,43 @@
                 <span></span>
             @endif
         </nav>
+
+        {{-- The observer's own earlier observations of the object, to compare with --}}
+        @if ($earlier['observations'] !== [])
+            <section class="card" aria-labelledby="earlier-title">
+                <div class="label" id="earlier-title">{{ __('Your earlier observations') }}</div>
+                <ul class="earlier">
+                    @foreach ($earlier['observations'] as $observation)
+                        <li>
+                            @if ($observation['drawing'])
+                                <a href="{{ $observation['drawing'] }}" target="_blank" rel="noopener">
+                                    <img src="{{ $observation['drawing'] }}" data-offline-src alt="{{ __('Drawing of :object', ['object' => $current['name']]) }}" loading="lazy" />
+                                </a>
+                            @endif
+                            <div>
+                                <div class="meta">
+                                    @if ($observation['url'])
+                                        <a href="{{ $observation['url'] }}">{{ $observation['date'] }}</a>
+                                    @else
+                                        {{ $observation['date'] }}
+                                    @endif
+                                    {{ $observation['instrument'] ? '· '.$observation['instrument'] : '' }}
+                                    @if ($observation['not_seen'])
+                                        · <span class="muted">{{ __('Not seen') }}</span>
+                                    @endif
+                                </div>
+                                @if ($observation['description'] !== '')
+                                    <p class="note">{{ $observation['description'] }}</p>
+                                @endif
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+                @if ($earlier['total'] > count($earlier['observations']))
+                    <p class="muted">{{ __('You observed :object :count times before.', ['object' => $current['name'], 'count' => $earlier['total']]) }}</p>
+                @endif
+            </section>
+        @endif
 
         {{-- Finding notes of observers, the most liked (deep-sky objects) --}}
         @if ($current['object'])
@@ -1157,7 +1199,18 @@
                         return fetch(urls[index], { credentials: 'same-origin', cache: 'no-store' })
                             .then(function (response) {
                                 if (! response.ok || response.redirected) throw new Error(response.status);
-                                return cache.put(urls[index], response);
+                                return response.clone().text().then(function (html) {
+                                    return cache.put(urls[index], response).then(function () {
+                                        // The drawings of the earlier observations, which the service worker serves without a connection
+                                        var page = new DOMParser().parseFromString(html, 'text/html');
+                                        var images = Array.prototype.map.call(page.querySelectorAll('img[data-offline-src]'), function (img) { return img.getAttribute('src'); });
+                                        return Promise.all(images.map(function (src) {
+                                            return fetch(src, { credentials: 'same-origin' })
+                                                .then(function (image) { return image.ok ? cache.put(src, image) : null; })
+                                                .catch(function () {});
+                                        }));
+                                    });
+                                });
                             })
                             .catch(function () { failed++; })
                             .then(function () { done++; return step(index + 1); });
