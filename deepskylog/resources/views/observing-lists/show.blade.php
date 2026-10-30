@@ -262,6 +262,7 @@
                         $exportStxtBase = route('observing-list.export.stxt', $list);
                         $exportApdBase = route('observing-list.export.apd', $list);
                         $exportOalBase = route('observing-list.export.oal', $list);
+                        $exportStellariumBase = route('observing-list.export.stellarium', $list);
                     @endphp
 
                     <div class="flex flex-wrap items-start justify-between gap-3 mb-3">
@@ -399,6 +400,8 @@
                                                     class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export SkyTools (.txt)') }}</a>
                                                 <a href="{{ $exportApdBase }}" target="_blank" rel="nofollow noopener noreferrer"
                                                     class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export AstroPlanner (.apd)') }}</a>
+                                                <a href="{{ $exportStellariumBase }}" target="_blank" rel="nofollow noopener noreferrer"
+                                                    class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export Stellarium (.sol)') }}</a>
                                                 <a href="{{ $exportOalBase }}" target="_blank" rel="nofollow noopener noreferrer"
                                                     class="block px-4 py-2 hover:bg-gray-700" role="menuitem">{{ __('Export OAL') }}</a>
                                             </div>

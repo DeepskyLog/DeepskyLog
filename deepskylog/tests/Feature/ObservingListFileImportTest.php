@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\DB;
  * The "Import objects" form of an observing list page
  * (POST /observing-list/{list}/import, ObservingListFileImportService):
  * deep-sky objects, comets, planets and lunar features in every format the
- * form accepts (.txt, .argo, .skylist, .apd, .csv, OAL .xml), and the OAL
- * export of a list (#114), which the import reads back.
+ * form accepts (.txt, .argo, .skylist, .apd, Stellarium .sol/.ol/.json, .csv,
+ * OAL .xml), and the OAL (#114) and Stellarium exports of a list, which the
+ * import reads back.
  */
 
 function olfiIndex(string $name, string $table, string $pk, string $type): void
@@ -328,6 +329,111 @@ it('exports a list as a valid OAL file that imports into the same list', functio
         ->assertSessionHas('success', '6 object(s) imported, 0 skipped.');
 
     expect(olfiItems($copy))->toBe(olfiItems($this->list));
+});
+
+/** A Stellarium observing list file with these objects, as its Observing list dialog writes it. */
+function olfiStellarium(array $objects): string
+{
+    return json_encode([
+        'defaultListOlud' => '',
+        'observingLists' => [
+            '{0b5c8f0e-4a8e-4a37-9d6f-2f3f6f1b2c11}' => [
+                'name' => 'Autumn', 'description' => '', 'sorting' => '',
+                'creation date' => '2026-10-01 21:00:00', 'last edit' => '2026-10-01 21:00:00',
+                'objects' => array_map(fn (array $object) => $object + [
+                    'designation' => '', 'name' => '', 'nameI18n' => '', 'type' => 'Nebula', 'objtype' => '',
+                    'ra' => '', 'dec' => '', 'magnitude' => '', 'constellation' => '', 'jd' => 0,
+                    'location' => '', 'landscapeID' => '', 'fov' => 0, 'isVisibleMarker' => false,
+                ], $objects),
+            ],
+        ],
+        'shortName' => 'Observing list for Stellarium',
+        'version' => '2.1',
+    ]);
+}
+
+it('imports a Stellarium observing list, by a name when DeepskyLog does not know the designation', function () {
+    $content = olfiStellarium([
+        ['designation' => 'NGC 224', 'name' => 'Andromeda Galaxy', 'ra' => '0h42m44.3s', 'dec' => "+41°16'09\""],
+        ['designation' => 'LDN 1630', 'name' => 'Horsehead Nebula', 'nameI18n' => 'Paardenkopnevel'],
+        ['designation' => 'C/2020 F3 (NEOWISE)', 'type' => 'Planet'],
+        ['designation' => 'Mars', 'name' => 'Mars', 'nameI18n' => 'Mars', 'type' => 'Planet'],
+        ['designation' => 'Saturn', 'type' => 'Planet'],
+    ]);
+
+    olfiImport($this, $this->owner, $this->list, UploadedFile::fake()->createWithContent('observingList_Autumn.sol', $content))
+        ->assertSessionHas('success', '5 object(s) imported, 0 skipped.');
+
+    expect(olfiItems($this->list))->toBe(['B 33', 'C/2020 F3 (NEOWISE)', 'M 31', 'Mars', 'Saturn']);
+});
+
+it('imports every list of a Stellarium .ol file and the legacy bookmarks file', function () {
+    $all = json_decode(olfiStellarium([['designation' => 'M 31']]), true);
+    $all['observingLists']['{9d1c3a52-1111-4bbb-8ccc-000000000002}'] = ['name' => 'Planets', 'objects' => [['designation' => 'Jupiter', 'type' => 'Planet']]];
+
+    olfiImport($this, $this->owner, $this->list, UploadedFile::fake()->createWithContent('observingList.ol', json_encode($all)))
+        ->assertSessionHas('success', '2 object(s) imported, 0 skipped.');
+
+    $bookmarks = ['bookmarks' => ['{c2a1}' => ['name' => 'NGC 7000', 'nameI18n' => 'North America Nebula'], '{c2a2}' => ['name' => 'Tycho']]];
+    olfiImport($this, $this->owner, $this->list, UploadedFile::fake()->createWithContent('bookmarks.json', json_encode($bookmarks)))
+        ->assertSessionHas('success', '2 object(s) imported, 0 skipped.');
+
+    expect(olfiItems($this->list))->toBe(['Jupiter', 'M 31', 'NGC 7000', 'Tycho']);
+});
+
+it('reports a JSON file that is not a Stellarium observing list', function (string $content) {
+    olfiImport($this, $this->owner, $this->list, UploadedFile::fake()->createWithContent('list.json', $content))
+        ->assertSessionHas('warning', fn ($message) => str_contains($message, 'Not a Stellarium observing list'));
+
+    expect($this->list->items()->count())->toBe(0);
+})->with([
+    'broken' => ['{"observingLists": {'],
+    'other JSON' => ['{"objects": ["M 31"]}'],
+]);
+
+it('exports a list as a Stellarium observing list that imports into the same list', function () {
+    foreach (['M 31', 'NGC 7000', 'B 33', '1P/Halley', 'Jupiter', 'Copernicus'] as $name) {
+        $this->list->items()->create(['object_name' => $name, 'source_mode' => 'manual', 'added_by_user_id' => $this->owner->id]);
+    }
+    $this->list->update(['description' => '<p>Autumn &amp; winter</p>']);
+
+    $response = $this->actingAs($this->owner)->get(route('observing-list.export.stellarium', $this->list))
+        ->assertOk()
+        ->assertHeader('Content-Type', 'application/json')
+        ->assertDownload('Test_list.sol');
+    $content = $response->streamedContent();
+    $data = json_decode($content, true);
+
+    expect($data['shortName'])->toBe('Observing list for Stellarium')
+        ->and($data['version'])->toBe('2.1')
+        ->and($data['defaultListOlud'])->toBe('')
+        ->and($data['observingLists'])->toHaveCount(1)
+        ->and(array_key_first($data['observingLists']))->toMatch('/^\{[0-9a-f-]{36}\}$/');
+
+    $exported = array_values($data['observingLists'])[0];
+    expect($exported['name'])->toBe('Test list')
+        ->and($exported['description'])->toBe('Autumn & winter');
+
+    $objects = collect($exported['objects'])->keyBy('designation');
+    expect($objects->keys()->sort()->values()->all())->toBe(['1P/Halley', 'B 33', 'Copernicus', 'Jupiter', 'M 31', 'NGC 7000'])
+        ->and($objects['M 31'])->toMatchArray([
+            'type' => 'Nebula', 'ra' => '0h42m36.0s', 'dec' => "+41°16'12\"", 'magnitude' => '3.40', 'constellation' => 'And',
+        ])
+        ->and($objects['Jupiter'])->toMatchArray(['type' => 'Planet', 'ra' => '', 'dec' => ''])
+        ->and($objects['1P/Halley']['type'])->toBe('Planet');
+
+    $copy = ObservingList::create(['owner_user_id' => $this->owner->id, 'name' => 'Copy', 'public' => true]);
+    olfiImport($this, $this->owner, $copy, UploadedFile::fake()->createWithContent('Test_list.sol', $content))
+        ->assertSessionHas('success', '6 object(s) imported, 0 skipped.');
+
+    expect(olfiItems($copy))->toBe(olfiItems($this->list));
+});
+
+it('only exports a private list for Stellarium for its owner', function () {
+    $this->list->update(['public' => false]);
+
+    $this->actingAs(User::factory()->create())->get(route('observing-list.export.stellarium', $this->list))
+        ->assertForbidden();
 });
 
 it('only exports a private list as OAL for its owner', function () {

@@ -835,7 +835,7 @@ class ObservingListController extends Controller
                 'required',
                 'file',
                 // AstroPlanner APD files are SQLite DBs and often fail MIME sniffing; validate by extension.
-                'extensions:txt,argo,skylist,apd,csv,xml,oal',
+                'extensions:txt,argo,skylist,apd,sol,ol,json,csv,xml,oal',
                 'max:5120', // 5MB max
             ],
         ]);
@@ -843,7 +843,7 @@ class ObservingListController extends Controller
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
-                ->with('error', __('Import failed. Please select a supported file (.argo, .skylist, .txt, .apd, .csv, .xml).'));
+                ->with('error', __('Import failed. Please select a supported file (.argo, .skylist, .txt, .apd, .sol, .csv, .xml).'));
         }
 
         $file = $request->file('file');

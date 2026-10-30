@@ -832,6 +832,8 @@ Route::get('/observing-list/{list}/export/stxt.txt', [App\Http\Controllers\Obser
     ->name('observing-list.export.stxt')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
 Route::get('/observing-list/{list}/export/apd.apd', [App\Http\Controllers\ObservingListExportController::class, 'apd'])
     ->name('observing-list.export.apd')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
+Route::get('/observing-list/{list}/export/stellarium.sol', [App\Http\Controllers\ObservingListExportController::class, 'stellarium'])
+    ->name('observing-list.export.stellarium')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
 Route::get('/observing-list/{list}/export/oal.xml', [App\Http\Controllers\ObservingListExportController::class, 'oal'])
     ->name('observing-list.export.oal')->middleware(['auth', 'verified', 'doNotCacheResponse', 'throttle:exports']);
 
