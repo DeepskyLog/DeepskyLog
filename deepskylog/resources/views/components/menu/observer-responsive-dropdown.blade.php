@@ -61,6 +61,18 @@
                     label="{{ __('Observing partners nearby') }}"
                 />
 
+                <x-dropdown.item
+                    icon="hand-raised"
+                    href="{{ route('observing-requests') }}"
+                    label="{{ __('Observing requests') }}"
+                />
+
+                <x-dropdown.item
+                    icon="star"
+                    href="{{ route('sky-quality.star-count') }}"
+                    label="{{ __('Measure your sky') }}"
+                />
+
                 <x-dropdown.item href="/eyepiece">
                     <x-outline.eyepiece-icon class="h-4 w-4 mr-3 text-gray-300 inline-block align-middle" />
                     {{ __('My eyepieces') }}

@@ -159,6 +159,9 @@ class AccountDataExport
             'object_finding_note_likes' => DB::table('object_finding_note_likes')->where('user_id', $id),
             'user_follows' => DB::table('user_follows')->where(fn ($query) => $query->where('follower_id', $id)->orWhere('followed_id', $id)),
             'object_follows' => DB::table('object_follows')->where('user_id', $id),
+            'observing_requests' => DB::table('observing_requests')->where('user_id', $id)->orderBy('id'),
+            'observing_request_answers' => DB::table('observing_request_answers')->whereIn('observing_request_id', DB::table('observing_requests')->where('user_id', $id)->select('id'))->orderBy('id'),
+            'sky_measurements' => DB::table('sky_measurements')->where('user_id', $id)->orderBy('id'),
 
             'observing_goals' => DB::table('observing_goals')->where('user_id', $id)->orderBy('id'),
             'clubs' => DB::table('clubs')->where('user_id', $id)->orderBy('id'),

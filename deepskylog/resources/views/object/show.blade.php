@@ -740,6 +740,7 @@ try {
                             @if (!empty($session->name) && \App\Models\DeepskyObject::where('name', $session->name)->exists()
                                 && !in_array($session->source_type_raw ?? '', ['planet', 'comet', 'moon', 'lunar_feature', 'asteroid', 'sun'], true))
                                 @livewire('object-finding-notes', ['objectName' => $session->name], key('finding-notes-' . $session->name))
+                                @livewire('object-observing-requests', ['objectName' => $session->name], key('observing-requests-' . $session->name))
                             @endif
 
                             {{-- Nearby objects (powergrid) --}}

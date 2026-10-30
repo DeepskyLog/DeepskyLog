@@ -10,6 +10,7 @@ use App\Models\Filter;
 use App\Models\Location;
 use App\Jobs\TranslateObservationDescriptions;
 use App\Services\ObjectObservationStatistics;
+use App\Services\ObservingRequests;
 use App\Services\Observations\DescriptionTranslations;
 use App\Services\Observations\SuspectObservations;
 use App\Services\SessionObservationLinker;
@@ -32,6 +33,13 @@ class ObservationObserver
 
         $this->syncSessions($obs);
         $this->refreshObjectStatistics($obs);
+
+        // An observation of an object others asked for answers their request
+        try {
+            ObservingRequests::observationCreated($obs);
+        } catch (\Throwable $e) {
+            report($e);
+        }
 
         // Invalidate homepage sketch/observation caches so lists refresh quickly
         // (include non-drawing observations so the "20 newest observations" list updates)

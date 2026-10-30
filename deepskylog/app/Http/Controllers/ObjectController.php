@@ -3192,6 +3192,7 @@ class ObjectController extends Controller
                 ->where('object_name', $originalName)
                 ->update(['object_name' => $validated['name']]);
             \App\Models\ObjectFindingNote::moveObject($originalName, $validated['name']);
+            \App\Models\ObservingRequest::moveObject($originalName, $validated['name']);
             \App\Models\ObjectFollow::moveDeepskyObject($originalName, $validated['name']);
 
             // Update objectnames table
@@ -4403,6 +4404,7 @@ class ObjectController extends Controller
                 ->where('object_name', $objectName)
                 ->update(['object_name' => $targetName]);
             \App\Models\ObjectFindingNote::moveObject($objectName, $targetName);
+            \App\Models\ObservingRequest::moveObject($objectName, $targetName);
             \App\Models\ObjectFollow::moveDeepskyObject($objectName, $targetName);
         } else {
             // Observations can't be left pointing to a deleted object
@@ -4414,6 +4416,7 @@ class ObjectController extends Controller
             DB::table('observing_list_items')
                 ->where('object_name', $objectName)
                 ->delete();
+            DB::table('observing_requests')->where('object_name', $objectName)->delete();
         }
 
         // Remove associated records; the search_index rows of the object and

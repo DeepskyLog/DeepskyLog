@@ -113,6 +113,13 @@
                     />
                 @endif
 
+                @if (!empty($observingRequests))
+                    <x-observing-requests-home
+                        :requests="$observingRequests"
+                        class="order-3 lg:order-none"
+                    />
+                @endif
+
                 @if (!empty($onThisNight))
                     <x-on-this-night
                         :years="$onThisNight['years']"

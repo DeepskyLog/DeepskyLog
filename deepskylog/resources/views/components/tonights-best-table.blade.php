@@ -1,6 +1,9 @@
 @props(["best"])
 
 {{-- The objects of a TonightsBest result: on the home page and in the night list wizard --}}
+@php
+    $requested = \App\Services\ObservingRequests::requestedAmong(array_column($best["objects"], "name"), auth()->user());
+@endphp
 <div class="mt-4 overflow-x-auto">
     <table class="w-full text-left text-sm">
         <thead class="text-xs uppercase text-gray-400">
@@ -25,6 +28,9 @@
                     <td class="whitespace-nowrap px-2 py-1">{{ $object["time"] }}</td>
                     <td class="px-2 py-1">
                         <a href="{{ route("object.show", $object["slug"]) }}" class="text-blue-400 hover:underline">{{ $object["name"] }}</a>
+                        @if (isset($requested[mb_strtolower($object["name"])]))
+                            <x-requested-badge :slug="$object['slug']" />
+                        @endif
                         @if ($best["mode"] === "personal" && $object["kind"] === "deepsky")
                             <a href="{{ route("object.field-views", ["slug" => $object["slug"], "datetime" => $object["moment"]]) }}" class="ml-1 text-xs text-gray-400 hover:underline" title="{{ __("Field views") }}">&#128301;</a>
                         @endif

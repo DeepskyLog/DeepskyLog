@@ -19,6 +19,7 @@ use App\Services\Moon\LunarTerminator;
 use App\Services\Planets\PlanetMoonEvents;
 use App\Services\Observations\ObservationCardData;
 use App\Services\Observations\SuspectObservations;
+use App\Services\ObservingRequests;
 use App\Services\OnThisNight;
 use App\Services\SessionObservationReminders;
 use App\Services\TonightsBest;
@@ -1089,8 +1090,17 @@ class SessionController extends Controller
             $onThisNight = null;
         }
 
+        // Objects others asked to observe that the observer's telescope can probably show
+        try {
+            $observingRequests = Auth::check() ? ObservingRequests::forHomePage(Auth::user()) : null;
+        } catch (\Throwable $e) {
+            report($e);
+            $observingRequests = null;
+        }
+
         return $this->noCacheResponse(response()->view('welcome', compact(
             'sessions',
+            'observingRequests',
             'onThisNight',
             'sessionsWithoutObservations',
             'beginnerPath',

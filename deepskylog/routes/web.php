@@ -1078,6 +1078,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Observing partners nearby: observers who opted in, found by the cell of their standard location
     Route::view('/observing-partners', 'observing-partners')
         ->name('observing-partners')->middleware('doNotCacheResponse');
+    // Observing requests: objects observers ask the others to observe
+    Route::view('/observing-requests', 'observing-requests')
+        ->name('observing-requests')->middleware('doNotCacheResponse');
+    // Measure your sky: the naked-eye limiting magnitude from a count of stars
+    Route::view('/sky-quality/star-count', 'sky-star-count')
+        ->name('sky-quality.star-count')->middleware('doNotCacheResponse');
     // What's new for me: the objects a telescope or eyepiece adds
     Route::get('/instrument/{user}/{instrument}/whats-new', [App\Http\Controllers\WhatsNewEquipmentController::class, 'instrument'])
         ->name('instrument.whats-new')->middleware('doNotCacheResponse');

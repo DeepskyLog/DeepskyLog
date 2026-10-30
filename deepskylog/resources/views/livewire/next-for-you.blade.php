@@ -214,6 +214,9 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-700">
+                        @php
+                            $requested = \App\Services\ObservingRequests::requestedAmong(array_column($shown["objects"], "name"), auth()->user());
+                        @endphp
                         @foreach ($shown["objects"] as $object)
                             <tr wire:key="next-{{ $object["slug"] }}">
                                 <td class="px-2 py-1">
@@ -222,6 +225,9 @@
                                         class="text-blue-400 hover:underline"
                                         >{{ $object["name"] }}</a
                                     >
+                                    @if (isset($requested[mb_strtolower($object["name"])]))
+                                        <x-requested-badge :slug="$object['slug']" />
+                                    @endif
                                 </td>
                                 <td class="px-2 py-1">
                                     {{ __($object["type"]) }}

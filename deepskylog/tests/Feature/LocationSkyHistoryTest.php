@@ -28,10 +28,10 @@ it('takes the median of each night and of the nights of each year', function () 
     $history = LocationSkyHistory::forLocation($location);
 
     expect($history->nights)->toBe([
-        ['date' => '2020-03-01', 'sqm' => 20.4, 'nelm' => 5.3],
-        ['date' => '2020-04-01', 'sqm' => 19.0, 'nelm' => null],
-        ['date' => '2020-05-01', 'sqm' => 18.0, 'nelm' => null],
-        ['date' => '2022-01-10', 'sqm' => null, 'nelm' => 6.1],
+        ['date' => '2020-03-01', 'sqm' => 20.4, 'nelm' => 5.3, 'measured' => false],
+        ['date' => '2020-04-01', 'sqm' => 19.0, 'nelm' => null, 'measured' => false],
+        ['date' => '2020-05-01', 'sqm' => 18.0, 'nelm' => null, 'measured' => false],
+        ['date' => '2022-01-10', 'sqm' => null, 'nelm' => 6.1, 'measured' => false],
     ])->and($history->years)->toBe([
         2020 => ['sqm' => 19.0, 'nelm' => 5.3, 'nights' => 3],
         2022 => ['sqm' => null, 'nelm' => 6.1, 'nights' => 1],
@@ -57,7 +57,7 @@ it('leaves out the placeholders and implausible values', function () {
     skyHistoryObservation($location, '2020-03-04', 0.0, 5.5);
 
     $history = LocationSkyHistory::forLocation($location);
-    expect($history->nights)->toBe([['date' => '2020-03-04', 'sqm' => null, 'nelm' => 5.5]])
+    expect($history->nights)->toBe([['date' => '2020-03-04', 'sqm' => null, 'nelm' => 5.5, 'measured' => false]])
         ->and($history->has('sqm'))->toBeFalse()
         ->and($history->has('nelm'))->toBeTrue();
 });

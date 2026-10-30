@@ -73,6 +73,10 @@
 
                 <x-menu.item icon="user-group" href="{{ route('observing-partners') }}">{{ __('Observing partners nearby') }}</x-menu.item>
 
+                <x-menu.item icon="hand-raised" href="{{ route('observing-requests') }}">{{ __('Observing requests') }}</x-menu.item>
+
+                <x-menu.item icon="star" href="{{ route('sky-quality.star-count') }}">{{ __('Measure your sky') }}</x-menu.item>
+
                 <x-menu.item href="/eyepiece">
                     <x-slot:svg><x-outline.eyepiece-icon class="h-4 w-4" /></x-slot:svg>{{ __('My eyepieces') }}
                 </x-menu.item>
