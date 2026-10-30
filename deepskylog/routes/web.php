@@ -365,6 +365,10 @@ Route::get('/observations/zip', [App\Http\Controllers\ObservationZipController::
 Route::get('/observations/zip/download/{token}', [App\Http\Controllers\ObservationZipController::class, 'download'])
     ->name('observations.zip.download')
     ->middleware(['auth', 'doNotCacheResponse']);
+// "Download all my data" of the profile page (App\Jobs\GenerateAccountExport).
+Route::get('/user/my-data/download/{token}', [App\Http\Controllers\AccountExportController::class, 'download'])
+    ->name('account-export.download')
+    ->middleware(['auth', 'doNotCacheResponse']);
 Route::get('/observation/{observer}/{date}/{object}/{index?}', [App\Http\Controllers\ObservationsController::class, 'detail'])
     ->where('date', '[0-9]{4}-[0-9]{2}-[0-9]{2}')
     ->where('index', '[0-9]+')

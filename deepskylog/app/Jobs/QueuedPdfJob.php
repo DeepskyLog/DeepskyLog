@@ -64,7 +64,7 @@ abstract class QueuedPdfJob implements ShouldQueue
     public const NOTIFY_DELAY_SECONDS = 15;
 
     /** @var array<int, class-string<QueuedPdfJob>> */
-    public const KINDS = [GenerateAtlasPdf::class, GenerateObjectSetsPdf::class, GenerateObjectReportPdf::class, GenerateObservationsZip::class];
+    public const KINDS = [GenerateAtlasPdf::class, GenerateObjectSetsPdf::class, GenerateObjectReportPdf::class, GenerateObservationsZip::class, GenerateAccountExport::class];
 
     /**
      * The language of the request that queued the PDF: the worker has no

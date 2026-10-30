@@ -16,6 +16,10 @@
             {{ __("This deletes your observations and sketches, your sessions, your instruments, eyepieces, filters, lenses and locations, and your observing lists, comments and likes. Messages you sent stay in the inbox of their receivers.") }}
         </div>
 
+        <div class="mt-3 max-w-xl text-sm text-gray-300">
+            {{ __("Use Download all my data above to keep a copy of everything in one zip file.") }}
+        </div>
+
         <div class="mt-5">
             <x-button
                 negative

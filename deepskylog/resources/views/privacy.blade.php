@@ -16,6 +16,7 @@
             {!! __("The user has the right at any time, at no cost and upon request, to prohibit the use of his information for the purpose of direct communication.") !!}
 
             {{ __("Your personal information is never passed on to third parties.") }}
+            {!! sprintf(__("You can download all data of your account at any time with %sDownload all my data%s on your profile page: your observations with their drawings, sessions, equipment, locations, observing lists, messages, goals and settings, in one zip file."), "<a class='text-blue-400 hover:underline' href='" . route("profile.show") . "'>", "</a>") !!}
             <br />
             <br />
 

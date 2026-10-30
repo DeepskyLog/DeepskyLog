@@ -181,30 +181,12 @@ class ObservationZipBuilder
             throw new \RuntimeException($refusal);
         }
 
-        $progress(['phase' => 'drawings', 'total' => $observations->count()]);
-
-        [$drawings, $missing] = $this->collectDrawings($observations);
-        $this->assertDiskSpace($path, $drawings);
-
-        $progress(['phase' => 'oal']);
-        $oal = app(ObservationSearchExportController::class)->oalWithImages(
-            $observations,
-            $drawings->mapWithKeys(fn (array $drawing) => [$drawing['observation']->id => $drawing['entry']])->all()
-        );
-
         $zip = new ZipArchive();
         if ($zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
             throw new \RuntimeException('Could not create the zip file.');
         }
 
-        $zip->addFromString('observations.xml', $oal);
-        unset($oal);
-        $zip->addFromString('drawings.csv', $this->csv($drawings, $missing));
-
-        foreach ($drawings as $drawing) {
-            $zip->addFile($drawing['file'], $drawing['entry']);
-            $zip->setCompressionName($drawing['entry'], ZipArchive::CM_STORE);
-        }
+        $counts = $this->addTo($zip, $observations, '', dirname($path), $progress);
 
         // The files are only read when the zip is closed, which takes most of
         // the time with many drawings.
@@ -212,6 +194,43 @@ class ObservationZipBuilder
 
         if (! $zip->close()) {
             throw new \RuntimeException('Could not write the zip file.');
+        }
+
+        return $counts;
+    }
+
+    /**
+     * Add the observations to an open zip under $folder ('' or ending in
+     * '/'): observations.xml, drawings.csv and the drawings, which are only
+     * read when the zip is closed. Also used by AccountDataExport.
+     *
+     * @param  Collection<int, Observation>  $observations
+     * @param  string  $directory  where the zip is written, to check its free space
+     * @param  callable(array<string, mixed>): void  $progress
+     * @return array{observations: int, drawings: int, missing: int}
+     */
+    public function addTo(ZipArchive $zip, Collection $observations, string $folder, string $directory, callable $progress): array
+    {
+        $progress(['phase' => 'drawings', 'total' => $observations->count()]);
+
+        [$drawings, $missing] = $this->collectDrawings($observations);
+        $this->assertDiskSpace($directory, $drawings);
+
+        if ($observations->isNotEmpty()) {
+            $progress(['phase' => 'oal']);
+            $oal = app(ObservationSearchExportController::class)->oalWithImages(
+                $observations,
+                $drawings->mapWithKeys(fn (array $drawing) => [$drawing['observation']->id => $drawing['entry']])->all()
+            );
+            $zip->addFromString($folder . 'observations.xml', $oal);
+            unset($oal);
+        }
+
+        $zip->addFromString($folder . 'drawings.csv', $this->csv($drawings, $missing));
+
+        foreach ($drawings as $drawing) {
+            $zip->addFile($drawing['file'], $folder . $drawing['entry']);
+            $zip->setCompressionName($folder . $drawing['entry'], ZipArchive::CM_STORE);
         }
 
         return ['observations' => $observations->count(), 'drawings' => $drawings->count(), 'missing' => $missing->count()];
@@ -256,10 +275,10 @@ class ObservationZipBuilder
      *
      * @param  Collection<int, array{file: string}>  $drawings
      */
-    private function assertDiskSpace(string $path, Collection $drawings): void
+    private function assertDiskSpace(string $directory, Collection $drawings): void
     {
         $needed = $drawings->sum(fn (array $drawing) => (int) @filesize($drawing['file']));
-        $free = @disk_free_space(dirname($path));
+        $free = @disk_free_space($directory);
 
         if ($free !== false && $free < $needed + self::SPARE_BYTES) {
             throw new \RuntimeException(sprintf('Not enough disk space for the zip: %d bytes needed, %d free.', $needed, $free));

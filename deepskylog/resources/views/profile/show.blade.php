@@ -77,6 +77,12 @@
                 </div>
             @endif
 
+            <x-section-border/>
+
+            <div class="mt-10 sm:mt-0">
+                @livewire("profile.download-my-data")
+            </div>
+
             {{-- User 1 owns the system teams and is never deleted --}}
             @if (Laravel\Jetstream\Jetstream::hasAccountDeletionFeatures() && ! is_null($user->getAuthPassword()) && $user->id !== 1)
                 <x-section-border/>

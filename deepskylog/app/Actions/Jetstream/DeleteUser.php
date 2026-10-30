@@ -23,7 +23,8 @@ use Laravel\Jetstream\Contracts\DeletesUsers;
  * observing lists, comments, likes, club memberships and settings. Used when observers delete
  * their own account on the profile page, by the administrators' "remove
  * user" page and by users:prune-inactive. Messages the observer sent stay in
- * the inbox of their receivers.
+ * the inbox of their receivers. A new table of the observer's own rows also
+ * belongs in AccountDataExport::tables(), which gives them a copy first.
  */
 class DeleteUser implements DeletesUsers
 {
