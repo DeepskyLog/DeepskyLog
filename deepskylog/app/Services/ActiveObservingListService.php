@@ -15,8 +15,8 @@ class ActiveObservingListService
      */
     public function setActiveList(User $user, ObservingList $list): bool
     {
-        // Check authorization: user must own the list or be subscribed to it while it is public
-        if ($user->id !== $list->owner_user_id && !($list->public && $list->isSubscribedBy($user))) {
+        // Check authorization: user must own the list, edit it with a club, or be subscribed to it while it is public
+        if (!$list->isEditableBy($user) && !($list->public && $list->isSubscribedBy($user))) {
             throw new \Exception('User is not authorized to set this list as active');
         }
 

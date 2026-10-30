@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Club;
 use App\Models\ObservingList;
 use App\Services\SeasonalVisibility;
 use App\Services\ObservingListTimes;
@@ -195,6 +196,11 @@ class ObservingListController extends Controller
             ->get();
 
         $isOwner = $user ? ($user->id === $list->owner_user_id) : false;
+        $canEdit = $user ? $list->isEditableBy($user) : false;
+        // The clubs of the viewer the list is shared with: who of the members has seen what
+        $clubs = $user && $list->public
+            ? $list->clubs()->whereIn('clubs.id', Club::ofMember($user)->select('clubs.id'))->orderBy('clubs.name')->get()
+            : collect();
         $isSubscribed = $user ? $list->isSubscribedBy($user) : false;
         $isLiked = $user ? $list->isLikedBy($user) : false;
         $isActive = $user ? $this->activeListService->isActive($user, $list) : false;
@@ -211,6 +217,8 @@ class ObservingListController extends Controller
             'items' => $items,
             'comments' => $comments,
             'isOwner' => $isOwner,
+            'canEdit' => $canEdit,
+            'clubs' => $clubs,
             'isSubscribed' => $isSubscribed,
             'isLiked' => $isLiked,
             'isActive' => $isActive,

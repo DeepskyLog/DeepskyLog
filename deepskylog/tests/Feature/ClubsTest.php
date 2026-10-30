@@ -169,6 +169,61 @@ it('lets members share their public lists with the club', function () {
     expect($club->observingLists()->count())->toBe(0);
 });
 
+it('lets the members of a club edit a list together and shows who has seen what', function () {
+    $anna = clubObserver('anna');
+    $bert = clubObserver('bert');
+    $carl = clubObserver('carl');
+    $club = makeClub($anna, ['join_policy' => Club::OPEN]);
+    $club->join($bert);
+    $list = ObservingList::create(['owner_user_id' => $anna->id, 'name' => 'Autumn galaxies', 'public' => true]);
+    $m31  = $list->items()->create(['object_name' => 'M 31', 'sort_order' => 1, 'added_by_user_id' => $anna->id]);
+    $list->items()->create(['object_name' => 'M 33', 'sort_order' => 2, 'added_by_user_id' => $anna->id]);
+    $list->items()->create(['object_name' => 'NGC 891', 'sort_order' => 3, 'added_by_user_id' => $anna->id]);
+
+    // Shared without editing: only the owner edits
+    $this->actingAs($anna)->post(route('clubs.lists.store', $club), ['list_id' => $list->id])->assertSessionHas('success');
+    expect($bert->can('addItem', $list->fresh()))->toBeFalse();
+
+    // Only the owner lets the members edit it
+    $this->actingAs($bert)->put(route('clubs.lists.editing', [$club, $list]), ['members_edit' => 1])->assertForbidden();
+    $this->actingAs($anna)->put(route('clubs.lists.editing', [$club, $list]), ['members_edit' => 1])->assertSessionHas('success');
+
+    expect($bert->can('addItem', $list->fresh()))->toBeTrue()
+        ->and($bert->can('removeItem', $list->fresh()))->toBeTrue()
+        ->and($bert->can('setAsActive', $list->fresh()))->toBeTrue()
+        ->and($bert->can('update', $list->fresh()))->toBeFalse()
+        ->and($bert->can('delete', $list->fresh()))->toBeFalse()
+        ->and($carl->can('addItem', $list->fresh()))->toBeFalse();
+
+    $this->actingAs($bert)->delete(route('observing-list.items.destroy', [$list, $m31]))->assertRedirect();
+    expect($list->items()->count())->toBe(2);
+    $this->actingAs($carl)->delete(route('observing-list.items.destroy', [$list, $list->items()->first()]))->assertForbidden();
+
+    // Not while the list is private, nor after leaving the club
+    $list->update(['public' => false]);
+    expect($bert->can('addItem', $list->fresh()))->toBeFalse();
+    $list->update(['public' => true]);
+
+    $this->actingAs($bert)->get(route('observing-list.show', $list))->assertOk()
+        ->assertSee('Edited together by the members of')->assertSee(route('clubs.lists.progress', [$club, $list]), false);
+
+    // Who has seen what: not-seen observations are left out
+    clubObservation($bert, 'M 33', '2026-10-01');
+    clubObservation($anna, 'M 33', '2026-10-02');
+    $notSeen = clubObservation($anna, 'NGC 891', '2026-10-02');
+    DB::table('deepsky_observation_details')->insert(['observation_id' => $notSeen->id, 'visibility' => Observation::VISIBILITY_NOT_SEEN]);
+
+    $this->actingAs($carl)->get(route('clubs.lists.progress', [$club, $list]))->assertForbidden();
+    $this->actingAs($bert)->get(route('clubs.lists.progress', [$club, $list]))->assertOk()
+        ->assertSee('1 of the 2 objects have been seen by a member of Urania.')
+        ->assertSee('Bert has seen it');
+    $this->actingAs($bert)->get(route('clubs.lists.progress', [$club, $list, 'show' => 'nobody']))->assertOk()
+        ->assertSee('NGC 891')->assertDontSee('M 33');
+
+    $club->remove($bert);
+    expect($bert->can('addItem', $list->fresh()))->toBeFalse();
+});
+
 it('has club challenges that only members join and that are not in the news', function () {
     $anna = clubObserver('anna');
     $bert = clubObserver('bert');

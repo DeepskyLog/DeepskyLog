@@ -54,8 +54,8 @@ class ObservingListPolicy
      */
     public function addItem(User $user, ObservingList $list): bool
     {
-        // Only owner can add items
-        return $user->id === $list->owner_user_id;
+        // The owner, or a member of a club the list is shared with to edit together
+        return $list->isEditableBy($user);
     }
 
     /**
@@ -63,8 +63,8 @@ class ObservingListPolicy
      */
     public function removeItem(User $user, ObservingList $list): bool
     {
-        // Only owner can remove items
-        return $user->id === $list->owner_user_id;
+        // The owner, or a member of a club the list is shared with to edit together
+        return $list->isEditableBy($user);
     }
 
     /**
@@ -140,8 +140,9 @@ class ObservingListPolicy
      */
     public function setAsActive(User $user, ObservingList $list): bool
     {
-        // The owner, or a subscriber as long as the list is public
-        return $user->id === $list->owner_user_id || ($list->public && $list->isSubscribedBy($user));
+        // The owner, a subscriber as long as the list is public, or a member
+        // of a club that edits it together (to fill it from the object pages)
+        return $list->isEditableBy($user) || ($list->public && $list->isSubscribedBy($user));
     }
 
     /**

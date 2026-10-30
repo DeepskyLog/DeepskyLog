@@ -557,11 +557,13 @@
                                 </td>
                                 <td class="py-1 pr-3 text-right">
                                     {{ $row["source"] }}
-                                    @if ($ranking["source_total"] > 0) /{{
-                                        $ranking[
-                                            "source_total"
-                                        ]
-                                    }}@endif
+                                    @if ($ranking["source_total"] > 0)
+                                        /{{
+                                            $ranking[
+                                                "source_total"
+                                            ]
+                                        }}
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -722,9 +724,54 @@
                                             )
                                         }}
                                     @endif
+                                    @if ($list->pivot->members_edit)
+                                        &middot;
+                                        <span class="text-green-400">{{
+                                            __(
+                                                "Edited together",
+                                            )
+                                        }}</span>
+                                    @endif
                                 </span>
+                                @if ($isMember || $canManage)
+                                    &middot;
+                                    <a
+                                        href="{{ route("clubs.lists.progress", [$club, $list->slug]) }}"
+                                        class="text-blue-400 hover:underline"
+                                        >{{
+                                            __(
+                                                "Who has seen what",
+                                            )
+                                        }}</a
+                                    >
+                                @endif
                             </span>
                             @auth
+                                @if ((int) $list->owner_user_id === (int) auth()->id())
+                                    {{-- The owner lets the members edit the list, or stops that --}}
+                                    <form
+                                        method="POST"
+                                        action="{{ route("clubs.lists.editing", [$club, $list->slug]) }}"
+                                    >
+                                        @csrf
+                                        @method ("PUT")
+                                        <input
+                                            type="hidden"
+                                            name="members_edit"
+                                            value="{{ $list->pivot->members_edit ? 0 : 1 }}"
+                                        />
+                                        <button
+                                            type="submit"
+                                            class="text-xs text-blue-400 hover:underline"
+                                        >
+                                            {{
+                                                $list->pivot->members_edit
+                                                    ? __("Only I edit it")
+                                                    : __("Let the members edit it")
+                                            }}
+                                        </button>
+                                    </form>
+                                @endif
                                 @if ((int) $list->owner_user_id === (int) auth()->id() || $canManage)
                                     <form
                                         method="POST"
@@ -778,6 +825,21 @@
                                 </option>
                             @endforeach
                         </select>
+                        <label
+                            class="inline-flex items-center gap-1 text-gray-300"
+                        >
+                            <input
+                                type="checkbox"
+                                name="members_edit"
+                                value="1"
+                                class="rounded border-gray-600 bg-gray-900"
+                            />
+                            {{
+                                __(
+                                    "The members may add and remove objects",
+                                )
+                            }}
+                        </label>
                         <button
                             type="submit"
                             class="rounded bg-blue-600 px-3 py-1 font-medium text-white hover:bg-blue-500"

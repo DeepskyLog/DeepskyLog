@@ -9,11 +9,13 @@ use App\Models\ObservingList;
 use App\Models\StarParty;
 use App\Models\User;
 use App\Services\ClubRanking;
+use App\Services\Clubs\ClubListProgress;
 use App\Services\Clubs\ClubNotifier;
 use App\Services\ObjectSources;
 use App\Services\ObserverCountries;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -326,9 +328,62 @@ class ClubController extends Controller
         if ($list === null) {
             return back()->with('error', __('Choose one of your public observing lists.'));
         }
-        $club->observingLists()->syncWithoutDetaching([$list->id => ['user_id' => $user->id]]);
+        $club->observingLists()->syncWithoutDetaching([$list->id => ['user_id' => $user->id, 'members_edit' => $request->boolean('members_edit')]]);
 
         return back()->with('success', __('The observing list is shared with the club.'));
+    }
+
+    /**
+     * The owner of a shared list lets the members of the club add and remove
+     * its objects and edit their notes, or stops that.
+     */
+    public function listEditing(Request $request, Club $club, ObservingList $list): RedirectResponse
+    {
+        abort_unless((int) $list->owner_user_id === (int) $request->user()->id, 403);
+        abort_unless($club->observingLists()->where('observing_lists.id', $list->id)->exists(), 404);
+
+        $membersEdit = $request->boolean('members_edit');
+        $club->observingLists()->updateExistingPivot($list->id, ['members_edit' => $membersEdit]);
+
+        return back()->with('success', $membersEdit
+            ? __('The members of the club can now edit the observing list.')
+            : __('Only you can edit the observing list now.'));
+    }
+
+    /**
+     * Which members of the club have seen which objects of a list the club
+     * shares; for the members and the administrators of the club.
+     */
+    public function listProgress(Request $request, Club $club, ObservingList $list): View
+    {
+        $viewer = $request->user();
+        abort_unless($club->isMember($viewer) || $club->canBeManagedBy($viewer), 403);
+        $shared = $club->observingLists()->where('observing_lists.id', $list->id)->where('observing_lists.public', true)->first();
+        abort_if($shared === null, 404);
+
+        $progress = ClubListProgress::for($club, $list);
+        $filter   = in_array($request->query('show'), ClubListProgress::FILTERS, true) ? $request->query('show') : ClubListProgress::FILTERS[0];
+        $objects  = ClubListProgress::filter($progress['objects'], $filter, $viewer);
+        $page     = LengthAwarePaginator::resolveCurrentPage();
+        $objects  = new LengthAwarePaginator(
+            $objects->forPage($page, ClubListProgress::PER_PAGE)->values(),
+            $objects->count(),
+            ClubListProgress::PER_PAGE,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        return view('clubs.list-progress', [
+            'club'         => $club,
+            'list'         => $list,
+            'membersEdit'  => (bool) $shared->pivot->members_edit,
+            'canEdit'      => $list->isEditableBy($viewer),
+            'members'      => $progress['members'],
+            'objects'      => $objects,
+            'total'        => $progress['total'],
+            'seenByAnyone' => $progress['seen_by_anyone'],
+            'filter'       => $filter,
+        ]);
     }
 
     /** The owner of the list or a club administrator stops sharing it. */

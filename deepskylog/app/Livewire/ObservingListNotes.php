@@ -38,7 +38,8 @@ class ObservingListNotes extends Component
 
         $this->listId = $list->id;
         $this->listSlug = (string) $list->slug;
-        $this->isOwner = Auth::id() !== null && Auth::id() === $list->owner_user_id;
+        // Who may edit the notes: the owner, or a member of a club that edits the list together
+        $this->isOwner = Auth::check() && Gate::allows('addItem', $list);
     }
 
     #[On('observing-list-table-visible-objects-updated')]

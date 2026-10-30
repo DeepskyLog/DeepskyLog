@@ -267,6 +267,8 @@ Route::middleware('doNotCacheResponse')->group(function () {
         Route::delete('/clubs/{club}/members/{member}', [App\Http\Controllers\ClubController::class, 'removeMember'])->name('clubs.members.destroy');
         Route::post('/clubs/{club}/lists', [App\Http\Controllers\ClubController::class, 'shareList'])->name('clubs.lists.store');
         Route::delete('/clubs/{club}/lists', [App\Http\Controllers\ClubController::class, 'unshareList'])->name('clubs.lists.destroy');
+        Route::put('/clubs/{club}/lists/{list}/editing', [App\Http\Controllers\ClubController::class, 'listEditing'])->name('clubs.lists.editing');
+        Route::get('/clubs/{club}/lists/{list}', [App\Http\Controllers\ClubController::class, 'listProgress'])->name('clubs.lists.progress');
         // The challenges of a club, set by its administrators
         Route::get('/clubs/{club}/challenges/create', [App\Http\Controllers\ObservingChallengeController::class, 'clubCreate'])->name('clubs.challenges.create');
         Route::post('/clubs/{club}/challenges', [App\Http\Controllers\ObservingChallengeController::class, 'clubStore'])->name('clubs.challenges.store');

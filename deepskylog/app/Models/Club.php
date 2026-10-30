@@ -21,8 +21,10 @@ use Illuminate\Support\Str;
  * is the first) edit the club, let in the observers who asked to join
  * (join_policy approval; open clubs let everybody in at once), invite
  * observers and set the club's challenges. The members share their public
- * observing lists with the club and organise its starparties; the club page
- * ranks the members (App\Services\ClubRanking).
+ * observing lists with the club, optionally to edit them together
+ * (club_observing_list.members_edit, ObservingList::isEditableBy()), and
+ * organise its starparties; the club page ranks the members
+ * (App\Services\ClubRanking).
  */
 class Club extends Model
 {
@@ -91,7 +93,7 @@ class Club extends Model
     public function observingLists(): BelongsToMany
     {
         return $this->belongsToMany(ObservingList::class, 'club_observing_list')
-            ->withPivot('user_id')
+            ->withPivot('user_id', 'members_edit')
             ->withTimestamps();
     }
 
