@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Services\ContrastReserveCalculator;
 use App\Services\FieldViews\FieldViewBuilder;
 use App\Services\FieldViews\FieldViewRenderer;
+use App\Services\FieldViews\StarHopRoute;
 use App\Services\LocalHorizon;
 use Database\Factories\EyepieceFactory;
 use Database\Factories\InstrumentFactory;
@@ -439,4 +440,85 @@ it('gives the instrument options of the observation form the lens that is always
     // The lens of someone else's instrument is not given away.
     $selected = $this->actingAs($user)->getJson(route('instrument.select.api', ['selected' => $foreign->id]))->assertOk()->json();
     expect($selected[0])->not->toHaveKey('lens_id');
+});
+
+function hopStar(float $ra, float $dec, float $mag, array $names = []): void
+{
+    DB::table('stars')->insert($names + [
+        'source_key'   => sha1($ra.':'.$dec.':'.$mag.':'.json_encode($names)), 'source_table' => 'stars8',
+        'ra_hours'     => $ra / 15.0, 'ra_degrees' => $ra, 'decl_degrees' => $dec,
+        'vmag_int'     => (int) round($mag * 100), 'vmag' => $mag,
+    ]);
+}
+
+it('hops from a naked-eye star along stars that fit in the field to the object', function () {
+    // A bright star 6° east of the object, twice in the table (once without a name).
+    hopStar(106.0, 20.0, 2.0, ['bayer' => 'Alp', 'constellation_code' => 'Gem']);
+    hopStar(106.0, 20.0, 1.9);
+    // Stars to hop along, and fainter ones the finder shows too faintly.
+    hopStar(104.1, 20.1, 6.0, ['flamsteed' => '12', 'constellation_code' => 'Gem']);
+    hopStar(102.1, 19.9, 6.5);
+    hopStar(103.0, 20.0, 9.8);
+    hopStar(101.0, 20.0, 9.8);
+
+    $route = StarHopRoute::find(100.0, 20.0, 2.5, 10.0, 6.0);
+
+    expect($route)->toHaveCount(4)
+        ->and(array_column($route, 'kind'))->toBe(['start', 'star', 'star', 'target'])
+        ->and($route[0]['label'])->toBe('α Gem')
+        ->and($route[1]['label'])->toBe('12 Gem')
+        ->and($route[2]['label'])->toBeNull()
+        ->and($route[2]['magnitude'])->toBe(6.5)
+        ->and($route[3]['direction'])->toBe('to the west');
+    foreach (array_slice($route, 1) as $step) {
+        expect($step['distance'])->toBeLessThanOrEqual(2.5 * StarHopRoute::STEP_FRACTION);
+    }
+});
+
+it('finds no route when the stars lie farther apart than the field', function () {
+    hopStar(106.0, 20.0, 2.0, ['bayer' => 'Alp', 'constellation_code' => 'Gem']);
+    hopStar(103.0, 20.0, 6.0);
+
+    expect(StarHopRoute::find(100.0, 20.0, 1.0, 10.0, 6.0))->toBeNull()
+        // A star the sky hides is no start.
+        ->and(StarHopRoute::find(100.0, 20.0, 5.0, 10.0, 2.5))->toBeNull()
+        ->and(StarHopRoute::find(100.0, 20.0, 5.0, 10.0, 6.0))->toHaveCount(3);
+});
+
+it('draws the star hop with the finder views and lists its steps', function () {
+    fieldViewObject();
+    [$user] = fieldViewObserver();
+    // η Her and a star between it and M 13.
+    hopStar(250.32, 38.92, 3.5, ['bayer' => 'Eta', 'constellation_code' => 'Her']);
+    hopStar(250.37, 37.70, 6.0);
+
+    $object = DeepskyObject::where('name', 'M 13')->first();
+    $result = app(FieldViewBuilder::class)->build($user, $object, ['datetime' => '2026-07-01T23:30']);
+    $hop    = $result['star_hop'];
+
+    expect(array_column($hop['steps'], 'kind'))->toBe(['start', 'star', 'target'])
+        ->and($hop['steps'][0]['label'])->toBe('η Her')
+        ->and($hop['steps'][1]['clock'])->toBeBetween(1, 12)
+        ->and($hop['field'])->toBe('5.6°')
+        ->and($hop['svg'])->toContain('>1 η Her</text>')
+        ->and($hop['svg'])->toContain('>2</text>')
+        ->and($result['views']['finder']['svg'])->toContain('>2</text>')
+        ->and($result['views']['naked_eye']['svg'])->toContain('>η Her</text>');
+
+    Livewire::actingAs($user)->test(ObjectFieldViews::class, ['object' => $object])
+        ->assertSee('Star hop')
+        ->assertSee('Start at η Her (magnitude 3.5), seen with the naked eye.');
+
+    $response = $this->actingAs($user)->get(route('object.field-views.pdf', ['slug' => 'm-13', 'datetime' => '2026-07-01T23:30']));
+    $response->assertOk();
+});
+
+it('says so when there is no route', function () {
+    fieldViewObject();
+    [$user] = fieldViewObserver();
+
+    $result = app(FieldViewBuilder::class)->build($user, DeepskyObject::where('name', 'M 13')->first(), ['datetime' => '2026-07-01T23:30']);
+
+    expect($result['star_hop'])->toHaveKey('message')
+        ->and($result['star_hop'])->not->toHaveKey('svg');
 });

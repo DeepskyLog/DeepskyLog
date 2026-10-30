@@ -239,7 +239,7 @@ It's small, and the eyepiece page plus the offline cache already hold everything
 What's new: for past nights, fetch temperature, humidity, wind and cloud cover from Open-Meteo's historical archive API (the same provider as the forecast). Prefill the empty weather field of a session, and show "conditions that night" on old observations.
 Why: it closes a gap in thousands of old sessions without asking anyone to type anything.
 
-- Star-hop routes for any object
+- [X] Star-hop routes for any object
 The beginner path already gives a hop() from the nearest bright star.
 
 What's new: generalise it to a chain of stars that each fit in the observer's finder field, from a naked-eye star to the object. Draw the chain on the finder field view and show it at the eyepiece.

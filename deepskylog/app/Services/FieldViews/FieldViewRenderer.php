@@ -37,6 +37,9 @@ use Illuminate\Support\Facades\Schema;
  * - extinction: whether stars fade towards the horizon
  * - constellations, star_names, object_labels: what to draw besides the stars
  * - overlays: [['radius_deg' => float, 'label' => string]], circles around the centre
+ * - route: a star-hop route (StarHopRoute): ['points' => [['ra', 'dec' (degrees),
+ *   'label' => ?string]], 'field_deg' => radius of the finder's field, drawn
+ *   as a dashed circle around every point but the last; 0 for none]
  * - theme: 'dark' (screen) or 'light' (print)
  * - size: width and height in pixels
  */
@@ -129,6 +132,7 @@ class FieldViewRenderer
             'star_names'         => false,
             'object_labels'      => false,
             'overlays'           => [],
+            'route'              => null,
             'theme'              => 'dark',
             'size'               => 600,
         ];
@@ -159,6 +163,7 @@ class FieldViewRenderer
             $svg[] = $this->localHorizon($s);
         }
         $svg[] = $this->overlays($s);
+        $svg[] = $this->route($s);
         $svg[] = $this->targetMarker($s);
         // What lies outside the field is painted over rather than clipped:
         // not every SVG renderer (ImageMagick, dompdf) supports clip paths.
@@ -848,6 +853,63 @@ class FieldViewRenderer
             $out .= sprintf('<circle cx="%s" cy="%s" r="%s" fill="none" stroke="%s" stroke-width="%s" stroke-dasharray="%s"/>', $this->f($this->centerX), $this->f($this->centerY), $this->f($r), $this->colors['overlay'], $this->f(1.4 * $s), $this->f(6 * $s));
             if (! empty($overlay['label'])) {
                 $out .= sprintf('<text x="%s" y="%s" font-size="%s" fill="%s" text-anchor="middle">%s</text>', $this->f($this->centerX), $this->f($this->centerY - $r - 5 * $s), $this->f(18 * $s), $this->colors['overlay'], e($overlay['label']));
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * The star-hop route: a line from star to star, kept clear of the stars,
+     * the finder's field around each star and the labels of the stars.
+     */
+    private function route(float $s): string
+    {
+        $route  = $this->view['route'];
+        $points = [];
+        foreach (is_array($route) ? ($route['points'] ?? []) : [] as $point) {
+            $xy = $this->project((float) $point['ra'], (float) $point['dec']);
+            if ($xy === null) {
+                return '';
+            }
+            $points[] = $xy + [2 => $point['label'] ?? null];
+        }
+        if (count($points) < 2) {
+            return '';
+        }
+
+        $color = $this->colors['overlay'];
+        $gap   = 9 * $s;
+        $out   = '';
+        $field = (float) ($route['field_deg'] ?? 0);
+        if ($field > 0) {
+            $r = $this->overlayRadius($field);
+            foreach (array_slice($points, 0, -1) as [$x, $y]) {
+                $out .= sprintf('<circle cx="%s" cy="%s" r="%s" fill="none" stroke="%s" stroke-opacity="0.45" stroke-width="%s" stroke-dasharray="%s"/>', $this->f($x), $this->f($y), $this->f($r), $color, $this->f($s), $this->f(5 * $s));
+            }
+        }
+
+        $d = '';
+        for ($i = 1; $i < count($points); $i++) {
+            [$x0, $y0] = $points[$i - 1];
+            [$x1, $y1] = $points[$i];
+            $length    = hypot($x1 - $x0, $y1 - $y0);
+            // Clear of the reticle of the target at the end.
+            $end = $i === count($points) - 1 ? 2 * $gap : $gap;
+            if ($length <= $gap + $end) {
+                continue;
+            }
+            $ux = ($x1 - $x0) / $length;
+            $uy = ($y1 - $y0) / $length;
+            $d .= 'M'.$this->f($x0 + $ux * $gap).' '.$this->f($y0 + $uy * $gap).'L'.$this->f($x1 - $ux * $end).' '.$this->f($y1 - $uy * $end);
+        }
+        if ($d !== '') {
+            $out .= sprintf('<path d="%s" fill="none" stroke="%s" stroke-width="%s" stroke-linecap="round"/>', $d, $color, $this->f(2 * $s));
+        }
+
+        foreach ($points as [$x, $y, $label]) {
+            if ($label !== null && $label !== '' && $this->inField([$x, $y], -20 * $s)) {
+                $out .= sprintf('<text x="%s" y="%s" font-size="%s" font-weight="bold" fill="%s">%s</text>', $this->f($x + 10 * $s), $this->f($y - 8 * $s), $this->f(18 * $s), $color, e($label));
             }
         }
 

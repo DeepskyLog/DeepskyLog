@@ -9,6 +9,7 @@
     $time = fn ($moment) => $moment ? $moment->format('H:i') : null;
     $showViews = $views ? array_filter([
         'finder' => isset($views['views']['finder']['svg']) ? $views['views']['finder'] : null,
+        'star_hop' => isset($views['star_hop']['svg']) ? $views['star_hop'] : null,
         'telescope' => isset($views['views']['telescope']['svg']) ? $views['views']['telescope'] : null,
         'naked_eye' => isset($views['views']['naked_eye']['svg']) ? $views['views']['naked_eye'] : null,
     ]) : [];
@@ -52,6 +53,8 @@
         .meta { margin: 0; color: #d1d5db; }
         .note { margin: .5rem 0 0; color: #e5e7eb; }
         .muted { color: #9ca3af; font-size: .9rem; }
+        .hop-steps { margin: .25rem 0 .75rem !important; font-size: 1rem; }
+        .hop-steps li { margin: .2rem 0; }
         .log { display: block; width: 100%; margin: 1rem 0 .5rem; padding: 1.1rem; border: 0; border-radius: .75rem; background: #b91c1c; color: #fff; font-size: 1.6rem; font-weight: 800; text-align: center; text-decoration: none; cursor: pointer; }
         .row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
         .row.spread { justify-content: space-between; }
@@ -294,10 +297,15 @@
                         <p class="muted">
                             {{ implode(' · ', array_filter([
                                 $view['subtitle'] ?? null,
-                                __('Field of view: :fov', ['fov' => $view['fov']]),
-                                __('Limiting magnitude: :mag', ['mag' => number_format($view['limit'], 1)]),
+                                __('Field of view: :fov', ['fov' => $view['field'] ?? $view['fov']]),
+                                isset($view['steps'])
+                                    ? __('Stars to magnitude :mag', ['mag' => number_format($view['limit'], 1)])
+                                    : __('Limiting magnitude: :mag', ['mag' => number_format($view['limit'], 1)]),
                             ])) }}
                         </p>
+                        @isset($view['steps'])
+                            @include('partials.star-hop-steps', ['starHop' => $view, 'object' => $current['name'], 'class' => 'hop-steps'])
+                        @endisset
                         @if (! empty($view['contrast']['category']) && $view['contrast']['value'] !== null)
                             <p class="muted">{{ __('contrast.reserve.summary', ['value' => number_format($view['contrast']['value'], 2), 'category' => __('contrast.reserve.category.'.$view['contrast']['category'])]) }}</p>
                         @endif
@@ -309,6 +317,9 @@
                 @endforeach
                 @if (isset($views['views']['finder']['message']))
                     <p class="muted">{{ $views['views']['finder']['message'] }}</p>
+                @endif
+                @if (isset($views['star_hop']['message']))
+                    <p class="muted">{{ $views['star_hop']['message'] }}</p>
                 @endif
                 @foreach ($views['warnings'] ?? [] as $warning)
                     <p class="muted">{{ $warning }}</p>

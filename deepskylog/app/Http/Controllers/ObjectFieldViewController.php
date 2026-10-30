@@ -46,7 +46,14 @@ class ObjectFieldViewController extends Controller
             $panels[$key] = $view;
         }
 
-        $html = view('pdf.field_views', ['result' => $result, 'panels' => $panels])->render();
+        // The star-hop route on a page of its own.
+        $starHop = $result['star_hop'];
+        if (isset($starHop['svg'])) {
+            $starHop['image'] = SvgRasterizer::toDataUri($starHop['svg'], $sizePx, $sizePx)
+                ?? 'data:image/svg+xml;base64,'.base64_encode($starHop['svg']);
+        }
+
+        $html = view('pdf.field_views', ['result' => $result, 'panels' => $panels, 'starHop' => $starHop])->render();
 
         $options = new \Dompdf\Options();
         $options->set('isHtml5ParserEnabled', true);
