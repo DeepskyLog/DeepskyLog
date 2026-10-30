@@ -19,6 +19,7 @@ use App\Services\Moon\LunarTerminator;
 use App\Services\Planets\PlanetMoonEvents;
 use App\Services\Observations\ObservationCardData;
 use App\Services\Observations\SuspectObservations;
+use App\Services\OnThisNight;
 use App\Services\SessionObservationReminders;
 use App\Services\TonightsBest;
 use App\Services\Weather\NightForecast;
@@ -1080,8 +1081,17 @@ class SessionController extends Controller
             $beginnerPath = null;
         }
 
+        // What the observer observed in the night of this date in earlier years
+        try {
+            $onThisNight = Auth::check() ? OnThisNight::forHomePage(Auth::user()) : null;
+        } catch (\Throwable $e) {
+            report($e);
+            $onThisNight = null;
+        }
+
         return $this->noCacheResponse(response()->view('welcome', compact(
             'sessions',
+            'onThisNight',
             'sessionsWithoutObservations',
             'beginnerPath',
             'suspectObservationCount',

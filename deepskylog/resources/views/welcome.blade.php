@@ -113,6 +113,13 @@
                     />
                 @endif
 
+                @if (!empty($onThisNight))
+                    <x-on-this-night
+                        :years="$onThisNight['years']"
+                        class="order-3 lg:order-none"
+                    />
+                @endif
+
                 @if (!empty($nightForecast))
                     <x-night-forecast
                         :nights="$nightForecast"

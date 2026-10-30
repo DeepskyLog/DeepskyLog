@@ -257,7 +257,7 @@ Who it helps: owners of Dobsonians without GoTo, who are a large part of the use
 
 - [X] Drawing templates for planets at the eyepiece: for Venus, Mars, Jupiter and Saturn the sketch pad of the At the eyepiece page draws the disk as the telescope shows it at that moment (turned and mirrored like N and W): the flattening, the terminator of the phase, the polar caps of Mars, Saturn's rings with the part behind the globe hidden, and marks of the central meridian beyond the poles. "Fill the disk" paints the lit disk (rings and caps in their own shades, the night side black) and the Darken brush draws belts and markings on it; "Outline of the planet" turns the outline off. The sketch's details give the diameter, phase, Ls of Mars and ring tilt of Saturn, and the top lines the central meridian (CM of Mars, CM I and CM II of Jupiter) at the moment the sketch was begun, like the ALPO blank forms.
 
-- [ ] "On this night". A home page box showing what you observed on this date in earlier years, with the drawing if there is one. ObserverBlog::night() already groups observations per night, so this is cheap, and it brings observers back to their old observations.
+- [x] "On this night". A home page box showing what you observed on this date in earlier years, with the drawing if there is one. ObserverBlog::night() already groups observations per night, so this is cheap, and it brings observers back to their old observations.
 
 - [ ] Your own drawings over time. The drawings of one object by one observer side by side, oldest to newest, with the aperture and sky of each. DrawingComparison already does this per aperture class; this would be per observer.
 
