@@ -70,6 +70,14 @@ class AtTheEyepieceController extends Controller
             $compass = SketchOverlay::compass($rotation ?? 0.0, $mirrors && (bool) $instrument->flip_image, $mirrors && (bool) $instrument->flop_image);
         }
 
+        // A planet's disk as the drawing template of the sketch pad
+        $planetSketch = AtTheEyepiece::planetSketch($user, $list, $current, $page['location'], $page['now']);
+        $sketchLabels = AtTheEyepiece::sketchLabels($user, $list, $page['now']);
+        if ($planetSketch !== null) {
+            $compass = $planetSketch['compass'];
+            $sketchLabels = [...$sketchLabels, ...$planetSketch['template']['details']];
+        }
+
         return view('observing-lists.eyepiece', $page + [
             'views' => $views,
             'compass' => $compass,
@@ -78,7 +86,9 @@ class AtTheEyepieceController extends Controller
             'goto' => AtTheEyepiece::gotoLink($current, $page['location'], $current['at'] ?? $page['now']),
             'findingNotes' => AtTheEyepiece::findingNotes($current['object'], $user),
             'earlier' => AtTheEyepiece::earlierObservations($current, $user, AtTheEyepiece::nightOf($page['now'], $page['timezone']), $page['timezone']),
-            'sketchLabels' => AtTheEyepiece::sketchLabels($user, $list, $page['now']),
+            'sketchLabels' => $sketchLabels,
+            'sketchOrientation' => $views['orientation'] ?? $planetSketch['orientation'] ?? null,
+            'planetTemplate' => $planetSketch['template'] ?? null,
         ]);
     }
 

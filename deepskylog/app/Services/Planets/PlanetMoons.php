@@ -43,10 +43,10 @@ class PlanetMoons
 
     /**
      * The four Galilean moons seen from the Earth ('earth') and the Sun
-     * ('sun'), Jupiter's distance (AU) and the System II longitude of its
-     * central meridian (degrees).
+     * ('sun'), Jupiter's distance (AU) and the System I and System II
+     * longitudes of its central meridian (degrees).
      *
-     * @return array{earth: array<string, array{x: float, y: float, z: float}>, sun: array<string, array{x: float, y: float, z: float}>, distance: float, cm2: float}
+     * @return array{earth: array<string, array{x: float, y: float, z: float}>, sun: array<string, array{x: float, y: float, z: float}>, distance: float, cm1: float, cm2: float}
      */
     public static function jupiter(int $timestamp): array
     {
@@ -197,7 +197,8 @@ class PlanetMoons
             'earth'    => self::project($vectors, $g['earth'], $radii, 2095.0),
             'sun'      => self::project($vectors, $g['sun'], [], 2095.0),
             'distance' => $g['earth']['distance'],
-            'cm2'      => self::centralMeridian($g),
+            'cm1'      => self::centralMeridian($g, 17.710, 877.90003539),
+            'cm2'      => self::centralMeridian($g, 16.838, 870.27003539),
         ];
     }
 
@@ -367,13 +368,14 @@ class PlanetMoons
     }
 
     /**
-     * The System II longitude of Jupiter's central meridian (Meeus chapter
-     * 42, without the correction for the phase): the Great Red Spot crosses
-     * it when its longitude is this.
+     * The longitude of Jupiter's central meridian (Meeus chapter 42, without
+     * the correction for the phase) in the system of W0 + rate × d: System I
+     * (the equatorial zone) or System II (the rest; the Great Red Spot
+     * crosses it when its longitude is this).
      *
      * @param  array<string, mixed>  $g  geometry()
      */
-    private static function centralMeridian(array $g): float
+    private static function centralMeridian(array $g, float $w0, float $rate): float
     {
         $d  = $g['jde'] - 2433282.5;
         $t1 = $d / 36525.0;
@@ -388,7 +390,7 @@ class PlanetMoons
         $delta                            = atan($v / sqrt($x * $x + $u * $u));
         $zeta                             = atan2(sin($d0) * cos($delta) * cos($a0 - $alpha) - sin($delta) * cos($d0), cos($delta) * sin($a0 - $alpha));
 
-        return SkyPositions::wrap(16.838 + 870.27003539 * $d - rad2deg($zeta) - 5.02626 * $g['earth']['distance']);
+        return SkyPositions::wrap($w0 + $rate * $d - rad2deg($zeta) - $rate * $g['earth']['distance'] / 173.1446);
     }
 
     private static function sin(float $degrees): float

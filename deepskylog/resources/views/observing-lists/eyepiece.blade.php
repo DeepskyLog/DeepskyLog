@@ -463,6 +463,10 @@
             <button type="button" class="button" data-tool="hard" aria-pressed="false">{{ __('Hard') }}</button>
             <button type="button" class="button" data-tool="star" aria-pressed="false">{{ __('Star') }}</button>
             <button type="button" class="button" data-tool="eraser" aria-pressed="false">{{ __('Eraser') }}</button>
+            @if ($planetTemplate)
+                {{-- Belts and markings on a filled disk --}}
+                <button type="button" class="button" data-tool="dark" aria-pressed="false">{{ __('Darken') }}</button>
+            @endif
             <span class="gap"></span>
             <button type="button" class="button" data-size="0" aria-pressed="false" title="{{ __('Small') }}">S</button>
             <button type="button" class="button" data-size="1" aria-pressed="true" title="{{ __('Medium') }}">M</button>
@@ -474,6 +478,10 @@
         <div class="sketch-tools">
             <label class="button">{{ __('Field brightness') }} <input type="range" id="sketch-brightness" min="0" max="80" step="2" /></label>
             <label class="button"><input type="checkbox" id="sketch-labels-on" /> {{ __('Details on the sketch') }}</label>
+            @if ($planetTemplate)
+                <label class="button"><input type="checkbox" id="sketch-outline-on" /> {{ __('Outline of the planet') }}</label>
+                <button type="button" class="button" id="sketch-fill">{{ __('Fill the disk') }}</button>
+            @endif
             <button type="button" class="button" id="sketch-labels-edit" aria-expanded="false" aria-controls="sketch-labels">{{ __('Edit the details') }}</button>
         </div>
         {{-- The date, object and constellation come first; these lines (equipment,
@@ -508,7 +516,9 @@
             'sketchField' => \App\Services\AtTheEyepiece::SKETCH_FIELD,
             'constellation' => $details['constellation'],
             'sketchLabels' => $sketchLabels,
-            'up' => isset($views['orientation']) ? ($views['orientation'] === 'zenith' ? __('Zenith up, as in the telescope view') : __('North up, as in the telescope view')) : '',
+            'up' => $sketchOrientation ? ($sketchOrientation === 'zenith' ? __('Zenith up, as in the telescope view') : __('North up, as in the telescope view')) : '',
+            // The disk of a planet as drawing template (PlanetSketchTemplate)
+            'planet' => $planetTemplate,
             'following' => $following,
             // Only a list with times follows the clock
             'sequence' => $timed ? $entries->map(fn ($entry) => ['id' => $entry['item']->id, 'at' => $entry['at']->timestamp])->values() : [],
@@ -794,14 +804,18 @@
                 // The field brightness and details on or off, for every sketch on this device
                 var STYLE = 'dsl-eyepiece-sketch-style';
                 var MARGIN = 300;
-                var style = { brightness: 40, labels: true };
+                var style = { brightness: 40, labels: true, outline: true };
                 try {
                     var kept = JSON.parse(storage('localStorage', STYLE) || 'null');
                     if (kept && typeof kept.brightness === 'number') style.brightness = kept.brightness;
                     if (kept && typeof kept.labels === 'boolean') style.labels = kept.labels;
+                    if (kept && typeof kept.outline === 'boolean') style.outline = kept.outline;
                 } catch (e) {}
                 // Per tool the small, medium and large size (pixels)
-                var SIZES = { soft: [14, 28, 56], hard: [1.5, 3, 6], star: [2, 3.5, 6], eraser: [10, 24, 50] };
+                var SIZES = { soft: [14, 28, 56], dark: [14, 28, 56], hard: [1.5, 3, 6], star: [2, 3.5, 6], eraser: [10, 24, 50] };
+                // A planet's template fills this part of the field circle
+                var planet = data.planet;
+                var TEMPLATE = planet ? RADIUS * 0.82 / planet.extent : 0;
                 var dialog = document.getElementById('sketch-pad');
                 var canvas = document.getElementById('sketch-canvas');
                 var context = canvas.getContext('2d');
@@ -820,7 +834,7 @@
                     if (draft && Array.isArray(draft.strokes)) { strokes = draft.strokes; started = draft.started || null; }
                     if (draft && typeof draft.labels === 'string') labels = draft.labels;
                 } catch (e) {}
-                document.getElementById('sketch-up').textContent = data.up || '';
+                showUp();
                 var labelsText = document.getElementById('sketch-labels-text');
                 var labelsPanel = document.getElementById('sketch-labels');
                 var labelsPreview = document.getElementById('sketch-labels-preview');
@@ -837,10 +851,11 @@
                 function keepStyle() {
                     storage('localStorage', STYLE, JSON.stringify(style));
                 }
-                function dab(x, y, radius, alpha) {
+                function dab(x, y, radius, alpha, rgb) {
+                    rgb = rgb || '255,255,255';
                     var gradient = ink.createRadialGradient(x, y, 0, x, y, radius);
-                    gradient.addColorStop(0, 'rgba(255,255,255,' + alpha + ')');
-                    gradient.addColorStop(1, 'rgba(255,255,255,0)');
+                    gradient.addColorStop(0, 'rgba(' + rgb + ',' + alpha + ')');
+                    gradient.addColorStop(1, 'rgba(' + rgb + ',0)');
                     ink.fillStyle = gradient;
                     ink.beginPath();
                     ink.arc(x, y, radius, 0, 2 * Math.PI);
@@ -857,8 +872,38 @@
                 }
                 // Paint the points of a stroke from index `from` on; a soft
                 // stroke lays dabs a quarter of its radius apart
+                // A point of the planet [west, north] (equatorial radii) on
+                // the canvas, turned and mirrored as N and W of the view
+                function place(point) {
+                    var north = data.compass ? data.compass.north : [0, -1];
+                    var west = data.compass ? data.compass.west : [1, 0];
+                    return [
+                        SIZE / 2 + TEMPLATE * (point[0] * west[0] + point[1] * north[0]),
+                        SIZE / 2 + TEMPLATE * (point[0] * west[1] + point[1] * north[1]),
+                    ];
+                }
+                function trace(pen, points, closed) {
+                    pen.beginPath();
+                    points.forEach(function (point, i) {
+                        var p = place(point);
+                        if (i === 0) pen.moveTo(p[0], p[1]); else pen.lineTo(p[0], p[1]);
+                    });
+                    if (closed) pen.closePath();
+                }
                 function draw(stroke, from) {
                     var points = stroke.points;
+                    // "Fill the disk": the lit disk (rings, caps) in its
+                    // shades, the night side black, painted back to front
+                    if (stroke.tool === 'disk') {
+                        if (! planet) return;
+                        planet.fills.forEach(function (fill) {
+                            var level = Math.round(fill.level * 255);
+                            ink.fillStyle = 'rgb(' + level + ',' + level + ',' + level + ')';
+                            trace(ink, fill.points, true);
+                            ink.fill();
+                        });
+                        return;
+                    }
                     var radius = SIZES[stroke.tool][stroke.size];
                     if (stroke.tool === 'star') {
                         dab(points[0][0], points[0][1], radius * 2.2, 0.9);
@@ -871,16 +916,17 @@
                     for (var i = from; i < points.length; i++) {
                         var a = points[Math.max(i - 1, 0)];
                         var b = points[i];
-                        if (stroke.tool !== 'soft') {
+                        if (stroke.tool !== 'soft' && stroke.tool !== 'dark') {
                             line(a, b, stroke.tool === 'eraser' ? '#000' : '#fff', stroke.tool === 'eraser' ? 2 * radius : radius);
                             continue;
                         }
                         var spacing = radius / 4;
-                        if (i === 0) { dab(b[0], b[1], radius, 0.06); stroke.carry = 0; continue; }
+                        var rgb = stroke.tool === 'dark' ? '0,0,0' : null;
+                        if (i === 0) { dab(b[0], b[1], radius, 0.06, rgb); stroke.carry = 0; continue; }
                         var length = Math.hypot(b[0] - a[0], b[1] - a[1]);
                         var t = spacing - (stroke.carry || 0);
                         for (; t <= length; t += spacing) {
-                            dab(a[0] + (b[0] - a[0]) * t / length, a[1] + (b[1] - a[1]) * t / length, radius, 0.06);
+                            dab(a[0] + (b[0] - a[0]) * t / length, a[1] + (b[1] - a[1]) * t / length, radius, 0.06, rgb);
                         }
                         stroke.carry = length - (t - spacing);
                     }
@@ -904,8 +950,19 @@
                         field.addColorStop(1, grey(style.brightness * 0.45));
                         context.fillStyle = field;
                         context.fillRect(0, 0, SIZE, SIZE);
-                        context.globalCompositeOperation = 'screen';
                     }
+                    // The outline of the planet under the strokes, which a
+                    // filled disk lightens but leaves visible
+                    if (planet && style.outline) {
+                        context.strokeStyle = '#6b6b6b';
+                        context.lineWidth = 2;
+                        context.lineJoin = 'round';
+                        planet.lines.forEach(function (line) {
+                            trace(context, line.points, line.closed);
+                            context.stroke();
+                        });
+                    }
+                    context.globalCompositeOperation = 'screen';
                     context.drawImage(paint, 0, 0);
                     context.restore();
                     context.strokeStyle = '#555';
@@ -943,6 +1000,20 @@
                     }
                     return parts.year + '/' + parts.month + '/' + parts.day + ' ' + parts.hour + ':' + parts.minute;
                 }
+                // The central meridians of the planet when the sketch was
+                // begun: "CM I 123.4° · CM II 234.5°"
+                function meridians() {
+                    if (! planet || ! planet.meridians.length) return '';
+                    var at = started ? new Date(started).getTime() : Date.now();
+                    var hours = (at - planet.at * 1000) / 3600000;
+                    return planet.meridians.map(function (meridian) {
+                        var value = ((meridian.value + meridian.rate * hours) % 360 + 360) % 360;
+                        return meridian.label + ' ' + value.toFixed(1) + '°';
+                    }).join(' · ');
+                }
+                function showUp() {
+                    document.getElementById('sketch-up').textContent = [data.up || '', meridians()].filter(Boolean).join(' · ');
+                }
                 // The sketch with the details beside the field: each line as
                 // large as fits between the edge and the field circle with N and W
                 function labelled() {
@@ -974,6 +1045,7 @@
                         [moment(started ? new Date(started) : new Date()), '#d4d4d4'],
                         [data.object, '#d4d4d4'],
                         [data.constellation || '', '#c4f1f6'],
+                        [meridians(), '#d4d4d4'],
                     ].filter(function (line) { return line[0]; });
                     head.forEach(function (line, i) { write(line[0], PAD + i * FONT * LINE, line[1]); });
                     var foot = labelsText.value.split('\n').map(function (line) { return line.trim(); }).filter(Boolean);
@@ -1049,6 +1121,25 @@
                     show();
                 });
                 brightness.addEventListener('change', preview);
+                var outlineOn = document.getElementById('sketch-outline-on');
+                if (outlineOn) {
+                    outlineOn.checked = style.outline;
+                    outlineOn.addEventListener('change', function () {
+                        style.outline = outlineOn.checked;
+                        keepStyle();
+                        show();
+                        preview();
+                    });
+                    document.getElementById('sketch-fill').addEventListener('click', function () {
+                        if (! started) started = new Date().toISOString();
+                        var stroke = { tool: 'disk', size: size, points: [[SIZE / 2, SIZE / 2]] };
+                        strokes.push(stroke);
+                        draw(stroke, 0);
+                        keep();
+                        show();
+                        preview();
+                    });
+                }
                 labelsOn.addEventListener('change', function () {
                     style.labels = labelsOn.checked;
                     keepStyle();
@@ -1068,6 +1159,7 @@
 
                 var api = {
                     open: function () {
+                        showUp();
                         if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open', '');
                     },
                     close: function () { if (dialog.open) dialog.close(); },

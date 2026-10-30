@@ -67,9 +67,10 @@ class PlanetDiskRenderer
                     $labels .= sprintf('<text x="%.1f" y="%.1f" font-size="10" font-family="sans-serif" fill="#f9fafb" fill-opacity="0.85" text-anchor="%s">%s</text>', $sx, $sy + 3, $anchor, e($feature['name']));
                 }
             }
-            foreach (['north' => 90.0, 'south' => -90.0] as $pole => $latitude) {
-                $outline = $this->outline($latitude, 0.0, abs($latitude - MarsFeatures::capEdge($pole, $this->disk['ls'])));
-                if ($outline !== null) {
+            foreach (['north', 'south'] as $pole) {
+                $cap = $this->capOutline($pole);
+                if ($cap !== null) {
+                    $outline = implode(' ', array_map(fn (array $point) => vsprintf('%.1f,%.1f', $this->screen(...$point)), $cap));
                     $svg .= sprintf('<polygon points="%s" fill="#f8fafc"><title>%s</title></polygon>', $outline, e($pole === 'north' ? __('North polar cap') : __('South polar cap')));
                 }
             }
@@ -127,6 +128,34 @@ class PlanetDiskRenderer
      */
     private function outline(float $latitude, float $longitude, float $radius): ?string
     {
+        $points = $this->outlineInSky($latitude, $longitude, $radius);
+
+        return $points === null ? null : implode(' ', array_map(fn (array $point) => vsprintf('%.1f,%.1f', $this->screen(...$point)), $points));
+    }
+
+    /**
+     * The edge of a polar cap of Mars (MarsFeatures::capEdge()) in the sky:
+     * points [west, north] in radii of the disk, as outlineInSky(). Null when
+     * the cap is on the far side.
+     *
+     * @return list<array{0: float, 1: float}>|null
+     */
+    public function capOutline(string $pole): ?array
+    {
+        $latitude = $pole === 'north' ? 90.0 : -90.0;
+
+        return $this->outlineInSky($latitude, 0.0, abs($latitude - MarsFeatures::capEdge($pole, $this->disk['ls'])));
+    }
+
+    /**
+     * The outline of a circle of $radius degrees on Mars around a point, as
+     * points [west, north] in the sky in radii of the disk; the part behind
+     * the limb is laid on the limb. Null when it is all on the far side.
+     *
+     * @return list<array{0: float, 1: float}>|null
+     */
+    private function outlineInSky(float $latitude, float $longitude, float $radius): ?array
+    {
         $c = $this->view($latitude, $longitude);
         if ($c[2] < -sin(deg2rad($radius))) {
             return null;
@@ -154,10 +183,10 @@ class PlanetDiskRenderer
                 $length  = sqrt($x * $x + $y * $y) ?: 1.0;
                 [$x, $y] = [$x / $length, $y / $length];
             }
-            $points[] = vsprintf('%.1f,%.1f', $this->screen(...$this->rotate($x, $y)));
+            $points[] = $this->rotate($x, $y);
         }
 
-        return implode(' ', $points);
+        return $points;
     }
 
     /**

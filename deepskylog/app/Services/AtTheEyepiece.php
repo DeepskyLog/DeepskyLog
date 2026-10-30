@@ -20,6 +20,8 @@ use App\Services\Import\CsvObservationImporter;
 use App\Services\Import\ImportResult;
 use App\Services\Observations\ApertureRecords;
 use App\Services\Observations\ObservationCardData;
+use App\Services\Observations\SketchOverlay;
+use App\Services\Planets\PlanetSketchTemplate;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -50,7 +52,8 @@ use Illuminate\Support\Str;
  * field, the field circle SKETCH_FIELD of the square with N and W outside
  * it; drawingImage()
  * reads such a sketch and saveDrawing() stores it as it is, white stars on
- * black, as the observation's drawing.
+ * black, as the observation's drawing. Of Venus, Mars, Jupiter and Saturn
+ * the pad offers the planet's disk as a drawing template (planetSketch()).
  */
 class AtTheEyepiece
 {
@@ -347,6 +350,41 @@ class AtTheEyepiece
                 'url' => $observation->detailUrl(),
             ])->all(),
             'total' => $query->count(),
+        ];
+    }
+
+    /**
+     * The drawing template of the sketch pad for a planet of
+     * PlanetSketchTemplate::PLANETS (null for other objects) at the moment,
+     * with N and W of the telescope view: the zenith up unless the
+     * instrument the observation is saved with (equipment()) is on an
+     * equatorial mount, mirrored per its flip and flop (never binoculars).
+     *
+     * @param  array<string, mixed>  $entry  an entry of page()
+     * @return array{template: array<string, mixed>, compass: array{north: array{0: float, 1: float}, west: array{0: float, 1: float}}, orientation: string}|null
+     */
+    public static function planetSketch(User $user, ObservingList $list, array $entry, ?Location $location, Carbon $moment): ?array
+    {
+        $planet = $entry['object'] === null ? PlanetSketchTemplate::planetOf((string) $entry['name']) : null;
+        if ($planet === null) {
+            return null;
+        }
+
+        $template = PlanetSketchTemplate::for($planet, $moment->getTimestamp());
+        $equipment = self::equipment($user, $list, $moment);
+        $instrument = $equipment['instrument_id'] ? Instrument::find($equipment['instrument_id']) : null;
+        $location = ($equipment['location_id'] ? Location::find($equipment['location_id']) : null) ?? $location;
+
+        $rotation = null;
+        if ($instrument?->mount_type?->name !== 'Equatorial') {
+            $rotation = SketchOverlay::zenithRotationAt($location, $moment, $template['ra'], $template['dec']);
+        }
+        $mirrors = $instrument !== null && ! $instrument->isBinocular();
+
+        return [
+            'template' => $template,
+            'compass' => SketchOverlay::compass($rotation ?? 0.0, $mirrors && (bool) $instrument->flip_image, $mirrors && (bool) $instrument->flop_image),
+            'orientation' => $rotation === null ? 'north' : 'zenith',
         ];
     }
 

@@ -15,19 +15,27 @@ use App\Services\News\SkyPositions;
  * the ALPO and BAA give the features) and the season, the areocentric
  * longitude Ls of the Sun.
  *
+ * Jupiter and Saturn (for the drawing templates of the sketch pad) get the
+ * position angle P of their north pole and the tilt DE of the disk towards
+ * us from the IAU direction of their pole (POLES).
+ *
  * Nutation and aberration are left out (a few hundredths of a degree). The
  * positions come from SkyPositions::planetVectors() (VSOP87 of the library,
  * corrected for the light time).
  */
 class PlanetDisk
 {
+    /** The planets of the page Mars and Venus tonight. */
     public const PLANETS = ['mars', 'venus'];
 
     /** The equatorial semidiameter at 1 AU (arcseconds, Meeus chapter 55; Venus with its clouds). */
-    public const SEMIDIAMETER = ['mars' => 4.68, 'venus' => 8.41];
+    public const SEMIDIAMETER = ['mars' => 4.68, 'venus' => 8.41] + PlanetMoons::SEMIDIAMETER;
 
     /** The polar radius of the planet in its equatorial radius. */
-    public const FLATTENING = ['mars' => 0.9941, 'venus' => 1.0];
+    public const FLATTENING = ['mars' => 0.9941, 'venus' => 1.0] + PlanetMoons::FLATTENING;
+
+    /** The north pole of Jupiter and Saturn (J2000 right ascension and declination, degrees; IAU 2015). */
+    public const POLES = ['jupiter' => [268.056595, 64.495303], 'saturn' => [40.589, 83.537]];
 
     /**
      * @return array{planet: string, at: int, diameter: float, illuminated: float, phase_angle: float, bright_limb: float, magnitude: ?float, elongation: float, distance: float, sun_distance: float, ra: float, dec: float, de?: float, ds?: float, p?: float, cm?: float, ls?: float, defect?: float}
@@ -67,7 +75,31 @@ class PlanetDisk
             'dec'          => $equatorial['dec'],
         ];
 
+        if (isset(self::POLES[$planet])) {
+            return $result + self::pole($planet, $timestamp, $equatorial);
+        }
+
         return $planet === 'mars' ? $result + self::mars($timestamp, $v, $x, $y, $z, $lambda, $beta, $equatorial, $diameter, $illuminated) : $result;
+    }
+
+    /**
+     * The position angle P of the north pole of Jupiter or Saturn and the
+     * planetocentric declination DE of the Earth (Saturn's ring tilt B), from
+     * the pole of POLES precessed to the date.
+     *
+     * @param  array{ra: float, dec: float}  $equatorial
+     * @return array{de: float, p: float}
+     */
+    private static function pole(string $planet, int $timestamp, array $equatorial): array
+    {
+        $ecliptical = SkyPositions::eclipticalOfDate(...[...self::POLES[$planet], $timestamp]);
+        $pole       = SkyPositions::toEquatorial($ecliptical['lon'], $ecliptical['lat'], $timestamp);
+        $sinDe      = -self::sin($pole['dec']) * self::sin($equatorial['dec']) - self::cos($pole['dec']) * self::cos($equatorial['dec']) * self::cos($pole['ra'] - $equatorial['ra']);
+
+        return [
+            'de' => rad2deg(asin(max(-1.0, min(1.0, $sinDe)))),
+            'p'  => self::positionAngle($pole['ra'], $pole['dec'], $equatorial['ra'], $equatorial['dec']),
+        ];
     }
 
     /**
