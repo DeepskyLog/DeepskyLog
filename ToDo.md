@@ -244,3 +244,11 @@ The beginner path already gives a hop() from the nearest bright star.
 
 What's new: generalise it to a chain of stars that each fit in the observer's finder field, from a naked-eye star to the object. Draw the chain on the finder field view and show it at the eyepiece.
 Who it helps: owners of Dobsonians without GoTo, who are a large part of the users.
+
+- [X] Mars and Venus: /mars-venus (View menu "Mars and Venus tonight", linked from the object pages of Mars and Venus) draws both planets as the telescope shows them in a night, at the moment they are highest or a chosen time, in the orientations of the Jupiter and Saturn page. Mars with its phase, the pole at its real angle, the polar caps of the season and about twenty classical albedo features (Syrtis Major, Hellas, Mare Acidalium, Solis Lacus, …), with the diameter, magnitude, tilt, central meridian and season (Ls, with the dust storm season); the central meridian every hour of the night with the features on it; "When can I see…?" gives the coming moments a chosen feature crosses the central meridian while Mars is up; the next opposition and closest approach (19 and 20 February 2027, 13.8″). Venus with its phase, diameter, magnitude and elongation, and the next greatest elongations, dichotomy and conjunctions. A table of the coming 16 weeks gives both disks.
+
+- Plain-language NGC/IC descriptions and the history of each object. This would decode Dreyer's abbreviations ("vF, pL, iR, bM") into readable text in the reader's language. With Steinicke's revised NGC it could add who discovered the object, when, and with what aperture. That fits next to the aperture records ("Herschel saw it with 18.7 inches; the smallest telescope in DeepskyLog: 4 inches"). It's cheap: one data import plus a decoder.
+
+- Cool-down and dew advice for the night. "Put the 12″ outside at 20:15" would come from the mirror size and the temperature drop in the forecast. Add a dew warning per hour (DEW_HUMIDITY already exists) and when the dew heater is needed. It's small, works with both NightForecast and the clear-night alert, and helps every Dobsonian owner.
+
+- Observing lists shared within a club. Today a list has one owner. Letting club members edit one list together and see who has seen which object would make clubs much more useful.

@@ -52,6 +52,18 @@
                 <a href="{{ route('moon.show') }}" class="text-gray-300 hover:underline">{{ __('The Moon and its terminator') }}</a>
             </li>
         @endif
+        @if (($session->source_type_raw ?? '') === 'planet')
+            {{-- The disks of Mars and Venus, the moons of Jupiter and Saturn --}}
+            @if (in_array(strtolower((string) ($session->name ?? '')), ['mars', 'venus'], true))
+                <li>
+                    <a href="{{ route('mars-venus.show') }}" class="text-gray-300 hover:underline">{{ __('Mars and Venus tonight') }}</a>
+                </li>
+            @elseif (in_array(strtolower((string) ($session->name ?? '')), ['jupiter', 'saturn'], true))
+                <li>
+                    <a href="{{ route('planet-moons.show') }}" class="text-gray-300 hover:underline">{{ __('Jupiter and Saturn tonight') }}</a>
+                </li>
+            @endif
+        @endif
         @auth
             @if (!empty($canonicalSlug) && auth()->user()->slug)
                 @if ($isCometLocal)

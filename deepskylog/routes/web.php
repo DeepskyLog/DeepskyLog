@@ -135,6 +135,9 @@ Route::post('/moon/observing-list', [App\Http\Controllers\MoonController::class,
 // The moons of Jupiter and Saturn in a night: transits, shadows, eclipses, the Great Red Spot, Titan's elongations
 Route::get('/jupiter-saturn', [App\Http\Controllers\PlanetMoonsController::class, 'show'])
     ->name('planet-moons.show')->middleware('doNotCacheResponse');
+// Mars and Venus in a night: the disks, the central meridian of Mars and its features, the phases of Venus
+Route::get('/mars-venus', [App\Http\Controllers\MarsVenusController::class, 'show'])
+    ->name('mars-venus.show')->middleware('doNotCacheResponse');
 
 // The objects of the month of Astroforum (astroforum:objects-of-the-month)
 Route::get('/admin/objects-of-the-month', [App\Http\Controllers\ObjectOfTheMonthController::class, 'admin'])

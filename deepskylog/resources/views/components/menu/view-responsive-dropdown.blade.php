@@ -50,6 +50,12 @@
             />
 
             <x-dropdown.item
+                icon="globe-europe-africa"
+                href="{{ route('mars-venus.show') }}"
+                label="{{ __('Mars and Venus tonight') }}"
+            />
+
+            <x-dropdown.item
                 icon="bars-3-center-left"
                 href="/observations"
                 label="{{ __('All observations') }}"

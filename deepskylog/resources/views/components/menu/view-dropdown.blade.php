@@ -22,6 +22,8 @@
 
             <x-menu.item icon="globe-alt" href="{{ route('planet-moons.show') }}">{{ __('Jupiter and Saturn tonight') }}</x-menu.item>
 
+            <x-menu.item icon="globe-europe-africa" href="{{ route('mars-venus.show') }}">{{ __('Mars and Venus tonight') }}</x-menu.item>
+
             @if (!Auth::guest() && Auth::user()->isObserver())
                 <x-menu.item href="{{ route('session.all') }}">
                     <x-slot:svg><x-outline.session-icon class="h-4 w-4" /></x-slot:svg>{{ __('All sessions') }}
