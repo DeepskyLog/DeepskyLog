@@ -24,6 +24,10 @@
                        class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
                         {{ __('Revisit with your telescope') }}
                     </a>
+                    <a href="{{ route('observing-list.trip') }}"
+                       class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
+                        {{ __('What could I see from…?') }}
+                    </a>
                     <a href="{{ route('observing-list.next-for-you') }}"
                        class="inline-flex items-center px-3 py-2 bg-gray-700 border border-gray-600 rounded-md font-semibold text-xs text-gray-200 uppercase tracking-widest hover:bg-gray-600">
                         {{ __('Next for you') }}

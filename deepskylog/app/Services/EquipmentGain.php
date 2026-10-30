@@ -674,8 +674,19 @@ class EquipmentGain
      */
     private function seenNames(): array
     {
+        return self::seenObjectNames($this->user);
+    }
+
+    /**
+     * The deep-sky objects an observer has seen, by name in lower case; also
+     * for the trip planner.
+     *
+     * @return array<string, true>
+     */
+    public static function seenObjectNames(User $user): array
+    {
         return DB::table('observations')
-            ->where('observer_username', $this->user->username)
+            ->where('observer_username', $user->username)
             ->where('target_table', 'objects')
             ->whereNotExists(function (Builder $details) {
                 $details->selectRaw('1')

@@ -1053,6 +1053,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Revisit with your telescope: seen objects the telescope shows much better
     Route::view('/observing-lists/revisit', 'observing-lists.revisit')
         ->name('observing-list.revisit')->middleware('doNotCacheResponse');
+    // The trip planner: what is new for the observer at a place picked on a map
+    Route::view('/observing-lists/trip', 'observing-lists.trip')
+        ->name('observing-list.trip')->middleware('doNotCacheResponse');
     // Next for you: unseen objects the observers who saw the same objects saw too
     Route::view('/observing-lists/next-for-you', 'observing-lists.next-for-you')
         ->name('observing-list.next-for-you')->middleware('doNotCacheResponse');

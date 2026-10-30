@@ -51,6 +51,11 @@
             </div>
             <div class="flex flex-wrap items-center gap-2 text-sm">
                 <a href="{{ route("star-parties.calendar", $party) }}" class="rounded bg-gray-700 px-3 py-2 text-white hover:bg-gray-600">{{ __("Add to my calendar") }}</a>
+                @auth
+                    @if (! $party->isPast())
+                        <a href="{{ route("observing-list.trip", ["lat" => $party->latitude, "lon" => $party->longitude, "tz" => $party->timezone, "place" => html_entity_decode((string) $party->name, ENT_QUOTES | ENT_HTML5, "UTF-8"), "from" => $party->start_date->toDateString(), "until" => $party->end_date->toDateString()]) }}" class="rounded bg-gray-700 px-3 py-2 text-white hover:bg-gray-600">{{ __("What is new for me there?") }}</a>
+                    @endif
+                @endauth
                 @if ($canManage)
                     <a href="{{ route("star-parties.edit", $party) }}" class="rounded bg-blue-700 px-3 py-2 text-white hover:bg-blue-600">{{ __("Edit") }}</a>
                     @if (! $party->isPast())

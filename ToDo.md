@@ -223,7 +223,7 @@ Aperture records show the single smallest telescope that saw an object. Across 1
 What's new: on the object page, a "seen by X% of observers with 4″, 6″, 8″, 12″…" chart. It would use the DrawingComparison::CLASSES aperture classes, count seen and not seen, and apply the plausibility filter of ApertureRecords.
 Why: the model's prediction would sit next to what observers actually saw. It's a strong addition to the object page, and cheap, because it's cached aggregate work.
 
-- Trip planner: "What could I see from…?"
+- [X] Trip planner: "What could I see from…?"
 An observer going to La Palma, Namibia or a starparty abroad wants to know what's new for them there.
 
 What's new: pick a place on a map (not one of their saved locations), dates and an instrument. The list holds the objects that never rise high enough at home, or that their telescope doesn't show from their usual dark sky, ranked by popularity. They can make it an observing list with times per night.
