@@ -29,6 +29,7 @@ use deepskylog\AstronomyLibrary\Time;
 use deepskylog\AstronomyLibrary\Targets\Target as AstroTarget;
 use App\Services\CometCoordinates;
 use App\Services\DeepskyObjectCreator;
+use App\Services\DreyerDescription;
 use App\Services\NearbyObjects;
 use App\Services\ObjectErrorReportNotifier;
 use App\Services\ObjectNameCatalogs;
@@ -733,6 +734,8 @@ class ObjectController extends Controller
         $session = (object) [
             'name' => $record->name ?? ($record->display_name ?? $slug),
             'comments' => $record->description ?? ($record->notes ?? null),
+            // Dreyer's abbreviations of the description in the reader's language
+            'plain_description' => in_array($type, ['deepsky', 'objects'], true) ? DreyerDescription::plain($record->description ?? null) : null,
             'preview' => null,
             'observerid' => null,
             'picture' => null,

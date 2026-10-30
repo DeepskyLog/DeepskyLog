@@ -256,7 +256,15 @@
                                     @if (!empty(trim($session->comments ?? '')))
                                         <tr>
                                             <td class="pr-4 font-medium">{{ __('Description') }}</td>
-                                            <td>{!! \App\Support\Html::purify($session->comments, true) !!}</td>
+                                            <td>
+                                                {!! \App\Support\Html::purify($session->comments, true) !!}
+                                                @if (!empty($session->plain_description))
+                                                    <div class="mt-1 text-sm text-gray-300" title="{{ __('dreyer.plain_words_title') }}">
+                                                        <span class="text-gray-400">{{ __('dreyer.plain_words') }}:</span>
+                                                        {{ $session->plain_description }}
+                                                    </div>
+                                                @endif
+                                            </td>
                                         </tr>
                                     @endif
                                     @auth
