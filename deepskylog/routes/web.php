@@ -869,9 +869,11 @@ Route::get('/object/{slug}/nearby-table.pdf', [App\Http\Controllers\NearbyExport
 
 // The object with the naked eye, in the finder and in the telescope
 // (App\Livewire\ObjectFieldViews), and the same views as a PDF.
-// The drawings of an object side by side per aperture class.
+// The drawings of an object side by side per aperture class, and those of one observer over time.
 Route::get('/object/{slug}/drawings/compare', [App\Http\Controllers\ObjectDrawingComparisonController::class, 'show'])
     ->name('object.drawings.compare');
+Route::get('/object/{slug}/drawings/observer/{observer}', [App\Http\Controllers\ObjectDrawingComparisonController::class, 'observer'])
+    ->name('object.drawings.observer');
 Route::get('/object/{slug}/field-views', [App\Http\Controllers\ObjectFieldViewController::class, 'show'])
     ->name('object.field-views')->middleware(['auth', 'doNotCacheResponse']);
 Route::get('/object/{slug}/field-views.pdf', [App\Http\Controllers\ObjectFieldViewController::class, 'pdf'])

@@ -23,6 +23,7 @@ use App\Models\ObservationTranslation;
 use App\Services\AavsoVariableStars;
 use App\Services\ObservationSearchQuery;
 use App\Services\Observations\ObservationCardData;
+use App\Services\Observations\ObserverDrawings;
 use App\Services\Observations\SameFieldObjects;
 use App\Services\Observations\SketchOverlay;
 use App\Services\Observations\TargetAltitude;
@@ -177,7 +178,23 @@ class ObservationsController extends Controller
             'variableStarEstimate' => $obsType === 'deepsky' ? VariableStarEstimate::find($selectedUnified->id) : null,
             // The drawing laid over the DSS image
             'sketchOverlay' => $obsType === 'deepsky' ? SketchOverlay::for($selectedUnified) : null,
+            // The observer's drawings of the object over time, when they drew it more than once
+            'observerDrawingsUrl' => $this->observerDrawingsUrl($selectedUnified, $observerUser),
         ], $preloadedData, $socialData));
+    }
+
+    /** The page of the observer's drawings of the object over time, when the drawing is one of several. */
+    private function observerDrawingsUrl(Observation $observation, User $observer): ?string
+    {
+        if (! $observation->has_drawing || $observation->target_type !== Observation::TYPE_DEEPSKY || ! $observer->slug) {
+            return null;
+        }
+        $objectSlug = DB::table('objects')->where('name', $observation->target_key)->value('slug');
+        if (! $objectSlug || app(ObserverDrawings::class)->count((string) $observation->target_key, $observer->username) < 2) {
+            return null;
+        }
+
+        return route('object.drawings.observer', ['slug' => $objectSlug, 'observer' => $observer->slug]);
     }
 
     /**

@@ -5,6 +5,7 @@ use App\Models\MountType;
 use App\Models\Observation;
 use App\Models\User;
 use App\Services\Observations\DrawingComparison;
+use App\Services\Observations\ObserverDrawings;
 use Database\Factories\InstrumentFactory;
 use Illuminate\Support\Facades\DB;
 
@@ -102,4 +103,42 @@ it('shows one drawing per aperture on the object page, the most liked', function
 
 it('answers 404 for an unknown object', function () {
     $this->get('/object/nothing-here/drawings/compare')->assertNotFound();
+});
+
+it('shows the drawings of one observer oldest to newest with aperture and sky', function () {
+    drawingComparisonObject();
+    $user = User::factory()->create(['name' => 'Jane Sketcher']);
+    $other = User::factory()->create();
+    $newer = drawingComparisonDrawing($user, 406, '2024-03-03');
+    $older = drawingComparisonDrawing($user, 203, '2020-03-01');
+    $older->update(['sqm' => 21.3]);
+    drawingComparisonDrawing($user, 406, '2024-03-05', false);
+    drawingComparisonDrawing($other, 254, '2023-01-01');
+
+    $drawings = (new ObserverDrawings)->forObserver('M 51', $user);
+    expect($drawings->pluck('id')->all())->toBe([$older->id, $newer->id])
+        ->and((float) $drawings[0]->drawing_sqm)->toBe(21.3)
+        ->and((int) $drawings[0]->drawing_sky_from_location)->toBe(0)
+        ->and($drawings[1]->drawing_sqm)->toBeNull()
+        ->and((new ObserverDrawings)->observersWithSeveral('M 51'))->toBe([$user->username => 2]);
+
+    $this->get("/object/m-51/drawings/observer/{$user->slug}")
+        ->assertOk()
+        ->assertSeeInOrder(['m51-2020-03-01.jpg', 'm51-2024-03-03.jpg'])
+        ->assertSee('SQM 21.30')
+        ->assertSee('203 mm')
+        ->assertDontSee('m51-2023-01-01.jpg');
+
+    $this->get('/object/m-51/drawings/compare')
+        ->assertSee("/object/m-51/drawings/observer/{$user->slug}");
+
+    $this->actingAs($user);
+    $this->blade('<x-drawing-apertures object-name="M 51" slug="m-51" />')
+        ->assertSee('Your drawings over time')
+        ->assertSee("/object/m-51/drawings/observer/{$user->slug}");
+});
+
+it('answers 404 for an unknown observer of the drawings over time', function () {
+    drawingComparisonObject();
+    $this->get('/object/m-51/drawings/observer/nobody-here')->assertNotFound();
 });

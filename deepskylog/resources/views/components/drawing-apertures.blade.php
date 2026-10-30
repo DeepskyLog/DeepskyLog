@@ -10,10 +10,29 @@
         $highlights = [];
     }
     $inches = (bool) (auth()->user()?->showInches ?? false);
+    // The viewer's own drawings of the object over time, when they drew it more than once
+    $viewer = auth()->user();
+    $ownDrawings = 0;
+    try {
+        $ownDrawings = $viewer ? app(\App\Services\Observations\ObserverDrawings::class)->count($objectName, $viewer->username) : 0;
+    } catch (\Throwable $_) {
+        $ownDrawings = 0;
+    }
     if (count($highlights) > 1) {
         \App\Services\Observations\ObservationCardData::instance()->preload(array_values($highlights));
     }
 @endphp
+
+@if (count($highlights) <= 1 && $ownDrawings > 1)
+    <div class="mt-6">
+        <a
+            href="{{ route("object.drawings.observer", ["slug" => $slug, "observer" => $viewer->slug]) }}"
+            class="text-sm text-indigo-400 hover:text-indigo-300"
+        >
+            {{ __("Your drawings over time") }} ({{ $ownDrawings }})
+        </a>
+    </div>
+@endif
 
 @if (count($highlights) > 1)
     <div class="mt-6">
@@ -25,6 +44,14 @@
             >
                 {{ __("Compare drawings") }}
             </a>
+            @if ($ownDrawings > 1)
+                <a
+                    href="{{ route("object.drawings.observer", ["slug" => $slug, "observer" => $viewer->slug]) }}"
+                    class="text-sm text-indigo-400 hover:text-indigo-300"
+                >
+                    {{ __("Your drawings over time") }} ({{ $ownDrawings }})
+                </a>
+            @endif
         </div>
         <div class="mt-2 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             @foreach ($highlights as $key => $drawing)

@@ -250,7 +250,7 @@ class ApertureRecords
     }
 
     /** Whether the observation has an SQM or NELM of its own. */
-    private static function ownSkySql(): string
+    public static function ownSkySql(): string
     {
         [$sqmFrom, $sqmTo] = LocationSkyHistory::SQM_RANGE;
         [$nelmFrom, $nelmTo] = LocationSkyHistory::NELM_RANGE;

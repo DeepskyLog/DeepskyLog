@@ -280,6 +280,11 @@
                         @if (! empty($sketchOverlay))
                             @include('observations.partials.sketch-overlay')
                         @endif
+                        @if (! empty($observerDrawingsUrl))
+                            <div class="mt-3 text-sm text-center">
+                                <a href="{{ $observerDrawingsUrl }}" class="text-indigo-400 hover:text-indigo-300">{{ __('All drawings of this object by :observer over time', ['observer' => $user?->name ?? $obs->observerid]) }}</a>
+                            </div>
+                        @endif
                     @endif
 
                     {{-- Header: observer + object --}}

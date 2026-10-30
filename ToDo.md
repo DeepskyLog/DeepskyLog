@@ -259,7 +259,7 @@ Who it helps: owners of Dobsonians without GoTo, who are a large part of the use
 
 - [x] "On this night". A home page box showing what you observed on this date in earlier years, with the drawing if there is one. ObserverBlog::night() already groups observations per night, so this is cheap, and it brings observers back to their old observations.
 
-- [ ] Your own drawings over time. The drawings of one object by one observer side by side, oldest to newest, with the aperture and sky of each. DrawingComparison already does this per aperture class; this would be per observer.
+- [x] Your own drawings over time. The drawings of one object by one observer side by side, oldest to newest, with the aperture and sky of each. DrawingComparison already does this per aperture class; this would be per observer.
 
 - [ ] "Download all my data". One zip with everything the account holds: observations with drawings, sessions, equipment, locations, lists, messages, goals and settings. The privacy policy and GDPR expect this. It would reuse GenerateObservationsZip, QueuedPdfJob and /downloads/mine.
 

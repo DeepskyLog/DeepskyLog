@@ -86,6 +86,26 @@
                         </section>
                     @endforeach
                 </div>
+
+                @if (! empty($observers))
+                    <section class="mt-8">
+                        <h2 class="mb-2 text-lg font-semibold text-white">{{ __('Drawings over time') }}</h2>
+                        <p class="mb-3 text-sm text-gray-400">{{ __('The observers who drew :object more than once, with their drawings oldest to newest.', ['object' => $object->name]) }}</p>
+                        <ul class="flex flex-wrap gap-2 text-sm">
+                            @foreach ($observers as $username => $count)
+                                @php($observerUser = $observerUsers[$username] ?? null)
+                                @if ($observerUser?->slug)
+                                    <li>
+                                        <a href="{{ route('object.drawings.observer', ['slug' => $object->slug, 'observer' => $observerUser->slug]) }}"
+                                            class="inline-block rounded bg-gray-800 px-2 py-1 text-gray-200 hover:bg-gray-700">
+                                            {{ $observerUser->name }} ({{ $count }})
+                                        </a>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </section>
+                @endif
             @endif
         </div>
     </div>
