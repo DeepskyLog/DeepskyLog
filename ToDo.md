@@ -14,7 +14,7 @@
   - [ ] About 270 NGC/IC "double stars" are not in the WDS and mostly have no separation or magnitudes.
 - [ ] On real server:
   - [ ] php artisan db:seed --class=BackfillSessionObservationIdsSeeder
-  - [ ] php artisan db:seed --class=BackfillSketchObservationIdsSeeder
+  - [ ] php artisan db:seed --class=BackfillSketchObservationIdsSeeder (right after LegacyObservationsSeeder and BackfillSessionObservationIdsSeeder, step 3.3 of DEPLOY-PLAN.md; then the check of 3.5: every sketch must point at a drawing of its own observer)
   - [ ] php artisan db:seed --class=addAchievementsSeeder
   - [ ] php artisan db:seed --class=LegacyObjectContoursSeeder
   - [ ] php artisan migrate (the `stars` index takes about a minute on 38M rows)
