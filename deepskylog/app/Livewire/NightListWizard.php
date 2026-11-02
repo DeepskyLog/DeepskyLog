@@ -24,7 +24,7 @@ class NightListWizard extends Component
 {
     /**
      * The kinds of objects offered: groups of deepskytypes codes, and the
-     * planets and comets (SOLAR_SYSTEM_GROUPS).
+     * planets, comets and lunar features (SOLAR_SYSTEM_GROUPS).
      */
     public const TYPE_GROUPS = [
         'galaxies'           => ['GALXY', 'GALCL', 'GXADN', 'GXAGC', 'GACAN'],
@@ -38,9 +38,10 @@ class NightListWizard extends Component
         'double_stars'       => ['DS'],
         'planets'            => [],
         'comets'             => [],
+        'lunar_features'     => [],
     ];
 
-    private const SOLAR_SYSTEM_GROUPS = ['planets', 'comets'];
+    private const SOLAR_SYSTEM_GROUPS = ['planets', 'comets', 'lunar_features'];
 
     public string $night = '';
 
@@ -195,6 +196,7 @@ class NightListWizard extends Component
             'deepsky'      => $this->typeGroups === [] || $deepsky !== [],
             'planets'      => in_array('planets', $groups, true),
             'comets'       => in_array('comets', $groups, true),
+            'moon'         => in_array('lunar_features', $groups, true),
             'sources'      => $this->sources,
             'sources_only' => $this->sourceMode === 'only' && $this->sources !== [],
             'seen'         => $this->seen,

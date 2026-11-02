@@ -13,6 +13,7 @@
         "double_stars" => __("Double stars"),
         "planets" => __("Planets"),
         "comets" => __("Comets"),
+        "lunar_features" => __("Lunar features"),
     ];
 @endphp
 
@@ -118,7 +119,7 @@
                         </label>
                     @endforeach
                 </div>
-                <p class="mt-1 text-xs text-gray-500">{{ __("Choose nothing for all kinds of objects but double stars. Planets and comets come on top of the number of deep-sky objects.") }}</p>
+                <p class="mt-1 text-xs text-gray-500">{{ __("Choose nothing for all kinds of objects but double stars. Planets, comets and lunar features come on top of the number of deep-sky objects; lunar features only when the Moon is up and at least a quarter lit.") }}</p>
             </section>
 
             {{-- 4. Catalogs and lists first --}}

@@ -8,6 +8,9 @@ use App\Models\Observation;
 use App\Models\ObservingList;
 use App\Models\User;
 use App\Services\FieldViews\FieldViewBuilder;
+use App\Services\Moon\LunarEphemeris;
+use App\Services\Moon\LunarTerminator;
+use App\Services\Weather\NightForecast;
 use App\Services\Weather\SeeingForecast;
 use App\Support\EphemerisDate;
 use Carbon\Carbon;
@@ -60,6 +63,12 @@ use Illuminate\Support\Str;
  * a poor night chosen double stars closer than CLOSE_DOUBLE_ARCSEC are left
  * out. Planets and close double stars are marked with the seeing.
  *
+ * When a Moon lit at least MOON_FRACTION stands at least
+ * MIN_SOLAR_SYSTEM_ALTITUDE high in the hours chosen, the deep-sky objects
+ * suffer, but the Moon itself is worth a look: up to LUNAR_FEATURES features
+ * at the terminator (LunarTerminator::features(), the showpieces first) at
+ * the moment the Moon stands highest come on top of the list.
+ *
  * Objects behind the local horizon of the location (LocalHorizon) are only
  * taken while they stand above it, at their highest moment there.
  *
@@ -89,6 +98,12 @@ class TonightsBest
     public const SOLAR_SYSTEM_COUNT = 5;
 
     public const MAX_COMETS = 2;
+
+    /** The lunar features at the terminator on the list when the Moon is up. */
+    public const LUNAR_FEATURES = 5;
+
+    /** A Moon lit at least this much brightens the sky enough to look at it instead. */
+    public const MOON_FRACTION = NightForecast::MOON_FRACTION;
 
     /** The faintest comet on the list without a telescope to judge by. */
     public const POPULAR_COMET_LIMIT = 10.0;
@@ -200,13 +215,14 @@ class TonightsBest
      *
      * The deep-sky objects are of the types given, else of all types but the
      * EXCLUDED_TYPES; 'count' is their number, the planets and comets
-     * (SOLAR_SYSTEM_COUNT at most) come on top. 'exclude' holds deep-sky
+     * (SOLAR_SYSTEM_COUNT at most) and the lunar features ('moon',
+     * LUNAR_FEATURES at most) come on top. 'exclude' holds deep-sky
      * objects (objects.name) to leave out: those of the earlier nights of a
      * starparty, so each night gets a list of its own.
      *
      * @return array{night: ?string, period: string, from: ?string, until: ?string, types: list<string>,
      *     sources: list<string>, sources_only: bool, seen: string, difficulty: string, count: int,
-     *     deepsky: bool, planets: bool, comets: bool, exclude: list<string>}
+     *     deepsky: bool, planets: bool, comets: bool, moon: bool, exclude: list<string>}
      */
     public static function options(array $options = []): array
     {
@@ -227,6 +243,7 @@ class TonightsBest
             'deepsky'      => (bool) ($options['deepsky'] ?? true),
             'planets'      => (bool) ($options['planets'] ?? true),
             'comets'       => (bool) ($options['comets'] ?? true),
+            'moon'         => (bool) ($options['moon'] ?? true),
             'exclude'      => array_values(array_unique(array_filter(array_map('strval', (array) ($options['exclude'] ?? [])), fn (string $name) => $name !== ''))),
         ];
     }
@@ -259,8 +276,8 @@ class TonightsBest
         // a seeing forecast not cached yet is fetched after the response, and changes the key
         $seeing = SeeingForecast::forNight((float) $location->latitude, (float) $location->longitude, $night, $timezone, fetch: false);
 
-        // v2: a magnitude of 0 is unknown (ContrastReserveCalculator::target()); v4: the field of view; v5: the seeing; v6: the twilight
-        $key = 'tonights_best:v6:'.md5(json_encode([
+        // v2: a magnitude of 0 is unknown (ContrastReserveCalculator::target()); v4: the field of view; v5: the seeing; v6: the twilight; v7: the lunar features
+        $key = 'tonights_best:v7:'.md5(json_encode([
             $user?->id, $instrument?->id, $location->id, (float) $location->latitude, (float) $location->longitude, $location->horizon, $lensId, $field, $seeing, $night, $timezone, $options, $offset,
             // a new observation changes what the observer has seen
             $user ? DB::table('observations')->where('observer_username', $user->username)->max('id') : null,
@@ -278,8 +295,8 @@ class TonightsBest
 
     /**
      * Make an observing list of the observer with the objects of a result of
-     * for(), in the order to observe them: the deep-sky objects, planets and
-     * comets, under the names the list tables match on (search_index.name),
+     * for(), in the order to observe them: the deep-sky objects, planets,
+     * comets and lunar features, under the names the list tables match on (search_index.name),
      * each with its moment. Null when there are none.
      */
     public static function createList(User $owner, array $result, ?string $name = null, bool $public = false): ?ObservingList
@@ -454,6 +471,7 @@ class TonightsBest
         if ($up = $this->moon->upBetween()) {
             $result['moon'] = ['fraction' => round($this->moon->illuminatedFraction(), 2), 'from' => $this->time($up[0]), 'until' => $this->time($up[1])];
         }
+        $moonlight = $this->moon;
         if (! $this->moon->brightens()) {
             $this->moon = null;
         }
@@ -485,7 +503,11 @@ class TonightsBest
             $result['steady_doubles'] = count($doubles);
         }
 
-        $objects = array_merge($deepsky, $this->options['planets'] || $this->options['comets'] ? $this->solarSystem() : []);
+        $objects = array_merge(
+            $deepsky,
+            $this->options['planets'] || $this->options['comets'] ? $this->solarSystem() : [],
+            $this->options['moon'] ? $this->lunarFeatures($moonlight) : [],
+        );
         // in the order to observe them
         usort($objects, fn (array $a, array $b) => [$a['timestamp'], $a['name']] <=> [$b['timestamp'], $b['name']]);
         // the moment for the field views
@@ -1151,6 +1173,56 @@ class TonightsBest
     }
 
     /**
+     * The lunar features at the terminator (LunarTerminator::features(), the
+     * showpieces first) at the moment the Moon stands highest in the hours
+     * chosen, LUNAR_FEATURES at most, when it is lit at least MOON_FRACTION
+     * and stands at least MIN_SOLAR_SYSTEM_ALTITUDE high then: a Moon that
+     * spoils the deep-sky objects. With sources_only, only the features of
+     * the chosen lists.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function lunarFeatures(MoonlightSky $moonlight): array
+    {
+        $highest = $moonlight->highest();
+        if ($highest === null || $highest['altitude'] < self::MIN_SOLAR_SYSTEM_ALTITUDE || $moonlight->illuminatedFraction() < self::MOON_FRACTION) {
+            return [];
+        }
+
+        $features = [];
+        foreach (LunarTerminator::features(LunarEphemeris::at($highest['timestamp'])) as $feature) {
+            if (! $this->allowed($feature['name'])) {
+                continue;
+            }
+            $features[] = [
+                'kind'      => 'lunar',
+                'name'      => $feature['name'],
+                'list_name' => $feature['name'],
+                'slug'      => $feature['slug'] ?: $feature['name'],
+                // the English label of LunarTerminator::typeLabel(), translated by the views
+                'type'             => in_array($feature['type'], ['crater', 'mare', 'mountain', 'valley'], true) ? ucfirst($feature['type']) : 'Other',
+                'type_code'        => 'lunar',
+                'constellation'    => null,
+                'magnitude'        => null,
+                'altitude'         => (int) round($highest['altitude']),
+                'timestamp'        => $highest['timestamp'],
+                'time'             => $this->time($highest['timestamp']),
+                'sqm'              => null,
+                'contrast_reserve' => null,
+                'category'         => null,
+                'status'           => $feature['slug'] ? $this->status('lunar_features', (string) $feature['slug']) : ($this->user ? 'new' : null),
+                // the relief at the terminator needs steady air as much as the planets
+                'seeing' => $this->seeingMark(),
+            ];
+            if (count($features) >= self::LUNAR_FEATURES) {
+                break;
+            }
+        }
+
+        return $features;
+    }
+
+    /**
      * The planets and the comets brighter than magnitude 13 with their
      * positions (degrees) and magnitudes at midnight (UT) of the night, the
      * same for every location and cached for the night.
@@ -1235,7 +1307,7 @@ class TonightsBest
         $instrumentId = $this->instrument?->id;
         $rows         = DB::table('observations')
             ->where('observer_username', $this->user->username)
-            ->whereIn('target_table', ['objects', 'cometobjects', 'planets'])
+            ->whereIn('target_table', ['objects', 'cometobjects', 'planets', 'lunar_features'])
             ->whereNotExists(function (Builder $details) {
                 $details->selectRaw('1')
                     ->from('deepsky_observation_details')

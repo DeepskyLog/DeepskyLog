@@ -28,6 +28,9 @@
                     <td class="whitespace-nowrap px-2 py-1">{{ $object["time"] }}</td>
                     <td class="px-2 py-1">
                         <a href="{{ route("object.show", $object["slug"]) }}" class="text-blue-400 hover:underline">{{ $object["name"] }}</a>
+                        @if ($object["kind"] === "lunar")
+                            <a href="{{ route("moon.show") }}" class="ml-1 text-xs text-gray-400 hover:underline" title="{{ __("At the terminator: the low Sun shows its relief") }}">&#127763;</a>
+                        @endif
                         @if (isset($requested[mb_strtolower($object["name"])]))
                             <x-requested-badge :slug="$object['slug']" />
                         @endif

@@ -203,6 +203,46 @@ it('lowers the contrast reserve under the full Moon', function () {
         ->and($galaxy['contrast_reserve'])->toBeLessThan(0.9);
 });
 
+it('adds the lunar features at the terminator when the Moon is up', function () {
+    Queue::fake();
+    tbAutumnSky();
+    $user = tbObserver();
+    foreach ([['Ptolemaeus', 'crater', -9.1647, -1.8448, 153.67], ['Rupes Recta', 'other', -21.6748, -7.7019, 115.95], ['Mare Imbrium', 'mare', 34.7230, -14.9140, 1145.53]] as [$name, $type, $lat, $lon, $diameter]) {
+        DB::table('lunar_features')->insert(['name' => $name, 'slug' => Str::slug($name), 'feature_type' => $type, 'lat' => $lat, 'lon' => $lon,
+            'diameter'                              => $diameter, 'created_at' => now(), 'updated_at' => now()]);
+    }
+    \App\Services\Moon\LunarTerminator::forgetCatalogue();
+    DB::table('observations')->insert(['observer_username' => $user->username, 'observed_on' => '2025-10-01', 'instrument_id' => $user->stdtelescope,
+        'target_type'                                      => 'lunar', 'target_table' => 'lunar_features', 'target_key' => 'ptolemaeus', 'target_name' => 'Ptolemaeus',
+        'has_drawing'                                      => false, 'language' => 'en', 'legacy_source' => 'lunar', 'created_at' => now(), 'updated_at' => now()]);
+
+    // The evening of 17 November 2026: the Moon just past first quarter, high in the evening.
+    $result = TonightsBest::for($user, ['night' => '2026-11-17']);
+    $lunar  = collect($result['objects'])->where('kind', 'lunar')->keyBy('name');
+    expect($lunar->keys()->sort()->values()->all())->toBe(['Ptolemaeus', 'Rupes Recta'])
+        ->and($lunar['Ptolemaeus']['type'])->toBe('Crater')
+        ->and($lunar['Ptolemaeus']['status'])->toBe('seen')
+        ->and($lunar['Rupes Recta']['status'])->toBe('new')
+        ->and($lunar['Ptolemaeus']['altitude'])->toBeGreaterThanOrEqual(TonightsBest::MIN_SOLAR_SYSTEM_ALTITUDE);
+
+    // Not without the Moon, nor when left out.
+    expect(collect(TonightsBest::for($user, ['night' => TB_NEW_MOON])['objects'])->where('kind', 'lunar'))->toBeEmpty()
+        ->and(collect(TonightsBest::for($user, ['night' => '2026-11-17', 'moon' => false])['objects'])->where('kind', 'lunar'))->toBeEmpty();
+
+    // The list holds them under their names, at the moment the Moon is highest.
+    $list = TonightsBest::createList($user, $result);
+    expect($list->items()->pluck('object_name'))->toContain('Ptolemaeus', 'Rupes Recta');
+
+    // The wizard offers them as a kind of objects.
+    $this->actingAs($user);
+    Livewire::test(NightListWizard::class)
+        ->set('night', '2026-11-17')
+        ->set('typeGroups', ['lunar_features'])
+        ->call('preview')
+        ->assertSee('Rupes Recta')
+        ->assertDontSee('Autumn Galaxy 1');
+});
+
 it('puts the objects of the chosen sources first, or only them', function () {
     Queue::fake();
     tbAutumnSky();

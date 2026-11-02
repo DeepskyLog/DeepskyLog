@@ -143,6 +143,24 @@ class MoonlightSky
     }
 
     /**
+     * The moment of the window the Moon stands highest, with its altitude, or
+     * null when it stays below the horizon.
+     *
+     * @return array{timestamp: int, altitude: float}|null
+     */
+    public function highest(): ?array
+    {
+        $best = null;
+        foreach ($this->moon as $timestamp => $moon) {
+            if ($moon['altitude'] > 0 && ($best === null || $moon['altitude'] > $best['altitude'])) {
+                $best = ['timestamp' => $timestamp, 'altitude' => $moon['altitude']];
+            }
+        }
+
+        return $best;
+    }
+
+    /**
      * The moment of the window the point stands out best against the sky
      * while it stands at least $minAltitude high: the sky at it darkest less
      * the extinction of the point then (AtmosphericExtinction), the higher
