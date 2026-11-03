@@ -1,7 +1,7 @@
 <!-- Settings Dropdown -->
 <div class="relative ml-3">
     @if (Auth::user())
-        <x-menu.dropdown align="right" :width="56" :columns="2">
+        <x-menu.dropdown align="right" :width="64" :columns="2">
             <x-slot name="trigger">
                 @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                     <button x-ref="trigger" @click="open = !open" aria-haspopup="true" :aria-expanded="open.toString()" class="inline-flex items-center rounded px-2 py-1 text-sm text-gray-200 hover:bg-gray-800">

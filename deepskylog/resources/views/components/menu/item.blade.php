@@ -16,9 +16,9 @@
     @endif
 
     @if ($label)
-        <span class="truncate">{!! $label !!}</span>
+        <span class="min-w-0 break-words">{!! $label !!}</span>
     @else
-        <span class="truncate">{{ $slot }}</span>
+        <span class="min-w-0 break-words">{{ $slot }}</span>
     @endif
 </a>
 </div>
