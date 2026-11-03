@@ -38,7 +38,7 @@
                                         $viewer = auth()->user();
                                         $allowAdmin = config('sessions.allow_admin_override', false);
                                         $viewerIsOwner = $viewer && ($viewer->username === ($u->username ?? $u->slug ?? null));
-                                        $viewerIsAdmin = $viewer && method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges();
+                                        $viewerIsAdmin = $viewer && $viewer->isAdministrator();
                                         $showDraftActions = $viewerIsOwner || ($allowAdmin && $viewerIsAdmin);
                                     @endphp
 

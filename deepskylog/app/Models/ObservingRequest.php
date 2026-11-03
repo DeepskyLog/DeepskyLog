@@ -123,7 +123,7 @@ class ObservingRequest extends Model
     /** The observer who asked, administrators and database experts close a request. */
     public function canBeClosedBy(?User $user): bool
     {
-        return $user !== null && ($user->id === $this->user_id || $user->hasAdministratorPrivileges());
+        return $user !== null && ($user->id === $this->user_id || $user->hasModeratorRole());
     }
 
     public function close(): void

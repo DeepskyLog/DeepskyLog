@@ -449,7 +449,7 @@ class StarPartyController extends Controller
      */
     private function refusal(User $user): ?string
     {
-        if ($user->hasAdministratorPrivileges()) {
+        if ($user->isAdministrator()) {
             return null;
         }
         $open = StarParty::where('user_id', $user->id)->upcoming()->count();

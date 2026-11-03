@@ -22,7 +22,7 @@ class ObservationZipController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $administrator = $user->hasAdministratorPrivileges();
+        $administrator = $user->isAdministrator();
 
         $observer = null;
         if ($request->filled('observer')) {

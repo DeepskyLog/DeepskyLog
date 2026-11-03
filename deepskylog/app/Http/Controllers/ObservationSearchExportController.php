@@ -621,7 +621,7 @@ class ObservationSearchExportController extends Controller
             $viewer = Auth::user();
             $allowAdmin = config('sessions.allow_admin_override', false);
             $viewerIsOwner = $viewer && ($viewer->username === $session->observerid || ($viewer->slug ?? null) === ($user->slug ?? null));
-            $viewerIsAdmin = $viewer && method_exists($viewer, 'hasAdministratorPrivileges') && $viewer->hasAdministratorPrivileges();
+            $viewerIsAdmin = $viewer && $viewer->isAdministrator();
 
             if (!($viewerIsOwner || ($allowAdmin && $viewerIsAdmin))) {
                 abort(404);

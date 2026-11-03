@@ -108,7 +108,7 @@ class ObservationSession extends Model
             return true;
         }
 
-        return config('sessions.allow_admin_override', false) && $user->hasAdministratorPrivileges();
+        return config('sessions.allow_admin_override', false) && $user->isAdministrator();
     }
 
     /**

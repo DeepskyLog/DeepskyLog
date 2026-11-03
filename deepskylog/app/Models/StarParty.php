@@ -138,7 +138,7 @@ class StarParty extends Model
      */
     public function scopeVisibleTo(Builder $query, ?User $user): Builder
     {
-        if ($user?->hasAdministratorPrivileges()) {
+        if ($user?->isAdministrator()) {
             return $query;
         }
 
@@ -234,7 +234,7 @@ class StarParty extends Model
     /** The organiser and the administrators edit, cancel and delete a starparty. */
     public function canBeManagedBy(?User $user): bool
     {
-        return $user !== null && ((int) $user->id === (int) $this->user_id || $user->hasAdministratorPrivileges());
+        return $user !== null && ((int) $user->id === (int) $this->user_id || $user->isAdministrator());
     }
 
     /**

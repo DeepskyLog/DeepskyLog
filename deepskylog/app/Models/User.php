@@ -280,9 +280,12 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Checks if the user's active team is the administrators team
+     * Checks if the user is a member of the administrators team, whatever role
+     * they work in now. Not for permissions: an administrator working in the
+     * role of observer has the rights of an observer (isAdministrator(),
+     * hasModeratorRole()).
      *
-     * @return bool True if the user's active team is the administrators team
+     * @return bool True if the user is a member of the administrators team
      */
     public function hasAdministratorPrivileges(): bool
     {
@@ -309,6 +312,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isObserver(): bool
     {
         return $this->currentTeamIs(Team::OBSERVERS);
+    }
+
+    /**
+     * Checks if the user's active team is the administrators team or the team
+     * of Database experts: the roles that may change and delete what other
+     * observers recorded.
+     */
+    public function hasModeratorRole(): bool
+    {
+        return $this->isAdministrator() || $this->isDatabaseExpert();
     }
 
     /**

@@ -2475,7 +2475,7 @@ class ObservationsController extends Controller
             $viewer = $request->user();
             $owns = ($viewer && ($viewer->id && $obs->observer_user_id == $viewer->id || $viewer->username && $obs->observer_username == $viewer->username));
             // Another observer's observation only in the role of administrator or database expert
-            $isAdmin = $viewer && ($viewer->isAdministrator() || $viewer->isDatabaseExpert());
+            $isAdmin = $viewer && $viewer->hasModeratorRole();
             if (!$owns && !$isAdmin) {
                 abort(403);
             }
@@ -2821,7 +2821,7 @@ class ObservationsController extends Controller
 
         $owns = ($viewer->id && $selectedUnified->observer_user_id && $viewer->id == $selectedUnified->observer_user_id) || ($viewer->username && $selectedUnified->observer_username && $viewer->username == $selectedUnified->observer_username);
         // Another observer's observation only in the role of administrator or database expert
-        $isAdmin = $viewer->isAdministrator() || $viewer->isDatabaseExpert();
+        $isAdmin = $viewer->hasModeratorRole();
         if (!$owns && !$isAdmin) {
             abort(403);
         }
@@ -3034,7 +3034,7 @@ class ObservationsController extends Controller
 
         $owns = ($viewer->id && $selectedUnified->observer_user_id && $viewer->id == $selectedUnified->observer_user_id) || ($viewer->username && $selectedUnified->observer_username && $viewer->username == $selectedUnified->observer_username);
         // Another observer's observation only in the role of administrator or database expert
-        $isAdmin = $viewer->isAdministrator() || $viewer->isDatabaseExpert();
+        $isAdmin = $viewer->hasModeratorRole();
         if (!$owns && !$isAdmin) {
             abort(403);
         }

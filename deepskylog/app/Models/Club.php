@@ -145,7 +145,7 @@ class Club extends Model
     /** The club administrators and the administrators of DeepskyLog manage the club. */
     public function canBeManagedBy(?User $user): bool
     {
-        return $user !== null && ($this->isAdmin($user) || $user->hasAdministratorPrivileges());
+        return $user !== null && ($this->isAdmin($user) || $user->isAdministrator());
     }
 
     /** The administrators of the club. */

@@ -11,7 +11,7 @@
         >
             @livewire("teams.update-team-name-form", ["team" => $team])
 
-            @if (Auth::user()->hasAdministratorPrivileges())
+            @if (Auth::user()->isAdministrator())
                 @livewire("teams.team-member-manager", ["team" => $team])
             @endif
         </div>

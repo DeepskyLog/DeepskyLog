@@ -99,7 +99,7 @@
                         </x-menu.item>
                     @endauth
                     <x-menu.item href="{{ $exportZipUrl }}" rel="nofollow" data-last>
-                        {{ auth()->user()?->hasAdministratorPrivileges() ? __('Zip file with drawings') : __('Zip file with my drawings') }}
+                        {{ auth()->user()?->isAdministrator() ? __('Zip file with drawings') : __('Zip file with my drawings') }}
                     </x-menu.item>
                 </x-menu.dropdown>
                 <x-expand-all-details table="observation-search-table" />
