@@ -2002,9 +2002,23 @@ class Objects
         echo '  <td colspan="3">Aladin</td>';
         echo '  <td colspan="100">';
         echo '    <div id="aladin-lite-div" style="width:600px;height:400px;"></div>';
-        echo '    <script type="text/javascript" src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>';
+        // Loaded asynchronously, so the page doesn't wait for the Aladin server (or hang when it is down)
         echo '    <script type="text/javascript">';
-        echo '      var aladin = A.aladin(\'#aladin-lite-div\', {survey: "P/DSS2/color", fov:'.$this->getFov($object).', target: "'.$this->raDecToAladin($ra, $dec).'"});';
+        echo '      (function () {';
+        echo '        var base = "https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/";';
+        echo '        var css = document.createElement("link");';
+        echo '        css.rel = "stylesheet";';
+        echo '        css.href = base + "aladin.min.css";';
+        echo '        document.head.appendChild(css);';
+        echo '        var script = document.createElement("script");';
+        echo '        script.src = base + "aladin.min.js";';
+        echo '        script.charset = "utf-8";';
+        echo '        script.async = true;';
+        echo '        script.onload = function () {';
+        echo '          window.aladin = A.aladin(\'#aladin-lite-div\', {survey: "P/DSS2/color", fov:'.$this->getFov($object).', target: "'.$this->raDecToAladin($ra, $dec).'"});';
+        echo '        };';
+        echo '        document.head.appendChild(script);';
+        echo '      })();';
         echo '    </script>';
         echo '  </td>';
         echo '</tr>';

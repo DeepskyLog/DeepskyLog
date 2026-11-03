@@ -243,8 +243,6 @@ function head() {
      })();
 
      </script>";
-	echo '<link rel="stylesheet" href="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />';
-
 	echo "</head>";
 }
 ?>
