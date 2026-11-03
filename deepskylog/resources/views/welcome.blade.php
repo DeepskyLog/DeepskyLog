@@ -2,10 +2,8 @@
     <div class="mx-auto max-w-screen bg-gray-900 px-2 py-6 sm:px-6 lg:px-8">
         @guest
             <x-card>
+                <x-application-logo class="mb-4 block h-16 w-auto" />
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
-                    <x-application-logo
-                        class="block h-12 w-auto flex-shrink-0"
-                    />
                     <div class="min-w-0 flex-1 space-y-2 text-sm">
                         <p>
                             <strong>{{
@@ -234,6 +232,13 @@
                 @if ($challenges->isNotEmpty())
                     <x-observing-challenges
                         :entries="$challenges"
+                        class="order-2 lg:order-none"
+                    />
+                @endif
+
+                @if ($observingGoals->isNotEmpty())
+                    <x-observing-goals-home
+                        :goals="$observingGoals"
                         class="order-2 lg:order-none"
                     />
                 @endif

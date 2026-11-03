@@ -28,6 +28,9 @@ class ObservingGoal extends Model
     /** The goals an observer may have. */
     public const MAX_PER_USER = 20;
 
+    /** The goals shown on the home page. */
+    public const HOMEPAGE = 5;
+
     /** The longest period of a goal, in years. */
     public const MAX_YEARS = 10;
 
@@ -257,5 +260,32 @@ class ObservingGoal extends Model
         $order = ['active' => 0, 'upcoming' => 1, 'reached' => 2, 'ended' => 3];
 
         return $goals->sortBy(fn (self $goal) => $order[$goal->progress()['status']])->values();
+    }
+
+    /**
+     * The observer's own goals for the home page: those whose period has not
+     * ended, running ones first, then the reached ones, then the coming ones.
+     * The goals of a challenge and the beginner path have boxes of their own.
+     *
+     * @return Collection<int, self>
+     */
+    public static function forHomePage(User $user): Collection
+    {
+        $order = ['active' => 0, 'reached' => 1, 'upcoming' => 2];
+
+        return self::query()
+            ->where('user_id', $user->id)
+            ->whereNull('challenge_id')
+            ->where('beginner_path', false)
+            ->whereDate('ends_on', '>=', Carbon::today())
+            ->with('observingList:id,slug')
+            ->orderBy('ends_on')
+            ->orderBy('id')
+            ->get()
+            ->each(fn (self $goal) => $goal->setRelation('user', $user))
+            ->filter(fn (self $goal) => isset($order[$goal->progress()['status']]))
+            ->sortBy(fn (self $goal) => $order[$goal->progress()['status']])
+            ->take(self::HOMEPAGE)
+            ->values();
     }
 }

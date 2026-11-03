@@ -1,4 +1,4 @@
-<div>
+<div id="observing-goals">
     @if ($goals->isNotEmpty() || $isOwner)
         <div class="mb-6"><x-card>
             <div class="flex flex-wrap items-center justify-between gap-2 px-5">

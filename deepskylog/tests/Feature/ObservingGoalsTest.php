@@ -222,3 +222,26 @@ it('shows the running goals and the reached ones in the blog and its feed', func
         ->assertSee('reached the observing goal', false)
         ->assertDontSee('Hidden goal');
 });
+
+it('shows the observer their own goals that have not ended on the home page', function () {
+    goalFor($this->observer, ['name' => 'Running Hickson hunt']);
+    goalFor($this->observer, ['name' => 'Secret Messier run', 'public' => false]);
+    goalFor($this->observer, ['name' => 'Old Caldwell year', 'starts_on' => '2025-01-01', 'ends_on' => '2025-12-31']);
+    goalFor($this->observer, ['name' => 'My beginner path', 'beginner_path' => true]);
+    $other = User::factory()->create();
+    goalFor($other, ['name' => 'Someone else entirely']);
+
+    expect(ObservingGoal::forHomePage($this->observer)->pluck('name')->all())
+        ->toEqualCanonicalizing(['Running Hickson hunt', 'Secret Messier run']);
+
+    $this->actingAs($this->observer)->get('/')
+        ->assertOk()
+        ->assertSee('Running Hickson hunt')
+        ->assertSee('Secret Messier run')
+        ->assertSee('All my observing goals')
+        ->assertDontSee('Old Caldwell year')
+        ->assertDontSee('Someone else entirely');
+
+    auth()->logout();
+    $this->get('/')->assertOk()->assertDontSee('Running Hickson hunt');
+});

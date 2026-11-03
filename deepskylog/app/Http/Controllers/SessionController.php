@@ -1055,6 +1055,14 @@ class SessionController extends Controller
             $challenges = collect();
         }
 
+        // The observer's own observing goals that have not ended
+        try {
+            $observingGoals = Auth::check() ? \App\Models\ObservingGoal::forHomePage(Auth::user()) : collect();
+        } catch (\Throwable $e) {
+            report($e);
+            $observingGoals = collect();
+        }
+
         // The observer's own sessions of the last weeks without any observation of theirs
         try {
             $sessionsWithoutObservations = Auth::check() ? SessionObservationReminders::forUser(Auth::user()) : collect();
@@ -1118,6 +1126,7 @@ class SessionController extends Controller
             'objectOfTheMonth',
             'objectOfTheMonthDrawings',
             'challenges',
+            'observingGoals',
         )));
     }
 
